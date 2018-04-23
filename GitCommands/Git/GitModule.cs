@@ -992,9 +992,9 @@ namespace GitCommands
 
             filename = filename.ToPosixPath();
 
-            var tree = RunGitCmd(command, SystemEncoding);
+            var refList = RunGitCmd(command, SystemEncoding);
 
-            var refs = GetTreeRefs(tree);
+            var refs = ParseRefs(refList);
 
             return refs.Where(showRemoteRef).ToDictionary(r => r, r => GetSubmoduleCommitHash(filename, r.Name));
         }
@@ -2763,56 +2763,72 @@ namespace GitCommands
 
             remote = remote.ToPosixPath();
 
-            result.CmdResult = GetTreeFromRemoteRefs(remote, tags, branches);
+            result.CmdResult = RunLsRemote();
 
-            var tree = result.CmdResult.StdOutput;
+            var output = result.CmdResult.StdOutput;
 
             // If the authentication failed because of a missing key, ask the user to supply one.
-            if (tree.Contains("FATAL ERROR") && tree.Contains("authentication"))
+            if (output.Contains("FATAL ERROR") && output.Contains("authentication"))
             {
                 result.AuthenticationFail = true;
             }
-            else if (tree.ToLower().Contains("the server's host key is not cached in the registry"))
+            else if (output.ToLower().Contains("the server's host key is not cached in the registry"))
             {
                 result.HostKeyFail = true;
             }
             else if (result.CmdResult.ExitedSuccessfully)
             {
-                result.Result = GetTreeRefs(tree);
+                result.Result = ParseRefs(output);
             }
 
             return result;
-        }
 
-        private CmdResult GetTreeFromRemoteRefsEx(string remote, bool tags, bool branches)
-        {
-            if (tags && branches)
+            CmdResult RunLsRemote()
             {
-                return RunGitCmdResult("ls-remote --heads --tags \"" + remote + "\"");
+                if (tags && branches)
+                {
+                    return RunGitCmdResult($"ls-remote --heads --tags \"{remote}\"");
+                }
+
+                if (tags)
+                {
+                    return RunGitCmdResult($"ls-remote --tags \"{remote}\"");
+                }
+
+                if (branches)
+                {
+                    return RunGitCmdResult($"ls-remote --heads \"{remote}\"");
+                }
+
+                return new CmdResult();
             }
-
-            if (tags)
-            {
-                return RunGitCmdResult("ls-remote --tags \"" + remote + "\"");
-            }
-
-            if (branches)
-            {
-                return RunGitCmdResult("ls-remote --heads \"" + remote + "\"");
-            }
-
-            return new CmdResult();
-        }
-
-        private CmdResult GetTreeFromRemoteRefs(string remote, bool tags, bool branches)
-        {
-            return GetTreeFromRemoteRefsEx(remote, tags, branches);
         }
 
         public IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true)
         {
-            var tree = GetTree(tags, branches);
-            return GetTreeRefs(tree);
+            var refList = GetRefList();
+
+            return ParseRefs(refList);
+
+            string GetRefList()
+            {
+                if (tags && branches)
+                {
+                    return RunGitCmd("show-ref --dereference", SystemEncoding);
+                }
+
+                if (tags)
+                {
+                    return RunGitCmd("show-ref --tags", SystemEncoding);
+                }
+
+                if (branches)
+                {
+                    return RunGitCmd(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", SystemEncoding);
+                }
+
+                return "";
+            }
         }
 
         /// <param name="option">Ordery by date is slower.</param>
@@ -2885,38 +2901,20 @@ namespace GitCommands
                 .ToList();
         }
 
-        private string GetTree(bool tags, bool branches)
-        {
-            if (tags && branches)
-            {
-                return RunGitCmd("show-ref --dereference", SystemEncoding);
-            }
-
-            if (tags)
-            {
-                return RunGitCmd("show-ref --tags", SystemEncoding);
-            }
-
-            if (branches)
-            {
-                return RunGitCmd(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", SystemEncoding);
-            }
-
-            return "";
-        }
-
         [NotNull, ItemNotNull]
-        public IReadOnlyList<IGitRef> GetTreeRefs([NotNull] string tree)
+        public IReadOnlyList<IGitRef> ParseRefs([NotNull] string refList)
         {
             // Parse lines of format:
             //
             // 69a7c7a40230346778e7eebed809773a6bc45268 refs/heads/master
             // 69a7c7a40230346778e7eebed809773a6bc45268 refs/remotes/origin/master
             // 366dfba1abf6cb98d2934455713f3d190df2ba34 refs/tags/2.51
+            //
+            // Lines may also use \t as a column delimiter, such as output of "ls-remote --heads origin".
 
-            var regex = new Regex(@"^(?<objectid>[0-9a-f]{40}) (?<refname>.+)$", RegexOptions.Multiline);
+            var regex = new Regex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline);
 
-            var matches = regex.Matches(tree);
+            var matches = regex.Matches(refList);
 
             var gitRefs = new List<IGitRef>();
             var headByRemote = new Dictionary<string, GitRef>();

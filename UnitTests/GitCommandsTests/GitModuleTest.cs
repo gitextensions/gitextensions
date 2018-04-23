@@ -192,18 +192,18 @@ namespace GitCommandsTests
         }
 
         [Test]
-        public void GetTreeRefs()
+        public void ParseRefs()
         {
-            Assert.IsEmpty(_gitModule.GetTreeRefs(""));
-            Assert.IsEmpty(_gitModule.GetTreeRefs("Foo"));
+            Assert.IsEmpty(_gitModule.ParseRefs(""));
+            Assert.IsEmpty(_gitModule.ParseRefs("Foo"));
 
-            const string tree =
+            const string refList =
                 "69a7c7a40230346778e7eebed809773a6bc45268 refs/heads/master\n" +
                 "69a7c7a40230346778e7eebed809773a6bc45268 refs/remotes/origin/master\n" +
-                "5303e7114f1896c639dea0231fac522752cc44a2 refs/remotes/upstream/mono\n" +
-                "366dfba1abf6cb98d2934455713f3d190df2ba34 refs/tags/2.51\n";
+                "5303e7114f1896c639dea0231fac522752cc44a2\trefs/remotes/upstream/mono\n" +
+                "366dfba1abf6cb98d2934455713f3d190df2ba34\trefs/tags/2.51\n";
 
-            var refs = _gitModule.GetTreeRefs(tree);
+            var refs = _gitModule.ParseRefs(refList);
 
             Assert.AreEqual(4, refs.Count);
 

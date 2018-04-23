@@ -926,32 +926,30 @@ namespace GitUI.CommandsDialogs
 
         private void LoadMultiBranchViewData(string remote)
         {
-            Cursor = Cursors.AppStarting;
-            try
+            using (WaitCursorScope.Enter(Cursors.AppStarting))
             {
                 IReadOnlyList<IGitRef> remoteHeads;
                 if (Module.EffectiveSettings.Detailed.GetRemoteBranchesDirectlyFromRemote.ValueOrDefault)
                 {
                     EnsurePageant(remote);
-                    var cmdGetBranchesFromRemote = "ls-remote --heads \"" + remote + "\"";
-                    using (var formProcess = new FormRemoteProcess(Module, cmdGetBranchesFromRemote)
+
+                    var formProcess = new FormRemoteProcess(Module, $"ls-remote --heads \"{remote}\"")
                     {
                         Remote = remote
-                    })
+                    };
+
+                    using (formProcess)
                     {
                         formProcess.ShowDialog(this);
+
                         if (formProcess.ErrorOccurred())
                         {
                             return;
                         }
 
-                        var processOutput = formProcess.GetOutputString();
-                        var cmdOutput = TakeCommandOutput(processOutput);
-                        remoteHeads = Module.GetTreeRefs(cmdOutput);
-                        if (remoteHeads == null)
-                        {
-                            return;
-                        }
+                        var refList = CleanCommandOutput(formProcess.GetOutputString());
+
+                        remoteHeads = Module.ParseRefs(refList);
                     }
                 }
                 else
@@ -960,77 +958,75 @@ namespace GitUI.CommandsDialogs
                     remoteHeads = Module.GetRemoteBranches().Where(r => r.Remote == remote).ToList();
                 }
 
-                ProcessHeads(remote, remoteHeads);
-            }
-            finally
-            {
-                Cursor = Cursors.Default;
-            }
-        }
-
-        private static string TakeCommandOutput(string processOutput)
-        {
-            // the command output consists of lines in the format:
-            // fa77791d780a01a06d1f7d4ccad4ef93ed0ae2fd\trefs/heads/branchName
-            int firstTabIdx = processOutput.IndexOf('\t');
-            if (firstTabIdx < 40)
-            {
-                return string.Empty;
+                ProcessHeads(remoteHeads);
             }
 
-            var cmdOutput = processOutput.Substring(firstTabIdx - 40);
-            return cmdOutput;
-        }
+            return;
 
-        private void ProcessHeads(string remote, IReadOnlyList<IGitRef> remoteHeads)
-        {
-            var localHeads = GetLocalBranches().ToList();
-            var remoteBranches = remoteHeads.ToHashSet(h => h.LocalName);
-
-            // Add all the local branches.
-            foreach (var head in localHeads)
+            string CleanCommandOutput(string processOutput)
             {
-                DataRow row = _branchTable.NewRow();
-                row[ForceColumnName] = false;
-                row[DeleteColumnName] = false;
-                row[LocalColumnName] = head.Name;
+                // Command output consists of lines of format:
+                //
+                //     <SHA1> \t <full-ref>
+                //
+                // Such as:
+                //
+                //     fa77791d780a01a06d1f7d4ccad4ef93ed0ae2fd\trefs/heads/branchName
 
-                string remoteName;
-                if (head.Remote == remote)
+                int firstTabIdx = processOutput.IndexOf('\t');
+
+                return firstTabIdx == 40
+                    ? processOutput
+                    : firstTabIdx > 40
+                        ? processOutput.Substring(firstTabIdx - 40)
+                        : string.Empty;
+            }
+
+            void ProcessHeads(IReadOnlyList<IGitRef> remoteHeads)
+            {
+                var localHeads = GetLocalBranches().ToList();
+                var remoteBranches = remoteHeads.ToHashSet(h => h.LocalName);
+
+                // Add all the local branches.
+                foreach (var head in localHeads)
                 {
-                    remoteName = head.MergeWith ?? head.Name;
-                }
-                else
-                {
-                    remoteName = head.Name;
-                }
+                    var remoteName = head.Remote == remote
+                        ? head.MergeWith ?? head.Name
+                        : head.Name;
+                    var isKnownAtRemote = remoteBranches.Contains(remoteName);
 
-                row[RemoteColumnName] = remoteName;
-                bool knownAtRemote = remoteBranches.Contains(remoteName);
-                row[NewColumnName] = knownAtRemote ? _no.Text : _yes.Text;
-                row[PushColumnName] = knownAtRemote;
+                    var row = _branchTable.NewRow();
 
-                _branchTable.Rows.Add(row);
-            }
-
-            // Offer to delete all the left over remote branches.
-            foreach (var remoteHead in remoteHeads)
-            {
-                var head = remoteHead;
-                if (localHeads.All(h => h.Name != head.LocalName))
-                {
-                    DataRow row = _branchTable.NewRow();
-                    row[LocalColumnName] = null;
-                    row[RemoteColumnName] = remoteHead.LocalName;
-                    row[NewColumnName] = _no.Text;
-                    row[PushColumnName] = false;
                     row[ForceColumnName] = false;
                     row[DeleteColumnName] = false;
+                    row[LocalColumnName] = head.Name;
+                    row[RemoteColumnName] = remoteName;
+                    row[NewColumnName] = isKnownAtRemote ? _no.Text : _yes.Text;
+                    row[PushColumnName] = isKnownAtRemote;
+
                     _branchTable.Rows.Add(row);
                 }
-            }
 
-            BranchGrid.Enabled = true;
+                // Offer to delete all the left over remote branches.
+                foreach (var remoteHead in remoteHeads)
+                {
+                    if (localHeads.All(h => h.Name != remoteHead.LocalName))
+                    {
+                        var row = _branchTable.NewRow();
+
+                        row[LocalColumnName] = null;
+                        row[RemoteColumnName] = remoteHead.LocalName;
+                        row[NewColumnName] = _no.Text;
+                        row[PushColumnName] = false;
+                        row[ForceColumnName] = false;
+                        row[DeleteColumnName] = false;
+
+                        _branchTable.Rows.Add(row);
+                    }
+                }
+
+                BranchGrid.Enabled = true;
+            }
         }
 
         private static void BranchTable_ColumnChanged(object sender, DataColumnChangeEventArgs e)
