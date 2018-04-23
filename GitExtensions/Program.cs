@@ -7,6 +7,7 @@ using GitCommands.Utils;
 using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitExtensions
@@ -129,6 +130,7 @@ namespace GitExtensions
             AppSettings.SaveSettings();
         }
 
+        [CanBeNull]
         private static string GetWorkingDir(string[] args)
         {
             var workingDir = "";
