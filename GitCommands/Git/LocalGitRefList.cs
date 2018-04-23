@@ -16,11 +16,9 @@ namespace GitCommands.Git
         [NotNull, ItemNotNull]
         private readonly Item[] _items;
 
-        public LocalGitRefList([NotNull]string commandOutput)
+        public LocalGitRefList([NotNull]GitCommandResult result)
         {
-            // TODO handle git error message
-            var lines = commandOutput.SplitLines();
-            _items = lines.Select(l => new Item(l)).ToArray();
+            _items = result.Lines.Select(l => new Item(l)).ToArray();
         }
 
         [NotNull, ItemNotNull]

@@ -13,12 +13,9 @@ namespace GitCommands.Git
             _gitModule = gitModule;
         }
 
-        public void Execute()
+        public GitCommandResult Execute()
         {
-            Output = _gitModule.RunGitCmd(CommandLine);
+            return new GitCommandResult(_gitModule.RunGitCmd(CommandLine));
         }
-
-        public bool ResultedInAnError => GitModule.IsGitErrorMessage(Output);
-        public string Output { get; private set; }
     }
 }

@@ -2834,14 +2834,14 @@ namespace GitCommands
         public IReadOnlyList<IGitRef> GetTagRefs(BranchOrdering ordering)
         {
             var command = new ListLocalTagsCommand(this);
-            command.Execute();
-            if (command.ResultedInAnError)
+            var result = command.Execute();
+            if (result.IsError)
             {
                 // TODO better error handling?
                 return new IGitRef[0];
             }
 
-            return new LocalGitRefList(command.Output).OrderedTags(ordering);
+            return new LocalGitRefList(result).OrderedTags(ordering);
         }
 
         public IReadOnlyList<string> GetMergedBranches(bool includeRemote = false)
