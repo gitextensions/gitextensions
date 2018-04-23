@@ -2833,11 +2833,15 @@ namespace GitCommands
 
         public IReadOnlyList<IGitRef> GetTagRefs(BranchOrdering ordering)
         {
-            var list = GetRefs(true, false);
+            var command = new ListLocalTagsCommand(this);
+            command.Execute();
+            if (command.ResultedInAnError)
+            {
+                // TODO better error handling?
+                return new IGitRef[0];
+            }
 
-            // TODO call command, parse and sort output
-
-            return new List<IGitRef>(list);
+            return new LocalGitRefList(command.Output).OrderedTags(ordering);
         }
 
         public IReadOnlyList<string> GetMergedBranches(bool includeRemote = false)
