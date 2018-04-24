@@ -95,7 +95,8 @@
     <Compile Include="Git\Extensions\GitRevisionExtensions.cs" />
     <Compile Include="Git\GitCommandResult.cs" />
     <Compile Include="Git\ListLocalTagsCommand.cs" />
-    <Compile Include="Git\LocalGitRefList.cs" />
+    <Compile Include="Git\ListLocalGitRefsCommandResult.cs" />
+    <Compile Include="Git\LocalGitRefSorter.cs" />
     <Compile Include="Git\LongShaProvider.cs" />
     <Compile Include="Git\GitRevisionTester.cs" />
     <Compile Include="Git\GitRefName.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Git\Tag\GitTagController.cs" />
     <Compile Include="Git\Tag\TagOperation.cs" />
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
+    <Compile Include="Git\TimestampedGitRefItem.cs" />
     <Compile Include="Remote\GitRemoteManager.cs" />
     <Compile Include="Remote\RepoNameExtractor.cs" />
     <Compile Include="UserRepositoryHistory\IRepositoryManager.cs" />

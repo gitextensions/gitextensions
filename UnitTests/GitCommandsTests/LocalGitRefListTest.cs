@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
@@ -12,9 +13,9 @@ namespace GitCommandsTests
         [Test]
         public void List_should_sort_branch_names_alphabetically()
         {
-            var list = new LocalGitRefList(TestOutput);
+            var list = CreateSut();
 
-            list.OrderedBranches(BranchOrdering.Alphabetically)
+            new LocalGitRefSorter().OrderedBranches(list, BranchOrdering.Alphabetically)
                 .Select(r => r.Name)
                 .Should().BeEquivalentTo(new[] { "feature/spellchecker", "master", "mono" }, options => options.WithStrictOrdering());
         }
@@ -22,9 +23,9 @@ namespace GitCommandsTests
         [Test]
         public void List_should_sort_branch_names_by_date()
         {
-            var list = new LocalGitRefList(TestOutput);
+            var list = CreateSut();
 
-            list.OrderedBranches(BranchOrdering.ByLastAccessDate)
+            new LocalGitRefSorter().OrderedBranches(list, BranchOrdering.ByLastAccessDate)
                 .Select(r => r.Name)
                 .Should().BeEquivalentTo(new[] { "master", "mono", "feature/spellchecker" }, options => options.WithStrictOrdering());
         }
@@ -32,9 +33,9 @@ namespace GitCommandsTests
         [Test]
         public void List_should_sort_tag_names_alphabetically()
         {
-            var list = new LocalGitRefList(TestOutput);
+            var list = CreateSut();
 
-            list.OrderedTags(BranchOrdering.Alphabetically)
+            new LocalGitRefSorter().OrderedTags(list, BranchOrdering.Alphabetically)
                 .Select(r => r.Name)
                 .Should().BeEquivalentTo(new[] { "2.47.3", "master_Net2.0", "v2.49.01" }, options => options.WithStrictOrdering());
         }
@@ -42,11 +43,16 @@ namespace GitCommandsTests
         [Test]
         public void List_should_sort_tag_names_by_date()
         {
-            var list = new LocalGitRefList(TestOutput);
+            var list = CreateSut();
 
-            list.OrderedTags(BranchOrdering.ByLastAccessDate)
+            new LocalGitRefSorter().OrderedTags(list, BranchOrdering.ByLastAccessDate)
                 .Select(r => r.Name)
                 .Should().BeEquivalentTo(new[] { "v2.49.01", "2.47.3", "master_Net2.0" }, options => options.WithStrictOrdering());
+        }
+
+        private static IReadOnlyList<TimestampedGitRefItem> CreateSut()
+        {
+            return new ListLocalGitRefsCommandResult(TestOutput).Items;
         }
 
         private static GitCommandResult TestOutput =>

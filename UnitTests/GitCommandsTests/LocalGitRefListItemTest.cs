@@ -82,9 +82,9 @@ namespace GitCommandsTests
             }
         }
 
-        private static LocalGitRefList.Item CreateItem(string refName = "refs/tags/0.90")
+        private static TimestampedGitRefItem CreateItem(string refName = "refs/tags/0.90")
         {
-            return new LocalGitRefList.Item(@"1229370351 +0100 943d230ba465d86c3ad2cd00f7e8c508d144d9a5 " + refName);
+            return new TimestampedGitRefItem(@"1229370351 +0100 943d230ba465d86c3ad2cd00f7e8c508d144d9a5 " + refName);
         }
     }
 }

@@ -2841,7 +2841,8 @@ namespace GitCommands
                 return new IGitRef[0];
             }
 
-            return new LocalGitRefList(result).OrderedTags(ordering);
+            var refs = new ListLocalGitRefsCommandResult(result).Items;
+            return new LocalGitRefSorter().OrderedTags(refs, ordering);
         }
 
         public IReadOnlyList<string> GetMergedBranches(bool includeRemote = false)
