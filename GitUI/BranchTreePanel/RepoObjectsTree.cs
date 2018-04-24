@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using ResourceManager;
@@ -20,7 +21,7 @@ namespace GitUI.BranchTreePanel
 
         private readonly List<Tree> _rootNodes = new List<Tree>();
         private SearchControl<string> _txtBranchCriterion;
-        private readonly ImageList _imageList = new ImageList();
+
         public RepoObjectsTree()
         {
             _currentToken = _reloadCancellation.Next();
@@ -45,12 +46,18 @@ namespace GitUI.BranchTreePanel
 
         private void InitImageList()
         {
-            _imageList.Images.Add(nameof(MsVsImages.Branch_16x), MsVsImages.Branch_16x);
-            _imageList.Images.Add(nameof(MsVsImages.Repository_16x), MsVsImages.Repository_16x);
-            _imageList.Images.Add(nameof(MsVsImages.BranchRemote_16x), MsVsImages.BranchRemote_16x);
-            _imageList.Images.Add(nameof(MsVsImages.Folder_grey_16x), MsVsImages.Folder_grey_16x);
-            _imageList.Images.Add(nameof(MsVsImages.Tag_16x), MsVsImages.Tag_16x);
-            treeMain.ImageList = _imageList;
+            treeMain.ImageList = new ImageList
+            {
+                ImageSize = DpiUtil.Scale(new Size(16, 16)), // Scale ImageSize and images scale automatically
+                Images =
+                {
+                    { nameof(MsVsImages.Branch_16x), MsVsImages.Branch_16x },
+                    { nameof(MsVsImages.Repository_16x), MsVsImages.Repository_16x },
+                    { nameof(MsVsImages.BranchRemote_16x), MsVsImages.BranchRemote_16x },
+                    { nameof(MsVsImages.Folder_grey_16x), MsVsImages.Folder_grey_16x },
+                    { nameof(MsVsImages.Tag_16x), MsVsImages.Tag_16x },
+                }
+            };
             treeMain.ImageKey = nameof(MsVsImages.Branch_16x);
             treeMain.SelectedImageKey = treeMain.ImageKey;
         }
