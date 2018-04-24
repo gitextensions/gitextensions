@@ -724,6 +724,13 @@ namespace GitUI.CommandsDialogs
         private void RefreshWorkingDirCombo()
         {
             var path = Module.WorkingDir;
+
+            // it appears at times Module.WorkingDir path is an empty string, this caused issues like #4874
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return;
+            }
+
             var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
             using (var graphics = CreateGraphics())
