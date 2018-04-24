@@ -76,6 +76,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _buildReportTabCaption = new TranslationString("Build Report");
         private readonly TranslationString _consoleTabCaption = new TranslationString("Console");
 
+        private readonly TranslationString _noWorkingFolderText = new TranslationString("No working directory");
         private readonly TranslationString _commitButtonText = new TranslationString("Commit");
 
         private readonly TranslationString _undoLastCommitText = new TranslationString("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
@@ -691,6 +692,7 @@ namespace GitUI.CommandsDialogs
             // it appears at times Module.WorkingDir path is an empty string, this caused issues like #4874
             if (string.IsNullOrWhiteSpace(path))
             {
+                _NO_TRANSLATE_Workingdir.Text = _noWorkingFolderText.Text;
                 return;
             }
 
