@@ -46,6 +46,7 @@ test_script:
         "UnitTests\GravatarTests\bin\Release\GravatarTests.dll"
         "UnitTests\Plugins\ReleaseNotesGeneratorTests\bin\Release\ReleaseNotesGeneratorTests.dll"
         "UnitTests\ResourceManagerTests\bin\Release\ResourceManagerTests.dll"
+        "UnitTests\GitCommandIntegrationTests\bin\Release\GitCommandIntegrationTests.dll"
     )
     $packageConfig = [xml](Get-Content .nuget\packages.config)
     $opencover_version = $packageConfig.SelectSingleNode('/packages/package[@id="OpenCover"]').version
