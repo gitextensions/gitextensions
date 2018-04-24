@@ -187,6 +187,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{17FD2A
 		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitCommandIntegrationTests", "UnitTests\GitCommandIntegrationTests\GitCommandIntegrationTests.csproj", "{62C7A5D4-DD49-413D-81D5-01B9A7F03287}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -719,6 +721,18 @@ Global
 		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.ReleaseTC|Any CPU.Build.0 = Release|Any CPU
 		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.ReleaseTC|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}.ReleaseTC|Mixed Platforms.Build.0 = Release|Any CPU
+		{62C7A5D4-DD49-413D-81D5-01B9A7F03287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62C7A5D4-DD49-413D-81D5-01B9A7F03287}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62C7A5D4-DD49-413D-81D5-01B9A7F03287}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{62C7A5D4-DD49-413D-81D5-01B9A7F03287}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{62C7A5D4-DD49-413D-81D5-01B9A7F03287}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62C7A5D4-DD49-413D-81D5-01B9A7F03287}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62C7A5D4-DD49-413D-81D5-01B9A7F03287}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{62C7A5D4-DD49-413D-81D5-01B9A7F03287}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{62C7A5D4-DD49-413D-81D5-01B9A7F03287}.ReleaseTC|Any CPU.ActiveCfg = Release|Any CPU
+		{62C7A5D4-DD49-413D-81D5-01B9A7F03287}.ReleaseTC|Any CPU.Build.0 = Release|Any CPU
+		{62C7A5D4-DD49-413D-81D5-01B9A7F03287}.ReleaseTC|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{62C7A5D4-DD49-413D-81D5-01B9A7F03287}.ReleaseTC|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -764,6 +778,7 @@ Global
 		{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 		{472B72D9-9336-4C8B-A199-300F0CA7669E} = {C5855184-8571-4AD0-A373-B98215BA56CA}
 		{17FD2A6B-4005-41DC-BFAC-59F936DF33AA} = {C5855184-8571-4AD0-A373-B98215BA56CA}
+		{62C7A5D4-DD49-413D-81D5-01B9A7F03287} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}
