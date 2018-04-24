@@ -15,7 +15,8 @@ namespace GitCommandsTests
         {
             var list = CreateSut();
 
-            new LocalGitRefSorter().OrderedBranches(list, BranchOrdering.Alphabetically)
+            new SortedLocalBranchList(list, BranchOrdering.Alphabetically)
+                .Items
                 .Select(r => r.Name)
                 .Should().BeEquivalentTo(new[] { "feature/spellchecker", "master", "mono" }, options => options.WithStrictOrdering());
         }
@@ -25,7 +26,8 @@ namespace GitCommandsTests
         {
             var list = CreateSut();
 
-            new LocalGitRefSorter().OrderedBranches(list, BranchOrdering.ByLastAccessDate)
+            new SortedLocalBranchList(list, BranchOrdering.ByLastAccessDate)
+                .Items
                 .Select(r => r.Name)
                 .Should().BeEquivalentTo(new[] { "master", "mono", "feature/spellchecker" }, options => options.WithStrictOrdering());
         }
@@ -35,7 +37,8 @@ namespace GitCommandsTests
         {
             var list = CreateSut();
 
-            new LocalGitRefSorter().OrderedTags(list, BranchOrdering.Alphabetically)
+            new SortedLocalTagList(list, BranchOrdering.Alphabetically)
+                .Items
                 .Select(r => r.Name)
                 .Should().BeEquivalentTo(new[] { "2.47.3", "master_Net2.0", "v2.49.01" }, options => options.WithStrictOrdering());
         }
@@ -45,7 +48,8 @@ namespace GitCommandsTests
         {
             var list = CreateSut();
 
-            new LocalGitRefSorter().OrderedTags(list, BranchOrdering.ByLastAccessDate)
+            new SortedLocalTagList(list, BranchOrdering.ByLastAccessDate)
+                .Items
                 .Select(r => r.Name)
                 .Should().BeEquivalentTo(new[] { "v2.49.01", "2.47.3", "master_Net2.0" }, options => options.WithStrictOrdering());
         }

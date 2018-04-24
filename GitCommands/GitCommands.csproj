@@ -96,10 +96,12 @@
     <Compile Include="Git\GitCommandResult.cs" />
     <Compile Include="Git\ListLocalTagsCommand.cs" />
     <Compile Include="Git\ListLocalGitRefsCommandResult.cs" />
-    <Compile Include="Git\LocalGitRefSorter.cs" />
+    <Compile Include="Git\SortedLocalTagList.cs" />
     <Compile Include="Git\LongShaProvider.cs" />
     <Compile Include="Git\GitRevisionTester.cs" />
     <Compile Include="Git\GitRefName.cs" />
+    <Compile Include="Git\SortedLocalBranchList.cs" />
+    <Compile Include="Git\SortedLocalGitRefList.cs" />
     <Compile Include="Git\Tag\GitCreateTagArgs.cs" />
     <Compile Include="Git\Tag\GitCreateTagCmd.cs" />
     <Compile Include="Git\GitDeleteRemoteBranchesCmd.cs" />

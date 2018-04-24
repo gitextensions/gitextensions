@@ -6,25 +6,24 @@ using JetBrains.Annotations;
 
 namespace GitCommands.Git
 {
-    public sealed class LocalGitRefSorter
+    public abstract class SortedLocalGitRefList
     {
-        [NotNull, ItemNotNull]
-        public IReadOnlyList<IGitRef> OrderedBranches(IReadOnlyList<TimestampedGitRefItem> gitRefs, BranchOrdering ordering)
+        [NotNull, ItemNotNull] private readonly IReadOnlyList<TimestampedGitRefItem> _items;
+        private readonly BranchOrdering _ordering;
+        [NotNull] private readonly Func<TimestampedGitRefItem, bool> _filter;
+
+        protected SortedLocalGitRefList(
+            [NotNull, ItemNotNull] IReadOnlyList<TimestampedGitRefItem> items,
+            BranchOrdering ordering,
+            [NotNull] Func<TimestampedGitRefItem, bool> filter)
         {
-            return OrderedFilteredGitRefs(gitRefs, ordering, i => i.Ref.IsHead);
+            _items = items;
+            _filter = filter;
+            _ordering = ordering;
         }
 
         [NotNull, ItemNotNull]
-        public IReadOnlyList<IGitRef> OrderedTags(IReadOnlyList<TimestampedGitRefItem> gitRefs, BranchOrdering ordering)
-        {
-            return OrderedFilteredGitRefs(gitRefs, ordering, i => i.Ref.IsTag);
-        }
-
-        [NotNull, ItemNotNull]
-        private IReadOnlyList<IGitRef> OrderedFilteredGitRefs(IReadOnlyList<TimestampedGitRefItem> gitRefs, BranchOrdering ordering, [NotNull] Func<TimestampedGitRefItem, bool> filter)
-        {
-            return SortFunction(ordering)(gitRefs.Where(filter)).Select(i => i.Ref).ToArray();
-        }
+        public IReadOnlyList<IGitRef> Items => SortFunction(_ordering)(_items.Where(_filter)).Select(i => i.Ref).ToArray();
 
         [NotNull]
         private Func<IEnumerable<TimestampedGitRefItem>, IEnumerable<TimestampedGitRefItem>> SortFunction(BranchOrdering ordering)
