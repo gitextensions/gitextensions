@@ -37,86 +37,50 @@ namespace GitUI.CommandsDialogs
     {
         #region Translation
 
-        private readonly TranslationString _stashCount =
-            new TranslationString("{0} saved {1}");
-        private readonly TranslationString _stashPlural =
-            new TranslationString("stashes");
-        private readonly TranslationString _stashSingular =
-            new TranslationString("stash");
+        private readonly TranslationString _stashCount = new TranslationString("{0} saved {1}");
+        private readonly TranslationString _stashPlural = new TranslationString("stashes");
+        private readonly TranslationString _stashSingular = new TranslationString("stash");
 
-        private readonly TranslationString _warningMiddleOfBisect =
-            new TranslationString("You are in the middle of a bisect");
-        private readonly TranslationString _warningMiddleOfRebase =
-            new TranslationString("You are in the middle of a rebase");
-        private readonly TranslationString _warningMiddleOfPatchApply =
-            new TranslationString("You are in the middle of a patch apply");
+        private readonly TranslationString _warningMiddleOfBisect = new TranslationString("You are in the middle of a bisect");
+        private readonly TranslationString _warningMiddleOfRebase = new TranslationString("You are in the middle of a rebase");
+        private readonly TranslationString _warningMiddleOfPatchApply = new TranslationString("You are in the middle of a patch apply");
 
-        private readonly TranslationString _hintUnresolvedMergeConflicts =
-            new TranslationString("There are unresolved merge conflicts!");
+        private readonly TranslationString _hintUnresolvedMergeConflicts = new TranslationString("There are unresolved merge conflicts!");
 
-        private readonly TranslationString _noBranchTitle =
-            new TranslationString("no branch");
+        private readonly TranslationString _noBranchTitle = new TranslationString("no branch");
+        private readonly TranslationString _noSubmodulesPresent = new TranslationString("No submodules");
+        private readonly TranslationString _topProjectModuleFormat = new TranslationString("Top project: {0}");
+        private readonly TranslationString _superprojectModuleFormat = new TranslationString("Superproject: {0}");
 
-        private readonly TranslationString _noSubmodulesPresent =
-            new TranslationString("No submodules");
-        private readonly TranslationString _topProjectModuleFormat =
-            new TranslationString("Top project: {0}");
-        private readonly TranslationString _superprojectModuleFormat =
-            new TranslationString("Superproject: {0}");
+        private readonly TranslationString _indexLockCantDelete = new TranslationString("Failed to delete index.lock.");
 
-        private readonly TranslationString _indexLockCantDelete =
-            new TranslationString("Failed to delete index.lock.");
+        private readonly TranslationString _errorCaption = new TranslationString("Error");
+        private readonly TranslationString _loading = new TranslationString("Loading...");
 
-        private readonly TranslationString _errorCaption =
-            new TranslationString("Error");
-        private readonly TranslationString _loading =
-            new TranslationString("Loading...");
+        private readonly TranslationString _noReposHostPluginLoaded = new TranslationString("No repository host plugin loaded.");
+        private readonly TranslationString _noReposHostFound = new TranslationString("Could not find any relevant repository hosts for the currently open repository.");
 
-        private readonly TranslationString _noReposHostPluginLoaded =
-            new TranslationString("No repository host plugin loaded.");
+        private readonly TranslationString _configureWorkingDirMenu = new TranslationString("Configure this menu");
 
-        private readonly TranslationString _noReposHostFound =
-            new TranslationString("Could not find any relevant repository hosts for the currently open repository.");
+        private readonly TranslationString _directoryIsNotAValidRepositoryCaption = new TranslationString("Open");
+        private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort and remove it from the recent repositories list?");
 
-        private readonly TranslationString _configureWorkingDirMenu =
-            new TranslationString("Configure this menu");
+        private readonly TranslationString _updateCurrentSubmodule = new TranslationString("Update current submodule");
 
-        // ReSharper disable InconsistentNaming
-        private readonly TranslationString _directoryIsNotAValidRepositoryCaption =
-            new TranslationString("Open");
+        private readonly TranslationString _pullFetch = new TranslationString("Pull - fetch");
+        private readonly TranslationString _pullFetchAll = new TranslationString("Pull - fetch all");
+        private readonly TranslationString _pullMerge = new TranslationString("Pull - merge");
+        private readonly TranslationString _pullRebase = new TranslationString("Pull - rebase");
+        private readonly TranslationString _pullOpenDialog = new TranslationString("Open pull dialog");
 
-        private readonly TranslationString _directoryIsNotAValidRepository =
-            new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort and remove it from the recent repositories list?");
+        private readonly TranslationString _buildReportTabCaption = new TranslationString("Build Report");
+        private readonly TranslationString _consoleTabCaption = new TranslationString("Console");
 
-        // ReSharper restore InconsistentNaming
+        private readonly TranslationString _noWorkingFolderText = new TranslationString("No working directory");
+        private readonly TranslationString _commitButtonText = new TranslationString("Commit");
 
-        private readonly TranslationString _updateCurrentSubmodule =
-            new TranslationString("Update current submodule");
-
-        private readonly TranslationString _pullFetch =
-            new TranslationString("Pull - fetch");
-        private readonly TranslationString _pullFetchAll =
-            new TranslationString("Pull - fetch all");
-        private readonly TranslationString _pullMerge =
-            new TranslationString("Pull - merge");
-        private readonly TranslationString _pullRebase =
-            new TranslationString("Pull - rebase");
-        private readonly TranslationString _pullOpenDialog =
-            new TranslationString("Open pull dialog");
-
-        private readonly TranslationString _buildReportTabCaption =
-            new TranslationString("Build Report");
-        private readonly TranslationString _consoleTabCaption =
-            new TranslationString("Console");
-
-        private readonly TranslationString _commitButtonText =
-            new TranslationString("Commit");
-
-        private readonly TranslationString _undoLastCommitText =
-            new TranslationString("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
-
-        private readonly TranslationString _undoLastCommitCaption =
-            new TranslationString("Undo last commit");
+        private readonly TranslationString _undoLastCommitText = new TranslationString("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
+        private readonly TranslationString _undoLastCommitCaption = new TranslationString("Undo last commit");
         #endregion
 
         private Dashboard _dashboard;
@@ -724,6 +688,14 @@ namespace GitUI.CommandsDialogs
         private void RefreshWorkingDirCombo()
         {
             var path = Module.WorkingDir;
+
+            // it appears at times Module.WorkingDir path is an empty string, this caused issues like #4874
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                _NO_TRANSLATE_Workingdir.Text = _noWorkingFolderText.Text;
+                return;
+            }
+
             var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
             using (var graphics = CreateGraphics())
