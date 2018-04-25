@@ -278,6 +278,7 @@
             this.Warnings.TabIndex = 4;
             this.Warnings.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDoubleClick);
             this.Warnings.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDown);
+            this.Warnings.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Warnings_KeyPress);
             // 
             // columnIsLostObjectSelected
             // 

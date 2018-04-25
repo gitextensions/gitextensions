@@ -347,5 +347,14 @@ namespace GitUI.CommandsDialogs
 
             base.Dispose(disposing);
         }
+
+        private void Warnings_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                e.Handled = true;
+                ViewCurrentItem();
+            }
+        }
     }
 }
