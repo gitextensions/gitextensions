@@ -93,7 +93,7 @@ namespace GitCommands.Patches
             }
             else
             {
-                Match match = Regex.Match(header, "--cc [\\\"]?(.*)[\\\"]?");
+                Match match = Regex.Match(header, "(?:--cc|--combined) [\\\"]?(.*)[\\\"]?");
 
                 if (!match.Success)
                 {
