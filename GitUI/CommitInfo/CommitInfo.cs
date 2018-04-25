@@ -634,6 +634,56 @@ namespace GitUI.CommitInfo
             ReloadCommitInfo();
         }
 
+        private void copySelectionToolStripMenuItem_Click( object sender, EventArgs e )
+        {
+            Clipboard.SetText(SelectedText);
+        }
+
+        private void copyCommitHashToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.Guid);
+        }
+
+        private void copyCommitSubjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.Subject);
+        }
+
+        private void copyCommitMessageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.Body);
+        }
+
+        private void copyAuthorNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.Author);
+        }
+
+        private void copyAuthorEmailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.AuthorEmail);
+        }
+
+        private void copyAuthorDateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.AuthorDate.ToString());
+        }
+
+        private void copyCommitterNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.Committer);
+        }
+
+        private void copyCommitterEmailToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.CommitterEmail);
+        }
+
+        private void copyCommitDateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_revision.CommitDate.ToString());
+        }
+
         private void copyCommitInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var commitInfo = $"{_RevisionHeader.GetPlaintText()}{Environment.NewLine}{RevisionInfo.GetPlaintText()}";
@@ -685,6 +735,23 @@ namespace GitUI.CommitInfo
         {
             // Cache desired size for commit header
             _headerResize = e.NewRectangle;
+        }
+        /// <summary>
+        /// Gets the selected text from both the header and the info panel
+        /// </summary>
+        private string SelectedText
+        {
+            get
+            {
+                var selectedText = string.Join( Environment.NewLine, _RevisionHeader.SelectedText, RevisionInfo.SelectedText );
+
+                return string.IsNullOrWhiteSpace( selectedText ) ? string.Empty : selectedText;
+            }
+        }
+
+        private void commitInfoContextMenuStrip_Opening( object sender, CancelEventArgs e )
+        {
+            copySelectionToolStripMenuItem.Enabled = SelectedText.Length > 0;
         }
     }
 }
