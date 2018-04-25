@@ -226,6 +226,7 @@
             this.mnuLostObjectsCreateBranch});
             this.mnuLostObjects.Name = "mnuLostObjects";
             this.mnuLostObjects.Size = new System.Drawing.Size(190, 70);
+            this.mnuLostObjects.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLostObjects_Opening);
             // 
             // mnuLostObjectView
             // 

@@ -349,6 +349,15 @@ namespace GitUI.CommandsDialogs
             base.Dispose(disposing);
         }
 
+        private void mnuLostObjects_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+            var isCommit = lostObject != null && lostObject.ObjectType == LostObjectType.Commit;
+            var contextMenu = Warnings.SelectedRows[0].ContextMenuStrip;
+            contextMenu.Items[1].Enabled = isCommit;
+            contextMenu.Items[2].Enabled = isCommit;
+        }
+
         private void Warnings_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == 13)
