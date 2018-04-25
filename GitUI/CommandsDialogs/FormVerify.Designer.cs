@@ -36,6 +36,7 @@
             this.mnuLostObjectView = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuLostObjectsCreateTag = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuLostObjectsCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Warnings = new System.Windows.Forms.DataGridView();
             this.columnIsLostObjectSelected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.columnDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -223,7 +224,8 @@
             this.mnuLostObjects.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuLostObjectView,
             this.mnuLostObjectsCreateTag,
-            this.mnuLostObjectsCreateBranch});
+            this.mnuLostObjectsCreateBranch,
+            this.copyHashToolStripMenuItem});
             this.mnuLostObjects.Name = "mnuLostObjects";
             this.mnuLostObjects.Size = new System.Drawing.Size(190, 70);
             this.mnuLostObjects.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLostObjects_Opening);
@@ -250,6 +252,13 @@
             this.mnuLostObjectsCreateBranch.Size = new System.Drawing.Size(189, 22);
             this.mnuLostObjectsCreateBranch.Text = "Create branch";
             this.mnuLostObjectsCreateBranch.Click += new System.EventHandler(this.mnuLostObjectsCreateBranch_Click);
+            // 
+            // copyHashToolStripMenuItem
+            // 
+            this.copyHashToolStripMenuItem.Name = "copyHashToolStripMenuItem";
+            this.copyHashToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.copyHashToolStripMenuItem.Text = "Copy object hash";
+            this.copyHashToolStripMenuItem.Click += new System.EventHandler(this.copyHashToolStripMenuItem_Click);
             // 
             // Warnings
             // 
@@ -374,5 +383,6 @@
         private System.Windows.Forms.CheckBox Unreachable;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolStripMenuItem copyHashToolStripMenuItem;
     }
 }

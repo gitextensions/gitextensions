@@ -367,5 +367,11 @@ namespace GitUI.CommandsDialogs
                 ViewCurrentItem();
             }
         }
+
+        private void copyHashToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+            Clipboard.SetText(lostObject.Hash);
+        }
     }
 }
