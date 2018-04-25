@@ -222,7 +222,8 @@ namespace GitUI.CommandsDialogs
                         .Split('\r', '\n')
                         .Where(s => !string.IsNullOrEmpty(s))
                         .Select((s) => LostObject.TryParse(Module, s))
-                        .Where(parsedLostObject => parsedLostObject != null));
+                        .Where(parsedLostObject => parsedLostObject != null)
+                        .OrderByDescending(l => l.Date));
 
                 UpdateFilteredLostObjects();
             }
