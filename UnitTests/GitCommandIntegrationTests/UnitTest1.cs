@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using ApprovalTests;
 using NUnit.Framework;
 
 namespace GitCommandIntegrationTests
@@ -9,7 +9,7 @@ namespace GitCommandIntegrationTests
         [Test]
         public void TestMethod1()
         {
-            true.Should().Be(true);
+            Approvals.Verify("ApprovalTests is working");
         }
     }
 }
