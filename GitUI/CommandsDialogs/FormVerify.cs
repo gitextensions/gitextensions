@@ -45,7 +45,8 @@ namespace GitUI.CommandsDialogs
             columnDate.Width = DpiUtil.Scale(56);
             columnType.Width = DpiUtil.Scale(58);
             columnAuthor.Width = DpiUtil.Scale(150);
-            columnHash.Width = DpiUtil.Scale(80);
+            columnHash.Width = DpiUtil.Scale(280);
+            columnHash.MinimumWidth = DpiUtil.Scale(75);
 
             _selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
 
