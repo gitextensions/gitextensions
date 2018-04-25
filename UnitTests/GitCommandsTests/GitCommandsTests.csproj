@@ -141,10 +141,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="UserRepositoryHistory\RepositoriesTests.Deserialize_recent_repositories.approved.txt" />
-    <Content Include="UserRepositoryHistory\RepositoriesTests.Deserialize_remote_repositories.approved.txt" />
-    <Content Include="UserRepositoryHistory\RepositoriesTests.Serialize_recent_repositories.approved.xml" />
-    <Content Include="UserRepositoryHistory\RepositoriesTests.Serialize_remote_repositories.approved.xml" />
     <Content Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Deserialize_remote_repositories_without_ns.approved.txt" />
     <Content Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Deserialize_remote_repositories_with_ns.approved.txt" />
     <Content Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Serialize_recent_repositories.approved.xml" />
