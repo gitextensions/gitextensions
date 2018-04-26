@@ -2,6 +2,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ApprovalTests.Reporters;
+using CommonTestUtils;
 
 [assembly: AssemblyTitle("GitCommandIntegrationTests")]
 [assembly: AssemblyDescription("")]
@@ -20,4 +21,5 @@ using ApprovalTests.Reporters;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
+[assembly: ConfigureJoinableTaskFactory]
 [assembly: UseReporter(typeof(DiffReporter))]

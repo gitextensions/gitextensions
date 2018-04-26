@@ -43,10 +43,5 @@ namespace GitCommandIntegrationTests
                 Approvals.Verify(output);
             }
         }
-
-        static PoC()
-        {
-            ThreadHelper.JoinableTaskContext = new JoinableTaskContext(); // TODO oh no that's ugly
-        }
     }
 }
