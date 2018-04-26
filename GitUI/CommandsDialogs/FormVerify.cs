@@ -352,11 +352,14 @@ namespace GitUI.CommandsDialogs
 
         private void mnuLostObjects_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
-            var isCommit = lostObject != null && lostObject.ObjectType == LostObjectType.Commit;
-            var contextMenu = Warnings.SelectedRows[0].ContextMenuStrip;
-            contextMenu.Items[1].Enabled = isCommit;
-            contextMenu.Items[2].Enabled = isCommit;
+            if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
+            {
+                var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+                var isCommit = lostObject != null && lostObject.ObjectType == LostObjectType.Commit;
+                var contextMenu = Warnings.SelectedRows[0].ContextMenuStrip;
+                contextMenu.Items[1].Enabled = isCommit;
+                contextMenu.Items[2].Enabled = isCommit;
+            }
         }
 
         private void Warnings_KeyPress(object sender, KeyPressEventArgs e)
@@ -370,8 +373,11 @@ namespace GitUI.CommandsDialogs
 
         private void copyHashToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
-            Clipboard.SetText(lostObject.Hash);
+            if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
+            {
+                var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+                Clipboard.SetText(lostObject.Hash);
+            }
         }
     }
 }
