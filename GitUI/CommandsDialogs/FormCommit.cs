@@ -17,6 +17,7 @@ using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Script;
+using GitUI.SpellChecker;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using Timer = System.Windows.Forms.Timer;
@@ -3171,6 +3172,23 @@ namespace GitUI.CommandsDialogs
                 Staged.SelectedIndex = 0;
                 StagedSelectionChanged(null, null);
             }
+        }
+
+        internal TestAccessor GetTestAccessor()
+            => new TestAccessor(this);
+
+        public readonly struct TestAccessor
+        {
+            private readonly FormCommit _formCommit;
+
+            public TestAccessor(FormCommit formCommit)
+            {
+                _formCommit = formCommit;
+            }
+
+            public EditNetSpell Message => _formCommit.Message;
+
+            public ToolStripDropDownButton CommitMessageToolStripMenuItem => _formCommit.commitMessageToolStripMenuItem;
         }
     }
 
