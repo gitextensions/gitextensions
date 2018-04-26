@@ -40,6 +40,7 @@
             this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showContainedInTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showMessagesOfAnnotatedTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showTagThisCommitDerivesFromMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.addNoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this._RevisionHeader = new System.Windows.Forms.RichTextBox();
@@ -107,6 +108,7 @@
             this.showContainedInBranchesRemoteIfNoLocalToolStripMenuItem,
             this.showContainedInTagsToolStripMenuItem,
             this.showMessagesOfAnnotatedTagsToolStripMenuItem,
+            this.showTagThisCommitDerivesFromMenuItem,
             this.toolStripSeparator2,
             this.addNoteToolStripMenuItem});
             this.commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
@@ -158,6 +160,13 @@
             this.showMessagesOfAnnotatedTagsToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
             this.showMessagesOfAnnotatedTagsToolStripMenuItem.Text = "Show messages of annotated tags";
             this.showMessagesOfAnnotatedTagsToolStripMenuItem.Click += new System.EventHandler(this.showMessagesOfAnnotatedTagsToolStripMenuItem_Click);
+            //
+            // showTagThisCommitDerivesFromMenuItem
+            //
+            this.showTagThisCommitDerivesFromMenuItem.Name = "showTagThisCommitDerivesFromMenuItem";
+            this.showTagThisCommitDerivesFromMenuItem.Size = new System.Drawing.Size(453, 22);
+            this.showTagThisCommitDerivesFromMenuItem.Text = "Show the most recent tag this commit derives from";
+            this.showTagThisCommitDerivesFromMenuItem.Click += new System.EventHandler(this.showTagThisCommitDerivesFromMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -218,5 +227,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem addNoteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showMessagesOfAnnotatedTagsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showTagThisCommitDerivesFromMenuItem;
     }
 }

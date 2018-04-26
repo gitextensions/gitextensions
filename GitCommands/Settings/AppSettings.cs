@@ -409,6 +409,12 @@ namespace GitCommands
             set => SetBool("commitinfoshowcontainedintags", value);
         }
 
+        public static bool CommitInfoShowTagThisCommitDerivesFrom
+        {
+            get => GetBool("commitinfoshowtagthiscommitderivesfrom", true);
+            set => SetBool("commitinfoshowtagthiscommitderivesfrom", value);
+        }
+
         public static string GravatarCachePath => Path.Combine(ApplicationDataPath.Value, "Images\\");
 
         public static string Translation

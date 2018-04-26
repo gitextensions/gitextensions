@@ -138,5 +138,7 @@ namespace GitUIPluginInterfaces
         string ReEncodeStringFromLossless(string s);
 
         string ReEncodeCommitMessage(string s, string toEncodingName);
+
+        string GetDescribe(string commit);
     }
 }

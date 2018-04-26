@@ -3891,6 +3891,18 @@ namespace GitCommands
             return RunGitCmdResult("rm --cached " + filename).ExitedSuccessfully;
         }
 
+        public string GetDescribe(string commit)
+        {
+            string info = RunGitCmd("describe --tags --first-parent " + commit).TrimEnd();
+
+            if (IsGitErrorMessage(info))
+            {
+                return null;
+            }
+
+            return info;
+        }
+
         /// <summary>
         /// Determines whether a git command's output indicates an error occurred.
         /// </summary>

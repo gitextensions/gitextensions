@@ -5,12 +5,13 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.ExternalLinks;
+using GitCommands.Git;
 using GitCommands.Remote;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
@@ -29,6 +30,9 @@ namespace GitUI.CommitInfo
         private readonly TranslationString _containedInTags = new TranslationString("Contained in tags:");
         private readonly TranslationString _containedInNoTag = new TranslationString("Contained in no tag");
         private readonly TranslationString _trsLinksRelatedToRevision = new TranslationString("Related links:");
+        private readonly TranslationString _derivesFromTag = new TranslationString("Derives from tag:");
+        private readonly TranslationString _derivesFromNoTag = new TranslationString("Derives from no tag");
+        private readonly TranslationString _plusCommits = new TranslationString("commits");
 
         private const int MaximumDisplayedRefs = 20;
         private readonly ILinkFactory _linkFactory = new LinkFactory();
@@ -41,6 +45,7 @@ namespace GitUI.CommitInfo
         private readonly IGitRevisionExternalLinksParser _gitRevisionExternalLinksParser;
         private readonly IExternalLinkRevisionParser _externalLinkRevisionParser;
         private readonly IGitRemoteManager _gitRemoteManager;
+        private readonly GitDescribeProvider _gitDescribeProvider;
 
         public CommitInfo()
         {
@@ -65,6 +70,7 @@ namespace GitUI.CommitInfo
             _gitRemoteManager = new GitRemoteManager(() => Module);
             _externalLinkRevisionParser = new ExternalLinkRevisionParser(_gitRemoteManager);
             _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
+            _gitDescribeProvider = new GitDescribeProvider(() => Module);
 
             RevisionInfo.Font = AppSettings.Font;
             using (Graphics g = CreateGraphics())
@@ -149,6 +155,7 @@ namespace GitUI.CommitInfo
         private string _tagInfo;
         private List<string> _branches;
         private string _branchInfo;
+        private string _gitDescribeInfo;
         private IList<string> _sortedRefs;
         private Rectangle _headerResize; // Cache desired size for commit header
 
@@ -161,6 +168,7 @@ namespace GitUI.CommitInfo
             showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
             showContainedInTagsToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInTags;
             showMessagesOfAnnotatedTagsToolStripMenuItem.Checked = AppSettings.ShowAnnotatedTagsMessages;
+            showTagThisCommitDerivesFromMenuItem.Checked = AppSettings.CommitInfoShowTagThisCommitDerivesFrom;
 
             ResetTextAndImage();
 
@@ -216,6 +224,11 @@ namespace GitUI.CommitInfo
             if (AppSettings.CommitInfoShowContainedInTags)
             {
                 ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadTagInfoAsync(_revision.Guid)).FileAndForget();
+            }
+
+            if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom)
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadDescribeInfoAsync(_revision.Guid)).FileAndForget();
             }
         }
 
@@ -327,6 +340,15 @@ namespace GitUI.CommitInfo
 
             await TaskScheduler.Default;
             _linksInfo = GetLinksForRevision(revision);
+
+            await this.SwitchToMainThreadAsync();
+            UpdateRevisionInfo();
+        }
+
+        private async Task LoadDescribeInfoAsync(string revision)
+        {
+            await TaskScheduler.Default;
+            _gitDescribeInfo = GetDescribeInfoForRevision(revision);
 
             await this.SwitchToMainThreadAsync();
             UpdateRevisionInfo();
@@ -463,7 +485,7 @@ namespace GitUI.CommitInfo
             string body = _revisionInfo;
             if (Revision != null && !Revision.IsArtificial)
             {
-                body += "\n" + _annotatedTagsInfo + _linksInfo + _branchInfo + _tagInfo;
+                body += "\n" + _annotatedTagsInfo + _linksInfo + _branchInfo + _tagInfo + _gitDescribeInfo;
             }
 
             RevisionInfo.SuspendLayout();
@@ -503,6 +525,7 @@ namespace GitUI.CommitInfo
             _branchInfo = string.Empty;
             _annotatedTagsInfo = string.Empty;
             _tagInfo = string.Empty;
+            _gitDescribeInfo = string.Empty;
             _branches = null;
             _annotatedTagsMessages = null;
             _tags = null;
@@ -622,6 +645,28 @@ namespace GitUI.CommitInfo
             }
         }
 
+        private string GetDescribeInfoForRevision(string revision)
+        {
+            var (precedingTag, commitCount) = _gitDescribeProvider.Get(revision);
+
+            StringBuilder gitDescribeInfo = new StringBuilder();
+            if (!string.IsNullOrEmpty(precedingTag))
+            {
+                string tagString = ShowBranchesAsLinks ? _linkFactory.CreateTagLink(precedingTag) : WebUtility.HtmlEncode(precedingTag);
+                gitDescribeInfo.Append(Environment.NewLine + WebUtility.HtmlEncode(_derivesFromTag.Text) + " " + tagString);
+                if (!string.IsNullOrEmpty(commitCount))
+                {
+                    gitDescribeInfo.Append(" + " + commitCount + " " + WebUtility.HtmlEncode(_plusCommits.Text));
+                }
+            }
+            else
+            {
+                gitDescribeInfo.Append(Environment.NewLine + WebUtility.HtmlEncode(_derivesFromNoTag.Text));
+            }
+
+            return gitDescribeInfo.ToString();
+        }
+
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AppSettings.CommitInfoShowContainedInBranchesLocal = !AppSettings.CommitInfoShowContainedInBranchesLocal;
@@ -631,6 +676,12 @@ namespace GitUI.CommitInfo
         private void showContainedInTagsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             AppSettings.CommitInfoShowContainedInTags = !AppSettings.CommitInfoShowContainedInTags;
+            ReloadCommitInfo();
+        }
+
+        private void showTagThisCommitDerivesFromMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.CommitInfoShowTagThisCommitDerivesFrom = !AppSettings.CommitInfoShowTagThisCommitDerivesFrom;
             ReloadCommitInfo();
         }
 
