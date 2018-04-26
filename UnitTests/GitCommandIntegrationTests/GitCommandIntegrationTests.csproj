@@ -43,10 +43,12 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="PoC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestRepoDirectory.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ApprovalTests">
@@ -66,10 +68,27 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
+      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
+      <Name>GitCommands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj">
+      <Project>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</Project>
+      <Name>GitExtUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+      <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
+      <Name>GitUIPluginInterfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CommonTestUtils\CommonTestUtils.csproj">
       <Project>{7b1f2fa0-e17d-499b-af86-d49dbef8c548}</Project>
       <Name>CommonTestUtils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="repos\poc.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
