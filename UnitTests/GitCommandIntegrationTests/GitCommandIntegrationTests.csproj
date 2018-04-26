@@ -46,6 +46,8 @@
     <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodedTestRepository.cs" />
+    <Compile Include="CodedRepositoryPoC.cs" />
     <Compile Include="TestRepository.cs" />
     <Compile Include="ITestRepositoryData.cs" />
     <Compile Include="PoC.cs" />
@@ -58,6 +60,9 @@
     </PackageReference>
     <PackageReference Include="FluentAssertions">
       <Version>5.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="LibGit2Sharp">
+      <Version>0.25.0</Version>
     </PackageReference>
     <PackageReference Include="NSubstitute">
       <Version>3.1.0</Version>
