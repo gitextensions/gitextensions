@@ -232,6 +232,7 @@
             // 
             // mnuLostObjectView
             // 
+            this.mnuLostObjectView.Image = global::GitUI.Properties.Resources.IconViewFile;
             this.mnuLostObjectView.Name = "mnuLostObjectView";
             this.mnuLostObjectView.Size = new System.Drawing.Size(189, 22);
             this.mnuLostObjectView.Text = "View";
@@ -239,6 +240,7 @@
             // 
             // mnuLostObjectsCreateTag
             // 
+            this.mnuLostObjectsCreateTag.Image = global::GitUI.Properties.Resources.IconTagCreate;
             this.mnuLostObjectsCreateTag.Name = "mnuLostObjectsCreateTag";
             this.mnuLostObjectsCreateTag.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
             this.mnuLostObjectsCreateTag.Size = new System.Drawing.Size(189, 22);
@@ -247,6 +249,7 @@
             // 
             // mnuLostObjectsCreateBranch
             // 
+            this.mnuLostObjectsCreateBranch.Image = global::GitUI.Properties.Resources.IconBranchCreate;
             this.mnuLostObjectsCreateBranch.Name = "mnuLostObjectsCreateBranch";
             this.mnuLostObjectsCreateBranch.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
             this.mnuLostObjectsCreateBranch.Size = new System.Drawing.Size(189, 22);
@@ -255,6 +258,7 @@
             // 
             // copyHashToolStripMenuItem
             // 
+            this.copyHashToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
             this.copyHashToolStripMenuItem.Name = "copyHashToolStripMenuItem";
             this.copyHashToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.copyHashToolStripMenuItem.Text = "Copy object hash";
