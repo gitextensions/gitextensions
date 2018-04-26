@@ -1,7 +1,5 @@
 ﻿using ApprovalTests;
 using GitCommands;
-using GitUI;
-using Microsoft.VisualStudio.Threading;
 using NUnit.Framework;
 
 namespace GitCommandIntegrationTests
@@ -35,9 +33,9 @@ namespace GitCommandIntegrationTests
 
         private static void RunGitCommandOnTestRepo(string gitCommandLine)
         {
-            using (var tempDir = new TestRepoDirectory(TestRepoName))
+            using (ITestRepositoryData tempDir = new ZippedTestRepoDirectory(TestRepoName))
             {
-                var gitModule = new GitModule(tempDir.PathToExtractedContent);
+                var gitModule = new GitModule(tempDir.ContentPath);
                 var output = gitModule.RunGitCmdResult(gitCommandLine, GitModule.SystemEncoding).StdOutput;
 
                 Approvals.Verify(output);

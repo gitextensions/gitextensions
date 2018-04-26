@@ -46,9 +46,11 @@
     <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestRepository.cs" />
+    <Compile Include="ITestRepositoryData.cs" />
     <Compile Include="PoC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestRepoDirectory.cs" />
+    <Compile Include="ZippedTestRepoDirectory.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ApprovalTests">
