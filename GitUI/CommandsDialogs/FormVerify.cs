@@ -47,6 +47,8 @@ namespace GitUI.CommandsDialogs
             columnAuthor.Width = DpiUtil.Scale(150);
             columnHash.Width = DpiUtil.Scale(280);
             columnHash.MinimumWidth = DpiUtil.Scale(75);
+            columnParent.Width = DpiUtil.Scale(280);
+            columnParent.MinimumWidth = DpiUtil.Scale(75);
 
             _selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
 
@@ -59,6 +61,7 @@ namespace GitUI.CommandsDialogs
             columnSubject.DataPropertyName = nameof(LostObject.Subject);
             columnAuthor.DataPropertyName = nameof(LostObject.Author);
             columnHash.DataPropertyName = nameof(LostObject.Hash);
+            columnParent.DataPropertyName = nameof(LostObject.Parent);
 
             if (commands != null)
             {
@@ -359,6 +362,7 @@ namespace GitUI.CommandsDialogs
                 var contextMenu = Warnings.SelectedRows[0].ContextMenuStrip;
                 contextMenu.Items[1].Enabled = isCommit;
                 contextMenu.Items[2].Enabled = isCommit;
+                contextMenu.Items[4].Enabled = isCommit;
             }
         }
 
@@ -377,6 +381,15 @@ namespace GitUI.CommandsDialogs
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
                 Clipboard.SetText(lostObject.Hash);
+            }
+        }
+
+        private void copyParentHashToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
+            {
+                var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+                Clipboard.SetText(lostObject.Parent);
             }
         }
     }

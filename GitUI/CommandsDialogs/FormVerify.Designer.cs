@@ -38,12 +38,14 @@
             this.mnuLostObjectsCreateBranch = new System.Windows.Forms.ToolStripMenuItem();
             this.copyHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Warnings = new System.Windows.Forms.DataGridView();
+            this.copyParentHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.columnIsLostObjectSelected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.columnDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnSubject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnHash = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.columnParent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             panel1 = new System.Windows.Forms.Panel();
             panel2 = new System.Windows.Forms.Panel();
             flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -134,7 +136,7 @@
             panel2.Dock = System.Windows.Forms.DockStyle.Top;
             panel2.Location = new System.Drawing.Point(0, 0);
             panel2.Name = "panel2";
-            panel2.Size = new System.Drawing.Size(859, 138);
+            panel2.Size = new System.Drawing.Size(859, 134);
             panel2.TabIndex = 4;
             // 
             // flowLayoutPanel1
@@ -146,7 +148,7 @@
             flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Padding = new System.Windows.Forms.Padding(5);
-            flowLayoutPanel1.Size = new System.Drawing.Size(351, 138);
+            flowLayoutPanel1.Size = new System.Drawing.Size(322, 134);
             flowLayoutPanel1.TabIndex = 13;
             // 
             // label2
@@ -154,17 +156,17 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(8, 5);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(335, 105);
+            this.label2.Size = new System.Drawing.Size(306, 91);
             this.label2.TabIndex = 15;
             this.label2.Text = resources.GetString("label2.Text");
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 115);
+            this.label1.Location = new System.Drawing.Point(8, 101);
             this.label1.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(200, 15);
+            this.label1.Size = new System.Drawing.Size(177, 13);
             this.label1.TabIndex = 16;
             this.label1.Text = "Double-click on a row for quick view";
             // 
@@ -175,7 +177,7 @@
             this.ShowOnlyCommits.CheckState = System.Windows.Forms.CheckState.Checked;
             this.ShowOnlyCommits.Location = new System.Drawing.Point(430, 9);
             this.ShowOnlyCommits.Name = "ShowOnlyCommits";
-            this.ShowOnlyCommits.Size = new System.Drawing.Size(131, 19);
+            this.ShowOnlyCommits.Size = new System.Drawing.Size(116, 17);
             this.ShowOnlyCommits.TabIndex = 0;
             this.ShowOnlyCommits.Text = "Show only commits";
             this.ShowOnlyCommits.UseVisualStyleBackColor = true;
@@ -188,7 +190,7 @@
             this.NoReflogs.CheckState = System.Windows.Forms.CheckState.Checked;
             this.NoReflogs.Location = new System.Drawing.Point(430, 35);
             this.NoReflogs.Name = "NoReflogs";
-            this.NoReflogs.Size = new System.Drawing.Size(375, 34);
+            this.NoReflogs.Size = new System.Drawing.Size(345, 30);
             this.NoReflogs.TabIndex = 1;
             this.NoReflogs.Text = "Do not consider commits that are referenced only by an entry in a \r\nreflog to be " +
     "reachable.";
@@ -200,7 +202,7 @@
             this.FullCheck.AutoSize = true;
             this.FullCheck.Location = new System.Drawing.Point(430, 101);
             this.FullCheck.Name = "FullCheck";
-            this.FullCheck.Size = new System.Drawing.Size(397, 34);
+            this.FullCheck.Size = new System.Drawing.Size(376, 30);
             this.FullCheck.TabIndex = 3;
             this.FullCheck.Text = "Check not just objects in GIT_OBJECT_DIRECTORY ($GIT_DIR/objects), \r\nbut also the" +
     " ones found in alternate object pools.\r\n";
@@ -212,7 +214,7 @@
             this.Unreachable.AutoSize = true;
             this.Unreachable.Location = new System.Drawing.Point(430, 68);
             this.Unreachable.Name = "Unreachable";
-            this.Unreachable.Size = new System.Drawing.Size(429, 34);
+            this.Unreachable.Size = new System.Drawing.Size(403, 30);
             this.Unreachable.TabIndex = 2;
             this.Unreachable.Text = "Print out objects that exist but that aren\'t readable from any of the reference \r" +
     "\nnodes.\r\n";
@@ -225,9 +227,10 @@
             this.mnuLostObjectView,
             this.mnuLostObjectsCreateTag,
             this.mnuLostObjectsCreateBranch,
-            this.copyHashToolStripMenuItem});
+            this.copyHashToolStripMenuItem,
+            this.copyParentHashToolStripMenuItem});
             this.mnuLostObjects.Name = "mnuLostObjects";
-            this.mnuLostObjects.Size = new System.Drawing.Size(190, 70);
+            this.mnuLostObjects.Size = new System.Drawing.Size(190, 114);
             this.mnuLostObjects.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLostObjects_Opening);
             // 
             // mnuLostObjectView
@@ -278,21 +281,30 @@
             this.columnType,
             this.columnSubject,
             this.columnAuthor,
-            this.columnHash});
+            this.columnHash,
+            this.columnParent});
             this.Warnings.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Warnings.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
-            this.Warnings.Location = new System.Drawing.Point(0, 138);
+            this.Warnings.Location = new System.Drawing.Point(0, 134);
             this.Warnings.MultiSelect = false;
             this.Warnings.Name = "Warnings";
             this.Warnings.RowHeadersVisible = false;
             this.Warnings.RowTemplate.ContextMenuStrip = this.mnuLostObjects;
             this.Warnings.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Warnings.ShowEditingIcon = false;
-            this.Warnings.Size = new System.Drawing.Size(859, 376);
+            this.Warnings.Size = new System.Drawing.Size(859, 380);
             this.Warnings.TabIndex = 4;
             this.Warnings.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDoubleClick);
             this.Warnings.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Warnings_CellMouseDown);
             this.Warnings.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Warnings_KeyPress);
+            // 
+            // copyParentHashToolStripMenuItem
+            // 
+            this.copyParentHashToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCopyToClipboard;
+            this.copyParentHashToolStripMenuItem.Name = "copyParentHashToolStripMenuItem";
+            this.copyParentHashToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.copyParentHashToolStripMenuItem.Text = "Copy parent hash";
+            this.copyParentHashToolStripMenuItem.Click += new System.EventHandler(this.copyParentHashToolStripMenuItem_Click);
             // 
             // columnIsLostObjectSelected
             // 
@@ -300,6 +312,7 @@
             this.columnIsLostObjectSelected.HeaderText = "";
             this.columnIsLostObjectSelected.MinimumWidth = 20;
             this.columnIsLostObjectSelected.Name = "columnIsLostObjectSelected";
+            this.columnIsLostObjectSelected.Width = 20;
             // 
             // columnDate
             // 
@@ -307,6 +320,7 @@
             this.columnDate.HeaderText = "Date";
             this.columnDate.Name = "columnDate";
             this.columnDate.ReadOnly = true;
+            this.columnDate.Width = 55;
             // 
             // columnType
             // 
@@ -314,6 +328,7 @@
             this.columnType.HeaderText = "Type";
             this.columnType.Name = "columnType";
             this.columnType.ReadOnly = true;
+            this.columnType.Width = 56;
             // 
             // columnSubject
             // 
@@ -336,6 +351,12 @@
             this.columnHash.HeaderText = "Hash";
             this.columnHash.Name = "columnHash";
             this.columnHash.ReadOnly = true;
+            // 
+            // columnParent
+            // 
+            this.columnParent.HeaderText = "Parent(s) hashs";
+            this.columnParent.Name = "columnParent";
+            this.columnParent.ReadOnly = true;
             // 
             // FormVerify
             // 
@@ -375,12 +396,6 @@
         private System.Windows.Forms.Button Remove;
         private System.Windows.Forms.Button SaveObjects;
         private System.Windows.Forms.DataGridView Warnings;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn columnIsLostObjectSelected;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnDate;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnType;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnSubject;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnAuthor;
-        private System.Windows.Forms.DataGridViewTextBoxColumn columnHash;
         private System.Windows.Forms.CheckBox ShowOnlyCommits;
         private System.Windows.Forms.CheckBox NoReflogs;
         private System.Windows.Forms.CheckBox FullCheck;
@@ -388,5 +403,13 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolStripMenuItem copyHashToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyParentHashToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn columnIsLostObjectSelected;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnDate;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnSubject;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnAuthor;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnHash;
+        private System.Windows.Forms.DataGridViewTextBoxColumn columnParent;
     }
 }

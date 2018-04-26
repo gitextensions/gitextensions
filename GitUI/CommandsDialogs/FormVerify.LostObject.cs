@@ -24,8 +24,8 @@ namespace GitUI.CommandsDialogs
             /// %s  - subject.
             /// %ct - committer date, UNIX timestamp (easy to parse format).
             /// </summary>
-            private const string LogCommandArgumentsFormat = "log -n1 --pretty=format:\"%aN, %e, %s, %ct\" {0}";
-            private const string LogPattern = @"^([^,]+), (.*), (.+), (\d+)$";
+            private const string LogCommandArgumentsFormat = "log -n1 --pretty=format:\"%aN, %e, %s, %ct, %P\" {0}";
+            private const string LogPattern = @"^([^,]+), (.*), (.+), (\d+), (.+)?$";
             private const string RawDataPattern = "^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) (" + GitRevision.Sha1HashPattern + ")(.)*$";
 
             private static readonly Regex RawDataRegex = new Regex(RawDataPattern, RegexOptions.Compiled);
@@ -37,6 +37,11 @@ namespace GitUI.CommandsDialogs
             /// Sha1 hash of lost object.
             /// </summary>
             public string Hash { get; }
+
+            /// <summary>
+            /// Sha1 hash of parent commit of commit lost object.
+            /// </summary>
+            public string Parent { get; private set; }
 
             /// <summary>
             /// Diagnostics and object type.
@@ -91,6 +96,10 @@ namespace GitUI.CommandsDialogs
                         string encodingName = logPatternMatch.Groups[2].Value;
                         result.Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups[3].Value, encodingName);
                         result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups[4].Value);
+                        if (logPatternMatch.Groups.Count >= 5)
+                        {
+                            result.Parent = logPatternMatch.Groups[5].Value;
+                        }
                     }
                 }
 
