@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Repository;
+using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -53,6 +54,10 @@ namespace GitUI.CommandsDialogs
         {
             base.OnRuntimeLoad(e);
             FillFromDropDown();
+
+            // scale up for hi DPI
+            MaximumSize = DpiUtil.Scale(new Size(950, 375));
+            MinimumSize = DpiUtil.Scale(new Size(450, 375));
 
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
