@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace CommonTestUtils.TestRepository
 {
-    public sealed class ZippedTestRepoDirectory : TestRepository
+    public sealed class ZippedTestRepoDirectory : TestRepositoryData
     {
         private readonly string _repoName;
 

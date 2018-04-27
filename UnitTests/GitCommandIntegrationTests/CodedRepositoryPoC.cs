@@ -33,7 +33,7 @@ namespace GitCommandIntegrationTests
 
         private static void RunGitCommandOnTestRepo(string gitCommandLine)
         {
-            using (ITestRepositoryData tempDir = new ReferenceRepository())
+            using (ITestRepositoryData tempDir = new ReferenceRepositoryData())
             {
                 var gitModule = new GitModule(tempDir.ContentPath);
                 var output = gitModule.RunGitCmdResult(gitCommandLine, GitModule.SystemEncoding).StdOutput;

@@ -4,11 +4,11 @@ using NUnit.Framework;
 
 namespace CommonTestUtils.TestRepository
 {
-    public abstract class TestRepository : ITestRepositoryData
+    public abstract class TestRepositoryData : ITestRepositoryData
     {
         private readonly string _randomId;
 
-        protected TestRepository()
+        protected TestRepositoryData()
         {
             _randomId = Guid.NewGuid().ToString("N");
         }

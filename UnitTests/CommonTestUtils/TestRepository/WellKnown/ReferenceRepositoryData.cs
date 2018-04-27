@@ -3,7 +3,7 @@ using System.IO;
 
 namespace CommonTestUtils.TestRepository.WellKnown
 {
-    public class CodedTestRepository : TestRepository
+    public class ReferenceRepositoryData : TestRepositoryData
     {
         // time must be fixed to get deterministic hashes
         private static readonly DateTimeOffset When = new DateTimeOffset(2018, 1, 2, 3, 4, 5, 6, TimeSpan.Zero);
