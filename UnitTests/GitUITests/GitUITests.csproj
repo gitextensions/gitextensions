@@ -52,7 +52,6 @@
   <ItemGroup>
     <Compile Include="CancellationTokenSequenceTests.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\FormCommitTests.cs" />
-    <Compile Include="CommandsDialogs\ReferenceRepository.cs" />
     <Compile Include="CommandsDialogs\RevisionDiffContextMenuControllerTests.cs" />
     <Compile Include="CommandsDialogs\RevisionFileTreeControllerTests.cs" />
     <Compile Include="CommandsDialogs\RevisionDiffControllerTests.cs" />

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CommonTestUtils.TestRepository;
+using CommonTestUtils.TestRepository.WellKnown;
 using GitUI;
 using GitUI.CommandsDialogs;
 using NUnit.Framework;
@@ -10,37 +12,21 @@ namespace GitUITests.CommandsDialogs.CommitDialog
     [Apartment(ApartmentState.STA)]
     public class FormCommitTests
     {
-        // Created once for the fixture
-        private ReferenceRepository _referenceRepository;
-
-        // Created once for each test
+        private ITestRepository _referenceRepository;
         private GitUICommands _commands;
 
         [SetUp]
         public void SetUp()
         {
-            if (_referenceRepository == null)
-            {
-                _referenceRepository = new ReferenceRepository();
-            }
-            else
-            {
-                _referenceRepository.Reset();
-            }
-
+            _referenceRepository = new TestRepository(new ReferenceRepositoryData());
             _commands = new GitUICommands(_referenceRepository.Module);
         }
 
         [TearDown]
         public void TearDown()
         {
+            _referenceRepository?.Dispose();
             _commands = null;
-        }
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            _referenceRepository.Dispose();
         }
 
         [Test]
