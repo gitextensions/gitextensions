@@ -2,7 +2,7 @@
 using System.IO;
 using NUnit.Framework;
 
-namespace GitCommandIntegrationTests
+namespace CommonTestUtils.TestRepository
 {
     public abstract class TestRepository : ITestRepositoryData
     {

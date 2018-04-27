@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 
-namespace GitCommandIntegrationTests
+namespace CommonTestUtils.TestRepository.WellKnown
 {
-    internal class CodedTestRepository : TestRepository
+    public class CodedTestRepository : TestRepository
     {
         // time must be fixed to get deterministic hashes
         private static readonly DateTimeOffset When = new DateTimeOffset(2018, 1, 2, 3, 4, 5, 6, TimeSpan.Zero);

@@ -1,4 +1,6 @@
 ﻿using ApprovalTests;
+using CommonTestUtils.TestRepository;
+using CommonTestUtils.TestRepository.WellKnown;
 using GitCommands;
 using NUnit.Framework;
 
@@ -31,7 +33,7 @@ namespace GitCommandIntegrationTests
 
         private static void RunGitCommandOnTestRepo(string gitCommandLine)
         {
-            using (ITestRepositoryData tempDir = new CodedTestRepository())
+            using (ITestRepositoryData tempDir = new ReferenceRepository())
             {
                 var gitModule = new GitModule(tempDir.ContentPath);
                 var output = gitModule.RunGitCmdResult(gitCommandLine, GitModule.SystemEncoding).StdOutput;

@@ -2,9 +2,9 @@
 using System.IO.Compression;
 using NUnit.Framework;
 
-namespace GitCommandIntegrationTests
+namespace CommonTestUtils.TestRepository
 {
-    internal sealed class ZippedTestRepoDirectory : TestRepository
+    public sealed class ZippedTestRepoDirectory : TestRepository
     {
         private readonly string _repoName;
 
