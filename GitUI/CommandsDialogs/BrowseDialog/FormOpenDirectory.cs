@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Repository;
 using ResourceManager;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -30,6 +31,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             _NO_TRANSLATE_Directory.Focus();
             _NO_TRANSLATE_Directory.Select();
+        }
+
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
+
+            // scale up for hi DPI
+            float scale = GetScaleFactor();
+            MaximumSize = new Size((int)(800 * scale), (int)(116 * scale));
+            MinimumSize = new Size((int)(450 * scale), (int)(116 * scale));
         }
 
         private IList<string> GetDirectories(GitModule currentModule)
@@ -65,7 +76,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     directories.Add(PathUtil.EnsureTrailingPathSeparator(homeDir));
                 }
             }
-            
+
             return directories.Distinct().ToList();
         }
 
