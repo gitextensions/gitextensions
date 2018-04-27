@@ -34,6 +34,12 @@ namespace CommonTestUtils.TestRepository
         {
             try
             {
+                foreach (var file in Directory.EnumerateFiles(ContentTargetPath, "*", SearchOption.AllDirectories))
+                {
+                    File.SetAttributes(file, FileAttributes.Normal);
+                    File.Delete(file);
+                }
+
                 Directory.Delete(ContentTargetPath, true);
             }
             catch
