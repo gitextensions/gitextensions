@@ -27,10 +27,10 @@ namespace GitCommandIntegrationTests
 
         public void Dispose()
         {
-            CleanupExtractedDirectory();
+            CleanupCreatedDirectory();
         }
 
-        private void CleanupExtractedDirectory()
+        private void CleanupCreatedDirectory()
         {
             try
             {
