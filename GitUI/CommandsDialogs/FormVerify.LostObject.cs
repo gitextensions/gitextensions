@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Text.RegularExpressions;
 using GitCommands;
 
@@ -91,6 +92,12 @@ namespace GitUI.CommandsDialogs
                         result.Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups[3].Value, encodingName);
                         result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups[4].Value);
                     }
+                }
+
+                if (result.ObjectType == LostObjectType.Blob)
+                {
+                    var blobPath = Path.Combine(module.WorkingDirGitDir, "objects", hash.Substring(0, 2), hash.Substring(2, hash.Length - 2));
+                    result.Date = new FileInfo(blobPath).CreationTime;
                 }
 
                 return result;

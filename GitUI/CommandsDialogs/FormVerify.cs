@@ -45,7 +45,8 @@ namespace GitUI.CommandsDialogs
             columnDate.Width = DpiUtil.Scale(56);
             columnType.Width = DpiUtil.Scale(58);
             columnAuthor.Width = DpiUtil.Scale(150);
-            columnHash.Width = DpiUtil.Scale(80);
+            columnHash.Width = DpiUtil.Scale(280);
+            columnHash.MinimumWidth = DpiUtil.Scale(75);
 
             _selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
 
@@ -221,7 +222,8 @@ namespace GitUI.CommandsDialogs
                         .Split('\r', '\n')
                         .Where(s => !string.IsNullOrEmpty(s))
                         .Select((s) => LostObject.TryParse(Module, s))
-                        .Where(parsedLostObject => parsedLostObject != null));
+                        .Where(parsedLostObject => parsedLostObject != null)
+                        .OrderByDescending(l => l.Date));
 
                 UpdateFilteredLostObjects();
             }
@@ -346,6 +348,36 @@ namespace GitUI.CommandsDialogs
             }
 
             base.Dispose(disposing);
+        }
+
+        private void mnuLostObjects_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
+            {
+                var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+                var isCommit = lostObject != null && lostObject.ObjectType == LostObjectType.Commit;
+                var contextMenu = Warnings.SelectedRows[0].ContextMenuStrip;
+                contextMenu.Items[1].Enabled = isCommit;
+                contextMenu.Items[2].Enabled = isCommit;
+            }
+        }
+
+        private void Warnings_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                e.Handled = true;
+                ViewCurrentItem();
+            }
+        }
+
+        private void copyHashToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
+            {
+                var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+                Clipboard.SetText(lostObject.Hash);
+            }
         }
     }
 }
