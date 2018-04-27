@@ -49,6 +49,8 @@
     <Compile Include="EmbeddedResourceLoader.cs" />
     <Compile Include="GitModuleTestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestRepository\ITestRepository.cs" />
+    <Compile Include="TestRepository\TestRepository.cs" />
     <Compile Include="TestRepository\WellKnown\ReferenceRepositoryData.cs" />
     <Compile Include="TestRepository\ITestRepositoryData.cs" />
     <Compile Include="TestRepository\TestRepositoryData.cs" />
