@@ -1,6 +1,42 @@
 Changelog
 =========
 
+### [Version 2.51.01] (20 Mar 2018)
+
+#### Highlights
+* Updated bundled Git to 2.16.2
+* Updated Putty to 0.70
+
+#### Features:
+* TaskCanceledException for ShowSelectedFileDiff() - Issue [4570]
+* Add a hotkey for toggling viewing of Tags - Issue [4449]
+* Fixes on jira commit hint plugin - PR [4412]
+* Add two ScriptEvents, BeforeMerge, AfterMerge - Issue [4380]
+* Better display of "Find and replace" dialog on multiple screens computer - PR [4354]
+* Commit "Author" text box has incorrect descriptive text - Issue [3501]
+* Keep last used Destination in clone dialog as entered - Issue [2313]
+
+#### Fixes:
+* Wrong diff for initial commit - Issue [4580]
+* Find in the Diff tab shows differences reversed after wrapping around the files - Issue [4546]
+* "Restore to selected version" function is removed from 2.51 - Issue [4535]
+* Update Git for Windows version to account for recent GitHub breakage [4523]
+* GitK is not launched with newer Git - Issue [4510]
+* PuTTY Installer Is Outdated - Issue [4509]
+* GitEx selects the top revision after creating a new tag - Issue [4495]
+* 2.51: App crashes upon pressing "Script"  - Issue [4488]
+* Find in the Diff tab fails to find text - Issue [4485]
+* Branch input isn't focused on Merge window - Issue [4464]
+* Option to set language in - Dictionary For Spelling Check - not working - Issue [4443]
+* Remotes not persisted - Issue [4441]
+* git log is called for artificial commits - Issue [4361]
+* "Reword Commit" doesn't refresh the UI - Issue [3935]
+* Not able to issue "git flow release publish" in git-flow plugin  - Issue [2838]
+* Fields order in "create tag" window - Issue [2515]
+* Submodule dialog: "Name" textbox too small for long names - Issue [1858]
+
+
+
 ### [Version 2.51.00] (28 Jan 2018)
 
 #### Features:
@@ -2145,8 +2181,6 @@ Changelog
 * Added standalone UI
 
 
-
-
 [Version 2.50]:https://github.com/gitextensions/gitextensions/releases/tag/v2.50
 [3777]:https://github.com/gitextensions/gitextensions/issues/3777
 [3767]:https://github.com/gitextensions/gitextensions/issues/3767
@@ -2415,3 +2449,29 @@ Changelog
 [4374]:https://github.com/gitextensions/gitextensions/issues/4374
 [4373]:https://github.com/gitextensions/gitextensions/issues/4373
 [4370]:https://github.com/gitextensions/gitextensions/issues/4370
+
+[Version 2.51.01]:https://github.com/gitextensions/gitextensions/releases/tag/v2.51.01
+[4580]:https://github.com/gitextensions/gitextensions/issues/4580
+[4570]:https://github.com/gitextensions/gitextensions/issues/4570
+[4546]:https://github.com/gitextensions/gitextensions/issues/4546
+[4535]:https://github.com/gitextensions/gitextensions/issues/4535
+[4523]:https://github.com/gitextensions/gitextensions/issues/4523
+[4510]:https://github.com/gitextensions/gitextensions/issues/4510
+[4509]:https://github.com/gitextensions/gitextensions/issues/4509
+[4495]:https://github.com/gitextensions/gitextensions/issues/4495
+[4488]:https://github.com/gitextensions/gitextensions/issues/4488
+[4485]:https://github.com/gitextensions/gitextensions/issues/4485
+[4464]:https://github.com/gitextensions/gitextensions/issues/4464
+[4449]:https://github.com/gitextensions/gitextensions/issues/4449
+[4443]:https://github.com/gitextensions/gitextensions/issues/4443
+[4441]:https://github.com/gitextensions/gitextensions/issues/4441
+[4412]:https://github.com/gitextensions/gitextensions/pull/4412
+[4380]:https://github.com/gitextensions/gitextensions/issues/4380
+[4361]:https://github.com/gitextensions/gitextensions/issues/4361
+[4354]:https://github.com/gitextensions/gitextensions/pull/4354
+[3935]:https://github.com/gitextensions/gitextensions/issues/3935
+[3501]:https://github.com/gitextensions/gitextensions/issues/3501
+[2838]:https://github.com/gitextensions/gitextensions/issues/2838
+[2515]:https://github.com/gitextensions/gitextensions/issues/2515
+[2313]:https://github.com/gitextensions/gitextensions/issues/2313
+[1858]:https://github.com/gitextensions/gitextensions/issues/1858
