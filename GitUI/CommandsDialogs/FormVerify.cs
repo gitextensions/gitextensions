@@ -174,8 +174,23 @@ namespace GitUI.CommandsDialogs
             UpdateLostObjects();
         }
 
-        private void ShowOnlyCommitsCheckedChanged(object sender, EventArgs e)
+        private void ShowCommitsCheckedChanged(object sender, EventArgs e)
         {
+            if (!ShowCommits.Checked && !ShowOtherObjects.Checked)
+            {
+                ShowOtherObjects.Checked = true;
+            }
+
+            UpdateFilteredLostObjects();
+        }
+
+        private void ShowOtherObjects_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!ShowCommits.Checked && !ShowOtherObjects.Checked)
+            {
+                ShowCommits.Checked = true;
+            }
+
             UpdateFilteredLostObjects();
         }
 
@@ -244,12 +259,8 @@ namespace GitUI.CommandsDialogs
         // TODO: add textbox for simple fulltext search/filtering (useful for large repos)
         private bool IsMatchToFilter(LostObject lostObject)
         {
-            if (ShowOnlyCommits.Checked)
-            {
-                return lostObject.ObjectType == LostObjectType.Commit;
-            }
-
-            return true;
+            return (ShowCommits.Checked && lostObject.ObjectType == LostObjectType.Commit)
+                || (ShowOtherObjects.Checked && lostObject.ObjectType != LostObjectType.Commit);
         }
 
         private string GetOptions()

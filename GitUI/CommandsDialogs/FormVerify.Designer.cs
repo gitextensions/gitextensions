@@ -28,7 +28,7 @@
             this.SaveObjects = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.ShowOnlyCommits = new System.Windows.Forms.CheckBox();
+            this.ShowCommits = new System.Windows.Forms.CheckBox();
             this.NoReflogs = new System.Windows.Forms.CheckBox();
             this.FullCheck = new System.Windows.Forms.CheckBox();
             this.Unreachable = new System.Windows.Forms.CheckBox();
@@ -46,6 +46,7 @@
             this.columnAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnHash = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnParent = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ShowOtherObjects = new System.Windows.Forms.CheckBox();
             panel1 = new System.Windows.Forms.Panel();
             panel2 = new System.Windows.Forms.Panel();
             flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -129,7 +130,8 @@
             // 
             panel2.AutoSize = true;
             panel2.Controls.Add(flowLayoutPanel1);
-            panel2.Controls.Add(this.ShowOnlyCommits);
+            panel2.Controls.Add(this.ShowOtherObjects);
+            panel2.Controls.Add(this.ShowCommits);
             panel2.Controls.Add(this.NoReflogs);
             panel2.Controls.Add(this.FullCheck);
             panel2.Controls.Add(this.Unreachable);
@@ -172,16 +174,16 @@
             // 
             // ShowOnlyCommits
             // 
-            this.ShowOnlyCommits.AutoSize = true;
-            this.ShowOnlyCommits.Checked = true;
-            this.ShowOnlyCommits.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ShowOnlyCommits.Location = new System.Drawing.Point(430, 9);
-            this.ShowOnlyCommits.Name = "ShowOnlyCommits";
-            this.ShowOnlyCommits.Size = new System.Drawing.Size(116, 17);
-            this.ShowOnlyCommits.TabIndex = 0;
-            this.ShowOnlyCommits.Text = "Show only commits";
-            this.ShowOnlyCommits.UseVisualStyleBackColor = true;
-            this.ShowOnlyCommits.CheckedChanged += new System.EventHandler(this.ShowOnlyCommitsCheckedChanged);
+            this.ShowCommits.AutoSize = true;
+            this.ShowCommits.Checked = true;
+            this.ShowCommits.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ShowCommits.Location = new System.Drawing.Point(430, 9);
+            this.ShowCommits.Name = "ShowCommits";
+            this.ShowCommits.Size = new System.Drawing.Size(93, 17);
+            this.ShowCommits.TabIndex = 0;
+            this.ShowCommits.Text = "Show commits";
+            this.ShowCommits.UseVisualStyleBackColor = true;
+            this.ShowCommits.CheckedChanged += new System.EventHandler(this.ShowCommitsCheckedChanged);
             // 
             // NoReflogs
             // 
@@ -358,6 +360,17 @@
             this.columnParent.Name = "columnParent";
             this.columnParent.ReadOnly = true;
             // 
+            // ShowOtherObjects
+            // 
+            this.ShowOtherObjects.AutoSize = true;
+            this.ShowOtherObjects.Location = new System.Drawing.Point(569, 9);
+            this.ShowOtherObjects.Name = "ShowOtherObjects";
+            this.ShowOtherObjects.Size = new System.Drawing.Size(119, 17);
+            this.ShowOtherObjects.TabIndex = 0;
+            this.ShowOtherObjects.Text = "Show other objects";
+            this.ShowOtherObjects.UseVisualStyleBackColor = true;
+            this.ShowOtherObjects.CheckedChanged += new System.EventHandler(this.ShowOtherObjects_CheckedChanged);
+            // 
             // FormVerify
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -396,7 +409,7 @@
         private System.Windows.Forms.Button Remove;
         private System.Windows.Forms.Button SaveObjects;
         private System.Windows.Forms.DataGridView Warnings;
-        private System.Windows.Forms.CheckBox ShowOnlyCommits;
+        private System.Windows.Forms.CheckBox ShowCommits;
         private System.Windows.Forms.CheckBox NoReflogs;
         private System.Windows.Forms.CheckBox FullCheck;
         private System.Windows.Forms.CheckBox Unreachable;
@@ -411,5 +424,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn columnAuthor;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnHash;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnParent;
+        private System.Windows.Forms.CheckBox ShowOtherObjects;
     }
 }
