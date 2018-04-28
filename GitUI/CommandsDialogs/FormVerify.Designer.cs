@@ -47,6 +47,7 @@
             this.columnAuthor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnHash = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.columnParent = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             panel1 = new System.Windows.Forms.Panel();
             panel2 = new System.Windows.Forms.Panel();
             flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
@@ -241,7 +242,8 @@
             this.mnuLostObjectsCreateTag,
             this.mnuLostObjectsCreateBranch,
             this.copyHashToolStripMenuItem,
-            this.copyParentHashToolStripMenuItem});
+            this.copyParentHashToolStripMenuItem,
+            this.saveAsToolStripMenuItem});
             this.mnuLostObjects.Name = "mnuLostObjects";
             this.mnuLostObjects.Size = new System.Drawing.Size(190, 114);
             this.mnuLostObjects.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLostObjects_Opening);
@@ -371,6 +373,14 @@
             this.columnParent.Name = "columnParent";
             this.columnParent.ReadOnly = true;
             // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconSaveAs;
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
+            this.saveAsToolStripMenuItem.Text = "Save as...";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            // 
             // FormVerify
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -425,5 +435,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn columnHash;
         private System.Windows.Forms.DataGridViewTextBoxColumn columnParent;
         private System.Windows.Forms.CheckBox ShowOtherObjects;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
     }
 }

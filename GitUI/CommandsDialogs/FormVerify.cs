@@ -376,10 +376,12 @@ namespace GitUI.CommandsDialogs
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
                 var isCommit = lostObject != null && lostObject.ObjectType == LostObjectType.Commit;
+                var isBlob = lostObject != null && lostObject.ObjectType == LostObjectType.Blob;
                 var contextMenu = Warnings.SelectedRows[0].ContextMenuStrip;
                 contextMenu.Items[1].Enabled = isCommit;
                 contextMenu.Items[2].Enabled = isCommit;
                 contextMenu.Items[4].Enabled = isCommit;
+                contextMenu.Items[5].Enabled = isBlob;
             }
         }
 
@@ -408,6 +410,34 @@ namespace GitUI.CommandsDialogs
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
                 Clipboard.SetText(lostObject.Parent);
+            }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Warnings == null || Warnings.SelectedRows.Count == 0 || Warnings.SelectedRows[0].DataBoundItem == null)
+            {
+                return;
+            }
+
+            var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+            if (lostObject.ObjectType == LostObjectType.Blob)
+            {
+                using (var fileDialog =
+                    new SaveFileDialog
+                    {
+                        InitialDirectory = Module.WorkingDir,
+                        FileName = "LOST_FOUND.txt",
+                        DefaultExt = "txt",
+                        AddExtension = true
+                    })
+                {
+                    fileDialog.Filter = "(*.*)|*.*";
+                    if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                    {
+                        Module.SaveBlobAs(fileDialog.FileName, lostObject.Hash);
+                    }
+                }
             }
         }
     }
