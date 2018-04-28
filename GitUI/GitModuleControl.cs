@@ -128,7 +128,18 @@ namespace GitUI
                     }
                     else
                     {
-                        parent = parent.Parent;
+                        if (parent.Parent == null)
+                        {
+                            var form = parent as Form;
+                            if (form != null)
+                            {
+                                parent = form.Owner;
+                            }
+                        }
+                        else
+                        {
+                            parent = parent.Parent;
+                        }
                     }
                 }
 
