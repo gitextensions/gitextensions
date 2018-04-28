@@ -252,6 +252,10 @@ namespace GitUI.CommandsDialogs
             SuspendLayout();
             _filteredLostObjects.Clear();
             _filteredLostObjects.AddRange(_lostObjects.Where(IsMatchToFilter));
+
+            columnAuthor.Visible = ShowCommitsAndTags.Checked;
+            columnSubject.Visible = ShowCommitsAndTags.Checked;
+            columnParent.Visible = ShowCommitsAndTags.Checked;
             ////Warnings.DataSource = filteredLostObjects;
             ResumeLayout();
         }
