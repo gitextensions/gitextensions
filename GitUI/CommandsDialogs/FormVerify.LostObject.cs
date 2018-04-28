@@ -57,6 +57,11 @@ namespace GitUI.CommandsDialogs
             public string Subject { get; private set; }
             public DateTime? Date { get; private set; }
 
+            /// <summary>
+            /// Tag name (for a tag object)
+            /// </summary>
+            public string TagName { get; set; }
+
             private LostObject(LostObjectType objectType, string rawType, string hash)
             {
                 ObjectType = objectType;
@@ -116,7 +121,8 @@ namespace GitUI.CommandsDialogs
                     {
                         result.Parent = tagPatternMatch.Groups[1].Value;
                         result.Author = module.ReEncodeStringFromLossless(tagPatternMatch.Groups[3].Value);
-                        result.Subject = tagPatternMatch.Groups[2].Value + ":" + tagPatternMatch.Groups[5].Value;
+                        result.TagName = tagPatternMatch.Groups[2].Value;
+                        result.Subject = result.TagName + ":" + tagPatternMatch.Groups[5].Value;
                         result.Date = DateTimeUtils.ParseUnixTime(tagPatternMatch.Groups[4].Value);
                     }
                 }

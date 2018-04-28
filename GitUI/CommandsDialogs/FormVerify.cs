@@ -323,7 +323,8 @@ namespace GitUI.CommandsDialogs
             foreach (var lostObject in selectedLostObjects)
             {
                 currentTag++;
-                var createTagArgs = new GitCreateTagArgs($"{RestoredObjectsTagPrefix}{currentTag}", lostObject.Hash);
+                var tagName = lostObject.ObjectType == LostObjectType.Tag ? lostObject.TagName : currentTag.ToString();
+                var createTagArgs = new GitCreateTagArgs($"{RestoredObjectsTagPrefix}{tagName}", lostObject.Hash);
                 _gitTagController.CreateTag(createTagArgs, this);
             }
 
