@@ -378,11 +378,12 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Warnings_KeyPress(object sender, KeyPressEventArgs e)
+        private void Warnings_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyChar == 13)
+            if (e.KeyValue == 13)
             {
                 e.Handled = true;
+                e.SuppressKeyPress = true;
                 ViewCurrentItem();
             }
         }
