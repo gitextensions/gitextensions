@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -106,7 +107,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         }
 
         [Test]
-        public async Task RemoveFromHistoryAsync_should_remove_if_exists()
+        public async Task RemoveRecentAsync_should_remove_if_exists()
         {
             const string repoToDelete = "path to delete";
             var history = new List<Repository>
@@ -119,7 +120,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(Key).Returns(x => history);
 
-            var newHistory = await _manager.RemoveFromHistoryAsync(repoToDelete);
+            var newHistory = await _manager.RemoveRecentAsync(repoToDelete);
 
             newHistory.Count.Should().Be(4);
             newHistory.Should().NotContain(repoToDelete);
@@ -129,7 +130,7 @@ namespace GitCommandsTests.UserRepositoryHistory
         }
 
         [Test]
-        public async Task RemoveFromHistoryAsync_should_not_crash_if_not_exists()
+        public async Task RemoveRecentAsync_should_not_crash_if_not_exists()
         {
             const string repoToDelete = "path to delete";
             var history = new List<Repository>
@@ -142,7 +143,7 @@ namespace GitCommandsTests.UserRepositoryHistory
             };
             _repositoryStorage.Load(Key).Returns(x => history);
 
-            var newHistory = await _manager.RemoveFromHistoryAsync(repoToDelete);
+            var newHistory = await _manager.RemoveRecentAsync(repoToDelete);
 
             newHistory.Count.Should().Be(5);
             newHistory.Should().NotContain(repoToDelete);
@@ -152,7 +153,14 @@ namespace GitCommandsTests.UserRepositoryHistory
         }
 
         [Test]
-        public async Task SaveHistoryAsync_should_trim_history_size()
+        public void SaveRecentHistoryAsync_should_throw_if_repositories_null()
+        {
+            Func<Task> action = async () => await _manager.SaveRecentHistoryAsync(null);
+            action.Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public async Task SaveRecentHistoryAsync_should_trim_history_size()
         {
             const int size = 3;
             AppSettings.RecentRepositoriesHistorySize = size;
@@ -165,7 +173,7 @@ namespace GitCommandsTests.UserRepositoryHistory
                 new Repository("path5"),
             };
 
-            await _manager.SaveHistoryAsync(history);
+            await _manager.SaveRecentHistoryAsync(history);
 
             _repositoryStorage.Received(1).Save(Key, Arg.Is<IEnumerable<Repository>>(h => h.Count() == size));
         }

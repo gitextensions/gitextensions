@@ -787,7 +787,7 @@ namespace GitUI.CommandsDialogs
             {
                 ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
-                    var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadHistoryAsync();
+                    var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync();
 
                     await this.SwitchToMainThreadAsync();
                     string prevUrl = PushDestination.Text;

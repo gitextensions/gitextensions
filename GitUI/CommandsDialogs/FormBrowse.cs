@@ -1588,7 +1588,7 @@ namespace GitUI.CommandsDialogs
 
         private void FileToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
-            var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadHistoryAsync());
+            var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync());
             if (repositoryHistory.Count == 0)
             {
                 recentToolStripMenuItem.Enabled = false;
@@ -1636,7 +1636,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveFromHistoryAsync(path));
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(path));
         }
 
         private void HistoryItemMenuClick(object sender, EventArgs e)
@@ -1652,7 +1652,7 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 var repositoryHistory = Array.Empty<Repository>();
-                await RepositoryHistoryManager.Locals.SaveHistoryAsync(repositoryHistory);
+                await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync(repositoryHistory);
 
                 await this.SwitchToMainThreadAsync();
                 _dashboard?.ShowRecentRepositories();
@@ -1725,7 +1725,7 @@ namespace GitUI.CommandsDialogs
 
         private void WorkingdirDropDownOpening(object sender, EventArgs e)
         {
-            var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadHistoryAsync());
+            var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync());
             _NO_TRANSLATE_Workingdir.DropDownItems.Clear();
 
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();

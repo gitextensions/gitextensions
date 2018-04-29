@@ -21,7 +21,7 @@ namespace GitCommands.UserRepositoryHistory
         }
 
         /// <summary>
-        /// <para>Saves the provided repository path to history of local git repositories as the "most recent".</para>
+        /// <para>Saves the provided repository path to the list of recently used git repositories as the top entry.</para>
         /// <para>If the history contains an entry for the provided path, the entry is physically moved
         /// to the top of the history list.</para>
         /// </summary>
@@ -30,7 +30,7 @@ namespace GitCommands.UserRepositoryHistory
         /// the history is updated, as it may have been updated by another instance of GE.
         /// </remarks>
         /// <param name="repositoryPath">A repository path to be save as "most recent".</param>
-        /// <returns>The current version of the history of local git repositories after the update.</returns>
+        /// <returns>The current version of the list of recently used git repositories after the update.</returns>
         /// <exception cref="ArgumentException"><paramref name="repositoryPath"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
         /// <exception cref="NotSupportedException"><paramref name="repositoryPath"/> is a URL.</exception>
         [ContractAnnotation("repositoryPath:null=>halt")]
@@ -58,7 +58,7 @@ namespace GitCommands.UserRepositoryHistory
             async Task<IList<Repository>> AddAsMostRecentRepositoryAsync(string path)
             {
                 await TaskScheduler.Default;
-                var repositoryHistory = await LoadHistoryAsync();
+                var repositoryHistory = await LoadRecentHistoryAsync();
 
                 var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
                 if (repository != null)
@@ -77,17 +77,17 @@ namespace GitCommands.UserRepositoryHistory
 
                 repositoryHistory.Insert(0, repository);
 
-                await SaveHistoryAsync(repositoryHistory);
+                await SaveRecentHistoryAsync(repositoryHistory);
 
                 return repositoryHistory;
             }
         }
 
         /// <summary>
-        /// Loads the history of local git repositories from a persistent storage.
+        /// Loads the list of recently used local git repositories from a persistent storage.
         /// </summary>
-        /// <returns>The history of local git repositories.</returns>
-        public async Task<IList<Repository>> LoadHistoryAsync()
+        /// <returns>The list of recently used local git repositories.</returns>
+        public async Task<IList<Repository>> LoadRecentHistoryAsync()
         {
             await TaskScheduler.Default;
 
@@ -103,13 +103,13 @@ namespace GitCommands.UserRepositoryHistory
         }
 
         /// <summary>
-        /// Removes <paramref name="repositoryPath"/> from the history of local git repositories in a persistent storage.
+        /// Removes <paramref name="repositoryPath"/> from the the list of recently used local git repositories in a persistent storage.
         /// </summary>
         /// <param name="repositoryPath">A repository path to remove.</param>
-        /// <returns>The current version of the history of local git repositories after the update.</returns>
+        /// <returns>The current version of the list of recently used git repositories after the update.</returns>
         /// <exception cref="ArgumentException"><paramref name="repositoryPath"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
         [ContractAnnotation("repositoryPath:null=>halt")]
-        public async Task<IList<Repository>> RemoveFromHistoryAsync(string repositoryPath)
+        public async Task<IList<Repository>> RemoveRecentAsync(string repositoryPath)
         {
             if (string.IsNullOrWhiteSpace(repositoryPath))
             {
@@ -117,7 +117,7 @@ namespace GitCommands.UserRepositoryHistory
             }
 
             await TaskScheduler.Default;
-            var repositoryHistory = await LoadHistoryAsync();
+            var repositoryHistory = await LoadRecentHistoryAsync();
             var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
             if (repository == null)
             {
@@ -129,18 +129,25 @@ namespace GitCommands.UserRepositoryHistory
                 return repositoryHistory;
             }
 
-            await SaveHistoryAsync(repositoryHistory);
+            await SaveRecentHistoryAsync(repositoryHistory);
             return repositoryHistory;
         }
 
         /// <summary>
-        /// Loads the history of local git repositories to a persistent storage.
+        /// Saves the list of recently used local git repositories to a persistent storage.
         /// </summary>
-        /// <param name="repositoryHistory">A collection of local git repositories.</param>
+        /// <param name="repositoryHistory">A list of recently used git repositories.</param>
         /// <returns>An awaitable task.</returns>
         /// <remarks>The size of the history will be adjusted as per <see cref="AppSettings.RecentRepositoriesHistorySize"/> setting.</remarks>
-        public async Task SaveHistoryAsync(IEnumerable<Repository> repositoryHistory)
+        /// <exception cref="ArgumentNullException"><paramref name="repositoryHistory"/> is <see langword="null"/>.</exception>
+        [ContractAnnotation("repositoryHistory:null=>halt")]
+        public async Task SaveRecentHistoryAsync(IEnumerable<Repository> repositoryHistory)
         {
+            if (repositoryHistory == null)
+            {
+                throw new ArgumentNullException(nameof(repositoryHistory));
+            }
+
             await TaskScheduler.Default;
             _repositoryStorage.Save(KeyRecentHistory, AdjustHistorySize(repositoryHistory, AppSettings.RecentRepositoriesHistorySize));
         }
