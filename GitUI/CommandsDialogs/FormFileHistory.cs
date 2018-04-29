@@ -583,5 +583,74 @@ namespace GitUI.CommandsDialogs
             detectMoveAndCopyInThisFileToolStripMenuItem.Checked = AppSettings.DetectCopyInAllOnBlame;
             UpdateSelectedFileViewers(true);
         }
+
+        private void CopyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
+        {
+            var selectedRevisions = FileChanges.GetSelectedRevisions();
+
+            if (selectedRevisions != null)
+            {
+                var r = selectedRevisions[0];
+                if (r != null)
+                {
+                    GitUI.UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, r.Guid.ShortenTo(15));
+                    GitUI.UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, r.Subject.ShortenTo(30));
+                    GitUI.UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(authorCopyToolStripMenuItem, r.Author);
+                    GitUI.UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(dateCopyToolStripMenuItem, r.CommitDate.ToString());
+                }
+            }
+        }
+
+        private void HashCopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedRevisions = FileChanges.GetSelectedRevisions();
+            if (selectedRevisions != null)
+            {
+                var r = selectedRevisions[0];
+                if (r != null)
+                {
+                    Clipboard.SetText(r.Guid);
+                }
+            }
+        }
+
+        private void MessageCopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedRevisions = FileChanges.GetSelectedRevisions();
+            if (selectedRevisions != null)
+            {
+                var r = selectedRevisions[0];
+                if (r != null)
+                {
+                    Clipboard.SetText(r.Subject);
+                }
+            }
+        }
+
+        private void AuthorCopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedRevisions = FileChanges.GetSelectedRevisions();
+            if (selectedRevisions != null)
+            {
+                var r = selectedRevisions[0];
+                if (r != null)
+                {
+                    Clipboard.SetText(r.Author);
+                }
+            }
+        }
+
+        private void DateCopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedRevisions = FileChanges.GetSelectedRevisions();
+            if (selectedRevisions != null)
+            {
+                var r = selectedRevisions[0];
+                if (r != null)
+                {
+                    Clipboard.SetText(r.CommitDate.ToString());
+                }
+            }
+        }
     }
 }
