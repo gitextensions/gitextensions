@@ -55,6 +55,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripButton_customMessage = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.View = new GitUI.Editor.FileViewer();
+            this.Cancel = new System.Windows.Forms.Button();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.gitStashBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -87,6 +88,7 @@ namespace GitUI.CommandsDialogs
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.View);
+            this.splitContainer1.Panel2.Controls.Add(this.Cancel);
             this.splitContainer1.Size = new System.Drawing.Size(708, 520);
             this.splitContainer1.SplitterDistance = 280;
             this.splitContainer1.SplitterWidth = 5;
@@ -338,11 +340,24 @@ namespace GitUI.CommandsDialogs
             this.View.Name = "View";
             this.View.Size = new System.Drawing.Size(423, 520);
             this.View.TabIndex = 0;
+            this.View.KeyUp += new System.Windows.Forms.KeyEventHandler(this.View_KeyUp);
+            // 
+            // Cancel
+            // 
+            this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.Cancel.Location = new System.Drawing.Point(82, 137);
+            this.Cancel.Name = "Cancel";
+            this.Cancel.Size = new System.Drawing.Size(75, 23);
+            this.Cancel.TabIndex = 1;
+            this.Cancel.TabStop = false;
+            this.Cancel.Text = "Cancel";
+            this.Cancel.UseVisualStyleBackColor = true;
             // 
             // FormStash
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.CancelButton = this.Cancel;
             this.ClientSize = new System.Drawing.Size(708, 520);
             this.Controls.Add(this.splitContainer1);
             this.MinimumSize = new System.Drawing.Size(640, 478);
@@ -394,5 +409,6 @@ namespace GitUI.CommandsDialogs
         private Panel panel1;
         private ToolTip toolTip;
         private Button StashSelectedFiles;
+        private Button Cancel;
     }
 }

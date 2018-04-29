@@ -27,6 +27,7 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextArea.MouseEnter += TextArea_MouseEnter;
             TextEditor.ActiveTextAreaControl.TextArea.MouseLeave += TextArea_MouseLeave;
             TextEditor.ActiveTextAreaControl.TextArea.MouseDown += TextAreaMouseDown;
+            TextEditor.ActiveTextAreaControl.TextArea.KeyUp += TextArea_KeyUp;
             TextEditor.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
@@ -34,6 +35,11 @@ namespace GitUI.Editor
             _lineNumbersControl = new DiffViewerLineNumberCtrl(TextEditor.ActiveTextAreaControl.TextArea);
 
             VRulerPosition = GitCommands.AppSettings.DiffVerticalRulerPosition;
+        }
+
+        private void TextArea_KeyUp(object sender, KeyEventArgs e)
+        {
+            KeyUp?.Invoke(sender, e);
         }
 
         public new Font Font
@@ -45,6 +51,7 @@ namespace GitUI.Editor
         public new event MouseEventHandler MouseMove;
         public new event EventHandler MouseEnter;
         public new event EventHandler MouseLeave;
+        public new event System.Windows.Forms.KeyEventHandler KeyUp;
 
         private void TextArea_MouseEnter(object sender, EventArgs e)
         {
