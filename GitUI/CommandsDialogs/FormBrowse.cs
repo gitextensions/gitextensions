@@ -693,7 +693,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
+            var recentRepositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
             using (var graphics = CreateGraphics())
             {
@@ -702,7 +702,7 @@ namespace GitUI.CommandsDialogs
                     MeasureFont = _NO_TRANSLATE_Workingdir.Font,
                     Graphics = graphics
                 };
-                splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, mostRecentRepos);
+                splitter.SplitRecentRepos(recentRepositoryHistory, mostRecentRepos, mostRecentRepos);
 
                 RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
 
@@ -1586,37 +1586,6 @@ namespace GitUI.CommandsDialogs
             Close();
         }
 
-        private void FileToolStripMenuItemDropDownOpening(object sender, EventArgs e)
-        {
-            var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync());
-            if (repositoryHistory.Count == 0)
-            {
-                recentToolStripMenuItem.Enabled = false;
-                return;
-            }
-
-            recentToolStripMenuItem.Enabled = true;
-            recentToolStripMenuItem.DropDownItems.Clear();
-
-            foreach (var historyItem in repositoryHistory)
-            {
-                if (string.IsNullOrEmpty(historyItem.Path))
-                {
-                    continue;
-                }
-
-                var historyItemMenu = new ToolStripMenuItem(historyItem.Path);
-                historyItemMenu.Click += HistoryItemMenuClick;
-                historyItemMenu.Width = 225;
-                recentToolStripMenuItem.DropDownItems.Add(historyItemMenu);
-            }
-
-            // Re-add controls.
-            recentToolStripMenuItem.DropDownItems.Add(clearRecentRepositoriesListToolStripMenuItem);
-            TranslateItem(clearRecentRepositoriesListMenuItem.Name, clearRecentRepositoriesListMenuItem);
-            recentToolStripMenuItem.DropDownItems.Add(clearRecentRepositoriesListMenuItem);
-        }
-
         private void ChangeWorkingDir(string path)
         {
             var module = new GitModule(path);
@@ -1647,7 +1616,35 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void ClearRecentRepositoriesListClick(object sender, EventArgs e)
+        private void tsmiRecentRepositories_DropDownOpening(object sender, EventArgs e)
+        {
+            tsmiRecentRepositories.DropDownItems.Clear();
+
+            var recentRepositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync());
+            if (recentRepositoryHistory.Count == 0)
+            {
+                return;
+            }
+
+            // TODO: must apply the same shortening strategy as for the "working folder" dropdown
+            foreach (var historyItem in recentRepositoryHistory.Where(r => !string.IsNullOrEmpty(r.Path)))
+            {
+                var historyItemMenu = new ToolStripMenuItem(historyItem.Path)
+                {
+                    DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
+                    Image = Resources.RecentRepositories
+                };
+                historyItemMenu.Click += HistoryItemMenuClick;
+                tsmiRecentRepositories.DropDownItems.Add(historyItemMenu);
+            }
+
+            // Re-add controls.
+            tsmiRecentRepositories.DropDownItems.Add(clearRecentRepositoriesListToolStripMenuItem);
+            TranslateItem(tsmiRecentRepositoriesClear.Name, tsmiRecentRepositoriesClear);
+            tsmiRecentRepositories.DropDownItems.Add(tsmiRecentRepositoriesClear);
+        }
+
+        private void tsmiRecentRepositoriesClear_Click(object sender, EventArgs e)
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
@@ -1761,7 +1758,7 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
 
-            ToolStripMenuItem toolStripItem = new ToolStripMenuItem(openToolStripMenuItem.Text);
+            var toolStripItem = new ToolStripMenuItem(openToolStripMenuItem.Text, openToolStripMenuItem.Image);
             toolStripItem.ShortcutKeys = openToolStripMenuItem.ShortcutKeys;
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
             toolStripItem.Click += (hs, he) => OpenToolStripMenuItemClick(hs, he);
