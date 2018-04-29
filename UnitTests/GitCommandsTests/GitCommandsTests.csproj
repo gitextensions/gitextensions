@@ -93,6 +93,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remote\GitRemoteManagerTests.cs" />
     <Compile Include="UserRepositoryHistory\Legacy\RepositoryCategoryXmlSerialiserTests.cs" />
+    <Compile Include="UserRepositoryHistory\Legacy\RepositoryHistoryMigratorTests.cs" />
+    <Compile Include="UserRepositoryHistory\Legacy\RepositoryStorageTests.cs" />
     <Compile Include="UserRepositoryHistory\LocalRepositoryManagerTests.cs" />
     <Compile Include="UserRepositoryHistory\RemoteRepositoryManagerTests.cs" />
     <Compile Include="UserRepositoryHistory\RepositoryStorageTests.cs" />

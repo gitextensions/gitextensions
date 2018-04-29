@@ -2,22 +2,51 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GitCommands.UserRepositoryHistory.Legacy;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.UserRepositoryHistory
 {
+    public interface ILocalRepositoryManager : IRepositoryManager
+    {
+        /// <summary>
+        /// Loads the list of favourite local git repositories from a persistent storage.
+        /// </summary>
+        /// <returns>The list of favourite local git repositories.</returns>
+        Task<IList<Repository>> LoadFavouriteHistoryAsync();
+
+        /// <summary>
+        /// Removes <paramref name="repositoryPath"/> from the the list of favourite local git repositories in a persistent storage.
+        /// </summary>
+        /// <param name="repositoryPath">A repository path to remove.</param>
+        /// <returns>The current version of the list of favourite git repositories after the update.</returns>
+        Task<IList<Repository>> RemoveFavouriteAsync(string repositoryPath);
+
+        /// <summary>
+        /// Saves the list of favourite local git repositories to a persistent storage.
+        /// </summary>
+        /// <param name="repositoryHistory">A list of favourite git repositories.</param>
+        /// <returns>An awaitable task.</returns>
+        Task SaveFavouriteHistoryAsync(IEnumerable<Repository> repositoryHistory);
+    }
+
     /// <summary>
     /// Manages the history of local git repositories.
     /// </summary>
-    public sealed class LocalRepositoryManager : IRepositoryManager
+    public sealed class LocalRepositoryManager : ILocalRepositoryManager
     {
+        //// configuration key under which user's recent local git repository history is persisted
         private const string KeyRecentHistory = "history";
+        //// configuration key under which user's favourite local git repository history is persisted
+        private const string KeyFavouriteHistory = "history-favourite";
         private readonly IRepositoryStorage _repositoryStorage;
+        private readonly IRepositoryHistoryMigrator _repositoryHistoryMigrator;
 
-        public LocalRepositoryManager(IRepositoryStorage repositoryStorage)
+        public LocalRepositoryManager(IRepositoryStorage repositoryStorage, IRepositoryHistoryMigrator repositoryHistoryMigrator)
         {
             _repositoryStorage = repositoryStorage;
+            _repositoryHistoryMigrator = repositoryHistoryMigrator;
         }
 
         /// <summary>
@@ -84,6 +113,26 @@ namespace GitCommands.UserRepositoryHistory
         }
 
         /// <summary>
+        /// Loads the list of favourite local git repositories from a persistent storage.
+        /// </summary>
+        /// <returns>The list of favourite local git repositories.</returns>
+        public async Task<IList<Repository>> LoadFavouriteHistoryAsync()
+        {
+            await TaskScheduler.Default;
+
+            var history = _repositoryStorage.Load(KeyFavouriteHistory) ?? Array.Empty<Repository>();
+
+            // backwards compatibility - port the existing user's categorised repositories
+            var migrated = await _repositoryHistoryMigrator.MigrateAsync(history);
+
+            // TODO: should we save now?
+            //      in an edge case scenario, the legacy setting has been migrated,
+            //      the app crashes before the updated history persisted...
+
+            return migrated;
+        }
+
+        /// <summary>
         /// Loads the list of recently used local git repositories from a persistent storage.
         /// </summary>
         /// <returns>The list of recently used local git repositories.</returns>
@@ -100,6 +149,37 @@ namespace GitCommands.UserRepositoryHistory
             }
 
             return AdjustHistorySize(history, size).ToList();
+        }
+
+        /// <summary>
+        /// Removes <paramref name="repositoryPath"/> from the the list of favourite local git repositories in a persistent storage.
+        /// </summary>
+        /// <param name="repositoryPath">A repository path to remove.</param>
+        /// <returns>The current version of the list of favourite git repositories after the update.</returns>
+        /// <exception cref="ArgumentException"><paramref name="repositoryPath"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
+        [ContractAnnotation("repositoryPath:null=>halt")]
+        public async Task<IList<Repository>> RemoveFavouriteAsync(string repositoryPath)
+        {
+            if (string.IsNullOrWhiteSpace(repositoryPath))
+            {
+                throw new ArgumentException(nameof(repositoryPath));
+            }
+
+            await TaskScheduler.Default;
+            var repositoryHistory = await LoadFavouriteHistoryAsync();
+            var repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
+            if (repository == null)
+            {
+                return repositoryHistory;
+            }
+
+            if (!repositoryHistory.Remove(repository))
+            {
+                return repositoryHistory;
+            }
+
+            await SaveFavouriteHistoryAsync(repositoryHistory);
+            return repositoryHistory;
         }
 
         /// <summary>
@@ -131,6 +211,24 @@ namespace GitCommands.UserRepositoryHistory
 
             await SaveRecentHistoryAsync(repositoryHistory);
             return repositoryHistory;
+        }
+
+        /// <summary>
+        /// Saves the list of favourite local git repositories to a persistent storage.
+        /// </summary>
+        /// <param name="repositoryHistory">A list of favourite git repositories.</param>
+        /// <returns>An awaitable task.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="repositoryHistory"/> is <see langword="null"/>.</exception>
+        [ContractAnnotation("repositoryHistory:null=>halt")]
+        public async Task SaveFavouriteHistoryAsync(IEnumerable<Repository> repositoryHistory)
+        {
+            if (repositoryHistory == null)
+            {
+                throw new ArgumentNullException(nameof(repositoryHistory));
+            }
+
+            await TaskScheduler.Default;
+            _repositoryStorage.Save(KeyFavouriteHistory, repositoryHistory);
         }
 
         /// <summary>
