@@ -384,7 +384,7 @@ namespace GitUI.CommandsDialogs
             // Close Stash form with escape button while pointer focus is in FileViewer(diff view)
             if (e.KeyCode == Keys.Escape)
             {
-                Cancel.PerformClick();
+                Close();
             }
         }
     }
