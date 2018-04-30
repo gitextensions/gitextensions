@@ -2806,9 +2806,7 @@ namespace GitCommands
 
         public IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true)
         {
-            var refList = new GetRefsGitCommand(this, tags, branches).Execute();
-
-            return ParseRefs(refList);
+            return new GetRefsGitCommand(this, tags, branches).Execute();
         }
 
         /// <param name="option">Ordery by date is slower.</param>
