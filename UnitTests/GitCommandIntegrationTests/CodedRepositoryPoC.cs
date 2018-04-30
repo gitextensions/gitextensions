@@ -39,7 +39,7 @@ namespace GitCommandIntegrationTests
                 var gitModule = new GitModule(tempDir.ContentPath);
                 var output = new GetRefsGitCommand(gitModule, tags: tags, branches: branches).Execute();
 
-                Approvals.Verify(output);
+                Approvals.VerifyAll(output, r => r.Guid + " " + r.CompleteName);
             }
         }
     }
