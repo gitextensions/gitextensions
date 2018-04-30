@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -468,6 +469,26 @@ namespace GitUI.CommandsDialogs
             manipulateCommitToolStripMenuItem.Enabled =
                 selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
             saveAsToolStripMenuItem.Enabled = selectedRevisions.Count == 1;
+
+            // clipboard branch and tag menu handling
+            {
+                var revision = selectedRevisions[0];
+                var gitRefListsForRevision = new GitUI.UserControls.RevisionGridClasses.GitRefListsForRevision(revision);
+                branchNameCopyToolStripMenuItem.Tag = "caption";
+                tagNameCopyToolStripMenuItem.Tag = "caption";
+                GitUI.UserControls.RevisionGridClasses.MenuUtil.SetAsCaptionMenuItem(branchNameCopyToolStripMenuItem, FileHistoryContextMenu);
+                GitUI.UserControls.RevisionGridClasses.MenuUtil.SetAsCaptionMenuItem(tagNameCopyToolStripMenuItem, FileHistoryContextMenu);
+
+                var branchNames = gitRefListsForRevision.GetAllBranchNames();
+                GitUI.UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(copyToClipboardToolStripMenuItem, branchNameCopyToolStripMenuItem, branchNames, "branchNameItem");
+
+                var tagNames = gitRefListsForRevision.GetAllTagNames();
+                GitUI.UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(copyToClipboardToolStripMenuItem, tagNameCopyToolStripMenuItem, tagNames, "tagNameItem");
+
+                toolStripSeparator6.Visible = branchNames.Any() || tagNames.Any();
+
+                toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
+            }
         }
 
         private const string FormBrowseName = "FormBrowse";
