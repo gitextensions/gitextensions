@@ -10,5 +10,11 @@
             Viewer.ViewTextAsync("", text);
             Viewer.IsReadOnly = false;
         }
+
+        public bool IsReadOnly
+        {
+            get { return Viewer.IsReadOnly; }
+            set { Viewer.IsReadOnly = value; }
+        }
     }
 }
