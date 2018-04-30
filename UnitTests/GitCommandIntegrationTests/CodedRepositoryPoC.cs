@@ -2,6 +2,7 @@
 using CommonTestUtils.TestRepository;
 using CommonTestUtils.TestRepository.WellKnown;
 using GitCommands;
+using GitCommands.Git;
 using NUnit.Framework;
 
 namespace GitCommandIntegrationTests
@@ -16,27 +17,27 @@ namespace GitCommandIntegrationTests
         [Test]
         public void Listing_both_tags_and_branches_should_list_all_tags_and_branches_with_hash_and_refname_columns()
         {
-            RunGitCommandOnTestRepo(@"show-ref --dereference");
+            RunGitCommandOnTestRepo(tags: true, branches: true);
         }
 
         [Test]
         public void Listing_tags_should_list_all_tags_with_hash_and_refname_columns()
         {
-            RunGitCommandOnTestRepo(@"show-ref --tags");
+            RunGitCommandOnTestRepo(tags: true, branches: false);
         }
 
         [Test]
         public void Listing_branches_should_list_all_branches_with_hash_and_refname_columns()
         {
-            RunGitCommandOnTestRepo(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""");
+            RunGitCommandOnTestRepo(tags: false, branches: true);
         }
 
-        private static void RunGitCommandOnTestRepo(string gitCommandLine)
+        private static void RunGitCommandOnTestRepo(bool tags, bool branches)
         {
             using (ITestRepositoryData tempDir = new ReferenceRepositoryData())
             {
                 var gitModule = new GitModule(tempDir.ContentPath);
-                var output = gitModule.RunGitCmdResult(gitCommandLine, GitModule.SystemEncoding).StdOutput;
+                var output = new GetRefsGitCommand(gitModule, tags: tags, branches: branches).Execute();
 
                 Approvals.Verify(output);
             }
