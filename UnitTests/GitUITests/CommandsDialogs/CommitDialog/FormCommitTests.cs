@@ -119,7 +119,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
                     switch (commitKind)
                     {
                     case CommitKind.Normal:
-                        Assert.True(_commands.StartCommitDialog());
+                        Assert.True(_commands.StartCommitDialog(owner: null));
                         break;
 
                     case CommitKind.Squash:
