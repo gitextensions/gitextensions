@@ -646,8 +646,6 @@ namespace GitUI
             _document = editor.Document;
         }
 
-        public IList<TextMarker> Markers => _markers.AsReadOnly();
-
         #region IDisposable Members
 
         public void Dispose()

@@ -28,23 +28,23 @@ namespace GitStatistics
             yield return _ignoreSubmodules;
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUIEventArgs)
+        public override bool Execute(GitUIEventArgs args)
         {
-            if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
+            if (string.IsNullOrEmpty(args.GitModule.WorkingDir))
             {
                 return false;
             }
 
             bool countSubmodule = !_ignoreSubmodules.ValueOrDefault(Settings);
             using (var formGitStatistics =
-                new FormGitStatistics(gitUIEventArgs.GitModule, _codeFiles.ValueOrDefault(Settings), countSubmodule)
+                new FormGitStatistics(args.GitModule, _codeFiles.ValueOrDefault(Settings), countSubmodule)
                 {
                     DirectoriesToIgnore = _ignoreDirectories.ValueOrDefault(Settings)
                 })
             {
                 formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
 
-                formGitStatistics.ShowDialog(gitUIEventArgs.OwnerForm);
+                formGitStatistics.ShowDialog(args.OwnerForm);
             }
 
             return false;

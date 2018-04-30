@@ -30,7 +30,8 @@ namespace GitUITests
                 {
                     try
                     {
-                        ITranslate obj = TranslationUtl.CreateInstanceOfClass(type) as ITranslate;
+                        var obj = (ITranslate)TranslationUtl.CreateInstanceOfClass(type);
+
                         obj.AddTranslationItems(tranlation);
                         obj.TranslateItems(tranlation);
                     }

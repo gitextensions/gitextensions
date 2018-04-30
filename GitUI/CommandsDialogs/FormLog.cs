@@ -1,5 +1,4 @@
 ﻿using System;
-using GitCommands;
 
 namespace GitUI.CommandsDialogs
 {
@@ -11,18 +10,12 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormLog(GitUICommands commands)
-            : base(true, commands)
+            : base(enablePositionRestore: true, commands)
         {
             InitializeComponent();
             Translate();
 
             diffViewer.ExtraDiffArgumentsChanged += DiffViewerExtraDiffArgumentsChanged;
-        }
-
-        public FormLog(GitUICommands commands, GitRevision revision)
-            : this(commands)
-        {
-            RevisionGrid.SetSelectedRevision(revision);
         }
 
         private void FormDiffLoad(object sender, EventArgs e)

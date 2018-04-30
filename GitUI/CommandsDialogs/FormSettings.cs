@@ -6,7 +6,6 @@ using GitCommands.Utils;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
-using GitUI.Plugin;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -112,7 +111,7 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.AddSettingsPage(new PluginsSettingsGroup(), null);
             SettingsPageReference pluginsPageRef = PluginsSettingsGroup.GetPageReference();
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<PluginRootIntroductionPage>(this), pluginsPageRef, true); // as root
-            foreach (var gitPlugin in LoadedPlugins.Plugins)
+            foreach (var gitPlugin in PluginRegistry.Plugins)
             {
                 var settingsPage = PluginSettingsPage.CreateSettingsPageFromPlugin(this, gitPlugin);
                 settingsTreeView.AddSettingsPage(settingsPage, pluginsPageRef);
@@ -271,16 +270,7 @@ namespace GitUI.CommandsDialogs
             ////Cursor.Current = Cursors.Default;
         }
 
-        #region Hotkey commands
-
         public static readonly string HotkeySettingsName = "Scripts";
-
-        internal enum Commands
-        {
-            NothingYet
-        }
-
-        #endregion
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {

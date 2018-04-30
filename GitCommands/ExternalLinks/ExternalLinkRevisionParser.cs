@@ -140,7 +140,7 @@ namespace GitCommands.ExternalLinks
                     {
                         allMatches.Add(match);
                     }
-                    else if (definition.NestedSearchPatternRegex.Value != null && match.Value != null)
+                    else if (definition.NestedSearchPatternRegex.Value != null)
                     {
                         MatchCollection nestedMatches = definition.NestedSearchPatternRegex.Value.Matches(match.Value);
 

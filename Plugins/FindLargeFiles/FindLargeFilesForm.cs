@@ -18,13 +18,13 @@ namespace FindLargeFiles
         private readonly TranslationString _deleteCaption = new TranslationString("Delete");
 
         private readonly float _threshold;
-        private readonly GitUIBaseEventArgs _gitUiCommands;
+        private readonly GitUIEventArgs _gitUiCommands;
         private readonly IGitModule _gitCommands;
         private string[] _revList;
         private readonly Dictionary<string, GitObject> _list = new Dictionary<string, GitObject>();
         private readonly SortableObjectsList _gitObjects = new SortableObjectsList();
 
-        public FindLargeFilesForm(float threshold, GitUIBaseEventArgs gitUiEventArgs)
+        public FindLargeFilesForm(float threshold, GitUIEventArgs gitUiEventArgs)
         {
             InitializeComponent();
 

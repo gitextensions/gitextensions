@@ -12,18 +12,19 @@ namespace GitUIPluginInterfaces
 
         public string GetString()
         {
-            StringBuilder sb = new StringBuilder();
-            if (StdOutput != null && StdOutput.Length > 0)
+            var sb = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(StdOutput))
             {
                 sb.Append(StdOutput);
             }
 
-            if (StdError != null && StdError.Length > 0 && StdOutput != null && StdOutput.Length > 0)
+            if (!string.IsNullOrEmpty(StdError) && !string.IsNullOrEmpty(StdOutput))
             {
                 sb.AppendLine();
             }
 
-            if (StdError != null && StdError.Length > 0)
+            if (!string.IsNullOrEmpty(StdError))
             {
                 sb.Append(StdError);
             }

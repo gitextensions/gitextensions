@@ -23,11 +23,6 @@ namespace GitUI
             }
         }
 
-        public void AppendLine([NotNull] string text)
-        {
-            Append(text + Environment.NewLine);
-        }
-
         public void Clear()
         {
             lock (_outputString)

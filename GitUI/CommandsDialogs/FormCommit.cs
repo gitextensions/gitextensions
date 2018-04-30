@@ -464,7 +464,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if ((!_currentFilesList.SelectedItem.IsNew) && (!_currentFilesList.SelectedItem.IsRenamed))
                     {
-                        UICommands.StartFileHistoryDialog(this, _currentFilesList.SelectedItem.Name, null);
+                        UICommands.StartFileHistoryDialog(this, _currentFilesList.SelectedItem.Name);
                     }
                 }
 
@@ -1718,7 +1718,7 @@ namespace GitUI.CommandsDialogs
             _shouldRescanChanges = false;
             try
             {
-                if (_currentFilesList == null || _currentFilesList.SelectedItems.Count() == 0)
+                if (_currentFilesList == null || !_currentFilesList.SelectedItems.Any())
                 {
                     return;
                 }
@@ -2343,13 +2343,13 @@ namespace GitUI.CommandsDialogs
 
         private void ResetClick(object sender, EventArgs e)
         {
-            UICommands.StartResetChangesDialog(this, Unstaged.AllItems, false);
+            UICommands.StartResetChangesDialog(this, Unstaged.AllItems.ToList(), onlyUnstaged: false);
             Initialize();
         }
 
         private void ResetUnStagedClick(object sender, EventArgs e)
         {
-            UICommands.StartResetChangesDialog(this, Unstaged.AllItems, true);
+            UICommands.StartResetChangesDialog(this, Unstaged.AllItems.ToList(), onlyUnstaged: true);
             Initialize();
         }
 
@@ -2440,7 +2440,7 @@ namespace GitUI.CommandsDialogs
 
             if (list.SelectedItems.Count() == 1)
             {
-                UICommands.StartFileHistoryDialog(this, list.SelectedItem.Name, null);
+                UICommands.StartFileHistoryDialog(this, list.SelectedItem.Name);
             }
             else
             {
@@ -2815,7 +2815,7 @@ namespace GitUI.CommandsDialogs
         private void commitSubmoduleChanges_Click(object sender, EventArgs e)
         {
             GitUICommands submodulCommands = new GitUICommands(_fullPathResolver.Resolve(_currentItem.Name.EnsureTrailingPathSeparator()));
-            submodulCommands.StartCommitDialog(this, false);
+            submodulCommands.StartCommitDialog(this);
             Initialize();
         }
 
@@ -3155,7 +3155,7 @@ namespace GitUI.CommandsDialogs
 
         private void createBranchToolStripButton_Click(object sender, EventArgs e)
         {
-            var branchCreated = UICommands.StartCreateBranchDialog(this, null);
+            var branchCreated = UICommands.StartCreateBranchDialog(this);
             if (!branchCreated)
             {
                 return;

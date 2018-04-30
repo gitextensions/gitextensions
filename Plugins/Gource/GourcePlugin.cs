@@ -50,10 +50,10 @@ namespace Gource
             yield return _gourceArguments;
         }
 
-        public override bool Execute(GitUIBaseEventArgs eventArgs)
+        public override bool Execute(GitUIEventArgs args)
         {
-            IGitModule gitUiCommands = eventArgs.GitModule;
-            var ownerForm = eventArgs.OwnerForm;
+            IGitModule gitUiCommands = args.GitModule;
+            var ownerForm = args.OwnerForm;
             if (!gitUiCommands.IsValidGitWorkingDir())
             {
                 MessageBox.Show(ownerForm, _currentDirectoryIsNotValidGit.Text);
@@ -112,7 +112,7 @@ namespace Gource
                 }
             }
 
-            using (var gourceStart = new GourceStart(pathToGource, eventArgs, _gourceArguments.ValueOrDefault(Settings)))
+            using (var gourceStart = new GourceStart(pathToGource, args, _gourceArguments.ValueOrDefault(Settings)))
             {
                 gourceStart.ShowDialog(ownerForm);
                 Settings.SetValue(_gourceArguments.Name, gourceStart.GourceArguments, s => s);

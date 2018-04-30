@@ -36,12 +36,12 @@ namespace GitUIPluginInterfaces
 
         public void SetBool(string name, bool? value)
         {
-            SetValue(name, value, (bool? b) => b.HasValue ? (b.Value ? "true" : "false") : null);
+            SetValue(name, value, b => b.HasValue ? (b.Value ? "true" : "false") : null);
         }
 
         public void SetInt(string name, int? value)
         {
-            SetValue(name, value, (int? b) => b.HasValue ? b.ToString() : null);
+            SetValue(name, value, b => b.HasValue ? b.ToString() : null);
         }
 
         public int? GetInt(string name)
@@ -59,7 +59,7 @@ namespace GitUIPluginInterfaces
 
         public void SetFloat(string name, float? value)
         {
-            SetValue(name, value, (float? b) => b.HasValue ? b.ToString() : null);
+            SetValue(name, value, b => b.HasValue ? b.ToString() : null);
         }
 
         public float? GetFloat(string name)
@@ -82,7 +82,7 @@ namespace GitUIPluginInterfaces
 
         public void SetDate(string name, DateTime? value)
         {
-            SetValue(name, value, (DateTime? b) => b?.ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
+            SetValue(name, value, b => b?.ToString("yyyy/M/dd", CultureInfo.InvariantCulture));
         }
 
         public DateTime? GetDate(string name)

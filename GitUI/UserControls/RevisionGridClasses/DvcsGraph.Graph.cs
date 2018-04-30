@@ -51,7 +51,7 @@ namespace GitUI.RevisionGridClasses
 
                     // We need to signal the DvcsGraph object that it needs to
                     // redraw everything.
-                    Updated(this);
+                    Updated?.Invoke(this);
                 }
             }
 

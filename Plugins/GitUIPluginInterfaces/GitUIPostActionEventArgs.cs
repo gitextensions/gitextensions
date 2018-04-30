@@ -2,7 +2,7 @@
 
 namespace GitUIPluginInterfaces
 {
-    public class GitUIPostActionEventArgs : GitUIBaseEventArgs
+    public class GitUIPostActionEventArgs : GitUIEventArgs
     {
         public bool ActionDone { get; }
 

@@ -46,7 +46,8 @@ namespace GitUI.CommandsDialogs
 
         private void bw_DoWork(object sender, DoWorkEventArgs e)
         {
-            BackgroundWorker bw = sender as BackgroundWorker;
+            var bw = (BackgroundWorker)sender;
+
             foreach (var oldSubmodule in Module.GetSubmodulesInfo())
             {
                 if (bw.CancellationPending)

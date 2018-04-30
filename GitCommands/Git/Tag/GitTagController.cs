@@ -56,7 +56,7 @@ namespace GitCommands.Git.Tag
             var createTagCmd = new GitCreateTagCmd(args, tagMessageFileName);
             try
             {
-                return _uiCommands.StartCommandLineProcessDialog(createTagCmd, parentWindow);
+                return _uiCommands.StartCommandLineProcessDialog(parentWindow, createTagCmd);
             }
             finally
             {

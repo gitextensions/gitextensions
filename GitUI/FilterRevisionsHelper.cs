@@ -102,16 +102,15 @@ namespace GitUI
             string inMemMessageFilter;
             string inMemCommitterFilter;
             string inMemAuthorFilter;
-            var filterParams = new bool[4];
-            filterParams[0] = _commitToolStripMenuItem.Checked;
-            filterParams[1] = _committerToolStripMenuItem.Checked;
-            filterParams[2] = _authorToolStripMenuItem.Checked;
-            filterParams[3] = _diffContainsToolStripMenuItem.Checked;
+
             try
             {
                 _NO_TRANSLATE_revisionGrid.FormatQuickFilter(
                     _NO_TRANSLATE_textBox.Text,
-                    filterParams,
+                    _commitToolStripMenuItem.Checked,
+                    _committerToolStripMenuItem.Checked,
+                    _authorToolStripMenuItem.Checked,
+                    _diffContainsToolStripMenuItem.Checked,
                     out revListArgs,
                     out inMemMessageFilter,
                     out inMemCommitterFilter,
@@ -183,11 +182,6 @@ namespace GitUI
             {
                 _commitToolStripMenuItem.Checked = true;
             }
-        }
-
-        public void SetLimit(int limit)
-        {
-            _NO_TRANSLATE_revisionGrid.SetLimit(limit);
         }
 
         public void Dispose()

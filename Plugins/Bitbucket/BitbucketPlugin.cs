@@ -18,11 +18,11 @@ namespace Bitbucket
             Translate();
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIEventArgs args)
         {
-            using (var frm = new BitbucketPullRequestForm(this, Settings, gitUiCommands))
+            using (var frm = new BitbucketPullRequestForm(this, Settings, args))
             {
-                frm.ShowDialog(gitUiCommands.OwnerForm);
+                frm.ShowDialog(args.OwnerForm);
             }
 
             return true;

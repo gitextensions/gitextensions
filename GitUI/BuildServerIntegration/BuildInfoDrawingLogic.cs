@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
-using GitUI.Properties;
 using GitUI.UserControls;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using JetBrains.Annotations;

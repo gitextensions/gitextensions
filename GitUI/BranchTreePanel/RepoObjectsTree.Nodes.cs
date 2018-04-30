@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BranchTreePanel
 {

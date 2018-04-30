@@ -54,7 +54,7 @@ namespace JiraCommitHintPlugin
             Description = description;
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIEventArgs args)
         {
             if (_enabledSettings.ValueOrDefault(Settings))
             {
@@ -204,7 +204,7 @@ namespace JiraCommitHintPlugin
             gitUiCommands.PostRepositoryChanged -= gitUiCommands_PostRepositoryChanged;
         }
 
-        private void gitUiCommands_PreCommit(object sender, GitUIBaseEventArgs e)
+        private void gitUiCommands_PreCommit(object sender, GitUIEventArgs e)
         {
             if (!_enabledSettings.ValueOrDefault(Settings))
             {
@@ -230,7 +230,7 @@ namespace JiraCommitHintPlugin
             });
         }
 
-        private void gitUiCommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
+        private void gitUiCommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
         {
             if (!_enabledSettings.ValueOrDefault(Settings))
             {

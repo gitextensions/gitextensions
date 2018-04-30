@@ -151,24 +151,4 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return Panel;
         }
     }
-
-    public static class SettingsLayoutExt
-    {
-    }
-
-    public class BoolNullableISettingAdapter : GitUIPluginInterfaces.BoolSetting
-    {
-        public BoolNullableISettingAdapter(string caption, BoolNullableSetting setting)
-            : base(setting.FullPath, caption, setting.DefaultValue.Value)
-        {
-        }
-    }
-
-    public class StringISettingAdapter : GitUIPluginInterfaces.StringSetting
-    {
-        public StringISettingAdapter(string caption, GitCommands.Settings.StringSetting setting)
-            : base(setting.FullPath, caption, setting.DefaultValue)
-        {
-        }
-    }
 }

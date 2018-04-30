@@ -203,9 +203,9 @@ namespace GitUI.SpellChecker
             TextBox.SelectAll();
         }
 
-        protected override void OnRuntimeLoad(EventArgs e)
+        protected override void OnRuntimeLoad()
         {
-            base.OnRuntimeLoad(e);
+            base.OnRuntimeLoad();
 
             _customUnderlines = new SpellCheckEditControl(TextBox);
             TextBox.SelectionChanged += TextBox_SelectionChanged;

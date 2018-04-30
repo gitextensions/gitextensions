@@ -390,7 +390,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             CalculateNextUpdateTime(UpdateDelay);
         }
 
-        private void GitUICommands_PreCheckout(object sender, GitUIBaseEventArgs e)
+        private void GitUICommands_PreCheckout(object sender, GitUIEventArgs e)
         {
             CurrentStatus = GitStatusMonitorState.Paused;
         }
@@ -400,7 +400,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             CurrentStatus = GitStatusMonitorState.Running;
         }
 
-        private void GitUICommands_PostEditGitIgnore(object sender, GitUIBaseEventArgs e)
+        private void GitUICommands_PostEditGitIgnore(object sender, GitUIEventArgs e)
         {
             _ignoredFiles = new HashSet<string>();
             _ignoredFilesAreStale = true;

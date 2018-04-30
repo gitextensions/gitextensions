@@ -11,8 +11,8 @@ namespace GitUI.Editor
     public partial class FileViewerInternal : GitExtensionsControl, IFileViewer
     {
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
-        private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
         private readonly DiffViewerLineNumberCtrl _lineNumbersControl;
+        private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
         private bool _isGotoLineUIApplicable = true;
 
         public FileViewerInternal()
@@ -314,11 +314,6 @@ namespace GitUI.Editor
         }
 
         public int TotalNumberOfLines => TextEditor.Document.TotalNumberOfLines;
-
-        public void FocusTextArea()
-        {
-            TextEditor.ActiveTextAreaControl.TextArea.Select();
-        }
 
         public bool IsReadOnly
         {

@@ -15,16 +15,16 @@ namespace GitImpact
 
         #region IGitPlugin Members
 
-        public override bool Execute(GitUIBaseEventArgs gitUIEventArgs)
+        public override bool Execute(GitUIEventArgs args)
         {
-            if (string.IsNullOrEmpty(gitUIEventArgs.GitModule.WorkingDir))
+            if (string.IsNullOrEmpty(args.GitModule.WorkingDir))
             {
                 return false;
             }
 
-            using (var form = new FormImpact(gitUIEventArgs.GitModule))
+            using (var form = new FormImpact(args.GitModule))
             {
-                form.ShowDialog(gitUIEventArgs.OwnerForm);
+                form.ShowDialog(args.OwnerForm);
             }
 
             return false;

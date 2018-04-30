@@ -20,16 +20,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private IGitRef _selectedTag;
         private IGitRef _selectedBranch;
 
-        private readonly AsyncLoader _tagsLoader;
-        private readonly AsyncLoader _branchesLoader;
+        private readonly AsyncLoader _tagsLoader = new AsyncLoader();
+        private readonly AsyncLoader _branchesLoader = new AsyncLoader();
 
         public FormGoToCommit(GitUICommands commands)
             : base(commands)
         {
             InitializeComponent();
             Translate();
-            _tagsLoader = new AsyncLoader();
-            _branchesLoader = new AsyncLoader();
         }
 
         private void FormGoToCommit_Load(object sender, EventArgs e)
