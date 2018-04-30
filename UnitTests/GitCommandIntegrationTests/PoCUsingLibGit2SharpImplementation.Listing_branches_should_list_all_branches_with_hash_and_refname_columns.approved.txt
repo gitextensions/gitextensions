@@ -1,5 +1,5 @@
 ﻿358e9746519286658f248a2104a2a628d7bc7120 refs/heads/feature/magic
-d9acf227fc21c42a2cd6e055fe9b8d688fdea2ed refs/heads/test3
-d9acf227fc21c42a2cd6e055fe9b8d688fdea2ed refs/heads/test2
-d9acf227fc21c42a2cd6e055fe9b8d688fdea2ed refs/heads/test1
 d9acf227fc21c42a2cd6e055fe9b8d688fdea2ed refs/heads/master
+d9acf227fc21c42a2cd6e055fe9b8d688fdea2ed refs/heads/test1
+d9acf227fc21c42a2cd6e055fe9b8d688fdea2ed refs/heads/test2
+d9acf227fc21c42a2cd6e055fe9b8d688fdea2ed refs/heads/test3
