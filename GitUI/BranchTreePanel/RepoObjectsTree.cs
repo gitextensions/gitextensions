@@ -126,9 +126,9 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        protected override void OnUICommandsSourceChanged(object sender, IGitUICommandsSource newSource)
+        protected override void OnUICommandsSourceChanged(IGitUICommandsSource newSource)
         {
-            base.OnUICommandsSourceChanged(sender, newSource);
+            base.OnUICommandsSourceChanged(newSource);
 
             CancelBackgroundTasks();
 

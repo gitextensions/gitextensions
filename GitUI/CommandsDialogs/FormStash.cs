@@ -378,5 +378,14 @@ namespace GitUI.CommandsDialogs
                 StashMessage.ReadOnly = false;
             }
         }
+
+        private void View_KeyUp(object sender, KeyEventArgs e)
+        {
+            // Close Stash form with escape button while pointer focus is in FileViewer(diff view)
+            if (e.KeyCode == Keys.Escape)
+            {
+                Close();
+            }
+        }
     }
 }

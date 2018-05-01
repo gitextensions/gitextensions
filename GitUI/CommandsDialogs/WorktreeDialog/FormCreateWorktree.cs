@@ -118,7 +118,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 arguments += " " + ((GitRef)comboBoxBranches.SelectedItem).Name;
             }
 
-            UICommands.StartGitCommandProcessDialog(arguments);
+            UICommands.StartGitCommandProcessDialog(this, arguments);
             DialogResult = DialogResult.OK;
         }
 

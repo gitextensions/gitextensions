@@ -55,7 +55,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             showCurrentBranchMenuItem.Checked = AppSettings.DashboardShowCurrentBranch;
 
             var menuStrip = FindControl<MenuStrip>(Parent.Parent.Parent, p => true); // TODO: improve: Parent.Parent.Parent == FormBrowse
-            var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
+            var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().Single(p => p.Name == "dashboardToolStripMenuItem");
             dashboardMenu.DropDownItems.Add(showCurrentBranchMenuItem);
         }
 

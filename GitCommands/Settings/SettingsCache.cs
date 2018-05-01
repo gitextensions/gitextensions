@@ -26,7 +26,7 @@ namespace GitCommands
             });
         }
 
-        public T LockedAction<T>(Func<T> action)
+        protected T LockedAction<T>(Func<T> action)
         {
             lock (_byNameMap)
             {
@@ -55,7 +55,7 @@ namespace GitCommands
             LockedAction(SaveImpl);
         }
 
-        public void Load()
+        private void Load()
         {
             LockedAction(() =>
                 {
@@ -66,7 +66,7 @@ namespace GitCommands
 
         public void Import(IEnumerable<(string name, string value)> keyValuePairs)
         {
-                LockedAction(() =>
+            LockedAction(() =>
                 {
                     foreach (var (key, value) in keyValuePairs)
                     {
@@ -161,40 +161,34 @@ namespace GitCommands
 
                 if (_byNameMap.TryGetValue(name, out object o))
                 {
-                    if (o == null)
+                    switch (o)
                     {
-                        val = defaultValue;
-                        return false;
-                    }
-                    else if (o is T)
-                    {
-                        val = (T)o;
-                        return true;
-                    }
-                    else
-                    {
-                        throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
+                        case null:
+                            return false;
+                        case T t:
+                            val = t;
+                            return true;
+                        default:
+                            throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
                     }
                 }
-                else
+
+                if (decode == null)
                 {
-                    if (decode == null)
-                    {
-                        throw new ArgumentNullException(nameof(decode), string.Format("The decode parameter for setting {0} is null.", name));
-                    }
-
-                    string s = GetValue(name);
-
-                    if (s == null)
-                    {
-                        val = defaultValue;
-                        return false;
-                    }
-
-                    val = decode(s);
-                    _byNameMap[name] = val;
-                    return true;
+                    throw new ArgumentNullException(nameof(decode), string.Format("The decode parameter for setting {0} is null.", name));
                 }
+
+                string s = GetValue(name);
+
+                if (s == null)
+                {
+                    val = defaultValue;
+                    return false;
+                }
+
+                val = decode(s);
+                _byNameMap[name] = val;
+                return true;
             });
             value = val;
             return result;

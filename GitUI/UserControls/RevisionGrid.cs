@@ -8,7 +8,6 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -242,8 +241,6 @@ namespace GitUI
         public Font HeadFont { get; private set; }
         [Browsable(false)]
         public Font SuperprojectFont { get; private set; }
-        [Browsable(false)]
-        public int LastScrollPos { get; private set; }
         [Browsable(false)]
         public string[] LastSelectedRows { get; private set; }
         [Browsable(false)]
@@ -690,7 +687,10 @@ namespace GitUI
         }
 
         public void FormatQuickFilter(string filter,
-                                      bool[] parameters,
+                                      bool filterCommit,
+                                      bool filterCommitter,
+                                      bool filterAuthor,
+                                      bool filterDiffContent,
                                       out string revListArgs,
                                       out string inMemMessageFilter,
                                       out string inMemCommitterFilter,
@@ -705,7 +705,7 @@ namespace GitUI
                 // hash filtering only possible in memory
                 var cmdLineSafe = GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
                 revListArgs = " --regexp-ignore-case ";
-                if (parameters[0])
+                if (filterCommit)
                 {
                     if (cmdLineSafe && !MessageFilterCouldBeSHA(filter))
                     {
@@ -717,7 +717,7 @@ namespace GitUI
                     }
                 }
 
-                if (parameters[1] && !filter.IsNullOrWhiteSpace())
+                if (filterCommitter && !filter.IsNullOrWhiteSpace())
                 {
                     if (cmdLineSafe)
                     {
@@ -729,7 +729,7 @@ namespace GitUI
                     }
                 }
 
-                if (parameters[2] && !filter.IsNullOrWhiteSpace())
+                if (filterAuthor && !filter.IsNullOrWhiteSpace())
                 {
                     if (cmdLineSafe)
                     {
@@ -741,7 +741,7 @@ namespace GitUI
                     }
                 }
 
-                if (parameters[3])
+                if (filterDiffContent)
                 {
                     if (cmdLineSafe)
                     {
@@ -776,11 +776,6 @@ namespace GitUI
 
             SetShowBranches();
             return true;
-        }
-
-        public void SetLimit(int limit)
-        {
-            _revisionFilter.SetLimit(limit);
         }
 
         public override void Refresh()
@@ -1297,11 +1292,11 @@ namespace GitUI
                     RefsOptions = _refsOptions,
                     RevisionFilter = _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
                     PathFilter = _revisionFilter.GetPathFilter() + FixedPathFilter,
+                    InMemFilter = revGraphIMF
                 };
                 _revisionGraphCommand.Updated += GitGetCommitsCommandUpdated;
                 _revisionGraphCommand.Exited += GitGetCommitsCommandExited;
                 _revisionGraphCommand.Error += _revisionGraphCommand_Error;
-                _revisionGraphCommand.InMemFilter = revGraphIMF;
                 _revisionGraphCommand.Execute();
                 LoadRevisions();
                 SetRevisionsLayout();
@@ -1665,9 +1660,9 @@ namespace GitUI
             // Draw cell background
             e.Graphics.FillRectangle(cellBackgroundBrush, e.CellBounds);
             Color? backColor = null;
-            if (cellBackgroundBrush is SolidBrush)
+            if (cellBackgroundBrush is SolidBrush brush)
             {
-                backColor = (cellBackgroundBrush as SolidBrush).Color;
+                backColor = brush.Color;
             }
 
             // Draw graphics column
@@ -1852,7 +1847,7 @@ namespace GitUI
                                               gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
                         drawRefArgs.RefsFont = gitRef.Selected ? rowFont : RefsFont;
 
-                        offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true, false);
+                        offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true);
                     }
 
                     if (IsCardLayout())
@@ -2797,7 +2792,7 @@ namespace GitUI
             if (sender is ToolStripItem toolStripItem)
             {
                 string branch = toolStripItem.Text;
-                UICommands.StartCheckoutBranch(this, branch, false);
+                UICommands.StartCheckoutBranch(this, branch);
             }
         }
 

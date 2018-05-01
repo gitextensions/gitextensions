@@ -14,11 +14,11 @@ namespace ReleaseNotesGenerator
             Translate();
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIEventArgs args)
         {
-            using (var form = new ReleaseNotesGeneratorForm(gitUiCommands))
+            using (var form = new ReleaseNotesGeneratorForm(args))
             {
-                if (form.ShowDialog(gitUiCommands.OwnerForm) == DialogResult.OK)
+                if (form.ShowDialog(args.OwnerForm) == DialogResult.OK)
                 {
                     return true;
                 }

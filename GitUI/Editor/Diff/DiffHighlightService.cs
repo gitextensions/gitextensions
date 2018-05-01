@@ -44,8 +44,10 @@ namespace GitUI.Editor.Diff
 
             while (beginOffset < endOffsetMin)
             {
-                if (!document.GetCharAt(lineAdded.Offset + beginOffset).Equals(
-                        document.GetCharAt(lineRemoved.Offset + beginOffset)))
+                var a = document.GetCharAt(lineAdded.Offset + beginOffset);
+                var r = document.GetCharAt(lineRemoved.Offset + beginOffset);
+
+                if (a != r)
                 {
                     break;
                 }
@@ -57,9 +59,10 @@ namespace GitUI.Editor.Diff
             {
                 reverseOffset = lineAdded.Length - lineAddedEndOffset;
 
-                if (!document.GetCharAt(lineAdded.Offset + lineAdded.Length - 1 - reverseOffset).
-                         Equals(document.GetCharAt(lineRemoved.Offset + lineRemoved.Length - 1 -
-                                                   reverseOffset)))
+                var a = document.GetCharAt(lineAdded.Offset + lineAdded.Length - 1 - reverseOffset);
+                var r = document.GetCharAt(lineRemoved.Offset + lineRemoved.Length - 1 - reverseOffset);
+
+                if (a != r)
                 {
                     break;
                 }

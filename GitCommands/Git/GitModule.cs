@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
@@ -87,9 +86,6 @@ namespace GitCommands
     [DebuggerDisplay("GitModule ( {" + nameof(WorkingDir) + "} )")]
     public sealed class GitModule : IGitModule
     {
-        public static readonly char RefSeparator = '/';
-        public static readonly string RefSep = RefSeparator.ToString(CultureInfo.InvariantCulture);
-
         private const char LineSeparator = '\n';
         public static readonly char ActiveBranchIndicator = '*';
 
@@ -201,11 +197,14 @@ namespace GitCommands
         {
             get
             {
-                lock (_lock)
+                if (_effectiveSettings == null)
                 {
-                    if (_effectiveSettings == null)
+                    lock (_lock)
                     {
-                        _effectiveSettings = RepoDistSettings.CreateEffective(this);
+                        if (_effectiveSettings == null)
+                        {
+                            _effectiveSettings = RepoDistSettings.CreateEffective(this);
+                        }
                     }
                 }
 
@@ -223,11 +222,14 @@ namespace GitCommands
         {
             get
             {
-                lock (_lock)
+                if (_localSettings == null)
                 {
-                    if (_localSettings == null)
+                    lock (_lock)
                     {
-                        _localSettings = new RepoDistSettings(null, EffectiveSettings.SettingsCache);
+                        if (_localSettings == null)
+                        {
+                            _localSettings = new RepoDistSettings(null, EffectiveSettings.SettingsCache);
+                        }
                     }
                 }
 
@@ -240,11 +242,14 @@ namespace GitCommands
         {
             get
             {
-                lock (_lock)
+                if (_effectiveConfigFile == null)
                 {
-                    if (_effectiveConfigFile == null)
+                    lock (_lock)
                     {
-                        _effectiveConfigFile = ConfigFileSettings.CreateEffective(this);
+                        if (_effectiveConfigFile == null)
+                        {
+                            _effectiveConfigFile = ConfigFileSettings.CreateEffective(this);
+                        }
                     }
                 }
 
@@ -3087,7 +3092,7 @@ namespace GitCommands
             }
             else
             {
-                return new string[] { };
+                return Array.Empty<string>();
             }
         }
 
@@ -3779,33 +3784,6 @@ namespace GitCommands
             diffHeader = ReEncodeFileNameFromLossless(diffHeader);
             diffContent = ReEncodeString(diffContent, LosslessEncoding, FilesEncoding);
             return header + diffHeader + diffContent;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            if (obj == this)
-            {
-                return true;
-            }
-
-            return obj is GitModule other && Equals(other);
-        }
-
-        private bool Equals(GitModule other)
-        {
-            return
-                string.Equals(WorkingDir, other.WorkingDir) &&
-                Equals(_superprojectModule, other._superprojectModule);
-        }
-
-        public override int GetHashCode()
-        {
-            return WorkingDir.GetHashCode();
         }
 
         public override string ToString()

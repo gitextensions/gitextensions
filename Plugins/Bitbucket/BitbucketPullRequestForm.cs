@@ -24,7 +24,7 @@ namespace Bitbucket
         private readonly Settings _settings;
         private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
 
-        public BitbucketPullRequestForm(BitbucketPlugin plugin, ISettingsSource settings, GitUIBaseEventArgs gitUiCommands)
+        public BitbucketPullRequestForm(BitbucketPlugin plugin, ISettingsSource settings, GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
             Translate();
@@ -317,7 +317,7 @@ namespace Bitbucket
 
         private void PullRequestChanged(object sender, EventArgs e)
         {
-            var curItem = lbxPullRequests.SelectedItem as PullRequest;
+            var curItem = (PullRequest)lbxPullRequests.SelectedItem;
 
             txtPRTitle.Text = curItem.Title;
             txtPRDescription.Text = curItem.Description;
@@ -395,7 +395,7 @@ namespace Bitbucket
         {
             try
             {
-                var link = (sender as LinkLabel).Text;
+                var link = ((LinkLabel)sender).Text;
                 if (e.Button == MouseButtons.Right)
                 {
                     // Just copy the text

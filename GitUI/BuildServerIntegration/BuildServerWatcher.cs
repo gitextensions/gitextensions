@@ -35,8 +35,8 @@ namespace GitUI.BuildServerIntegration
 
         private IDisposable _buildStatusCancellationToken;
         private IBuildServerAdapter _buildServerAdapter;
-        private CancellationTokenSequence _launchCancellation = new CancellationTokenSequence();
 
+        private readonly CancellationTokenSequence _launchCancellation = new CancellationTokenSequence();
         private readonly object _buildServerCredentialsLock = new object();
         private readonly IRepoNameExtractor _repoNameExtractor;
 

@@ -21,11 +21,11 @@ namespace ReleaseNotesGenerator
         private readonly TranslationString _caption = new TranslationString("Invalid input");
 
         private const string MostRecentHint = "most recent changes are listed on top";
-        private readonly GitUIBaseEventArgs _gitUiCommands;
+        private readonly GitUIEventArgs _gitUiCommands;
         private IEnumerable<LogLine> _lastGeneratedLogLines;
         private readonly IGitLogLineParser _gitLogLineParser;
 
-        public ReleaseNotesGeneratorForm(GitUIBaseEventArgs gitUiCommands)
+        public ReleaseNotesGeneratorForm(GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
             Translate();

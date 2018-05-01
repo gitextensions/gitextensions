@@ -47,28 +47,18 @@ namespace Gerrit
         public override void Register(IGitUICommands gitUiCommands)
         {
             _gitUiCommands = gitUiCommands;
-            gitUiCommands.PostBrowseInitialize += gitUiCommands_PostBrowseInitialize;
-            gitUiCommands.PostRegisterPlugin += gitUiCommands_PostRegisterPlugin;
+            gitUiCommands.PostBrowseInitialize += UpdateGerritMenuItems;
+            gitUiCommands.PostRegisterPlugin += UpdateGerritMenuItems;
         }
 
         public override void Unregister(IGitUICommands gitUiCommands)
         {
-            gitUiCommands.PostBrowseInitialize -= gitUiCommands_PostBrowseInitialize;
-            gitUiCommands.PostRegisterPlugin -= gitUiCommands_PostRegisterPlugin;
+            gitUiCommands.PostBrowseInitialize -= UpdateGerritMenuItems;
+            gitUiCommands.PostRegisterPlugin -= UpdateGerritMenuItems;
             _gitUiCommands = null;
         }
 
-        private void gitUiCommands_PostRegisterPlugin(object sender, GitUIBaseEventArgs e)
-        {
-            UpdateGerritMenuItems(e);
-        }
-
-        private void gitUiCommands_PostBrowseInitialize(object sender, GitUIBaseEventArgs e)
-        {
-            UpdateGerritMenuItems(e);
-        }
-
-        private void UpdateGerritMenuItems(GitUIBaseEventArgs e)
+        private void UpdateGerritMenuItems(object sender, GitUIEventArgs e)
         {
             if (!_initialized)
             {
@@ -425,7 +415,7 @@ namespace Gerrit
             return null;
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIEventArgs args)
         {
             using (var form = new FormPluginInformation())
             {

@@ -180,11 +180,6 @@ namespace GitUI.RevisionGridClasses
             BranchFilter.Text = filter;
         }
 
-        public void SetLimit(int limit)
-        {
-            _NO_TRANSLATE_Limit.Value = limit;
-        }
-
         private void OkClick(object sender, EventArgs e)
         {
             Close();

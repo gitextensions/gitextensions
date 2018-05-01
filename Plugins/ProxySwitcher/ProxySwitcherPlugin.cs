@@ -26,11 +26,11 @@ namespace ProxySwitcher
             yield return HttpProxyPort;
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIEventArgs args)
         {
-            using (var form = new ProxySwitcherForm(this, Settings, gitUiCommands))
+            using (var form = new ProxySwitcherForm(this, Settings, args))
             {
-                form.ShowDialog(gitUiCommands.OwnerForm);
+                form.ShowDialog(args.OwnerForm);
             }
 
             return false;

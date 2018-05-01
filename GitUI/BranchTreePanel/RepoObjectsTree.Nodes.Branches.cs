@@ -169,7 +169,7 @@ namespace GitUI.BranchTreePanel
             {
                 var branchHead = CreateBranchRef(UICommands.Module, FullPath);
                 var cmd = new GitDeleteBranchCmd(new[] { branchHead }, true);
-                UICommands.StartCommandLineProcessDialog(cmd, null);
+                UICommands.StartCommandLineProcessDialog(null, cmd);
             }
         }
 
@@ -210,7 +210,7 @@ namespace GitUI.BranchTreePanel
                 var branchHeads =
                     branches.Select(branch => CreateBranchRef(UICommands.Module, branch.FullPath));
                 var cmd = new GitDeleteBranchCmd(branchHeads.ToList(), true);
-                UICommands.StartCommandLineProcessDialog(cmd, null);
+                UICommands.StartCommandLineProcessDialog(null, cmd);
             }
         }
 

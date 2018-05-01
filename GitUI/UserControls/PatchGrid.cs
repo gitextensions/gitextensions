@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Patches;
@@ -28,7 +27,7 @@ namespace GitUI
             Status.Width = DpiUtil.Scale(80);
         }
 
-        protected override void OnRuntimeLoad(EventArgs e)
+        protected override void OnRuntimeLoad()
         {
             Initialize();
         }

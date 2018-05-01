@@ -39,11 +39,6 @@ namespace GitUI
             _splitters.ForEach(s => s.SaveToSettings(_settings));
         }
 
-        public void AdjustAccordingToFontSize()
-        {
-            _splitters.ForEach(s => s.AdjustToCurrentFontSize());
-        }
-
         private class SplitterData
         {
             public SplitContainer Splitter;
@@ -98,7 +93,7 @@ namespace GitUI
                 Splitter.Panel1Collapsed = settings.GetBool(Panel1CollapsedSettingsKey, defaultValue: false);
             }
 
-            public void AdjustToCurrentFontSize()
+            private void AdjustToCurrentFontSize()
             {
                 if (_latestFontSize.Value != 0 && Splitter.Font.Size != 0)
                 {
@@ -173,10 +168,10 @@ namespace GitUI
             /// </returns>
             private bool IsValidSplitterDistance(int distance)
             {
-                bool valid;
-                int limit = SplitterSize;
-                valid = (distance > Splitter.Panel1MinSize) && (distance < limit - Splitter.Panel2MinSize);
-                return valid;
+                var limit = SplitterSize;
+
+                return distance > Splitter.Panel1MinSize &&
+                       distance < limit - Splitter.Panel2MinSize;
             }
         }
     }

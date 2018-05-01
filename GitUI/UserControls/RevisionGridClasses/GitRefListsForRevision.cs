@@ -34,11 +34,6 @@ namespace GitUI.UserControls.RevisionGridClasses
             return _allBranches.Select(b => b.Name).ToArray();
         }
 
-        public string[] GetAllNonRemoteBranchNames()
-        {
-            return _allBranches.Where(head => !head.IsRemote).Select(b => b.Name).ToArray();
-        }
-
         public string[] GetAllTagNames()
         {
             return AllTags.Select(t => t.Name).ToArray();

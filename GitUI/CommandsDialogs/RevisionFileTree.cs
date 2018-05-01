@@ -215,7 +215,7 @@ See the changes in the commit form.");
             FileText.ReloadHotkeys();
         }
 
-        protected override void OnRuntimeLoad(EventArgs e)
+        protected override void OnRuntimeLoad()
         {
             _revisionFileTreeController = new RevisionFileTreeController(() => Module.WorkingDir,
                                                                          new GitRevisionInfoProvider(() => Module),
@@ -235,7 +235,7 @@ See the changes in the commit form.");
 
             GotFocus += (s, e1) => tvGitTree.Focus();
 
-            base.OnRuntimeLoad(e);
+            base.OnRuntimeLoad();
         }
 
         private IEnumerable<string> FindFileMatches(string name)
@@ -407,7 +407,7 @@ See the changes in the commit form.");
         {
             if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
             {
-                UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision, false, false);
+                UICommands.StartFileHistoryDialog(this, gitItem.FileName, _revision);
             }
         }
 

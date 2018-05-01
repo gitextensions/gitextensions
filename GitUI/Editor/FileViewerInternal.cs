@@ -11,8 +11,8 @@ namespace GitUI.Editor
     public partial class FileViewerInternal : GitExtensionsControl, IFileViewer
     {
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
-        private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
         private readonly DiffViewerLineNumberCtrl _lineNumbersControl;
+        private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
         private bool _isGotoLineUIApplicable = true;
 
         public FileViewerInternal()
@@ -27,6 +27,7 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextArea.MouseEnter += TextArea_MouseEnter;
             TextEditor.ActiveTextAreaControl.TextArea.MouseLeave += TextArea_MouseLeave;
             TextEditor.ActiveTextAreaControl.TextArea.MouseDown += TextAreaMouseDown;
+            TextEditor.ActiveTextAreaControl.TextArea.KeyUp += TextArea_KeyUp;
             TextEditor.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.KeyDown += BlameFileKeyUp;
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
@@ -34,6 +35,11 @@ namespace GitUI.Editor
             _lineNumbersControl = new DiffViewerLineNumberCtrl(TextEditor.ActiveTextAreaControl.TextArea);
 
             VRulerPosition = GitCommands.AppSettings.DiffVerticalRulerPosition;
+        }
+
+        private void TextArea_KeyUp(object sender, KeyEventArgs e)
+        {
+            KeyUp?.Invoke(sender, e);
         }
 
         public new Font Font
@@ -45,6 +51,7 @@ namespace GitUI.Editor
         public new event MouseEventHandler MouseMove;
         public new event EventHandler MouseEnter;
         public new event EventHandler MouseLeave;
+        public new event System.Windows.Forms.KeyEventHandler KeyUp;
 
         private void TextArea_MouseEnter(object sender, EventArgs e)
         {
@@ -314,11 +321,6 @@ namespace GitUI.Editor
         }
 
         public int TotalNumberOfLines => TextEditor.Document.TotalNumberOfLines;
-
-        public void FocusTextArea()
-        {
-            TextEditor.ActiveTextAreaControl.TextArea.Select();
-        }
 
         public bool IsReadOnly
         {
