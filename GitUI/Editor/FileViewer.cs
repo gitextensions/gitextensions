@@ -42,6 +42,7 @@ namespace GitUI.Editor
             _internalFileViewer.MouseEnter += _internalFileViewer_MouseEnter;
             _internalFileViewer.MouseLeave += _internalFileViewer_MouseLeave;
             _internalFileViewer.MouseMove += _internalFileViewer_MouseMove;
+            _internalFileViewer.KeyUp += _internalFileViewer_KeyUp;
 
             var internalFileViewerControl = (Control)_internalFileViewer;
             internalFileViewerControl.Dock = DockStyle.Fill;
@@ -109,6 +110,11 @@ namespace GitUI.Editor
 
             contextMenu.Opening += ContextMenu_Opening;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+        }
+
+        private void _internalFileViewer_KeyUp(object sender, KeyEventArgs e)
+        {
+            OnKeyUp(e);
         }
 
         private void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)

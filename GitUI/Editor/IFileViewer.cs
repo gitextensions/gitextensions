@@ -23,6 +23,8 @@ namespace GitUI.Editor
         event EventHandler TextChanged;
         event EventHandler ScrollPosChanged;
         event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
+        event KeyEventHandler KeyDown;
+        event KeyEventHandler KeyUp;
         event EventHandler DoubleClick;
 
         void EnableScrollBars(bool enable);
