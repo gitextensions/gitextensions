@@ -51,10 +51,7 @@ namespace TranslationApp
             set
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TranslatedValue)));
-                if (value != _item.Value)
-                {
-                    _item.Value = value;
-                }
+                _item.Value = value;
             }
         }
 

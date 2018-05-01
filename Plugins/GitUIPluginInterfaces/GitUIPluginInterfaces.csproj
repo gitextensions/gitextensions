@@ -84,7 +84,7 @@
     <Compile Include="IGitPluginSettingsContainer.cs" />
     <Compile Include="IGitSubmoduleInfo.cs" />
     <Compile Include="IGitUICommands.cs" />
-    <Compile Include="GitUIBaseEventArgs.cs" />
+    <Compile Include="GitUIEventArgs.cs" />
     <Compile Include="RepositoryHosts\IHostedRepository.cs" />
     <Compile Include="RepositoryHosts\IPasswordHelper.cs" />
     <Compile Include="RepositoryHosts\IHostedRemote.cs" />

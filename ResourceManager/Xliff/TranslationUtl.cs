@@ -79,10 +79,8 @@ namespace ResourceManager.Xliff
             }
 
             Func<PropertyInfo, bool> isTranslatableItem;
-            if (item is DataGridViewColumn)
+            if (item is DataGridViewColumn c)
             {
-                var c = item as DataGridViewColumn;
-
                 isTranslatableItem = propertyInfo => IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
             }
             else if (item is ComboBox || item is ListBox)

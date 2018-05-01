@@ -22,11 +22,11 @@ namespace FindLargeFiles
             yield return _sizeLargeFile;
         }
 
-        public override bool Execute(GitUIBaseEventArgs gitUiCommands)
+        public override bool Execute(GitUIEventArgs args)
         {
-            using (var frm = new FindLargeFilesForm(_sizeLargeFile.ValueOrDefault(Settings), gitUiCommands))
+            using (var frm = new FindLargeFilesForm(_sizeLargeFile.ValueOrDefault(Settings), args))
             {
-                frm.ShowDialog(gitUiCommands.OwnerForm);
+                frm.ShowDialog(args.OwnerForm);
             }
 
             return true;

@@ -8,12 +8,12 @@ namespace GitUI
 {
     /// <summary>Base class for a <see cref="UserControl"/> requiring
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
-    public class GitModuleControl : GitExtensionsControl
+    public abstract class GitModuleControl : GitExtensionsControl
     {
         private readonly object _lock = new object();
 
         [Browsable(false)]
-        public bool UICommandsSourceParentSearch { get; }
+        private bool UICommandsSourceParentSearch { get; }
 
         /// <summary>Occurs after the <see cref="UICommandsSource"/> is changed.</summary>
         [Browsable(false)]
@@ -48,7 +48,7 @@ namespace GitUI
                 }
 
                 _uiCommandsSource = value;
-                OnUICommandsSourceChanged(this, _uiCommandsSource);
+                OnUICommandsSourceChanged(_uiCommandsSource);
             }
         }
 
@@ -76,7 +76,7 @@ namespace GitUI
         [Browsable(false)]
         public GitModule Module => UICommands.Module;
 
-        public GitModuleControl()
+        protected GitModuleControl()
         {
             UICommandsSourceParentSearch = true;
         }
@@ -122,13 +122,24 @@ namespace GitUI
                 Control parent = Parent;
                 while (parent != null && cmdsSrc == null)
                 {
-                    if (parent is IGitUICommandsSource)
+                    if (parent is IGitUICommandsSource source)
                     {
-                        cmdsSrc = parent as IGitUICommandsSource;
+                        cmdsSrc = source;
                     }
                     else
                     {
-                        parent = parent.Parent;
+                        if (parent.Parent == null)
+                        {
+                            var form = parent as Form;
+                            if (form != null)
+                            {
+                                parent = form.Owner;
+                            }
+                        }
+                        else
+                        {
+                            parent = parent.Parent;
+                        }
                     }
                 }
 
@@ -149,13 +160,13 @@ namespace GitUI
 
         /// <summary>Tries to run scripts identified by a <paramref name="command"/>
         /// and returns true if any executed.</summary>
-        protected bool ExecuteScriptCommand(int command)
+        private bool ExecuteScriptCommand(int command)
         {
             return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGrid);
         }
 
         /// <summary>Raises the <see cref="GitUICommandsSourceSet"/> event.</summary>
-        protected virtual void OnUICommandsSourceChanged(object sender, IGitUICommandsSource newSource)
+        protected virtual void OnUICommandsSourceChanged(IGitUICommandsSource newSource)
         {
             GitUICommandsSourceSet?.Invoke(this, new GitUICommandsSourceEventArgs(newSource));
         }

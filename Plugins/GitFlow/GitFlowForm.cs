@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitFlow.Properties;
-using GitUI;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -19,7 +18,7 @@ namespace GitFlow
         private readonly TranslationString _loading = new TranslationString("Loading...");
         private readonly TranslationString _noBranchExist = new TranslationString("No {0} branches exist.");
 
-        private readonly GitUIBaseEventArgs _gitUiCommands;
+        private readonly GitUIEventArgs _gitUiCommands;
 
         private Dictionary<string, IReadOnlyList<string>> Branches { get; } = new Dictionary<string, IReadOnlyList<string>>();
 
@@ -46,7 +45,7 @@ namespace GitFlow
 
         private bool IsGitFlowInited => !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.RunGitCmd("config --get gitflow.branch.master"));
 
-        public GitFlowForm(GitUIBaseEventArgs gitUiCommands)
+        public GitFlowForm(GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
             Translate();

@@ -593,17 +593,6 @@ namespace GitCommands
             return args.ToString();
         }
 
-        private static string GetBisectCommand(GitBisectOption bisectOption)
-        {
-            var args = new ArgumentBuilder
-            {
-                "bisect",
-                bisectOption
-            };
-
-            return args.ToString();
-        }
-
         public static string StopBisectCmd()
         {
             return "bisect reset";

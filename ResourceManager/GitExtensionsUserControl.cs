@@ -9,9 +9,9 @@ using GitCommands;
 namespace ResourceManager
 {
     /// <summary>Provides translation and hotkey plumbing for GitEx <see cref="UserControl"/>s.</summary>
-    public class GitExtensionsControl : UserControl, ITranslate
+    public abstract class GitExtensionsControl : UserControl, ITranslate
     {
-        public GitExtensionsControl()
+        protected GitExtensionsControl()
         {
             Font = AppSettings.Font;
 
@@ -39,7 +39,7 @@ namespace ResourceManager
             return isComponentInDesignMode;
         }
 
-        protected virtual void OnRuntimeLoad(EventArgs e)
+        protected virtual void OnRuntimeLoad()
         {
         }
 
@@ -49,7 +49,7 @@ namespace ResourceManager
 
             if (!CheckComponent(this))
             {
-                OnRuntimeLoad(e);
+                OnRuntimeLoad();
             }
         }
 
@@ -83,23 +83,6 @@ namespace ResourceManager
             TranslationUtils.TranslateItemsFromFields(Name, this, translation);
         }
 
-        protected void TranslateItem(string itemName, object item)
-        {
-            var translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
-
-            if (translation.Count == 0)
-            {
-                return;
-            }
-
-            var itemsToTranslate = new[] { (itemName, item) };
-
-            foreach (var pair in translation)
-            {
-                TranslationUtils.TranslateItemsFromList(Name, pair.Value, itemsToTranslate);
-            }
-        }
-
         #region Hotkeys
 
         /// <summary>Gets or sets a value that specifies if the hotkeys are used</summary>
@@ -130,7 +113,7 @@ namespace ResourceManager
             return GetHotkeyCommand(commandCode)?.KeyData ?? Keys.None;
         }
 
-        protected HotkeyCommand GetHotkeyCommand(int commandCode)
+        private HotkeyCommand GetHotkeyCommand(int commandCode)
         {
             return Hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode);
         }

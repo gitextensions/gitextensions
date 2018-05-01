@@ -19,7 +19,6 @@ using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Hotkey;
-using GitUI.Plugin;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUI.UserControls;
@@ -161,7 +160,7 @@ namespace GitUI.CommandsDialogs
 
                 try
                 {
-                    PluginLoader.Load();
+                    PluginRegistry.Initialize();
                 }
                 finally
                 {
@@ -331,7 +330,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void UICommands_PostRepositoryChanged(object sender, GitUIBaseEventArgs e)
+        private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
         {
             this.InvokeAsync(RefreshRevisions).FileAndForget();
         }
@@ -468,7 +467,7 @@ namespace GitUI.CommandsDialogs
 
         private void RegisterPlugins()
         {
-            foreach (var plugin in LoadedPlugins.Plugins)
+            foreach (var plugin in PluginRegistry.Plugins)
             {
                 // Add the plugin to the Plugins menu
                 var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
@@ -482,10 +481,10 @@ namespace GitUI.CommandsDialogs
             UICommands.RaisePostRegisterPlugin(this);
 
             // Show "Repository hosts" menu item when there is at least 1 repository host plugin loaded
-            _repositoryHostsToolStripMenuItem.Visible = RepoHosts.GitHosters.Count > 0;
-            if (RepoHosts.GitHosters.Count == 1)
+            _repositoryHostsToolStripMenuItem.Visible = PluginRegistry.GitHosters.Count > 0;
+            if (PluginRegistry.GitHosters.Count == 1)
             {
-                _repositoryHostsToolStripMenuItem.Text = RepoHosts.GitHosters[0].Description;
+                _repositoryHostsToolStripMenuItem.Text = PluginRegistry.GitHosters[0].Description;
             }
 
             UpdatePluginMenu(Module.IsValidGitWorkingDir());
@@ -493,7 +492,7 @@ namespace GitUI.CommandsDialogs
 
         private void UnregisterPlugins()
         {
-            foreach (var plugin in LoadedPlugins.Plugins)
+            foreach (var plugin in PluginRegistry.Plugins)
             {
                 plugin.Unregister(UICommands);
             }
@@ -521,8 +520,6 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                UICommands.RaisePreBrowseInitialize(this);
-
                 // check for updates
                 if (AppSettings.LastUpdateCheck.AddDays(7) < DateTime.Now)
                 {
@@ -1195,7 +1192,7 @@ namespace GitUI.CommandsDialogs
 
         private void InitNewRepositoryToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartInitializeDialog(this, SetGitModule);
+            UICommands.StartInitializeDialog(this, gitModuleChanged: SetGitModule);
         }
 
         private void PushToolStripMenuItemClick(object sender, EventArgs e)
@@ -1231,7 +1228,14 @@ namespace GitUI.CommandsDialogs
                 Module.LastPullActionToFormPullAction();
             }
 
-            UICommands.StartPullDialog(this, isSilent);
+            if (isSilent)
+            {
+                UICommands.StartPullDialogAndPullImmediately(this);
+            }
+            else
+            {
+                UICommands.StartPullDialog(this);
+            }
         }
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
@@ -1569,7 +1573,7 @@ namespace GitUI.CommandsDialogs
 
         private void ManageStashesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartStashDialog(this, true);
+            UICommands.StartStashDialog(this);
         }
 
         private void CreateStashToolStripMenuItemClick(object sender, EventArgs e)
@@ -1956,14 +1960,14 @@ namespace GitUI.CommandsDialogs
         private void BranchSelectToolStripItem_Click(object sender, EventArgs e)
         {
             var toolStripItem = (ToolStripItem)sender;
-            UICommands.StartCheckoutBranch(this, toolStripItem.Text, false);
+            UICommands.StartCheckoutBranch(this, toolStripItem.Text);
         }
 
         private void _forkCloneMenuItem_Click(object sender, EventArgs e)
         {
-            if (RepoHosts.GitHosters.Count > 0)
+            if (PluginRegistry.GitHosters.Count > 0)
             {
-                UICommands.StartCloneForkFromHoster(this, RepoHosts.GitHosters[0], SetGitModule);
+                UICommands.StartCloneForkFromHoster(this, PluginRegistry.GitHosters[0], SetGitModule);
                 UICommands.RepoChangedNotifier.Notify();
             }
             else
@@ -1974,7 +1978,7 @@ namespace GitUI.CommandsDialogs
 
         private void _viewPullRequestsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var repoHost = RepoHosts.TryGetGitHosterForModule(Module);
+            var repoHost = PluginRegistry.TryGetGitHosterForModule(Module);
             if (repoHost == null)
             {
                 MessageBox.Show(this, _noReposHostFound.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1986,7 +1990,7 @@ namespace GitUI.CommandsDialogs
 
         private void _createPullRequestToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var repoHost = RepoHosts.TryGetGitHosterForModule(Module);
+            var repoHost = PluginRegistry.TryGetGitHosterForModule(Module);
             if (repoHost == null)
             {
                 MessageBox.Show(this, _noReposHostFound.Text, _errorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2066,7 +2070,7 @@ namespace GitUI.CommandsDialogs
                 case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
                 case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
                 case Commands.QuickFetch: QuickFetch(); break;
-                case Commands.QuickPull: UICommands.StartPullDialog(this, true); break;
+                case Commands.QuickPull: UICommands.StartPullDialogAndPullImmediately(this); break;
                 case Commands.QuickPush: UICommands.StartPushDialog(this, true); break;
                 case Commands.RotateApplicationIcon: RotateApplicationIcon(); break;
                 case Commands.CloseRepository: CloseToolStripMenuItemClick(null, null); break;
@@ -2299,7 +2303,7 @@ namespace GitUI.CommandsDialogs
 
             RefreshPullIcon();
 
-            UICommands.StartPullDialog(this, true, out _, true);
+            UICommands.StartPullDialogAndPullImmediately(this, fetchAll: true);
 
             // restore AppSettings.FormPullAction value
             if (!AppSettings.SetNextPullActionAsDefault)

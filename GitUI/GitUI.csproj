@@ -315,7 +315,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Script\PowerShellHelper.cs" />
-    <Compile Include="RepoHosts.cs" />
     <Compile Include="Script\ScriptRunner.cs" />
     <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
     <Compile Include="SplitterManager.cs" />
@@ -647,7 +646,7 @@
     <Compile Include="CommandsDialogs\BrowseDialog\GitFileTreeComparer.cs" />
     <Compile Include="Lemmings.cs" />
     <Compile Include="Plugin\GitPluginSettingsContainer.cs" />
-    <Compile Include="Plugin\LoadPlugins.cs" />
+    <Compile Include="Plugin\PluginRegistry.cs" />
     <Compile Include="ProcessOutputTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Custom.cs">
@@ -1018,8 +1017,6 @@
       <DependentUpon>FormGitLog.cs</DependentUpon>
     </Compile>
     <Compile Include="GitUICommands.cs" />
-    <Compile Include="GitUIEventArgs.cs" />
-    <Compile Include="Plugin\LoadedPlugins.cs" />
     <Compile Include="UserControls\GravatarControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

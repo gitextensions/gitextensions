@@ -134,7 +134,7 @@ namespace GitUI.BranchTreePanel
                 if (MessageBoxes.ConfirmDeleteRemoteBranch(TreeViewNode.TreeView,
                     remoteBranchInfo.BranchName, remoteBranchInfo.Remote))
                 {
-                    UICommands.StartCommandLineProcessDialog(cmd, null);
+                    UICommands.StartCommandLineProcessDialog(null, cmd);
                 }
             }
 

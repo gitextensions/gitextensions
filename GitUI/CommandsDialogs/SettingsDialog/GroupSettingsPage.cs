@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using ResourceManager;
 
@@ -38,7 +39,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public IEnumerable<string> GetSearchKeywords()
         {
-            return new string[] { };
+            return Array.Empty<string>();
         }
 
         public bool IsInstantSavePage => false;

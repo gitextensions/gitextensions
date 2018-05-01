@@ -58,7 +58,7 @@ namespace GitCommandsTests.Git.Tag
 
             _fileSystem.File.Exists(Arg.Is<string>(s => s != null)).Returns(true);
 
-            _uiCommands.StartCommandLineProcessDialog(Arg.Any<GitCreateTagCmd>(), Arg.Any<IWin32Window>())
+            _uiCommands.StartCommandLineProcessDialog(Arg.Any<IWin32Window>(), Arg.Any<GitCreateTagCmd>())
                 .Returns(uiResult);
 
             Assert.AreEqual(uiResult, _controller.CreateTag(args, CreateTestingWindow()));
@@ -75,8 +75,7 @@ namespace GitCommandsTests.Git.Tag
             _controller.CreateTag(args, window);
 
             _uiCommands.Received(1).StartCommandLineProcessDialog(
-                Arg.Is<GitCreateTagCmd>(c => c.Arguments == args),
-                window);
+                window, Arg.Is<GitCreateTagCmd>(c => c.Arguments == args));
         }
 
         private static IWin32Window CreateTestingWindow()

@@ -138,7 +138,7 @@ namespace GitUI.CommandsDialogs
             DiffText.ReloadHotkeys();
         }
 
-        protected override void OnRuntimeLoad(EventArgs e)
+        protected override void OnRuntimeLoad()
         {
             _revisionDiffController = new RevisionDiffController(_gitRevisionTester);
 
@@ -150,7 +150,7 @@ namespace GitUI.CommandsDialogs
 
             GotFocus += (s, e1) => DiffFiles.Focus();
 
-            base.OnRuntimeLoad(e);
+            base.OnRuntimeLoad();
         }
 
         private string DescribeRevision(string sha1)
@@ -240,7 +240,7 @@ namespace GitUI.CommandsDialogs
             // Combined diff is a display only diff, no manipulations
             bool isAnyCombinedDiff = DiffFiles.SelectedItemParents.Any(item => item.Guid == DiffFiles.CombinedDiffGuid);
             bool isExactlyOneItemSelected = DiffFiles.SelectedItems.Count() == 1;
-            bool isAnyItemSelected = DiffFiles.SelectedItems.Count() > 0;
+            bool isAnyItemSelected = DiffFiles.SelectedItems.Any();
 
             // No changes to files in bare repos
             bool isBareRepository = Module.IsBareRepository();
@@ -362,7 +362,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                UICommands.StartFileHistoryDialog(this, DiffFiles.SelectedItem.Name, DiffFiles.Revision, false);
+                UICommands.StartFileHistoryDialog(this, DiffFiles.SelectedItem.Name, DiffFiles.Revision);
             }
         }
 
@@ -530,7 +530,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                UICommands.StartFileHistoryDialog(this, item.Name, DiffFiles.Revision, false);
+                UICommands.StartFileHistoryDialog(this, item.Name, DiffFiles.Revision);
             }
         }
 
@@ -772,7 +772,7 @@ namespace GitUI.CommandsDialogs
             foreach (var name in submodules)
             {
                 GitUICommands submodulCommands = new GitUICommands(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
-                submodulCommands.StartCommitDialog(this, false);
+                submodulCommands.StartCommitDialog(this);
             }
 
             RefreshArtificial();

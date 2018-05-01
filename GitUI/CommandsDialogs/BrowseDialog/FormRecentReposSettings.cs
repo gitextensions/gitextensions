@@ -197,13 +197,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private bool GetSelectedRepo(object sender, out RecentRepoInfo repo)
         {
-            if (sender is ContextMenuStrip)
+            if (sender is ContextMenuStrip strip)
             {
-                sender = ((ContextMenuStrip)sender).SourceControl;
+                sender = strip.SourceControl;
             }
-            else if (sender is ToolStripItem)
+            else if (sender is ToolStripItem item)
             {
-                return GetSelectedRepo(((ToolStripItem)sender).Owner, out repo);
+                return GetSelectedRepo(item.Owner, out repo);
             }
             else
             {

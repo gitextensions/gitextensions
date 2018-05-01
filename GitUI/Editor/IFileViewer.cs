@@ -66,7 +66,6 @@ namespace GitUI.Editor
         /// </summary>
         bool IsGotoLineUIApplicable();
         Font Font { get; set; }
-        void FocusTextArea();
 
         void SetFileLoader(GetNextFileFnc fileLoader);
     }

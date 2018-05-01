@@ -58,10 +58,8 @@ namespace GitUI.CommitInfo
 
             _commitDataManager = new CommitDataManager(() => Module);
 
-            IHeaderRenderStyleProvider headerRenderer;
-            IHeaderLabelFormatter labelFormatter;
-            labelFormatter = new TabbedHeaderLabelFormatter();
-            headerRenderer = new TabbedHeaderRenderStyleProvider();
+            var labelFormatter = new TabbedHeaderLabelFormatter();
+            var headerRenderer = new TabbedHeaderRenderStyleProvider();
 
             _commitDataHeaderRenderer = new CommitDataHeaderRenderer(labelFormatter, _dateFormatter, headerRenderer, _linkFactory);
             _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
@@ -142,10 +140,6 @@ namespace GitUI.CommitInfo
             get => _revision;
             set => SetRevisionWithChildren(value, null);
         }
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        [Browsable(false)]
-        public string RevisionGuid => _revision.Guid;
 
         private string _revisionInfo;
         private string _linksInfo;

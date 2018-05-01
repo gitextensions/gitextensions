@@ -13,6 +13,7 @@ namespace GitUI.CommandsDialogs
             Commit,
             Blob,
             Tree,
+            Tag,
             Other
         }
 
@@ -24,12 +25,16 @@ namespace GitUI.CommandsDialogs
             /// %s  - subject.
             /// %ct - committer date, UNIX timestamp (easy to parse format).
             /// </summary>
-            private const string LogCommandArgumentsFormat = "log -n1 --pretty=format:\"%aN, %e, %s, %ct\" {0}";
-            private const string LogPattern = @"^([^,]+), (.*), (.+), (\d+)$";
+            private const string LogCommandArgumentsFormat = "log -n1 --pretty=format:\"%aN, %e, %s, %ct, %P\" {0}";
+            private const string LogPattern = @"^([^,]+), (.*), (.+), (\d+), (.+)?$";
             private const string RawDataPattern = "^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) (" + GitRevision.Sha1HashPattern + ")(.)*$";
+
+            private const string TagCommandArguments = "cat-file -p {0}";
+            private const string TagPattern = @"^object (.+)\ntype commit\ntag (.+)\ntagger (.+) <.*> (.+) .*\n\n(.*)\n";
 
             private static readonly Regex RawDataRegex = new Regex(RawDataPattern, RegexOptions.Compiled);
             private static readonly Regex LogRegex = new Regex(LogPattern, RegexOptions.Compiled | RegexOptions.Singleline);
+            private static readonly Regex TagRegex = new Regex(TagPattern, RegexOptions.Compiled | RegexOptions.Multiline);
 
             public LostObjectType ObjectType { get; }
 
@@ -39,6 +44,11 @@ namespace GitUI.CommandsDialogs
             public string Hash { get; }
 
             /// <summary>
+            /// Sha1 hash of parent commit of commit lost object.
+            /// </summary>
+            public string Parent { get; private set; }
+
+            /// <summary>
             /// Diagnostics and object type.
             /// </summary>
             public string RawType { get; }
@@ -46,6 +56,11 @@ namespace GitUI.CommandsDialogs
             public string Author { get; private set; }
             public string Subject { get; private set; }
             public DateTime? Date { get; private set; }
+
+            /// <summary>
+            /// Tag name (for a tag object)
+            /// </summary>
+            public string TagName { get; set; }
 
             private LostObject(LostObjectType objectType, string rawType, string hash)
             {
@@ -91,6 +106,24 @@ namespace GitUI.CommandsDialogs
                         string encodingName = logPatternMatch.Groups[2].Value;
                         result.Subject = module.ReEncodeCommitMessage(logPatternMatch.Groups[3].Value, encodingName);
                         result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups[4].Value);
+                        if (logPatternMatch.Groups.Count >= 5)
+                        {
+                            result.Parent = logPatternMatch.Groups[5].Value;
+                        }
+                    }
+                }
+
+                if (result.ObjectType == LostObjectType.Tag)
+                {
+                    var tagData = GetLostTagData(module, hash);
+                    var tagPatternMatch = TagRegex.Match(tagData);
+                    if (tagPatternMatch.Success)
+                    {
+                        result.Parent = tagPatternMatch.Groups[1].Value;
+                        result.Author = module.ReEncodeStringFromLossless(tagPatternMatch.Groups[3].Value);
+                        result.TagName = tagPatternMatch.Groups[2].Value;
+                        result.Subject = result.TagName + ":" + tagPatternMatch.Groups[5].Value;
+                        result.Date = DateTimeUtils.ParseUnixTime(tagPatternMatch.Groups[4].Value);
                     }
                 }
 
@@ -105,12 +138,22 @@ namespace GitUI.CommandsDialogs
 
             private static string GetLostCommitLog(GitModule module, string hash)
             {
+                return VerifyHashAndRunCommand(module, hash, LogCommandArgumentsFormat);
+            }
+
+            private static string VerifyHashAndRunCommand(GitModule module, string hash, string command)
+            {
                 if (string.IsNullOrEmpty(hash) || !GitRevision.Sha1HashRegex.IsMatch(hash))
                 {
                     throw new ArgumentOutOfRangeException(nameof(hash), hash, "Hash must be a valid SHA-1 hash.");
                 }
 
-                return module.RunGitCmd(string.Format(LogCommandArgumentsFormat, hash), GitModule.LosslessEncoding);
+                return module.RunGitCmd(string.Format(command, hash), GitModule.LosslessEncoding);
+            }
+
+            private static string GetLostTagData(GitModule module, string hash)
+            {
+                return VerifyHashAndRunCommand(module, hash, TagCommandArguments);
             }
 
             private static LostObjectType GetObjectType(GroupCollection matchedGroup)
@@ -125,6 +168,7 @@ namespace GitUI.CommandsDialogs
                     case "commit": return LostObjectType.Commit;
                     case "blob": return LostObjectType.Blob;
                     case "tree": return LostObjectType.Tree;
+                    case "tag": return LostObjectType.Tag;
                     default: return LostObjectType.Other;
                 }
             }

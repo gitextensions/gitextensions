@@ -48,7 +48,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.Mask();
             _remoteLoader.LoadAsync(
                 () => _hostedRemotes.Where(r => !r.IsOwnedByMe).ToArray(),
-                (IHostedRemote[] foreignHostedRemotes) =>
+                foreignHostedRemotes =>
                 {
                     if (foreignHostedRemotes.Length == 0)
                     {

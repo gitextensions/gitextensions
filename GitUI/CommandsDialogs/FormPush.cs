@@ -632,7 +632,8 @@ namespace GitUI.CommandsDialogs
                     return false;
                 }
 
-                UICommands.StartPullDialog(owner, true, _selectedRemoteBranchName, _selectedRemote.Name, out var pullCompleted, false);
+                UICommands.StartPullDialogAndPullImmediately(out var pullCompleted, owner, _selectedRemoteBranchName, _selectedRemote.Name);
+
                 if (pullCompleted)
                 {
                     form.Retry();
@@ -766,7 +767,7 @@ namespace GitUI.CommandsDialogs
 
             Text = string.Concat(_pushCaption.Text, " (", Module.WorkingDir, ")");
 
-            var gitHoster = RepoHosts.TryGetGitHosterForModule(Module);
+            var gitHoster = PluginRegistry.TryGetGitHosterForModule(Module);
             _createPullRequestCB.Enabled = gitHoster != null;
         }
 

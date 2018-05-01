@@ -54,17 +54,17 @@ namespace AutoCompileSubmodules
             gitUiCommands.PostUpdateSubmodules -= GitUiCommandsPostUpdateSubmodules;
         }
 
-        public override bool Execute(GitUIBaseEventArgs e)
+        public override bool Execute(GitUIEventArgs args)
         {
             // Only build when plugin is enabled
-            if (string.IsNullOrEmpty(e.GitModule.WorkingDir))
+            if (string.IsNullOrEmpty(args.GitModule.WorkingDir))
             {
                 return false;
             }
 
             var msbuildpath = _msBuildPath.ValueOrDefault(Settings);
 
-            var workingDir = new DirectoryInfo(e.GitModule.WorkingDir);
+            var workingDir = new DirectoryInfo(args.GitModule.WorkingDir);
             var solutionFiles = workingDir.GetFiles("*.sln", SearchOption.AllDirectories);
 
             for (var n = solutionFiles.Length - 1; n > 0; n--)
@@ -72,7 +72,7 @@ namespace AutoCompileSubmodules
                 var solutionFile = solutionFiles[n];
 
                 var result =
-                    MessageBox.Show(e.OwnerForm,
+                    MessageBox.Show(args.OwnerForm,
                         string.Format(_doYouWantBuild.Text,
                                       solutionFile.Name,
                                       SolutionFilesToString(solutionFiles)),
@@ -91,11 +91,11 @@ namespace AutoCompileSubmodules
 
                 if (string.IsNullOrEmpty(msbuildpath) || !File.Exists(msbuildpath))
                 {
-                    MessageBox.Show(e.OwnerForm, _enterCorrectMsBuildPath.Text);
+                    MessageBox.Show(args.OwnerForm, _enterCorrectMsBuildPath.Text);
                 }
                 else
                 {
-                    e.GitUICommands.StartCommandLineProcessDialog(e.OwnerForm, msbuildpath, solutionFile.FullName + " " + _msBuildArguments.ValueOrDefault(Settings));
+                    args.GitUICommands.StartCommandLineProcessDialog(args.OwnerForm, msbuildpath, solutionFile.FullName + " " + _msBuildArguments.ValueOrDefault(Settings));
                 }
             }
 

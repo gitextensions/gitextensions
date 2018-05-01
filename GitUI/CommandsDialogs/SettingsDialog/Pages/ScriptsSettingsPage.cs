@@ -89,13 +89,13 @@ Current Branch:
                 foreach (System.Collections.DictionaryEntry icon in resourceSet)
                 {
                     // add entry to toolstrip
-                    if (icon.Value.GetType() == typeof(Icon))
+                    if (icon.Value is Icon)
                     {
                         ////contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)((Icon)icon.Value).ToBitmap(), SplitButtonMenuItem_Click);
                     }
-                    else if (icon.Value.GetType() == typeof(Bitmap))
+                    else if (icon.Value is Bitmap bitmap)
                     {
-                        contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), (Image)icon.Value, SplitButtonMenuItem_Click);
+                        contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), bitmap, SplitButtonMenuItem_Click);
                     }
                     ////var aa = icon.Value.GetType();
                 }
@@ -141,7 +141,7 @@ Current Branch:
                 return;
             }
 
-            ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+            var scriptInfo = (ScriptInfo)ScriptList.SelectedRows[0].DataBoundItem;
 
             nameTextBox.Text = scriptInfo.Name;
             commandTextBox.Text = scriptInfo.Command;
@@ -187,7 +187,8 @@ Current Branch:
         {
             if (ScriptList.SelectedRows.Count > 0)
             {
-                ScriptInfo selectedScriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+                var selectedScriptInfo = (ScriptInfo)ScriptList.SelectedRows[0].DataBoundItem;
+
                 selectedScriptInfo.Name = nameTextBox.Text;
                 selectedScriptInfo.Command = commandTextBox.Text;
                 selectedScriptInfo.Arguments = argumentsTextBox.Text;

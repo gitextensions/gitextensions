@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs
         private GitRevision _headRevision;
         private readonly GitRevision _mergeBase;
         private readonly IGitRevisionTester _revisionTester;
-        private IFileStatusListContextMenuController _revisionDiffContextMenuController;
+        private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
         private readonly bool _firstParentIsValid;
@@ -181,7 +181,7 @@ namespace GitUI.CommandsDialogs
 
             if (item.IsTracked)
             {
-                UICommands.StartFileHistoryDialog(this, item.Name, _baseRevision, false);
+                UICommands.StartFileHistoryDialog(this, item.Name, _baseRevision);
             }
         }
 
