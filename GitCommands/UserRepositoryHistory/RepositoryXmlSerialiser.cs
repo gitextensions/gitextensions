@@ -85,7 +85,9 @@ namespace GitCommands.UserRepositoryHistory
                 using (var sw = new StringWriter())
                 {
                     var serializer = new XmlSerializer(typeof(RepositoryHistorySurrogate));
-                    serializer.Serialize(sw, surrogate);
+                    var ns = new XmlSerializerNamespaces();
+                    ns.Add(string.Empty, string.Empty);
+                    serializer.Serialize(sw, surrogate, ns);
                     return sw.ToString();
                 }
             }
