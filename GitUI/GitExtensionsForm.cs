@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -118,7 +117,7 @@ namespace GitUI
         public static Icon GetApplicationIcon(string iconStyle, string iconColor)
         {
             var colorIndex = (int)GetColorIndexByName(iconColor);
-            if (colorIndex == (int) ColorIndex.Unknown)
+            if (colorIndex == (int)ColorIndex.Unknown)
                 colorIndex = 0;
 
             Icon appIcon;
@@ -233,14 +232,7 @@ namespace GitUI
             float scale = 1.0f * deviceDpi / position.DeviceDpi;
 
             StartPosition = FormStartPosition.Manual;
-            if (FormBorderStyle == FormBorderStyle.Sizable ||
-                FormBorderStyle == FormBorderStyle.SizableToolWindow)
-            {
-                Size formSize = position.Rect.Size;
-                formSize.Width = (int)(formSize.Width * scale);
-                formSize.Height = (int)(formSize.Height * scale);
-                Size = formSize;
-            }
+
             if (Owner == null || !_windowCentred)
             {
                 Point location = position.Rect.Location;
@@ -257,7 +249,7 @@ namespace GitUI
                 Location = new Point(Owner.Left + Owner.Width / 2 - Width / 2,
                     Math.Max(0, Owner.Top + Owner.Height / 2 - Height / 2));
             }
-            if(WindowState != position.State)
+            if (WindowState != position.State)
                 WindowState = position.State;
         }
 
