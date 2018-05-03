@@ -3,34 +3,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
+using GitCommands.UserRepositoryHistory.Legacy;
 using JetBrains.Annotations;
 
 namespace GitCommands.UserRepositoryHistory
 {
     /// <summary>
-    /// Provides the ability to serialise and deserialise collections of user's git repositories.
-    /// </summary>
-    public interface IRepositorySerialiser
-    {
-        /// <summary>
-        /// Restores a list of user's git repositories from the supplied string.
-        /// </summary>
-        /// <param name="serialised">A serialised list of user's git repositories.</param>
-        /// <returns>A list of user's git repositories.</returns>
-        IReadOnlyList<Repository> Deserialize(string serialised);
-
-        /// <summary>
-        /// Serialises the given list of user's git repositories.
-        /// </summary>
-        /// <param name="repositories">A list of user's git repositories.</param>
-        /// <returns>A serialised list of user's git repositories.</returns>
-        string Serialize(IEnumerable<Repository> repositories);
-    }
-
-    /// <summary>
     /// Serialises or deserialises user's git repositories into XML.
     /// </summary>
-    public sealed class RepositoryXmlSerialiser : IRepositorySerialiser
+    public sealed class RepositoryXmlSerialiser : IRepositorySerialiser<Repository>
     {
         /// <summary>
         /// Restores a list of user's git repositories from the supplied string.
@@ -96,25 +77,6 @@ namespace GitCommands.UserRepositoryHistory
                 Trace.WriteLine(ex.Message);
                 return null;
             }
-        }
-
-        /// <summary>
-        /// The surrogate is necessary to provide backwards compatibility.
-        /// The original implementation persisted user's git repositories under "RepositoryHistory" root node.
-        /// </summary>
-        [XmlRoot("RepositoryHistory")]
-        public class RepositoryHistorySurrogate
-        {
-            public RepositoryHistorySurrogate(IEnumerable<Repository> repositories)
-            {
-                Repositories.AddRange(repositories);
-            }
-
-            public RepositoryHistorySurrogate()
-            {
-            }
-
-            public List<Repository> Repositories { get; } = new List<Repository>();
         }
     }
 }

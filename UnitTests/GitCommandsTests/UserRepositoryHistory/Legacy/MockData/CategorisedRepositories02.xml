@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<ArrayOfRepositoryCategory xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <RepositoryCategory>
+    <Repositories>
+      <Repository>
+        <Title>Git Extenions</Title>
+        <Path>C:\Development\gitextensions\</Path>
+        <Description>Mega project!</Description>
+        <Anchor>MostRecent</Anchor>
+      </Repository>
+    </Repositories>
+    <Description>Git Extensions</Description>
+    <CategoryType>Repositories</CategoryType>
+  </RepositoryCategory>
+  <RepositoryCategory>
+    <Repositories>
+      <Repository>
+        <Path>C:\Development\RibbonWinForms\</Path>
+        <Description>Check it out!</Description>
+        <Anchor>None</Anchor>
+      </Repository>
+      <Repository>
+        <Path>C:\Development\System.IO.Abstractions\</Path>
+        <Anchor>None</Anchor>
+      </Repository>
+    </Repositories>
+    <Description>3rd Party</Description>
+    <CategoryType>Repositories</CategoryType>
+  </RepositoryCategory>
+  <RepositoryCategory>
+    <Repositories>
+      <Repository>
+        <Title>Test 00</Title>
+        <Path>C:\Development\test</Path>
+        <Description>Some test folder</Description>
+        <Anchor>MostRecent</Anchor>
+      </Repository>
+      <Repository>
+        <Title>Test 01</Title>
+        <Path>C:\Development\test - Copy</Path>
+        <Anchor>MostRecent</Anchor>
+      </Repository>
+      <Repository>
+        <Title>Test 02</Title>
+        <Path>C:\Development\test - Copy (2)</Path>
+        <Anchor>None</Anchor>
+      </Repository>
+      <Repository>
+        <Title>Test 03</Title>
+        <Path>C:\Development\test - Copy (3)</Path>
+        <Anchor>None</Anchor>
+      </Repository>
+      <Repository>
+        <Title>Test 04</Title>
+        <Path>C:\Development\test - Copy (4)</Path>
+        <Anchor>None</Anchor>
+      </Repository>
+    </Repositories>
+    <Description>Tests</Description>
+    <CategoryType>Repositories</CategoryType>
+  </RepositoryCategory>
+</ArrayOfRepositoryCategory>

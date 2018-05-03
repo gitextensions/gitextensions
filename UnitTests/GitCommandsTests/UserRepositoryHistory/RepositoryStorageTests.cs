@@ -11,13 +11,13 @@ namespace GitCommandsTests.UserRepositoryHistory
     [TestFixture]
     public class RepositoryStorageTests
     {
-        private IRepositorySerialiser _repositorySerialiser;
+        private IRepositorySerialiser<Repository> _repositorySerialiser;
         private RepositoryStorage _repositoryStorage;
 
         [SetUp]
         public void Setup()
         {
-            _repositorySerialiser = Substitute.For<IRepositorySerialiser>();
+            _repositorySerialiser = Substitute.For<IRepositorySerialiser<Repository>>();
             _repositoryStorage = new RepositoryStorage(_repositorySerialiser);
         }
 

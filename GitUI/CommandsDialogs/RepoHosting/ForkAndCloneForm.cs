@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
-                    var repositoryHistory = await RepositoryHistoryManager.Locals.LoadHistoryAsync();
+                    var repositoryHistory = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
 
                     await this.SwitchToMainThreadAsync();
                     var lastRepo = repositoryHistory.FirstOrDefault();

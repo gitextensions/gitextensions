@@ -8,14 +8,14 @@
         static RepositoryHistoryManager()
         {
             var repositoryStorage = new RepositoryStorage();
-            Locals = new LocalRepositoryManager(repositoryStorage);
+            Locals = new LocalRepositoryManager(repositoryStorage, new Legacy.RepositoryHistoryMigrator());
             Remotes = new RemoteRepositoryManager(repositoryStorage);
         }
 
         /// <summary>
         /// Provides an access to the local repositories history manager.
         /// </summary>
-        public static IRepositoryManager Locals { get; }
+        public static ILocalRepositoryManager Locals { get; }
 
         /// <summary>
         /// Provides an access to the remote repositories history manager.

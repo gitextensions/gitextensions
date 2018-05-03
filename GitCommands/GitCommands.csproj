@@ -107,6 +107,13 @@
     <Compile Include="Remote\GitRemoteManager.cs" />
     <Compile Include="Remote\RepoNameExtractor.cs" />
     <Compile Include="UserRepositoryHistory\IRepositoryManager.cs" />
+    <Compile Include="UserRepositoryHistory\IRepositorySerialiser.cs" />
+    <Compile Include="UserRepositoryHistory\Legacy\Repository.cs" />
+    <Compile Include="UserRepositoryHistory\Legacy\RepositoryCategory.cs" />
+    <Compile Include="UserRepositoryHistory\Legacy\RepositoryCategoryXmlSerialiser.cs" />
+    <Compile Include="UserRepositoryHistory\Legacy\RepositoryHistoryMigrator.cs" />
+    <Compile Include="UserRepositoryHistory\Legacy\RepositoryHistorySurrogate.cs" />
+    <Compile Include="UserRepositoryHistory\Legacy\RepositoryStorage.cs" />
     <Compile Include="UserRepositoryHistory\LocalRepositoryManager.cs" />
     <Compile Include="UserRepositoryHistory\RemoteRepositoryManager.cs" />
     <Compile Include="UserRepositoryHistory\RepositoryHistoryManager.cs" />
