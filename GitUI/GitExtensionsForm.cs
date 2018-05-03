@@ -292,6 +292,14 @@ namespace GitUI
             return deviceDpi;
         }
 
+        public float GetScaleFactor()
+        {
+            var currentDpi = GetCurrentDeviceDpi();
+            var standardDpi = 96; // Default DPI at 100% zoom
+            var scaleFactor = (float)currentDpi / standardDpi;
+            return scaleFactor;
+        }
+
         private static WindowPositionList _windowPositionList;
         /// <summary>
         ///   Save the position of a form to the user settings. Hides the window
