@@ -20,7 +20,7 @@ namespace GitCommandsTests.ExternalLinks
         private RepoDistSettings _userRoaming;
         private RepoDistSettings _repoDistributed;
         private RepoDistSettings _repoLocal;
-        private IExternalLinksLoader _externalLinksLoader;
+        private IExternalLinksStorage _externalLinksStorage;
         private ConfiguredLinkDefinitionsProvider _provider;
 
         [SetUp]
@@ -39,9 +39,9 @@ namespace GitCommandsTests.ExternalLinks
             _repoDistributed = new RepoDistSettings(_userRoaming, new GitExtSettingsCache(_level2));
             _repoLocal = new RepoDistSettings(_repoDistributed, new GitExtSettingsCache(_level1));
 
-            _externalLinksLoader = Substitute.For<IExternalLinksLoader>();
+            _externalLinksStorage = Substitute.For<IExternalLinksStorage>();
 
-            _provider = new ConfiguredLinkDefinitionsProvider(_externalLinksLoader);
+            _provider = new ConfiguredLinkDefinitionsProvider(_externalLinksStorage);
         }
 
         [TearDown]
@@ -64,7 +64,7 @@ namespace GitCommandsTests.ExternalLinks
         [Test]
         public void Can_load_1_layers_of_settings()
         {
-            _externalLinksLoader.Load(Arg.Any<RepoDistSettings>()).Returns(new List<ExternalLinkDefinition>
+            _externalLinksStorage.Load(Arg.Any<RepoDistSettings>()).Returns(new List<ExternalLinkDefinition>
             {
                 new ExternalLinkDefinition { Name = "user definition 1" },
             });
@@ -77,7 +77,7 @@ namespace GitCommandsTests.ExternalLinks
         [Test]
         public void Can_load_2_layers_of_settings()
         {
-            _externalLinksLoader.Load(Arg.Any<RepoDistSettings>()).Returns(
+            _externalLinksStorage.Load(Arg.Any<RepoDistSettings>()).Returns(
                 new List<ExternalLinkDefinition>
                 {
                     new ExternalLinkDefinition { Name = "local definition 1" },
@@ -99,7 +99,7 @@ namespace GitCommandsTests.ExternalLinks
         [Test]
         public void Can_load_3_layers_of_settings()
         {
-            _externalLinksLoader.Load(Arg.Any<RepoDistSettings>()).Returns(
+            _externalLinksStorage.Load(Arg.Any<RepoDistSettings>()).Returns(
                 new List<ExternalLinkDefinition>
                 {
                     new ExternalLinkDefinition { Name = "local definition 1" },

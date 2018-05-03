@@ -78,8 +78,8 @@
     <Compile Include="ExternalLinks\ExternalLinkDefinition.cs" />
     <Compile Include="ExternalLinks\ExternalLinkFormat.cs" />
     <Compile Include="ExternalLinks\ExternalLinkRevisionParser.cs" />
-    <Compile Include="ExternalLinks\ExternalLinksLoader.cs" />
     <Compile Include="ExternalLinks\ExternalLinksManager.cs" />
+    <Compile Include="ExternalLinks\ExternalLinksStorage.cs" />
     <Compile Include="ExternalLinks\GitRevisionExternalLinksParser.cs" />
     <Compile Include="FileAssociatedIconProvider.cs" />
     <Compile Include="FileHelper.cs" />

@@ -8,14 +8,14 @@ using NUnit.Framework;
 namespace GitCommandsTests.ExternalLinks
 {
     [TestFixture]
-    public class ExternalLinksLoaderIntegrationTests
+    public class ExternalLinksStorageIntegrationTests
     {
-        private ExternalLinksLoader _loader;
+        private ExternalLinksStorage _externalLinksStorage;
 
         [SetUp]
         public void Setup()
         {
-            _loader = new ExternalLinksLoader();
+            _externalLinksStorage = new ExternalLinksStorage();
         }
 
         [TestCase("level1_repogit_GitExtensions", 1)]
@@ -32,7 +32,7 @@ namespace GitCommandsTests.ExternalLinks
                 {
                     var settings = new RepoDistSettings(null, settingsCache);
 
-                    var definitions = _loader.Load(settings);
+                    var definitions = _externalLinksStorage.Load(settings);
                     definitions.Count.Should().Be(expected);
                 }
             }

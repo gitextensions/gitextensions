@@ -21,11 +21,11 @@ namespace GitCommands.ExternalLinks
     /// </summary>
     public sealed class ConfiguredLinkDefinitionsProvider : IConfiguredLinkDefinitionsProvider
     {
-        private readonly IExternalLinksLoader _externalLinksLoader;
+        private readonly IExternalLinksStorage _externalLinksStorage;
 
-        public ConfiguredLinkDefinitionsProvider(IExternalLinksLoader externalLinksLoader)
+        public ConfiguredLinkDefinitionsProvider(IExternalLinksStorage externalLinksStorage)
         {
-            _externalLinksLoader = externalLinksLoader;
+            _externalLinksStorage = externalLinksStorage;
         }
 
         /// <summary>
@@ -39,11 +39,11 @@ namespace GitCommands.ExternalLinks
             }
 
             var cachedSettings = new RepoDistSettings(null, settings.SettingsCache);
-            IEnumerable<ExternalLinkDefinition> effective = _externalLinksLoader.Load(cachedSettings);
+            IEnumerable<ExternalLinkDefinition> effective = _externalLinksStorage.Load(cachedSettings);
 
             if (settings.LowerPriority != null)
             {
-                var lowerPriorityLoader = new ConfiguredLinkDefinitionsProvider(_externalLinksLoader);
+                var lowerPriorityLoader = new ConfiguredLinkDefinitionsProvider(_externalLinksStorage);
                 effective = effective.Union(lowerPriorityLoader.Get(settings.LowerPriority));
             }
 
