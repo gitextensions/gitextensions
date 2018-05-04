@@ -473,21 +473,26 @@ namespace GitUI.CommandsDialogs
             // clipboard branch and tag menu handling
             {
                 var revision = selectedRevisions[0];
-                var gitRefListsForRevision = new GitUI.UserControls.RevisionGridClasses.GitRefListsForRevision(revision);
-                branchNameCopyToolStripMenuItem.Tag = "caption";
-                tagNameCopyToolStripMenuItem.Tag = "caption";
-                GitUI.UserControls.RevisionGridClasses.MenuUtil.SetAsCaptionMenuItem(branchNameCopyToolStripMenuItem, FileHistoryContextMenu);
-                GitUI.UserControls.RevisionGridClasses.MenuUtil.SetAsCaptionMenuItem(tagNameCopyToolStripMenuItem, FileHistoryContextMenu);
+                copyToClipboardToolStripMenuItem.Enabled = !revision.IsArtificial;
 
-                var branchNames = gitRefListsForRevision.GetAllBranchNames();
-                GitUI.UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(copyToClipboardToolStripMenuItem, branchNameCopyToolStripMenuItem, branchNames, "branchNameItem");
+                if (copyToClipboardToolStripMenuItem.Enabled)
+                {
+                    var gitRefListsForRevision = new UserControls.RevisionGridClasses.GitRefListsForRevision(revision);
+                    branchNameCopyToolStripMenuItem.Tag = "caption";
+                    tagNameCopyToolStripMenuItem.Tag = "caption";
+                    UserControls.RevisionGridClasses.MenuUtil.SetAsCaptionMenuItem(branchNameCopyToolStripMenuItem, FileHistoryContextMenu);
+                    UserControls.RevisionGridClasses.MenuUtil.SetAsCaptionMenuItem(tagNameCopyToolStripMenuItem, FileHistoryContextMenu);
 
-                var tagNames = gitRefListsForRevision.GetAllTagNames();
-                GitUI.UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(copyToClipboardToolStripMenuItem, tagNameCopyToolStripMenuItem, tagNames, "tagNameItem");
+                    var branchNames = gitRefListsForRevision.GetAllBranchNames();
+                    UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(copyToClipboardToolStripMenuItem, branchNameCopyToolStripMenuItem, branchNames, "branchNameItem");
 
-                toolStripSeparator6.Visible = branchNames.Any() || tagNames.Any();
+                    var tagNames = gitRefListsForRevision.GetAllTagNames();
+                    UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(copyToClipboardToolStripMenuItem, tagNameCopyToolStripMenuItem, tagNames, "tagNameItem");
 
-                toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
+                    toolStripSeparator6.Visible = branchNames.Any() || tagNames.Any();
+
+                    toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
+                }
             }
         }
 
