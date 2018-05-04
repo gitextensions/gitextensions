@@ -637,41 +637,34 @@ namespace GitUI.CommandsDialogs
 
         private void MessageCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedRevisions = FileChanges.GetSelectedRevisions();
-            if (selectedRevisions != null)
-            {
-                var r = selectedRevisions[0];
-                if (r != null)
-                {
-                    Clipboard.SetText(r.Subject);
-                }
-            }
+            DoOnSelectedRevision((GitRevision r) => Clipboard.SetText(r.Subject));
         }
 
         private void AuthorCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedRevisions = FileChanges.GetSelectedRevisions();
-            if (selectedRevisions != null)
-            {
-                var r = selectedRevisions[0];
-                if (r != null)
-                {
-                    Clipboard.SetText(r.Author);
-                }
-            }
+            DoOnSelectedRevision((GitRevision r) => Clipboard.SetText(r.Author));
         }
 
         private void DateCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            DoOnSelectedRevision((GitRevision r) => Clipboard.SetText(r.CommitDate.ToString()));
+        }
+
+        private void DoOnSelectedRevision(Action<GitRevision> toDo)
+        {
             var selectedRevisions = FileChanges.GetSelectedRevisions();
-            if (selectedRevisions != null)
+            if (selectedRevisions == null)
             {
-                var r = selectedRevisions[0];
-                if (r != null)
-                {
-                    Clipboard.SetText(r.CommitDate.ToString());
-                }
+                return;
             }
+
+            var r = selectedRevisions[0];
+            if (r == null)
+            {
+                return;
+            }
+
+            toDo(r);
         }
     }
 }
