@@ -607,64 +607,44 @@ namespace GitUI.CommandsDialogs
 
         private void CopyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
         {
-            var selectedRevisions = FileChanges.GetSelectedRevisions();
-
-            if (selectedRevisions != null)
+            DoOnSelectedRevision(r =>
             {
-                var r = selectedRevisions[0];
-                if (r != null)
-                {
-                    GitUI.UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, r.Guid.ShortenTo(15));
-                    GitUI.UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, r.Subject.ShortenTo(30));
-                    GitUI.UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(authorCopyToolStripMenuItem, r.Author);
-                    GitUI.UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(dateCopyToolStripMenuItem, r.CommitDate.ToString());
-                }
-            }
+                UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, r.Guid.ShortenTo(15));
+                UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, r.Subject.ShortenTo(30));
+                UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(authorCopyToolStripMenuItem, r.Author);
+                UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(dateCopyToolStripMenuItem, r.CommitDate.ToString());
+            });
         }
 
         private void HashCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedRevisions = FileChanges.GetSelectedRevisions();
-            if (selectedRevisions != null)
-            {
-                var r = selectedRevisions[0];
-                if (r != null)
-                {
-                    Clipboard.SetText(r.Guid);
-                }
-            }
+            DoOnSelectedRevision(r => Clipboard.SetText(r.Guid));
         }
 
         private void MessageCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DoOnSelectedRevision((GitRevision r) => Clipboard.SetText(r.Subject));
+            DoOnSelectedRevision(r => Clipboard.SetText(r.Subject));
         }
 
         private void AuthorCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DoOnSelectedRevision((GitRevision r) => Clipboard.SetText(r.Author));
+            DoOnSelectedRevision(r => Clipboard.SetText(r.Author));
         }
 
         private void DateCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DoOnSelectedRevision((GitRevision r) => Clipboard.SetText(r.CommitDate.ToString()));
+            DoOnSelectedRevision(r => Clipboard.SetText(r.CommitDate.ToString()));
         }
 
         private void DoOnSelectedRevision(Action<GitRevision> toDo)
         {
             var selectedRevisions = FileChanges.GetSelectedRevisions();
-            if (selectedRevisions == null)
+            if (selectedRevisions == null || selectedRevisions.Count == 0 || selectedRevisions[0] == null)
             {
                 return;
             }
 
-            var r = selectedRevisions[0];
-            if (r == null)
-            {
-                return;
-            }
-
-            toDo(r);
+            toDo(selectedRevisions[0]);
         }
     }
 }
