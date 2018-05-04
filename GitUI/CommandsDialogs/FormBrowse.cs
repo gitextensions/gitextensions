@@ -693,7 +693,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
+            var recentRepositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
             List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
             using (var graphics = CreateGraphics())
             {
@@ -702,7 +702,7 @@ namespace GitUI.CommandsDialogs
                     MeasureFont = _NO_TRANSLATE_Workingdir.Font,
                     Graphics = graphics
                 };
-                splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, mostRecentRepos);
+                splitter.SplitRecentRepos(recentRepositoryHistory, mostRecentRepos, mostRecentRepos);
 
                 RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
 
@@ -1586,37 +1586,6 @@ namespace GitUI.CommandsDialogs
             Close();
         }
 
-        private void FileToolStripMenuItemDropDownOpening(object sender, EventArgs e)
-        {
-            var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadHistoryAsync());
-            if (repositoryHistory.Count == 0)
-            {
-                recentToolStripMenuItem.Enabled = false;
-                return;
-            }
-
-            recentToolStripMenuItem.Enabled = true;
-            recentToolStripMenuItem.DropDownItems.Clear();
-
-            foreach (var historyItem in repositoryHistory)
-            {
-                if (string.IsNullOrEmpty(historyItem.Path))
-                {
-                    continue;
-                }
-
-                var historyItemMenu = new ToolStripMenuItem(historyItem.Path);
-                historyItemMenu.Click += HistoryItemMenuClick;
-                historyItemMenu.Width = 225;
-                recentToolStripMenuItem.DropDownItems.Add(historyItemMenu);
-            }
-
-            // Re-add controls.
-            recentToolStripMenuItem.DropDownItems.Add(clearRecentRepositoriesListToolStripMenuItem);
-            TranslateItem(clearRecentRepositoriesListMenuItem.Name, clearRecentRepositoriesListMenuItem);
-            recentToolStripMenuItem.DropDownItems.Add(clearRecentRepositoriesListMenuItem);
-        }
-
         private void ChangeWorkingDir(string path)
         {
             var module = new GitModule(path);
@@ -1636,23 +1605,35 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveFromHistoryAsync(path));
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(path));
         }
 
-        private void HistoryItemMenuClick(object sender, EventArgs e)
+        private void tsmiFavouriteRepositories_DropDownOpening(object sender, EventArgs e)
         {
-            if (sender is ToolStripMenuItem button)
-            {
-                ChangeWorkingDir(button.Text);
-            }
+            tsmiFavouriteRepositories.DropDownItems.Clear();
+            PopulateFavouriteRepositoriesMenu(tsmiFavouriteRepositories);
         }
 
-        private void ClearRecentRepositoriesListClick(object sender, EventArgs e)
+        private void tsmiRecentRepositories_DropDownOpening(object sender, EventArgs e)
+        {
+            tsmiRecentRepositories.DropDownItems.Clear();
+            PopulateRecentRepositoriesMenu(tsmiRecentRepositories);
+            if (tsmiRecentRepositories.DropDownItems.Count < 1)
+            {
+                return;
+            }
+
+            tsmiRecentRepositories.DropDownItems.Add(clearRecentRepositoriesListToolStripMenuItem);
+            TranslateItem(tsmiRecentRepositoriesClear.Name, tsmiRecentRepositoriesClear);
+            tsmiRecentRepositories.DropDownItems.Add(tsmiRecentRepositoriesClear);
+        }
+
+        private void tsmiRecentRepositoriesClear_Click(object sender, EventArgs e)
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 var repositoryHistory = Array.Empty<Repository>();
-                await RepositoryHistoryManager.Locals.SaveHistoryAsync(repositoryHistory);
+                await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync(repositoryHistory);
 
                 await this.SwitchToMainThreadAsync();
                 _dashboard?.ShowRecentRepositories();
@@ -1710,58 +1691,140 @@ namespace GitUI.CommandsDialogs
             UICommands.StartCleanupRepositoryDialog(this);
         }
 
-        private void AddWorkingdirDropDownItem(Repository repo, string caption)
+        private void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container)
         {
-            ToolStripMenuItem toolStripItem = new ToolStripMenuItem(caption);
-            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
+            var mostRecentRepos = new List<RecentRepoInfo>();
+            var lessRecentRepos = new List<RecentRepoInfo>();
 
-            toolStripItem.Click += (hs, he) => ChangeWorkingDir(repo.Path);
-
-            if (!repo.Path.Equals(caption))
+            var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync());
+            if (repositoryHistory.Count < 1)
             {
-                toolStripItem.ToolTipText = repo.Path;
+                return;
             }
-        }
-
-        private void WorkingdirDropDownOpening(object sender, EventArgs e)
-        {
-            var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadHistoryAsync());
-            _NO_TRANSLATE_Workingdir.DropDownItems.Clear();
-
-            List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
-            List<RecentRepoInfo> lessRecentRepos = new List<RecentRepoInfo>();
 
             using (var graphics = CreateGraphics())
             {
                 var splitter = new RecentRepoSplitter
                 {
-                    MeasureFont = _NO_TRANSLATE_Workingdir.Font,
+                    MeasureFont = container.Font,
                     Graphics = graphics
                 };
                 splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, lessRecentRepos);
             }
 
-            foreach (RecentRepoInfo repo in mostRecentRepos)
+            foreach (var repo in mostRecentRepos.Union(lessRecentRepos).GroupBy(k => k.Repo.Category))
             {
-                AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
+                AddFavouriteRepositories(repo.Key, repo.ToList());
+            }
+
+            void AddFavouriteRepositories(string category, IList<RecentRepoInfo> repos)
+            {
+                ToolStripMenuItem menuItemCategory;
+                if (!container.DropDownItems.ContainsKey(category))
+                {
+                    menuItemCategory = new ToolStripMenuItem(category);
+                    container.DropDownItems.Add(menuItemCategory);
+                }
+                else
+                {
+                    menuItemCategory = (ToolStripMenuItem)container.DropDownItems[category];
+                }
+
+                repos.ForEach(r =>
+                {
+                    var item = new ToolStripMenuItem(r.Caption)
+                    {
+                        DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
+                    };
+                    menuItemCategory.DropDownItems.Add(item);
+
+                    item.Click += (hs, he) => ChangeWorkingDir(r.Repo.Path);
+
+                    if (!r.Repo.Path.Equals(r.Caption))
+                    {
+                        item.ToolTipText = r.Repo.Path;
+                    }
+                });
+            }
+        }
+
+        private void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container)
+        {
+            var mostRecentRepos = new List<RecentRepoInfo>();
+            var lessRecentRepos = new List<RecentRepoInfo>();
+
+            var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync());
+            if (repositoryHistory.Count < 1)
+            {
+                return;
+            }
+
+            using (var graphics = CreateGraphics())
+            {
+                var splitter = new RecentRepoSplitter
+                {
+                    MeasureFont = container.Font,
+                    Graphics = graphics
+                };
+                splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, lessRecentRepos);
+            }
+
+            foreach (var repo in mostRecentRepos)
+            {
+                AddRecentRepositories(repo.Repo, repo.Caption);
             }
 
             if (lessRecentRepos.Count > 0)
             {
                 if (mostRecentRepos.Count > 0 && (AppSettings.SortMostRecentRepos || AppSettings.SortLessRecentRepos))
                 {
-                    _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
+                    container.DropDownItems.Add(new ToolStripSeparator());
                 }
 
-                foreach (RecentRepoInfo repo in lessRecentRepos)
+                foreach (var repo in lessRecentRepos)
                 {
-                    AddWorkingdirDropDownItem(repo.Repo, repo.Caption);
+                    AddRecentRepositories(repo.Repo, repo.Caption);
                 }
             }
 
+            void AddRecentRepositories(Repository repo, string caption)
+            {
+                if (!string.IsNullOrEmpty(repo.Category))
+                {
+                    caption = $"{caption} ({repo.Category})";
+                }
+
+                var item = new ToolStripMenuItem(caption)
+                {
+                    DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
+                };
+                container.DropDownItems.Add(item);
+
+                item.Click += (hs, he) => ChangeWorkingDir(repo.Path);
+
+                if (!repo.Path.Equals(caption))
+                {
+                    item.ToolTipText = repo.Path;
+                }
+            }
+        }
+
+        private void WorkingdirDropDownOpening(object sender, EventArgs e)
+        {
+            _NO_TRANSLATE_Workingdir.DropDownItems.Clear();
+
+            var tsmiCategorisedRepos = new ToolStripMenuItem(tsmiFavouriteRepositories.Text, tsmiFavouriteRepositories.Image);
+            PopulateFavouriteRepositoriesMenu(tsmiCategorisedRepos);
+            if (tsmiCategorisedRepos.DropDownItems.Count > 0)
+            {
+                _NO_TRANSLATE_Workingdir.DropDownItems.Add(tsmiCategorisedRepos);
+            }
+
+            PopulateRecentRepositoriesMenu(_NO_TRANSLATE_Workingdir);
+
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
 
-            ToolStripMenuItem toolStripItem = new ToolStripMenuItem(openToolStripMenuItem.Text);
+            var toolStripItem = new ToolStripMenuItem(openToolStripMenuItem.Text, openToolStripMenuItem.Image);
             toolStripItem.ShortcutKeys = openToolStripMenuItem.ShortcutKeys;
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
             toolStripItem.Click += (hs, he) => OpenToolStripMenuItemClick(hs, he);

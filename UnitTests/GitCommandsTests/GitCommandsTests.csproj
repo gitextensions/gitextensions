@@ -92,6 +92,9 @@
     <Compile Include="PathEqualityComparerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remote\GitRemoteManagerTests.cs" />
+    <Compile Include="UserRepositoryHistory\Legacy\RepositoryCategoryXmlSerialiserTests.cs" />
+    <Compile Include="UserRepositoryHistory\Legacy\RepositoryHistoryMigratorTests.cs" />
+    <Compile Include="UserRepositoryHistory\Legacy\RepositoryStorageTests.cs" />
     <Compile Include="UserRepositoryHistory\LocalRepositoryManagerTests.cs" />
     <Compile Include="UserRepositoryHistory\RemoteRepositoryManagerTests.cs" />
     <Compile Include="UserRepositoryHistory\RepositoryStorageTests.cs" />
@@ -141,12 +144,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="UserRepositoryHistory\RepositoriesTests.Deserialize_recent_repositories.approved.txt" />
-    <Content Include="UserRepositoryHistory\RepositoriesTests.Deserialize_remote_repositories.approved.txt" />
-    <Content Include="UserRepositoryHistory\RepositoriesTests.Serialize_recent_repositories.approved.xml" />
-    <Content Include="UserRepositoryHistory\RepositoriesTests.Serialize_remote_repositories.approved.xml" />
-    <Content Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Deserialize_remote_repositories.approved.txt" />
-    <Content Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Serialize_recent_repositories.approved.xml" />
+    <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories01.xml" />
+    <EmbeddedResource Include="UserRepositoryHistory\Legacy\MockData\CategorisedRepositories02.xml" />
+    <None Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Deserialize_remote_repositories_without_ns.approved.txt" />
+    <None Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Deserialize_remote_repositories_with_ns.approved.txt" />
+    <None Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.Serialize_recent_repositories.approved.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UserRepositoryHistory\Legacy\RepositoryCategorySerialiserTests.Verify_backwards_compatibility_of_object_graph.approved.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

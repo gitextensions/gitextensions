@@ -29,9 +29,9 @@ namespace GitCommands.UserRepositoryHistory
     /// </summary>
     public sealed class RepositoryStorage : IRepositoryStorage
     {
-        private readonly IRepositorySerialiser _repositorySerialiser;
+        private readonly IRepositorySerialiser<Repository> _repositorySerialiser;
 
-        public RepositoryStorage(IRepositorySerialiser repositorySerialiser)
+        public RepositoryStorage(IRepositorySerialiser<Repository> repositorySerialiser)
         {
             _repositorySerialiser = repositorySerialiser;
         }

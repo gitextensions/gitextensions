@@ -231,7 +231,6 @@ namespace GitUI
             _windowCentred = StartPosition == FormStartPosition.CenterParent;
 
             var position = LookupWindowPosition(name);
-
             if (position == null)
             {
                 return;
@@ -240,14 +239,6 @@ namespace GitUI
             float scale = (float)DpiUtil.DpiX / position.DeviceDpi;
 
             StartPosition = FormStartPosition.Manual;
-            if (FormBorderStyle == FormBorderStyle.Sizable ||
-                FormBorderStyle == FormBorderStyle.SizableToolWindow)
-            {
-                Size formSize = position.Rect.Size;
-                formSize.Width = (int)(formSize.Width * scale);
-                formSize.Height = (int)(formSize.Height * scale);
-                Size = formSize;
-            }
 
             if (Owner == null || !_windowCentred)
             {
@@ -279,7 +270,7 @@ namespace GitUI
         {
             SortedDictionary<float, Rectangle> distance = new SortedDictionary<float, Rectangle>();
             foreach (var rect in from screen in Screen.AllScreens
-                                  select screen.WorkingArea)
+                                 select screen.WorkingArea)
             {
                 if (rect.Contains(location) && !distance.ContainsKey(0.0f))
                 {

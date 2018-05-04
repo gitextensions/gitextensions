@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils.GitUI;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -26,7 +28,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
-                var repositoryHistory = await RepositoryHistoryManager.Locals.LoadHistoryAsync();
+                var repositoryHistory = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
 
                 await this.SwitchToMainThreadAsync();
                 _NO_TRANSLATE_Directory.DataSource = GetDirectories(currentModule, repositoryHistory);
@@ -34,6 +36,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 _NO_TRANSLATE_Directory.Focus();
                 _NO_TRANSLATE_Directory.Select();
             });
+        }
+
+        protected override void OnRuntimeLoad(EventArgs e)
+        {
+            base.OnRuntimeLoad(e);
+
+            // scale up for hi DPI
+            MaximumSize = DpiUtil.Scale(new Size(800, 116));
+            MinimumSize = DpiUtil.Scale(new Size(450, 116));
         }
 
         private static IReadOnlyList<string> GetDirectories(GitModule currentModule, IEnumerable<Repository> repositoryHistory)

@@ -25,10 +25,46 @@ namespace GitCommandsTests.UserRepositoryHistory
         }
 
         [Test]
-        public void Deserialize_remote_repositories()
+        public void Deserialize_remote_repositories_with_ns()
         {
             const string settingHistoryValue = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <RepositoryHistory xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <Repositories>
+    <Repository>
+      <Path>https://github.com/RussKie/gitextensions.github.io.git</Path>
+      <Anchor>None</Anchor>
+    </Repository>
+    <Repository>
+      <Path>https://github.com/RussKie/gitextensions.git</Path>
+      <Anchor>None</Anchor>
+    </Repository>
+    <Repository>
+      <Path>https://github.com/gregsohl/gitextensions.git</Path>
+      <Anchor>None</Anchor>
+    </Repository>
+    <Repository>
+      <Path>https://github.com/gitextensions/gitextensions.git</Path>
+      <Anchor>None</Anchor>
+    </Repository>
+    <Repository>
+      <Path>https://github.com/EbenZhang/gitextensions.git</Path>
+      <Anchor>None</Anchor>
+    </Repository>
+  </Repositories>
+  <Description>Recent Repositories</Description>
+  <CategoryType>Repositories</CategoryType>
+</RepositoryHistory>";
+
+            var repositories = _repositoryXmlSerialiser.Deserialize(settingHistoryValue);
+
+            Approvals.VerifyAll(repositories, "path");
+        }
+
+        [Test]
+        public void Deserialize_remote_repositories_without_ns()
+        {
+            const string settingHistoryValue = @"<?xml version=""1.0"" encoding=""utf-16""?>
+<RepositoryHistory>
   <Repositories>
     <Repository>
       <Path>https://github.com/RussKie/gitextensions.github.io.git</Path>
