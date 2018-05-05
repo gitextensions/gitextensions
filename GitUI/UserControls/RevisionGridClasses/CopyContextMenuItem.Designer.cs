@@ -33,7 +33,7 @@
             this.authorCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dateCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hashCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.separatorAfterRefNames = new System.Windows.Forms.ToolStripSeparator();
             this.branchNameCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tagNameCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 
@@ -52,10 +52,10 @@
             this.tagNameCopyToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
             this.tagNameCopyToolStripMenuItem.Text = "Tag name:";
             // 
-            // toolStripSeparator6
+            // separatorAfterRefNames
             // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(185, 6);
+            this.separatorAfterRefNames.Name = "separatorAfterRefNames";
+            this.separatorAfterRefNames.Size = new System.Drawing.Size(185, 6);
             // 
             // hashCopyToolStripMenuItem
             // 
@@ -91,7 +91,7 @@
             this.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
                 this.branchNameCopyToolStripMenuItem,
                 this.tagNameCopyToolStripMenuItem,
-                this.toolStripSeparator6,
+                this.separatorAfterRefNames,
                 this.hashCopyToolStripMenuItem,
                 this.messageCopyToolStripMenuItem,
                 this.authorCopyToolStripMenuItem,
@@ -107,7 +107,7 @@
 
         private System.Windows.Forms.ToolStripMenuItem branchNameCopyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tagNameCopyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripSeparator separatorAfterRefNames;
         private System.Windows.Forms.ToolStripMenuItem hashCopyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem messageCopyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem authorCopyToolStripMenuItem;
