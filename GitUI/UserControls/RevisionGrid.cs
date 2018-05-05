@@ -141,6 +141,8 @@ namespace GitUI
 
             _commitDataManager = new CommitDataManager(() => Module);
 
+            copyToClipboardToolStripMenuItem.GetLatestSelectedRevision = () => LatestSelectedRevision;
+
             MenuCommands = new RevisionGridMenuCommands(this);
             MenuCommands.CreateOrUpdateMenuCommands();
 

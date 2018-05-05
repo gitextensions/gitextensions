@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -12,7 +13,11 @@ namespace GitUI.UserControls.RevisionGridClasses
             InitializeComponent();
         }
 
-        private GitRevision LatestSelectedRevision => null; // TODO
+        [Browsable(false)]
+        public Func<GitRevision> GetLatestSelectedRevision { get; set; }
+
+        [Browsable(false)]
+        private GitRevision LatestSelectedRevision => GetLatestSelectedRevision?.Invoke();
 
         private void copyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
         {
