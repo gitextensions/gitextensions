@@ -53,18 +53,20 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         internal void UpdateItems(GitRefListsForRevision gitRefListsForRevision, ContextMenuStrip mainContextMenu)
         {
-            branchNameCopyToolStripMenuItem.Tag = "caption";
-            tagNameCopyToolStripMenuItem.Tag = "caption";
-            MenuUtil.SetAsCaptionMenuItem(branchNameCopyToolStripMenuItem, mainContextMenu);
-            MenuUtil.SetAsCaptionMenuItem(tagNameCopyToolStripMenuItem, mainContextMenu);
-
             var branchNames = gitRefListsForRevision.GetAllBranchNames();
-            SetCopyToClipboardMenuItems(this, branchNameCopyToolStripMenuItem, branchNames, "branchNameItem");
+            UpdateBranchOrTagItems(mainContextMenu, branchNameCopyToolStripMenuItem, branchNames, "branchNameItem");
 
             var tagNames = gitRefListsForRevision.GetAllTagNames();
-            SetCopyToClipboardMenuItems(this, tagNameCopyToolStripMenuItem, tagNames, "tagNameItem");
+            UpdateBranchOrTagItems(mainContextMenu, tagNameCopyToolStripMenuItem, tagNames, "tagNameItem");
 
             separatorAfterRefNames.Visible = branchNames.Any() || tagNames.Any();
+        }
+
+        private void UpdateBranchOrTagItems(ContextMenuStrip mainContextMenu, ToolStripMenuItem captionItem, string[] names, string itemFlag)
+        {
+            captionItem.Tag = "caption";
+            MenuUtil.SetAsCaptionMenuItem(captionItem, mainContextMenu);
+            SetCopyToClipboardMenuItems(this, captionItem, names, itemFlag);
         }
 
         /// <summary>
