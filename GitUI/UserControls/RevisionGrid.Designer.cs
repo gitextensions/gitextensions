@@ -90,7 +90,7 @@ namespace GitUI
             this.bisectSkipRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stopBisectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bisectSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyToClipboardToolStripMenuItem = new GitUI.UserControls.RevisionGridClasses.CopyContextMenuItem();
             this.messageCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.authorCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dateCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -852,7 +852,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem rebaseOnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rebaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rebaseInteractivelyToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
+        private GitUI.UserControls.RevisionGridClasses.CopyContextMenuItem copyToClipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem branchNameCopyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tagNameCopyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem messageCopyToolStripMenuItem;
