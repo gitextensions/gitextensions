@@ -384,7 +384,6 @@
     <Compile Include="UserControls\RevisionGridClasses\CopyContextMenuItem.Designer.cs">
       <DependentUpon>CopyContextMenuItem.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\CopyToClipboardMenuHelper.cs" />
     <Compile Include="UserControls\RevisionGridClasses\CaptionCustomMenuRenderer.cs" />
     <Compile Include="UserControls\RevisionGridClasses\GitRefListsForRevision.cs" />
     <Compile Include="UserControls\RevisionGridClasses\MenuUtil.cs" />
