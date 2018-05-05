@@ -65,7 +65,6 @@ namespace GitUI.UserControls.RevisionGridClasses
             CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(this, tagNameCopyToolStripMenuItem, tagNames, "tagNameItem");
 
             toolStripSeparator6.Visible = branchNames.Any() || tagNames.Any();
-            toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
         }
     }
 }
