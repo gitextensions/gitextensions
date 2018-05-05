@@ -2624,21 +2624,7 @@ namespace GitUI
                 }
             }
 
-            // clipboard branch and tag menu handling
-            {
-                branchNameCopyToolStripMenuItem.Tag = "caption";
-                tagNameCopyToolStripMenuItem.Tag = "caption";
-                MenuUtil.SetAsCaptionMenuItem(branchNameCopyToolStripMenuItem, mainContextMenu);
-                MenuUtil.SetAsCaptionMenuItem(tagNameCopyToolStripMenuItem, mainContextMenu);
-
-                var branchNames = gitRefListsForRevision.GetAllBranchNames();
-                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(copyToClipboardToolStripMenuItem, branchNameCopyToolStripMenuItem, branchNames, "branchNameItem");
-
-                var tagNames = gitRefListsForRevision.GetAllTagNames();
-                CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(copyToClipboardToolStripMenuItem, tagNameCopyToolStripMenuItem, tagNames, "tagNameItem");
-
-                toolStripSeparator6.Visible = branchNames.Any() || tagNames.Any();
-            }
+            copyToClipboardToolStripMenuItem.UpdateItems(gitRefListsForRevision, mainContextMenu);
 
             var allBranches = gitRefListsForRevision.AllBranches;
             foreach (var head in allBranches)
@@ -2726,8 +2712,6 @@ namespace GitUI
             resetCurrentBranchToHereToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
             archiveRevisionToolStripMenuItem.Enabled = !revision.IsArtificial;
             createTagToolStripMenuItem.Enabled = !revision.IsArtificial;
-
-            toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
 
             openBuildReportToolStripMenuItem.Visible = !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url);
 
@@ -3092,26 +3076,6 @@ namespace GitUI
             AppSettings.RevisionGraphDrawNonRelativesGray = !AppSettings.RevisionGraphDrawNonRelativesGray;
             MenuCommands.TriggerMenuChanged();
             Revisions.Refresh();
-        }
-
-        private void MessageToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Clipboard.SetText(LatestSelectedRevision.Subject);
-        }
-
-        private void AuthorToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Clipboard.SetText(LatestSelectedRevision.Author);
-        }
-
-        private void DateToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Clipboard.SetText(LatestSelectedRevision.CommitDate.ToString());
-        }
-
-        private void HashToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Clipboard.SetText(LatestSelectedRevision.Guid);
         }
 
         private void MarkRevisionAsBadToolStripMenuItemClick(object sender, EventArgs e)
@@ -3706,18 +3670,6 @@ namespace GitUI
                 {
                     _parentChildNavigationHistory.NavigateToChild(r.Guid, children[0]);
                 }
-            }
-        }
-
-        private void copyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
-        {
-            var r = LatestSelectedRevision;
-            if (r != null)
-            {
-                CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, r.Guid.ShortenTo(15));
-                CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, r.Subject.ShortenTo(30));
-                CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(authorCopyToolStripMenuItem, r.Author);
-                CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(dateCopyToolStripMenuItem, r.CommitDate.ToString());
             }
         }
 
