@@ -13,7 +13,7 @@ namespace ResourceManager
         }
 
         /// <summary>Gets the translated text.</summary>
-        public string Text { get; }
+        public string Text { get; private set; }
 
         /// <summary>Returns <see cref="Text"/> value.</summary>
         public override string ToString()
