@@ -30,11 +30,19 @@ namespace GitUI.UserControls.RevisionGridClasses
             MenuUtil.SetAsCaptionMenuItem(branchNameCopyToolStripMenuItem, Owner);
             MenuUtil.SetAsCaptionMenuItem(tagNameCopyToolStripMenuItem, Owner);
 
-            DropDownItems.OfType<CopyToClipboardToolStripMenuItem>().ToArray().ForEach(i => DropDownItems.Remove(i));
+            CleanupDynamicallyAddedItems();
 
             AddRefNameItems(branchNameCopyToolStripMenuItem, ViewModel.BranchNames);
             AddRefNameItems(tagNameCopyToolStripMenuItem, ViewModel.TagNames);
             AddDetailItems();
+        }
+
+        private void CleanupDynamicallyAddedItems()
+        {
+            DropDownItems
+                .OfType<CopyToClipboardToolStripMenuItem>()
+                .ToArray()
+                .ForEach(i => DropDownItems.Remove(i));
         }
 
         private void AddDetailItems()
