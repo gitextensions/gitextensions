@@ -141,7 +141,7 @@ namespace GitUI
 
             _commitDataManager = new CommitDataManager(() => Module);
 
-            copyToClipboardToolStripMenuItem.GetLatestSelectedRevision = () => LatestSelectedRevision;
+            copyToClipboardToolStripMenuItem.GetViewModel = () => new CopyContextMenuViewModel(LatestSelectedRevision);
 
             MenuCommands = new RevisionGridMenuCommands(this);
             MenuCommands.CreateOrUpdateMenuCommands();
@@ -2625,8 +2625,6 @@ namespace GitUI
                     _rebaseOnTopOf = toolStripItem.Tag as string;
                 }
             }
-
-            copyToClipboardToolStripMenuItem.UpdateItems(gitRefListsForRevision, mainContextMenu);
 
             var allBranches = gitRefListsForRevision.AllBranches;
             foreach (var head in allBranches)

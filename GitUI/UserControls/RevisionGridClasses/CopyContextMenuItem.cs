@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
-using GitCommands;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
@@ -14,59 +14,34 @@ namespace GitUI.UserControls.RevisionGridClasses
         }
 
         [Browsable(false)]
-        public Func<GitRevision> GetLatestSelectedRevision { get; set; }
+        public Func<CopyContextMenuViewModel> GetViewModel { get; set; }
 
         [Browsable(false)]
-        private GitRevision LatestSelectedRevision => GetLatestSelectedRevision?.Invoke();
+        private CopyContextMenuViewModel ViewModel => GetViewModel?.Invoke();
 
         private void copyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
         {
-            var r = LatestSelectedRevision;
-            if (r != null)
+            var r = ViewModel;
+            if (r == null)
             {
-                AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, r.Guid.ShortenTo(15));
-                AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, r.Subject.ShortenTo(30));
-                AddOrUpdateTextPostfix(authorCopyToolStripMenuItem, r.Author);
-                AddOrUpdateTextPostfix(dateCopyToolStripMenuItem, r.CommitDate.ToString());
+                return;
             }
+
+            // TODO only once
+            MenuUtil.SetAsCaptionMenuItem(branchNameCopyToolStripMenuItem, Owner);
+            MenuUtil.SetAsCaptionMenuItem(tagNameCopyToolStripMenuItem, Owner);
+
+            DropDownItems.OfType<CopyToClipboardToolStripMenuItem>().ToArray().ForEach(i => DropDownItems.Remove(i));
+
+            AddRefNameItems(branchNameCopyToolStripMenuItem, ViewModel.BranchNames);
+            AddRefNameItems(tagNameCopyToolStripMenuItem, ViewModel.TagNames);
+            AddDetailItems();
         }
 
-        private void MessageToolStripMenuItemClick(object sender, EventArgs e)
+        private void AddDetailItems()
         {
-            Clipboard.SetText(LatestSelectedRevision.Subject);
-        }
-
-        private void AuthorToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Clipboard.SetText(LatestSelectedRevision.Author);
-        }
-
-        private void DateToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Clipboard.SetText(LatestSelectedRevision.CommitDate.ToString());
-        }
-
-        private void HashToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            Clipboard.SetText(LatestSelectedRevision.Guid);
-        }
-
-        internal void UpdateItems(GitRefListsForRevision gitRefListsForRevision, ContextMenuStrip mainContextMenu)
-        {
-            var branchNames = gitRefListsForRevision.GetAllBranchNames();
-            UpdateBranchOrTagItems(mainContextMenu, branchNameCopyToolStripMenuItem, branchNames, "branchNameItem");
-
-            var tagNames = gitRefListsForRevision.GetAllTagNames();
-            UpdateBranchOrTagItems(mainContextMenu, tagNameCopyToolStripMenuItem, tagNames, "tagNameItem");
-
-            separatorAfterRefNames.Visible = branchNames.Any() || tagNames.Any();
-        }
-
-        private void UpdateBranchOrTagItems(ContextMenuStrip mainContextMenu, ToolStripMenuItem captionItem, string[] names, string itemFlag)
-        {
-            captionItem.Tag = "caption";
-            MenuUtil.SetAsCaptionMenuItem(captionItem, mainContextMenu);
-            SetCopyToClipboardMenuItems(this, captionItem, names, itemFlag);
+            InsertItemsAfterItem(separatorAfterRefNames, ViewModel.DetailItems.Select(i => new CopyToClipboardToolStripMenuItem(i.Text, i.Value)).ToArray());
+            separatorAfterRefNames.Visible = ViewModel.BranchNames.Any() || ViewModel.TagNames.Any();
         }
 
         /// <summary>
@@ -74,51 +49,20 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// sets also the visibility of captionItem
         /// ...
         /// </summary>
-        private static void SetCopyToClipboardMenuItems(
-            ToolStripMenuItem targetMenu,
-            ToolStripMenuItem captionItem,
-            string[] gitNameList,
-            string itemFlag)
+        private void AddRefNameItems(ToolStripItem captionItem, IReadOnlyList<string> gitNameList)
         {
-            // remove previous items
-            targetMenu.DropDownItems.OfType<ToolStripMenuItem>()
-                .Where(item => (item.Tag as string) == itemFlag)
-                .ToArray()
-                .ForEach(item => targetMenu.DropDownItems.Remove(item));
+            InsertItemsAfterItem(captionItem, gitNameList.Select(name => new CopyToClipboardToolStripMenuItem(name, name)).ToArray());
 
-            // insert items
-            var branchNameItemInsertAfter = captionItem;
-            gitNameList.ForEach(branchName =>
-            {
-                var branchNameItem = new ToolStripMenuItem(branchName);
-                branchNameItem.Tag = itemFlag; // to delete items from previous opening
-                branchNameItem.Click += CopyToClipBoard;
-                int insertAfterIndex = targetMenu.DropDownItems.IndexOf(branchNameItemInsertAfter);
-                targetMenu.DropDownItems.Insert(insertAfterIndex + 1, branchNameItem);
-                branchNameItemInsertAfter = branchNameItem;
-            });
-
-            // visibility of caption
-            // TODO: why is the Visible property always false when it is read from?
             captionItem.Visible = gitNameList.Any();
         }
 
-        private static void CopyToClipBoard(object sender, EventArgs e)
+        private void InsertItemsAfterItem(ToolStripItem anchorItem, CopyToClipboardToolStripMenuItem[] items)
         {
-            Clipboard.SetText(sender.ToString());
-        }
-
-        /// <summary>
-        /// adds or updates text in parentheses (...)
-        /// </summary>
-        private static void AddOrUpdateTextPostfix(ToolStripItem target, string postfix)
-        {
-            if (target.Text.EndsWith(")"))
+            var startIndex = DropDownItems.IndexOf(anchorItem) + 1;
+            for (var i = 0; i < items.Length; ++i)
             {
-                target.Text = target.Text.Substring(0, target.Text.IndexOf("     ("));
+                DropDownItems.Insert(startIndex + i, items[i]);
             }
-
-            target.Text += string.Format("     ({0})", postfix);
         }
     }
 }
