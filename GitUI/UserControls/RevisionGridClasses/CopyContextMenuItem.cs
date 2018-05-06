@@ -27,7 +27,6 @@ namespace GitUI.UserControls.RevisionGridClasses
                 return;
             }
 
-            // TODO only once
             MenuUtil.SetAsCaptionMenuItem(branchNameCopyToolStripMenuItem, Owner);
             MenuUtil.SetAsCaptionMenuItem(tagNameCopyToolStripMenuItem, Owner);
 
@@ -44,15 +43,9 @@ namespace GitUI.UserControls.RevisionGridClasses
             separatorAfterRefNames.Visible = ViewModel.SeparatorVisible;
         }
 
-        /// <summary>
-        /// ...
-        /// sets also the visibility of captionItem
-        /// ...
-        /// </summary>
         private void AddRefNameItems(ToolStripItem captionItem, IReadOnlyList<string> gitNameList)
         {
             InsertItemsAfterItem(captionItem, gitNameList.Select(name => new CopyToClipboardToolStripMenuItem(name, name)).ToArray());
-
             captionItem.Visible = gitNameList.Any();
         }
 
