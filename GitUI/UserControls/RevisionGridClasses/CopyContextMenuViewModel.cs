@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using GitCommands;
 using ResourceManager;
 
@@ -22,6 +23,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         public IReadOnlyList<string> BranchNames { get; }
         public IReadOnlyList<string> TagNames { get; }
+        public bool SeparatorVisible => BranchNames.Any() || TagNames.Any();
         public IReadOnlyList<DetailItem> DetailItems { get; }
 
         public CopyContextMenuViewModel(GitRevision gitRevision)

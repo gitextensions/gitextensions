@@ -41,7 +41,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         private void AddDetailItems()
         {
             InsertItemsAfterItem(separatorAfterRefNames, ViewModel.DetailItems.Select(i => new CopyToClipboardToolStripMenuItem(i.Text, i.Value)).ToArray());
-            separatorAfterRefNames.Visible = ViewModel.BranchNames.Any() || ViewModel.TagNames.Any();
+            separatorAfterRefNames.Visible = ViewModel.SeparatorVisible;
         }
 
         /// <summary>
