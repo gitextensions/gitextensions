@@ -209,7 +209,7 @@ namespace GitCommandsTests.UserRepositoryHistory
                 new Repository("path5"),
             };
             _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => history);
-            _repositoryHistoryMigrator.MigrateAsync(Arg.Any<List<Repository>>()).Returns(x => history);
+            _repositoryHistoryMigrator.MigrateAsync(Arg.Any<List<Repository>>()).Returns(x => (history, false));
 
             var newHistory = await _manager.RemoveFavouriteAsync(repoToDelete);
 
@@ -236,7 +236,7 @@ namespace GitCommandsTests.UserRepositoryHistory
                 new Repository("path5"),
             };
             _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => history);
-            _repositoryHistoryMigrator.MigrateAsync(Arg.Any<List<Repository>>()).Returns(x => history);
+            _repositoryHistoryMigrator.MigrateAsync(Arg.Any<List<Repository>>()).Returns(x => (history, false));
 
             var newHistory = await _manager.RemoveFavouriteAsync(repoToDelete);
 

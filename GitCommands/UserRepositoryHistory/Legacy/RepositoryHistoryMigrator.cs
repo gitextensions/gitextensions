@@ -18,8 +18,11 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         /// Migrates settings from the old legacy format into the new structure.
         /// </summary>
         /// <param name="currentHistory">The current list of favourite local git repositories.</param>
-        /// <returns>The list of favourite local git repositories enriched with the legacy categorised git repositories, if any.</returns>
-        Task<IList<Current.Repository>> MigrateAsync(IEnumerable<Current.Repository> currentHistory);
+        /// <returns>
+        /// The list of favourite local git repositories enriched with the legacy categorised git repositories.
+        /// <c>changed</c> is <see langword="true"/>, if the migration has taken place; otherwise <see langword="false"/>.
+        /// </returns>
+        Task<(IList<Current.Repository> history, bool changed)> MigrateAsync(IEnumerable<Current.Repository> currentHistory);
     }
 
     /// <summary>
@@ -44,10 +47,13 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         /// Migrates settings from the old legacy format into the new structure.
         /// </summary>
         /// <param name="currentHistory">The current list of favourite local git repositories.</param>
-        /// <returns>The list of favourite local git repositories enriched with the legacy categorised git repositories, if any.</returns>
+        /// <returns>
+        /// The list of favourite local git repositories enriched with the legacy categorised git repositories.
+        /// <c>changed</c> is <see langword="true"/>, if the migration has taken place; otherwise <see langword="false"/>.
+        /// </returns>
         /// <exception cref="ArgumentNullException"><paramref name="currentHistory"/> is <see langword="null"/>.</exception>
         [ContractAnnotation("currentHistory:null=>halt")]
-        public async Task<IList<Current.Repository>> MigrateAsync(IEnumerable<Current.Repository> currentHistory)
+        public async Task<(IList<Current.Repository> history, bool changed)> MigrateAsync(IEnumerable<Current.Repository> currentHistory)
         {
             if (currentHistory == null)
             {
@@ -60,35 +66,40 @@ namespace GitCommands.UserRepositoryHistory.Legacy
             var categorised = _repositoryStorage.Load();
             if (categorised?.Count < 1)
             {
-                return history;
+                return (history, false);
             }
 
-            MigrateSettings(history, categorised);
+            var changed = MigrateSettings(history, categorised);
 
             // settings have been migrated, clear the old setting
             _repositoryStorage.Save();
 
-            return history;
+            return (history, changed);
         }
 
-        private static void MigrateSettings(IList<Current.Repository> history, IEnumerable<RepositoryCategory> categorised)
+        private static bool MigrateSettings(IList<Current.Repository> history, IEnumerable<RepositoryCategory> categorised)
         {
+            var changed = false;
             categorised.Where(c => c.CategoryType == "Repositories")
-                .ForEach(c =>
-                {
-                    c.Repositories.ForEach(r =>
-                    {
-                        var repo = history.FirstOrDefault(hr => hr.Path == r.Path);
-                        if (repo == null)
-                        {
-                            repo = new Current.Repository(r.Path);
-                            history.Add(repo);
-                        }
+                       .ForEach(c =>
+                       {
+                           c.Repositories.ForEach(r =>
+                           {
+                               var repo = history.FirstOrDefault(hr => hr.Path == r.Path);
+                               if (repo == null)
+                               {
+                                   repo = new Current.Repository(r.Path);
+                                   history.Add(repo);
+                               }
 
-                        repo.Anchor = GetAnchor(r.Anchor);
-                        repo.Category = c.Description;
-                    });
-                });
+                               repo.Anchor = GetAnchor(r.Anchor);
+                               repo.Category = c.Description;
+
+                               changed = true;
+                           });
+                       });
+
+            return changed;
 
             Current.Repository.RepositoryAnchor GetAnchor(string anchor)
             {
