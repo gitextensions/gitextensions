@@ -385,6 +385,7 @@
       <DependentUpon>CopyContextMenuItem.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\RevisionGridClasses\CaptionCustomMenuRenderer.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\CopyContextMenuViewModel.cs" />
     <Compile Include="UserControls\RevisionGridClasses\CopyToClipboardToolStripMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
