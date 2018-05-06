@@ -44,12 +44,14 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
 
             _repositoryStorage.Load().Returns(x => new RepositoryCategoryXmlSerialiser().Deserialize(xml));
 
-            var currentHistory = await _historyMigrator.MigrateAsync(new List<Current.Repository>());
+            var (currentHistory, migrated) = await _historyMigrator.MigrateAsync(new List<Current.Repository>());
 
             currentHistory.Count.Should().Be(8);
             currentHistory.Count(r => r.Category == "Git Extensions").Should().Be(1);
             currentHistory.Count(r => r.Category == "3rd Party").Should().Be(2);
             currentHistory.Count(r => r.Category == "Tests").Should().Be(5);
+
+            migrated.Should().BeTrue();
         }
     }
 }

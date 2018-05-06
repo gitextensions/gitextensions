@@ -123,13 +123,13 @@ namespace GitCommands.UserRepositoryHistory
             var history = _repositoryStorage.Load(KeyFavouriteHistory) ?? Array.Empty<Repository>();
 
             // backwards compatibility - port the existing user's categorised repositories
-            var migrated = await _repositoryHistoryMigrator.MigrateAsync(history);
+            var (migrated, changed) = await _repositoryHistoryMigrator.MigrateAsync(history);
+            if (changed)
+            {
+                _repositoryStorage.Save(KeyFavouriteHistory, migrated);
+            }
 
-            // TODO: should we save now?
-            //      in an edge case scenario, the legacy setting has been migrated,
-            //      the app crashes before the updated history persisted...
-
-            return migrated;
+            return migrated ?? new List<Repository>();
         }
 
         /// <summary>
