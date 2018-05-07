@@ -18,6 +18,7 @@ namespace GitUI.CommandsDialogs
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFileHistory));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.FileChanges = new GitUI.RevisionGrid();
             this.FileHistoryContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -208,6 +209,14 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(336, 6);
+            // 
+            // copyToClipboardToolStripMenuItem
+            // 
+            this.copyToClipboardToolStripMenuItem.GetViewModel = null;
+            this.copyToClipboardToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("copyToClipboardToolStripMenuItem.Image")));
+            this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
+            this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(491, 30);
+            this.copyToClipboardToolStripMenuItem.Text = "Copy to clipboard";
             // 
             // tabControl1
             // 
