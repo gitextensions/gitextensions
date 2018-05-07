@@ -38,6 +38,8 @@ fatcow
 ------
 - http://www.fatcow.com/free-icons
 - Lisence: Creative Commons (Attribution 3.0 United States)
+bullet_add.png
+bullet_delete.png
 database_save_a*.png
 database*.png
 fatcow_*
@@ -68,3 +70,14 @@ Microsoft Visual Studio 2017 Images
 ===================================
 All images in the GitUI/Resources/Icons/VS2017Images folder.
 See https://docs.microsoft.com/en-us/visualstudio/designers/the-visual-studio-image-library
+
+bgblue.png
+bggrey.png
+--------------
+https://www.vecteezy.com/vector-art/136250-rhinestone-abstract-background-vector
+    Copyright: noodledoodle
+
+    You are allowed to:
+    Download to obtain the non-exclusive right to use Eezy files to create new, derivative, unique works, however the original Eezy file or artwork must be largely unrecognizable.
+    Download, edit, and remix for personal and commercial use, but give credit back to the author:
+        Illustration credit: www.Vecteezy.com

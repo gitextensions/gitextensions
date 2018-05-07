@@ -80,6 +80,15 @@
     <Compile Include="CommandsDialogs\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardTheme.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\UserRepositoriesList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\UserRepositoriesList.Designer.cs">
+      <DependentUpon>UserRepositoriesList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\UserRepositoriesListController.cs" />
+    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\RepositoryEventArgs.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -620,12 +629,6 @@
     <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardItem.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardItem.Designer.cs">
-      <DependentUpon>DashboardItem.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1100,6 +1103,9 @@
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\UserRepositoriesList.resx">
+      <DependentUpon>UserRepositoriesList.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormOpenDirectory.resx">
       <DependentUpon>FormOpenDirectory.cs</DependentUpon>
     </EmbeddedResource>
@@ -1303,10 +1309,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\Dashboard.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardItem.resx">
-      <DependentUpon>DashboardItem.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\GotoUserManualControl.resx">
@@ -1578,7 +1580,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <CustomToolNamespace>GitUI.Properties</CustomToolNamespace>
-      <LogicalName>GitUI.Properties.Resources.resources</LogicalName>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGrid.resx">
@@ -1884,6 +1885,7 @@
     <Content Include="Resources\Icons\commit_ok.png" />
     <Content Include="Resources\Icons\commit_warning.png" />
     <Content Include="Resources\Icons\14.png" />
+    <Content Include="Resources\Icons\14_bw.png" />
     <Content Include="Resources\Icons\2.png" />
     <Content Include="Resources\Icons\21.png" />
     <Content Include="Resources\Icons\24.png" />
@@ -1897,13 +1899,20 @@
     <Content Include="Resources\Icons\8.png" />
     <Content Include="Resources\Icons\86.png" />
     <Content Include="Resources\Icons\90.png" />
+    <Content Include="Resources\Icons\bgblue.png" />
+    <Content Include="Resources\Icons\bggrey.png" />
     <Content Include="Resources\Icons\BuildCancelled.png" />
     <Content Include="Resources\Icons\BuildFailed.png" />
     <Content Include="Resources\Icons\BuildSuccessful.png" />
+    <Content Include="Resources\Icons\bullet_add.png" />
+    <Content Include="Resources\Icons\bullet_delete.png" />
     <Content Include="Resources\Icons\decrease.png" />
     <Content Include="Resources\Icons\eye_closed.png" />
     <Content Include="Resources\Icons\eye_opened.png" />
+    <Content Include="Resources\Icons\folder_error.png" />
+    <Content Include="Resources\Icons\folder_git.png" />
     <Content Include="Resources\Icons\gitex.png" />
+    <Content Include="Resources\Icons\git_extensions_logo.png" />
     <Content Include="Resources\Icons\HelpCommandMerge.png" />
     <Content Include="Resources\Icons\HelpCommandRebase.png" />
     <Content Include="Resources\Icons\HelpPullFetch.png" />
@@ -1942,6 +1951,7 @@
     <Content Include="Resources\Icons\tag_many.png" />
     <Content Include="Resources\Icons\tag_ok.png" />
     <Content Include="Resources\Icons\tag_warning.png" />
+    <Content Include="Resources\Icons\x_with_arrow_32.png" />
     <Content Include="Translation\Czech.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -10,7 +10,7 @@ namespace GitUI.Editor
             return IsLightColor(backColor) ? Color.Black : Color.White;
         }
 
-        public static bool IsLightColor(Color color)
+        public static bool IsLightColor(this Color color)
         {
             if ((color.R > 130 ||
                  color.B > 130 ||

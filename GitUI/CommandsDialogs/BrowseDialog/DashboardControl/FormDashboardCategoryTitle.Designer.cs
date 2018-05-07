@@ -28,43 +28,76 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.Title = new System.Windows.Forms.TextBox();
-            this.OkButton = new System.Windows.Forms.Button();
+            System.Windows.Forms.FlowLayoutPanel flpnlControls;
+            this.btnOk = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.lblCategoryName = new System.Windows.Forms.Label();
+            this.txtCategoryName = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            flpnlControls = new System.Windows.Forms.FlowLayoutPanel();
+            flpnlControls.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // label1
+            // flpnlControls
             // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 15);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 21);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Enter caption";
-            this.label1.UseCompatibleTextRendering = true;
+            flpnlControls.Controls.Add(this.btnOk);
+            flpnlControls.Controls.Add(this.btnCancel);
+            flpnlControls.Dock = System.Windows.Forms.DockStyle.Bottom;
+            flpnlControls.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            flpnlControls.Location = new System.Drawing.Point(0, 26);
+            flpnlControls.Name = "flpnlControls";
+            flpnlControls.Size = new System.Drawing.Size(384, 34);
+            flpnlControls.TabIndex = 4;
+            flpnlControls.WrapContents = false;
             // 
-            // Title
+            // btnOk
             // 
-            this.Title.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.Title.Location = new System.Drawing.Point(86, 14);
-            this.Title.Name = "Title";
-            this.Title.Size = new System.Drawing.Size(324, 23);
-            this.Title.TabIndex = 1;
+            this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOk.AutoSize = true;
+            this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnOk.Location = new System.Drawing.Point(257, 3);
+            this.btnOk.Name = "btnOk";
+            this.btnOk.Size = new System.Drawing.Size(124, 25);
+            this.btnOk.TabIndex = 0;
+            this.btnOk.Text = "OK";
+            this.btnOk.UseCompatibleTextRendering = true;
+            this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.OkButton_Click);
             // 
-            // OkButton
+            // btnCancel
             // 
-            this.OkButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.OkButton.Location = new System.Drawing.Point(416, 13);
-            this.OkButton.Name = "OkButton";
-            this.OkButton.Size = new System.Drawing.Size(75, 25);
-            this.OkButton.TabIndex = 2;
-            this.OkButton.Text = "OK";
-            this.OkButton.UseCompatibleTextRendering = true;
-            this.OkButton.UseVisualStyleBackColor = true;
-            this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.AutoSize = true;
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(176, 3);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 25);
+            this.btnCancel.TabIndex = 1;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseCompatibleTextRendering = true;
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // lblCategoryName
+            // 
+            this.lblCategoryName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCategoryName.AutoSize = true;
+            this.lblCategoryName.Location = new System.Drawing.Point(3, 4);
+            this.lblCategoryName.Name = "lblCategoryName";
+            this.lblCategoryName.Size = new System.Drawing.Size(80, 18);
+            this.lblCategoryName.TabIndex = 0;
+            this.lblCategoryName.Text = "Category name";
+            this.lblCategoryName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblCategoryName.UseCompatibleTextRendering = true;
+            // 
+            // txtCategoryName
+            // 
+            this.txtCategoryName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtCategoryName.Location = new System.Drawing.Point(89, 3);
+            this.txtCategoryName.Name = "txtCategoryName";
+            this.txtCategoryName.Size = new System.Drawing.Size(292, 21);
+            this.txtCategoryName.TabIndex = 1;
             // 
             // tableLayoutPanel1
             // 
@@ -73,23 +106,25 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.OkButton, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.Title, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Controls.Add(this.lblCategoryName, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.txtCategoryName, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(494, 52);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(384, 27);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
             // FormDashboardCategoryTitle
             // 
-            this.AcceptButton = this.OkButton;
+            this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(494, 52);
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.CancelButton = this.btnCancel;
+            this.ClientSize = new System.Drawing.Size(384, 60);
+            this.Controls.Add(flpnlControls);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -98,6 +133,8 @@
             this.Name = "FormDashboardCategoryTitle";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Enter Caption";
+            flpnlControls.ResumeLayout(false);
+            flpnlControls.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
@@ -107,9 +144,10 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox Title;
-        private System.Windows.Forms.Button OkButton;
+        private System.Windows.Forms.Label lblCategoryName;
+        private System.Windows.Forms.TextBox txtCategoryName;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Button btnOk;
+        private System.Windows.Forms.Button btnCancel;
     }
 }

@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using JetBrains.Annotations;
 using Microsoft.Win32.SafeHandles;
 
@@ -80,11 +81,33 @@ namespace GitExtUtils.GitUI
             return (int)Math.Round(i * ScaleX);
         }
 
+        /// <summary>
+        /// Returns a scaled copy of measurement <paramref name="i"/> which has
+        /// equivalent length on screen at the current DPI at the original would
+        /// at 96 DPI.
+        /// </summary>
+        public static float Scale(float i)
+        {
+            return (float)Math.Round(i * ScaleX);
+        }
+
         public static Point Scale(Point point)
         {
             return new Point(
                 (int)(point.X * ScaleX),
                 (int)(point.Y * ScaleY));
+        }
+
+        /// <summary>
+        /// Returns a scaled copy of <paramref name="padding"/> which takes equivalent
+        /// screen space at the current DPI as the original would at 96 DPI.
+        /// </summary>
+        public static Padding Scale(Padding padding)
+        {
+            return new Padding((int)(padding.Left * ScaleX),
+                               (int)(padding.Top * ScaleX),
+                               (int)(padding.Right * ScaleX),
+                               (int)(padding.Bottom * ScaleX));
         }
 
         [NotNull]
