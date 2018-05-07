@@ -32,7 +32,7 @@ namespace GitUI
             _commitFilterToolStripMenuItem.Checked = true;
             _commitFilterToolStripMenuItem.CheckOnClick = true;
             _commitFilterToolStripMenuItem.Name = "commitToolStripMenuItem1";
-            _commitFilterToolStripMenuItem.Text = "Commit";
+            _commitFilterToolStripMenuItem.Text = "Commit message and hash";
 
             //
             // committerToolStripMenuItem
