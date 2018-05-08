@@ -19,6 +19,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _wrongGitVersion =
             new TranslationString("Git found but version {0} is not supported. Upgrade to version {1} or later");
 
+        private readonly TranslationString _notRecommendedGitVersion =
+            new TranslationString("Git found but version {0} is older than recommended. Upgrade to version {1} or later");
+
         private readonly TranslationString _gitVersionFound =
             new TranslationString("Git {0} is found on your computer.");
 
@@ -512,7 +515,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (GitCommandHelpers.VersionInUse < GitVersion.LastSupportedVersion)
             {
-                RenderSettingUnset(GitFound, GitFound_Fix, string.Format(_wrongGitVersion.Text, GitCommandHelpers.VersionInUse, GitVersion.LastSupportedVersion));
+                RenderSettingUnset(GitFound, GitFound_Fix, string.Format(_wrongGitVersion.Text, GitCommandHelpers.VersionInUse, GitVersion.LastRecommendedVersion));
+                return false;
+            }
+
+            if (GitCommandHelpers.VersionInUse < GitVersion.LastRecommendedVersion)
+            {
+                RenderSettingNotRecommended(GitFound, GitFound_Fix, string.Format(_notRecommendedGitVersion.Text, GitCommandHelpers.VersionInUse, GitVersion.LastRecommendedVersion));
                 return false;
             }
 
@@ -693,6 +702,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             settingButton.BackColor = Color.LavenderBlush;
             settingButton.ForeColor = Color.Crimson;
+            settingButton.Text = text;
+            settingFixButton.Visible = true;
+        }
+
+        private static void RenderSettingNotRecommended(Button settingButton, Button settingFixButton, string text)
+        {
+            settingButton.BackColor = Color.Coral;
+            settingButton.ForeColor = Color.Black;
             settingButton.Text = text;
             settingFixButton.Visible = true;
         }
