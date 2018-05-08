@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -61,6 +62,11 @@ namespace GitUI.CommandsDialogs
         protected override void OnRuntimeLoad(EventArgs e)
         {
             base.OnRuntimeLoad(e);
+
+            // scale up for hi DPI
+            MaximumSize = DpiUtil.Scale(new Size(950, 375));
+            MinimumSize = DpiUtil.Scale(new Size(450, 375));
+
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 var repositoryHistory = await RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync();

@@ -386,9 +386,7 @@ namespace GitUI.CommandsDialogs
             this.ClientSize = new System.Drawing.Size(616, 336);
             this.Controls.Add(this.tableLayoutPanel2);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(933, 375);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(430, 375);
             this.Name = "FormClone";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Clone";
