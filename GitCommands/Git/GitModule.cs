@@ -99,7 +99,7 @@ namespace GitCommands
         private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
 
         public static readonly string NoNewLineAtTheEnd = "\\ No newline at end of file";
-        private const string DiffCommandWithStandardArgs = " -c diff.submodule=short diff --no-color ";
+        private const string DiffCommandWithStandardArgs = " -c diff.submodule=short -c diff.noprefix=false diff --no-color ";
 
         public GitModule(string workingdir)
         {
