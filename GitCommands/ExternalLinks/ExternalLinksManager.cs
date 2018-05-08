@@ -10,13 +10,13 @@ namespace GitCommands.ExternalLinks
     {
         private readonly RepoDistSettings _cachedSettings;
         private readonly ExternalLinksManager _lowerPriority;
-        private readonly IExternalLinksLoader _externalLinksLoader = new ExternalLinksLoader();
+        private readonly IExternalLinksStorage _externalLinksStorage = new ExternalLinksStorage();
         private readonly List<ExternalLinkDefinition> _definitions;
 
         public ExternalLinksManager(RepoDistSettings settings)
         {
             _cachedSettings = new RepoDistSettings(null, settings.SettingsCache);
-            _definitions = _externalLinksLoader.Load(_cachedSettings).ToList();
+            _definitions = _externalLinksStorage.Load(_cachedSettings).ToList();
 
             if (settings.LowerPriority != null)
             {
@@ -89,7 +89,7 @@ namespace GitCommands.ExternalLinks
         public void Save()
         {
             _lowerPriority?.Save();
-            _externalLinksLoader.Save(_cachedSettings, _definitions);
+            _externalLinksStorage.Save(_cachedSettings, _definitions);
         }
     }
 }

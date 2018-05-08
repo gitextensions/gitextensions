@@ -9,7 +9,7 @@ using GitCommands.Settings;
 
 namespace GitCommands.ExternalLinks
 {
-    public interface IExternalLinksLoader
+    public interface IExternalLinksStorage
     {
         /// <summary>
         /// Loads external link definitions from the settings.
@@ -22,7 +22,7 @@ namespace GitCommands.ExternalLinks
         void Save(RepoDistSettings settings, IReadOnlyList<ExternalLinkDefinition> definitions);
     }
 
-    public sealed class ExternalLinksLoader : IExternalLinksLoader
+    public sealed class ExternalLinksStorage : IExternalLinksStorage
     {
         private const string SettingName = "RevisionLinkDefs";
 
@@ -54,7 +54,9 @@ namespace GitCommands.ExternalLinks
 
                     var sw = new StringWriter();
                     var serializer = new XmlSerializer(typeof(List<ExternalLinkDefinition>));
-                    serializer.Serialize(sw, definitions);
+                    var ns = new XmlSerializerNamespaces();
+                    ns.Add(string.Empty, string.Empty);
+                    serializer.Serialize(sw, definitions.OrderBy(x => x.Name).ToList(), ns);
                     xml = sw.ToString();
                 }
 

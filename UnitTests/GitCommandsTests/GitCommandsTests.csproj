@@ -55,8 +55,8 @@
     <Compile Include="EnvironmentPathsProviderTests.cs" />
     <Compile Include="ExternalLinks\ConfiguredLinkDefinitionsProviderTests.cs" />
     <Compile Include="ExternalLinks\ExternalLinkRevisionParserTests.cs" />
-    <Compile Include="ExternalLinks\ExternalLinksLoaderIntegrationTests.cs" />
     <Compile Include="ExternalLinks\ExternalLinksManagerIntegrationTests.cs" />
+    <Compile Include="ExternalLinks\ExternalLinksStorageIntegrationTests.cs" />
     <Compile Include="FileAssociatedIconProviderTests.cs" />
     <Compile Include="FullPathResolverTests.cs" />
     <Compile Include="ArgumentBuilderTests.cs" />

@@ -18,7 +18,7 @@ namespace GitCommandsTests.ExternalLinks
         private RepoDistSettings _userRoaming;
         private RepoDistSettings _repoDistributed;
         private RepoDistSettings _repoLocal;
-        private ExternalLinksLoader _loader;
+        private ExternalLinksStorage _externalLinksStorage;
 
         [SetUp]
         public void Setup()
@@ -36,7 +36,7 @@ namespace GitCommandsTests.ExternalLinks
             _repoDistributed = new RepoDistSettings(_userRoaming, new GitExtSettingsCache(_level2));
             _repoLocal = new RepoDistSettings(_repoDistributed, new GitExtSettingsCache(_level1));
 
-            _loader = new ExternalLinksLoader();
+            _externalLinksStorage = new ExternalLinksStorage();
         }
 
         [TearDown]
@@ -53,7 +53,7 @@ namespace GitCommandsTests.ExternalLinks
         [Test]
         public void Add_should_add_new_definition_to_the_lowest_level_level2()
         {
-            _loader.Load(_userRoaming).Count.Should().Be(1);
+            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(1);
 
             var manager = new ExternalLinksManager(_repoDistributed);
 
@@ -76,13 +76,13 @@ namespace GitCommandsTests.ExternalLinks
 
             manager.Save();
 
-            _loader.Load(_userRoaming).Count.Should().Be(2);
+            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(2);
         }
 
         [Test]
         public void Add_should_add_new_definition_to_the_lowest_level_level3()
         {
-            _loader.Load(_userRoaming).Count.Should().Be(1);
+            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(1);
 
             var manager = new ExternalLinksManager(_repoLocal);
 
@@ -107,14 +107,14 @@ namespace GitCommandsTests.ExternalLinks
 
             manager.Save();
 
-            _loader.Load(_userRoaming).Count.Should().Be(2);
+            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(2);
         }
 
         [Test]
         public void Add_should_add_definition_present_in_lower_level_to_higher_level()
         {
-            _loader.Load(_userRoaming).Count.Should().Be(1);
-            _loader.Load(_repoDistributed).Count.Should().Be(3);
+            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(1);
+            _externalLinksStorage.Load(_repoDistributed).Count.Should().Be(3);
 
             var manager = new ExternalLinksManager(_repoLocal);
 
@@ -139,15 +139,15 @@ namespace GitCommandsTests.ExternalLinks
 
             manager.Save();
 
-            _loader.Load(_userRoaming).Count.Should().Be(1);
-            _loader.Load(_repoDistributed).Count.Should().Be(4);
+            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(1);
+            _externalLinksStorage.Load(_repoDistributed).Count.Should().Be(4);
         }
 
         [Test]
         public void Remove_should_remove_definition_from_collection()
         {
-            _loader.Load(_userRoaming).Count.Should().Be(1);
-            _loader.Load(_repoDistributed).Count.Should().Be(3);
+            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(1);
+            _externalLinksStorage.Load(_repoDistributed).Count.Should().Be(3);
 
             var manager = new ExternalLinksManager(_repoLocal);
 
@@ -169,8 +169,8 @@ namespace GitCommandsTests.ExternalLinks
             // 1 comes from the local
             effectiveSettings.Count.Should().Be(4);
 
-            _loader.Load(_userRoaming).Count.Should().Be(0);
-            _loader.Load(_repoDistributed).Count.Should().Be(3);
+            _externalLinksStorage.Load(_userRoaming).Count.Should().Be(0);
+            _externalLinksStorage.Load(_repoDistributed).Count.Should().Be(3);
         }
     }
 }

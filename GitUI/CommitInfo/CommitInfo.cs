@@ -40,7 +40,7 @@ namespace GitUI.CommitInfo
         private readonly ICommitDataManager _commitDataManager;
         private readonly ICommitDataHeaderRenderer _commitDataHeaderRenderer;
         private readonly ICommitDataBodyRenderer _commitDataBodyRenderer;
-        private readonly IExternalLinksLoader _externalLinksLoader;
+        private readonly IExternalLinksStorage _externalLinksStorage;
         private readonly IConfiguredLinkDefinitionsProvider _effectiveLinkDefinitionsProvider;
         private readonly IGitRevisionExternalLinksParser _gitRevisionExternalLinksParser;
         private readonly IExternalLinkRevisionParser _externalLinkRevisionParser;
@@ -63,8 +63,8 @@ namespace GitUI.CommitInfo
 
             _commitDataHeaderRenderer = new CommitDataHeaderRenderer(labelFormatter, _dateFormatter, headerRenderer, _linkFactory);
             _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
-            _externalLinksLoader = new ExternalLinksLoader();
-            _effectiveLinkDefinitionsProvider = new ConfiguredLinkDefinitionsProvider(_externalLinksLoader);
+            _externalLinksStorage = new ExternalLinksStorage();
+            _effectiveLinkDefinitionsProvider = new ConfiguredLinkDefinitionsProvider(_externalLinksStorage);
             _gitRemoteManager = new GitRemoteManager(() => Module);
             _externalLinkRevisionParser = new ExternalLinkRevisionParser(_gitRemoteManager);
             _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
