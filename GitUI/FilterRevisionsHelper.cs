@@ -10,7 +10,7 @@ namespace GitUI
         private readonly RevisionGrid _NO_TRANSLATE_revisionGrid;
         private readonly ToolStripButton _NO_TRANSLATE_showFirstParentButton;
 
-        private readonly ToolStripMenuItem _commitToolStripMenuItem;
+        private readonly ToolStripMenuItem _commitFilterToolStripMenuItem;
         private readonly ToolStripMenuItem _committerToolStripMenuItem;
         private readonly ToolStripMenuItem _authorToolStripMenuItem;
         private readonly ToolStripMenuItem _diffContainsToolStripMenuItem;
@@ -20,7 +20,7 @@ namespace GitUI
 
         public FilterRevisionsHelper()
         {
-            _commitToolStripMenuItem = new ToolStripMenuItem();
+            _commitFilterToolStripMenuItem = new ToolStripMenuItem();
             _committerToolStripMenuItem = new ToolStripMenuItem();
             _authorToolStripMenuItem = new ToolStripMenuItem();
             _diffContainsToolStripMenuItem = new ToolStripMenuItem();
@@ -29,10 +29,10 @@ namespace GitUI
             //
             // commitToolStripMenuItem1
             //
-            _commitToolStripMenuItem.Checked = true;
-            _commitToolStripMenuItem.CheckOnClick = true;
-            _commitToolStripMenuItem.Name = "commitToolStripMenuItem1";
-            _commitToolStripMenuItem.Text = "Commit";
+            _commitFilterToolStripMenuItem.Checked = true;
+            _commitFilterToolStripMenuItem.CheckOnClick = true;
+            _commitFilterToolStripMenuItem.Name = "commitToolStripMenuItem1";
+            _commitFilterToolStripMenuItem.Text = "Commit message and hash";
 
             //
             // committerToolStripMenuItem
@@ -75,7 +75,7 @@ namespace GitUI
 
             dropDownButton.DropDownItems.AddRange(new ToolStripItem[]
             {
-                _commitToolStripMenuItem,
+                _commitFilterToolStripMenuItem,
                 _committerToolStripMenuItem,
                 _authorToolStripMenuItem,
                 _diffContainsToolStripMenuItem
@@ -107,7 +107,7 @@ namespace GitUI
             {
                 _NO_TRANSLATE_revisionGrid.FormatQuickFilter(
                     _NO_TRANSLATE_textBox.Text,
-                    _commitToolStripMenuItem.Checked,
+                    _commitFilterToolStripMenuItem.Checked,
                     _committerToolStripMenuItem.Checked,
                     _authorToolStripMenuItem.Checked,
                     _diffContainsToolStripMenuItem.Checked,
@@ -173,14 +173,14 @@ namespace GitUI
         {
             if (_diffContainsToolStripMenuItem.Checked)
             {
-                _commitToolStripMenuItem.Checked = false;
+                _commitFilterToolStripMenuItem.Checked = false;
                 _committerToolStripMenuItem.Checked = false;
                 _authorToolStripMenuItem.Checked = false;
                 _hashToolStripMenuItem.Checked = false;
             }
             else
             {
-                _commitToolStripMenuItem.Checked = true;
+                _commitFilterToolStripMenuItem.Checked = true;
             }
         }
 
@@ -194,7 +194,7 @@ namespace GitUI
         {
             if (disposing)
             {
-                _commitToolStripMenuItem.Dispose();
+                _commitFilterToolStripMenuItem.Dispose();
                 _committerToolStripMenuItem.Dispose();
                 _authorToolStripMenuItem.Dispose();
                 _diffContainsToolStripMenuItem.Dispose();
