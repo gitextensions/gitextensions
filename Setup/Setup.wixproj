@@ -6,7 +6,6 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <Version Condition=" '$(Version)' == '' ">0.00</Version>
     <NumericVersion Condition=" '$(NumericVersion)' == '' ">$(Version)</NumericVersion>
-    <IncludeRequiredSoftware Condition=" '$(IncludeRequiredSoftware)' == '' ">1</IncludeRequiredSoftware>
     <ProductVersion>3.0</ProductVersion>
     <ProjectGuid>{9380c29c-3c7f-47a8-a4c9-a5ee9d7b386a}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
@@ -17,7 +16,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;Version=$(Version);NumericVersion=$(NumericVersion);IncludeRequiredSoftware=$(IncludeRequiredSoftware)</DefineConstants>
+    <DefineConstants>Debug;Version=$(Version);NumericVersion=$(NumericVersion)</DefineConstants>
     <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
@@ -25,12 +24,12 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
-    <DefineConstants>Version=$(Version);NumericVersion=$(NumericVersion);IncludeRequiredSoftware=$(IncludeRequiredSoftware)</DefineConstants>
+    <DefineConstants>Version=$(Version);NumericVersion=$(NumericVersion)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug;Version=$(Version);NumericVersion=$(NumericVersion);IncludeRequiredSoftware=$(IncludeRequiredSoftware)</DefineConstants>
+    <DefineConstants>Debug;Version=$(Version);NumericVersion=$(NumericVersion)</DefineConstants>
     <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
@@ -38,7 +37,7 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
-    <DefineConstants>Version=$(Version);NumericVersion=$(NumericVersion);IncludeRequiredSoftware=$(IncludeRequiredSoftware)</DefineConstants>
+    <DefineConstants>Version=$(Version);NumericVersion=$(NumericVersion)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
@@ -51,7 +50,6 @@
     <Compile Include="UI\MaintenanceTypeDlg.wxs" />
     <Compile Include="UI\MaintenanceWelcomeDlg.wxs" />
     <Compile Include="UI\ProgressDlg.wxs" />
-    <Compile Include="UI\RequiredSoftwareDlg.wxs" />
     <Compile Include="UI\SSHClientDlg.wxs" />
     <Compile Include="UI\UserExit.wxs" />
     <Compile Include="UI\VerifyReadyDlg.wxs" />
@@ -91,7 +89,6 @@
   </Target>
   <Target Name="BeforeBuild">
     <Exec Command="
-	call DownloadExternals.cmd $(Configuration)
 	call BuildGitExtNative.cmd $(Configuration) build">
     </Exec>
   </Target>

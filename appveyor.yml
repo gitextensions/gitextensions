@@ -19,7 +19,6 @@ build:
 cache:
   #- packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
   - packages\WiX.3.11.0 -> Setup\packages.config
-  - Setup\cache -> Setup\DownloadExternals.cmd
 
 install:
 - cmd: git submodule update --init --recursive
