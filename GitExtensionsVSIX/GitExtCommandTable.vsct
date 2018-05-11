@@ -118,10 +118,11 @@
             <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtCommitCommand" priority="0x0001" type="Button">
                 <Parent guid="guidGitExtensionsPackageCmdSet" id="gitExtMenuChangesGroup" />
                 <Icon guid="guidImages" id="commit"/>
+                <CommandFlag>TextChanges</CommandFlag>
                 <Strings>
                     <CommandName>GitExt.Commit</CommandName>
                     <ButtonText>&amp;Commit</ButtonText>
-                  <ToolTipText>Commit changes</ToolTipText>
+                    <ToolTipText>Commit changes</ToolTipText>
                 </Strings>
             </Button>
             <Button guid="guidGitExtensionsPackageCmdSet" id="gitExtPullCommand" priority="0x0002" type="Button">

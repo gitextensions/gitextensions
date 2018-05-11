@@ -403,7 +403,7 @@ namespace GitPlugin
         private Command GetCommand(string commandName, string caption, string tooltip, int iconIndex,
             vsCommandStyle commandStyle, Commands2 commands)
         {
-            object[] contextGUIDS = Array.Empty<object>();
+            var contextGUIDS = Array.Empty<object>();
 
             // Add command
             Command command = GetCommand(commandName);

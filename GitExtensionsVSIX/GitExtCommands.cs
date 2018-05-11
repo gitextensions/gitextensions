@@ -47,7 +47,7 @@ namespace GitExtensionsVSIX
 
             _package = package;
             _application = (DTE2)ServiceProvider.GetService(typeof(DTE));
-            _commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            _commandService = (OleMenuCommandService)ServiceProvider.GetService(typeof(IMenuCommandService));
 
             try
             {
@@ -102,10 +102,13 @@ namespace GitExtensionsVSIX
         {
             _commandsByName[commandName] = command;
             var commandId = new CommandID(CommandSet, id);
-            var menuCommand = new OleMenuCommand(MenuItemCallback, commandId);
-            menuCommand.BeforeQueryStatus += MenuCommand_BeforeQueryStatus;
+            var menuCommand = new OleMenuCommand(MenuItemCallback, MenuCommandChange, MenuCommand_BeforeQueryStatus, commandId);
             _commandService.AddCommand(menuCommand);
             _commands[id] = command;
+        }
+
+        private void MenuCommandChange(object sender, EventArgs e)
+        {
         }
 
         private void MenuCommand_BeforeQueryStatus(object sender, EventArgs e)
