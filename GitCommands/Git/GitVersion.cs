@@ -15,8 +15,10 @@ namespace GitCommands
         private static readonly GitVersion v2_5_1 = new GitVersion("2.5.1");
         private static readonly GitVersion v2_7_0 = new GitVersion("2.7.0");
         private static readonly GitVersion v2_9_0 = new GitVersion("2.9.0");
+        private static readonly GitVersion v2_16_3 = new GitVersion("2.16.3");
 
-        public static readonly GitVersion LastSupportedVersion = v1_7_0;
+        public static readonly GitVersion LastSupportedVersion = v2_9_0;
+        public static readonly GitVersion LastRecommendedVersion = v2_16_3;
 
         private const string Prefix = "git version";
 

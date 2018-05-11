@@ -7360,7 +7360,7 @@ Check if file is accessible.</source>
         <target />
       </trans-unit>
       <trans-unit id="downloadGitForWindows.Text">
-        <source>Download msysgit</source>
+        <source>Download Git</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBox7.Text">
