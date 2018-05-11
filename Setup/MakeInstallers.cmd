@@ -17,8 +17,7 @@ IF "%Configuration%"=="" SET Configuration=Release
 SET BuildType=%2
 IF "%BuildType%"=="" SET BuildType=Rebuild
 
-set normal=GitExtensions-%Version%-Setup.msi
-set complete=GitExtensions-%Version%-SetupComplete.msi
+set normal=GitExtensions-%Version%.msi
 for /f "tokens=*" %%i in ('hMSBuild.bat -only-path -notamd64') do set msbuild="%%i"
 set output=bin\%Configuration%\GitExtensions.msi
 set project=Setup.wixproj
@@ -31,19 +30,10 @@ echo.
 echo Removing %normal%
 del %normal% 2> nul
 
-echo Removing %complete%
-del %complete% 2> nul
-
 echo.
 
 echo Building %normal%
-%build% /p:IncludeRequiredSoftware=0
+%build%
 IF ERRORLEVEL 1 EXIT /B 1
 copy %output% %normal%
-IF ERRORLEVEL 1 EXIT /B 1
-
-echo Building %complete%
-%build% /p:IncludeRequiredSoftware=1
-IF ERRORLEVEL 1 EXIT /B 1
-copy %output% %complete%
 IF ERRORLEVEL 1 EXIT /B 1
