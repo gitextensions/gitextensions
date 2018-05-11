@@ -2,19 +2,17 @@
 
 # Git Extensions
 
-Git Extensions is a standalone UI tool for managing git repositories.
 
-It also integrates with Windows Explorer and Microsoft Visual Studio (2010/2012/2013/2015/2017).
+It also integrates with Windows Explorer and Microsoft Visual Studio (2015/2017).
 
-For more information please [check out our website](https://gitextensions.github.io/) or [download the latest version](https://github.com/gitextensions/gitextensions/releases/latest) and give it a try.
 
 <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?maxAge=86400" alt="Github Releases (latest)"></a>
 
 ### Current Status
 
 The work has been split into two streams:
- * version 3.0x, and
- * version 2.5x.
+ * version 3.0x
+ * version 2.5x
 
 #### Version 3.0x
 
@@ -98,7 +96,7 @@ title="See more information on Transifex.com"><img src="https://ds0k0en9abmn1.cl
   </tr>
   <tr>
     <td><strong>Visual Studio addin (2010/2012/2013)</strong></td>
-    <td><a href="https://github.com/gitextensions/gitextensions/releases/latest">Download and run setup.exe</a></td>
+    <td>Included with installer for the 2.x branch. <a href="https://github.com/gitextensions/gitextensions/releases/latest">Download and run setup.exe</a></td>
   </tr>
   <tr>
     <td><strong>Visual Studio Code VSIX</strong><br />Kudos to <a href="/pmiossec" class="author text-inherit">@pmiossec</a></td>
