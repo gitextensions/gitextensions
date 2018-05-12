@@ -8,7 +8,7 @@ namespace GitUI
 {
     /// <summary>Base class for a <see cref="UserControl"/> requiring
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
-    public abstract class GitModuleControl : GitExtensionsControl
+    public class GitModuleControl : GitExtensionsControl
     {
         private readonly object _lock = new object();
 
