@@ -48,6 +48,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.pnlHeader = new System.Windows.Forms.Panel();
+            this.pnlBody = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.lblRecentRepositories = new System.Windows.Forms.Label();
             this.tsmiCategories = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,6 +66,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             this.mnuTop = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuConfigure = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlHeader.SuspendLayout();
+            this.pnlBody.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.contextMenuStrip.SuspendLayout();
             this.menuStripRecentMenu.SuspendLayout();
@@ -91,6 +93,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             this.pnlHeader.Padding = new System.Windows.Forms.Padding(20, 0, 20, 11);
             this.pnlHeader.Size = new System.Drawing.Size(451, 73);
             this.pnlHeader.TabIndex = 0;
+            // 
+            // pnlBody
+            // 
+            this.pnlBody.Controls.Add(this.listView1);
+            this.pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlBody.Location = new System.Drawing.Point(0, 0);
+            this.pnlBody.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlBody.Name = "pnlBody";
+            this.pnlBody.Padding = new System.Windows.Forms.Padding(20);
+            this.pnlBody.Size = new System.Drawing.Size(451, 73);
+            this.pnlBody.TabIndex = 1;
             // 
             // tableLayoutPanel1
             // 
@@ -178,15 +191,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             // listView1
             // 
             this.listView1.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.clmhdrPath,
             this.clmhdrBranch,
             this.clmhdrCategory});
             this.listView1.ContextMenuStrip = this.contextMenuStrip;
+            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView1.FullRowSelect = true;
             listViewGroup1.Header = "Most Recent";
             listViewGroup1.Name = "lvgMostRecent";
@@ -267,8 +278,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this.listView1);
             this.Controls.Add(this.menuStripRecentMenu);
+            this.Controls.Add(this.pnlBody);
             this.Controls.Add(this.pnlHeader);
             this.DoubleBuffered = true;
             this.Name = "RecentRepositoriesList";
@@ -276,6 +287,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             this.Load += new System.EventHandler(this.RecentRepositoriesList_Load);
             this.pnlHeader.ResumeLayout(false);
             this.pnlHeader.PerformLayout();
+            this.pnlBody.ResumeLayout(false);
+            this.pnlBody.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.contextMenuStrip.ResumeLayout(false);
@@ -289,6 +302,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         #endregion
 
         private System.Windows.Forms.Panel pnlHeader;
+        private System.Windows.Forms.Panel pnlBody;
         private System.Windows.Forms.Label lblRecentRepositories;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem tsmiRemoveFromList;

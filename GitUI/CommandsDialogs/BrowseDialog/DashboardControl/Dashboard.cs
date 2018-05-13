@@ -44,14 +44,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             flpnlContribute.Dock = DockStyle.Bottom;
             flpnlContribute.SendToBack();
 
-            recentRepositoriesList1.GitModuleChanged += OnModuleChanged;
+            userRepositoriesList.GitModuleChanged += OnModuleChanged;
 
             // apply scaling
             pnlLogo.Padding = DpiUtil.Scale(pnlLogo.Padding);
-            flpnlStart.Padding = DpiUtil.Scale(flpnlStart.Padding);
-            flpnlContribute.Padding = DpiUtil.Scale(flpnlContribute.Padding);
-            tableLayoutPanel1.ColumnStyles[1].Width = DpiUtil.Scale(tableLayoutPanel1.ColumnStyles[1].Width);
-            recentRepositoriesList1.HeaderHeight = pnlLogo.Height;
+            userRepositoriesList.HeaderHeight = pnlLogo.Height;
+
+            this.AdjustForDpiScaling();
         }
 
         // need this to stop flickering of the background images, nothing else works
@@ -69,7 +68,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             InitDashboardLayout();
             ApplyTheme();
-            recentRepositoriesList1.ShowRecentRepositories();
+            userRepositoriesList.ShowRecentRepositories();
 
             void ApplyTheme()
             {
@@ -80,13 +79,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 flpnlStart.BackColor = _selectedTheme.PrimaryLight;
                 flpnlContribute.BackColor = _selectedTheme.PrimaryVeryLight;
                 lblContribute.ForeColor = _selectedTheme.SecondaryHeadingText;
-                recentRepositoriesList1.BranchNameColor = AppSettings.BranchColor; // _selectedTheme.SecondaryText;
-                recentRepositoriesList1.FavouriteColor = _selectedTheme.AccentedText;
-                recentRepositoriesList1.ForeColor = _selectedTheme.PrimaryText;
-                recentRepositoriesList1.HeaderColor = _selectedTheme.SecondaryHeadingText;
-                recentRepositoriesList1.HeaderBackColor = _selectedTheme.PrimaryDark;
-                recentRepositoriesList1.HoverColor = _selectedTheme.PrimaryLight;
-                recentRepositoriesList1.MainBackColor = _selectedTheme.Primary;
+                userRepositoriesList.BranchNameColor = AppSettings.BranchColor; // _selectedTheme.SecondaryText;
+                userRepositoriesList.FavouriteColor = _selectedTheme.AccentedText;
+                userRepositoriesList.ForeColor = _selectedTheme.PrimaryText;
+                userRepositoriesList.HeaderColor = _selectedTheme.SecondaryHeadingText;
+                userRepositoriesList.HeaderBackColor = _selectedTheme.PrimaryDark;
+                userRepositoriesList.HoverColor = _selectedTheme.PrimaryLight;
+                userRepositoriesList.MainBackColor = _selectedTheme.Primary;
                 BackgroundImage = _selectedTheme.BackgroundImage;
 
                 foreach (var item in flpnlContribute.Controls.OfType<LinkLabel>().Union(flpnlStart.Controls.OfType<LinkLabel>()))
@@ -115,7 +114,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         },
                         (panel, lastControl) =>
                         {
-                            var height = DpiUtil.Scale(lastControl.Location.Y + lastControl.Size.Height) + panel.Padding.Bottom;
+                            var height = lastControl.Location.Y + lastControl.Size.Height + panel.Padding.Bottom;
                             panel.Height = height;
                             panel.MinimumSize = new Size(0, height);
                         });
@@ -137,7 +136,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         },
                         (panel, lastControl) =>
                         {
-                            var height = DpiUtil.Scale(lastControl.Location.Y + lastControl.Size.Height) + panel.Padding.Bottom;
+                            var height = lastControl.Location.Y + lastControl.Size.Height + panel.Padding.Bottom;
                             panel.MinimumSize = new Size(0, height);
                         });
                 }
@@ -170,7 +169,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         AutoSize = true,
                         AutoEllipsis = true,
                         Font = AppSettings.Font,
-                        Image = icon,
+                        Image = DpiUtil.Scale(icon),
                         ImageAlign = ContentAlignment.MiddleLeft,
                         LinkBehavior = LinkBehavior.NeverUnderline,
                         Margin = new Padding(padding3, 0, padding3, DpiUtil.Scale(8)),

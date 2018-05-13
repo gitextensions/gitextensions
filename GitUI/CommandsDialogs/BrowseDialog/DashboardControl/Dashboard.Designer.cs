@@ -34,7 +34,7 @@
             this.lblContribute = new System.Windows.Forms.Label();
             this.pnlLogo = new System.Windows.Forms.Panel();
             this.pbLogo = new System.Windows.Forms.PictureBox();
-            this.recentRepositoriesList1 = new GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList();
+            this.userRepositoriesList = new GitUI.CommandsDialogs.BrowseDialog.DashboardControl.UserRepositoriesList();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.pnlLeft.SuspendLayout();
             this.flpnlContribute.SuspendLayout();
@@ -121,18 +121,18 @@
             // 
             // recentRepositoriesList1
             // 
-            this.recentRepositoriesList1.BranchNameColor = System.Drawing.SystemColors.HotTrack;
-            this.recentRepositoriesList1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.recentRepositoriesList1.HeaderBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(183)))), ((int)(((byte)(226)))));
-            this.recentRepositoriesList1.HeaderColor = System.Drawing.Color.Empty;
-            this.recentRepositoriesList1.HeaderHeight = 70;
-            this.recentRepositoriesList1.HoverColor = System.Drawing.Color.Empty;
-            this.recentRepositoriesList1.Location = new System.Drawing.Point(246, 0);
-            this.recentRepositoriesList1.MainBackColor = System.Drawing.Color.Empty;
-            this.recentRepositoriesList1.Margin = new System.Windows.Forms.Padding(0);
-            this.recentRepositoriesList1.Name = "recentRepositoriesList1";
-            this.recentRepositoriesList1.Size = new System.Drawing.Size(405, 358);
-            this.recentRepositoriesList1.TabIndex = 1;
+            this.userRepositoriesList.BranchNameColor = System.Drawing.SystemColors.HotTrack;
+            this.userRepositoriesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.userRepositoriesList.HeaderBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(160)))), ((int)(((byte)(183)))), ((int)(((byte)(226)))));
+            this.userRepositoriesList.HeaderColor = System.Drawing.Color.Empty;
+            this.userRepositoriesList.HeaderHeight = 70;
+            this.userRepositoriesList.HoverColor = System.Drawing.Color.Empty;
+            this.userRepositoriesList.Location = new System.Drawing.Point(246, 0);
+            this.userRepositoriesList.MainBackColor = System.Drawing.Color.Empty;
+            this.userRepositoriesList.Margin = new System.Windows.Forms.Padding(0);
+            this.userRepositoriesList.Name = "userRepositoriesList";
+            this.userRepositoriesList.Size = new System.Drawing.Size(405, 358);
+            this.userRepositoriesList.TabIndex = 1;
             // 
             // tableLayoutPanel1
             // 
@@ -143,7 +143,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85.71428F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.142857F));
             this.tableLayoutPanel1.Controls.Add(this.pnlLeft, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.recentRepositoriesList1, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.userRepositoriesList, 2, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
@@ -182,7 +182,7 @@
         private System.Windows.Forms.FlowLayoutPanel flpnlContribute;
         private System.Windows.Forms.Label lblContribute;
         private System.Windows.Forms.Panel pnlLogo;
-        private UserRepositoriesList recentRepositoriesList1;
+        private UserRepositoriesList userRepositoriesList;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.PictureBox pbLogo;
     }

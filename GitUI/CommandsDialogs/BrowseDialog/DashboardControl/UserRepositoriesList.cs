@@ -51,17 +51,18 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             _foreColorBrush = new SolidBrush(base.ForeColor);
 
-            _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints - DpiUtil.Scale(1f));
-            lblRecentRepositories.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + DpiUtil.Scale(5.5f));
+            _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints - 1f);
+            lblRecentRepositories.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
 
             listView1.Items.Clear();
             listView1.ContextMenuStrip = contextMenuStrip;
 
-            ApplyScaling();
-
             imageList1.Images.Clear();
+            imageList1.ImageSize = DpiUtil.Scale(imageList1.ImageSize);
             imageList1.Images.Add(Resources.folder_git);
             imageList1.Images.Add(Resources.folder_error);
+
+            this.AdjustForDpiScaling();
         }
 
         [Category("Appearance")]
@@ -275,24 +276,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             handler?.Invoke(this, args);
         }
 
-        private void ApplyScaling()
-        {
-            tableLayoutPanel1.ColumnStyles[1].Width *= DpiUtil.ScaleX;
-            pnlHeader.Padding = DpiUtil.Scale(pnlHeader.Padding);
-
-            var padding4 = DpiUtil.Scale(4);
-            var padding36 = DpiUtil.Scale(36);
-            listView1.Width = Width - (2 * padding36);
-            listView1.Location = new Point(padding36, pnlHeader.Height + padding4);
-            listView1.Size = new Size(Width - (2 * padding36), Height - pnlHeader.Height - (2 * padding4));
-        }
-
         private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate) where T : Control
         {
             foreach (Control control in controls)
             {
-                var result = control as T;
-                if (result != null && predicate(result))
+                if (control is T result && predicate(result))
                 {
                     return result;
                 }
