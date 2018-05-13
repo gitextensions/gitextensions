@@ -5,8 +5,9 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Repository;
 using GitCommands.Remote;
+using GitCommands.Repository;
+using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -96,6 +97,7 @@ Inactive remote is completely invisible to git.");
             _lvgEnabled = new ListViewGroup(_lvgEnabledHeader.Text, HorizontalAlignment.Left);
             _lvgDisabled = new ListViewGroup(_lvgDisabledHeader.Text, HorizontalAlignment.Left);
             Remotes.Groups.AddRange(new[] { _lvgEnabled, _lvgDisabled });
+            Remotes.Columns[0].Width = DpiUtil.Scale(120);
 
             Application.Idle += application_Idle;
         }
@@ -155,12 +157,12 @@ Inactive remote is completely invisible to git.");
         {
             if (disabled)
             {
-                btnToggleState.Image = Properties.Resources.eye_opened;
+                btnToggleState.Image = DpiUtil.Scale(Properties.Resources.eye_opened);
                 toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Activate.Text ?? "").Trim());
             }
             else
             {
-                btnToggleState.Image = Properties.Resources.eye_closed;
+                btnToggleState.Image = DpiUtil.Scale(Properties.Resources.eye_closed);
                 toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Deactivate.Text ?? "").Trim());
             }
         }
