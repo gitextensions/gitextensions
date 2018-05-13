@@ -7,6 +7,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remote;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -104,6 +105,7 @@ Inactive remote is completely invisible to git.");
             MergeWith.DataPropertyName = nameof(IGitRef.MergeWith);
 
             this.AdjustForDpiScaling();
+            Remotes.Columns[0].Width = DpiUtil.Scale(120);
         }
 
         /// <summary>
@@ -162,12 +164,12 @@ Inactive remote is completely invisible to git.");
         {
             if (disabled)
             {
-                btnToggleState.Image = Properties.Resources.eye_opened;
+                btnToggleState.Image = DpiUtil.Scale(Properties.Resources.eye_opened);
                 toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Activate.Text ?? "").Trim());
             }
             else
             {
-                btnToggleState.Image = Properties.Resources.eye_closed;
+                btnToggleState.Image = DpiUtil.Scale(Properties.Resources.eye_closed);
                 toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Deactivate.Text ?? "").Trim());
             }
         }
