@@ -858,7 +858,7 @@ namespace GitUI.CommandsDialogs
                 summary += Module.GetSubmoduleSummary(name);
             }
 
-            using (var frm = new FormEdit(summary))
+            using (var frm = new FormEdit(UICommands, summary))
             {
                 frm.ShowDialog(this);
             }
