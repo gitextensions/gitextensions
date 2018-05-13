@@ -8285,8 +8285,8 @@ Par conséquent le bouton Annuler n'annule AUCUN changement fait.</target>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupported.Text">
-        <source>Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.</source>
-        <target>Stasher des fichiers non suivis n'est pas supporté par la version de msysgit que vous utilisez. Veuillez mettez à jour msysgit au moins à la version 1.7.7 pour utiliser cette option.</target>
+        <source>Stash untracked files is not supported in the version of Git you are using. Please update Git to at least version 1.7.7 to use this option.</source>
+        <target>Stasher des fichiers non suivis n'est pas supporté par la version de Git que vous utilisez. Veuillez mettez à jour Git au moins à la version 1.7.7 pour utiliser cette option.</target>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupportedCaption.Text">
@@ -9246,8 +9246,8 @@ Vérifiez si le fichier est accessible.</target>
         
       </trans-unit>
       <trans-unit id="downloadGitForWindows.Text">
-        <source>Download msysgit</source>
-        <target>Télécharger msysgit</target>
+        <source>Download Git</source>
+        <target>Télécharger Git</target>
         
       </trans-unit>
       <trans-unit id="groupBox7.Text">

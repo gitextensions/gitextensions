@@ -8119,8 +8119,8 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupported.Text">
-        <source>Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.</source>
-        <target>Uschování nesledovaných souborů není podporováno v této verzi programu msysgit. Prosím aktualizujte msysgit alespoň na verzi 1.7.7.</target>
+        <source>Stash untracked files is not supported in the version of Git you are using. Please update Git to at least version 1.7.7 to use this option.</source>
+        <target>Uschování nesledovaných souborů není podporováno v této verzi programu Git. Prosím aktualizujte Git alespoň na verzi 1.7.7.</target>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupportedCaption.Text">
@@ -9068,8 +9068,8 @@ Check if file is accessible.</source>
         
       </trans-unit>
       <trans-unit id="downloadGitForWindows.Text">
-        <source>Download msysgit</source>
-        <target>Stáhnout msysgit</target>
+        <source>Download Git</source>
+        <target>Stáhnout Git</target>
         
       </trans-unit>
       <trans-unit id="groupBox7.Text">

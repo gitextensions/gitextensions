@@ -7791,9 +7791,9 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupported.Text">
-        <source>Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.</source>
-        <target>설치된 msysgit 버전에서는 Stash untracked 파일은 지원하지 않습니다.
-사용하실려면, msysgit 을 1.7.7 이후 버전으로 업그레이드 하세요.</target>
+        <source>Stash untracked files is not supported in the version of Git you are using. Please update Git to at least version 1.7.7 to use this option.</source>
+        <target>설치된 Git 버전에서는 Stash untracked 파일은 지원하지 않습니다.
+사용하실려면, Git 을 1.7.7 이후 버전으로 업그레이드 하세요.</target>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupportedCaption.Text">
@@ -8703,8 +8703,8 @@ Check if file is accessible.</source>
         
       </trans-unit>
       <trans-unit id="downloadGitForWindows.Text">
-        <source>Download msysgit</source>
-        <target>msysgit 다운로드</target>
+        <source>Download Git</source>
+        <target>Git 다운로드</target>
         
       </trans-unit>
       <trans-unit id="groupBox7.Text">

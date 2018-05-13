@@ -8162,8 +8162,8 @@ Por ello el botón Cancelar NO revierte ninguno de los cambios realizados.</targ
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupported.Text">
-        <source>Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.</source>
-        <target>La versión de msysgit que está usando no soporta apilar archivos no seguidos. Por favor actualice msysgit como mínimo a la versión 1.7.7 para usar esta opción.</target>
+        <source>Stash untracked files is not supported in the version of Git you are using. Please update Git to at least version 1.7.7 to use this option.</source>
+        <target>La versión de Git que está usando no soporta apilar archivos no seguidos. Por favor actualice Git como mínimo a la versión 1.7.7 para usar esta opción.</target>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupportedCaption.Text">
@@ -9107,8 +9107,8 @@ Check if file is accessible.</source>
         
       </trans-unit>
       <trans-unit id="downloadGitForWindows.Text">
-        <source>Download msysgit</source>
-        <target>Descargar msysgit</target>
+        <source>Download Git</source>
+        <target>Descargar Git</target>
         
       </trans-unit>
       <trans-unit id="groupBox7.Text">

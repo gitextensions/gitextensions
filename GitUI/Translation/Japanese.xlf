@@ -8208,8 +8208,8 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupported.Text">
-        <source>Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.</source>
-        <target>現在使用している msysgit は、未追跡ファイルのスタッシュに対応していません。このオプションを使用するには、msysgit を バージョン 1.77 以上のものに更新してください。</target>
+        <source>Stash untracked files is not supported in the version of Git you are using. Please update Git to at least version 1.7.7 to use this option.</source>
+        <target>現在使用している Git は、未追跡ファイルのスタッシュに対応していません。このオプションを使用するには、Git を バージョン 1.77 以上のものに更新してください。</target>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupportedCaption.Text">
@@ -9160,8 +9160,8 @@ Check if file is accessible.</source>
         
       </trans-unit>
       <trans-unit id="downloadGitForWindows.Text">
-        <source>Download msysgit</source>
-        <target>msysgitをダウンロード</target>
+        <source>Download Git</source>
+        <target>Gitをダウンロード</target>
         
       </trans-unit>
       <trans-unit id="groupBox7.Text">

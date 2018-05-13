@@ -8283,8 +8283,8 @@ De knop Annuleren zal dus NIET alle wijzigingen terugrollen.</target>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupported.Text">
-        <source>Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.</source>
-        <target>Het stashen van niet getrackte bestanden wordt niet ondersteund door deze versie van msysgit. Update msysgit a.u.b. naar versie 1.7.7 of hoger.</target>
+        <source>Stash untracked files is not supported in the version of Git you are using. Please update Git to at least version 1.7.7 to use this option.</source>
+        <target>Het stashen van niet getrackte bestanden wordt niet ondersteund door deze versie van Git. Update Git a.u.b. naar versie 1.7.7 of hoger.</target>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupportedCaption.Text">
@@ -9245,8 +9245,8 @@ Controleer bestandstoegang.</target>
         
       </trans-unit>
       <trans-unit id="downloadGitForWindows.Text">
-        <source>Download msysgit</source>
-        <target>Download msysgit</target>
+        <source>Download Git</source>
+        <target>Download Git</target>
         
       </trans-unit>
       <trans-unit id="groupBox7.Text">

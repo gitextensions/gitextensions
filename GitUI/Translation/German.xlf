@@ -8256,8 +8256,8 @@ Der Abbrechen Buttons macht darum KEINE Änderungen rückgängig.</target>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupported.Text">
-        <source>Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.</source>
-        <target>Nicht verfolgte Dateien zu stashen wird in Ihrer verwendeten msysgit Version nicht unterstützt. Bitte aktualisieren Sie msysgit auf die Version 1.7.7 oder höher, um diese Option zu verwenden.</target>
+        <source>Stash untracked files is not supported in the version of Git you are using. Please update Git to at least version 1.7.7 to use this option.</source>
+        <target>Nicht verfolgte Dateien zu stashen wird in Ihrer verwendeten Git Version nicht unterstützt. Bitte aktualisieren Sie Git auf die Version 1.7.7 oder höher, um diese Option zu verwenden.</target>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupportedCaption.Text">
@@ -9214,8 +9214,8 @@ Check if file is accessible.</source>
         
       </trans-unit>
       <trans-unit id="downloadGitForWindows.Text">
-        <source>Download msysgit</source>
-        <target>msysgit herunterladen</target>
+        <source>Download Git</source>
+        <target>Git herunterladen</target>
         
       </trans-unit>
       <trans-unit id="groupBox7.Text">
