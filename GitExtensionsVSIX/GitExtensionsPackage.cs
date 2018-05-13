@@ -37,9 +37,7 @@ namespace GitExtensionsVSIX
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress);
-            await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
-
-            GitExtCommands.Initialize(this);
+            await GitExtCommands.InitializeAsync(this, cancellationToken);
         }
     }
 }
