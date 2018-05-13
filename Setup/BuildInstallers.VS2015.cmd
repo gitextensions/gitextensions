@@ -13,12 +13,8 @@ set msbuildparams=/p:Configuration=Release /t:Rebuild /nologo /v:m
 
 %msbuild% %project% /p:Platform="Any CPU" %msbuildparams%
 IF ERRORLEVEL 1 EXIT /B 1
-%msbuild% %projectShellEx% /p:Platform=Win32 %msbuildparams%
-IF ERRORLEVEL 1 EXIT /B 1
-%msbuild% %projectShellEx% /p:Platform=x64 %msbuildparams%
-IF ERRORLEVEL 1 EXIT /B 1
-%msbuild% %projectSshAskPass% /p:Platform=Win32 %msbuildparams%
-IF ERRORLEVEL 1 EXIT /B 1
+
+call BuildGitExtNative.cmd Release Rebuild
 
 call MakeInstallers.cmd
 IF ERRORLEVEL 1 EXIT /B 1

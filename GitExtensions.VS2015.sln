@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}"
 EndProject
@@ -228,7 +228,6 @@ Global
 		{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A}.Release|Any CPU.ActiveCfg = Release|x86
 		{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A}.Release|Mixed Platforms.Build.0 = Release|x86
 		{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A}.ReleaseTC|Any CPU.ActiveCfg = Release|x86
 		{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A}.ReleaseTC|Mixed Platforms.ActiveCfg = Release|x86
 		{9380C29C-3C7F-47A8-A4C9-A5EE9D7B386A}.ReleaseTC|Mixed Platforms.Build.0 = Release|x86
