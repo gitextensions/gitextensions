@@ -1003,6 +1003,11 @@ namespace GitUI.CommandsDialogs
 
         private void CheckForStagedAndCommit(bool amend, bool push)
         {
+            BypassFormActivatedEventHandler(() => DoCheckForStagedAndCommit(amend, push));
+        }
+
+        private void DoCheckForStagedAndCommit(bool amend, bool push)
+        {
             if (amend)
             {
                 // This is an amend commit.  Confirm the user understands the implications.  We don't want to prompt for an empty
@@ -1034,21 +1039,10 @@ namespace GitUI.CommandsDialogs
                         return;
                     }
 
-                    try
+                    // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
+                    if (MessageBox.Show(this, _noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                     {
-                        // unsubscribe the event handler so that after the message box is closed, the RescanChanges call is suppressed
-                        // (otherwise it would move all changed files from staged back to unstaged file list)
-                        Activated -= FormCommitActivated;
-
-                        // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
-                        if (MessageBox.Show(this, _noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                        {
-                            return;
-                        }
-                    }
-                    finally
-                    {
-                        Activated += FormCommitActivated;
+                        return;
                     }
 
                     StageAllAccordingToFilter();
