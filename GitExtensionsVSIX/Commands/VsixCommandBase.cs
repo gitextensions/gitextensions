@@ -1,5 +1,4 @@
 ﻿using EnvDTE80;
-using GitPluginShared.Commands;
 using Microsoft.VisualStudio.Shell;
 
 namespace GitExtensionsVSIX.Commands
