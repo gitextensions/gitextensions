@@ -8263,7 +8263,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupported.Text">
-        <source>Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.</source>
+        <source>Stash untracked files is not supported in the version of Git you are using. Please update Git to at least version 1.7.7 to use this option.</source>
         <target>[Şŧȧşħ ŭƞŧřȧƈķḗḓ ƒīŀḗş īş ƞǿŧ şŭƥƥǿřŧḗḓ īƞ ŧħḗ ṽḗřşīǿƞ ǿƒ ḿşẏşɠīŧ ẏǿŭ ȧřḗ ŭşīƞɠ. Ƥŀḗȧşḗ ŭƥḓȧŧḗ ḿşẏşɠīŧ ŧǿ ȧŧ ŀḗȧşŧ ṽḗřşīǿƞ 1.7.7 ŧǿ ŭşḗ ŧħīş ǿƥŧīǿƞ. ǅϖ鶱ϵẛ ϰϵıΐıςſς靐 ΰΐǲϖϖ ǋς 鶱]</target>
         
       </trans-unit>
@@ -9227,7 +9227,7 @@ Check if file is accessible.</source>
         
       </trans-unit>
       <trans-unit id="downloadGitForWindows.Text">
-        <source>Download msysgit</source>
+        <source>Download Git</source>
         <target>[Ḓǿẇƞŀǿȧḓ ḿşẏşɠīŧ ΐςǈςϵϐǈı 鶱ϑ]</target>
         
       </trans-unit>

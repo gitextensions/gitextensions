@@ -5886,7 +5886,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
 
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupported.Text">
-        <source>Stash untracked files is not supported in the version of msysgit you are using. Please update msysgit to at least version 1.7.7 to use this option.</source>
+        <source>Stash untracked files is not supported in the version of Git you are using. Please update Git to at least version 1.7.7 to use this option.</source>
 
       </trans-unit>
       <trans-unit id="stashUntrackedFilesNotSupportedCaption.Text">
@@ -6606,7 +6606,7 @@ global settings.
 
       </trans-unit>
       <trans-unit id="downloadMsysgit.Text">
-        <source>Download msysgit</source>
+        <source>Download Git</source>
 
       </trans-unit>
       <trans-unit id="groupBox7.Text">
@@ -6630,7 +6630,7 @@ global settings.
 
       </trans-unit>
       <trans-unit id="label50.Text">
-        <source>Git Extensions can use msysgit or cygwin to access git repositories. Set the correct paths below.</source>
+        <source>Git Extensions can use Git or cygwin to access git repositories. Set the correct paths below.</source>
 
       </trans-unit>
       <trans-unit id="label51.Text">

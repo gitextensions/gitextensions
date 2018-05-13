@@ -179,7 +179,7 @@
             this.downloadGitForWindows.Size = new System.Drawing.Size(291, 13);
             this.downloadGitForWindows.TabIndex = 7;
             this.downloadGitForWindows.TabStop = true;
-            this.downloadGitForWindows.Text = "Download msysgit";
+            this.downloadGitForWindows.Text = "Download Git";
             this.downloadGitForWindows.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.downloadGitForWindows.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.downloadGitForWindows_LinkClicked);
             // 
