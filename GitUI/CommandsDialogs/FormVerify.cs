@@ -297,7 +297,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using (var frm = new FormEdit(Module.ShowSha1(currenItem.Hash)))
+            using (var frm = new FormEdit(UICommands, Module.ShowSha1(currenItem.Hash)))
             {
                 frm.IsReadOnly = true;
                 frm.ShowDialog(this);

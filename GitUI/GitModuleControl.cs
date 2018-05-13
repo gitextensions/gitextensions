@@ -8,7 +8,7 @@ namespace GitUI
 {
     /// <summary>Base class for a <see cref="UserControl"/> requiring
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
-    public abstract class GitModuleControl : GitExtensionsControl
+    public class GitModuleControl : GitExtensionsControl
     {
         private readonly object _lock = new object();
 
@@ -128,18 +128,7 @@ namespace GitUI
                     }
                     else
                     {
-                        if (parent.Parent == null)
-                        {
-                            var form = parent as Form;
-                            if (form != null)
-                            {
-                                parent = form.Owner;
-                            }
-                        }
-                        else
-                        {
-                            parent = parent.Parent;
-                        }
+                        parent = parent.Parent;
                     }
                 }
 
