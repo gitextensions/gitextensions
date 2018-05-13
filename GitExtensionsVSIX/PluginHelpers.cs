@@ -5,7 +5,7 @@ using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.CommandBars;
 
-namespace GitPluginShared
+namespace GitExtensionsVSIX
 {
     public static class PluginHelpers
     {

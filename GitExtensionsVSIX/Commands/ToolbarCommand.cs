@@ -2,7 +2,7 @@
 using EnvDTE;
 using EnvDTE80;
 
-namespace GitPluginShared.Commands
+namespace GitExtensionsVSIX.Commands
 {
     public class ToolbarCommand<TCommand> : CommandBase
         where TCommand : ItemCommandBase, new()

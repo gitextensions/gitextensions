@@ -2,7 +2,7 @@
 using System.Linq;
 using EnvDTE;
 
-namespace GitPluginShared.Commands
+namespace GitExtensionsVSIX.Commands
 {
     public sealed class Init : ItemCommandBase
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-namespace GitPluginShared.Git
+namespace GitExtensionsVSIX.Git
 {
     public static class GitCommands
     {

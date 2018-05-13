@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using EnvDTE;
 using EnvDTE80;
 
-namespace GitPluginShared.Commands
+namespace GitExtensionsVSIX.Commands
 {
     /// <summary>
     /// An item command is a command associated with selected items in solution explorer.

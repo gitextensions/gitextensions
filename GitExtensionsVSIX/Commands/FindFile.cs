@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using EnvDTE;
 using EnvDTE80;
-using GitPluginShared.Git;
+using GitExtensionsVSIX.Git;
 
-namespace GitPluginShared.Commands
+namespace GitExtensionsVSIX.Commands
 {
     public sealed class FindFile : ItemCommandBase
     {

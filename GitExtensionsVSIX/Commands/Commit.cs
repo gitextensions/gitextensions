@@ -1,8 +1,8 @@
 ﻿using System;
 using EnvDTE;
-using GitPluginShared.Git;
+using GitExtensionsVSIX.Git;
 
-namespace GitPluginShared.Commands
+namespace GitExtensionsVSIX.Commands
 {
     public sealed class Commit : ItemCommandBase
     {
