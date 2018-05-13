@@ -1,9 +1,9 @@
 ﻿namespace GitUI.HelperDialogs
 {
-    public partial class FormEdit : GitExtensionsForm
+    public partial class FormEdit : GitModuleForm
     {
-        public FormEdit(string text)
-            : base(true)
+        public FormEdit(GitUICommands commands, string text)
+            : base(true, commands)
         {
             InitializeComponent();
             Translate();
