@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using EnvDTE;
-using EnvDTE80;
 using GitExtensionsVSIX.Commands;
 using Microsoft.VisualStudio.Shell;
 using static GitExtensionsVSIX.PackageIds;
@@ -27,7 +26,7 @@ namespace GitExtensionsVSIX
         private readonly Dictionary<string, VsixCommandBase> _commandsByName = new Dictionary<string, VsixCommandBase>();
         private readonly Dictionary<int, VsixCommandBase> _commands = new Dictionary<int, VsixCommandBase>();
 
-        private readonly DTE2 _application;
+        private readonly _DTE _application;
         private OutputWindowPane _outputPane;
         private readonly OleMenuCommandService _commandService;
 
@@ -44,7 +43,7 @@ namespace GitExtensionsVSIX
             }
 
             _package = package;
-            _application = (DTE2)ServiceProvider.GetService(typeof(DTE));
+            _application = (_DTE)ServiceProvider.GetService(typeof(DTE));
             _commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
 
             try

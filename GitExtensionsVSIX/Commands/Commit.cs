@@ -10,7 +10,7 @@ namespace GitExtensionsVSIX.Commands
         private static string lastFile;
         private static string _lastUpdatedCaption;
 
-        public override bool IsEnabled(EnvDTE80.DTE2 application)
+        public override bool IsEnabled(_DTE application)
         {
             bool enabled = base.IsEnabled(application);
 
@@ -75,7 +75,7 @@ namespace GitExtensionsVSIX.Commands
 
         protected override CommandTarget SupportedTargets => CommandTarget.Any;
 
-        private static string GetSelectedFile(EnvDTE80.DTE2 application)
+        private static string GetSelectedFile(_DTE application)
         {
             foreach (SelectedItem sel in application.SelectedItems)
             {

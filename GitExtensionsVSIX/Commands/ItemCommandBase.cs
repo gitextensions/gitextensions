@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 using EnvDTE;
-using EnvDTE80;
 
 namespace GitExtensionsVSIX.Commands
 {
@@ -11,7 +10,7 @@ namespace GitExtensionsVSIX.Commands
     /// </summary>
     public abstract class ItemCommandBase : CommandBase
     {
-        public override void OnCommand(DTE2 application, OutputWindowPane pane)
+        public override void OnCommand(_DTE application, OutputWindowPane pane)
         {
             if (!RunForSelection)
             {
@@ -67,7 +66,7 @@ namespace GitExtensionsVSIX.Commands
             }
         }
 
-        private void ExecuteOnSolutionItem(SelectedItem solutionItem, DTE2 application, OutputWindowPane pane)
+        private void ExecuteOnSolutionItem(SelectedItem solutionItem, _DTE application, OutputWindowPane pane)
         {
             if (solutionItem.ProjectItem != null && IsTargetSupported(GetProjectItemTarget(solutionItem.ProjectItem)))
             {
@@ -97,7 +96,7 @@ namespace GitExtensionsVSIX.Commands
             MessageBox.Show("You need to select a file or project to use this function.", "Git Extensions", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        public override bool IsEnabled(DTE2 application)
+        public override bool IsEnabled(_DTE application)
         {
             return application.SelectedItems.Count == 0
                 ? IsTargetSupported(application.Solution.IsOpen ? CommandTarget.Solution : CommandTarget.Empty)
@@ -115,7 +114,7 @@ namespace GitExtensionsVSIX.Commands
             return (SupportedTargets & commandTarget) == commandTarget;
         }
 
-        private static CommandTarget GetSelectedItemTarget(SelectedItem selectedItem, DTE2 application)
+        private static CommandTarget GetSelectedItemTarget(SelectedItem selectedItem, _DTE application)
         {
             if (selectedItem.ProjectItem != null)
             {
