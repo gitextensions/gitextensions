@@ -20,9 +20,9 @@ namespace GitExtUtils.GitUI
 
         static DpiUtil()
         {
-            using (var hdc = GetDC(IntPtr.Zero))
+            try
             {
-                try
+                using (var hdc = GetDC(IntPtr.Zero))
                 {
                     const int LOGPIXELSX = 88;
                     const int LOGPIXELSY = 90;
@@ -33,14 +33,14 @@ namespace GitExtUtils.GitUI
                     ScaleX = DpiX / 96.0f;
                     ScaleY = DpiY / 96.0f;
                 }
-                catch
-                {
-                    DpiX = 96;
-                    DpiY = 96;
+            }
+            catch
+            {
+                DpiX = 96;
+                DpiY = 96;
 
-                    ScaleX = 1.0f;
-                    ScaleY = 1.0f;
-                }
+                ScaleX = 1.0f;
+                ScaleY = 1.0f;
             }
         }
 
@@ -86,7 +86,7 @@ namespace GitExtUtils.GitUI
                 (int)(point.Y * ScaleY));
         }
 
-        public static Image Scale( Image image)
+        public static Image Scale(Image image)
         {
             const string dpiScaled = "__DPI_SCALED__";
 
