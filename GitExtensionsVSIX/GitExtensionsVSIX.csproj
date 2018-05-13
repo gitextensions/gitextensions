@@ -154,6 +154,7 @@
     <PackageReference Include="EnvDTE80" Version="8.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Shell.14.0" Version="14.0.23205" />
     <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.10.0" Version="10.0.30319" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="15.7.7" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.1.192" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
