@@ -908,54 +908,80 @@ namespace GitUI.CommandsDialogs
 
         private void CheckForStagedAndCommit(bool amend, bool push)
         {
+            BypassFormActivatedEventHandler(() =>
+            {
+                if (ConfirmOrStageCommit(amend))
+                {
+                    DoCommit(amend, push);
+                }
+            });
+        }
+
+        private bool ConfirmOrStageCommit(bool amend)
+        {
             if (amend)
             {
-                // This is an amend commit.  Confirm the user understands the implications.  We don't want to prompt for an empty
-                // commit, because amend may be used just to change the commit message or timestamp.
-                if (!AppSettings.DontConfirmAmend)
-                    if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
-                        return;
+                return ConfirmAmendCommit();
             }
-            else if (Staged.IsEmpty)
+
+            if (Staged.IsEmpty)
             {
-                if (IsMergeCommit)
+                return IsMergeCommit ? ConfirmEmptyMergeCommit() : ConfirmAndStageAllUnstaged();
+            }
+
+            return true;
+        }
+
+        private bool ConfirmAmendCommit()
+        {
+            // This is an amend commit.  Confirm the user understands the implications.  We don't want to prompt for an empty
+            // commit, because amend may be used just to change the commit message or timestamp.
+            if (!AppSettings.DontConfirmAmend)
+            {
+                if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
                 {
-                    // it is a merge commit, so user can commit just for merging two branches even the changeset is empty,
-                    // but also user may forget to add files, so only ask for confirmation that user really wants to commit an empty changeset
-                    if (MessageBox.Show(this, _noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                        return;
-                }
-                else
-                {
-                    if (Unstaged.IsEmpty)
-                    {
-                        MessageBox.Show(this, _noFilesStagedAndNothingToCommit.Text, _noStagedChanges.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        return;
-                    }
-
-                    try
-                    {
-                        // unsubscribe the event handler so that after the message box is closed, the RescanChanges call is suppressed
-                        // (otherwise it would move all changed files from staged back to unstaged file list)
-                        this.Activated -= FormCommitActivated;
-
-                        // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
-                        if (MessageBox.Show(this, _noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                            return;
-                    }
-                    finally
-                    {
-                        this.Activated += FormCommitActivated;
-                    }
-
-                    StageAllAccordingToFilter();
-                    // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
-                    if (Staged.IsEmpty)
-                        return;
+                    return false;
                 }
             }
 
-            DoCommit(amend, push);
+            return true;
+        }
+
+        private bool ConfirmEmptyMergeCommit()
+        {
+            // it is a merge commit, so user can commit just for merging two branches even the changeset is empty,
+            // but also user may forget to add files, so only ask for confirmation that user really wants to commit an empty changeset
+            if (MessageBox.Show(this, _noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ConfirmAndStageAllUnstaged()
+        {
+            if (Unstaged.IsEmpty)
+            {
+                MessageBox.Show(this, _noFilesStagedAndNothingToCommit.Text, _noStagedChanges.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+            }
+
+            // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
+            if (MessageBox.Show(this, _noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return false;
+            }
+
+            StageAllAccordingToFilter();
+
+            // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
+            if (Staged.IsEmpty)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private void DoCommit(bool amend, bool push)
@@ -2047,14 +2073,32 @@ namespace GitUI.CommandsDialogs
 
         private void ResetClick(object sender, EventArgs e)
         {
-            UICommands.StartResetChangesDialog(this, Unstaged.AllItems, false);
-            Initialize();
+            HandleResetButton(onlyUnstaged: false);
         }
 
         private void ResetUnStagedClick(object sender, EventArgs e)
         {
-            UICommands.StartResetChangesDialog(this, Unstaged.AllItems, true);
+            HandleResetButton(onlyUnstaged: true);
+        }
+
+        private void HandleResetButton(bool onlyUnstaged)
+        {
+            BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.ToList(), onlyUnstaged: onlyUnstaged));
             Initialize();
+        }
+
+        private void BypassFormActivatedEventHandler(Action action)
+        {
+            try
+            {
+                Activated -= FormCommitActivated;
+
+                action();
+            }
+            finally
+            {
+                Activated += FormCommitActivated;
+            }
         }
 
         private void ShowUntrackedFilesToolStripMenuItemClick(object sender, EventArgs e)
