@@ -370,6 +370,7 @@
     <Compile Include="UserControls\GotoUserManualControl.Designer.cs">
       <DependentUpon>GotoUserManualControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ListViewGroupMouseEventArgs.cs" />
     <Compile Include="UserControls\MainThreadScheduler.cs" />
     <Compile Include="UserControls\PathFormatter.cs" />
     <Compile Include="UserControls\NativeListView.cs">
