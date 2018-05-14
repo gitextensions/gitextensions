@@ -125,6 +125,8 @@ namespace GitUI.CommandsDialogs
             _showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
             InitializeComponent();
 
+            MainSplitContainer.Visible = false;
+
             // set tab page images
             CommitInfoTabControl.ImageList = new ImageList
             {
@@ -360,31 +362,41 @@ namespace GitUI.CommandsDialogs
 
         private void ShowDashboard()
         {
+            toolPanel.TopToolStripPanelVisible = false;
+            toolPanel.BottomToolStripPanelVisible = false;
+            toolPanel.LeftToolStripPanelVisible = false;
+            toolPanel.RightToolStripPanelVisible = false;
+
+            MainSplitContainer.Visible = false;
+
             if (_dashboard == null)
             {
                 _dashboard = new Dashboard();
                 _dashboard.GitModuleChanged += SetGitModule;
                 toolPanel.ContentPanel.Controls.Add(_dashboard);
                 _dashboard.Dock = DockStyle.Fill;
-                _dashboard.SetSplitterPositions();
-            }
-            else
-            {
-                _dashboard.Refresh();
             }
 
+            Text = _appTitleGenerator.Generate(string.Empty, false, string.Empty);
+
+            _dashboard.RefreshContent();
             _dashboard.Visible = true;
             _dashboard.BringToFront();
-            _dashboard.ShowRecentRepositories();
         }
 
         private void HideDashboard()
         {
-            if (_dashboard != null && _dashboard.Visible)
+            MainSplitContainer.Visible = true;
+            if (_dashboard == null || !_dashboard.Visible)
             {
-                _dashboard.SaveSplitterPositions();
-                _dashboard.Visible = false;
+                return;
             }
+
+            _dashboard.Visible = false;
+            toolPanel.TopToolStripPanelVisible = true;
+            toolPanel.BottomToolStripPanelVisible = true;
+            toolPanel.LeftToolStripPanelVisible = true;
+            toolPanel.RightToolStripPanelVisible = true;
         }
 
         private void BrowseLoad(object sender, EventArgs e)
@@ -509,6 +521,7 @@ namespace GitUI.CommandsDialogs
             dashboardToolStripMenuItem.Visible = false;
             repositoryToolStripMenuItem.Visible = false;
             commandsToolStripMenuItem.Visible = false;
+            pluginsToolStripMenuItem.Visible = false;
             refreshToolStripMenuItem.ShortcutKeys = Keys.None;
             refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.None;
             _repositoryHostsToolStripMenuItem.Visible = false;
@@ -518,6 +531,7 @@ namespace GitUI.CommandsDialogs
 
         private void InternalInitialize(bool hard)
         {
+            toolPanel.SuspendLayout();
             using (WaitCursorScope.Enter())
             {
                 // check for updates
@@ -555,6 +569,7 @@ namespace GitUI.CommandsDialogs
                 toolStripButtonPull.Enabled = validWorkingDir;
                 toolStripButtonPush.Enabled = validWorkingDir;
                 dashboardToolStripMenuItem.Visible = !validWorkingDir;
+                pluginsToolStripMenuItem.Visible = validWorkingDir;
                 repositoryToolStripMenuItem.Visible = validWorkingDir;
                 commandsToolStripMenuItem.Visible = validWorkingDir;
                 toolStripFileExplorer.Enabled = validWorkingDir;
@@ -636,6 +651,8 @@ namespace GitUI.CommandsDialogs
 
                 UICommands.RaisePostBrowseInitialize(this);
             }
+
+            toolPanel.ResumeLayout();
         }
 
         private void ReloadRepoObjectsTree()
@@ -1245,7 +1262,7 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshDashboardToolStripMenuItemClick(object sender, EventArgs e)
         {
-            _dashboard.Refresh();
+            _dashboard.RefreshContent();
         }
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
@@ -1368,6 +1385,8 @@ namespace GitUI.CommandsDialogs
                 _showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
                 LayoutRevisionInfo();
             }
+
+            _dashboard?.RefreshContent();
         }
 
         private void TagToolStripMenuItemClick(object sender, EventArgs e)
@@ -1636,7 +1655,7 @@ namespace GitUI.CommandsDialogs
                 await RepositoryHistoryManager.Locals.SaveRecentHistoryAsync(repositoryHistory);
 
                 await this.SwitchToMainThreadAsync();
-                _dashboard?.ShowRecentRepositories();
+                _dashboard?.RefreshContent();
             });
         }
 
@@ -1854,8 +1873,8 @@ namespace GitUI.CommandsDialogs
             var module = e.GitModule;
             HideVariableMainMenuItems();
             UnregisterPlugins();
-            UICommands = new GitUICommands(module);
 
+            UICommands = new GitUICommands(module);
             if (Module.IsValidGitWorkingDir())
             {
                 var path = Module.WorkingDir;
@@ -1873,12 +1892,20 @@ namespace GitUI.CommandsDialogs
                     Debug.WriteLine("Log output encoding: " + module.LogOutputEncoding.EncodingName);
                 }
 #endif
-            }
 
-            HideDashboard();
-            UICommands.RepoChangedNotifier.Notify();
-            RevisionGrid.IndexWatcher.Reset();
-            RegisterPlugins();
+                HideDashboard();
+                UICommands.RepoChangedNotifier.Notify();
+                RevisionGrid.IndexWatcher.Reset();
+                RegisterPlugins();
+            }
+            else
+            {
+                dashboardToolStripMenuItem.Visible = true;
+
+                RevisionGrid.IndexWatcher.Reset();
+                MainSplitContainer.Visible = false;
+                ShowDashboard();
+            }
         }
 
         private void TranslateToolStripMenuItemClick(object sender, EventArgs e)
@@ -2199,10 +2226,6 @@ namespace GitUI.CommandsDialogs
         {
             base.OnClosing(e);
             SaveSplitterPositions();
-            if (_dashboard != null && _dashboard.Visible)
-            {
-                _dashboard.SaveSplitterPositions();
-            }
         }
 
         protected override void OnClosed(EventArgs e)

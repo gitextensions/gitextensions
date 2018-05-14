@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.UserRepositoryHistory;
+using GitExtUtils.GitUI;
+using GitUI.Editor;
+using GitUI.Properties;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
@@ -20,59 +22,184 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private readonly TranslationString _issues = new TranslationString("Issues");
         private readonly TranslationString _openRepository = new TranslationString("Open repository");
         private readonly TranslationString _translate = new TranslationString("Translate");
-        private readonly TranslationString _directoryIsNotAValidRepositoryCaption = new TranslationString("Open");
-        private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort and remove it from the recent repositories list?");
-        private readonly TranslationString _directoryIsNotAValidRepositoryOpenIt = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to open it?");
         private readonly TranslationString _showCurrentBranch = new TranslationString("Show current branch");
-        private bool _initialized;
-        private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("Dashboard"));
+
+        private DashboardTheme _selectedTheme;
+
+        public event EventHandler<GitModuleEventArgs> GitModuleChanged;
 
         public Dashboard()
         {
             InitializeComponent();
             Translate();
 
-            Bitmap image = Lemmings.GetPictureBoxImage(DateTime.Now);
-            if (image != null)
+            SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            Visible = false;
+
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            pnlLeft.Dock = DockStyle.Fill;
+            flpnlStart.Dock = DockStyle.Fill;
+            flpnlContribute.Dock = DockStyle.Bottom;
+            flpnlContribute.SendToBack();
+
+            userRepositoriesList.GitModuleChanged += OnModuleChanged;
+
+            // apply scaling
+            pnlLogo.Padding = DpiUtil.Scale(pnlLogo.Padding);
+            userRepositoriesList.HeaderHeight = pnlLogo.Height;
+
+            this.AdjustForDpiScaling();
+        }
+
+        // need this to stop flickering of the background images, nothing else works
+        protected override CreateParams CreateParams
+        {
+            get
             {
-                pictureBox1.Image = image;
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x02000000;
+                return cp;
+            }
+        }
+
+        public void RefreshContent()
+        {
+            InitDashboardLayout();
+            ApplyTheme();
+            userRepositoriesList.ShowRecentRepositories();
+
+            void ApplyTheme()
+            {
+                _selectedTheme = SystemColors.ControlText.IsLightColor() ? DashboardTheme.Dark : DashboardTheme.Light;
+
+                BackColor = _selectedTheme.Primary;
+                pnlLogo.BackColor = _selectedTheme.PrimaryVeryDark;
+                flpnlStart.BackColor = _selectedTheme.PrimaryLight;
+                flpnlContribute.BackColor = _selectedTheme.PrimaryVeryLight;
+                lblContribute.ForeColor = _selectedTheme.SecondaryHeadingText;
+                userRepositoriesList.BranchNameColor = AppSettings.BranchColor; // _selectedTheme.SecondaryText;
+                userRepositoriesList.FavouriteColor = _selectedTheme.AccentedText;
+                userRepositoriesList.ForeColor = _selectedTheme.PrimaryText;
+                userRepositoriesList.HeaderColor = _selectedTheme.SecondaryHeadingText;
+                userRepositoriesList.HeaderBackColor = _selectedTheme.PrimaryDark;
+                userRepositoriesList.HoverColor = _selectedTheme.PrimaryLight;
+                userRepositoriesList.MainBackColor = _selectedTheme.Primary;
+                BackgroundImage = _selectedTheme.BackgroundImage;
+
+                foreach (var item in flpnlContribute.Controls.OfType<LinkLabel>().Union(flpnlStart.Controls.OfType<LinkLabel>()))
+                {
+                    item.LinkColor = _selectedTheme.PrimaryText;
+                }
             }
 
-            // Do this at runtime, because it is difficult to keep consistent at design time.
-            pictureBox1.BringToFront();
-            pictureBox1.Location = new Point(Width - pictureBox1.Image.Width - 10, Height - pictureBox1.Image.Height - 10);
+            void InitDashboardLayout()
+            {
+                try
+                {
+                    pnlLeft.SuspendLayout();
 
-            Load += Dashboard_Load;
+                    AddLinks(flpnlContribute,
+                        panel =>
+                        {
+                            panel.Controls.Add(lblContribute);
+                            lblContribute.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
+
+                            CreateLink(panel, _develop.Text, Resources.develop.ToBitmap(), GitHubItem_Click);
+                            CreateLink(panel, _donate.Text, Resources.dollar.ToBitmap(), DonateItem_Click);
+                            CreateLink(panel, _translate.Text, Resources.EditItem, TranslateItem_Click);
+                            var lastControl = CreateLink(panel, _issues.Text, Resources.bug, IssuesItem_Click);
+                            return lastControl;
+                        },
+                        (panel, lastControl) =>
+                        {
+                            var height = lastControl.Location.Y + lastControl.Size.Height + panel.Padding.Bottom;
+                            panel.Height = height;
+                            panel.MinimumSize = new Size(0, height);
+                        });
+
+                    AddLinks(flpnlStart,
+                        panel =>
+                        {
+                            CreateLink(panel, _createRepository.Text, Resources.IconRepoCreate, createItem_Click);
+                            CreateLink(panel, _openRepository.Text, Resources.IconRepoOpen, openItem_Click);
+                            var lastControl = CreateLink(panel, _cloneRepository.Text, Resources.IconCloneRepoGit, cloneItem_Click);
+
+                            foreach (var gitHoster in PluginRegistry.GitHosters)
+                            {
+                                lastControl = CreateLink(panel, string.Format(_cloneFork.Text, gitHoster.Description), Resources.IconCloneRepoGithub,
+                                    (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged));
+                            }
+
+                            return lastControl;
+                        },
+                        (panel, lastControl) =>
+                        {
+                            var height = lastControl.Location.Y + lastControl.Size.Height + panel.Padding.Bottom;
+                            panel.MinimumSize = new Size(0, height);
+                        });
+                }
+                finally
+                {
+                    pnlLeft.ResumeLayout(false);
+                    pnlLeft.PerformLayout();
+                    AutoScrollMinSize = new Size(0, pnlLogo.Height + flpnlStart.MinimumSize.Height + flpnlContribute.MinimumSize.Height);
+                }
+
+                void AddLinks(Panel panel, Func<Panel, Control> addLinks, Action<Panel, Control> onLayout)
+                {
+                    panel.SuspendLayout();
+                    panel.Controls.Clear();
+
+                    var lastControl = addLinks(panel);
+
+                    panel.ResumeLayout(false);
+                    panel.PerformLayout();
+
+                    onLayout(panel, lastControl);
+                }
+
+                Control CreateLink(Control container, string text, Image icon, EventHandler handler)
+                {
+                    var padding24 = DpiUtil.Scale(24);
+                    var padding3 = DpiUtil.Scale(3);
+                    var linkLabel = new LinkLabel
+                    {
+                        AutoSize = true,
+                        AutoEllipsis = true,
+                        Font = AppSettings.Font,
+                        Image = DpiUtil.Scale(icon),
+                        ImageAlign = ContentAlignment.MiddleLeft,
+                        LinkBehavior = LinkBehavior.NeverUnderline,
+                        Margin = new Padding(padding3, 0, padding3, DpiUtil.Scale(8)),
+                        Padding = new Padding(padding24, padding3, padding3, padding3),
+                        TabStop = true,
+                        Text = text,
+                        TextAlign = ContentAlignment.MiddleLeft
+                    };
+                    linkLabel.MouseHover += (s, e) => linkLabel.LinkColor = _selectedTheme.AccentedText;
+                    linkLabel.MouseLeave += (s, e) => linkLabel.LinkColor = _selectedTheme.PrimaryText;
+
+                    if (handler != null)
+                    {
+                        linkLabel.Click += handler;
+                    }
+
+                    container.Controls.Add(linkLabel);
+
+                    return linkLabel;
+                }
+            }
         }
 
-        private void Dashboard_Load(object sender, EventArgs e)
+        protected virtual void OnModuleChanged(object sender, GitModuleEventArgs e)
         {
-            //
-            // create Show current branch menu item and add to Dashboard menu
-            //
-            var showCurrentBranchMenuItem = new ToolStripMenuItem(_showCurrentBranch.Text);
-            showCurrentBranchMenuItem.Click += showCurrentBranchMenuItem_Click;
-            showCurrentBranchMenuItem.Checked = AppSettings.DashboardShowCurrentBranch;
-
-            var menuStrip = FindControl<MenuStrip>(Parent.Parent.Parent, p => true); // TODO: improve: Parent.Parent.Parent == FormBrowse
-            var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().Single(p => p.Name == "dashboardToolStripMenuItem");
-            dashboardMenu.DropDownItems.Add(showCurrentBranchMenuItem);
+            var handler = GitModuleChanged;
+            handler?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// code duplicated from GerritPlugin.cs
-        /// </summary>
-        private T FindControl<T>(Control form, Func<T, bool> predicate)
-            where T : Control
-        {
-            return FindControl(form.Controls, predicate);
-        }
-
-        /// <summary>
-        /// code duplicated from GerritPlugin.cs
-        /// </summary>
-        private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
-            where T : Control
+        private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate) where T : Control
         {
             foreach (Control control in controls)
             {
@@ -82,7 +209,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 }
 
                 result = FindControl(control.Controls, predicate);
-
                 if (result != null)
                 {
                     return result;
@@ -92,43 +218,30 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             return null;
         }
 
-        public void SaveSplitterPositions()
+        private void dashboard_ParentChanged(object sender, EventArgs e)
         {
-            _splitterManager.SaveSplitters();
-        }
-
-        public event EventHandler<GitModuleEventArgs> GitModuleChanged;
-
-        public virtual void OnModuleChanged(object sender, GitModuleEventArgs e)
-        {
-            GitModuleChanged?.Invoke(this, e);
-        }
-
-        public override void Refresh()
-        {
-            _initialized = false;
-            ShowRecentRepositories();
-        }
-
-        public void ShowRecentRepositories()
-        {
-            if (!Visible)
+            if (Parent == null)
             {
+                Visible = false;
                 return;
             }
 
-            // Make sure the dashboard is only initialized once
-            if (!_initialized)
+            //
+            // create Show current branch menu item and add to Dashboard menu
+            //
+            var showCurrentBranchMenuItem = new ToolStripMenuItem(_showCurrentBranch.Text);
+            showCurrentBranchMenuItem.Click += showCurrentBranchMenuItem_Click;
+            showCurrentBranchMenuItem.Checked = AppSettings.DashboardShowCurrentBranch;
+
+            var form = Application.OpenForms.Cast<Form>().FirstOrDefault(x => x.Name == nameof(FormBrowse));
+            if (form != null)
             {
-                _initialized = true;
+                var menuStrip = FindControl<MenuStrip>(form.Controls, p => p.Name == "menuStrip1");
+                var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
+                dashboardMenu?.DropDownItems.Add(showCurrentBranchMenuItem);
             }
 
-            commonSplitContainer.Panel1MinSize = 1;
-            commonSplitContainer.Panel2MinSize = 1;
-            splitContainer7.Panel1MinSize = 1;
-            splitContainer7.Panel2MinSize = 1;
-
-            pictureBox1.BringToFront();
+            Visible = true;
         }
 
         private void showCurrentBranchMenuItem_Click(object sender, EventArgs e)
@@ -136,104 +249,46 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             bool newValue = !AppSettings.DashboardShowCurrentBranch;
             AppSettings.DashboardShowCurrentBranch = newValue;
             ((ToolStripMenuItem)sender).Checked = newValue;
-            Refresh();
+            RefreshContent();
         }
 
-        public void SetSplitterPositions()
+        private static void TranslateItem_Click(object sender, EventArgs e)
         {
-            _splitterManager.AddSplitter(mainSplitContainer, "mainSplitContainer", 315);
-            _splitterManager.RestoreSplitters();
+            Process.Start("https://www.transifex.com/git-extensions/git-extensions/translate/");
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private static void GitHubItem_Click(object sender, EventArgs e)
         {
-            Refresh();
+            Process.Start(@"http://github.com/gitextensions/gitextensions");
         }
 
-        private void groupLayoutPanel_DragDrop(object sender, DragEventArgs e)
+        private static void IssuesItem_Click(object sender, EventArgs e)
         {
-            if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
+            Process.Start(@"http://github.com/gitextensions/gitextensions/issues");
+        }
+
+        private void openItem_Click(object sender, EventArgs e)
+        {
+            GitModule module = FormOpenDirectory.OpenModule(this, currentModule: null);
+            if (module != null)
             {
-                if (fileNameArray.Length != 1)
-                {
-                    return;
-                }
-
-                string dir = fileNameArray[0];
-                if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
-                {
-                    GitModule module = new GitModule(dir);
-
-                    if (!module.IsValidGitWorkingDir())
-                    {
-                        DialogResult dialogResult = MessageBox.Show(this, _directoryIsNotAValidRepositoryOpenIt.Text,
-                            _directoryIsNotAValidRepositoryCaption.Text, MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button2);
-                        if (dialogResult == DialogResult.No)
-                        {
-                            return;
-                        }
-                    }
-
-                    ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(dir));
-                    OnModuleChanged(this, new GitModuleEventArgs(module));
-                }
-
-                return;
-            }
-
-            var text = e.Data.GetData(DataFormats.UnicodeText) as string;
-            if (!string.IsNullOrEmpty(text))
-            {
-                var lines = text.Split('\n');
-                if (lines.Length != 1)
-                {
-                    return;
-                }
-
-                string url = lines[0];
-                if (!string.IsNullOrEmpty(url))
-                {
-                    UICommands.StartCloneDialog(this, url, false, OnModuleChanged);
-                }
+                OnModuleChanged(this, new GitModuleEventArgs(module));
             }
         }
 
-        private void groupLayoutPanel_DragEnter(object sender, DragEventArgs e)
+        private void cloneItem_Click(object sender, EventArgs e)
         {
-            if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
-            {
-                if (fileNameArray.Length != 1)
-                {
-                    return;
-                }
+            UICommands.StartCloneDialog(this, null, false, OnModuleChanged);
+        }
 
-                string dir = fileNameArray[0];
-                if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
-                {
-                    // Allow drop (copy, not move) folders
-                    e.Effect = DragDropEffects.Copy;
-                }
+        private void createItem_Click(object sender, EventArgs e)
+        {
+            UICommands.StartInitializeDialog(this, Module.WorkingDir, OnModuleChanged);
+        }
 
-                return;
-            }
-
-            var text = e.Data.GetData(DataFormats.UnicodeText) as string;
-            if (!string.IsNullOrEmpty(text))
-            {
-                var lines = text.Split('\n');
-                if (lines.Length != 1)
-                {
-                    return;
-                }
-
-                string url = lines[0];
-                if (!string.IsNullOrEmpty(url))
-                {
-                    // Allow drop (copy, not move) folders
-                    e.Effect = DragDropEffects.Copy;
-                }
-            }
+        private static void DonateItem_Click(object sender, EventArgs e)
+        {
+            Process.Start(FormDonate.DonationUrl);
         }
     }
 }

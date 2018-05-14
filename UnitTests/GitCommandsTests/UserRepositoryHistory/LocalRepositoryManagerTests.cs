@@ -124,6 +124,13 @@ namespace GitCommandsTests.UserRepositoryHistory
         }
 
         [Test]
+        public void AssignCategoryAsync_should_throw_if_key_null()
+        {
+            Func<Task> f = async () => { await _manager.AssignCategoryAsync(null, null); };
+            f.Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
         public async Task LoadFavouriteHistoryAsync_should_return_empty_list_if_nothing_loaded()
         {
             _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => null);

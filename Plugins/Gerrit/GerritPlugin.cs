@@ -141,7 +141,7 @@ namespace Gerrit
 
             // Find the controls we're going to extend.
 
-            var menuStrip = FindControl<MenuStrip>(form, p => true);
+            var menuStrip = FindControl<MenuStrip>(form, p => p.Name == "menuStrip1");
             var toolStrip = FindControl<ToolStrip>(form, p => p.Name == "ToolStrip");
 
             if (menuStrip == null)

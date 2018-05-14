@@ -11,6 +11,17 @@ namespace GitCommands.UserRepositoryHistory
     public interface ILocalRepositoryManager : IRepositoryManager
     {
         /// <summary>
+        /// Categorises the given <paramref name="repository"/> and assigns to the list of favourites,
+        /// if the <paramref name="category"/> is supplied; otherwise removes the repository from
+        /// the list of favourites.
+        /// </summary>
+        /// <param name="repository">The repository to categorise.</param>
+        /// <param name="category">The new category, if it is supplied.</param>
+        /// <returns>The current version of the list of favourite git repositories after the update.</returns>
+        [ContractAnnotation("repository:null=>halt")]
+        Task<IList<Repository>> AssignCategoryAsync(Repository repository, string category);
+
+        /// <summary>
         /// Loads the list of favourite local git repositories from a persistent storage.
         /// </summary>
         /// <returns>The list of favourite local git repositories.</returns>
@@ -21,6 +32,7 @@ namespace GitCommands.UserRepositoryHistory
         /// </summary>
         /// <param name="repositoryPath">A repository path to remove.</param>
         /// <returns>The current version of the list of favourite git repositories after the update.</returns>
+        [ContractAnnotation("repositoryPath:null=>halt")]
         Task<IList<Repository>> RemoveFavouriteAsync(string repositoryPath);
 
         /// <summary>
@@ -28,6 +40,7 @@ namespace GitCommands.UserRepositoryHistory
         /// </summary>
         /// <param name="repositoryHistory">A list of favourite git repositories.</param>
         /// <returns>An awaitable task.</returns>
+        [ContractAnnotation("repositoryHistory:null=>halt")]
         Task SaveFavouriteHistoryAsync(IEnumerable<Repository> repositoryHistory);
     }
 
@@ -110,6 +123,53 @@ namespace GitCommands.UserRepositoryHistory
 
                 return repositoryHistory;
             }
+        }
+
+        /// <summary>
+        /// Categorises the given <paramref name="repository"/> and assigns to the list of favourites,
+        /// if the <paramref name="category"/> is supplied; otherwise removes the repository from
+        /// the list of favourites.
+        /// </summary>
+        /// <param name="repository">The repository to categorise.</param>
+        /// <param name="category">The new category, if it is supplied.</param>
+        /// <returns>The current version of the list of favourite git repositories after the update.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="repository"/> is <see langword="null"/>.</exception>
+        [ContractAnnotation("repository:null=>halt")]
+        public async Task<IList<Repository>> AssignCategoryAsync(Repository repository, string category)
+        {
+            if (repository == null)
+            {
+                throw new ArgumentNullException(nameof(repository));
+            }
+
+            await TaskScheduler.Default;
+
+            var favourites = await LoadFavouriteHistoryAsync();
+            var favourite = favourites.FirstOrDefault(f => string.Equals(f.Path, repository.Path, StringComparison.OrdinalIgnoreCase));
+
+            if (favourite == null)
+            {
+                if (!string.IsNullOrWhiteSpace(category))
+                {
+                    repository.Category = category;
+                    favourites.Add(repository);
+                }
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(category))
+                {
+                    favourites.Remove(favourite);
+                }
+                else
+                {
+                    favourite.Category = category;
+                }
+            }
+
+            await SaveFavouriteHistoryAsync(favourites);
+
+            return favourites;
         }
 
         /// <summary>

@@ -403,6 +403,9 @@
   <data name="Star" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/14.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="StarBw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/14_bw.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="loadingpanel_animated" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/loadingpanel.gif;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -730,5 +733,29 @@ Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87</value>
   </data>
   <data name="eye_opened" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\eye_opened.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="x_with_arrow_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\x_with_arrow_32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bullet_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\bullet_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bullet_delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\bullet_delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bggrey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\bggrey.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="bgblue" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\bgblue.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="folder_error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\folder_error.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="folder_git" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\folder_git.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="git_extensions_logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\git_extensions_logo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
