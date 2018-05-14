@@ -908,48 +908,80 @@ namespace GitUI.CommandsDialogs
 
         private void CheckForStagedAndCommit(bool amend, bool push)
         {
-            BypassFormActivatedEventHandler(() => DoCheckForStagedAndCommit(amend, push));
+            BypassFormActivatedEventHandler(() =>
+            {
+                if (ConfirmOrStageCommit(amend))
+                {
+                    DoCommit(amend, push);
+                }
+            });
         }
 
-        private void DoCheckForStagedAndCommit(bool amend, bool push)
+        private bool ConfirmOrStageCommit(bool amend)
         {
             if (amend)
             {
-                // This is an amend commit.  Confirm the user understands the implications.  We don't want to prompt for an empty
-                // commit, because amend may be used just to change the commit message or timestamp.
-                if (!AppSettings.DontConfirmAmend)
-                    if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
-                        return;
+                return ConfirmAmendCommit();
             }
-            else if (Staged.IsEmpty)
+
+            if (Staged.IsEmpty)
             {
-                if (IsMergeCommit)
-                {
-                    // it is a merge commit, so user can commit just for merging two branches even the changeset is empty,
-                    // but also user may forget to add files, so only ask for confirmation that user really wants to commit an empty changeset
-                    if (MessageBox.Show(this, _noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                        return;
-                }
-                else
-                {
-                    if (Unstaged.IsEmpty)
-                    {
-                        MessageBox.Show(this, _noFilesStagedAndNothingToCommit.Text, _noStagedChanges.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        return;
-                    }
+                return IsMergeCommit ? ConfirmEmptyMergeCommit() : ConfirmAndStageAllUnstaged();
+            }
 
-                    // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
-                    if (MessageBox.Show(this, _noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                        return;
+            return true;
+        }
 
-                    StageAllAccordingToFilter();
-                    // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
-                    if (Staged.IsEmpty)
-                        return;
+        private bool ConfirmAmendCommit()
+        {
+            // This is an amend commit.  Confirm the user understands the implications.  We don't want to prompt for an empty
+            // commit, because amend may be used just to change the commit message or timestamp.
+            if (!AppSettings.DontConfirmAmend)
+            {
+                if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                {
+                    return false;
                 }
             }
 
-            DoCommit(amend, push);
+            return true;
+        }
+
+        private bool ConfirmEmptyMergeCommit()
+        {
+            // it is a merge commit, so user can commit just for merging two branches even the changeset is empty,
+            // but also user may forget to add files, so only ask for confirmation that user really wants to commit an empty changeset
+            if (MessageBox.Show(this, _noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ConfirmAndStageAllUnstaged()
+        {
+            if (Unstaged.IsEmpty)
+            {
+                MessageBox.Show(this, _noFilesStagedAndNothingToCommit.Text, _noStagedChanges.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+            }
+
+            // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
+            if (MessageBox.Show(this, _noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return false;
+            }
+
+            StageAllAccordingToFilter();
+
+            // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
+            if (Staged.IsEmpty)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private void DoCommit(bool amend, bool push)
