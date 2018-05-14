@@ -1,14 +1,13 @@
 using EnvDTE;
-using EnvDTE80;
 using GitExtensionsVSIX.Git;
 
 namespace GitExtensionsVSIX.Commands
 {
     public abstract class CommandBase
     {
-        public abstract void OnCommand(DTE2 application, OutputWindowPane pane);
+        public abstract void OnCommand(_DTE application, OutputWindowPane pane);
 
-        public abstract bool IsEnabled(DTE2 application);
+        public abstract bool IsEnabled(_DTE application);
 
         protected static void RunGitEx(string command, string filename, string[] arguments = null)
         {

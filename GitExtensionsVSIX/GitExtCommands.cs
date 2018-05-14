@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Diagnostics;
+using System.Threading;
 using EnvDTE;
-using EnvDTE80;
 using GitExtensionsVSIX.Commands;
 using Microsoft.VisualStudio.Shell;
 using static GitExtensionsVSIX.PackageIds;
+using Task = System.Threading.Tasks.Task;
 
 namespace GitExtensionsVSIX
 {
@@ -27,25 +29,27 @@ namespace GitExtensionsVSIX
         private readonly Dictionary<string, VsixCommandBase> _commandsByName = new Dictionary<string, VsixCommandBase>();
         private readonly Dictionary<int, VsixCommandBase> _commands = new Dictionary<int, VsixCommandBase>();
 
-        private readonly DTE2 _application;
+        private readonly _DTE _application;
         private OutputWindowPane _outputPane;
-        private readonly OleMenuCommandService _commandService;
+        private readonly IMenuCommandService _commandService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GitExtCommands"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        private GitExtCommands(Package package)
+        private GitExtCommands(Package package, _DTE dte, IMenuCommandService menuCommandService)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (package == null)
             {
                 throw new ArgumentNullException(nameof(package));
             }
 
             _package = package;
-            _application = (DTE2)ServiceProvider.GetService(typeof(DTE));
-            _commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            _application = dte;
+            _commandService = menuCommandService;
 
             try
             {
@@ -131,9 +135,17 @@ namespace GitExtensionsVSIX
         /// Initializes the singleton instance of the command.
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        public static void Initialize(Package package)
+        public static async Task InitializeAsync(AsyncPackage package, CancellationToken cancellationToken)
         {
-            Instance = new GitExtCommands(package);
+            var dteObject = await package.GetServiceAsync(typeof(DTE));
+            var menuCommandServiceObject = await package.GetServiceAsync(typeof(IMenuCommandService));
+
+            cancellationToken.ThrowIfCancellationRequested();
+            Debug.Assert(dteObject != null, $"Assertion failed: {nameof(dteObject)} != null");
+            Debug.Assert(menuCommandServiceObject != null, $"Assertion failed: {nameof(menuCommandServiceObject)} != null");
+
+            await package.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            Instance = new GitExtCommands(package, (_DTE)dteObject, (IMenuCommandService)menuCommandServiceObject);
         }
 
         /// <summary>

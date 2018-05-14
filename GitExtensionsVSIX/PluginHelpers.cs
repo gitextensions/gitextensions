@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using EnvDTE;
-using EnvDTE80;
 using Microsoft.VisualStudio.CommandBars;
 
 namespace GitExtensionsVSIX
@@ -15,7 +14,7 @@ namespace GitExtensionsVSIX
         // On VS2013 (at least) update captions of command on hidden toolbar lead to create doubles of all commands on toolbar 2 commits, 4, 8, 16 ...
         public static bool AllowCaptionUpdate;
 
-        public static bool ChangeCommandCaption(DTE2 application, string commandBarName, string tooltipText, string caption)
+        public static bool ChangeCommandCaption(_DTE application, string commandBarName, string tooltipText, string caption)
         {
             if (!AllowCaptionUpdate)
             {
@@ -52,7 +51,7 @@ namespace GitExtensionsVSIX
                 .FirstOrDefault();
         }
 
-        public static OutputWindowPane AquireOutputPane(DTE2 app, string name)
+        public static OutputWindowPane AquireOutputPane(_DTE app, string name)
         {
             try
             {
@@ -78,7 +77,7 @@ namespace GitExtensionsVSIX
             }
         }
 
-        public static OutputWindowPane FindOutputPane(DTE2 app, string name)
+        public static OutputWindowPane FindOutputPane(_DTE app, string name)
         {
             try
             {

@@ -1,6 +1,5 @@
 // Copyright (C) 2006-2008 Jim Tilander. See COPYING for and README for more details.
 using EnvDTE;
-using EnvDTE80;
 
 namespace GitExtensionsVSIX.Commands
 {
@@ -12,13 +11,13 @@ namespace GitExtensionsVSIX.Commands
             RunForSelection = runForSelection;
         }
 
-        public override void OnCommand(DTE2 application, OutputWindowPane pane)
+        public override void OnCommand(_DTE application, OutputWindowPane pane)
         {
             var command = new TCommand { RunForSelection = RunForSelection };
             command.OnCommand(application, pane);
         }
 
-        public override bool IsEnabled(DTE2 application)
+        public override bool IsEnabled(_DTE application)
         {
             return new TCommand().IsEnabled(application);
         }
