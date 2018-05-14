@@ -2047,13 +2047,17 @@ namespace GitUI.CommandsDialogs
 
         private void ResetClick(object sender, EventArgs e)
         {
-            BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.ToList(), onlyUnstaged: false));
-            Initialize();
+            HandleResetButton(onlyUnstaged: false);
         }
 
         private void ResetUnStagedClick(object sender, EventArgs e)
         {
-            BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.ToList(), onlyUnstaged: true));
+            HandleResetButton(onlyUnstaged: true);
+        }
+
+        private void HandleResetButton(bool onlyUnstaged)
+        {
+            BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.ToList(), onlyUnstaged: onlyUnstaged));
             Initialize();
         }
 
