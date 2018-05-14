@@ -57,6 +57,18 @@ namespace GitUI.UserControls
 
     internal class ExListView : NativeListView
     {
+        private static readonly PropertyInfo ListViewGroupIdProperty;
+
+        /// <summary>
+        /// Occurs when the user clicks a <see cref="ListViewGroup"/> within the list view control.
+        /// </summary>
+        public event EventHandler<ListViewGroupMouseEventArgs> GroupMouseClick;
+
+        static ExListView()
+        {
+            ListViewGroupIdProperty = typeof(ListViewGroup).GetProperty("ID", BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.NonPublic);
+        }
+
         public ExListView()
         {
             DoubleBuffered = true;
@@ -64,7 +76,7 @@ namespace GitUI.UserControls
 
         #region Win32 Apis
 
-        protected static class NativeMethods
+        private static class NativeMethods
         {
             [DllImport("user32", CharSet = CharSet.Auto)]
             public static extern IntPtr SendMessage(HandleRef hWnd,
@@ -82,6 +94,8 @@ namespace GitUI.UserControls
 
             public const int WM_LBUTTONDOWN = 0x0201;
             public const int WM_LBUTTONUP = 0x0202;
+            public const int WM_RBUTTONDOWN = 0x0204;
+            public const int WM_RBUTTONUP = 0x0205;
             public const int WM_PAINT = 0x0F;
             public const int WM_REFLECT_NOTIFY = 0x204E;
             public const int LVM_FIRST = 0x1000;
@@ -237,66 +251,80 @@ namespace GitUI.UserControls
                     break;
                 case NativeMethods.WM_LBUTTONUP:
                 case NativeMethods.WM_LBUTTONDOWN:
-                    var info = new NativeMethods.LVHITTESTINFO();
-
-                    info.pt = NativeMethods.LParamToPOINT((uint)m.LParam);
-
-                    // if the click is on the group header, exit, otherwise send message
-                    var handleRef = new HandleRef(this, Handle);
-                    if (NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) != new IntPtr(-1))
                     {
-                        if ((info.flags & NativeMethods.LVHITTESTFLAGS.LVHT_EX_GROUP_HEADER) != 0)
+                        if (IsListViewGroupClickHandled((uint)m.LParam, MouseButtons.Left))
                         {
                             return;
                         }
+
+                        base.WndProc(ref m);
+                        break;
                     }
 
-                    base.WndProc(ref m);
-                    break;
+                case NativeMethods.WM_RBUTTONUP:
+                case NativeMethods.WM_RBUTTONDOWN:
+                    {
+                        if (IsListViewGroupClickHandled((uint)m.LParam, MouseButtons.Right))
+                        {
+                            return;
+                        }
+
+                        base.WndProc(ref m);
+                        break;
+                    }
+
                 default:
                     base.WndProc(ref m);
                     break;
             }
+
+            bool IsListViewGroupClickHandled(uint lparam, MouseButtons button)
+            {
+                var info = new NativeMethods.LVHITTESTINFO
+                {
+                    pt = NativeMethods.LParamToPOINT(lparam)
+                };
+
+                var handleRef = new HandleRef(this, Handle);
+                if (NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) == new IntPtr(-1))
+                {
+                    return false;
+                }
+
+                if ((info.flags & NativeMethods.LVHITTESTFLAGS.LVHT_EX_GROUP_HEADER) == 0)
+                {
+                    return false;
+                }
+
+                foreach (ListViewGroup group in Groups)
+                {
+                    var groupId = GetGroupId(group);
+                    if (info.iItem == groupId)
+                    {
+                        GroupMouseClick?.Invoke(this, new ListViewGroupMouseEventArgs(button, group, 1, info.pt.X, info.pt.Y, 0));
+                        return true;
+                    }
+                }
+
+                return false;
+            }
         }
 
-        private static int? GetGroupID(ListViewGroup lstvwgrp)
+        private static int GetGroupId(ListViewGroup listViewGroup)
         {
-            int? rtnval = null;
-            Type groupType = lstvwgrp.GetType();
-            PropertyInfo pi = groupType.GetProperty("ID", BindingFlags.NonPublic |
-                                                      BindingFlags.Instance);
-            if (pi != null)
+            if (ListViewGroupIdProperty != null)
             {
-                object tmprtnval = pi.GetValue(lstvwgrp, null);
-                if (tmprtnval != null)
+                try
                 {
-                    rtnval = tmprtnval as int?;
+                    return (int)ListViewGroupIdProperty.GetValue(listViewGroup);
+                }
+                catch (Exception)
+                {
+                    // no-op
                 }
             }
 
-            return rtnval;
-        }
-
-        private void SetGrpState(ListViewGroup lstvwgrp, ListViewGroupState state)
-        {
-            if (lstvwgrp == null)
-            {
-                return;
-            }
-
-            int? groupId = GetGroupID(lstvwgrp);
-            int groupIndex = Groups.IndexOf(lstvwgrp);
-            var group = new NativeMethods.LVGROUP();
-            group.CbSize = Marshal.SizeOf(group);
-            group.State = state;
-            group.Mask = NativeMethods.ListViewGroupMask.State;
-            var handleRef = new HandleRef(this, Handle);
-            group.IGroupId = groupId ?? groupIndex;
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.LVM_SETGROUPINFO, (IntPtr)group.IGroupId, ref group);
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.LVM_SETGROUPINFO, (IntPtr)group.IGroupId, ref group);
-            Refresh();
+            return -1;
         }
 
         public void SetGroupState(ListViewGroupState state)
@@ -310,7 +338,25 @@ namespace GitUI.UserControls
 
             foreach (ListViewGroup lvg in Groups)
             {
-                SetGrpState(lvg, state);
+                SetGrpState(lvg);
+            }
+
+            Refresh();
+            return;
+
+            void SetGrpState(ListViewGroup lstvwgrp)
+            {
+                int groupId = GetGroupId(lstvwgrp);
+                int groupIndex = Groups.IndexOf(lstvwgrp);
+
+                var group = new NativeMethods.LVGROUP();
+                group.CbSize = Marshal.SizeOf(group);
+                group.State = state;
+                group.Mask = NativeMethods.ListViewGroupMask.State;
+
+                var handleRef = new HandleRef(this, Handle);
+                group.IGroupId = groupId < 0 ? groupId : groupIndex;
+                NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SETGROUPINFO, (IntPtr)group.IGroupId, ref group);
             }
         }
     }
