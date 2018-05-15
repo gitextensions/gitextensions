@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -27,6 +28,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             _origTextBoxFont = textBoxFind.Font;
             SetFindPrompt(true);
+
+            treeView1.ImageList = new ImageList();
+            treeView1.ImageList.ImageSize = DpiUtil.Scale(new Size(16, 16)); // Scale ImageSize and images scale automatically
+            this.AdjustForDpiScaling();
         }
 
         /// <param name="asRoot">only one page can be set as the root page (for the GitExt and Plugin root node)</param>
