@@ -32,7 +32,6 @@
             System.Windows.Forms.Label lblSpacer2;
             this.textBoxFind = new System.Windows.Forms.TextBox();
             this.treeView1 = new GitUI.UserControls.NativeTreeView();
-            this.labelNumFound = new System.Windows.Forms.Label();
             lblSpacer1 = new System.Windows.Forms.Label();
             lblSpacer2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -77,20 +76,11 @@
             this.treeView1.TabIndex = 3;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
-            // labelNumFound
-            // 
-            this.labelNumFound.AutoSize = true;
-            this.labelNumFound.Location = new System.Drawing.Point(174, 9);
-            this.labelNumFound.Name = "labelNumFound";
-            this.labelNumFound.Size = new System.Drawing.Size(0, 25);
-            this.labelNumFound.TabIndex = 3;
-            // 
             // SettingsTreeViewUserControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.treeView1);
             this.Controls.Add(lblSpacer2);
-            this.Controls.Add(this.labelNumFound);
             this.Controls.Add(this.textBoxFind);
             this.Controls.Add(lblSpacer1);
             this.MinimumSize = new System.Drawing.Size(100, 220);
@@ -105,6 +95,5 @@
 
         private System.Windows.Forms.TextBox textBoxFind;
         private UserControls.NativeTreeView treeView1;
-        private System.Windows.Forms.Label labelNumFound;
     }
 }
