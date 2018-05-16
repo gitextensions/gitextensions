@@ -2230,7 +2230,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnClosed(EventArgs e)
         {
-            SetWorkingDir("");
+            UnregisterPlugins();
 
             base.OnClosed(e);
         }
