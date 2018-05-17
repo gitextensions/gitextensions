@@ -1905,7 +1905,7 @@ namespace GitUI
                         SizeF textSize = drawRefArgs.Graphics.MeasureString(text, rowFont);
 
                         offset += 1 + textSize.Width;
-                        offset = DrawRef(drawRefArgs, offset, revision.Subject, AppSettings.BranchColor, ArrowType.None, false, true);
+                        offset = DrawRef(drawRefArgs, offset, revision.Subject, AppSettings.OtherTagColor, ArrowType.None, false, true);
                     }
                 }
                 else if (columnIndex == authorColIndex)
