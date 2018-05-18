@@ -55,6 +55,9 @@ See the changes in the commit form.");
             Translate();
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
+            _revisionFileTreeController = new RevisionFileTreeController(() => Module.WorkingDir,
+                                                                         new GitRevisionInfoProvider(() => Module),
+                                                                         new FileAssociatedIconProvider());
         }
 
         public void ExpandToFile(string filePath)
@@ -217,10 +220,6 @@ See the changes in the commit form.");
 
         protected override void OnRuntimeLoad()
         {
-            _revisionFileTreeController = new RevisionFileTreeController(() => Module.WorkingDir,
-                                                                         new GitRevisionInfoProvider(() => Module),
-                                                                         new FileAssociatedIconProvider());
-
             tvGitTree.ImageList = new ImageList(components)
             {
                 ColorDepth = ColorDepth.Depth32Bit,

@@ -284,6 +284,9 @@ namespace GitUI.CommandsDialogs
 
         private void LayoutRevisionInfo()
         {
+            // Handle must be created prior to insertion
+            IntPtr h = CommitInfoTabControl.Handle;
+
             if (_showRevisionInfoNextToRevisionGrid)
             {
                 RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
