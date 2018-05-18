@@ -42,7 +42,7 @@ namespace GitUI
             _fildFilePredicateProvider = new FindFilePredicateProvider();
         }
 
-        public GitUICommands(string workingDir)
+        public GitUICommands([CanBeNull] string workingDir)
             : this(new GitModule(workingDir))
         {
         }
