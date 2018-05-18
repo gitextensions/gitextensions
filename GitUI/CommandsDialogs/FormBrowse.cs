@@ -108,6 +108,7 @@ namespace GitUI.CommandsDialogs
         private readonly IAppTitleGenerator _appTitleGenerator;
         private readonly ILongShaProvider _longShaProvider;
         private static bool _showRevisionInfoNextToRevisionGrid;
+        private bool _startWithDashboard = false;
 
         /// <summary>
         /// For VS designer
@@ -282,6 +283,17 @@ namespace GitUI.CommandsDialogs
             this.AdjustForDpiScaling();
         }
 
+        public FormBrowse(GitUICommands commands, string filter, string selectCommit, bool startWithDashboard = false)
+            : this(commands, filter)
+        {
+            if (!string.IsNullOrEmpty(selectCommit))
+            {
+                RevisionGrid.SetInitialRevision(_longShaProvider.Get(selectCommit));
+            }
+
+            _startWithDashboard = startWithDashboard;
+        }
+
         private void LayoutRevisionInfo()
         {
             // Handle must be created prior to insertion
@@ -323,15 +335,6 @@ namespace GitUI.CommandsDialogs
             if (!GitCommandHelpers.VersionInUse.SupportWorktreeList)
             {
                 manageWorktreeToolStripMenuItem.Enabled = false;
-            }
-        }
-
-        public FormBrowse(GitUICommands commands, string filter, string selectCommit)
-            : this(commands, filter)
-        {
-            if (!string.IsNullOrEmpty(selectCommit))
-            {
-                RevisionGrid.SetInitialRevision(_longShaProvider.Get(selectCommit));
             }
         }
 
@@ -545,38 +548,42 @@ namespace GitUI.CommandsDialogs
                     updateForm.SearchForUpdatesAndShow(Owner, false);
                 }
 
-                bool bareRepository = Module.IsBareRepository();
-                bool validWorkingDir = Module.IsValidGitWorkingDir();
                 bool hasWorkingDir = !string.IsNullOrEmpty(Module.WorkingDir);
-                branchSelect.Text = validWorkingDir ? Module.GetSelectedBranch() : "";
-                if (hasWorkingDir)
+                if (hasWorkingDir && !_startWithDashboard)
                 {
                     HideDashboard();
                 }
                 else
                 {
+                    // Consume the startup arguments, no specific directory was requested
+                    _startWithDashboard = false;
                     ShowDashboard();
                 }
 
+                bool bareRepository = Module.IsBareRepository();
+                bool isDashboard = _dashboard != null && _dashboard.Visible;
+                bool validBrowseDir = !isDashboard && Module.IsValidGitWorkingDir();
+
+                branchSelect.Text = validBrowseDir ? Module.GetSelectedBranch() : "";
                 toolStripButtonLevelUp.Enabled = hasWorkingDir && !bareRepository;
-                CommitInfoTabControl.Visible = validWorkingDir;
-                fileExplorerToolStripMenuItem.Enabled = validWorkingDir;
-                manageRemoteRepositoriesToolStripMenuItem1.Enabled = validWorkingDir;
-                branchSelect.Enabled = validWorkingDir;
-                toolStripButton1.Enabled = validWorkingDir && !bareRepository;
+                CommitInfoTabControl.Visible = validBrowseDir;
+                fileExplorerToolStripMenuItem.Enabled = validBrowseDir;
+                manageRemoteRepositoriesToolStripMenuItem1.Enabled = validBrowseDir;
+                branchSelect.Enabled = validBrowseDir;
+                toolStripButton1.Enabled = validBrowseDir && !bareRepository;
                 if (_toolStripGitStatus != null)
                 {
-                    _toolStripGitStatus.Enabled = validWorkingDir && !Module.IsBareRepository();
+                    _toolStripGitStatus.Enabled = validBrowseDir && !Module.IsBareRepository();
                 }
 
-                toolStripButtonPull.Enabled = validWorkingDir;
-                toolStripButtonPush.Enabled = validWorkingDir;
-                dashboardToolStripMenuItem.Visible = !validWorkingDir;
-                pluginsToolStripMenuItem.Visible = validWorkingDir;
-                repositoryToolStripMenuItem.Visible = validWorkingDir;
-                commandsToolStripMenuItem.Visible = validWorkingDir;
-                toolStripFileExplorer.Enabled = validWorkingDir;
-                if (validWorkingDir)
+                toolStripButtonPull.Enabled = validBrowseDir;
+                toolStripButtonPush.Enabled = validBrowseDir;
+                dashboardToolStripMenuItem.Visible = isDashboard;
+                pluginsToolStripMenuItem.Visible = validBrowseDir;
+                repositoryToolStripMenuItem.Visible = validBrowseDir;
+                commandsToolStripMenuItem.Visible = validBrowseDir;
+                toolStripFileExplorer.Enabled = validBrowseDir;
+                if (!isDashboard)
                 {
                     refreshToolStripMenuItem.ShortcutKeys = Keys.F5;
                 }
@@ -585,15 +592,15 @@ namespace GitUI.CommandsDialogs
                     refreshDashboardToolStripMenuItem.ShortcutKeys = Keys.F5;
                 }
 
-                UpdatePluginMenu(validWorkingDir);
-                gitMaintenanceToolStripMenuItem.Enabled = validWorkingDir;
-                editgitignoreToolStripMenuItem1.Enabled = validWorkingDir;
-                editgitattributesToolStripMenuItem.Enabled = validWorkingDir;
-                editmailmapToolStripMenuItem.Enabled = validWorkingDir;
-                toolStripSplitStash.Enabled = validWorkingDir && !bareRepository;
-                commitcountPerUserToolStripMenuItem.Enabled = validWorkingDir;
-                _createPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
-                _viewPullRequestsToolStripMenuItem.Enabled = validWorkingDir;
+                UpdatePluginMenu(validBrowseDir);
+                gitMaintenanceToolStripMenuItem.Enabled = validBrowseDir;
+                editgitignoreToolStripMenuItem1.Enabled = validBrowseDir;
+                editgitattributesToolStripMenuItem.Enabled = validBrowseDir;
+                editmailmapToolStripMenuItem.Enabled = validBrowseDir;
+                toolStripSplitStash.Enabled = validBrowseDir && !bareRepository;
+                commitcountPerUserToolStripMenuItem.Enabled = validBrowseDir;
+                _createPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
+                _viewPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
 
                 _filterBranchHelper.InitToolStripBranchFilter();
 
@@ -633,8 +640,8 @@ namespace GitUI.CommandsDialogs
 
                 RefreshWorkingDirCombo();
                 var branchName = !string.IsNullOrEmpty(branchSelect.Text) ? branchSelect.Text : _noBranchTitle.Text;
-                Text = _appTitleGenerator.Generate(Module.WorkingDir, validWorkingDir, branchName);
-                UpdateJumplist(validWorkingDir);
+                Text = _appTitleGenerator.Generate(Module.WorkingDir, validBrowseDir, branchName);
+                UpdateJumplist(validBrowseDir);
 
                 OnActivate();
 
@@ -642,7 +649,7 @@ namespace GitUI.CommandsDialogs
                 LoadUserMenu();
                 ReloadRepoObjectsTree();
 
-                if (validWorkingDir)
+                if (validBrowseDir)
                 {
                     // add Navigate and View menu
                     _formBrowseMenus.ResetMenuCommandSets();
