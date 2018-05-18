@@ -182,6 +182,13 @@ namespace GitCommands
         [ContractAnnotation("=>true,error:null,data:notnull")]
         private bool TryGetCommitLog([NotNull] string commitId, [NotNull] string format, out string error, out string data)
         {
+            if (GitCommands.Git.Extensions.GitRevisionExtensions.IsArtificial(commitId))
+            {
+                data = null;
+                error = "No log information for artificial commits";
+                return false;
+            }
+
             var arguments = $"log -1 --pretty=\"format:{format}\" {commitId}";
 
             // Do not cache this command, since notes can be added
