@@ -303,6 +303,10 @@ See the changes in the commit form.");
                     WorkingDirectory = _fullPathResolver.Resolve(item.FileName.EnsureTrailingPathSeparator())
                 }
             };
+            if (item.Guid.IsNotNullOrWhitespace())
+            {
+                process.StartInfo.Arguments += " -commit=" + item.Guid;
+            }
 
             process.Start();
         }
