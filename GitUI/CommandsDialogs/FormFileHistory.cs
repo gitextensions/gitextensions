@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -468,6 +469,31 @@ namespace GitUI.CommandsDialogs
             manipulateCommitToolStripMenuItem.Enabled =
                 selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
             saveAsToolStripMenuItem.Enabled = selectedRevisions.Count == 1;
+
+            // clipboard branch and tag menu handling
+            {
+                var revision = selectedRevisions[0];
+                copyToClipboardToolStripMenuItem.Enabled = !revision.IsArtificial;
+
+                if (copyToClipboardToolStripMenuItem.Enabled)
+                {
+                    var gitRefListsForRevision = new UserControls.RevisionGridClasses.GitRefListsForRevision(revision);
+                    branchNameCopyToolStripMenuItem.Tag = "caption";
+                    tagNameCopyToolStripMenuItem.Tag = "caption";
+                    UserControls.RevisionGridClasses.MenuUtil.SetAsCaptionMenuItem(branchNameCopyToolStripMenuItem, FileHistoryContextMenu);
+                    UserControls.RevisionGridClasses.MenuUtil.SetAsCaptionMenuItem(tagNameCopyToolStripMenuItem, FileHistoryContextMenu);
+
+                    var branchNames = gitRefListsForRevision.GetAllBranchNames();
+                    UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(copyToClipboardToolStripMenuItem, branchNameCopyToolStripMenuItem, branchNames, "branchNameItem");
+
+                    var tagNames = gitRefListsForRevision.GetAllTagNames();
+                    UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.SetCopyToClipboardMenuItems(copyToClipboardToolStripMenuItem, tagNameCopyToolStripMenuItem, tagNames, "tagNameItem");
+
+                    toolStripSeparator6.Visible = branchNames.Any() || tagNames.Any();
+
+                    toolStripSeparator6.Enabled = branchNameCopyToolStripMenuItem.Enabled || tagNameCopyToolStripMenuItem.Enabled;
+                }
+            }
         }
 
         private const string FormBrowseName = "FormBrowse";
@@ -582,6 +608,48 @@ namespace GitUI.CommandsDialogs
             AppSettings.DetectCopyInAllOnBlame = !AppSettings.DetectCopyInAllOnBlame;
             detectMoveAndCopyInThisFileToolStripMenuItem.Checked = AppSettings.DetectCopyInAllOnBlame;
             UpdateSelectedFileViewers(true);
+        }
+
+        private void CopyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
+        {
+            DoOnSelectedRevision(r =>
+            {
+                UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(hashCopyToolStripMenuItem, r.Guid.ShortenTo(15));
+                UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(messageCopyToolStripMenuItem, r.Subject.ShortenTo(30));
+                UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(authorCopyToolStripMenuItem, r.Author);
+                UserControls.RevisionGridClasses.CopyToClipboardMenuHelper.AddOrUpdateTextPostfix(dateCopyToolStripMenuItem, r.CommitDate.ToString());
+            });
+        }
+
+        private void HashCopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoOnSelectedRevision(r => Clipboard.SetText(r.Guid));
+        }
+
+        private void MessageCopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoOnSelectedRevision(r => Clipboard.SetText(r.Subject));
+        }
+
+        private void AuthorCopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoOnSelectedRevision(r => Clipboard.SetText(r.Author));
+        }
+
+        private void DateCopyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoOnSelectedRevision(r => Clipboard.SetText(r.CommitDate.ToString()));
+        }
+
+        private void DoOnSelectedRevision(Action<GitRevision> toDo)
+        {
+            var selectedRevisions = FileChanges.GetSelectedRevisions();
+            if (selectedRevisions == null || selectedRevisions.Count == 0 || selectedRevisions[0] == null)
+            {
+                return;
+            }
+
+            toDo(selectedRevisions[0]);
         }
     }
 }
