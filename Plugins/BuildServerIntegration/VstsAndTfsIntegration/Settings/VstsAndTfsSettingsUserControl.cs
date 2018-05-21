@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
@@ -17,6 +20,7 @@ namespace VstsAndTfsIntegration.Settings
         private static readonly Regex VstsHttpOrSshUrlRegex = new Regex(@"^.+://([^.@]+)(@[^.]*)?\.visualstudio\.com(:\d*)?(/[^/]*)?/_(git|ssh)/(.+)$");
 
         private string _defaultProjectName;
+        private IEnumerable<string> _remotes;
         private string _tokenManagementUrl;
 
         public VstsAndTfsSettingsUserControl()
@@ -28,9 +32,10 @@ namespace VstsAndTfsIntegration.Settings
             EnableRestApiLink();
         }
 
-        public void Initialize(string defaultProjectName)
+        public void Initialize(string defaultProjectName, IEnumerable<string> remotes)
         {
             _defaultProjectName = defaultProjectName;
+            _remotes = remotes;
         }
 
         public void LoadSettings(ISettingsSource buildServerConfig)
@@ -42,6 +47,19 @@ namespace VstsAndTfsIntegration.Settings
                 TfsBuildDefinitionNameFilter.Text = buildServerConfig.GetString(VstsAndTfsAdapter.VstsTfsBuildDefinitionNameFilterSettingKey, string.Empty);
                 TfsServer.Text = buildServerConfig.GetString(VstsAndTfsAdapter.VstsTfsServerUrlSettingKey, string.Empty);
                 RestApiToken.Text = buildServerConfig.GetString(VstsAndTfsAdapter.VstsTfsRestApiTokenSettingKey, string.Empty);
+            }
+
+            if (string.IsNullOrWhiteSpace(TfsServer.Text))
+            {
+                var vstsRemote = _remotes.FirstOrDefault(r => VstsHttpOrSshUrlRegex.IsMatch(r));
+                if (vstsRemote == null)
+                {
+                    return;
+                }
+
+                var match = VstsHttpOrSshUrlRegex.Match(vstsRemote);
+                TfsServer.Text = $"https://{match.Groups[1].Value}.visualstudio.com/";
+                TfsProjectName.Text = match.Groups[2].Value;
             }
         }
 
