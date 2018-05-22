@@ -1,2 +1,4 @@
 #!/bin/bash
-mono GitExtensions.exe "$@" &
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+mono "$DIR/GitExtensions.exe" "$@" &
+
