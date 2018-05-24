@@ -170,15 +170,16 @@ namespace GitUI.CommandsDialogs
                                 Patch patch = Module.GetSingleDiff(gitStash.Name + "^", gitStash.Name, stashedItem.Name, stashedItem.OldName, extraDiffArguments, encoding, true, stashedItem.IsTracked);
                                 if (patch == null)
                                 {
-                                    return string.Empty;
+                                    return (text: string.Empty, openWithDifftool: null /* not applicable */);
                                 }
 
                                 if (stashedItem.IsSubmodule)
                                 {
-                                    return LocalizationHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch);
+                                    return (text: LocalizationHelpers.ProcessSubmodulePatch(Module, stashedItem.Name, patch),
+                                            openWithDifftool: null /* not implemented */);
                                 }
 
-                                return patch.Text;
+                                return (text: patch.Text, openWithDifftool: null /* not implemented */);
                             });
                     }
                 }

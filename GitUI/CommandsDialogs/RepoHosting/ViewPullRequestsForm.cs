@@ -178,7 +178,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void ResetAllAndShowLoadingPullRequests()
         {
             _discussionWB.DocumentText = "";
-            _diffViewer.ViewPatch("");
+            _diffViewer.ViewPatch(null);
             _fileStatusList.SetDiffs();
 
             _pullRequestsList.Items.Clear();
@@ -232,7 +232,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
 
             _discussionWB.DocumentText = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo);
-            _diffViewer.ViewPatch("");
+            _diffViewer.ViewPatch(null);
             _fileStatusList.SetDiffs();
 
             LoadDiffPatch();
@@ -401,7 +401,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
 
             var data = _diffCache[gis.Name];
-            _diffViewer.ViewPatch(data);
+            _diffViewer.ViewPatch(text: data, openWithDifftool: null /* not implemented */);
         }
 
         private void _closePullRequestBtn_Click(object sender, EventArgs e)

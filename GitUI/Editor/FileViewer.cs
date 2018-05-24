@@ -55,7 +55,7 @@ namespace GitUI.Editor
                     if (!IsDisposed)
                     {
                         ResetForText(null);
-                        _internalFileViewer.SetText("Unsupported file: \n\n" + args.Exception.ToString());
+                        _internalFileViewer.SetText("Unsupported file: \n\n" + args.Exception.ToString(), openWithDifftool: null /* not applicable */);
                         TextLoaded?.Invoke(this, null);
                     }
                 };
@@ -140,6 +140,11 @@ namespace GitUI.Editor
         {
             get => _internalFileViewer.Font;
             set => _internalFileViewer.Font = value;
+        }
+
+        public Action OpenWithDifftool
+        {
+            get => _internalFileViewer.OpenWithDifftool;
         }
 
         [Description("Ignore changes in amount of whitespace. This ignores whitespace at line end, and considers all other sequences of one or more whitespace characters to be equivalent.")]
@@ -418,8 +423,9 @@ namespace GitUI.Editor
 
         public Task ViewFileAsync(string fileName)
         {
-            return ViewItemAsync(fileName, () => GetImage(fileName), () => GetFileText(fileName),
-                () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""));
+            return ViewItemAsync(fileName, getImage: () => GetImage(fileName), getFileText: () => GetFileText(fileName),
+                getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""),
+                openWithDifftool: null /* not implemented */);
         }
 
         public string GetText()
@@ -429,80 +435,84 @@ namespace GitUI.Editor
 
         public void ViewCurrentChanges(GitItemStatus item)
         {
-            ViewCurrentChanges(item.Name, item.OldName, item.IsStaged, item.IsSubmodule, item.GetSubmoduleStatusAsync);
+            ViewCurrentChanges(item.Name, item.OldName, item.IsStaged, item.IsSubmodule, item.GetSubmoduleStatusAsync, null /* not implemented */);
         }
 
-        public void ViewCurrentChanges(GitItemStatus item, bool isStaged)
+        public void ViewCurrentChanges(GitItemStatus item, bool isStaged, [CanBeNull] Action openWithDifftool)
         {
-            ViewCurrentChanges(item.Name, item.OldName, isStaged, item.IsSubmodule, item.GetSubmoduleStatusAsync);
+            ViewCurrentChanges(item.Name, item.OldName, isStaged, item.IsSubmodule, item.GetSubmoduleStatusAsync, openWithDifftool);
         }
 
         public void ViewCurrentChanges(string fileName, string oldFileName, bool staged,
-            bool isSubmodule, Func<Task<GitSubmoduleStatus>> getStatusAsync)
+            bool isSubmodule, Func<Task<GitSubmoduleStatus>> getStatusAsync, [CanBeNull] Action openWithDifftool)
         {
             if (!isSubmodule)
             {
-                _async.LoadAsync(() => Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding),
-                    ViewStagingPatch);
+                _async.LoadAsync(() => { return (patch: Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), openWithDifftool); },
+                    (patch) => ViewStagingPatch(patch.patch, patch.openWithDifftool));
             }
             else if (getStatusAsync() != null)
             {
-                _async.LoadAsync(() =>
+                ViewPatchAsync(() =>
                     {
                         var status = ThreadHelper.JoinableTaskFactory.Run(() => getStatusAsync());
                         if (status == null)
                         {
-                            return string.Format("Submodule \"{0}\" has unresolved conflicts", fileName);
+                            return (text: string.Format("Submodule \"{0}\" has unresolved conflicts", fileName),
+                                    openWithDifftool: null /* not applicable */);
                         }
 
-                        return LocalizationHelpers.ProcessSubmoduleStatus(Module, status);
-                    }, ViewPatch);
+                        return (text: LocalizationHelpers.ProcessSubmoduleStatus(Module, status),
+                                openWithDifftool: null /* not implemented */);
+                    });
             }
             else
             {
-                _async.LoadAsync(() => LocalizationHelpers.ProcessSubmodulePatch(Module, fileName,
-                    Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding)), ViewPatch);
+                ViewPatchAsync(() =>
+                    (text: LocalizationHelpers.ProcessSubmodulePatch(Module, fileName,
+                               Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding)),
+                     openWithDifftool: null /* not implemented */));
             }
         }
 
-        public void ViewStagingPatch(Patch patch)
+        public void ViewStagingPatch(Patch patch, [CanBeNull] Action openWithDifftool)
         {
-            ViewPatch(patch);
+            ViewPatch(patch, openWithDifftool);
             Reset(true, true, true);
         }
 
-        public void ViewPatch([CanBeNull] Patch patch)
+        public void ViewPatch([CanBeNull] Patch patch, [CanBeNull] Action openWithDifftool = null)
         {
             string text = patch != null ? patch.Text : "";
-            ViewPatch(text);
+            ViewPatch(text, openWithDifftool);
         }
 
-        public void ViewPatch([NotNull] string text)
+        public void ViewPatch([NotNull] string text, [CanBeNull] Action openWithDifftool)
         {
             ResetForDiff();
-            _internalFileViewer.SetText(text, isDiff: true);
+            _internalFileViewer.SetText(text, openWithDifftool, isDiff: true);
             TextLoaded?.Invoke(this, null);
             RestoreCurrentScrollPos();
         }
 
-        public Task ViewPatchAsync(Func<string> loadPatchText)
+        public Task ViewPatchAsync(Func<(string text, Action openWithDifftool)> loadPatchText)
         {
-            return _async.LoadAsync(loadPatchText, ViewPatch);
+            return _async.LoadAsync(loadPatchText, patchText => ViewPatch(patchText.text, patchText.openWithDifftool));
         }
 
-        public Task ViewTextAsync(string fileName, string text)
+        public Task ViewTextAsync([NotNull] string fileName, [NotNull] string text, [CanBeNull] Action openWithDifftool = null)
         {
             ResetForText(fileName);
 
             // Check for binary file.
             if (FileHelper.IsBinaryFileAccordingToContent(text))
             {
-                _internalFileViewer.SetText("Binary file: " + fileName + " (Detected)");
+                _internalFileViewer.SetText("Binary file: " + fileName + " (Detected)", openWithDifftool);
                 TextLoaded?.Invoke(this, null);
                 return Task.CompletedTask;
             }
 
-            _internalFileViewer.SetText(text);
+            _internalFileViewer.SetText(text, openWithDifftool);
             TextLoaded?.Invoke(this, null);
 
             RestoreCurrentScrollPos();
@@ -538,11 +548,12 @@ namespace GitUI.Editor
 
         public Task ViewGitItemAsync(string fileName, string guid)
         {
-            return ViewItemAsync(fileName, () => GetImage(fileName, guid), () => GetFileTextIfBlobExists(guid),
-                () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), guid));
+            return ViewItemAsync(fileName, getImage: () => GetImage(fileName, guid), getFileText: () => GetFileTextIfBlobExists(guid),
+                getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), guid),
+                openWithDifftool: () => Module.OpenWithDifftool(fileName, firstRevision: guid));
         }
 
-        private Task ViewItemAsync(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText)
+        private Task ViewItemAsync(string fileName, Func<Image> getImage, Func<string> getFileText, Func<string> getSubmoduleText, [CanBeNull] Action openWithDifftool)
         {
             FilePreamble = null;
 
@@ -552,11 +563,11 @@ namespace GitUI.Editor
             {
                 if (GitModule.IsValidGitWorkingDir(fullPath))
                 {
-                    return _async.LoadAsync(getSubmoduleText, text => ViewTextAsync(fileName, text));
+                    return _async.LoadAsync(getSubmoduleText, text => ViewTextAsync(fileName, text, openWithDifftool));
                 }
                 else
                 {
-                    return ViewTextAsync(null, "Directory: " + fileName);
+                    return ViewTextAsync(fileName, "Directory: " + fileName, openWithDifftool: null /* not applicable */);
                 }
             }
             else if (IsImage(fileName))
@@ -586,11 +597,11 @@ namespace GitUI.Editor
             // Check binary from extension/attributes (a secondary check for file contents before display)
             else if (IsBinaryFile(fileName))
             {
-                return ViewTextAsync(null, "Binary file: " + fileName);
+                return ViewTextAsync(fileName, "Binary file: " + fileName, openWithDifftool);
             }
             else
             {
-                return _async.LoadAsync(getFileText, text => ViewTextAsync(fileName, text));
+                return _async.LoadAsync(getFileText, text => ViewTextAsync(fileName, text, openWithDifftool));
             }
         }
 
@@ -1024,6 +1035,8 @@ namespace GitUI.Editor
         internal enum Commands
         {
             Find = 0,
+            FindNextOrOpenWithDifftool = 8,
+            FindPrevious = 9,
             GoToLine = 1,
             IncreaseNumberOfVisibleLines = 2,
             DecreaseNumberOfVisibleLines = 3,
@@ -1039,7 +1052,9 @@ namespace GitUI.Editor
 
             switch (command)
             {
-                case Commands.Find: FindToolStripMenuItemClick(null, null); break;
+                case Commands.Find: _internalFileViewer.Find(); break;
+                case Commands.FindNextOrOpenWithDifftool: _internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: true); break;
+                case Commands.FindPrevious: _internalFileViewer.FindNextAsync(searchForwardOrOpenWithDifftool: false); break;
                 case Commands.GoToLine: goToLineToolStripMenuItem_Click(null, null); break;
                 case Commands.IncreaseNumberOfVisibleLines: IncreaseNumberOfLinesToolStripMenuItemClick(null, null); break;
                 case Commands.DecreaseNumberOfVisibleLines: DescreaseNumberOfLinesToolStripMenuItemClick(null, null); break;

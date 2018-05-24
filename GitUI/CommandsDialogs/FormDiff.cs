@@ -98,7 +98,7 @@ namespace GitUI.CommandsDialogs
         {
             if (DiffFiles.SelectedItem == null)
             {
-                DiffText.ViewPatch("");
+                DiffText.ViewPatch(null);
                 return;
             }
 

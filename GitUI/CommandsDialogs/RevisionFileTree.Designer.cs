@@ -32,6 +32,7 @@
             this.FileTreeSplitContainer = new System.Windows.Forms.SplitContainer();
             this.tvGitTree = new UserControls.NativeTreeView();
             this.FileTreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToThisRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorFileSystemActions = new System.Windows.Forms.ToolStripSeparator();
@@ -101,6 +102,7 @@
             // FileTreeContextMenu
             // 
             this.FileTreeContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openWithDifftoolToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.resetToThisRevisionToolStripMenuItem,
             this.toolStripSeparatorFileSystemActions,
@@ -128,6 +130,14 @@
             this.FileTreeContextMenu.Name = "FileTreeContextMenu";
             this.FileTreeContextMenu.Size = new System.Drawing.Size(326, 474);
             this.FileTreeContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.FileTreeContextMenu_Opening);
+            // 
+            // openWithDifftoolToolStripMenuItem
+            // 
+            this.openWithDifftoolToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconDiffTool;
+            this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
+            this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
+            this.openWithDifftoolToolStripMenuItem.Text = "Open with difftool";
+            this.openWithDifftoolToolStripMenuItem.Click += new System.EventHandler(this.openWithDifftoolToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
@@ -340,6 +350,7 @@
         private UserControls.NativeTreeView tvGitTree;
         private Editor.FileViewer FileText;
         private System.Windows.Forms.ContextMenuStrip FileTreeContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetToThisRevisionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFileSystemActions;
@@ -354,9 +365,9 @@
         private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorEditFileActions;
         private System.Windows.Forms.ToolStripMenuItem editCheckedOutFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openWithToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFileWithToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openWithToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFileTreeActions;
         private System.Windows.Forms.ToolStripMenuItem expandAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem collapseAllToolStripMenuItem;

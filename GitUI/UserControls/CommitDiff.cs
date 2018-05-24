@@ -68,7 +68,8 @@ namespace GitUI.UserControls
             GitRevision revision = DiffFiles.Revision;
             if (DiffFiles.SelectedItem != null && revision != null)
             {
-                await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.Guid, revision.Guid, DiffFiles.SelectedItem, string.Empty);
+                await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.Guid, revision.Guid, DiffFiles.SelectedItem, string.Empty,
+                    openWithDifftool: null /* use default */);
             }
         }
     }

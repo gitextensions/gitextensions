@@ -246,9 +246,12 @@ namespace GitUI.Hotkey
 
             HotkeyCommand[] scriptsHotkeys = LoadScriptHotkeys();
 
+            const Keys OpenWithDifftoolHotkey = Keys.F3;
+            const Keys ShowHistoryHotkey = Keys.H;
+            const Keys BlameHotkey = Keys.B;
+
             return new[]
               {
-                // FormCommit
                 new HotkeySettings(
                     FormCommit.HotkeySettingsName,
                     Hk(FormCommit.Commands.AddToGitIgnore, Keys.None),
@@ -260,9 +263,10 @@ namespace GitUI.Hotkey
                     Hk(FormCommit.Commands.ResetSelectedFiles, Keys.R),
                     Hk(FormCommit.Commands.StageSelectedFile, Keys.S),
                     Hk(FormCommit.Commands.UnStageSelectedFile, Keys.U),
-                    Hk(FormCommit.Commands.ShowHistory, Keys.H),
+                    Hk(FormCommit.Commands.ShowHistory, ShowHistoryHotkey),
                     Hk(FormCommit.Commands.ToggleSelectionFilter, Keys.Control | Keys.F),
-                    Hk(FormCommit.Commands.StageAll, Keys.Control | Keys.S)),
+                    Hk(FormCommit.Commands.StageAll, Keys.Control | Keys.S),
+                    Hk(FormCommit.Commands.OpenWithDifftool, OpenWithDifftoolHotkey)),
                 new HotkeySettings(
                     FormBrowse.HotkeySettingsName,
                     Hk(FormBrowse.Commands.GitBash, Keys.Control | Keys.G),
@@ -283,7 +287,8 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Commands.Stash, Keys.Control | Keys.Alt | Keys.Up),
                     Hk(FormBrowse.Commands.StashPop, Keys.Control | Keys.Alt | Keys.Down),
                     Hk(FormBrowse.Commands.CloseRepository, Keys.Control | Keys.W),
-                    Hk(FormBrowse.Commands.RotateApplicationIcon, Keys.Control | Keys.Shift | Keys.I)),
+                    Hk(FormBrowse.Commands.RotateApplicationIcon, Keys.Control | Keys.Shift | Keys.I),
+                    Hk(FormBrowse.Commands.OpenWithDifftool, OpenWithDifftoolHotkey)),
                 new HotkeySettings(
                     RevisionGrid.HotkeySettingsName,
                     Hk(RevisionGrid.Commands.RevisionFilter, Keys.Control | Keys.F),
@@ -315,6 +320,8 @@ namespace GitUI.Hotkey
                 new HotkeySettings(
                     FileViewer.HotkeySettingsName,
                     Hk(FileViewer.Commands.Find, Keys.Control | Keys.F),
+                    Hk(FileViewer.Commands.FindNextOrOpenWithDifftool, OpenWithDifftoolHotkey),
+                    Hk(FileViewer.Commands.FindPrevious, Keys.Shift | OpenWithDifftoolHotkey),
                     Hk(FileViewer.Commands.GoToLine, Keys.Control | Keys.G),
                     Hk(FileViewer.Commands.IncreaseNumberOfVisibleLines, Keys.None),
                     Hk(FileViewer.Commands.DecreaseNumberOfVisibleLines, Keys.None),
@@ -331,7 +338,15 @@ namespace GitUI.Hotkey
                     Hk(FormResolveConflicts.Commands.Rescan, Keys.F5)),
                 new HotkeySettings(
                     RevisionDiff.HotkeySettingsName,
-                    Hk(RevisionDiff.Commands.DeleteSelectedFiles, Keys.Delete)),
+                    Hk(RevisionDiff.Command.DeleteSelectedFiles, Keys.Delete),
+                    Hk(RevisionDiff.Command.ShowHistory, ShowHistoryHotkey),
+                    Hk(RevisionDiff.Command.Blame, BlameHotkey),
+                    Hk(RevisionDiff.Command.OpenWithDifftool, OpenWithDifftoolHotkey)),
+                new HotkeySettings(
+                    RevisionFileTree.HotkeySettingsName,
+                    Hk(RevisionFileTree.Command.ShowHistory, ShowHistoryHotkey),
+                    Hk(RevisionFileTree.Command.Blame, BlameHotkey),
+                    Hk(RevisionFileTree.Command.OpenWithDifftool, OpenWithDifftoolHotkey)),
                 new HotkeySettings(
                     FormSettings.HotkeySettingsName,
                     scriptsHotkeys)

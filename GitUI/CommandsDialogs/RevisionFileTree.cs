@@ -10,6 +10,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.Hotkey;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -53,6 +54,7 @@ See the changes in the commit form.");
         {
             InitializeComponent();
             Translate();
+            HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
             _revisionFileTreeController = new RevisionFileTreeController(() => Module.WorkingDir,
@@ -213,10 +215,50 @@ See the changes in the commit form.");
             }
         }
 
+        #region Hotkey commands
+
+        public static readonly string HotkeySettingsName = "RevisionFileTree";
+
+        public enum Command
+        {
+            ShowHistory = 0,
+            Blame = 1,
+            OpenWithDifftool = 2
+        }
+
+        public bool ExecuteCommand(Command cmd)
+        {
+            return ExecuteCommand((int)cmd);
+        }
+
+        protected override bool ExecuteCommand(int cmd)
+        {
+            switch ((Command)cmd)
+            {
+                case Command.ShowHistory: fileHistoryToolStripMenuItem.PerformClick(); break;
+                case Command.Blame: blameToolStripMenuItem1.PerformClick(); break;
+                case Command.OpenWithDifftool: openWithDifftoolToolStripMenuItem.PerformClick(); break;
+                default: return base.ExecuteCommand(cmd);
+            }
+
+            return true;
+        }
+
         public void ReloadHotkeys()
         {
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            fileHistoryToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
+            blameToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Blame);
+            openWithDifftoolToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenWithDifftool);
             FileText.ReloadHotkeys();
         }
+
+        private string GetShortcutKeyDisplayString(Command cmd)
+        {
+            return GetShortcutKeys((int)cmd).ToShortcutKeyDisplayString();
+        }
+
+        #endregion
 
         protected override void OnRuntimeLoad()
         {
@@ -231,6 +273,8 @@ See the changes in the commit form.");
                     Properties.Resources.IconFolderSubmodule // Submodule
                 }
             };
+
+            ReloadHotkeys();
 
             GotFocus += (s, e1) => tvGitTree.Focus();
 
@@ -533,6 +577,8 @@ See the changes in the commit form.");
             editCheckedOutFileToolStripMenuItem.Enabled = isExistingFileOrDirectory;
             openWithToolStripMenuItem.Visible = isFile;
             openWithToolStripMenuItem.Enabled = isExistingFileOrDirectory;
+            openWithDifftoolToolStripMenuItem.Visible = isFile;
+            openWithDifftoolToolStripMenuItem.Enabled = FileText.OpenWithDifftool != null;
             openFileToolStripMenuItem.Visible = isFile;
             openFileWithToolStripMenuItem.Visible = isFile;
 
@@ -595,6 +641,11 @@ See the changes in the commit form.");
                 var fileName = _fullPathResolver.Resolve(gitItem.FileName);
                 OsShellUtil.OpenAs(fileName.ToNativePath());
             }
+        }
+
+        private void openWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FileText.OpenWithDifftool?.Invoke();
         }
 
         private void resetToThisRevisionToolStripMenuItem_Click(object sender, EventArgs e)
