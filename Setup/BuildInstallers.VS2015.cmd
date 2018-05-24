@@ -14,14 +14,23 @@ set msbuildparams=/p:Configuration=Release /t:Rebuild /nologo /v:m
 %msbuild% %project% /p:Platform="Any CPU" %msbuildparams%
 IF ERRORLEVEL 1 EXIT /B 1
 
+Echo ----------------------------------------------------------------------
+Echo Building the release
+Echo ----------------------------------------------------------------------
 call BuildGitExtNative.cmd Release Rebuild
 
+Echo ----------------------------------------------------------------------
+Echo Generating installers
+Echo ----------------------------------------------------------------------
 call MakeInstallers.cmd
 IF ERRORLEVEL 1 EXIT /B 1
 
 %msbuild% %project% /p:Platform="Any CPU" /p:DefineConstants=__MonoCS__ %msbuildparams%
 IF ERRORLEVEL 1 EXIT /B 1
 
+Echo ----------------------------------------------------------------------
+Echo Building the portable archive
+Echo ----------------------------------------------------------------------
 call MakeMonoArchive.cmd
 IF ERRORLEVEL 1 EXIT /B 1
 

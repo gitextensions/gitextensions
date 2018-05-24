@@ -51,8 +51,9 @@ GitCommandsTests/test-results/*
 GitExtensionsMono.sln.VisualState.xml
 TestResult.xml
 libgit2sharp
+Setup/Changelog.md
 Setup/GitExtensions/
-Setup/GitExtensions*Mono.zip
+Setup/GitExtensions*.zip
 Setup/tools/tx.exe
 
 # Backup & report files from converting an old project file to a newer

@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -19,6 +19,6 @@ using System.Reflection;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.51.01")]
-[assembly: AssemblyFileVersion("2.51.01")]
-[assembly: AssemblyInformationalVersion("2.51.01")]
+[assembly: AssemblyVersion("2.51.02")]
+[assembly: AssemblyFileVersion("2.51.02")]
+[assembly: AssemblyInformationalVersion("2.51.02")]
