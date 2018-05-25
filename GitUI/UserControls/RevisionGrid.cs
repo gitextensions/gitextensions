@@ -2946,6 +2946,11 @@ namespace GitUI
 
         private void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus> status, GitRevision unstagedRev, GitRevision stagedRev)
         {
+            if (status == null)
+            {
+                return;
+            }
+
             int staged = status.Count(item => item.IsStaged);
             int unstaged = status.Count - staged;
 
@@ -2959,9 +2964,8 @@ namespace GitUI
                 stagedRev.SubjectCount = "(" + staged + ") ";
             }
 
-            _artificialStatus = unstagedRev == null || stagedRev == null
-                ? status
-                : null;
+            // cache the status, if commits do not exist or for a refresh
+            _artificialStatus = status;
 
             Revisions.Invalidate();
         }
@@ -2999,10 +3003,7 @@ namespace GitUI
             };
             Revisions.Add(stagedRev, DvcsGraph.DataTypes.Normal);
 
-            if (_artificialStatus != null)
-            {
-                UpdateArtificialCommitCount(_artificialStatus, unstagedRev, stagedRev);
-            }
+            UpdateArtificialCommitCount(_artificialStatus, unstagedRev, stagedRev);
         }
 
         internal void DrawNonrelativesGray_ToolStripMenuItemClick(object sender, EventArgs e)
