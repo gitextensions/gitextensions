@@ -42,18 +42,40 @@ namespace GitCommandsTests
         [TestCase(
             new byte[] { nil, 1, nil, 2, 3, nil, 4, 5, 6, nil, 7, 8, 9, 10 },
             new byte[0], new byte[] { 1 }, new byte[] { 2, 3 }, new byte[] { 4, 5, 6 }, new byte[] { 7, 8, 9, 10 })]
-        public void ReadNullTerminatedLines(byte[] input, params byte[][] expected)
+        public void ReadNullTerminatedLines(byte[] input, params byte[][] expectedChunks)
         {
             var stream = new MemoryStream(input);
 
             // Run the test at multiple buffer sizes to test boundary conditions thoroughly
             for (var bufferSize = 1; bufferSize < input.Length + 2; bufferSize++)
             {
+                // Test overload that allocates an output buffer
                 stream.Position = 0;
 
-                var actual = stream.ReadNullTerminatedChunks(bufferSize).ToArray();
+                Assert.AreEqual(
+                    expectedChunks,
+                    stream.ReadNullTerminatedChunks(bufferSize).ToArray(),
+                    "bufferSize={0}", bufferSize);
 
-                Assert.AreEqual(expected, actual, $"bufferSize={bufferSize}");
+                // Test overload that uses external buffer
+                var buffer = new byte[bufferSize];
+
+                stream.Position = 0;
+
+                using (var e = stream.ReadNullTerminatedChunks(ref buffer).GetEnumerator())
+                {
+                    for (var chunkIndex = 0; chunkIndex < expectedChunks.Length; chunkIndex++)
+                    {
+                        var expected = expectedChunks[chunkIndex];
+                        Assert.IsTrue(e.MoveNext());
+                        Assert.AreEqual(
+                            expected,
+                            e.Current.ToArray(),
+                            "input=[{0}] chunkIndex={1} bufferSize={2}", string.Join(",", expected), chunkIndex, bufferSize);
+                    }
+
+                    Assert.IsFalse(e.MoveNext(), "bufferSize={0}", bufferSize);
+                }
             }
         }
     }
