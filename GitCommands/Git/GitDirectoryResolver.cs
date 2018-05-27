@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace GitCommands.Git
 {
@@ -15,7 +16,8 @@ namespace GitCommands.Git
         /// </summary>
         /// <param name="repositoryPath">The repository working folder.</param>
         /// <returns>The resolved location of .git folder.</returns>
-        string Resolve(string repositoryPath);
+        [NotNull]
+        string Resolve([NotNull] string repositoryPath);
     }
 
     /// <summary>
@@ -25,7 +27,7 @@ namespace GitCommands.Git
     {
         private readonly IFileSystem _fileSystem;
 
-        public GitDirectoryResolver(IFileSystem fileSystem)
+        public GitDirectoryResolver([NotNull] IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
         }

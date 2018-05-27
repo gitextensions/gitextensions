@@ -5,6 +5,7 @@ using System.Linq;
 using GitCommands;
 using GitCommands.Settings;
 using GitCommands.Utils;
+using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
@@ -43,9 +44,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private bool SolveEditor()
         {
             string editor = CommonLogic.GetGlobalEditor();
+
             if (string.IsNullOrEmpty(editor))
             {
-                GlobalConfigFileSettings.SetPathValue("core.editor", "\"" + AppSettings.GetGitExtensionsFullPath() + "\" fileeditor");
+                GlobalConfigFileSettings.SetPathValue("core.editor", EditorHelper.FileEditorCommand);
             }
 
             return true;

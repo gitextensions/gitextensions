@@ -38,7 +38,7 @@ namespace GitUI.Editor
 
             GitUICommandsSourceSet += FileViewer_GitUICommandsSourceSet;
 
-            _internalFileViewer = new FileViewerInternal();
+            _internalFileViewer = new FileViewerInternal(() => Module);
             _internalFileViewer.MouseEnter += _internalFileViewer_MouseEnter;
             _internalFileViewer.MouseLeave += _internalFileViewer_MouseLeave;
             _internalFileViewer.MouseMove += _internalFileViewer_MouseMove;
@@ -483,8 +483,7 @@ namespace GitUI.Editor
 
         public void ViewPatch([CanBeNull] Patch patch, [CanBeNull] Action openWithDifftool = null)
         {
-            string text = patch != null ? patch.Text : "";
-            ViewPatch(text, openWithDifftool);
+            ViewPatch(patch?.Text ?? "", openWithDifftool);
         }
 
         public void ViewPatch([NotNull] string text, [CanBeNull] Action openWithDifftool)

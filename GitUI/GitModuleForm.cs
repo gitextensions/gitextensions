@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Script;
+using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -11,7 +13,7 @@ namespace GitUI
     {
         private GitUICommands _uiCommands;
 
-        /// <summary>Gets a <see cref="GitUICommands"/> reference.</summary>
+        /// <inheritdoc />
         [Browsable(false)]
         public GitUICommands UICommands
         {
@@ -24,7 +26,6 @@ namespace GitUI
 
                 return _uiCommands;
             }
-
             protected set
             {
                 GitUICommands oldCommands = _uiCommands;
@@ -34,24 +35,26 @@ namespace GitUI
         }
 
         /// <summary>true if <see cref="UICommands"/> has been initialized.</summary>
-        public bool IsUICommandsInitialized => _uiCommands != null;
+        protected bool IsUICommandsInitialized => _uiCommands != null;
 
         /// <summary>Gets a <see cref="GitModule"/> reference.</summary>
+        [CanBeNull]
         [Browsable(false)]
         public GitModule Module => _uiCommands?.Module;
 
+        /// <inheritdoc />
         public event EventHandler<GitUICommandsChangedEventArgs> GitUICommandsChanged;
 
         protected GitModuleForm()
         {
         }
 
-        public GitModuleForm(GitUICommands commands)
+        protected GitModuleForm(GitUICommands commands)
             : this(true, commands)
         {
         }
 
-        public GitModuleForm(bool enablePositionRestore, GitUICommands commands)
+        protected GitModuleForm(bool enablePositionRestore, GitUICommands commands)
             : base(enablePositionRestore)
         {
             UICommands = commands;
@@ -59,17 +62,8 @@ namespace GitUI
 
         protected override bool ExecuteCommand(int command)
         {
-            if (ExecuteScriptCommand(command))
-            {
-                return true;
-            }
-
-            return base.ExecuteCommand(command);
-        }
-
-        protected bool ExecuteScriptCommand(int command)
-        {
-            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command);
+            return ScriptRunner.ExecuteScriptCommand(this, Module, command)
+                || base.ExecuteCommand(command);
         }
     }
 }

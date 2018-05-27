@@ -39,29 +39,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public override void OnPageShown()
         {
-            {
-                bool canFindGitCmd = CheckSettingsLogic.CanFindGitCmd();
+            bool canFindGitCmd = CheckSettingsLogic.CanFindGitCmd();
 
-                GlobalUserName.Enabled = canFindGitCmd;
-                GlobalUserEmail.Enabled = canFindGitCmd;
-                GlobalEditor.Enabled = canFindGitCmd;
-                CommitTemplatePath.Enabled = canFindGitCmd;
-                _NO_TRANSLATE_GlobalMergeTool.Enabled = canFindGitCmd;
-                MergetoolPath.Enabled = canFindGitCmd;
-                MergeToolCmd.Enabled = canFindGitCmd;
-                GlobalKeepMergeBackup.Enabled = canFindGitCmd;
-                InvalidGitPathGlobal.Visible = !canFindGitCmd;
-            }
+            GlobalUserName.Enabled = canFindGitCmd;
+            GlobalUserEmail.Enabled = canFindGitCmd;
+            GlobalEditor.Enabled = canFindGitCmd;
+            CommitTemplatePath.Enabled = canFindGitCmd;
+            _NO_TRANSLATE_GlobalMergeTool.Enabled = canFindGitCmd;
+            MergetoolPath.Enabled = canFindGitCmd;
+            MergeToolCmd.Enabled = canFindGitCmd;
+            GlobalKeepMergeBackup.Enabled = canFindGitCmd;
+            InvalidGitPathGlobal.Visible = !canFindGitCmd;
 
-            if (_NO_TRANSLATE_GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase)
-                && string.IsNullOrEmpty(MergeToolCmd.Text))
-            {
-                MergeToolCmd.Enabled = false;
-            }
-            else
-            {
-                MergeToolCmd.Enabled = true;
-            }
+            var isKdiff3 = _NO_TRANSLATE_GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase);
+
+            MergeToolCmd.Enabled = !isKdiff3 || !string.IsNullOrEmpty(MergeToolCmd.Text);
         }
 
         protected override void SettingsToPage()
@@ -98,44 +90,46 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             CurrentSettings.FilesEncoding = CommonLogic.ComboToEncoding(Global_FilesEncoding);
 
-            if (CheckSettingsLogic.CanFindGitCmd())
+            if (!CheckSettingsLogic.CanFindGitCmd())
             {
-                CurrentSettings.SetValue(SettingKeyString.UserName, GlobalUserName.Text);
-                CurrentSettings.SetValue(SettingKeyString.UserEmail, GlobalUserEmail.Text);
-                CurrentSettings.SetValue("commit.template", CommitTemplatePath.Text);
-                CurrentSettings.SetPathValue("core.editor", GlobalEditor.Text);
+                return;
+            }
 
-                CheckSettingsLogic.SetDiffToolToConfig(CurrentSettings, _NO_TRANSLATE_GlobalDiffTool.Text);
+            CurrentSettings.SetValue(SettingKeyString.UserName, GlobalUserName.Text);
+            CurrentSettings.SetValue(SettingKeyString.UserEmail, GlobalUserEmail.Text);
+            CurrentSettings.SetValue("commit.template", CommitTemplatePath.Text);
+            CurrentSettings.SetPathValue("core.editor", GlobalEditor.Text);
 
-                CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalDiffTool.Text), DifftoolPath.Text);
-                CurrentSettings.SetPathValue(string.Format("difftool.{0}.cmd", _NO_TRANSLATE_GlobalDiffTool.Text), DifftoolCmd.Text);
+            CheckSettingsLogic.SetDiffToolToConfig(CurrentSettings, _NO_TRANSLATE_GlobalDiffTool.Text);
 
-                CurrentSettings.SetValue("merge.tool", _NO_TRANSLATE_GlobalMergeTool.Text);
+            CurrentSettings.SetPathValue(string.Format("difftool.{0}.path", _NO_TRANSLATE_GlobalDiffTool.Text), DifftoolPath.Text);
+            CurrentSettings.SetPathValue(string.Format("difftool.{0}.cmd", _NO_TRANSLATE_GlobalDiffTool.Text), DifftoolCmd.Text);
 
-                CurrentSettings.SetPathValue(string.Format("mergetool.{0}.path", _NO_TRANSLATE_GlobalMergeTool.Text), MergetoolPath.Text);
-                CurrentSettings.SetPathValue(string.Format("mergetool.{0}.cmd", _NO_TRANSLATE_GlobalMergeTool.Text), MergeToolCmd.Text);
+            CurrentSettings.SetValue("merge.tool", _NO_TRANSLATE_GlobalMergeTool.Text);
 
-                CurrentSettings.mergetool.keepBackup.Value = GlobalKeepMergeBackup.GetNullableChecked();
+            CurrentSettings.SetPathValue(string.Format("mergetool.{0}.path", _NO_TRANSLATE_GlobalMergeTool.Text), MergetoolPath.Text);
+            CurrentSettings.SetPathValue(string.Format("mergetool.{0}.cmd", _NO_TRANSLATE_GlobalMergeTool.Text), MergeToolCmd.Text);
 
-                if (globalAutoCrlfFalse.Checked)
-                {
-                    CurrentSettings.core.autocrlf.Value = AutoCRLFType.@false;
-                }
+            CurrentSettings.mergetool.keepBackup.Value = GlobalKeepMergeBackup.GetNullableChecked();
 
-                if (globalAutoCrlfInput.Checked)
-                {
-                    CurrentSettings.core.autocrlf.Value = AutoCRLFType.input;
-                }
+            if (globalAutoCrlfFalse.Checked)
+            {
+                CurrentSettings.core.autocrlf.Value = AutoCRLFType.@false;
+            }
 
-                if (globalAutoCrlfTrue.Checked)
-                {
-                    CurrentSettings.core.autocrlf.Value = AutoCRLFType.@true;
-                }
+            if (globalAutoCrlfInput.Checked)
+            {
+                CurrentSettings.core.autocrlf.Value = AutoCRLFType.input;
+            }
 
-                if (globalAutoCrlfNotSet.Checked)
-                {
-                    CurrentSettings.core.autocrlf.Value = null;
-                }
+            if (globalAutoCrlfTrue.Checked)
+            {
+                CurrentSettings.core.autocrlf.Value = AutoCRLFType.@true;
+            }
+
+            if (globalAutoCrlfNotSet.Checked)
+            {
+                CurrentSettings.core.autocrlf.Value = null;
             }
         }
 
@@ -149,15 +143,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             MergetoolPath.Text = CurrentSettings.GetValue(string.Format("mergetool.{0}.path", _NO_TRANSLATE_GlobalMergeTool.Text.Trim()));
             MergeToolCmd.Text = CurrentSettings.GetValue(string.Format("mergetool.{0}.cmd", _NO_TRANSLATE_GlobalMergeTool.Text.Trim()));
 
-            if (_NO_TRANSLATE_GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase) &&
-                string.IsNullOrEmpty(MergeToolCmd.Text))
-            {
-                MergeToolCmd.Enabled = false;
-            }
-            else
-            {
-                MergeToolCmd.Enabled = true;
-            }
+            var isKdiff3 = _NO_TRANSLATE_GlobalMergeTool.Text.Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase);
+
+            MergeToolCmd.Enabled = !isKdiff3 || !string.IsNullOrEmpty(MergeToolCmd.Text);
 
             MergeToolCmdSuggest_Click(null, null);
         }
