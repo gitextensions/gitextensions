@@ -256,6 +256,47 @@ namespace GitUIPluginInterfaces
                 return false;
             }
 
+            return TryParseAsciiHexBytes(
+                new ArraySegment<byte>(bytes, index, Sha1CharCount),
+                out objectId);
+        }
+
+        [MustUseReturnValue]
+        [ContractAnnotation("=>false,objectId:null")]
+        [ContractAnnotation("=>true,objectId:notnull")]
+        public static bool TryParseAsciiHexBytes(ArraySegment<byte> bytes, int index, out ObjectId objectId)
+        {
+            // TODO get rid of this overload? slice the array segment instead
+
+            return TryParseAsciiHexBytes(
+                new ArraySegment<byte>(bytes.Array, bytes.Offset + index, Sha1CharCount),
+                out objectId);
+        }
+
+        /// <summary>
+        /// Parses an <see cref="ObjectId"/> from a segment of <paramref name="bytes"/> containing ASCII characters.
+        /// </summary>
+        /// <remarks>
+        /// <para>Unlike <see cref="Parse(byte[],int)"/> which reads raw bytes, this method reads human-readable
+        /// ASCII-encoded bytes, which are more verbose. Several git commands emit them in this form.</para>
+        /// <para>For parsing to succeed, <paramref name="bytes"/> must contain 40 bytes.</para>
+        /// </remarks>
+        /// <param name="bytes">The byte array to parse from.</param>
+        /// <param name="objectId">The parsed <see cref="ObjectId"/>.</param>
+        /// <returns><c>true</c> if parsing succeeded, otherwise <c>false</c>.</returns>
+        [MustUseReturnValue]
+        [ContractAnnotation("=>false,objectId:null")]
+        [ContractAnnotation("=>true,objectId:notnull")]
+        public static bool TryParseAsciiHexBytes(ArraySegment<byte> bytes, out ObjectId objectId)
+        {
+            var index = bytes.Offset;
+
+            if (bytes.Count != Sha1CharCount)
+            {
+                objectId = default;
+                return false;
+            }
+
             var success = true;
 
             var i1 = HexAsciiBytesToUInt32(index);
@@ -275,14 +316,16 @@ namespace GitUIPluginInterfaces
 
             uint HexAsciiBytesToUInt32(int j)
             {
-                return (uint)(HexAsciiByteToInt(bytes[j]) << 28 |
-                              HexAsciiByteToInt(bytes[j + 1]) << 24 |
-                              HexAsciiByteToInt(bytes[j + 2]) << 20 |
-                              HexAsciiByteToInt(bytes[j + 3]) << 16 |
-                              HexAsciiByteToInt(bytes[j + 4]) << 12 |
-                              HexAsciiByteToInt(bytes[j + 5]) << 8 |
-                              HexAsciiByteToInt(bytes[j + 6]) << 4 |
-                              HexAsciiByteToInt(bytes[j + 7]));
+                var array = bytes.Array;
+
+                return (uint)(HexAsciiByteToInt(array[j]) << 28 |
+                              HexAsciiByteToInt(array[j + 1]) << 24 |
+                              HexAsciiByteToInt(array[j + 2]) << 20 |
+                              HexAsciiByteToInt(array[j + 3]) << 16 |
+                              HexAsciiByteToInt(array[j + 4]) << 12 |
+                              HexAsciiByteToInt(array[j + 5]) << 8 |
+                              HexAsciiByteToInt(array[j + 6]) << 4 |
+                              HexAsciiByteToInt(array[j + 7]));
             }
 
             int HexAsciiByteToInt(byte b)

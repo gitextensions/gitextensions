@@ -190,7 +190,7 @@ namespace GitCommandsTests.Git
                 ObjectId.IndexId.GetHashCode());
         }
 
-        private const string NonHexAscii = "0123456789abcdefghijklmnopqrstuvwxyz";
+        private const string NonHexAscii = "0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz";
         private const string HexAscii = "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f20";
 
         [TestCase(HexAscii, 0, "000102030405060708090a0b0c0d0e0f10111213")]
