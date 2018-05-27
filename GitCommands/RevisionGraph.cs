@@ -175,7 +175,9 @@ namespace GitCommands
                 // Pool string values likely to form a small set: encoding, authorname, authoremail, committername, committeremail
                 var stringPool = new StringPool();
 
-                foreach (var logItemBytes in process.StandardOutput.BaseStream.ReadNullTerminatedChunks())
+                var buffer = new byte[4096];
+
+                foreach (var logItemBytes in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
                 {
                     if (token.IsCancellationRequested)
                     {
@@ -228,7 +230,7 @@ namespace GitCommands
             return refs;
         }
 
-        private void ProcessLogItem(byte[] logItemBytes, StringPool stringPool)
+        private void ProcessLogItem(ArraySegment<byte> logItemBytes, StringPool stringPool)
         {
             if (!ObjectId.TryParseAsciiHexBytes(logItemBytes, 0, out var objectId) ||
                 !ObjectId.TryParseAsciiHexBytes(logItemBytes, ObjectId.Sha1CharCount, out var treeId))
@@ -239,9 +241,9 @@ namespace GitCommands
             var parentIds = new List<ObjectId>(capacity: 1);
             var parentIdOffset = ObjectId.Sha1CharCount * 2;
 
-            while (parentIdOffset < logItemBytes.Length - 1)
+            while (parentIdOffset < logItemBytes.Count - 1)
             {
-                var b = logItemBytes[parentIdOffset];
+                var b = logItemBytes.Array[logItemBytes.Offset + parentIdOffset];
 
                 if (b == '\n')
                 {
@@ -263,7 +265,7 @@ namespace GitCommands
                 parentIdOffset += ObjectId.Sha1CharCount;
             }
 
-            var s = _module.LogOutputEncoding.GetString(logItemBytes, parentIdOffset, logItemBytes.Length - parentIdOffset);
+            var s = _module.LogOutputEncoding.GetString(logItemBytes.Array, logItemBytes.Offset + parentIdOffset, logItemBytes.Count - parentIdOffset);
 
             var match = _commitRegex.Match(s);
 
