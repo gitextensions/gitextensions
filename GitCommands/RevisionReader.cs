@@ -369,7 +369,7 @@ namespace GitCommands
                 Guid = objectIdStr,
 
                 // TODO take IReadOnlyList<ObjectId> instead
-                ParentGuids = parentIds.Select(p => p.ToString()).ToArray(),
+                ParentGuids = parentIds.ToArray(p => p.ToString()),
 
                 TreeGuid = treeId,
                 Author = author,
