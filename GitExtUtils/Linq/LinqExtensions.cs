@@ -5,7 +5,11 @@ namespace System.Linq
 {
     public static class LinqExtensions
     {
-        public static HashSet<TKey> ToHashSet<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
+        [NotNull]
+        [MustUseReturnValue]
+        public static HashSet<TKey> ToHashSet<TSource, TKey>(
+            [NotNull] this IEnumerable<TSource> source,
+            [NotNull] Func<TSource, TKey> keySelector)
         {
             if (keySelector == null)
             {
@@ -31,13 +35,16 @@ namespace System.Linq
             return result;
         }
 
+        [NotNull]
         public static IEnumerable<TValue> SelectMany<TValue>(
-            this IEnumerable<IEnumerable<TValue>> source)
+            [NotNull] this IEnumerable<IEnumerable<TValue>> source)
         {
             return source.SelectMany(i => i);
         }
 
-        public static string Join(this IEnumerable<string> source, string separator)
+        [Pure]
+        [NotNull]
+        public static string Join([NotNull] this IEnumerable<string> source, [NotNull] string separator)
         {
             return string.Join(separator, source);
         }
@@ -52,7 +59,12 @@ namespace System.Linq
         /// <param name="comparer">A function to compare keys.</param>
         /// <returns>An <see cref="IOrderedEnumerable{TElement}"/> whose elements are sorted according to a key.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="keySelector"/> is <c>null</c>.</exception>
-        public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TKey, TKey, int> comparer)
+        [NotNull]
+        [LinqTunnel]
+        public static IOrderedEnumerable<TSource> OrderBy<TSource, TKey>(
+            [NotNull] this IEnumerable<TSource> source,
+            [NotNull] Func<TSource, TKey> keySelector,
+            [NotNull] Func<TKey, TKey, int> comparer)
         {
             FuncComparer<TKey> fc = new FuncComparer<TKey>(comparer);
 
@@ -81,7 +93,9 @@ namespace System.Linq
         /// <param name="source">A sequence of values to invoke a transform function on.</param>
         /// <param name="transformer">A transform function to apply to each element.</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="transformer"/> is <c>null</c>.</exception>
-        public static void Transform<TSource>(this TSource[] source, Func<TSource, TSource> transformer)
+        public static void Transform<TSource>(
+            [NotNull] this TSource[] source,
+            [NotNull, InstantHandle] Func<TSource, TSource> transformer)
         {
             if (source == null)
             {
@@ -99,7 +113,7 @@ namespace System.Linq
             }
         }
 
-        public static void AddAll<T>(this IList<T> list, IEnumerable<T> elementsToAdd)
+        public static void AddAll<T>([NotNull] this IList<T> list, [NotNull, InstantHandle] IEnumerable<T> elementsToAdd)
         {
             foreach (T t in elementsToAdd)
             {
@@ -107,7 +121,7 @@ namespace System.Linq
             }
         }
 
-        public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
+        public static void ForEach<T>([NotNull] this IEnumerable<T> enumerable, [NotNull, InstantHandle] Action<T> action)
         {
             foreach (T t in enumerable)
             {
@@ -122,7 +136,9 @@ namespace System.Linq
             list[index2] = temp;
         }
 
-        public static IReadOnlyList<T> AsReadOnlyList<T>(this IEnumerable<T> source)
+        [Pure]
+        [NotNull]
+        public static IReadOnlyList<T> AsReadOnlyList<T>([NotNull] this IEnumerable<T> source)
         {
             if (source is IReadOnlyList<T> readOnlyList)
             {
