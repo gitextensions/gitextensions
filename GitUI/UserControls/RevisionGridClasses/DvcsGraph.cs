@@ -15,7 +15,7 @@ namespace GitUI.RevisionGridClasses
 {
     public sealed partial class DvcsGraph : DataGridView
     {
-        #region Delegates
+        #region EventArgs
 
         public class LoadingEventArgs : EventArgs
         {
@@ -32,39 +32,29 @@ namespace GitUI.RevisionGridClasses
         #region DataType enum
 
         [Flags]
-        public enum DataType
+        public enum DataTypes
         {
             Normal = 0,
             Active = 1,
-            Special = 2,
-            Filtered = 4,
+            Special = 2
         }
 
         #endregion
 
-        #region FilterType enum
-
-        public enum FilterType
-        {
-            None,
-            Highlight,
-            Hide,
-        }
-
-        #endregion
-
-        private int _nodeDimension = DpiUtil.Scale(10);
-        private int _laneWidth = DpiUtil.Scale(13);
-        private int _laneLineWidth = DpiUtil.Scale(2);
+        private readonly int _nodeDimension = DpiUtil.Scale(10);
+        private readonly int _laneWidth = DpiUtil.Scale(13);
+        private readonly int _laneSidePadding = DpiUtil.Scale(4);
+        private readonly int _laneLineWidth = DpiUtil.Scale(2);
         private const int MaxLanes = 40;
 
         private Pen _whiteBorderPen;
         private Pen _blackBorderPen;
 
         private readonly AutoResetEvent _backgroundEvent = new AutoResetEvent(false);
-        private readonly Graph _graphData;
-        private readonly Dictionary<Junction, int> _junctionColors = new Dictionary<Junction, int>();
+        private readonly Dictionary<Junction, int> _colorByJunction = new Dictionary<Junction, int>();
         private readonly Color _nonRelativeColor = Color.LightGray;
+
+        private readonly Graph _graphData = new Graph();
 
         private readonly Color[] _possibleColors =
             {
@@ -89,7 +79,6 @@ namespace GitUI.RevisionGridClasses
         private int _cacheCountMax; // Number of elements allowed in the cache. Is based on control height.
         private int _cacheHead = -1; // The 'slot' that is the head of the circular bitmap
         private int _cacheHeadRow; // The node row that is in the head slot
-        private FilterType _filterMode = FilterType.None;
         private Bitmap _graphBitmap;
         private int _graphDataCount;
         private Graphics _graphWorkArea;
@@ -97,24 +86,18 @@ namespace GitUI.RevisionGridClasses
         private int _visibleBottom;
         private int _visibleTop;
 
-        public void SetDimensions(int nodeDimension, int laneWidth, int laneLineWidth, int rowHeight)
+        public void SetRowHeight(int rowHeight)
         {
             RowTemplate.Height = rowHeight;
-            _nodeDimension = DpiUtil.Scale(nodeDimension);
-            _laneWidth = DpiUtil.Scale(laneWidth);
-            _laneLineWidth = DpiUtil.Scale(laneLineWidth);
 
             dataGrid_Resize(null, null);
         }
 
         public DvcsGraph()
         {
-            _graphData = new Graph();
-
             _backgroundThread = new Thread(BackgroundThreadEntry)
             {
                 IsBackground = true,
-                Priority = ThreadPriority.Normal,
                 Name = "DvcsGraph.backgroundThread"
             };
             _backgroundThread.Start();
@@ -166,89 +149,16 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
-        /// <summary>
-        /// 0
-        /// </summary>
         internal DataGridViewColumn GraphColumn => Columns[0];
-
-        /// <summary>
-        /// 1
-        /// </summary>
         internal DataGridViewColumn MessageColumn => Columns[1];
-
-        /// <summary>
-        /// 2
-        /// </summary>
         internal DataGridViewColumn AuthorColumn => Columns[2];
-
-        /// <summary>
-        /// 3
-        /// </summary>
         internal DataGridViewColumn DateColumn => Columns[3];
-
         internal DataGridViewColumn IdColumn => Columns[4];
 
         public void ShowAuthor(bool show)
         {
             AuthorColumn.Visible = show;
             DateColumn.Visible = show;
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
-        [DefaultValue(FilterType.None)]
-        [Category("Behavior")]
-        public FilterType FilterMode
-        {
-            get { return _filterMode; }
-            set
-            {
-                // TODO: We only need to rebuild the graph if switching to or from hide
-                if (_filterMode == value)
-                {
-                    return;
-                }
-
-                this.InvokeSync(() =>
-                    {
-                        lock (_backgroundEvent)
-                        {
-                            // Make sure the background thread isn't running
-                            lock (_backgroundThread)
-                            {
-                                _backgroundScrollTo = 0;
-                                _graphDataCount = 0;
-                            }
-
-                            lock (_graphData)
-                            {
-                                _filterMode = value;
-                                _graphData.IsFilter = (_filterMode & FilterType.Hide) == FilterType.Hide;
-                                RebuildGraph();
-                            }
-                        }
-                    });
-            }
-        }
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        [Browsable(false)]
-        public object[] SelectedData
-        {
-            get
-            {
-                if (SelectedRows.Count == 0)
-                {
-                    return null;
-                }
-
-                var data = new object[SelectedRows.Count];
-                for (int i = 0; i < SelectedRows.Count; i++)
-                {
-                    data[i] = _graphData[i].Node.Data;
-                }
-
-                return data;
-            }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
@@ -372,11 +282,11 @@ namespace GitUI.RevisionGridClasses
         [Browsable(false)]
         public bool RevisionGraphVisible => GraphColumn.Visible;
 
-        public void Add(string id, string[] parentIds, DataType type, GitRevision data)
+        public void Add(GitRevision revision, DataTypes types)
         {
             lock (_graphData)
             {
-                _graphData.Add(id, parentIds, type, data);
+                _graphData.Add(revision, types);
             }
 
             UpdateData();
@@ -393,33 +303,10 @@ namespace GitUI.RevisionGridClasses
             lock (_graphData)
             {
                 SetRowCount(0);
-                _junctionColors.Clear();
+                _colorByJunction.Clear();
                 _graphData.Clear();
                 _graphDataCount = 0;
                 RebuildGraph();
-            }
-
-            _filterMode = FilterType.None;
-        }
-
-        public void FilterClear()
-        {
-            lock (_graphData)
-            {
-                foreach (Node n in _graphData.Nodes.Values)
-                {
-                    n.IsFiltered = false;
-                }
-
-                _graphData.IsFilter = false;
-            }
-        }
-
-        public void Filter(string id)
-        {
-            lock (_graphData)
-            {
-                _graphData.Filter(id);
             }
         }
 
@@ -536,7 +423,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
-        private void graphData_Updated(object graph)
+        private void graphData_Updated()
         {
             // We have to post this since the thread owns a lock on GraphData that we'll
             // need in order to re-draw the graph.
@@ -769,23 +656,9 @@ namespace GitUI.RevisionGridClasses
 
                 if (GraphColumn.Width != _laneWidth * laneCount && _laneWidth * laneCount > GraphColumn.MinimumWidth)
                 {
-                    GraphColumn.Width = _laneWidth * laneCount;
+                    GraphColumn.Width = (_laneWidth * laneCount) + (_laneSidePadding * 2);
                 }
             }
-        }
-
-        // Color of non-relative branches.
-
-        private List<Color> GetJunctionColors(IEnumerable<Junction> junction)
-        {
-            var colors = junction.Select(GetJunctionColor).ToList();
-
-            if (colors.Count == 0)
-            {
-                colors.Add(Color.Black);
-            }
-
-            return colors;
         }
 
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
@@ -797,7 +670,7 @@ namespace GitUI.RevisionGridClasses
             {
                 if (_revisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
                 {
-                    return _revisionGraphDrawStyle;
+                    return RevisionGraphDrawStyleEnum.HighlightSelected;
                 }
 
                 if (AppSettings.RevisionGraphDrawNonRelativesGray)
@@ -815,8 +688,16 @@ namespace GitUI.RevisionGridClasses
 
         // http://en.wikipedia.org/wiki/File:RBG_color_wheel.svg
 
+        // This is the order to grab the colors in.
+        private static readonly int[] preferedColors = { 4, 8, 6, 10, 2, 5, 7, 3, 9, 1, 11 };
+
+        private readonly List<int> _adjacentColors = new List<int>(capacity: 3);
+        private readonly Random _random = new Random();
+
         private Color GetJunctionColor(Junction junction)
         {
+            ThreadHelper.AssertOnUIThread();
+
             // Draw non-relative branches gray
             if (!junction.IsRelative && _revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
             {
@@ -834,35 +715,21 @@ namespace GitUI.RevisionGridClasses
                 return AppSettings.GraphColor;
             }
 
-            // This is the order to grab the colors in.
-            int[] preferedColors = { 4, 8, 6, 10, 2, 5, 7, 3, 9, 1, 11 };
-
-            int colorIndex;
-            if (_junctionColors.TryGetValue(junction, out colorIndex))
+            // See if this junciton's colour has already been calculated
+            if (_colorByJunction.TryGetValue(junction, out var colorIndex))
             {
                 return _possibleColors[colorIndex];
             }
 
-            // Get adjacent junctions
-            var adjacentJunctions = new List<Junction>();
-            var adjacentColors = new List<int>();
-            adjacentJunctions.AddRange(junction.Youngest.Ancestors);
-            adjacentJunctions.AddRange(junction.Youngest.Descendants);
-            adjacentJunctions.AddRange(junction.Oldest.Ancestors);
-            adjacentJunctions.AddRange(junction.Oldest.Descendants);
-            foreach (Junction peer in adjacentJunctions)
-            {
-                if (_junctionColors.TryGetValue(peer, out colorIndex))
-                {
-                    adjacentColors.Add(colorIndex);
-                }
-                else
-                {
-                    colorIndex = -1;
-                }
-            }
+            // NOTE we reuse _adjacentColors to avoid allocating lists during UI painting.
+            // This is safe as we are always on the UI thread here.
+            _adjacentColors.Clear();
+            _adjacentColors.AddRange(
+                from peer in GetPeers().SelectMany()
+                where _colorByJunction.TryGetValue(peer, out colorIndex)
+                select colorIndex);
 
-            if (adjacentColors.Count == 0)
+            if (_adjacentColors.Count == 0)
             {
                 // This is an end-point. We need to 'pick' a new color
                 colorIndex = 0;
@@ -870,12 +737,12 @@ namespace GitUI.RevisionGridClasses
             else
             {
                 // This is a parent branch, calculate new color based on parent branch
-                int start = adjacentColors[0];
+                int start = _adjacentColors[0];
                 int i;
                 for (i = 0; i < preferedColors.Length; i++)
                 {
                     colorIndex = (start + preferedColors[i]) % _possibleColors.Length;
-                    if (!adjacentColors.Contains(colorIndex))
+                    if (!_adjacentColors.Contains(colorIndex))
                     {
                         break;
                     }
@@ -883,13 +750,21 @@ namespace GitUI.RevisionGridClasses
 
                 if (i == preferedColors.Length)
                 {
-                    var r = new Random();
-                    colorIndex = r.Next(preferedColors.Length);
+                    colorIndex = _random.Next(preferedColors.Length);
                 }
             }
 
-            _junctionColors[junction] = colorIndex;
+            _colorByJunction[junction] = colorIndex;
             return _possibleColors[colorIndex];
+
+            // Get adjacent (peer) junctions
+            IEnumerable<IEnumerable<Junction>> GetPeers()
+            {
+                yield return junction.Youngest.Ancestors;
+                yield return junction.Youngest.Descendants;
+                yield return junction.Oldest.Ancestors;
+                yield return junction.Oldest.Descendants;
+            }
         }
 
         public override void Refresh()
@@ -927,6 +802,12 @@ namespace GitUI.RevisionGridClasses
                 {
                     _graphBitmap.Dispose();
                     _graphBitmap = null;
+                }
+
+                if (_graphWorkArea != null)
+                {
+                    _graphWorkArea.Dispose();
+                    _graphWorkArea = null;
                 }
 
                 if (width > 0 && height > 0)
@@ -991,7 +872,7 @@ namespace GitUI.RevisionGridClasses
             else
             {
                 // Item already in the cache
-                return CreateRectangle(neededRow, width);
+                return CreateRectangle();
             }
 
             if (RevisionGraphVisible)
@@ -1002,7 +883,16 @@ namespace GitUI.RevisionGridClasses
                 }
             }
 
-            return CreateRectangle(neededRow, width);
+            return CreateRectangle();
+
+            Rectangle CreateRectangle()
+            {
+                return new Rectangle(
+                    0,
+                    ((_cacheHeadRow + neededRow - _cacheHead) % _cacheCountMax) * RowTemplate.Height,
+                    width,
+                    _rowHeight);
+            }
         }
 
         private bool DrawVisibleGraph(int start, int end)
@@ -1023,7 +913,7 @@ namespace GitUI.RevisionGridClasses
 
                 // Get the x,y value of the current item's upper left in the cache
                 int curCacheRow = (_cacheHeadRow + rowIndex - _cacheHead) % _cacheCountMax;
-                const int x = 0;
+                int x = _laneSidePadding;
                 int y = curCacheRow * _rowHeight;
 
                 var laneRect = new Rectangle(0, y, Width, _rowHeight);
@@ -1061,20 +951,15 @@ namespace GitUI.RevisionGridClasses
             return true;
         }
 
-        private Rectangle CreateRectangle(int neededRow, int width)
-        {
-            return new Rectangle(
-                0,
-                ((_cacheHeadRow + neededRow - _cacheHead) % _cacheCountMax) * RowTemplate.Height,
-                width,
-                _rowHeight);
-        }
-
         // end drawGraph
 
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
+        private readonly List<Color> _junctionColors = new List<Color>(4);
+
         private bool DrawItem(Graphics wa, Graph.ILaneRow row)
         {
+            ThreadHelper.AssertOnUIThread();
+
             if (row == null || row.NodeLane == -1)
             {
                 return false;
@@ -1107,51 +992,51 @@ namespace GitUI.RevisionGridClasses
                                      (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && laneInfo.Junctions.Any(j => j.HighLight)) ||
                                      (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
 
-                    List<Color> curColors = GetJunctionColors(laneInfo.Junctions);
+                    UpdateJunctionColors(laneInfo.Junctions);
 
                     // Create the brush for drawing the line
-                    Brush brushLineColor = null;
-                    Pen brushLineColorPen = null;
+                    Brush lineBrush = null;
+                    Pen linePen = null;
                     try
                     {
                         bool drawBorder = highLight && AppSettings.BranchBorders; // hide border for "non-relatives"
 
-                        if (curColors.Count == 1 || !AppSettings.StripedBranchChange)
+                        if (_junctionColors.Count == 1 || !AppSettings.StripedBranchChange)
                         {
-                            if (curColors[0] != _nonRelativeColor)
+                            if (_junctionColors[0] != _nonRelativeColor)
                             {
-                                brushLineColor = new SolidBrush(curColors[0]);
+                                lineBrush = new SolidBrush(_junctionColors[0]);
                             }
-                            else if (curColors.Count > 1 && curColors[1] != _nonRelativeColor)
+                            else if (_junctionColors.Count > 1 && _junctionColors[1] != _nonRelativeColor)
                             {
-                                brushLineColor = new SolidBrush(curColors[1]);
+                                lineBrush = new SolidBrush(_junctionColors[1]);
                             }
                             else
                             {
                                 drawBorder = false;
-                                brushLineColor = new SolidBrush(_nonRelativeColor);
+                                lineBrush = new SolidBrush(_nonRelativeColor);
                             }
                         }
                         else
                         {
-                            Color lastRealColor = curColors.LastOrDefault(c => c != _nonRelativeColor);
+                            Color lastRealColor = _junctionColors.LastOrDefault(c => c != _nonRelativeColor);
 
                             if (lastRealColor.IsEmpty)
                             {
-                                brushLineColor = new SolidBrush(_nonRelativeColor);
+                                lineBrush = new SolidBrush(_nonRelativeColor);
                                 drawBorder = false;
                             }
                             else
                             {
-                                brushLineColor = new HatchBrush(HatchStyle.DarkDownwardDiagonal, curColors[0], lastRealColor);
+                                lineBrush = new HatchBrush(HatchStyle.DarkDownwardDiagonal, _junctionColors[0], lastRealColor);
                             }
                         }
 
                         // Precalculate line endpoints
-                        bool singleLane = laneInfo.ConnectLane == lane;
+                        bool sameLane = laneInfo.ConnectLane == lane;
                         int x0 = mid;
                         int y0 = top - 1;
-                        int x1 = singleLane ? x0 : mid + ((laneInfo.ConnectLane - lane) * _laneWidth);
+                        int x1 = sameLane ? x0 : mid + ((laneInfo.ConnectLane - lane) * _laneWidth);
                         int y1 = top + _rowHeight;
 
                         Point p0 = new Point(x0, y0);
@@ -1159,139 +1044,150 @@ namespace GitUI.RevisionGridClasses
 
                         // Precalculate curve control points when needed
                         Point c0, c1;
-                        if (singleLane)
+                        if (sameLane)
                         {
-                            c0 = c1 = Point.Empty;
+                            // We are drawing between two points in the same
+                            // lane, so there will be no curve
+                            c0 = c1 = default;
                         }
                         else
                         {
-                            // Controls the curvature of cross-lane lines (0 = straight line, 1 = 90 degree turns)
-                            const float severity = 0.5f;
-                            c0 = new Point(x0, (int)((y0 * (1.0f - severity)) + (y1 * severity)));
-                            c1 = new Point(x1, (int)((y1 * (1.0f - severity)) + (y0 * severity)));
+                            // Left shifting int is fast equivalent of dividing by two,
+                            // thus computing the average of y0 and y1.
+                            var yMid = (y0 + y1) >> 1;
+
+                            c0 = new Point(x0, yMid);
+                            c1 = new Point(x1, yMid);
                         }
 
                         for (int i = drawBorder ? 0 : 2; i < 3; i++)
                         {
-                            Pen penLine;
+                            Pen pen;
                             switch (i)
                             {
                                 case 0:
-                                    penLine = _whiteBorderPen;
+                                    pen = _whiteBorderPen;
                                     break;
                                 case 1:
-                                    penLine = _blackBorderPen;
+                                    pen = _blackBorderPen;
                                     break;
                                 default:
-                                    if (brushLineColorPen == null)
+                                    if (linePen == null)
                                     {
-                                        brushLineColorPen = new Pen(brushLineColor, _laneLineWidth);
+                                        linePen = new Pen(lineBrush, _laneLineWidth);
                                     }
 
-                                    penLine = brushLineColorPen;
+                                    pen = linePen;
                                     break;
                             }
 
-                            if (singleLane)
+                            if (sameLane)
                             {
-                                wa.DrawLine(penLine, p0, p1);
+                                wa.DrawLine(pen, p0, p1);
                             }
                             else
                             {
-                                wa.DrawBezier(penLine, p0, c0, c1, p1);
+                                wa.DrawBezier(pen, p0, c0, c1, p1);
                             }
                         }
                     }
                     finally
                     {
-                        brushLineColorPen?.Dispose();
-                        ((IDisposable)brushLineColor)?.Dispose();
+                        linePen?.Dispose();
+                        lineBrush?.Dispose();
                     }
                 }
             }
 
             // Reset the clip region
             wa.Clip = oldClip;
+
+            // Draw node
+            var nodeRect = new Rectangle(
+                wa.RenderingOrigin.X + ((_laneWidth - _nodeDimension) / 2) + (row.NodeLane * _laneWidth),
+                wa.RenderingOrigin.Y + ((_rowHeight - _nodeDimension) / 2),
+                _nodeDimension,
+                _nodeDimension);
+
+            Brush nodeBrush;
+
+            UpdateJunctionColors(row.Node.Ancestors);
+
+            bool highlight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
+                             (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
+                             (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
+
+            bool drawNodeBorder = AppSettings.BranchBorders && highlight;
+
+            if (_junctionColors.Count == 1)
             {
-                // Draw node
-                var nodeRect = new Rectangle(
-                    wa.RenderingOrigin.X + ((_laneWidth - _nodeDimension) / 2) + (row.NodeLane * _laneWidth),
-                    wa.RenderingOrigin.Y + ((_rowHeight - _nodeDimension) / 2),
-                    _nodeDimension,
-                    _nodeDimension);
-
-                Brush nodeBrush;
-
-                List<Color> nodeColors = GetJunctionColors(row.Node.Ancestors);
-
-                bool highlight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
-                                 (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
-                                 (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
-
-                bool drawBorder = AppSettings.BranchBorders && highlight;
-
-                if (nodeColors.Count == 1)
+                nodeBrush = new SolidBrush(highlight ? _junctionColors[0] : _nonRelativeColor);
+                if (_junctionColors[0] == _nonRelativeColor)
                 {
-                    nodeBrush = new SolidBrush(highlight ? nodeColors[0] : _nonRelativeColor);
-                    if (nodeColors[0] == _nonRelativeColor)
-                    {
-                        drawBorder = false;
-                    }
+                    drawNodeBorder = false;
                 }
-                else
+            }
+            else
+            {
+                nodeBrush = new LinearGradientBrush(
+                    nodeRect, _junctionColors[0], _junctionColors[1],
+                    LinearGradientMode.Horizontal);
+                if (_junctionColors.All(c => c == _nonRelativeColor))
                 {
-                    nodeBrush = new LinearGradientBrush(nodeRect, nodeColors[0], nodeColors[1],
-                                                        LinearGradientMode.Horizontal);
-                    if (nodeColors.All(c => c == _nonRelativeColor))
-                    {
-                        drawBorder = false;
-                    }
-                }
-
-                if (_filterMode == FilterType.Highlight && row.Node.IsFiltered)
-                {
-                    Rectangle highlightRect = nodeRect;
-                    highlightRect.Inflate(2, 3);
-                    wa.FillRectangle(Brushes.Yellow, highlightRect);
-                    wa.DrawRectangle(Pens.Black, highlightRect);
-                }
-
-                if (row.Node.Data == null)
-                {
-                    wa.FillEllipse(Brushes.White, nodeRect);
-                    using (var pen = new Pen(Color.Red, 2))
-                    {
-                        wa.DrawEllipse(pen, nodeRect);
-                    }
-                }
-                else if (row.Node.IsActive)
-                {
-                    wa.FillRectangle(nodeBrush, nodeRect);
-                    nodeRect.Inflate(1, 1);
-                    using (var pen = new Pen(Color.Black, 3))
-                    {
-                        wa.DrawRectangle(pen, nodeRect);
-                    }
-                }
-                else if (row.Node.IsSpecial)
-                {
-                    wa.FillRectangle(nodeBrush, nodeRect);
-                    if (drawBorder)
-                    {
-                        wa.DrawRectangle(Pens.Black, nodeRect);
-                    }
-                }
-                else
-                {
-                    wa.FillEllipse(nodeBrush, nodeRect);
-                    if (drawBorder)
-                    {
-                        wa.DrawEllipse(Pens.Black, nodeRect);
-                    }
+                    drawNodeBorder = false;
                 }
             }
 
+            if (row.Node.Data == null)
+            {
+                wa.FillEllipse(Brushes.White, nodeRect);
+                using (var pen = new Pen(Color.Red, 2))
+                {
+                    wa.DrawEllipse(pen, nodeRect);
+                }
+            }
+            else if (row.Node.IsActive)
+            {
+                wa.FillRectangle(nodeBrush, nodeRect);
+                nodeRect.Inflate(1, 1);
+                using (var pen = new Pen(Color.Black, 3))
+                {
+                    wa.DrawRectangle(pen, nodeRect);
+                }
+            }
+            else if (row.Node.IsSpecial)
+            {
+                wa.FillRectangle(nodeBrush, nodeRect);
+                if (drawNodeBorder)
+                {
+                    wa.DrawRectangle(Pens.Black, nodeRect);
+                }
+            }
+            else
+            {
+                wa.FillEllipse(nodeBrush, nodeRect);
+                if (drawNodeBorder)
+                {
+                    wa.DrawEllipse(Pens.Black, nodeRect);
+                }
+            }
+
+            nodeBrush.Dispose();
+
             return true;
+
+            void UpdateJunctionColors(IEnumerable<Junction> junction)
+            {
+                _junctionColors.Clear();
+
+                // Color of non-relative branches.
+                _junctionColors.AddRange(junction.Select(GetJunctionColor));
+
+                if (_junctionColors.Count == 0)
+                {
+                    _junctionColors.Add(Color.Black);
+                }
+            }
         }
 
         public void HighlightBranch(string id)
@@ -1350,68 +1246,52 @@ namespace GitUI.RevisionGridClasses
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (e.KeyData == Keys.Home)
+            switch (e.KeyData)
             {
-                if (RowCount != 0)
-                {
-                    ClearSelection();
-                    Rows[0].Selected = true;
-                    CurrentCell = Rows[0].Cells[1];
-                }
+                case Keys.Home:
+                    if (RowCount != 0)
+                    {
+                        ClearSelection();
+                        Rows[0].Selected = true;
+                        CurrentCell = Rows[0].Cells[1];
+                    }
 
-                return;
+                    break;
+                case Keys.End:
+                    if (RowCount != 0)
+                    {
+                        ClearSelection();
+                        Rows[RowCount - 1].Selected = true;
+                        CurrentCell = Rows[RowCount - 1].Cells[1];
+                    }
+
+                    break;
+                default:
+                    base.OnKeyDown(e);
+                    break;
             }
-            else if (e.KeyData == Keys.End)
-            {
-                if (RowCount != 0)
-                {
-                    ClearSelection();
-                    Rows[RowCount - 1].Selected = true;
-                    CurrentCell = Rows[RowCount - 1].Cells[1];
-                }
-
-                return;
-            }
-
-            base.OnKeyDown(e);
         }
 
         #region Nested type: Node
 
         private sealed class Node
         {
-            public readonly List<Junction> Ancestors = new List<Junction>();
-            public readonly List<Junction> Descendants = new List<Junction>();
-            public readonly string Id;
-            public GitRevision Data;
-            public DataType DataType;
-            public int InLane = int.MaxValue;
-            public int Index = int.MaxValue;
+            public List<Junction> Ancestors { get; } = new List<Junction>(capacity: 2);
+            public List<Junction> Descendants { get; } = new List<Junction>(capacity: 2);
+            public string Id { get; }
+
+            public GitRevision Data { get; set; }
+            public DataTypes DataTypes { get; set; }
+            public int InLane { get; set; } = int.MaxValue;
+            public int Index { get; set; } = int.MaxValue;
 
             public Node(string id)
             {
                 Id = id;
             }
 
-            public bool IsActive => (DataType & DataType.Active) == DataType.Active;
-
-            public bool IsFiltered
-            {
-                get { return (DataType & DataType.Filtered) == DataType.Filtered; }
-                set
-                {
-                    if (value)
-                    {
-                        DataType |= DataType.Filtered;
-                    }
-                    else
-                    {
-                        DataType &= ~DataType.Filtered;
-                    }
-                }
-            }
-
-            public bool IsSpecial => (DataType & DataType.Special) == DataType.Special;
+            public bool IsActive => DataTypes.HasFlag(DataTypes.Active);
+            public bool IsSpecial => DataTypes.HasFlag(DataTypes.Special);
 
             public override string ToString()
             {

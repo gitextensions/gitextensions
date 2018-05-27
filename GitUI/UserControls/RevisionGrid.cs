@@ -60,9 +60,6 @@ namespace GitUI
         private readonly TranslationString _baseForCompareNotSelectedError = new TranslationString("Base commit for compare is not selected.");
         private readonly TranslationString _strError = new TranslationString("Error");
 
-        private const int NodeDimension = 10;
-        private const int LaneWidth = 13;
-        private const int LaneLineWidth = 2;
         private const int MaxSuperprojectRefs = 4;
         private Brush _selectedItemBrush;
         private SolidBrush _authoredRevisionsBrush;
@@ -1362,15 +1359,16 @@ namespace GitUI
         private void _revisionGraphCommand_Error(object sender, AsyncErrorEventArgs e)
         {
             // This has to happen on the UI thread
-            this.InvokeAsync(() =>
-                                  {
-                                      Error.Visible = true;
-                                      ////Error.BringToFront();
-                                      NoGit.Visible = false;
-                                      NoCommits.Visible = false;
-                                      Revisions.Visible = false;
-                                      Loading.Visible = false;
-                                  })
+            this.InvokeAsync(
+                    () =>
+                    {
+                        Error.Visible = true;
+                        ////Error.BringToFront();
+                        NoGit.Visible = false;
+                        NoCommits.Visible = false;
+                        Revisions.Visible = false;
+                        Loading.Visible = false;
+                    })
                 .FileAndForget();
 
             DisposeRevisionGraphCommand();
@@ -1427,15 +1425,16 @@ namespace GitUI
                 !FilterIsApplied(true))
             {
                 // This has to happen on the UI thread
-                this.InvokeAsync(() =>
-                                      {
-                                          NoGit.Visible = false;
-                                          NoCommits.Visible = true;
-                                          ////NoCommits.BringToFront();
-                                          Revisions.Visible = false;
-                                          Loading.Visible = false;
-                                          _isRefreshingRevisions = false;
-                                      })
+                this.InvokeAsync(
+                        () =>
+                        {
+                            NoGit.Visible = false;
+                            NoCommits.Visible = true;
+                            ////NoCommits.BringToFront();
+                            Revisions.Visible = false;
+                            Loading.Visible = false;
+                            _isRefreshingRevisions = false;
+                        })
                     .FileAndForget();
             }
             else
@@ -1570,6 +1569,7 @@ namespace GitUI
             }
 
             _initialLoad = false;
+
             SelectionTimer.Enabled = false;
             SelectionTimer.Stop();
             SelectionTimer.Enabled = true;
@@ -2995,24 +2995,26 @@ namespace GitUI
                 }
             }
 
-            string filtredCurrentCheckout = _filtredCurrentCheckout;
-
-            if (filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges() && !Module.IsBareRepository())
+            if (_filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges() && !Module.IsBareRepository())
             {
-                CheckUncommitedChanged(filtredCurrentCheckout);
+                CheckUncommitedChanged(_filtredCurrentCheckout);
             }
 
-            var dataType = DvcsGraph.DataType.Normal;
-            if (rev.Guid == filtredCurrentCheckout)
+            DvcsGraph.DataTypes dataTypes;
+            if (rev.Guid == _filtredCurrentCheckout)
             {
-                dataType = DvcsGraph.DataType.Active;
+                dataTypes = DvcsGraph.DataTypes.Active;
             }
-            else if (rev.Refs.Any())
+            else if (rev.Refs.Count != 0)
             {
-                dataType = DvcsGraph.DataType.Special;
+                dataTypes = DvcsGraph.DataTypes.Special;
+            }
+            else
+            {
+                dataTypes = DvcsGraph.DataTypes.Normal;
             }
 
-            Revisions.Add(rev.Guid, rev.ParentGuids, dataType, rev);
+            Revisions.Add(rev, dataTypes);
         }
 
         public void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus> status)
@@ -3026,6 +3028,7 @@ namespace GitUI
         {
             int staged = status.Count(item => item.IsStaged);
             int unstaged = status.Count - staged;
+
             if (unstagedRev != null)
             {
                 unstagedRev.SubjectCount = "(" + unstaged + ") ";
@@ -3036,14 +3039,9 @@ namespace GitUI
                 stagedRev.SubjectCount = "(" + staged + ") ";
             }
 
-            if (unstagedRev == null || stagedRev == null)
-            {
-                _artificialStatus = status;
-            }
-            else
-            {
-                _artificialStatus = null;
-            }
+            _artificialStatus = unstagedRev == null || stagedRev == null
+                ? status
+                : null;
 
             Revisions.Invalidate();
         }
@@ -3065,7 +3063,7 @@ namespace GitUI
                 Subject = Strings.GetCurrentUnstagedChanges(),
                 ParentGuids = new[] { GitRevision.IndexGuid }
             };
-            Revisions.Add(unstagedRev.Guid, unstagedRev.ParentGuids, DvcsGraph.DataType.Normal, unstagedRev);
+            Revisions.Add(unstagedRev, DvcsGraph.DataTypes.Normal);
 
             // Add index as virtual commit
             var stagedRev = new GitRevision(GitRevision.IndexGuid)
@@ -3079,7 +3077,7 @@ namespace GitUI
                 Subject = Strings.GetCurrentIndex(),
                 ParentGuids = new[] { filtredCurrentCheckout }
             };
-            Revisions.Add(stagedRev.Guid, stagedRev.ParentGuids, DvcsGraph.DataType.Normal, stagedRev);
+            Revisions.Add(stagedRev, DvcsGraph.DataTypes.Normal);
 
             if (_artificialStatus != null)
             {
@@ -3457,7 +3455,7 @@ namespace GitUI
                 _selectedItemBrush = _filledItemBrush;
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth);
+                Revisions.SetRowHeight(_rowHeigth);
             }
             else
             {
@@ -3485,7 +3483,7 @@ namespace GitUI
                 }
 
                 Revisions.ShowAuthor(!IsCardLayout());
-                Revisions.SetDimensions(NodeDimension, LaneWidth, LaneLineWidth, _rowHeigth);
+                Revisions.SetRowHeight(_rowHeigth);
             }
 
             // Hide graph column when there it is disabled OR when a filter is active

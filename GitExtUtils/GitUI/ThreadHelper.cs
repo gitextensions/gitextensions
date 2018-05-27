@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -62,6 +63,17 @@ namespace GitUI
                 string message = string.Format(CultureInfo.CurrentCulture, "{0} must be called on the UI thread.", callerMemberName);
                 throw new COMException(message, RPC_E_WRONG_THREAD);
             }
+        }
+
+        [Conditional("DEBUG")]
+        public static void AssertOnUIThread()
+        {
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+            {
+                return;
+            }
+
+            Debug.Assert(JoinableTaskContext.IsOnMainThread, "Must be on the UI thread.");
         }
 
         public static void ThrowIfOnUIThread([CallerMemberName] string callerMemberName = "")

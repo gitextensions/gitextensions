@@ -73,6 +73,12 @@ namespace System.Linq
             return result;
         }
 
+        public static IEnumerable<TValue> SelectMany<TValue>(
+            this IEnumerable<IEnumerable<TValue>> source)
+        {
+            return source.SelectMany(i => i);
+        }
+
         public static string Join(this IEnumerable<string> source, string separator)
         {
             return string.Join(separator, source);
@@ -149,6 +155,13 @@ namespace System.Linq
             {
                 action(t);
             }
+        }
+
+        public static void Swap<T>(this IList<T> list, int index1, int index2)
+        {
+            var temp = list[index1];
+            list[index1] = list[index2];
+            list[index2] = temp;
         }
     }
 }
