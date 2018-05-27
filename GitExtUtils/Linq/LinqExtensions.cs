@@ -18,17 +18,20 @@ namespace System.Linq
                 throw new ArgumentNullException(nameof(keySelector));
             }
 
-            HashSet<TKey> result = new HashSet<TKey>();
+            var result = new HashSet<TKey>();
 
-            foreach (TSource sourceElement in source)
+            foreach (var element in source)
             {
-                TKey key = keySelector(sourceElement);
+                var key = keySelector(element);
 
                 if (key == null)
                 {
-                    var ex = new ArgumentException("Key selector produced a key that is null. See exception data for source.", nameof(keySelector));
-                    ex.Data.Add("source", sourceElement);
-                    throw ex;
+                    throw new ArgumentException(
+                        "Key selector produced a key that is null. See exception data for source.",
+                        nameof(keySelector))
+                    {
+                        Data = { { "source", element } }
+                    };
                 }
 
                 result.Add(key);
