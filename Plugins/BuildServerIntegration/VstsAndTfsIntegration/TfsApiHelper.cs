@@ -19,9 +19,8 @@ namespace VstsAndTfsIntegration
     {
         private HttpClient _httpClient;
         private IEnumerable<BuildDefinition> _buildDefinitions;
-        private string _projectId;
 
-        private HttpClient InitializeHttpClient(string serverUrl, string personalAccessToken)
+        private HttpClient InitializeHttpClient(string serverUrl, string projectName, string personalAccessToken)
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(
@@ -31,29 +30,18 @@ namespace VstsAndTfsIntegration
                 Convert.ToBase64String(
                     System.Text.Encoding.ASCII.GetBytes($":{personalAccessToken}")));
 
-            var formatedUrl = serverUrl.EndsWith("/") ? serverUrl : serverUrl + "/";
-            client.BaseAddress = new Uri(formatedUrl);
+            var hostUri = new Uri(serverUrl);
+
+            // Uri constructor takes care of ensuring there's a slash after serverUrl, as well as path encoding projectName.
+            client.BaseAddress = new Uri(hostUri, projectName + "/");
             return client;
         }
 
         private async Task<IEnumerable<BuildDefinition>> GetBuildDefinitionsAsync(string teamCollection, string projectName, Regex buildDefinitionNameFilter)
         {
-            var projects = await GetProjectsAsync(teamCollection);
             var buildDefs = new List<BuildDefinition>();
 
-            if (projects.Count == 0)
-            {
-                return buildDefs;
-            }
-
-            var projectFound = projects.FirstOrDefault(p => p.Name == projectName);
-            if (projectFound == null)
-            {
-                return buildDefs;
-            }
-
-            _projectId = projectFound.Id;
-            using (var response = await _httpClient.GetAsync($"{_projectId}/_apis/build/definitions"))
+            using (var response = await _httpClient.GetAsync($"_apis/build/definitions"))
             {
                 response.EnsureSuccessStatusCode();
                 string json = await response.Content.ReadAsStringAsync();
@@ -79,22 +67,11 @@ namespace VstsAndTfsIntegration
             return buildDefs;
         }
 
-        private async Task<IList<Project>> GetProjectsAsync(string teamCollection)
-        {
-            using (var response = await _httpClient.GetAsync($"{teamCollection}/_apis/projects"))
-            {
-                response.EnsureSuccessStatusCode();
-                string json = await response.Content.ReadAsStringAsync();
-
-                return JsonConvert.DeserializeObject<ListWrapper<Project>>(json).Value;
-            }
-        }
-
         public void ConnectToTfsServer(string serverUrl, string teamCollection, string projectName, string restApiToken, Regex buildDefinitionNameFilter = null)
         {
             try
             {
-                _httpClient = InitializeHttpClient(serverUrl, restApiToken);
+                _httpClient = InitializeHttpClient(serverUrl, projectName, restApiToken);
 
                 var taskServerInit = ThreadHelper.JoinableTaskFactory.RunAsync(async () => await GetBuildDefinitionsAsync(teamCollection, projectName, buildDefinitionNameFilter));
                 _buildDefinitions = taskServerInit.Join();
@@ -115,7 +92,7 @@ namespace VstsAndTfsIntegration
             var result = new List<Build>();
             string buildDefIds = string.Join(",", _buildDefinitions.Select(b => b.Id));
             using (HttpResponseMessage response = await _httpClient.GetAsync(
-            $"{_projectId}/_apis/build/builds?api-version=2.0&definitions={buildDefIds}"))
+                $"_apis/build/builds?api-version=2.0&definitions={buildDefIds}"))
             {
                 response.EnsureSuccessStatusCode();
                 string json = await response.Content.ReadAsStringAsync();
