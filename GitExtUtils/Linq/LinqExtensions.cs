@@ -66,16 +66,14 @@ namespace System.Linq
             [NotNull] Func<TSource, TKey> keySelector,
             [NotNull] Func<TKey, TKey, int> comparer)
         {
-            FuncComparer<TKey> fc = new FuncComparer<TKey>(comparer);
-
-            return source.OrderBy(keySelector, fc);
+            return source.OrderBy(keySelector, new DelegateComparer<TKey>(comparer));
         }
 
-        private class FuncComparer<T> : IComparer<T>
+        private sealed class DelegateComparer<T> : IComparer<T>
         {
             private readonly Func<T, T, int> _comparer;
 
-            public FuncComparer(Func<T, T, int> comparer)
+            public DelegateComparer(Func<T, T, int> comparer)
             {
                 _comparer = comparer;
             }
