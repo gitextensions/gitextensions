@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 
+// ReSharper disable once CheckNamespace
+
 namespace System.Linq
 {
     public static class LinqExtensions
