@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
 
@@ -44,18 +43,30 @@ namespace GitCommands
             }
 
             var module = _getModule();
+
             if (module == null)
             {
                 throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
             }
 
-            var subItems = module.GetTree(item.Guid, false).ToList();
-            foreach (var subItem in subItems.OfType<GitItem>())
-            {
-                subItem.FileName = Path.Combine((item as GitItem)?.FileName ?? string.Empty, subItem.FileName ?? string.Empty);
-            }
+            return YieldSubItems();
 
-            return subItems;
+            IEnumerable<IGitItem> YieldSubItems()
+            {
+                var basePath = (item as GitItem)?.FileName ?? string.Empty;
+
+                foreach (var subItem in module.GetTree(item.Guid, full: false))
+                {
+                    if (subItem is GitItem gitItem)
+                    {
+                        gitItem.FileName = Path.Combine(
+                            basePath,
+                            gitItem.FileName ?? string.Empty);
+                    }
+
+                    yield return subItem;
+                }
+            }
         }
     }
 }
