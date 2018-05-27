@@ -201,6 +201,7 @@ namespace GitUIPluginInterfaces
         /// <returns>The parsed <see cref="ObjectId"/>.</returns>
         /// <exception cref="IOException">General error reading from <paramref name="stream"/>.</exception>
         /// <exception cref="EndOfStreamException"><paramref name="stream"/> ended before 20 bytes could be read.</exception>
+        [NotNull]
         [MustUseReturnValue]
         public static ObjectId Parse([NotNull] Stream stream)
         {
@@ -244,6 +245,8 @@ namespace GitUIPluginInterfaces
         /// <param name="index">The index within <paramref name="bytes"/> to commence parsing from.</param>
         /// <returns>The parsed <see cref="ObjectId"/>.</returns>
         [MustUseReturnValue]
+        [ContractAnnotation("=>false,objectId:null")]
+        [ContractAnnotation("=>true,objectId:notnull")]
         public static bool TryParseAsciiHexBytes([NotNull] byte[] bytes, int index, out ObjectId objectId)
         {
             if (index < 0 || index > bytes.Length - Sha1CharCount)
