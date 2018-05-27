@@ -243,7 +243,8 @@ namespace GitUIPluginInterfaces
         /// </remarks>
         /// <param name="bytes">The byte array to parse from.</param>
         /// <param name="index">The index within <paramref name="bytes"/> to commence parsing from.</param>
-        /// <returns>The parsed <see cref="ObjectId"/>.</returns>
+        /// <param name="objectId">The parsed <see cref="ObjectId"/>.</param>
+        /// <returns><c>true</c> if parsing succeeded, otherwise <c>false</c>.</returns>
         [MustUseReturnValue]
         [ContractAnnotation("=>false,objectId:null")]
         [ContractAnnotation("=>true,objectId:notnull")]
