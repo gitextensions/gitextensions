@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Script;
+using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -12,7 +13,7 @@ namespace GitUI
     {
         private GitUICommands _uiCommands;
 
-        /// <summary>Gets a <see cref="GitUICommands"/> reference.</summary>
+        /// <inheritdoc />
         [Browsable(false)]
         public GitUICommands UICommands
         {
@@ -37,9 +38,11 @@ namespace GitUI
         protected bool IsUICommandsInitialized => _uiCommands != null;
 
         /// <summary>Gets a <see cref="GitModule"/> reference.</summary>
+        [CanBeNull]
         [Browsable(false)]
         public GitModule Module => _uiCommands?.Module;
 
+        /// <inheritdoc />
         public event EventHandler<GitUICommandsChangedEventArgs> GitUICommandsChanged;
 
         protected GitModuleForm()
