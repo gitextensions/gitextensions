@@ -49,14 +49,6 @@ namespace GitCommandsTests
             // Run the test at multiple buffer sizes to test boundary conditions thoroughly
             for (var bufferSize = 1; bufferSize < input.Length + 2; bufferSize++)
             {
-                // Test overload that allocates an output buffer
-                stream.Position = 0;
-
-                Assert.AreEqual(
-                    expectedChunks,
-                    stream.ReadNullTerminatedChunks(bufferSize).ToArray(),
-                    "bufferSize={0}", bufferSize);
-
                 // Test overload that uses external buffer
                 var buffer = new byte[bufferSize];
 
