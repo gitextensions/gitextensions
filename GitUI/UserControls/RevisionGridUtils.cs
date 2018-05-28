@@ -12,10 +12,14 @@ namespace GitUI.UserControls
             return rect;
         }
 
-        public static void DrawColumnText(Graphics gc, string text, Font font, Color color, Rectangle bounds)
+        /// <summary>
+        /// Draws the text and returns true if the text has been truncated.
+        /// </summary>
+        public static bool DrawColumnTextTruncated(Graphics gc, string text, Font font, Color color, Rectangle bounds)
         {
-            TextRenderer.DrawText(gc, text, font, bounds, color,
-                TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix);
+            int width = TextRenderer.MeasureText(gc, text, font, bounds.Size, TextFormatFlags.NoPrefix).Width;
+            TextRenderer.DrawText(gc, text, font, bounds, color, TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis);
+            return width > bounds.Width;
         }
     }
 }
