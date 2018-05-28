@@ -29,45 +29,54 @@ namespace GitUI.RevisionGridClasses
 
             public int CachedCount => _lanes.CachedCount;
 
-            private void ClearHighlightBranch()
+            public void HighlightBranch(string startId)
             {
-                foreach (Node node in Nodes.Values)
+                ClearHighlights();
+                WalkBranchAndHighlightReachableNodes();
+                return;
+
+                void ClearHighlights()
                 {
-                    foreach (Junction junction in node.Ancestors)
+                    foreach (var node in Nodes.Values)
                     {
-                        junction.HighLight = false;
+                        foreach (var junction in node.Ancestors)
+                        {
+                            junction.HighLight = false;
+                        }
                     }
                 }
-            }
 
-            public void HighlightBranch(string id)
-            {
-                ClearHighlightBranch();
-                HighlightBranchRecursive(id);
+                void WalkBranchAndHighlightReachableNodes()
+                {
+                    var stack = new Stack<string>();
+                    stack.Push(startId);
+
+                    while (stack.Count != 0)
+                    {
+                        var id = stack.Pop();
+
+                        if (!Nodes.TryGetValue(id, out var node))
+                        {
+                            continue;
+                        }
+
+                        foreach (var junction in node.Ancestors)
+                        {
+                            if (!junction.HighLight)
+                            {
+                                junction.HighLight = true;
+
+                                stack.Push(junction.Oldest.Id);
+                            }
+                        }
+                    }
+                }
             }
 
             public bool IsRevisionRelative(string guid)
             {
                 return Nodes.TryGetValue(guid, out var startNode)
                     && startNode.Ancestors.Any(a => a.IsRelative);
-            }
-
-            private void HighlightBranchRecursive(string id)
-            {
-                if (Nodes.TryGetValue(id, out var startNode))
-                {
-                    foreach (Junction junction in startNode.Ancestors)
-                    {
-                        if (junction.HighLight)
-                        {
-                            continue;
-                        }
-
-                        junction.HighLight = true;
-
-                        HighlightBranchRecursive(junction.Oldest.Id);
-                    }
-                }
             }
 
             public void Add(GitRevision revision, DataTypes types)
@@ -142,15 +151,15 @@ namespace GitUI.RevisionGridClasses
                 }
 
                 bool isRebuild = false;
-                foreach (Junction d in node.Ancestors)
+                foreach (var ancestor in node.Ancestors)
                 {
-                    d.IsRelative = isRelative || d.IsRelative;
+                    ancestor.IsRelative = isRelative || ancestor.IsRelative;
 
                     // Uh, oh, we've already processed this lane. We'll have to update some rows.
-                    var parent = d.TryGetParent(node);
+                    var parent = ancestor.TryGetParent(node);
                     if (parent != null && parent.InLane != int.MaxValue)
                     {
-                        int resetTo = d.Oldest.Descendants.Aggregate(d.Oldest.InLane, (current, dd) => Math.Min(current, dd.Youngest.InLane));
+                        int resetTo = ancestor.Oldest.Descendants.Aggregate(ancestor.Oldest.InLane, (current, dd) => Math.Min(current, dd.Youngest.InLane));
                         Debug.WriteLine("We have to start over at lane {0} because of {1}", resetTo, node);
                         isRebuild = true;
                         break;
@@ -223,14 +232,14 @@ namespace GitUI.RevisionGridClasses
                 var nodesToRemove = Nodes.Values.Where(n => n.Data == null).ToList();
 
                 // Remove all nodes that don't have a value associated with them.
-                foreach (Node n in nodesToRemove)
+                foreach (var node in nodesToRemove)
                 {
-                    Nodes.Remove(n.Id);
+                    Nodes.Remove(node.Id);
 
                     // This guy should have been at the end of some junctions
-                    foreach (Junction j in n.Descendants)
+                    foreach (Junction j in node.Descendants)
                     {
-                        j.Remove(n);
+                        j.Remove(node);
                     }
                 }
             }
@@ -239,11 +248,11 @@ namespace GitUI.RevisionGridClasses
             {
                 var nodes = new List<Node>(capacity: _junctions.Count);
 
-                foreach (Junction j in _junctions)
+                foreach (var junction in _junctions)
                 {
-                    if (j.Youngest.Descendants.Count == 0 && !nodes.Contains(j.Youngest))
+                    if (junction.Youngest.Descendants.Count == 0 && !nodes.Contains(junction.Youngest))
                     {
-                        nodes.Add(j.Youngest);
+                        nodes.Add(junction.Youngest);
                     }
                 }
 
@@ -277,18 +286,18 @@ namespace GitUI.RevisionGridClasses
                 var l = new Queue<Node>();
                 var s = new Queue<Node>();
                 var p = new Queue<Node>();
-                foreach (Node h in GetRefs())
+                foreach (var refNode in GetRefs())
                 {
-                    foreach (Junction aj in h.Ancestors)
+                    foreach (var junction in refNode.Ancestors)
                     {
-                        if (!s.Contains(aj.Oldest))
+                        if (!s.Contains(junction.Oldest))
                         {
-                            s.Enqueue(aj.Oldest);
+                            s.Enqueue(junction.Oldest);
                         }
 
-                        if (!s.Contains(aj.Youngest))
+                        if (!s.Contains(junction.Youngest))
                         {
-                            s.Enqueue(aj.Youngest);
+                            s.Enqueue(junction.Youngest);
                         }
                     }
                 }
