@@ -41,7 +41,7 @@ namespace VstsAndTfsIntegration
         {
             var buildDefs = new List<BuildDefinition>();
 
-            using (var response = await _httpClient.GetAsync($"_apis/build/definitions"))
+            using (var response = await _httpClient.GetAsync($"_apis/build/definitions?api-version=2.0"))
             {
                 response.EnsureSuccessStatusCode();
                 string json = await response.Content.ReadAsStringAsync();
