@@ -51,7 +51,7 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
-        public static void BuildStatusMessageCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Color foreColor, Font rowFont, bool isSelected)
+        public static void BuildStatusMessageCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, Color foreColor, Font rowFont, bool isSelected, RevisionGrid revisions)
         {
             if (revision.BuildStatus == null)
             {
@@ -60,8 +60,7 @@ namespace GitUI.BuildServerIntegration
 
             var color = GetColor();
             var text = (string)e.FormattedValue;
-            var rect = RevisionGridUtils.GetCellRectangle(e);
-            RevisionGridUtils.DrawColumnText(e.Graphics, text, rowFont, color, rect);
+            revisions.DrawColumnText(e, text, rowFont, color);
 
             Color GetColor()
             {

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git.Extensions;
 using GitExtUtils.GitUI;
 
 namespace GitUI.RevisionGridClasses
@@ -335,6 +336,110 @@ namespace GitUI.RevisionGridClasses
             {
                 return _graphData[rowIndex]?.Node.Data;
             }
+        }
+
+        private static bool AppendBranches(string prefix, ref System.Text.StringBuilder text, IEnumerable<GitUIPluginInterfaces.IGitRef> refs, ref HashSet<string> shown)
+        {
+            bool any = false;
+            foreach (var gitref in refs)
+            {
+                if (!AppSettings.ShowRemoteBranches && !gitref.Remote.IsNullOrEmpty())
+                {
+                    continue;
+                }
+
+                text.Append(any ? ", " : prefix);
+                any = true;
+                text.Append(gitref.Name);
+                shown.Add(gitref.Name);
+            }
+
+            return any;
+        }
+
+        public string GetLaneInfo(int row, int x, GitModule currentModule)
+        {
+            int lane = (x - _laneSidePadding) / _laneWidth;
+            var laneInfoText = new System.Text.StringBuilder();
+            lock (_graphData)
+            {
+                Graph.ILaneRow laneRow = _graphData[row];
+                if (laneRow != null)
+                {
+                    DvcsGraph.Node node = null;
+                    if (lane == laneRow.NodeLane)
+                    {
+                        node = laneRow.Node;
+                        if (!node.Id.IsArtificial())
+                        {
+                            laneInfoText.AppendLine(node.Id);
+                        }
+                    }
+                    else if (lane >= 0 && lane < laneRow.Count)
+                    {
+                        for (int laneInfoIndex = 0, laneInfoCount = laneRow.LaneInfoCount(lane); laneInfoIndex < laneInfoCount; ++laneInfoIndex)
+                        {
+                            // search for next node below this row
+                            Graph.LaneInfo laneInfo = laneRow[lane, laneInfoIndex];
+                            DvcsGraph.Junction firstJunction = laneInfo.Junctions.First();
+                            for (int nodeIndex = 0, nodeCount = firstJunction.NodesCount; nodeIndex < nodeCount; ++nodeIndex)
+                            {
+                                DvcsGraph.Node laneNode = firstJunction[nodeIndex];
+                                if (laneNode.Index > row)
+                                {
+                                    node = laneNode;
+                                    break; // from for (nodes)
+                                }
+                            }
+                        }
+                    }
+
+                    if (node != null)
+                    {
+                        var shownBranches = new HashSet<string>();
+                        if (AppendBranches("at ", ref laneInfoText, node.Data.Refs, ref shownBranches))
+                        {
+                            laneInfoText.AppendLine();
+                        }
+
+                        const string headSuffix = "/HEAD";
+                        const string remotesPrefix = "remotes/";
+                        var branches
+                            = currentModule.GetAllBranchesWhichContainGivenCommit(node.Id, getLocal: true, getRemote: AppSettings.ShowRemoteBranches)
+                              .Where(branch => !branch.EndsWith(headSuffix)).ToList();
+                        for (int branchIndex = 0, branchCount = branches.Count; branchIndex < branchCount; ++branchIndex)
+                        {
+                            if (branches[branchIndex].StartsWith(remotesPrefix))
+                            {
+                                branches[branchIndex] = branches[branchIndex].Remove(0, remotesPrefix.Length);
+                            }
+                        }
+
+                        branches = branches.Except(shownBranches).ToList();
+                        if (branches.Any())
+                        {
+                            const int MaximumDisplayedRefs = 20;
+                            if (branches.Count > MaximumDisplayedRefs)
+                            {
+                                branches[MaximumDisplayedRefs - 2] = "…";
+                                branches[MaximumDisplayedRefs - 1] = branches[branches.Count - 1];
+                                branches.RemoveRange(MaximumDisplayedRefs, branches.Count - MaximumDisplayedRefs);
+                            }
+
+                            laneInfoText.Append("in ").Append(string.Join(", ", branches)).AppendLine();
+                        }
+
+                        if (laneInfoText.Length > 0)
+                        {
+                            laneInfoText.AppendLine();
+                        }
+
+                        laneInfoText.Append(node.Data.Subject);
+                    }
+                }
+            }
+
+            return laneInfoText.ToString();
         }
 
         public string GetRowId(int rowIndex)

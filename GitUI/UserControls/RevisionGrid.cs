@@ -166,6 +166,9 @@ namespace GitUI
             Revisions.KeyUp += RevisionsKeyUp;
             Revisions.KeyDown += RevisionsKeyDown;
             Revisions.MouseDown += RevisionsMouseDown;
+            Revisions.ShowCellToolTips = false;
+            Revisions.MouseEnter += RevisionsMouseEnter;
+            Revisions.CellMouseMove += RevisionsMouseMove;
 
             showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
             BranchFilter = string.Empty;
@@ -191,7 +194,6 @@ namespace GitUI
             Revisions.ColumnHeadersVisible = false;
             Revisions.IdColumn.Visible = AppSettings.ShowIds;
 
-            IsMessageMultilineDataGridViewColumn.Width = DpiUtil.Scale(25);
             IsMessageMultilineDataGridViewColumn.DisplayIndex = 2;
             IsMessageMultilineDataGridViewColumn.Resizable = DataGridViewTriState.False;
 
@@ -216,6 +218,75 @@ namespace GitUI
 
             BuildServerWatcher = new BuildServerWatcher(this, Revisions);
         }
+
+        #region ToolTip
+
+        private ToolTip _toolTip = new ToolTip();
+        private Dictionary<Point, bool> _showCellToolTip = new Dictionary<Point, bool>();
+
+        private void RevisionsMouseEnter(object sender, EventArgs e)
+        {
+            _toolTip.Active = false;
+            _toolTip.AutoPopDelay = 32767;
+        }
+
+        private void RevisionsMouseMove(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            string oldTooltip = _toolTip.GetToolTip(Revisions);
+            string newToolTip = oldTooltip;
+            bool showToolTip = false;
+            if (e.ColumnIndex == GraphDataGridViewColumn.Index)
+            {
+                newToolTip = Revisions.GetLaneInfo(e.RowIndex, e.X, Module);
+            }
+            else if (e.ColumnIndex == IsMessageMultilineDataGridViewColumn.Index)
+            {
+                newToolTip = IsMessageMultiline(e.RowIndex) ? Revisions.GetRowData(e.RowIndex).Body : string.Empty;
+            }
+            else if (e.ColumnIndex == MessageDataGridViewColumn.Index && IsMessageMultiline(e.RowIndex))
+            {
+                newToolTip = Revisions.GetRowData(e.RowIndex).Body;
+            }
+            else if (_showCellToolTip.TryGetValue(new Point(e.ColumnIndex, e.RowIndex), out showToolTip) && showToolTip)
+            {
+                newToolTip = e.ColumnIndex == IdDataGridViewColumn.Index
+                             ? Revisions.GetRowData(e.RowIndex).Guid
+                             : Revisions.Rows[e.RowIndex].Cells[e.ColumnIndex].FormattedValue.ToString();
+            }
+            else
+            {
+                // no tooltip unless always active or truncated
+                newToolTip = string.Empty;
+            }
+
+            if (newToolTip != oldTooltip)
+            {
+                _toolTip.SetToolTip(Revisions, newToolTip);
+            }
+
+            if (!_toolTip.Active)
+            {
+                _toolTip.Active = true;
+            }
+        }
+
+        private bool IsMessageMultiline(int row)
+        {
+            return !Revisions.Rows[row].Cells[IsMessageMultilineDataGridViewColumn.Index].FormattedValue.ToString().IsNullOrEmpty();
+        }
+
+        internal void DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color)
+        {
+            DrawColumnText(e, text, font, color, RevisionGridUtils.GetCellRectangle(e));
+        }
+
+        internal void DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds)
+        {
+            bool truncated = RevisionGridUtils.DrawColumnTextTruncated(e.Graphics, text, font, color, bounds);
+            _showCellToolTip[new Point(e.ColumnIndex, e.RowIndex)] = truncated;
+        }
+
+        #endregion // ToolTip
 
         private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
         {
@@ -266,6 +337,7 @@ namespace GitUI
                 _fontOfSHAColumn = new Font("Consolas", _normalFont.SizeInPoints);
                 IdDataGridViewColumn.DefaultCellStyle.Font = _fontOfSHAColumn;
                 IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
+                IsMessageMultilineDataGridViewColumn.Width = TextRenderer.MeasureText(MultilineMessageIndicator, NormalFont).Width;
 
                 RefsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
                 HeadFont = new Font(_normalFont, FontStyle.Bold);
@@ -795,6 +867,8 @@ namespace GitUI
             SetRevisionsLayout();
 
             base.Refresh();
+
+            _showCellToolTip.Clear();
 
             Revisions.Refresh();
         }
@@ -1835,7 +1909,7 @@ namespace GitUI
 
                     var text = (string)e.FormattedValue;
                     var bounds = AdjustCellBounds(e.CellBounds, offset);
-                    RevisionGridUtils.DrawColumnText(e.Graphics, text, rowFont, foreColor, bounds);
+                    DrawColumnText(e, text, rowFont, foreColor, bounds);
 
                     if (IsCardLayout())
                     {
@@ -1891,16 +1965,14 @@ namespace GitUI
                     if (!revision.IsArtificial)
                     {
                         var text = (string)e.FormattedValue;
-                        e.Graphics.DrawString(text, rowFont, foreBrush,
-                                              new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                        DrawColumnText(e, text, rowFont, foreColor);
                     }
                 }
                 else if (columnIndex == dateColIndex)
                 {
                     var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
                     var text = TimeToString(time);
-                    e.Graphics.DrawString(text, rowFont, foreBrush,
-                                          new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                    DrawColumnText(e, text, rowFont, foreColor);
                 }
                 else if (columnIndex == idColIndex)
                 {
@@ -1908,9 +1980,7 @@ namespace GitUI
                     {
                         // do not show artificial GUID
                         var text = revision.Guid;
-                        var rect = RevisionGridUtils.GetCellRectangle(e);
-                        RevisionGridUtils.DrawColumnText(e.Graphics, text, _fontOfSHAColumn,
-                            foreColor, rect);
+                        DrawColumnText(e, text, _fontOfSHAColumn, foreColor);
                     }
                 }
                 else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
@@ -1920,13 +1990,12 @@ namespace GitUI
                 else if (columnIndex == BuildServerWatcher.BuildStatusMessageColumnIndex)
                 {
                     var isSelected = Revisions.Rows[e.RowIndex].Selected;
-                    BuildInfoDrawingLogic.BuildStatusMessageCellPainting(e, revision, foreColor, rowFont, isSelected);
+                    BuildInfoDrawingLogic.BuildStatusMessageCellPainting(e, revision, foreColor, rowFont, isSelected, this);
                 }
                 else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
                 {
                     var text = (string)e.FormattedValue;
-                    e.Graphics.DrawString(text, rowFont, foreBrush,
-                                            new PointF(e.CellBounds.Left, e.CellBounds.Top + 4));
+                    DrawColumnText(e, text, rowFont, foreColor);
                 }
             }
         }
@@ -1993,7 +2062,7 @@ namespace GitUI
                     headBounds.Offset((int)(extraOffset + 1), 0);
                 }
 
-                RevisionGridUtils.DrawColumnText(drawRefArgs.Graphics, headName, drawRefArgs.RefsFont, textColor, headBounds);
+                RevisionGridUtils.DrawColumnTextTruncated(drawRefArgs.Graphics, headName, drawRefArgs.RefsFont, textColor, headBounds);
             }
 
             return offset;
