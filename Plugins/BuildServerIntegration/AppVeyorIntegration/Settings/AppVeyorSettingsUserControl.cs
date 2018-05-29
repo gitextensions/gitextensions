@@ -8,7 +8,7 @@ using ResourceManager;
 namespace AppVeyorIntegration.Settings
 {
     [Export(typeof(IBuildServerSettingsUserControl))]
-    [BuildServerSettingsUserControlMetadata("AppVeyor")]
+    [BuildServerSettingsUserControlMetadata(AppVeyorAdapter.PluginName)]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class AppVeyorSettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
     {

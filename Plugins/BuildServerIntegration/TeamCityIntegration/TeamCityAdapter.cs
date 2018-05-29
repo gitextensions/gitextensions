@@ -50,10 +50,11 @@ namespace TeamCityIntegration
     }
 
     [Export(typeof(IBuildServerAdapter))]
-    [TeamCityIntegrationMetadata("TeamCity")]
+    [TeamCityIntegrationMetadata(PluginName)]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     internal class TeamCityAdapter : IBuildServerAdapter
     {
+        public const string PluginName = "TeamCity";
         private IBuildServerWatcher _buildServerWatcher;
 
         private HttpClientHandler _httpClientHandler;
