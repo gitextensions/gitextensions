@@ -210,13 +210,14 @@ namespace GitUI.CommandsDialogs
                         _toolStripGitStatus.Visible = false;
                         _toolStripGitStatus.Text = String.Empty;
                     }
-                    else if(status == GitStatusMonitorState.Running)
+                    else if (status == GitStatusMonitorState.Running)
                     {
                         _toolStripGitStatus.Visible = true;
                     }
                 };
 
-                _gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) => {
+                _gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) =>
+                {
                     var status = e.ItemStatuses.ToList();
                     _toolStripGitStatus.Image = commitIconProvider.GetCommitIcon(status);
 
@@ -780,6 +781,13 @@ namespace GitUI.CommandsDialogs
             }
             catch (System.Runtime.InteropServices.COMException ex)
             {
+                // reported in https://github.com/gitextensions/gitextensions/issues/2269
+                Trace.WriteLine(ex.Message, "UpdateJumplist");
+            }
+            catch (IOException ex)
+            {
+                // reported in https://github.com/gitextensions/gitextensions/issues/4549
+                // looks like a regression in Windows 10.0.16299 (1709)
                 Trace.WriteLine(ex.Message, "UpdateJumplist");
             }
 #endif
@@ -2023,7 +2031,7 @@ namespace GitUI.CommandsDialogs
             this.runMergetoolToolStripMenuItem.Enabled =
             this.cherryPickToolStripMenuItem.Enabled =
             this.checkoutToolStripMenuItem.Enabled =
-            this.toolStripMenuItemReflog.Enabled = 
+            this.toolStripMenuItemReflog.Enabled =
             this.bisectToolStripMenuItem.Enabled =
               enabled && !Module.IsBareRepository();
 
