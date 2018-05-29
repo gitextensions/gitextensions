@@ -49,7 +49,9 @@
     <PackageReference Include="System.Reactive.Linq" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Settings\VstsAndTfsSettingsUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -85,6 +87,9 @@
     <EmbeddedResource Include="Settings\VstsAndTfsSettingsUserControl.resx">
       <DependentUpon>VstsAndTfsSettingsUserControl.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
