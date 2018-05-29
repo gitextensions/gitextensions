@@ -926,6 +926,11 @@ namespace GitUI
                             // we need to put filename in list-item text -> then horizontal scrollbar
                             // will have proper width (by the longest filename, and not all path)
                             text = PathFormatter.FormatTextForFileNameOnly(item.Name, item.OldName);
+                            if (!_filter.IsMatch(text))
+                            {
+                                continue;
+                            }
+
                             text = AppendItemSubmoduleStatus(text, item);
                         }
 
