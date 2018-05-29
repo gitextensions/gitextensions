@@ -9,7 +9,7 @@ using ResourceManager;
 namespace TfsIntegration.Settings
 {
     [Export(typeof(IBuildServerSettingsUserControl))]
-    [BuildServerSettingsUserControlMetadata("Team Foundation Server")]
+    [BuildServerSettingsUserControlMetadata(TfsAdapter.PluginName)]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class TfsSettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
     {

@@ -41,10 +41,11 @@ namespace AppVeyorIntegration
     }
 
     [Export(typeof(IBuildServerAdapter))]
-    [AppVeyorIntegrationMetadata("AppVeyor")]
+    [AppVeyorIntegrationMetadata(PluginName)]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     internal class AppVeyorAdapter : IBuildServerAdapter
     {
+        public const string PluginName = "AppVeyor";
         private const uint ProjectsToRetrieveCount = 25;
         private const string WebSiteUrl = "https://ci.appveyor.com";
         private const string ApiBaseUrl = WebSiteUrl + "/api/projects/";

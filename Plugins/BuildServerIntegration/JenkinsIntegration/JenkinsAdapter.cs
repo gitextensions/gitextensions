@@ -45,10 +45,11 @@ namespace JenkinsIntegration
     }
 
     [Export(typeof(IBuildServerAdapter))]
-    [JenkinsIntegrationMetadata("Jenkins")]
+    [JenkinsIntegrationMetadata(PluginName)]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     internal class JenkinsAdapter : IBuildServerAdapter
     {
+        public const string PluginName = "Jenkins";
         private static readonly IBuildDurationFormatter _buildDurationFormatter = new BuildDurationFormatter();
         private IBuildServerWatcher _buildServerWatcher;
 

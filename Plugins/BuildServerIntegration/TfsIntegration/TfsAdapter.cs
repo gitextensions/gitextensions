@@ -38,10 +38,11 @@ namespace TfsIntegration
     }
 
     [Export(typeof(IBuildServerAdapter))]
-    [TfsIntegrationMetadata("Team Foundation Server")]
+    [TfsIntegrationMetadata(PluginName)]
     [PartCreationPolicy(CreationPolicy.NonShared)]
     internal class TfsAdapter : IBuildServerAdapter
     {
+        public const string PluginName = "Team Foundation Server";
         private IBuildServerWatcher _buildServerWatcher;
         private ITfsHelper _tfsHelper;
         private string _tfsServer;
