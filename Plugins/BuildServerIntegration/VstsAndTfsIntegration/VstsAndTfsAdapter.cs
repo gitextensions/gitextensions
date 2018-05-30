@@ -40,7 +40,6 @@ namespace VstsAndTfsIntegration
         private string _tfsServer;
         private string _tfsTeamCollectionName;
         private string _projectName;
-        private Regex _tfsBuildDefinitionNameFilter;
         private string _restApiToken;
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
@@ -66,10 +65,8 @@ namespace VstsAndTfsIntegration
                 return;
             }
 
-            _tfsBuildDefinitionNameFilter = new Regex(tfsBuildDefinitionNameFilterSetting, RegexOptions.Compiled);
-
             _tfsHelper = new TfsApiHelper();
-            _tfsHelper.ConnectToTfsServer(_tfsServer, _tfsTeamCollectionName, _projectName, _restApiToken, _tfsBuildDefinitionNameFilter);
+            _tfsHelper.ConnectToTfsServer(_tfsServer, _tfsTeamCollectionName, _projectName, _restApiToken, tfsBuildDefinitionNameFilterSetting);
         }
 
         /// <summary>
