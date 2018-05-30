@@ -7,7 +7,6 @@ using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitUI;
-using Microsoft.VisualStudio.Threading;
 using Newtonsoft.Json;
 
 namespace VstsAndTfsIntegration
@@ -19,7 +18,7 @@ namespace VstsAndTfsIntegration
     {
         private const string BuildDefinitionsUrl = "_apis/build/definitions?api-version=2.0";
         private HttpClient _httpClient;
-        private IEnumerable<BuildDefinition> _buildDefinitions;
+        private string _buildDefinitionsToQuery;
 
         private HttpClient InitializeHttpClient(string serverUrl, string projectName, string personalAccessToken)
         {
@@ -49,25 +48,35 @@ namespace VstsAndTfsIntegration
             }
         }
 
-        private async Task<IEnumerable<BuildDefinition>> GetBuildDefinitionsAsync(string buildDefinitionNameFilter)
+        private async Task<string> GetBuildDefinitionsAsync(string buildDefinitionNameFilter)
         {
             var isNotFiltered = string.IsNullOrWhiteSpace(buildDefinitionNameFilter);
             var buildDefinitionUriFilter = isNotFiltered ? string.Empty : "&name=" + buildDefinitionNameFilter;
             var buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(BuildDefinitionsUrl + buildDefinitionUriFilter);
             if (buildDefinitions.Count != 0)
             {
-                return buildDefinitions.Value;
+                return GetBuildDefinitionsIds(buildDefinitions.Value);
             }
 
             if (isNotFiltered)
             {
-                return new List<BuildDefinition>();
+                return null;
             }
 
             buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(BuildDefinitionsUrl);
 
             var tfsBuildDefinitionNameFilter = new Regex(buildDefinitionNameFilter, RegexOptions.Compiled);
-            return buildDefinitions.Value.Where(b => tfsBuildDefinitionNameFilter.IsMatch(b.Name));
+            return GetBuildDefinitionsIds(buildDefinitions.Value.Where(b => tfsBuildDefinitionNameFilter.IsMatch(b.Name)));
+        }
+
+        private string GetBuildDefinitionsIds(IEnumerable<BuildDefinition> buildDefinitions)
+        {
+            if (buildDefinitions != null && buildDefinitions.Any())
+            {
+                return string.Join(",", buildDefinitions.Select(b => b.Id));
+            }
+
+            return null;
         }
 
         public void ConnectToTfsServer(string serverUrl, string teamCollection, string projectName, string restApiToken, string buildDefinitionNameFilter)
@@ -77,7 +86,7 @@ namespace VstsAndTfsIntegration
                 _httpClient = InitializeHttpClient(serverUrl, projectName, restApiToken);
 
                 var taskServerInit = ThreadHelper.JoinableTaskFactory.RunAsync(async () => await GetBuildDefinitionsAsync(buildDefinitionNameFilter));
-                _buildDefinitions = taskServerInit.Join();
+                _buildDefinitionsToQuery = taskServerInit.Join();
             }
             catch (Exception ex)
             {
@@ -85,28 +94,24 @@ namespace VstsAndTfsIntegration
             }
         }
 
-        public async Task<IReadOnlyList<Build>> QueryBuildsAsync(DateTime? sinceDate, bool? running)
+        public async Task<IEnumerable<Build>> QueryBuildsAsync(DateTime? sinceDate, bool? running)
         {
-            if (_buildDefinitions == null)
+            if (_buildDefinitionsToQuery == null)
             {
-                return new List<Build>();
+                return Enumerable.Empty<Build>();
             }
 
-            string buildDefIds = string.Join(",", _buildDefinitions.Select(b => b.Id));
-            var builds = (await HttpGetAsync<ListWrapper<Build>>($"_apis/build/builds?api-version=2.0&definitions={buildDefIds}")).Value;
+            var builds = (await HttpGetAsync<ListWrapper<Build>>($"_apis/build/builds?api-version=2.0&definitions={_buildDefinitionsToQuery}")).Value;
 
             return builds
-                .Where(b => !running.HasValue || (running.Value == b.IsInProgress))
-                .Where(b => !sinceDate.HasValue || (b.StartTime >= sinceDate.Value))
+                .Where(b => !running.HasValue || running.Value == b.IsInProgress)
+                .Where(b => !sinceDate.HasValue || b.StartTime >= sinceDate.Value)
                 .ToList();
         }
 
         public void Dispose()
         {
-            if (_httpClient != null)
-            {
-                _httpClient.Dispose();
-            }
+            _httpClient?.Dispose();
         }
     }
 
@@ -127,7 +132,7 @@ namespace VstsAndTfsIntegration
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string url { get; set; }
+        public string Url { get; set; }
     }
 
     /// <summary>
