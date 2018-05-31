@@ -184,6 +184,7 @@ namespace VstsAndTfsIntegration
 
         public void Dispose()
         {
+            _tfsHelper?.Dispose();
             GC.SuppressFinalize(this);
         }
     }
