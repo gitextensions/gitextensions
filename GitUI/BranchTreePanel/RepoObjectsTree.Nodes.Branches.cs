@@ -127,12 +127,7 @@ namespace GitUI.BranchTreePanel
 
             public override bool Equals(object obj)
             {
-                if (!base.Equals(obj))
-                {
-                    return false;
-                }
-
-                return obj is LocalBranchNode localBranchNode && IsActive == localBranchNode.IsActive;
+                return base.Equals(obj) && obj is LocalBranchNode localBranchNode && IsActive == localBranchNode.IsActive;
             }
 
             public override int GetHashCode()
