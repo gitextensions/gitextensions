@@ -4,12 +4,14 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
+using GitUI.UserControls.RevisionGridClasses;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -67,6 +69,8 @@ namespace GitUI.CommandsDialogs
             _commitDataManager = new CommitDataManager(() => Module);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _longShaProvider = new LongShaProvider(() => Module);
+
+            copyToClipboardToolStripMenuItem.GetViewModel = () => new CopyContextMenuViewModel(FileChanges.GetSelectedRevisions().FirstOrDefault());
 
             this.AdjustForDpiScaling();
         }
@@ -468,6 +472,8 @@ namespace GitUI.CommandsDialogs
             manipulateCommitToolStripMenuItem.Enabled =
                 selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
             saveAsToolStripMenuItem.Enabled = selectedRevisions.Count == 1;
+            copyToClipboardToolStripMenuItem.Enabled =
+                selectedRevisions.Count >= 1 && !selectedRevisions[0].IsArtificial;
         }
 
         private const string FormBrowseName = "FormBrowse";
