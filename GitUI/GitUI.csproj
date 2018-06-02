@@ -1100,6 +1100,9 @@
     <Compile Include="WebBrowserEmulationMode.cs" />
     <Compile Include="WindowPositionList.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\WordWrapper.cs" />
+    <Compile Include="WindowsJumpListManager.cs" />
+    <Compile Include="WindowsThumbnailToolbarButton.cs" />
+    <Compile Include="WindowsThumbnailToolbarButtons.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CommandsDialogs\AboutBox.resx">

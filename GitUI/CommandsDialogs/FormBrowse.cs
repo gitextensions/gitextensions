@@ -27,7 +27,6 @@ using GitUI.UserControls.ToolStripClasses;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -87,10 +86,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripItem _bisect;
         private ToolStripItem _warning;
 
-        private ThumbnailToolBarButton _commitButton;
-        private ThumbnailToolBarButton _pushButton;
-        private ThumbnailToolBarButton _pullButton;
-        private bool _toolbarButtonsCreated;
         private readonly ToolStripMenuItem _toolStripGitStatus;
         private readonly GitStatusMonitor _gitStatusMonitor;
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
@@ -107,6 +102,7 @@ namespace GitUI.CommandsDialogs
         private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
         private readonly IAppTitleGenerator _appTitleGenerator;
         private readonly ILongShaProvider _longShaProvider;
+        private readonly WindowsJumpListManager _windowsJumpListManager;
         private static bool _showRevisionInfoNextToRevisionGrid;
         private bool _startWithDashboard = false;
 
@@ -269,6 +265,7 @@ namespace GitUI.CommandsDialogs
 
             _repositoryDescriptionProvider = new RepositoryDescriptionProvider(new GitDirectoryResolver());
             _appTitleGenerator = new AppTitleGenerator(_repositoryDescriptionProvider);
+            _windowsJumpListManager = new WindowsJumpListManager(_repositoryDescriptionProvider);
 
             FillBuildReport();  // Ensure correct page visibility
             RevisionGrid.ShowBuildServerInfo = true;
@@ -407,10 +404,11 @@ namespace GitUI.CommandsDialogs
 
         private void BrowseLoad(object sender, EventArgs e)
         {
-            if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-            {
-                TaskbarManager.Instance.ApplicationId = "GitExtensions";
-            }
+            var buttons = new WindowsThumbnailToolbarButtons(
+                new WindowsThumbnailToolbarButton(toolStripButton1.Text, toolStripButton1.Image, ToolStripButton1Click),
+                new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
+                new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick));
+            _windowsJumpListManager.CreateJumpList(Handle, buttons);
 
             SetSplitterPositions();
             HideVariableMainMenuItems();
@@ -641,7 +639,6 @@ namespace GitUI.CommandsDialogs
                 RefreshWorkingDirCombo();
                 var branchName = !string.IsNullOrEmpty(branchSelect.Text) ? branchSelect.Text : _noBranchTitle.Text;
                 Text = _appTitleGenerator.Generate(Module.WorkingDir, validBrowseDir, branchName);
-                UpdateJumplist(validBrowseDir);
 
                 OnActivate();
 
@@ -651,12 +648,18 @@ namespace GitUI.CommandsDialogs
 
                 if (validBrowseDir)
                 {
+                    _windowsJumpListManager.AddToRecent(Module.WorkingDir);
+
                     // add Navigate and View menu
                     _formBrowseMenus.ResetMenuCommandSets();
                     _formBrowseMenus.AddMenuCommandSet(MainMenuItem.NavigateMenu, RevisionGrid.MenuCommands.GetNavigateMenuCommands());
                     _formBrowseMenus.AddMenuCommandSet(MainMenuItem.ViewMenu, RevisionGrid.MenuCommands.GetViewMenuCommands());
 
                     _formBrowseMenus.InsertAdditionalMainMenuItems(repositoryToolStripMenuItem);
+                }
+                else
+                {
+                    _windowsJumpListManager.DisableThumbnailToolbar();
                 }
 
                 UICommands.RaisePostBrowseInitialize(this);
@@ -806,137 +809,6 @@ namespace GitUI.CommandsDialogs
             {
                 RevisionGrid.RefreshRevisions();
             }
-        }
-
-        private void UpdateJumplist(bool validWorkingDir)
-        {
-            if (!EnvUtils.RunningOnWindows() || !TaskbarManager.IsPlatformSupported)
-            {
-                return;
-            }
-
-            try
-            {
-                if (validWorkingDir)
-                {
-                    string repositoryDescription = _repositoryDescriptionProvider.Get(Module.WorkingDir);
-                    string baseFolder = Path.Combine(AppSettings.ApplicationDataPath.Value, "Recent");
-                    if (!Directory.Exists(baseFolder))
-                    {
-                        Directory.CreateDirectory(baseFolder);
-                    }
-
-                    // Remove InvalidPathChars
-                    StringBuilder sb = new StringBuilder(repositoryDescription);
-                    foreach (char c in Path.GetInvalidFileNameChars())
-                    {
-                        sb.Replace(c, '_');
-                    }
-
-                    string path = Path.Combine(baseFolder, string.Format("{0}.{1}", sb, "gitext"));
-                    File.WriteAllText(path, Module.WorkingDir);
-                    JumpList.AddToRecent(path);
-
-                    var jumpList = JumpList.CreateJumpListForIndividualWindow(TaskbarManager.Instance.ApplicationId, Handle);
-                    jumpList.ClearAllUserTasks();
-
-                    // to control which category Recent/Frequent is displayed
-                    jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
-
-                    jumpList.Refresh();
-                }
-
-                CreateOrUpdateTaskBarButtons(validWorkingDir);
-            }
-            catch (System.Runtime.InteropServices.COMException ex)
-            {
-                Trace.WriteLine(ex.Message, "UpdateJumplist");
-            }
-        }
-
-        private void CreateOrUpdateTaskBarButtons(bool validRepo)
-        {
-            if (EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-            {
-                if (!_toolbarButtonsCreated)
-                {
-                    _commitButton = new ThumbnailToolBarButton(MakeIcon(toolStripButton1.Image, 48, true), toolStripButton1.Text);
-                    _commitButton.Click += ToolStripButton1Click;
-
-                    _pushButton = new ThumbnailToolBarButton(MakeIcon(toolStripButtonPush.Image, 48, true), toolStripButtonPush.Text);
-                    _pushButton.Click += PushToolStripMenuItemClick;
-
-                    _pullButton = new ThumbnailToolBarButton(MakeIcon(toolStripButtonPull.Image, 48, true), toolStripButtonPull.Text);
-                    _pullButton.Click += PullToolStripMenuItemClick;
-
-                    _toolbarButtonsCreated = true;
-                    ThumbnailToolBarButton[] buttons = { _commitButton, _pullButton, _pushButton };
-
-                    // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
-                    TaskbarManager.Instance.ThumbnailToolBars.AddButtons(Handle, buttons);
-                }
-
-                _commitButton.Enabled = validRepo;
-                _pushButton.Enabled = validRepo;
-                _pullButton.Enabled = validRepo;
-            }
-        }
-
-        /// <summary>
-        /// Converts an image into an icon.  This was taken off of the interwebs.
-        /// It's on a billion different sites and forum posts, so I would say its creative commons by now. -tekmaven
-        /// </summary>
-        /// <param name="img">The image that shall become an icon</param>
-        /// <param name="size">The width and height of the icon. Standard
-        /// sizes are 16x16, 32x32, 48x48, 64x64.</param>
-        /// <param name="keepAspectRatio">Whether the image should be squashed into a
-        /// square or whether whitespace should be put around it.</param>
-        /// <returns>An icon!!</returns>
-        private static Icon MakeIcon(Image img, int size, bool keepAspectRatio)
-        {
-            Bitmap square = new Bitmap(size, size); // create new bitmap
-            Graphics g = Graphics.FromImage(square); // allow drawing to it
-
-            int x, y, w, h; // dimensions for new image
-
-            if (!keepAspectRatio || img.Height == img.Width)
-            {
-                // just fill the square
-                x = y = 0; // set x and y to 0
-                w = h = size; // set width and height to size
-            }
-            else
-            {
-                // work out the aspect ratio
-                float r = img.Width / (float)img.Height;
-
-                // set dimensions accordingly to fit inside size^2 square
-                if (r > 1)
-                {
-                    // w is bigger, so divide h by r
-                    w = size;
-                    h = (int)(size / r);
-                    x = 0;
-                    y = (size - h) / 2; // center the image
-                }
-                else
-                {
-                    // h is bigger, so multiply w by r
-                    w = (int)(size * r);
-                    h = size;
-                    y = 0;
-                    x = (size - w) / 2; // center the image
-                }
-            }
-
-            // make the image shrink nicely by using HighQualityBicubic mode
-            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            g.DrawImage(img, x, y, w, h); // draw image with specified dimensions
-            g.Flush(); // make sure all drawing operations complete before we get the icon
-
-            // following line would work directly on any image, but then
-            // it wouldn't look as nice.
-            return Icon.FromHandle(square.GetHicon());
         }
 
         private void UpdateStashCount()
@@ -3019,50 +2891,13 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                if (_commitButton != null)
-                {
-                    _commitButton.Dispose();
-                }
-
-                if (_pushButton != null)
-                {
-                    _pushButton.Dispose();
-                }
-
-                if (_pullButton != null)
-                {
-                    _pullButton.Dispose();
-                }
-
-                if (_submodulesStatusSequence != null)
-                {
-                    _submodulesStatusSequence.Dispose();
-                }
-
-                if (_formBrowseMenus != null)
-                {
-                    _formBrowseMenus.Dispose();
-                }
-
-                if (_filterRevisionsHelper != null)
-                {
-                    _filterRevisionsHelper.Dispose();
-                }
-
-                if (_filterBranchHelper != null)
-                {
-                    _filterBranchHelper.Dispose();
-                }
-
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-
-                if (_gitStatusMonitor != null)
-                {
-                    _gitStatusMonitor.Dispose();
-                }
+                _submodulesStatusSequence?.Dispose();
+                _formBrowseMenus?.Dispose();
+                _filterRevisionsHelper?.Dispose();
+                _filterBranchHelper?.Dispose();
+                components?.Dispose();
+                _gitStatusMonitor?.Dispose();
+                _windowsJumpListManager?.Dispose();
             }
 
             base.Dispose(disposing);
