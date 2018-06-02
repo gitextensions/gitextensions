@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands.Git
@@ -61,12 +62,12 @@ namespace GitCommands.Git
 
             var mode = int.Parse(match.Groups["mode"].Value);
             var typeName = match.Groups["type"].Value;
-            var guid = match.Groups["objectid"].Value;
+            var objectId = ObjectId.Parse(match.Groups["objectid"].Value);
             var name = match.Groups["name"].Value;
 
             Enum.TryParse(typeName, ignoreCase: true, out GitObjectType type);
 
-            return new GitItem(mode, type, guid, name);
+            return new GitItem(mode, type, objectId, name);
         }
     }
 }

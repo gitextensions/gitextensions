@@ -50,7 +50,7 @@ namespace ResourceManagerTests.CommitDataRenders
                 x[1] = "11119447928051cfb3494c9c0ef1a1d0ecde56a8";
                 return true;
             });
-            var data = new CommitData(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(),
+            var data = new CommitData(ObjectId.Random(), ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 "John Doe (Acme Inc) <John.Doe@test.com>", DateTime.UtcNow,
                 "John Doe <John.Doe@test.com>", DateTime.UtcNow,
@@ -64,7 +64,7 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_should_render_body_without_links()
         {
-            var data = new CommitData(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(),
+            var data = new CommitData(ObjectId.Random(), ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 "John Doe (Acme Inc) <John.Doe@test.com>", DateTime.UtcNow,
                 "John Doe <John.Doe@test.com>", DateTime.UtcNow,

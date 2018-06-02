@@ -43,12 +43,14 @@
   <ItemGroup>
     <PackageReference Include="ApprovalTests" Version="3.0.13" />
     <PackageReference Include="FluentAssertions" Version="5.2.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppTitleGeneratorTests.cs" />
     <Compile Include="ArgumentBuilderExtensionsTests.cs" />
+    <Compile Include="ArrayExtensionsTests.cs" />
     <Compile Include="CommitDataManagerTest.cs" />
     <Compile Include="CommitTemplateManagerTests.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="ArgumentBuilderTests.cs" />
     <Compile Include="Git\GitDescribeProviderTests.cs" />
     <Compile Include="Git\GitRefNameTests.cs" />
+    <Compile Include="StreamExtensionsTests.cs" />
     <Compile Include="RepoNameExtractorTest.cs" />
     <Compile Include="GitModuleTest.cs" />
     <Compile Include="GitRevisionInfoProviderTests.cs" />
@@ -74,6 +77,7 @@
     <Compile Include="Git\GitRevisionTesterTests.cs" />
     <Compile Include="Git\GitStashTests.cs" />
     <Compile Include="Git\Gpg\GitGpgControllerTests.cs" />
+    <Compile Include="Git\ObjectIdTests.cs" />
     <Compile Include="Git\Tag\GitCreateTagCmdTests.cs" />
     <Compile Include="Git\RevisionDiffProviderTest.cs" />
     <Compile Include="Git\GitBranchNameNormaliserTest.cs" />
@@ -101,6 +105,7 @@
     <Compile Include="UserRepositoryHistory\RepositoryXmlSerialiserTests.cs" />
     <Compile Include="SshPathLocatorTest.cs" />
     <Compile Include="StringExtensionTests.cs" />
+    <Compile Include="StringPoolTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ExternalLinks\MockData\level3_roaming_GitExtensions.settings.xml" />

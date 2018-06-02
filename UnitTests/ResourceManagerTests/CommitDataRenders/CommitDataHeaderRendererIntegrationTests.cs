@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using FluentAssertions;
 using GitCommands;
+using GitUIPluginInterfaces;
 using NUnit.Framework;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
@@ -21,8 +22,8 @@ namespace ResourceManagerTests.CommitDataRenders
         [SetUp]
         public void Setup()
         {
-            var commitGuid = Guid.NewGuid().ToString("N");
-            var treeGuid = Guid.NewGuid().ToString("N");
+            var commitGuid = ObjectId.Random();
+            var treeGuid = ObjectId.Random();
             var parentGuid1 = Guid.NewGuid().ToString("N");
             var parentGuid2 = Guid.NewGuid().ToString("N");
             var authorTime = DateTime.UtcNow.AddDays(-3);

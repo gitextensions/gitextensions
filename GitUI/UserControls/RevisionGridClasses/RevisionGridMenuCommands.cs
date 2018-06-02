@@ -81,7 +81,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private IEnumerable<MenuCommand> CreateNavigateMenuCommands()
         {
-            return new List<MenuCommand>
+            return new[]
             {
                 new MenuCommand
                 {
@@ -163,7 +163,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private IEnumerable<MenuCommand> CreateViewMenuCommands()
         {
-            return new List<MenuCommand>
+            return new[]
             {
                 // the first three MenuCommands just reuse (the currently rather
                 // convoluted) logic from RevisionGrid.
@@ -341,7 +341,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                     Text = "Show first parents",
                     Image = Properties.Resources.IconShowFirstParent,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ShowFirstParent),
-                    ExecuteAction = () => _revisionGrid.ShowFirstParent_ToolStripMenuItemClick(null, null),
+                    ExecuteAction = () => _revisionGrid.ShowFirstParent(),
                     IsCheckedFunc = () => AppSettings.ShowFirstParent
                 },
                 new MenuCommand
@@ -407,10 +407,10 @@ namespace GitUI.UserControls.RevisionGridClasses
                     return;
                 }
 
-                string revisionGuid = formGoToCommit.ValidateAndGetSelectedRevision();
-                if (!string.IsNullOrEmpty(revisionGuid))
+                var revisionGuid = formGoToCommit.ValidateAndGetSelectedRevision();
+                if (revisionGuid != null)
                 {
-                    _revisionGrid.SetSelectedRevision(new GitRevision(revisionGuid));
+                    _revisionGrid.SetSelectedRevision(new GitRevision(revisionGuid.ToString()));
                 }
                 else
                 {

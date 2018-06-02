@@ -4,7 +4,7 @@ using GitCommands;
 
 namespace GitUI
 {
-    public class FilterRevisionsHelper : IDisposable
+    internal sealed class FilterRevisionsHelper : IDisposable
     {
         private readonly ToolStripTextBox _NO_TRANSLATE_textBox;
         private readonly RevisionGrid _NO_TRANSLATE_revisionGrid;
@@ -18,56 +18,59 @@ namespace GitUI
 
         private readonly Form _NO_TRANSLATE_form;
 
-        public FilterRevisionsHelper()
-        {
-            _commitFilterToolStripMenuItem = new ToolStripMenuItem();
-            _committerToolStripMenuItem = new ToolStripMenuItem();
-            _authorToolStripMenuItem = new ToolStripMenuItem();
-            _diffContainsToolStripMenuItem = new ToolStripMenuItem();
-            _hashToolStripMenuItem = new ToolStripMenuItem();
-
-            //
-            // commitToolStripMenuItem1
-            //
-            _commitFilterToolStripMenuItem.Checked = true;
-            _commitFilterToolStripMenuItem.CheckOnClick = true;
-            _commitFilterToolStripMenuItem.Name = "commitToolStripMenuItem1";
-            _commitFilterToolStripMenuItem.Text = "Commit message and hash";
-
-            //
-            // committerToolStripMenuItem
-            //
-            _committerToolStripMenuItem.CheckOnClick = true;
-            _committerToolStripMenuItem.Name = "committerToolStripMenuItem";
-            _committerToolStripMenuItem.Text = "Committer";
-
-            //
-            // authorToolStripMenuItem
-            //
-            _authorToolStripMenuItem.CheckOnClick = true;
-            _authorToolStripMenuItem.Name = "authorToolStripMenuItem";
-            _authorToolStripMenuItem.Text = "Author";
-
-            //
-            // diffContainsToolStripMenuItem
-            //
-            _diffContainsToolStripMenuItem.CheckOnClick = true;
-            _diffContainsToolStripMenuItem.Name = "diffContainsToolStripMenuItem";
-            _diffContainsToolStripMenuItem.Text = "Diff contains (SLOW)";
-            _diffContainsToolStripMenuItem.Click += diffContainsToolStripMenuItem_Click;
-
-            //
-            // hashToolStripMenuItem
-            //
-            _hashToolStripMenuItem.CheckOnClick = true;
-            _hashToolStripMenuItem.Name = "hashToolStripMenuItem";
-            _hashToolStripMenuItem.Size = new System.Drawing.Size(216, 24);
-            _hashToolStripMenuItem.Text = "Hash";
-        }
-
         public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGrid revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
-            : this()
         {
+            _commitFilterToolStripMenuItem = new ToolStripMenuItem
+            {
+                Checked = true,
+                CheckOnClick = true,
+                Name = "commitToolStripMenuItem1",
+                Text = "Commit message and hash"
+            };
+
+            _committerToolStripMenuItem = new ToolStripMenuItem
+            {
+                CheckOnClick = true,
+                Name = "committerToolStripMenuItem",
+                Text = "Committer"
+            };
+
+            _authorToolStripMenuItem = new ToolStripMenuItem
+            {
+                CheckOnClick = true,
+                Name = "authorToolStripMenuItem",
+                Text = "Author"
+            };
+
+            _diffContainsToolStripMenuItem = new ToolStripMenuItem
+            {
+                CheckOnClick = true,
+                Name = "diffContainsToolStripMenuItem",
+                Text = "Diff contains (SLOW)"
+            };
+            _diffContainsToolStripMenuItem.Click += (sender, e) =>
+            {
+                if (_diffContainsToolStripMenuItem.Checked)
+                {
+                    _commitFilterToolStripMenuItem.Checked = false;
+                    _committerToolStripMenuItem.Checked = false;
+                    _authorToolStripMenuItem.Checked = false;
+                    _hashToolStripMenuItem.Checked = false;
+                }
+                else
+                {
+                    _commitFilterToolStripMenuItem.Checked = true;
+                }
+            };
+
+            _hashToolStripMenuItem = new ToolStripMenuItem
+            {
+                CheckOnClick = true,
+                Name = "hashToolStripMenuItem",
+                Size = new System.Drawing.Size(216, 24),
+                Text = "Hash"
+            };
+
             _NO_TRANSLATE_textBox = textBox;
             _NO_TRANSLATE_revisionGrid = revisionGrid;
             _NO_TRANSLATE_showFirstParentButton = showFirstParentButton;
@@ -83,11 +86,17 @@ namespace GitUI
 
             _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
 
-            label.Click += ToolStripLabelClick;
-            _NO_TRANSLATE_textBox.Leave += ToolStripTextBoxFilterLeave;
-            _NO_TRANSLATE_textBox.KeyPress += ToolStripTextBoxFilterKeyPress;
-            _NO_TRANSLATE_showFirstParentButton.Click += ToolStripShowFirstParentButtonClick;
-            _NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += RevisionGridShowFirstParentsToggled;
+            label.Click += delegate { ApplyFilter(); };
+            _NO_TRANSLATE_textBox.Leave += delegate { ApplyFilter(); };
+            _NO_TRANSLATE_textBox.KeyPress += (sender, e) =>
+            {
+                if (e.KeyChar == (char)Keys.Enter)
+                {
+                    ApplyFilter();
+                }
+            };
+            _NO_TRANSLATE_showFirstParentButton.Click += delegate { _NO_TRANSLATE_revisionGrid.ShowFirstParent(); };
+            _NO_TRANSLATE_revisionGrid.ShowFirstParentsToggled += delegate { _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent; };
         }
 
         public void SetFilter(string filter)
@@ -141,65 +150,13 @@ namespace GitUI
             _NO_TRANSLATE_revisionGrid.ForceRefreshRevisions();
         }
 
-        private void ToolStripTextBoxFilterLeave(object sender, EventArgs e)
-        {
-            ToolStripLabelClick(sender, e);
-        }
-
-        private void ToolStripTextBoxFilterKeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                ToolStripLabelClick(null, null);
-            }
-        }
-
-        private void ToolStripLabelClick(object sender, EventArgs e)
-        {
-            ApplyFilter();
-        }
-
-        private void ToolStripShowFirstParentButtonClick(object sender, EventArgs e)
-        {
-            _NO_TRANSLATE_revisionGrid.ShowFirstParent_ToolStripMenuItemClick(sender, e);
-        }
-
-        private void RevisionGridShowFirstParentsToggled(object sender, EventArgs e)
-        {
-            _NO_TRANSLATE_showFirstParentButton.Checked = AppSettings.ShowFirstParent;
-        }
-
-        private void diffContainsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (_diffContainsToolStripMenuItem.Checked)
-            {
-                _commitFilterToolStripMenuItem.Checked = false;
-                _committerToolStripMenuItem.Checked = false;
-                _authorToolStripMenuItem.Checked = false;
-                _hashToolStripMenuItem.Checked = false;
-            }
-            else
-            {
-                _commitFilterToolStripMenuItem.Checked = true;
-            }
-        }
-
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _commitFilterToolStripMenuItem.Dispose();
-                _committerToolStripMenuItem.Dispose();
-                _authorToolStripMenuItem.Dispose();
-                _diffContainsToolStripMenuItem.Dispose();
-                _hashToolStripMenuItem.Dispose();
-            }
+            _commitFilterToolStripMenuItem.Dispose();
+            _committerToolStripMenuItem.Dispose();
+            _authorToolStripMenuItem.Dispose();
+            _diffContainsToolStripMenuItem.Dispose();
+            _hashToolStripMenuItem.Dispose();
         }
     }
 }

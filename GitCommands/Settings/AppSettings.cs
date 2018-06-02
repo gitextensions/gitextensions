@@ -10,6 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands.Logging;
 using GitCommands.Settings;
+using JetBrains.Annotations;
 using Microsoft.Win32;
 
 namespace GitCommands
@@ -1696,7 +1697,7 @@ namespace GitCommands
 
     public class AppSettingsPath : SettingsPath
     {
-        public AppSettingsPath(string pathName) : base(null, pathName)
+        public AppSettingsPath([NotNull] string pathName) : base(null, pathName)
         {
         }
 

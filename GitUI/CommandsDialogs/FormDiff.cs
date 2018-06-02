@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs
 
             _baseRevision = new GitRevision(baseCommitSha);
             _headRevision = new GitRevision(headCommitSha);
-            _mergeBase = new GitRevision(Module.GetMergeBase(_baseRevision.Guid, _headRevision.Guid));
+            _mergeBase = new GitRevision(Module.GetMergeBase(_baseRevision.Guid, _headRevision.Guid).ToString());
             ckCompareToMergeBase.Text += $" ({GitRevision.ToShortSha(_mergeBase.Guid)})";
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
@@ -265,13 +265,14 @@ namespace GitUI.CommandsDialogs
             bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);
             bool allAreDeleted = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsDeleted);
 
-            var selectionInfo = new ContextMenuDiffToolInfo(_headRevision, selectedItemParentRevs,
+            return new ContextMenuDiffToolInfo(
+                _headRevision,
+                selectedItemParentRevs,
                 allAreNew: allAreNew,
                 allAreDeleted: allAreDeleted,
                 firstIsParent: firstIsParent,
                 firstParentsValid: _firstParentIsValid,
                 localExists: localExists);
-            return selectionInfo;
         }
 
         private void openWithDifftoolToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
@@ -294,7 +295,7 @@ namespace GitUI.CommandsDialogs
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     displayStr = form.BranchName;
-                    revision = new GitRevision(Module.RevParse(form.BranchName));
+                    revision = new GitRevision(Module.RevParse(form.BranchName).ToString());
                     PopulateDiffFiles();
                 }
             }

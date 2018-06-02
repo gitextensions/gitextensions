@@ -17,6 +17,7 @@ using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
@@ -193,7 +194,7 @@ namespace GitUI.CommitInfo
             var body = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(header);
-            _RevisionHeader.Height = GetRevisionHeaderHeight();
+            _RevisionHeader.Height = _headerResize.Height;
             _revisionInfo = body;
 
             UpdateRevisionInfo();
@@ -212,7 +213,7 @@ namespace GitUI.CommitInfo
 
             if (AppSettings.ShowAnnotatedTagsMessages)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadAnnotatedTagInfoAsync(_revision)).FileAndForget();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadAnnotatedTagInfoAsync(_revision.Refs)).FileAndForget();
             }
 
             if (AppSettings.CommitInfoShowContainedInTags)
@@ -226,11 +227,6 @@ namespace GitUI.CommitInfo
             }
         }
 
-        private int GetRevisionHeaderHeight()
-        {
-            return _headerResize.Height;
-        }
-
         private async Task LoadSortedRefsAsync()
         {
             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
@@ -240,25 +236,25 @@ namespace GitUI.CommitInfo
             UpdateRevisionInfo();
         }
 
-        private async Task LoadAnnotatedTagInfoAsync(GitRevision revision)
+        private async Task LoadAnnotatedTagInfoAsync(IReadOnlyList<IGitRef> refs)
         {
             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-            _annotatedTagsMessages = GetAnnotatedTagsMessages(revision);
+            _annotatedTagsMessages = GetAnnotatedTagsMessages(refs);
 
             await this.SwitchToMainThreadAsync();
             UpdateRevisionInfo();
         }
 
-        private IDictionary<string, string> GetAnnotatedTagsMessages(GitRevision revision)
+        private IDictionary<string, string> GetAnnotatedTagsMessages(IReadOnlyList<IGitRef> refs)
         {
-            if (revision == null)
+            if (refs == null)
             {
                 return null;
             }
 
-            IDictionary<string, string> result = new Dictionary<string, string>();
+            var result = new Dictionary<string, string>();
 
-            foreach (GitRef gitRef in revision.Refs)
+            foreach (var gitRef in refs)
             {
                 #region Note on annotated tags
                 // Notice that for the annotated tags, gitRef's come in pairs because they're produced
@@ -446,7 +442,7 @@ namespace GitUI.CommitInfo
                         .ToList();
 
                     thisRevisionTagNames.Sort(new ItemTpComparer(_sortedRefs, "refs/tags/"));
-                    _annotatedTagsInfo = GetAnnotatedTagsInfo(Revision, thisRevisionTagNames, _annotatedTagsMessages);
+                    _annotatedTagsInfo = GetAnnotatedTagsInfo(thisRevisionTagNames, _annotatedTagsMessages);
                 }
 
                 if (_tags != null && string.IsNullOrEmpty(_tagInfo))
@@ -490,7 +486,6 @@ namespace GitUI.CommitInfo
         }
 
         private static string GetAnnotatedTagsInfo(
-            GitRevision revision,
             IEnumerable<string> tagNames,
             IDictionary<string, string> annotatedTagsMessages)
         {

@@ -2461,7 +2461,7 @@ namespace GitUI.CommandsDialogs
                 CommitData commit = _commitDataManager.GetCommitData(e.Data, out _);
                 if (commit != null)
                 {
-                    RevisionGrid.SetSelectedRevision(new GitRevision(commit.Guid));
+                    RevisionGrid.SetSelectedRevision(new GitRevision(commit.Guid.ToString()));
                 }
             }
             else if (e.Command == "navigatebackward")

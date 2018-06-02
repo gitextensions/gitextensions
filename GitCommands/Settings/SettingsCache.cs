@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -151,7 +152,7 @@ namespace GitCommands
             });
         }
 
-        public bool TryGetValue<T>(string name, T defaultValue, Func<string, T> decode, out T value)
+        public bool TryGetValue<T>([NotNull] string name, T defaultValue, [NotNull] Func<string, T> decode, out T value)
         {
             T val = defaultValue;
 

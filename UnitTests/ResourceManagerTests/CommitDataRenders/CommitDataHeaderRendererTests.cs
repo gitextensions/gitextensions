@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands;
+using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 using ResourceManager;
@@ -90,8 +91,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData("8ea78df688ec4719a9756c1199a515d1",
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
@@ -101,7 +103,7 @@ namespace ResourceManagerTests.CommitDataRenders
 
             var result = _renderer.Render(data, false);
 
-            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   8ea78df688ec4719a9756c1199a515d1");
+            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
             _labelFormatter.Received(1).FormatLabel(Strings.GetAuthorText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetDateText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetCommitHashText(), Arg.Any<int>());
@@ -117,8 +119,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = "John Doe <John.Doe@test.com>";
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData("8ea78df688ec4719a9756c1199a515d1",
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
@@ -129,7 +132,7 @@ namespace ResourceManagerTests.CommitDataRenders
 
             var result = _renderer.Render(data, false);
 
-            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Committer:     John Doe <John.Doe@test.com>{Environment.NewLine}Commit hash:   8ea78df688ec4719a9756c1199a515d1");
+            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Committer:     John Doe <John.Doe@test.com>{Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
             _labelFormatter.Received(1).FormatLabel(Strings.GetAuthorText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetDateText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetCommitterText(), Arg.Any<int>());
@@ -145,8 +148,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
-            var data = new CommitData("8ea78df688ec4719a9756c1199a515d1",
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
@@ -157,7 +161,7 @@ namespace ResourceManagerTests.CommitDataRenders
 
             var result = _renderer.Render(data, false);
 
-            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Author date:   6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit date:   2 months ago (10/23/2017 12:17:11){Environment.NewLine}Commit hash:   8ea78df688ec4719a9756c1199a515d1");
+            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Author date:   6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit date:   2 months ago (10/23/2017 12:17:11){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
             _labelFormatter.Received(1).FormatLabel(Strings.GetAuthorText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetAuthorDateText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetCommitDateText(), Arg.Any<int>());
@@ -173,8 +177,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData("8ea78df688ec4719a9756c1199a515d1",
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
@@ -185,7 +190,7 @@ namespace ResourceManagerTests.CommitDataRenders
 
             var result = _renderer.Render(data, false);
 
-            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   8ea78df688ec4719a9756c1199a515d1{Environment.NewLine}" +
+            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c{Environment.NewLine}" +
                 $"Children:      {GitRevision.ToShortSha(_childrenHashes[0])} " +
                 $"{GitRevision.ToShortSha(_childrenHashes[1])} " +
                 $"{GitRevision.ToShortSha(_childrenHashes[2])}");
@@ -204,8 +209,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData("8ea78df688ec4719a9756c1199a515d1",
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 _parentHashes.AsReadOnly(),
                 author, authorDate,
                 committer, commitDate, "");
@@ -215,7 +221,7 @@ namespace ResourceManagerTests.CommitDataRenders
 
             var result = _renderer.Render(data, false);
 
-            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   8ea78df688ec4719a9756c1199a515d1{Environment.NewLine}" +
+            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c{Environment.NewLine}" +
                 $"Parent(s):     {GitRevision.ToShortSha(_parentHashes[0])} {GitRevision.ToShortSha(_parentHashes[1])} {GitRevision.ToShortSha(_parentHashes[2])}");
             _labelFormatter.Received(1).FormatLabel(Strings.GetAuthorText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetDateText(), Arg.Any<int>());
@@ -233,8 +239,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData(artificialGuid,
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse(artificialGuid),
+                ObjectId.Random(),
                 _childrenHashes.AsReadOnly(),
                 author, authorDate,
                 committer, commitDate, "");
@@ -265,8 +272,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData("8ea78df688ec4719a9756c1199a515d1",
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
@@ -276,7 +284,7 @@ namespace ResourceManagerTests.CommitDataRenders
 
             var result = _renderer.RenderPlain(data);
 
-            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   8ea78df688ec4719a9756c1199a515d1");
+            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
             _labelFormatter.Received(1).FormatLabel(Strings.GetAuthorText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetDateText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetCommitHashText(), Arg.Any<int>());
@@ -292,8 +300,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = "John Doe <John.Doe@test.com>";
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = authorDate;
-            var data = new CommitData("8ea78df688ec4719a9756c1199a515d1",
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
@@ -304,7 +313,7 @@ namespace ResourceManagerTests.CommitDataRenders
 
             var result = _renderer.RenderPlain(data);
 
-            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Committer:     John Doe <John.Doe@test.com>{Environment.NewLine}Commit hash:   8ea78df688ec4719a9756c1199a515d1");
+            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Committer:     John Doe <John.Doe@test.com>{Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
             _labelFormatter.Received(1).FormatLabel(Strings.GetAuthorText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetDateText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetCommitterText(), Arg.Any<int>());
@@ -320,8 +329,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var committer = author;
             var authorDate = DateTime.Parse("2017-06-17T16:38:40+03");
             var commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
-            var data = new CommitData("8ea78df688ec4719a9756c1199a515d1",
-                Guid.NewGuid().ToString("N"),
+            var data = new CommitData(
+                ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
+                ObjectId.Random(),
                 new ReadOnlyCollection<string>(new List<string>()),
                 author, authorDate,
                 committer, commitDate, "");
@@ -332,7 +342,7 @@ namespace ResourceManagerTests.CommitDataRenders
 
             var result = _renderer.RenderPlain(data);
 
-            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Author date:   6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit date:   2 months ago (10/23/2017 12:17:11){Environment.NewLine}Commit hash:   8ea78df688ec4719a9756c1199a515d1");
+            result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Author date:   6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit date:   2 months ago (10/23/2017 12:17:11){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c");
             _labelFormatter.Received(1).FormatLabel(Strings.GetAuthorText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetAuthorDateText(), Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.GetCommitDateText(), Arg.Any<int>());

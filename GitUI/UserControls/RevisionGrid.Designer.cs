@@ -1,4 +1,3 @@
-
 using System.Windows.Forms;
 using GitUI.RevisionGridClasses;
 
@@ -19,7 +18,13 @@ namespace GitUI
         {
             if (disposing)
             {
-                DisposeRevisionGraphCommand();
+                _revisionSubscription?.Dispose();
+
+                if (_revisionReader != null)
+                {
+                    _revisionReader.Dispose();
+                    _revisionReader = null;
+                }
 
                 if (BuildServerWatcher != null)
                 {

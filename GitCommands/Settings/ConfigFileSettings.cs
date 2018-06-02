@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitCommands.Settings
 {
@@ -81,7 +82,7 @@ namespace GitCommands.Settings
             return SettingsCache.GetValues(setting);
         }
 
-        public void SetValue(string setting, string value)
+        public void SetValue(string setting, [CanBeNull] string value)
         {
             if (value.IsNullOrEmpty())
             {
@@ -92,7 +93,7 @@ namespace GitCommands.Settings
             SetString(setting, value);
         }
 
-        public void SetPathValue(string setting, string value)
+        public void SetPathValue(string setting, [NotNull] string value)
         {
             SetValue(setting, ConfigSection.FixPath(value));
         }
@@ -121,45 +122,48 @@ namespace GitCommands.Settings
             SettingsCache.RemoveConfigSection(configSectionName, performSave);
         }
 
+        [CanBeNull]
         public Encoding FilesEncoding
         {
             get => GetEncoding("i18n.filesEncoding");
-
             set => SetEncoding("i18n.filesEncoding", value);
         }
 
+        [CanBeNull]
         public Encoding CommitEncoding => GetEncoding("i18n.commitEncoding");
 
+        [CanBeNull]
         public Encoding LogOutputEncoding => GetEncoding("i18n.logoutputencoding");
 
+        [CanBeNull]
         private Encoding GetEncoding(string settingName)
         {
-            Encoding result;
-
             string encodingName = GetValue(settingName);
 
             if (string.IsNullOrEmpty(encodingName))
             {
-                result = null;
-            }
-            else if (!AppSettings.AvailableEncodings.TryGetValue(encodingName, out result))
-            {
-                try
-                {
-                    result = Encoding.GetEncoding(encodingName);
-                }
-                catch (ArgumentException)
-                {
-                    Debug.WriteLine("Unsupported encoding set in git config file: {0}\n" +
-                        "Please check the setting {1} in config file.", encodingName, settingName);
-                    result = null;
-                }
+                return null;
             }
 
-            return result;
+            if (AppSettings.AvailableEncodings.TryGetValue(encodingName, out var result))
+            {
+                return result;
+            }
+
+            try
+            {
+                return Encoding.GetEncoding(encodingName);
+            }
+            catch (ArgumentException)
+            {
+                Debug.WriteLine(
+                    "Unsupported encoding set in git config file: {0}\n" +
+                    "Please check the setting {1} in config file.", encodingName, settingName);
+                return null;
+            }
         }
 
-        private void SetEncoding(string settingName, Encoding encoding)
+        private void SetEncoding(string settingName, [CanBeNull] Encoding encoding)
         {
             SetValue(settingName, encoding?.HeaderName);
         }

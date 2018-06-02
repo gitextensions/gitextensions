@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using GitCommands.Git.Extensions;
@@ -12,14 +13,15 @@ namespace GitCommands
 {
     public sealed class GitRevision : IGitItem, INotifyPropertyChanged
     {
-        /// <summary>40 characters of 0's</summary>
-        public const string UnstagedGuid = "0000000000000000000000000000000000000000";
-
         /// <summary>40 characters of 1's</summary>
-        public const string IndexGuid = "1111111111111111111111111111111111111111";
+        public const string UnstagedGuid = "1111111111111111111111111111111111111111";
+
+        /// <summary>40 characters of 2's</summary>
+        public const string IndexGuid = "2222222222222222222222222222222222222222";
 
         /// <summary>40 characters of a-f or any digit.</summary>
         public const string Sha1HashPattern = @"[a-f\d]{40}";
+
         public const string Sha1HashShortPattern = @"[a-f\d]{7,40}";
         public static readonly Regex Sha1HashRegex = new Regex("^" + Sha1HashPattern + "$", RegexOptions.Compiled);
         public static readonly Regex Sha1HashShortRegex = new Regex(string.Format(@"\b{0}\b", Sha1HashShortPattern), RegexOptions.Compiled);
@@ -34,13 +36,13 @@ namespace GitCommands
             SubjectCount = "";
         }
 
-        public List<IGitRef> Refs { get; } = new List<IGitRef>();
+        public IReadOnlyList<IGitRef> Refs { get; set; } = Array.Empty<IGitRef>();
 
         // TODO seems inconsistent that this can be null, yet Refs is never null
         [CanBeNull, ItemNotNull]
         public IReadOnlyList<string> ParentGuids { get; set; }
 
-        public string TreeGuid { get; set; }
+        public ObjectId TreeGuid { get; set; }
 
         public string Author { get; set; }
         public string AuthorEmail { get; set; }
@@ -69,6 +71,7 @@ namespace GitCommands
         // Count for artificial commits (could be changed to object lists)
         public string SubjectCount { get; set; }
         public string Body { get; set; }
+        public bool HasMultiLineMessage { get; set; }
 
         // UTF-8 when is null or empty
         public string MessageEncoding { get; set; }
@@ -79,6 +82,9 @@ namespace GitCommands
         public string Name { get; set; }
 
         #endregion
+
+        [CanBeNull]
+        public ObjectId ObjectId => ObjectId.TryParse(Guid, out var id) ? id : null;
 
         public override string ToString()
         {
@@ -114,7 +120,7 @@ namespace GitCommands
 
         public bool HasParent => ParentGuids != null && ParentGuids.Count > 0;
 
-        public string FirstParentGuid => HasParent ? ParentGuids[0] : null;
+        public string FirstParentGuid => ParentGuids?.FirstOrDefault();
 
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -28,6 +28,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\Debug\GitCommands.xml</DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -39,6 +40,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>..\GitExtensions.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\Release\GitCommands.xml</DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -52,6 +54,7 @@
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
     <PackageReference Include="SmartFormat.NET" Version="2.0.0.0" />
     <PackageReference Include="System.IO.Abstractions" Version="2.0.0.144" />
+    <PackageReference Include="System.Reactive.Linq" Version="3.1.1" />
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +63,7 @@
     </Compile>
     <Compile Include="AppTitleGenerator.cs" />
     <Compile Include="ArgumentBuilderExtensions.cs" />
+    <Compile Include="ArrayExtensions.cs" />
     <Compile Include="AsyncLoader.cs" />
     <Compile Include="BoolExtensions.cs" />
     <Compile Include="ArgumentBuilder.cs" />
@@ -143,6 +147,8 @@
     <Compile Include="Settings\SettingsCache.cs" />
     <Compile Include="Settings\SettingsContainer.cs" />
     <Compile Include="Settings\SettingsPath.cs" />
+    <Compile Include="StreamExtensions.cs" />
+    <Compile Include="StringPool.cs" />
     <Compile Include="Utils\EnvUtils.cs" />
     <Compile Include="ExternalLinks\ExternalLink.cs" />
     <Compile Include="Git\GitBisectOption.cs" />
@@ -183,7 +189,7 @@
     <Compile Include="Patches\Patch.cs" />
     <Compile Include="Patches\PatchFile.cs" />
     <Compile Include="Patches\PatchManager.cs" />
-    <Compile Include="RevisionGraph.cs" />
+    <Compile Include="RevisionReader.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="Statistics\CommitCounter.cs" />
     <Compile Include="Statistics\ImpactLoader.cs" />

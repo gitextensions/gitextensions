@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -40,15 +41,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// <summary>
         /// returns null if revision does not exist (could not be revparsed)
         /// </summary>
-        public string ValidateAndGetSelectedRevision()
+        [CanBeNull]
+        public ObjectId ValidateAndGetSelectedRevision()
         {
-            string guid = Module.RevParse(_selectedRevision);
-            if (!string.IsNullOrEmpty(guid))
-            {
-                return guid;
-            }
-
-            return null;
+            return Module.RevParse(_selectedRevision);
         }
 
         private void commitExpression_TextChanged(object sender, EventArgs e)
@@ -209,8 +205,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            string guid = Module.RevParse(text);
-            if (!string.IsNullOrEmpty(guid))
+            var guid = Module.RevParse(text);
+            if (guid != null)
             {
                 textboxCommitExpression.Text = text;
                 textboxCommitExpression.SelectAll();
