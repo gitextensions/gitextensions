@@ -1,7 +1,39 @@
 Changelog
 =========
 
-### [Version 2.51.01] (20 Mar 2018)
+### [Version 2.51.02] (24 May 2018)
+
+#### Highlights:
+* Simplified installer - Git and KDiff3 installers are no longer installed as part of GitExtensions's installation. The user will have to install external apps and tools separately.
+* Fixes to address a number of layout issues for high DPI monitors.
+
+#### Features:
+* Remove Git and KDiff3 from installer 2.51 - PR [4933]
+* Check for recommended Git version 2.51 - PR [4932]
+* Check for recommended Git version - PR [4929]
+* Delete TAGMESSAGE after tag command completes - PR [4792]
+* fix: FormFixHome is messed up HiDPI - PR [4780]
+* fix: FormRemotes is messed up on HiDPI - PR [4779]
+* Fix avatar under high DPI - PR [4711]
+* Remove Git from installer package - Issue [4515]
+
+#### Fixes:
+* Shell start script failing if run from a different directory - Issue [4975]
+* Crash when you click on the Commit tab - Issue [4956]
+* "Reset all changes" not working when "Refresh dialog on form focus" true - Issue [4907]
+* CommitPickerSmallControl broken under high DPI - Issue [4862]
+* Init wrong folder - Issue [4855]
+* "Clone repository" form layout broken at high DPI - Issue [4776]
+* Git config diff.noprefix true option breaks most of GitExtensions functionality - Issue [4392]
+* When creating an annotated tag, a TAGMESSAGE file is left in the repository - Issue [4358]
+* "Open local repository" layout broken at high DPI - Issue [4174]
+* High HDPI is really messing up the display of screens - Issue [4099]
+* "Clean working directory" form layout broken at high DPI - Issue [3828]
+
+
+
+
+### [Version 2.51.01] (11 Mar 2018)
 
 #### Highlights
 * Updated bundled Git to 2.16.2
@@ -2475,3 +2507,24 @@ Changelog
 [2515]:https://github.com/gitextensions/gitextensions/issues/2515
 [2313]:https://github.com/gitextensions/gitextensions/issues/2313
 [1858]:https://github.com/gitextensions/gitextensions/issues/1858
+
+[Version 2.51.02]:https://github.com/gitextensions/gitextensions/releases/tag/v2.51.02
+[4975]:https://github.com/gitextensions/gitextensions/issues/4975
+[4956]:https://github.com/gitextensions/gitextensions/issues/4956
+[4933]:https://github.com/gitextensions/gitextensions/pull/4933
+[4932]:https://github.com/gitextensions/gitextensions/pull/4932
+[4929]:https://github.com/gitextensions/gitextensions/pull/4929
+[4907]:https://github.com/gitextensions/gitextensions/issues/4907
+[4862]:https://github.com/gitextensions/gitextensions/issues/4862
+[4855]:https://github.com/gitextensions/gitextensions/issues/4855
+[4792]:https://github.com/gitextensions/gitextensions/pull/4792
+[4780]:https://github.com/gitextensions/gitextensions/pull/4780
+[4779]:https://github.com/gitextensions/gitextensions/pull/4779
+[4776]:https://github.com/gitextensions/gitextensions/issues/4776
+[4711]:https://github.com/gitextensions/gitextensions/pull/4711
+[4515]:https://github.com/gitextensions/gitextensions/issues/4515
+[4392]:https://github.com/gitextensions/gitextensions/issues/4392
+[4358]:https://github.com/gitextensions/gitextensions/issues/4358
+[4174]:https://github.com/gitextensions/gitextensions/issues/4174
+[4099]:https://github.com/gitextensions/gitextensions/issues/4099
+[3828]:https://github.com/gitextensions/gitextensions/issues/3828
