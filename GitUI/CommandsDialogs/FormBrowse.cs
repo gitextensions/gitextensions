@@ -670,17 +670,12 @@ namespace GitUI.CommandsDialogs
 
         private void ReloadRepoObjectsTree()
         {
-            if (IsRepoObjectsTreeVisible())
+            if (MainSplitContainer.Panel1Collapsed)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => repoObjectsTree.ReloadAsync()).FileAndForget();
+                return;
             }
 
-            return;
-
-            bool IsRepoObjectsTreeVisible()
-            {
-                return !MainSplitContainer.Panel1Collapsed;
-            }
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => repoObjectsTree.ReloadAsync()).FileAndForget();
         }
 
         private void OnActivate()
