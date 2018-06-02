@@ -25,6 +25,7 @@ namespace GitUI.BranchTreePanel
         private TagTree _tagTree;
         private RemoteBranchTree _remoteTree;
         private List<TreeNode> _searchResult;
+        private FilterBranchHelper _filterBranchHelper;
         private bool _searchCriteriaChanged;
 
         public RepoObjectsTree()
@@ -49,7 +50,10 @@ namespace GitUI.BranchTreePanel
             mnubtnFilterLocalBranchInRevisionGrid.ToolTipText = _showBranchOnly.Text;
         }
 
-        public FilterBranchHelper FilterBranchHelper { private get; set; }
+        public void SetBranchFilterer(FilterBranchHelper filterBranchHelper)
+        {
+            _filterBranchHelper = filterBranchHelper;
+        }
 
         public async Task ReloadAsync()
         {

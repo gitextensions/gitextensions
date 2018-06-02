@@ -82,7 +82,7 @@ namespace GitUI.BranchTreePanel
 
         private void FilterInRevisionGrid(BaseBranchNode branch)
         {
-            FilterBranchHelper.SetBranchFilter(branch.FullPath, refresh: true);
+            _filterBranchHelper?.SetBranchFilter(branch.FullPath, refresh: true);
         }
 
         private void PopupManageRemotesForm(string remoteName)
