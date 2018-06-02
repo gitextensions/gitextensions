@@ -137,14 +137,11 @@ namespace GitUI.BranchTreePanel
 
             internal override void OnDoubleClick()
             {
-                base.OnDoubleClick();
                 Checkout();
             }
 
             internal override void OnSelected()
             {
-                base.OnSelected();
-
                 SelectRevision();
             }
 
