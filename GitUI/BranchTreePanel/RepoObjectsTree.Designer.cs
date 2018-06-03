@@ -320,7 +320,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnDeleteRemoteBranch
             // 
-            this.mnubtnDeleteRemoteBranch.Image = global::GitUI.Properties.Resources.Delete;
+            this.mnubtnDeleteRemoteBranch.Image = global::GitUI.Properties.Resources.IconBranchDelete;
             this.mnubtnDeleteRemoteBranch.Name = "mnubtnDeleteRemoteBranch";
             this.mnubtnDeleteRemoteBranch.Size = new System.Drawing.Size(193, 22);
             this.mnubtnDeleteRemoteBranch.Text = "&Delete";
@@ -361,7 +361,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnDeleteTag
             // 
-            this.mnubtnDeleteTag.Image = global::GitUI.Properties.Resources.Delete;
+            this.mnubtnDeleteTag.Image = global::GitUI.Properties.Resources.IconBranchDelete;
             this.mnubtnDeleteTag.Name = "mnubtnDeleteTag";
             this.mnubtnDeleteTag.Size = new System.Drawing.Size(157, 22);
             this.mnubtnDeleteTag.Text = "&Delete";
