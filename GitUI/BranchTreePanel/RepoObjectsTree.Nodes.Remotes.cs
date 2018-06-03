@@ -14,7 +14,7 @@ namespace GitUI.BranchTreePanel
 {
     public partial class RepoObjectsTree
     {
-        private class RemoteBranchTree : Tree
+        private sealed class RemoteBranchTree : Tree
         {
             public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
