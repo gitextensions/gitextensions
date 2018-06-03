@@ -212,7 +212,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnuBtnManageRemotesFromRootNode
             // 
-            this.mnuBtnManageRemotesFromRootNode.Image = global::GitUI.Properties.MsVsImages.Repository_16x;
+            this.mnuBtnManageRemotesFromRootNode.Image = global::GitUI.Properties.Resources.IconRemotes;
             this.mnuBtnManageRemotesFromRootNode.Name = "mnuBtnManageRemotesFromRootNode";
             this.mnuBtnManageRemotesFromRootNode.Size = new System.Drawing.Size(163, 22);
             this.mnuBtnManageRemotesFromRootNode.Text = "&Manage remotes";
@@ -399,7 +399,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnManageRemotes
             // 
-            this.mnubtnManageRemotes.Image = global::GitUI.Properties.MsVsImages.Repository_16x;
+            this.mnubtnManageRemotes.Image = global::GitUI.Properties.Resources.IconRemotes;
             this.mnubtnManageRemotes.Name = "mnubtnManageRemotes";
             this.mnubtnManageRemotes.Size = new System.Drawing.Size(163, 22);
             this.mnubtnManageRemotes.Text = "&Manage remotes";
