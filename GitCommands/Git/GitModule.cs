@@ -3884,7 +3884,7 @@ namespace GitCommands
 
             var patches = PatchProcessor.CreatePatchesFromString(patch, encoding).ToList();
 
-            return GetPatch(patches, filePath, filePath).Text;
+            return GetPatch(patches, filePath, filePath)?.Text;
         }
 
         public bool HasLfsSupport()
