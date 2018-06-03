@@ -96,6 +96,7 @@ namespace GitUI.BranchTreePanel
             this.treeMain.FullRowSelect = true;
             this.treeMain.Location = new System.Drawing.Point(3, 41);
             this.treeMain.Name = "treeMain";
+            this.treeMain.PathSeparator = "/";
             this.treeMain.ShowNodeToolTips = true;
             this.treeMain.Size = new System.Drawing.Size(294, 350);
             this.treeMain.TabIndex = 3;

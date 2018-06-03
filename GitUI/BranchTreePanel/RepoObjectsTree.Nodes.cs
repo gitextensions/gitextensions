@@ -171,6 +171,7 @@ namespace GitUI.BranchTreePanel
                 {
                     _treeViewNode = value;
                     _treeViewNode.Tag = this;
+                    _treeViewNode.Name = DisplayText();
                     _treeViewNode.Text = DisplayText();
                     _treeViewNode.ContextMenuStrip = GetContextMenuStrip();
                     ApplyStyle();

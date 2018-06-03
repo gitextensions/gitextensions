@@ -61,6 +61,8 @@ namespace GitUI.BranchTreePanel
 
             var token = CancelBackgroundTasks();
             Enabled = false;
+
+            var currentBranch = Module.GetSelectedBranch();
             try
             {
                 var tasks = _rootNodes.Select(r => r.ReloadAsync(token)).ToArray();
@@ -70,6 +72,14 @@ namespace GitUI.BranchTreePanel
             {
                 await this.SwitchToMainThreadAsync(token);
                 Enabled = true;
+
+                var selectedNode = treeMain.AllNodes().FirstOrDefault(n =>
+                    _rootNodes.Any(rn => $"{rn.TreeViewNode.FullPath}{treeMain.PathSeparator}{currentBranch}" == n.FullPath));
+                if (selectedNode != null)
+                {
+                    treeMain.SelectedNode = selectedNode;
+                    treeMain.SelectedNode.EnsureVisible();
+                }
             }
         }
 
