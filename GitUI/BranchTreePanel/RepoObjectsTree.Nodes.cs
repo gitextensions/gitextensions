@@ -12,8 +12,9 @@ namespace GitUI.BranchTreePanel
     {
         private sealed class Nodes : IEnumerable<Node>
         {
-            public readonly Tree Tree;
             private readonly List<Node> _nodesList = new List<Node>();
+
+            public Tree Tree { get; }
 
             public Nodes(Tree tree)
             {
