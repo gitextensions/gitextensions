@@ -356,9 +356,13 @@ namespace GitUI.CommandsDialogs
         }
 
         #region IBrowseRepo
+
         public void GoToRef(string refName, bool showNoRevisionMsg)
         {
-            RevisionGrid.GoToRef(refName, showNoRevisionMsg);
+            using (WaitCursorScope.Enter())
+            {
+                RevisionGrid.GoToRef(refName, showNoRevisionMsg);
+            }
         }
 
         #endregion
