@@ -3861,6 +3861,7 @@ namespace GitCommands
                 }).ToList();
         }
 
+        [CanBeNull]
         public string GetCombinedDiffContent(GitRevision revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding)
         {
             var args = new ArgumentBuilder
