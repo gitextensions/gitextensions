@@ -34,26 +34,16 @@ namespace GitUI.BranchTreePanel
                 return FullPath.GetHashCode();
             }
 
-            private bool Equals(BaseBranchNode other)
-            {
-                if (other == null)
-                {
-                    return false;
-                }
-
-                return ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath);
-            }
-
             public override bool Equals(object obj)
             {
-                return Equals(obj as BaseBranchNode);
+                return obj is BaseBranchNode other && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath));
             }
 
             protected BaseBranchNode(Tree tree, string fullPath)
                 : base(tree)
             {
                 fullPath = fullPath.Trim();
-                if (fullPath.IsNullOrEmpty())
+                if (string.IsNullOrEmpty(fullPath))
                 {
                     throw new ArgumentNullException(nameof(fullPath));
                 }
@@ -67,7 +57,7 @@ namespace GitUI.BranchTreePanel
             internal BaseBranchNode CreateRootNode(IDictionary<string, BaseBranchNode> nodes,
                 Func<Tree, string, BaseBranchNode> createPathNode)
             {
-                if (ParentPath.IsNullOrEmpty())
+                if (string.IsNullOrEmpty(ParentPath))
                 {
                     return this;
                 }
