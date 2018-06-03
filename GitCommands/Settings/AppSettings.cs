@@ -10,8 +10,10 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands.Logging;
 using GitCommands.Settings;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.Win32;
+using StringSetting = GitCommands.Settings.StringSetting;
 
 namespace GitCommands
 {
@@ -1464,9 +1466,9 @@ namespace GitCommands
             set => SetBool("UseConsoleEmulatorForCommands", value);
         }
 
-        public static BranchOrdering BranchOrderingCriteria
+        public static GitRefsOrder BranchOrderingCriteria
         {
-            get => GetEnum("BranchOrderingCriteria", BranchOrdering.ByLastAccessDate);
+            get => GetEnum("BranchOrderingCriteria", GitRefsOrder.ByLastAccessDate);
             set => SetEnum("BranchOrderingCriteria", value);
         }
 

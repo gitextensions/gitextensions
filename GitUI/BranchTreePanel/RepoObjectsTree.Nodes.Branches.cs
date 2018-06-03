@@ -232,12 +232,7 @@ namespace GitUI.BranchTreePanel
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
 
-                var branchNames = Module.GetRefs(false).Select(b => b.Name);
-                if (AppSettings.BranchOrderingCriteria == BranchOrdering.Alphabetically)
-                {
-                    branchNames = branchNames.OrderBy(b => b);
-                }
-
+                var branchNames = Module.GetRefs(false, order: AppSettings.BranchOrderingCriteria).Select(b => b.Name);
                 FillBranchTree(branchNames, token);
             }
 

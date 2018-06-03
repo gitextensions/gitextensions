@@ -124,7 +124,6 @@
     <Compile Include="UserRepositoryHistory\RepositoryDescriptionProvider.cs" />
     <Compile Include="UserRepositoryHistory\RepositoryStorage.cs" />
     <Compile Include="UserRepositoryHistory\RepositoryXmlSerialiser.cs" />
-    <Compile Include="Settings\BranchOrdering.cs" />
     <Compile Include="Git\GitGpgController.cs" />
     <Compile Include="SshPathLocator.cs" />
     <Compile Include="Git\IndexLockManager.cs" />
