@@ -242,12 +242,11 @@ namespace GitUI.BranchTreePanel
             public static void OnNode<T>(TreeNode treeNode, Action<T> action) where T : Node
             {
                 var node = GetNodeSafe<T>(treeNode);
-                if (node == null)
-                {
-                    return;
-                }
 
-                action(node);
+                if (node != null)
+                {
+                    action(node);
+                }
             }
         }
     }
