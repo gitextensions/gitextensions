@@ -13,7 +13,7 @@ namespace GitUI.BranchTreePanel
         private sealed class Nodes : IEnumerable<Node>
         {
             public readonly Tree Tree;
-            private readonly IList<Node> _nodesList = new List<Node>();
+            private readonly List<Node> _nodesList = new List<Node>();
 
             public Nodes(Tree tree)
             {
