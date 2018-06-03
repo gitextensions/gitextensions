@@ -19,12 +19,11 @@ namespace GitUI.BranchTreePanel
             public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
             {
-                uiCommands.GitUICommandsChanged += UiCommands_GitUICommandsChanged;
-            }
-
-            private void UiCommands_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
-            {
-                TreeViewNode.TreeView.SelectedNode = null;
+                // TODO unsubscribe this event as needed
+                uiCommands.GitUICommandsChanged += (sender, e) =>
+                {
+                    TreeViewNode.TreeView.SelectedNode = null;
+                };
             }
 
             protected override async Task LoadNodesAsync(CancellationToken token)
