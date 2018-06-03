@@ -29,9 +29,6 @@ namespace GitUI
         private readonly TranslationString _diffWithParent = new TranslationString("Diff with:");
         public readonly TranslationString CombinedDiff = new TranslationString("Combined Diff");
 
-        // Artificial commit for the combined diff, similar to GitRevision.UnstagedGuid
-        public readonly string CombinedDiffGuid = "2222222222222222222222222222222222222222";
-
         private IDisposable _selectedIndexChangeSubscription;
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
 
@@ -894,7 +891,7 @@ namespace GitUI
                 if (revision != null)
                 {
                     string groupName;
-                    if (revision.Guid == CombinedDiffGuid)
+                    if (revision.Guid == GitRevision.CombinedDiffGuid)
                     {
                         groupName = CombinedDiff.Text;
                     }
@@ -1185,7 +1182,7 @@ namespace GitUI
                         if (conflicts.Any())
                         {
                             // Create an artificial commit
-                            var rev = new GitRevision(CombinedDiffGuid);
+                            var rev = new GitRevision(GitRevision.CombinedDiffGuid);
                             dictionary.Add(rev, conflicts);
                         }
                     }
