@@ -10,7 +10,7 @@ namespace GitUI.BranchTreePanel
 {
     partial class RepoObjectsTree
     {
-        private sealed class Nodes
+        private sealed class Nodes : IEnumerable<Node>
         {
             public readonly Tree Tree;
             private readonly IList<Node> _nodesList = new List<Node>();
@@ -30,11 +30,9 @@ namespace GitUI.BranchTreePanel
                 _nodesList.Clear();
             }
 
-            public IEnumerator<Node> GetEnumerator()
-            {
-                var e = _nodesList.GetEnumerator();
-                return e;
-            }
+            public IEnumerator<Node> GetEnumerator() => _nodesList.GetEnumerator();
+
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
             /// <summary>
             /// Returns all nodes of a given TNode type using depth-first, pre-order method
