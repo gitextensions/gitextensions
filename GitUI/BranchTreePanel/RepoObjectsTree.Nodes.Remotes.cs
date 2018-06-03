@@ -40,7 +40,6 @@ namespace GitUI.BranchTreePanel
 
                 token.ThrowIfCancellationRequested();
                 var remotes = Module.GetRemotes(allowEmpty: true);
-                var branchFullPaths = new List<string>();
                 foreach (var branchPath in branches)
                 {
                     token.ThrowIfCancellationRequested();
@@ -57,8 +56,6 @@ namespace GitUI.BranchTreePanel
                     {
                         Nodes.AddNode(parent);
                     }
-
-                    branchFullPaths.Add(remoteBranchNode.FullPath);
                 }
             }
 
