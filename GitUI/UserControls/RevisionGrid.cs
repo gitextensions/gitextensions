@@ -1544,23 +1544,18 @@ namespace GitUI
         private void OnGraphKeyUp(object sender, KeyEventArgs e)
         {
             var selectedRevision = LatestSelectedRevision;
+
             if (selectedRevision == null)
             {
                 return;
             }
 
-            if (e.KeyCode != Keys.F2 && e.KeyCode != Keys.Delete)
-            {
-                return;
-            }
-
-            var gitRefListsForRevision = new GitRefListsForRevision(selectedRevision);
-
             switch (e.KeyCode)
             {
                 case Keys.F2:
                 {
-                    InitiateRefAction(gitRefListsForRevision.GetRenameableLocalBranches(),
+                    InitiateRefAction(
+                        new GitRefListsForRevision(selectedRevision).GetRenameableLocalBranches(),
                         gitRef => UICommands.StartRenameDialog(this, gitRef.Name),
                         FormQuickGitRefSelector.Action.Rename);
                     break;
@@ -1568,8 +1563,8 @@ namespace GitUI
 
                 case Keys.Delete:
                 {
-                    string currentBranch = Module.GetSelectedBranch();
-                    InitiateRefAction(gitRefListsForRevision.GetDeletableLocalRefs(currentBranch),
+                    InitiateRefAction(
+                        new GitRefListsForRevision(selectedRevision).GetDeletableLocalRefs(Module.GetSelectedBranch()),
                         gitRef =>
                         {
                             if (gitRef.IsTag)
