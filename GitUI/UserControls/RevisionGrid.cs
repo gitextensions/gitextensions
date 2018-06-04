@@ -82,6 +82,7 @@ namespace GitUI
         private readonly IGitRevisionTester _gitRevisionTester;
         private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
         private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
+        private readonly Lazy<IndexWatcher> _indexWatcher;
 
         private RefFilterOptions _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
 
@@ -106,6 +107,16 @@ namespace GitUI
 
         private string _rebaseOnTopOf;
         private BuildServerWatcher _buildServerWatcher;
+        private Font _normalFont;
+        private Font _headFont;
+        private Font _superprojectFont;
+        private Font _refsFont;
+        private string[] _lastSelectedRows;
+        private string _fixedRevisionFilter = "";
+        private string _fixedPathFilter = "";
+        private string _branchFilter = string.Empty;
+        private JoinableTask<SuperProjectInfo> _superprojectCurrentCheckout;
+        private int _latestSelectedRowIndex;
 
         /// <summary>
         /// Refs loaded while the latest processing of git log
@@ -128,6 +139,7 @@ namespace GitUI
             // Parent-child navigation can expect that SetSelectedRevision is always successfull since it always uses first-parents
             _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));
             _revisionHighlighting = new AuthorEmailBasedRevisionHighlighting();
+            _indexWatcher = new Lazy<IndexWatcher>(() => new IndexWatcher(UICommandsSource));
 
             Loading.Image = Resources.loadingpanel;
 
@@ -310,15 +322,6 @@ namespace GitUI
         }
 
         [Browsable(false)]
-        public Font HeadFont { get; private set; }
-        [Browsable(false)]
-        public Font SuperprojectFont { get; private set; }
-        [Browsable(false)]
-        public string[] LastSelectedRows { get; private set; }
-        [Browsable(false)]
-        public Font RefsFont { get; private set; }
-        private Font _normalFont;
-        [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Font NormalFont
         {
@@ -333,23 +336,15 @@ namespace GitUI
                 IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
                 IsMessageMultilineDataGridViewColumn.Width = TextRenderer.MeasureText(MultilineMessageIndicator, NormalFont).Width;
 
-                RefsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
-                HeadFont = new Font(_normalFont, FontStyle.Bold);
-                SuperprojectFont = new Font(_normalFont, FontStyle.Underline);
+                _refsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
+                _headFont = new Font(_normalFont, FontStyle.Bold);
+                _superprojectFont = new Font(_normalFont, FontStyle.Underline);
             }
         }
 
         [Category("Filter")]
         [DefaultValue("")]
         public string QuickRevisionFilter { get; set; } = "";
-
-        [Category("Filter")]
-        [DefaultValue("")]
-        public string FixedRevisionFilter { get; set; } = "";
-
-        [Category("Filter")]
-        [DefaultValue("")]
-        public string FixedPathFilter { get; set; } = "";
 
         [Category("Filter")]
         [DefaultValue(true)]
@@ -368,19 +363,8 @@ namespace GitUI
         public string InMemMessageFilter { get; set; } = "";
 
         [Category("Filter")]
-        [DefaultValue("")]
-        public string BranchFilter { get; set; } = string.Empty;
-
-        [Category("Filter")]
         [DefaultValue(false)]
         public bool AllowGraphWithFilter { get; set; }
-
-        [Browsable(false)]
-        public string CurrentCheckout { get; private set; }
-        [Browsable(false)]
-        private JoinableTask<SuperProjectInfo> SuperprojectCurrentCheckout { get; set; }
-        [Browsable(false)]
-        public int LatestSelectedRowIndex { get; private set; }
         [Browsable(false)]
         public GitRevision LatestSelectedRevision
         {
@@ -419,19 +403,13 @@ namespace GitUI
         [DefaultValue(false)]
         public bool DoubleClickDoesNotOpenCommitInfo { get; set; }
 
-        private IndexWatcher _indexWatcher;
         [Browsable(false)]
-        public IndexWatcher IndexWatcher
-        {
-            get
-            {
-                if (_indexWatcher == null)
-                {
-                    _indexWatcher = new IndexWatcher(UICommandsSource);
-                }
+        public IndexWatcher IndexWatcher => _indexWatcher.Value;
 
-                return _indexWatcher;
-            }
+        public void SetFilters((string revision, string path) filter)
+        {
+            _fixedRevisionFilter = filter.revision;
+            _fixedPathFilter = filter.path;
         }
 
         public void SetInitialRevision(string initialSelectedRevision)
@@ -609,7 +587,7 @@ namespace GitUI
                 return;
             }
 
-            var rect = Revisions.GetCellDisplayRectangle(0, LatestSelectedRowIndex, true);
+            var rect = Revisions.GetCellDisplayRectangle(0, _latestSelectedRowIndex, true);
             using (var dlg = new FormQuickGitRefSelector())
             {
                 dlg.Init(actionLabel, refs);
@@ -959,13 +937,13 @@ namespace GitUI
 
             if (Revisions.SelectedRows.Count > 0)
             {
-                LatestSelectedRowIndex = Revisions.SelectedRows[0].Index;
+                _latestSelectedRowIndex = Revisions.SelectedRows[0].Index;
 
                 // if there was selected a new revision while data is being loaded
                 // then don't change the new selection when restoring selected revisions after data is loaded
                 if (_isRefreshingRevisions && !Revisions.UpdatingVisibleRows)
                 {
-                    LastSelectedRows = Revisions.SelectedIds;
+                    _lastSelectedRows = Revisions.SelectedIds;
                 }
             }
 
@@ -1221,19 +1199,19 @@ namespace GitUI
                 // new current checkout instead.
                 if (newCurrentCheckout == CurrentCheckout)
                 {
-                    LastSelectedRows = Revisions.SelectedIds;
+                    _lastSelectedRows = Revisions.SelectedIds;
                 }
                 else
                 {
                     // This is a new checkout, so ensure the variable is cleared out.
-                    LastSelectedRows = null;
+                    _lastSelectedRows = null;
                 }
 
                 Revisions.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
                 _filtredCurrentCheckout = null;
                 _currentCheckoutParents = null;
-                SuperprojectCurrentCheckout = newSuperPrjectInfo;
+                _superprojectCurrentCheckout = newSuperPrjectInfo;
                 Revisions.Clear();
                 Error.Visible = false;
 
@@ -1343,9 +1321,9 @@ namespace GitUI
                     Module,
                     revisions,
                     _refFilterOptions,
-                    BranchFilter,
-                    _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + FixedRevisionFilter,
-                    _revisionFilter.GetPathFilter() + FixedPathFilter,
+                    _branchFilter,
+                    _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + _fixedRevisionFilter,
+                    _revisionFilter.GetPathFilter() + _fixedPathFilter,
                     predicate);
 
                 LoadRevisions();
@@ -1431,7 +1409,7 @@ namespace GitUI
 
         internal bool FilterIsApplied(bool inclBranchFilter)
         {
-            return (inclBranchFilter && !string.IsNullOrEmpty(BranchFilter)) ||
+            return (inclBranchFilter && !string.IsNullOrEmpty(_branchFilter)) ||
                    !(string.IsNullOrEmpty(QuickRevisionFilter) &&
                      !_revisionFilter.FilterEnabled() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
@@ -1441,7 +1419,7 @@ namespace GitUI
 
         private bool ShouldHideGraph(bool inclBranchFilter)
         {
-            return (inclBranchFilter && !string.IsNullOrEmpty(BranchFilter)) ||
+            return (inclBranchFilter && !string.IsNullOrEmpty(_branchFilter)) ||
                    !(!_revisionFilter.ShouldHideGraph() &&
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
@@ -1502,7 +1480,7 @@ namespace GitUI
         private void SelectInitialRevision()
         {
             string filtredCurrentCheckout = _filtredCurrentCheckout;
-            string[] lastSelectedRows = LastSelectedRows ?? Array.Empty<string>();
+            string[] lastSelectedRows = _lastSelectedRows ?? Array.Empty<string>();
 
             // filter out all unavailable commits from LastSelectedRows.
             lastSelectedRows = lastSelectedRows.Where(revision => FindRevisionIndex(revision) >= 0).ToArray();
@@ -1510,7 +1488,7 @@ namespace GitUI
             if (lastSelectedRows.Any())
             {
                 Revisions.SelectedIds = lastSelectedRows;
-                LastSelectedRows = null;
+                _lastSelectedRows = null;
             }
             else
             {
@@ -1655,7 +1633,7 @@ namespace GitUI
                 return;
             }
 
-            var spi = SuperprojectCurrentCheckout.Task.CompletedOrDefault();
+            var spi = _superprojectCurrentCheckout.Task.CompletedOrDefault();
             var superprojectRefs = new List<IGitRef>();
             if (spi?.Refs != null && spi.Refs.ContainsKey(revision.Guid))
             {
@@ -1747,11 +1725,11 @@ namespace GitUI
                 var rowFont = NormalFont;
                 if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
                 {
-                    rowFont = HeadFont;
+                    rowFont = _headFont;
                 }
                 else if (spi != null && spi.CurrentBranch == revision.Guid)
                 {
-                    rowFont = SuperprojectFont;
+                    rowFont = _superprojectFont;
                 }
 
                 if (columnIndex == messageColIndex)
@@ -1793,7 +1771,7 @@ namespace GitUI
 
                     float offset = baseOffset;
 
-                    drawRefArgs.RefsFont = IsFilledBranchesLayout() ? rowFont : RefsFont;
+                    drawRefArgs.RefsFont = IsFilledBranchesLayout() ? rowFont : _refsFont;
 
                     if (spi != null)
                     {
@@ -1843,7 +1821,7 @@ namespace GitUI
 
                             ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
                                                   gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
-                            drawRefArgs.RefsFont = gitRef.Selected ? rowFont : RefsFont;
+                            drawRefArgs.RefsFont = gitRef.Selected ? rowFont : _refsFont;
 
                             var superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
                             if (superprojectRef != null)
@@ -1872,7 +1850,7 @@ namespace GitUI
 
                         ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
                                               gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
-                        drawRefArgs.RefsFont = gitRef.Selected ? rowFont : RefsFont;
+                        drawRefArgs.RefsFont = gitRef.Selected ? rowFont : _refsFont;
 
                         offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true);
                     }
@@ -2418,7 +2396,7 @@ namespace GitUI
         {
             var pt = Revisions.PointToClient(Cursor.Position);
             var hti = Revisions.HitTest(pt.X, pt.Y);
-            LatestSelectedRowIndex = hti.RowIndex;
+            _latestSelectedRowIndex = hti.RowIndex;
         }
 
         private void RevisionsCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
@@ -2431,17 +2409,17 @@ namespace GitUI
             var pt = Revisions.PointToClient(Cursor.Position);
             var hti = Revisions.HitTest(pt.X, pt.Y);
 
-            if (LatestSelectedRowIndex == hti.RowIndex)
+            if (_latestSelectedRowIndex == hti.RowIndex)
             {
                 return;
             }
 
-            LatestSelectedRowIndex = hti.RowIndex;
+            _latestSelectedRowIndex = hti.RowIndex;
             Revisions.ClearSelection();
 
-            if (IsValidRevisionIndex(LatestSelectedRowIndex))
+            if (IsValidRevisionIndex(_latestSelectedRowIndex))
             {
-                Revisions.Rows[LatestSelectedRowIndex].Selected = true;
+                Revisions.Rows[_latestSelectedRowIndex].Selected = true;
             }
         }
 
@@ -2511,7 +2489,7 @@ namespace GitUI
             ShowCurrentBranchOnly_ToolStripMenuItemChecked = AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
             ShowFilteredBranches_ToolStripMenuItemChecked = AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly;
 
-            BranchFilter = _revisionFilter.GetBranchFilter();
+            _branchFilter = _revisionFilter.GetBranchFilter();
 
             if (!AppSettings.BranchFilterEnabled)
             {
@@ -2523,7 +2501,7 @@ namespace GitUI
             }
             else
             {
-                _refFilterOptions = BranchFilter.Length > 0
+                _refFilterOptions = _branchFilter.Length > 0
                     ? 0
                     : RefFilterOptions.All | RefFilterOptions.Boundary;
             }
@@ -2540,7 +2518,7 @@ namespace GitUI
 
         private void ApplyFilterFromRevisionFilterDialog()
         {
-            BranchFilter = _revisionFilter.GetBranchFilter();
+            _branchFilter = _revisionFilter.GetBranchFilter();
             SetShowBranches();
         }
 
@@ -3694,7 +3672,7 @@ namespace GitUI
                 {
                     _initialSelectedRevision = revisionGuid.ToString();
                     Revisions.SelectedIds = null;
-                    LastSelectedRows = null;
+                    _lastSelectedRows = null;
                 }
             }
             else if (showNoRevisionMsg)

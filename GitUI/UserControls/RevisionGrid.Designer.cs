@@ -25,12 +25,6 @@ namespace GitUI
                     _buildServerWatcher = null;
                 }
 
-                if (_indexWatcher != null)
-                {
-                    _indexWatcher.Dispose();
-                    _indexWatcher = null;
-                }
-
                 _selectedItemBrush = null;
 
                 if (_filledItemBrush != null)
@@ -49,6 +43,11 @@ namespace GitUI
                 {
                     _fontOfSHAColumn.Dispose();
                     _fontOfSHAColumn = null;
+                }
+
+                if (_indexWatcher.IsValueCreated)
+                {
+                    _indexWatcher.Value.Dispose();
                 }
             }
 
