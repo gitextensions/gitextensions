@@ -98,7 +98,7 @@ namespace GitUI
         private RevisionReader _revisionReader;
         private IDisposable _revisionSubscription;
         private RevisionGridLayout _layout;
-        private int _rowHeigth;
+        private int _rowHeight;
         private GitRevision _baseCommitToCompare;
         private string _rebaseOnTopOf;
         private bool _isRefreshingRevisions;
@@ -113,7 +113,7 @@ namespace GitUI
         private string _branchFilter = string.Empty;
         private JoinableTask<SuperProjectInfo> _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
-        private string _filtredCurrentCheckout;
+        private string _filteredCurrentCheckout;
         private string[] _currentCheckoutParents;
         private bool _settingsLoaded;
         private Font _fontOfSHAColumn;
@@ -973,7 +973,7 @@ namespace GitUI
 
                 Graph.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
-                _filtredCurrentCheckout = null;
+                _filteredCurrentCheckout = null;
                 _currentCheckoutParents = null;
                 _superprojectCurrentCheckout = newSuperPrjectInfo;
                 Graph.Clear();
@@ -1226,7 +1226,7 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            string filtredCurrentCheckout = _filtredCurrentCheckout;
+            string filtredCurrentCheckout = _filteredCurrentCheckout;
             string[] lastSelectedRows = _lastSelectedRows ?? Array.Empty<string>();
 
             // filter out all unavailable commits from LastSelectedRows.
@@ -1760,7 +1760,7 @@ namespace GitUI
                     if (IsCardLayout)
                     {
                         int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
-                        int gravatarSize = _rowHeigth - textHeight - 12;
+                        int gravatarSize = _rowHeight - textHeight - 12;
                         int gravatarTop = e.CellBounds.Top + textHeight + 6;
                         int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
 
@@ -1780,7 +1780,7 @@ namespace GitUI
                         string authorText;
                         string timeText;
 
-                        if (_rowHeigth >= 60)
+                        if (_rowHeight >= 60)
                         {
                             authorText = revision.Author;
                             timeText = TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate);
@@ -2809,11 +2809,11 @@ namespace GitUI
                 return;
             }
 
-            if (_filtredCurrentCheckout == null)
+            if (_filteredCurrentCheckout == null)
             {
                 if (rev.Guid == CurrentCheckout)
                 {
-                    _filtredCurrentCheckout = CurrentCheckout;
+                    _filteredCurrentCheckout = CurrentCheckout;
                 }
                 else
                 {
@@ -2822,17 +2822,17 @@ namespace GitUI
                         _currentCheckoutParents = GetAllParents(CurrentCheckout);
                     }
 
-                    _filtredCurrentCheckout = _currentCheckoutParents.FirstOrDefault(parent => parent == rev.Guid);
+                    _filteredCurrentCheckout = _currentCheckoutParents.FirstOrDefault(parent => parent == rev.Guid);
                 }
             }
 
-            if (_filtredCurrentCheckout == rev.Guid && ShowUncommitedChanges() && !Module.IsBareRepository())
+            if (_filteredCurrentCheckout == rev.Guid && ShowUncommitedChanges() && !Module.IsBareRepository())
             {
-                CheckUncommitedChanged(_filtredCurrentCheckout);
+                CheckUncommitedChanged(_filteredCurrentCheckout);
             }
 
             DvcsGraph.DataTypes dataTypes;
-            if (rev.Guid == _filtredCurrentCheckout)
+            if (rev.Guid == _filteredCurrentCheckout)
             {
                 dataTypes = DvcsGraph.DataTypes.Active;
             }
@@ -3194,7 +3194,7 @@ namespace GitUI
 
             if (IsCardLayout)
             {
-                _rowHeigth = AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Card ||
+                _rowHeight = AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Card ||
                              AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph
                     ? 45
                     : 70;
@@ -3202,7 +3202,7 @@ namespace GitUI
                 if (_filledItemBrush == null)
                 {
                     _filledItemBrush = new LinearGradientBrush(
-                        rect: new Rectangle(0, 0, _rowHeigth, _rowHeigth),
+                        rect: new Rectangle(0, 0, _rowHeight, _rowHeight),
                         color1: Graph.RowTemplate.DefaultCellStyle.SelectionBackColor,
                         color2: Color.LightBlue,
                         angle: 90,
@@ -3212,7 +3212,7 @@ namespace GitUI
                 _selectedItemBrush = _filledItemBrush;
 
                 Graph.ShowAuthor(!IsCardLayout);
-                Graph.SetRowHeight(_rowHeigth);
+                Graph.SetRowHeight(_rowHeight);
             }
             else
             {
@@ -3220,19 +3220,19 @@ namespace GitUI
                 {
                     using (var graphics = Graphics.FromHwnd(Handle))
                     {
-                        _rowHeigth = (int)graphics.MeasureString("By", _normalFont).Height + 9;
+                        _rowHeight = (int)graphics.MeasureString("By", _normalFont).Height + 9;
                     }
 
                     _selectedItemBrush = SystemBrushes.Highlight;
                 }
                 else
                 {
-                    _rowHeigth = 25;
+                    _rowHeight = 25;
 
                     if (_filledItemBrush == null)
                     {
                         _filledItemBrush = new LinearGradientBrush(
-                            rect: new Rectangle(0, 0, _rowHeigth, _rowHeigth),
+                            rect: new Rectangle(0, 0, _rowHeight, _rowHeight),
                             color1: Graph.RowTemplate.DefaultCellStyle.SelectionBackColor,
                             color2: Color.LightBlue,
                             angle: 90,
@@ -3243,7 +3243,7 @@ namespace GitUI
                 }
 
                 Graph.ShowAuthor(!IsCardLayout);
-                Graph.SetRowHeight(_rowHeigth);
+                Graph.SetRowHeight(_rowHeight);
             }
 
             // Hide graph column when there it is disabled OR when a filter is active
