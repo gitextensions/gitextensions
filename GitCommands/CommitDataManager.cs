@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
+using GitCommands.Git.Extensions;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
@@ -187,7 +187,7 @@ namespace GitCommands
         [ContractAnnotation("=>true,error:null,data:notnull")]
         private bool TryGetCommitLog([NotNull] string commitId, [NotNull] string format, out string error, out string data)
         {
-            if (GitCommands.Git.Extensions.GitRevisionExtensions.IsArtificial(commitId))
+            if (GitRevisionExtensions.IsArtificial(commitId))
             {
                 data = null;
                 error = "No log information for artificial commits";
