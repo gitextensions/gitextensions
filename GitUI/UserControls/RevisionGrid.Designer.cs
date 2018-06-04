@@ -19,10 +19,10 @@ namespace GitUI
                     _revisionReader = null;
                 }
 
-                if (BuildServerWatcher != null)
+                if (_buildServerWatcher != null)
                 {
-                    BuildServerWatcher.Dispose();
-                    BuildServerWatcher = null;
+                    _buildServerWatcher.Dispose();
+                    _buildServerWatcher = null;
                 }
 
                 if (_indexWatcher != null)
