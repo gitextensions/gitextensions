@@ -116,6 +116,14 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
+        public void CombinedDiffId_has_expected_value()
+        {
+            Assert.AreEqual(
+                "3333333333333333333333333333333333333333",
+                ObjectId.CombinedDiffId.ToString());
+        }
+
+        [Test]
         public void UnstagedId_is_artificial()
         {
             Assert.IsTrue(ObjectId.UnstagedId.IsArtificial);
@@ -125,6 +133,12 @@ namespace GitCommandsTests.Git
         public void IndexId_is_artificial()
         {
             Assert.IsTrue(ObjectId.IndexId.IsArtificial);
+        }
+
+        [Test]
+        public void CombinedDiffId_is_artificial()
+        {
+            Assert.IsTrue(ObjectId.CombinedDiffId.IsArtificial);
         }
 
         [Test]
