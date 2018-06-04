@@ -1099,38 +1099,29 @@ namespace GitUI
 
             private RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
             {
-                SetUpVars(authorFilter, out _authorFilter, out _authorFilterRegex, ignoreCase);
-                SetUpVars(committerFilter, out _committerFilter, out _committerFilterRegex, ignoreCase);
-                SetUpVars(messageFilter, out _messageFilter, out _messageFilterRegex, ignoreCase);
+                (_authorFilter, _authorFilterRegex) = SetUpVars(authorFilter, ignoreCase);
+                (_committerFilter, _committerFilterRegex) = SetUpVars(committerFilter, ignoreCase);
+                (_messageFilter, _messageFilterRegex) = SetUpVars(messageFilter, ignoreCase);
+
                 if (!string.IsNullOrEmpty(_messageFilter) && MessageFilterCouldBeSHA(_messageFilter))
                 {
-                    SetUpVars(messageFilter, out _shaFilter, out _shaFilterRegex, false);
+                    (_shaFilter, _shaFilterRegex) = SetUpVars(messageFilter, false);
                 }
-            }
 
-            private static void SetUpVars(string filterValue,
-                                   out string filterStr,
-                                   out Regex filterRegEx,
-                                   bool ignoreCase)
-            {
-                filterStr = filterValue?.Trim() ?? string.Empty;
-
-                var options = ignoreCase ? RegexOptions.IgnoreCase : RegexOptions.None;
-
-                try
+                (string filterStr, Regex filterRegex) SetUpVars(string filterValue, bool ignoreKase)
                 {
-                    filterRegEx = new Regex(filterStr, options);
-                }
-                catch (ArgumentException)
-                {
-                    filterRegEx = null;
-                }
-            }
+                    var filterStr = filterValue?.Trim() ?? string.Empty;
 
-            private static bool CheckCondition(string filter, Regex regex, string value)
-            {
-                return string.IsNullOrEmpty(filter) ||
-                       ((regex != null) && (value != null) && regex.IsMatch(value));
+                    try
+                    {
+                        var options = ignoreKase ? RegexOptions.IgnoreCase : RegexOptions.None;
+                        return (filterStr, new Regex(filterStr, options));
+                    }
+                    catch (ArgumentException)
+                    {
+                        return (filterStr, null);
+                    }
+                }
             }
 
             public bool Predicate(GitRevision rev)
@@ -1139,6 +1130,12 @@ namespace GitUI
                        CheckCondition(_committerFilter, _committerFilterRegex, rev.Committer) &&
                        (CheckCondition(_messageFilter, _messageFilterRegex, rev.Body) ||
                         (_shaFilter != null && CheckCondition(_shaFilter, _shaFilterRegex, rev.Guid)));
+
+                bool CheckCondition(string filter, Regex regex, string value)
+                {
+                    return string.IsNullOrEmpty(filter) ||
+                           (regex != null && value != null && regex.IsMatch(value));
+                }
             }
 
             [CanBeNull]
