@@ -71,7 +71,6 @@ namespace GitUI
         private readonly IImageCache _avatarCache;
         private readonly IAvatarService _gravatarService;
         private readonly IImageNameProvider _avatarImageNameProvider;
-        private readonly ICommitDataManager _commitDataManager;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IGitRevisionTester _gitRevisionTester;
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
@@ -141,8 +140,6 @@ namespace GitUI
             _gravatarService = new GravatarService(_avatarCache, _avatarImageNameProvider);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _gitRevisionTester = new GitRevisionTester(_fullPathResolver);
-
-            _commitDataManager = new CommitDataManager(() => Module);
 
             copyToClipboardToolStripMenuItem.GetViewModel = () => new CopyContextMenuViewModel(LatestSelectedRevision);
 
