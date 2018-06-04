@@ -3861,6 +3861,7 @@ namespace GitCommands
                 }).ToList();
         }
 
+        [CanBeNull]
         public string GetCombinedDiffContent(GitRevision revisionOfMergeCommit, string filePath, string extraArgs, Encoding encoding)
         {
             var args = new ArgumentBuilder
@@ -3884,7 +3885,7 @@ namespace GitCommands
 
             var patches = PatchProcessor.CreatePatchesFromString(patch, encoding).ToList();
 
-            return GetPatch(patches, filePath, filePath).Text;
+            return GetPatch(patches, filePath, filePath)?.Text;
         }
 
         public bool HasLfsSupport()
