@@ -378,9 +378,6 @@ namespace GitUI
         [Browsable(false)]
         public string CurrentCheckout { get; private set; }
         [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public string FiltredFileName { get; set; }
-        [Browsable(false)]
         private JoinableTask<SuperProjectInfo> SuperprojectCurrentCheckout { get; set; }
         [Browsable(false)]
         public int LatestSelectedRowIndex { get; private set; }
