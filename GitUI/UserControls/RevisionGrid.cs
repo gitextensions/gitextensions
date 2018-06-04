@@ -210,11 +210,13 @@ namespace GitUI
 
             try
             {
-                SetRevisionsLayout((RevisionGridLayout)AppSettings.RevisionGraphLayout);
+                AppSettings.RevisionGraphLayout = (int)(RevisionGridLayout)AppSettings.RevisionGraphLayout;
+                SetRevisionsLayout();
             }
             catch
             {
-                SetRevisionsLayout(RevisionGridLayout.SmallWithGraph);
+                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.SmallWithGraph;
+                SetRevisionsLayout();
             }
 
             compareToBaseToolStripMenuItem.Enabled = false;
@@ -2147,7 +2149,7 @@ namespace GitUI
         private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
             float x, float y, float width, float height, float radius, ArrowType arrowType, bool dashedLine, bool fill)
         {
-            float additionalOffset = arrowType != ArrowType.None ? GetArrowSize(height) : 0;
+            float additionalOffset = arrowType != ArrowType.None ? height - 6 : 0;
             width += additionalOffset;
             var oldMode = graphics.SmoothingMode;
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -2206,10 +2208,6 @@ namespace GitUI
             return additionalOffset;
         }
 
-        private static float GetArrowSize(float rowHeight)
-        {
-            return rowHeight - 6;
-        }
 
         private static void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
         {
@@ -3335,12 +3333,8 @@ namespace GitUI
                 nextLayout = 1;
             }
 
-            SetRevisionsLayout((RevisionGridLayout)nextLayout);
-        }
+            AppSettings.RevisionGraphLayout = nextLayout;
 
-        public void SetRevisionsLayout(RevisionGridLayout revisionGridLayout)
-        {
-            AppSettings.RevisionGraphLayout = (int)revisionGridLayout;
             SetRevisionsLayout();
         }
 
