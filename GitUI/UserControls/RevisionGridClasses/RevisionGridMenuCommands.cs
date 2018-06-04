@@ -243,7 +243,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                     Name = "showRevisionGraphToolStripMenuItem",
                     Text = "Show revision graph",
                     ExecuteAction = () => _revisionGrid.ShowRevisionGraph_ToolStripMenuItemClick(null, null),
-                    IsCheckedFunc = () => _revisionGrid.IsGraphLayout()
+                    IsCheckedFunc = () => _revisionGrid.IsGraphLayout
                 },
                 new MenuCommand
                 {
