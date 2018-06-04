@@ -2273,33 +2273,35 @@ namespace GitUI
             return additionalOffset;
         }
 
+        private static readonly PointF[] _arrowPoints = new PointF[4];
+
         private static void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
         {
+            ThreadHelper.AssertOnUIThread();
+
             const float horShift = 4;
             const float verShift = 3;
+
             float height = rowHeight - (verShift * 2);
             float width = height / 2;
 
-            var points = new[]
-            {
-                new PointF(x + horShift, y + verShift),
-                new PointF(x + horShift + width, y + verShift + (height / 2)),
-                new PointF(x + horShift, y + verShift + height),
-                new PointF(x + horShift, y + verShift)
-            };
+            _arrowPoints[0] = new PointF(x + horShift, y + verShift);
+            _arrowPoints[1] = new PointF(x + horShift + width, y + verShift + (height / 2));
+            _arrowPoints[2] = new PointF(x + horShift, y + verShift + height);
+            _arrowPoints[3] = new PointF(x + horShift, y + verShift);
 
             if (filled)
             {
-                using (var solidBrush = new SolidBrush(color))
+                using (var brush = new SolidBrush(color))
                 {
-                    graphics.FillPolygon(solidBrush, points);
+                    graphics.FillPolygon(brush, _arrowPoints);
                 }
             }
             else
             {
                 using (var pen = new Pen(color))
                 {
-                    graphics.DrawPolygon(pen, points);
+                    graphics.DrawPolygon(pen, _arrowPoints);
                 }
             }
         }
