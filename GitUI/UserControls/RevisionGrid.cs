@@ -245,9 +245,9 @@ namespace GitUI
                 }
             }
 
-            if (disposing && components != null)
+            if (disposing)
             {
-                components.Dispose();
+                components?.Dispose();
             }
 
             base.Dispose(disposing);
