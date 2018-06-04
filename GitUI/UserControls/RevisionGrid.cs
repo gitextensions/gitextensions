@@ -58,6 +58,10 @@ namespace GitUI
     [DefaultEvent("DoubleClick")]
     public sealed partial class RevisionGrid : GitModuleControl
     {
+        public event EventHandler<GitModuleEventArgs> GitModuleChanged;
+        public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
+        public event EventHandler<EventArgs> ShowFirstParentsToggled;
+
         private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
         private readonly TranslationString _cannotHighlightSelectedBranch = new TranslationString("Cannot highlight selected branch when revision graph is loading.");
         private readonly TranslationString _noRevisionFoundError = new TranslationString("No revision found.");
@@ -89,10 +93,7 @@ namespace GitUI
 
         private RevisionGridLayout _layout;
         private int _rowHeigth;
-        public event EventHandler<GitModuleEventArgs> GitModuleChanged;
-        public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
         public Action OnToggleBranchTreePanelRequested;
-        public event EventHandler<EventArgs> ShowFirstParentsToggled;
 
         private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
