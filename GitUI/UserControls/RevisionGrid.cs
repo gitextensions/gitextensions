@@ -348,7 +348,7 @@ namespace GitUI
                 IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
                 IsMessageMultilineDataGridViewColumn.Width = TextRenderer.MeasureText(MultilineMessageIndicator, NormalFont).Width;
 
-                _refsFont = IsFilledBranchesLayout() ? _normalFont : new Font(_normalFont, FontStyle.Bold);
+                _refsFont = IsFilledBranchesLayout ? _normalFont : new Font(_normalFont, FontStyle.Bold);
                 _headFont = new Font(_normalFont, FontStyle.Bold);
                 _superprojectFont = new Font(_normalFont, FontStyle.Underline);
             }
@@ -1711,7 +1711,7 @@ namespace GitUI
                 if (columnIndex == messageColIndex)
                 {
                     int baseOffset = 0;
-                    if (IsCardLayout())
+                    if (IsCardLayout)
                     {
                         baseOffset = 5;
 
@@ -1747,7 +1747,7 @@ namespace GitUI
 
                     float offset = baseOffset;
 
-                    drawRefArgs.RefsFont = IsFilledBranchesLayout() ? rowFont : _refsFont;
+                    drawRefArgs.RefsFont = IsFilledBranchesLayout ? rowFont : _refsFont;
 
                     if (spi != null)
                     {
@@ -1831,7 +1831,7 @@ namespace GitUI
                         offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true);
                     }
 
-                    if (IsCardLayout())
+                    if (IsCardLayout)
                     {
                         offset = baseOffset;
                     }
@@ -1840,7 +1840,7 @@ namespace GitUI
                     var bounds = AdjustCellBounds(e.CellBounds, offset);
                     DrawColumnText(e, text, rowFont, foreColor, bounds);
 
-                    if (IsCardLayout())
+                    if (IsCardLayout)
                     {
                         int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
                         int gravatarSize = _rowHeigth - textHeight - 12;
@@ -1977,7 +1977,7 @@ namespace GitUI
         {
             var textColor = fill ? headColor : Lerp(headColor, Color.White, 0.5f);
 
-            if (IsCardLayout())
+            if (IsCardLayout)
             {
                 using (Brush textBrush = new SolidBrush(textColor))
                 {
@@ -1999,7 +1999,7 @@ namespace GitUI
             }
             else
             {
-                string headName = IsFilledBranchesLayout()
+                string headName = IsFilledBranchesLayout
                                ? name
                                : string.Concat("[", name, "] ");
 
@@ -2008,7 +2008,7 @@ namespace GitUI
 
                 offset += textSize.Width;
 
-                if (IsFilledBranchesLayout())
+                if (IsFilledBranchesLayout)
                 {
                     offset += 9;
 
@@ -3212,7 +3212,7 @@ namespace GitUI
             // hide revision graph when hiding merge commits, reasons:
             // 1, revison graph is no longer relevant, as we are not sohwing all commits
             // 2, performance hit when both revision graph and no merge commits are enabled
-            if (IsGraphLayout() && !AppSettings.ShowMergeCommits)
+            if (IsGraphLayout && !AppSettings.ShowMergeCommits)
             {
                 ToggleRevisionGraph();
                 SetRevisionsLayout();
@@ -3255,7 +3255,7 @@ namespace GitUI
             MenuCommands.TriggerMenuChanged();
 
             // must show MergeCommits when showing revision graph
-            if (!AppSettings.ShowMergeCommits && IsGraphLayout())
+            if (!AppSettings.ShowMergeCommits && IsGraphLayout)
             {
                 AppSettings.ShowMergeCommits = true;
                 showMergeCommitsToolStripMenuItem.Checked = true;
@@ -3346,7 +3346,7 @@ namespace GitUI
 
             SetAuthoredRevisionsBrush();
 
-            if (IsCardLayout())
+            if (IsCardLayout)
             {
                 _rowHeigth = AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Card ||
                              AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph
@@ -3365,12 +3365,12 @@ namespace GitUI
 
                 _selectedItemBrush = _filledItemBrush;
 
-                Revisions.ShowAuthor(!IsCardLayout());
+                Revisions.ShowAuthor(!IsCardLayout);
                 Revisions.SetRowHeight(_rowHeigth);
             }
             else
             {
-                if (IsFilledBranchesLayout())
+                if (IsFilledBranchesLayout)
                 {
                     using (var graphics = Graphics.FromHwnd(Handle))
                     {
@@ -3396,13 +3396,13 @@ namespace GitUI
                     _selectedItemBrush = _filledItemBrush;
                 }
 
-                Revisions.ShowAuthor(!IsCardLayout());
+                Revisions.ShowAuthor(!IsCardLayout);
                 Revisions.SetRowHeight(_rowHeigth);
             }
 
             // Hide graph column when there it is disabled OR when a filter is active
             // allowing for special case when history of a single file is being displayed
-            if (!IsGraphLayout() || (ShouldHideGraph(false) && !AllowGraphWithFilter))
+            if (!IsGraphLayout || (ShouldHideGraph(false) && !AllowGraphWithFilter))
             {
                 Revisions.HideRevisionGraph();
             }
@@ -3426,26 +3426,21 @@ namespace GitUI
             }
         }
 
-        private bool IsFilledBranchesLayout()
-        {
-            return _layout == RevisionGridLayout.FilledBranchesSmall || _layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
-        }
+        private bool IsFilledBranchesLayout
+            => _layout == RevisionGridLayout.FilledBranchesSmall ||
+               _layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
 
-        private bool IsCardLayout()
-        {
-            return _layout == RevisionGridLayout.Card
-                   || _layout == RevisionGridLayout.CardWithGraph
-                   || _layout == RevisionGridLayout.LargeCard
-                   || _layout == RevisionGridLayout.LargeCardWithGraph;
-        }
+        private bool IsCardLayout
+            => _layout == RevisionGridLayout.Card ||
+               _layout == RevisionGridLayout.CardWithGraph ||
+               _layout == RevisionGridLayout.LargeCard ||
+               _layout == RevisionGridLayout.LargeCardWithGraph;
 
-        internal bool IsGraphLayout()
-        {
-            return _layout == RevisionGridLayout.SmallWithGraph
-                   || _layout == RevisionGridLayout.CardWithGraph
-                   || _layout == RevisionGridLayout.LargeCardWithGraph
-                   || _layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
-        }
+        internal bool IsGraphLayout
+            => _layout == RevisionGridLayout.SmallWithGraph ||
+               _layout == RevisionGridLayout.CardWithGraph ||
+               _layout == RevisionGridLayout.LargeCardWithGraph ||
+               _layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
 
         #region Hotkey commands
 
