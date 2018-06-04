@@ -98,8 +98,6 @@ namespace GitUI
         private IDisposable _revisionSubscription;
         private RevisionGridLayout _layout;
         private int _rowHeigth;
-        public Action OnToggleBranchTreePanelRequested;
-
         private GitRevision _baseCommitToCompare;
         private string _rebaseOnTopOf;
         private bool _isRefreshingRevisions;
@@ -116,6 +114,8 @@ namespace GitUI
         private JoinableTask<SuperProjectInfo> _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
         private string _filtredCurrentCheckout;
+
+        [Browsable(false)] public Action OnToggleBranchTreePanelRequested { get; set; }
 
         /// <summary>
         /// Refs loaded while the latest processing of git log
