@@ -353,16 +353,16 @@ namespace GitUI
             set
             {
                 _normalFont = value;
-                MessageDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
-                DateDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
-                _fontOfSHAColumn = new Font("Consolas", _normalFont.SizeInPoints);
-                IdDataGridViewColumn.DefaultCellStyle.Font = _fontOfSHAColumn;
-                IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
-                IsMessageMultilineDataGridViewColumn.Width = TextRenderer.MeasureText(MultilineMessageIndicator, _normalFont).Width;
-
                 _refsFont = IsFilledBranchesLayout ? _normalFont : new Font(_normalFont, FontStyle.Bold);
                 _headFont = new Font(_normalFont, FontStyle.Bold);
                 _superprojectFont = new Font(_normalFont, FontStyle.Underline);
+                _fontOfSHAColumn = new Font("Consolas", _normalFont.SizeInPoints);
+
+                MessageDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
+                DateDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
+                IdDataGridViewColumn.DefaultCellStyle.Font = _fontOfSHAColumn;
+                IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
+                IsMessageMultilineDataGridViewColumn.Width = TextRenderer.MeasureText(MultilineMessageIndicator, _normalFont).Width;
             }
         }
 
@@ -371,6 +371,12 @@ namespace GitUI
         {
             get => Graph.MultiSelect;
             set => Graph.MultiSelect = value;
+        }
+
+        public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
+        {
+            get => Graph.RevisionGraphDrawStyle;
+            set => Graph.RevisionGraphDrawStyle = value;
         }
 
         private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripDropDownItem targetMenuItem)
@@ -807,12 +813,6 @@ namespace GitUI
             Graph.HighlightBranch(id);
         }
 
-        public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
-        {
-            get => Graph.RevisionGraphDrawStyle;
-            set => Graph.RevisionGraphDrawStyle = value;
-        }
-
         public string DescribeRevision(GitRevision revision, int maxLength = 0)
         {
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
@@ -889,80 +889,6 @@ namespace GitUI
             if (IndexWatcher.IndexChanged)
             {
                 ForceRefreshRevisions();
-            }
-        }
-
-        private sealed class RevisionGridInMemFilter
-        {
-            private readonly string _authorFilter;
-            private readonly Regex _authorFilterRegex;
-            private readonly string _committerFilter;
-            private readonly Regex _committerFilterRegex;
-            private readonly string _messageFilter;
-            private readonly Regex _messageFilterRegex;
-            private readonly string _shaFilter;
-            private readonly Regex _shaFilterRegex;
-
-            private RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
-            {
-                (_authorFilter, _authorFilterRegex) = SetUpVars(authorFilter, ignoreCase);
-                (_committerFilter, _committerFilterRegex) = SetUpVars(committerFilter, ignoreCase);
-                (_messageFilter, _messageFilterRegex) = SetUpVars(messageFilter, ignoreCase);
-
-                if (!string.IsNullOrEmpty(_messageFilter) && ObjectId.IsValidPartial(_messageFilter, minLength: 5))
-                {
-                    (_shaFilter, _shaFilterRegex) = SetUpVars(messageFilter, false);
-                }
-
-                (string filterStr, Regex filterRegex) SetUpVars(string filterValue, bool ignoreKase)
-                {
-                    var filterStr = filterValue?.Trim() ?? string.Empty;
-
-                    try
-                    {
-                        var options = ignoreKase ? RegexOptions.IgnoreCase : RegexOptions.None;
-                        return (filterStr, new Regex(filterStr, options));
-                    }
-                    catch (ArgumentException)
-                    {
-                        return (filterStr, null);
-                    }
-                }
-            }
-
-            public bool Predicate(GitRevision rev)
-            {
-                return CheckCondition(_authorFilter, _authorFilterRegex, rev.Author) &&
-                       CheckCondition(_committerFilter, _committerFilterRegex, rev.Committer) &&
-                       (CheckCondition(_messageFilter, _messageFilterRegex, rev.Body) ||
-                        (_shaFilter != null && CheckCondition(_shaFilter, _shaFilterRegex, rev.Guid)));
-
-                bool CheckCondition(string filter, Regex regex, string value)
-                {
-                    return string.IsNullOrEmpty(filter) ||
-                           (regex != null && value != null && regex.IsMatch(value));
-                }
-            }
-
-            [CanBeNull]
-            public static RevisionGridInMemFilter CreateIfNeeded([CanBeNull] string authorFilter,
-                                                                 [CanBeNull] string committerFilter,
-                                                                 [CanBeNull] string messageFilter,
-                                                                 bool ignoreCase)
-            {
-                if (string.IsNullOrEmpty(authorFilter) &&
-                    string.IsNullOrEmpty(committerFilter) &&
-                    string.IsNullOrEmpty(messageFilter) &&
-                    !ObjectId.IsValidPartial(messageFilter, minLength: 5))
-                {
-                    return null;
-                }
-
-                return new RevisionGridInMemFilter(
-                    authorFilter,
-                    committerFilter,
-                    messageFilter,
-                    ignoreCase);
             }
         }
 
@@ -1174,15 +1100,6 @@ namespace GitUI
                 Error.BringToFront();
                 throw;
             }
-        }
-
-        private sealed class SuperProjectInfo
-        {
-            public string CurrentBranch;
-            public string Conflict_Base;
-            public string Conflict_Remote;
-            public string Conflict_Local;
-            public Dictionary<string, List<IGitRef>> Refs;
         }
 
         [CanBeNull]
@@ -1417,14 +1334,6 @@ namespace GitUI
             SelectionTimer.Stop();
             SelectionTimer.Enabled = true;
             SelectionTimer.Start();
-        }
-
-        private struct DrawRefArgs
-        {
-            public Graphics Graphics;
-            public Rectangle CellBounds;
-            public bool IsRowSelected;
-            public Font RefsFont;
         }
 
         #region Graph event handlers
@@ -3133,56 +3042,6 @@ namespace GitUI
             }
         }
 
-        #region Drag/drop patch files on revision grid
-
-        private void GraphDragDrop(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
-            {
-                if (fileNameArray.Length > 10)
-                {
-                    // Some users need to be protected against themselves!
-                    MessageBox.Show(this, _droppingFilesBlocked.Text);
-                    return;
-                }
-
-                foreach (object fileNameObject in fileNameArray)
-                {
-                    var fileName = fileNameObject as string;
-
-                    if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        // Start apply patch dialog for each dropped patch file...
-                        UICommands.StartApplyPatchDialog(this, fileName);
-                    }
-                }
-            }
-        }
-
-        private static void GraphDragEnter(object sender, DragEventArgs e)
-        {
-            if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
-            {
-                foreach (object fileNameObject in fileNameArray)
-                {
-                    var fileName = fileNameObject as string;
-
-                    if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        // Allow drop (copy, not move) patch files
-                        e.Effect = DragDropEffects.Copy;
-                    }
-                    else
-                    {
-                        // When a non-patch file is dragged, do not allow it
-                        e.Effect = DragDropEffects.None;
-                        return;
-                    }
-                }
-            }
-        }
-        #endregion
-
         internal void ShowGitNotes_ToolStripMenuItemClick()
         {
             AppSettings.ShowGitNotes = !AppSettings.ShowGitNotes;
@@ -3429,89 +3288,6 @@ namespace GitUI
                _layout == RevisionGridLayout.LargeCardWithGraph ||
                _layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
 
-        #region Hotkey commands
-
-        public static readonly string HotkeySettingsName = "RevisionGrid";
-
-        internal enum Commands
-        {
-            ToggleRevisionGraph = 0,
-            RevisionFilter = 1,
-            ToggleAuthorDateCommitDate = 2,
-            ToggleOrderRevisionsByDate = 3,
-            ToggleShowRelativeDate = 4,
-            ToggleDrawNonRelativesGray = 5,
-            ToggleShowGitNotes = 6,
-            ToggleRevisionCardLayout = 7,
-            ToggleShowMergeCommits = 8,
-            ShowAllBranches = 9,
-            ShowCurrentBranchOnly = 10,
-            ShowFilteredBranches = 11,
-            ShowRemoteBranches = 12,
-            ShowFirstParent = 13,
-            GoToParent = 14,
-            GoToChild = 15,
-            ToggleHighlightSelectedBranch = 16,
-            NextQuickSearch = 17,
-            PrevQuickSearch = 18,
-            SelectCurrentRevision = 19,
-            GoToCommit = 20,
-            NavigateBackward = 21,
-            NavigateForward = 22,
-            SelectAsBaseToCompare = 23,
-            CompareToBase = 24,
-            CreateFixupCommit = 25,
-            ToggleShowTags = 26,
-            ToggleBranchTreePanel = 27
-        }
-
-        protected override bool ExecuteCommand(int cmd)
-        {
-            Commands command = (Commands)cmd;
-
-            switch (command)
-            {
-                case Commands.ToggleRevisionGraph: ToggleRevisionGraph(); break;
-                case Commands.RevisionFilter: ShowRevisionFilterDialog(); break;
-                case Commands.ToggleAuthorDateCommitDate: ToggleShowAuthorDate(); break;
-                case Commands.ToggleOrderRevisionsByDate: ToggleOrderRevisionByDate(); break;
-                case Commands.ToggleShowRelativeDate: ShowRelativeDate_ToolStripMenuItemClick(null); break;
-                case Commands.ToggleDrawNonRelativesGray: DrawNonrelativesGray_ToolStripMenuItemClick(); break;
-                case Commands.ToggleShowGitNotes: ShowGitNotes_ToolStripMenuItemClick(); break;
-                case Commands.ToggleRevisionCardLayout: ToggleRevisionCardLayout(); break;
-                case Commands.ToggleShowMergeCommits: ShowMergeCommits_ToolStripMenuItemClick(); break;
-                case Commands.ToggleShowTags: ShowTags_ToolStripMenuItemClick(); break;
-                case Commands.ShowAllBranches: ShowAllBranches(); break;
-                case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnly(); break;
-                case Commands.ShowFilteredBranches: ShowFilteredBranches(); break;
-                case Commands.ShowRemoteBranches: ToggleShowRemoteBranches(); break;
-                case Commands.ShowFirstParent: ShowFirstParent(); break;
-                case Commands.SelectCurrentRevision: SetSelectedRevision(new GitRevision(CurrentCheckout)); break;
-                case Commands.GoToCommit: MenuCommands.GotoCommitExcecute(); break;
-                case Commands.GoToParent: goToParentToolStripMenuItem_Click(); break;
-                case Commands.GoToChild: goToChildToolStripMenuItem_Click(); break;
-                case Commands.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
-                case Commands.NextQuickSearch: NextQuickSearch(true); break;
-                case Commands.PrevQuickSearch: NextQuickSearch(false); break;
-                case Commands.NavigateBackward: NavigateBackward(); break;
-                case Commands.NavigateForward: NavigateForward(); break;
-                case Commands.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(null, null); break;
-                case Commands.CompareToBase: compareToBaseToolStripMenuItem_Click(null, null); break;
-                case Commands.CreateFixupCommit: FixupCommitToolStripMenuItemClick(null, null); break;
-                case Commands.ToggleBranchTreePanel: ToggleBranchTreePanel(); break;
-                default:
-                    {
-                        bool result = base.ExecuteCommand(cmd);
-                        RefreshRevisions();
-                        return result;
-                    }
-            }
-
-            return true;
-        }
-
-        #endregion
-
         internal bool ExecuteCommand(Commands cmd)
         {
             return ExecuteCommand((int)cmd);
@@ -3720,5 +3496,241 @@ namespace GitUI
 
             RefreshRevisions();
         }
+
+        #region Nested type: RevisionGridInMemFilter
+
+        private sealed class RevisionGridInMemFilter
+        {
+            private readonly string _authorFilter;
+            private readonly Regex _authorFilterRegex;
+            private readonly string _committerFilter;
+            private readonly Regex _committerFilterRegex;
+            private readonly string _messageFilter;
+            private readonly Regex _messageFilterRegex;
+            private readonly string _shaFilter;
+            private readonly Regex _shaFilterRegex;
+
+            private RevisionGridInMemFilter(string authorFilter, string committerFilter, string messageFilter, bool ignoreCase)
+            {
+                (_authorFilter, _authorFilterRegex) = SetUpVars(authorFilter, ignoreCase);
+                (_committerFilter, _committerFilterRegex) = SetUpVars(committerFilter, ignoreCase);
+                (_messageFilter, _messageFilterRegex) = SetUpVars(messageFilter, ignoreCase);
+
+                if (!string.IsNullOrEmpty(_messageFilter) && ObjectId.IsValidPartial(_messageFilter, minLength: 5))
+                {
+                    (_shaFilter, _shaFilterRegex) = SetUpVars(messageFilter, false);
+                }
+
+                (string filterStr, Regex filterRegex) SetUpVars(string filterValue, bool ignoreKase)
+                {
+                    var filterStr = filterValue?.Trim() ?? string.Empty;
+
+                    try
+                    {
+                        var options = ignoreKase ? RegexOptions.IgnoreCase : RegexOptions.None;
+                        return (filterStr, new Regex(filterStr, options));
+                    }
+                    catch (ArgumentException)
+                    {
+                        return (filterStr, null);
+                    }
+                }
+            }
+
+            public bool Predicate(GitRevision rev)
+            {
+                return CheckCondition(_authorFilter, _authorFilterRegex, rev.Author) &&
+                       CheckCondition(_committerFilter, _committerFilterRegex, rev.Committer) &&
+                       (CheckCondition(_messageFilter, _messageFilterRegex, rev.Body) ||
+                        (_shaFilter != null && CheckCondition(_shaFilter, _shaFilterRegex, rev.Guid)));
+
+                bool CheckCondition(string filter, Regex regex, string value)
+                {
+                    return string.IsNullOrEmpty(filter) ||
+                           (regex != null && value != null && regex.IsMatch(value));
+                }
+            }
+
+            [CanBeNull]
+            public static RevisionGridInMemFilter CreateIfNeeded([CanBeNull] string authorFilter,
+                [CanBeNull] string committerFilter,
+                [CanBeNull] string messageFilter,
+                bool ignoreCase)
+            {
+                if (string.IsNullOrEmpty(authorFilter) &&
+                    string.IsNullOrEmpty(committerFilter) &&
+                    string.IsNullOrEmpty(messageFilter) &&
+                    !ObjectId.IsValidPartial(messageFilter, minLength: 5))
+                {
+                    return null;
+                }
+
+                return new RevisionGridInMemFilter(
+                    authorFilter,
+                    committerFilter,
+                    messageFilter,
+                    ignoreCase);
+            }
+        }
+
+        #endregion
+
+        #region Nested type: SuperProjectInfo
+
+        private sealed class SuperProjectInfo
+        {
+            public string CurrentBranch;
+            public string Conflict_Base;
+            public string Conflict_Remote;
+            public string Conflict_Local;
+            public Dictionary<string, List<IGitRef>> Refs;
+        }
+
+        #endregion
+
+        #region Nested type: Draw ref args
+
+        private struct DrawRefArgs
+        {
+            public Graphics Graphics;
+            public Rectangle CellBounds;
+            public bool IsRowSelected;
+            public Font RefsFont;
+        }
+
+        #endregion
+
+        #region Drag/drop patch files on revision grid
+
+        private void GraphDragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
+            {
+                if (fileNameArray.Length > 10)
+                {
+                    // Some users need to be protected against themselves!
+                    MessageBox.Show(this, _droppingFilesBlocked.Text);
+                    return;
+                }
+
+                foreach (object fileNameObject in fileNameArray)
+                {
+                    var fileName = fileNameObject as string;
+
+                    if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        // Start apply patch dialog for each dropped patch file...
+                        UICommands.StartApplyPatchDialog(this, fileName);
+                    }
+                }
+            }
+        }
+
+        private static void GraphDragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
+            {
+                foreach (object fileNameObject in fileNameArray)
+                {
+                    var fileName = fileNameObject as string;
+
+                    if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        // Allow drop (copy, not move) patch files
+                        e.Effect = DragDropEffects.Copy;
+                    }
+                    else
+                    {
+                        // When a non-patch file is dragged, do not allow it
+                        e.Effect = DragDropEffects.None;
+                        return;
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region Hotkey commands
+
+        public static readonly string HotkeySettingsName = "RevisionGrid";
+
+        internal enum Commands
+        {
+            ToggleRevisionGraph = 0,
+            RevisionFilter = 1,
+            ToggleAuthorDateCommitDate = 2,
+            ToggleOrderRevisionsByDate = 3,
+            ToggleShowRelativeDate = 4,
+            ToggleDrawNonRelativesGray = 5,
+            ToggleShowGitNotes = 6,
+            ToggleRevisionCardLayout = 7,
+            ToggleShowMergeCommits = 8,
+            ShowAllBranches = 9,
+            ShowCurrentBranchOnly = 10,
+            ShowFilteredBranches = 11,
+            ShowRemoteBranches = 12,
+            ShowFirstParent = 13,
+            GoToParent = 14,
+            GoToChild = 15,
+            ToggleHighlightSelectedBranch = 16,
+            NextQuickSearch = 17,
+            PrevQuickSearch = 18,
+            SelectCurrentRevision = 19,
+            GoToCommit = 20,
+            NavigateBackward = 21,
+            NavigateForward = 22,
+            SelectAsBaseToCompare = 23,
+            CompareToBase = 24,
+            CreateFixupCommit = 25,
+            ToggleShowTags = 26,
+            ToggleBranchTreePanel = 27
+        }
+
+        protected override bool ExecuteCommand(int cmd)
+        {
+            Commands command = (Commands)cmd;
+
+            switch (command)
+            {
+                case Commands.ToggleRevisionGraph: ToggleRevisionGraph(); break;
+                case Commands.RevisionFilter: ShowRevisionFilterDialog(); break;
+                case Commands.ToggleAuthorDateCommitDate: ToggleShowAuthorDate(); break;
+                case Commands.ToggleOrderRevisionsByDate: ToggleOrderRevisionByDate(); break;
+                case Commands.ToggleShowRelativeDate: ShowRelativeDate_ToolStripMenuItemClick(null); break;
+                case Commands.ToggleDrawNonRelativesGray: DrawNonrelativesGray_ToolStripMenuItemClick(); break;
+                case Commands.ToggleShowGitNotes: ShowGitNotes_ToolStripMenuItemClick(); break;
+                case Commands.ToggleRevisionCardLayout: ToggleRevisionCardLayout(); break;
+                case Commands.ToggleShowMergeCommits: ShowMergeCommits_ToolStripMenuItemClick(); break;
+                case Commands.ToggleShowTags: ShowTags_ToolStripMenuItemClick(); break;
+                case Commands.ShowAllBranches: ShowAllBranches(); break;
+                case Commands.ShowCurrentBranchOnly: ShowCurrentBranchOnly(); break;
+                case Commands.ShowFilteredBranches: ShowFilteredBranches(); break;
+                case Commands.ShowRemoteBranches: ToggleShowRemoteBranches(); break;
+                case Commands.ShowFirstParent: ShowFirstParent(); break;
+                case Commands.SelectCurrentRevision: SetSelectedRevision(new GitRevision(CurrentCheckout)); break;
+                case Commands.GoToCommit: MenuCommands.GotoCommitExcecute(); break;
+                case Commands.GoToParent: goToParentToolStripMenuItem_Click(); break;
+                case Commands.GoToChild: goToChildToolStripMenuItem_Click(); break;
+                case Commands.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
+                case Commands.NextQuickSearch: NextQuickSearch(true); break;
+                case Commands.PrevQuickSearch: NextQuickSearch(false); break;
+                case Commands.NavigateBackward: NavigateBackward(); break;
+                case Commands.NavigateForward: NavigateForward(); break;
+                case Commands.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(null, null); break;
+                case Commands.CompareToBase: compareToBaseToolStripMenuItem_Click(null, null); break;
+                case Commands.CreateFixupCommit: FixupCommitToolStripMenuItemClick(null, null); break;
+                case Commands.ToggleBranchTreePanel: ToggleBranchTreePanel(); break;
+                default:
+                {
+                    bool result = base.ExecuteCommand(cmd);
+                    RefreshRevisions();
+                    return result;
+                }
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }
