@@ -23,7 +23,7 @@ namespace GitUI
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
-            this.Revisions = new GitUI.RevisionGridClasses.DvcsGraph();
+            this.Graph = new GitUI.RevisionGridClasses.DvcsGraph();
             this.GraphDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MessageDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IsMessageMultilineDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -88,38 +88,38 @@ namespace GitUI
             this.rebaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebaseInteractivelyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebaseWithAdvOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.Revisions)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Graph)).BeginInit();
             this.mainContextMenu.SuspendLayout();
             this.NoCommits.SuspendLayout();
             this.NoGit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Error)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             this.SuspendLayout();
-            // 
-            // Revisions
-            // 
-            this.Revisions.AllowUserToAddRows = false;
-            this.Revisions.AllowUserToDeleteRows = false;
+            //
+            // Graph
+            //
+            this.Graph.AllowUserToAddRows = false;
+            this.Graph.AllowUserToDeleteRows = false;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Revisions.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.Revisions.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.Revisions.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this.Graph.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.Graph.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.Graph.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Revisions.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.Revisions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Revisions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Graph.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.Graph.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Graph.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.GraphDataGridViewColumn,
             this.MessageDataGridViewColumn,
             this.AuthorDataGridViewColumn,
             this.DateDataGridViewColumn,
             this.IdDataGridViewColumn,
             this.IsMessageMultilineDataGridViewColumn});
-            this.Revisions.ContextMenuStrip = this.mainContextMenu;
+            this.Graph.ContextMenuStrip = this.mainContextMenu;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -127,36 +127,33 @@ namespace GitUI
             dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.Revisions.DefaultCellStyle = dataGridViewCellStyle4;
-            this.Revisions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Revisions.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Revisions.GridColor = System.Drawing.SystemColors.Window;
-            this.Revisions.Location = new System.Drawing.Point(0, 0);
-            this.Revisions.Name = "Revisions";
-            this.Revisions.ReadOnly = true;
+            this.Graph.DefaultCellStyle = dataGridViewCellStyle4;
+            this.Graph.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Graph.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Graph.GridColor = System.Drawing.SystemColors.Window;
+            this.Graph.Location = new System.Drawing.Point(0, 0);
+            this.Graph.Name = "Graph";
+            this.Graph.ReadOnly = true;
             dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.Revisions.RowHeadersDefaultCellStyle = dataGridViewCellStyle5;
-            this.Revisions.RowHeadersVisible = false;
+            this.Graph.RowHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            this.Graph.RowHeadersVisible = false;
             dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Revisions.RowsDefaultCellStyle = dataGridViewCellStyle6;
-            this.Revisions.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(185)))), ((int)(((byte)(235)))));
-            this.Revisions.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            this.Revisions.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Revisions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Revisions.Size = new System.Drawing.Size(682, 235);
-            this.Revisions.StandardTab = true;
-            this.Revisions.TabIndex = 0;
-            this.Revisions.VirtualMode = true;
-            this.Revisions.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.RevisionsCellMouseDown);
-            this.Revisions.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.RevisionsDoubleClick);
-            this.Revisions.MouseClick += new System.Windows.Forms.MouseEventHandler(this.RevisionsMouseClick);
-            // 
+            this.Graph.RowsDefaultCellStyle = dataGridViewCellStyle6;
+            this.Graph.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Graph.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(185)))), ((int)(((byte)(235)))));
+            this.Graph.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            this.Graph.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.Graph.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.Graph.Size = new System.Drawing.Size(682, 235);
+            this.Graph.StandardTab = true;
+            this.Graph.TabIndex = 0;
+            this.Graph.VirtualMode = true;
+            //
             // Graph
             // 
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -682,10 +679,10 @@ namespace GitUI
             this.Controls.Add(this.NoCommits);
             this.Controls.Add(this.Error);
             this.Controls.Add(this.Loading);
-            this.Controls.Add(this.Revisions);
+            this.Controls.Add(this.Graph);
             this.Name = "RevisionGrid";
             this.Size = new System.Drawing.Size(682, 235);
-            ((System.ComponentModel.ISupportInitialize)(this.Revisions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Graph)).EndInit();
             this.mainContextMenu.ResumeLayout(false);
             this.NoCommits.ResumeLayout(false);
             this.NoCommits.PerformLayout();
@@ -701,7 +698,7 @@ namespace GitUI
 
         public System.Windows.Forms.PictureBox Error;
 
-        private DvcsGraph Revisions;
+        private DvcsGraph Graph;
         private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.Timer SelectionTimer;
         private System.Windows.Forms.Timer quickSearchTimer;
