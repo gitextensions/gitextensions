@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGridClasses
@@ -156,6 +157,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// <summary>
         /// this is needed because _revsionGrid is null when TranslationApp is called
         /// </summary>
+        [CanBeNull]
         private string GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands revGridCommands)
         {
             return _revisionGrid?.GetShortcutKeys(revGridCommands).ToShortcutKeyDisplayString();

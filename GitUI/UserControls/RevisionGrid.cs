@@ -957,7 +957,7 @@ namespace GitUI
             return Revisions.GetRevision(guid);
         }
 
-        public bool SetSelectedRevision(GitRevision revision)
+        public bool SetSelectedRevision([CanBeNull] GitRevision revision)
         {
             return SetSelectedRevision(revision?.Guid);
         }
@@ -1145,9 +1145,9 @@ namespace GitUI
             }
 
             [CanBeNull]
-            public static RevisionGridInMemFilter CreateIfNeeded(string authorFilter,
-                                                                 string committerFilter,
-                                                                 string messageFilter,
+            public static RevisionGridInMemFilter CreateIfNeeded([CanBeNull] string authorFilter,
+                                                                 [CanBeNull] string committerFilter,
+                                                                 [CanBeNull] string messageFilter,
                                                                  bool ignoreCase)
             {
                 if (string.IsNullOrEmpty(authorFilter) &&
@@ -1387,6 +1387,7 @@ namespace GitUI
             public Dictionary<string, List<IGitRef>> Refs;
         }
 
+        [CanBeNull]
         private static SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef, GitModule gitModule)
         {
             if (gitModule.SuperprojectModule == null)
@@ -3041,7 +3042,7 @@ namespace GitUI
             UpdateArtificialCommitCount(status, unstagedRev, stagedRev);
         }
 
-        private void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus> status, GitRevision unstagedRev, GitRevision stagedRev)
+        private void UpdateArtificialCommitCount([CanBeNull] IReadOnlyList<GitItemStatus> status, GitRevision unstagedRev, GitRevision stagedRev)
         {
             if (status == null)
             {
