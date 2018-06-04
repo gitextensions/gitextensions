@@ -1487,13 +1487,12 @@ namespace GitUI
 
         private void OnGraphKeyPress(object sender, KeyPressEventArgs e)
         {
-            var curIndex = -1;
-            if (Graph.SelectedRows.Count > 0)
-            {
-                curIndex = Graph.SelectedRows[0].Index;
-            }
+            var curIndex = Graph.SelectedRows.Count > 0
+                ? Graph.SelectedRows[0].Index
+                : -1;
 
             curIndex = curIndex >= 0 ? curIndex : 0;
+
             if (e.KeyChar == 8 && _quickSearchString.Length > 1)
             {
                 // backspace
@@ -1665,9 +1664,8 @@ namespace GitUI
             }
             else if (ShouldRenderAlternateBackColor(e.RowIndex))
             {
-                cellBackgroundBrush = new SolidBrush(ColorHelper.MakeColorDarker(e.CellStyle.BackColor));
-
                 // TODO if default background is nearly black, we should make it lighter instead
+                cellBackgroundBrush = new SolidBrush(ColorHelper.MakeColorDarker(e.CellStyle.BackColor));
             }
             else
             {
@@ -1702,7 +1700,9 @@ namespace GitUI
                 // TODO: If the background colour is close to being Gray, we should adjust the gray until there is a bit more contrast.
                 while (ColorHelper.GetColorBrightnessDifference(foreColor, backColor.Value) < 125)
                 {
-                    foreColor = ColorHelper.IsLightColor(backColor.Value) ? ColorHelper.MakeColorDarker(foreColor) : ColorHelper.MakeColorLighter(foreColor);
+                    foreColor = backColor.Value.IsLightColor()
+                        ? ColorHelper.MakeColorDarker(foreColor)
+                        : ColorHelper.MakeColorLighter(foreColor);
                 }
             }
             else
@@ -1999,6 +1999,7 @@ namespace GitUI
             }
 
             var revision = GetRevision(e.RowIndex);
+
             if (revision == null)
             {
                 return;
@@ -2006,28 +2007,22 @@ namespace GitUI
 
             e.FormattingApplied = true;
 
-            int graphColIndex = GraphDataGridViewColumn.Index;
-            int messageColIndex = MessageDataGridViewColumn.Index;
-            int authorColIndex = AuthorDataGridViewColumn.Index;
-            int dateColIndex = DateDataGridViewColumn.Index;
-            int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
-
-            if (columnIndex == graphColIndex && !revision.IsArtificial)
+            if (columnIndex == GraphDataGridViewColumn.Index && !revision.IsArtificial)
             {
                 // Do not show artificial guid
                 e.Value = revision.Guid;
             }
-            else if (columnIndex == messageColIndex)
+            else if (columnIndex == MessageDataGridViewColumn.Index)
             {
                 e.Value = revision.IsArtificial
                     ? revision.SubjectCount
                     : revision.Subject;
             }
-            else if (columnIndex == authorColIndex)
+            else if (columnIndex == AuthorDataGridViewColumn.Index)
             {
                 e.Value = revision.Author ?? "";
             }
-            else if (columnIndex == dateColIndex)
+            else if (columnIndex == DateDataGridViewColumn.Index)
             {
                 var time = AppSettings.ShowAuthorDate
                     ? revision.AuthorDate
@@ -2036,6 +2031,10 @@ namespace GitUI
                     ? $"{time:d} {time:T}"
                     : "";
             }
+            else if (columnIndex == IsMessageMultilineDataGridViewColumn.Index && AppSettings.ShowIndicatorForMultilineMessage)
+            {
+                e.Value = revision.HasMultiLineMessage ? MultilineMessageIndicator : "";
+            }
             else if (columnIndex == _buildServerWatcher.BuildStatusImageColumnIndex)
             {
                 BuildInfoDrawingLogic.BuildStatusImageColumnCellFormatting(e, Graph, revision);
@@ -2043,10 +2042,6 @@ namespace GitUI
             else if (columnIndex == _buildServerWatcher.BuildStatusMessageColumnIndex)
             {
                 BuildInfoDrawingLogic.BuildStatusMessageCellFormatting(e, revision);
-            }
-            else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
-            {
-                e.Value = revision.HasMultiLineMessage ? MultilineMessageIndicator : "";
             }
             else
             {
