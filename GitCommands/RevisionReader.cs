@@ -336,7 +336,7 @@ namespace GitCommands
 
             #endregion
 
-            #region Encoded string valies (names, emails, subject, body)
+            #region Encoded string values (names, emails, subject, body)
 
             // Finally, decode the names, email, subject and body strings using the required text encoding
             var s = encoding.GetString(array, offset, lastOffset - offset);
