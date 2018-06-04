@@ -3344,8 +3344,6 @@ namespace GitUI
                          ? (RevisionGridLayout)AppSettings.RevisionGraphLayout
                          : RevisionGridLayout.SmallWithGraph;
 
-            IsCardLayout();
-
             NormalFont = AppSettings.Font; // new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
 
             SetAuthoredRevisionsBrush();
