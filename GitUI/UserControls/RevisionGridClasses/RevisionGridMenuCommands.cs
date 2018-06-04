@@ -19,8 +19,8 @@ namespace GitUI.UserControls.RevisionGridClasses
         private readonly RevisionGrid _revisionGrid;
 
         // must both be created only once
-        private IEnumerable<MenuCommand> _navigateMenuCommands;
-        private IEnumerable<MenuCommand> _viewMenuCommands;
+        private IReadOnlyList<MenuCommand> _navigateMenuCommands;
+        private IReadOnlyList<MenuCommand> _viewMenuCommands;
 
         public RevisionGridMenuCommands(RevisionGrid revisionGrid)
         {
@@ -63,7 +63,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             OnMenuChanged();
         }
 
-        private static void UpdateMenuCommandShortcutKeyDisplayString(IEnumerable<MenuCommand> targetList, IEnumerable<MenuCommand> sourceList)
+        private static void UpdateMenuCommandShortcutKeyDisplayString(IReadOnlyList<MenuCommand> targetList, IEnumerable<MenuCommand> sourceList)
         {
             foreach (var sourceMc in sourceList.Where(mc => !mc.IsSeparator))
             {
@@ -72,12 +72,12 @@ namespace GitUI.UserControls.RevisionGridClasses
             }
         }
 
-        public IEnumerable<MenuCommand> GetNavigateMenuCommands()
+        public IReadOnlyList<MenuCommand> GetNavigateMenuCommands()
         {
             return _navigateMenuCommands;
         }
 
-        private IEnumerable<MenuCommand> CreateNavigateMenuCommands()
+        private IReadOnlyList<MenuCommand> CreateNavigateMenuCommands()
         {
             return new[]
             {
@@ -160,7 +160,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             return _revisionGrid?.GetShortcutKeys(revGridCommands).ToShortcutKeyDisplayString();
         }
 
-        private IEnumerable<MenuCommand> CreateViewMenuCommands()
+        private IReadOnlyList<MenuCommand> CreateViewMenuCommands()
         {
             return new[]
             {
@@ -361,7 +361,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             };
         }
 
-        public IEnumerable<MenuCommand> GetViewMenuCommands()
+        public IReadOnlyList<MenuCommand> GetViewMenuCommands()
         {
             return _viewMenuCommands;
         }
