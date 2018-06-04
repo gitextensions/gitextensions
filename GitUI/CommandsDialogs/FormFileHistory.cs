@@ -218,10 +218,17 @@ namespace GitUI.CommandsDialogs
                     // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
                     //
 
-                    string arg = "log --format=\"%n\" --name-only --follow " +
-                        GitCommandHelpers.FindRenamesAndCopiesOpts()
-                        + " -- \"" + fileName + "\"";
-                    Process p = Module.RunGitCmdDetached(arg, GitModule.LosslessEncoding);
+                    var args = new ArgumentBuilder
+                    {
+                        "log",
+                        "--format=\"%n\"",
+                        "--name-only",
+                        "--format",
+                        GitCommandHelpers.FindRenamesAndCopiesOpts(),
+                        "--",
+                        fileName.Quote()
+                    };
+                    Process p = Module.RunGitCmdDetached(args.ToString(), GitModule.LosslessEncoding);
 
                     // the sequence of (quoted) file names - start with the initial filename for the search.
                     var listOfFileNames = new StringBuilder("\"" + fileName + "\"");
