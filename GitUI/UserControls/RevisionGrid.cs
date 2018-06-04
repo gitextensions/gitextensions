@@ -126,6 +126,9 @@ namespace GitUI
         [Browsable(false)] public string InMemMessageFilter { get; set; } = "";
         [Browsable(false)] public bool AllowGraphWithFilter { get; set; }
         [Browsable(false)] public string CurrentCheckout { get; private set; }
+        [Browsable(false)] public bool ShowUncommitedChangesIfPossible { get; set; }
+        [Browsable(false)] public bool ShowBuildServerInfo { get; set; }
+        [Browsable(false)] public bool DoubleClickDoesNotOpenCommitInfo { get; set; }
 
         internal RevisionGridMenuCommands MenuCommands { get; }
         internal bool IsShowCurrentBranchOnlyChecked { get; private set; }
@@ -339,6 +342,37 @@ namespace GitUI
 
         #endregion
 
+        [Browsable(false)] public IndexWatcher IndexWatcher => _indexWatcher.Value;
+
+        [CanBeNull]
+        [Browsable(false)]
+        public GitRevision LatestSelectedRevision => IsValidRevisionIndex(_latestSelectedRowIndex) ? GetRevision(_latestSelectedRowIndex) : null;
+
+        private Font NormalFont
+        {
+            set
+            {
+                _normalFont = value;
+                MessageDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
+                DateDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
+                _fontOfSHAColumn = new Font("Consolas", _normalFont.SizeInPoints);
+                IdDataGridViewColumn.DefaultCellStyle.Font = _fontOfSHAColumn;
+                IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
+                IsMessageMultilineDataGridViewColumn.Width = TextRenderer.MeasureText(MultilineMessageIndicator, _normalFont).Width;
+
+                _refsFont = IsFilledBranchesLayout ? _normalFont : new Font(_normalFont, FontStyle.Bold);
+                _headFont = new Font(_normalFont, FontStyle.Bold);
+                _superprojectFont = new Font(_normalFont, FontStyle.Underline);
+            }
+        }
+
+        [Browsable(false)]
+        public bool MultiSelect
+        {
+            get => Graph.MultiSelect;
+            set => Graph.MultiSelect = value;
+        }
+
         private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripDropDownItem targetMenuItem)
         {
             foreach (var menuCommand in menuCommands)
@@ -365,55 +399,6 @@ namespace GitUI
                 }
             }
         }
-
-        private Font NormalFont
-        {
-            set
-            {
-                _normalFont = value;
-                MessageDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
-                DateDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
-                _fontOfSHAColumn = new Font("Consolas", _normalFont.SizeInPoints);
-                IdDataGridViewColumn.DefaultCellStyle.Font = _fontOfSHAColumn;
-                IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
-                IsMessageMultilineDataGridViewColumn.Width = TextRenderer.MeasureText(MultilineMessageIndicator, _normalFont).Width;
-
-                _refsFont = IsFilledBranchesLayout ? _normalFont : new Font(_normalFont, FontStyle.Bold);
-                _headFont = new Font(_normalFont, FontStyle.Bold);
-                _superprojectFont = new Font(_normalFont, FontStyle.Underline);
-            }
-        }
-
-        [CanBeNull]
-        [Browsable(false)]
-        public GitRevision LatestSelectedRevision => IsValidRevisionIndex(_latestSelectedRowIndex) ? GetRevision(_latestSelectedRowIndex) : null;
-
-        [Description("Indicates whether the user is allowed to select more than one commit at a time.")]
-        [Category("Behavior")]
-        [DefaultValue(true)]
-        public bool MultiSelect
-        {
-            get => Graph.MultiSelect;
-            set => Graph.MultiSelect = value;
-        }
-
-        [Description("Show uncommited changes in revision grid if enabled in settings.")]
-        [Category("Behavior")]
-        [DefaultValue(false)]
-        public bool ShowUncommitedChangesIfPossible { get; set; }
-
-        [Description("Show build server information in revision grid if enabled in settings.")]
-        [Category("Behavior")]
-        [DefaultValue(false)]
-        public bool ShowBuildServerInfo { get; set; }
-
-        [Description("Do not open the commit info dialog on double click. This is used if the double click event is handled elseswhere.")]
-        [Category("Behavior")]
-        [DefaultValue(false)]
-        public bool DoubleClickDoesNotOpenCommitInfo { get; set; }
-
-        [Browsable(false)]
-        public IndexWatcher IndexWatcher => _indexWatcher.Value;
 
         public void SetFilters((string revision, string path) filter)
         {
@@ -820,42 +805,6 @@ namespace GitUI
         {
             RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
             Graph.HighlightBranch(id);
-        }
-
-        private void GraphSelectionChanged(object sender, EventArgs e)
-        {
-            _parentChildNavigationHistory.RevisionsSelectionChanged();
-
-            if (Graph.SelectedRows.Count > 0)
-            {
-                _latestSelectedRowIndex = Graph.SelectedRows[0].Index;
-
-                // if there was selected a new revision while data is being loaded
-                // then don't change the new selection when restoring selected revisions after data is loaded
-                if (_isRefreshingRevisions && !Graph.UpdatingVisibleRows)
-                {
-                    _lastSelectedRows = Graph.SelectedIds;
-                }
-            }
-
-            SelectionTimer.Enabled = false;
-            SelectionTimer.Stop();
-            SelectionTimer.Enabled = true;
-            SelectionTimer.Start();
-
-            var selectedRevisions = GetSelectedRevisions();
-            var firstSelectedRevision = selectedRevisions.FirstOrDefault();
-            if (selectedRevisions.Count == 1 && firstSelectedRevision != null)
-            {
-                _navigationHistory.Push(firstSelectedRevision.Guid);
-            }
-
-            if (Parent != null && !Graph.UpdatingVisibleRows &&
-                _revisionHighlighting.ProcessRevisionSelectionChange(Module, selectedRevisions) ==
-                AuthorEmailBasedRevisionHighlighting.SelectionChangeAction.RefreshUserInterface)
-            {
-                Refresh();
-            }
         }
 
         public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
@@ -1458,11 +1407,11 @@ namespace GitUI
             Graph.AuthorColumn.HeaderText = Strings.GetAuthorText();
             Graph.DateColumn.HeaderText = GetDateHeaderText();
 
-            Graph.SelectionChanged -= GraphSelectionChanged;
+            Graph.SelectionChanged -= OnGraphSelectionChanged;
 
             Graph.Enabled = true;
             Graph.Focus();
-            Graph.SelectionChanged += GraphSelectionChanged;
+            Graph.SelectionChanged += OnGraphSelectionChanged;
 
             Graph.ResumeLayout();
 
@@ -1488,6 +1437,42 @@ namespace GitUI
         }
 
         #region Graph event handlers
+
+        private void OnGraphSelectionChanged(object sender, EventArgs e)
+        {
+            _parentChildNavigationHistory.RevisionsSelectionChanged();
+
+            if (Graph.SelectedRows.Count > 0)
+            {
+                _latestSelectedRowIndex = Graph.SelectedRows[0].Index;
+
+                // if there was selected a new revision while data is being loaded
+                // then don't change the new selection when restoring selected revisions after data is loaded
+                if (_isRefreshingRevisions && !Graph.UpdatingVisibleRows)
+                {
+                    _lastSelectedRows = Graph.SelectedIds;
+                }
+            }
+
+            SelectionTimer.Enabled = false;
+            SelectionTimer.Stop();
+            SelectionTimer.Enabled = true;
+            SelectionTimer.Start();
+
+            var selectedRevisions = GetSelectedRevisions();
+            var firstSelectedRevision = selectedRevisions.FirstOrDefault();
+            if (selectedRevisions.Count == 1 && firstSelectedRevision != null)
+            {
+                _navigationHistory.Push(firstSelectedRevision.Guid);
+            }
+
+            if (Parent != null && !Graph.UpdatingVisibleRows &&
+                _revisionHighlighting.ProcessRevisionSelectionChange(Module, selectedRevisions) ==
+                AuthorEmailBasedRevisionHighlighting.SelectionChangeAction.RefreshUserInterface)
+            {
+                Refresh();
+            }
+        }
 
         private void OnGraphKeyPress(object sender, KeyPressEventArgs e)
         {
