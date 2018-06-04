@@ -158,20 +158,18 @@ namespace GitUI.CommandsDialogs
             }
 
             _asyncLoader.LoadAsync(
-                () => BuildFilter(FileName),
+                () => BuildFilter(),
                 filter =>
                 {
-                    var (revisionFilter, pathFilter) = BuildFilter(FileName);
-
-                    FileChanges.FixedRevisionFilter = revisionFilter;
-                    FileChanges.FixedPathFilter = pathFilter;
+                    FileChanges.SetFilters(filter);
                     FileChanges.AllowGraphWithFilter = true;
-
                     FileChanges.Load();
                 });
 
-            (string revisionFilter, string pathFilter) BuildFilter(string fileName)
+            (string revision, string path) BuildFilter()
             {
+                var fileName = FileName;
+
                 // Replace windows path separator to Linux path separator.
                 // This is needed to keep the file history working when started from file tree in
                 // browse dialog.
@@ -204,7 +202,7 @@ namespace GitUI.CommandsDialogs
 
                 FileName = fileName;
 
-                var res = (revisionFilter: (string)null, pathFilter: $" \"{fileName}\"");
+                var res = (revision: (string)null, path: $" \"{fileName}\"");
 
                 if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
                 {
@@ -254,24 +252,24 @@ namespace GitUI.CommandsDialogs
                     }
 
                     // here we need --name-only to get the previous filenames in the revision graph
-                    res.pathFilter = listOfFileNames.ToString();
-                    res.revisionFilter += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();
+                    res.path = listOfFileNames.ToString();
+                    res.revision += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();
                 }
                 else if (AppSettings.FollowRenamesInFileHistory)
                 {
                     // history of a directory
                     // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                    res.revisionFilter = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents";
+                    res.revision = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents";
                 }
                 else
                 {
                     // rename following disabled
-                    res.revisionFilter = " --parents";
+                    res.revision = " --parents";
                 }
 
                 if (AppSettings.FullHistoryInFileHistory)
                 {
-                    res.revisionFilter = string.Concat(" --full-history --simplify-merges ", res.revisionFilter);
+                    res.revision = string.Concat(" --full-history --simplify-merges ", res.revision);
                 }
 
                 return res;
