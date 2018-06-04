@@ -1530,14 +1530,21 @@ namespace GitUI
 
         private void OnGraphKeyDown(object sender, KeyEventArgs e)
         {
-            // BrowserBack/BrowserForward keys and additional handling for Alt+Right/Left sent by some keyboards
-            if ((e.KeyCode == Keys.BrowserBack) || ((e.KeyCode == Keys.Left) && e.Modifiers.HasFlag(Keys.Alt)))
+            switch (e.KeyCode)
             {
-                NavigateBackward();
-            }
-            else if ((e.KeyCode == Keys.BrowserForward) || ((e.KeyCode == Keys.Right) && e.Modifiers.HasFlag(Keys.Alt)))
-            {
-                NavigateForward();
+                case Keys.BrowserBack:
+                case Keys.Left when e.Modifiers.HasFlag(Keys.Alt):
+                {
+                    NavigateBackward();
+                    break;
+                }
+
+                case Keys.BrowserForward:
+                case Keys.Right when e.Modifiers.HasFlag(Keys.Alt):
+                {
+                    NavigateForward();
+                    break;
+                }
             }
         }
 
