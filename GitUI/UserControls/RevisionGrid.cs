@@ -1171,7 +1171,7 @@ namespace GitUI
             Translate();
         }
 
-        private bool ShowRemoteRef(IGitRef r)
+        private static bool ShowRemoteRef(IGitRef r)
         {
             if (r.IsTag)
             {
