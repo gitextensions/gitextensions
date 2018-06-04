@@ -1335,7 +1335,7 @@ namespace GitUI
             }
         }
 
-        private class SuperProjectInfo
+        private sealed class SuperProjectInfo
         {
             public string CurrentBranch;
             public string Conflict_Base;
@@ -1587,7 +1587,7 @@ namespace GitUI
             SelectionTimer.Start();
         }
 
-        public struct DrawRefArgs
+        private struct DrawRefArgs
         {
             public Graphics Graphics;
             public Rectangle CellBounds;
@@ -2171,7 +2171,7 @@ namespace GitUI
 
         private static readonly float[] dashPattern = { 4, 4 };
 
-        private float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
+        private static float DrawHeadBackground(bool isSelected, Graphics graphics, Color color,
             float x, float y, float width, float height, float radius, ArrowType arrowType, bool dashedLine, bool fill)
         {
             float additionalOffset = arrowType != ArrowType.None ? height - 6 : 0;
@@ -2427,7 +2427,7 @@ namespace GitUI
             UICommands.StartEditGitIgnoreDialog(this, false);
         }
 
-        internal void InvalidateRevisions()
+        private void InvalidateRevisions()
         {
             Revisions.Invalidate();
         }
