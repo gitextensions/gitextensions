@@ -118,7 +118,6 @@ namespace GitUI
         private bool _settingsLoaded;
         private Font _fontOfSHAColumn;
 
-        [Browsable(false)] internal RevisionGridMenuCommands MenuCommands { get; }
         [Browsable(false)] public Action OnToggleBranchTreePanelRequested { get; set; }
         [Browsable(false)] public string QuickRevisionFilter { get; set; } = "";
         [Browsable(false)] public bool InMemFilterIgnoreCase { get; set; } = true;
@@ -127,6 +126,11 @@ namespace GitUI
         [Browsable(false)] public string InMemMessageFilter { get; set; } = "";
         [Browsable(false)] public bool AllowGraphWithFilter { get; set; }
         [Browsable(false)] public string CurrentCheckout { get; private set; }
+
+        internal RevisionGridMenuCommands MenuCommands { get; }
+        internal bool IsShowCurrentBranchOnlyChecked { get; private set; }
+        internal bool IsShowAllBranchesChecked { get; private set; }
+        internal bool IsShowFilteredBranchesChecked { get; private set; }
 
         /// <summary>
         /// Refs loaded while the latest processing of git log
@@ -2459,10 +2463,6 @@ namespace GitUI
             SetShowBranches();
             ForceRefreshRevisions();
         }
-
-        internal bool IsShowCurrentBranchOnlyChecked { get; private set; }
-        internal bool IsShowAllBranchesChecked { get; private set; }
-        internal bool IsShowFilteredBranchesChecked { get; private set; }
 
         private void SetShowBranches()
         {
