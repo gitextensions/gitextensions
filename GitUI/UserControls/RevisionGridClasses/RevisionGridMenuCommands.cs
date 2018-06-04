@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -59,7 +58,6 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         public void TriggerMenuChanged()
         {
-            Debug.WriteLine("RevisionGridMenuCommands.TriggerMenuChanged()");
             OnMenuChanged();
         }
 
@@ -372,8 +370,6 @@ namespace GitUI.UserControls.RevisionGridClasses
         // paramenter name not used
         private void OnMenuChanged()
         {
-            Debug.WriteLine("RevisionGridMenuCommands.OnPropertyChanged()");
-
             MenuChanged?.Invoke(this, null);
 
             foreach (var menuCommand in GetMenuCommandsWithoutSeparators())
