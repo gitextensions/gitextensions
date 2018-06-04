@@ -72,11 +72,15 @@ namespace GitUI
         private Brush _selectedItemBrush;
         private SolidBrush _authoredRevisionsBrush;
         private Brush _filledItemBrush; // disposable brush
+
+        private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
+        private readonly NavigationHistory _navigationHistory = new NavigationHistory();
         private readonly IImageCache _avatarCache;
         private readonly IAvatarService _gravatarService;
         private readonly IImageNameProvider _avatarImageNameProvider;
         private readonly IGitRevisionTester _gitRevisionTester;
-        private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
+        private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
+        private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
         private RefFilterOptions _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
 
@@ -94,10 +98,6 @@ namespace GitUI
         private RevisionGridLayout _layout;
         private int _rowHeigth;
         public Action OnToggleBranchTreePanelRequested;
-
-        private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
-        private readonly NavigationHistory _navigationHistory = new NavigationHistory();
-        private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
 
         private GitRevision _baseCommitToCompare;
 
