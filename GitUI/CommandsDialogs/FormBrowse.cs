@@ -1565,7 +1565,7 @@ namespace GitUI.CommandsDialogs
                 _filterBranchHelper.SetBranchFilter(string.Empty, true);
 
                 // Execute the "Show all branches" menu option
-                RevisionGrid.ShowAllBranches_ToolStripMenuItemClick(sender, e);
+                RevisionGrid.ShowAllBranches();
             }
         }
 
