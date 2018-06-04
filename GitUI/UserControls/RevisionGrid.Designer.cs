@@ -7,31 +7,6 @@ namespace GitUI
     {
         private System.ComponentModel.IContainer components = null;
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _revisionSubscription?.Dispose();
-                _revisionReader?.Dispose();
-                _buildServerWatcher?.Dispose();
-                _filledItemBrush?.Dispose();
-                _authoredRevisionsBrush?.Dispose();
-                _fontOfSHAColumn?.Dispose();
-
-                if (_indexWatcher.IsValueCreated)
-                {
-                    _indexWatcher.Value.Dispose();
-                }
-            }
-
-            if (disposing && components != null)
-            {
-                components.Dispose();
-            }
-
-            base.Dispose(disposing);
-        }
-
         #region Component Designer generated code
 
         /// <summary>

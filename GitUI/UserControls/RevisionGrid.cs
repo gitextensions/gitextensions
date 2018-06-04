@@ -228,6 +228,31 @@ namespace GitUI
             _buildServerWatcher = new BuildServerWatcher(this, Revisions);
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _revisionSubscription?.Dispose();
+                _revisionReader?.Dispose();
+                _buildServerWatcher?.Dispose();
+                _filledItemBrush?.Dispose();
+                _authoredRevisionsBrush?.Dispose();
+                _fontOfSHAColumn?.Dispose();
+
+                if (_indexWatcher.IsValueCreated)
+                {
+                    _indexWatcher.Value.Dispose();
+                }
+            }
+
+            if (disposing && components != null)
+            {
+                components.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
         #region ToolTip
 
         private readonly ToolTip _toolTip = new ToolTip();
