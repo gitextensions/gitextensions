@@ -70,9 +70,6 @@ namespace GitUI
         private readonly TranslationString _strError = new TranslationString("Error");
 
         private const int MaxSuperprojectRefs = 4;
-        private Brush _selectedItemBrush;
-        private SolidBrush _authoredRevisionsBrush;
-        private Brush _filledItemBrush; // disposable brush
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
@@ -85,12 +82,17 @@ namespace GitUI
         private readonly Lazy<IndexWatcher> _indexWatcher;
 
         private RefFilterOptions _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
-
-        private bool _initialLoad = true;
-        private string _initialSelectedRevision;
+        private IEnumerable<IGitRef> _latestRefs = Enumerable.Empty<IGitRef>();
         private string _lastQuickSearchString = string.Empty;
-        private Label _quickSearchLabel;
+        private bool _initialLoad = true;
 
+        /// <summary>Tracks status for the artificial commits while the revision graph is reloading</summary>
+        private IReadOnlyList<GitItemStatus> _artificialStatus;
+        private Brush _selectedItemBrush;
+        private SolidBrush _authoredRevisionsBrush;
+        private Brush _filledItemBrush; // disposable brush
+        private string _initialSelectedRevision;
+        private Label _quickSearchLabel;
         private string _quickSearchString = "";
         private RevisionReader _revisionReader;
         private IDisposable _revisionSubscription;
@@ -99,13 +101,9 @@ namespace GitUI
         public Action OnToggleBranchTreePanelRequested;
 
         private GitRevision _baseCommitToCompare;
-
-        // tracks status for the artificial commits while the revision graph is reloading
-        private IReadOnlyList<GitItemStatus> _artificialStatus;
-
-        private IEnumerable<IGitRef> _latestRefs = Enumerable.Empty<IGitRef>();
-
         private string _rebaseOnTopOf;
+        private bool _isRefreshingRevisions;
+        private bool _isLoading;
         private BuildServerWatcher _buildServerWatcher;
         private Font _normalFont;
         private Font _headFont;
@@ -117,6 +115,7 @@ namespace GitUI
         private string _branchFilter = string.Empty;
         private JoinableTask<SuperProjectInfo> _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
+        private string _filtredCurrentCheckout;
 
         /// <summary>
         /// Refs loaded while the latest processing of git log
@@ -417,8 +416,6 @@ namespace GitUI
             _initialSelectedRevision = initialSelectedRevision;
         }
 
-        private bool _isRefreshingRevisions;
-        private bool _isLoading;
         private void RevisionsLoading(object sender, DvcsGraph.LoadingEventArgs e)
         {
             // Since this can happen on a background thread, we'll just set a
@@ -1157,8 +1154,6 @@ namespace GitUI
             return false;
         }
 
-        private string _filtredCurrentCheckout;
-
         public void ForceRefreshRevisions()
         {
             try
@@ -1381,6 +1376,7 @@ namespace GitUI
         }
 
         private static readonly Regex PotentialShaPattern = new Regex(@"^[a-f0-9]{5,}", RegexOptions.Compiled);
+
         public static bool MessageFilterCouldBeSHA(string filter)
         {
             bool result = PotentialShaPattern.IsMatch(filter);
@@ -3685,8 +3681,6 @@ namespace GitUI
         {
             return GetShortcutKeys((int)cmd);
         }
-
-        internal RevisionGridMenuCommands MenuCommands { get; }
 
         private void CompareToBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
