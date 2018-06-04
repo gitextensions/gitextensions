@@ -3343,7 +3343,8 @@ namespace GitUI
                          ? (RevisionGridLayout)AppSettings.RevisionGraphLayout
                          : RevisionGridLayout.SmallWithGraph;
 
-            NormalFont = AppSettings.Font; // new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
+            // TODO why was this removed? if we only set the font when the control is created then it cannot update when settings change
+            ////NormalFont = new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
 
             SetAuthoredRevisionsBrush();
 
