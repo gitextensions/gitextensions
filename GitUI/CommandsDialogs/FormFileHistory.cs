@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -34,7 +33,7 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        internal FormFileHistory(GitUICommands commands)
+        private FormFileHistory(GitUICommands commands)
             : base(commands)
         {
             InitializeComponent();

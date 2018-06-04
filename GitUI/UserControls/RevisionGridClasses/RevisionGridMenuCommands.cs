@@ -370,7 +370,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         // taken from http://stackoverflow.com/questions/5058254/inotifypropertychanged-propertychangedeventhandler-event-is-always-null
         // paramenter name not used
-        protected void OnMenuChanged()
+        private void OnMenuChanged()
         {
             Debug.WriteLine("RevisionGridMenuCommands.OnPropertyChanged()");
 
@@ -393,7 +393,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             return _navigateMenuCommands.Concat(_viewMenuCommands).Where(mc => !mc.IsSeparator);
         }
 
-        public void SelectCurrentRevisionExecute()
+        private void SelectCurrentRevisionExecute()
         {
             _revisionGrid.ExecuteCommand(RevisionGrid.Commands.SelectCurrentRevision);
         }
