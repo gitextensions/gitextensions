@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -18,7 +19,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void PageToSettings()
         {
-            AppSettings.BranchOrderingCriteria = (BranchOrdering)cbBranchOrderingCriteria.SelectedIndex;
+            AppSettings.BranchOrderingCriteria = (GitRefsOrder)cbBranchOrderingCriteria.SelectedIndex;
         }
 
         public static SettingsPageReference GetPageReference()

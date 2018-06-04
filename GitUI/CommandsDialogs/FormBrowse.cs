@@ -1916,11 +1916,7 @@ namespace GitUI.CommandsDialogs
 
         private IEnumerable<string> GetBranchNames()
         {
-            IEnumerable<string> branchNames = Module.GetRefs(false).Select(b => b.Name);
-            if (AppSettings.BranchOrderingCriteria == BranchOrdering.Alphabetically)
-            {
-                branchNames = branchNames.OrderBy(b => b);
-            }
+            IEnumerable<string> branchNames = Module.GetRefs(false, order: AppSettings.BranchOrderingCriteria).Select(b => b.Name);
 
             // Make sure there are never more than a 100 branches added to the menu
             // GitExtensions will hang when the drop down is too large...

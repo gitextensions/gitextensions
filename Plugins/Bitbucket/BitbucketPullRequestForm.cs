@@ -202,7 +202,7 @@ namespace Bitbucket
         private async Task RefreshDDLBranchAsync(ComboBox branchComboBox, object selectedValue)
         {
             List<string> branchNames = (await GetBitbucketBranchesAsync((Repository)selectedValue)).ToList();
-            if (AppSettings.BranchOrderingCriteria == BranchOrdering.Alphabetically)
+            if (AppSettings.BranchOrderingCriteria == GitRefsOrder.Alphabetically)
             {
                 branchNames.Sort();
             }

@@ -87,7 +87,6 @@ namespace GitCommands
     public sealed class GitModule : IGitModule
     {
         private const char LineSeparator = '\n';
-        public static readonly char ActiveBranchIndicator = '*';
 
         private static readonly Regex AnsiCodePattern = new Regex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.Compiled);
         private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
@@ -2823,11 +2822,17 @@ namespace GitCommands
             }
         }
 
-        public IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true)
+        public IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true, GitRefsOrder order = GitRefsOrder.ByLastAccessDate)
         {
             var refList = GetRefList();
 
-            return ParseRefs(refList);
+            var refs = ParseRefs(refList);
+            if (order == GitRefsOrder.Alphabetically)
+            {
+                refs = refs.OrderBy(b => b.Name).ToList();
+            }
+
+            return refs;
 
             string GetRefList()
             {
@@ -2968,18 +2973,6 @@ namespace GitCommands
             gitRefs.AddRange(headByRemote.Values);
 
             return gitRefs;
-        }
-
-        /// <summary>Gets the branch names, with the active branch, if applicable, listed first.
-        /// The active branch will be indicated by a "*", so ensure to Trim before processing.</summary>
-        public IEnumerable<string> GetBranchNames()
-        {
-            return RunGitCmd("branch", SystemEncoding)
-                .Split(LineSeparator)
-                .Where(branch => !string.IsNullOrWhiteSpace(branch)) // first is ""
-                .OrderByDescending(branch => branch.Contains(ActiveBranchIndicator)) // * for current branch
-                .ThenBy(r => r)
-                .Select(line => line.Trim());
         }
 
         /// <summary>

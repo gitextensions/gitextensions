@@ -106,10 +106,10 @@ namespace GitUI.BranchTreePanel
 
         private sealed class LocalBranchNode : BaseBranchNode
         {
-            public LocalBranchNode(Tree tree, string fullPath)
-                : base(tree, fullPath.TrimStart(GitModule.ActiveBranchIndicator))
+            public LocalBranchNode(Tree tree, string fullPath, bool isCurrent)
+                : base(tree, fullPath)
             {
-                IsActive = fullPath.StartsWith(GitModule.ActiveBranchIndicator.ToString());
+                IsActive = isCurrent;
             }
 
             public bool IsActive { get; }
@@ -231,7 +231,9 @@ namespace GitUI.BranchTreePanel
             {
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
-                FillBranchTree(Module.GetBranchNames(), token);
+
+                var branchNames = Module.GetRefs(false, order: AppSettings.BranchOrderingCriteria).Select(b => b.Name);
+                FillBranchTree(branchNames, token);
             }
 
             private void FillBranchTree(IEnumerable<string> branches, CancellationToken token)
@@ -265,12 +267,14 @@ namespace GitUI.BranchTreePanel
                 // 0 master
 
                 #endregion ex
+
+                var currentBranch = Module.GetSelectedBranch();
                 var nodes = new Dictionary<string, BaseBranchNode>();
                 var branchFullPaths = new List<string>();
                 foreach (var branch in branches)
                 {
                     token.ThrowIfCancellationRequested();
-                    var localBranchNode = new LocalBranchNode(this, branch);
+                    var localBranchNode = new LocalBranchNode(this, branch, branch == currentBranch);
                     var parent = localBranchNode.CreateRootNode(nodes,
                         (tree, parentPath) => new BranchPathNode(tree, parentPath));
                     if (parent != null)
@@ -295,7 +299,7 @@ namespace GitUI.BranchTreePanel
                 }
             }
         }
-    #endregion private classes
+        #endregion private classes
 
         [Pure]
         public static GitRef CreateBranchRef(GitModule module, string name)
