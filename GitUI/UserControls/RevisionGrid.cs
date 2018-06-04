@@ -364,19 +364,9 @@ namespace GitUI
         [Category("Filter")]
         [DefaultValue(false)]
         public bool AllowGraphWithFilter { get; set; }
+        [CanBeNull]
         [Browsable(false)]
-        public GitRevision LatestSelectedRevision
-        {
-            get
-            {
-                if (IsValidRevisionIndex(LatestSelectedRowIndex))
-                {
-                    return GetRevision(LatestSelectedRowIndex);
-                }
-
-                return null;
-            }
-        }
+        public GitRevision LatestSelectedRevision => IsValidRevisionIndex(_latestSelectedRowIndex) ? GetRevision(_latestSelectedRowIndex) : null;
 
         [Description("Indicates whether the user is allowed to select more than one commit at a time.")]
         [Category("Behavior")]
