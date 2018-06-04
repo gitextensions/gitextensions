@@ -358,13 +358,18 @@ namespace GitUIPluginInterfaces
         /// <param name="s">The string to validate.</param>
         /// <returns><c>true</c> if <paramref name="s"/> is a valid SHA-1 hash, otherwise <c>false</c>.</returns>
         [Pure]
-        public static bool IsValid([NotNull] string s)
-        {
-            if (s.Length != Sha1CharCount)
-            {
-                return false;
-            }
+        public static bool IsValid([NotNull] string s) => s.Length == Sha1CharCount && IsValidCharacters(s);
 
+        /// <summary>
+        /// Identifies whether <paramref name="s"/> contains between <paramref name="minLength"/> and 40 valid SHA-1 hash characters.
+        /// </summary>
+        /// <param name="s">The string to validate.</param>
+        /// <returns><c>true</c> if <paramref name="s"/> is a valid partial SHA-1 hash, otherwise <c>false</c>.</returns>
+        [Pure]
+        public static bool IsValidPartial([NotNull] string s, int minLength) => s.Length >= minLength && s.Length <= Sha1CharCount && IsValidCharacters(s);
+
+        private static bool IsValidCharacters(string s)
+        {
             // ReSharper disable once LoopCanBeConvertedToQuery
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < s.Length; i++)

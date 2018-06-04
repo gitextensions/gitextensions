@@ -627,7 +627,7 @@ namespace GitUI
                 revListArgs = " --regexp-ignore-case ";
                 if (filterCommit)
                 {
-                    if (cmdLineSafe && !MessageFilterCouldBeSHA(filter))
+                    if (cmdLineSafe && !ObjectId.IsValidPartial(filter, minLength: 5))
                     {
                         revListArgs += "--grep=\"" + filter + "\" ";
                     }
@@ -909,7 +909,7 @@ namespace GitUI
                 (_committerFilter, _committerFilterRegex) = SetUpVars(committerFilter, ignoreCase);
                 (_messageFilter, _messageFilterRegex) = SetUpVars(messageFilter, ignoreCase);
 
-                if (!string.IsNullOrEmpty(_messageFilter) && MessageFilterCouldBeSHA(_messageFilter))
+                if (!string.IsNullOrEmpty(_messageFilter) && ObjectId.IsValidPartial(_messageFilter, minLength: 5))
                 {
                     (_shaFilter, _shaFilterRegex) = SetUpVars(messageFilter, false);
                 }
@@ -953,7 +953,7 @@ namespace GitUI
                 if (string.IsNullOrEmpty(authorFilter) &&
                     string.IsNullOrEmpty(committerFilter) &&
                     string.IsNullOrEmpty(messageFilter) &&
-                    !MessageFilterCouldBeSHA(messageFilter))
+                    !ObjectId.IsValidPartial(messageFilter, minLength: 5))
                 {
                     return null;
                 }
@@ -1216,15 +1216,6 @@ namespace GitUI
             }
 
             return spi;
-        }
-
-        private static readonly Regex PotentialShaPattern = new Regex(@"^[a-f0-9]{5,}", RegexOptions.Compiled);
-
-        public static bool MessageFilterCouldBeSHA(string filter)
-        {
-            bool result = PotentialShaPattern.IsMatch(filter);
-
-            return result;
         }
 
         private void OnRevisionReaderError(Exception exception)
