@@ -115,7 +115,15 @@ namespace GitUI
         private int _latestSelectedRowIndex;
         private string _filtredCurrentCheckout;
 
+        [Browsable(false)] internal RevisionGridMenuCommands MenuCommands { get; }
         [Browsable(false)] public Action OnToggleBranchTreePanelRequested { get; set; }
+        [Browsable(false)] public string QuickRevisionFilter { get; set; } = "";
+        [Browsable(false)] public bool InMemFilterIgnoreCase { get; set; } = true;
+        [Browsable(false)] public string InMemAuthorFilter { get; set; } = "";
+        [Browsable(false)] public string InMemCommitterFilter { get; set; } = "";
+        [Browsable(false)] public string InMemMessageFilter { get; set; } = "";
+        [Browsable(false)] public bool AllowGraphWithFilter { get; set; }
+        [Browsable(false)] public string CurrentCheckout { get; private set; }
 
         /// <summary>
         /// Refs loaded while the latest processing of git log
@@ -341,29 +349,6 @@ namespace GitUI
             }
         }
 
-        [Category("Filter")]
-        [DefaultValue("")]
-        public string QuickRevisionFilter { get; set; } = "";
-
-        [Category("Filter")]
-        [DefaultValue(true)]
-        public bool InMemFilterIgnoreCase { get; set; } = true;
-
-        [Category("Filter")]
-        [DefaultValue("")]
-        public string InMemAuthorFilter { get; set; } = "";
-
-        [Category("Filter")]
-        [DefaultValue("")]
-        public string InMemCommitterFilter { get; set; } = "";
-
-        [Category("Filter")]
-        [DefaultValue("")]
-        public string InMemMessageFilter { get; set; } = "";
-
-        [Category("Filter")]
-        [DefaultValue(false)]
-        public bool AllowGraphWithFilter { get; set; }
         [CanBeNull]
         [Browsable(false)]
         public GitRevision LatestSelectedRevision => IsValidRevisionIndex(_latestSelectedRowIndex) ? GetRevision(_latestSelectedRowIndex) : null;
