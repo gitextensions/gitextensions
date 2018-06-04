@@ -86,7 +86,7 @@ namespace GitUI.CommandsDialogs
             FileName = fileName;
             SetTitle(string.Empty);
 
-            Diff.ExtraDiffArgumentsChanged += DiffExtraDiffArgumentsChanged;
+            Diff.ExtraDiffArgumentsChanged += (sender, e) => UpdateSelectedFileViewers();
 
             bool isSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(FileName));
             if (isSubmodule)
@@ -277,11 +277,6 @@ namespace GitUI.CommandsDialogs
 
                 return res;
             }
-        }
-
-        private void DiffExtraDiffArgumentsChanged(object sender, EventArgs e)
-        {
-            UpdateSelectedFileViewers();
         }
 
         private void FileChangesSelectionChanged(object sender, EventArgs e)
