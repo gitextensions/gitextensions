@@ -88,8 +88,8 @@ namespace GitUI
         private string _initialSelectedRevision;
         private string _lastQuickSearchString = string.Empty;
         private Label _quickSearchLabel;
-        private string _quickSearchString;
 
+        private string _quickSearchString = "";
         private RevisionReader _revisionReader;
         private IDisposable _revisionSubscription;
 
@@ -165,18 +165,13 @@ namespace GitUI
             Revisions.CellMouseMove += RevisionsMouseMove;
 
             showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
-            BranchFilter = string.Empty;
+
             SetShowBranches();
-            QuickRevisionFilter = "";
-            FixedRevisionFilter = "";
-            FixedPathFilter = "";
-            InMemFilterIgnoreCase = true;
-            InMemAuthorFilter = "";
-            InMemCommitterFilter = "";
-            InMemMessageFilter = "";
-            AllowGraphWithFilter = false;
-            _quickSearchString = "";
+
             quickSearchTimer.Tick += QuickSearchTimerTick;
+
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            HotkeysEnabled = true;
 
             Revisions.Loading += RevisionsLoading;
 
@@ -195,7 +190,6 @@ namespace GitUI
             AuthorDataGridViewColumn.Width = DpiUtil.Scale(150);
             DateDataGridViewColumn.Width = DpiUtil.Scale(135);
 
-            HotkeysEnabled = true;
             try
             {
                 SetRevisionsLayout((RevisionGridLayout)AppSettings.RevisionGraphLayout);
@@ -206,8 +200,6 @@ namespace GitUI
             }
 
             compareToBaseToolStripMenuItem.Enabled = false;
-
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
 
             BuildServerWatcher = new BuildServerWatcher(this, Revisions);
@@ -350,28 +342,36 @@ namespace GitUI
 
         [Category("Filter")]
         [DefaultValue("")]
-        public string QuickRevisionFilter { get; set; }
+        public string QuickRevisionFilter { get; set; } = "";
+
         [Category("Filter")]
         [DefaultValue("")]
-        public string FixedRevisionFilter { get; set; }
+        public string FixedRevisionFilter { get; set; } = "";
+
         [Category("Filter")]
         [DefaultValue("")]
-        public string FixedPathFilter { get; set; }
+        public string FixedPathFilter { get; set; } = "";
+
         [Category("Filter")]
         [DefaultValue(true)]
-        public bool InMemFilterIgnoreCase { get; set; }
+        public bool InMemFilterIgnoreCase { get; set; } = true;
+
         [Category("Filter")]
         [DefaultValue("")]
-        public string InMemAuthorFilter { get; set; }
+        public string InMemAuthorFilter { get; set; } = "";
+
         [Category("Filter")]
         [DefaultValue("")]
-        public string InMemCommitterFilter { get; set; }
+        public string InMemCommitterFilter { get; set; } = "";
+
         [Category("Filter")]
         [DefaultValue("")]
-        public string InMemMessageFilter { get; set; }
+        public string InMemMessageFilter { get; set; } = "";
+
         [Category("Filter")]
         [DefaultValue("")]
-        public string BranchFilter { get; set; }
+        public string BranchFilter { get; set; } = string.Empty;
+
         [Category("Filter")]
         [DefaultValue(false)]
         public bool AllowGraphWithFilter { get; set; }
