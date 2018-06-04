@@ -213,7 +213,7 @@ namespace GitUI
 
             try
             {
-                AppSettings.RevisionGraphLayout = (int)(RevisionGridLayout)AppSettings.RevisionGraphLayout;
+                AppSettings.RevisionGraphLayout = AppSettings.RevisionGraphLayout;
                 SetRevisionsLayout();
             }
             catch
