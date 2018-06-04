@@ -358,11 +358,8 @@ namespace GitUI
             }
         }
 
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Font NormalFont
+        private Font NormalFont
         {
-            get { return _normalFont; }
             set
             {
                 _normalFont = value;
