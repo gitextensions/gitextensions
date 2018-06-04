@@ -114,6 +114,9 @@ namespace GitUI
         private JoinableTask<SuperProjectInfo> _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
         private string _filtredCurrentCheckout;
+        private string[] _currentCheckoutParents;
+        private bool _settingsLoaded;
+        private Font _fontOfSHAColumn;
 
         [Browsable(false)] internal RevisionGridMenuCommands MenuCommands { get; }
         [Browsable(false)] public Action OnToggleBranchTreePanelRequested { get; set; }
@@ -2903,8 +2906,6 @@ namespace GitUI
             return ShowUncommitedChangesIfPossible && AppSettings.RevisionGraphShowWorkingDirChanges;
         }
 
-        private string[] _currentCheckoutParents;
-
         private void OnRevisionRead([CanBeNull] GitRevision rev = null)
         {
             if (rev == null)
@@ -3132,9 +3133,6 @@ namespace GitUI
                 mainContextMenu.Items.RemoveAt(mainContextMenu.Items.Count - 1);
             }
         }
-
-        private bool _settingsLoaded;
-        private Font _fontOfSHAColumn;
 
         private void RunScript(object sender, EventArgs e)
         {
