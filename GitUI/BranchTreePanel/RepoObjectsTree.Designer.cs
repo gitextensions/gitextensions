@@ -66,6 +66,7 @@ namespace GitUI.BranchTreePanel
             this.menuTag = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnCreateBranchForTag = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuBtnCheckoutTag = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiSpacer4 = new System.Windows.Forms.ToolStripSeparator();
             this.mnubtnDeleteTag = new System.Windows.Forms.ToolStripMenuItem();
             this.menuBranchPath = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnDeleteAllBranches = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,7 +80,6 @@ namespace GitUI.BranchTreePanel
             this.btnSettings = new System.Windows.Forms.Button();
             this.menuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiSpacer4 = new System.Windows.Forms.ToolStripSeparator();
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
             this.menuRemotes.SuspendLayout();
@@ -115,6 +115,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnExpandAll});
             this.menuMain.Name = "menuMain";
             this.menuMain.Size = new System.Drawing.Size(137, 76);
+            this.menuMain.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // mnubtnReload
             // 
@@ -154,6 +155,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnFilterLocalBranchInRevisionGrid});
             this.menuBranch.Name = "contextmenuBranch";
             this.menuBranch.Size = new System.Drawing.Size(192, 98);
+            this.menuBranch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // mnuBtnCheckoutLocal
             // 
@@ -209,6 +211,7 @@ namespace GitUI.BranchTreePanel
             this.mnuBtnManageRemotesFromRootNode});
             this.menuRemotes.Name = "contextmenuRemotes";
             this.menuRemotes.Size = new System.Drawing.Size(164, 26);
+            this.menuRemotes.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // mnuBtnManageRemotesFromRootNode
             // 
@@ -236,6 +239,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnFilterRemoteBranchInRevisionGrid});
             this.menuRemote.Name = "contextmenuRemote";
             this.menuRemote.Size = new System.Drawing.Size(194, 280);
+            this.menuRemote.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // mnubtnRemoteBranchFetchAndCheckout
             // 
@@ -341,7 +345,8 @@ namespace GitUI.BranchTreePanel
             this.tsmiSpacer4,
             this.mnubtnDeleteTag});
             this.menuTag.Name = "contextmenuTag";
-            this.menuTag.Size = new System.Drawing.Size(158, 98);
+            this.menuTag.Size = new System.Drawing.Size(158, 76);
+            this.menuTag.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // mnubtnCreateBranchForTag
             // 
@@ -359,6 +364,11 @@ namespace GitUI.BranchTreePanel
             this.mnuBtnCheckoutTag.Text = "&Checkout";
             this.mnuBtnCheckoutTag.ToolTipText = "Checkout this branch";
             // 
+            // tsmiSpacer4
+            // 
+            this.tsmiSpacer4.Name = "tsmiSpacer4";
+            this.tsmiSpacer4.Size = new System.Drawing.Size(154, 6);
+            // 
             // mnubtnDeleteTag
             // 
             this.mnubtnDeleteTag.Image = global::GitUI.Properties.Resources.IconBranchDelete;
@@ -373,6 +383,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnDeleteAllBranches});
             this.menuBranchPath.Name = "contextmenuBranch";
             this.menuBranchPath.Size = new System.Drawing.Size(157, 48);
+            this.menuBranchPath.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // mnubtnDeleteAllBranches
             // 
@@ -390,7 +401,8 @@ namespace GitUI.BranchTreePanel
             this.tsmiSpacer3,
             this.mnubtnManageRemotes});
             this.menuRemoteRepoNode.Name = "contextmenuRemote";
-            this.menuRemoteRepoNode.Size = new System.Drawing.Size(164, 54);
+            this.menuRemoteRepoNode.Size = new System.Drawing.Size(164, 76);
+            this.menuRemoteRepoNode.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // tsmiSpacer3
             // 
@@ -492,11 +504,6 @@ namespace GitUI.BranchTreePanel
             this.showTagsToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
             this.showTagsToolStripMenuItem.Text = "Show &tags";
             this.showTagsToolStripMenuItem.Click += new System.EventHandler(this.ShowTagsToolStripMenuItem_Click);
-            // 
-            // tsmiSpacer4
-            // 
-            this.tsmiSpacer4.Name = "tsmiSpacer4";
-            this.tsmiSpacer4.Size = new System.Drawing.Size(154, 6);
             // 
             // RepoObjectsTree
             // 
