@@ -165,7 +165,6 @@ namespace GitUI.CommandsDialogs
 
                     FileChanges.FixedRevisionFilter = revisionFilter;
                     FileChanges.FixedPathFilter = pathFilter;
-                    FileChanges.FiltredFileName = FileName;
                     FileChanges.AllowGraphWithFilter = true;
 
                     FileChanges.Load();
