@@ -92,9 +92,6 @@ namespace GitUI
         private string _quickSearchString = "";
         private RevisionReader _revisionReader;
         private IDisposable _revisionSubscription;
-
-        public BuildServerWatcher BuildServerWatcher { get; private set; }
-
         private RevisionGridLayout _layout;
         private int _rowHeigth;
         public Action OnToggleBranchTreePanelRequested;
@@ -107,6 +104,7 @@ namespace GitUI
         private IEnumerable<IGitRef> _latestRefs = Enumerable.Empty<IGitRef>();
 
         private string _rebaseOnTopOf;
+        private BuildServerWatcher _buildServerWatcher;
 
         /// <summary>
         /// Refs loaded while the latest processing of git log
@@ -202,7 +200,7 @@ namespace GitUI
             compareToBaseToolStripMenuItem.Enabled = false;
             fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
 
-            BuildServerWatcher = new BuildServerWatcher(this, Revisions);
+            _buildServerWatcher = new BuildServerWatcher(this, Revisions);
         }
 
         #region ToolTip
@@ -1198,7 +1196,7 @@ namespace GitUI
 
                 _initialLoad = true;
 
-                BuildServerWatcher.CancelBuildStatusFetchOperation();
+                _buildServerWatcher.CancelBuildStatusFetchOperation();
 
                 DisposeRevisionReader();
 
@@ -1497,7 +1495,7 @@ namespace GitUI
                     SelectInitialRevision();
                     if (ShowBuildServerInfo)
                     {
-                        await BuildServerWatcher.LaunchBuildServerInfoFetchOperationAsync();
+                        await _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync();
                     }
                 }).FileAndForget();
             }
@@ -1964,11 +1962,11 @@ namespace GitUI
                         DrawColumnText(e, text, _fontOfSHAColumn, foreColor);
                     }
                 }
-                else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
+                else if (columnIndex == _buildServerWatcher.BuildStatusImageColumnIndex)
                 {
                     BuildInfoDrawingLogic.BuildStatusImageColumnCellPainting(e, revision);
                 }
-                else if (columnIndex == BuildServerWatcher.BuildStatusMessageColumnIndex)
+                else if (columnIndex == _buildServerWatcher.BuildStatusMessageColumnIndex)
                 {
                     var isSelected = Revisions.Rows[e.RowIndex].Selected;
                     BuildInfoDrawingLogic.BuildStatusMessageCellPainting(e, revision, foreColor, rowFont, isSelected, this);
@@ -2142,11 +2140,11 @@ namespace GitUI
                     e.Value = string.Format("{0} {1}", time.ToShortDateString(), time.ToLongTimeString());
                 }
             }
-            else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
+            else if (columnIndex == _buildServerWatcher.BuildStatusImageColumnIndex)
             {
                 BuildInfoDrawingLogic.BuildStatusImageColumnCellFormatting(e, Revisions, revision);
             }
-            else if (columnIndex == BuildServerWatcher.BuildStatusMessageColumnIndex)
+            else if (columnIndex == _buildServerWatcher.BuildStatusMessageColumnIndex)
             {
                 BuildInfoDrawingLogic.BuildStatusMessageCellFormatting(e, revision);
             }
