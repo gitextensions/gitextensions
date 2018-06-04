@@ -146,12 +146,10 @@ namespace GitUI
             MenuCommands.CreateOrUpdateMenuCommands();
 
             // fill View context menu from MenuCommands
-            var viewMenuCommands = MenuCommands.GetViewMenuCommands();
-            FillMenuFromMenuCommands(viewMenuCommands, viewToolStripMenuItem);
+            FillMenuFromMenuCommands(MenuCommands.GetViewMenuCommands(), viewToolStripMenuItem);
 
             // fill Navigate context menu from MenuCommands
-            var navigateMenuCommands = MenuCommands.GetNavigateMenuCommands();
-            FillMenuFromMenuCommands(navigateMenuCommands, navigateToolStripMenuItem);
+            FillMenuFromMenuCommands(MenuCommands.GetNavigateMenuCommands(), navigateToolStripMenuItem);
 
             NormalFont = AppSettings.Font;
             Loading.Paint += Loading_Paint;
