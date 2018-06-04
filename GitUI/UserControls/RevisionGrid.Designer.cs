@@ -12,38 +12,11 @@ namespace GitUI
             if (disposing)
             {
                 _revisionSubscription?.Dispose();
-
-                if (_revisionReader != null)
-                {
-                    _revisionReader.Dispose();
-                    _revisionReader = null;
-                }
-
-                if (_buildServerWatcher != null)
-                {
-                    _buildServerWatcher.Dispose();
-                    _buildServerWatcher = null;
-                }
-
-                _selectedItemBrush = null;
-
-                if (_filledItemBrush != null)
-                {
-                    _filledItemBrush.Dispose();
-                    _filledItemBrush = null;
-                }
-
-                if (_authoredRevisionsBrush != null)
-                {
-                    _authoredRevisionsBrush.Dispose();
-                    _authoredRevisionsBrush = null;
-                }
-
-                if (_fontOfSHAColumn != null)
-                {
-                    _fontOfSHAColumn.Dispose();
-                    _fontOfSHAColumn = null;
-                }
+                _revisionReader?.Dispose();
+                _buildServerWatcher?.Dispose();
+                _filledItemBrush?.Dispose();
+                _authoredRevisionsBrush?.Dispose();
+                _fontOfSHAColumn?.Dispose();
 
                 if (_indexWatcher.IsValueCreated)
                 {
