@@ -228,28 +228,31 @@ namespace GitUI.CommandsDialogs
                         "--",
                         fileName.Quote()
                     };
-                    Process p = Module.RunGitCmdDetached(args.ToString(), GitModule.LosslessEncoding);
 
-                    // the sequence of (quoted) file names - start with the initial filename for the search.
-                    var listOfFileNames = new StringBuilder("\"" + fileName + "\"");
+                    StringBuilder listOfFileNames;
 
-                    // keep a set of the file names already seen
-                    var setOfFileNames = new HashSet<string> { fileName };
-
-                    string line;
-                    do
+                    using (var process = Module.RunGitCmdDetached(args.ToString(), GitModule.LosslessEncoding))
                     {
-                        line = p.StandardOutput.ReadLine();
-                        line = GitModule.ReEncodeFileNameFromLossless(line);
+                        listOfFileNames = new StringBuilder("\"" + fileName + "\"");
 
-                        if (!string.IsNullOrEmpty(line) && setOfFileNames.Add(line))
+                        // keep a set of the file names already seen
+                        var setOfFileNames = new HashSet<string> { fileName };
+
+                        string line;
+                        do
                         {
-                            listOfFileNames.Append(" \"");
-                            listOfFileNames.Append(line);
-                            listOfFileNames.Append('\"');
+                            line = process.StandardOutput.ReadLine();
+                            line = GitModule.ReEncodeFileNameFromLossless(line);
+
+                            if (!string.IsNullOrEmpty(line) && setOfFileNames.Add(line))
+                            {
+                                listOfFileNames.Append(" \"");
+                                listOfFileNames.Append(line);
+                                listOfFileNames.Append('\"');
+                            }
                         }
+                        while (line != null);
                     }
-                    while (line != null);
 
                     // here we need --name-only to get the previous filenames in the revision graph
                     res.pathFilter = listOfFileNames.ToString();
