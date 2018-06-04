@@ -1693,7 +1693,7 @@ namespace GitUI
 
             using (Brush foreBrush = new SolidBrush(foreColor))
             {
-                var rowFont = NormalFont;
+                var rowFont = _normalFont;
                 if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
                 {
                     rowFont = _headFont;
@@ -3384,7 +3384,7 @@ namespace GitUI
                 {
                     using (var graphics = Graphics.FromHwnd(Handle))
                     {
-                        _rowHeigth = (int)graphics.MeasureString("By", NormalFont).Height + 9;
+                        _rowHeigth = (int)graphics.MeasureString("By", _normalFont).Height + 9;
                     }
 
                     _selectedItemBrush = SystemBrushes.Highlight;
