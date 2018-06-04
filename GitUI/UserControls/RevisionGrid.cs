@@ -61,6 +61,7 @@ namespace GitUI
         public event EventHandler<GitModuleEventArgs> GitModuleChanged;
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
         public event EventHandler<EventArgs> ShowFirstParentsToggled;
+        public event EventHandler SelectionChanged;
 
         private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
         private readonly TranslationString _cannotHighlightSelectedBranch = new TranslationString("Cannot highlight selected branch when revision graph is loading.");
@@ -884,8 +885,6 @@ namespace GitUI
 
             ForceRefreshRevisions();
         }
-
-        public event EventHandler SelectionChanged;
 
         private void SetSelectedIndex(int index)
         {
