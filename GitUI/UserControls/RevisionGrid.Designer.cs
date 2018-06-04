@@ -752,24 +752,24 @@ namespace GitUI
 
         #endregion
 
+        public System.Windows.Forms.PictureBox Error;
+
         private DvcsGraph Revisions;
         private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.Timer SelectionTimer;
-        public System.Windows.Forms.PictureBox Error;
-        private System.Windows.Forms.ContextMenuStrip mainContextMenu;
-        private System.Windows.Forms.ToolStripMenuItem createTagToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem createNewBranchToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem resetCurrentBranchToHereToolStripMenuItem;
+        private System.Windows.Forms.Timer quickSearchTimer;
         private System.Windows.Forms.Panel NoCommits;
+        private System.Windows.Forms.Panel NoGit;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button Commit;
         private System.Windows.Forms.Button GitIgnore;
+        private System.Windows.Forms.Button InitRepository;
+        private System.Windows.Forms.Button CloneRepository;
+
+        private System.Windows.Forms.ContextMenuStrip mainContextMenu;
         private System.Windows.Forms.ToolStripMenuItem navigateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem revertCommitToolStripMenuItem;
-        private System.Windows.Forms.Panel NoGit;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripMenuItem deleteTagToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem checkoutRevisionToolStripMenuItem;
@@ -777,19 +777,13 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem checkoutBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mergeBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cherryPickCommitToolStripMenuItem;
-        private System.Windows.Forms.Timer quickSearchTimer;
         private System.Windows.Forms.ToolStripMenuItem rebaseOnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rebaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rebaseInteractivelyToolStripMenuItem;
-        private GitUI.UserControls.RevisionGridClasses.CopyContextMenuItem copyToClipboardToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem markRevisionAsBadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem markRevisionAsGoodToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopBisectToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator bisectSeparator;
         private System.Windows.Forms.ToolStripMenuItem runScriptToolStripMenuItem;
-        private System.Windows.Forms.Button InitRepository;
-        private System.Windows.Forms.Button CloneRepository;
         private System.Windows.Forms.ToolStripMenuItem showMergeCommitsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manipulateCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rewordCommitToolStripMenuItem;
@@ -797,25 +791,35 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem squashCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renameBranchToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bisectSkipRevisionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+        private System.Windows.Forms.ToolStripMenuItem compareToBranchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compareToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compareWithCurrentBranchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compareToBaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectAsBaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem getHelpOnHowToUseTheseFeaturesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openBuildReportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editCommitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem rebaseWithAdvOptionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createTagToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createNewBranchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resetCurrentBranchToHereToolStripMenuItem;
+        private GitUI.UserControls.RevisionGridClasses.CopyContextMenuItem copyToClipboardToolStripMenuItem;
+
+        private System.Windows.Forms.ToolStripSeparator bisectSeparator;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+
         private System.Windows.Forms.DataGridViewTextBoxColumn MessageDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AuthorDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn IdDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn GraphDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn IsMessageMultilineDataGridViewColumn;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripMenuItem compareToBranchToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem compareToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem compareWithCurrentBranchToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem compareToBaseToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem selectAsBaseToolStripMenuItem;
-        private ToolStripMenuItem getHelpOnHowToUseTheseFeaturesToolStripMenuItem;
-        private ToolStripMenuItem openBuildReportToolStripMenuItem;
-        private ToolStripMenuItem editCommitToolStripMenuItem;
-        private ToolStripMenuItem rebaseWithAdvOptionsToolStripMenuItem;
     }
 }
