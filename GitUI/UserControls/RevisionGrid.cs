@@ -3320,11 +3320,12 @@ namespace GitUI
 
         public void ToggleRevisionCardLayout()
         {
-            var layouts = new List<RevisionGridLayout>((RevisionGridLayout[])Enum.GetValues(typeof(RevisionGridLayout)));
-            layouts.Sort();
-            var maxLayout = (int)layouts[layouts.Count - 1];
+            var layouts = (RevisionGridLayout[])Enum.GetValues(typeof(RevisionGridLayout));
 
-            int nextLayout = AppSettings.RevisionGraphLayout + 1;
+            Array.Sort(layouts);
+
+            var maxLayout = (int)layouts[layouts.Length - 1];
+            var nextLayout = AppSettings.RevisionGraphLayout + 1;
 
             if (nextLayout > maxLayout)
             {
