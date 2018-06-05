@@ -397,12 +397,9 @@ namespace GitUI
         private void Loading_Paint(object sender, PaintEventArgs e)
         {
             // If our loading state has changed since the last paint, update it.
-            if (Loading != null)
+            if (Loading != null && Loading.Visible != _isLoading)
             {
-                if (Loading.Visible != _isLoading)
-                {
-                    Loading.Visible = _isLoading;
-                }
+                Loading.Visible = _isLoading;
             }
         }
 
