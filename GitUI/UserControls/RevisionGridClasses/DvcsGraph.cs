@@ -442,31 +442,6 @@ namespace GitUI.RevisionGridClasses
             return laneInfoText.ToString();
         }
 
-        public string GetRowId(int rowIndex)
-        {
-            lock (_graphData)
-            {
-                return _graphData[rowIndex]?.Node.Id;
-            }
-        }
-
-        public int FindRow(string id)
-        {
-            lock (_graphData)
-            {
-                int i;
-                for (i = 0; i < _graphData.CachedCount; i++)
-                {
-                    if (_graphData[i] != null && _graphData[i].Node.Id.CompareTo(id) == 0)
-                    {
-                        break;
-                    }
-                }
-
-                return i == _graphData.Count ? -1 : i;
-            }
-        }
-
         public void Prune()
         {
             lock (_graphData)
