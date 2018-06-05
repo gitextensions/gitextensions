@@ -181,7 +181,6 @@ namespace GitUI.CommandsDialogs
                 filter =>
                 {
                     FileChanges.SetFilters(filter);
-                    FileChanges.AllowGraphWithFilter = true;
                     FileChanges.Load();
                 });
 

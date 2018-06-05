@@ -105,7 +105,6 @@ namespace GitUI
         [Browsable(false)] public string InMemAuthorFilter { get; set; } = "";
         [Browsable(false)] public string InMemCommitterFilter { get; set; } = "";
         [Browsable(false)] public string InMemMessageFilter { get; set; } = "";
-        [Browsable(false)] public bool AllowGraphWithFilter { get; set; }
         [Browsable(false)] public string CurrentCheckout { get; private set; }
         [Browsable(false)] public bool ShowUncommitedChangesIfPossible { get; set; }
         [Browsable(false)] public bool ShowBuildServerInfo { get; set; }
