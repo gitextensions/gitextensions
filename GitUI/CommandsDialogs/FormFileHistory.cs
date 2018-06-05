@@ -129,6 +129,28 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _asyncLoader.Dispose();
+                _filterRevisionsHelper.Dispose();
+                _filterBranchHelper.Dispose();
+                _formBrowseMenus.Dispose();
+
+                components?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
+        public void SelectBlameTab() => tabControl1.SelectedTab = BlameTab;
+        public void SelectDiffTab() => tabControl1.SelectedTab = DiffTab;
+
         protected override void OnRuntimeLoad(EventArgs e)
         {
             base.OnRuntimeLoad(e);
@@ -143,16 +165,6 @@ namespace GitUI.CommandsDialogs
             {
                 FileChanges.Visible = false;
             }
-        }
-
-        public void SelectBlameTab()
-        {
-            tabControl1.SelectedTab = BlameTab;
-        }
-
-        public void SelectDiffTab()
-        {
-            tabControl1.SelectedTab = DiffTab;
         }
 
         private void LoadFileHistory()
@@ -483,20 +495,6 @@ namespace GitUI.CommandsDialogs
                 selectedRevisions.Count >= 1 && !selectedRevisions[0].IsArtificial;
         }
 
-        public override void AddTranslationItems(ITranslation translation)
-        {
-            base.AddTranslationItems(translation);
-            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
-            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
-        }
-
-        public override void TranslateItems(ITranslation translation)
-        {
-            base.TranslateItems(translation);
-            TranslationUtils.TranslateItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
-            TranslationUtils.TranslateItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
-        }
-
         private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
         {
             UICommands.OpenWithDifftool(this, FileChanges.GetSelectedRevisions(), FileName, string.Empty, RevisionDiffKind.DiffBLocal, true);
@@ -550,25 +548,6 @@ namespace GitUI.CommandsDialogs
             LoadFileHistory();
         }
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _asyncLoader.Dispose();
-                _filterRevisionsHelper.Dispose();
-                _filterBranchHelper.Dispose();
-                _formBrowseMenus.Dispose();
-
-                components?.Dispose();
-            }
-
-            base.Dispose(disposing);
-        }
-
         private void toolStripBranchFilterComboBox_Click(object sender, EventArgs e)
         {
             toolStripBranchFilterComboBox.DroppedDown = true;
@@ -594,5 +573,23 @@ namespace GitUI.CommandsDialogs
             detectMoveAndCopyInThisFileToolStripMenuItem.Checked = AppSettings.DetectCopyInAllOnBlame;
             UpdateSelectedFileViewers(true);
         }
+
+        #region Translation
+
+        public override void AddTranslationItems(ITranslation translation)
+        {
+            base.AddTranslationItems(translation);
+            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
+            TranslationUtils.AddTranslationItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
+        }
+
+        public override void TranslateItems(ITranslation translation)
+        {
+            base.TranslateItems(translation);
+            TranslationUtils.TranslateItemsFromFields(FormBrowseName, _filterRevisionsHelper, translation);
+            TranslationUtils.TranslateItemsFromFields(FormBrowseName, _filterBranchHelper, translation);
+        }
+
+        #endregion
     }
 }
