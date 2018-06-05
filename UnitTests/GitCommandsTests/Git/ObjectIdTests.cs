@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using GitCommands;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using NUnit.Framework;
@@ -157,8 +158,24 @@ namespace GitCommandsTests.Git
                 ObjectId.UnstagedId);
 
             Assert.AreEqual(
+                ObjectId.UnstagedId,
+                ObjectId.Parse(GitRevision.UnstagedGuid));
+
+            Assert.AreEqual(
                 ObjectId.IndexId,
                 ObjectId.IndexId);
+
+            Assert.AreEqual(
+                ObjectId.IndexId,
+                ObjectId.Parse(GitRevision.IndexGuid));
+
+            Assert.AreEqual(
+                ObjectId.CombinedDiffId,
+                ObjectId.CombinedDiffId);
+
+            Assert.AreEqual(
+                ObjectId.CombinedDiffId,
+                ObjectId.Parse(GitRevision.CombinedDiffGuid));
         }
 
         [Test]
