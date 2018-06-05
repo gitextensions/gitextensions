@@ -297,14 +297,14 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateSelectedFileViewers(bool force = false)
         {
-            var selectedRows = FileChanges.GetSelectedRevisions();
+            var selectedRevisions = FileChanges.GetSelectedRevisions();
 
-            if (selectedRows.Count == 0)
+            if (selectedRevisions.Count == 0)
             {
                 return;
             }
 
-            GitRevision revision = selectedRows[0];
+            GitRevision revision = selectedRevisions[0];
             var children = FileChanges.GetRevisionChildren(revision.Guid);
 
             var fileName = revision.Name;
@@ -322,11 +322,11 @@ namespace GitUI.CommandsDialogs
             }
             else if (tabControl1.SelectedTab == ViewTab)
             {
-                var scrollpos = View.ScrollPos;
+                var scrollPos = View.ScrollPos;
 
                 View.Encoding = Diff.Encoding;
                 View.ViewGitItemRevisionAsync(fileName, revision.Guid);
-                View.ScrollPos = scrollpos;
+                View.ScrollPos = scrollPos;
             }
             else if (tabControl1.SelectedTab == DiffTab)
             {
@@ -348,7 +348,7 @@ namespace GitUI.CommandsDialogs
                 _buildReportTabPageExtension = new BuildReportTabPageExtension(tabControl1, _buildReportTabCaption.Text);
             }
 
-            _buildReportTabPageExtension.FillBuildReport(selectedRows.Count == 1 ? revision : null);
+            _buildReportTabPageExtension.FillBuildReport(selectedRevisions.Count == 1 ? revision : null);
         }
 
         private BuildReportTabPageExtension _buildReportTabPageExtension;
