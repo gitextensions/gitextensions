@@ -17,16 +17,20 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormFileHistory : GitModuleForm
     {
+        private const string FormBrowseName = "FormBrowse";
+
+        private readonly TranslationString _buildReportTabCaption = new TranslationString("Build Report");
+        private readonly AsyncLoader _asyncLoader = new AsyncLoader();
         private readonly ICommitDataManager _commitDataManager;
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
         private readonly FilterBranchHelper _filterBranchHelper;
-        private readonly AsyncLoader _asyncLoader;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly ILongShaProvider _longShaProvider;
 
-        private readonly TranslationString _buildReportTabCaption =
-            new TranslationString("Build Report");
+        private BuildReportTabPageExtension _buildReportTabPageExtension;
+
+        private string FileName { get; set; }
 
         private FormFileHistory()
             : this(null)
@@ -37,8 +41,6 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            _asyncLoader = new AsyncLoader();
-
             tabControl1.ImageList = new ImageList
             {
                 ColorDepth = ColorDepth.Depth8Bit,
@@ -87,7 +89,8 @@ namespace GitUI.CommandsDialogs
 
             Diff.ExtraDiffArgumentsChanged += (sender, e) => UpdateSelectedFileViewers();
 
-            bool isSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(FileName));
+            var isSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(FileName));
+
             if (isSubmodule)
             {
                 tabControl1.RemoveIfExists(BlameTab);
@@ -134,8 +137,6 @@ namespace GitUI.CommandsDialogs
                 FileChanges.Visible = false;
             }
         }
-
-        private string FileName { get; set; }
 
         public void SelectBlameTab()
         {
@@ -351,8 +352,6 @@ namespace GitUI.CommandsDialogs
             _buildReportTabPageExtension.FillBuildReport(selectedRevisions.Count == 1 ? revision : null);
         }
 
-        private BuildReportTabPageExtension _buildReportTabPageExtension;
-
         private void TabControl1SelectedIndexChanged(object sender, EventArgs e)
         {
             FileChangesSelectionChanged(sender, e);
@@ -476,8 +475,6 @@ namespace GitUI.CommandsDialogs
             copyToClipboardToolStripMenuItem.Enabled =
                 selectedRevisions.Count >= 1 && !selectedRevisions[0].IsArtificial;
         }
-
-        private const string FormBrowseName = "FormBrowse";
 
         public override void AddTranslationItems(ITranslation translation)
         {
