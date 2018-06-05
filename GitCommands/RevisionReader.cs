@@ -216,7 +216,7 @@ namespace GitCommands
             }
         }
 
-        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, out GitRevision revision)
+        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, [CanBeNull] out GitRevision revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.
@@ -348,10 +348,14 @@ namespace GitCommands
             var committer = reader.ReadLine(stringPool);
             var committerEmail = reader.ReadLine(stringPool);
 
-            // NOTE the convention is that the Body property contain a copy of Subject
-            // Therefore we read the subject twice
             var subject = reader.ReadLine(advance: false);
-            var body = reader.ReadToEnd();
+            Debug.Assert(subject != null, "subject != null");
+
+            // NOTE the convention is that the Subject string is duplicated at the start of the Body string
+            // Therefore we read the subject twice.
+            // If there are not enough characters remaining for a body, then just assign the subject string directly.
+            var body = reader.Remaining - subject.Length == 2 ? subject : reader.ReadToEnd();
+            Debug.Assert(body != null, "body != null");
 
             if (author == null || authorEmail == null || committer == null || committerEmail == null || subject == null || body == null)
             {
@@ -381,7 +385,7 @@ namespace GitCommands
                 MessageEncoding = encodingName,
                 Subject = subject,
                 Body = body,
-                HasMultiLineMessage = !string.IsNullOrWhiteSpace(body)
+                HasMultiLineMessage = !ReferenceEquals(subject, body)
             };
 
             return true;
@@ -408,7 +412,10 @@ namespace GitCommands
                 _index = 0;
             }
 
-            public string ReadLine(StringPool pool = null, bool advance = true)
+            public int Remaining => _s.Length - _index;
+
+            [CanBeNull]
+            public string ReadLine([CanBeNull] StringPool pool = null, bool advance = true)
             {
                 if (_index == _s.Length)
                 {
@@ -420,7 +427,7 @@ namespace GitCommands
 
                 if (endIndex == -1)
                 {
-                    return ReadToEnd();
+                    return ReadToEnd(advance);
                 }
 
                 if (advance)
@@ -433,16 +440,22 @@ namespace GitCommands
                     : _s.Substring(startIndex, endIndex - startIndex);
             }
 
-            public string ReadToEnd()
+            [CanBeNull]
+            public string ReadToEnd(bool advance = true)
             {
                 if (_index == _s.Length)
                 {
                     return null;
                 }
 
-                _index = _s.Length;
+                var s = _s.Substring(_index);
 
-                return _s.Substring(_index);
+                if (advance)
+                {
+                    _index = _s.Length;
+                }
+
+                return s;
             }
         }
 
