@@ -1875,7 +1875,7 @@ namespace GitUI
             return AppSettings.RevisionGraphDrawAlternateBackColor && rowIndex % 2 == 0;
         }
 
-        private float DrawRef(DrawRefArgs drawRefArgs, float offset, string name, Color headColor, ArrowType arrowType, bool dashedLine = false, bool fill = false)
+        private static float DrawRef(DrawRefArgs drawRefArgs, float offset, string name, Color headColor, ArrowType arrowType, bool dashedLine = false, bool fill = false)
         {
             var textColor = fill ? headColor : Lerp(headColor, Color.White, 0.5f);
 
