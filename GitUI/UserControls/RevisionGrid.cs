@@ -213,6 +213,8 @@ namespace GitUI
 
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
+
+            BuildServerWatcher = new BuildServerWatcher(this, Revisions);
         }
 
         private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
@@ -808,8 +810,6 @@ namespace GitUI
             Revisions.Visible = false;
             Loading.Visible = true;
             Loading.BringToFront();
-
-            BuildServerWatcher = new BuildServerWatcher(this, Revisions);
         }
 
         public new void Load()
