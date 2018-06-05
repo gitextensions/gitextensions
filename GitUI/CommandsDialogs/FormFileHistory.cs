@@ -41,22 +41,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            tabControl1.ImageList = new ImageList
-            {
-                ColorDepth = ColorDepth.Depth8Bit,
-                ImageSize = DpiUtil.Scale(new Size(16, 16)),
-                Images =
-                {
-                    Properties.Resources.IconCommit,
-                    Properties.Resources.IconViewFile,
-                    Properties.Resources.IconDiff,
-                    Properties.Resources.IconBlame
-                }
-            };
-            tabControl1.TabPages[0].ImageIndex = 0;
-            tabControl1.TabPages[1].ImageIndex = 1;
-            tabControl1.TabPages[2].ImageIndex = 2;
-            tabControl1.TabPages[3].ImageIndex = 3;
+            ConfigureTabControl();
 
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, FileChanges);
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, FileChanges, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
@@ -74,6 +59,28 @@ namespace GitUI.CommandsDialogs
             copyToClipboardToolStripMenuItem.GetViewModel = () => new CopyContextMenuViewModel(FileChanges.GetSelectedRevisions().FirstOrDefault());
 
             this.AdjustForDpiScaling();
+
+            return;
+
+            void ConfigureTabControl()
+            {
+                tabControl1.ImageList = new ImageList
+                {
+                    ColorDepth = ColorDepth.Depth8Bit,
+                    ImageSize = DpiUtil.Scale(new Size(16, 16)),
+                    Images =
+                    {
+                        Properties.Resources.IconCommit,
+                        Properties.Resources.IconViewFile,
+                        Properties.Resources.IconDiff,
+                        Properties.Resources.IconBlame
+                    }
+                };
+                tabControl1.TabPages[0].ImageIndex = 0;
+                tabControl1.TabPages[1].ImageIndex = 1;
+                tabControl1.TabPages[2].ImageIndex = 2;
+                tabControl1.TabPages[3].ImageIndex = 3;
+            }
         }
 
         public FormFileHistory(GitUICommands commands, string fileName, GitRevision revision = null, bool filterByRevision = false)
