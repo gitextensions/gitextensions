@@ -297,7 +297,6 @@ namespace GitUI.Hotkey
                     Hk(RevisionGrid.Commands.ToggleShowRelativeDate, Keys.None),
                     Hk(RevisionGrid.Commands.ToggleDrawNonRelativesGray, Keys.None),
                     Hk(RevisionGrid.Commands.ToggleShowGitNotes, Keys.None),
-                    Hk(RevisionGrid.Commands.ToggleRevisionCardLayout, Keys.Control | Keys.Shift | Keys.L),
                     Hk(RevisionGrid.Commands.ToggleShowMergeCommits, Keys.Control | Keys.Shift | Keys.M),
                     Hk(RevisionGrid.Commands.ToggleShowTags, Keys.Control | Keys.Alt | Keys.T),
                     Hk(RevisionGrid.Commands.ShowAllBranches, Keys.Control | Keys.Shift | Keys.A),

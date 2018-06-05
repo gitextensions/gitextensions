@@ -898,10 +898,10 @@ namespace GitCommands
             set => SetBool("showids", value);
         }
 
-        public static int RevisionGraphLayout
+        public static bool ShowRevisionGridGraphColumn
         {
-            get => GetInt("revisiongraphlayout", 2);
-            set => SetInt("revisiongraphlayout", value);
+            get => GetBool("showrevisiongridgraphcolumn", true);
+            set => SetBool("showrevisiongridgraphcolumn", value);
         }
 
         public static bool ShowAuthorDate
