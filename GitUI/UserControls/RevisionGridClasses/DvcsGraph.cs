@@ -469,12 +469,11 @@ namespace GitUI.RevisionGridClasses
 
         public void Prune()
         {
-            int count;
             lock (_graphData)
             {
                 _graphData.Prune();
-                count = _graphData.Count;
-                SetRowCount(count);
+
+                SetRowCount(_graphData.Count);
             }
         }
 
