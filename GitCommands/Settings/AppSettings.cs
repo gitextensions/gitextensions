@@ -876,7 +876,7 @@ namespace GitCommands
 
         public static bool ShowIndicatorForMultilineMessage
         {
-            get => GetBool("showindicatorformultilinemessage", false);
+            get => GetBool("showindicatorformultilinemessage", true);
             set => SetBool("showindicatorformultilinemessage", value);
         }
 
@@ -900,7 +900,7 @@ namespace GitCommands
 
         public static bool ShowIds
         {
-            get => GetBool("showids", false);
+            get => GetBool("showids", true);
             set => SetBool("showids", value);
         }
 
@@ -1066,7 +1066,7 @@ namespace GitCommands
 
         public static bool MarkIllFormedLinesInCommitMsg
         {
-            get => GetBool("markillformedlinesincommitmsg", false);
+            get => GetBool("markillformedlinesincommitmsg", true);
             set => SetBool("markillformedlinesincommitmsg", value);
         }
 
