@@ -6,11 +6,13 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Extensions;
 using GitExtUtils.GitUI;
+using GitUIPluginInterfaces;
 
 namespace GitUI.RevisionGridClasses
 {
@@ -360,13 +362,13 @@ namespace GitUI.RevisionGridClasses
         public string GetLaneInfo(int row, int x, GitModule currentModule)
         {
             int lane = (x - _laneSidePadding) / _laneWidth;
-            var laneInfoText = new System.Text.StringBuilder();
+            var laneInfoText = new StringBuilder();
             lock (_graphData)
             {
                 Graph.ILaneRow laneRow = _graphData[row];
                 if (laneRow != null)
                 {
-                    DvcsGraph.Node node = null;
+                    Node node = null;
                     if (lane == laneRow.NodeLane)
                     {
                         node = laneRow.Node;
@@ -381,10 +383,10 @@ namespace GitUI.RevisionGridClasses
                         {
                             // search for next node below this row
                             Graph.LaneInfo laneInfo = laneRow[lane, laneInfoIndex];
-                            DvcsGraph.Junction firstJunction = laneInfo.Junctions.First();
+                            Junction firstJunction = laneInfo.Junctions.First();
                             for (int nodeIndex = 0, nodeCount = firstJunction.NodesCount; nodeIndex < nodeCount; ++nodeIndex)
                             {
-                                DvcsGraph.Node laneNode = firstJunction[nodeIndex];
+                                Node laneNode = firstJunction[nodeIndex];
                                 if (laneNode.Index > row)
                                 {
                                     node = laneNode;
