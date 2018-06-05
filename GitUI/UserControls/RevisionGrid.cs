@@ -29,25 +29,12 @@ using GitUI.Script;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGridClasses;
 using GitUIPluginInterfaces;
-using Gravatar;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI
 {
-    public enum RevisionGridLayout
-    {
-        FilledBranchesSmall = 1,
-        FilledBranchesSmallWithGraph = 2,
-        Small = 3,
-        SmallWithGraph = 4,
-        Card = 5,
-        CardWithGraph = 6,
-        LargeCard = 7,
-        LargeCardWithGraph = 8
-    }
-
     public enum RevisionGraphDrawStyleEnum
     {
         Normal,
@@ -73,9 +60,7 @@ namespace GitUI
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
-        private readonly IImageCache _avatarCache;
-        private readonly IAvatarService _gravatarService;
-        private readonly IImageNameProvider _avatarImageNameProvider;
+        private readonly Brush _selectedItemBrush = SystemBrushes.Highlight;
         private readonly IGitRevisionTester _gitRevisionTester;
         private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
         private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
@@ -89,16 +74,12 @@ namespace GitUI
 
         /// <summary>Tracks status for the artificial commits while the revision graph is reloading</summary>
         private IReadOnlyList<GitItemStatus> _artificialStatus;
-        private Brush _selectedItemBrush;
         private SolidBrush _authoredRevisionsBrush;
-        private Brush _filledItemBrush; // disposable brush
         private string _initialSelectedRevision;
         private Label _quickSearchLabel;
         private string _quickSearchString = "";
         private RevisionReader _revisionReader;
         private IDisposable _revisionSubscription;
-        private RevisionGridLayout _layout;
-        private int _rowHeight;
         private GitRevision _baseCommitToCompare;
         private string _rebaseOnTopOf;
         private bool _isRefreshingRevisions;
@@ -162,10 +143,6 @@ namespace GitUI
 
             Translate();
 
-            _avatarImageNameProvider = new AvatarImageNameProvider();
-            _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
-            _avatarCache.Invalidated += (s, e) => Graph.Invalidate();
-            _gravatarService = new GravatarService(_avatarCache, _avatarImageNameProvider);
             _gitRevisionTester = new GitRevisionTester(new FullPathResolver(() => Module.WorkingDir));
 
             copyToClipboardToolStripMenuItem.GetViewModel = () => new CopyContextMenuViewModel(LatestSelectedRevision);
@@ -222,16 +199,7 @@ namespace GitUI
             AuthorDataGridViewColumn.Width = DpiUtil.Scale(150);
             DateDataGridViewColumn.Width = DpiUtil.Scale(135);
 
-            try
-            {
-                AppSettings.RevisionGraphLayout = AppSettings.RevisionGraphLayout;
-                SetRevisionsLayout();
-            }
-            catch
-            {
-                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.SmallWithGraph;
-                SetRevisionsLayout();
-            }
+            Refresh();
 
             compareToBaseToolStripMenuItem.Enabled = false;
             fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
@@ -246,7 +214,6 @@ namespace GitUI
                 _revisionSubscription?.Dispose();
                 _revisionReader?.Dispose();
                 _buildServerWatcher?.Dispose();
-                _filledItemBrush?.Dispose();
                 _authoredRevisionsBrush?.Dispose();
                 _fontOfSHAColumn?.Dispose();
 
@@ -353,7 +320,7 @@ namespace GitUI
             set
             {
                 _normalFont = value;
-                _refsFont = IsFilledBranchesLayout ? _normalFont : new Font(_normalFont, FontStyle.Bold);
+                _refsFont = _normalFont;
                 _headFont = new Font(_normalFont, FontStyle.Bold);
                 _superprojectFont = new Font(_normalFont, FontStyle.Underline);
                 _fontOfSHAColumn = new Font("Consolas", _normalFont.SizeInPoints);
@@ -708,7 +675,7 @@ namespace GitUI
                 return;
             }
 
-            SetRevisionsLayout();
+            RefreshLayout();
 
             base.Refresh();
 
@@ -1088,7 +1055,7 @@ namespace GitUI
                     predicate);
 
                 LoadRevisions();
-                SetRevisionsLayout();
+                RefreshLayout();
                 ResetNavigationHistory();
             }
             catch (Exception)
@@ -1610,236 +1577,158 @@ namespace GitUI
             }
             */
 
-            using (Brush foreBrush = new SolidBrush(foreColor))
+            var rowFont = _normalFont;
+            if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
             {
-                var rowFont = _normalFont;
-                if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
+                rowFont = _headFont;
+            }
+            else if (spi != null && spi.CurrentBranch == revision.Guid)
+            {
+                rowFont = _superprojectFont;
+            }
+
+            if (columnIndex == messageColIndex)
+            {
+                float offset = 0;
+
+                drawRefArgs.RefsFont = /*true ? rowFont :*/ _refsFont;
+
+                if (spi != null)
                 {
-                    rowFont = _headFont;
+                    if (spi.Conflict_Base == revision.Guid)
+                    {
+                        offset = DrawRef(drawRefArgs, offset, "Base", Color.OrangeRed, ArrowType.NotFilled);
+                    }
+
+                    if (spi.Conflict_Local == revision.Guid)
+                    {
+                        offset = DrawRef(drawRefArgs, offset, "Local", Color.OrangeRed, ArrowType.NotFilled);
+                    }
+
+                    if (spi.Conflict_Remote == revision.Guid)
+                    {
+                        offset = DrawRef(drawRefArgs, offset, "Remote", Color.OrangeRed, ArrowType.NotFilled);
+                    }
                 }
-                else if (spi != null && spi.CurrentBranch == revision.Guid)
+
+                if (revision.Refs.Count != 0)
                 {
-                    rowFont = _superprojectFont;
-                }
+                    var gitRefs = revision.Refs.ToList();
+                    gitRefs.Sort(
+                        (left, right) =>
+                        {
+                            int leftTypeRank = RefTypeRank(left);
+                            int rightTypeRank = RefTypeRank(right);
+                            if (leftTypeRank == rightTypeRank)
+                            {
+                                return left.Name.CompareTo(right.Name);
+                            }
 
-                if (columnIndex == messageColIndex)
-                {
-                    int baseOffset = 0;
-                    if (IsCardLayout)
+                            return leftTypeRank.CompareTo(rightTypeRank);
+                        });
+
+                    foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || AppSettings.ShowRemoteBranches)))
                     {
-                        baseOffset = 5;
-
-                        Rectangle cellRectangle = new Rectangle(e.CellBounds.Left + baseOffset, e.CellBounds.Top + 1, e.CellBounds.Width - (baseOffset * 2), e.CellBounds.Height - 4);
-
-                        if (!AppSettings.RevisionGraphDrawNonRelativesGray || Graph.RowIsRelative(e.RowIndex))
+                        if (gitRef.IsTag)
                         {
-                            e.Graphics.FillRectangle(
-                                new LinearGradientBrush(cellRectangle,
-                                    Color.FromArgb(255, 220, 220, 231),
-                                    Color.FromArgb(255, 240, 240, 250), 90, false), cellRectangle);
-                            using (var pen = new Pen(Color.FromArgb(255, 200, 200, 200), 1))
+                            if (!AppSettings.ShowTags)
                             {
-                                e.Graphics.DrawRectangle(pen, cellRectangle);
+                                continue;
                             }
                         }
-                        else
-                        {
-                            e.Graphics.FillRectangle(
-                                new LinearGradientBrush(cellRectangle,
-                                    Color.FromArgb(255, 240, 240, 240),
-                                    Color.FromArgb(255, 250, 250, 250), 90, false), cellRectangle);
-                        }
 
-                        if ((e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected)
-                        {
-                            using (var penSelectionBackColor = new Pen(Graph.RowTemplate.DefaultCellStyle.SelectionBackColor, 1))
-                            {
-                                e.Graphics.DrawRectangle(penSelectionBackColor, cellRectangle);
-                            }
-                        }
-                    }
+                        var headColor = GetHeadColor(gitRef);
 
-                    float offset = baseOffset;
-
-                    drawRefArgs.RefsFont = IsFilledBranchesLayout ? rowFont : _refsFont;
-
-                    if (spi != null)
-                    {
-                        if (spi.Conflict_Base == revision.Guid)
-                        {
-                            offset = DrawRef(drawRefArgs, offset, "Base", Color.OrangeRed, ArrowType.NotFilled);
-                        }
-
-                        if (spi.Conflict_Local == revision.Guid)
-                        {
-                            offset = DrawRef(drawRefArgs, offset, "Local", Color.OrangeRed, ArrowType.NotFilled);
-                        }
-
-                        if (spi.Conflict_Remote == revision.Guid)
-                        {
-                            offset = DrawRef(drawRefArgs, offset, "Remote", Color.OrangeRed, ArrowType.NotFilled);
-                        }
-                    }
-
-                    if (revision.Refs.Count != 0)
-                    {
-                        var gitRefs = revision.Refs.ToList();
-                        gitRefs.Sort(
-                            (left, right) =>
-                            {
-                                int leftTypeRank = RefTypeRank(left);
-                                int rightTypeRank = RefTypeRank(right);
-                                if (leftTypeRank == rightTypeRank)
-                                {
-                                    return left.Name.CompareTo(right.Name);
-                                }
-
-                                return leftTypeRank.CompareTo(rightTypeRank);
-                            });
-
-                        foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || AppSettings.ShowRemoteBranches)))
-                        {
-                            if (gitRef.IsTag)
-                            {
-                                if (!AppSettings.ShowTags)
-                                {
-                                    continue;
-                                }
-                            }
-
-                            Color headColor = GetHeadColor(gitRef);
-
-                            ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
-                                gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
-                            drawRefArgs.RefsFont = gitRef.Selected ? rowFont : _refsFont;
-
-                            var superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
-                            if (superprojectRef != null)
-                            {
-                                superprojectRefs.Remove(superprojectRef);
-                            }
-
-                            string name = gitRef.Name;
-                            if (gitRef.IsTag
-                                && gitRef.IsDereference // see note on using IsDereference in CommitInfo class.
-                                && AppSettings.ShowAnnotatedTagsMessages
-                                && AppSettings.ShowIndicatorForMultilineMessage)
-                            {
-                                name = name + "  " + MultilineMessageIndicator;
-                            }
-
-                            offset = DrawRef(drawRefArgs, offset, name, headColor, arrowType, superprojectRef != null, true);
-                        }
-                    }
-
-                    for (int i = 0; i < Math.Min(MaxSuperprojectRefs, superprojectRefs.Count); i++)
-                    {
-                        var gitRef = superprojectRefs[i];
-                        Color headColor = GetHeadColor(gitRef);
-                        var gitRefName = i < (MaxSuperprojectRefs - 1) ? gitRef.Name : "…";
-
-                        ArrowType arrowType = gitRef.Selected ? ArrowType.Filled :
-                            gitRef.SelectedHeadMergeSource ? ArrowType.NotFilled : ArrowType.None;
+                        var arrowType = gitRef.Selected
+                            ? ArrowType.Filled
+                            : gitRef.SelectedHeadMergeSource
+                                ? ArrowType.NotFilled
+                                : ArrowType.None;
                         drawRefArgs.RefsFont = gitRef.Selected ? rowFont : _refsFont;
 
-                        offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true);
-                    }
-
-                    if (IsCardLayout)
-                    {
-                        offset = baseOffset;
-                    }
-
-                    var text = (string)e.FormattedValue;
-                    var bounds = AdjustCellBounds(e.CellBounds, offset);
-                    DrawColumnText(e, text, rowFont, foreColor, bounds);
-
-                    if (IsCardLayout)
-                    {
-                        int textHeight = (int)e.Graphics.MeasureString(text, rowFont).Height;
-                        int gravatarSize = _rowHeight - textHeight - 12;
-                        int gravatarTop = e.CellBounds.Top + textHeight + 6;
-                        int gravatarLeft = e.CellBounds.Left + baseOffset + 2;
-
-                        var imageName = _avatarImageNameProvider.Get(revision.AuthorEmail);
-                        var gravatar = _avatarCache.GetImage(imageName, null);
-                        if (gravatar == null)
+                        var superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
+                        if (superprojectRef != null)
                         {
-                            gravatar = Resources.User;
-
-                            // kick off download operation, will likely display the avatar during the next round of repaint
-                            _gravatarService.GetAvatarAsync(revision.AuthorEmail, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
+                            superprojectRefs.Remove(superprojectRef);
                         }
 
-                        e.Graphics.DrawImage(gravatar, gravatarLeft + 1, gravatarTop + 1, gravatarSize, gravatarSize);
-                        e.Graphics.DrawRectangle(Pens.Black, gravatarLeft, gravatarTop, gravatarSize + 1, gravatarSize + 1);
-
-                        string authorText;
-                        string timeText;
-
-                        if (_rowHeight >= 60)
+                        string name = gitRef.Name;
+                        if (gitRef.IsTag
+                            && gitRef.IsDereference // see note on using IsDereference in CommitInfo class.
+                            && AppSettings.ShowAnnotatedTagsMessages
+                            && AppSettings.ShowIndicatorForMultilineMessage)
                         {
-                            authorText = revision.Author;
-                            timeText = TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate);
-                        }
-                        else
-                        {
-                            timeText = string.Concat(revision.Author, " (", TimeToString(AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate), ")");
-                            authorText = string.Empty;
+                            name = name + "  " + MultilineMessageIndicator;
                         }
 
-                        e.Graphics.DrawString(authorText, rowFont, foreBrush,
-                            new PointF(gravatarLeft + gravatarSize + 5, gravatarTop + 6));
-                        e.Graphics.DrawString(timeText, rowFont, foreBrush,
-                            new PointF(gravatarLeft + gravatarSize + 5, e.CellBounds.Bottom - textHeight - 4));
+                        offset = DrawRef(drawRefArgs, offset, name, headColor, arrowType, superprojectRef != null, true);
                     }
+                }
 
-                    if (revision.IsArtificial)
-                    {
-                        // Get offset for "count" text
-                        SizeF textSize = drawRefArgs.Graphics.MeasureString(text, rowFont);
+                for (int i = 0; i < Math.Min(MaxSuperprojectRefs, superprojectRefs.Count); i++)
+                {
+                    var gitRef = superprojectRefs[i];
+                    var headColor = GetHeadColor(gitRef);
+                    var gitRefName = i < (MaxSuperprojectRefs - 1) ? gitRef.Name : "…";
 
-                        offset += 1 + textSize.Width;
-                        offset = DrawRef(drawRefArgs, offset, revision.Subject, AppSettings.OtherTagColor, ArrowType.None, false, true);
-                    }
+                    var arrowType = gitRef.Selected
+                        ? ArrowType.Filled
+                        : gitRef.SelectedHeadMergeSource
+                            ? ArrowType.NotFilled
+                            : ArrowType.None;
+                    drawRefArgs.RefsFont = gitRef.Selected ? rowFont : _refsFont;
+
+                    offset = DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true);
                 }
-                else if (columnIndex == authorColIndex)
+
+                var text = (string)e.FormattedValue;
+                var bounds = AdjustCellBounds(e.CellBounds, offset);
+                DrawColumnText(e, text, rowFont, foreColor, bounds);
+
+                if (revision.IsArtificial)
                 {
-                    if (!revision.IsArtificial)
-                    {
-                        var text = (string)e.FormattedValue;
-                        DrawColumnText(e, text, rowFont, foreColor);
-                    }
+                    // Get offset for "count" text
+                    offset += 1 + drawRefArgs.Graphics.MeasureString(text, rowFont).Width;
+
+                    /*offset = */DrawRef(drawRefArgs, offset, revision.Subject, AppSettings.OtherTagColor, ArrowType.None, false, true);
                 }
-                else if (columnIndex == dateColIndex)
-                {
-                    var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
-                    var text = TimeToString(time);
-                    DrawColumnText(e, text, rowFont, foreColor);
-                }
-                else if (columnIndex == idColIndex)
-                {
-                    if (!revision.IsArtificial)
-                    {
-                        // do not show artificial GUID
-                        var text = revision.Guid;
-                        DrawColumnText(e, text, _fontOfSHAColumn, foreColor);
-                    }
-                }
-                else if (columnIndex == _buildServerWatcher.BuildStatusImageColumnIndex)
-                {
-                    BuildInfoDrawingLogic.BuildStatusImageColumnCellPainting(e, revision);
-                }
-                else if (columnIndex == _buildServerWatcher.BuildStatusMessageColumnIndex)
-                {
-                    var isSelected = Graph.Rows[e.RowIndex].Selected;
-                    BuildInfoDrawingLogic.BuildStatusMessageCellPainting(e, revision, foreColor, rowFont, isSelected, this);
-                }
-                else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
+            }
+            else if (columnIndex == authorColIndex)
+            {
+                if (!revision.IsArtificial)
                 {
                     var text = (string)e.FormattedValue;
                     DrawColumnText(e, text, rowFont, foreColor);
                 }
+            }
+            else if (columnIndex == dateColIndex)
+            {
+                var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
+                var text = TimeToString(time);
+                DrawColumnText(e, text, rowFont, foreColor);
+            }
+            else if (columnIndex == idColIndex)
+            {
+                if (!revision.IsArtificial)
+                {
+                    // do not show artificial GUID
+                    var text = revision.Guid;
+                    DrawColumnText(e, text, _fontOfSHAColumn, foreColor);
+                }
+            }
+            else if (columnIndex == _buildServerWatcher.BuildStatusImageColumnIndex)
+            {
+                BuildInfoDrawingLogic.BuildStatusImageColumnCellPainting(e, revision);
+            }
+            else if (columnIndex == _buildServerWatcher.BuildStatusMessageColumnIndex)
+            {
+                var isSelected = Graph.Rows[e.RowIndex].Selected;
+                BuildInfoDrawingLogic.BuildStatusMessageCellPainting(e, revision, foreColor, rowFont, isSelected, this);
+            }
+            else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
+            {
+                var text = (string)e.FormattedValue;
+                DrawColumnText(e, text, rowFont, foreColor);
             }
 
             return;
@@ -1999,54 +1888,27 @@ namespace GitUI
         {
             var textColor = fill ? headColor : Lerp(headColor, Color.White, 0.5f);
 
-            if (IsCardLayout)
+            var headBounds = AdjustCellBounds(drawRefArgs.CellBounds, offset);
+            var textSize = drawRefArgs.Graphics.MeasureString(name, drawRefArgs.RefsFont);
+
+            offset += textSize.Width;
+
+            if (true)
             {
-                using (Brush textBrush = new SolidBrush(textColor))
-                {
-                    string headName = name;
-                    offset += drawRefArgs.Graphics.MeasureString(headName, drawRefArgs.RefsFont).Width + 6;
-                    var location = new PointF(drawRefArgs.CellBounds.Right - offset, drawRefArgs.CellBounds.Top + 4);
-                    var size = new SizeF(drawRefArgs.Graphics.MeasureString(headName, drawRefArgs.RefsFont).Width,
-                                     drawRefArgs.Graphics.MeasureString(headName, drawRefArgs.RefsFont).Height);
-                    if (fill)
-                    {
-                        drawRefArgs.Graphics.FillRectangle(SystemBrushes.Info, location.X - 1,
-                                             location.Y - 1, size.Width + 3, size.Height + 2);
-                    }
+                offset += 9;
 
-                    drawRefArgs.Graphics.DrawRectangle(SystemPens.InfoText, location.X - 1,
-                                         location.Y - 1, size.Width + 3, size.Height + 2);
-                    drawRefArgs.Graphics.DrawString(headName, drawRefArgs.RefsFont, textBrush, location);
-                }
+                float extraOffset = DrawHeadBackground(drawRefArgs.IsRowSelected, drawRefArgs.Graphics,
+                                                       headColor, headBounds.X,
+                                                       headBounds.Y,
+                                                       RoundToEven(textSize.Width + 3),
+                                                       RoundToEven(textSize.Height), 3,
+                                                       arrowType, dashedLine, fill);
+
+                offset += extraOffset;
+                headBounds.Offset((int)(extraOffset + 1), 0);
             }
-            else
-            {
-                string headName = IsFilledBranchesLayout
-                               ? name
-                               : string.Concat("[", name, "] ");
 
-                var headBounds = AdjustCellBounds(drawRefArgs.CellBounds, offset);
-                SizeF textSize = drawRefArgs.Graphics.MeasureString(headName, drawRefArgs.RefsFont);
-
-                offset += textSize.Width;
-
-                if (IsFilledBranchesLayout)
-                {
-                    offset += 9;
-
-                    float extraOffset = DrawHeadBackground(drawRefArgs.IsRowSelected, drawRefArgs.Graphics,
-                                                           headColor, headBounds.X,
-                                                           headBounds.Y,
-                                                           RoundToEven(textSize.Width + 3),
-                                                           RoundToEven(textSize.Height), 3,
-                                                           arrowType, dashedLine, fill);
-
-                    offset += extraOffset;
-                    headBounds.Offset((int)(extraOffset + 1), 0);
-                }
-
-                RevisionGridUtils.DrawColumnTextTruncated(drawRefArgs.Graphics, headName, drawRefArgs.RefsFont, textColor, headBounds);
-            }
+            RevisionGridUtils.DrawColumnTextTruncated(drawRefArgs.Graphics, name, drawRefArgs.RefsFont, textColor, headBounds);
 
             return offset;
         }
@@ -3053,10 +2915,10 @@ namespace GitUI
             // hide revision graph when hiding merge commits, reasons:
             // 1, revison graph is no longer relevant, as we are not sohwing all commits
             // 2, performance hit when both revision graph and no merge commits are enabled
-            if (IsGraphLayout && !AppSettings.ShowMergeCommits)
+            if (AppSettings.ShowRevisionGridGraphColumn && !AppSettings.ShowMergeCommits)
             {
                 ToggleRevisionGraphSettings();
-                SetRevisionsLayout();
+                RefreshLayout();
             }
 
             ForceRefreshRevisions();
@@ -3092,11 +2954,11 @@ namespace GitUI
         internal void ToggleRevisionGraph()
         {
             ToggleRevisionGraphSettings();
-            SetRevisionsLayout();
+            RefreshLayout();
             MenuCommands.TriggerMenuChanged();
 
             // must show MergeCommits when showing revision graph
-            if (!AppSettings.ShowMergeCommits && IsGraphLayout)
+            if (!AppSettings.ShowMergeCommits && AppSettings.ShowRevisionGridGraphColumn)
             {
                 AppSettings.ShowMergeCommits = true;
                 showMergeCommitsToolStripMenuItem.Checked = true;
@@ -3108,40 +2970,10 @@ namespace GitUI
             }
         }
 
-        private static void ToggleRevisionGraphSettings()
+        private void ToggleRevisionGraphSettings()
         {
-            if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Small)
-            {
-                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.SmallWithGraph;
-            }
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Card)
-            {
-                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.CardWithGraph;
-            }
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCard)
-            {
-                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.LargeCardWithGraph;
-            }
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.SmallWithGraph)
-            {
-                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.Small;
-            }
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph)
-            {
-                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.Card;
-            }
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.LargeCardWithGraph)
-            {
-                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.LargeCard;
-            }
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.FilledBranchesSmall)
-            {
-                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.FilledBranchesSmallWithGraph;
-            }
-            else if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.FilledBranchesSmallWithGraph)
-            {
-                AppSettings.RevisionGraphLayout = (int)RevisionGridLayout.FilledBranchesSmall;
-            }
+            AppSettings.ShowRevisionGridGraphColumn = !AppSettings.ShowRevisionGridGraphColumn;
+            Refresh();
         }
 
         internal void ShowTags_ToolStripMenuItemClick()
@@ -3159,104 +2991,11 @@ namespace GitUI
             Refresh();
         }
 
-        public void ToggleRevisionCardLayout()
+        private void RefreshLayout()
         {
-            var layouts = (RevisionGridLayout[])Enum.GetValues(typeof(RevisionGridLayout));
-
-            Array.Sort(layouts);
-
-            var maxLayout = (int)layouts[layouts.Length - 1];
-            var nextLayout = AppSettings.RevisionGraphLayout + 1;
-
-            if (nextLayout > maxLayout)
-            {
-                nextLayout = 1;
-            }
-
-            AppSettings.RevisionGraphLayout = nextLayout;
-
-            SetRevisionsLayout();
-        }
-
-        private void SetRevisionsLayout()
-        {
-            _layout = Enum.IsDefined(typeof(RevisionGridLayout), AppSettings.RevisionGraphLayout)
-                         ? (RevisionGridLayout)AppSettings.RevisionGraphLayout
-                         : RevisionGridLayout.SmallWithGraph;
-
             // TODO why was this removed? if we only set the font when the control is created then it cannot update when settings change
             ////NormalFont = new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
 
-            SetAuthoredRevisionsBrush();
-
-            if (IsCardLayout)
-            {
-                _rowHeight = AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Card ||
-                             AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph
-                    ? 45
-                    : 70;
-
-                if (_filledItemBrush == null)
-                {
-                    _filledItemBrush = new LinearGradientBrush(
-                        rect: new Rectangle(0, 0, _rowHeight, _rowHeight),
-                        color1: Graph.RowTemplate.DefaultCellStyle.SelectionBackColor,
-                        color2: Color.LightBlue,
-                        angle: 90,
-                        isAngleScaleable: false);
-                }
-
-                _selectedItemBrush = _filledItemBrush;
-
-                Graph.ShowAuthor(!IsCardLayout);
-                Graph.SetRowHeight(_rowHeight);
-            }
-            else
-            {
-                if (IsFilledBranchesLayout)
-                {
-                    using (var graphics = Graphics.FromHwnd(Handle))
-                    {
-                        _rowHeight = (int)graphics.MeasureString("By", _normalFont).Height + 9;
-                    }
-
-                    _selectedItemBrush = SystemBrushes.Highlight;
-                }
-                else
-                {
-                    _rowHeight = 25;
-
-                    if (_filledItemBrush == null)
-                    {
-                        _filledItemBrush = new LinearGradientBrush(
-                            rect: new Rectangle(0, 0, _rowHeight, _rowHeight),
-                            color1: Graph.RowTemplate.DefaultCellStyle.SelectionBackColor,
-                            color2: Color.LightBlue,
-                            angle: 90,
-                            isAngleScaleable: false);
-                    }
-
-                    _selectedItemBrush = _filledItemBrush;
-                }
-
-                Graph.ShowAuthor(!IsCardLayout);
-                Graph.SetRowHeight(_rowHeight);
-            }
-
-            // Hide graph column when there it is disabled OR when a filter is active
-            // allowing for special case when history of a single file is being displayed
-            if (!IsGraphLayout || (ShouldHideGraph(false) && !AllowGraphWithFilter))
-            {
-                Graph.HideRevisionGraph();
-            }
-            else
-            {
-                Graph.ShowRevisionGraph();
-            }
-        }
-
-        private void SetAuthoredRevisionsBrush()
-        {
             if (_authoredRevisionsBrush != null && _authoredRevisionsBrush.Color != AppSettings.AuthoredRevisionsColor)
             {
                 _authoredRevisionsBrush.Dispose();
@@ -3267,23 +3006,25 @@ namespace GitUI
             {
                 _authoredRevisionsBrush = new SolidBrush(AppSettings.AuthoredRevisionsColor);
             }
+
+            using (var g = Graphics.FromHwnd(Handle))
+            {
+                Graph.SetRowHeight((int)g.MeasureString("By", _normalFont).Height + 9);
+            }
+
+            Graph.ShowAuthor(true);
+
+            // Hide graph column when there it is disabled OR when a filter is active
+            // allowing for special case when history of a single file is being displayed
+            if (!AppSettings.ShowRevisionGridGraphColumn || ShouldHideGraph(false))
+            {
+                Graph.HideRevisionGraph();
+            }
+            else
+            {
+                Graph.ShowRevisionGraph();
+            }
         }
-
-        private bool IsFilledBranchesLayout
-            => _layout == RevisionGridLayout.FilledBranchesSmall ||
-               _layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
-
-        private bool IsCardLayout
-            => _layout == RevisionGridLayout.Card ||
-               _layout == RevisionGridLayout.CardWithGraph ||
-               _layout == RevisionGridLayout.LargeCard ||
-               _layout == RevisionGridLayout.LargeCardWithGraph;
-
-        internal bool IsGraphLayout
-            => _layout == RevisionGridLayout.SmallWithGraph ||
-               _layout == RevisionGridLayout.CardWithGraph ||
-               _layout == RevisionGridLayout.LargeCardWithGraph ||
-               _layout == RevisionGridLayout.FilledBranchesSmallWithGraph;
 
         internal bool ExecuteCommand(Commands cmd)
         {
@@ -3660,7 +3401,7 @@ namespace GitUI
             ToggleShowRelativeDate = 4,
             ToggleDrawNonRelativesGray = 5,
             ToggleShowGitNotes = 6,
-            ToggleRevisionCardLayout = 7,
+            //// <snip>
             ToggleShowMergeCommits = 8,
             ShowAllBranches = 9,
             ShowCurrentBranchOnly = 10,
@@ -3696,7 +3437,6 @@ namespace GitUI
                 case Commands.ToggleShowRelativeDate: ShowRelativeDate_ToolStripMenuItemClick(null); break;
                 case Commands.ToggleDrawNonRelativesGray: DrawNonrelativesGray_ToolStripMenuItemClick(); break;
                 case Commands.ToggleShowGitNotes: ShowGitNotes_ToolStripMenuItemClick(); break;
-                case Commands.ToggleRevisionCardLayout: ToggleRevisionCardLayout(); break;
                 case Commands.ToggleShowMergeCommits: ShowMergeCommits_ToolStripMenuItemClick(); break;
                 case Commands.ToggleShowTags: ShowTags_ToolStripMenuItemClick(); break;
                 case Commands.ShowAllBranches: ShowAllBranches(); break;

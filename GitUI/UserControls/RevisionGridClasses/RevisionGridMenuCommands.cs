@@ -241,7 +241,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                     Name = "showRevisionGraphToolStripMenuItem",
                     Text = "Show revision graph",
                     ExecuteAction = () => _revisionGrid.ToggleRevisionGraph(),
-                    IsCheckedFunc = () => _revisionGrid.IsGraphLayout
+                    IsCheckedFunc = () => AppSettings.ShowRevisionGridGraphColumn
                 },
                 new MenuCommand
                 {
@@ -321,13 +321,6 @@ namespace GitUI.UserControls.RevisionGridClasses
                     Text = "Highlight selected branch (until refresh)",
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleHighlightSelectedBranch),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGrid.Commands.ToggleHighlightSelectedBranch)
-                },
-                new MenuCommand
-                {
-                    Name = "ToggleRevisionCardLayout",
-                    Text = "Change commit view layout",
-                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGrid.Commands.ToggleRevisionCardLayout),
-                    ExecuteAction = () => _revisionGrid.ToggleRevisionCardLayout()
                 },
 
                 MenuCommand.CreateSeparator(),
