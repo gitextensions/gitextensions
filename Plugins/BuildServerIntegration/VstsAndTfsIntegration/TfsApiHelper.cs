@@ -14,27 +14,30 @@ namespace VstsAndTfsIntegration
     /// <summary>
     /// For VSTS and TFS >=2015
     /// </summary>
-    public class TfsApiHelper : IDisposable
+    public class TfsApiHelper
     {
         private const string BuildDefinitionsUrl = "_apis/build/definitions?api-version=2.0";
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
         private string _buildDefinitionsToQuery;
 
-        private HttpClient InitializeHttpClient(string serverUrl, string projectName, string personalAccessToken)
+        public TfsApiHelper(HttpClient httpClient)
         {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Add(
+            _httpClient = httpClient;
+        }
+
+        private void InitializeHttpClient(string serverUrl, string projectName, string personalAccessToken)
+        {
+            _httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
                 Convert.ToBase64String(
                     System.Text.Encoding.ASCII.GetBytes($":{personalAccessToken}")));
 
             var hostUri = new Uri(serverUrl);
 
             // Uri constructor takes care of ensuring there's a slash after serverUrl, as well as path encoding projectName.
-            client.BaseAddress = new Uri(hostUri, projectName + "/");
-            return client;
+            _httpClient.BaseAddress = new Uri(hostUri, projectName + "/");
         }
 
         private async Task<T> HttpGetAsync<T>(string url)
@@ -83,7 +86,7 @@ namespace VstsAndTfsIntegration
         {
             try
             {
-                _httpClient = InitializeHttpClient(serverUrl, projectName, restApiToken);
+                InitializeHttpClient(serverUrl, projectName, restApiToken);
 
                 var taskServerInit = ThreadHelper.JoinableTaskFactory.RunAsync(async () => await GetBuildDefinitionsAsync(buildDefinitionNameFilter));
                 _buildDefinitionsToQuery = taskServerInit.Join();
@@ -107,11 +110,6 @@ namespace VstsAndTfsIntegration
                 .Where(b => !running.HasValue || running.Value == b.IsInProgress)
                 .Where(b => !sinceDate.HasValue || b.StartTime >= sinceDate.Value)
                 .ToList();
-        }
-
-        public void Dispose()
-        {
-            _httpClient?.Dispose();
         }
     }
 
