@@ -288,7 +288,7 @@ namespace GitUI
 
         #endregion // ToolTip
 
-        private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripMenuItem targetMenuItem)
+        private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripDropDownItem targetMenuItem)
         {
             foreach (var menuCommand in menuCommands)
             {
@@ -408,29 +408,17 @@ namespace GitUI
         [Description("Show uncommited changes in revision grid if enabled in settings.")]
         [Category("Behavior")]
         [DefaultValue(false)]
-        public bool ShowUncommitedChangesIfPossible
-        {
-            get;
-            set;
-        }
+        public bool ShowUncommitedChangesIfPossible { get; set; }
 
         [Description("Show build server information in revision grid if enabled in settings.")]
         [Category("Behavior")]
         [DefaultValue(false)]
-        public bool ShowBuildServerInfo
-        {
-            get;
-            set;
-        }
+        public bool ShowBuildServerInfo { get; set; }
 
         [Description("Do not open the commit info dialog on double click. This is used if the double click event is handled elseswhere.")]
         [Category("Behavior")]
         [DefaultValue(false)]
-        public bool DoubleClickDoesNotOpenCommitInfo
-        {
-            get;
-            set;
-        }
+        public bool DoubleClickDoesNotOpenCommitInfo { get; set; }
 
         private IndexWatcher _indexWatcher;
         [Browsable(false)]
@@ -2288,12 +2276,12 @@ namespace GitUI
             float width = height / 2;
 
             var points = new[]
-                                 {
-                                     new PointF(x + horShift, y + verShift),
-                                     new PointF(x + horShift + width, y + verShift + (height / 2)),
-                                     new PointF(x + horShift, y + verShift + height),
-                                     new PointF(x + horShift, y + verShift)
-                                 };
+            {
+                new PointF(x + horShift, y + verShift),
+                new PointF(x + horShift + width, y + verShift + (height / 2)),
+                new PointF(x + horShift, y + verShift + height),
+                new PointF(x + horShift, y + verShift)
+            };
 
             if (filled)
             {
@@ -2478,7 +2466,6 @@ namespace GitUI
             Revisions.Invalidate();
         }
 
-        // internal because used by RevisonGridMenuCommands
         internal void ShowCurrentBranchOnly_ToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (ShowCurrentBranchOnly_ToolStripMenuItemChecked)
@@ -2493,7 +2480,6 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        // internal because used by RevisonGridMenuCommands
         internal void ShowAllBranches_ToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (ShowAllBranches_ToolStripMenuItemChecked)
@@ -2507,7 +2493,6 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        // internal because used by RevisonGridMenuCommands
         internal void ShowFilteredBranches_ToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (ShowFilteredBranches_ToolStripMenuItemChecked)
@@ -2523,18 +2508,14 @@ namespace GitUI
         }
 
         internal bool ShowCurrentBranchOnly_ToolStripMenuItemChecked { get; private set; }
-
         internal bool ShowAllBranches_ToolStripMenuItemChecked { get; private set; }
-
         internal bool ShowFilteredBranches_ToolStripMenuItemChecked { get; private set; }
 
         private void SetShowBranches()
         {
             ShowAllBranches_ToolStripMenuItemChecked = !AppSettings.BranchFilterEnabled;
-            ShowCurrentBranchOnly_ToolStripMenuItemChecked =
-                AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
-            ShowFilteredBranches_ToolStripMenuItemChecked =
-                AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly;
+            ShowCurrentBranchOnly_ToolStripMenuItemChecked = AppSettings.BranchFilterEnabled && AppSettings.ShowCurrentBranchOnly;
+            ShowFilteredBranches_ToolStripMenuItemChecked = AppSettings.BranchFilterEnabled && !AppSettings.ShowCurrentBranchOnly;
 
             BranchFilter = _revisionFilter.GetBranchFilter();
 
@@ -2549,11 +2530,12 @@ namespace GitUI
             else
             {
                 _refFilterOptions = BranchFilter.Length > 0
-                               ? 0
-                               : RefFilterOptions.All | RefFilterOptions.Boundary;
+                    ? 0
+                    : RefFilterOptions.All | RefFilterOptions.Boundary;
             }
 
-            MenuCommands.TriggerMenuChanged(); // apply checkboxes changes also to FormBrowse main menu
+            // Apply checkboxes changes also to FormBrowse main menu
+            MenuCommands.TriggerMenuChanged();
         }
 
         internal void FilterToolStripMenuItemClick(object sender, EventArgs e)
@@ -3433,21 +3415,19 @@ namespace GitUI
 
             if (IsCardLayout())
             {
-                if (AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Card
-                    || AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph)
-                {
-                    _rowHeigth = 45;
-                }
-                else
-                {
-                    _rowHeigth = 70;
-                }
+                _rowHeigth = AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.Card ||
+                             AppSettings.RevisionGraphLayout == (int)RevisionGridLayout.CardWithGraph
+                    ? 45
+                    : 70;
 
                 if (_filledItemBrush == null)
                 {
-                    _filledItemBrush = new LinearGradientBrush(new Rectangle(0, 0, _rowHeigth, _rowHeigth),
-                        Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
-                        Color.LightBlue, 90, false);
+                    _filledItemBrush = new LinearGradientBrush(
+                        rect: new Rectangle(0, 0, _rowHeigth, _rowHeigth),
+                        color1: Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
+                        color2: Color.LightBlue,
+                        angle: 90,
+                        isAngleScaleable: false);
                 }
 
                 _selectedItemBrush = _filledItemBrush;
@@ -3472,9 +3452,12 @@ namespace GitUI
 
                     if (_filledItemBrush == null)
                     {
-                        _filledItemBrush = new LinearGradientBrush(new Rectangle(0, 0, _rowHeigth, _rowHeigth),
-                            Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
-                            Color.LightBlue, 90, false);
+                        _filledItemBrush = new LinearGradientBrush(
+                            rect: new Rectangle(0, 0, _rowHeigth, _rowHeigth),
+                            color1: Revisions.RowTemplate.DefaultCellStyle.SelectionBackColor,
+                            color2: Color.LightBlue,
+                            angle: 90,
+                            isAngleScaleable: false);
                     }
 
                     _selectedItemBrush = _filledItemBrush;

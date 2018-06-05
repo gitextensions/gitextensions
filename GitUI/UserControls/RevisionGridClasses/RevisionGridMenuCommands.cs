@@ -13,11 +13,8 @@ namespace GitUI.UserControls.RevisionGridClasses
 {
     internal class RevisionGridMenuCommands : MenuCommandsBase
     {
-        private readonly TranslationString _quickSearchQuickHelp =
-            new TranslationString("Start typing in revision grid to start quick search.");
-
-        private readonly TranslationString _noRevisionFoundError =
-            new TranslationString("No revision found.");
+        private readonly TranslationString _quickSearchQuickHelp = new TranslationString("Start typing in revision grid to start quick search.");
+        private readonly TranslationString _noRevisionFoundError = new TranslationString("No revision found.");
 
         private readonly RevisionGrid _revisionGrid;
 
@@ -403,7 +400,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         public void GotoCommitExcecute()
         {
-            using (FormGoToCommit formGoToCommit = new FormGoToCommit(_revisionGrid.UICommands))
+            using (var formGoToCommit = new FormGoToCommit(_revisionGrid.UICommands))
             {
                 if (formGoToCommit.ShowDialog(_revisionGrid) != DialogResult.OK)
                 {
