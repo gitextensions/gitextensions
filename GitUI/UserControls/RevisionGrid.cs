@@ -268,11 +268,13 @@ namespace GitUI
             {
                 _toolTip.Active = true;
             }
-        }
 
-        private bool IsMessageMultiline(int row)
-        {
-            return !Revisions.Rows[row].Cells[IsMessageMultilineDataGridViewColumn.Index].FormattedValue.ToString().IsNullOrEmpty();
+            return;
+
+            bool IsMessageMultiline(int row)
+            {
+                return !Revisions.Rows[row].Cells[IsMessageMultilineDataGridViewColumn.Index].FormattedValue.ToString().IsNullOrEmpty();
+            }
         }
 
         internal void DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color)
