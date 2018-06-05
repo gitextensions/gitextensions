@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using GitCommands;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using NUnit.Framework;
@@ -116,6 +117,14 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
+        public void CombinedDiffId_has_expected_value()
+        {
+            Assert.AreEqual(
+                "3333333333333333333333333333333333333333",
+                ObjectId.CombinedDiffId.ToString());
+        }
+
+        [Test]
         public void UnstagedId_is_artificial()
         {
             Assert.IsTrue(ObjectId.UnstagedId.IsArtificial);
@@ -125,6 +134,12 @@ namespace GitCommandsTests.Git
         public void IndexId_is_artificial()
         {
             Assert.IsTrue(ObjectId.IndexId.IsArtificial);
+        }
+
+        [Test]
+        public void CombinedDiffId_is_artificial()
+        {
+            Assert.IsTrue(ObjectId.CombinedDiffId.IsArtificial);
         }
 
         [Test]
@@ -143,8 +158,24 @@ namespace GitCommandsTests.Git
                 ObjectId.UnstagedId);
 
             Assert.AreEqual(
+                ObjectId.UnstagedId,
+                ObjectId.Parse(GitRevision.UnstagedGuid));
+
+            Assert.AreEqual(
                 ObjectId.IndexId,
                 ObjectId.IndexId);
+
+            Assert.AreEqual(
+                ObjectId.IndexId,
+                ObjectId.Parse(GitRevision.IndexGuid));
+
+            Assert.AreEqual(
+                ObjectId.CombinedDiffId,
+                ObjectId.CombinedDiffId);
+
+            Assert.AreEqual(
+                ObjectId.CombinedDiffId,
+                ObjectId.Parse(GitRevision.CombinedDiffGuid));
         }
 
         [Test]

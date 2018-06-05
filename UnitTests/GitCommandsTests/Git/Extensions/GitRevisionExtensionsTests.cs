@@ -14,6 +14,7 @@ namespace GitCommandsTests.Git.Extensions
         [TestCase("0000", false)]
         [TestCase(GitRevision.UnstagedGuid, true)]
         [TestCase(GitRevision.IndexGuid, true)]
+        [TestCase(GitRevision.CombinedDiffGuid, true)]
         public void IsArtificial_tests(string sha1, bool expected)
         {
             sha1.IsArtificial().Should().Be(expected);

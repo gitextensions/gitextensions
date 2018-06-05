@@ -30,6 +30,12 @@ namespace GitUIPluginInterfaces
         public static ObjectId IndexId { get; } = new ObjectId(0x22222222, 0x22222222, 0x22222222, 0x22222222, 0x22222222);
 
         /// <summary>
+        /// Gets the artificial ObjectId used to represent combined diff for merge commits.
+        /// </summary>
+        [NotNull]
+        public static ObjectId CombinedDiffId { get; } = new ObjectId(0x33333333, 0x33333333, 0x33333333, 0x33333333, 0x33333333);
+
+        /// <summary>
         /// Produces an <see cref="ObjectId"/> populated with random bytes.
         /// </summary>
         [NotNull]
@@ -44,7 +50,7 @@ namespace GitUIPluginInterfaces
                 unchecked((uint)_random.Next()));
         }
 
-        public bool IsArtificial => this == UnstagedId || this == IndexId;
+        public bool IsArtificial => this == UnstagedId || this == IndexId || this == CombinedDiffId;
 
         private const int Sha1ByteCount = 20;
         public const int Sha1CharCount = 40;

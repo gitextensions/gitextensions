@@ -19,6 +19,10 @@ namespace GitCommands
         /// <summary>40 characters of 2's</summary>
         public const string IndexGuid = "2222222222222222222222222222222222222222";
 
+        /// <summary>40 characters of 2's
+        /// Artificial commit for the combined diff</summary>
+        public const string CombinedDiffGuid = "3333333333333333333333333333333333333333";
+
         /// <summary>40 characters of a-f or any digit.</summary>
         public const string Sha1HashPattern = @"[a-f\d]{40}";
 

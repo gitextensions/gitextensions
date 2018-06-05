@@ -1,3 +1,4 @@
+using System;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
@@ -40,6 +41,14 @@ namespace GitCommandsTests.Git
             _revisionDiffProvider.Get(firstRevision, GitRevision.IndexGuid).Should().Be("--cached --cached");
         }
 #endif
+
+        // Combined Diff artificial commit should not be included in diffs
+        [TestCase(GitRevision.CombinedDiffGuid, "")]
+        [TestCase("", GitRevision.CombinedDiffGuid)]
+        public void RevisionDiffProvider_should_throw_if_any_combined_diff(string firstRevision, string secondRevision)
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => _revisionDiffProvider.Get(firstRevision, secondRevision));
+        }
 
         [TestCase(GitRevision.IndexGuid, GitRevision.UnstagedGuid)]
         [TestCase("^", "")]
