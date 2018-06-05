@@ -251,7 +251,7 @@ namespace GitUI
             {
                 newToolTip = e.ColumnIndex == IdDataGridViewColumn.Index
                              ? Revisions.GetRowData(e.RowIndex).Guid
-                             : Revisions.Rows[e.RowIndex].Cells[e.ColumnIndex].FormattedValue.ToString();
+                             : GetCellText(e.RowIndex, e.ColumnIndex).ToString();
             }
             else
             {
@@ -273,7 +273,12 @@ namespace GitUI
 
             bool IsMessageMultiline(int row)
             {
-                return !Revisions.Rows[row].Cells[IsMessageMultilineDataGridViewColumn.Index].FormattedValue.ToString().IsNullOrEmpty();
+                return !string.IsNullOrEmpty(GetCellText(row, IsMessageMultilineDataGridViewColumn.Index));
+            }
+
+            string GetCellText(int row, int col)
+            {
+                return Revisions.Rows[row].Cells[col].FormattedValue?.ToString() ?? "";
             }
         }
 
