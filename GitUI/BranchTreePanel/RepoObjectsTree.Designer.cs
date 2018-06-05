@@ -41,7 +41,6 @@ namespace GitUI.BranchTreePanel
             this.menuBranch = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuBtnCheckoutLocal = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnBranchDelete = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnubtnBranchDeleteForce = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnFilterLocalBranchInRevisionGrid = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnFilterRemoteBranchInRevisionGrid = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnBranchCheckout = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,7 +67,6 @@ namespace GitUI.BranchTreePanel
             this.mnubtnDeleteTag = new System.Windows.Forms.ToolStripMenuItem();
             this.menuBranchPath = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnDeleteAllBranches = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnubtnDeleteAllBranchesForce = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRemoteRepoNode = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnManageRemotes = new System.Windows.Forms.ToolStripMenuItem();
             this.repoTreePanel = new System.Windows.Forms.TableLayoutPanel();
@@ -141,7 +139,6 @@ namespace GitUI.BranchTreePanel
             this.menuBranch.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuBtnCheckoutLocal,
             this.mnubtnBranchDelete,
-            this.mnubtnBranchDeleteForce,
             this.mnubtnFilterLocalBranchInRevisionGrid});
             this.menuBranch.Name = "contextmenuBranch";
             this.menuBranch.Size = new System.Drawing.Size(192, 92);
@@ -161,14 +158,6 @@ namespace GitUI.BranchTreePanel
             this.mnubtnBranchDelete.Size = new System.Drawing.Size(191, 22);
             this.mnubtnBranchDelete.Text = "Delete";
             this.mnubtnBranchDelete.ToolTipText = "Delete the branch, which must be fully merged in its upstream branch or in HEAD";
-            // 
-            // mnubtnBranchDeleteForce
-            // 
-            this.mnubtnBranchDeleteForce.Image = global::GitUI.Properties.Resources.Delete;
-            this.mnubtnBranchDeleteForce.Name = "mnubtnBranchDeleteForce";
-            this.mnubtnBranchDeleteForce.Size = new System.Drawing.Size(191, 22);
-            this.mnubtnBranchDeleteForce.Text = "Force Delete";
-            this.mnubtnBranchDeleteForce.ToolTipText = "Delete the branch, regardless of its merged status";
             // 
             // mnubtnFilterLocalBranchInRevisionGrid
             // 
@@ -363,8 +352,7 @@ namespace GitUI.BranchTreePanel
             // menuBranchPath
             // 
             this.menuBranchPath.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnubtnDeleteAllBranches,
-            this.mnubtnDeleteAllBranchesForce});
+            this.mnubtnDeleteAllBranches});
             this.menuBranchPath.Name = "contextmenuBranch";
             this.menuBranchPath.Size = new System.Drawing.Size(157, 48);
             // 
@@ -376,14 +364,6 @@ namespace GitUI.BranchTreePanel
             this.mnubtnDeleteAllBranches.Text = "Delete All";
             this.mnubtnDeleteAllBranches.ToolTipText = "Delete all child branchs, which must all be fully merged in its upstream branch o" +
     "r in HEAD";
-            // 
-            // mnubtnDeleteAllBranchesForce
-            // 
-            this.mnubtnDeleteAllBranchesForce.Image = global::GitUI.Properties.Resources.Delete;
-            this.mnubtnDeleteAllBranchesForce.Name = "mnubtnDeleteAllBranchesForce";
-            this.mnubtnDeleteAllBranchesForce.Size = new System.Drawing.Size(156, 22);
-            this.mnubtnDeleteAllBranchesForce.Text = "Force Delete All";
-            this.mnubtnDeleteAllBranchesForce.ToolTipText = "Delete all child branches, regardless of their merged status";
             // 
             // menuRemoteRepoNode
             // 
@@ -517,7 +497,6 @@ namespace GitUI.BranchTreePanel
         private ContextMenuStrip menuBranch;
         private ToolStripMenuItem mnubtnBranchCheckout;
         private ToolStripMenuItem mnubtnBranchDelete;
-        private ToolStripMenuItem mnubtnBranchDeleteForce;
         private ToolStripMenuItem mnubtnFilterLocalBranchInRevisionGrid;
         private ToolStripMenuItem mnubtnFilterRemoteBranchInRevisionGrid;
         private ContextMenuStrip menuTags;
@@ -529,7 +508,6 @@ namespace GitUI.BranchTreePanel
         private ContextMenuStrip menuTag;
         private ContextMenuStrip menuBranchPath;
         private ToolStripMenuItem mnubtnDeleteAllBranches;
-        private ToolStripMenuItem mnubtnDeleteAllBranchesForce;
         private ContextMenuStrip menuMain;
         private ToolStripMenuItem mnubtnCollapseAll;
         private ToolStripMenuItem mnubtnExpandAll;

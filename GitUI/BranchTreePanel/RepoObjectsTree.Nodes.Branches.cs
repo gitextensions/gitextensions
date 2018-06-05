@@ -164,13 +164,6 @@ namespace GitUI.BranchTreePanel
                     FullPath
                 });
             }
-
-            public void DeleteForce()
-            {
-                var branchHead = CreateBranchRef(UICommands.Module, FullPath);
-                var cmd = new GitDeleteBranchCmd(new[] { branchHead }, true);
-                UICommands.StartCommandLineProcessDialog(null, cmd);
-            }
         }
 
         private class BasePathNode : BaseBranchNode
@@ -202,15 +195,6 @@ namespace GitUI.BranchTreePanel
             {
                 var branches = Nodes.DepthEnumerator<LocalBranchNode>().Select(branch => branch.FullPath);
                 UICommands.StartDeleteBranchDialog(ParentWindow(), branches);
-            }
-
-            public void DeleteAllForce()
-            {
-                var branches = Nodes.DepthEnumerator<LocalBranchNode>();
-                var branchHeads =
-                    branches.Select(branch => CreateBranchRef(UICommands.Module, branch.FullPath));
-                var cmd = new GitDeleteBranchCmd(branchHeads.ToList(), true);
-                UICommands.StartCommandLineProcessDialog(null, cmd);
             }
         }
 

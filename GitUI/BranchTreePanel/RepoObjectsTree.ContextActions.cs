@@ -32,12 +32,10 @@ namespace GitUI.BranchTreePanel
 
             RegisterClick<LocalBranchNode>(mnuBtnCheckoutLocal, branch => branch.Checkout());
             RegisterClick<LocalBranchNode>(mnubtnBranchDelete, branch => branch.Delete());
-            RegisterClick<LocalBranchNode>(mnubtnBranchDeleteForce, branch => branch.DeleteForce());
             RegisterClick<LocalBranchNode>(mnubtnFilterLocalBranchInRevisionGrid, FilterInRevisionGrid);
             Node.RegisterContextMenu(typeof(LocalBranchNode), menuBranch);
 
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranches, branchPath => branchPath.DeleteAll());
-            RegisterClick<BranchPathNode>(mnubtnDeleteAllBranchesForce, branchPath => branchPath.DeleteAllForce());
             Node.RegisterContextMenu(typeof(BranchPathNode), menuBranchPath);
 
             RegisterClick<RemoteBranchNode>(mnubtnDeleteRemoteBranch, remoteBranch => remoteBranch.Delete());
