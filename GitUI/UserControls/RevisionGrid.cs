@@ -233,8 +233,8 @@ namespace GitUI
         private void RevisionsMouseMove(object sender, DataGridViewCellMouseEventArgs e)
         {
             string oldTooltip = _toolTip.GetToolTip(Revisions);
-            string newToolTip = oldTooltip;
-            bool showToolTip = false;
+
+            string newToolTip;
             if (e.ColumnIndex == GraphDataGridViewColumn.Index)
             {
                 newToolTip = Revisions.GetLaneInfo(e.RowIndex, e.X, Module);
@@ -247,7 +247,7 @@ namespace GitUI
             {
                 newToolTip = Revisions.GetRowData(e.RowIndex).Body;
             }
-            else if (_showCellToolTip.TryGetValue(new Point(e.ColumnIndex, e.RowIndex), out showToolTip) && showToolTip)
+            else if (_showCellToolTip.TryGetValue(new Point(e.ColumnIndex, e.RowIndex), out var showToolTip) && showToolTip)
             {
                 newToolTip = e.ColumnIndex == IdDataGridViewColumn.Index
                              ? Revisions.GetRowData(e.RowIndex).Guid
