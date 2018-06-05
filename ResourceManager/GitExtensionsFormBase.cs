@@ -72,7 +72,7 @@ namespace ResourceManager
         }
 
         /// <summary>Indicates whether this is a valid <see cref="IComponent"/> running in design mode.</summary>
-        protected static bool CheckComponent(object value)
+        protected static bool IsDesignModeComponent(object value)
         {
             if (value is IComponent component)
             {
@@ -97,7 +97,7 @@ namespace ResourceManager
         protected void GitExtensionsFormLoad(object sender, EventArgs e)
         {
             // find out if the value is a component and is currently in design mode
-            var isComponentInDesignMode = CheckComponent(this);
+            var isComponentInDesignMode = IsDesignModeComponent(this);
 
             if (!_translated && !isComponentInDesignMode)
             {
