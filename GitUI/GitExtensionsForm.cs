@@ -121,7 +121,7 @@ namespace GitUI
             // Should be called after restoring position
             base.OnLoad(e);
 
-            if (!CheckComponent(this))
+            if (!IsDesignModeComponent(this))
             {
                 OnRuntimeLoad(e);
             }
