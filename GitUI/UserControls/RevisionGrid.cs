@@ -232,6 +232,13 @@ namespace GitUI
 
         private void RevisionsMouseMove(object sender, DataGridViewCellMouseEventArgs e)
         {
+            var revision = Revisions.GetRowData(e.RowIndex);
+
+            if (revision == null)
+            {
+                return;
+            }
+
             string oldTooltip = _toolTip.GetToolTip(Revisions);
 
             string newToolTip;
@@ -241,17 +248,17 @@ namespace GitUI
             }
             else if (e.ColumnIndex == IsMessageMultilineDataGridViewColumn.Index)
             {
-                newToolTip = IsMessageMultiline(e.RowIndex) ? Revisions.GetRowData(e.RowIndex).Body : string.Empty;
+                newToolTip = revision.HasMultiLineMessage ? revision.Body : string.Empty;
             }
-            else if (e.ColumnIndex == MessageDataGridViewColumn.Index && IsMessageMultiline(e.RowIndex))
+            else if (e.ColumnIndex == MessageDataGridViewColumn.Index && revision.HasMultiLineMessage)
             {
-                newToolTip = Revisions.GetRowData(e.RowIndex).Body;
+                newToolTip = revision.Body;
             }
             else if (_showCellToolTip.TryGetValue(new Point(e.ColumnIndex, e.RowIndex), out var showToolTip) && showToolTip)
             {
                 newToolTip = e.ColumnIndex == IdDataGridViewColumn.Index
-                             ? Revisions.GetRowData(e.RowIndex).Guid
-                             : GetCellText(e.RowIndex, e.ColumnIndex).ToString();
+                             ? revision.Guid
+                             : GetCellText(e.RowIndex, e.ColumnIndex);
             }
             else
             {
@@ -270,11 +277,6 @@ namespace GitUI
             }
 
             return;
-
-            bool IsMessageMultiline(int row)
-            {
-                return !string.IsNullOrEmpty(GetCellText(row, IsMessageMultilineDataGridViewColumn.Index));
-            }
 
             string GetCellText(int row, int col)
             {
