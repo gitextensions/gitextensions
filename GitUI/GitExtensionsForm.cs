@@ -10,10 +10,8 @@ using ResourceManager;
 
 namespace GitUI
 {
-    /// <summary>Base class for a Git Extensions <see cref="Form"/>.
-    /// <remarks>
-    /// Includes support for font, hotkey, icon, translation, and position restore.
-    /// </remarks></summary>
+    /// <summary>Base class for a Git Extensions <see cref="Form"/>.</summary>
+    /// <remarks>Includes support for font, hotkey, icon, translation, and position restore.</remarks>
     public class GitExtensionsForm : GitExtensionsFormBase
     {
         /// <summary>indicates whether the <see cref="Form"/>'s position will be restored</summary>
@@ -107,10 +105,6 @@ namespace GitUI
 
         #endregion icon
 
-        /// <summary>Sets <see cref="AutoScaleMode"/>,
-        /// restores position, raises the <see cref="Form.Load"/> event,
-        /// and .
-        /// </summary>
         protected override void OnLoad(EventArgs e)
         {
             if (_enablePositionRestore)
