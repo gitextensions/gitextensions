@@ -221,8 +221,8 @@ namespace GitUI
 
         #region ToolTip
 
-        private ToolTip _toolTip = new ToolTip();
-        private Dictionary<Point, bool> _showCellToolTip = new Dictionary<Point, bool>();
+        private readonly ToolTip _toolTip = new ToolTip();
+        private readonly Dictionary<Point, bool> _showCellToolTip = new Dictionary<Point, bool>();
 
         private void RevisionsMouseEnter(object sender, EventArgs e)
         {
@@ -288,7 +288,7 @@ namespace GitUI
             _showCellToolTip[new Point(e.ColumnIndex, e.RowIndex)] = truncated;
         }
 
-        #endregion // ToolTip
+        #endregion
 
         private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripDropDownItem targetMenuItem)
         {
