@@ -340,25 +340,6 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
-        private static bool AppendBranches(string prefix, ref System.Text.StringBuilder text, IEnumerable<GitUIPluginInterfaces.IGitRef> refs, ref HashSet<string> shown)
-        {
-            bool any = false;
-            foreach (var gitref in refs)
-            {
-                if (!AppSettings.ShowRemoteBranches && !gitref.Remote.IsNullOrEmpty())
-                {
-                    continue;
-                }
-
-                text.Append(any ? ", " : prefix);
-                any = true;
-                text.Append(gitref.Name);
-                shown.Add(gitref.Name);
-            }
-
-            return any;
-        }
-
         public string GetLaneInfo(int row, int x, GitModule currentModule)
         {
             int lane = (x - _laneSidePadding) / _laneWidth;
@@ -399,7 +380,7 @@ namespace GitUI.RevisionGridClasses
                     if (node != null)
                     {
                         var shownBranches = new HashSet<string>();
-                        if (AppendBranches("at ", ref laneInfoText, node.Data.Refs, ref shownBranches))
+                        if (AppendBranches(laneInfoText, "at ", node.Data.Refs, shownBranches))
                         {
                             laneInfoText.AppendLine();
                         }
@@ -442,6 +423,26 @@ namespace GitUI.RevisionGridClasses
             }
 
             return laneInfoText.ToString();
+
+            bool AppendBranches(StringBuilder text, string prefix, IEnumerable<IGitRef> refs, HashSet<string> shown)
+            {
+                var any = false;
+
+                foreach (var gitRef in refs)
+                {
+                    if (!AppSettings.ShowRemoteBranches && !gitRef.Remote.IsNullOrEmpty())
+                    {
+                        continue;
+                    }
+
+                    text.Append(any ? ", " : prefix);
+                    any = true;
+                    text.Append(gitRef.Name);
+                    shown.Add(gitRef.Name);
+                }
+
+                return any;
+            }
         }
 
         public void Prune()
