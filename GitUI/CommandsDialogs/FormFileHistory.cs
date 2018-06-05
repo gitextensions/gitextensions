@@ -185,6 +185,8 @@ namespace GitUI.CommandsDialogs
                     FileChanges.Load();
                 });
 
+            return;
+
             (string revision, string path) BuildFilter()
             {
                 var fileName = FileName;

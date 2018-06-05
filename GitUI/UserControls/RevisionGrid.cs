@@ -364,9 +364,12 @@ namespace GitUI
         private void Loading_Paint(object sender, PaintEventArgs e)
         {
             // If our loading state has changed since the last paint, update it.
-            if (Loading != null && Loading.Visible != _isLoading)
+            if (Loading != null)
             {
-                Loading.Visible = _isLoading;
+                if (Loading.Visible != _isLoading)
+                {
+                    Loading.Visible = _isLoading;
+                }
             }
         }
 
@@ -1074,7 +1077,7 @@ namespace GitUI
                 return null;
             }
 
-            SuperProjectInfo spi = new SuperProjectInfo();
+            var spi = new SuperProjectInfo();
             var (code, commit) = gitModule.GetSuperprojectCurrentCheckout();
             if (code == 'U')
             {
@@ -2834,17 +2837,21 @@ namespace GitUI
                 return;
             }
 
-            int lastIndex = mainContextMenu.Items.Count;
+            var lastIndex = mainContextMenu.Items.Count;
 
-            foreach (ScriptInfo scriptInfo in scripts)
+            foreach (var script in scripts)
             {
-                if (scriptInfo.Enabled)
+                if (script.Enabled)
                 {
-                    ToolStripItem item = new ToolStripMenuItem(scriptInfo.Name);
-                    item.Name = item.Text + "_ownScript";
+                    var item = new ToolStripMenuItem
+                    {
+                        Text = script.Name,
+                        Name = script.Name + "_ownScript",
+                        Image = script.GetIcon()
+                    };
                     item.Click += RunScript;
-                    item.Image = scriptInfo.GetIcon();
-                    if (scriptInfo.AddToRevisionGridContextMenu)
+
+                    if (script.AddToRevisionGridContextMenu)
                     {
                         mainContextMenu.Items.Add(item);
                     }
@@ -2867,13 +2874,10 @@ namespace GitUI
         private void RemoveOwnScripts()
         {
             runScriptToolStripMenuItem.DropDown.Items.Clear();
-            List<ToolStripItem> list = new List<ToolStripItem>();
-            foreach (ToolStripItem item in mainContextMenu.Items)
-            {
-                list.Add(item);
-            }
 
-            foreach (ToolStripItem item in list)
+            var list = mainContextMenu.Items.Cast<ToolStripItem>().ToList();
+
+            foreach (var item in list)
             {
                 if (item.Name.Contains("_ownScript"))
                 {
@@ -2913,7 +2917,7 @@ namespace GitUI
             showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
 
             // hide revision graph when hiding merge commits, reasons:
-            // 1, revison graph is no longer relevant, as we are not sohwing all commits
+            // 1, revision graph is no longer relevant, as we are not showing all commits
             // 2, performance hit when both revision graph and no merge commits are enabled
             if (AppSettings.ShowRevisionGridGraphColumn && !AppSettings.ShowMergeCommits)
             {
@@ -3116,8 +3120,7 @@ namespace GitUI
 
         public void GoToRef(string refName, bool showNoRevisionMsg)
         {
-            string sha1;
-            if (DetachedHeadParser.TryParse(refName, out sha1))
+            if (DetachedHeadParser.TryParse(refName, out var sha1))
             {
                 refName = sha1;
             }
@@ -3426,7 +3429,7 @@ namespace GitUI
 
         protected override bool ExecuteCommand(int cmd)
         {
-            Commands command = (Commands)cmd;
+            var command = (Commands)cmd;
 
             switch (command)
             {
