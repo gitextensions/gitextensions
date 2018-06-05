@@ -7,9 +7,11 @@ namespace GitUI.UserControls
     {
         public static Rectangle GetCellRectangle(DataGridViewCellPaintingEventArgs e)
         {
-            var rect = new Rectangle(e.CellBounds.Left, e.CellBounds.Top + 4, e.CellBounds.Width,
+            return new Rectangle(
+                e.CellBounds.Left,
+                e.CellBounds.Top + 4,
+                e.CellBounds.Width,
                 e.CellBounds.Height);
-            return rect;
         }
 
         /// <summary>
