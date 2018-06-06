@@ -41,7 +41,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.CommandCacheItems = new System.Windows.Forms.ListBox();
             this.commandCacheOutput = new System.Windows.Forms.RichTextBox();
             this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
-            this.enhancedLogCheckBox = new System.Windows.Forms.CheckBox();
             this.logContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
@@ -191,18 +190,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.alwaysOnTopCheckBox.UseVisualStyleBackColor = true;
             this.alwaysOnTopCheckBox.CheckedChanged += new System.EventHandler(this.alwaysOnTopCheckBox_CheckedChanged);
             // 
-            // enhancedLogCheckBox
-            // 
-            this.enhancedLogCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.enhancedLogCheckBox.AutoSize = true;
-            this.enhancedLogCheckBox.Location = new System.Drawing.Point(104, 451);
-            this.enhancedLogCheckBox.Name = "enhancedLogCheckBox";
-            this.enhancedLogCheckBox.Size = new System.Drawing.Size(110, 17);
-            this.enhancedLogCheckBox.TabIndex = 3;
-            this.enhancedLogCheckBox.Text = "Enhanced logging";
-            this.enhancedLogCheckBox.UseVisualStyleBackColor = true;
-            this.enhancedLogCheckBox.CheckedChanged += new System.EventHandler(this.enhancedLogCheckBox_CheckedChanged);
-            // 
             // logContextMenuStrip
             // 
             this.logContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -222,7 +209,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(659, 470);
-            this.Controls.Add(this.enhancedLogCheckBox);
             this.Controls.Add(this.alwaysOnTopCheckBox);
             this.Controls.Add(this.TabControl);
             this.Name = "FormGitLog";
@@ -258,7 +244,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private System.Windows.Forms.ListBox LogItems;
         private System.Windows.Forms.RichTextBox LogOutput;
         private CheckBox alwaysOnTopCheckBox;
-        private CheckBox enhancedLogCheckBox;
         private ContextMenuStrip logContextMenuStrip;
         private ToolStripMenuItem saveToFileToolStripMenuItem;
     }

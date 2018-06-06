@@ -511,14 +511,6 @@ namespace GitCommands
         {
             EnvironmentConfiguration.SetEnvironmentVariables();
 
-            string quotedCmd = fileName;
-            if (quotedCmd.IndexOf(' ') != -1)
-            {
-                quotedCmd = quotedCmd.Quote();
-            }
-
-            var executionStartTimestamp = DateTime.Now;
-
             var startInfo = new ProcessStartInfo
             {
                 FileName = fileName,
@@ -531,13 +523,12 @@ namespace GitCommands
                 startInfo.CreateNoWindow = true;
             }
 
-            var startCmd = AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionStartTimestamp, isStart: true);
+            var startCmd = AppSettings.GitLog.Log(fileName, arguments);
             var startProcess = Process.Start(startInfo);
 
             startProcess.Exited += (sender, args) =>
             {
-                var executionEndTimestamp = DateTime.Now;
-                AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp, startCmd: startCmd);
+                startCmd.LogEnd();
             };
 
             return startProcess;
@@ -3153,7 +3144,7 @@ namespace GitCommands
             {
                 // Catch all parser errors, and ignore them all!
                 // We should never get here...
-                AppSettings.GitLog.Log("Error parsing output from command: " + args + "\n\nPlease report a bug!", DateTime.Now, DateTime.Now, isStart: true);
+                AppSettings.GitLog.Log("Error parsing output from command: " + args + "\n\nPlease report a bug!");
 
                 return new GitBlame(Array.Empty<GitBlameLine>());
             }

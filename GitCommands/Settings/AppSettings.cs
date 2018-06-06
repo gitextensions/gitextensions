@@ -1472,12 +1472,6 @@ namespace GitCommands
             set => SetEnum("BranchOrderingCriteria", value);
         }
 
-        public static bool EnhancedGitLog
-        {
-            get => GetBool("EnhancedGitLog", false);
-            set => SetBool("EnhancedGitLog", value);
-        }
-
         public static string GetGitExtensionsFullPath()
         {
             return Application.ExecutablePath;

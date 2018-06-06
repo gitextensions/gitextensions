@@ -17,9 +17,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             ShowInTaskbar = true;
             InitializeComponent();
             Translate();
-            enhancedLogCheckBox.CheckedChanged -= new System.EventHandler(enhancedLogCheckBox_CheckedChanged);
-            enhancedLogCheckBox.Checked = AppSettings.EnhancedGitLog;
-            enhancedLogCheckBox.CheckedChanged += new System.EventHandler(enhancedLogCheckBox_CheckedChanged);
         }
 
         private void GitLogFormLoad(object sender, EventArgs e)
@@ -123,12 +120,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             TopMost = !TopMost;
             alwaysOnTopCheckBox.Checked = TopMost;
-        }
-
-        private void enhancedLogCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            AppSettings.EnhancedGitLog = !AppSettings.EnhancedGitLog;
-            enhancedLogCheckBox.Checked = AppSettings.EnhancedGitLog;
         }
 
         private void SaveToFileToolStripMenuItem_Click(object sender, System.EventArgs e)
