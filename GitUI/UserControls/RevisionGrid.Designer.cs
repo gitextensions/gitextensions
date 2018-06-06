@@ -69,10 +69,6 @@ namespace GitUI
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBuildReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SelectionTimer = new System.Windows.Forms.Timer(this.components);
-            this.NoCommits = new System.Windows.Forms.Panel();
-            this.GitIgnore = new System.Windows.Forms.Button();
-            this.Commit = new System.Windows.Forms.Button();
-            this.lblEmptyRepository = new System.Windows.Forms.Label();
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
@@ -83,7 +79,6 @@ namespace GitUI
             this.rebaseWithAdvOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Graph)).BeginInit();
             this.mainContextMenu.SuspendLayout();
-            this.NoCommits.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Error)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             this.SuspendLayout();
@@ -505,45 +500,6 @@ namespace GitUI
             this.SelectionTimer.Interval = 200;
             this.SelectionTimer.Tick += new System.EventHandler(this.SelectionTimerTick);
             // 
-            // NoCommits
-            // 
-            this.NoCommits.Controls.Add(this.GitIgnore);
-            this.NoCommits.Controls.Add(this.Commit);
-            this.NoCommits.Controls.Add(this.lblEmptyRepository);
-            this.NoCommits.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.NoCommits.Location = new System.Drawing.Point(0, 0);
-            this.NoCommits.Name = "NoCommits";
-            this.NoCommits.Size = new System.Drawing.Size(682, 235);
-            this.NoCommits.TabIndex = 3;
-            // 
-            // GitIgnore
-            // 
-            this.GitIgnore.Location = new System.Drawing.Point(468, 10);
-            this.GitIgnore.Name = "GitIgnore";
-            this.GitIgnore.Size = new System.Drawing.Size(182, 27);
-            this.GitIgnore.TabIndex = 3;
-            this.GitIgnore.Text = "Edit .gitignore";
-            this.GitIgnore.UseVisualStyleBackColor = true;
-            this.GitIgnore.Click += new System.EventHandler(this.GitIgnoreClick);
-            // 
-            // Commit
-            // 
-            this.Commit.Location = new System.Drawing.Point(468, 42);
-            this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(182, 27);
-            this.Commit.TabIndex = 2;
-            this.Commit.Text = "Commit";
-            this.Commit.UseVisualStyleBackColor = true;
-            this.Commit.Click += new System.EventHandler(this.CommitClick);
-            // 
-            // label1
-            //
-            this.lblEmptyRepository.AutoSize = true;
-            this.lblEmptyRepository.Location = new System.Drawing.Point(15, 10);
-            this.lblEmptyRepository.Name = "lblEmptyRepository";
-            this.lblEmptyRepository.Size = new System.Drawing.Size(393, 120);
-            this.lblEmptyRepository.TabIndex = 0;
-            // 
             // Error
             // 
             this.Error.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -616,7 +572,6 @@ namespace GitUI
             // RevisionGrid
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.NoCommits);
             this.Controls.Add(this.Error);
             this.Controls.Add(this.Loading);
             this.Controls.Add(this.Graph);
@@ -624,12 +579,9 @@ namespace GitUI
             this.Size = new System.Drawing.Size(682, 235);
             ((System.ComponentModel.ISupportInitialize)(this.Graph)).EndInit();
             this.mainContextMenu.ResumeLayout(false);
-            this.NoCommits.ResumeLayout(false);
-            this.NoCommits.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Error)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             this.ResumeLayout(false);
-
         }
 
         #endregion
@@ -639,10 +591,6 @@ namespace GitUI
         internal DvcsGraph Graph;
         private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.Timer SelectionTimer;
-        private System.Windows.Forms.Panel NoCommits;
-        private System.Windows.Forms.Label lblEmptyRepository;
-        private System.Windows.Forms.Button Commit;
-        private System.Windows.Forms.Button GitIgnore;
 
         private System.Windows.Forms.ContextMenuStrip mainContextMenu;
         private System.Windows.Forms.ToolStripMenuItem navigateToolStripMenuItem;
