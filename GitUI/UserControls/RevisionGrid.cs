@@ -86,7 +86,6 @@ namespace GitUI
         private Font _normalFont;
         private Font _headFont;
         private Font _superprojectFont;
-        private Font _refsFont;
         private string[] _lastSelectedRows;
         private string _fixedRevisionFilter = "";
         private string _fixedPathFilter = "";
@@ -268,7 +267,6 @@ If this is a central repository (bare repository without a working directory):
             set
             {
                 _normalFont = value;
-                _refsFont = _normalFont;
                 _headFont = new Font(_normalFont, FontStyle.Bold);
                 _superprojectFont = new Font(_normalFont, FontStyle.Underline);
                 _fontOfSHAColumn = new Font("Consolas", _normalFont.SizeInPoints);
@@ -1433,17 +1431,17 @@ If this is a central repository (bare repository without a working directory):
                 {
                     if (spi.Conflict_Base == revision.Guid)
                     {
-                        RevisionGridRefRenderer.DrawRef(e, isRowSelected, _refsFont, ref offset, "Base", Color.OrangeRed, ArrowType.NotFilled);
+                        RevisionGridRefRenderer.DrawRef(e, isRowSelected, _normalFont, ref offset, "Base", Color.OrangeRed, ArrowType.NotFilled);
                     }
 
                     if (spi.Conflict_Local == revision.Guid)
                     {
-                        RevisionGridRefRenderer.DrawRef(e, isRowSelected, _refsFont, ref offset, "Local", Color.OrangeRed, ArrowType.NotFilled);
+                        RevisionGridRefRenderer.DrawRef(e, isRowSelected, _normalFont, ref offset, "Local", Color.OrangeRed, ArrowType.NotFilled);
                     }
 
                     if (spi.Conflict_Remote == revision.Guid)
                     {
-                        RevisionGridRefRenderer.DrawRef(e, isRowSelected, _refsFont, ref offset, "Remote", Color.OrangeRed, ArrowType.NotFilled);
+                        RevisionGridRefRenderer.DrawRef(e, isRowSelected, _normalFont, ref offset, "Remote", Color.OrangeRed, ArrowType.NotFilled);
                     }
                 }
 
@@ -1478,7 +1476,7 @@ If this is a central repository (bare repository without a working directory):
                             : gitRef.SelectedHeadMergeSource
                                 ? ArrowType.NotFilled
                                 : ArrowType.None;
-                        var font = gitRef.Selected ? rowFont : _refsFont;
+                        var font = gitRef.Selected ? rowFont : _normalFont;
 
                         var superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
                         if (superprojectRef != null)
@@ -1510,7 +1508,7 @@ If this is a central repository (bare repository without a working directory):
                         : gitRef.SelectedHeadMergeSource
                             ? ArrowType.NotFilled
                             : ArrowType.None;
-                    var font = gitRef.Selected ? rowFont : _refsFont;
+                    var font = gitRef.Selected ? rowFont : _normalFont;
 
                     RevisionGridRefRenderer.DrawRef(e, isRowSelected, font, ref offset, gitRefName, headColor, arrowType, dashedLine: true);
                 }
@@ -1524,7 +1522,7 @@ If this is a central repository (bare repository without a working directory):
                     // Get offset for "count" text
                     offset += 1 + e.Graphics.MeasureString(text, rowFont).Width;
 
-                    RevisionGridRefRenderer.DrawRef(e, isRowSelected, _refsFont, ref offset, revision.Subject, AppSettings.OtherTagColor, ArrowType.None, dashedLine: false, fill: true);
+                    RevisionGridRefRenderer.DrawRef(e, isRowSelected, _normalFont, ref offset, revision.Subject, AppSettings.OtherTagColor, ArrowType.None, dashedLine: false, fill: true);
                 }
             }
             else if (columnIndex == AuthorDataGridViewColumn.Index)
