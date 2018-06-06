@@ -124,6 +124,7 @@ namespace GitCommands
 
         public bool HasParent => ParentGuids != null && ParentGuids.Count > 0;
 
+        [CanBeNull]
         public string FirstParentGuid => ParentGuids?.FirstOrDefault();
 
         public event PropertyChangedEventHandler PropertyChanged;

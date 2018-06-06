@@ -13,6 +13,7 @@ using GitCommands;
 using GitCommands.Git.Extensions;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitUI.RevisionGridClasses
 {
@@ -164,6 +165,7 @@ namespace GitUI.RevisionGridClasses
             DateColumn.Visible = show;
         }
 
+        [CanBeNull]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -332,6 +334,7 @@ namespace GitUI.RevisionGridClasses
             }
         }
 
+        [CanBeNull]
         public GitRevision GetRowData(int rowIndex)
         {
             lock (_graphData)
@@ -1036,7 +1039,7 @@ namespace GitUI.RevisionGridClasses
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
         private readonly List<Color> _junctionColors = new List<Color>(4);
 
-        private bool DrawItem(Graphics wa, Graph.ILaneRow row)
+        private bool DrawItem(Graphics wa, [CanBeNull] Graph.ILaneRow row)
         {
             ThreadHelper.AssertOnUIThread();
 
@@ -1281,6 +1284,7 @@ namespace GitUI.RevisionGridClasses
             return _graphData.IsRevisionRelative(guid);
         }
 
+        [CanBeNull]
         public GitRevision GetRevision(string guid)
         {
             return _graphData.Nodes.TryGetValue(guid, out var node) ? node.Data : null;
