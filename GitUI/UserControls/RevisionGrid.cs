@@ -43,12 +43,6 @@ namespace GitUI
     [DefaultEvent("DoubleClick")]
     public sealed partial class RevisionGrid : GitModuleControl
     {
-        public event EventHandler<GitModuleEventArgs> GitModuleChanged
-        {
-            add => _notAGitRepo.GitModuleChanged += value;
-            remove => _notAGitRepo.GitModuleChanged -= value;
-        }
-
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
         public event EventHandler<EventArgs> ShowFirstParentsToggled;
         public event EventHandler SelectionChanged;
@@ -63,7 +57,6 @@ namespace GitUI
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
-        private readonly NotAGitRepoControl _notAGitRepo;
         private readonly BareRepoControl _bareRepo;
         private readonly EmptyRepoControl _emptyRepo;
         private readonly RevisionGridToolTipProvider _toolTipProvider;
@@ -135,10 +128,6 @@ namespace GitUI
         {
             InitLayout();
             InitializeComponent();
-
-            _notAGitRepo = new NotAGitRepoControl();
-            _notAGitRepo.Resolved += (s, e) => ForceRefreshRevisions();
-            Controls.Add(_notAGitRepo);
 
             _bareRepo = new BareRepoControl { Dock = DockStyle.Fill };
             Controls.Add(_bareRepo);
@@ -604,7 +593,6 @@ namespace GitUI
             Error.Visible = false;
             _bareRepo.Visible = false;
             _emptyRepo.Visible = false;
-            _notAGitRepo.Visible = false;
             Graph.Visible = false;
             Loading.Visible = true;
             ////Loading.BringToFront();
@@ -860,22 +848,8 @@ namespace GitUI
                 _superprojectCurrentCheckout = newSuperProjectInfo;
                 Graph.Clear();
                 Error.Visible = false;
-
-                if (!Module.IsValidGitWorkingDir())
-                {
-                    Graph.Visible = false;
-                    _bareRepo.Visible = false;
-                    _emptyRepo.Visible = false;
-                    Loading.Visible = false;
-                    _notAGitRepo.Visible = true;
-                    _notAGitRepo.Reload();
-                    _notAGitRepo.BringToFront();
-                    return;
-                }
-
                 _bareRepo.Visible = false;
                 _emptyRepo.Visible = false;
-                _notAGitRepo.Visible = false;
                 Graph.Visible = true;
                 Graph.BringToFront();
                 Graph.Enabled = false;
@@ -983,7 +957,6 @@ namespace GitUI
                         () =>
                         {
                             Error.Visible = true;
-                            _notAGitRepo.Visible = false;
                             _bareRepo.Visible = false;
                             _emptyRepo.Visible = false;
                             Graph.Visible = false;
@@ -1010,7 +983,6 @@ namespace GitUI
                     this.InvokeAsync(
                             () =>
                             {
-                                _notAGitRepo.Visible = false;
                                 _bareRepo.Visible = isBare;
                                 _emptyRepo.Visible = !isBare;
                                 Graph.Visible = false;
