@@ -69,7 +69,6 @@ namespace GitUI
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBuildReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SelectionTimer = new System.Windows.Forms.Timer(this.components);
-            this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -79,7 +78,6 @@ namespace GitUI
             this.rebaseWithAdvOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Graph)).BeginInit();
             this.mainContextMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Error)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             this.SuspendLayout();
             //
@@ -500,17 +498,6 @@ namespace GitUI
             this.SelectionTimer.Interval = 200;
             this.SelectionTimer.Tick += new System.EventHandler(this.SelectionTimerTick);
             // 
-            // Error
-            // 
-            this.Error.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Error.Image = global::GitUI.Properties.Resources.error;
-            this.Error.Location = new System.Drawing.Point(0, 0);
-            this.Error.Name = "Error";
-            this.Error.Size = new System.Drawing.Size(682, 235);
-            this.Error.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.Error.TabIndex = 2;
-            this.Error.TabStop = false;
-            // 
             // Loading
             // 
             this.Loading.BackColor = System.Drawing.SystemColors.AppWorkspace;
@@ -572,21 +559,18 @@ namespace GitUI
             // RevisionGrid
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.Error);
             this.Controls.Add(this.Loading);
             this.Controls.Add(this.Graph);
             this.Name = "RevisionGrid";
             this.Size = new System.Drawing.Size(682, 235);
             ((System.ComponentModel.ISupportInitialize)(this.Graph)).EndInit();
             this.mainContextMenu.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Error)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             this.ResumeLayout(false);
         }
 
         #endregion
 
-        public System.Windows.Forms.PictureBox Error;
 
         internal DvcsGraph Graph;
         private System.Windows.Forms.PictureBox Loading;
