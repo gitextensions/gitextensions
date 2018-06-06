@@ -8,6 +8,49 @@ namespace GitUI.BranchTreePanel
     {
         private TreeNode _lastRightClickedNode;
 
+        private void ContextMenuAddExpandCollapseTree(ContextMenuStrip contextMenu)
+        {
+            // Add the following to the every participating context menu:
+            //
+            //    ---------
+            //    Collapse All
+            //    Expand All
+
+            if (!contextMenu.Items.Contains(tsmiSpacer1))
+            {
+                contextMenu.Items.Add(tsmiSpacer1);
+            }
+
+            if (!contextMenu.Items.Contains(mnubtnCollapseAll))
+            {
+                contextMenu.Items.Add(mnubtnCollapseAll);
+            }
+
+            if (!contextMenu.Items.Contains(mnubtnExpandAll))
+            {
+                contextMenu.Items.Add(mnubtnExpandAll);
+            }
+        }
+
+        private void ContextMenuBranchSpecific(ContextMenuStrip contextMenu)
+        {
+            if (contextMenu != menuBranch)
+            {
+                return;
+            }
+
+            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode;
+            if (node == null)
+            {
+                return;
+            }
+
+            var isNotActiveBranch = !((node.Tag as LocalBranchNode)?.IsActive ?? false);
+            mnuBtnCheckoutLocal.Visible = isNotActiveBranch;
+            tsmiSpacer2.Visible = isNotActiveBranch;
+            mnubtnBranchDelete.Visible = isNotActiveBranch;
+        }
+
         private void OnNodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             _lastRightClickedNode = e.Button == MouseButtons.Right ? e.Node : null;
@@ -99,26 +142,8 @@ namespace GitUI.BranchTreePanel
                 return;
             }
 
-            // Add the following to the every participating context menu:
-            //
-            //    ---------
-            //    Collapse All
-            //    Expand All
-
-            if (!contextMenu.Items.Contains(tsmiSpacer1))
-            {
-                contextMenu.Items.Add(tsmiSpacer1);
-            }
-
-            if (!contextMenu.Items.Contains(mnubtnCollapseAll))
-            {
-                contextMenu.Items.Add(mnubtnCollapseAll);
-            }
-
-            if (!contextMenu.Items.Contains(mnubtnExpandAll))
-            {
-                contextMenu.Items.Add(mnubtnExpandAll);
-            }
+            ContextMenuAddExpandCollapseTree(contextMenu);
+            ContextMenuBranchSpecific(contextMenu);
         }
     }
 }
