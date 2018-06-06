@@ -820,7 +820,7 @@ If this is a central repository (bare repository without a working directory):
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
                 GitModule capturedModule = Module;
-                JoinableTask<SuperProjectInfo> newSuperPrjectInfo =
+                JoinableTask<SuperProjectInfo> newSuperProjectInfo =
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
                         await TaskScheduler.Default.SwitchTo(alwaysYield: true);
@@ -830,7 +830,7 @@ If this is a central repository (bare repository without a working directory):
                 {
                     try
                     {
-                        await newSuperPrjectInfo;
+                        await newSuperProjectInfo;
                     }
                     finally
                     {
@@ -855,7 +855,7 @@ If this is a central repository (bare repository without a working directory):
                 CurrentCheckout = newCurrentCheckout;
                 _filteredCurrentCheckout = null;
                 _currentCheckoutParents = null;
-                _superprojectCurrentCheckout = newSuperPrjectInfo;
+                _superprojectCurrentCheckout = newSuperProjectInfo;
                 Graph.Clear();
                 Error.Visible = false;
 
@@ -2524,7 +2524,7 @@ If this is a central repository (bare repository without a working directory):
             return LocalizationHelpers.GetRelativeDateString(DateTime.Now, time, false);
         }
 
-        private bool ShowUncommitedChanges()
+        private bool ShowUncommittedChanges()
         {
             return ShowUncommittedChangesIfPossible && AppSettings.RevisionGraphShowWorkingDirChanges;
         }
@@ -2555,9 +2555,9 @@ If this is a central repository (bare repository without a working directory):
                 }
             }
 
-            if (_filteredCurrentCheckout == rev.Guid && ShowUncommitedChanges() && !Module.IsBareRepository())
+            if (_filteredCurrentCheckout == rev.Guid && ShowUncommittedChanges() && !Module.IsBareRepository())
             {
-                CheckUncommitedChanged(_filteredCurrentCheckout);
+                CheckUncommittedChanged(_filteredCurrentCheckout);
             }
 
             DvcsGraph.DataTypes dataTypes;
@@ -2614,7 +2614,7 @@ If this is a central repository (bare repository without a working directory):
             Graph.Invalidate();
         }
 
-        private void CheckUncommitedChanged(string filtredCurrentCheckout)
+        private void CheckUncommittedChanged(string filteredCurrentCheckout)
         {
             var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
             var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
@@ -2643,7 +2643,7 @@ If this is a central repository (bare repository without a working directory):
                 CommitDate = DateTime.MaxValue,
                 CommitterEmail = userEmail,
                 Subject = Strings.GetCurrentIndex(),
-                ParentGuids = new[] { filtredCurrentCheckout }
+                ParentGuids = new[] { filteredCurrentCheckout }
             };
             Graph.Add(stagedRev, DvcsGraph.DataTypes.Normal);
 
