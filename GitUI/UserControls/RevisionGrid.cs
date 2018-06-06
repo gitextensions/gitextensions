@@ -809,7 +809,9 @@ If this is a central repository (bare repository without a working directory):
                 RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
                 IsMessageMultilineDataGridViewColumn.Visible = AppSettings.ShowIndicatorForMultilineMessage;
 
-                ApplyFilterFromRevisionFilterDialog();
+                // Apply filter from revision filter dialog
+                _branchFilter = _revisionFilter.GetBranchFilter();
+                SetShowBranches();
 
                 _initialLoad = true;
 
@@ -2088,12 +2090,6 @@ If this is a central repository (bare repository without a working directory):
         {
             _revisionFilter.ShowDialog(this);
             ForceRefreshRevisions();
-        }
-
-        private void ApplyFilterFromRevisionFilterDialog()
-        {
-            _branchFilter = _revisionFilter.GetBranchFilter();
-            SetShowBranches();
         }
 
         private void ContextMenuOpening(object sender, CancelEventArgs e)
