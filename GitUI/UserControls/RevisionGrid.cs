@@ -105,7 +105,7 @@ namespace GitUI
         [Browsable(false)] public string InMemCommitterFilter { get; set; } = "";
         [Browsable(false)] public string InMemMessageFilter { get; set; } = "";
         [Browsable(false)] public string CurrentCheckout { get; private set; }
-        [Browsable(false)] public bool ShowUncommitedChangesIfPossible { get; set; }
+        [Browsable(false)] public bool ShowUncommittedChangesIfPossible { get; set; }
         [Browsable(false)] public bool ShowBuildServerInfo { get; set; }
         [Browsable(false)] public bool DoubleClickDoesNotOpenCommitInfo { get; set; }
 
@@ -2592,7 +2592,7 @@ If this is a central repository (bare repository without a working directory):
 
         private bool ShowUncommitedChanges()
         {
-            return ShowUncommitedChangesIfPossible && AppSettings.RevisionGraphShowWorkingDirChanges;
+            return ShowUncommittedChangesIfPossible && AppSettings.RevisionGraphShowWorkingDirChanges;
         }
 
         private void OnRevisionRead([CanBeNull] GitRevision rev = null)
