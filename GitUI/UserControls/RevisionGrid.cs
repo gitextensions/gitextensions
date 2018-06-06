@@ -200,7 +200,6 @@ If this is a central repository (bare repository without a working directory):
             Graph.DragDrop += GraphDragDrop;
             Graph.AllowDrop = true;
 
-            Graph.ColumnHeadersVisible = false;
             Graph.IdColumn.Visible = AppSettings.ShowIds;
 
             IsMessageMultilineDataGridViewColumn.DisplayIndex = 2;
@@ -1177,11 +1176,6 @@ If this is a central repository (bare repository without a working directory):
             return -1;
         }
 
-        private static string GetDateHeaderText()
-        {
-            return AppSettings.ShowAuthorDate ? Strings.GetAuthorDateText() : Strings.GetCommitDateText();
-        }
-
         private void LoadRevisions()
         {
             if (_revisionReader == null)
@@ -1191,12 +1185,7 @@ If this is a central repository (bare repository without a working directory):
 
             Graph.SuspendLayout();
 
-            Graph.MessageColumn.HeaderText = Strings.GetMessageText();
-            Graph.AuthorColumn.HeaderText = Strings.GetAuthorText();
-            Graph.DateColumn.HeaderText = GetDateHeaderText();
-
             Graph.SelectionChanged -= OnGraphSelectionChanged;
-
             Graph.Enabled = true;
             Graph.Focus();
             Graph.SelectionChanged += OnGraphSelectionChanged;
