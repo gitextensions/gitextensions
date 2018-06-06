@@ -172,10 +172,10 @@ namespace GitCommands
 
         public static ISet<string> GetAmbiguousRefNames(IEnumerable<IGitRef> refs)
         {
-            return refs.
-                GroupBy(r => r.Name).
-                Where(group => group.Count() > 1).
-                ToHashSet(e => e.Key);
+            return refs
+                .GroupBy(r => r.Name)
+                .Where(group => group.Count() > 1)
+                .ToHashSet(e => e.Key);
         }
     }
 }

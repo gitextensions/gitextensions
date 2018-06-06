@@ -1033,8 +1033,6 @@ namespace GitUI.RevisionGridClasses
             return true;
         }
 
-        // end drawGraph
-
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
         private readonly List<Color> _junctionColors = new List<Color>(4);
 
@@ -1394,6 +1392,4 @@ namespace GitUI.RevisionGridClasses
 
         #endregion
     }
-
-    // end of class DvcsGraph
 }
