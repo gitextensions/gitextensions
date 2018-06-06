@@ -434,6 +434,7 @@
       <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\RevisionGridClasses\RevisionGridToolTipProvider.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\RevisionGridRefRenderer.cs" />
     <Compile Include="UserControls\RevisionGridUtils.cs" />
     <Compile Include="UserControls\TextEventArgs.cs" />
     <Compile Include="UserControls\ToolStripClasses\CommitIconProvider.cs" />
