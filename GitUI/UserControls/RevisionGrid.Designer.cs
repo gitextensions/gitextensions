@@ -69,7 +69,6 @@ namespace GitUI
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBuildReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SelectionTimer = new System.Windows.Forms.Timer(this.components);
-            this.Loading = new System.Windows.Forms.PictureBox();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,7 +77,6 @@ namespace GitUI
             this.rebaseWithAdvOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Graph)).BeginInit();
             this.mainContextMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             this.SuspendLayout();
             //
             // Graph
@@ -498,18 +496,6 @@ namespace GitUI
             this.SelectionTimer.Interval = 200;
             this.SelectionTimer.Tick += new System.EventHandler(this.SelectionTimerTick);
             // 
-            // Loading
-            // 
-            this.Loading.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.Loading.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Loading.Location = new System.Drawing.Point(0, 0);
-            this.Loading.Name = "Loading";
-            this.Loading.Size = new System.Drawing.Size(682, 235);
-            this.Loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.Loading.TabIndex = 1;
-            this.Loading.TabStop = false;
-            this.Loading.Visible = false;
-            // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
@@ -559,21 +545,17 @@ namespace GitUI
             // RevisionGrid
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.Loading);
             this.Controls.Add(this.Graph);
             this.Name = "RevisionGrid";
             this.Size = new System.Drawing.Size(682, 235);
             ((System.ComponentModel.ISupportInitialize)(this.Graph)).EndInit();
             this.mainContextMenu.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             this.ResumeLayout(false);
         }
 
         #endregion
 
-
         internal DvcsGraph Graph;
-        private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.Timer SelectionTimer;
 
         private System.Windows.Forms.ContextMenuStrip mainContextMenu;
