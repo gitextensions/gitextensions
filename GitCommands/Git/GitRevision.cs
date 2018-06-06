@@ -83,6 +83,7 @@ namespace GitCommands
         #region IGitItem Members
 
         public string Guid { get; set; }
+        public string AbbrevGuid { get; set; }
         public string Name { get; set; }
 
         #endregion

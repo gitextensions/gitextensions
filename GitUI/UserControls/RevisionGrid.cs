@@ -1979,7 +1979,7 @@ namespace GitUI
                     if (!revision.IsArtificial)
                     {
                         // do not show artificial GUID
-                        var text = revision.Guid;
+                        var text = revision.AbbrevGuid;
                         DrawColumnText(e, text, _fontOfSHAColumn, foreColor);
                     }
                 }
