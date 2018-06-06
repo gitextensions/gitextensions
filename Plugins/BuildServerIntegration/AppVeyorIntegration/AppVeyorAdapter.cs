@@ -95,16 +95,16 @@ namespace AppVeyorIntegration
             _httpClientGitHub = GetHttpClient("https://api.github.com/", _gitHubToken);
             _httpClientGitHub.DefaultRequestHeaders.Add("User-Agent", "Anything");
 
-            var useAllProjets = string.IsNullOrWhiteSpace(projectNamesSetting);
+            var useAllProjects = string.IsNullOrWhiteSpace(projectNamesSetting);
             string[] projectNames = null;
-            if (!useAllProjets)
+            if (!useAllProjects)
             {
                 projectNames = _buildServerWatcher.ReplaceVariables(projectNamesSetting)
                     .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             if (Projects.Count == 0 ||
-                (!useAllProjets && Projects.Keys.Intersect(projectNames).Count() != projectNames.Length))
+                (!useAllProjects && Projects.Keys.Intersect(projectNames).Count() != projectNames.Length))
             {
                 Projects.Clear();
                 if (_accountToken.IsNullOrWhiteSpace())
@@ -141,7 +141,7 @@ namespace AppVeyorIntegration
                                     QueryUrl = BuildQueryUrl(projectId)
                                 };
 
-                                if (useAllProjets || projectNames.Contains(projectObj.Name))
+                                if (useAllProjects || projectNames.Contains(projectObj.Name))
                                 {
                                     Projects.Add(projectObj.Name, projectObj);
                                 }
@@ -150,7 +150,7 @@ namespace AppVeyorIntegration
                 }
             }
 
-            var builds = Projects.Where(p => useAllProjets || projectNames.Contains(p.Value.Name)).Select(p => p.Value);
+            var builds = Projects.Where(p => useAllProjects || projectNames.Contains(p.Value.Name)).Select(p => p.Value);
             _allBuilds =
                 FilterBuilds(builds.SelectMany(project => QueryBuildsResults(project)));
         }
@@ -538,18 +538,19 @@ namespace AppVeyorIntegration
     internal class BuildDetails : BuildInfo
     {
         private static readonly IBuildDurationFormatter _buildDurationFormatter = new BuildDurationFormatter();
+
         private int _buildProgressCount;
 
-        // From build build list
         public string BuildId { get; set; }
         public string CommitId { get; set; }
         public string AppVeyorBuildReportUrl { get; set; }
-        public bool IsRunning => Status == BuildStatus.InProgress;
         public string Branch { get; set; }
         public string BaseApiUrl { get; set; }
         public string BaseWebUrl { get; set; }
         public string PullRequestText { get; set; }
         public string TestsResultText { get; set; }
+
+        public bool IsRunning => Status == BuildStatus.InProgress;
 
         public void ChangeProgressCounter()
         {

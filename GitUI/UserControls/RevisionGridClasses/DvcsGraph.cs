@@ -783,16 +783,12 @@ namespace GitUI.RevisionGridClasses
         {
             ThreadHelper.AssertOnUIThread();
 
-            // Draw non-relative branches gray
-            if (!junction.IsRelative && _revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
+            // Non relatives or non-highlighted in grey
+            switch (_revisionGraphDrawStyleCache)
             {
-                return _nonRelativeColor;
-            }
-
-            // Draw non-highlighted branches gray
-            if (!junction.HighLight && _revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected)
-            {
-                return _nonRelativeColor;
+                case RevisionGraphDrawStyleEnum.DrawNonRelativesGray when !junction.IsRelative:
+                case RevisionGraphDrawStyleEnum.HighlightSelected when !junction.HighLight:
+                    return _nonRelativeColor;
             }
 
             if (!AppSettings.MulticolorBranches)

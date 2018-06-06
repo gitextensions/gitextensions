@@ -132,7 +132,7 @@ namespace GitUI
         {
             if (!task.IsCompleted)
             {
-                return default(T);
+                return default;
             }
 
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
