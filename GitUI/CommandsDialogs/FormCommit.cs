@@ -250,8 +250,6 @@ namespace GitUI.CommandsDialogs
             Message.WatermarkText = _useFormCommitMessage
                 ? _enterCommitMessageHint.Text
                 : _commitMessageDisabled.Text;
-
-            AssignCommitMessageFromTemplate();
         }
 
         private void AssignCommitMessageFromTemplate()
@@ -1962,6 +1960,10 @@ namespace GitUI.CommandsDialogs
             if (_useFormCommitMessage && !string.IsNullOrEmpty(message))
             {
                 Message.Text = message;
+            }
+            else
+            {
+                AssignCommitMessageFromTemplate();
             }
         }
 
