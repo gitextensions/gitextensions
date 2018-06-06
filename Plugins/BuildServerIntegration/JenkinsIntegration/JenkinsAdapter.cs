@@ -153,13 +153,16 @@ namespace JenkinsIntegration
                         .SelectMany(j => j["builds"]);
                     foreach (var j in jobDescription["jobs"])
                     {
-                        long ts = j["lastBuild"]["timestamp"].ToObject<long>();
-                        timestamp = Math.Max(timestamp, ts);
+                        var ts = j["lastBuild"]["timestamp"];
+                        if (ts != null)
+                        {
+                            timestamp = Math.Max(timestamp, ts.ToObject<long>());
+                        }
                     }
                 }
 
-                // else: The server had no response (overloaded?) or a multibranch pipeline is not configured
-                if (jobDescription["lastBuild"] != null)
+                // else: The server had no response (overloaded?)
+                if (timestamp == 0 && jobDescription["lastBuild"] != null && jobDescription["lastBuild"]["timestamp"] != null)
                 {
                     timestamp = jobDescription["lastBuild"]["timestamp"].ToObject<long>();
                 }
@@ -267,13 +270,24 @@ namespace JenkinsIntegration
                             return;
                         }
 
-                        var buildInfo = CreateBuildInfo((JObject)buildDetails);
-                        observer.OnNext(buildInfo);
-
-                        if (buildInfo.Status == BuildInfo.BuildStatus.InProgress)
+                        try
                         {
-                            // Need to make a full requery next time
-                            _lastBuildCache[build.Join().Url].Timestamp = 0;
+                            var buildInfo = CreateBuildInfo((JObject)buildDetails);
+
+                            if (buildInfo != null)
+                            {
+                                observer.OnNext(buildInfo);
+
+                                if (buildInfo.Status == BuildInfo.BuildStatus.InProgress)
+                                {
+                                    // Need to make a full requery next time
+                                    _lastBuildCache[build.Join().Url].Timestamp = 0;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            // Ignore unexpected responses
                         }
                     }
                 }
@@ -297,7 +311,7 @@ namespace JenkinsIntegration
 
         private const string _jenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1],totalCount,failCount,skipCount],building,duration";
 
-        private static BuildInfo CreateBuildInfo(JObject buildDescription)
+        private BuildInfo CreateBuildInfo(JObject buildDescription)
         {
             var idValue = buildDescription["number"].ToObject<string>();
             var statusValue = buildDescription["result"].ToObject<string>();
