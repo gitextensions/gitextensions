@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 using GitCommands;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -11,19 +12,19 @@ namespace GitUI
         private static readonly float[] dashPattern = { 4, 4 };
         private static readonly PointF[] _arrowPoints = new PointF[4];
 
-        public static void DrawRef(RevisionGrid.DrawRefArgs drawRefArgs, ref float offset, string name, Color headColor, RevisionGrid.ArrowType arrowType, bool dashedLine = false, bool fill = false)
+        public static void DrawRef(DataGridViewCellPaintingEventArgs e, bool isRowSelected, Font font, ref float offset, string name, Color headColor, RevisionGrid.ArrowType arrowType, bool dashedLine = false, bool fill = false)
         {
             var textColor = fill ? headColor : Lerp(headColor, Color.White, 0.5f);
 
-            var headBounds = AdjustCellBounds(drawRefArgs.CellBounds, offset);
-            var textSize = drawRefArgs.Graphics.MeasureString(name, drawRefArgs.RefsFont);
+            var headBounds = AdjustCellBounds(e.CellBounds, offset);
+            var textSize = e.Graphics.MeasureString(name, font);
 
             offset += textSize.Width;
             offset += 9;
 
             var extraOffset = DrawRefBackground(
-                drawRefArgs.IsRowSelected,
-                drawRefArgs.Graphics,
+                isRowSelected,
+                e.Graphics,
                 headColor,
                 headBounds.X,
                 headBounds.Y,
@@ -34,7 +35,7 @@ namespace GitUI
             offset += extraOffset;
             headBounds.Offset((int)(extraOffset + 1), 0);
 
-            RevisionGridUtils.DrawColumnTextTruncated(drawRefArgs.Graphics, name, drawRefArgs.RefsFont, textColor, headBounds);
+            RevisionGridUtils.DrawColumnTextTruncated(e.Graphics, name, font, textColor, headBounds);
         }
 
         private static float RoundToEven(float value)
