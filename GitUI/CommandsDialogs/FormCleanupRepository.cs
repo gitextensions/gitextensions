@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using ResourceManager;
-using System.Linq;
 using GitCommands.Utils;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs
 
 
         public FormCleanupRepository(GitUICommands aCommands)
-            : base(aCommands)
+            : base(true, aCommands)
         {
             InitializeComponent(); Translate();
             PreviewOutput.ReadOnly = true;
