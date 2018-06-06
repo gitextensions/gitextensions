@@ -448,7 +448,7 @@ If this is a central repository (bare repository without a working directory):
             quickSearchTimer.Start();
         }
 
-        private void InitiateRefAction(IGitRef[] refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
+        private void InitiateRefAction([CanBeNull] IGitRef[] refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
         {
             if (refs == null || refs.Length < 1)
             {
@@ -777,6 +777,7 @@ If this is a central repository (bare repository without a working directory):
             return found;
         }
 
+        [CanBeNull]
         public GitRevision GetRevision(string guid)
         {
             return Graph.GetRevision(guid);
@@ -854,6 +855,7 @@ If this is a central repository (bare repository without a working directory):
             return index >= 0 && index < Graph.RowCount;
         }
 
+        [CanBeNull]
         private GitRevision GetRevision(int row)
         {
             return Graph.GetRowData(row);
