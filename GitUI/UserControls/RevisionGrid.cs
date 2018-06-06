@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.DirectoryServices;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -65,6 +64,7 @@ namespace GitUI
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
         private readonly NotAGitRepoControl _notAGitRepo;
+        private readonly EmptyRepoControl _emptyRepo;
         private readonly RevisionGridToolTipProvider _toolTipProvider;
         private readonly QuickSearchProvider _quickSearchProvider;
         private readonly IGitRevisionTester _gitRevisionTester;
@@ -139,20 +139,13 @@ namespace GitUI
             _notAGitRepo.Resolved += (s, e) => ForceRefreshRevisions();
             Controls.Add(_notAGitRepo);
 
+
+            _emptyRepo = new EmptyRepoControl { Dock = DockStyle.Fill };
+            Controls.Add(_emptyRepo);
+
             _toolTipProvider = new RevisionGridToolTipProvider(this);
 
             _quickSearchProvider = new QuickSearchProvider(this);
-
-            // TODO expose this string to translation
-            // TODO move all 'empty repo' items into a new user control
-            lblEmptyRepository.Text = @"There are no commits made to this repository yet.
-
-If this is a normal repository, these steps are recommended:
-- Make sure you have a proper .gitignore file in your repository
-- Commit files using commit
-
-If this is a central repository (bare repository without a working directory):
-- Push changes from another repository";
 
             // Parent-child navigation can expect that SetSelectedRevision is always successful since it always uses first-parents
             _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));
@@ -604,12 +597,13 @@ If this is a central repository (bare repository without a working directory):
             base.OnCreateControl();
 
             _isLoading = true;
+
             Error.Visible = false;
-            NoCommits.Visible = false;
+            _emptyRepo.Visible = false;
             _notAGitRepo.Visible = false;
             Graph.Visible = false;
             Loading.Visible = true;
-            Loading.BringToFront();
+            ////Loading.BringToFront();
         }
 
         public new void Load()
@@ -866,7 +860,7 @@ If this is a central repository (bare repository without a working directory):
                 if (!Module.IsValidGitWorkingDir())
                 {
                     Graph.Visible = false;
-                    NoCommits.Visible = false;
+                    _emptyRepo.Visible = false;
                     Loading.Visible = false;
                     _notAGitRepo.Visible = true;
                     _notAGitRepo.Reload();
@@ -874,7 +868,7 @@ If this is a central repository (bare repository without a working directory):
                     return;
                 }
 
-                NoCommits.Visible = false;
+                _emptyRepo.Visible = false;
                 _notAGitRepo.Visible = false;
                 Graph.Visible = true;
                 Graph.BringToFront();
@@ -983,9 +977,8 @@ If this is a central repository (bare repository without a working directory):
                         () =>
                         {
                             Error.Visible = true;
-                            ////Error.BringToFront();
                             _notAGitRepo.Visible = false;
-                            NoCommits.Visible = false;
+                            _emptyRepo.Visible = false;
                             Graph.Visible = false;
                             Loading.Visible = false;
                         })
@@ -1009,8 +1002,7 @@ If this is a central repository (bare repository without a working directory):
                             () =>
                             {
                                 _notAGitRepo.Visible = false;
-                                NoCommits.Visible = true;
-                                ////NoCommits.BringToFront();
+                                _emptyRepo.Visible = !isBare;
                                 Graph.Visible = false;
                                 Loading.Visible = false;
                                 _isRefreshingRevisions = false;
@@ -1781,16 +1773,6 @@ If this is a central repository (bare repository without a working directory):
 
                     return frm.ShowDialog(this) == DialogResult.OK;
                 });
-        }
-
-        private void CommitClick(object sender, EventArgs e)
-        {
-            UICommands.StartCommitDialog(this);
-        }
-
-        private void GitIgnoreClick(object sender, EventArgs e)
-        {
-            UICommands.StartEditGitIgnoreDialog(this, false);
         }
 
         internal void ShowCurrentBranchOnly()

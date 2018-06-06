@@ -351,6 +351,12 @@
     <Compile Include="SplitterManager.cs" />
     <Compile Include="SpellChecker\SpellCheckerHelper.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractor.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\EmptyRepoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\RevisionGridClasses\EmptyRepoControl.Designer.cs">
+      <DependentUpon>EmptyRepoControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\RevisionGridClasses\NotAGitRepoControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1548,6 +1554,9 @@
     <EmbeddedResource Include="CommandsDialogs\FormRevertCommit.resx">
       <DependentUpon>FormRevertCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\RevisionGridClasses\EmptyRepoControl.resx">
+      <DependentUpon>EmptyRepoControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGridClasses\FormRevisionFilter.resx">
       <DependentUpon>FormRevisionFilter.cs</DependentUpon>
