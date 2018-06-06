@@ -760,12 +760,12 @@ namespace GitUI
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
 
-        private System.Windows.Forms.DataGridViewTextBoxColumn MessageDataGridViewColumn;
+        internal System.Windows.Forms.DataGridViewTextBoxColumn MessageDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AvatarColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AuthorDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateDataGridViewColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn IdDataGridViewColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn GraphDataGridViewColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn IsMessageMultilineDataGridViewColumn;
+        internal System.Windows.Forms.DataGridViewTextBoxColumn IdDataGridViewColumn;
+        internal System.Windows.Forms.DataGridViewTextBoxColumn GraphDataGridViewColumn;
+        internal System.Windows.Forms.DataGridViewTextBoxColumn IsMessageMultilineDataGridViewColumn;
     }
 }

@@ -60,6 +60,7 @@ namespace GitUI
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
+        private readonly RevisionGridToolTipProvider _toolTipProvider;
         private readonly QuickSearchProvider _quickSearchProvider;
         private readonly Brush _selectedItemBrush = SystemBrushes.Highlight;
         private readonly IGitRevisionTester _gitRevisionTester;
@@ -132,6 +133,7 @@ namespace GitUI
             InitLayout();
             InitializeComponent();
 
+            _toolTipProvider = new RevisionGridToolTipProvider(this);
             _quickSearchProvider = new QuickSearchProvider(this);
 
             // TODO expose this string to translation
@@ -174,15 +176,15 @@ If this is a central repository (bare repository without a working directory):
 
             Graph.CellPainting += OnGraphCellPainting;
             Graph.CellFormatting += OnGraphCellFormatting;
-            Graph.KeyPress += OnGraphKeyPress;
+            Graph.KeyPress += (_, e) => _quickSearchProvider.OnKeyPress(e);
             Graph.KeyUp += OnGraphKeyUp;
             Graph.KeyDown += OnGraphKeyDown;
             Graph.MouseDown += OnGraphMouseDown;
             Graph.CellMouseDown += OnGraphCellMouseDown;
             Graph.MouseDoubleClick += OnGraphDoubleClick;
             Graph.MouseClick += OnGraphMouseClick;
-            Graph.MouseEnter += OnGraphMouseEnter;
-            Graph.CellMouseMove += OnGraphCellMouseMove;
+            Graph.MouseEnter += (_, e) => _toolTipProvider.OnCellMouseEnter();
+            Graph.CellMouseMove += (_, e) => _toolTipProvider.OnCellMouseMove(e);
 
             showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
 
@@ -244,69 +246,6 @@ If this is a central repository (bare repository without a working directory):
 
         #region ToolTip
 
-        private readonly ToolTip _toolTip = new ToolTip();
-        private readonly Dictionary<Point, bool> _showCellToolTip = new Dictionary<Point, bool>();
-
-        private void OnGraphMouseEnter(object sender, EventArgs e)
-        {
-            _toolTip.Active = false;
-            _toolTip.AutoPopDelay = 32767;
-        }
-
-        private void OnGraphCellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            var revision = Graph.GetRowData(e.RowIndex);
-
-            if (revision == null)
-            {
-                return;
-            }
-
-            string oldTooltip = _toolTip.GetToolTip(Graph);
-
-            string newToolTip;
-            if (e.ColumnIndex == GraphDataGridViewColumn.Index)
-            {
-                newToolTip = Graph.GetLaneInfo(e.RowIndex, e.X, Module);
-            }
-            else if (e.ColumnIndex == IsMessageMultilineDataGridViewColumn.Index)
-            {
-                newToolTip = revision.HasMultiLineMessage ? revision.Body : string.Empty;
-            }
-            else if (e.ColumnIndex == MessageDataGridViewColumn.Index && revision.HasMultiLineMessage)
-            {
-                newToolTip = revision.Body;
-            }
-            else if (_showCellToolTip.TryGetValue(new Point(e.ColumnIndex, e.RowIndex), out var showToolTip) && showToolTip)
-            {
-                newToolTip = e.ColumnIndex == IdDataGridViewColumn.Index
-                             ? revision.Guid
-                             : GetCellText(e.RowIndex, e.ColumnIndex);
-            }
-            else
-            {
-                // no tooltip unless always active or truncated
-                newToolTip = string.Empty;
-            }
-
-            if (newToolTip != oldTooltip)
-            {
-                _toolTip.SetToolTip(Graph, newToolTip);
-            }
-
-            if (!_toolTip.Active)
-            {
-                _toolTip.Active = true;
-            }
-
-            return;
-
-            string GetCellText(int row, int col)
-            {
-                return Graph.Rows[row].Cells[col].FormattedValue?.ToString() ?? "";
-            }
-        }
-
         internal void DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color)
         {
             DrawColumnText(e, text, font, color, RevisionGridUtils.GetCellRectangle(e));
@@ -315,7 +254,7 @@ If this is a central repository (bare repository without a working directory):
         internal void DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds)
         {
             bool truncated = RevisionGridUtils.DrawColumnTextTruncated(e.Graphics, text, font, color, bounds);
-            _showCellToolTip[new Point(e.ColumnIndex, e.RowIndex)] = truncated;
+            _toolTipProvider.SetTruncation(e, truncated);
         }
 
         #endregion
@@ -654,7 +593,7 @@ If this is a central repository (bare repository without a working directory):
 
             base.Refresh();
 
-            _showCellToolTip.Clear();
+            _toolTipProvider.Clear();
 
             Graph.Refresh();
         }
@@ -1313,11 +1252,6 @@ If this is a central repository (bare repository without a working directory):
             {
                 Refresh();
             }
-        }
-
-        private void OnGraphKeyPress(object sender, KeyPressEventArgs e)
-        {
-            _quickSearchProvider.OnKeyPress(e);
         }
 
         private void OnGraphKeyDown(object sender, KeyEventArgs e)
