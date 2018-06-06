@@ -9,7 +9,7 @@ using GitCommands;
 namespace ResourceManager
 {
     /// <summary>Provides translation and hotkey plumbing for GitEx <see cref="UserControl"/>s.</summary>
-    public abstract class GitExtensionsControl : UserControl, ITranslate
+    public class GitExtensionsControl : UserControl, ITranslate
     {
         protected GitExtensionsControl()
         {
