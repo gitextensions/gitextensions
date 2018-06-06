@@ -133,6 +133,17 @@ namespace GitUI
             InitLayout();
             InitializeComponent();
 
+            // TODO expose this string to translation
+            // TODO move all 'empty repo' items into a new user control
+            lblEmptyRepository.Text = @"There are no commits made to this repository yet.
+
+If this is a normal repository, these steps are recommended:
+- Make sure you have a proper .gitignore file in your repository
+- Commit files using commit
+
+If this is a central repository (bare repository without a working directory):
+- Push changes from another repository";
+
             // Parent-child navigation can expect that SetSelectedRevision is always successfull since it always uses first-parents
             _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));
             _revisionHighlighting = new AuthorEmailBasedRevisionHighlighting();

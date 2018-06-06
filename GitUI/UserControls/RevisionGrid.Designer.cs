@@ -78,7 +78,7 @@ namespace GitUI
             this.label2 = new System.Windows.Forms.Label();
             this.GitIgnore = new System.Windows.Forms.Button();
             this.Commit = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblEmptyRepository = new System.Windows.Forms.Label();
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
             this.quickSearchTimer = new System.Windows.Forms.Timer(this.components);
@@ -524,7 +524,7 @@ namespace GitUI
             this.NoCommits.Controls.Add(this.NoGit);
             this.NoCommits.Controls.Add(this.GitIgnore);
             this.NoCommits.Controls.Add(this.Commit);
-            this.NoCommits.Controls.Add(this.label1);
+            this.NoCommits.Controls.Add(this.lblEmptyRepository);
             this.NoCommits.Dock = System.Windows.Forms.DockStyle.Fill;
             this.NoCommits.Location = new System.Drawing.Point(0, 0);
             this.NoCommits.Name = "NoCommits";
@@ -592,13 +592,12 @@ namespace GitUI
             this.Commit.Click += new System.EventHandler(this.CommitClick);
             // 
             // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(393, 120);
-            this.label1.TabIndex = 0;
-            this.label1.Text = resources.GetString("label1.Text");
+            //
+            this.lblEmptyRepository.AutoSize = true;
+            this.lblEmptyRepository.Location = new System.Drawing.Point(15, 10);
+            this.lblEmptyRepository.Name = "lblEmptyRepository";
+            this.lblEmptyRepository.Size = new System.Drawing.Size(393, 120);
+            this.lblEmptyRepository.TabIndex = 0;
             // 
             // Error
             // 
@@ -704,7 +703,7 @@ namespace GitUI
         private System.Windows.Forms.Timer quickSearchTimer;
         private System.Windows.Forms.Panel NoCommits;
         private System.Windows.Forms.Panel NoGit;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblEmptyRepository;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button Commit;
         private System.Windows.Forms.Button GitIgnore;
