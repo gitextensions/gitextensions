@@ -1368,11 +1368,12 @@ If this is a central repository (bare repository without a working directory):
             {
                 cellBackgroundBrush = _selectedItemBrush;
             }
-            else if (ShouldHighlightRevisionByAuthor(revision))
+            else if (AppSettings.HighlightAuthoredRevisions &&
+                     AuthorEmailEqualityComparer.Instance.Equals(revision.AuthorEmail, _revisionHighlighting.AuthorEmailToHighlight))
             {
                 cellBackgroundBrush = _authoredRevisionsBrush;
             }
-            else if (ShouldRenderAlternateBackColor(e.RowIndex))
+            else if (AppSettings.RevisionGraphDrawAlternateBackColor && e.RowIndex % 2 == 0)
             {
                 // TODO if default background is nearly black, we should make it lighter instead
                 cellBackgroundBrush = new SolidBrush(ColorHelper.MakeColorDarker(e.CellStyle.BackColor));
@@ -1731,18 +1732,6 @@ If this is a central repository (bare repository without a working directory):
         }
 
         #endregion
-
-        private bool ShouldHighlightRevisionByAuthor(GitRevision revision)
-        {
-            return AppSettings.HighlightAuthoredRevisions &&
-                   AuthorEmailEqualityComparer.Instance.Equals(revision.AuthorEmail,
-                                                               _revisionHighlighting.AuthorEmailToHighlight);
-        }
-
-        private static bool ShouldRenderAlternateBackColor(int rowIndex)
-        {
-            return AppSettings.RevisionGraphDrawAlternateBackColor && rowIndex % 2 == 0;
-        }
 
         private static float DrawRef(DrawRefArgs drawRefArgs, float offset, string name, Color headColor, ArrowType arrowType, bool dashedLine = false, bool fill = false)
         {
