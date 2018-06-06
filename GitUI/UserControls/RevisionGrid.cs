@@ -60,6 +60,7 @@ namespace GitUI
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
+        private readonly QuickSearchProvider _quickSearchProvider;
         private readonly Brush _selectedItemBrush = SystemBrushes.Highlight;
         private readonly IGitRevisionTester _gitRevisionTester;
         private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
@@ -70,15 +71,12 @@ namespace GitUI
 
         private RefFilterOptions _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
         private IEnumerable<IGitRef> _latestRefs = Enumerable.Empty<IGitRef>();
-        private string _lastQuickSearchString = string.Empty;
         private bool _initialLoad = true;
 
         /// <summary>Tracks status for the artificial commits while the revision graph is reloading</summary>
         private IReadOnlyList<GitItemStatus> _artificialStatus;
         private SolidBrush _authoredRevisionsBrush;
         private string _initialSelectedRevision;
-        private Label _quickSearchLabel;
-        private string _quickSearchString = "";
         private RevisionReader _revisionReader;
         private IDisposable _revisionSubscription;
         private GitRevision _baseCommitToCompare;
@@ -134,6 +132,8 @@ namespace GitUI
             InitLayout();
             InitializeComponent();
 
+            _quickSearchProvider = new QuickSearchProvider(this);
+
             // TODO expose this string to translation
             // TODO move all 'empty repo' items into a new user control
             lblEmptyRepository.Text = @"There are no commits made to this repository yet.
@@ -187,8 +187,6 @@ If this is a central repository (bare repository without a working directory):
             showMergeCommitsToolStripMenuItem.Checked = AppSettings.ShowMergeCommits;
 
             SetShowBranches();
-
-            quickSearchTimer.Tick += QuickSearchTimerTick;
 
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             HotkeysEnabled = true;
@@ -405,48 +403,9 @@ If this is a central repository (bare repository without a working directory):
             _isLoading = e.IsLoading;
         }
 
-        private void ShowQuickSearchString()
-        {
-            if (_quickSearchLabel == null)
-            {
-                _quickSearchLabel
-                    = new Label
-                    {
-                        Location = new Point(10, 10),
-                        BorderStyle = BorderStyle.FixedSingle,
-                        ForeColor = SystemColors.InfoText,
-                        BackColor = SystemColors.Info
-                    };
-                Controls.Add(_quickSearchLabel);
-            }
+        #region Quick search
 
-            _quickSearchLabel.Visible = true;
-            _quickSearchLabel.BringToFront();
-            _quickSearchLabel.Text = _quickSearchString;
-            _quickSearchLabel.AutoSize = true;
-        }
-
-        private void HideQuickSearchString()
-        {
-            if (_quickSearchLabel != null)
-            {
-                _quickSearchLabel.Visible = false;
-            }
-        }
-
-        private void QuickSearchTimerTick(object sender, EventArgs e)
-        {
-            quickSearchTimer.Stop();
-            _quickSearchString = "";
-            HideQuickSearchString();
-        }
-
-        private void RestartQuickSearchTimer()
-        {
-            quickSearchTimer.Stop();
-            quickSearchTimer.Interval = AppSettings.RevisionGridQuickSearchTimeout;
-            quickSearchTimer.Start();
-        }
+        #endregion
 
         private void InitiateRefAction([CanBeNull] IGitRef[] refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
         {
@@ -509,82 +468,82 @@ If this is a central repository (bare repository without a working directory):
             OnToggleBranchTreePanelRequested();
         }
 
-        private void FindNextMatch(int startIndex, string searchString, bool reverse)
+        internal void FindNextMatch(int startIndex, string searchString, bool reverse)
         {
             if (Graph.RowCount == 0)
             {
                 return;
             }
 
-            int? searchResult = reverse
-                ? SearchInReverseOrder(startIndex, searchString)
-                : SearchForward(startIndex, searchString);
+            var result = reverse
+                ? SearchBackwards()
+                : SearchForward();
 
-            if (searchResult.HasValue)
+            if (result.HasValue)
             {
                 Graph.ClearSelection();
-                Graph.Rows[searchResult.Value].Selected = true;
+                Graph.Rows[result.Value].Selected = true;
 
-                Graph.CurrentCell = Graph.Rows[searchResult.Value].Cells[1];
-            }
-        }
-
-        private int? SearchForward(int startIndex, string searchString)
-        {
-            // Check for out of bounds roll over if required
-            int index;
-            if (startIndex < 0 || startIndex >= Graph.RowCount)
-            {
-                startIndex = 0;
+                Graph.CurrentCell = Graph.Rows[result.Value].Cells[1];
             }
 
-            for (index = startIndex; index < Graph.RowCount; ++index)
+            int? SearchForward()
             {
-                if (_gitRevisionTester.Matches(GetRevision(index), searchString))
+                // Check for out of bounds roll over if required
+                int index;
+                if (startIndex < 0 || startIndex >= Graph.RowCount)
                 {
-                    return index;
+                    startIndex = 0;
                 }
-            }
 
-            // We didn't find it so start searching from the top
-            for (index = 0; index < startIndex; ++index)
-            {
-                if (_gitRevisionTester.Matches(GetRevision(index), searchString))
+                for (index = startIndex; index < Graph.RowCount; ++index)
                 {
-                    return index;
+                    if (_gitRevisionTester.Matches(GetRevision(index), searchString))
+                    {
+                        return index;
+                    }
                 }
-            }
 
-            return null;
-        }
-
-        private int? SearchInReverseOrder(int startIndex, string searchString)
-        {
-            // Check for out of bounds roll over if required
-            int index;
-            if (startIndex < 0 || startIndex >= Graph.RowCount)
-            {
-                startIndex = Graph.RowCount - 1;
-            }
-
-            for (index = startIndex; index >= 0; --index)
-            {
-                if (_gitRevisionTester.Matches(GetRevision(index), searchString))
+                // We didn't find it so start searching from the top
+                for (index = 0; index < startIndex; ++index)
                 {
-                    return index;
+                    if (_gitRevisionTester.Matches(GetRevision(index), searchString))
+                    {
+                        return index;
+                    }
                 }
+
+                return null;
             }
 
-            // We didn't find it so start searching from the bottom
-            for (index = Graph.RowCount - 1; index > startIndex; --index)
+            int? SearchBackwards()
             {
-                if (_gitRevisionTester.Matches(GetRevision(index), searchString))
+                // Check for out of bounds roll over if required
+                int index;
+                if (startIndex < 0 || startIndex >= Graph.RowCount)
                 {
-                    return index;
+                    startIndex = Graph.RowCount - 1;
                 }
-            }
 
-            return null;
+                for (index = startIndex; index >= 0; --index)
+                {
+                    if (_gitRevisionTester.Matches(GetRevision(index), searchString))
+                    {
+                        return index;
+                    }
+                }
+
+                // We didn't find it so start searching from the bottom
+                for (index = Graph.RowCount - 1; index > startIndex; --index)
+                {
+                    if (_gitRevisionTester.Matches(GetRevision(index), searchString))
+                    {
+                        return index;
+                    }
+                }
+
+                return null;
+            }
         }
 
         public void DisableContextMenu()
@@ -1358,44 +1317,7 @@ If this is a central repository (bare repository without a working directory):
 
         private void OnGraphKeyPress(object sender, KeyPressEventArgs e)
         {
-            var curIndex = Graph.SelectedRows.Count > 0
-                ? Graph.SelectedRows[0].Index
-                : -1;
-
-            curIndex = curIndex >= 0 ? curIndex : 0;
-
-            if (e.KeyChar == 8 && _quickSearchString.Length > 1)
-            {
-                // backspace
-                RestartQuickSearchTimer();
-
-                _quickSearchString = _quickSearchString.Substring(0, _quickSearchString.Length - 1);
-
-                FindNextMatch(curIndex, _quickSearchString, false);
-                _lastQuickSearchString = _quickSearchString;
-
-                e.Handled = true;
-                ShowQuickSearchString();
-            }
-            else if (!char.IsControl(e.KeyChar))
-            {
-                RestartQuickSearchTimer();
-
-                // The code below is meant to fix the weird keyvalues when pressing keys e.g. ".".
-                _quickSearchString = string.Concat(_quickSearchString, char.ToLower(e.KeyChar));
-
-                FindNextMatch(curIndex, _quickSearchString, false);
-                _lastQuickSearchString = _quickSearchString;
-
-                e.Handled = true;
-                ShowQuickSearchString();
-            }
-            else
-            {
-                _quickSearchString = "";
-                HideQuickSearchString();
-                e.Handled = false;
-            }
+            _quickSearchProvider.OnKeyPress(e);
         }
 
         private void OnGraphKeyDown(object sender, KeyEventArgs e)
@@ -3046,28 +2968,6 @@ If this is a central repository (bare repository without a working directory):
             return ExecuteCommand((int)cmd);
         }
 
-        private void NextQuickSearch(bool down)
-        {
-            var curIndex = -1;
-            if (Graph.SelectedRows.Count > 0)
-            {
-                curIndex = Graph.SelectedRows[0].Index;
-            }
-
-            RestartQuickSearchTimer();
-
-            bool reverse = !down;
-            var nextIndex = 0;
-            if (curIndex >= 0)
-            {
-                nextIndex = reverse ? curIndex - 1 : curIndex + 1;
-            }
-
-            _quickSearchString = _lastQuickSearchString;
-            FindNextMatch(nextIndex, _quickSearchString, reverse);
-            ShowQuickSearchString();
-        }
-
         private void ToggleHighlightSelectedBranch()
         {
             if (_revisionReader != null)
@@ -3458,8 +3358,8 @@ If this is a central repository (bare repository without a working directory):
                 case Commands.GoToParent: goToParentToolStripMenuItem_Click(); break;
                 case Commands.GoToChild: goToChildToolStripMenuItem_Click(); break;
                 case Commands.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
-                case Commands.NextQuickSearch: NextQuickSearch(true); break;
-                case Commands.PrevQuickSearch: NextQuickSearch(false); break;
+                case Commands.NextQuickSearch: _quickSearchProvider.NextResult(down: true); break;
+                case Commands.PrevQuickSearch: _quickSearchProvider.NextResult(down: false); break;
                 case Commands.NavigateBackward: NavigateBackward(); break;
                 case Commands.NavigateForward: NavigateForward(); break;
                 case Commands.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(null, null); break;

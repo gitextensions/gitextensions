@@ -81,7 +81,6 @@ namespace GitUI
             this.lblEmptyRepository = new System.Windows.Forms.Label();
             this.Error = new System.Windows.Forms.PictureBox();
             this.Loading = new System.Windows.Forms.PictureBox();
-            this.quickSearchTimer = new System.Windows.Forms.Timer(this.components);
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -630,10 +629,6 @@ namespace GitUI
             this.Loading.TabStop = false;
             this.Loading.Visible = false;
             // 
-            // quickSearchTimer
-            // 
-            this.quickSearchTimer.Interval = 500;
-            // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
@@ -705,10 +700,9 @@ namespace GitUI
 
         public System.Windows.Forms.PictureBox Error;
 
-        private DvcsGraph Graph;
+        internal DvcsGraph Graph;
         private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.Timer SelectionTimer;
-        private System.Windows.Forms.Timer quickSearchTimer;
         private System.Windows.Forms.Panel NoCommits;
         private System.Windows.Forms.Panel NoGit;
         private System.Windows.Forms.Label lblEmptyRepository;
