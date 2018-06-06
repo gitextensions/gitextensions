@@ -11,7 +11,7 @@ namespace GitUI
         private static readonly float[] dashPattern = { 4, 4 };
         private static readonly PointF[] _arrowPoints = new PointF[4];
 
-        public static float DrawRef(RevisionGrid.DrawRefArgs drawRefArgs, float offset, string name, Color headColor, RevisionGrid.ArrowType arrowType, bool dashedLine = false, bool fill = false)
+        public static void DrawRef(RevisionGrid.DrawRefArgs drawRefArgs, ref float offset, string name, Color headColor, RevisionGrid.ArrowType arrowType, bool dashedLine = false, bool fill = false)
         {
             var textColor = fill ? headColor : Lerp(headColor, Color.White, 0.5f);
 
@@ -35,8 +35,6 @@ namespace GitUI
             headBounds.Offset((int)(extraOffset + 1), 0);
 
             RevisionGridUtils.DrawColumnTextTruncated(drawRefArgs.Graphics, name, drawRefArgs.RefsFont, textColor, headBounds);
-
-            return offset;
         }
 
         private static float RoundToEven(float value)
