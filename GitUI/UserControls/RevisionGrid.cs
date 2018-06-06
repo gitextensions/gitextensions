@@ -307,12 +307,9 @@ If this is a central repository (bare repository without a working directory):
         private void Loading_Paint(object sender, PaintEventArgs e)
         {
             // If our loading state has changed since the last paint, update it.
-            if (Loading != null)
+            if (Loading != null && Loading.Visible != _isLoading)
             {
-                if (Loading.Visible != _isLoading)
-                {
-                    Loading.Visible = _isLoading;
-                }
+                Loading.Visible = _isLoading;
             }
         }
 
@@ -633,7 +630,8 @@ If this is a central repository (bare repository without a working directory):
         // Returns whether the required revision was found and selected
         private bool InternalSetSelectedRevision(string revision)
         {
-            int index = FindRevisionIndex(revision);
+            var index = FindRevisionIndex(revision);
+
             if (index >= 0 && index < Graph.RowCount)
             {
                 SetSelectedIndex(index);
@@ -994,7 +992,10 @@ If this is a central repository (bare repository without a working directory):
                     .FileAndForget();
 
                 DisposeRevisionReader();
-                this.InvokeAsync(() => throw new AggregateException(exception)).FileAndForget();
+
+                // Rethrow the exception on the UI thread
+                this.InvokeAsync(() => throw new AggregateException(exception))
+                    .FileAndForget();
             }
 
             void OnRevisionReadCompleted()
@@ -1102,7 +1103,7 @@ If this is a central repository (bare repository without a working directory):
 
         private void SelectInitialRevision()
         {
-            string filtredCurrentCheckout = _filteredCurrentCheckout;
+            string filteredCurrentCheckout = _filteredCurrentCheckout;
             string[] lastSelectedRows = _lastSelectedRows ?? Array.Empty<string>();
 
             // filter out all unavailable commits from LastSelectedRows.
@@ -1125,18 +1126,18 @@ If this is a central repository (bare repository without a working directory):
                 }
                 else
                 {
-                    SetSelectedRevision(filtredCurrentCheckout);
+                    SetSelectedRevision(filteredCurrentCheckout);
                 }
             }
 
-            if (string.IsNullOrEmpty(filtredCurrentCheckout))
+            if (string.IsNullOrEmpty(filteredCurrentCheckout))
             {
                 return;
             }
 
-            if (!Graph.IsRevisionRelative(filtredCurrentCheckout))
+            if (!Graph.IsRevisionRelative(filteredCurrentCheckout))
             {
-                HighlightBranch(filtredCurrentCheckout);
+                HighlightBranch(filteredCurrentCheckout);
             }
         }
 
@@ -1920,7 +1921,7 @@ If this is a central repository (bare repository without a working directory):
                     mergeBranchDropDown.Items.Add(toolStripItem);
                     if (_rebaseOnTopOf == null)
                     {
-                        _rebaseOnTopOf = toolStripItem.Tag as string;
+                        _rebaseOnTopOf = (string)toolStripItem.Tag;
                     }
                 }
             }
@@ -1954,14 +1955,12 @@ If this is a central repository (bare repository without a working directory):
                 {
                     if (head.CompleteName != currentBranchRef)
                     {
-                        toolStripItem = new ToolStripMenuItem(head.Name);
-                        toolStripItem.Tag = head.Name;
+                        toolStripItem = new ToolStripMenuItem(head.Name) { Tag = head.Name };
                         toolStripItem.Click += ToolStripItemClickDeleteBranch;
                         deleteBranchDropDown.Items.Add(toolStripItem); // Add to delete branch
                     }
 
-                    toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Tag = head.Name;
+                    toolStripItem = new ToolStripMenuItem(head.Name) { Tag = head.Name };
                     toolStripItem.Click += ToolStripItemClickRenameBranch;
                     renameDropDown.Items.Add(toolStripItem); // Add to rename branch
                 }
