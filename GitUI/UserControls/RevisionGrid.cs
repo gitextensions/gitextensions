@@ -59,6 +59,7 @@ namespace GitUI
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
         private readonly BareRepoControl _bareRepo;
         private readonly EmptyRepoControl _emptyRepo;
+        private readonly ErrorControl _errorImage;
         private readonly RevisionGridToolTipProvider _toolTipProvider;
         private readonly QuickSearchProvider _quickSearchProvider;
         private readonly IGitRevisionTester _gitRevisionTester;
@@ -134,6 +135,9 @@ namespace GitUI
 
             _emptyRepo = new EmptyRepoControl { Dock = DockStyle.Fill };
             Controls.Add(_emptyRepo);
+
+            _errorImage = new ErrorControl { Dock = DockStyle.Fill };
+            Controls.Add(_errorImage);
 
             _toolTipProvider = new RevisionGridToolTipProvider(this);
 
@@ -590,7 +594,7 @@ namespace GitUI
 
             _isLoading = true;
 
-            Error.Visible = false;
+            _errorImage.Visible = false;
             _bareRepo.Visible = false;
             _emptyRepo.Visible = false;
             Graph.Visible = false;
@@ -847,7 +851,7 @@ namespace GitUI
                 _currentCheckoutParents = null;
                 _superprojectCurrentCheckout = newSuperProjectInfo;
                 Graph.Clear();
-                Error.Visible = false;
+                _errorImage.Visible = false;
                 _bareRepo.Visible = false;
                 _emptyRepo.Visible = false;
                 Graph.Visible = true;
@@ -943,8 +947,8 @@ namespace GitUI
             }
             catch (Exception)
             {
-                Error.Visible = true;
-                Error.BringToFront();
+                _errorImage.Visible = true;
+                _errorImage.BringToFront();
                 throw;
             }
 
@@ -956,7 +960,7 @@ namespace GitUI
                 this.InvokeAsync(
                         () =>
                         {
-                            Error.Visible = true;
+                            _errorImage.Visible = true;
                             _bareRepo.Visible = false;
                             _emptyRepo.Visible = false;
                             Graph.Visible = false;
