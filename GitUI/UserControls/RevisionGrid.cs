@@ -1441,17 +1441,17 @@ If this is a central repository (bare repository without a working directory):
                 {
                     if (spi.Conflict_Base == revision.Guid)
                     {
-                        offset = RevisionGridRefRenderer.DrawRef(drawRefArgs, offset, "Base", Color.OrangeRed, ArrowType.NotFilled);
+                        RevisionGridRefRenderer.DrawRef(drawRefArgs, ref offset, "Base", Color.OrangeRed, ArrowType.NotFilled);
                     }
 
                     if (spi.Conflict_Local == revision.Guid)
                     {
-                        offset = RevisionGridRefRenderer.DrawRef(drawRefArgs, offset, "Local", Color.OrangeRed, ArrowType.NotFilled);
+                        RevisionGridRefRenderer.DrawRef(drawRefArgs, ref offset, "Local", Color.OrangeRed, ArrowType.NotFilled);
                     }
 
                     if (spi.Conflict_Remote == revision.Guid)
                     {
-                        offset = RevisionGridRefRenderer.DrawRef(drawRefArgs, offset, "Remote", Color.OrangeRed, ArrowType.NotFilled);
+                        RevisionGridRefRenderer.DrawRef(drawRefArgs, ref offset, "Remote", Color.OrangeRed, ArrowType.NotFilled);
                     }
                 }
 
@@ -1503,7 +1503,7 @@ If this is a central repository (bare repository without a working directory):
                             name = name + "  " + MultilineMessageIndicator;
                         }
 
-                        offset = RevisionGridRefRenderer.DrawRef(drawRefArgs, offset, name, headColor, arrowType, superprojectRef != null, true);
+                        RevisionGridRefRenderer.DrawRef(drawRefArgs, ref offset, name, headColor, arrowType, superprojectRef != null, true);
                     }
                 }
 
@@ -1520,7 +1520,7 @@ If this is a central repository (bare repository without a working directory):
                             : ArrowType.None;
                     drawRefArgs.RefsFont = gitRef.Selected ? rowFont : _refsFont;
 
-                    offset = RevisionGridRefRenderer.DrawRef(drawRefArgs, offset, gitRefName, headColor, arrowType, true);
+                    RevisionGridRefRenderer.DrawRef(drawRefArgs, ref offset, gitRefName, headColor, arrowType, true);
                 }
 
                 var text = (string)e.FormattedValue;
@@ -1532,7 +1532,7 @@ If this is a central repository (bare repository without a working directory):
                     // Get offset for "count" text
                     offset += 1 + drawRefArgs.Graphics.MeasureString(text, rowFont).Width;
 
-                    RevisionGridRefRenderer.DrawRef(drawRefArgs, offset, revision.Subject, AppSettings.OtherTagColor, ArrowType.None, false, true);
+                    RevisionGridRefRenderer.DrawRef(drawRefArgs, ref offset, revision.Subject, AppSettings.OtherTagColor, ArrowType.None, false, true);
                 }
             }
             else if (columnIndex == AuthorDataGridViewColumn.Index)
