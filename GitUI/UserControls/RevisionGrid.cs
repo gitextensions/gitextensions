@@ -144,7 +144,7 @@ If this is a normal repository, these steps are recommended:
 If this is a central repository (bare repository without a working directory):
 - Push changes from another repository";
 
-            // Parent-child navigation can expect that SetSelectedRevision is always successfull since it always uses first-parents
+            // Parent-child navigation can expect that SetSelectedRevision is always successful since it always uses first-parents
             _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));
             _revisionHighlighting = new AuthorEmailBasedRevisionHighlighting();
             _indexWatcher = new Lazy<IndexWatcher>(() => new IndexWatcher(UICommandsSource));
@@ -194,7 +194,7 @@ If this is a central repository (bare repository without a working directory):
 
             Graph.Loading += GraphLoading;
 
-            // Allow to drop patch file on revisiongrid
+            // Allow to drop patch file on revision grid
             Graph.DragEnter += GraphDragEnter;
             Graph.DragDrop += GraphDragDrop;
             Graph.AllowDrop = true;
