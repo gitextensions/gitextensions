@@ -1769,8 +1769,12 @@ If this is a central repository (bare repository without a working directory):
 
         private static float RoundToEven(float value)
         {
-            int result = ((int)value / 2) * 2;
-            return result < value ? result + 2 : result;
+            var result = (int)value;
+            result <<= 1;
+            result >>= 1;
+            return result < value
+                ? result + 2
+                : result;
         }
 
         private enum ArrowType
