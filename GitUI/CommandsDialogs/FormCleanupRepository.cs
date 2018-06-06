@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _reallyCleanupQuestionCaption = new TranslationString("Cleanup");
 
         public FormCleanupRepository(GitUICommands commands)
-            : base(commands)
+            : base(true, commands)
         {
             InitializeComponent();
             Translate();
