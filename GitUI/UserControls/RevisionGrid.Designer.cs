@@ -142,7 +142,7 @@ namespace GitUI
             // 
             this.GraphDataGridViewColumn.Frozen = true;
             this.GraphDataGridViewColumn.HeaderText = "";
-            this.GraphDataGridViewColumn.Name = "Graph";
+            this.GraphDataGridViewColumn.Name = "GraphColumn";
             this.GraphDataGridViewColumn.ReadOnly = true;
             this.GraphDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
