@@ -21,7 +21,6 @@ namespace GitUI
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGrid));
             this.Graph = new GitUI.RevisionGridClasses.DvcsGraph();
             this.GraphDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -158,8 +157,6 @@ namespace GitUI
             //
             // Graph
             // 
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.GraphDataGridViewColumn.DefaultCellStyle = dataGridViewCellStyle3;
             this.GraphDataGridViewColumn.Frozen = true;
             this.GraphDataGridViewColumn.HeaderText = "";
             this.GraphDataGridViewColumn.Name = "Graph";
