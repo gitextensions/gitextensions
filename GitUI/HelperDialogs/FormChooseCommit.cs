@@ -24,7 +24,7 @@ namespace GitUI.HelperDialogs
             : this(commands)
         {
             revisionGrid.MultiSelect = false;
-            revisionGrid.ShowUncommitedChangesIfPossible = showArtificial && !revisionGrid.Module.IsBareRepository();
+            revisionGrid.ShowUncommittedChangesIfPossible = showArtificial && !revisionGrid.Module.IsBareRepository();
 
             if (!string.IsNullOrEmpty(preselectCommit))
             {

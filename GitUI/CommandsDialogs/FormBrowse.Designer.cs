@@ -634,7 +634,7 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.RevisionGrid.Name = "RevisionGrid";
             this.RevisionGrid.RevisionGraphDrawStyle = GitUI.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
-            this.RevisionGrid.ShowUncommitedChangesIfPossible = true;
+            this.RevisionGrid.ShowUncommittedChangesIfPossible = true;
             this.RevisionGrid.Size = new System.Drawing.Size(380, 209);
             this.RevisionGrid.TabIndex = 0;
             // 
