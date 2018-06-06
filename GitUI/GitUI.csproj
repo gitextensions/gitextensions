@@ -351,6 +351,12 @@
     <Compile Include="SplitterManager.cs" />
     <Compile Include="SpellChecker\SpellCheckerHelper.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractor.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\BareRepoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\RevisionGridClasses\BareRepoControl.Designer.cs">
+      <DependentUpon>BareRepoControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\RevisionGridClasses\EmptyRepoControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1349,6 +1355,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RemotesComboboxControl.resx">
       <DependentUpon>RemotesComboboxControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\RevisionGridClasses\BareRepoControl.resx">
+      <DependentUpon>BareRepoControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGridClasses\DvcsGraph.resx">
       <DependentUpon>DvcsGraph.cs</DependentUpon>

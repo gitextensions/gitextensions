@@ -64,6 +64,7 @@ namespace GitUI
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
         private readonly NotAGitRepoControl _notAGitRepo;
+        private readonly BareRepoControl _bareRepo;
         private readonly EmptyRepoControl _emptyRepo;
         private readonly RevisionGridToolTipProvider _toolTipProvider;
         private readonly QuickSearchProvider _quickSearchProvider;
@@ -139,6 +140,8 @@ namespace GitUI
             _notAGitRepo.Resolved += (s, e) => ForceRefreshRevisions();
             Controls.Add(_notAGitRepo);
 
+            _bareRepo = new BareRepoControl { Dock = DockStyle.Fill };
+            Controls.Add(_bareRepo);
 
             _emptyRepo = new EmptyRepoControl { Dock = DockStyle.Fill };
             Controls.Add(_emptyRepo);
@@ -599,6 +602,7 @@ namespace GitUI
             _isLoading = true;
 
             Error.Visible = false;
+            _bareRepo.Visible = false;
             _emptyRepo.Visible = false;
             _notAGitRepo.Visible = false;
             Graph.Visible = false;
@@ -860,6 +864,7 @@ namespace GitUI
                 if (!Module.IsValidGitWorkingDir())
                 {
                     Graph.Visible = false;
+                    _bareRepo.Visible = false;
                     _emptyRepo.Visible = false;
                     Loading.Visible = false;
                     _notAGitRepo.Visible = true;
@@ -868,6 +873,7 @@ namespace GitUI
                     return;
                 }
 
+                _bareRepo.Visible = false;
                 _emptyRepo.Visible = false;
                 _notAGitRepo.Visible = false;
                 Graph.Visible = true;
@@ -978,6 +984,7 @@ namespace GitUI
                         {
                             Error.Visible = true;
                             _notAGitRepo.Visible = false;
+                            _bareRepo.Visible = false;
                             _emptyRepo.Visible = false;
                             Graph.Visible = false;
                             Loading.Visible = false;
@@ -997,11 +1004,14 @@ namespace GitUI
 
                 if (_revisionReader.RevisionCount == 0 && !FilterIsApplied(true))
                 {
+                    var isBare = Module.IsBareRepository();
+
                     // This has to happen on the UI thread
                     this.InvokeAsync(
                             () =>
                             {
                                 _notAGitRepo.Visible = false;
+                                _bareRepo.Visible = isBare;
                                 _emptyRepo.Visible = !isBare;
                                 Graph.Visible = false;
                                 Loading.Visible = false;
