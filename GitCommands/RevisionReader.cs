@@ -201,7 +201,7 @@ namespace GitCommands
 
             if (selectedRef != null)
             {
-                selectedRef.Selected = true;
+                selectedRef.IsSelected = true;
 
                 var localConfigFile = module.LocalConfigFile;
                 var selectedHeadMergeSource = refs.FirstOrDefault(
@@ -211,7 +211,7 @@ namespace GitCommands
 
                 if (selectedHeadMergeSource != null)
                 {
-                    selectedHeadMergeSource.SelectedHeadMergeSource = true;
+                    selectedHeadMergeSource.IsSelectedHeadMergeSource = true;
                 }
             }
         }

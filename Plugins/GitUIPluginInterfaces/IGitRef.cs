@@ -20,8 +20,8 @@
         IGitModule Module { get; }
         string Remote { get; }
         string TrackingRemote { get; set; }
-        bool Selected { get; set; }
-        bool SelectedHeadMergeSource { get; set; }
+        bool IsSelected { get; set; }
+        bool IsSelectedHeadMergeSource { get; set; }
 
         /// <summary>
         /// This method is a faster than the property above. The property reads the config file

@@ -1471,12 +1471,12 @@ If this is a central repository (bare repository without a working directory):
 
                         var headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
 
-                        var arrowType = gitRef.Selected
+                        var arrowType = gitRef.IsSelected
                             ? ArrowType.Filled
-                            : gitRef.SelectedHeadMergeSource
+                            : gitRef.IsSelectedHeadMergeSource
                                 ? ArrowType.NotFilled
                                 : ArrowType.None;
-                        var font = gitRef.Selected ? rowFont : _normalFont;
+                        var font = gitRef.IsSelected ? rowFont : _normalFont;
 
                         var superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
                         if (superprojectRef != null)
@@ -1503,12 +1503,12 @@ If this is a central repository (bare repository without a working directory):
                     var headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
                     var gitRefName = i < (MaxSuperprojectRefs - 1) ? gitRef.Name : "…";
 
-                    var arrowType = gitRef.Selected
+                    var arrowType = gitRef.IsSelected
                         ? ArrowType.Filled
-                        : gitRef.SelectedHeadMergeSource
+                        : gitRef.IsSelectedHeadMergeSource
                             ? ArrowType.NotFilled
                             : ArrowType.None;
-                    var font = gitRef.Selected ? rowFont : _normalFont;
+                    var font = gitRef.IsSelected ? rowFont : _normalFont;
 
                     RevisionGridRefRenderer.DrawRef(e, isRowSelected, font, ref offset, gitRefName, headColor, arrowType, dashedLine: true);
                 }
@@ -1568,12 +1568,12 @@ If this is a central repository (bare repository without a working directory):
                     return 0;
                 }
 
-                if (gitRef.Selected)
+                if (gitRef.IsSelected)
                 {
                     return 1;
                 }
 
-                if (gitRef.SelectedHeadMergeSource)
+                if (gitRef.IsSelectedHeadMergeSource)
                 {
                     return 2;
                 }

@@ -23,7 +23,7 @@ namespace GitCommands
         {
             Module = module;
             Guid = guid;
-            Selected = false;
+            IsSelected = false;
             CompleteName = completeName;
             Remote = remote;
 
@@ -41,8 +41,8 @@ namespace GitCommands
         }
 
         public string CompleteName { get; }
-        public bool Selected { get; set; }
-        public bool SelectedHeadMergeSource { get; set; }
+        public bool IsSelected { get; set; }
+        public bool IsSelectedHeadMergeSource { get; set; }
         public bool IsTag { get; }
         public bool IsHead { get; }
         public bool IsRemote { get; }
