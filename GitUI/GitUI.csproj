@@ -351,6 +351,12 @@
     <Compile Include="SplitterManager.cs" />
     <Compile Include="SpellChecker\SpellCheckerHelper.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractor.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\NotAGitRepoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\RevisionGridClasses\NotAGitRepoControl.Designer.cs">
+      <DependentUpon>NotAGitRepoControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\RevisionGridClasses\QuickSearchProvider.cs" />
     <Compile Include="UserControls\RevisionGridClasses\AvatarColumnProvider.cs" />
     <Compile Include="UserControls\BranchComboBox.cs">
@@ -1619,6 +1625,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BranchTreePanel\RepoObjectsTree.resx">
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\RevisionGridClasses\NotAGitRepoControl.resx">
+      <DependentUpon>NotAGitRepoControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

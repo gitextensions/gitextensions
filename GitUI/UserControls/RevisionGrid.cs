@@ -44,7 +44,12 @@ namespace GitUI
     [DefaultEvent("DoubleClick")]
     public sealed partial class RevisionGrid : GitModuleControl
     {
-        public event EventHandler<GitModuleEventArgs> GitModuleChanged;
+        public event EventHandler<GitModuleEventArgs> GitModuleChanged
+        {
+            add => _notAGitRepo.GitModuleChanged += value;
+            remove => _notAGitRepo.GitModuleChanged -= value;
+        }
+
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
         public event EventHandler<EventArgs> ShowFirstParentsToggled;
         public event EventHandler SelectionChanged;
@@ -59,6 +64,7 @@ namespace GitUI
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
+        private readonly NotAGitRepoControl _notAGitRepo;
         private readonly RevisionGridToolTipProvider _toolTipProvider;
         private readonly QuickSearchProvider _quickSearchProvider;
         private readonly IGitRevisionTester _gitRevisionTester;
@@ -129,7 +135,12 @@ namespace GitUI
             InitLayout();
             InitializeComponent();
 
+            _notAGitRepo = new NotAGitRepoControl();
+            _notAGitRepo.Resolved += (s, e) => ForceRefreshRevisions();
+            Controls.Add(_notAGitRepo);
+
             _toolTipProvider = new RevisionGridToolTipProvider(this);
+
             _quickSearchProvider = new QuickSearchProvider(this);
 
             // TODO expose this string to translation
@@ -595,7 +606,7 @@ If this is a central repository (bare repository without a working directory):
             _isLoading = true;
             Error.Visible = false;
             NoCommits.Visible = false;
-            NoGit.Visible = false;
+            _notAGitRepo.Visible = false;
             Graph.Visible = false;
             Loading.Visible = true;
             Loading.BringToFront();
@@ -855,27 +866,16 @@ If this is a central repository (bare repository without a working directory):
                 if (!Module.IsValidGitWorkingDir())
                 {
                     Graph.Visible = false;
-                    NoCommits.Visible = true;
+                    NoCommits.Visible = false;
                     Loading.Visible = false;
-                    NoGit.Visible = true;
-                    string dir = Module.WorkingDir;
-                    if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir) ||
-                        (Directory.GetDirectories(dir).Length == 0 &&
-                        Directory.GetFiles(dir).Length == 0))
-                    {
-                        CloneRepository.Show();
-                    }
-                    else
-                    {
-                        CloneRepository.Hide();
-                    }
-
-                    NoGit.BringToFront();
+                    _notAGitRepo.Visible = true;
+                    _notAGitRepo.Reload();
+                    _notAGitRepo.BringToFront();
                     return;
                 }
 
                 NoCommits.Visible = false;
-                NoGit.Visible = false;
+                _notAGitRepo.Visible = false;
                 Graph.Visible = true;
                 Graph.BringToFront();
                 Graph.Enabled = false;
@@ -984,7 +984,7 @@ If this is a central repository (bare repository without a working directory):
                         {
                             Error.Visible = true;
                             ////Error.BringToFront();
-                            NoGit.Visible = false;
+                            _notAGitRepo.Visible = false;
                             NoCommits.Visible = false;
                             Graph.Visible = false;
                             Loading.Visible = false;
@@ -1008,7 +1008,7 @@ If this is a central repository (bare repository without a working directory):
                     this.InvokeAsync(
                             () =>
                             {
-                                NoGit.Visible = false;
+                                _notAGitRepo.Visible = false;
                                 NoCommits.Visible = true;
                                 ////NoCommits.BringToFront();
                                 Graph.Visible = false;
@@ -2550,24 +2550,6 @@ If this is a central repository (bare repository without a working directory):
             ShowFirstParentsToggled?.Invoke(this, EventArgs.Empty);
 
             ForceRefreshRevisions();
-        }
-
-        private void OnModuleChanged(object sender, GitModuleEventArgs e)
-        {
-            GitModuleChanged?.Invoke(this, e);
-        }
-
-        private void InitRepository_Click(object sender, EventArgs e)
-        {
-            UICommands.StartInitializeDialog(this, Module.WorkingDir, OnModuleChanged);
-        }
-
-        private void CloneRepository_Click(object sender, EventArgs e)
-        {
-            if (UICommands.StartCloneDialog(this, null, OnModuleChanged))
-            {
-                ForceRefreshRevisions();
-            }
         }
 
         internal void ToggleRevisionGraph()
