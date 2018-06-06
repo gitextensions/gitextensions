@@ -259,8 +259,7 @@ namespace GitUI
             this.IdDataGridViewColumn.ReadOnly = true;
             this.IdDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.IdDataGridViewColumn.Visible = false;
-            this.IdDataGridViewColumn.FillWeight = 20f;
-            this.IdDataGridViewColumn.Resizable = DataGridViewTriState.False;
+            this.IdDataGridViewColumn.FillWeight = 7f;
             // 
             // mainContextMenu
             // 
