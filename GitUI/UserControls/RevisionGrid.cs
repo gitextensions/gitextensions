@@ -61,7 +61,6 @@ namespace GitUI
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
         private readonly RevisionGridToolTipProvider _toolTipProvider;
         private readonly QuickSearchProvider _quickSearchProvider;
-        private readonly Brush _selectedItemBrush = SystemBrushes.Highlight;
         private readonly IGitRevisionTester _gitRevisionTester;
         private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
         private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
@@ -75,7 +74,6 @@ namespace GitUI
 
         /// <summary>Tracks status for the artificial commits while the revision graph is reloading</summary>
         private IReadOnlyList<GitItemStatus> _artificialStatus;
-        private SolidBrush _authoredRevisionsBrush;
         private string _initialSelectedRevision;
         private RevisionReader _revisionReader;
         private IDisposable _revisionSubscription;
@@ -224,7 +222,6 @@ If this is a central repository (bare repository without a working directory):
                 _revisionSubscription?.Dispose();
                 _revisionReader?.Dispose();
                 _buildServerWatcher?.Dispose();
-                _authoredRevisionsBrush?.Dispose();
                 _fontOfSHAColumn?.Dispose();
 
                 if (_indexWatcher.IsValueCreated)
@@ -1346,84 +1343,23 @@ If this is a central repository (bare repository without a working directory):
 
             var isRowSelected = e.State.HasFlag(DataGridViewElementStates.Selected);
 
-            // Determine background colour for cell
-            Brush cellBackgroundBrush;
-            if (isRowSelected)
-            {
-                cellBackgroundBrush = _selectedItemBrush;
-            }
-            else if (AppSettings.HighlightAuthoredRevisions &&
-                     AuthorEmailEqualityComparer.Instance.Equals(revision.AuthorEmail, _revisionHighlighting.AuthorEmailToHighlight))
-            {
-                cellBackgroundBrush = _authoredRevisionsBrush;
-            }
-            else if (AppSettings.RevisionGraphDrawAlternateBackColor && e.RowIndex % 2 == 0)
-            {
-                // TODO if default background is nearly black, we should make it lighter instead
-                cellBackgroundBrush = new SolidBrush(ColorHelper.MakeColorDarker(e.CellStyle.BackColor));
-            }
-            else
-            {
-                cellBackgroundBrush = new SolidBrush(e.CellStyle.BackColor);
-            }
+            var (backBrush, backColor, disposeBackBrush) = GetBackgroundBrush();
+            var foreColor = GetForegroundBrush(backColor);
 
             // Draw cell background
-            e.Graphics.FillRectangle(cellBackgroundBrush, e.CellBounds);
+            e.Graphics.FillRectangle(backBrush, e.CellBounds);
 
-            var backColor = cellBackgroundBrush is SolidBrush brush
-                ? brush.Color
-                : (Color?)null;
+            var rowFont = GetRowFont();
 
-            // Graph column
-            if (e.ColumnIndex == GraphDataGridViewColumn.Index)
+            if (columnIndex == GraphDataGridViewColumn.Index)
             {
                 Graph.dataGrid_CellPainting(sender, e);
-                return;
             }
-
-            // Avatar column
-            if (e.ColumnIndex == _avatarColumn.Index)
+            else if (columnIndex == _avatarColumn.Index)
             {
                 _avatarColumn.OnCellPainting(e, revision);
-                return;
             }
-
-            // Determine cell foreground (text) colour for other columns
-            Color foreColor;
-            if (isRowSelected)
-            {
-                foreColor = SystemColors.HighlightText;
-            }
-            else if (AppSettings.RevisionGraphDrawNonRelativesTextGray && !Graph.RowIsRelative(e.RowIndex))
-            {
-                Debug.Assert(backColor != null, "backColor != null");
-                foreColor = Color.Gray;
-
-                // TODO: If the background colour is close to being Gray, we should adjust the gray until there is a bit more contrast.
-                while (ColorHelper.GetColorBrightnessDifference(foreColor, backColor.Value) < 125)
-                {
-                    foreColor = backColor.Value.IsLightColor()
-                        ? ColorHelper.MakeColorDarker(foreColor)
-                        : ColorHelper.MakeColorLighter(foreColor);
-                }
-            }
-            else
-            {
-                Debug.Assert(backColor != null, "backColor != null");
-                foreColor = ColorHelper.GetForeColorForBackColor(backColor.Value);
-            }
-
-            var rowFont = _normalFont;
-            if (revision.Guid == CurrentCheckout)
-            {
-                rowFont = _headFont;
-            }
-            else if (spi != null && spi.CurrentBranch == revision.Guid)
-            {
-                rowFont = _superprojectFont;
-            }
-
-            if (columnIndex == MessageDataGridViewColumn.Index)
+            else if (columnIndex == MessageDataGridViewColumn.Index)
             {
                 float offset = 0;
 
@@ -1448,18 +1384,7 @@ If this is a central repository (bare repository without a working directory):
                 if (revision.Refs.Count != 0)
                 {
                     var gitRefs = revision.Refs.ToList();
-                    gitRefs.Sort(
-                        (left, right) =>
-                        {
-                            int leftTypeRank = RefTypeRank(left);
-                            int rightTypeRank = RefTypeRank(right);
-                            if (leftTypeRank == rightTypeRank)
-                            {
-                                return left.Name.CompareTo(right.Name);
-                            }
-
-                            return leftTypeRank.CompareTo(rightTypeRank);
-                        });
+                    gitRefs.Sort(CompareRefs);
 
                     foreach (var gitRef in gitRefs)
                     {
@@ -1559,36 +1484,117 @@ If this is a central repository (bare repository without a working directory):
                 DrawColumnText(e, (string)e.FormattedValue, rowFont, foreColor);
             }
 
+            if (disposeBackBrush)
+            {
+                backBrush.Dispose();
+            }
+
             return;
 
-            int RefTypeRank(IGitRef gitRef)
+            int CompareRefs(IGitRef left, IGitRef right)
             {
-                if (gitRef.IsBisect)
+                var c = RefTypeRank(left).CompareTo(RefTypeRank(right));
+
+                return c == 0
+                    ? string.Compare(left.Name, right.Name, StringComparison.InvariantCultureIgnoreCase)
+                    : c;
+
+                int RefTypeRank(IGitRef gitRef)
                 {
-                    return 0;
+                    if (gitRef.IsBisect)
+                    {
+                        return 0;
+                    }
+
+                    if (gitRef.IsSelected)
+                    {
+                        return 1;
+                    }
+
+                    if (gitRef.IsSelectedHeadMergeSource)
+                    {
+                        return 2;
+                    }
+
+                    if (gitRef.IsHead)
+                    {
+                        return 3;
+                    }
+
+                    if (gitRef.IsRemote)
+                    {
+                        return 4;
+                    }
+
+                    return 5;
+                }
+            }
+
+            (Brush brush, Color color, bool disposeBrush) GetBackgroundBrush()
+            {
+                if (isRowSelected)
+                {
+                    return (SystemBrushes.Highlight, SystemColors.Highlight, false);
                 }
 
-                if (gitRef.IsSelected)
+                if (AppSettings.HighlightAuthoredRevisions &&
+                    AuthorEmailEqualityComparer.Instance.Equals(revision.AuthorEmail, _revisionHighlighting.AuthorEmailToHighlight))
                 {
-                    return 1;
+                    var c = AppSettings.AuthoredRevisionsColor;
+                    return (new SolidBrush(c), c, true);
                 }
 
-                if (gitRef.IsSelectedHeadMergeSource)
+                if (AppSettings.RevisionGraphDrawAlternateBackColor && e.RowIndex % 2 == 0)
                 {
-                    return 2;
+                    // TODO if default background is nearly black, we should make it lighter instead
+                    var c = ColorHelper.MakeColorDarker(e.CellStyle.BackColor);
+                    return (new SolidBrush(c), c, true);
+                }
+                else
+                {
+                    var c = e.CellStyle.BackColor;
+                    return (new SolidBrush(c), c, true);
+                }
+            }
+
+            Color GetForegroundBrush(Color background)
+            {
+                if (isRowSelected)
+                {
+                    return SystemColors.HighlightText;
                 }
 
-                if (gitRef.IsHead)
+                if (AppSettings.RevisionGraphDrawNonRelativesTextGray && !Graph.RowIsRelative(e.RowIndex))
                 {
-                    return 3;
+                    var color = Color.Gray;
+
+                    // TODO If the background colour is close to being Gray, we should adjust the gray until there is a bit more contrast
+                    while (ColorHelper.GetColorBrightnessDifference(color, background) < 125)
+                    {
+                        color = background.IsLightColor()
+                            ? ColorHelper.MakeColorDarker(color)
+                            : ColorHelper.MakeColorLighter(color);
+                    }
+
+                    return color;
                 }
 
-                if (gitRef.IsRemote)
+                return ColorHelper.GetForeColorForBackColor(background);
+            }
+
+            Font GetRowFont()
+            {
+                if (revision.Guid == CurrentCheckout)
                 {
-                    return 4;
+                    return _headFont;
                 }
 
-                return 5;
+                if (spi != null && spi.CurrentBranch == revision.Guid)
+                {
+                    return _superprojectFont;
+                }
+
+                return _normalFont;
             }
         }
 
@@ -2609,17 +2615,6 @@ If this is a central repository (bare repository without a working directory):
         {
             // TODO why was this removed? if we only set the font when the control is created then it cannot update when settings change
             ////NormalFont = new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
-
-            if (_authoredRevisionsBrush != null && _authoredRevisionsBrush.Color != AppSettings.AuthoredRevisionsColor)
-            {
-                _authoredRevisionsBrush.Dispose();
-                _authoredRevisionsBrush = null;
-            }
-
-            if (_authoredRevisionsBrush == null)
-            {
-                _authoredRevisionsBrush = new SolidBrush(AppSettings.AuthoredRevisionsColor);
-            }
 
             using (var g = Graphics.FromHwnd(Handle))
             {
