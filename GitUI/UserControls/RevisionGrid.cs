@@ -3199,13 +3199,8 @@ If this is a central repository (bare repository without a working directory):
 
         private void getHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenManual();
-        }
-
-        private static void OpenManual()
-        {
-            string url = UserManual.UserManual.UrlFor("modify_history", "using-autosquash-rebase-feature");
-            OsShellUtil.OpenUrlInDefaultBrowser(url);
+            OsShellUtil.OpenUrlInDefaultBrowser(
+                UserManual.UserManual.UrlFor("modify_history", "using-autosquash-rebase-feature"));
         }
 
         private void openBuildReportToolStripMenuItem_Click(object sender, EventArgs e)
