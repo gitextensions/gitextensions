@@ -979,6 +979,77 @@ If this is a central repository (bare repository without a working directory):
                 Error.BringToFront();
                 throw;
             }
+
+            return;
+
+            void OnRevisionReaderError(Exception exception)
+            {
+                // This has to happen on the UI thread
+                this.InvokeAsync(
+                        () =>
+                        {
+                            Error.Visible = true;
+                            ////Error.BringToFront();
+                            NoGit.Visible = false;
+                            NoCommits.Visible = false;
+                            Graph.Visible = false;
+                            Loading.Visible = false;
+                        })
+                    .FileAndForget();
+
+                DisposeRevisionReader();
+                this.InvokeAsync(() => throw new AggregateException(exception)).FileAndForget();
+            }
+
+            void OnRevisionReadCompleted()
+            {
+                _isLoading = false;
+
+                if (_revisionReader.RevisionCount == 0 && !FilterIsApplied(true))
+                {
+                    // This has to happen on the UI thread
+                    this.InvokeAsync(
+                            () =>
+                            {
+                                NoGit.Visible = false;
+                                NoCommits.Visible = true;
+                                ////NoCommits.BringToFront();
+                                Graph.Visible = false;
+                                Loading.Visible = false;
+                                _isRefreshingRevisions = false;
+                            })
+                        .FileAndForget();
+                }
+                else
+                {
+                    // This has to happen on the UI thread
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        await this.SwitchToMainThreadAsync();
+                        OnRevisionRead();
+                        Loading.Visible = false;
+                        _isRefreshingRevisions = false;
+                        SelectInitialRevision();
+                        if (ShowBuildServerInfo)
+                        {
+                            await _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync();
+                        }
+                    }).FileAndForget();
+                }
+
+                DisposeRevisionReader();
+            }
+
+            void DisposeRevisionReader()
+            {
+                if (_revisionReader != null)
+                {
+                    LatestRefs = _revisionReader.LatestRefs;
+
+                    _revisionReader.Dispose();
+                    _revisionReader = null;
+                }
+            }
         }
 
         [CanBeNull]
@@ -1014,25 +1085,6 @@ If this is a central repository (bare repository without a working directory):
             return spi;
         }
 
-        private void OnRevisionReaderError(Exception exception)
-        {
-            // This has to happen on the UI thread
-            this.InvokeAsync(
-                    () =>
-                    {
-                        Error.Visible = true;
-                        ////Error.BringToFront();
-                        NoGit.Visible = false;
-                        NoCommits.Visible = false;
-                        Graph.Visible = false;
-                        Loading.Visible = false;
-                    })
-                .FileAndForget();
-
-            DisposeRevisionReader();
-            this.InvokeAsync(() => throw new AggregateException(exception)).FileAndForget();
-        }
-
         internal bool FilterIsApplied(bool inclBranchFilter)
         {
             return (inclBranchFilter && !string.IsNullOrEmpty(_branchFilter)) ||
@@ -1050,57 +1102,6 @@ If this is a central repository (bare repository without a working directory):
                      string.IsNullOrEmpty(InMemAuthorFilter) &&
                      string.IsNullOrEmpty(InMemCommitterFilter) &&
                      string.IsNullOrEmpty(InMemMessageFilter));
-        }
-
-        private void DisposeRevisionReader()
-        {
-            if (_revisionReader != null)
-            {
-                LatestRefs = _revisionReader.LatestRefs;
-
-                _revisionReader.Dispose();
-                _revisionReader = null;
-            }
-        }
-
-        private void OnRevisionReadCompleted()
-        {
-            _isLoading = false;
-
-            if (_revisionReader.RevisionCount == 0 &&
-                !FilterIsApplied(true))
-            {
-                // This has to happen on the UI thread
-                this.InvokeAsync(
-                        () =>
-                        {
-                            NoGit.Visible = false;
-                            NoCommits.Visible = true;
-                            ////NoCommits.BringToFront();
-                            Graph.Visible = false;
-                            Loading.Visible = false;
-                            _isRefreshingRevisions = false;
-                        })
-                    .FileAndForget();
-            }
-            else
-            {
-                // This has to happen on the UI thread
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await this.SwitchToMainThreadAsync();
-                    OnRevisionRead();
-                    Loading.Visible = false;
-                    _isRefreshingRevisions = false;
-                    SelectInitialRevision();
-                    if (ShowBuildServerInfo)
-                    {
-                        await _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync();
-                    }
-                }).FileAndForget();
-            }
-
-            DisposeRevisionReader();
         }
 
         private void SelectInitialRevision()
