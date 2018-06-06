@@ -472,7 +472,7 @@ namespace GitUI.RevisionGridClasses
             {
                 // DO NOT INVOKE! The RowCount is fixed at other strategic points in time.
                 // -Doing this in synch can lock up the application
-                // -Doing this asynch causes the scrollbar to flicker and eats performance
+                // -Doing this async causes the scroll bar to flicker and eats performance
                 // -At first I was concerned that returning might lead to some cases where
                 //  we have more items in the list than we're showing, but I'm pretty sure
                 //  when we're done processing we'll update with the final count, so the
@@ -650,7 +650,7 @@ namespace GitUI.RevisionGridClasses
             // Add 5 for safe merge (1 for rounding and 1 for whitespace)....
             if (_visibleBottom + 2 > _graphData.Count)
             {
-                // Currently we are doing some important work; we are recieving
+                // Currently we are doing some important work; we are receiving
                 // rows that the user is viewing
                 if (Loading != null && _graphData.Count > RowCount) //// && graphData.Count != RowCount)
                 {
@@ -771,7 +771,7 @@ namespace GitUI.RevisionGridClasses
         // http://en.wikipedia.org/wiki/File:RBG_color_wheel.svg
 
         // This is the order to grab the colors in.
-        private static readonly int[] preferedColors = { 4, 8, 6, 10, 2, 5, 7, 3, 9, 1, 11 };
+        private static readonly int[] preferredColors = { 4, 8, 6, 10, 2, 5, 7, 3, 9, 1, 11 };
 
         private readonly List<int> _adjacentColors = new List<int>(capacity: 3);
         private readonly Random _random = new Random();
@@ -797,7 +797,7 @@ namespace GitUI.RevisionGridClasses
                 return AppSettings.GraphColor;
             }
 
-            // See if this junciton's colour has already been calculated
+            // See if this junction's colour has already been calculated
             if (_colorByJunction.TryGetValue(junction, out var colorIndex))
             {
                 return _possibleColors[colorIndex];
@@ -821,18 +821,18 @@ namespace GitUI.RevisionGridClasses
                 // This is a parent branch, calculate new color based on parent branch
                 int start = _adjacentColors[0];
                 int i;
-                for (i = 0; i < preferedColors.Length; i++)
+                for (i = 0; i < preferredColors.Length; i++)
                 {
-                    colorIndex = (start + preferedColors[i]) % _possibleColors.Length;
+                    colorIndex = (start + preferredColors[i]) % _possibleColors.Length;
                     if (!_adjacentColors.Contains(colorIndex))
                     {
                         break;
                     }
                 }
 
-                if (i == preferedColors.Length)
+                if (i == preferredColors.Length)
                 {
-                    colorIndex = _random.Next(preferedColors.Length);
+                    colorIndex = _random.Next(preferredColors.Length);
                 }
             }
 
