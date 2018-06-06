@@ -70,10 +70,6 @@ namespace GitUI
             this.openBuildReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SelectionTimer = new System.Windows.Forms.Timer(this.components);
             this.NoCommits = new System.Windows.Forms.Panel();
-            this.NoGit = new System.Windows.Forms.Panel();
-            this.InitRepository = new System.Windows.Forms.Button();
-            this.CloneRepository = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
             this.GitIgnore = new System.Windows.Forms.Button();
             this.Commit = new System.Windows.Forms.Button();
             this.lblEmptyRepository = new System.Windows.Forms.Label();
@@ -88,7 +84,6 @@ namespace GitUI
             ((System.ComponentModel.ISupportInitialize)(this.Graph)).BeginInit();
             this.mainContextMenu.SuspendLayout();
             this.NoCommits.SuspendLayout();
-            this.NoGit.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Error)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             this.SuspendLayout();
@@ -512,7 +507,6 @@ namespace GitUI
             // 
             // NoCommits
             // 
-            this.NoCommits.Controls.Add(this.NoGit);
             this.NoCommits.Controls.Add(this.GitIgnore);
             this.NoCommits.Controls.Add(this.Commit);
             this.NoCommits.Controls.Add(this.lblEmptyRepository);
@@ -521,46 +515,6 @@ namespace GitUI
             this.NoCommits.Name = "NoCommits";
             this.NoCommits.Size = new System.Drawing.Size(682, 235);
             this.NoCommits.TabIndex = 3;
-            // 
-            // NoGit
-            // 
-            this.NoGit.Controls.Add(this.InitRepository);
-            this.NoGit.Controls.Add(this.CloneRepository);
-            this.NoGit.Controls.Add(this.label2);
-            this.NoGit.Location = new System.Drawing.Point(0, 0);
-            this.NoGit.Name = "NoGit";
-            this.NoGit.Size = new System.Drawing.Size(682, 235);
-            this.NoGit.TabIndex = 4;
-            // 
-            // InitRepository
-            // 
-            this.InitRepository.Location = new System.Drawing.Point(22, 48);
-            this.InitRepository.Name = "InitRepository";
-            this.InitRepository.Size = new System.Drawing.Size(195, 31);
-            this.InitRepository.TabIndex = 2;
-            this.InitRepository.Text = "Initialize repository";
-            this.InitRepository.UseVisualStyleBackColor = true;
-            this.InitRepository.Click += new System.EventHandler(this.InitRepository_Click);
-            // 
-            // CloneRepository
-            // 
-            this.CloneRepository.Location = new System.Drawing.Point(224, 48);
-            this.CloneRepository.Name = "CloneRepository";
-            this.CloneRepository.Size = new System.Drawing.Size(195, 31);
-            this.CloneRepository.TabIndex = 3;
-            this.CloneRepository.Text = "Clone repository";
-            this.CloneRepository.UseVisualStyleBackColor = true;
-            this.CloneRepository.Visible = false;
-            this.CloneRepository.Click += new System.EventHandler(this.CloneRepository_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 10);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(281, 15);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "The current working directory is not a git repository.";
             // 
             // GitIgnore
             // 
@@ -672,8 +626,6 @@ namespace GitUI
             this.mainContextMenu.ResumeLayout(false);
             this.NoCommits.ResumeLayout(false);
             this.NoCommits.PerformLayout();
-            this.NoGit.ResumeLayout(false);
-            this.NoGit.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Error)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             this.ResumeLayout(false);
@@ -688,13 +640,9 @@ namespace GitUI
         private System.Windows.Forms.PictureBox Loading;
         private System.Windows.Forms.Timer SelectionTimer;
         private System.Windows.Forms.Panel NoCommits;
-        private System.Windows.Forms.Panel NoGit;
         private System.Windows.Forms.Label lblEmptyRepository;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button Commit;
         private System.Windows.Forms.Button GitIgnore;
-        private System.Windows.Forms.Button InitRepository;
-        private System.Windows.Forms.Button CloneRepository;
 
         private System.Windows.Forms.ContextMenuStrip mainContextMenu;
         private System.Windows.Forms.ToolStripMenuItem navigateToolStripMenuItem;
