@@ -366,6 +366,9 @@
     <Compile Include="UserControls\RevisionGridClasses\ErrorControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UserControls\RevisionGridClasses\LoadingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UserControls\RevisionGridClasses\QuickSearchProvider.cs" />
     <Compile Include="UserControls\RevisionGridClasses\AvatarColumnProvider.cs" />
     <Compile Include="UserControls\BranchComboBox.cs">

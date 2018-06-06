@@ -60,6 +60,7 @@ namespace GitUI
         private readonly BareRepoControl _bareRepo;
         private readonly EmptyRepoControl _emptyRepo;
         private readonly ErrorControl _errorImage;
+        private readonly LoadingControl _loadingImage;
         private readonly RevisionGridToolTipProvider _toolTipProvider;
         private readonly QuickSearchProvider _quickSearchProvider;
         private readonly IGitRevisionTester _gitRevisionTester;
@@ -139,6 +140,9 @@ namespace GitUI
             _errorImage = new ErrorControl { Dock = DockStyle.Fill };
             Controls.Add(_errorImage);
 
+            _loadingImage = new LoadingControl { Dock = DockStyle.Fill };
+            Controls.Add(_loadingImage);
+
             _toolTipProvider = new RevisionGridToolTipProvider(this);
 
             _quickSearchProvider = new QuickSearchProvider(this);
@@ -147,8 +151,6 @@ namespace GitUI
             _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));
             _revisionHighlighting = new AuthorEmailBasedRevisionHighlighting();
             _indexWatcher = new Lazy<IndexWatcher>(() => new IndexWatcher(UICommandsSource));
-
-            Loading.Image = Resources.loadingpanel;
 
             Translate();
 
@@ -166,7 +168,6 @@ namespace GitUI
             FillMenuFromMenuCommands(MenuCommands.GetNavigateMenuCommands(), navigateToolStripMenuItem);
 
             NormalFont = AppSettings.Font;
-            Loading.Paint += Loading_Paint;
 
             Graph.ShowCellToolTips = false;
 
@@ -301,15 +302,6 @@ namespace GitUI
                 }
 
                 targetMenuItem.DropDownItems.Add(toolStripItem);
-            }
-        }
-
-        private void Loading_Paint(object sender, PaintEventArgs e)
-        {
-            // If our loading state has changed since the last paint, update it.
-            if (Loading != null && Loading.Visible != _isLoading)
-            {
-                Loading.Visible = _isLoading;
             }
         }
 
@@ -598,8 +590,7 @@ namespace GitUI
             _bareRepo.Visible = false;
             _emptyRepo.Visible = false;
             Graph.Visible = false;
-            Loading.Visible = true;
-            ////Loading.BringToFront();
+            _loadingImage.Visible = true;
         }
 
         public new void Load()
@@ -857,8 +848,8 @@ namespace GitUI
                 Graph.Visible = true;
                 Graph.BringToFront();
                 Graph.Enabled = false;
-                Loading.Visible = true;
-                Loading.BringToFront();
+                _loadingImage.Visible = true;
+                _loadingImage.BringToFront();
                 _isLoading = true;
                 _isRefreshingRevisions = true;
                 base.Refresh();
@@ -964,7 +955,7 @@ namespace GitUI
                             _bareRepo.Visible = false;
                             _emptyRepo.Visible = false;
                             Graph.Visible = false;
-                            Loading.Visible = false;
+                            _loadingImage.Visible = false;
                         })
                     .FileAndForget();
 
@@ -990,7 +981,7 @@ namespace GitUI
                                 _bareRepo.Visible = isBare;
                                 _emptyRepo.Visible = !isBare;
                                 Graph.Visible = false;
-                                Loading.Visible = false;
+                                _loadingImage.Visible = false;
                                 _isRefreshingRevisions = false;
                             })
                         .FileAndForget();
@@ -1002,7 +993,7 @@ namespace GitUI
                     {
                         await this.SwitchToMainThreadAsync();
                         OnRevisionRead();
-                        Loading.Visible = false;
+                        _loadingImage.Visible = false;
                         _isRefreshingRevisions = false;
                         SelectInitialRevision();
                         if (ShowBuildServerInfo)
@@ -1294,12 +1285,6 @@ namespace GitUI
 
         private void OnGraphCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            // If our loading state has changed since the last paint, update it.
-            if (Loading != null && Loading.Visible != _isLoading)
-            {
-                Loading.Visible = _isLoading;
-            }
-
             var columnIndex = e.ColumnIndex;
             var revision = GetRevision(e.RowIndex);
 
