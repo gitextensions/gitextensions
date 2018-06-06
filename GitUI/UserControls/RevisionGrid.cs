@@ -2531,16 +2531,6 @@ namespace GitUI
             MenuCommands.TriggerMenuChanged(); // apply checkboxes changes also to FormBrowse main menu
         }
 
-        private void RevertCommitToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            if (LatestSelectedRevision == null)
-            {
-                return;
-            }
-
-            UICommands.StartRevertCommitDialog(this, LatestSelectedRevision);
-        }
-
         internal void FilterToolStripMenuItemClick(object sender, EventArgs e)
         {
             _revisionFilter.ShowDialog(this);
@@ -2902,6 +2892,15 @@ namespace GitUI
         {
             AppSettings.ShowSuperprojectRemoteBranches = !AppSettings.ShowSuperprojectRemoteBranches;
             ForceRefreshRevisions();
+        }
+
+        private void RevertCommitToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var revisions = GetSelectedRevisions(SortDirection.Ascending);
+            foreach (var rev in revisions)
+            {
+                UICommands.StartRevertCommitDialog(this, rev);
+            }
         }
 
         private void CherryPickCommitToolStripMenuItemClick(object sender, EventArgs e)
