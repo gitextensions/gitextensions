@@ -20,7 +20,7 @@ using GitExtUtils.GitUI;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
-using GitUI.Editor; // For ColorHelper
+using GitUI.Editor;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Properties;
@@ -1469,13 +1469,6 @@ namespace GitUI
 
             var columnIndex = e.ColumnIndex;
 
-            int graphColIndex = GraphDataGridViewColumn.Index;
-            int messageColIndex = MessageDataGridViewColumn.Index;
-            int authorColIndex = AuthorDataGridViewColumn.Index;
-            int dateColIndex = DateDataGridViewColumn.Index;
-            int idColIndex = IdDataGridViewColumn.Index;
-            int isMsgMultilineColIndex = IsMessageMultilineDataGridViewColumn.Index;
-
             if (e.RowIndex < 0 || (e.State & DataGridViewElementStates.Visible) == 0)
             {
                 return;
@@ -1505,7 +1498,7 @@ namespace GitUI
             {
                 Graphics = e.Graphics,
                 CellBounds = e.CellBounds,
-                IsRowSelected = (e.State & DataGridViewElementStates.Selected) == DataGridViewElementStates.Selected
+                IsRowSelected = e.State.HasFlag(DataGridViewElementStates.Selected)
             };
 
             // Determine background colour for cell
@@ -1535,8 +1528,8 @@ namespace GitUI
                 ? brush.Color
                 : (Color?)null;
 
-            // Draw graphics column
-            if (e.ColumnIndex == graphColIndex)
+            // Graph column
+            if (e.ColumnIndex == GraphDataGridViewColumn.Index)
             {
                 Graph.dataGrid_CellPainting(sender, e);
                 return;
@@ -1590,7 +1583,7 @@ namespace GitUI
                 rowFont = _superprojectFont;
             }
 
-            if (columnIndex == messageColIndex)
+            if (columnIndex == MessageDataGridViewColumn.Index)
             {
                 float offset = 0;
 
@@ -1696,27 +1689,24 @@ namespace GitUI
                     /*offset = */DrawRef(drawRefArgs, offset, revision.Subject, AppSettings.OtherTagColor, ArrowType.None, false, true);
                 }
             }
-            else if (columnIndex == authorColIndex)
+            else if (columnIndex == AuthorDataGridViewColumn.Index)
             {
                 if (!revision.IsArtificial)
                 {
-                    var text = (string)e.FormattedValue;
-                    DrawColumnText(e, text, rowFont, foreColor);
+                    DrawColumnText(e, (string)e.FormattedValue, rowFont, foreColor);
                 }
             }
-            else if (columnIndex == dateColIndex)
+            else if (columnIndex == DateDataGridViewColumn.Index)
             {
                 var time = AppSettings.ShowAuthorDate ? revision.AuthorDate : revision.CommitDate;
                 var text = TimeToString(time);
                 DrawColumnText(e, text, rowFont, foreColor);
             }
-            else if (columnIndex == idColIndex)
+            else if (columnIndex == IdDataGridViewColumn.Index)
             {
                 if (!revision.IsArtificial)
                 {
-                    // do not show artificial GUID
-                    var text = revision.Guid;
-                    DrawColumnText(e, text, _fontOfSHAColumn, foreColor);
+                    DrawColumnText(e, revision.Guid, _fontOfSHAColumn, foreColor);
                 }
             }
             else if (columnIndex == _buildServerWatcher.BuildStatusImageColumnIndex)
@@ -1728,10 +1718,9 @@ namespace GitUI
                 var isSelected = Graph.Rows[e.RowIndex].Selected;
                 BuildInfoDrawingLogic.BuildStatusMessageCellPainting(e, revision, foreColor, rowFont, isSelected, this);
             }
-            else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == isMsgMultilineColIndex)
+            else if (AppSettings.ShowIndicatorForMultilineMessage && columnIndex == IsMessageMultilineDataGridViewColumn.Index)
             {
-                var text = (string)e.FormattedValue;
-                DrawColumnText(e, text, rowFont, foreColor);
+                DrawColumnText(e, (string)e.FormattedValue, rowFont, foreColor);
             }
 
             return;
