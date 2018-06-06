@@ -1429,29 +1429,21 @@ If this is a central repository (bare repository without a working directory):
             {
                 float offset = 0;
 
-                var drawRefArgs = new DrawRefArgs
-                {
-                    Graphics = e.Graphics,
-                    CellBounds = e.CellBounds,
-                    IsRowSelected = isRowSelected,
-                    RefsFont = _refsFont
-                };
-
                 if (spi != null)
                 {
                     if (spi.Conflict_Base == revision.Guid)
                     {
-                        RevisionGridRefRenderer.DrawRef(drawRefArgs, ref offset, "Base", Color.OrangeRed, ArrowType.NotFilled);
+                        RevisionGridRefRenderer.DrawRef(e, isRowSelected, _refsFont, ref offset, "Base", Color.OrangeRed, ArrowType.NotFilled);
                     }
 
                     if (spi.Conflict_Local == revision.Guid)
                     {
-                        RevisionGridRefRenderer.DrawRef(drawRefArgs, ref offset, "Local", Color.OrangeRed, ArrowType.NotFilled);
+                        RevisionGridRefRenderer.DrawRef(e, isRowSelected, _refsFont, ref offset, "Local", Color.OrangeRed, ArrowType.NotFilled);
                     }
 
                     if (spi.Conflict_Remote == revision.Guid)
                     {
-                        RevisionGridRefRenderer.DrawRef(drawRefArgs, ref offset, "Remote", Color.OrangeRed, ArrowType.NotFilled);
+                        RevisionGridRefRenderer.DrawRef(e, isRowSelected, _refsFont, ref offset, "Remote", Color.OrangeRed, ArrowType.NotFilled);
                     }
                 }
 
@@ -1486,7 +1478,7 @@ If this is a central repository (bare repository without a working directory):
                             : gitRef.SelectedHeadMergeSource
                                 ? ArrowType.NotFilled
                                 : ArrowType.None;
-                        drawRefArgs.RefsFont = gitRef.Selected ? rowFont : _refsFont;
+                        var font = gitRef.Selected ? rowFont : _refsFont;
 
                         var superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
                         if (superprojectRef != null)
@@ -1503,7 +1495,7 @@ If this is a central repository (bare repository without a working directory):
                             name = name + "  " + MultilineMessageIndicator;
                         }
 
-                        RevisionGridRefRenderer.DrawRef(drawRefArgs, ref offset, name, headColor, arrowType, superprojectRef != null, true);
+                        RevisionGridRefRenderer.DrawRef(e, isRowSelected, font, ref offset, name, headColor, arrowType, dashedLine: superprojectRef != null, fill: true);
                     }
                 }
 
@@ -1518,9 +1510,9 @@ If this is a central repository (bare repository without a working directory):
                         : gitRef.SelectedHeadMergeSource
                             ? ArrowType.NotFilled
                             : ArrowType.None;
-                    drawRefArgs.RefsFont = gitRef.Selected ? rowFont : _refsFont;
+                    var font = gitRef.Selected ? rowFont : _refsFont;
 
-                    RevisionGridRefRenderer.DrawRef(drawRefArgs, ref offset, gitRefName, headColor, arrowType, true);
+                    RevisionGridRefRenderer.DrawRef(e, isRowSelected, font, ref offset, gitRefName, headColor, arrowType, dashedLine: true);
                 }
 
                 var text = (string)e.FormattedValue;
@@ -1530,9 +1522,9 @@ If this is a central repository (bare repository without a working directory):
                 if (revision.IsArtificial)
                 {
                     // Get offset for "count" text
-                    offset += 1 + drawRefArgs.Graphics.MeasureString(text, rowFont).Width;
+                    offset += 1 + e.Graphics.MeasureString(text, rowFont).Width;
 
-                    RevisionGridRefRenderer.DrawRef(drawRefArgs, ref offset, revision.Subject, AppSettings.OtherTagColor, ArrowType.None, false, true);
+                    RevisionGridRefRenderer.DrawRef(e, isRowSelected, _refsFont, ref offset, revision.Subject, AppSettings.OtherTagColor, ArrowType.None, dashedLine: false, fill: true);
                 }
             }
             else if (columnIndex == AuthorDataGridViewColumn.Index)
@@ -2918,19 +2910,6 @@ If this is a central repository (bare repository without a working directory):
             public string Conflict_Remote;
             public string Conflict_Local;
             public Dictionary<string, List<IGitRef>> Refs;
-        }
-
-        #endregion
-
-        #region Nested type: Draw ref args
-
-        // TODO get rid of this type
-        public struct DrawRefArgs
-        {
-            public Graphics Graphics;
-            public Rectangle CellBounds;
-            public bool IsRowSelected;
-            public Font RefsFont;
         }
 
         #endregion
