@@ -72,6 +72,25 @@
     </Compile>
     <Compile Include="AutoCompletion\CommitAutoCompleteProvider.cs" />
     <Compile Include="AutoCompletion\IAutoCompleteProvider.cs" />
+    <Compile Include="BranchTreePanel\RepoObjectsTree.ContextActions.cs">
+      <SubType>UserControl</SubType>
+      <DependentUpon>RepoObjectsTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BranchTreePanel\RepoObjectsTree.Nodes.Branches.cs">
+      <SubType>UserControl</SubType>
+      <DependentUpon>RepoObjectsTree.Nodes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BranchTreePanel\RepoObjectsTree.Nodes.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BranchTreePanel\RepoObjectsTree.Nodes.Remotes.cs">
+      <SubType>UserControl</SubType>
+      <DependentUpon>RepoObjectsTree.Nodes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BranchTreePanel\RepoObjectsTree.Nodes.Tags.cs">
+      <SubType>UserControl</SubType>
+      <DependentUpon>RepoObjectsTree.Nodes.cs</DependentUpon>
+    </Compile>
     <Compile Include="BuildServerIntegration\BuildInfoDrawingLogic.cs" />
     <Compile Include="BuildServerIntegration\BuildServerWatcher.cs" />
     <Compile Include="CommandsDialogs\AboutBox.cs">
@@ -668,9 +687,6 @@
     <Compile Include="Properties\Resources.Custom.cs">
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="BranchTreePanel\RepoObjectsTree.ContextActions.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Script\ScriptInfo.cs" />
     <Compile Include="Script\ScriptManager.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\CheckSettingsLogic.cs" />
@@ -1084,23 +1100,11 @@
     <Compile Include="UserControls\FolderBrowserButton.Designer.cs">
       <DependentUpon>FolderBrowserButton.cs</DependentUpon>
     </Compile>
-    <Compile Include="BranchTreePanel\RepoObjectsTree.Nodes.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="BranchTreePanel\RepoObjectsTree.Nodes.Branches.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="BranchTreePanel\RepoObjectsTree.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="BranchTreePanel\RepoObjectsTree.Designer.cs">
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>
-    </Compile>
-    <Compile Include="BranchTreePanel\RepoObjectsTree.Nodes.Remotes.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="BranchTreePanel\RepoObjectsTree.Nodes.Tags.cs">
-      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UserControls\WarningToolStripItem.cs">
       <SubType>Component</SubType>

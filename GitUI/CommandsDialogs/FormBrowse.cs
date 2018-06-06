@@ -172,7 +172,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.OnToggleBranchTreePanelRequested = () => toggleBranchTreePanel_Click(null, null);
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
-            repoObjectsTree.FilterBranchHelper = _filterBranchHelper;
+            repoObjectsTree.SetBranchFilterer(_filterBranchHelper);
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
             revisionDiff.Bind(RevisionGrid, fileTree);
 
@@ -670,17 +670,12 @@ namespace GitUI.CommandsDialogs
 
         private void ReloadRepoObjectsTree()
         {
-            if (IsRepoObjectsTreeVisible())
+            if (MainSplitContainer.Panel1Collapsed)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => repoObjectsTree.ReloadAsync()).FileAndForget();
+                return;
             }
 
-            return;
-
-            bool IsRepoObjectsTreeVisible()
-            {
-                return !MainSplitContainer.Panel1Collapsed;
-            }
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => repoObjectsTree.ReloadAsync()).FileAndForget();
         }
 
         private void OnActivate()

@@ -254,7 +254,6 @@ namespace GitUI.BranchTreePanel
 
                 var currentBranch = Module.GetSelectedBranch();
                 var nodes = new Dictionary<string, BaseBranchNode>();
-                var branchFullPaths = new List<string>();
                 foreach (var branch in branches)
                 {
                     token.ThrowIfCancellationRequested();
@@ -265,8 +264,6 @@ namespace GitUI.BranchTreePanel
                     {
                         Nodes.AddNode(parent);
                     }
-
-                    branchFullPaths.Add(localBranchNode.FullPath);
                 }
             }
 

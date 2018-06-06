@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace GitUI.BranchTreePanel
@@ -6,6 +7,49 @@ namespace GitUI.BranchTreePanel
     partial class RepoObjectsTree
     {
         private TreeNode _lastRightClickedNode;
+
+        private void ContextMenuAddExpandCollapseTree(ContextMenuStrip contextMenu)
+        {
+            // Add the following to the every participating context menu:
+            //
+            //    ---------
+            //    Collapse All
+            //    Expand All
+
+            if (!contextMenu.Items.Contains(tsmiSpacer1))
+            {
+                contextMenu.Items.Add(tsmiSpacer1);
+            }
+
+            if (!contextMenu.Items.Contains(mnubtnCollapseAll))
+            {
+                contextMenu.Items.Add(mnubtnCollapseAll);
+            }
+
+            if (!contextMenu.Items.Contains(mnubtnExpandAll))
+            {
+                contextMenu.Items.Add(mnubtnExpandAll);
+            }
+        }
+
+        private void ContextMenuBranchSpecific(ContextMenuStrip contextMenu)
+        {
+            if (contextMenu != menuBranch)
+            {
+                return;
+            }
+
+            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode;
+            if (node == null)
+            {
+                return;
+            }
+
+            var isNotActiveBranch = !((node.Tag as LocalBranchNode)?.IsActive ?? false);
+            mnuBtnCheckoutLocal.Visible = isNotActiveBranch;
+            tsmiSpacer2.Visible = isNotActiveBranch;
+            mnubtnBranchDelete.Visible = isNotActiveBranch;
+        }
 
         private void OnNodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
@@ -82,12 +126,24 @@ namespace GitUI.BranchTreePanel
 
         private void FilterInRevisionGrid(BaseBranchNode branch)
         {
-            FilterBranchHelper.SetBranchFilter(branch.FullPath, refresh: true);
+            _filterBranchHelper?.SetBranchFilter(branch.FullPath, refresh: true);
         }
 
         private void PopupManageRemotesForm(string remoteName)
         {
             UICommands.StartRemotesDialog(this, remoteName);
+        }
+
+        private void contextMenu_Opening(object sender, CancelEventArgs e)
+        {
+            var contextMenu = sender as ContextMenuStrip;
+            if (contextMenu == null)
+            {
+                return;
+            }
+
+            ContextMenuAddExpandCollapseTree(contextMenu);
+            ContextMenuBranchSpecific(contextMenu);
         }
     }
 }
