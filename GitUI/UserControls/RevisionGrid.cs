@@ -1322,31 +1322,23 @@ If this is a central repository (bare repository without a working directory):
         private void OnGraphCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             // If our loading state has changed since the last paint, update it.
-            if (Loading != null)
+            if (Loading != null && Loading.Visible != _isLoading)
             {
-                if (Loading.Visible != _isLoading)
-                {
-                    Loading.Visible = _isLoading;
-                }
+                Loading.Visible = _isLoading;
             }
 
             var columnIndex = e.ColumnIndex;
-
-            if (e.RowIndex < 0 || (e.State & DataGridViewElementStates.Visible) == 0)
-            {
-                return;
-            }
-
-            if (Graph.RowCount <= e.RowIndex)
-            {
-                return;
-            }
-
             var revision = GetRevision(e.RowIndex);
-            if (revision == null)
+
+            if (e.RowIndex < 0 ||
+                Graph.RowCount <= e.RowIndex ||
+                !e.State.HasFlag(DataGridViewElementStates.Visible) ||
+                revision == null)
             {
                 return;
             }
+
+            e.Handled = true;
 
             var spi = _superprojectCurrentCheckout.Task.CompletedOrDefault();
             var superprojectRefs = new List<IGitRef>();
@@ -1355,18 +1347,11 @@ If this is a central repository (bare repository without a working directory):
                 superprojectRefs.AddRange(spi.Refs[revision.Guid].Where(ShowRemoteRef));
             }
 
-            e.Handled = true;
-
-            var drawRefArgs = new DrawRefArgs
-            {
-                Graphics = e.Graphics,
-                CellBounds = e.CellBounds,
-                IsRowSelected = e.State.HasFlag(DataGridViewElementStates.Selected)
-            };
+            var isRowSelected = e.State.HasFlag(DataGridViewElementStates.Selected);
 
             // Determine background colour for cell
             Brush cellBackgroundBrush;
-            if (drawRefArgs.IsRowSelected /*&& !showRevisionCards*/)
+            if (isRowSelected)
             {
                 cellBackgroundBrush = _selectedItemBrush;
             }
@@ -1408,7 +1393,7 @@ If this is a central repository (bare repository without a working directory):
 
             // Determine cell foreground (text) colour for other columns
             Color foreColor;
-            if (drawRefArgs.IsRowSelected)
+            if (isRowSelected)
             {
                 foreColor = SystemColors.HighlightText;
             }
@@ -1431,21 +1416,8 @@ If this is a central repository (bare repository without a working directory):
                 foreColor = ColorHelper.GetForeColorForBackColor(backColor.Value);
             }
 
-            /*
-            if (!AppSettings.RevisionGraphDrawNonRelativesTextGray || Revisions.RowIsRelative(e.RowIndex))
-            {
-                foreColor = drawRefArgs.IsRowSelected && IsFilledBranchesLayout()
-                    ? SystemColors.HighlightText
-                    : e.CellStyle.ForeColor;
-            }
-            else
-            {
-                foreColor = drawRefArgs.IsRowSelected ? SystemColors.HighlightText : Color.Gray;
-            }
-            */
-
             var rowFont = _normalFont;
-            if (revision.Guid == CurrentCheckout /*&& !showRevisionCards*/)
+            if (revision.Guid == CurrentCheckout)
             {
                 rowFont = _headFont;
             }
@@ -1458,7 +1430,13 @@ If this is a central repository (bare repository without a working directory):
             {
                 float offset = 0;
 
-                drawRefArgs.RefsFont = /*true ? rowFont :*/ _refsFont;
+                var drawRefArgs = new DrawRefArgs
+                {
+                    Graphics = e.Graphics,
+                    CellBounds = e.CellBounds,
+                    IsRowSelected = isRowSelected,
+                    RefsFont = _refsFont
+                };
 
                 if (spi != null)
                 {
@@ -1494,14 +1472,12 @@ If this is a central repository (bare repository without a working directory):
                             return leftTypeRank.CompareTo(rightTypeRank);
                         });
 
-                    foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || AppSettings.ShowRemoteBranches)))
+                    foreach (var gitRef in gitRefs)
                     {
-                        if (gitRef.IsTag)
+                        if ((gitRef.IsTag && !AppSettings.ShowTags) ||
+                            (gitRef.IsRemote && !AppSettings.ShowRemoteBranches))
                         {
-                            if (!AppSettings.ShowTags)
-                            {
-                                continue;
-                            }
+                            continue;
                         }
 
                         var headColor = GetHeadColor(gitRef);
@@ -1743,21 +1719,20 @@ If this is a central repository (bare repository without a working directory):
             var textSize = drawRefArgs.Graphics.MeasureString(name, drawRefArgs.RefsFont);
 
             offset += textSize.Width;
+            offset += 9;
 
-            if (true)
-            {
-                offset += 9;
+            var extraOffset = DrawHeadBackground(
+                drawRefArgs.IsRowSelected,
+                drawRefArgs.Graphics,
+                headColor,
+                headBounds.X,
+                headBounds.Y,
+                RoundToEven(textSize.Width),
+                RoundToEven(textSize.Height),
+                radius: 3, arrowType, dashedLine, fill);
 
-                float extraOffset = DrawHeadBackground(drawRefArgs.IsRowSelected, drawRefArgs.Graphics,
-                                                       headColor, headBounds.X,
-                                                       headBounds.Y,
-                                                       RoundToEven(textSize.Width + 3),
-                                                       RoundToEven(textSize.Height), 3,
-                                                       arrowType, dashedLine, fill);
-
-                offset += extraOffset;
-                headBounds.Offset((int)(extraOffset + 1), 0);
-            }
+            offset += extraOffset;
+            headBounds.Offset((int)(extraOffset + 1), 0);
 
             RevisionGridUtils.DrawColumnTextTruncated(drawRefArgs.Graphics, name, drawRefArgs.RefsFont, textColor, headBounds);
 
