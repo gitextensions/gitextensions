@@ -66,6 +66,7 @@ namespace GitUI
         private readonly AuthorEmailBasedRevisionHighlighting _revisionHighlighting;
         private readonly Lazy<IndexWatcher> _indexWatcher;
         private readonly BuildServerWatcher _buildServerWatcher;
+        private readonly AvatarColumnProvider _avatarColumn;
 
         private RefFilterOptions _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
         private IEnumerable<IGitRef> _latestRefs = Enumerable.Empty<IGitRef>();
@@ -215,6 +216,8 @@ If this is a central repository (bare repository without a working directory):
             fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
 
             _buildServerWatcher = new BuildServerWatcher(this, Graph);
+
+            _avatarColumn = new AvatarColumnProvider(Graph, AvatarColumn);
         }
 
         protected override void Dispose(bool disposing)
@@ -1542,6 +1545,13 @@ If this is a central repository (bare repository without a working directory):
             if (e.ColumnIndex == GraphDataGridViewColumn.Index)
             {
                 Graph.dataGrid_CellPainting(sender, e);
+                return;
+            }
+
+            // Avatar column
+            if (e.ColumnIndex == _avatarColumn.Index)
+            {
+                _avatarColumn.OnCellPainting(e, revision);
                 return;
             }
 

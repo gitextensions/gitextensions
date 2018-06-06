@@ -156,7 +156,7 @@ namespace GitUI.RevisionGridClasses
         internal DataGridViewColumn MessageColumn => Columns[1];
         internal DataGridViewColumn AuthorColumn => Columns[2];
         internal DataGridViewColumn DateColumn => Columns[3];
-        internal DataGridViewColumn IdColumn => Columns[4];
+        internal DataGridViewColumn IdColumn => Columns[5];
 
         public void ShowAuthor(bool show)
         {

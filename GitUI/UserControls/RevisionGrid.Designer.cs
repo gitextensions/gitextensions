@@ -27,6 +27,7 @@ namespace GitUI
             this.GraphDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MessageDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IsMessageMultilineDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.AvatarColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.AuthorDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DateDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IdDataGridViewColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -115,6 +116,7 @@ namespace GitUI
             this.Graph.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.GraphDataGridViewColumn,
             this.MessageDataGridViewColumn,
+            this.AvatarColumn,
             this.AuthorDataGridViewColumn,
             this.DateDataGridViewColumn,
             this.IdDataGridViewColumn,
@@ -181,6 +183,15 @@ namespace GitUI
             this.IsMessageMultilineDataGridViewColumn.ReadOnly = true;
             this.IsMessageMultilineDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
+            // Avatar
+            //
+            this.AvatarColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.AvatarColumn.HeaderText = "Avatar";
+            this.AvatarColumn.Name = "Avatar";
+            this.AvatarColumn.ReadOnly = true;
+            this.AvatarColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.AvatarColumn.Resizable = DataGridViewTriState.False;
+            //
             // Author
             // 
             this.AuthorDataGridViewColumn.HeaderText = "Author";
@@ -759,6 +770,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
 
         private System.Windows.Forms.DataGridViewTextBoxColumn MessageDataGridViewColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn AvatarColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn AuthorDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn DateDataGridViewColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn IdDataGridViewColumn;
