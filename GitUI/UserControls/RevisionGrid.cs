@@ -2364,82 +2364,85 @@ namespace GitUI
         {
             RemoveOwnScripts();
             AddOwnScripts();
-        }
+            return;
 
-        private void AddOwnScripts()
-        {
-            var scripts = ScriptManager.GetScripts();
-
-            if (scripts == null)
+            void RemoveOwnScripts()
             {
+                runScriptToolStripMenuItem.DropDown.Items.Clear();
+
+                var list = mainContextMenu.Items.Cast<ToolStripItem>().ToList();
+
+                foreach (var item in list)
+                {
+                    if (item.Name.Contains("_ownScript"))
+                    {
+                        mainContextMenu.Items.RemoveByKey(item.Name);
+                    }
+                }
+
+                if (mainContextMenu.Items[mainContextMenu.Items.Count - 1] is ToolStripSeparator)
+                {
+                    mainContextMenu.Items.RemoveAt(mainContextMenu.Items.Count - 1);
+                }
+            }
+
+            void AddOwnScripts()
+            {
+                var scripts = ScriptManager.GetScripts();
+
+                if (scripts == null)
+                {
+                    return;
+                }
+
+                var lastIndex = mainContextMenu.Items.Count;
+
+                foreach (var script in scripts)
+                {
+                    if (script.Enabled)
+                    {
+                        var item = new ToolStripMenuItem
+                        {
+                            Text = script.Name,
+                            Name = script.Name + "_ownScript",
+                            Image = script.GetIcon()
+                        };
+                        item.Click += RunScript;
+
+                        if (script.AddToRevisionGridContextMenu)
+                        {
+                            mainContextMenu.Items.Add(item);
+                        }
+                        else
+                        {
+                            runScriptToolStripMenuItem.DropDown.Items.Add(item);
+                        }
+                    }
+                }
+
+                if (lastIndex != mainContextMenu.Items.Count)
+                {
+                    mainContextMenu.Items.Insert(lastIndex, new ToolStripSeparator());
+                }
+
+                bool showScriptsMenu = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
+                runScriptToolStripMenuItem.Visible = showScriptsMenu;
+
                 return;
-            }
 
-            var lastIndex = mainContextMenu.Items.Count;
-
-            foreach (var script in scripts)
-            {
-                if (script.Enabled)
+                void RunScript(object sender, EventArgs e)
                 {
-                    var item = new ToolStripMenuItem
+                    if (_settingsLoaded == false)
                     {
-                        Text = script.Name,
-                        Name = script.Name + "_ownScript",
-                        Image = script.GetIcon()
-                    };
-                    item.Click += RunScript;
-
-                    if (script.AddToRevisionGridContextMenu)
-                    {
-                        mainContextMenu.Items.Add(item);
+                        new FormSettings(UICommands).LoadSettings();
+                        _settingsLoaded = true;
                     }
-                    else
+
+                    if (ScriptRunner.RunScript(this, Module, sender.ToString(), this))
                     {
-                        runScriptToolStripMenuItem.DropDown.Items.Add(item);
+                        RefreshRevisions();
                     }
                 }
-            }
-
-            if (lastIndex != mainContextMenu.Items.Count)
-            {
-                mainContextMenu.Items.Insert(lastIndex, new ToolStripSeparator());
-            }
-
-            bool showScriptsMenu = runScriptToolStripMenuItem.DropDown.Items.Count > 0;
-            runScriptToolStripMenuItem.Visible = showScriptsMenu;
-        }
-
-        private void RemoveOwnScripts()
-        {
-            runScriptToolStripMenuItem.DropDown.Items.Clear();
-
-            var list = mainContextMenu.Items.Cast<ToolStripItem>().ToList();
-
-            foreach (var item in list)
-            {
-                if (item.Name.Contains("_ownScript"))
-                {
-                    mainContextMenu.Items.RemoveByKey(item.Name);
-                }
-            }
-
-            if (mainContextMenu.Items[mainContextMenu.Items.Count - 1] is ToolStripSeparator)
-            {
-                mainContextMenu.Items.RemoveAt(mainContextMenu.Items.Count - 1);
-            }
-        }
-
-        private void RunScript(object sender, EventArgs e)
-        {
-            if (_settingsLoaded == false)
-            {
-                new FormSettings(UICommands).LoadSettings();
-                _settingsLoaded = true;
-            }
-
-            if (ScriptRunner.RunScript(this, Module, sender.ToString(), this))
-            {
-                RefreshRevisions();
             }
         }
 
