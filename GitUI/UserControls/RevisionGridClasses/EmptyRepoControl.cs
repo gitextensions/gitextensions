@@ -1,4 +1,5 @@
-﻿using ResourceManager;
+﻿using System.Windows.Forms;
+using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
@@ -15,6 +16,8 @@ namespace GitUI.UserControls.RevisionGridClasses
 
             btnEditGitIgnore.Click += (_, e) => UICommands.StartEditGitIgnoreDialog(this, localExcludes: false);
             btnOpenCommitForm.Click += (_, e) => UICommands.StartCommitDialog(this);
+
+            Dock = DockStyle.Fill;
         }
     }
 }

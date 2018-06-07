@@ -1,4 +1,5 @@
-﻿using ResourceManager;
+﻿using System.Windows.Forms;
+using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
@@ -12,6 +13,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             Translate();
 
             label.Text = _bareRepositoriesAreNotSupported.Text;
+            Dock = DockStyle.Fill;
         }
     }
 }

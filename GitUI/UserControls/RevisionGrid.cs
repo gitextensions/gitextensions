@@ -57,9 +57,6 @@ namespace GitUI
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
-        private readonly BareRepoControl _bareRepo;
-        private readonly EmptyRepoControl _emptyRepo;
-        private readonly ErrorControl _errorImage;
         private readonly LoadingControl _loadingImage;
         private readonly RevisionGridToolTipProvider _toolTipProvider;
         private readonly QuickSearchProvider _quickSearchProvider;
@@ -131,17 +128,7 @@ namespace GitUI
             InitLayout();
             InitializeComponent();
 
-            _bareRepo = new BareRepoControl { Dock = DockStyle.Fill };
-            Controls.Add(_bareRepo);
-
-            _emptyRepo = new EmptyRepoControl { Dock = DockStyle.Fill };
-            Controls.Add(_emptyRepo);
-
-            _errorImage = new ErrorControl { Dock = DockStyle.Fill };
-            Controls.Add(_errorImage);
-
-            _loadingImage = new LoadingControl { Dock = DockStyle.Fill };
-            Controls.Add(_loadingImage);
+            _loadingImage = new LoadingControl();
 
             _toolTipProvider = new RevisionGridToolTipProvider(this);
 
@@ -237,6 +224,12 @@ namespace GitUI
             }
 
             base.Dispose(disposing);
+        }
+
+        private void SetPage(Control content)
+        {
+            Controls.Clear();
+            Controls.Add(content);
         }
 
         #region ToolTip
@@ -583,14 +576,8 @@ namespace GitUI
         protected override void OnCreateControl()
         {
             base.OnCreateControl();
-
             _isLoading = true;
-
-            _errorImage.Visible = false;
-            _bareRepo.Visible = false;
-            _emptyRepo.Visible = false;
-            Graph.Visible = false;
-            _loadingImage.Visible = true;
+            SetPage(_loadingImage);
         }
 
         public new void Load()
@@ -842,14 +829,7 @@ namespace GitUI
                 _currentCheckoutParents = null;
                 _superprojectCurrentCheckout = newSuperProjectInfo;
                 Graph.Clear();
-                _errorImage.Visible = false;
-                _bareRepo.Visible = false;
-                _emptyRepo.Visible = false;
-                Graph.Visible = true;
-                Graph.BringToFront();
-                Graph.Enabled = false;
-                _loadingImage.Visible = true;
-                _loadingImage.BringToFront();
+                SetPage(_loadingImage);
                 _isLoading = true;
                 _isRefreshingRevisions = true;
                 base.Refresh();
@@ -938,8 +918,7 @@ namespace GitUI
             }
             catch (Exception)
             {
-                _errorImage.Visible = true;
-                _errorImage.BringToFront();
+                SetPage(new ErrorControl());
                 throw;
             }
 
@@ -948,15 +927,7 @@ namespace GitUI
             void OnRevisionReaderError(Exception exception)
             {
                 // This has to happen on the UI thread
-                this.InvokeAsync(
-                        () =>
-                        {
-                            _errorImage.Visible = true;
-                            _bareRepo.Visible = false;
-                            _emptyRepo.Visible = false;
-                            Graph.Visible = false;
-                            _loadingImage.Visible = false;
-                        })
+                this.InvokeAsync(() => SetPage(new ErrorControl()))
                     .FileAndForget();
 
                 DisposeRevisionReader();
@@ -978,10 +949,7 @@ namespace GitUI
                     this.InvokeAsync(
                             () =>
                             {
-                                _bareRepo.Visible = isBare;
-                                _emptyRepo.Visible = !isBare;
-                                Graph.Visible = false;
-                                _loadingImage.Visible = false;
+                                SetPage(isBare ? (Control)new BareRepoControl() : new EmptyRepoControl());
                                 _isRefreshingRevisions = false;
                             })
                         .FileAndForget();
@@ -993,7 +961,7 @@ namespace GitUI
                     {
                         await this.SwitchToMainThreadAsync();
                         OnRevisionRead();
-                        _loadingImage.Visible = false;
+                        SetPage(Graph);
                         _isRefreshingRevisions = false;
                         SelectInitialRevision();
                         if (ShowBuildServerInfo)
