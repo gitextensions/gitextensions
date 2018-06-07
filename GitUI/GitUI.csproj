@@ -357,6 +357,7 @@
     <Compile Include="UserControls\RevisionGridClasses\BareRepoControl.Designer.cs">
       <DependentUpon>BareRepoControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\RevisionGridClasses\Columns\ColumnProvider.cs" />
     <Compile Include="UserControls\RevisionGridClasses\EmptyRepoControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
