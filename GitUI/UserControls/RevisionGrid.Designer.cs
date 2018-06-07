@@ -260,6 +260,7 @@ namespace GitUI
             this.IdDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.IdDataGridViewColumn.Visible = false;
             this.IdDataGridViewColumn.FillWeight = 7f;
+            this.IdDataGridViewColumn.MinimumWidth = 80;
             // 
             // mainContextMenu
             // 
