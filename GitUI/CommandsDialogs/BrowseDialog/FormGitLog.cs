@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -119,6 +120,24 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             TopMost = !TopMost;
             alwaysOnTopCheckBox.Checked = TopMost;
+        }
+
+        private void SaveToFileToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            using (var fileDialog = new SaveFileDialog
+            {
+                Title = Name,
+                DefaultExt = ".txt",
+                AddExtension = true
+            })
+            {
+                fileDialog.Filter =
+                    "All files (*.*)|*.*";
+                if (fileDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    File.WriteAllText(fileDialog.FileName, AppSettings.GitLog.ToString());
+                }
+            }
         }
 
         private void OnCommandsLogChanged(object sender, EventArgs e)

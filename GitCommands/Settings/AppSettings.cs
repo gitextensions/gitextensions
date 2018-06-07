@@ -54,7 +54,7 @@ namespace GitCommands
                 }
                 else
                 {
-                    // Make applicationdatapath version independent
+                    // Make ApplicationDataPath version independent
                     return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
                 }
             });

@@ -12,8 +12,6 @@ namespace GitUI.Script
             var psarguments = (runInBackground ? "" : "-NoExit") + " -ExecutionPolicy Unrestricted -Command \"" + command + " " + argument + "\"";
             EnvironmentConfiguration.SetEnvironmentVariables();
 
-            var executionStartTimestamp = DateTime.Now;
-
             var startInfo = new ProcessStartInfo
             {
                 FileName = filename,
@@ -22,12 +20,12 @@ namespace GitUI.Script
                 UseShellExecute = false
             };
 
+            var startCmd = AppSettings.GitLog.Log(filename, psarguments);
             var startProcess = Process.Start(startInfo);
 
             startProcess.Exited += (sender, args) =>
             {
-                var executionEndTimestamp = DateTime.Now;
-                AppSettings.GitLog.Log(filename + " " + psarguments, executionStartTimestamp, executionEndTimestamp);
+                startCmd.LogEnd();
             };
         }
     }

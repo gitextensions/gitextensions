@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -82,7 +82,7 @@ namespace GitCommands
         {
             EnvironmentConfiguration.SetEnvironmentVariables();
 
-            var executionStartTimestamp = DateTime.Now;
+            var startCmd = AppSettings.GitLog.Log(fileName, arguments);
 
             var startInfo = CreateProcessStartInfo(fileName, arguments, workingDirectory, outputEncoding);
             var startProcess = Process.Start(startInfo);
@@ -91,15 +91,7 @@ namespace GitCommands
             void ProcessExited(object sender, EventArgs args)
             {
                 startProcess.Exited -= ProcessExited;
-
-                string quotedCmd = fileName;
-                if (quotedCmd.IndexOf(' ') != -1)
-                {
-                    quotedCmd = quotedCmd.Quote();
-                }
-
-                var executionEndTimestamp = DateTime.Now;
-                AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
+                startCmd.LogEnd();
             }
 
             startProcess.Exited += ProcessExited;

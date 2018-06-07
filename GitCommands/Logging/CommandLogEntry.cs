@@ -2,23 +2,32 @@ using System;
 
 namespace GitCommands.Logging
 {
-  public class CommandLogEntry
-  {
-    public string Command { get; }
-    public DateTime ExecutionStartTimestamp { get; }
-    public DateTime ExecutionEndTimestamp { get; }
-
-    public CommandLogEntry(string command, DateTime executionStartTimestamp, DateTime executionEndTimestamp)
+    public class CommandLogEntry
     {
-      Command = command;
-      ExecutionStartTimestamp = executionStartTimestamp;
-      ExecutionEndTimestamp = executionEndTimestamp;
-    }
+        private string Command { get; }
+        private DateTime Timestamp { get; }
+        public TimeSpan? Duration { get; set;  }
 
-    public override string ToString()
-    {
-      var durationInMillis = (long)ExecutionEndTimestamp.Subtract(ExecutionStartTimestamp).TotalMilliseconds;
-      return string.Format("{0}    {1}    #(took {2} ms)", ExecutionStartTimestamp.ToString("O"), Command, durationInMillis);
+        /// <summary>
+        /// Create a new log entry
+        /// </summary>
+        /// <param name="command">The (Git) command to log</param>
+        /// <param name="timestamp">The time for the log</param>
+        public CommandLogEntry(string command, DateTime timestamp)
+        {
+            Command = command;
+            Timestamp = timestamp;
+
+            Duration = null;
+        }
+
+        public override string ToString()
+        {
+            string duration = Duration == null ?
+                "started" :
+                string.Format("{0:0}ms", ((TimeSpan)Duration).TotalMilliseconds);
+
+            return $"{Timestamp:HH:mm:ss.fffffff} {duration,7} {Command}";
+        }
     }
-  }
 }

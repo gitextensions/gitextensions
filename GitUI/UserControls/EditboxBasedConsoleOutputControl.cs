@@ -80,14 +80,6 @@ namespace GitUI.UserControls
 
                 KillProcess();
 
-                string quotedCmd = command;
-                if (quotedCmd.IndexOf(' ') != -1)
-                {
-                    quotedCmd = quotedCmd.Quote();
-                }
-
-                DateTime executionStartTimestamp = DateTime.Now;
-
                 // process used to execute external commands
                 var process = new Process();
                 ProcessStartInfo startInfo = GitCommandHelpers.CreateProcessStartInfo(command, arguments, workdir, GitModule.SystemEncoding);
@@ -132,10 +124,10 @@ namespace GitUI.UserControls
                     }).FileAndForget();
                 };
 
+                var startCmd = AppSettings.GitLog.Log(command, arguments);
                 process.Exited += (sender, args) =>
                 {
-                    DateTime executionEndTimestamp = DateTime.Now;
-                    AppSettings.GitLog.Log(quotedCmd + " " + arguments, executionStartTimestamp, executionEndTimestamp);
+                    startCmd.LogEnd();
                 };
 
                 process.Start();
