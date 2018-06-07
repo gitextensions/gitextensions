@@ -12,6 +12,7 @@ namespace GitUI.UserControls.RevisionGridClasses
             InitializeComponent();
 
             _image.Image = Resources.loadingpanel;
+            Dock = DockStyle.Fill;
         }
 
 #pragma warning disable
