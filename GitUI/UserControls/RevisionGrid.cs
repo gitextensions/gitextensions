@@ -775,6 +775,8 @@ namespace GitUI
 
         public void ForceRefreshRevisions()
         {
+            ThreadHelper.AssertOnUIThread();
+
             try
             {
                 RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
