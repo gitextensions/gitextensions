@@ -135,9 +135,16 @@ namespace GitCommands
                     {
                         if (revisionPredicate == null || revisionPredicate(revision))
                         {
-                            // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
-                            // Full commit message is used in InMemFilter but later it's not needed
-                            revision.Body = null;
+                            // The full commit message body is used initially in InMemFilter, after which it isn't
+                            // strictly needed and can be re-populated asynchronously.
+                            //
+                            // We keep full multiline message bodies within the last six months.
+                            // Commits earlier than that have their properties set to null and the
+                            // memory will be GCd.
+                            if (DateTime.Now - revision.AuthorDate > TimeSpan.FromDays(30 * 6))
+                            {
+                                revision.Body = null;
+                            }
 
                             // Look up any refs associate with this revision
                             revision.Refs = refsByObjectId[revision.Guid].AsReadOnlyList();
