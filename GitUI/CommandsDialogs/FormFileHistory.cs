@@ -10,7 +10,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
-using GitUI.UserControls.RevisionGridClasses;
+using GitUI.UserControls.RevisionGrid;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs

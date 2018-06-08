@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void LoadTagsAsync()
         {
-            comboBoxTags.Text = Strings.GetLoadingData();
+            comboBoxTags.Text = Strings.GetLoadingDataText();
             ThreadHelper.JoinableTaskFactory.RunAsync(() =>
             {
                 return _tagsLoader.LoadAsync(
@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void LoadBranchesAsync()
         {
-            comboBoxBranches.Text = Strings.GetLoadingData();
+            comboBoxBranches.Text = Strings.GetLoadingDataText();
             ThreadHelper.JoinableTaskFactory.RunAsync(() =>
             {
                 return _branchesLoader.LoadAsync(

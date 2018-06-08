@@ -22,7 +22,7 @@ namespace GitUI.Blame
         [CanBeNull] private GitBlameLine _clickedBlameLine;
         private GitBlameCommit _highlightedCommit;
         private GitBlame _blame;
-        private RevisionGrid _revGrid;
+        private RevisionGridControl _revGrid;
         private string _blameHash;
         private string _fileName;
         private Encoding _encoding;
@@ -54,7 +54,7 @@ namespace GitUI.Blame
             CommitInfo.CommandClick += commitInfo_CommandClick;
         }
 
-        public void LoadBlame(GitRevision revision, IReadOnlyList<string> children, string fileName, RevisionGrid revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
+        public void LoadBlame(GitRevision revision, IReadOnlyList<string> children, string fileName, RevisionGridControl revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
         {
             string guid = revision.Guid;
 

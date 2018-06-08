@@ -11,7 +11,7 @@ using GitCommands.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
-using GitUI.UserControls.RevisionGridClasses;
+using GitUI.UserControls.RevisionGrid;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _selectedRevision = new TranslationString("Selected");
         private readonly TranslationString _firstRevision = new TranslationString("First");
 
-        private RevisionGrid _revisionGrid;
+        private RevisionGridControl _revisionGrid;
         private RevisionFileTree _revisionFileTree;
         private string _oldRevision;
         private GitItemStatus _oldDiffItem;
@@ -146,7 +146,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void Bind(RevisionGrid revisionGrid, RevisionFileTree revisionFileTree)
+        public void Bind(RevisionGridControl revisionGrid, RevisionFileTree revisionFileTree)
         {
             _revisionGrid = revisionGrid;
             _revisionFileTree = revisionFileTree;
@@ -177,7 +177,7 @@ namespace GitUI.CommandsDialogs
             if (sha1.IsNullOrEmpty())
             {
                 // No parent at all, present as working directory
-                return Strings.GetCurrentUnstagedChanges();
+                return Strings.GetWorkspaceText();
             }
 
             var revision = _revisionGrid.GetRevision(sha1);

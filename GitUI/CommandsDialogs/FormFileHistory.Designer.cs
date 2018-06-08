@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFileHistory));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.FileChanges = new GitUI.RevisionGrid();
+            this.FileChanges = new GitUI.RevisionGridControl();
             this.FileHistoryContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diffToolremotelocalStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -34,7 +34,7 @@ namespace GitUI.CommandsDialogs
             this.followFileHistoryRenamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fullHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.copyToClipboardToolStripMenuItem = new GitUI.UserControls.RevisionGridClasses.CopyContextMenuItem();
+            this.copyToClipboardToolStripMenuItem = new GitUI.UserControls.RevisionGrid.CopyContextMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
             this.CommitDiff = new GitUI.UserControls.CommitDiff();
@@ -524,7 +524,7 @@ namespace GitUI.CommandsDialogs
         private System.Diagnostics.EventLog eventLog1;
         private FileViewer View;
         private FileViewer Diff;
-        private RevisionGrid FileChanges;
+        private RevisionGridControl FileChanges;
         private System.Windows.Forms.ContextMenuStrip FileHistoryContextMenu;
         private System.Windows.Forms.ToolStripMenuItem openWithDifftoolToolStripMenuItem;
         private Blame.BlameControl Blame;
@@ -557,7 +557,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem ignoreWhitespaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem detectMoveAndCopyInThisFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem detectMoveAndCopyInAllFilesToolStripMenuItem;
-        private GitUI.UserControls.RevisionGridClasses.CopyContextMenuItem copyToClipboardToolStripMenuItem;
+        private GitUI.UserControls.RevisionGrid.CopyContextMenuItem copyToClipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator separatorAfterCopySubmenu;
     }
 }
