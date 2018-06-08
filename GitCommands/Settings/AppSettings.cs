@@ -901,7 +901,7 @@ namespace GitCommands
             set => SetBool("showtags", value);
         }
 
-        public static bool ShowIds
+        public static bool ShowObjectIdColumn
         {
             get => GetBool("showids", true);
             set => SetBool("showids", value);
