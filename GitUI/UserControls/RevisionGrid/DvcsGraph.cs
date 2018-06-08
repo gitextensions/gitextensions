@@ -46,7 +46,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         private readonly int _nodeDimension = DpiUtil.Scale(10);
         private readonly int _laneWidth = DpiUtil.Scale(13);
-        private readonly int _laneSidePadding = DpiUtil.Scale(4);
+        private readonly int _laneSidePadding = DpiUtil.Scale(6);
         private readonly int _laneLineWidth = DpiUtil.Scale(2);
         private const int MaxLanes = 40;
 
