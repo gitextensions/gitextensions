@@ -54,19 +54,27 @@ namespace GitUI.UserControls.RevisionGrid
                     TriggerMenuChanged(); // trigger refresh
                 }
             }
+
+            return;
+
+            void UpdateMenuCommandShortcutKeyDisplayString(IReadOnlyList<MenuCommand> targetList, IEnumerable<MenuCommand> sourceList)
+            {
+                foreach (var source in sourceList.Where(mc => !mc.IsSeparator))
+                {
+                    var target = targetList.Single(mc => !mc.IsSeparator && mc.Name == source.Name);
+                    target.ShortcutKeyDisplayString = source.ShortcutKeyDisplayString;
+                }
+            }
         }
 
         public void TriggerMenuChanged()
         {
-            OnMenuChanged();
-        }
+            MenuChanged?.Invoke(this, null);
 
-        private static void UpdateMenuCommandShortcutKeyDisplayString(IReadOnlyList<MenuCommand> targetList, IEnumerable<MenuCommand> sourceList)
-        {
-            foreach (var sourceMc in sourceList.Where(mc => !mc.IsSeparator))
+            foreach (var menuCommand in GetMenuCommandsWithoutSeparators())
             {
-                var targetMc = targetList.Single(mc => !mc.IsSeparator && mc.Name == sourceMc.Name);
-                targetMc.ShortcutKeyDisplayString = sourceMc.ShortcutKeyDisplayString;
+                menuCommand.SetCheckForRegisteredMenuItems();
+                menuCommand.UpdateMenuItemsShortcutKeyDisplayString();
             }
         }
 
@@ -150,7 +158,7 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         /// <summary>
-        /// this is needed because _revsionGrid is null when TranslationApp is called
+        /// this is needed because _revisionGrid is null when TranslationApp is called
         /// </summary>
         [CanBeNull]
         private string GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands revGridCommands)
@@ -358,19 +366,6 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         public event EventHandler MenuChanged;
-
-        // taken from http://stackoverflow.com/questions/5058254/inotifypropertychanged-propertychangedeventhandler-event-is-always-null
-        // paramenter name not used
-        private void OnMenuChanged()
-        {
-            MenuChanged?.Invoke(this, null);
-
-            foreach (var menuCommand in GetMenuCommandsWithoutSeparators())
-            {
-                menuCommand.SetCheckForRegisteredMenuItems();
-                menuCommand.UpdateMenuItemsShortcutKeyDisplayString();
-            }
-        }
 
         protected override IEnumerable<MenuCommand> GetMenuCommandsForTranslation()
         {
