@@ -42,14 +42,14 @@ namespace GitUI.Editor
             }
         }
 
-        public static Color MakeColorLighter(Color color)
+        public static Color MakeColorLighter(Color color, int amount = 10)
         {
-            return AdjustColor(color);
+            return AdjustColor(color, amount);
         }
 
-        public static Color MakeColorDarker(Color color)
+        public static Color MakeColorDarker(Color color, int amount = 10)
         {
-            return AdjustColor(color, -10);
+            return AdjustColor(color, -amount);
         }
 
         public static int GetColorBrightnessIndex(Color c)
