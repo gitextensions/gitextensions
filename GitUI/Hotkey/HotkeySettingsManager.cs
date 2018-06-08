@@ -8,6 +8,7 @@ using System.Xml.Serialization;
 using GitCommands;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using GitUI.Script;
 using ResourceManager;
 
 namespace GitUI.Hotkey
@@ -244,8 +245,6 @@ namespace GitUI.Hotkey
         {
             HotkeyCommand Hk(object en, Keys k) => new HotkeyCommand((int)en, en.ToString()) { KeyData = k };
 
-            HotkeyCommand[] scriptsHotkeys = LoadScriptHotkeys();
-
             const Keys OpenWithDifftoolHotkey = Keys.F3;
             const Keys ShowHistoryHotkey = Keys.H;
             const Keys BlameHotkey = Keys.B;
@@ -347,24 +346,22 @@ namespace GitUI.Hotkey
                     Hk(RevisionFileTree.Command.OpenWithDifftool, OpenWithDifftoolHotkey)),
                 new HotkeySettings(
                     FormSettings.HotkeySettingsName,
-                    scriptsHotkeys)
+                    LoadScriptHotkeys())
               };
-        }
 
-        public static HotkeyCommand[] LoadScriptHotkeys()
-        {
-            var curScripts = Script.ScriptManager.GetScripts();
-
-            /* define unusable int for identifying a shortcut for a custom script is pressed
-             * all integers above 9000 represent a scripthotkey
-             * these integers are never matched in the 'switch' routine on a form and
-             * therefore execute the 'default' action
-             */
-
-            return curScripts.
-                Where(s => !s.Name.IsNullOrEmpty()).
-                Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.Name) { KeyData = Keys.None })
-            .ToArray();
+            HotkeyCommand[] LoadScriptHotkeys()
+            {
+                /* define unusable int for identifying a shortcut for a custom script is pressed
+                 * all integers above 9000 represent a scripthotkey
+                 * these integers are never matched in the 'switch' routine on a form and
+                 * therefore execute the 'default' action
+                 */
+                return ScriptManager
+                    .GetScripts()
+                    .Where(s => !s.Name.IsNullOrEmpty())
+                    .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.Name) { KeyData = Keys.None })
+                    .ToArray();
+            }
         }
     }
 }

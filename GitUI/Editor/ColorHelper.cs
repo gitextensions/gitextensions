@@ -26,18 +26,20 @@ namespace GitUI.Editor
         public static Color AdjustColor(Color color, int amount = 10)
         {
             return Color.FromArgb(
-                AdjustColorComponent(color.R, amount),
-                AdjustColorComponent(color.G, amount),
-                AdjustColorComponent(color.B, amount));
-        }
+                AdjustColorComponent(color.R),
+                AdjustColorComponent(color.G),
+                AdjustColorComponent(color.B));
 
-        public static int AdjustColorComponent(int colorComponentValue, int amount)
-        {
-            int newValue = colorComponentValue + amount;
-            newValue = Math.Max(0, newValue);
-            newValue = Math.Min(255, newValue);
+            int AdjustColorComponent(int v)
+            {
+                var newValue = v + amount;
 
-            return newValue;
+                return newValue < 0
+                    ? 0
+                    : newValue > 255
+                        ? 255
+                        : newValue;
+            }
         }
 
         public static Color MakeColorLighter(Color color)
