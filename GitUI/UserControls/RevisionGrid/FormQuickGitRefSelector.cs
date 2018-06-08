@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -28,7 +29,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// </summary>
         public IGitRef SelectedRef => (lbxRefs.SelectedItem as DisplyGitRef)?.Item;
 
-        public void Init(Action action, IGitRef[] refs)
+        public void Init(Action action, IReadOnlyList<IGitRef> refs)
         {
             switch (action)
             {
@@ -47,7 +48,7 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             lbxRefs.Items.Clear();
-            if (refs == null || refs.Length < 1)
+            if (refs == null || refs.Count < 1)
             {
                 DialogResult = DialogResult.Cancel;
                 Close();

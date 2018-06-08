@@ -23,36 +23,36 @@ namespace GitUI.UserControls.RevisionGrid
             _tags = revision.Refs.Where(h => h.IsTag).ToArray();
         }
 
-        public IEnumerable<IGitRef> AllBranches => _allBranches.AsEnumerable();
+        public IReadOnlyList<IGitRef> AllBranches => _allBranches;
 
-        public IEnumerable<IGitRef> AllTags => _tags.AsEnumerable();
+        public IReadOnlyList<IGitRef> AllTags => _tags;
 
-        public IEnumerable<IGitRef> BranchesWithNoIdenticalRemotes => _branchesWithNoIdenticalRemotes.AsEnumerable();
+        public IReadOnlyList<IGitRef> BranchesWithNoIdenticalRemotes => _branchesWithNoIdenticalRemotes;
 
-        public string[] GetAllBranchNames()
+        public IReadOnlyList<string> GetAllBranchNames()
         {
-            return _allBranches.Select(b => b.Name).ToArray();
+            return _allBranches.Select(b => b.Name).ToList();
         }
 
-        public string[] GetAllTagNames()
+        public IReadOnlyList<string> GetAllTagNames()
         {
-            return AllTags.Select(t => t.Name).ToArray();
+            return AllTags.Select(t => t.Name).ToList();
         }
 
         /// <summary>
         /// Returns the collection of local branches and tags which can be deleted.
         /// </summary>
-        public IGitRef[] GetDeletableLocalRefs(string currentBranch)
+        public IReadOnlyList<IGitRef> GetDeletableLocalRefs(string currentBranch)
         {
-            return _localBranches.Where(b => b.Name != currentBranch).Union(_tags).ToArray();
+            return _localBranches.Where(b => b.Name != currentBranch).Union(_tags).ToList();
         }
 
         /// <summary>
         /// Returns the collection of local branches which can be renamed.
         /// </summary>
-        public IGitRef[] GetRenameableLocalBranches()
+        public IReadOnlyList<IGitRef> GetRenameableLocalBranches()
         {
-            return _localBranches.ToArray();
+            return _localBranches.ToList();
         }
     }
 }

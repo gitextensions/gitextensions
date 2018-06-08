@@ -293,14 +293,14 @@ namespace GitUI
 
         #endregion
 
-        private void InitiateRefAction([CanBeNull] IGitRef[] refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
+        private void InitiateRefAction([CanBeNull] IReadOnlyList<IGitRef> refs, Action<IGitRef> action, FormQuickGitRefSelector.Action actionLabel)
         {
-            if (refs == null || refs.Length < 1)
+            if (refs == null || refs.Count < 1)
             {
                 return;
             }
 
-            if (refs.Length == 1)
+            if (refs.Count == 1)
             {
                 action(refs[0]);
                 return;
