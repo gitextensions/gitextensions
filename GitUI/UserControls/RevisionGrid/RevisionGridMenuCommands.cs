@@ -247,10 +247,20 @@ namespace GitUI.UserControls.RevisionGrid
                 new MenuCommand
                 {
                     Name = "showRevisionGraphToolStripMenuItem",
-                    Text = "Show revision graph",
+                    Text = "Show revision graph column",
                     ExecuteAction = () => _revisionGrid.ToggleRevisionGraph(),
                     IsCheckedFunc = () => AppSettings.ShowRevisionGridGraphColumn
                 },
+                new MenuCommand
+                {
+                    Name = "showIdsToolStripMenuItem",
+                    Text = "Show SHA-1 column",
+                    ExecuteAction = () => _revisionGrid.ToggleObjectIdColumn(),
+                    IsCheckedFunc = () => AppSettings.ShowIds
+                },
+
+                MenuCommand.CreateSeparator(),
+
                 new MenuCommand
                 {
                     Name = "drawNonrelativesGrayToolStripMenuItem",
@@ -294,13 +304,6 @@ namespace GitUI.UserControls.RevisionGrid
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.ToggleShowTags),
                     ExecuteAction = () => _revisionGrid.ShowTags_ToolStripMenuItemClick(),
                     IsCheckedFunc = () => AppSettings.ShowTags
-                },
-                new MenuCommand
-                {
-                    Name = "showIdsToolStripMenuItem",
-                    Text = "Show SHA-1",
-                    ExecuteAction = () => _revisionGrid.ShowIds_ToolStripMenuItemClick(),
-                    IsCheckedFunc = () => AppSettings.ShowIds
                 },
                 new MenuCommand
                 {

@@ -2098,6 +2098,13 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
+        internal void ToggleObjectIdColumn()
+        {
+            AppSettings.ShowIds = !AppSettings.ShowIds;
+            MenuCommands.TriggerMenuChanged();
+            Refresh();
+        }
+
         internal void ToggleRevisionGraph()
         {
             ToggleRevisionGraphSettings();
@@ -2126,13 +2133,6 @@ namespace GitUI
         internal void ShowTags_ToolStripMenuItemClick()
         {
             AppSettings.ShowTags = !AppSettings.ShowTags;
-            MenuCommands.TriggerMenuChanged();
-            Refresh();
-        }
-
-        internal void ShowIds_ToolStripMenuItemClick()
-        {
-            AppSettings.ShowIds = !AppSettings.ShowIds;
             MenuCommands.TriggerMenuChanged();
             Refresh();
         }
