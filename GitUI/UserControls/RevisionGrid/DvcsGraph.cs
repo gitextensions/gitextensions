@@ -517,46 +517,45 @@ namespace GitUI.UserControls.RevisionGrid
                     }
                 }
             }
-        }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
-        private void UpdateGraph(int curCount, int scrollTo)
-        {
-            lock (_graphData)
+            void UpdateGraph(int curCount, int scrollTo)
             {
-                while (curCount < scrollTo)
+                lock (_graphData)
                 {
-                    // Cache the next item
-                    if (!_graphData.CacheTo(curCount))
+                    while (curCount < scrollTo)
                     {
-                        Debug.WriteLine("Cached item FAILED {0}", curCount.ToString());
-                        lock (_backgroundThread)
+                        // Cache the next item
+                        if (!_graphData.CacheTo(curCount))
                         {
-                            _backgroundScrollTo = curCount;
+                            Debug.WriteLine("Cached item FAILED {0}", curCount.ToString());
+                            lock (_backgroundThread)
+                            {
+                                _backgroundScrollTo = curCount;
+                            }
+
+                            break;
                         }
 
-                        break;
-                    }
+                        // Update the row (if needed)
+                        if (curCount == Math.Min(scrollTo, _visibleBottom) - 1)
+                        {
+                            this.InvokeAsync(UpdateRow, curCount).FileAndForget();
+                        }
 
-                    // Update the row (if needed)
-                    if (curCount == Math.Min(scrollTo, _visibleBottom) - 1)
-                    {
-                        this.InvokeAsync(o => UpdateRow(o), curCount).FileAndForget();
-                    }
+                        int count = 0;
+                        if (FirstDisplayedCell != null)
+                        {
+                            count = FirstDisplayedCell.RowIndex + DisplayedRowCount(true);
+                        }
 
-                    int count = 0;
-                    if (FirstDisplayedCell != null)
-                    {
-                        count = FirstDisplayedCell.RowIndex + DisplayedRowCount(true);
-                    }
+                        if (curCount == count)
+                        {
+                            this.InvokeAsync(UpdateGraphColumnWidth).FileAndForget();
+                        }
 
-                    if (curCount == count)
-                    {
-                        this.InvokeAsync(UpdateGraphColumnWidth).FileAndForget();
+                        curCount = _graphData.CachedCount;
+                        _graphDataCount = curCount;
                     }
-
-                    curCount = _graphData.CachedCount;
-                    _graphDataCount = curCount;
                 }
             }
         }
