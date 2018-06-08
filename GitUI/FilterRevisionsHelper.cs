@@ -7,7 +7,7 @@ namespace GitUI
     internal sealed class FilterRevisionsHelper : IDisposable
     {
         private readonly ToolStripTextBox _NO_TRANSLATE_textBox;
-        private readonly RevisionGrid _NO_TRANSLATE_revisionGrid;
+        private readonly RevisionGridControl _NO_TRANSLATE_revisionGrid;
         private readonly ToolStripButton _NO_TRANSLATE_showFirstParentButton;
 
         private readonly ToolStripMenuItem _commitFilterToolStripMenuItem;
@@ -18,7 +18,7 @@ namespace GitUI
 
         private readonly Form _NO_TRANSLATE_form;
 
-        public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGrid revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
+        public FilterRevisionsHelper(ToolStripTextBox textBox, ToolStripDropDownButton dropDownButton, RevisionGridControl revisionGrid, ToolStripLabel label, ToolStripButton showFirstParentButton, Form form)
         {
             _commitFilterToolStripMenuItem = new ToolStripMenuItem
             {

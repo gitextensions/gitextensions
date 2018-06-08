@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly TranslationString _bisectStart =
             new TranslationString("Mark selected revisions as start bisect range?");
 
-        private readonly RevisionGrid _revisionGrid;
+        private readonly RevisionGridControl _revisionGrid;
 
         private FormBisect()
             : this((GitUICommands)null)
@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Translate();
         }
 
-        public FormBisect(RevisionGrid revisionGrid)
+        public FormBisect(RevisionGridControl revisionGrid)
             : this(revisionGrid.UICommands)
         {
             _revisionGrid = revisionGrid;

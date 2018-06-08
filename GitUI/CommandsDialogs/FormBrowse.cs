@@ -21,7 +21,7 @@ using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Script;
-using GitUI.UserControls.RevisionGridClasses;
+using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.ToolStripClasses;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;

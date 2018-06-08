@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.RevisionGrid = new GitUI.RevisionGrid();
+            this.RevisionGrid = new GitUI.RevisionGridControl();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.DiffFiles = new GitUI.FileStatusList();
             this.diffViewer = new GitUI.Editor.FileViewer();
@@ -147,7 +147,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer3;
         private FileStatusList DiffFiles;
-        private RevisionGrid RevisionGrid;
+        private RevisionGridControl RevisionGrid;
         private FileViewer diffViewer;
     }
 }

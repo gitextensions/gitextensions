@@ -62,7 +62,7 @@ namespace GitUI.CommandsDialogs
             this.repoObjectsTree = new GitUI.BranchTreePanel.RepoObjectsTree();
             this.RightSplitContainer = new System.Windows.Forms.SplitContainer();
             this.RevisionsSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.RevisionGrid = new GitUI.RevisionGrid();
+            this.RevisionGrid = new GitUI.RevisionGridControl();
             this.CommitInfoTabControl = new System.Windows.Forms.TabControl();
             this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
             this.RevisionInfo = new GitUI.CommitInfo.CommitInfo();
@@ -1683,7 +1683,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.TabPage TreeTabPage;
         private System.Windows.Forms.BindingSource gitRevisionBindingSource;
         private System.Windows.Forms.BindingSource gitItemBindingSource;
-        private GitUI.RevisionGrid RevisionGrid;
+        private GitUI.RevisionGridControl RevisionGrid;
         private ToolStripEx ToolStrip;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripSplitButton _NO_TRANSLATE_Workingdir;

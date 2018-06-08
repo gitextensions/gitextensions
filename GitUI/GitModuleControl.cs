@@ -151,7 +151,7 @@ namespace GitUI
         /// and returns true if any executed.</summary>
         private bool ExecuteScriptCommand(int command)
         {
-            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGrid);
+            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGridControl);
         }
 
         /// <summary>Raises the <see cref="GitUICommandsSourceSet"/> event.</summary>

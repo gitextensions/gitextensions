@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.SelectedBranch = new System.Windows.Forms.Label();
             this.CurrentBranch = new System.Windows.Forms.Label();
-            this.RevisionGrid = new GitUI.RevisionGrid();
+            this.RevisionGrid = new GitUI.RevisionGridControl();
             this.MailFrom = new System.Windows.Forms.TextBox();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.label3 = new System.Windows.Forms.Label();
@@ -388,7 +388,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Button Browse;
         private System.Windows.Forms.TextBox OutputPath;
         private System.Windows.Forms.Button FormatPatch;
-        private RevisionGrid RevisionGrid;
+        private RevisionGridControl RevisionGrid;
         private System.Windows.Forms.ComboBox MailTo;
         private System.Windows.Forms.RadioButton SaveToDir;
         private System.Windows.Forms.Label label2;

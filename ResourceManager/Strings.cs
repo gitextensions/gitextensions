@@ -2,6 +2,8 @@ using System;
 using GitCommands;
 using SmartFormat;
 
+#pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
+
 namespace ResourceManager
 {
     /// <summary>Contains common string literals which are translated.</summary>
@@ -70,19 +72,19 @@ namespace ResourceManager
             return Instance._childrenText.Text;
         }
 
-        public static string GetCurrentUnstagedChanges()
+        public static string GetWorkspaceText()
         {
-            return Instance._currentUnstagedChanges.Text;
+            return Instance._workspaceText.Text;
         }
 
-        public static string GetCurrentIndex()
+        public static string GetIndexText()
         {
-            return Instance._currentIndex.Text;
+            return Instance._indexText.Text;
         }
 
-        public static string GetLoadingData()
+        public static string GetLoadingDataText()
         {
-            return Instance._loadingData.Text;
+            return Instance._loadingDataText.Text;
         }
 
         public static readonly TranslationString BranchesText = new TranslationString("Branches");
@@ -94,8 +96,6 @@ namespace ResourceManager
             return Instance._uninterestingDiffOmitted.Text;
         }
 
-        #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
-
         private readonly TranslationString _dateText       = new TranslationString("Date");
         private readonly TranslationString _authorText     = new TranslationString("Author");
         private readonly TranslationString _authorDateText = new TranslationString("Author date");
@@ -105,10 +105,14 @@ namespace ResourceManager
         private readonly TranslationString _messageText    = new TranslationString("Message");
         private readonly TranslationString _parentsText    = new TranslationString("Parent(s)");
         private readonly TranslationString _childrenText   = new TranslationString("Children");
-        private readonly TranslationString _currentUnstagedChanges = new TranslationString("Working directory");
-        private readonly TranslationString _currentIndex   = new TranslationString("Commit index");
-        private readonly TranslationString _loadingData    = new TranslationString("Loading data...");
-        private readonly TranslationString _uninterestingDiffOmitted = new TranslationString("Uninteresting diff hunks are omitted.");
+        private readonly TranslationString _workspaceText  = new TranslationString("Workspace");
+        private readonly TranslationString _indexText      = new TranslationString("Index");
+
+        private readonly TranslationString _loadingDataText
+            = new TranslationString("Loading data...");
+
+        private readonly TranslationString _uninterestingDiffOmitted
+            = new TranslationString("Uninteresting diff hunks are omitted.");
 
         public static string GetNSecondsAgoText(int value)
         {
@@ -145,6 +149,16 @@ namespace ResourceManager
             return Smart.Format(AppSettings.CurrentCultureInfo, Instance._yearsAgo.Text, value, Math.Abs(value));
         }
 
+        public static string GetUnstagedCountText(int value)
+        {
+            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._unstagedCountText.Text, value, Math.Abs(value));
+        }
+
+        public static string GetStagedCountText(int value)
+        {
+            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._stagedCountText.Text, value, Math.Abs(value));
+        }
+
         private readonly TranslationString _secondsAgo = new TranslationString("{0} {1:second|seconds} ago");
         private readonly TranslationString _minutesAgo = new TranslationString("{0} {1:minute|minutes} ago");
         private readonly TranslationString _hoursAgo   = new TranslationString("{0} {1:hour|hours} ago");
@@ -153,6 +167,7 @@ namespace ResourceManager
         private readonly TranslationString _monthsAgo  = new TranslationString("{0} {1:month|months} ago");
         private readonly TranslationString _yearsAgo   = new TranslationString("{0} {1:year|years} ago");
 
-        #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
+        private readonly TranslationString _unstagedCountText = new TranslationString("{0} {1:file|files} with unstaged changes");
+        private readonly TranslationString _stagedCountText   = new TranslationString("{0} {1:file|files} with staged changes");
     }
 }
