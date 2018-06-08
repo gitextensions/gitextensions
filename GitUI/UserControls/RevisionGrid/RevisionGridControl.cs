@@ -182,8 +182,6 @@ namespace GitUI
             Graph.AddColumn(new CommitIdColumnProvider(this));
             Graph.AddColumn(_buildServerWatcher.ColumnProvider);
 
-            Refresh();
-
             compareToBaseToolStripMenuItem.Enabled = false;
             fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
         }
@@ -545,8 +543,6 @@ namespace GitUI
             base.Refresh();
 
             _toolTipProvider.Clear();
-
-            Graph.Refresh();
         }
 
         protected override void OnCreateControl()
@@ -1753,7 +1749,6 @@ namespace GitUI
         {
             AppSettings.ShowRemoteBranches = !AppSettings.ShowRemoteBranches;
             Graph.Invalidate();
-            MenuCommands.TriggerMenuChanged(); // check/uncheck ToolStripMenuItem
         }
 
         internal void ToggleShowReflogReferences()
@@ -1818,7 +1813,7 @@ namespace GitUI
         internal void ShowRelativeDate_ToolStripMenuItemClick(EventArgs e)
         {
             AppSettings.RelativeDate = !AppSettings.RelativeDate;
-            ForceRefreshRevisions();
+            Refresh();
         }
 
         private bool ShowUncommittedChanges()
@@ -2089,7 +2084,6 @@ namespace GitUI
             if (AppSettings.ShowRevisionGridGraphColumn && !AppSettings.ShowMergeCommits)
             {
                 ToggleRevisionGraphSettings();
-                Graph.Refresh();
             }
 
             ForceRefreshRevisions();
@@ -2107,7 +2101,7 @@ namespace GitUI
         internal void ToggleRevisionGraph()
         {
             ToggleRevisionGraphSettings();
-            Graph.Refresh();
+
             MenuCommands.TriggerMenuChanged();
 
             // must show MergeCommits when showing revision graph
