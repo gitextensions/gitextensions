@@ -29,7 +29,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             };
         }
 
-        public override void Refresh() => Column.Visible = AppSettings.ShowIds;
+        public override void Refresh() => Column.Visible = AppSettings.ShowObjectIdColumn;
 
         private readonly Dictionary<Font, int[]> _widthByLengthByFont = new Dictionary<Font, int[]>(capacity: 4);
 
