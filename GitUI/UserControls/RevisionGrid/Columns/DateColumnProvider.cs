@@ -59,6 +59,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
         {
+            if (revision.ObjectId?.IsArtificial == true)
+            {
+                toolTip = default;
+                return false;
+            }
+
             if (revision.Author == revision.Committer && revision.AuthorDate == revision.CommitDate)
             {
                 toolTip = $"{revision.AuthorDate:g} {revision.Author} authored and committed";

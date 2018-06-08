@@ -37,6 +37,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
         {
+            if (revision.ObjectId?.IsArtificial == true)
+            {
+                toolTip = default;
+                return false;
+            }
+
             toolTip = revision.Guid;
             return true;
         }
