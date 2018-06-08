@@ -1736,7 +1736,7 @@ namespace GitUI
         internal void ToggleShowAuthorDate()
         {
             AppSettings.ShowAuthorDate = !AppSettings.ShowAuthorDate;
-            ForceRefreshRevisions();
+            Refresh();
         }
 
         internal void ToggleOrderRevisionByDate()
