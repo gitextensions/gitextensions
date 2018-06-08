@@ -1178,7 +1178,7 @@ namespace GitUI.UserControls.RevisionGrid
                 g.SmoothingMode = SmoothingMode.None;
                 g.FillRectangle(nodeBrush, nodeRect);
                 nodeRect.Inflate(1, 1);
-                using (var pen = new Pen(Color.Black, 3))
+                using (var pen = new Pen(Color.Black, 2))
                 {
                     g.DrawRectangle(pen, nodeRect);
                 }
