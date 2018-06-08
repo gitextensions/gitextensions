@@ -59,21 +59,17 @@ namespace GitUI.UserControls.RevisionGrid
 
         private readonly Graph _graphData = new Graph();
 
-        private readonly Color[] _possibleColors =
-            {
-                Color.Red,
-                Color.MistyRose,
-                Color.Magenta,
-                Color.Violet,
-                Color.Blue,
-                Color.Azure,
-                Color.Cyan,
-                Color.SpringGreen,
-                Color.Green,
-                Color.Chartreuse,
-                Color.Gold,
-                Color.Orange
-            };
+        private static readonly IReadOnlyList<Color> _possibleColors = new[]
+        {
+            Color.FromArgb(240, 36, 117),
+            Color.FromArgb(52, 152, 219),
+            Color.FromArgb(46, 204, 113),
+            Color.FromArgb(142, 68, 173),
+            Color.FromArgb(231, 76, 60),
+            Color.FromArgb(40, 40, 40),
+            Color.FromArgb(26, 188, 156),
+            Color.FromArgb(241, 196, 15)
+        };
 
         private int _backgroundScrollTo;
         private readonly Thread _backgroundThread;
@@ -699,11 +695,6 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
-        // http://en.wikipedia.org/wiki/File:RBG_color_wheel.svg
-
-        // This is the order to grab the colors in.
-        private static readonly int[] preferredColors = { 4, 8, 6, 10, 2, 5, 7, 3, 9, 1, 11 };
-
         private readonly List<int> _adjacentColors = new List<int>(capacity: 3);
         private readonly Random _random = new Random();
 
@@ -746,20 +737,19 @@ namespace GitUI.UserControls.RevisionGrid
             else
             {
                 // This is a parent branch, calculate new color based on parent branch
-                int start = _adjacentColors[0];
                 int i;
-                for (i = 0; i < preferredColors.Length; i++)
+                for (i = 0; i < _possibleColors.Count; i++)
                 {
-                    colorIndex = (start + preferredColors[i]) % _possibleColors.Length;
+                    colorIndex = i;
                     if (!_adjacentColors.Contains(colorIndex))
                     {
                         break;
                     }
                 }
 
-                if (i == preferredColors.Length)
+                if (i == _possibleColors.Count)
                 {
-                    colorIndex = _random.Next(preferredColors.Length);
+                    colorIndex = _random.Next(_possibleColors.Count);
                 }
             }
 
