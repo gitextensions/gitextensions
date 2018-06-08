@@ -24,7 +24,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             };
         }
 
-        public override void UpdateVisibility() => Column.Visible = AppSettings.ShowIds;
+        public override void Refresh() => Column.Visible = AppSettings.ShowIds;
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
         {

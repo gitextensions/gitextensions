@@ -540,7 +540,7 @@ namespace GitUI
                 return;
             }
 
-            RefreshLayout();
+            Graph.Refresh();
 
             base.Refresh();
 
@@ -890,7 +890,7 @@ namespace GitUI
                     predicate);
 
                 LoadRevisions();
-                RefreshLayout();
+                Graph.Refresh();
                 ResetNavigationHistory();
             }
             catch (Exception)
@@ -2089,7 +2089,7 @@ namespace GitUI
             if (AppSettings.ShowRevisionGridGraphColumn && !AppSettings.ShowMergeCommits)
             {
                 ToggleRevisionGraphSettings();
-                RefreshLayout();
+                Graph.Refresh();
             }
 
             ForceRefreshRevisions();
@@ -2107,7 +2107,7 @@ namespace GitUI
         internal void ToggleRevisionGraph()
         {
             ToggleRevisionGraphSettings();
-            RefreshLayout();
+            Graph.Refresh();
             MenuCommands.TriggerMenuChanged();
 
             // must show MergeCommits when showing revision graph
@@ -2139,22 +2139,8 @@ namespace GitUI
         internal void ShowIds_ToolStripMenuItemClick()
         {
             AppSettings.ShowIds = !AppSettings.ShowIds;
-            Graph.UpdateColumnVisibilities();
             MenuCommands.TriggerMenuChanged();
             Refresh();
-        }
-
-        private void RefreshLayout()
-        {
-            // TODO why was this removed? if we only set the font when the control is created then it cannot update when settings change
-            ////NormalFont = new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
-
-            using (var g = Graphics.FromHwnd(Handle))
-            {
-                Graph.SetRowHeight((int)g.MeasureString("By", Graph.NormalFont).Height + 9);
-            }
-
-            Graph.UpdateColumnVisibilities();
         }
 
         internal bool ExecuteCommand(Commands cmd)

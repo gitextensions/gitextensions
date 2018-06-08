@@ -29,7 +29,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
         {
-            _grid.DrawColumnText(e, e.FormattedValue.ToString(), style.normalFont, style.foreColor);
+            _grid.DrawColumnText(e, e.FormattedValue.ToString(), style.normalFont, style.foreColor, e.CellBounds);
         }
 
         public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)

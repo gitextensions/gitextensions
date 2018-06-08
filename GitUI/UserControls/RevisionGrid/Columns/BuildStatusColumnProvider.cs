@@ -49,10 +49,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (_module().EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault)
             {
-                var color = GetColor();
-                var text = (string)e.FormattedValue;
-                var bounds = e.CellBounds.ReduceLeft(size.Width * 2);
-                _grid.DrawColumnText(e, text, style.normalFont, color, bounds);
+                _grid.DrawColumnText(
+                    e,
+                    (string)e.FormattedValue,
+                    style.normalFont,
+                    GetColor(),
+                    bounds: e.CellBounds.ReduceLeft(size.Width * 2));
             }
 
             Color GetColor()
