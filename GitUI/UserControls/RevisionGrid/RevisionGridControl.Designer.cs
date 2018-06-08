@@ -58,7 +58,6 @@ namespace GitUI
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.navigateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showMergeCommitsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBuildReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SelectionTimer = new System.Windows.Forms.Timer(this.components);
@@ -412,11 +411,6 @@ namespace GitUI
             this.openBuildReportToolStripMenuItem.Text = "Open build report in the browser";
             this.openBuildReportToolStripMenuItem.Click += new System.EventHandler(this.openBuildReportToolStripMenuItem_Click);
             // 
-            // showMergeCommitsToolStripMenuItem
-            // 
-            this.showMergeCommitsToolStripMenuItem.Name = "showMergeCommitsToolStripMenuItem";
-            this.showMergeCommitsToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
-            // 
             // SelectionTimer
             // 
             this.SelectionTimer.Interval = 200;
@@ -501,7 +495,6 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem markRevisionAsGoodToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopBisectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem runScriptToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showMergeCommitsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem manipulateCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rewordCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fixupCommitToolStripMenuItem;
