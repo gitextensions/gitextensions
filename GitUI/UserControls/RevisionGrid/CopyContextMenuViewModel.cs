@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using GitCommands;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
 {
-    public class CopyContextMenuViewModel
+    public sealed class CopyContextMenuViewModel
     {
-        public class DetailItem
+        public sealed class DetailItem
         {
             public DetailItem(string text, string value, int valueMaxLength = int.MaxValue)
             {
@@ -23,16 +23,17 @@ namespace GitUI.UserControls.RevisionGrid
 
         public IReadOnlyList<string> BranchNames { get; }
         public IReadOnlyList<string> TagNames { get; }
-        public bool SeparatorVisible => BranchNames.Any() || TagNames.Any();
         public IReadOnlyList<DetailItem> DetailItems { get; }
 
-        public CopyContextMenuViewModel(GitRevision gitRevision)
+        public bool SeparatorVisible => BranchNames.Any() || TagNames.Any();
+
+        public CopyContextMenuViewModel([CanBeNull] GitRevision gitRevision)
         {
             if (gitRevision == null)
             {
-                DetailItems = new DetailItem[0];
-                BranchNames = new string[0];
-                TagNames = new string[0];
+                DetailItems = Array.Empty<DetailItem>();
+                BranchNames = Array.Empty<string>();
+                TagNames = Array.Empty<string>();
                 return;
             }
 
@@ -45,8 +46,8 @@ namespace GitUI.UserControls.RevisionGrid
             };
 
             var gitRefListsForRevision = new GitRefListsForRevision(gitRevision);
-            BranchNames = new ReadOnlyCollection<string>(gitRefListsForRevision.GetAllBranchNames());
-            TagNames = new ReadOnlyCollection<string>(gitRefListsForRevision.GetAllTagNames());
+            BranchNames = gitRefListsForRevision.GetAllBranchNames();
+            TagNames = gitRefListsForRevision.GetAllTagNames();
         }
     }
 }
