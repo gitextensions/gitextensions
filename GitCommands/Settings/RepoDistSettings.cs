@@ -119,8 +119,8 @@ namespace GitCommands.Settings
             : base(container, "BuildServer")
         {
             Type = new StringSetting("Type", this, null);
-            EnableIntegration = new BoolNullableSetting("EnableIntegration", this, false);
-            ShowBuildSummaryInGrid = new BoolNullableSetting("ShowBuildSummaryInGrid", this, true);
+            EnableIntegration = new BoolNullableSetting("EnableIntegration", this, defaultValue: false);
+            ShowBuildSummaryInGrid = new BoolNullableSetting("ShowBuildSummaryInGrid", this, defaultValue: false);
         }
 
         public SettingsPath TypeSettings => new SettingsPath(this, Type.ValueOrDefault);
