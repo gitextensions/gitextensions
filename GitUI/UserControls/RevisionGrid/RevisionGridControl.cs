@@ -216,23 +216,27 @@ namespace GitUI
             Controls.Add(content);
         }
 
-        internal void DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color)
+        internal void DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds, bool useEllipsis = true)
         {
-            DrawColumnText(e, text, font, color, e.CellBounds);
-        }
-
-        internal void DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds)
-        {
-            var isTruncated = DrawColumnTextTruncated(e.Graphics, text, font, color, bounds);
+            var isTruncated = DrawColumnTextTruncated(e.Graphics, text, font, color, bounds, useEllipsis);
 
             _toolTipProvider.SetTruncation(e, isTruncated);
         }
 
         /// <returns>True if the text has been truncated.</returns>
-        public static bool DrawColumnTextTruncated(Graphics graphics, string text, Font font, Color color, Rectangle bounds)
+        public static bool DrawColumnTextTruncated(Graphics graphics, string text, Font font, Color color, Rectangle bounds, bool useEllipsis = true)
         {
-            var size = TextRenderer.MeasureText(graphics, text, font, bounds.Size, TextFormatFlags.NoPrefix);
-            TextRenderer.DrawText(graphics, text, font, bounds, color, TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
+            var flags = TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding;
+
+            if (useEllipsis)
+            {
+                flags |= TextFormatFlags.EndEllipsis;
+            }
+
+            var size = TextRenderer.MeasureText(graphics, text, font, Size.Empty, flags);
+
+            TextRenderer.DrawText(graphics, text, font, bounds, color, flags);
+
             return size.Width > bounds.Width;
         }
 
