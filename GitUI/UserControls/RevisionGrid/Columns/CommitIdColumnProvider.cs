@@ -20,7 +20,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 FillWeight = 20,
-                Resizable = DataGridViewTriState.False
+                Resizable = DataGridViewTriState.True,
+                MinimumWidth = 16
             };
         }
 

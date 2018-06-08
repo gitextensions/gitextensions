@@ -19,11 +19,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             Column = new DataGridViewTextBoxColumn
             {
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                Frozen = true,
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 Width = DpiUtil.Scale(70),
-                DefaultCellStyle = { Font = SystemFonts.DefaultFont }
+                Resizable = DataGridViewTriState.True
             };
         }
 

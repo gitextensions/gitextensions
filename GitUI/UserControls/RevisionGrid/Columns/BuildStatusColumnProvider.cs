@@ -21,11 +21,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             Column = new DataGridViewTextBoxColumn
             {
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 HeaderText = "Build Status",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                FillWeight = 50
+
+                FillWeight = 50,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             };
         }
 
