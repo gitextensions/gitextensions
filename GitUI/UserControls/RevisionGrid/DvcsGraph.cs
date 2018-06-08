@@ -977,7 +977,7 @@ namespace GitUI.UserControls.RevisionGrid
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
         private readonly List<Color> _junctionColors = new List<Color>(4);
 
-        private bool DrawItem(Graphics wa, [CanBeNull] Graph.ILaneRow row)
+        private bool DrawItem(Graphics g, [CanBeNull] Graph.ILaneRow row)
         {
             ThreadHelper.AssertOnUIThread();
 
@@ -989,21 +989,20 @@ namespace GitUI.UserControls.RevisionGrid
             // Clip to the area we're drawing in, but draw 1 pixel past so
             // that the top/bottom of the line segment's anti-aliasing isn't
             // visible in the final rendering.
-            int top = wa.RenderingOrigin.Y + (_rowHeight / 2);
+            int top = g.RenderingOrigin.Y + (_rowHeight / 2);
             var laneRect = new Rectangle(0, top, Width, _rowHeight);
-            Region oldClip = wa.Clip;
+            Region oldClip = g.Clip;
             var newClip = new Region(laneRect);
             newClip.Intersect(oldClip);
-            wa.Clip = newClip;
-            wa.Clear(Color.Transparent);
+            g.Clip = newClip;
+            g.Clear(Color.Transparent);
 
             // Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
             _revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
 
-            ////for (int r = 0; r < 2; r++)
             for (int lane = 0; lane < row.Count; lane++)
             {
-                int mid = wa.RenderingOrigin.X + (int)((lane + 0.5) * _laneWidth);
+                int mid = g.RenderingOrigin.X + (int)((lane + 0.5) * _laneWidth);
 
                 for (int item = 0; item < row.LaneInfoCount(lane); item++)
                 {
@@ -1104,11 +1103,11 @@ namespace GitUI.UserControls.RevisionGrid
 
                             if (sameLane)
                             {
-                                wa.DrawLine(pen, p0, p1);
+                                g.DrawLine(pen, p0, p1);
                             }
                             else
                             {
-                                wa.DrawBezier(pen, p0, c0, c1, p1);
+                                g.DrawBezier(pen, p0, c0, c1, p1);
                             }
                         }
                     }
@@ -1121,12 +1120,12 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             // Reset the clip region
-            wa.Clip = oldClip;
+            g.Clip = oldClip;
 
             // Draw node
             var nodeRect = new Rectangle(
-                wa.RenderingOrigin.X + ((_laneWidth - _nodeDimension) / 2) + (row.NodeLane * _laneWidth),
-                wa.RenderingOrigin.Y + ((_rowHeight - _nodeDimension) / 2),
+                g.RenderingOrigin.X + ((_laneWidth - _nodeDimension) / 2) + (row.NodeLane * _laneWidth),
+                g.RenderingOrigin.Y + ((_rowHeight - _nodeDimension) / 2),
                 _nodeDimension,
                 _nodeDimension);
 
@@ -1161,35 +1160,35 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (row.Node.Data == null)
             {
-                wa.FillEllipse(Brushes.White, nodeRect);
+                g.FillEllipse(Brushes.White, nodeRect);
                 using (var pen = new Pen(Color.Red, 2))
                 {
-                    wa.DrawEllipse(pen, nodeRect);
+                    g.DrawEllipse(pen, nodeRect);
                 }
             }
             else if (row.Node.IsActive)
             {
-                wa.FillRectangle(nodeBrush, nodeRect);
+                g.FillRectangle(nodeBrush, nodeRect);
                 nodeRect.Inflate(1, 1);
                 using (var pen = new Pen(Color.Black, 3))
                 {
-                    wa.DrawRectangle(pen, nodeRect);
+                    g.DrawRectangle(pen, nodeRect);
                 }
             }
             else if (row.Node.IsSpecial)
             {
-                wa.FillRectangle(nodeBrush, nodeRect);
+                g.FillRectangle(nodeBrush, nodeRect);
                 if (drawNodeBorder)
                 {
-                    wa.DrawRectangle(Pens.Black, nodeRect);
+                    g.DrawRectangle(Pens.Black, nodeRect);
                 }
             }
             else
             {
-                wa.FillEllipse(nodeBrush, nodeRect);
+                g.FillEllipse(nodeBrush, nodeRect);
                 if (drawNodeBorder)
                 {
-                    wa.DrawEllipse(Pens.Black, nodeRect);
+                    g.DrawEllipse(Pens.Black, nodeRect);
                 }
             }
 
