@@ -30,6 +30,30 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             };
         }
 
+        public override void Refresh()
+        {
+            UpdateWidth();
+
+            return;
+
+            void UpdateWidth()
+            {
+                if (_module().EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.Value == true)
+                {
+                    Column.Resizable = DataGridViewTriState.True;
+                    Column.FillWeight = 50;
+                    Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                }
+                else
+                {
+                    Column.Resizable = DataGridViewTriState.False;
+                    Column.Width = DpiUtil.Scale(16);
+                    Column.FillWeight = 50;
+                    Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                }
+            }
+        }
+
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
         {
             if (revision.BuildStatus == null)
@@ -48,7 +72,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             e.Graphics.FillEllipse(GetBrush(), new Rectangle(location, size));
             e.Graphics.EndContainer(container);
 
-            if (_module().EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.ValueOrDefault)
+            if (_module().EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.Value == true)
             {
                 _grid.DrawColumnText(
                     e,
