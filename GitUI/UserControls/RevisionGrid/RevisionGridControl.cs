@@ -1451,12 +1451,12 @@ namespace GitUI
             _rebaseOnTopOf = null;
             foreach (var head in gitRefListsForRevision.AllTags)
             {
-                var deleteItem = new ToolStripMenuItem(head.Name) { Tag = head.Name };
-                deleteItem.Click += ToolStripItemClickDeleteTag;
+                var deleteItem = new ToolStripMenuItem(head.Name);
+                deleteItem.Click += delegate { UICommands.StartDeleteTagDialog(this, head.Name); };
                 deleteTagDropDown.Items.Add(deleteItem);
 
                 var mergeItem = new ToolStripMenuItem(head.Name) { Tag = GetRefUnambiguousName(head) };
-                mergeItem.Click += ToolStripItemClickMergeBranch;
+                mergeItem.Click += delegate { UICommands.StartMergeBranchDialog(this, GetRefUnambiguousName(head)); };
                 mergeBranchDropDown.Items.Add(mergeItem);
             }
 
@@ -1473,10 +1473,10 @@ namespace GitUI
                 }
                 else
                 {
-                    ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Tag = GetRefUnambiguousName(head);
-                    toolStripItem.Click += ToolStripItemClickMergeBranch;
+                    var toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Click += delegate { UICommands.StartMergeBranchDialog(this, GetRefUnambiguousName(head)); };
                     mergeBranchDropDown.Items.Add(toolStripItem);
+
                     if (_rebaseOnTopOf == null)
                     {
                         _rebaseOnTopOf = (string)toolStripItem.Tag;
@@ -1493,9 +1493,8 @@ namespace GitUI
             // if there is no branch to merge, then let user to merge selected commit into current branch
             if (mergeBranchDropDown.Items.Count == 0 && !currentBranchPointsToRevision)
             {
-                ToolStripItem toolStripItem = new ToolStripMenuItem(revision.Guid);
-                toolStripItem.Tag = revision.Guid;
-                toolStripItem.Click += ToolStripItemClickMergeBranch;
+                var toolStripItem = new ToolStripMenuItem(revision.Guid);
+                toolStripItem.Click += delegate { UICommands.StartMergeBranchDialog(this, revision.Guid); };
                 mergeBranchDropDown.Items.Add(toolStripItem);
                 if (_rebaseOnTopOf == null)
                 {
@@ -1506,36 +1505,36 @@ namespace GitUI
             var allBranches = gitRefListsForRevision.AllBranches;
             foreach (var head in allBranches)
             {
-                ToolStripItem toolStripItem;
-
                 // skip remote branches - they can not be deleted this way
                 if (!head.IsRemote)
                 {
                     if (head.CompleteName != currentBranchRef)
                     {
-                        toolStripItem = new ToolStripMenuItem(head.Name) { Tag = head.Name };
-                        toolStripItem.Click += ToolStripItemClickDeleteBranch;
-                        deleteBranchDropDown.Items.Add(toolStripItem); // Add to delete branch
+                        var deleteBranchMenuItem = new ToolStripMenuItem(head.Name);
+                        deleteBranchMenuItem.Click += delegate { UICommands.StartDeleteBranchDialog(this, head.Name); };
+                        deleteBranchDropDown.Items.Add(deleteBranchMenuItem);
                     }
 
-                    toolStripItem = new ToolStripMenuItem(head.Name) { Tag = head.Name };
-                    toolStripItem.Click += ToolStripItemClickRenameBranch;
-                    renameDropDown.Items.Add(toolStripItem); // Add to rename branch
+                    var renameBranchMenuItem = new ToolStripMenuItem(head.Name);
+                    renameBranchMenuItem.Click += delegate { UICommands.StartRenameDialog(this, head.Name); };
+                    renameDropDown.Items.Add(renameBranchMenuItem);
                 }
 
                 if (head.CompleteName != currentBranchRef)
                 {
-                    toolStripItem = new ToolStripMenuItem(head.Name);
-                    if (head.IsRemote)
+                    var checkoutBranchMenuItem = new ToolStripMenuItem(head.Name);
+                    checkoutBranchMenuItem.Click += delegate
                     {
-                        toolStripItem.Click += ToolStripItemClickCheckoutRemoteBranch;
-                    }
-                    else
-                    {
-                        toolStripItem.Click += ToolStripItemClickCheckoutBranch;
-                    }
-
-                    checkoutBranchDropDown.Items.Add(toolStripItem);
+                        if (head.IsRemote)
+                        {
+                            UICommands.StartCheckoutRemoteBranch(this, head.Name);
+                        }
+                        else
+                        {
+                            UICommands.StartCheckoutBranch(this, head.Name);
+                        }
+                    };
+                    checkoutBranchDropDown.Items.Add(checkoutBranchMenuItem);
                 }
             }
 
@@ -1553,9 +1552,9 @@ namespace GitUI
                         }
                     }
 
-                    ToolStripItem toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += ToolStripItemClickDeleteRemoteBranch;
-                    deleteBranchDropDown.Items.Add(toolStripItem); // Add to delete branch
+                    var toolStripItem = new ToolStripMenuItem(head.Name);
+                    toolStripItem.Click += delegate { UICommands.StartDeleteRemoteBranchDialog(this, head.Name); };
+                    deleteBranchDropDown.Items.Add(toolStripItem);
                 }
             }
 
@@ -1622,55 +1621,6 @@ namespace GitUI
             return gitRef.Name;
         }
 
-        private void ToolStripItemClickDeleteTag(object sender, EventArgs e)
-        {
-            if (sender is ToolStripItem toolStripItem)
-            {
-                UICommands.StartDeleteTagDialog(this, toolStripItem.Tag as string);
-            }
-        }
-
-        private void ToolStripItemClickDeleteBranch(object sender, EventArgs e)
-        {
-            if (sender is ToolStripItem toolStripItem)
-            {
-                UICommands.StartDeleteBranchDialog(this, toolStripItem.Tag as string);
-            }
-        }
-
-        private void ToolStripItemClickDeleteRemoteBranch(object sender, EventArgs e)
-        {
-            if (sender is ToolStripItem toolStripItem)
-            {
-                UICommands.StartDeleteRemoteBranchDialog(this, toolStripItem.Text);
-            }
-        }
-
-        private void ToolStripItemClickCheckoutBranch(object sender, EventArgs e)
-        {
-            if (sender is ToolStripItem toolStripItem)
-            {
-                string branch = toolStripItem.Text;
-                UICommands.StartCheckoutBranch(this, branch);
-            }
-        }
-
-        private void ToolStripItemClickCheckoutRemoteBranch(object sender, EventArgs e)
-        {
-            if (sender is ToolStripItem toolStripItem)
-            {
-                UICommands.StartCheckoutRemoteBranch(this, toolStripItem.Text);
-            }
-        }
-
-        private void ToolStripItemClickMergeBranch(object sender, EventArgs e)
-        {
-            if (sender is ToolStripItem toolStripItem)
-            {
-                UICommands.StartMergeBranchDialog(this, toolStripItem.Tag as string);
-            }
-        }
-
         private void ToolStripItemClickRebaseBranch(object sender, EventArgs e)
         {
             if (_rebaseOnTopOf != null)
@@ -1695,20 +1645,11 @@ namespace GitUI
             }
         }
 
-        private void ToolStripItemClickRenameBranch(object sender, EventArgs e)
-        {
-            if (sender is ToolStripItem toolStripItem)
-            {
-                UICommands.StartRenameDialog(this, toolStripItem.Tag as string);
-            }
-        }
-
         private void CheckoutRevisionToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (LatestSelectedRevision != null)
             {
-                string revision = LatestSelectedRevision.Guid;
-                UICommands.StartCheckoutRevisionDialog(this, revision);
+                UICommands.StartCheckoutRevisionDialog(this, LatestSelectedRevision.Guid);
             }
         }
 
@@ -2216,7 +2157,7 @@ namespace GitUI
             }
             else if (showNoRevisionMsg)
             {
-                MessageBox.Show((ParentForm as IWin32Window) ?? this, _noRevisionFoundError.Text);
+                MessageBox.Show(ParentForm as IWin32Window ?? this, _noRevisionFoundError.Text);
             }
         }
 
