@@ -173,47 +173,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
             {
-                (Brush backBrush, Color backColor, bool disposeBackBrush, Color foreColor) style;
-
-                if (e.State.HasFlag(DataGridViewElementStates.Selected))
-                {
-                    style = (SystemBrushes.Highlight, SystemColors.Highlight, false, SystemColors.HighlightText);
-                }
-                else
-                {
-                    (Brush brush, Color color, bool disposeBrush) back;
-
-                    if (AppSettings.RevisionGraphDrawAlternateBackColor && e.RowIndex % 2 == 0)
-                    {
-                        // TODO if default background is nearly black, we should make it lighter instead
-                        var c = ColorHelper.MakeColorDarker(e.CellStyle.BackColor);
-                        back = (new SolidBrush(c), c, true);
-                    }
-                    else
-                    {
-                        var c = e.CellStyle.BackColor;
-                        back = (new SolidBrush(c), c, true);
-                    }
-
-                    var foreColor = Color.Gray;
-
-                    if (AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(e.RowIndex))
-                    {
-                        // TODO If the background colour is close to being Gray, we should adjust the gray until there is a bit more contrast
-                        while (ColorHelper.GetColorBrightnessDifference(foreColor, back.color) < 125)
-                        {
-                            foreColor = back.color.IsLightColor()
-                                ? ColorHelper.MakeColorDarker(foreColor)
-                                : ColorHelper.MakeColorLighter(foreColor);
-                        }
-                    }
-                    else
-                    {
-                        foreColor = ColorHelper.GetForeColorForBackColor(back.color);
-                    }
-
-                    style = (back.brush, back.color, back.disposeBrush, foreColor);
-                }
+                var style = GetStyle();
 
                 // Draw cell background
                 e.Graphics.FillRectangle(style.backBrush, e.CellBounds);
@@ -226,6 +186,49 @@ namespace GitUI.UserControls.RevisionGrid
                 }
 
                 e.Handled = true;
+            }
+
+            return;
+
+            (Brush backBrush, Color backColor, bool disposeBackBrush, Color foreColor) GetStyle()
+            {
+                if (e.State.HasFlag(DataGridViewElementStates.Selected))
+                {
+                    return (SystemBrushes.Highlight, SystemColors.Highlight, false, SystemColors.HighlightText);
+                }
+
+                (Brush brush, Color color, bool disposeBrush) back;
+
+                if (AppSettings.RevisionGraphDrawAlternateBackColor && e.RowIndex % 2 == 0)
+                {
+                    // TODO if default background is nearly black, we should make it lighter instead
+                    var c = ColorHelper.MakeColorDarker(e.CellStyle.BackColor);
+                    back = (new SolidBrush(c), c, true);
+                }
+                else
+                {
+                    var c = e.CellStyle.BackColor;
+                    back = (new SolidBrush(c), c, true);
+                }
+
+                var foreColor = Color.Gray;
+
+                if (AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(e.RowIndex))
+                {
+                    // TODO If the background colour is close to being Gray, we should adjust the gray until there is a bit more contrast
+                    while (ColorHelper.GetColorBrightnessDifference(foreColor, back.color) < 125)
+                    {
+                        foreColor = back.color.IsLightColor()
+                            ? ColorHelper.MakeColorDarker(foreColor)
+                            : ColorHelper.MakeColorLighter(foreColor);
+                    }
+                }
+                else
+                {
+                    foreColor = ColorHelper.GetForeColorForBackColor(back.color);
+                }
+
+                return (back.brush, back.color, back.disposeBrush, foreColor);
             }
         }
 
