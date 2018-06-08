@@ -8310,7 +8310,7 @@ If this is a central repository (bare repository without a working directory):
         <target />
       </trans-unit>
       <trans-unit id="showIdsToolStripMenuItem.Text">
-        <source>Show SHA-1</source>
+        <source>Show SHA-1 column</source>
         <target />
       </trans-unit>
       <trans-unit id="showIsMessageMultilineToolStripMenuItem.Text">
@@ -8326,7 +8326,7 @@ If this is a central repository (bare repository without a working directory):
         <target />
       </trans-unit>
       <trans-unit id="showRevisionGraphToolStripMenuItem.Text">
-        <source>Show revision graph</source>
+        <source>Show revision graph column</source>
         <target />
       </trans-unit>
       <trans-unit id="showTagsToolStripMenuItem.Text">
