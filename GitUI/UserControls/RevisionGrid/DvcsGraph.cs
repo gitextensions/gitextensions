@@ -121,7 +121,7 @@ namespace GitUI.UserControls.RevisionGrid
             _blackBorderPen = new Pen(Brushes.Black, _laneLineWidth + 1);
 
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            ColumnWidthChanged += dataGrid_ColumnWidthChanged;
+            ColumnWidthChanged += delegate { ClearDrawCache(); };
             Scroll += dataGrid_Scroll;
             CellPainting += OnCellPainting;
             CellFormatting += (_, e) =>
@@ -465,11 +465,6 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             e.Handled = true;
-        }
-
-        private void dataGrid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
-        {
-            ClearDrawCache();
         }
 
         private void dataGrid_Scroll(object sender, ScrollEventArgs e)
