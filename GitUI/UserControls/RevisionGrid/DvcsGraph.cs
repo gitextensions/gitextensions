@@ -50,8 +50,8 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly int _laneLineWidth = DpiUtil.Scale(2);
         private const int MaxLanes = 40;
 
-        private Pen _whiteBorderPen;
-        private Pen _blackBorderPen;
+        private readonly Pen _whiteBorderPen;
+        private readonly Pen _blackBorderPen;
 
         private readonly AutoResetEvent _backgroundEvent = new AutoResetEvent(false);
         private readonly Dictionary<Junction, int> _colorByJunction = new Dictionary<Junction, int>();
@@ -309,8 +309,8 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (disposing)
             {
-                _whiteBorderPen?.Dispose();
-                _blackBorderPen?.Dispose();
+                _whiteBorderPen.Dispose();
+                _blackBorderPen.Dispose();
                 _graphBitmap?.Dispose();
                 _backgroundEvent?.Dispose();
             }
