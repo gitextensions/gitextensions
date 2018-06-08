@@ -208,5 +208,16 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 : revision.Subject;
             e.FormattingApplied = true;
         }
+
+        public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
+        {
+            if (revision.HasMultiLineMessage && revision.Body != null)
+            {
+                toolTip = revision.Body;
+                return true;
+            }
+
+            return base.TryGetToolTip(e, revision, out toolTip);
+        }
     }
 }
