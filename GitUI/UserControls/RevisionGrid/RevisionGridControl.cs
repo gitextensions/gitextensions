@@ -698,7 +698,7 @@ namespace GitUI
         [CanBeNull]
         private GitRevision GetRevision(int row)
         {
-            return Graph.GetRowData(row);
+            return Graph.GetRevision(row);
         }
 
         public GitRevision GetCurrentRevision()

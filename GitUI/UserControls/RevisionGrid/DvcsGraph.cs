@@ -132,7 +132,7 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
                 {
-                    provider.OnCellFormatting(e, GetRowData(e.RowIndex));
+                    provider.OnCellFormatting(e, GetRevision(e.RowIndex));
                 }
             };
             _graphData.Updated += graphData_Updated;
@@ -161,7 +161,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         private void OnCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            var revision = GetRowData(e.RowIndex);
+            var revision = GetRevision(e.RowIndex);
 
             if (e.RowIndex < 0 ||
                 e.RowIndex >= RowCount ||
@@ -377,7 +377,7 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         [CanBeNull]
-        public GitRevision GetRowData(int rowIndex)
+        public GitRevision GetRevision(int rowIndex)
         {
             lock (_graphData)
             {

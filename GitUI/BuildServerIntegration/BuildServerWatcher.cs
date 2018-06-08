@@ -263,7 +263,7 @@ namespace GitUI.BuildServerIntegration
                     continue;
                 }
 
-                var revision = _revisions.GetRowData(index.Value);
+                var revision = _revisions.GetRevision(index.Value);
 
                 if (revision == null)
                 {

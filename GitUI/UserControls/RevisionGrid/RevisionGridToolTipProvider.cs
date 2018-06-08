@@ -24,7 +24,7 @@ namespace GitUI
 
         public void OnCellMouseMove(DataGridViewCellMouseEventArgs e)
         {
-            var revision = _grid.Graph.GetRowData(e.RowIndex);
+            var revision = _grid.Graph.GetRevision(e.RowIndex);
 
             if (revision == null)
             {
