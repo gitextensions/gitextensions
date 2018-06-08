@@ -487,6 +487,13 @@ namespace GitUI.UserControls.RevisionGrid
                             return;
                         }
 
+                        if (!RevisionGraphVisible)
+                        {
+                            // do nothing... do not cache, the graph is invisible
+                            Thread.Sleep(10);
+                            continue;
+                        }
+
                         int scrollTo;
                         lock (_backgroundThread)
                         {
@@ -500,15 +507,7 @@ namespace GitUI.UserControls.RevisionGrid
                             _graphDataCount = _graphData.CachedCount;
                         }
 
-                        if (RevisionGraphVisible)
-                        {
-                            UpdateGraph(curCount, scrollTo);
-                        }
-                        else
-                        {
-                            // do nothing... do not cache, the graph is invisible
-                            Thread.Sleep(10);
-                        }
+                        UpdateGraph(curCount, scrollTo);
                     }
                 }
             }
