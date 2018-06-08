@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using GitCommands;
+using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -25,6 +26,7 @@ namespace GitUI.UserControls.RevisionGrid
                 _lanes = new Lanes(this);
             }
 
+            [CanBeNull]
             public ILaneRow this[int col] => _lanes[col];
 
             public int CachedCount => _lanes.CachedCount;

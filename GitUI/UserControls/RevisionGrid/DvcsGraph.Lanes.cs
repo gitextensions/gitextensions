@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -23,6 +24,7 @@ namespace GitUI.UserControls.RevisionGrid
                 _laneRows = new List<Graph.ILaneRow>();
             }
 
+            [CanBeNull]
             public Graph.ILaneRow this[int row]
             {
                 get
