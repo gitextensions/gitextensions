@@ -141,24 +141,6 @@ namespace GitUI.UserControls.RevisionGrid
             Clear();
         }
 
-        public void SetRowHeight(int rowHeight)
-        {
-            RowTemplate.Height = rowHeight;
-
-            dataGrid_Resize(null, null);
-        }
-
-        public void UpdateColumnVisibilities()
-        {
-            foreach (DataGridViewColumn column in Columns)
-            {
-                if (column.Tag is ColumnProvider provider)
-                {
-                    provider.UpdateVisibility();
-                }
-            }
-        }
-
         private void OnCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             var revision = GetRevision(e.RowIndex);
@@ -497,7 +479,7 @@ namespace GitUI.UserControls.RevisionGrid
         private void dataGrid_Scroll(object sender, ScrollEventArgs e)
         {
             UpdateData();
-            UpdateColumnWidth();
+            UpdateGraphColumnWidth();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
@@ -574,7 +556,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                     if (curCount == count)
                     {
-                        this.InvokeAsync(UpdateColumnWidth).FileAndForget();
+                        this.InvokeAsync(UpdateGraphColumnWidth).FileAndForget();
                     }
 
                     curCount = _graphData.CachedCount;
@@ -653,7 +635,7 @@ namespace GitUI.UserControls.RevisionGrid
         [CanBeNull]
         internal GraphColumnProvider GraphColumnProvider { get; set; }
 
-        private void UpdateColumnWidth()
+        private void UpdateGraphColumnWidth()
         {
             // Auto scale width on scroll
             var graphColumn = GraphColumnProvider?.Column;
@@ -796,6 +778,26 @@ namespace GitUI.UserControls.RevisionGrid
         public override void Refresh()
         {
             ClearDrawCache();
+
+            // TODO why was this removed? if we only set the font when the control is created then it cannot update when settings change
+            ////NormalFont = new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
+
+            using (var g = Graphics.FromHwnd(Handle))
+            {
+                RowTemplate.Height = (int)g.MeasureString("By", _normalFont).Height + 9;
+
+                dataGrid_Resize(null, null);
+            }
+
+            // Refresh column providers
+            foreach (DataGridViewColumn column in Columns)
+            {
+                if (column.Tag is ColumnProvider provider)
+                {
+                    provider.Refresh();
+                }
+            }
+
             base.Refresh();
         }
 

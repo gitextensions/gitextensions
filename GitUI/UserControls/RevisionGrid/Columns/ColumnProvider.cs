@@ -20,7 +20,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         protected ColumnProvider(string name) => Name = name;
 
-        public virtual void UpdateVisibility() => Column.Visible = true;
+        public virtual void Refresh() => Column.Visible = true;
 
         public int Index => Column.Index;
 
