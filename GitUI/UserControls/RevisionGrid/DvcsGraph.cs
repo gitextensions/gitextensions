@@ -637,7 +637,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (graphColumn?.Visible == true)
             {
-                int laneCount = 2;
+                int laneCount = 1;
                 if (_graphData != null)
                 {
                     int width = 1;
