@@ -666,9 +666,10 @@ namespace GitUI.UserControls.RevisionGrid
                     laneCount = Math.Min(Math.Max(laneCount, width), maxLanes);
                 }
 
-                if (graphColumn.Width != _laneWidth * laneCount && _laneWidth * laneCount > graphColumn.MinimumWidth)
+                var columnWidth = (_laneWidth * laneCount) + (_laneSidePadding * 2);
+                if (graphColumn.Width != columnWidth && columnWidth > graphColumn.MinimumWidth)
                 {
-                    graphColumn.Width = (_laneWidth * laneCount) + (_laneSidePadding * 2);
+                    graphColumn.Width = columnWidth;
                 }
             }
         }

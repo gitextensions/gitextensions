@@ -22,7 +22,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 Width = DpiUtil.Scale(70),
-                Resizable = DataGridViewTriState.True
+                Resizable = DataGridViewTriState.False
             };
         }
 
