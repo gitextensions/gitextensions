@@ -39,8 +39,7 @@ namespace GitUI.UserControls.RevisionGrid
                 _navigateMenuCommands = CreateNavigateMenuCommands();
                 _viewMenuCommands = CreateViewMenuCommands();
             }
-
-            if (_navigateMenuCommands != null && _viewMenuCommands != null)
+            else if (_navigateMenuCommands != null && _viewMenuCommands != null)
             {
                 var navigateMenuCommands2 = CreateNavigateMenuCommands();
                 var viewMenuCommands2 = CreateViewMenuCommands();
