@@ -805,6 +805,10 @@ namespace GitUI.UserControls.RevisionGrid
             _cacheCount = 0;
         }
 
+        /// <summary>
+        /// Draws the required row into <see cref="_graphData"/>, or retrieves an equivalent one from the cache.
+        /// </summary>
+        /// <returns>The rectangle within <see cref="_graphData"/> at which the drawn image exists.</returns>
         private Rectangle DrawGraph(int neededRow)
         {
             if (neededRow < 0 || _graphData.Count == 0 || _graphData.Count <= neededRow)
@@ -903,7 +907,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (RevisionGraphVisible)
             {
-                if (!DrawVisibleGraph(start, end))
+                if (!DrawVisibleGraph())
                 {
                     return Rectangle.Empty;
                 }
@@ -919,62 +923,62 @@ namespace GitUI.UserControls.RevisionGrid
                     width,
                     _rowHeight);
             }
-        }
 
-        private bool DrawVisibleGraph(int start, int end)
-        {
-            for (int rowIndex = start; rowIndex < end; rowIndex++)
+            bool DrawVisibleGraph()
             {
-                Graph.ILaneRow row = _graphData[rowIndex];
-                if (row == null)
+                for (var rowIndex = start; rowIndex < end; rowIndex++)
                 {
-                    // This shouldn't be happening...If it does, clear the cache so we
-                    // eventually pick it up.
-                    Debug.WriteLine("Draw lane {0} NO DATA", rowIndex.ToString());
-                    ClearDrawCache();
-                    return false;
-                }
+                    var row = _graphData[rowIndex];
 
-                Region oldClip = _graphWorkArea.Clip;
+                    if (row == null)
+                    {
+                        // This shouldn't be happening...If it does, clear the cache so we
+                        // eventually pick it up.
+                        Debug.WriteLine("Draw lane {0} NO DATA", rowIndex.ToString());
+                        ClearDrawCache();
+                        return false;
+                    }
 
-                // Get the x,y value of the current item's upper left in the cache
-                int curCacheRow = (_cacheHeadRow + rowIndex - _cacheHead) % _cacheCountMax;
-                int x = _laneSidePadding;
-                int y = curCacheRow * _rowHeight;
+                    // Get the x,y value of the current item's upper left in the cache
+                    var curCacheRow = (_cacheHeadRow + rowIndex - _cacheHead) % _cacheCountMax;
+                    var x = _laneSidePadding;
+                    var y = curCacheRow * _rowHeight;
 
-                var laneRect = new Rectangle(0, y, Width, _rowHeight);
-                if (rowIndex == start || curCacheRow == 0)
-                {
-                    // Draw previous row first. Clip top to row. We also need to clear the area
-                    // before we draw since nothing else would clear the top 1/2 of the item to draw.
-                    _graphWorkArea.RenderingOrigin = new Point(x, y - _rowHeight);
-                    var newClip = new Region(laneRect);
-                    _graphWorkArea.Clip = newClip;
-                    _graphWorkArea.Clear(Color.Transparent);
-                    DrawItem(_graphWorkArea, _graphData[rowIndex - 1]);
+                    var laneRect = new Rectangle(0, y, Width, _rowHeight);
+                    var oldClip = _graphWorkArea.Clip;
+
+                    if (rowIndex == start || curCacheRow == 0)
+                    {
+                        // Draw previous row first. Clip top to row. We also need to clear the area
+                        // before we draw since nothing else would clear the top 1/2 of the item to draw.
+                        _graphWorkArea.RenderingOrigin = new Point(x, y - _rowHeight);
+                        _graphWorkArea.Clip = new Region(laneRect);
+                        _graphWorkArea.Clear(Color.Transparent);
+                        DrawItem(_graphWorkArea, _graphData[rowIndex - 1]);
+                        _graphWorkArea.Clip = oldClip;
+                    }
+
+                    if (rowIndex == end - 1)
+                    {
+                        // Use a custom clip for the last row
+                        _graphWorkArea.Clip = new Region(laneRect);
+                    }
+
+                    _graphWorkArea.RenderingOrigin = new Point(x, y);
+
+                    var success = DrawItem(_graphWorkArea, row);
+
                     _graphWorkArea.Clip = oldClip;
+
+                    if (!success)
+                    {
+                        ClearDrawCache();
+                        return false;
+                    }
                 }
 
-                bool isLast = rowIndex == end - 1;
-                if (isLast)
-                {
-                    var newClip = new Region(laneRect);
-                    _graphWorkArea.Clip = newClip;
-                }
-
-                _graphWorkArea.RenderingOrigin = new Point(x, y);
-                bool success = DrawItem(_graphWorkArea, row);
-
-                _graphWorkArea.Clip = oldClip;
-
-                if (!success)
-                {
-                    ClearDrawCache();
-                    return false;
-                }
+                return true;
             }
-
-            return true;
         }
 
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
