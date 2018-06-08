@@ -1009,6 +1009,8 @@ namespace GitUI.UserControls.RevisionGrid
             // Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
             _revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
 
+            var oldSmoothingMode = g.SmoothingMode;
+
             for (int lane = 0; lane < row.Count; lane++)
             {
                 int mid = g.RenderingOrigin.X + (int)((lane + 0.5) * _laneWidth);
@@ -1034,16 +1036,16 @@ namespace GitUI.UserControls.RevisionGrid
                         {
                             if (_junctionColors[0] != _nonRelativeColor)
                             {
-                                lineBrush = new SolidBrush(_junctionColors[0]);
+                                lineBrush = new SolidBrush(GetAdjustedLineColor(_junctionColors[0]));
                             }
                             else if (_junctionColors.Count > 1 && _junctionColors[1] != _nonRelativeColor)
                             {
-                                lineBrush = new SolidBrush(_junctionColors[1]);
+                                lineBrush = new SolidBrush(GetAdjustedLineColor(_junctionColors[1]));
                             }
                             else
                             {
                                 drawBorder = false;
-                                lineBrush = new SolidBrush(_nonRelativeColor);
+                                lineBrush = new SolidBrush(GetAdjustedLineColor(_nonRelativeColor));
                             }
                         }
                         else
@@ -1052,14 +1054,16 @@ namespace GitUI.UserControls.RevisionGrid
 
                             if (lastRealColor.IsEmpty)
                             {
-                                lineBrush = new SolidBrush(_nonRelativeColor);
+                                lineBrush = new SolidBrush(GetAdjustedLineColor(_nonRelativeColor));
                                 drawBorder = false;
                             }
                             else
                             {
-                                lineBrush = new HatchBrush(HatchStyle.DarkDownwardDiagonal, _junctionColors[0], lastRealColor);
+                                lineBrush = new HatchBrush(HatchStyle.DarkDownwardDiagonal, GetAdjustedLineColor(_junctionColors[0]), lastRealColor);
                             }
                         }
+
+                        Color GetAdjustedLineColor(Color c) => ColorHelper.MakeColorDarker(c, 50);
 
                         // Precalculate line endpoints
                         bool sameLane = laneInfo.ConnectLane == lane;
@@ -1068,8 +1072,8 @@ namespace GitUI.UserControls.RevisionGrid
                         int x1 = sameLane ? x0 : mid + ((laneInfo.ConnectLane - lane) * _laneWidth);
                         int y1 = top + _rowHeight;
 
-                        Point p0 = new Point(x0, y0);
-                        Point p1 = new Point(x1, y1);
+                        var p0 = new Point(x0, y0);
+                        var p1 = new Point(x1, y1);
 
                         // Precalculate curve control points when needed
                         Point c0, c1;
@@ -1089,7 +1093,9 @@ namespace GitUI.UserControls.RevisionGrid
                             c1 = new Point(x1, yMid);
                         }
 
-                        for (int i = drawBorder ? 0 : 2; i < 3; i++)
+                        g.SmoothingMode = sameLane ? SmoothingMode.None : SmoothingMode.AntiAlias;
+
+                        for (var i = drawBorder ? 0 : 2; i < 3; i++)
                         {
                             Pen pen;
                             switch (i)
@@ -1128,7 +1134,7 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             }
 
-            // Reset the clip region
+            // Reset graphics options
             g.Clip = oldClip;
 
             // Draw node
@@ -1169,6 +1175,8 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (row.Node.Data == null)
             {
+                nodeRect.Width = nodeRect.Height = _nodeDimension - 1;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.FillEllipse(Brushes.White, nodeRect);
                 using (var pen = new Pen(Color.Red, 2))
                 {
@@ -1177,6 +1185,7 @@ namespace GitUI.UserControls.RevisionGrid
             }
             else if (row.Node.IsActive)
             {
+                g.SmoothingMode = SmoothingMode.None;
                 g.FillRectangle(nodeBrush, nodeRect);
                 nodeRect.Inflate(1, 1);
                 using (var pen = new Pen(Color.Black, 3))
@@ -1186,6 +1195,7 @@ namespace GitUI.UserControls.RevisionGrid
             }
             else if (row.Node.IsSpecial)
             {
+                g.SmoothingMode = SmoothingMode.None;
                 g.FillRectangle(nodeBrush, nodeRect);
                 if (drawNodeBorder)
                 {
@@ -1194,6 +1204,8 @@ namespace GitUI.UserControls.RevisionGrid
             }
             else
             {
+                nodeRect.Width = nodeRect.Height = _nodeDimension - 1;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.FillEllipse(nodeBrush, nodeRect);
                 if (drawNodeBorder)
                 {
@@ -1202,6 +1214,8 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             nodeBrush.Dispose();
+
+            g.SmoothingMode = oldSmoothingMode;
 
             return true;
 
