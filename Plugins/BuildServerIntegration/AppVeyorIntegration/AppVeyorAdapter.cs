@@ -13,6 +13,7 @@ using GitCommands.Utils;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 
 namespace AppVeyorIntegration
@@ -155,7 +156,7 @@ namespace AppVeyorIntegration
                 FilterBuilds(builds.SelectMany(project => QueryBuildsResults(project)));
         }
 
-        private void FillProjectsFromSettings(string accountName, string[] projectNames)
+        private static void FillProjectsFromSettings(string accountName, [InstantHandle] IEnumerable<string> projectNames)
         {
             foreach (var projectName in projectNames)
             {

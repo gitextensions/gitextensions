@@ -199,12 +199,14 @@ namespace GitCommands
             set => WriteBoolRegKey("CheckSettings", value);
         }
 
+        [NotNull]
         public static string CascadeShellMenuItems
         {
             get => ReadStringRegValue("CascadeShellMenuItems", "110111000111111111");
             set => WriteStringRegValue("CascadeShellMenuItems", value);
         }
 
+        [CanBeNull]
         public static string SshPath
         {
             get => ReadStringRegValue("gitssh", null);
@@ -225,6 +227,7 @@ namespace GitCommands
             set => WriteBoolRegKey("ShowCurrentBranchInVS", value);
         }
 
+        [NotNull]
         public static string GitCommandValue
         {
             get
@@ -251,6 +254,7 @@ namespace GitCommands
             }
         }
 
+        [NotNull]
         public static string GitCommand
         {
             get
@@ -348,6 +352,7 @@ namespace GitCommands
             set => SetBool("provideautocompletion", value);
         }
 
+        [NotNull]
         public static string TruncatePathMethod
         {
             get => GetString("truncatepathmethod", "none");
@@ -418,8 +423,10 @@ namespace GitCommands
             set => SetBool("commitinfoshowtagthiscommitderivesfrom", value);
         }
 
+        [NotNull]
         public static string GravatarCachePath => Path.Combine(ApplicationDataPath.Value, "Images\\");
 
+        [NotNull]
         public static string Translation
         {
             get => GetString("translation", "");
@@ -427,6 +434,8 @@ namespace GitCommands
         }
 
         private static string _currentTranslation;
+
+        [NotNull]
         public static string CurrentTranslation
         {
             get => _currentTranslation ?? Translation;

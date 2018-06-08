@@ -55,6 +55,7 @@ namespace GitCommands
         public string CommitterEmail { get; set; }
         public DateTime CommitDate { get; set; }
 
+        [CanBeNull]
         public BuildInfo BuildStatus
         {
             get => _buildStatus;
