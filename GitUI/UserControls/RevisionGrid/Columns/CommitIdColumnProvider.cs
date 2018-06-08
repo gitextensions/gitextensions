@@ -1,6 +1,10 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
 {
@@ -27,12 +31,25 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void Refresh() => Column.Visible = AppSettings.ShowIds;
 
+        private readonly Dictionary<Font, int[]> _widthByLengthByFont = new Dictionary<Font, int[]>(capacity: 4);
+
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
         {
+            if (!_widthByLengthByFont.TryGetValue(style.normalFont, out var widthByLength))
+            {
+                widthByLength = Enumerable.Range(0, ObjectId.Sha1CharCount).Select(c => TextRenderer.MeasureText(new string('8', c), style.normalFont).Width).ToArray();
+
+                _widthByLengthByFont[style.normalFont] = widthByLength;
+            }
+
             if (!revision.IsArtificial)
             {
-                // TODO don't truncate with ellipsis
-                _grid.DrawColumnText(e, revision.Guid, style.normalFont, style.foreColor);
+                var i = Array.FindIndex(widthByLength, w => w > Column.Width);
+
+                if (i > 1 && revision.ObjectId != null)
+                {
+                    _grid.DrawColumnText(e, revision.ObjectId.ToShortString(i - 1), style.normalFont, style.foreColor, e.CellBounds, useEllipsis: false);
+                }
             }
         }
 
