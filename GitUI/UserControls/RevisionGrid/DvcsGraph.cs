@@ -528,7 +528,7 @@ namespace GitUI.UserControls.RevisionGrid
                         // Cache the next item
                         if (!_graphData.CacheTo(curCount))
                         {
-                            Debug.WriteLine("Cached item FAILED {0}", curCount.ToString());
+                            Debug.WriteLine("Cached item FAILED {0}", rowIndex);
                             lock (_backgroundThread)
                             {
                                 _backgroundScrollTo = curCount;
