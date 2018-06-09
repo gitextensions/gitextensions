@@ -1,4 +1,7 @@
-﻿namespace GitUI.CommitInfo
+﻿using System.Drawing;
+using System.Windows.Forms;
+
+namespace GitUI.CommitInfo
 {
     partial class CommitInfo
     {
@@ -71,28 +74,17 @@
             this.tableLayout.Size = new System.Drawing.Size(893, 386);
             this.tableLayout.TabIndex = 3;
             // 
-            // gravatar1
-            // 
-            this.gravatar1.BackColor = System.Drawing.SystemColors.Window;
-            this.gravatar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gravatar1.Location = new System.Drawing.Point(0, 0);
-            this.gravatar1.Margin = new System.Windows.Forms.Padding(0);
-            this.gravatar1.Name = "gravatar1";
-            this.tableLayout.SetRowSpan(this.gravatar1, 2);
-            this.gravatar1.Size = new System.Drawing.Size(105, 386);
-            this.gravatar1.TabIndex = 1;
-            // 
             // RevisionInfo
             // 
             this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
             this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionInfo.Location = new System.Drawing.Point(110, 102);
-            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(5);
+            this.RevisionInfo.Location = new System.Drawing.Point(96, 98);
+            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(0);
             this.RevisionInfo.Name = "RevisionInfo";
             this.RevisionInfo.ReadOnly = true;
-            this.RevisionInfo.Size = new System.Drawing.Size(778, 279);
+            this.RevisionInfo.Size = new System.Drawing.Size(797, 288);
             this.RevisionInfo.TabIndex = 0;
             this.RevisionInfo.Text = "";
             this.RevisionInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
@@ -112,7 +104,7 @@
             this.toolStripSeparator2,
             this.addNoteToolStripMenuItem});
             this.commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
-            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(454, 170);
+            this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(454, 192);
             // 
             // copyCommitInfoToolStripMenuItem
             // 
@@ -160,9 +152,9 @@
             this.showMessagesOfAnnotatedTagsToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
             this.showMessagesOfAnnotatedTagsToolStripMenuItem.Text = "Show messages of annotated tags";
             this.showMessagesOfAnnotatedTagsToolStripMenuItem.Click += new System.EventHandler(this.showMessagesOfAnnotatedTagsToolStripMenuItem_Click);
-            //
+            // 
             // showTagThisCommitDerivesFromMenuItem
-            //
+            // 
             this.showTagThisCommitDerivesFromMenuItem.Name = "showTagThisCommitDerivesFromMenuItem";
             this.showTagThisCommitDerivesFromMenuItem.Size = new System.Drawing.Size(453, 22);
             this.showTagThisCommitDerivesFromMenuItem.Text = "Show the most recent tag this commit derives from";
@@ -186,16 +178,26 @@
             this._RevisionHeader.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this._RevisionHeader.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this._RevisionHeader.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._RevisionHeader.Location = new System.Drawing.Point(109, 2);
-            this._RevisionHeader.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
+            this._RevisionHeader.Location = new System.Drawing.Point(96, 0);
+            this._RevisionHeader.Margin = new System.Windows.Forms.Padding(0);
             this._RevisionHeader.Name = "_RevisionHeader";
             this._RevisionHeader.ReadOnly = true;
-            this._RevisionHeader.Size = new System.Drawing.Size(780, 93);
+            this._RevisionHeader.Size = new System.Drawing.Size(797, 98);
             this._RevisionHeader.TabIndex = 0;
             this._RevisionHeader.Text = "";
             this._RevisionHeader.ContentsResized += new System.Windows.Forms.ContentsResizedEventHandler(this._RevisionHeader_ContentsResized);
             this._RevisionHeader.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
             this._RevisionHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this._RevisionHeader_MouseDown);
+            // 
+            // gravatar1
+            // 
+            this.gravatar1.BackColor = System.Drawing.SystemColors.Window;
+            this.gravatar1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gravatar1.Location = new System.Drawing.Point(0, 0);
+            this.gravatar1.Margin = new System.Windows.Forms.Padding(0);
+            this.gravatar1.Name = "gravatar1";
+            this.gravatar1.Size = new System.Drawing.Size(96, 98);
+            this.gravatar1.TabIndex = 1;
             // 
             // CommitInfo
             // 

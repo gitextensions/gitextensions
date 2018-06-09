@@ -50,9 +50,9 @@
             this._gravatarImg.ContextMenuStrip = this.contextMenuStrip;
             this._gravatarImg.Image = global::GitUI.Properties.Resources.User;
             this._gravatarImg.Location = new System.Drawing.Point(0, 0);
-            this._gravatarImg.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this._gravatarImg.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this._gravatarImg.Name = "_gravatarImg";
-            this._gravatarImg.Size = new System.Drawing.Size(93, 92);
+            this._gravatarImg.Size = new System.Drawing.Size(96, 96);
             this._gravatarImg.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this._gravatarImg.TabIndex = 0;
             this._gravatarImg.TabStop = false;
@@ -153,9 +153,9 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this._gravatarImg);
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.Name = "GravatarControl";
-            this.Size = new System.Drawing.Size(175, 172);
+            this.Size = new System.Drawing.Size(96, 96);
             ((System.ComponentModel.ISupportInitialize)(this._gravatarImg)).EndInit();
             this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
