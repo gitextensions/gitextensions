@@ -155,6 +155,8 @@ namespace GitUI.CommitInfo
 
         private void ReloadCommitInfo()
         {
+            LoadAuthorImage();
+
             _RevisionHeader.BackColor = ColorHelper.MakeColorDarker(BackColor, 0.05);
 
             showContainedInBranchesToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesLocal;
@@ -164,7 +166,19 @@ namespace GitUI.CommitInfo
             showMessagesOfAnnotatedTagsToolStripMenuItem.Checked = AppSettings.ShowAnnotatedTagsMessages;
             showTagThisCommitDerivesFromMenuItem.Checked = AppSettings.CommitInfoShowTagThisCommitDerivesFrom;
 
-            ResetTextAndImage();
+            _revisionInfo = "";
+            _linksInfo = "";
+            _branchInfo = "";
+            _annotatedTagsInfo = "";
+            _tagInfo = "";
+            _gitDescribeInfo = "";
+            _branches = null;
+            _annotatedTagsMessages = null;
+            _tags = null;
+            _linkFactory.Clear();
+
+            RevisionInfo.Clear();
+            _RevisionHeader.Clear();
 
             if (string.IsNullOrEmpty(_revision.Guid))
             {
@@ -172,7 +186,6 @@ namespace GitUI.CommitInfo
                 return;
             }
 
-            _RevisionHeader.Clear();
             var data = _commitDataManager.CreateFromRevision(_revision, _children);
 
             if (_revision.Body == null)
@@ -195,7 +208,6 @@ namespace GitUI.CommitInfo
             _revisionInfo = body;
 
             UpdateRevisionInfo();
-            LoadAuthorImage(data.Author ?? data.Committer);
 
             // No branch/tag data for artificial commands
             if (_revision.IsArtificial)
@@ -221,6 +233,20 @@ namespace GitUI.CommitInfo
             if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom)
             {
                 ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadDescribeInfoAsync(_revision.Guid)).FileAndForget();
+            }
+
+            return;
+
+            void LoadAuthorImage()
+            {
+                var showAvatar = AppSettings.ShowAuthorGravatar;
+
+                gravatar1.Visible = showAvatar;
+
+                if (showAvatar)
+                {
+                    gravatar1.LoadImage(_revision.AuthorEmail ?? _revision.CommitterEmail);
+                }
             }
         }
 
@@ -502,41 +528,6 @@ namespace GitUI.CommitInfo
             }
 
             return Environment.NewLine + result;
-        }
-
-        private void ResetTextAndImage()
-        {
-            _revisionInfo = string.Empty;
-            _linksInfo = string.Empty;
-            _branchInfo = string.Empty;
-            _annotatedTagsInfo = string.Empty;
-            _tagInfo = string.Empty;
-            _gitDescribeInfo = string.Empty;
-            _branches = null;
-            _annotatedTagsMessages = null;
-            _tags = null;
-            _linkFactory.Clear();
-            UpdateRevisionInfo();
-            gravatar1.Visible = AppSettings.ShowAuthorGravatar;
-            if (AppSettings.ShowAuthorGravatar)
-            {
-                gravatar1.LoadImage("");
-            }
-        }
-
-        private void LoadAuthorImage(string author)
-        {
-            var matches = Regex.Matches(author, @"<([\w\-\.]+@[\w\-\.]+)>");
-
-            if (matches.Count == 0)
-            {
-                return;
-            }
-
-            if (AppSettings.ShowAuthorGravatar)
-            {
-                gravatar1.LoadImage(matches[0].Groups[1].Value);
-            }
         }
 
         private string GetBranchesWhichContainsThisCommit(IEnumerable<string> branches, bool showBranchesAsLinks)
