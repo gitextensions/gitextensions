@@ -805,46 +805,15 @@ namespace GitUI.UserControls.RevisionGrid
                 return false;
             }
 
-            #region Make sure the graph cache bitmap is setup
-
             int height = _cacheCountMax * _rowHeight;
             int width = GraphColumnProvider.Column.Width;
-            if (_graphBitmap == null ||
 
-                // Resize the bitmap when the with or height is changed. The height won't change very often.
-                // The with changes more often, when branches become visible/invisible.
-                // Try to be 'smart' and not resize the bitmap for each little change. Enlarge when needed
-                // but never shrink the bitmap since the huge performance hit is worse than the little extra memory.
-                _graphBitmap.Width < width || _graphBitmap.Height != height)
+            if (width <= 0 || height <= 0)
             {
-                if (_graphBitmap != null)
-                {
-                    _graphBitmap.Dispose();
-                    _graphBitmap = null;
-                }
-
-                if (_graphBitmapGraphics != null)
-                {
-                    _graphBitmapGraphics.Dispose();
-                    _graphBitmapGraphics = null;
-                }
-
-                if (width <= 0 || height <= 0)
-                {
-                    return Rectangle.Empty;
-                }
-
-                _graphBitmap = new Bitmap(
-                    Math.Max(width, _laneWidth * 3),
-                    height,
-                    PixelFormat.Format32bppPArgb);
-                _graphBitmapGraphics = Graphics.FromImage(_graphBitmap);
-                _graphBitmapGraphics.SmoothingMode = SmoothingMode.AntiAlias;
-                _cacheHead = 0;
-                _cacheCount = 0;
+                return false;
             }
 
-            #endregion
+            EnsureCacheIsLargeEnough();
 
             // Compute how much the head needs to move to show the requested item.
             int neededHeadAdjustment = rowIndex - _cacheHead;
@@ -973,6 +942,39 @@ namespace GitUI.UserControls.RevisionGrid
                 }
 
                 return true;
+            }
+
+            void EnsureCacheIsLargeEnough()
+            {
+                if (_graphBitmap == null ||
+
+                    // Resize the bitmap when the with or height is changed. The height won't change very often.
+                    // The with changes more often, when branches become visible/invisible.
+                    // Try to be 'smart' and not resize the bitmap for each little change. Enlarge when needed
+                    // but never shrink the bitmap since the huge performance hit is worse than the little extra memory.
+                    _graphBitmap.Width < width || _graphBitmap.Height != height)
+                {
+                    if (_graphBitmap != null)
+                    {
+                        _graphBitmap.Dispose();
+                        _graphBitmap = null;
+                    }
+
+                    if (_graphBitmapGraphics != null)
+                    {
+                        _graphBitmapGraphics.Dispose();
+                        _graphBitmapGraphics = null;
+                    }
+
+                    _graphBitmap = new Bitmap(
+                        Math.Max(width, _laneWidth * 3),
+                        height,
+                        PixelFormat.Format32bppPArgb);
+                    _graphBitmapGraphics = Graphics.FromImage(_graphBitmap);
+                    _graphBitmapGraphics.SmoothingMode = SmoothingMode.AntiAlias;
+                    _cacheHead = 0;
+                    _cacheCount = 0;
+                }
             }
         }
 
