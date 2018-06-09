@@ -182,8 +182,9 @@ namespace GitUI.UserControls.RevisionGrid
 
                 if (AppSettings.RevisionGraphDrawAlternateBackColor && e.RowIndex % 2 == 0)
                 {
-                    // TODO if default background is nearly black, we should make it lighter instead
-                    var c = ColorHelper.MakeColorDarker(e.CellStyle.BackColor);
+                    var hsl = new HslColor(e.CellStyle.BackColor);
+                    const double adjustment = 0.03;
+                    var c = hsl.WithBrightness(hsl.L > 0.5 ? hsl.L - adjustment : hsl.L + adjustment).ToColor();
                     back = (new SolidBrush(c), c, true);
                 }
                 else
