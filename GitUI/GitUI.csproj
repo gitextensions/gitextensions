@@ -670,7 +670,7 @@
     <Compile Include="CommandsDialogs\FormBrowse.Designer.cs">
       <DependentUpon>FormBrowse.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editor\ColorHelper.cs" />
+    <Compile Include="ColorHelper.cs" />
     <Compile Include="CommandsDialogs\FormCommit.cs">
       <SubType>Form</SubType>
     </Compile>

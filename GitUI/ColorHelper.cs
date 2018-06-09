@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing;
 
-namespace GitUI.Editor
+namespace GitUI
 {
     public static class ColorHelper
     {
