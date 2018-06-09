@@ -78,6 +78,7 @@ namespace GitUI
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Graph.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.Graph.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.Graph.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.Graph.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             this.Graph.ColumnHeadersVisible = false;
             this.Graph.ContextMenuStrip = this.mainContextMenu;
