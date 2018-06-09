@@ -5,7 +5,7 @@ namespace GitStatistics.PieChart
     /// <summary>
     ///   Structure with graphics utility methods.
     /// </summary>
-    public struct GraphicsUtil
+    public static class GraphicsUtil
     {
         /// <summary>
         ///   Checks if point is contained within <c>RectangleF</c> structure

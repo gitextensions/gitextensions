@@ -300,7 +300,7 @@ namespace DeleteUnusedBranches
             return string.Format(_branchesSelected.Text, _branches.Count(b => b.Delete), _branches.Count);
         }
 
-        private struct RefreshContext
+        private readonly struct RefreshContext
         {
             public RefreshContext(IGitModule commands, bool includeRemotes, bool includeUnmerged, string referenceBranch,
                 string remoteRepositoryName, string regexFilter, bool regexIgnoreCase, bool regexDoesNotMatch,

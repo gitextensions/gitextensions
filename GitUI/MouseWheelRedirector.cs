@@ -83,7 +83,7 @@ namespace GitUI
             public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct POINT
+            public readonly struct POINT
             {
                 public readonly int X;
                 public readonly int Y;

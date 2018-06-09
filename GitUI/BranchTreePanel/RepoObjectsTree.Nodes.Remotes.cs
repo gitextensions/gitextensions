@@ -104,22 +104,23 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            private struct RemoteBranchInfo
+            private readonly struct RemoteBranchInfo
             {
-                public string Remote { get; set; }
+                public string Remote { get; }
+                public string BranchName { get; }
 
-                public string BranchName { get; set; }
+                public RemoteBranchInfo(string remote, string branchName)
+                {
+                    Remote = remote;
+                    BranchName = branchName;
+                }
             }
 
             private RemoteBranchInfo GetRemoteBranchInfo()
             {
                 var remote = FullPath.Split('/').First();
                 var branch = FullPath.Substring(remote.Length + 1);
-                return new RemoteBranchInfo
-                {
-                    Remote = remote,
-                    BranchName = branch
-                };
+                return new RemoteBranchInfo(remote, branch);
             }
 
             public void CreateBranch()

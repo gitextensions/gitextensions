@@ -725,7 +725,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             #region Nested type: Edge
 
-            private struct Edge
+            private readonly struct Edge
             {
                 public readonly int Start;
                 public readonly Graph.LaneInfo Data;
