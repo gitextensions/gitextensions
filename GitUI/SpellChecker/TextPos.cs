@@ -1,6 +1,6 @@
 ﻿namespace GitUI.SpellChecker
 {
-    public struct TextPos
+    public readonly struct TextPos
     {
         public int End { get; }
         public int Start { get; }

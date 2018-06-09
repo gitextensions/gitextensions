@@ -1151,7 +1151,7 @@ namespace GitStatistics.PieChart
         /// <summary>
         ///   Internal structure used to store periphery bounds data.
         /// </summary>
-        private struct PeripherySurfaceBounds
+        private readonly struct PeripherySurfaceBounds
         {
             public PeripherySurfaceBounds(float startAngle, float endAngle, PointF startPoint, PointF endPoint)
                 : this()

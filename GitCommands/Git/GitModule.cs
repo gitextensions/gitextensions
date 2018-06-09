@@ -51,7 +51,7 @@ namespace GitCommands
         ForceWithLease,
     }
 
-    public struct ConflictedFileData
+    public readonly struct ConflictedFileData
     {
         public ConflictedFileData(string hash, string filename)
         {
@@ -64,7 +64,7 @@ namespace GitCommands
     }
 
     [DebuggerDisplay("{" + nameof(Filename) + "}")]
-    public struct ConflictData
+    public readonly struct ConflictData
     {
         public ConflictData(ConflictedFileData @base, ConflictedFileData local,
             ConflictedFileData remote)

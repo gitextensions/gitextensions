@@ -106,7 +106,7 @@ namespace GitUI.UserControls
             #endregion Windows constants
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct POINT
+            public readonly struct POINT
             {
                 public readonly int X;
                 public readonly int Y;
