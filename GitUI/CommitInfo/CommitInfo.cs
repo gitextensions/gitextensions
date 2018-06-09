@@ -173,7 +173,8 @@ namespace GitUI.CommitInfo
             }
 
             _RevisionHeader.Clear();
-            CommitData data = _commitDataManager.CreateFromRevision(_revision);
+            var data = _commitDataManager.CreateFromRevision(_revision, _children);
+
             if (_revision.Body == null)
             {
                 _commitDataManager.UpdateBody(data, out _);
@@ -187,7 +188,6 @@ namespace GitUI.CommitInfo
                 ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadSortedRefsAsync()).FileAndForget();
             }
 
-            data.ChildrenGuids = _children;
             var header = _commitDataHeaderRenderer.Render(data, showRevisionsAsLinks: CommandClick != null);
             var body = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClick != null);
 
