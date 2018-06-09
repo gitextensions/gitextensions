@@ -49,12 +49,12 @@ namespace GitUI
         {
         }
 
-        protected GitModuleForm(GitUICommands commands)
+        protected GitModuleForm([CanBeNull] GitUICommands commands)
             : this(true, commands)
         {
         }
 
-        protected GitModuleForm(bool enablePositionRestore, GitUICommands commands)
+        protected GitModuleForm(bool enablePositionRestore, [CanBeNull] GitUICommands commands)
             : base(enablePositionRestore)
         {
             UICommands = commands;

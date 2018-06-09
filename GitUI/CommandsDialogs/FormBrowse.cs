@@ -24,6 +24,7 @@ using GitUI.Script;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.ToolStripClasses;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
 using ResourceManager;
@@ -114,7 +115,7 @@ namespace GitUI.CommandsDialogs
             Translate();
         }
 
-        public FormBrowse(GitUICommands commands, string filter)
+        public FormBrowse([CanBeNull] GitUICommands commands, string filter)
             : base(true, commands)
         {
             // Save value for commit info panel, may be changed
