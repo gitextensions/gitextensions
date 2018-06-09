@@ -169,7 +169,7 @@ namespace DeleteUnusedBranches
                     // TODO: use GitCommandHelpers.PushMultipleCmd after moving this window to GE (see FormPush as example)
                     var remoteBranchNameOffset = remoteBranchPrefix.Length;
                     var remoteBranchNames = string.Join(" ", remoteBranches.Select(branch => ":" + branch.Name.Substring(remoteBranchNameOffset)));
-                    _gitCommands.RunGitCmd(string.Format("push {0} {1}", remoteName, remoteBranchNames));
+                    _gitCommands.RunGitCmd($"push {remoteName} {remoteBranchNames}");
                 }
 
                 if (localBranches.Count > 0)

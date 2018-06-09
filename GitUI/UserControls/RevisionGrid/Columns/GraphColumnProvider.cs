@@ -33,7 +33,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         // Hide graph column when there it is disabled OR when a filter is active
         // allowing for special case when history of a single file is being displayed
-        public override void Refresh() => Column.Visible = AppSettings.ShowRevisionGridGraphColumn && !_grid.ShouldHideGraph(inclBranchFilter: false);
+        public override void Refresh()
+        {
+            Column.Visible
+                = AppSettings.ShowRevisionGridGraphColumn &&
+                  !_grid.ShouldHideGraph(inclBranchFilter: false);
+        }
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
         {

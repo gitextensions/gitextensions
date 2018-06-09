@@ -738,10 +738,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                 public int End => Data.ConnectLane;
 
-                public override string ToString()
-                {
-                    return string.Format("{0}->{1}: {2}", Start, End, Data);
-                }
+                public override string ToString() => $"{Start}->{End}: {Data}";
             }
 
             #endregion

@@ -53,7 +53,6 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly Pen _whiteBorderPen;
         private readonly Pen _blackBorderPen;
 
-        private readonly AutoResetEvent _backgroundEvent = new AutoResetEvent(false);
         private readonly Dictionary<Junction, int> _colorByJunction = new Dictionary<Junction, int>();
         private readonly Color _nonRelativeColor = Color.LightGray;
 
@@ -71,16 +70,18 @@ namespace GitUI.UserControls.RevisionGrid
             Color.FromArgb(241, 196, 15)
         };
 
-        private int _backgroundScrollTo;
+        private readonly AutoResetEvent _backgroundEvent = new AutoResetEvent(false);
         private readonly Thread _backgroundThread;
         private volatile bool _shouldRun = LicenseManager.UsageMode != LicenseUsageMode.Designtime;
+        private int _backgroundScrollTo;
+
         private int _cacheCount; // Number of elements in the cache.
         private int _cacheCountMax; // Number of elements allowed in the cache. Is based on control height.
         private int _cacheHead = -1; // The 'slot' that is the head of the circular bitmap
         private int _cacheHeadRow; // The node row that is in the head slot
-        private Bitmap _graphBitmap;
         private int _graphDataCount;
-        private Graphics _graphWorkArea;
+        [CanBeNull] private Bitmap _graphBitmap;
+        [CanBeNull] private Graphics _graphBitmapGraphics;
         private int _rowHeight; // Height of elements in the cache. Is equal to the control's row height.
         private int _visibleBottom;
         private int _visibleTop;
@@ -231,11 +232,15 @@ namespace GitUI.UserControls.RevisionGrid
                 }
 
                 var data = new string[SelectedRows.Count];
-                for (int i = 0; i < SelectedRows.Count; i++)
+
+                for (var i = 0; i < SelectedRows.Count; i++)
                 {
-                    if (_graphData[SelectedRows[i].Index] != null)
+                    var row = _graphData[SelectedRows[i].Index];
+
+                    if (row != null)
                     {
-                        data[SelectedRows.Count - 1 - i] = _graphData[SelectedRows[i].Index].Node.Id;
+                        // NOTE returned collection has reverse order of SelectedRows
+                        data[SelectedRows.Count - 1 - i] = row.Node.Id;
                     }
                 }
 
@@ -243,36 +248,38 @@ namespace GitUI.UserControls.RevisionGrid
             }
             set
             {
-                string[] currentSelection = SelectedIds;
-                if (value != null && currentSelection != null && value.SequenceEqual(currentSelection))
+                if (value != null &&
+                    SelectedRows.Count == value.Length &&
+                    SelectedIds?.SequenceEqual(value) == true)
                 {
                     return;
                 }
 
                 lock (_backgroundEvent)
+                lock (_graphData)
                 {
-                    lock (_graphData)
-                    {
-                        ClearSelection();
-                        CurrentCell = null;
-                        if (value == null)
-                        {
-                            return;
-                        }
+                    ClearSelection();
+                    CurrentCell = null;
 
-                        foreach (string rowItem in value)
+                    if (value == null)
+                    {
+                        return;
+                    }
+
+                    foreach (var guid in value)
+                    {
+                        if (TryGetRevisionIndex(guid) is int index &&
+                            index >= 0 &&
+                            index < Rows.Count)
                         {
-                            int? row = TryGetRevisionIndex(rowItem);
-                            if (row.HasValue && row.Value >= 0 && Rows.Count > row.Value)
+                            Rows[index].Selected = true;
+
+                            if (CurrentCell == null)
                             {
-                                Rows[row.Value].Selected = true;
-                                if (CurrentCell == null)
-                                {
-                                    // Set the current cell to the first item. We use cell
-                                    // 1 because cell 0 could be hidden if they've chosen to
-                                    // not see the graph
-                                    CurrentCell = Rows[row.Value].Cells[1];
-                                }
+                                // Set the current cell to the first item. We use cell
+                                // 1 because cell 0 could be hidden if they've chosen to
+                                // not see the graph
+                                CurrentCell = Rows[index].Cells[1];
                             }
                         }
                     }
@@ -564,16 +571,16 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 // Currently we are doing some important work; we are receiving
                 // rows that the user is viewing
-                if (Loading != null && _graphData.Count > RowCount) //// && graphData.Count != RowCount)
+                if (_graphData.Count > RowCount)
                 {
-                    Loading(this, new LoadingEventArgs(true));
+                    Loading?.Invoke(this, new LoadingEventArgs(isLoading: true));
                 }
             }
             else
             {
                 // All rows that the user is viewing are loaded. We now can hide the loading
                 // animation that is shown. (the event Loading(bool) triggers this!)
-                Loading?.Invoke(this, new LoadingEventArgs(false));
+                Loading?.Invoke(this, new LoadingEventArgs(isLoading: false));
             }
 
             if (_visibleBottom >= _graphData.Count)
@@ -581,8 +588,10 @@ namespace GitUI.UserControls.RevisionGrid
                 _visibleBottom = _graphData.Count;
             }
 
-            int targetBottom = _visibleBottom + 250;
-            targetBottom = Math.Min(targetBottom, _graphData.Count);
+            var targetBottom = Math.Min(
+                _visibleBottom + 250,
+                _graphData.Count);
+
             if (_backgroundScrollTo < targetBottom)
             {
                 _backgroundScrollTo = targetBottom;
@@ -820,24 +829,22 @@ namespace GitUI.UserControls.RevisionGrid
                     _graphBitmap = null;
                 }
 
-                if (_graphWorkArea != null)
+                if (_graphBitmapGraphics != null)
                 {
-                    _graphWorkArea.Dispose();
-                    _graphWorkArea = null;
+                    _graphBitmapGraphics.Dispose();
+                    _graphBitmapGraphics = null;
                 }
 
-                if (width > 0 && height > 0)
-                {
-                    _graphBitmap = new Bitmap(Math.Max(width, _laneWidth * 3), height, PixelFormat.Format32bppPArgb);
-                    _graphWorkArea = Graphics.FromImage(_graphBitmap);
-                    _graphWorkArea.SmoothingMode = SmoothingMode.AntiAlias;
-                    _cacheHead = 0;
-                    _cacheCount = 0;
-                }
-                else
+                if (width <= 0 || height <= 0)
                 {
                     return Rectangle.Empty;
                 }
+
+                _graphBitmap = new Bitmap(Math.Max(width, _laneWidth * 3), height, PixelFormat.Format32bppPArgb);
+                _graphBitmapGraphics = Graphics.FromImage(_graphBitmap);
+                _graphBitmapGraphics.SmoothingMode = SmoothingMode.AntiAlias;
+                _cacheHead = 0;
+                _cacheCount = 0;
             }
 
             #endregion
@@ -891,12 +898,9 @@ namespace GitUI.UserControls.RevisionGrid
                 return CreateRectangle();
             }
 
-            if (RevisionGraphVisible)
+            if (RevisionGraphVisible && !DrawVisibleGraph())
             {
-                if (!DrawVisibleGraph())
-                {
-                    return Rectangle.Empty;
-                }
+                return Rectangle.Empty;
             }
 
             return CreateRectangle();
@@ -931,30 +935,30 @@ namespace GitUI.UserControls.RevisionGrid
                     var y = curCacheRow * _rowHeight;
 
                     var laneRect = new Rectangle(0, y, Width, _rowHeight);
-                    var oldClip = _graphWorkArea.Clip;
+                    var oldClip = _graphBitmapGraphics.Clip;
 
                     if (rowIndex == start || curCacheRow == 0)
                     {
                         // Draw previous row first. Clip top to row. We also need to clear the area
                         // before we draw since nothing else would clear the top 1/2 of the item to draw.
-                        _graphWorkArea.RenderingOrigin = new Point(x, y - _rowHeight);
-                        _graphWorkArea.Clip = new Region(laneRect);
-                        _graphWorkArea.Clear(Color.Transparent);
-                        DrawItem(_graphWorkArea, _graphData[rowIndex - 1]);
-                        _graphWorkArea.Clip = oldClip;
+                        _graphBitmapGraphics.RenderingOrigin = new Point(x, y - _rowHeight);
+                        _graphBitmapGraphics.Clip = new Region(laneRect);
+                        _graphBitmapGraphics.Clear(Color.Transparent);
+                        DrawItem(_graphBitmapGraphics, _graphData[rowIndex - 1]);
+                        _graphBitmapGraphics.Clip = oldClip;
                     }
 
                     if (rowIndex == end - 1)
                     {
                         // Use a custom clip for the last row
-                        _graphWorkArea.Clip = new Region(laneRect);
+                        _graphBitmapGraphics.Clip = new Region(laneRect);
                     }
 
-                    _graphWorkArea.RenderingOrigin = new Point(x, y);
+                    _graphBitmapGraphics.RenderingOrigin = new Point(x, y);
 
-                    var success = DrawItem(_graphWorkArea, row);
+                    var success = DrawItem(_graphBitmapGraphics, row);
 
-                    _graphWorkArea.Clip = oldClip;
+                    _graphBitmapGraphics.Clip = oldClip;
 
                     if (!success)
                     {

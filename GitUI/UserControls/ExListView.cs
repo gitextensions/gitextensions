@@ -117,15 +117,8 @@ namespace GitUI.UserControls
                     Y = y;
                 }
 
-                public static implicit operator System.Drawing.Point(POINT p)
-                {
-                    return new System.Drawing.Point(p.X, p.Y);
-                }
-
-                public static implicit operator POINT(System.Drawing.Point p)
-                {
-                    return new POINT(p.X, p.Y);
-                }
+                public static implicit operator System.Drawing.Point(POINT p) => new System.Drawing.Point(p.X, p.Y);
+                public static implicit operator POINT(System.Drawing.Point p) => new POINT(p.X, p.Y);
             }
 
             public static POINT LParamToPOINT(uint lParam)
