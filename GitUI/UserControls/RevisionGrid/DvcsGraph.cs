@@ -826,11 +826,9 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             }
 
-            int newRows = 0;
-            if (_cacheCount < _cacheCountMax)
-            {
-                newRows = (rowIndex - _cacheCount) + 1;
-            }
+            var newRows = _cacheCount < _cacheCountMax
+                ? (rowIndex - _cacheCount) + 1
+                : 0;
 
             // Adjust the head of the cache
             _cacheHead = _cacheHead + neededHeadAdjustment;
