@@ -261,8 +261,8 @@ namespace DeleteUnusedBranches
                 mergedIntoBranch.Text,
                 _NO_TRANSLATE_Remote.Text,
                 useRegexFilter.Checked ? regexFilter.Text : null,
-                useRegexCaseInsensitive.Checked ? useRegexCaseInsensitive.Checked : false,
-                regexDoesNotMatch.Checked ? regexDoesNotMatch.Checked : false,
+                useRegexCaseInsensitive.Checked && useRegexCaseInsensitive.Checked,
+                regexDoesNotMatch.Checked && regexDoesNotMatch.Checked,
                 TimeSpan.FromDays((int)olderThanDays.Value),
                 _refreshCancellation.Token);
 
