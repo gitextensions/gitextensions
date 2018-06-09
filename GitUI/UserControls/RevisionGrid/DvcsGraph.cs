@@ -460,7 +460,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
-            var cellRect = DrawGraph(e.RowIndex);
+            var cellRect = RenderRow(e.RowIndex);
 
             if (!cellRect.IsEmpty)
             {
@@ -804,9 +804,9 @@ namespace GitUI.UserControls.RevisionGrid
         /// Draws the required row into <see cref="_graphData"/>, or retrieves an equivalent one from the cache.
         /// </summary>
         /// <returns>The rectangle within <see cref="_graphData"/> at which the drawn image exists.</returns>
-        private Rectangle DrawGraph(int neededRow)
+        private Rectangle RenderRow(int rowIndex)
         {
-            if (neededRow < 0 || _graphData.Count == 0 || _graphData.Count <= neededRow)
+            if (rowIndex < 0 || _graphData.Count == 0 || _graphData.Count <= rowIndex)
             {
                 return Rectangle.Empty;
             }
@@ -840,7 +840,10 @@ namespace GitUI.UserControls.RevisionGrid
                     return Rectangle.Empty;
                 }
 
-                _graphBitmap = new Bitmap(Math.Max(width, _laneWidth * 3), height, PixelFormat.Format32bppPArgb);
+                _graphBitmap = new Bitmap(
+                    Math.Max(width, _laneWidth * 3),
+                    height,
+                    PixelFormat.Format32bppPArgb);
                 _graphBitmapGraphics = Graphics.FromImage(_graphBitmap);
                 _graphBitmapGraphics.SmoothingMode = SmoothingMode.AntiAlias;
                 _cacheHead = 0;
@@ -850,7 +853,7 @@ namespace GitUI.UserControls.RevisionGrid
             #endregion
 
             // Compute how much the head needs to move to show the requested item.
-            int neededHeadAdjustment = neededRow - _cacheHead;
+            int neededHeadAdjustment = rowIndex - _cacheHead;
             if (neededHeadAdjustment > 0)
             {
                 neededHeadAdjustment -= _cacheCountMax - 1;
@@ -863,7 +866,7 @@ namespace GitUI.UserControls.RevisionGrid
             int newRows = 0;
             if (_cacheCount < _cacheCountMax)
             {
-                newRows = (neededRow - _cacheCount) + 1;
+                newRows = (rowIndex - _cacheCount) + 1;
             }
 
             // Adjust the head of the cache
@@ -898,57 +901,54 @@ namespace GitUI.UserControls.RevisionGrid
                 return CreateRectangle();
             }
 
-            if (RevisionGraphVisible && !DrawVisibleGraph())
-            {
-                return Rectangle.Empty;
-            }
-
-            return CreateRectangle();
+            return RevisionGraphVisible && DrawVisibleGraph()
+                ? CreateRectangle()
+                : Rectangle.Empty;
 
             Rectangle CreateRectangle()
             {
                 return new Rectangle(
                     0,
-                    ((_cacheHeadRow + neededRow - _cacheHead) % _cacheCountMax) * RowTemplate.Height,
+                    ((_cacheHeadRow + rowIndex - _cacheHead) % _cacheCountMax) * RowTemplate.Height,
                     width,
                     _rowHeight);
             }
 
             bool DrawVisibleGraph()
             {
-                for (var rowIndex = start; rowIndex < end; rowIndex++)
+                for (var index = start; index < end; index++)
                 {
-                    var row = _graphData[rowIndex];
+                    var row = _graphData[index];
 
                     if (row == null)
                     {
                         // This shouldn't be happening...If it does, clear the cache so we
                         // eventually pick it up.
-                        Debug.WriteLine("Draw lane {0} NO DATA", rowIndex.ToString());
+                        Debug.WriteLine("Draw lane {0} NO DATA", index);
                         ClearDrawCache();
                         return false;
                     }
 
                     // Get the x,y value of the current item's upper left in the cache
-                    var curCacheRow = (_cacheHeadRow + rowIndex - _cacheHead) % _cacheCountMax;
+                    var curCacheRow = (_cacheHeadRow + index - _cacheHead) % _cacheCountMax;
                     var x = _laneSidePadding;
                     var y = curCacheRow * _rowHeight;
 
                     var laneRect = new Rectangle(0, y, Width, _rowHeight);
                     var oldClip = _graphBitmapGraphics.Clip;
 
-                    if (rowIndex == start || curCacheRow == 0)
+                    if (index == start || curCacheRow == 0)
                     {
                         // Draw previous row first. Clip top to row. We also need to clear the area
                         // before we draw since nothing else would clear the top 1/2 of the item to draw.
                         _graphBitmapGraphics.RenderingOrigin = new Point(x, y - _rowHeight);
                         _graphBitmapGraphics.Clip = new Region(laneRect);
                         _graphBitmapGraphics.Clear(Color.Transparent);
-                        DrawItem(_graphBitmapGraphics, _graphData[rowIndex - 1]);
+                        DrawItem(_graphBitmapGraphics, _graphData[index - 1]);
                         _graphBitmapGraphics.Clip = oldClip;
                     }
 
-                    if (rowIndex == end - 1)
+                    if (index == end - 1)
                     {
                         // Use a custom clip for the last row
                         _graphBitmapGraphics.Clip = new Region(laneRect);

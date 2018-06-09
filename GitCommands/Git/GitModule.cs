@@ -23,7 +23,7 @@ using SmartFormat;
 
 namespace GitCommands
 {
-    public class GitModuleEventArgs : EventArgs
+    public sealed class GitModuleEventArgs : EventArgs
     {
         public GitModuleEventArgs(GitModule gitModule)
         {
@@ -66,7 +66,9 @@ namespace GitCommands
     [DebuggerDisplay("{" + nameof(Filename) + "}")]
     public readonly struct ConflictData
     {
-        public ConflictData(ConflictedFileData @base, ConflictedFileData local,
+        public ConflictData(
+            ConflictedFileData @base,
+            ConflictedFileData local,
             ConflictedFileData remote)
         {
             Base = @base;
@@ -98,10 +100,10 @@ namespace GitCommands
         public static readonly string NoNewLineAtTheEnd = "\\ No newline at end of file";
         private const string DiffCommandWithStandardArgs = "-c diff.submodule=short -c diff.noprefix=false diff --no-color ";
 
-        public GitModule([CanBeNull] string workingdir)
+        public GitModule([CanBeNull] string workingDir)
         {
             _superprojectInit = false;
-            WorkingDir = (workingdir ?? "").EnsureTrailingPathSeparator();
+            WorkingDir = (workingDir ?? "").EnsureTrailingPathSeparator();
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);

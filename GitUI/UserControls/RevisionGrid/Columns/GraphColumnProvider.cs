@@ -31,10 +31,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             _grid.Graph.dataGrid_CellPainting(revision, e);
         }
 
-        // Hide graph column when there it is disabled OR when a filter is active
-        // allowing for special case when history of a single file is being displayed
         public override void Refresh()
         {
+            // Hide graph column when there it is disabled OR when a filter is active
+            // allowing for special case when history of a single file is being displayed
             Column.Visible
                 = AppSettings.ShowRevisionGridGraphColumn &&
                   !_grid.ShouldHideGraph(inclBranchFilter: false);
