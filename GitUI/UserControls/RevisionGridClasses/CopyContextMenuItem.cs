@@ -22,7 +22,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         /// </remarks>
         private void AddDefaultCopyCommitHashMenuItemWithCtrlCShortcut()
         {
-            DropDownItems.Add(new CopyToClipboardToolStripMenuItem("(tmp)", () => ViewModel?.CommitHash, Keys.Control | Keys.C));
+            DropDownItems.Add(CreateCopyCommitHashMenuItem("(tmp)"));
         }
 
         [Browsable(false)]
@@ -66,13 +66,18 @@ namespace GitUI.UserControls.RevisionGridClasses
         private CopyToClipboardToolStripMenuItem[] CommitHashFollowedByAllOtherDetailItems()
         {
             var commitHashCaption = new CopyContextMenuViewModel.DetailItem(Strings.GetCommitHashText(), ViewModel?.CommitHash, 15).Text;
-            var copyCommitHashItem = new CopyToClipboardToolStripMenuItem(commitHashCaption, () => ViewModel?.CommitHash, Keys.Control | Keys.C);
+            var copyCommitHashItem = CreateCopyCommitHashMenuItem(commitHashCaption);
 
             var items =
                 new[] { copyCommitHashItem }
                     .Concat(ViewModel.DetailItems.Select(i => new CopyToClipboardToolStripMenuItem(i.Text, () => i.Value)));
 
             return items.ToArray();
+        }
+
+        private CopyToClipboardToolStripMenuItem CreateCopyCommitHashMenuItem(string caption)
+        {
+            return new CopyToClipboardToolStripMenuItem(caption, () => ViewModel?.CommitHash, Keys.Control | Keys.C);
         }
 
         private void AddRefNameItems(ToolStripItem captionItem, IReadOnlyList<string> gitNameList)
