@@ -9,6 +9,8 @@ using JetBrains.Annotations;
 
 namespace ResourceManager
 {
+    // NOTE do not make this class abstract as it breaks the WinForms designer in VS
+
     public class GitExtensionsFormBase : Form, ITranslate
     {
         /// <summary>indicates whether the <see cref="Form"/> has been translated</summary>

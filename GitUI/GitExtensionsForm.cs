@@ -10,6 +10,8 @@ using ResourceManager;
 
 namespace GitUI
 {
+    // NOTE do not make this class abstract as it breaks the WinForms designer in VS
+
     /// <summary>Base class for a Git Extensions <see cref="Form"/>.</summary>
     /// <remarks>Includes support for font, hotkey, icon, translation, and position restore.</remarks>
     public class GitExtensionsForm : GitExtensionsFormBase
@@ -26,7 +28,7 @@ namespace GitUI
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> indicating position restore.</summary>
         /// <param name="enablePositionRestore">Indicates whether the <see cref="Form"/>'s position
         /// will be restored upon being re-opened.</param>
-        public GitExtensionsForm(bool enablePositionRestore)
+        protected GitExtensionsForm(bool enablePositionRestore)
         {
             _enablePositionRestore = enablePositionRestore;
 
