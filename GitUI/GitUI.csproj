@@ -351,6 +351,7 @@
     <Compile Include="SpellChecker\SpellCheckerHelper.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractor.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\MultilineIndicator.cs" />
+    <Compile Include="UserControls\HslColor.cs" />
     <Compile Include="UserControls\RevisionGrid\RefArrowType.cs" />
     <Compile Include="UserControls\RevisionGrid\BareRepoControl.cs">
       <SubType>UserControl</SubType>

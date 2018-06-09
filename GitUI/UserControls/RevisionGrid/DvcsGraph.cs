@@ -196,12 +196,14 @@ namespace GitUI.UserControls.RevisionGrid
 
                 if (AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(e.RowIndex))
                 {
-                    // TODO If the background colour is close to being Gray, we should adjust the gray until there is a bit more contrast
-                    while (ColorHelper.GetColorBrightnessDifference(foreColor, back.color) < 125)
+                    // If necessary, adjust the fore color to create adequate lightness contrast with the background
+                    var foreHsl = new HslColor(foreColor);
+                    var backHsl = new HslColor(back.color);
+                    if (Math.Abs(foreHsl.L - backHsl.L) < 0.5)
                     {
-                        foreColor = back.color.IsLightColor()
-                            ? ColorHelper.MakeColorDarker(foreColor)
-                            : ColorHelper.MakeColorLighter(foreColor);
+                        foreColor = foreHsl
+                            .WithBrightness(backHsl.L > 0.5 ? foreHsl.L - 0.5 : foreHsl.L + 0.5)
+                            .ToColor();
                     }
                 }
                 else
@@ -1056,7 +1058,7 @@ namespace GitUI.UserControls.RevisionGrid
                             }
                         }
 
-                        Color GetAdjustedLineColor(Color c) => ColorHelper.MakeColorDarker(c, 50);
+                        Color GetAdjustedLineColor(Color c) => ColorHelper.MakeColorDarker(c, amount: 0.2);
 
                         // Precalculate line endpoints
                         bool sameLane = laneInfo.ConnectLane == lane;
