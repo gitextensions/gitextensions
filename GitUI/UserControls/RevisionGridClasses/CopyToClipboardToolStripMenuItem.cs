@@ -11,11 +11,12 @@ namespace GitUI.UserControls.RevisionGridClasses
     {
         private readonly Func<string> _value;
 
-        public CopyToClipboardToolStripMenuItem(string text, Func<string> value)
+        public CopyToClipboardToolStripMenuItem(string text, Func<string> value, Keys shortcut = default)
             : base(text)
         {
             _value = value;
             Click += CopyToClipboard;
+            ShortcutKeys = shortcut;
         }
 
         private void CopyToClipboard(object sender, EventArgs e)
