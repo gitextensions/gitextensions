@@ -11,6 +11,17 @@ namespace GitUI.UserControls.RevisionGridClasses
         public CopyContextMenuItem()
         {
             InitializeComponent();
+            AddDefaultCopyCommitHashMenuItemWithCtrlCShortcut();
+        }
+
+        /// <remarks>
+        /// This menu item is needed to override the default Ctrl+C handler of the grid control.
+        /// Because menu items' caption is a string value, this menu item must be updated
+        /// or replaced when the menu is opened to display updated commit hash in its label.
+        /// </remarks>
+        private void AddDefaultCopyCommitHashMenuItemWithCtrlCShortcut()
+        {
+            DropDownItems.Add(new CopyToClipboardToolStripMenuItem("(tmp)", () => ViewModel?.CommitHash, Keys.Control | Keys.C));
         }
 
         [Browsable(false)]
