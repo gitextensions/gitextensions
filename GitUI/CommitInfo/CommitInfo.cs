@@ -173,8 +173,7 @@ namespace GitUI.CommitInfo
                 return;
             }
 
-            _RevisionHeader.Text = string.Empty;
-            _RevisionHeader.Refresh();
+            _RevisionHeader.Clear();
             CommitData data = _commitDataManager.CreateFromRevision(_revision);
             if (_revision.Body == null)
             {
