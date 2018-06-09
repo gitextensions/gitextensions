@@ -451,6 +451,7 @@ namespace GitUI
             inMemMessageFilter = string.Empty;
             inMemCommitterFilter = string.Empty;
             inMemAuthorFilter = string.Empty;
+
             if (!string.IsNullOrEmpty(filter))
             {
                 // hash filtering only possible in memory
