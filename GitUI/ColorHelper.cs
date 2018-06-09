@@ -14,7 +14,8 @@ namespace GitUI
             return new HslColor(color).L > 0.5;
         }
 
-        public static Color MakeColorDarker(Color color, double amount = 0.1)
+        /// <remarks>0.05 is subtle. 0.3 is quite strong.</remarks>
+        public static Color MakeColorDarker(Color color, double amount)
         {
             var hsl = new HslColor(color);
             return hsl.WithBrightness(hsl.L - amount).ToColor();
