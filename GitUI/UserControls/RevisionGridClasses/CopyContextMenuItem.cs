@@ -31,7 +31,7 @@ namespace GitUI.UserControls.RevisionGridClasses
         [Browsable(false)]
         private CopyContextMenuViewModel ViewModel => GetViewModel?.Invoke();
 
-        private void copyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
+        private void copyToClipboardToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             var r = ViewModel;
             if (r == null)
