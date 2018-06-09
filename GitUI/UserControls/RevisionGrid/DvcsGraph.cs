@@ -462,18 +462,10 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
-            var cellRect = RenderRow(e.RowIndex);
-
-            if (!cellRect.IsEmpty)
+            if (RenderRow(e.RowIndex, e.CellBounds, e.Graphics))
             {
-                e.Graphics.DrawImage(
-                        _graphBitmap,
-                        e.CellBounds,
-                        cellRect,
-                        GraphicsUnit.Pixel);
+                e.Handled = true;
             }
-
-            e.Handled = true;
         }
 
         private void UpdateDataAndGraphColumnWidth()
@@ -806,11 +798,11 @@ namespace GitUI.UserControls.RevisionGrid
         /// Draws the required row into <see cref="_graphData"/>, or retrieves an equivalent one from the cache.
         /// </summary>
         /// <returns>The rectangle within <see cref="_graphData"/> at which the drawn image exists.</returns>
-        private Rectangle RenderRow(int rowIndex)
+        private bool RenderRow(int rowIndex, Rectangle cellBounds, Graphics graphics)
         {
             if (rowIndex < 0 || _graphData.Count == 0 || _graphData.Count <= rowIndex)
             {
-                return Rectangle.Empty;
+                return false;
             }
 
             #region Make sure the graph cache bitmap is setup
@@ -900,20 +892,31 @@ namespace GitUI.UserControls.RevisionGrid
             else
             {
                 // Item already in the cache
-                return CreateRectangle();
+                CreateRectangle();
+                return true;
             }
 
-            return RevisionGraphVisible && DrawVisibleGraph()
-                ? CreateRectangle()
-                : Rectangle.Empty;
-
-            Rectangle CreateRectangle()
+            if (!RevisionGraphVisible || !DrawVisibleGraph())
             {
-                return new Rectangle(
+                return false;
+            }
+
+            CreateRectangle();
+            return true;
+
+            void CreateRectangle()
+            {
+                var cellRect = new Rectangle(
                     0,
                     ((_cacheHeadRow + rowIndex - _cacheHead) % _cacheCountMax) * RowTemplate.Height,
                     width,
                     _rowHeight);
+
+                graphics.DrawImage(
+                    _graphBitmap,
+                    cellBounds,
+                    cellRect,
+                    GraphicsUnit.Pixel);
             }
 
             bool DrawVisibleGraph()
