@@ -8,6 +8,8 @@ using GitCommands;
 
 namespace ResourceManager
 {
+    // NOTE do not make this class abstract as it breaks the WinForms designer in VS
+
     /// <summary>Provides translation and hotkey plumbing for GitEx <see cref="UserControl"/>s.</summary>
     public class GitExtensionsControl : UserControl, ITranslate
     {
