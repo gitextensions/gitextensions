@@ -6,12 +6,12 @@ using GitCommands.UserRepositoryHistory;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class GitExtensionsSettingsPage : SettingsPageWithHeader
+    public partial class GeneralSettingsPage : SettingsPageWithHeader
     {
-        public GitExtensionsSettingsPage()
+        public GeneralSettingsPage()
         {
             InitializeComponent();
-            Text = "Git Extensions";
+            Text = "General";
             Translate();
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>

@@ -9031,11 +9031,11 @@ te kunnen wijzigen.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitExtensionsSettingsPage" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="GeneralSettingsPage" source-language="en" target-language="nl">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Extensions</source>
-        <target>Git Extensions</target>
+        <source>General</source>
+        <target>General</target>
         
       </trans-unit>
       <trans-unit id="btnDefaultDestinationBrowse.Text">

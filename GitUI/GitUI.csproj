@@ -723,11 +723,11 @@
       <DependentUpon>ConfirmationsSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\SettingsGroupPages.cs" />
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitExtensionsSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GeneralSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitExtensionsSettingsPage.Designer.cs">
-      <DependentUpon>GitExtensionsSettingsPage.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GeneralSettingsPage.Designer.cs">
+      <DependentUpon>GeneralSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitSettingsPage.cs">
       <SubType>UserControl</SubType>
@@ -1376,8 +1376,8 @@
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ConfirmationsSettingsPage.resx">
       <DependentUpon>ConfirmationsSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GitExtensionsSettingsPage.resx">
-      <DependentUpon>GitExtensionsSettingsPage.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GeneralSettingsPage.resx">
+      <DependentUpon>GeneralSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GitSettingsPage.resx">
       <DependentUpon>GitSettingsPage.cs</DependentUpon>

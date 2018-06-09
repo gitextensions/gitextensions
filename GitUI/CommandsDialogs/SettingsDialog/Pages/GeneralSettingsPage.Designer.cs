@@ -1,6 +1,6 @@
 ﻿namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    partial class GitExtensionsSettingsPage
+    partial class GeneralSettingsPage
     {
         /// <summary> 
         /// Required designer variable.
@@ -527,7 +527,7 @@
             this.Controls.Add(this.groupBoxBehaviour);
             this.Controls.Add(this.panelSpacer1);
             this.Controls.Add(this.groupBoxPerformance);
-            this.Name = "GitExtensionsSettingsPage";
+            this.Name = "GeneralSettingsPage";
             this.Size = new System.Drawing.Size(1216, 547);
             this.groupBoxBehaviour.ResumeLayout(false);
             this.groupBoxBehaviour.PerformLayout();

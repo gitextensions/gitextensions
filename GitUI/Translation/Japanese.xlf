@@ -8950,11 +8950,11 @@ Git の 正しいパスを入力してください。</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitExtensionsSettingsPage" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="GeneralSettingsPage" source-language="en" target-language="ja">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Extensions</source>
-        <target>Git Extensions</target>
+        <source>General</source>
+        <target>General</target>
         
       </trans-unit>
       <trans-unit id="btnDefaultDestinationBrowse.Text">
