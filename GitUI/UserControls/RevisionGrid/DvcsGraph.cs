@@ -48,6 +48,7 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly int _laneWidth = DpiUtil.Scale(16);
         private readonly int _laneSidePadding = DpiUtil.Scale(8);
         private readonly int _laneLineWidth = DpiUtil.Scale(2);
+
         private const int MaxLanes = 40;
 
         private readonly Pen _whiteBorderPen;
@@ -82,6 +83,7 @@ namespace GitUI.UserControls.RevisionGrid
         private int _graphDataCount;
         [CanBeNull] private Bitmap _graphBitmap;
         [CanBeNull] private Graphics _graphBitmapGraphics;
+
         private int _rowHeight; // Height of elements in the cache. Is equal to the control's row height.
         private int _visibleBottom;
         private int _visibleTop;
@@ -123,7 +125,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             ColumnWidthChanged += delegate { ClearDrawCache(); };
-            Scroll += dataGrid_Scroll;
+            Scroll += (s, e) => UpdateDataAndGraphColumnWidth();
             CellPainting += OnCellPainting;
             CellFormatting += (_, e) =>
             {
@@ -452,7 +454,7 @@ namespace GitUI.UserControls.RevisionGrid
             if (Rows[e.RowIndex].Height != RowTemplate.Height)
             {
                 Rows[e.RowIndex].Height = RowTemplate.Height;
-                dataGrid_Scroll(null, null);
+                UpdateDataAndGraphColumnWidth();
             }
 
             if (!e.State.HasFlag(DataGridViewElementStates.Visible) || e.ColumnIndex != 0)
@@ -474,7 +476,7 @@ namespace GitUI.UserControls.RevisionGrid
             e.Handled = true;
         }
 
-        private void dataGrid_Scroll(object sender, ScrollEventArgs e)
+        private void UpdateDataAndGraphColumnWidth()
         {
             UpdateData();
             UpdateGraphColumnWidth();
@@ -519,43 +521,43 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             }
 
-            void UpdateGraph(int curCount, int scrollTo)
+            void UpdateGraph(int fromIndex, in int toIndex)
             {
                 lock (_graphData)
                 {
-                    while (curCount < scrollTo)
+                    var rowIndex = fromIndex;
+
+                    while (rowIndex < toIndex)
                     {
                         // Cache the next item
-                        if (!_graphData.CacheTo(curCount))
+                        if (!_graphData.CacheTo(rowIndex))
                         {
                             Debug.WriteLine("Cached item FAILED {0}", rowIndex);
                             lock (_backgroundThread)
                             {
-                                _backgroundScrollTo = curCount;
+                                _backgroundScrollTo = rowIndex;
                             }
 
                             break;
                         }
 
                         // Update the row (if needed)
-                        if (curCount == Math.Min(scrollTo, _visibleBottom) - 1)
+                        if (rowIndex == Math.Min(toIndex, _visibleBottom) - 1)
                         {
-                            this.InvokeAsync(UpdateRow, curCount).FileAndForget();
+                            this.InvokeAsync(UpdateRow, rowIndex).FileAndForget();
                         }
 
-                        int count = 0;
-                        if (FirstDisplayedCell != null)
-                        {
-                            count = FirstDisplayedCell.RowIndex + DisplayedRowCount(true);
-                        }
+                        var count = FirstDisplayedCell != null
+                            ? FirstDisplayedCell.RowIndex + DisplayedRowCount(includePartialRow: true)
+                            : 0;
 
-                        if (curCount == count)
+                        if (rowIndex == count)
                         {
                             this.InvokeAsync(UpdateGraphColumnWidth).FileAndForget();
                         }
 
-                        curCount = _graphData.CachedCount;
-                        _graphDataCount = curCount;
+                        rowIndex = _graphData.CachedCount;
+                        _graphDataCount = rowIndex;
                     }
                 }
             }
@@ -1273,7 +1275,7 @@ namespace GitUI.UserControls.RevisionGrid
             // Keep an extra page in the cache
             _cacheCountMax = (Height * 2 / _rowHeight) + 1;
             ClearDrawCache();
-            dataGrid_Scroll(null, null);
+            UpdateDataAndGraphColumnWidth();
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
