@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using GitCommands.Git.Extensions;
@@ -17,8 +18,9 @@ namespace GitCommands
         /// data lookup is required to populate the returned <see cref="CommitData"/> object.
         /// </remarks>
         /// <param name="revision">The <see cref="GitRevision"/> to convert from.</param>
+        /// <param name="children">The list of children to add to the returned object.</param>
         [NotNull]
-        CommitData CreateFromRevision([NotNull] GitRevision revision);
+        CommitData CreateFromRevision([NotNull] GitRevision revision, IReadOnlyList<string> children);
 
         /// <summary>
         /// Gets <see cref="CommitData"/> for the specified <paramref name="sha1"/>.
@@ -152,7 +154,7 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public CommitData CreateFromRevision(GitRevision revision)
+        public CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<string> children)
         {
             if (revision == null)
             {
@@ -167,7 +169,7 @@ namespace GitCommands
             return new CommitData(revision.ObjectId, revision.TreeGuid, revision.ParentGuids,
                 string.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
                 string.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
-                revision.Body ?? revision.Subject);
+                revision.Body ?? revision.Subject) { ChildrenGuids = children };
         }
 
         [NotNull]
