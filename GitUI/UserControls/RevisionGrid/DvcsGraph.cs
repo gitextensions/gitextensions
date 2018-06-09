@@ -1140,6 +1140,7 @@ namespace GitUI.UserControls.RevisionGrid
                 _nodeDimension,
                 _nodeDimension);
 
+            Color? nodeColor = null;
             Brush nodeBrush;
 
             UpdateJunctionColors(row.Node.Ancestors);
@@ -1152,7 +1153,8 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (_junctionColors.Count == 1)
             {
-                nodeBrush = new SolidBrush(highlight ? _junctionColors[0] : _nonRelativeColor);
+                nodeColor = highlight ? _junctionColors[0] : _nonRelativeColor;
+                nodeBrush = new SolidBrush(nodeColor.Value);
                 if (_junctionColors[0] == _nonRelativeColor)
                 {
                     drawNodeBorder = false;
@@ -1184,7 +1186,8 @@ namespace GitUI.UserControls.RevisionGrid
                 g.SmoothingMode = SmoothingMode.None;
                 g.FillRectangle(nodeBrush, nodeRect);
                 nodeRect.Inflate(1, 1);
-                using (var pen = new Pen(Color.Black, 2))
+                var outlineColor = nodeColor == null ? Color.Black : ColorHelper.MakeColorDarker(nodeColor.Value, 0.3);
+                using (var pen = new Pen(outlineColor, 2))
                 {
                     g.DrawRectangle(pen, nodeRect);
                 }
