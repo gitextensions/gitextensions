@@ -482,36 +482,42 @@ namespace GitUI.UserControls.RevisionGrid
         {
             while (_shouldRun)
             {
+                if (!_shouldRun)
+                {
+                    return;
+                }
+
                 if (_backgroundEvent.WaitOne(500))
                 {
-                    lock (_backgroundEvent)
+                    if (!_shouldRun)
                     {
-                        if (!_shouldRun)
-                        {
-                            return;
-                        }
+                        return;
+                    }
 
-                        if (!RevisionGraphVisible)
+                    if (RevisionGraphVisible)
+                    {
+                        lock (_backgroundEvent)
                         {
-                            // do nothing... do not cache, the graph is invisible
-                            Thread.Sleep(10);
-                            continue;
-                        }
+                            int scrollTo;
+                            lock (_backgroundThread)
+                            {
+                                scrollTo = _backgroundScrollTo;
+                            }
 
-                        int scrollTo;
-                        lock (_backgroundThread)
-                        {
-                            scrollTo = _backgroundScrollTo;
-                        }
+                            int curCount;
+                            lock (_graphData)
+                            {
+                                curCount = _graphDataCount;
+                                _graphDataCount = _graphData.CachedCount;
+                            }
 
-                        int curCount;
-                        lock (_graphData)
-                        {
-                            curCount = _graphDataCount;
-                            _graphDataCount = _graphData.CachedCount;
+                            UpdateGraph(curCount, scrollTo);
                         }
-
-                        UpdateGraph(curCount, scrollTo);
+                    }
+                    else
+                    {
+                        // Graph is not visible, so sleep a little while to prevent wasting time do nothing... do not cache, the graph is invisible
+                        Thread.Sleep(10);
                     }
                 }
             }
