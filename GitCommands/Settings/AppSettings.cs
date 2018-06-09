@@ -487,7 +487,7 @@ namespace GitCommands
                 }
                 catch (CultureNotFoundException)
                 {
-                    Debug.WriteLine("Culture {0} not found", CurrentLanguageCode);
+                    Debug.WriteLine("Culture {0} not found", new object[] { CurrentLanguageCode });
                     return CultureInfo.GetCultureInfo("en");
                 }
             }
