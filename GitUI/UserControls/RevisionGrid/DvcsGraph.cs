@@ -1059,7 +1059,7 @@ namespace GitUI.UserControls.RevisionGrid
                             }
                         }
 
-                        Color GetAdjustedLineColor(Color c) => ColorHelper.MakeColorDarker(c, amount: 0.2);
+                        Color GetAdjustedLineColor(Color c) => ColorHelper.MakeColorDarker(c, amount: 0.1);
 
                         // Precalculate line endpoints
                         bool sameLane = laneInfo.ConnectLane == lane;
