@@ -45,7 +45,7 @@ See the changes in the commit form.");
 
         // store strings to not keep references to nodes
         private readonly Stack<string> _lastSelectedNodes = new Stack<string>();
-        private IRevisionFileTreeController _revisionFileTreeController;
+        private readonly IRevisionFileTreeController _revisionFileTreeController;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
         private GitRevision _revision;

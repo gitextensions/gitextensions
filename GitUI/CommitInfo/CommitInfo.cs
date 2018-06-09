@@ -72,7 +72,7 @@ namespace GitUI.CommitInfo
             _gitDescribeProvider = new GitDescribeProvider(() => Module);
 
             RevisionInfo.Font = AppSettings.Font;
-            using (Graphics g = CreateGraphics())
+            using (var g = CreateGraphics())
             {
                 _RevisionHeader.Font = _commitDataHeaderRenderer.GetFont(g);
             }
