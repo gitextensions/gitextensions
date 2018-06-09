@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGridClasses
 {
@@ -58,8 +59,20 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private void AddDetailItems()
         {
-            InsertItemsAfterItem(separatorAfterRefNames, ViewModel.DetailItems.Select(i => new CopyToClipboardToolStripMenuItem(i.Text, () => i.Value)).ToArray());
+            InsertItemsAfterItem(separatorAfterRefNames, CommitHashFollowedByAllOtherDetailItems());
             separatorAfterRefNames.Visible = ViewModel.SeparatorVisible;
+        }
+
+        private CopyToClipboardToolStripMenuItem[] CommitHashFollowedByAllOtherDetailItems()
+        {
+            var commitHashCaption = new CopyContextMenuViewModel.DetailItem(Strings.GetCommitHashText(), ViewModel?.CommitHash, 15).Text;
+            var copyCommitHashItem = new CopyToClipboardToolStripMenuItem(commitHashCaption, () => ViewModel?.CommitHash, Keys.Control | Keys.C);
+
+            var items =
+                new[] { copyCommitHashItem }
+                    .Concat(ViewModel.DetailItems.Select(i => new CopyToClipboardToolStripMenuItem(i.Text, () => i.Value)));
+
+            return items.ToArray();
         }
 
         private void AddRefNameItems(ToolStripItem captionItem, IReadOnlyList<string> gitNameList)
