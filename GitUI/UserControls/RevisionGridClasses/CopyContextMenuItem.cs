@@ -47,13 +47,13 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         private void AddDetailItems()
         {
-            InsertItemsAfterItem(separatorAfterRefNames, ViewModel.DetailItems.Select(i => new CopyToClipboardToolStripMenuItem(i.Text, i.Value)).ToArray());
+            InsertItemsAfterItem(separatorAfterRefNames, ViewModel.DetailItems.Select(i => new CopyToClipboardToolStripMenuItem(i.Text, () => i.Value)).ToArray());
             separatorAfterRefNames.Visible = ViewModel.SeparatorVisible;
         }
 
         private void AddRefNameItems(ToolStripItem captionItem, IReadOnlyList<string> gitNameList)
         {
-            InsertItemsAfterItem(captionItem, gitNameList.Select(name => new CopyToClipboardToolStripMenuItem(name, name)).ToArray());
+            InsertItemsAfterItem(captionItem, gitNameList.Select(name => new CopyToClipboardToolStripMenuItem(name, () => name)).ToArray());
             captionItem.Visible = gitNameList.Any();
         }
 
