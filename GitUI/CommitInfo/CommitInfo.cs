@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -13,6 +12,7 @@ using GitCommands;
 using GitCommands.ExternalLinks;
 using GitCommands.Git;
 using GitCommands.Remote;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
 using GitUI.Editor.RichTextBoxExtension;
@@ -152,7 +152,6 @@ namespace GitUI.CommitInfo
         private string _branchInfo;
         private string _gitDescribeInfo;
         private IList<string> _sortedRefs;
-        private Rectangle _headerResize; // Cache desired size for commit header
 
         private void ReloadCommitInfo()
         {
@@ -193,7 +192,6 @@ namespace GitUI.CommitInfo
             var body = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClick != null);
 
             _RevisionHeader.SetXHTMLText(header);
-            _RevisionHeader.Height = _headerResize.Height;
             _revisionInfo = body;
 
             UpdateRevisionInfo();
@@ -722,8 +720,7 @@ namespace GitUI.CommitInfo
 
         private void _RevisionHeader_ContentsResized(object sender, ContentsResizedEventArgs e)
         {
-            // Cache desired size for commit header
-            _headerResize = e.NewRectangle;
+            _RevisionHeader.Height = Math.Max(e.NewRectangle.Height, DpiUtil.Scale(AppSettings.AuthorImageSize));
         }
     }
 }
