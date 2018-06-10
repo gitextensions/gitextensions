@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.UserControls.RevisionGrid.Columns;
+using GitUI.UserControls.RevisionGrid.Graph;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid
@@ -53,7 +54,7 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly Dictionary<Junction, int> _colorByJunction = new Dictionary<Junction, int>();
         private readonly Color _nonRelativeColor = Color.LightGray;
 
-        private readonly Graph _graphData = new Graph();
+        private readonly GraphModel _graphData = new GraphModel();
 
         private static readonly IReadOnlyList<Color> _possibleColors = new[]
         {
@@ -351,7 +352,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             lock (_graphData)
             {
-                Graph.ILaneRow row = _graphData[rowIndex];
+                ILaneRow row = _graphData[rowIndex];
                 if (row == null)
                 {
                     return false;
@@ -988,7 +989,7 @@ namespace GitUI.UserControls.RevisionGrid
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
         private readonly List<Color> _junctionColors = new List<Color>(4);
 
-        private bool DrawItem(Graphics g, [CanBeNull] Graph.ILaneRow row)
+        private bool DrawItem(Graphics g, [CanBeNull] ILaneRow row)
         {
             ThreadHelper.AssertOnUIThread();
 
@@ -1019,7 +1020,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                 for (int item = 0; item < row.LaneInfoCount(lane); item++)
                 {
-                    Graph.LaneInfo laneInfo = row[lane, item];
+                    LaneInfo laneInfo = row[lane, item];
 
                     UpdateJunctionColors(laneInfo.Junctions);
 
@@ -1273,45 +1274,5 @@ namespace GitUI.UserControls.RevisionGrid
                     break;
             }
         }
-
-        #region Nested type: Node
-
-        private sealed class Node
-        {
-            public List<Junction> Ancestors { get; } = new List<Junction>(capacity: 2);
-            public List<Junction> Descendants { get; } = new List<Junction>(capacity: 2);
-            public string Id { get; }
-
-            public GitRevision Data { get; set; }
-            public DataTypes DataTypes { get; set; }
-            public int InLane { get; set; } = int.MaxValue;
-            public int Index { get; set; } = int.MaxValue;
-
-            public Node(string id)
-            {
-                Id = id;
-            }
-
-            public bool IsActive => DataTypes.HasFlag(DataTypes.Active);
-            public bool IsSpecial => DataTypes.HasFlag(DataTypes.Special);
-
-            public override string ToString()
-            {
-                if (Data == null)
-                {
-                    string name = Id;
-                    if (name.Length > 8)
-                    {
-                        name = name.Substring(0, 4) + ".." + name.Substring(name.Length - 4, 4);
-                    }
-
-                    return string.Format("{0} ({1})", name, Index);
-                }
-
-                return Data.ToString();
-            }
-        }
-
-        #endregion
     }
 }
