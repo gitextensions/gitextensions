@@ -894,6 +894,53 @@ namespace GitUI
 
             return;
 
+            void OnRevisionRead(GitRevision revision)
+            {
+                if (revision == null)
+                {
+                    Graph.Prune();
+                    return;
+                }
+
+                if (_filteredCurrentCheckout == null)
+                {
+                    if (revision.Guid == CurrentCheckout)
+                    {
+                        _filteredCurrentCheckout = CurrentCheckout;
+                    }
+                    else
+                    {
+                        if (_currentCheckoutParents == null)
+                        {
+                            _currentCheckoutParents = GetAllParents(CurrentCheckout);
+                        }
+
+                        _filteredCurrentCheckout = _currentCheckoutParents.FirstOrDefault(parent => parent == revision.Guid);
+                    }
+                }
+
+                if (_filteredCurrentCheckout == revision.Guid && ShowUncommittedChanges() && !Module.IsBareRepository())
+                {
+                    CheckUncommittedChanged(_filteredCurrentCheckout);
+                }
+
+                DvcsGraph.DataTypes dataTypes;
+                if (revision.Guid == _filteredCurrentCheckout)
+                {
+                    dataTypes = DvcsGraph.DataTypes.Active;
+                }
+                else if (revision.Refs.Count != 0)
+                {
+                    dataTypes = DvcsGraph.DataTypes.Special;
+                }
+                else
+                {
+                    dataTypes = DvcsGraph.DataTypes.Normal;
+                }
+
+                Graph.Add(revision, dataTypes);
+            }
+
             void OnRevisionReaderError(Exception exception)
             {
                 // This has to happen on the UI thread
@@ -930,7 +977,7 @@ namespace GitUI
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
                         await this.SwitchToMainThreadAsync();
-                        OnRevisionRead();
+                        Graph.Prune();
                         SetPage(Graph);
                         _isRefreshingRevisions = false;
                         SelectInitialRevision();
@@ -1752,54 +1799,6 @@ namespace GitUI
         private bool ShowUncommittedChanges()
         {
             return ShowUncommittedChangesIfPossible && AppSettings.RevisionGraphShowWorkingDirChanges;
-        }
-
-        private void OnRevisionRead([CanBeNull] GitRevision revision = null)
-        {
-            if (revision == null)
-            {
-                // Prune the graph and make sure the row count matches reality
-                Graph.Prune();
-                return;
-            }
-
-            if (_filteredCurrentCheckout == null)
-            {
-                if (revision.Guid == CurrentCheckout)
-                {
-                    _filteredCurrentCheckout = CurrentCheckout;
-                }
-                else
-                {
-                    if (_currentCheckoutParents == null)
-                    {
-                        _currentCheckoutParents = GetAllParents(CurrentCheckout);
-                    }
-
-                    _filteredCurrentCheckout = _currentCheckoutParents.FirstOrDefault(parent => parent == revision.Guid);
-                }
-            }
-
-            if (_filteredCurrentCheckout == revision.Guid && ShowUncommittedChanges() && !Module.IsBareRepository())
-            {
-                CheckUncommittedChanged(_filteredCurrentCheckout);
-            }
-
-            DvcsGraph.DataTypes dataTypes;
-            if (revision.Guid == _filteredCurrentCheckout)
-            {
-                dataTypes = DvcsGraph.DataTypes.Active;
-            }
-            else if (revision.Refs.Count != 0)
-            {
-                dataTypes = DvcsGraph.DataTypes.Special;
-            }
-            else
-            {
-                dataTypes = DvcsGraph.DataTypes.Normal;
-            }
-
-            Graph.Add(revision, dataTypes);
         }
 
         public void InvalidateCount()
