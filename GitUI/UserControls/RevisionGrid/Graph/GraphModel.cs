@@ -264,6 +264,18 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return _lanes.CacheTo(idx);
         }
 
+        private bool GetOrCreateNode(string objectId, [NotNull] out Node node)
+        {
+            if (!Nodes.TryGetValue(objectId, out node))
+            {
+                node = new Node(objectId);
+                Nodes.Add(objectId, node);
+                return false;
+            }
+
+            return true;
+        }
+
 #if false
 // TopoSorting is an easy way to detect if something has gone wrong with the graph
 
@@ -366,17 +378,5 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return l.ToArray();
             }
 #endif
-
-        private bool GetOrCreateNode(string objectId, [NotNull] out Node node)
-        {
-            if (!Nodes.TryGetValue(objectId, out node))
-            {
-                node = new Node(objectId);
-                Nodes.Add(objectId, node);
-                return false;
-            }
-
-            return true;
-        }
     }
 }
