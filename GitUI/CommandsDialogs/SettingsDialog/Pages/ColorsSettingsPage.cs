@@ -38,7 +38,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             DrawNonRelativesGray.Checked = AppSettings.RevisionGraphDrawNonRelativesGray;
             DrawNonRelativesTextGray.Checked = AppSettings.RevisionGraphDrawNonRelativesTextGray;
             StripedBanchChange.Checked = AppSettings.StripedBranchChange;
-            HighlightAuthoredRevisions.Checked = AppSettings.HighlightAuthoredRevisions;
 
             _NO_TRANSLATE_ColorGraphLabel.BackColor = AppSettings.GraphColor;
             _NO_TRANSLATE_ColorGraphLabel.Text = AppSettings.GraphColor.Name;
@@ -85,7 +84,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
             AppSettings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
             AppSettings.StripedBranchChange = StripedBanchChange.Checked;
-            AppSettings.HighlightAuthoredRevisions = HighlightAuthoredRevisions.Checked;
 
             AppSettings.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;
             AppSettings.TagColor = _NO_TRANSLATE_ColorTagLabel.BackColor;
