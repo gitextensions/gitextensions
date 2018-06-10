@@ -60,6 +60,17 @@ namespace GitUI
                             break;
                         }
 
+                    case SplitContainer splitContainer:
+                    {
+                        if (splitContainer.Tag as string != "__DPI_SCALED__")
+                        {
+                            splitContainer.Tag = "__DPI_SCALED__";
+                            splitContainer.SplitterWidth = DpiUtil.Scale(splitContainer.SplitterWidth);
+                        }
+
+                        break;
+                    }
+
                     default:
                         {
                             if (next is TextBoxBase || next is UpDownBase)
