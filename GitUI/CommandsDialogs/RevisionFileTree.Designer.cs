@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.FileTreeSplitContainer = new System.Windows.Forms.SplitContainer();
-            this.tvGitTree = new UserControls.NativeTreeView();
+            this.tvGitTree = new GitUI.UserControls.NativeTreeView();
             this.FileTreeContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openWithDifftoolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,10 +54,10 @@
             this.assumeUnchangedTheFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorFileTreeActions = new System.Windows.Forms.ToolStripSeparator();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.expandSubtreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.expandAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.collapseAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.FileText = new GitUI.Editor.FileViewer();
-            this.expandSubtreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.FileTreeSplitContainer)).BeginInit();
             this.FileTreeSplitContainer.Panel1.SuspendLayout();
             this.FileTreeSplitContainer.Panel2.SuspendLayout();
@@ -81,14 +81,17 @@
             this.FileTreeSplitContainer.Panel2.Controls.Add(this.FileText);
             this.FileTreeSplitContainer.Size = new System.Drawing.Size(793, 303);
             this.FileTreeSplitContainer.SplitterDistance = 300;
+            this.FileTreeSplitContainer.SplitterWidth = 6;
             this.FileTreeSplitContainer.TabIndex = 1;
             // 
             // tvGitTree
             // 
+            this.tvGitTree.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.tvGitTree.ContextMenuStrip = this.FileTreeContextMenu;
             this.tvGitTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tvGitTree.HideSelection = false;
             this.tvGitTree.Location = new System.Drawing.Point(0, 0);
+            this.tvGitTree.Margin = new System.Windows.Forms.Padding(0);
             this.tvGitTree.Name = "tvGitTree";
             this.tvGitTree.Size = new System.Drawing.Size(300, 303);
             this.tvGitTree.TabIndex = 0;
@@ -295,6 +298,14 @@
             this.findToolStripMenuItem.Text = "Find in file tree...";
             this.findToolStripMenuItem.Click += new System.EventHandler(this.findToolStripMenuItem_Click);
             // 
+            // expandSubtreeToolStripMenuItem
+            // 
+            this.expandSubtreeToolStripMenuItem.Image = global::GitUI.Properties.Resources.increase;
+            this.expandSubtreeToolStripMenuItem.Name = "expandSubtreeToolStripMenuItem";
+            this.expandSubtreeToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
+            this.expandSubtreeToolStripMenuItem.Text = "Expand subtree (takes a while on large subtrees)";
+            this.expandSubtreeToolStripMenuItem.Click += new System.EventHandler(this.expandSubtreeToolStripMenuItem_Click);
+            // 
             // expandAllToolStripMenuItem
             // 
             this.expandAllToolStripMenuItem.Image = global::GitUI.Properties.Resources.increase;
@@ -315,18 +326,10 @@
             // 
             this.FileText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileText.Location = new System.Drawing.Point(0, 0);
-            this.FileText.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.FileText.Margin = new System.Windows.Forms.Padding(0);
             this.FileText.Name = "FileText";
-            this.FileText.Size = new System.Drawing.Size(489, 303);
+            this.FileText.Size = new System.Drawing.Size(487, 303);
             this.FileText.TabIndex = 0;
-            // 
-            // expandSubtreeToolStripMenuItem
-            // 
-            this.expandSubtreeToolStripMenuItem.Image = global::GitUI.Properties.Resources.increase;
-            this.expandSubtreeToolStripMenuItem.Name = "expandSubtreeToolStripMenuItem";
-            this.expandSubtreeToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
-            this.expandSubtreeToolStripMenuItem.Text = "Expand subtree (takes a while on large subtrees)";
-            this.expandSubtreeToolStripMenuItem.Click += new System.EventHandler(this.expandSubtreeToolStripMenuItem_Click);
             // 
             // RevisionFileTree
             // 
