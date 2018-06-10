@@ -10,7 +10,6 @@ using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
-using GitUI.Editor;
 using GitUI.UserControls.RevisionGrid.Columns;
 using JetBrains.Annotations;
 
@@ -50,9 +49,6 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly int _laneLineWidth = DpiUtil.Scale(2);
 
         private const int MaxLanes = 40;
-
-        private readonly Pen _whiteBorderPen;
-        private readonly Pen _blackBorderPen;
 
         private readonly Dictionary<Junction, int> _colorByJunction = new Dictionary<Junction, int>();
         private readonly Color _nonRelativeColor = Color.LightGray;
@@ -119,9 +115,6 @@ namespace GitUI.UserControls.RevisionGrid
             RowsDefaultCellStyle.Font = SystemFonts.DefaultFont;
             RowHeadersDefaultCellStyle.Font = SystemFonts.DefaultFont;
             RowTemplate.DefaultCellStyle.Font = SystemFonts.DefaultFont;
-
-            _whiteBorderPen = new Pen(Brushes.White, _laneLineWidth);
-            _blackBorderPen = new Pen(Brushes.Black, _laneLineWidth + 1);
 
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             ColumnWidthChanged += delegate { ClearDrawCache(); };
@@ -302,8 +295,6 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (disposing)
             {
-                _whiteBorderPen.Dispose();
-                _blackBorderPen.Dispose();
                 _graphBitmap?.Dispose();
                 _backgroundEvent?.Dispose();
             }
