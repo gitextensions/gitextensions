@@ -216,14 +216,6 @@ namespace GitUI
 
         internal void DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds, bool useEllipsis = true)
         {
-            var isTruncated = DrawColumnTextTruncated(e.Graphics, text, font, color, bounds, useEllipsis);
-
-            _toolTipProvider.SetTruncation(e.ColumnIndex, e.RowIndex, isTruncated);
-        }
-
-        /// <returns>True if the text has been truncated.</returns>
-        public static bool DrawColumnTextTruncated(Graphics graphics, string text, Font font, Color color, Rectangle bounds, bool useEllipsis = true)
-        {
             var flags = TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding;
 
             if (useEllipsis)
@@ -231,11 +223,18 @@ namespace GitUI
                 flags |= TextFormatFlags.EndEllipsis;
             }
 
-            var size = TextRenderer.MeasureText(graphics, text, font, graphics.ClipBounds.Size.ToSize(), flags);
+            var size = TextRenderer.MeasureText(
+                e.Graphics,
+                text,
+                font,
+                new Size(
+                    bounds.Width + 16,
+                    bounds.Height),
+                flags);
 
-            TextRenderer.DrawText(graphics, text, font, bounds, color, flags);
+            TextRenderer.DrawText(e.Graphics, text, font, bounds, color, flags);
 
-            return size.Width > bounds.Width;
+            _toolTipProvider.SetTruncation(e.ColumnIndex, e.RowIndex, truncated: size.Width > bounds.Width);
         }
 
         [Browsable(false)] public IndexWatcher IndexWatcher => _indexWatcher.Value;
