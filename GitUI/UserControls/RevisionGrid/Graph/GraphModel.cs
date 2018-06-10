@@ -84,7 +84,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             var parentIds = revision.ParentGuids;
 
             // If we haven't seen this node yet, create a new junction.
-            if (!GetNode(revision.Guid, out var node) && (parentIds == null || parentIds.Count == 0))
+            if (!GetOrCreateNode(revision.Guid, out var node) && (parentIds == null || parentIds.Count == 0))
             {
                 _junctions.Add(new Junction(node, node));
             }
@@ -97,7 +97,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             foreach (string parentId in parentIds)
             {
-                GetNode(parentId, out var parent);
+                GetOrCreateNode(parentId, out var parent);
 
                 if (parent.Index < node.Index)
                 {
@@ -367,7 +367,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 #endif
 
-        private bool GetNode(string objectId, out Node node)
+        private bool GetOrCreateNode(string objectId, [NotNull] out Node node)
         {
             if (!Nodes.TryGetValue(objectId, out node))
             {
