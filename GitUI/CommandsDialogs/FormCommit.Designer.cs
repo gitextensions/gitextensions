@@ -656,6 +656,7 @@ namespace GitUI.CommandsDialogs
             this.splitLeft.Panel2.Controls.Add(this.toolbarStaged);
             this.splitLeft.Size = new System.Drawing.Size(397, 622);
             this.splitLeft.SplitterDistance = 274;
+            this.splitLeft.SplitterWidth = 6;
             this.splitLeft.TabIndex = 3;
             this.splitLeft.TabStop = false;
             //
@@ -912,7 +913,7 @@ namespace GitUI.CommandsDialogs
             this.LoadingStaged.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LoadingStaged.Location = new System.Drawing.Point(0, 28);
             this.LoadingStaged.Name = "LoadingStaged";
-            this.LoadingStaged.Size = new System.Drawing.Size(397, 316);
+            this.LoadingStaged.Size = new System.Drawing.Size(397, 314);
             this.LoadingStaged.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.LoadingStaged.TabIndex = 17;
             this.LoadingStaged.TabStop = false;
@@ -926,7 +927,7 @@ namespace GitUI.CommandsDialogs
             this.Staged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Staged.Name = "Staged";
             this.Staged.SelectFirstItemOnSetItems = false;
-            this.Staged.Size = new System.Drawing.Size(397, 316);
+            this.Staged.Size = new System.Drawing.Size(397, 314);
             this.Staged.TabIndex = 0;
             this.Staged.SelectedIndexChanged += new System.EventHandler(this.StagedSelectionChanged);
             this.Staged.DataSourceChanged += new System.EventHandler(this.Staged_DataSourceChanged);
@@ -1035,7 +1036,7 @@ namespace GitUI.CommandsDialogs
             //
             this.splitRight.Panel2.Controls.Add(this.tableLayoutPanel1);
             this.splitRight.Panel2MinSize = 145;
-            this.splitRight.Size = new System.Drawing.Size(517, 622);
+            this.splitRight.Size = new System.Drawing.Size(515, 622);
             this.splitRight.SplitterDistance = 426;
             this.splitRight.TabIndex = 0;
             this.splitRight.TabStop = false;
@@ -1073,7 +1074,7 @@ namespace GitUI.CommandsDialogs
             this.SelectedDiff.Location = new System.Drawing.Point(0, 0);
             this.SelectedDiff.Margin = new System.Windows.Forms.Padding(2, 3, 3, 3);
             this.SelectedDiff.Name = "SelectedDiff";
-            this.SelectedDiff.Size = new System.Drawing.Size(517, 426);
+            this.SelectedDiff.Size = new System.Drawing.Size(515, 426);
             this.SelectedDiff.TabIndex = 0;
             this.SelectedDiff.TabStop = false;
             this.SelectedDiff.ContextMenuOpening += new System.ComponentModel.CancelEventHandler(this.SelectedDiff_ContextMenuOpening);
@@ -1092,16 +1093,17 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(517, 192);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(515, 192);
             this.tableLayoutPanel1.TabIndex = 8;
             //
             // panel1
             //
             this.panel1.Controls.Add(this.Message);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(178, 31);
+            this.panel1.Location = new System.Drawing.Point(175, 28);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(336, 158);
+            this.panel1.Size = new System.Drawing.Size(340, 164);
             this.panel1.TabIndex = 7;
             //
             // Message
@@ -1110,7 +1112,7 @@ namespace GitUI.CommandsDialogs
             this.Message.Location = new System.Drawing.Point(0, 0);
             this.Message.Margin = new System.Windows.Forms.Padding(0);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(336, 158);
+            this.Message.Size = new System.Drawing.Size(340, 164);
             this.Message.TabIndex = 0;
             this.Message.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F);
             this.Message.SelectionChanged += new System.EventHandler(this.Message_SelectionChanged);
@@ -1229,7 +1231,7 @@ namespace GitUI.CommandsDialogs
             this.toolbarCommit.Name = "toolbarCommit";
             this.toolbarCommit.Padding = new System.Windows.Forms.Padding(1, 1, 2, 1);
             this.toolbarCommit.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolbarCommit.Size = new System.Drawing.Size(342, 28);
+            this.toolbarCommit.Size = new System.Drawing.Size(340, 28);
             this.toolbarCommit.Stretch = true;
             this.toolbarCommit.TabIndex = 5;
             //
@@ -1352,7 +1354,6 @@ namespace GitUI.CommandsDialogs
             this.gpgSignCommitToolStripComboBox.MaxDropDownItems = 3;
             this.gpgSignCommitToolStripComboBox.Name = "gpgSignCommitToolStripComboBox";
             this.gpgSignCommitToolStripComboBox.Size = new System.Drawing.Size(230, 23);
-            this.gpgSignCommitToolStripComboBox.Text = "Sign commit with default key";
             this.gpgSignCommitToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.gpgSignCommitChanged);
             // 
             // toolStripGpgKeyTextBox
