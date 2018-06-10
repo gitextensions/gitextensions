@@ -1021,30 +1021,46 @@ namespace GitUI
                 Graph.SelectedObjectIds = selectedObjectIds;
                 _selectedObjectIds = null;
             }
+            else if (!string.IsNullOrEmpty(InitialObjectId))
+            {
+                int index = SearchRevision(InitialObjectId);
+                if (index >= 0)
+                {
+                    SetSelectedIndex(index);
+                }
+            }
             else
             {
-                if (!string.IsNullOrEmpty(InitialObjectId))
-                {
-                    int index = SearchRevision(InitialObjectId);
-                    if (index >= 0)
-                    {
-                        SetSelectedIndex(index);
-                    }
-                }
-                else
-                {
-                    SetSelectedRevision(filteredCurrentCheckout);
-                }
+                SetSelectedRevision(filteredCurrentCheckout);
             }
 
-            if (string.IsNullOrEmpty(filteredCurrentCheckout))
-            {
-                return;
-            }
-
-            if (!Graph.IsRevisionRelative(filteredCurrentCheckout))
+            if (!string.IsNullOrEmpty(filteredCurrentCheckout) &&
+                !Graph.IsRevisionRelative(filteredCurrentCheckout))
             {
                 HighlightBranch(filteredCurrentCheckout);
+            }
+
+            return;
+
+            int SearchRevision(string objectId)
+            {
+                // Attempt to look up an item by its ID
+                if (Graph.TryGetRevisionIndex(objectId) is int exactIndex)
+                {
+                    return exactIndex;
+                }
+
+                // Not found, so search for its parents
+                foreach (var parentId in GetAllParents(objectId))
+                {
+                    if (Graph.TryGetRevisionIndex(parentId) is int parentIndex)
+                    {
+                        return parentIndex;
+                    }
+                }
+
+                // Not found...
+                return -1;
             }
         }
 
@@ -1059,26 +1075,6 @@ namespace GitUI
             };
 
             return Module.ReadGitOutputLines(args.ToString()).ToArray();
-        }
-
-        private int SearchRevision(string initRevision)
-        {
-            var exactIndex = Graph.TryGetRevisionIndex(initRevision);
-            if (exactIndex.HasValue)
-            {
-                return exactIndex.Value;
-            }
-
-            foreach (var parentHash in GetAllParents(initRevision))
-            {
-                var parentIndex = Graph.TryGetRevisionIndex(parentHash);
-                if (parentIndex.HasValue)
-                {
-                    return parentIndex.Value;
-                }
-            }
-
-            return -1;
         }
 
         private void LoadRevisions()
