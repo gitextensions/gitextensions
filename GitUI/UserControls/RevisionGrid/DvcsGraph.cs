@@ -294,16 +294,16 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
             {
-                var style = GetStyle();
+                var (backBrush, backColor, disposeBackBrush, foreColor) = GetStyle();
 
                 // Draw cell background
-                e.Graphics.FillRectangle(style.backBrush, e.CellBounds);
+                e.Graphics.FillRectangle(backBrush, e.CellBounds);
 
-                provider.OnCellPainting(e, revision, (style.backBrush, style.backColor, style.foreColor, _normalFont, _boldFont));
+                provider.OnCellPainting(e, revision, (backBrush, backColor, foreColor, _normalFont, _boldFont));
 
-                if (style.disposeBackBrush)
+                if (disposeBackBrush)
                 {
-                    style.backBrush.Dispose();
+                    backBrush.Dispose();
                 }
 
                 e.Handled = true;
