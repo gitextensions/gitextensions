@@ -256,18 +256,18 @@ namespace GitUI
             set => Graph.RevisionGraphDrawStyle = value;
         }
 
-        private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripDropDownItem targetMenuItem)
+        private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripDropDownItem targetItem)
         {
             foreach (var menuCommand in menuCommands)
             {
-                var toolStripItem = MenuCommand.CreateToolStripItem(menuCommand);
+                var item = MenuCommand.CreateToolStripItem(menuCommand);
 
-                if (toolStripItem is ToolStripMenuItem toolStripMenuItem)
+                if (item is ToolStripMenuItem menuItem)
                 {
-                    menuCommand.RegisterMenuItem(toolStripMenuItem);
+                    menuCommand.RegisterMenuItem(menuItem);
                 }
 
-                targetMenuItem.DropDownItems.Add(toolStripItem);
+                targetItem.DropDownItems.Add(item);
             }
         }
 
