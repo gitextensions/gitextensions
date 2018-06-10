@@ -15,7 +15,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class RevisionFileTree : GitModuleControl
+    public partial class RevisionFileTreeControl : GitModuleControl
     {
         private readonly TranslationString _resetFileCaption = new TranslationString("Reset");
         private readonly TranslationString _resetFileText = new TranslationString("Are you sure you want to reset this file or directory?");
@@ -50,7 +50,7 @@ See the changes in the commit form.");
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
         private GitRevision _revision;
 
-        public RevisionFileTree()
+        public RevisionFileTreeControl()
         {
             InitializeComponent();
             Translate();

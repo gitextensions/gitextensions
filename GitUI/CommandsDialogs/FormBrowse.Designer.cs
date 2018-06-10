@@ -67,11 +67,11 @@ namespace GitUI.CommandsDialogs
             this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
             this.RevisionInfo = new GitUI.CommitInfo.CommitInfo();
             this.TreeTabPage = new System.Windows.Forms.TabPage();
-            this.fileTree = new GitUI.CommandsDialogs.RevisionFileTree();
+            this.fileTree = new GitUI.CommandsDialogs.RevisionFileTreeControl();
             this.DiffTabPage = new System.Windows.Forms.TabPage();
-            this.revisionDiff = new GitUI.CommandsDialogs.RevisionDiff();
+            this.revisionDiff = new GitUI.CommandsDialogs.RevisionDiffControl();
             this.GpgInfoTabPage = new System.Windows.Forms.TabPage();
-            this.revisionGpgInfo1 = new GitUI.CommandsDialogs.RevisionGpgInfo();
+            this.revisionGpgInfo1 = new GitUI.CommandsDialogs.RevisionGpgInfoControl();
             this.FilterToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -1828,10 +1828,10 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem tsmiRecentRepositoriesClear;
         private ToolStripSeparator clearRecentRepositoriesListToolStripMenuItem;
         private ToolStripButton toolStripFileExplorer;
-        private RevisionFileTree fileTree;
-        private RevisionDiff revisionDiff;
+        private RevisionFileTreeControl fileTree;
+        private RevisionDiffControl revisionDiff;
         private ToolStripContainer toolPanel;
-        private RevisionGpgInfo revisionGpgInfo1;
+        private RevisionGpgInfoControl revisionGpgInfo1;
         private ToolStripMenuItem createAStashToolStripMenuItem;
         private ToolStripMenuItem undoLastCommitToolStripMenuItem;
         private ToolStripMenuItem tsmiFavouriteRepositories;

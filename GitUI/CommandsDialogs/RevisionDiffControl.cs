@@ -16,7 +16,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class RevisionDiff : GitModuleControl
+    public partial class RevisionDiffControl : GitModuleControl
     {
         private readonly TranslationString _saveFileFilterCurrentFormat = new TranslationString("Current format");
         private readonly TranslationString _saveFileFilterAllFiles = new TranslationString("All files");
@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _firstRevision = new TranslationString("First");
 
         private RevisionGridControl _revisionGrid;
-        private RevisionFileTree _revisionFileTree;
+        private RevisionFileTreeControl _revisionFileTree;
         private string _oldRevision;
         private GitItemStatus _oldDiffItem;
         private IRevisionDiffController _revisionDiffController;
@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
         private readonly IGitRevisionTester _gitRevisionTester;
 
-        public RevisionDiff()
+        public RevisionDiffControl()
         {
             InitializeComponent();
             DiffFiles.AlwaysRevisionGroups = true;
@@ -146,7 +146,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public void Bind(RevisionGridControl revisionGrid, RevisionFileTree revisionFileTree)
+        public void Bind(RevisionGridControl revisionGrid, RevisionFileTreeControl revisionFileTree)
         {
             _revisionGrid = revisionGrid;
             _revisionFileTree = revisionFileTree;

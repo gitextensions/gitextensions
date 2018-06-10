@@ -334,16 +334,16 @@ namespace GitUI.Hotkey
                     Hk(FormResolveConflicts.Commands.Merge, Keys.M),
                     Hk(FormResolveConflicts.Commands.Rescan, Keys.F5)),
                 new HotkeySettings(
-                    RevisionDiff.HotkeySettingsName,
-                    Hk(RevisionDiff.Command.DeleteSelectedFiles, Keys.Delete),
-                    Hk(RevisionDiff.Command.ShowHistory, ShowHistoryHotkey),
-                    Hk(RevisionDiff.Command.Blame, BlameHotkey),
-                    Hk(RevisionDiff.Command.OpenWithDifftool, OpenWithDifftoolHotkey)),
+                    RevisionDiffControl.HotkeySettingsName,
+                    Hk(RevisionDiffControl.Command.DeleteSelectedFiles, Keys.Delete),
+                    Hk(RevisionDiffControl.Command.ShowHistory, ShowHistoryHotkey),
+                    Hk(RevisionDiffControl.Command.Blame, BlameHotkey),
+                    Hk(RevisionDiffControl.Command.OpenWithDifftool, OpenWithDifftoolHotkey)),
                 new HotkeySettings(
-                    RevisionFileTree.HotkeySettingsName,
-                    Hk(RevisionFileTree.Command.ShowHistory, ShowHistoryHotkey),
-                    Hk(RevisionFileTree.Command.Blame, BlameHotkey),
-                    Hk(RevisionFileTree.Command.OpenWithDifftool, OpenWithDifftoolHotkey)),
+                    RevisionFileTreeControl.HotkeySettingsName,
+                    Hk(RevisionFileTreeControl.Command.ShowHistory, ShowHistoryHotkey),
+                    Hk(RevisionFileTreeControl.Command.Blame, BlameHotkey),
+                    Hk(RevisionFileTreeControl.Command.OpenWithDifftool, OpenWithDifftoolHotkey)),
                 new HotkeySettings(
                     FormSettings.HotkeySettingsName,
                     LoadScriptHotkeys())

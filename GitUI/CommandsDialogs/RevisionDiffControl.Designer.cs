@@ -2,7 +2,7 @@
 
 namespace GitUI.CommandsDialogs
 {
-    partial class RevisionDiff
+    partial class RevisionDiffControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -399,7 +399,7 @@ namespace GitUI.CommandsDialogs
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.DiffSplitContainer);
-            this.Name = "RevisionDiff";
+            this.Name = "RevisionDiffControl";
             this.Size = new System.Drawing.Size(729, 360);
             this.DiffSplitContainer.Panel1.ResumeLayout(false);
             this.DiffSplitContainer.Panel2.ResumeLayout(false);

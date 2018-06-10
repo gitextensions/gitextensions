@@ -9678,7 +9678,7 @@ Cela va juste charger dans le sous module le commit déterminé par le projet su
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionDiff" source-language="en" target-language="fr">
+  <file datatype="plaintext" original="RevisionDiffControl" source-language="en" target-language="fr">
     <body>
       <trans-unit id="_deleteFailed.Text">
         <source>Delete file failed</source>
@@ -9872,7 +9872,7 @@ Cela va juste charger dans le sous module le commit déterminé par le projet su
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionFileTree" source-language="en" target-language="fr">
+  <file datatype="plaintext" original="RevisionFileTreeControl" source-language="en" target-language="fr">
     <body>
       <trans-unit id="_assumeUnchangedCaption.Text">
         <source>Assume this file won't change</source>
@@ -10063,7 +10063,7 @@ Vous pouvez voir les changements dans le formulaire de commit.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionGpgInfo" source-language="en" target-language="fr">
+  <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en" target-language="fr">
     <body>
       <trans-unit id="_commitNotSigned.Text">
         <source>Commit is not signed</source>

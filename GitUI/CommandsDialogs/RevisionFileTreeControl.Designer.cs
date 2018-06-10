@@ -1,6 +1,6 @@
 ﻿namespace GitUI.CommandsDialogs
 {
-    partial class RevisionFileTree
+    partial class RevisionFileTreeControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -336,7 +336,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.FileTreeSplitContainer);
-            this.Name = "RevisionFileTree";
+            this.Name = "RevisionFileTreeControl";
             this.Size = new System.Drawing.Size(793, 303);
             this.FileTreeSplitContainer.Panel1.ResumeLayout(false);
             this.FileTreeSplitContainer.Panel2.ResumeLayout(false);

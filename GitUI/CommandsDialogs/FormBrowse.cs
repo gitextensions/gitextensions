@@ -2029,11 +2029,11 @@ namespace GitUI.CommandsDialogs
         {
             if (revisionDiff.Visible)
             {
-                revisionDiff.ExecuteCommand(RevisionDiff.Command.OpenWithDifftool);
+                revisionDiff.ExecuteCommand(RevisionDiffControl.Command.OpenWithDifftool);
             }
             else if (fileTree.Visible)
             {
-                fileTree.ExecuteCommand(RevisionFileTree.Command.OpenWithDifftool);
+                fileTree.ExecuteCommand(RevisionFileTreeControl.Command.OpenWithDifftool);
             }
         }
 
