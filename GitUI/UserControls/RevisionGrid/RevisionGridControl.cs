@@ -44,6 +44,8 @@ namespace GitUI
         public event EventHandler<EventArgs> ShowFirstParentsToggled;
         public event EventHandler SelectionChanged;
 
+        public static readonly string HotkeySettingsName = "RevisionGrid";
+
         private readonly TranslationString _droppingFilesBlocked = new TranslationString("For you own protection dropping more than 10 patch files at once is blocked!");
         private readonly TranslationString _cannotHighlightSelectedBranch = new TranslationString("Cannot highlight selected branch when revision graph is loading.");
         private readonly TranslationString _noRevisionFoundError = new TranslationString("No revision found.");
@@ -161,11 +163,11 @@ namespace GitUI
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             HotkeysEnabled = true;
 
-            Graph.Loading += GraphLoading;
+            Graph.Loading += OnGraphLoading;
 
             // Allow to drop patch file on revision grid
-            Graph.DragEnter += GraphDragEnter;
-            Graph.DragDrop += GraphDragDrop;
+            Graph.DragEnter += OnGraphDragEnter;
+            Graph.DragDrop += OnGraphDragDrop;
             Graph.AllowDrop = true;
 
             _buildServerWatcher = new BuildServerWatcher(this, Graph, () => Module);
@@ -281,7 +283,7 @@ namespace GitUI
             _initialSelectedRevision = initialSelectedRevision;
         }
 
-        private void GraphLoading(object sender, DvcsGraph.LoadingEventArgs e)
+        private void OnGraphLoading(object sender, DvcsGraph.LoadingEventArgs e)
         {
             // Since this can happen on a background thread, we'll just set a
             // flag and deal with it next time we paint (a bit of a hack, but
@@ -1605,7 +1607,6 @@ namespace GitUI
 
                 return _ambiguousRefs;
             }
-
             set
             {
                 _ambiguousRefs = value;
@@ -2338,7 +2339,7 @@ namespace GitUI
 
         #region Drag/drop patch files on revision grid
 
-        private void GraphDragDrop(object sender, DragEventArgs e)
+        private void OnGraphDragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
             {
@@ -2362,7 +2363,7 @@ namespace GitUI
             }
         }
 
-        private static void GraphDragEnter(object sender, DragEventArgs e)
+        private static void OnGraphDragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
             {
@@ -2387,8 +2388,6 @@ namespace GitUI
         #endregion
 
         #region Hotkey commands
-
-        public static readonly string HotkeySettingsName = "RevisionGrid";
 
         internal enum Commands
         {
