@@ -277,6 +277,14 @@ namespace GitUI.CommandsDialogs
             FillTerminalTab();
             ManageWorktreeSupport();
 
+            var toolBackColor = ColorHelper.MakeColorDarker(SystemColors.Control, 0.05);
+            ToolStrip.BackColor = toolBackColor;
+            toolStripBranchFilterComboBox.BackColor = toolBackColor;
+            toolStripRevisionFilterTextBox.BackColor = toolBackColor;
+            toolStripRevisionFilterDropDownButton.BackColor = toolBackColor;
+            menuStrip1.BackColor = toolBackColor;
+            toolPanel.TopToolStripPanel.BackColor = toolBackColor;
+
             this.AdjustForDpiScaling();
         }
 
