@@ -1173,12 +1173,6 @@ namespace GitCommands
             set => SetBool("stripedbranchchange", value);
         }
 
-        public static bool BranchBorders
-        {
-            get => GetBool("branchborders", true);
-            set => SetBool("branchborders", value);
-        }
-
         public static bool HighlightAuthoredRevisions
         {
             get => GetBool("highlightauthoredrevisions", true);
