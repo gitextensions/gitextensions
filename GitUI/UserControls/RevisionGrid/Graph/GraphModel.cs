@@ -95,7 +95,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             node.Index = AddedNodes.Count;
             AddedNodes.Add(node);
 
-            foreach (string parentId in parentIds)
+            foreach (var parentId in parentIds ?? Array.Empty<string>())
             {
                 GetOrCreateNode(parentId, out var parent);
 
