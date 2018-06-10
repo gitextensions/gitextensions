@@ -305,7 +305,6 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.Location = new System.Drawing.Point(4, 4);
             this.RevisionGrid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.RevisionGraphDrawStyle = GitUI.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
             this.RevisionGrid.Size = new System.Drawing.Size(1022, 382);
             this.RevisionGrid.TabIndex = 0;
             // 

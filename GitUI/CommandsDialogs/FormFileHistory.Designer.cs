@@ -102,7 +102,6 @@ namespace GitUI.CommandsDialogs
             this.FileChanges.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileChanges.Location = new System.Drawing.Point(0, 0);
             this.FileChanges.Name = "FileChanges";
-            this.FileChanges.RevisionGraphDrawStyle = GitUI.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
             this.FileChanges.ShowUncommittedChangesIfPossible = true;
             this.FileChanges.Size = new System.Drawing.Size(748, 101);
             this.FileChanges.TabIndex = 2;
