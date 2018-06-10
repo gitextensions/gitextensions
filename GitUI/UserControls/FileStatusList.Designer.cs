@@ -40,6 +40,7 @@ namespace GitUI
             // 
             // FileStatusListView
             // 
+            this.FileStatusListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.FileStatusListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
             this.FileStatusListView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -48,7 +49,7 @@ namespace GitUI
             this.FileStatusListView.HideSelection = false;
             this.FileStatusListView.LabelWrap = false;
             this.FileStatusListView.Location = new System.Drawing.Point(0, 21);
-            this.FileStatusListView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.FileStatusListView.Margin = new System.Windows.Forms.Padding(0);
             this.FileStatusListView.Name = "FileStatusListView";
             this.FileStatusListView.OwnerDraw = true;
             this.FileStatusListView.ShowItemToolTips = true;
@@ -69,12 +70,13 @@ namespace GitUI
             // 
             // NoFiles
             // 
+            this.NoFiles.AutoSize = true;
             this.NoFiles.BackColor = System.Drawing.SystemColors.Window;
             this.NoFiles.ForeColor = System.Drawing.SystemColors.InactiveCaption;
-            this.NoFiles.Location = new System.Drawing.Point(5, 5);
+            this.NoFiles.Location = new System.Drawing.Point(4, 4);
             this.NoFiles.Margin = new System.Windows.Forms.Padding(0);
             this.NoFiles.Name = "NoFiles";
-            this.NoFiles.Size = new System.Drawing.Size(201, 56);
+            this.NoFiles.Size = new System.Drawing.Size(63, 13);
             this.NoFiles.TabIndex = 1;
             this.NoFiles.Text = "No changes";
             // 
