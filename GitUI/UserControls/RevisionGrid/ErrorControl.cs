@@ -11,6 +11,8 @@ namespace GitUI.UserControls.RevisionGrid
             InitializeComponent();
 
             Dock = DockStyle.Fill;
+
+            this.AdjustForDpiScaling();
         }
 
 #pragma warning disable

@@ -14,6 +14,8 @@ namespace GitUI.UserControls.RevisionGrid
 
             label.Text = _bareRepositoriesAreNotSupported.Text;
             Dock = DockStyle.Fill;
+
+            this.AdjustForDpiScaling();
         }
     }
 }

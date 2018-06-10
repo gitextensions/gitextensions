@@ -13,6 +13,8 @@ namespace GitUI.UserControls.RevisionGrid
 
             _image.Image = Resources.loadingpanel;
             Dock = DockStyle.Fill;
+
+            this.AdjustForDpiScaling();
         }
 
 #pragma warning disable
