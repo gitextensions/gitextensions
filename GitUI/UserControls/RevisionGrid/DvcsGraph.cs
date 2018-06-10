@@ -44,6 +44,10 @@ namespace GitUI.UserControls.RevisionGrid
 
         #endregion
 
+        [Description("Loading Handler. NOTE: This will often happen on a background thread so UI operations may not be safe!")]
+        [Category("Behavior")]
+        public event EventHandler<LoadingEventArgs> Loading;
+
         private readonly int _nodeDimension = DpiUtil.Scale(10);
         private readonly int _laneWidth = DpiUtil.Scale(16);
         private readonly int _laneSidePadding = DpiUtil.Scale(8);
@@ -88,15 +92,41 @@ namespace GitUI.UserControls.RevisionGrid
         private Font _normalFont;
         private Font _boldFont;
 
-        internal Font NormalFont
+        private readonly List<int> _adjacentColors = new List<int>(capacity: 3);
+        private readonly Random _random = new Random();
+        private readonly List<Color> _junctionColors = new List<Color>(4);
+        private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
+        private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
+
+        [DefaultValue(RevisionGraphDrawStyleEnum.DrawNonRelativesGray)]
+        [Browsable(false)]
+        public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
         {
-            get => _normalFont;
+            get
+            {
+                if (_revisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
+                {
+                    return RevisionGraphDrawStyleEnum.HighlightSelected;
+                }
+
+                if (AppSettings.RevisionGraphDrawNonRelativesGray)
+                {
+                    return RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+                }
+
+                return RevisionGraphDrawStyleEnum.Normal;
+            }
             set
             {
-                _normalFont = value;
-                _boldFont = new Font(value, FontStyle.Bold);
+                _revisionGraphDrawStyle = value;
             }
         }
+
+        public bool UpdatingVisibleRows { get; private set; }
+
+        // TODO get rid of this GraphColumnProvider property by moving all graph render code into GraphColumnProvider
+        [CanBeNull]
+        internal GraphColumnProvider GraphColumnProvider { get; set; }
 
         public DvcsGraph()
         {
@@ -134,87 +164,31 @@ namespace GitUI.UserControls.RevisionGrid
             Clear();
         }
 
-        private void OnCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
+        protected override void Dispose(bool disposing)
         {
-            var revision = GetRevision(e.RowIndex);
-
-            if (e.RowIndex < 0 ||
-                e.RowIndex >= RowCount ||
-                !e.State.HasFlag(DataGridViewElementStates.Visible) ||
-                revision == null)
+            lock (_backgroundEvent)
             {
-                return;
+                _shouldRun = false;
             }
 
-            if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
+            if (disposing)
             {
-                var style = GetStyle();
-
-                // Draw cell background
-                e.Graphics.FillRectangle(style.backBrush, e.CellBounds);
-
-                provider.OnCellPainting(e, revision, (style.backBrush, style.backColor, style.foreColor, _normalFont, _boldFont));
-
-                if (style.disposeBackBrush)
-                {
-                    style.backBrush.Dispose();
-                }
-
-                e.Handled = true;
+                _graphBitmap?.Dispose();
+                _backgroundEvent?.Dispose();
             }
 
-            return;
-
-            (Brush backBrush, Color backColor, bool disposeBackBrush, Color foreColor) GetStyle()
-            {
-                if (e.State.HasFlag(DataGridViewElementStates.Selected))
-                {
-                    return (SystemBrushes.Highlight, SystemColors.Highlight, false, SystemColors.HighlightText);
-                }
-
-                (Brush brush, Color color, bool disposeBrush) back;
-
-                if (AppSettings.RevisionGraphDrawAlternateBackColor && e.RowIndex % 2 == 0)
-                {
-                    var hsl = new HslColor(e.CellStyle.BackColor);
-                    const double adjustment = 0.03;
-                    var c = hsl.WithBrightness(hsl.L > 0.5 ? hsl.L - adjustment : hsl.L + adjustment).ToColor();
-                    back = (new SolidBrush(c), c, true);
-                }
-                else
-                {
-                    var c = e.CellStyle.BackColor;
-                    back = (new SolidBrush(c), c, true);
-                }
-
-                var foreColor = Color.Gray;
-
-                if (AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(e.RowIndex))
-                {
-                    // If necessary, adjust the fore color to create adequate lightness contrast with the background
-                    var foreHsl = new HslColor(foreColor);
-                    var backHsl = new HslColor(back.color);
-                    if (Math.Abs(foreHsl.L - backHsl.L) < 0.5)
-                    {
-                        foreColor = foreHsl
-                            .WithBrightness(backHsl.L > 0.5 ? foreHsl.L - 0.5 : foreHsl.L + 0.5)
-                            .ToColor();
-                    }
-                }
-                else
-                {
-                    foreColor = ColorHelper.GetForeColorForBackColor(back.color);
-                }
-
-                return (back.brush, back.color, back.disposeBrush, foreColor);
-            }
+            base.Dispose(disposing);
         }
 
-        internal void AddColumn(ColumnProvider columnProvider)
+        internal Font NormalFont
         {
-            columnProvider.Column.Tag = columnProvider;
-
-            Columns.Add(columnProvider.Column);
+            get => _normalFont;
+            set
+            {
+                _normalFont = value;
+                _boldFont = new Font(value, FontStyle.Bold);
+            }
         }
 
         [CanBeNull]
@@ -295,30 +269,92 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
-        protected override void Dispose(bool disposing)
-        {
-            lock (_backgroundEvent)
-            {
-                _shouldRun = false;
-            }
-
-            if (disposing)
-            {
-                _graphBitmap?.Dispose();
-                _backgroundEvent?.Dispose();
-            }
-
-            base.Dispose(disposing);
-        }
-
-        [Description("Loading Handler. NOTE: This will often happen on a background thread so UI operations may not be safe!")]
-        [Category("Behavior")]
-        public event EventHandler<LoadingEventArgs> Loading;
-
         [DefaultValue(true)]
         [Browsable(false)]
         public bool RevisionGraphVisible => AppSettings.ShowRevisionGridGraphColumn;
+
+        internal void AddColumn(ColumnProvider columnProvider)
+        {
+            columnProvider.Column.Tag = columnProvider;
+
+            Columns.Add(columnProvider.Column);
+        }
+
+        private void OnCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        {
+            var revision = GetRevision(e.RowIndex);
+
+            if (e.RowIndex < 0 ||
+                e.RowIndex >= RowCount ||
+                !e.State.HasFlag(DataGridViewElementStates.Visible) ||
+                revision == null)
+            {
+                return;
+            }
+
+            if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
+            {
+                var style = GetStyle();
+
+                // Draw cell background
+                e.Graphics.FillRectangle(style.backBrush, e.CellBounds);
+
+                provider.OnCellPainting(e, revision, (style.backBrush, style.backColor, style.foreColor, _normalFont, _boldFont));
+
+                if (style.disposeBackBrush)
+                {
+                    style.backBrush.Dispose();
+                }
+
+                e.Handled = true;
+            }
+
+            return;
+
+            (Brush backBrush, Color backColor, bool disposeBackBrush, Color foreColor) GetStyle()
+            {
+                if (e.State.HasFlag(DataGridViewElementStates.Selected))
+                {
+                    return (SystemBrushes.Highlight, SystemColors.Highlight, false, SystemColors.HighlightText);
+                }
+
+                (Brush brush, Color color, bool disposeBrush) back;
+
+                if (AppSettings.RevisionGraphDrawAlternateBackColor && e.RowIndex % 2 == 0)
+                {
+                    var hsl = new HslColor(e.CellStyle.BackColor);
+                    const double adjustment = 0.03;
+                    var c = hsl.WithBrightness(hsl.L > 0.5 ? hsl.L - adjustment : hsl.L + adjustment).ToColor();
+                    back = (new SolidBrush(c), c, true);
+                }
+                else
+                {
+                    var c = e.CellStyle.BackColor;
+                    back = (new SolidBrush(c), c, true);
+                }
+
+                var foreColor = Color.Gray;
+
+                if (AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(e.RowIndex))
+                {
+                    // If necessary, adjust the fore color to create adequate lightness contrast with the background
+                    var foreHsl = new HslColor(foreColor);
+                    var backHsl = new HslColor(back.color);
+                    if (Math.Abs(foreHsl.L - backHsl.L) < 0.5)
+                    {
+                        foreColor = foreHsl
+                            .WithBrightness(backHsl.L > 0.5 ? foreHsl.L - 0.5 : foreHsl.L + 0.5)
+                            .ToColor();
+                    }
+                }
+                else
+                {
+                    foreColor = ColorHelper.GetForeColorForBackColor(back.color);
+                }
+
+                return (back.brush, back.color, back.disposeBrush, foreColor);
+            }
+        }
 
         public void Add(GitRevision revision, DataTypes types)
         {
@@ -630,13 +666,6 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
-        public bool UpdatingVisibleRows { get; private set; }
-
-        // TODO get rid of this GraphColumnProvider property by moving all graph render code into GraphColumnProvider
-
-        [CanBeNull]
-        internal GraphColumnProvider GraphColumnProvider { get; set; }
-
         private void UpdateGraphColumnWidth()
         {
             // Auto scale width on scroll
@@ -675,34 +704,6 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             }
         }
-
-        private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
-        [DefaultValue(RevisionGraphDrawStyleEnum.DrawNonRelativesGray)]
-        [Browsable(false)]
-        public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
-        {
-            get
-            {
-                if (_revisionGraphDrawStyle == RevisionGraphDrawStyleEnum.HighlightSelected)
-                {
-                    return RevisionGraphDrawStyleEnum.HighlightSelected;
-                }
-
-                if (AppSettings.RevisionGraphDrawNonRelativesGray)
-                {
-                    return RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
-                }
-
-                return RevisionGraphDrawStyleEnum.Normal;
-            }
-            set
-            {
-                _revisionGraphDrawStyle = value;
-            }
-        }
-
-        private readonly List<int> _adjacentColors = new List<int>(capacity: 3);
-        private readonly Random _random = new Random();
 
         private Color GetJunctionColor(Junction junction)
         {
@@ -985,9 +986,6 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             }
         }
-
-        private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
-        private readonly List<Color> _junctionColors = new List<Color>(4);
 
         private bool DrawItem(Graphics g, [CanBeNull] ILaneRow row)
         {
