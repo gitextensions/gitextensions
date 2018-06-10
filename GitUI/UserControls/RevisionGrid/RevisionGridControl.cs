@@ -924,19 +924,11 @@ namespace GitUI
                     CheckUncommittedChanged(_filteredCurrentCheckout);
                 }
 
-                DvcsGraph.DataTypes dataTypes;
-                if (revision.Guid == _filteredCurrentCheckout)
-                {
-                    dataTypes = DvcsGraph.DataTypes.Active;
-                }
-                else if (revision.Refs.Count != 0)
-                {
-                    dataTypes = DvcsGraph.DataTypes.Special;
-                }
-                else
-                {
-                    dataTypes = DvcsGraph.DataTypes.Normal;
-                }
+                var dataTypes = revision.Guid == _filteredCurrentCheckout
+                    ? DvcsGraph.DataTypes.Active
+                    : revision.Refs.Count != 0
+                        ? DvcsGraph.DataTypes.Special
+                        : DvcsGraph.DataTypes.Normal;
 
                 Graph.Add(revision, dataTypes);
             }
