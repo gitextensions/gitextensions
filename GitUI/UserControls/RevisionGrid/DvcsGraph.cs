@@ -1012,10 +1012,6 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Graph.LaneInfo laneInfo = row[lane, item];
 
-                    bool highLight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && laneInfo.Junctions.Any(j => j.IsRelative)) ||
-                                     (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && laneInfo.Junctions.Any(j => j.HighLight)) ||
-                                     (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
-
                     UpdateJunctionColors(laneInfo.Junctions);
 
                     // Create the brush for drawing the line
