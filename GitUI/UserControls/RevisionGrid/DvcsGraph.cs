@@ -256,13 +256,14 @@ namespace GitUI.UserControls.RevisionGrid
                 lock (_backgroundEvent)
                 lock (_graphData)
                 {
-                    ClearSelection();
-                    CurrentCell = null;
-
                     if (value == null)
                     {
+                        // Setting CurrentCell to null internally calls ClearSelection
+                        CurrentCell = null;
                         return;
                     }
+
+                    DataGridViewCell currentCell = null;
 
                     foreach (var guid in value)
                     {
@@ -272,15 +273,23 @@ namespace GitUI.UserControls.RevisionGrid
                         {
                             Rows[index].Selected = true;
 
-                            if (CurrentCell == null)
+                            if (currentCell == null)
                             {
                                 // Set the current cell to the first item. We use cell
                                 // 1 because cell 0 could be hidden if they've chosen to
                                 // not see the graph
-                                CurrentCell = Rows[index].Cells[1];
+                                currentCell = Rows[index].Cells[1];
                             }
                         }
                     }
+
+                    // Only clear selection if we have a current cell
+                    if (currentCell != null)
+                    {
+                        ClearSelection();
+                    }
+
+                    CurrentCell = currentCell;
                 }
             }
         }
