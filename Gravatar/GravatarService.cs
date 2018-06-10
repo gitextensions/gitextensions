@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Drawing;
 using System.Net;
@@ -185,28 +186,73 @@ namespace Gravatar
             return DownloadImageAsync(imageUrl, imageFileName);
         }
 
+        private readonly ConcurrentDictionary<(Uri imageUrl, string imageFileName), (DateTime, Task<Image>)> _downloads = new ConcurrentDictionary<(Uri imageUrl, string imageFileName), (DateTime, Task<Image>)>();
+
         private async Task<Image> DownloadImageAsync(Uri imageUrl, string imageFileName)
         {
-            try
+            ClearOldCacheEntries();
+
+            var errorCount = 0;
+
+            while (true)
             {
-                using (var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy })
+                var (_, task) = _downloads.GetOrAdd((imageUrl, imageFileName), tuple => (DateTime.UtcNow, Download(tuple)));
+
+                // If we discover a faulted task, remove it and try again
+                if (task.IsFaulted || task.IsCanceled)
                 {
-                    webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
-                    using (var imageStream = await webClient.OpenReadTaskAsync(imageUrl))
+                    _downloads.TryRemove((imageUrl, imageFileName), out _);
+
+                    if (++errorCount > 3)
                     {
-                        await _cache.AddImageAsync(imageFileName, imageStream);
+                        await task;
                     }
 
-                    return await _cache.GetImageAsync(imageFileName, null);
+                    continue;
                 }
-            }
-            catch (Exception ex)
-            {
-                // catch IO errors
-                Trace.WriteLine(ex.Message);
+
+                return await task;
             }
 
-            return null;
+            async Task<Image> Download((Uri imageUrl, string imageFileName) data)
+            {
+                try
+                {
+                    using (var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy })
+                    {
+                        webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
+
+                        using (var imageStream = await webClient.OpenReadTaskAsync(data.imageUrl))
+                        {
+                            await _cache.AddImageAsync(data.imageFileName, imageStream);
+                        }
+
+                        return await _cache.GetImageAsync(data.imageFileName, null);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // catch IO errors
+                    Trace.WriteLine(ex.Message);
+                }
+
+                return null;
+            }
+
+            void ClearOldCacheEntries()
+            {
+                var now = DateTime.UtcNow;
+
+                foreach (var pair in _downloads)
+                {
+                    var (time, _) = pair.Value;
+
+                    if (now - time > TimeSpan.FromSeconds(30))
+                    {
+                        _downloads.TryRemove(pair.Key, out _);
+                    }
+                }
+            }
         }
     }
 }
