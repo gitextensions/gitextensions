@@ -66,7 +66,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         {
                             junction.HighLight = true;
 
-                            stack.Push(junction.Oldest.Id);
+                            stack.Push(junction.Oldest.ObjectId);
                         }
                     }
                 }
@@ -234,7 +234,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // Remove all nodes that don't have a value associated with them.
             foreach (var node in nodesToRemove)
             {
-                Nodes.Remove(node.Id);
+                Nodes.Remove(node.ObjectId);
 
                 // This guy should have been at the end of some junctions
                 foreach (Junction j in node.Descendants)
@@ -367,12 +367,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 #endif
 
-        private bool GetNode(string id, out Node node)
+        private bool GetNode(string objectId, out Node node)
         {
-            if (!Nodes.TryGetValue(id, out node))
+            if (!Nodes.TryGetValue(objectId, out node))
             {
-                node = new Node(id);
-                Nodes.Add(id, node);
+                node = new Node(objectId);
+                Nodes.Add(objectId, node);
                 return false;
             }
 

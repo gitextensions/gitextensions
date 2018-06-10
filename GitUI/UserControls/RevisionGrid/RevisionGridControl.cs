@@ -69,14 +69,13 @@ namespace GitUI
 
         /// <summary>Tracks status for the artificial commits while the revision graph is reloading</summary>
         private IReadOnlyList<GitItemStatus> _artificialStatus;
-        private string _initialSelectedRevision;
         private RevisionReader _revisionReader;
         private IDisposable _revisionSubscription;
         private GitRevision _baseCommitToCompare;
         private string _rebaseOnTopOf;
         private bool _isRefreshingRevisions;
         private bool _isLoading;
-        private string[] _lastSelectedRows;
+        private IReadOnlyList<string> _selectedObjectIds;
         private string _fixedRevisionFilter = "";
         private string _fixedPathFilter = "";
         private string _branchFilter = string.Empty;
@@ -96,6 +95,9 @@ namespace GitUI
         [Browsable(false)] public bool ShowUncommittedChangesIfPossible { get; set; }
         [Browsable(false)] public bool ShowBuildServerInfo { get; set; }
         [Browsable(false)] public bool DoubleClickDoesNotOpenCommitInfo { get; set; }
+
+        [CanBeNull]
+        public string InitialObjectId { private get; set; }
 
         internal RevisionGridMenuCommands MenuCommands { get; }
         internal bool IsShowCurrentBranchOnlyChecked { get; private set; }
@@ -275,11 +277,6 @@ namespace GitUI
         {
             _fixedRevisionFilter = filter.revision;
             _fixedPathFilter = filter.path;
-        }
-
-        public void SetInitialRevision(string initialSelectedRevision)
-        {
-            _initialSelectedRevision = initialSelectedRevision;
         }
 
         private void OnGraphLoading(object sender, DvcsGraph.LoadingEventArgs e)
@@ -788,12 +785,12 @@ namespace GitUI
                 // new current checkout instead.
                 if (newCurrentCheckout == CurrentCheckout)
                 {
-                    _lastSelectedRows = Graph.SelectedIds;
+                    _selectedObjectIds = Graph.SelectedObjectIds;
                 }
                 else
                 {
                     // This is a new checkout, so ensure the variable is cleared out.
-                    _lastSelectedRows = null;
+                    _selectedObjectIds = null;
                 }
 
                 Graph.ClearSelection();
@@ -1013,22 +1010,22 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            string filteredCurrentCheckout = _filteredCurrentCheckout;
-            string[] lastSelectedRows = _lastSelectedRows ?? Array.Empty<string>();
+            var filteredCurrentCheckout = _filteredCurrentCheckout;
+            var selectedObjectIds = _selectedObjectIds ?? Array.Empty<string>();
 
             // filter out all unavailable commits from LastSelectedRows.
-            lastSelectedRows = lastSelectedRows.Where(revision => FindRevisionIndex(revision) >= 0).ToArray();
+            selectedObjectIds = selectedObjectIds.Where(revision => FindRevisionIndex(revision) >= 0).ToArray();
 
-            if (lastSelectedRows.Any())
+            if (selectedObjectIds.Count != 0)
             {
-                Graph.SelectedIds = lastSelectedRows;
-                _lastSelectedRows = null;
+                Graph.SelectedObjectIds = selectedObjectIds;
+                _selectedObjectIds = null;
             }
             else
             {
-                if (!string.IsNullOrEmpty(_initialSelectedRevision))
+                if (!string.IsNullOrEmpty(InitialObjectId))
                 {
-                    int index = SearchRevision(_initialSelectedRevision);
+                    int index = SearchRevision(InitialObjectId);
                     if (index >= 0)
                     {
                         SetSelectedIndex(index);
@@ -1051,14 +1048,14 @@ namespace GitUI
             }
         }
 
-        private string[] GetAllParents(string initRevision)
+        private string[] GetAllParents(string objectId)
         {
             var args = new ArgumentBuilder
             {
                 "rev-list",
                 { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
                 { AppSettings.MaxRevisionGraphCommits > 0, $"--max-count=\"{AppSettings.MaxRevisionGraphCommits}\" " },
-                initRevision
+                objectId
             };
 
             return Module.ReadGitOutputLines(args.ToString()).ToArray();
@@ -1127,7 +1124,7 @@ namespace GitUI
                 // then don't change the new selection when restoring selected revisions after data is loaded
                 if (_isRefreshingRevisions && !Graph.UpdatingVisibleRows)
                 {
-                    _lastSelectedRows = Graph.SelectedIds;
+                    _selectedObjectIds = Graph.SelectedObjectIds;
                 }
             }
 
@@ -2151,9 +2148,9 @@ namespace GitUI
             {
                 if (_isLoading || !SetSelectedRevision(new GitRevision(revisionGuid.ToString())))
                 {
-                    _initialSelectedRevision = revisionGuid.ToString();
-                    Graph.SelectedIds = null;
-                    _lastSelectedRows = null;
+                    InitialObjectId = revisionGuid.ToString();
+                    Graph.SelectedObjectIds = null;
+                    _selectedObjectIds = null;
                 }
             }
             else if (showNoRevisionMsg)

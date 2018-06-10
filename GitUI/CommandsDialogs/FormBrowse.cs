@@ -293,7 +293,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!string.IsNullOrEmpty(selectCommit))
             {
-                RevisionGrid.SetInitialRevision(_longShaProvider.Get(selectCommit));
+                RevisionGrid.InitialObjectId = _longShaProvider.Get(selectCommit);
             }
 
             _startWithDashboard = startWithDashboard;
