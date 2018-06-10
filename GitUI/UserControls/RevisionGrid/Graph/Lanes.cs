@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
@@ -548,25 +549,32 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             public override string ToString()
             {
-                string s = NodeLane + "/" + Count + ": ";
+                var str = new StringBuilder();
+
+                str.Append(NodeLane).Append('/').Append(Count).Append(": ");
+
                 for (int i = 0; i < Count; i++)
                 {
                     if (i == NodeLane)
                     {
-                        s += "*";
+                        str.Append('*');
                     }
 
-                    s += "{";
-                    for (int j = 0; j < LaneInfoCount(i); j++)
+                    str.Append('{');
+
+                    var count = LaneInfoCount(i);
+
+                    for (var j = 0; j < count; j++)
                     {
-                        s += " " + this[i, j];
+                        str.Append(' ').Append(this[i, j]);
                     }
 
-                    s += " }, ";
+                    str.Append(" }, ");
                 }
 
-                s += Node;
-                return s;
+                str.Append(Node);
+
+                return str.ToString();
             }
 
             #region Nested type: Edges
