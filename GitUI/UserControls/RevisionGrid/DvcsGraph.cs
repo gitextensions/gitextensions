@@ -195,7 +195,7 @@ namespace GitUI.UserControls.RevisionGrid
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public string[] SelectedIds
+        public IReadOnlyList<string> SelectedObjectIds
         {
             get
             {
@@ -213,7 +213,7 @@ namespace GitUI.UserControls.RevisionGrid
                     if (row != null)
                     {
                         // NOTE returned collection has reverse order of SelectedRows
-                        data[SelectedRows.Count - 1 - i] = row.Node.Id;
+                        data[SelectedRows.Count - 1 - i] = row.Node.ObjectId;
                     }
                 }
 
@@ -222,8 +222,8 @@ namespace GitUI.UserControls.RevisionGrid
             set
             {
                 if (value != null &&
-                    SelectedRows.Count == value.Length &&
-                    SelectedIds?.SequenceEqual(value) == true)
+                    SelectedRows.Count == value.Count &&
+                    SelectedObjectIds?.SequenceEqual(value) == true)
                 {
                     return;
                 }
@@ -1228,7 +1228,7 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 foreach (var descendant in node.Descendants)
                 {
-                    childrenIds.Add(descendant.ChildOf(node).Id);
+                    childrenIds.Add(descendant.ChildOf(node).ObjectId);
                 }
             }
 

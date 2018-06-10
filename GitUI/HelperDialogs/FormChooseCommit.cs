@@ -31,7 +31,7 @@ namespace GitUI.HelperDialogs
                 var guid = Module.RevParse(preselectCommit);
                 if (guid != null)
                 {
-                    revisionGrid.SetInitialRevision(guid.ToString());
+                    revisionGrid.InitialObjectId = guid.ToString();
                 }
             }
         }
