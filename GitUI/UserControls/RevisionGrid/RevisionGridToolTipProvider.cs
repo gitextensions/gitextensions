@@ -8,7 +8,7 @@ namespace GitUI
     internal sealed class RevisionGridToolTipProvider
     {
         private readonly ToolTip _toolTip = new ToolTip();
-        private readonly Dictionary<Point, bool> _showCellToolTip = new Dictionary<Point, bool>();
+        private readonly Dictionary<Point, bool> _isTruncatedByCellPos = new Dictionary<Point, bool>();
         private readonly RevisionGridControl _grid;
 
         public RevisionGridToolTipProvider(RevisionGridControl grid)
@@ -22,9 +22,9 @@ namespace GitUI
             _toolTip.AutoPopDelay = 32767;
         }
 
-        public void OnCellMouseMove(DataGridViewCellMouseEventArgs e)
+        public void OnCellMouseMove(int columnIndex, int rowIndex)
         {
-            var revision = _grid.Graph.GetRevision(e.RowIndex);
+            var revision = _grid.Graph.GetRevision(rowIndex);
 
             if (revision == null)
             {
@@ -48,17 +48,17 @@ namespace GitUI
 
             string GetToolTipText()
             {
-                if (_grid.Graph.Columns[e.ColumnIndex].Tag is ColumnProvider provider &&
-                    provider.TryGetToolTip(e, revision, out var toolTip) &&
+                if (_grid.Graph.Columns[columnIndex].Tag is ColumnProvider provider &&
+                    provider.TryGetToolTip(revision, out var toolTip) &&
                     !string.IsNullOrWhiteSpace(toolTip))
                 {
                     return toolTip;
                 }
 
-                if (_showCellToolTip.TryGetValue(new Point(e.ColumnIndex, e.RowIndex), out var showToolTip)
+                if (_isTruncatedByCellPos.TryGetValue(new Point(columnIndex, rowIndex), out var showToolTip)
                     && showToolTip)
                 {
-                    return _grid.Graph.Rows[e.RowIndex].Cells[e.ColumnIndex].FormattedValue?.ToString() ?? "";
+                    return _grid.Graph.Rows[rowIndex].Cells[columnIndex].FormattedValue?.ToString() ?? "";
                 }
 
                 // no tooltip unless always active or truncated
@@ -68,12 +68,12 @@ namespace GitUI
 
         public void Clear()
         {
-            _showCellToolTip.Clear();
+            _isTruncatedByCellPos.Clear();
         }
 
-        public void SetTruncation(DataGridViewCellPaintingEventArgs e, bool truncated)
+        public void SetTruncation(int columnIndex, int rowIndex, bool truncated)
         {
-            _showCellToolTip[new Point(e.ColumnIndex, e.RowIndex)] = truncated;
+            _isTruncatedByCellPos[new Point(columnIndex, rowIndex)] = truncated;
         }
     }
 }
