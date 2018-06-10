@@ -211,9 +211,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
         {
-            if (revision.HasMultiLineMessage && revision.Body != null)
+            if (!revision.IsArtificial && revision.HasMultiLineMessage)
             {
-                toolTip = revision.Body;
+                toolTip = revision.Body ?? revision.Subject + "\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.";
                 return true;
             }
 
