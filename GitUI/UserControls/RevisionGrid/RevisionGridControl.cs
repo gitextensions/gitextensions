@@ -84,6 +84,7 @@ namespace GitUI
         private string _filteredCurrentCheckout;
         private string[] _currentCheckoutParents;
         private bool _settingsLoaded;
+        private ISet<string> _ambiguousRefs;
 
         [Browsable(false)] public Action OnToggleBranchTreePanelRequested { get; set; }
         [Browsable(false)] public string QuickRevisionFilter { get; set; } = "";
@@ -115,6 +116,12 @@ namespace GitUI
                 _latestRefs = value;
                 AmbiguousRefs = null;
             }
+        }
+
+        private ISet<string> AmbiguousRefs
+        {
+            get => _ambiguousRefs ?? (_ambiguousRefs = GitRef.GetAmbiguousRefNames(LatestRefs));
+            set => _ambiguousRefs = value;
         }
 
         public RevisionGridControl()
@@ -1624,24 +1631,6 @@ namespace GitUI
             openBuildReportToolStripMenuItem.Visible = !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url);
 
             RefreshOwnScripts();
-        }
-
-        private ISet<string> _ambiguousRefs;
-        private ISet<string> AmbiguousRefs
-        {
-            get
-            {
-                if (_ambiguousRefs == null)
-                {
-                    _ambiguousRefs = GitRef.GetAmbiguousRefNames(LatestRefs);
-                }
-
-                return _ambiguousRefs;
-            }
-            set
-            {
-                _ambiguousRefs = value;
-            }
         }
 
         private string GetRefUnambiguousName(IGitRef gitRef)
