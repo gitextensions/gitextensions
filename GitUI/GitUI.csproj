@@ -352,6 +352,12 @@
     <Compile Include="SpellChecker\WordAtCursorExtractor.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\MultilineIndicator.cs" />
     <Compile Include="UserControls\HslColor.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\GraphModel.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\ILaneRow.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\Junction.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\LaneInfo.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\Lanes.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\Node.cs" />
     <Compile Include="UserControls\RevisionGrid\RefArrowType.cs" />
     <Compile Include="UserControls\RevisionGrid\BareRepoControl.cs">
       <SubType>UserControl</SubType>
@@ -483,18 +489,6 @@
       <DependentUpon>RemotesComboboxControl.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\RevisionGrid\DoubleClickRevisionEventArgs.cs" />
-    <Compile Include="UserControls\RevisionGrid\DvcsGraph.Graph.cs">
-      <DependentUpon>DvcsGraph.cs</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\RevisionGrid\DvcsGraph.Junction.cs">
-      <DependentUpon>DvcsGraph.cs</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\RevisionGrid\DvcsGraph.Lanes.cs">
-      <DependentUpon>DvcsGraph.cs</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Editor\FormGoToLine.cs">
       <SubType>Form</SubType>
     </Compile>
