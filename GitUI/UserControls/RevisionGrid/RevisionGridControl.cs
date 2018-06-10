@@ -154,7 +154,7 @@ namespace GitUI
             Graph.MouseDoubleClick += OnGraphDoubleClick;
             Graph.MouseClick += OnGraphMouseClick;
             Graph.MouseEnter += (_, e) => _toolTipProvider.OnCellMouseEnter();
-            Graph.CellMouseMove += (_, e) => _toolTipProvider.OnCellMouseMove(e);
+            Graph.CellMouseMove += (_, e) => _toolTipProvider.OnCellMouseMove(e.ColumnIndex, e.RowIndex);
 
             SetShowBranches();
 
@@ -216,7 +216,7 @@ namespace GitUI
         {
             var isTruncated = DrawColumnTextTruncated(e.Graphics, text, font, color, bounds, useEllipsis);
 
-            _toolTipProvider.SetTruncation(e, isTruncated);
+            _toolTipProvider.SetTruncation(e.ColumnIndex, e.RowIndex, isTruncated);
         }
 
         /// <returns>True if the text has been truncated.</returns>
