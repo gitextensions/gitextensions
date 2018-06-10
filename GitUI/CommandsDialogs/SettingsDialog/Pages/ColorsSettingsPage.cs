@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.Editor;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -11,7 +10,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public ColorsSettingsPage()
         {
             InitializeComponent();
-            Text = "Colors";
             Translate();
         }
 
@@ -39,7 +37,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkDrawAlternateBackColor.Checked = AppSettings.RevisionGraphDrawAlternateBackColor;
             DrawNonRelativesGray.Checked = AppSettings.RevisionGraphDrawNonRelativesGray;
             DrawNonRelativesTextGray.Checked = AppSettings.RevisionGraphDrawNonRelativesTextGray;
-            BranchBorders.Checked = AppSettings.BranchBorders;
             StripedBanchChange.Checked = AppSettings.StripedBranchChange;
             HighlightAuthoredRevisions.Checked = AppSettings.HighlightAuthoredRevisions;
 
@@ -87,7 +84,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RevisionGraphDrawAlternateBackColor = chkDrawAlternateBackColor.Checked;
             AppSettings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
             AppSettings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
-            AppSettings.BranchBorders = BranchBorders.Checked;
             AppSettings.StripedBranchChange = StripedBanchChange.Checked;
             AppSettings.HighlightAuthoredRevisions = HighlightAuthoredRevisions.Checked;
 

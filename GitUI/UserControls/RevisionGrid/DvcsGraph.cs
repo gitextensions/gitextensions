@@ -1029,11 +1029,8 @@ namespace GitUI.UserControls.RevisionGrid
 
                     // Create the brush for drawing the line
                     Brush lineBrush = null;
-                    Pen linePen = null;
                     try
                     {
-                        bool drawBorder = highLight && AppSettings.BranchBorders; // hide border for "non-relatives"
-
                         if (_junctionColors.Count == 1 || !AppSettings.StripedBranchChange)
                         {
                             if (_junctionColors[0] != _nonRelativeColor)
@@ -1046,7 +1043,6 @@ namespace GitUI.UserControls.RevisionGrid
                             }
                             else
                             {
-                                drawBorder = false;
                                 lineBrush = new SolidBrush(GetAdjustedLineColor(_nonRelativeColor));
                             }
                         }
@@ -1057,7 +1053,6 @@ namespace GitUI.UserControls.RevisionGrid
                             if (lastRealColor.IsEmpty)
                             {
                                 lineBrush = new SolidBrush(GetAdjustedLineColor(_nonRelativeColor));
-                                drawBorder = false;
                             }
                             else
                             {
@@ -1097,40 +1092,20 @@ namespace GitUI.UserControls.RevisionGrid
 
                         g.SmoothingMode = sameLane ? SmoothingMode.None : SmoothingMode.AntiAlias;
 
-                        for (var i = drawBorder ? 0 : 2; i < 3; i++)
+                        using (var linePen = new Pen(lineBrush, _laneLineWidth))
                         {
-                            Pen pen;
-                            switch (i)
-                            {
-                                case 0:
-                                    pen = _whiteBorderPen;
-                                    break;
-                                case 1:
-                                    pen = _blackBorderPen;
-                                    break;
-                                default:
-                                    if (linePen == null)
-                                    {
-                                        linePen = new Pen(lineBrush, _laneLineWidth);
-                                    }
-
-                                    pen = linePen;
-                                    break;
-                            }
-
                             if (sameLane)
                             {
-                                g.DrawLine(pen, p0, p1);
+                                g.DrawLine(linePen, p0, p1);
                             }
                             else
                             {
-                                g.DrawBezier(pen, p0, c0, c1, p1);
+                                g.DrawBezier(linePen, p0, c0, c1, p1);
                             }
                         }
                     }
                     finally
                     {
-                        linePen?.Dispose();
                         lineBrush?.Dispose();
                     }
                 }
@@ -1155,26 +1130,16 @@ namespace GitUI.UserControls.RevisionGrid
                              (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
                              (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
 
-            bool drawNodeBorder = AppSettings.BranchBorders && highlight;
-
             if (_junctionColors.Count == 1)
             {
                 nodeColor = highlight ? _junctionColors[0] : _nonRelativeColor;
                 nodeBrush = new SolidBrush(nodeColor.Value);
-                if (_junctionColors[0] == _nonRelativeColor)
-                {
-                    drawNodeBorder = false;
-                }
             }
             else
             {
                 nodeBrush = new LinearGradientBrush(
                     nodeRect, _junctionColors[0], _junctionColors[1],
                     LinearGradientMode.Horizontal);
-                if (_junctionColors.All(c => c == _nonRelativeColor))
-                {
-                    drawNodeBorder = false;
-                }
             }
 
             if (row.Node.Data == null)
@@ -1202,20 +1167,12 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 g.SmoothingMode = SmoothingMode.None;
                 g.FillRectangle(nodeBrush, nodeRect);
-                if (drawNodeBorder)
-                {
-                    g.DrawRectangle(Pens.Black, nodeRect);
-                }
             }
             else
             {
                 nodeRect.Width = nodeRect.Height = _nodeDimension - 1;
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.FillEllipse(nodeBrush, nodeRect);
-                if (drawNodeBorder)
-                {
-                    g.DrawEllipse(Pens.Black, nodeRect);
-                }
             }
 
             nodeBrush.Dispose();

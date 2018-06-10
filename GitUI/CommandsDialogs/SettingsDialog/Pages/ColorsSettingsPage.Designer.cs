@@ -48,7 +48,6 @@
             this._NO_TRANSLATE_ColorBranchLabel = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorTagLabel = new System.Windows.Forms.Label();
             this.lblColorTag = new System.Windows.Forms.Label();
-            this.BranchBorders = new System.Windows.Forms.CheckBox();
             this.gbDiffView = new System.Windows.Forms.GroupBox();
             this.tlpnlDiffView = new System.Windows.Forms.TableLayoutPanel();
             this.lblColorLineRemoved = new System.Windows.Forms.Label();
@@ -126,7 +125,6 @@
             this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorBranchLabel, 1, 8);
             this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorTagLabel, 1, 7);
             this.tlpnlRevisionGraph.Controls.Add(this.lblColorTag, 0, 7);
-            this.tlpnlRevisionGraph.Controls.Add(this.BranchBorders, 0, 3);
             this.tlpnlRevisionGraph.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlRevisionGraph.Location = new System.Drawing.Point(8, 22);
             this.tlpnlRevisionGraph.Name = "tlpnlRevisionGraph";
@@ -352,17 +350,6 @@
             this.lblColorTag.TabIndex = 8;
             this.lblColorTag.Text = "Color tag";
             // 
-            // BranchBorders
-            // 
-            this.BranchBorders.AutoSize = true;
-            this.BranchBorders.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BranchBorders.Location = new System.Drawing.Point(3, 72);
-            this.BranchBorders.Name = "BranchBorders";
-            this.BranchBorders.Size = new System.Drawing.Size(172, 17);
-            this.BranchBorders.TabIndex = 4;
-            this.BranchBorders.Text = "Draw branch borders";
-            this.BranchBorders.UseVisualStyleBackColor = true;
-            // 
             // gbDiffView
             // 
             this.gbDiffView.AutoSize = true;
@@ -538,6 +525,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(tlpnlMain);
             this.Name = "ColorsSettingsPage";
+            this.Text = "Colors";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(1001, 614);
             tlpnlMain.ResumeLayout(false);
@@ -561,7 +549,6 @@
         private System.Windows.Forms.CheckBox DrawNonRelativesGray;
         private System.Windows.Forms.Label _NO_TRANSLATE_ColorGraphLabel;
         private System.Windows.Forms.CheckBox StripedBanchChange;
-        private System.Windows.Forms.CheckBox BranchBorders;
         private System.Windows.Forms.CheckBox MulticolorBranches;
         private System.Windows.Forms.Label lblColorBranchRemote;
         private System.Windows.Forms.Label _NO_TRANSLATE_ColorRemoteBranchLabel;
