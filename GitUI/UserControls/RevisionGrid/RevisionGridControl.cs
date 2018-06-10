@@ -229,7 +229,7 @@ namespace GitUI
                 flags |= TextFormatFlags.EndEllipsis;
             }
 
-            var size = TextRenderer.MeasureText(graphics, text, font, Size.Empty, flags);
+            var size = TextRenderer.MeasureText(graphics, text, font, graphics.ClipBounds.Size.ToSize(), flags);
 
             TextRenderer.DrawText(graphics, text, font, bounds, color, flags);
 
