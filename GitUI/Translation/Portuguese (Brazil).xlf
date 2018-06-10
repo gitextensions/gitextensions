@@ -9279,7 +9279,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionDiff" source-language="en" target-language="pt-BR">
+  <file datatype="plaintext" original="RevisionDiffControl" source-language="en" target-language="pt-BR">
     <body>
       <trans-unit id="_deleteFailed.Text">
         <source>Delete file failed</source>
@@ -9435,7 +9435,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionFileTree" source-language="en" target-language="pt-BR">
+  <file datatype="plaintext" original="RevisionFileTreeControl" source-language="en" target-language="pt-BR">
     <body>
       <trans-unit id="_assumeUnchangedCaption.Text">
         <source>Assume this file won't change</source>
@@ -9585,7 +9585,7 @@ See the changes in the commit form.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionGpgInfo" source-language="en" target-language="pt-BR">
+  <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en" target-language="pt-BR">
     <body>
       <trans-unit id="_commitNotSigned.Text">
         <source>Commit is not signed</source>

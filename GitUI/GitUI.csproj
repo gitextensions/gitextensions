@@ -131,19 +131,19 @@
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitIgnoreModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitLocalExcludeModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\IGitIgnoreDialogModel.cs" />
-    <Compile Include="CommandsDialogs\RevisionDiff.cs">
+    <Compile Include="CommandsDialogs\RevisionDiffControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\RevisionDiff.Designer.cs">
-      <DependentUpon>RevisionDiff.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\RevisionDiffControl.Designer.cs">
+      <DependentUpon>RevisionDiffControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\FileStatusListContextMenuController.cs" />
     <Compile Include="CommandsDialogs\RevisionDiffController.cs" />
-    <Compile Include="CommandsDialogs\RevisionFileTree.cs">
+    <Compile Include="CommandsDialogs\RevisionFileTreeControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\RevisionFileTree.Designer.cs">
-      <DependentUpon>RevisionFileTree.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\RevisionFileTreeControl.Designer.cs">
+      <DependentUpon>RevisionFileTreeControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\FormCompareToBranch.cs">
       <SubType>Form</SubType>
@@ -206,11 +206,11 @@
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\MergeToolsHelper.cs" />
     <Compile Include="CommandsDialogs\RevisionFileTreeController.cs" />
-    <Compile Include="CommandsDialogs\RevisionGpgInfo.cs">
+    <Compile Include="CommandsDialogs\RevisionGpgInfoControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\RevisionGpgInfo.Designer.cs">
-      <DependentUpon>RevisionGpgInfo.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\RevisionGpgInfoControl.Designer.cs">
+      <DependentUpon>RevisionGpgInfoControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.cs">
       <SubType>Form</SubType>
@@ -1161,11 +1161,11 @@
       <DependentUpon>FormUpdates.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\RevisionDiff.resx">
-      <DependentUpon>RevisionDiff.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\RevisionDiffControl.resx">
+      <DependentUpon>RevisionDiffControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\RevisionFileTree.resx">
-      <DependentUpon>RevisionFileTree.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\RevisionFileTreeControl.resx">
+      <DependentUpon>RevisionFileTreeControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormCompareToBranch.resx">
       <DependentUpon>FormCompareToBranch.cs</DependentUpon>
@@ -1200,8 +1200,8 @@
     <EmbeddedResource Include="CommandsDialogs\SearchWindow.resx">
       <DependentUpon>SearchWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\RevisionGpgInfo.resx">
-      <DependentUpon>RevisionGpgInfo.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\RevisionGpgInfoControl.resx">
+      <DependentUpon>RevisionGpgInfoControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.resx">
       <DependentUpon>FormAvailableEncodings.cs</DependentUpon>

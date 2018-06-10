@@ -1,16 +1,17 @@
 ﻿using System.Windows.Forms;
 using GitCommands.Gpg;
 using GitCommands.Utils;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class RevisionGpgInfo : GitModuleControl
+    public partial class RevisionGpgInfoControl : GitModuleControl
     {
         private readonly TranslationString _commitNotSigned = new TranslationString("Commit is not signed");
         private readonly TranslationString _tagNotSigned = new TranslationString("Tag is not signed");
 
-        public RevisionGpgInfo()
+        public RevisionGpgInfoControl()
         {
             InitializeComponent();
             Translate();
@@ -19,7 +20,7 @@ namespace GitUI.CommandsDialogs
             this.AdjustForDpiScaling();
         }
 
-        public void DisplayGpgInfo(GpgInfo info)
+        public void DisplayGpgInfo([CanBeNull] GpgInfo info)
         {
             // No Commit Signature and No Tag Signature
             if (info == null)
@@ -51,7 +52,7 @@ namespace GitUI.CommandsDialogs
         private void ApplyLayout()
         {
             float heightRowCommit;
-            var heightRowTag = 0f;
+            float heightRowTag;
 
             if (txtTagGpgInfo.Visible)
             {
@@ -61,6 +62,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 heightRowCommit = 100f;
+                heightRowTag = 0f;
             }
 
             tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Percent;
