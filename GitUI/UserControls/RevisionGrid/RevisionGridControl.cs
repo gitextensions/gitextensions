@@ -1754,9 +1754,9 @@ namespace GitUI
             return ShowUncommittedChangesIfPossible && AppSettings.RevisionGraphShowWorkingDirChanges;
         }
 
-        private void OnRevisionRead([CanBeNull] GitRevision rev = null)
+        private void OnRevisionRead([CanBeNull] GitRevision revision = null)
         {
-            if (rev == null)
+            if (revision == null)
             {
                 // Prune the graph and make sure the row count matches reality
                 Graph.Prune();
@@ -1765,7 +1765,7 @@ namespace GitUI
 
             if (_filteredCurrentCheckout == null)
             {
-                if (rev.Guid == CurrentCheckout)
+                if (revision.Guid == CurrentCheckout)
                 {
                     _filteredCurrentCheckout = CurrentCheckout;
                 }
@@ -1776,21 +1776,21 @@ namespace GitUI
                         _currentCheckoutParents = GetAllParents(CurrentCheckout);
                     }
 
-                    _filteredCurrentCheckout = _currentCheckoutParents.FirstOrDefault(parent => parent == rev.Guid);
+                    _filteredCurrentCheckout = _currentCheckoutParents.FirstOrDefault(parent => parent == revision.Guid);
                 }
             }
 
-            if (_filteredCurrentCheckout == rev.Guid && ShowUncommittedChanges() && !Module.IsBareRepository())
+            if (_filteredCurrentCheckout == revision.Guid && ShowUncommittedChanges() && !Module.IsBareRepository())
             {
                 CheckUncommittedChanged(_filteredCurrentCheckout);
             }
 
             DvcsGraph.DataTypes dataTypes;
-            if (rev.Guid == _filteredCurrentCheckout)
+            if (revision.Guid == _filteredCurrentCheckout)
             {
                 dataTypes = DvcsGraph.DataTypes.Active;
             }
-            else if (rev.Refs.Count != 0)
+            else if (revision.Refs.Count != 0)
             {
                 dataTypes = DvcsGraph.DataTypes.Special;
             }
@@ -1799,7 +1799,7 @@ namespace GitUI
                 dataTypes = DvcsGraph.DataTypes.Normal;
             }
 
-            Graph.Add(rev, dataTypes);
+            Graph.Add(revision, dataTypes);
         }
 
         public void InvalidateCount()
