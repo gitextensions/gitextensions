@@ -37,7 +37,6 @@
             this.lblColorAuthored = new System.Windows.Forms.Label();
             this.lblColorBranchRemote = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorOtherLabel = new System.Windows.Forms.Label();
-            this.HighlightAuthoredRevisions = new System.Windows.Forms.CheckBox();
             this.lblColorLabel = new System.Windows.Forms.Label();
             this.chkDrawAlternateBackColor = new System.Windows.Forms.CheckBox();
             this.DrawNonRelativesTextGray = new System.Windows.Forms.CheckBox();
@@ -114,7 +113,6 @@
             this.tlpnlRevisionGraph.Controls.Add(this.lblColorAuthored, 0, 11);
             this.tlpnlRevisionGraph.Controls.Add(this.lblColorBranchRemote, 0, 9);
             this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorOtherLabel, 1, 10);
-            this.tlpnlRevisionGraph.Controls.Add(this.HighlightAuthoredRevisions, 0, 6);
             this.tlpnlRevisionGraph.Controls.Add(this.lblColorLabel, 0, 10);
             this.tlpnlRevisionGraph.Controls.Add(this.chkDrawAlternateBackColor, 0, 2);
             this.tlpnlRevisionGraph.Controls.Add(this.DrawNonRelativesTextGray, 0, 5);
@@ -219,17 +217,6 @@
             this._NO_TRANSLATE_ColorOtherLabel.Text = "Red";
             this._NO_TRANSLATE_ColorOtherLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this._NO_TRANSLATE_ColorOtherLabel.Click += new System.EventHandler(this.ColorLabel_Click);
-            // 
-            // HighlightAuthoredRevisions
-            // 
-            this.HighlightAuthoredRevisions.AutoSize = true;
-            this.HighlightAuthoredRevisions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.HighlightAuthoredRevisions.Location = new System.Drawing.Point(3, 141);
-            this.HighlightAuthoredRevisions.Name = "HighlightAuthoredRevisions";
-            this.HighlightAuthoredRevisions.Size = new System.Drawing.Size(172, 17);
-            this.HighlightAuthoredRevisions.TabIndex = 7;
-            this.HighlightAuthoredRevisions.Text = "Highlight authored revisions";
-            this.HighlightAuthoredRevisions.UseVisualStyleBackColor = true;
             // 
             // lblColorLabel
             // 
@@ -569,7 +556,6 @@
         private System.Windows.Forms.Label lblColorSection;
         private System.Windows.Forms.Label lblColorLineAdded;
         private System.Windows.Forms.Label _NO_TRANSLATE_ColorAddedLineLabel;
-        private System.Windows.Forms.CheckBox HighlightAuthoredRevisions;
         private System.Windows.Forms.Label _NO_TRANSLATE_ColorAuthoredRevisions;
         private System.Windows.Forms.Label lblColorAuthored;
         private System.Windows.Forms.CheckBox chkDrawAlternateBackColor;
