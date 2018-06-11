@@ -11,6 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public GitRevision Data { get; set; }
         public DvcsGraph.DataTypes DataTypes { get; set; }
+
         public int InLane { get; set; } = int.MaxValue;
         public int Index { get; set; } = int.MaxValue;
 
