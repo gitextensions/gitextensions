@@ -16,7 +16,7 @@ using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid
 {
-    public sealed partial class RevisionDataGridView : DataGridView
+    public sealed class RevisionDataGridView : DataGridView
     {
         #region EventArgs
 
@@ -139,14 +139,6 @@ namespace GitUI.UserControls.RevisionGrid
 
             InitializeComponent();
 
-            ColumnHeadersDefaultCellStyle.Font = SystemFonts.DefaultFont;
-            Font = SystemFonts.DefaultFont;
-            DefaultCellStyle.Font = SystemFonts.DefaultFont;
-            AlternatingRowsDefaultCellStyle.Font = SystemFonts.DefaultFont;
-            RowsDefaultCellStyle.Font = SystemFonts.DefaultFont;
-            RowHeadersDefaultCellStyle.Font = SystemFonts.DefaultFont;
-            RowTemplate.DefaultCellStyle.Font = SystemFonts.DefaultFont;
-
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             ColumnWidthChanged += delegate { ClearDrawCache(); };
             Scroll += (s, e) => UpdateDataAndGraphColumnWidth();
@@ -158,10 +150,42 @@ namespace GitUI.UserControls.RevisionGrid
                     provider.OnCellFormatting(e, GetRevision(e.RowIndex));
                 }
             };
+            Resize += OnResize;
+
             _graphData.Updated += graphData_Updated;
 
             VirtualMode = true;
             Clear();
+
+            return;
+
+            void InitializeComponent()
+            {
+                ((ISupportInitialize)this).BeginInit();
+                SuspendLayout();
+                AllowUserToAddRows = false;
+                AllowUserToDeleteRows = false;
+                BackgroundColor = SystemColors.Window;
+                CellBorderStyle = DataGridViewCellBorderStyle.None;
+                ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+                DefaultCellStyle = new DataGridViewCellStyle
+                {
+                    Alignment = DataGridViewContentAlignment.MiddleLeft,
+                    BackColor = SystemColors.Window,
+                    ForeColor = SystemColors.ControlText,
+                    SelectionBackColor = SystemColors.Highlight,
+                    SelectionForeColor = SystemColors.HighlightText,
+                    WrapMode = DataGridViewTriState.False
+                };
+                Dock = DockStyle.Fill;
+                GridColor = SystemColors.Window;
+                ReadOnly = true;
+                RowHeadersVisible = false;
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                StandardTab = true;
+                ((ISupportInitialize)this).EndInit();
+                ResumeLayout(false);
+            }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
@@ -784,7 +808,7 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 RowTemplate.Height = (int)g.MeasureString("By", _normalFont).Height + 9;
 
-                dataGrid_Resize(null, null);
+                OnResize(null, null);
             }
 
             // Refresh column providers
@@ -1235,7 +1259,7 @@ namespace GitUI.UserControls.RevisionGrid
             return childrenIds;
         }
 
-        private void dataGrid_Resize(object sender, EventArgs e)
+        private void OnResize(object sender, EventArgs e)
         {
             _rowHeight = RowTemplate.Height;
 

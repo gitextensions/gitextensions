@@ -687,9 +687,6 @@
     <Compile Include="UserControls\RevisionGrid\RevisionDataGridView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UserControls\RevisionGrid\RevisionDataGridView.Designer.cs">
-      <DependentUpon>RevisionDataGridView.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\FileStatusList.cs">
       <SubType>UserControl</SubType>
     </Compile>
