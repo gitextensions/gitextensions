@@ -51,20 +51,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public int CachedCount => _laneRows.Count;
 
-        #region IEnumerable<LaneRow> Members
-
-        public IEnumerator<ILaneRow> GetEnumerator()
-        {
-            return new LaneEnumerator(this);
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        #endregion
-
         public void Clear()
         {
             _laneRows.Clear();
@@ -434,6 +420,20 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return curLane;
         }
 
+        #region IEnumerable<LaneRow>
+
+        public IEnumerator<ILaneRow> GetEnumerator()
+        {
+            for (var i = 0; i < _laneRows.Count; i++)
+            {
+                yield return this[i];
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        #endregion
+
         #region Nested type: ActiveLaneRow
 
         private sealed class ActiveLaneRow : ILaneRow
@@ -745,45 +745,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             public int End => Data.ConnectLane;
 
             public override string ToString() => $"{Start}->{End}: {Data}";
-        }
-
-        #endregion
-
-        #region Nested type: LaneEnumerator
-
-        private sealed class LaneEnumerator : IEnumerator<ILaneRow>
-        {
-            private readonly Lanes _lanes;
-            private int _index;
-
-            public LaneEnumerator(Lanes lanes)
-            {
-                _lanes = lanes;
-                Reset();
-            }
-
-            #region IEnumerator<LaneRow> Members
-
-            public void Reset()
-            {
-                _index = 0;
-            }
-
-            void IDisposable.Dispose()
-            {
-            }
-
-            object IEnumerator.Current => Current;
-
-            public ILaneRow Current => _lanes[_index];
-
-            public bool MoveNext()
-            {
-                _index++;
-                return _index < _lanes._laneRows.Count;
-            }
-
-            #endregion
         }
 
         #endregion
