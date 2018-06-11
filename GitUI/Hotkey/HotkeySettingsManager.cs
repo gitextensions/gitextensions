@@ -286,6 +286,7 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Commands.Stash, Keys.Control | Keys.Alt | Keys.Up),
                     Hk(FormBrowse.Commands.StashPop, Keys.Control | Keys.Alt | Keys.Down),
                     Hk(FormBrowse.Commands.CloseRepository, Keys.Control | Keys.W),
+                    Hk(FormBrowse.Commands.OpenSettings, Keys.Control | Keys.Oemcomma),
                     Hk(FormBrowse.Commands.OpenWithDifftool, OpenWithDifftoolHotkey)),
                 new HotkeySettings(
                     RevisionGridControl.HotkeySettingsName,

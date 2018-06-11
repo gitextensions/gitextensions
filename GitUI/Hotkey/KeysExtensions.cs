@@ -59,6 +59,11 @@ namespace GitUI.Hotkey
         [CanBeNull]
         public static string ToFormattedString(this Keys key)
         {
+            if (key == Keys.Oemcomma)
+            {
+                return ",";
+            }
+
             // Get the string representation
             var str = key.ToCultureSpecificString();
 
