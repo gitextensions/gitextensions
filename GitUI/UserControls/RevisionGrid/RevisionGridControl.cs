@@ -853,7 +853,7 @@ namespace GitUI
                 }
 
                 var dataTypes = revision.Guid == _filteredCurrentCheckout
-                    ? RevisionDataGridView.DataTypes.Active
+                    ? RevisionDataGridView.DataTypes.CheckedOut
                     : revision.Refs.Count != 0
                         ? RevisionDataGridView.DataTypes.Special
                         : RevisionDataGridView.DataTypes.Normal;
