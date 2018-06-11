@@ -11,6 +11,7 @@ using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.UserControls.RevisionGrid;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -37,7 +38,7 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        private FormFileHistory(GitUICommands commands)
+        private FormFileHistory([CanBeNull] GitUICommands commands)
             : base(commands)
         {
             InitializeComponent();

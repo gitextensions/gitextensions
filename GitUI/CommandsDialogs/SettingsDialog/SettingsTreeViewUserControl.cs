@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -204,7 +205,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
         #endregion
 
-        public void GotoPage(SettingsPageReference settingsPageReference)
+        public void GotoPage([CanBeNull] SettingsPageReference settingsPageReference)
         {
             TreeNode node;
             if (settingsPageReference == null)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 
 namespace GitUI.Hotkey
 {
@@ -54,6 +55,7 @@ namespace GitUI.Hotkey
               .ToArray());
         }
 
+        [CanBeNull]
         public static string ToFormattedString(this Keys key)
         {
             // Get the string representation
@@ -73,6 +75,7 @@ namespace GitUI.Hotkey
             return key.ToText() ?? "";
         }
 
+        [CanBeNull]
         private static string ToCultureSpecificString(this Keys key)
         {
             if (key == Keys.None)
