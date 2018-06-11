@@ -89,19 +89,21 @@ namespace GitUI
         private bool _settingsLoaded;
         private ISet<string> _ambiguousRefs;
 
-        [Browsable(false)] public Action OnToggleBranchTreePanelRequested { get; set; }
-        [Browsable(false)] public string QuickRevisionFilter { get; set; } = "";
-        [Browsable(false)] public bool InMemFilterIgnoreCase { get; set; } = true;
-        [Browsable(false)] public string InMemAuthorFilter { get; set; } = "";
-        [Browsable(false)] public string InMemCommitterFilter { get; set; } = "";
-        [Browsable(false)] public string InMemMessageFilter { get; set; } = "";
-        [Browsable(false)] public string CurrentCheckout { get; private set; }
-        [Browsable(false)] public bool ShowUncommittedChangesIfPossible { get; set; }
-        [Browsable(false)] public bool ShowBuildServerInfo { get; set; }
-        [Browsable(false)] public bool DoubleClickDoesNotOpenCommitInfo { get; set; }
+        // NOTE internal properties aren't serialised
+
+        internal Action OnToggleBranchTreePanelRequested { get; set; }
+        internal string QuickRevisionFilter { get; set; } = "";
+        internal bool InMemFilterIgnoreCase { get; set; } = true;
+        internal string InMemAuthorFilter { get; set; } = "";
+        internal string InMemCommitterFilter { get; set; } = "";
+        internal string InMemMessageFilter { get; set; } = "";
+        internal string CurrentCheckout { get; private set; }
+        internal bool ShowUncommittedChangesIfPossible { get; set; } = true;
+        internal bool ShowBuildServerInfo { get; set; }
+        internal bool DoubleClickDoesNotOpenCommitInfo { get; set; }
 
         [CanBeNull]
-        public string InitialObjectId { private get; set; }
+        internal string InitialObjectId { private get; set; }
 
         internal RevisionGridMenuCommands MenuCommands { get; }
         internal bool IsShowCurrentBranchOnlyChecked { get; private set; }
@@ -245,20 +247,18 @@ namespace GitUI
             _toolTipProvider.SetTruncation(e.ColumnIndex, e.RowIndex, truncated: size.Width > bounds.Width);
         }
 
-        [Browsable(false)] public IndexWatcher IndexWatcher => _indexWatcher.Value;
+        internal IndexWatcher IndexWatcher => _indexWatcher.Value;
 
         [CanBeNull]
-        [Browsable(false)]
-        public GitRevision LatestSelectedRevision => IsValidRevisionIndex(_latestSelectedRowIndex) ? GetRevision(_latestSelectedRowIndex) : null;
+        internal GitRevision LatestSelectedRevision => IsValidRevisionIndex(_latestSelectedRowIndex) ? GetRevision(_latestSelectedRowIndex) : null;
 
-        [Browsable(false)]
-        public bool MultiSelect
+        internal bool MultiSelect
         {
             get => _gridView.MultiSelect;
             set => _gridView.MultiSelect = value;
         }
 
-        public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
+        internal RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
         {
             get => _gridView.RevisionGraphDrawStyle;
             set => _gridView.RevisionGraphDrawStyle = value;
