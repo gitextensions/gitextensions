@@ -744,7 +744,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                 public void Add(int from, LaneInfo data)
                 {
-                    var e = new Edge(data, @from);
+                    var e = new Edge(data, from);
                     EdgeList.Add(e);
 
                     while (_countStart.Count <= e.Start)
