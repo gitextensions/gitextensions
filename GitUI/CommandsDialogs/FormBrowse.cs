@@ -719,6 +719,7 @@ namespace GitUI.CommandsDialogs
             gitGUIToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGui).ToShortcutKeyDisplayString();
             kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGitK).ToShortcutKeyDisplayString();
             checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CheckoutBranch).ToShortcutKeyDisplayString();
+            settingsToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.OpenSettings).ToShortcutKeyDisplayString();
 
             // TODO: add more
         }
@@ -1993,7 +1994,6 @@ namespace GitUI.CommandsDialogs
             FocusCommitInfo = 4,
             FocusFileTree = 5,
             FocusDiff = 6,
-            FocusFilter = 18,
             Commit = 7,
             AddNotes = 8,
             FindFileInSelectedCommit = 9,
@@ -2005,7 +2005,9 @@ namespace GitUI.CommandsDialogs
             CloseRepository = 15,
             Stash = 16,
             StashPop = 17,
-            OpenWithDifftool = 19
+            FocusFilter = 18,
+            OpenWithDifftool = 19,
+            OpenSettings = 20
         }
 
         private void AddNotes()
@@ -2069,6 +2071,7 @@ namespace GitUI.CommandsDialogs
                 case Commands.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
                 case Commands.StashPop: UICommands.StashPop(this); break;
                 case Commands.OpenWithDifftool: OpenWithDifftool(); break;
+                case Commands.OpenSettings: OnShowSettingsClick(null, null); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
