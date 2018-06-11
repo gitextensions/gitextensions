@@ -13,6 +13,8 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
     {
+        [CanBeNull] private static Type _lastSelectedSettingsPageType;
+
         #region Translation
 
         private readonly TranslationString _cantFindGitMessage =
@@ -123,6 +125,11 @@ namespace GitUI.CommandsDialogs
                 settingsTreeView.AddSettingsPage(settingsPage, pluginsPageRef);
             }
 
+            if (initialPage == null && _lastSelectedSettingsPageType != null)
+            {
+                initialPage = new SettingsPageReferenceByType(_lastSelectedSettingsPageType);
+            }
+
             settingsTreeView.GotoPage(initialPage);
             settingsTreeView.ResumeLayout();
 
@@ -167,6 +174,11 @@ namespace GitUI.CommandsDialogs
             panelCurrentSettingsPage.Controls.Clear();
 
             var settingsPage = e.SettingsPage;
+
+            if (settingsPage != null)
+            {
+                _lastSelectedSettingsPageType = settingsPage.GetType();
+            }
 
             if (settingsPage?.GuiControl != null)
             {
