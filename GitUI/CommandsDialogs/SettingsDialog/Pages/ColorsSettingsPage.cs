@@ -110,20 +110,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ColorLabel_Click(object sender, EventArgs e)
         {
-            PickColor((Label)sender);
-        }
+            var label = (Label)sender;
 
-        private void PickColor(Control targetColorControl)
-        {
-            using (var colorDialog = new ColorDialog { Color = targetColorControl.BackColor })
+            using (var colorDialog = new ColorDialog { Color = label.BackColor })
             {
                 colorDialog.ShowDialog(this);
-                targetColorControl.BackColor = colorDialog.Color;
-                targetColorControl.Text = colorDialog.Color.Name;
+                label.BackColor = colorDialog.Color;
+                label.Text = colorDialog.Color.Name;
+                label.ForeColor = ColorHelper.GetForeColorForBackColor(label.BackColor);
             }
-
-            targetColorControl.ForeColor =
-                ColorHelper.GetForeColorForBackColor(targetColorControl.BackColor);
         }
     }
 }
