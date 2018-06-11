@@ -161,7 +161,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void settingsTreeViewUserControl1_SettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)
+        private void OnSettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)
         {
             panelCurrentSettingsPage.Controls.Clear();
 
