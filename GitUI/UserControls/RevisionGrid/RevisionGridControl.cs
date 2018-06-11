@@ -136,9 +136,9 @@ namespace GitUI
 
             _loadingImage = new LoadingControl();
 
-            _toolTipProvider = new RevisionGridToolTipProvider(this);
+            _toolTipProvider = new RevisionGridToolTipProvider(_gridView);
 
-            _quickSearchProvider = new QuickSearchProvider(this);
+            _quickSearchProvider = new QuickSearchProvider(this, _gridView);
 
             // Parent-child navigation can expect that SetSelectedRevision is always successful since it always uses first-parents
             _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));
@@ -163,36 +163,36 @@ namespace GitUI
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             HotkeysEnabled = true;
 
-            Graph.NormalFont = AppSettings.Font;
-            Graph.ShowCellToolTips = false;
+            _gridView.NormalFont = AppSettings.Font;
+            _gridView.ShowCellToolTips = false;
 
-            Graph.KeyPress += (_, e) => _quickSearchProvider.OnKeyPress(e);
-            Graph.KeyUp += OnGraphKeyUp;
-            Graph.KeyDown += OnGraphKeyDown;
-            Graph.MouseDown += OnGraphMouseDown;
-            Graph.CellMouseDown += OnGraphCellMouseDown;
-            Graph.MouseDoubleClick += OnGraphDoubleClick;
-            Graph.MouseClick += OnGraphMouseClick;
-            Graph.MouseEnter += (_, e) => _toolTipProvider.OnCellMouseEnter();
-            Graph.CellMouseMove += (_, e) => _toolTipProvider.OnCellMouseMove(e.ColumnIndex, e.RowIndex);
-            Graph.Loading += OnGraphLoading;
+            _gridView.KeyPress += (_, e) => _quickSearchProvider.OnKeyPress(e);
+            _gridView.KeyUp += OnGridViewKeyUp;
+            _gridView.KeyDown += OnGridViewKeyDown;
+            _gridView.MouseDown += OnGridViewMouseDown;
+            _gridView.CellMouseDown += OnGridViewCellMouseDown;
+            _gridView.MouseDoubleClick += OnGridViewDoubleClick;
+            _gridView.MouseClick += OnGridViewMouseClick;
+            _gridView.MouseEnter += (_, e) => _toolTipProvider.OnCellMouseEnter();
+            _gridView.CellMouseMove += (_, e) => _toolTipProvider.OnCellMouseMove(e.ColumnIndex, e.RowIndex);
+            _gridView.Loading += OnGridViewLoading;
 
             // Allow to drop patch file on revision grid
-            Graph.AllowDrop = true;
-            Graph.DragEnter += OnGraphDragEnter;
-            Graph.DragDrop += OnGraphDragDrop;
+            _gridView.AllowDrop = true;
+            _gridView.DragEnter += OnGridViewDragEnter;
+            _gridView.DragDrop += OnGridViewDragDrop;
 
-            _buildServerWatcher = new BuildServerWatcher(this, Graph, () => Module);
+            _buildServerWatcher = new BuildServerWatcher(this, _gridView, () => Module);
 
-            var graphColumnProvider = new GraphColumnProvider(this);
-            Graph.GraphColumnProvider = graphColumnProvider;
-            Graph.AddColumn(graphColumnProvider);
-            Graph.AddColumn(new MessageColumnProvider(this));
-            Graph.AddColumn(new AvatarColumnProvider(Graph));
-            Graph.AddColumn(new AuthorColumnProvider(this, _authorHighlighting));
-            Graph.AddColumn(new DateColumnProvider(this));
-            Graph.AddColumn(new CommitIdColumnProvider(this));
-            Graph.AddColumn(_buildServerWatcher.ColumnProvider);
+            var graphColumnProvider = new GraphColumnProvider(this, _gridView);
+            _gridView.GraphColumnProvider = graphColumnProvider;
+            _gridView.AddColumn(graphColumnProvider);
+            _gridView.AddColumn(new MessageColumnProvider(this));
+            _gridView.AddColumn(new AvatarColumnProvider(_gridView));
+            _gridView.AddColumn(new AuthorColumnProvider(this, _authorHighlighting));
+            _gridView.AddColumn(new DateColumnProvider(this));
+            _gridView.AddColumn(new CommitIdColumnProvider(this));
+            _gridView.AddColumn(_buildServerWatcher.ColumnProvider);
 
             fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
         }
@@ -257,14 +257,14 @@ namespace GitUI
         [Browsable(false)]
         public bool MultiSelect
         {
-            get => Graph.MultiSelect;
-            set => Graph.MultiSelect = value;
+            get => _gridView.MultiSelect;
+            set => _gridView.MultiSelect = value;
         }
 
         public RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
         {
-            get => Graph.RevisionGraphDrawStyle;
-            set => Graph.RevisionGraphDrawStyle = value;
+            get => _gridView.RevisionGraphDrawStyle;
+            set => _gridView.RevisionGraphDrawStyle = value;
         }
 
         private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripDropDownItem targetItem)
@@ -288,7 +288,7 @@ namespace GitUI
             _fixedPathFilter = filter.path;
         }
 
-        private void OnGraphLoading(object sender, DvcsGraph.LoadingEventArgs e)
+        private void OnGridViewLoading(object sender, RevisionDataGridView.LoadingEventArgs e)
         {
             // Since this can happen on a background thread, we'll just set a
             // flag and deal with it next time we paint (a bit of a hack, but
@@ -313,7 +313,7 @@ namespace GitUI
                 return;
             }
 
-            var rect = Graph.GetCellDisplayRectangle(0, _latestSelectedRowIndex, true);
+            var rect = _gridView.GetCellDisplayRectangle(0, _latestSelectedRowIndex, true);
             using (var dlg = new FormQuickGitRefSelector())
             {
                 dlg.Init(actionLabel, refs);
@@ -363,7 +363,7 @@ namespace GitUI
 
         internal void FindNextMatch(int startIndex, string searchString, bool reverse)
         {
-            if (Graph.RowCount == 0)
+            if (_gridView.RowCount == 0)
             {
                 return;
             }
@@ -374,22 +374,22 @@ namespace GitUI
 
             if (result.HasValue)
             {
-                Graph.ClearSelection();
-                Graph.Rows[result.Value].Selected = true;
+                _gridView.ClearSelection();
+                _gridView.Rows[result.Value].Selected = true;
 
-                Graph.CurrentCell = Graph.Rows[result.Value].Cells[1];
+                _gridView.CurrentCell = _gridView.Rows[result.Value].Cells[1];
             }
 
             int? SearchForward()
             {
                 // Check for out of bounds roll over if required
                 int index;
-                if (startIndex < 0 || startIndex >= Graph.RowCount)
+                if (startIndex < 0 || startIndex >= _gridView.RowCount)
                 {
                     startIndex = 0;
                 }
 
-                for (index = startIndex; index < Graph.RowCount; ++index)
+                for (index = startIndex; index < _gridView.RowCount; ++index)
                 {
                     if (_gitRevisionTester.Matches(GetRevision(index), searchString))
                     {
@@ -413,9 +413,9 @@ namespace GitUI
             {
                 // Check for out of bounds roll over if required
                 int index;
-                if (startIndex < 0 || startIndex >= Graph.RowCount)
+                if (startIndex < 0 || startIndex >= _gridView.RowCount)
                 {
-                    startIndex = Graph.RowCount - 1;
+                    startIndex = _gridView.RowCount - 1;
                 }
 
                 for (index = startIndex; index >= 0; --index)
@@ -427,7 +427,7 @@ namespace GitUI
                 }
 
                 // We didn't find it so start searching from the bottom
-                for (index = Graph.RowCount - 1; index > startIndex; --index)
+                for (index = _gridView.RowCount - 1; index > startIndex; --index)
                 {
                     if (_gitRevisionTester.Matches(GetRevision(index), searchString))
                     {
@@ -441,7 +441,7 @@ namespace GitUI
 
         public void DisableContextMenu()
         {
-            Graph.ContextMenuStrip = null;
+            _gridView.ContextMenuStrip = null;
         }
 
         public void FormatQuickFilter(string filter,
@@ -544,7 +544,7 @@ namespace GitUI
                 return;
             }
 
-            Graph.Refresh();
+            _gridView.Refresh();
 
             base.Refresh();
 
@@ -570,17 +570,17 @@ namespace GitUI
 
         private void SetSelectedIndex(int index)
         {
-            if (Graph.Rows[index].Selected)
+            if (_gridView.Rows[index].Selected)
             {
                 return;
             }
 
-            Graph.ClearSelection();
+            _gridView.ClearSelection();
 
-            Graph.Rows[index].Selected = true;
-            Graph.CurrentCell = Graph.Rows[index].Cells[1];
+            _gridView.Rows[index].Selected = true;
+            _gridView.CurrentCell = _gridView.Rows[index].Cells[1];
 
-            Graph.Select();
+            _gridView.Select();
         }
 
         // Selects row containing revision given its revisionId
@@ -589,15 +589,15 @@ namespace GitUI
         {
             var index = FindRevisionIndex(revision);
 
-            if (index >= 0 && index < Graph.RowCount)
+            if (index >= 0 && index < _gridView.RowCount)
             {
                 SetSelectedIndex(index);
                 return true;
             }
             else
             {
-                Graph.ClearSelection();
-                Graph.Select();
+                _gridView.ClearSelection();
+                _gridView.Select();
                 return false;
             }
         }
@@ -609,7 +609,7 @@ namespace GitUI
         /// <returns>Index of the found revision or -1 if nothing was found</returns>
         private int FindRevisionIndex(string revision)
         {
-            return Graph.TryGetRevisionIndex(revision) ?? -1;
+            return _gridView.TryGetRevisionIndex(revision) ?? -1;
         }
 
         public bool SetSelectedRevision(string revision)
@@ -626,7 +626,7 @@ namespace GitUI
         [CanBeNull]
         public GitRevision GetRevision(string guid)
         {
-            return Graph.GetRevision(guid);
+            return _gridView.GetRevision(guid);
         }
 
         public bool SetSelectedRevision([CanBeNull] GitRevision revision)
@@ -637,7 +637,7 @@ namespace GitUI
         private void HighlightBranch(string id)
         {
             RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
-            Graph.HighlightBranch(id);
+            _gridView.HighlightBranch(id);
         }
 
         public string DescribeRevision(GitRevision revision, int maxLength = 0)
@@ -667,10 +667,10 @@ namespace GitUI
 
         public IReadOnlyList<GitRevision> GetSelectedRevisions(SortDirection? direction = null)
         {
-            var rows = Graph
+            var rows = _gridView
                 .SelectedRows
                 .Cast<DataGridViewRow>()
-                .Where(row => Graph.RowCount > row.Index);
+                .Where(row => _gridView.RowCount > row.Index);
 
             if (direction.HasValue)
             {
@@ -693,18 +693,18 @@ namespace GitUI
 
         public IReadOnlyList<string> GetRevisionChildren(string revision)
         {
-            return Graph.GetRevisionChildren(revision);
+            return _gridView.GetRevisionChildren(revision);
         }
 
         private bool IsValidRevisionIndex(int index)
         {
-            return index >= 0 && index < Graph.RowCount;
+            return index >= 0 && index < _gridView.RowCount;
         }
 
         [CanBeNull]
         private GitRevision GetRevision(int row)
         {
-            return Graph.GetRevision(row);
+            return _gridView.GetRevision(row);
         }
 
         public GitRevision GetCurrentRevision()
@@ -794,7 +794,7 @@ namespace GitUI
                 // new current checkout instead.
                 if (newCurrentCheckout == CurrentCheckout)
                 {
-                    _selectedObjectIds = Graph.SelectedObjectIds;
+                    _selectedObjectIds = _gridView.SelectedObjectIds;
                 }
                 else
                 {
@@ -802,12 +802,12 @@ namespace GitUI
                     _selectedObjectIds = null;
                 }
 
-                Graph.ClearSelection();
+                _gridView.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
                 _filteredCurrentCheckout = null;
                 _currentCheckoutParents = null;
                 _superprojectCurrentCheckout = newSuperProjectInfo;
-                Graph.Clear();
+                _gridView.Clear();
                 SetPage(_loadingImage);
                 _isLoading = true;
                 _isRefreshingRevisions = true;
@@ -892,7 +892,7 @@ namespace GitUI
                     predicate);
 
                 LoadRevisions();
-                Graph.Refresh();
+                _gridView.Refresh();
                 ResetNavigationHistory();
             }
             catch (Exception)
@@ -907,7 +907,7 @@ namespace GitUI
             {
                 if (revision == null)
                 {
-                    Graph.Prune();
+                    _gridView.Prune();
                     return;
                 }
 
@@ -934,12 +934,12 @@ namespace GitUI
                 }
 
                 var dataTypes = revision.Guid == _filteredCurrentCheckout
-                    ? DvcsGraph.DataTypes.Active
+                    ? RevisionDataGridView.DataTypes.Active
                     : revision.Refs.Count != 0
-                        ? DvcsGraph.DataTypes.Special
-                        : DvcsGraph.DataTypes.Normal;
+                        ? RevisionDataGridView.DataTypes.Special
+                        : RevisionDataGridView.DataTypes.Normal;
 
-                Graph.Add(revision, dataTypes);
+                _gridView.Add(revision, dataTypes);
             }
 
             void OnRevisionReaderError(Exception exception)
@@ -978,8 +978,8 @@ namespace GitUI
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
                         await this.SwitchToMainThreadAsync();
-                        Graph.Prune();
-                        SetPage(Graph);
+                        _gridView.Prune();
+                        SetPage(_gridView);
                         _isRefreshingRevisions = false;
                         SelectInitialRevision();
                         if (ShowBuildServerInfo)
@@ -1066,7 +1066,7 @@ namespace GitUI
 
             if (selectedObjectIds.Count != 0)
             {
-                Graph.SelectedObjectIds = selectedObjectIds;
+                _gridView.SelectedObjectIds = selectedObjectIds;
                 _selectedObjectIds = null;
             }
             else if (!string.IsNullOrEmpty(InitialObjectId))
@@ -1083,7 +1083,7 @@ namespace GitUI
             }
 
             if (!string.IsNullOrEmpty(filteredCurrentCheckout) &&
-                !Graph.IsRevisionRelative(filteredCurrentCheckout))
+                !_gridView.IsRevisionRelative(filteredCurrentCheckout))
             {
                 HighlightBranch(filteredCurrentCheckout);
             }
@@ -1093,7 +1093,7 @@ namespace GitUI
             int SearchRevision(string objectId)
             {
                 // Attempt to look up an item by its ID
-                if (Graph.TryGetRevisionIndex(objectId) is int exactIndex)
+                if (_gridView.TryGetRevisionIndex(objectId) is int exactIndex)
                 {
                     return exactIndex;
                 }
@@ -1101,7 +1101,7 @@ namespace GitUI
                 // Not found, so search for its parents
                 foreach (var parentId in GetAllParents(objectId))
                 {
-                    if (Graph.TryGetRevisionIndex(parentId) is int parentIndex)
+                    if (_gridView.TryGetRevisionIndex(parentId) is int parentIndex)
                     {
                         return parentIndex;
                     }
@@ -1132,14 +1132,14 @@ namespace GitUI
                 return;
             }
 
-            Graph.SuspendLayout();
+            _gridView.SuspendLayout();
 
-            Graph.SelectionChanged -= OnGraphSelectionChanged;
-            Graph.Enabled = true;
-            Graph.Focus();
-            Graph.SelectionChanged += OnGraphSelectionChanged;
+            _gridView.SelectionChanged -= OnGridViewSelectionChanged;
+            _gridView.Enabled = true;
+            _gridView.Focus();
+            _gridView.SelectionChanged += OnGridViewSelectionChanged;
 
-            Graph.ResumeLayout();
+            _gridView.ResumeLayout();
 
             if (!_initialLoad)
             {
@@ -1156,19 +1156,19 @@ namespace GitUI
 
         #region Graph event handlers
 
-        private void OnGraphSelectionChanged(object sender, EventArgs e)
+        private void OnGridViewSelectionChanged(object sender, EventArgs e)
         {
             _parentChildNavigationHistory.RevisionsSelectionChanged();
 
-            if (Graph.SelectedRows.Count > 0)
+            if (_gridView.SelectedRows.Count > 0)
             {
-                _latestSelectedRowIndex = Graph.SelectedRows[0].Index;
+                _latestSelectedRowIndex = _gridView.SelectedRows[0].Index;
 
                 // if there was selected a new revision while data is being loaded
                 // then don't change the new selection when restoring selected revisions after data is loaded
-                if (_isRefreshingRevisions && !Graph.UpdatingVisibleRows)
+                if (_isRefreshingRevisions && !_gridView.UpdatingVisibleRows)
                 {
-                    _selectedObjectIds = Graph.SelectedObjectIds;
+                    _selectedObjectIds = _gridView.SelectedObjectIds;
                 }
             }
 
@@ -1185,14 +1185,14 @@ namespace GitUI
             }
 
             if (Parent != null &&
-                !Graph.UpdatingVisibleRows &&
+                !_gridView.UpdatingVisibleRows &&
                 _authorHighlighting.ProcessRevisionSelectionChange(Module, selectedRevisions))
             {
                 Refresh();
             }
         }
 
-        private void OnGraphKeyDown(object sender, KeyEventArgs e)
+        private void OnGridViewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
             {
@@ -1212,7 +1212,7 @@ namespace GitUI
             }
         }
 
-        private void OnGraphKeyUp(object sender, KeyEventArgs e)
+        private void OnGridViewKeyUp(object sender, KeyEventArgs e)
         {
             var selectedRevision = LatestSelectedRevision;
 
@@ -1253,7 +1253,7 @@ namespace GitUI
             }
         }
 
-        private void OnGraphMouseDown(object sender, MouseEventArgs e)
+        private void OnGridViewMouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.XButton1)
             {
@@ -1279,7 +1279,7 @@ namespace GitUI
             return true;
         }
 
-        private void OnGraphDoubleClick(object sender, MouseEventArgs e)
+        private void OnGridViewDoubleClick(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left)
             {
@@ -1294,22 +1294,22 @@ namespace GitUI
             }
         }
 
-        private void OnGraphMouseClick(object sender, MouseEventArgs e)
+        private void OnGridViewMouseClick(object sender, MouseEventArgs e)
         {
-            var pt = Graph.PointToClient(Cursor.Position);
-            var hti = Graph.HitTest(pt.X, pt.Y);
+            var pt = _gridView.PointToClient(Cursor.Position);
+            var hti = _gridView.HitTest(pt.X, pt.Y);
             _latestSelectedRowIndex = hti.RowIndex;
         }
 
-        private void OnGraphCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        private void OnGridViewCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button != MouseButtons.Right)
             {
                 return;
             }
 
-            var pt = Graph.PointToClient(Cursor.Position);
-            var hti = Graph.HitTest(pt.X, pt.Y);
+            var pt = _gridView.PointToClient(Cursor.Position);
+            var hti = _gridView.HitTest(pt.X, pt.Y);
 
             if (_latestSelectedRowIndex == hti.RowIndex)
             {
@@ -1317,11 +1317,11 @@ namespace GitUI
             }
 
             _latestSelectedRowIndex = hti.RowIndex;
-            Graph.ClearSelection();
+            _gridView.ClearSelection();
 
             if (IsValidRevisionIndex(_latestSelectedRowIndex))
             {
-                Graph.Rows[_latestSelectedRowIndex].Selected = true;
+                _gridView.Rows[_latestSelectedRowIndex].Selected = true;
             }
         }
 
@@ -1711,7 +1711,7 @@ namespace GitUI
         internal void ToggleShowRemoteBranches()
         {
             AppSettings.ShowRemoteBranches = !AppSettings.ShowRemoteBranches;
-            Graph.Invalidate();
+            _gridView.Invalidate();
         }
 
         internal void ToggleShowReflogReferences()
@@ -1818,7 +1818,7 @@ namespace GitUI
             // cache the status, if commits do not exist or for a refresh
             _artificialStatus = status;
 
-            Graph.Invalidate();
+            _gridView.Invalidate();
         }
 
         private void CheckUncommittedChanged(string filteredCurrentCheckout)
@@ -1838,7 +1838,7 @@ namespace GitUI
                 Subject = Strings.GetWorkspaceText(),
                 ParentGuids = new[] { GitRevision.IndexGuid }
             };
-            Graph.Add(unstagedRev, DvcsGraph.DataTypes.Normal);
+            _gridView.Add(unstagedRev, RevisionDataGridView.DataTypes.Normal);
 
             // Add index as virtual commit
             var stagedRev = new GitRevision(GitRevision.IndexGuid)
@@ -1852,7 +1852,7 @@ namespace GitUI
                 Subject = Strings.GetIndexText(),
                 ParentGuids = new[] { filteredCurrentCheckout }
             };
-            Graph.Add(stagedRev, DvcsGraph.DataTypes.Normal);
+            _gridView.Add(stagedRev, RevisionDataGridView.DataTypes.Normal);
 
             UpdateArtificialCommitCount(_artificialStatus, unstagedRev, stagedRev);
         }
@@ -1861,7 +1861,7 @@ namespace GitUI
         {
             AppSettings.RevisionGraphDrawNonRelativesGray = !AppSettings.RevisionGraphDrawNonRelativesGray;
             MenuCommands.TriggerMenuChanged();
-            Graph.Refresh();
+            _gridView.Refresh();
         }
 
         #region Bisect
@@ -2127,7 +2127,7 @@ namespace GitUI
                 if (_isLoading || !SetSelectedRevision(new GitRevision(revisionGuid.ToString())))
                 {
                     InitialObjectId = revisionGuid.ToString();
-                    Graph.SelectedObjectIds = null;
+                    _gridView.SelectedObjectIds = null;
                     _selectedObjectIds = null;
                 }
             }
@@ -2313,7 +2313,7 @@ namespace GitUI
 
         #region Drag/drop patch files on revision grid
 
-        private void OnGraphDragDrop(object sender, DragEventArgs e)
+        private void OnGridViewDragDrop(object sender, DragEventArgs e)
         {
             if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
             {
@@ -2337,7 +2337,7 @@ namespace GitUI
             }
         }
 
-        private static void OnGraphDragEnter(object sender, DragEventArgs e)
+        private static void OnGridViewDragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
             {

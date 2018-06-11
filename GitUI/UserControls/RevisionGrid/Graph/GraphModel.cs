@@ -79,7 +79,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                    && startNode.Ancestors.Any(a => a.IsRelative);
         }
 
-        public void Add(GitRevision revision, DvcsGraph.DataTypes types)
+        public void Add(GitRevision revision, RevisionDataGridView.DataTypes types)
         {
             var parentIds = revision.ParentGuids;
 
@@ -116,7 +116,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     // and is about to start a new branch. This will also mean that the last
                     // revisions are non-relative. Make sure a new junction is added and this
                     // is the start of a new branch (and color!)
-                    !types.HasFlag(DvcsGraph.DataTypes.Active))
+                    !types.HasFlag(RevisionDataGridView.DataTypes.Active))
                 {
                     // The node isn't a junction point. Just the parent to the node's
                     // (only) ancestor junction.
@@ -145,7 +145,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 }
             }
 
-            bool isRelative = types.HasFlag(DvcsGraph.DataTypes.Active);
+            bool isRelative = types.HasFlag(RevisionDataGridView.DataTypes.Active);
             if (!isRelative && node.Descendants.Any(d => d.IsRelative))
             {
                 isRelative = true;

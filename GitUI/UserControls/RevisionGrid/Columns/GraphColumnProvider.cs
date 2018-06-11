@@ -8,11 +8,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     internal sealed class GraphColumnProvider : ColumnProvider
     {
         private readonly RevisionGridControl _grid;
+        private readonly RevisionDataGridView _gridView;
 
-        public GraphColumnProvider(RevisionGridControl grid)
+        public GraphColumnProvider(RevisionGridControl grid, RevisionDataGridView gridView)
             : base("Graph")
         {
             _grid = grid;
+            _gridView = gridView;
 
             // TODO lightweight column template (not text box)
 
@@ -28,7 +30,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
         {
-            _grid.Graph.dataGrid_CellPainting(revision, e);
+            _gridView.dataGrid_CellPainting(revision, e);
         }
 
         public override void Refresh()

@@ -13,7 +13,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private readonly IAvatarService _gravatarService;
         private readonly IImageNameProvider _avatarImageNameProvider;
 
-        public AvatarColumnProvider(DvcsGraph graph)
+        public AvatarColumnProvider(RevisionDataGridView revisionGridView)
             : base("Avatar")
         {
             Column = new DataGridViewTextBoxColumn
@@ -27,7 +27,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             _avatarImageNameProvider = new AvatarImageNameProvider();
             _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
-            _avatarCache.Invalidated += (s, e) => graph.Invalidate();
+            _avatarCache.Invalidated += (s, e) => revisionGridView.Invalidate();
             _gravatarService = new GravatarService(_avatarCache, _avatarImageNameProvider);
         }
 

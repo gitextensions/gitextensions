@@ -11,12 +11,14 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     internal sealed class BuildStatusColumnProvider : ColumnProvider
     {
         private readonly RevisionGridControl _grid;
+        private readonly RevisionDataGridView _gridView;
         private readonly Func<GitModule> _module;
 
-        public BuildStatusColumnProvider(RevisionGridControl grid, Func<GitModule> module)
+        public BuildStatusColumnProvider(RevisionGridControl grid, RevisionDataGridView gridView, Func<GitModule> module)
             : base("Build Status")
         {
             _grid = grid;
+            _gridView = gridView;
             _module = module;
 
             Column = new DataGridViewTextBoxColumn
@@ -84,7 +86,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             Color GetColor()
             {
-                var isSelected = _grid.Graph.Rows[e.RowIndex].Selected;
+                var isSelected = _gridView.Rows[e.RowIndex].Selected;
 
                 switch (revision.BuildStatus.Status)
                 {
