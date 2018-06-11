@@ -364,7 +364,6 @@
     <Compile Include="UserControls\BranchSelector.Designer.cs">
       <DependentUpon>BranchSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\ComboBoxHelper.cs" />
     <Compile Include="UserControls\CommitDiff.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -302,7 +302,7 @@ namespace GitUI.CommandsDialogs
 
         private void Stashes_DropDown(object sender, EventArgs e)
         {
-            Stashes.ResizeComboBoxDropDownWidth(Stashes.Size.Width, splitContainer1.Width - (2 * showToolStripLabel.Width));
+            Stashes.ResizeDropDownWidth(Stashes.Size.Width, splitContainer1.Width - (2 * showToolStripLabel.Width));
         }
 
         private void RefreshClick(object sender, EventArgs e)
