@@ -13,6 +13,8 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
     {
+        public static readonly string HotkeySettingsName = "Scripts";
+
         [CanBeNull] private static Type _lastSelectedSettingsPageType;
 
         #region Translation
@@ -276,8 +278,6 @@ namespace GitUI.CommandsDialogs
 
             return true;
         }
-
-        public static readonly string HotkeySettingsName = "Scripts";
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
