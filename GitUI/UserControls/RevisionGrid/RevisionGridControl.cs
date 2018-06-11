@@ -81,6 +81,10 @@ namespace GitUI
         private string _branchFilter = string.Empty;
         private JoinableTask<SuperProjectInfo> _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
+
+        /// <summary>
+        /// Same as <see cref="CurrentCheckout"/> except <c>null</c> until the associated revision is loaded.
+        /// </summary>
         private string _filteredCurrentCheckout;
         private string[] _currentCheckoutParents;
         private bool _settingsLoaded;
@@ -128,6 +132,7 @@ namespace GitUI
         {
             InitLayout();
             InitializeComponent();
+            Translate();
 
             _loadingImage = new LoadingControl();
 
@@ -139,8 +144,6 @@ namespace GitUI
             _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));
             _authorHighlighting = new AuthorRevisionHighlighting();
             _indexWatcher = new Lazy<IndexWatcher>(() => new IndexWatcher(UICommandsSource));
-
-            Translate();
 
             _gitRevisionTester = new GitRevisionTester(new FullPathResolver(() => Module.WorkingDir));
 
@@ -155,8 +158,14 @@ namespace GitUI
             // fill Navigate context menu from MenuCommands
             FillMenuFromMenuCommands(MenuCommands.GetNavigateMenuCommands(), navigateToolStripMenuItem);
 
+            SetShowBranches();
+
+            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
+            HotkeysEnabled = true;
+
             Graph.NormalFont = AppSettings.Font;
             Graph.ShowCellToolTips = false;
+
             Graph.KeyPress += (_, e) => _quickSearchProvider.OnKeyPress(e);
             Graph.KeyUp += OnGraphKeyUp;
             Graph.KeyDown += OnGraphKeyDown;
@@ -166,18 +175,12 @@ namespace GitUI
             Graph.MouseClick += OnGraphMouseClick;
             Graph.MouseEnter += (_, e) => _toolTipProvider.OnCellMouseEnter();
             Graph.CellMouseMove += (_, e) => _toolTipProvider.OnCellMouseMove(e.ColumnIndex, e.RowIndex);
-
-            SetShowBranches();
-
-            Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            HotkeysEnabled = true;
-
             Graph.Loading += OnGraphLoading;
 
             // Allow to drop patch file on revision grid
+            Graph.AllowDrop = true;
             Graph.DragEnter += OnGraphDragEnter;
             Graph.DragDrop += OnGraphDragDrop;
-            Graph.AllowDrop = true;
 
             _buildServerWatcher = new BuildServerWatcher(this, Graph, () => Module);
 

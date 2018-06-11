@@ -12,15 +12,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     {
         private readonly ActiveLaneRow _currentRow = new ActiveLaneRow();
         private readonly List<LaneJunctionDetail> _laneNodes = new List<LaneJunctionDetail>();
-        private readonly List<ILaneRow> _laneRows;
+        private readonly List<ILaneRow> _laneRows = new List<ILaneRow>();
         private readonly GraphModel _sourceGraph;
 
         public Lanes(GraphModel graph)
         {
             _sourceGraph = graph;
-
-            // Rebuild lanes
-            _laneRows = new List<ILaneRow>();
         }
 
         [CanBeNull]
@@ -65,13 +62,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public bool CacheTo(int row)
         {
-            bool isValid = true;
-            while (isValid && row >= CachedCount)
+            while (row >= CachedCount)
             {
-                isValid = MoveNext();
+                if (!MoveNext())
+                {
+                    return false;
+                }
             }
 
-            return isValid;
+            return true;
         }
 
         public void Update(Node node)
@@ -82,20 +81,18 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             // This node is a head, create a new lane for it
-            Node h = node;
-            if (h.Ancestors.Count != 0)
+            Node head = node;
+            if (head.Ancestors.Count != 0)
             {
-                foreach (Junction j in h.Ancestors)
+                foreach (Junction j in head.Ancestors)
                 {
-                    var detail = new LaneJunctionDetail(j);
-                    _laneNodes.Add(detail);
+                    _laneNodes.Add(new LaneJunctionDetail(j));
                 }
             }
             else
             {
                 // This is a single entry with no parents or children.
-                var detail = new LaneJunctionDetail(h);
-                _laneNodes.Add(detail);
+                _laneNodes.Add(new LaneJunctionDetail(head));
             }
         }
 
@@ -808,11 +805,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             {
                 if (Junction != null)
                 {
-                    string nodeName = "(null)";
-                    if (_index < Junction.NodesCount)
-                    {
-                        nodeName = Junction[_index].ToString();
-                    }
+                    var nodeName = _index < Junction.NodesCount
+                        ? Junction[_index].ToString()
+                        : "(null)";
 
                     return _index + "/" + Junction.NodesCount + "~" + nodeName + "~" + Junction;
                 }
@@ -845,7 +840,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 _edges = activeRow.EdgeList;
             }
 
-            #region LaneRow Members
+            #region ILaneRow
 
             public int NodeLane { get; }
 
@@ -924,8 +919,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 s += Node;
                 return s;
             }
-
-            // Node information
         }
 
         #endregion

@@ -174,7 +174,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 _lanes.Clear();
                 _lanes.CacheTo(lastLane);
 
-                // We need to signal the DvcsGraph object that it needs to redraw everything.
+                // We need to redraw everything
                 Updated?.Invoke();
             }
             else
