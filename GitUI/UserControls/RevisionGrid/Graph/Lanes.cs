@@ -675,10 +675,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 private readonly List<int> _countEnd = new List<int>();
                 private readonly List<int> _countStart = new List<int>();
 
-#pragma warning disable 0649
-                private readonly LaneInfo _emptyItem;
-#pragma warning restore 0649
-
                 public List<Edge> EdgeList { get; } = new List<Edge>();
 
                 public LaneInfo Current(int lane, int item)
@@ -697,7 +693,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         }
                     }
 
-                    return _emptyItem;
+                    return default;
                 }
 
                 public LaneInfo Next(int lane, int item)
@@ -716,7 +712,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         }
                     }
 
-                    return _emptyItem;
+                    return default;
                 }
 
                 public LaneInfo RemoveNext(int lane, int item, out int start, out int end)
@@ -743,7 +739,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                     start = -1;
                     end = -1;
-                    return _emptyItem;
+                    return default;
                 }
 
                 public void Add(int from, LaneInfo data)
