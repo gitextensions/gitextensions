@@ -1135,12 +1135,6 @@ namespace GitCommands
             set => SetColor("diffaddedextracolor", value);
         }
 
-        public static Color AuthoredRevisionsColor
-        {
-            get => GetColor("authoredrevisionscolor", Color.LightYellow);
-            set => SetColor("authoredrevisionscolor", value);
-        }
-
         public static Font DiffFont
         {
             get => GetFont("difffont", new Font("Courier New", 10));

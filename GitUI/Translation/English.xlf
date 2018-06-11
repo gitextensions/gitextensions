@@ -558,10 +558,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Green</source>
         <target />
       </trans-unit>
-      <trans-unit id="HighlightAuthoredRevisions.Text">
-        <source>Highlight authored revisions</source>
-        <target />
-      </trans-unit>
       <trans-unit id="IconStyle.Item0">
         <source>Default</source>
         <target />
@@ -620,10 +616,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>Revision graph</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Color authored revisions</source>
         <target />
       </trans-unit>
       <trans-unit id="label25.Text">
