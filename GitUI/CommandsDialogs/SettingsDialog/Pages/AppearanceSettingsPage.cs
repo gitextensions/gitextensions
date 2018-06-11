@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.UserControls;
 using Gravatar;
 using ResourceManager;
 
@@ -33,24 +32,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             base.OnRuntimeLoad();
 
             // align 1st columns across all tables
-            var columnWidth = Math.Max(Math.Max(Math.Max(truncateLongFilenames.Width, lblCacheDays.Width), lblLanguage.Width), lblSpellingDictionary.Width);
-            tlpnlGeneral.ColumnStyles[0].SizeType = SizeType.Absolute;
-            tlpnlAuthor.ColumnStyles[0].SizeType = SizeType.Absolute;
-            tlpnlLanguage.ColumnStyles[0].SizeType = SizeType.Absolute;
-            tlpnlGeneral.ColumnStyles[0].Width = columnWidth;
-            tlpnlAuthor.ColumnStyles[0].Width = columnWidth;
-            tlpnlLanguage.ColumnStyles[0].Width = columnWidth;
+            tlpnlGeneral.AdjustWidthToSize(0, truncateLongFilenames.Width, lblCacheDays.Width, lblLanguage.Width, lblSpellingDictionary.Width);
+            tlpnlAuthor.AdjustWidthToSize(0, truncateLongFilenames.Width, lblCacheDays.Width, lblLanguage.Width, lblSpellingDictionary.Width);
+            tlpnlLanguage.AdjustWidthToSize(0, truncateLongFilenames.Width, lblCacheDays.Width, lblLanguage.Width, lblSpellingDictionary.Width);
 
             // align 2nd columns across all tables
             truncatePathMethod.AdjustWidthToFitContent();
             Language.AdjustWidthToFitContent();
-            columnWidth = Math.Max(Math.Max(truncatePathMethod.Width, NoImageService.Width), Language.Width);
-            tlpnlGeneral.ColumnStyles[1].SizeType = SizeType.Absolute;
-            tlpnlAuthor.ColumnStyles[1].SizeType = SizeType.Absolute;
-            tlpnlLanguage.ColumnStyles[1].SizeType = SizeType.Absolute;
-            tlpnlGeneral.ColumnStyles[1].Width = columnWidth;
-            tlpnlAuthor.ColumnStyles[1].Width = columnWidth;
-            tlpnlLanguage.ColumnStyles[1].Width = columnWidth;
+            tlpnlGeneral.AdjustWidthToSize(1, truncatePathMethod.Width, NoImageService.Width, Language.Width);
+            tlpnlAuthor.AdjustWidthToSize(1, truncatePathMethod.Width, NoImageService.Width, Language.Width);
+            tlpnlLanguage.AdjustWidthToSize(1, truncatePathMethod.Width, NoImageService.Width, Language.Width);
         }
 
         public static SettingsPageReference GetPageReference()

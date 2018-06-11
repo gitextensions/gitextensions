@@ -4,7 +4,7 @@ using FluentAssertions;
 using GitUI;
 using NUnit.Framework;
 
-namespace GitExtUtils
+namespace GitExtUtilsTests
 {
     [TestFixture]
     public class ComboBoxExtensionsTests
