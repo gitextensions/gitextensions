@@ -167,11 +167,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             }
         }
 
-        ////private TreeNode FindNodeBySettingsPage(ISettingsPage settingsPage)
-        ////{
-        ////    return GetNodesWithSettingsPage().FirstOrDefault(te => te.Tag == settingsPage);
-        ////}
-
         #region FindPrompt
         private void SetFindPrompt(bool show)
         {
