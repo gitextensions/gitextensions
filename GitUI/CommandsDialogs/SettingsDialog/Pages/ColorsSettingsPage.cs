@@ -71,10 +71,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_ColorSectionLabel.BackColor = AppSettings.DiffSectionColor;
             _NO_TRANSLATE_ColorSectionLabel.Text = AppSettings.DiffSectionColor.Name;
             _NO_TRANSLATE_ColorSectionLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorSectionLabel.BackColor);
-
-            _NO_TRANSLATE_ColorAuthoredRevisions.BackColor = AppSettings.AuthoredRevisionsColor;
-            _NO_TRANSLATE_ColorAuthoredRevisions.Text = AppSettings.AuthoredRevisionsColor.Name;
-            _NO_TRANSLATE_ColorAuthoredRevisions.ForeColor = ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorAuthoredRevisions.BackColor);
         }
 
         protected override void PageToSettings()
@@ -90,7 +86,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.BranchColor = _NO_TRANSLATE_ColorBranchLabel.BackColor;
             AppSettings.RemoteBranchColor = _NO_TRANSLATE_ColorRemoteBranchLabel.BackColor;
             AppSettings.OtherTagColor = _NO_TRANSLATE_ColorOtherLabel.BackColor;
-            AppSettings.AuthoredRevisionsColor = _NO_TRANSLATE_ColorAuthoredRevisions.BackColor;
 
             AppSettings.DiffAddedColor = _NO_TRANSLATE_ColorAddedLineLabel.BackColor;
             AppSettings.DiffRemovedColor = _NO_TRANSLATE_ColorRemovedLine.BackColor;
