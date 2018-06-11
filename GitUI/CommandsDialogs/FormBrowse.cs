@@ -2108,9 +2108,10 @@ namespace GitUI.CommandsDialogs
 
         protected void SetSplitterPositions()
         {
-            _splitterManager.AddSplitter(RevisionsSplitContainer, "RevisionsSplitContainer");
-            _splitterManager.AddSplitter(MainSplitContainer, "MainSplitContainer");
+            _splitterManager.AddSplitter(RevisionsSplitContainer, nameof(RevisionsSplitContainer));
+            _splitterManager.AddSplitter(MainSplitContainer, nameof(MainSplitContainer));
             _splitterManager.AddSplitter(RightSplitContainer, nameof(RightSplitContainer));
+
             revisionDiff.InitSplitterManager(_splitterManager);
             fileTree.InitSplitterManager(_splitterManager);
 
