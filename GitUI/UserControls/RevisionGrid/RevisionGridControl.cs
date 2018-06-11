@@ -57,7 +57,6 @@ namespace GitUI
         private readonly LoadingControl _loadingImage;
         private readonly RevisionGridToolTipProvider _toolTipProvider;
         private readonly QuickSearchProvider _quickSearchProvider;
-        private readonly IGitRevisionTester _gitRevisionTester;
         private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
         private readonly AuthorRevisionHighlighting _authorHighlighting;
         private readonly Lazy<IndexWatcher> _indexWatcher;
@@ -138,14 +137,12 @@ namespace GitUI
 
             _toolTipProvider = new RevisionGridToolTipProvider(_gridView);
 
-            _quickSearchProvider = new QuickSearchProvider(this, _gridView);
+            _quickSearchProvider = new QuickSearchProvider(this, _gridView, () => Module.WorkingDir);
 
             // Parent-child navigation can expect that SetSelectedRevision is always successful since it always uses first-parents
             _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));
             _authorHighlighting = new AuthorRevisionHighlighting();
             _indexWatcher = new Lazy<IndexWatcher>(() => new IndexWatcher(UICommandsSource));
-
-            _gitRevisionTester = new GitRevisionTester(new FullPathResolver(() => Module.WorkingDir));
 
             copyToClipboardToolStripMenuItem.GetViewModel = () => new CopyContextMenuViewModel(LatestSelectedRevision);
 
@@ -359,84 +356,6 @@ namespace GitUI
         private void ToggleBranchTreePanel()
         {
             OnToggleBranchTreePanelRequested();
-        }
-
-        internal void FindNextMatch(int startIndex, string searchString, bool reverse)
-        {
-            if (_gridView.RowCount == 0)
-            {
-                return;
-            }
-
-            var result = reverse
-                ? SearchBackwards()
-                : SearchForward();
-
-            if (result.HasValue)
-            {
-                _gridView.ClearSelection();
-                _gridView.Rows[result.Value].Selected = true;
-
-                _gridView.CurrentCell = _gridView.Rows[result.Value].Cells[1];
-            }
-
-            int? SearchForward()
-            {
-                // Check for out of bounds roll over if required
-                int index;
-                if (startIndex < 0 || startIndex >= _gridView.RowCount)
-                {
-                    startIndex = 0;
-                }
-
-                for (index = startIndex; index < _gridView.RowCount; ++index)
-                {
-                    if (_gitRevisionTester.Matches(GetRevision(index), searchString))
-                    {
-                        return index;
-                    }
-                }
-
-                // We didn't find it so start searching from the top
-                for (index = 0; index < startIndex; ++index)
-                {
-                    if (_gitRevisionTester.Matches(GetRevision(index), searchString))
-                    {
-                        return index;
-                    }
-                }
-
-                return null;
-            }
-
-            int? SearchBackwards()
-            {
-                // Check for out of bounds roll over if required
-                int index;
-                if (startIndex < 0 || startIndex >= _gridView.RowCount)
-                {
-                    startIndex = _gridView.RowCount - 1;
-                }
-
-                for (index = startIndex; index >= 0; --index)
-                {
-                    if (_gitRevisionTester.Matches(GetRevision(index), searchString))
-                    {
-                        return index;
-                    }
-                }
-
-                // We didn't find it so start searching from the bottom
-                for (index = _gridView.RowCount - 1; index > startIndex; --index)
-                {
-                    if (_gitRevisionTester.Matches(GetRevision(index), searchString))
-                    {
-                        return index;
-                    }
-                }
-
-                return null;
-            }
         }
 
         public void DisableContextMenu()

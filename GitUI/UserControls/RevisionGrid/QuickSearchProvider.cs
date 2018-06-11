@@ -1,6 +1,8 @@
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI
@@ -15,14 +17,17 @@ namespace GitUI
         private readonly RevisionGridControl _grid;
         private readonly RevisionDataGridView _gridView;
         private readonly Timer _quickSearchTimer;
+        private readonly IGitRevisionTester _gitRevisionTester;
 
         private string _lastQuickSearchString = "";
         private string _quickSearchString = "";
 
-        public QuickSearchProvider(RevisionGridControl grid, RevisionDataGridView gridView)
+        public QuickSearchProvider(RevisionGridControl grid, RevisionDataGridView gridView, Func<string> getWorkingDir)
         {
             _grid = grid;
             _gridView = gridView;
+
+            _gitRevisionTester = new GitRevisionTester(new FullPathResolver(getWorkingDir));
 
             _label = new Label
             {
@@ -58,7 +63,7 @@ namespace GitUI
 
                 _quickSearchString = _quickSearchString.Substring(0, _quickSearchString.Length - 1);
 
-                _grid.FindNextMatch(curIndex, _quickSearchString, false);
+                FindNextMatch(curIndex, _quickSearchString, false);
                 _lastQuickSearchString = _quickSearchString;
 
                 e.Handled = true;
@@ -71,7 +76,7 @@ namespace GitUI
                 // The code below is meant to fix the weird key values when pressing keys e.g. ".".
                 _quickSearchString = string.Concat(_quickSearchString, char.ToLower(e.KeyChar));
 
-                _grid.FindNextMatch(curIndex, _quickSearchString, false);
+                FindNextMatch(curIndex, _quickSearchString, false);
                 _lastQuickSearchString = _quickSearchString;
 
                 e.Handled = true;
@@ -103,7 +108,7 @@ namespace GitUI
             }
 
             _quickSearchString = _lastQuickSearchString;
-            _grid.FindNextMatch(nextIndex, _quickSearchString, reverse);
+            FindNextMatch(nextIndex, _quickSearchString, reverse);
             ShowQuickSearchString();
         }
 
@@ -125,6 +130,84 @@ namespace GitUI
             _quickSearchTimer.Stop();
             _quickSearchTimer.Interval = AppSettings.RevisionGridQuickSearchTimeout;
             _quickSearchTimer.Start();
+        }
+
+        private void FindNextMatch(int startIndex, string searchString, bool reverse)
+        {
+            if (_gridView.RowCount == 0)
+            {
+                return;
+            }
+
+            var result = reverse
+                ? SearchBackwards()
+                : SearchForward();
+
+            if (result.HasValue)
+            {
+                _gridView.ClearSelection();
+                _gridView.Rows[result.Value].Selected = true;
+
+                _gridView.CurrentCell = _gridView.Rows[result.Value].Cells[1];
+            }
+
+            int? SearchForward()
+            {
+                // Check for out of bounds roll over if required
+                int index;
+                if (startIndex < 0 || startIndex >= _gridView.RowCount)
+                {
+                    startIndex = 0;
+                }
+
+                for (index = startIndex; index < _gridView.RowCount; ++index)
+                {
+                    if (_gitRevisionTester.Matches(_gridView.GetRevision(index), searchString))
+                    {
+                        return index;
+                    }
+                }
+
+                // We didn't find it so start searching from the top
+                for (index = 0; index < startIndex; ++index)
+                {
+                    if (_gitRevisionTester.Matches(_gridView.GetRevision(index), searchString))
+                    {
+                        return index;
+                    }
+                }
+
+                return null;
+            }
+
+            int? SearchBackwards()
+            {
+                // Check for out of bounds roll over if required
+                int index;
+                if (startIndex < 0 || startIndex >= _gridView.RowCount)
+                {
+                    startIndex = _gridView.RowCount - 1;
+                }
+
+                for (index = startIndex; index >= 0; --index)
+                {
+                    if (_gitRevisionTester.Matches(_gridView.GetRevision(index), searchString))
+                    {
+                        return index;
+                    }
+                }
+
+                // We didn't find it so start searching from the bottom
+                for (index = _gridView.RowCount - 1; index > startIndex; --index)
+                {
+                    if (_gitRevisionTester.Matches(_gridView.GetRevision(index), searchString))
+                    {
+                        return index;
+                    }
+                }
+
+                return null;
+            }
         }
     }
 }
