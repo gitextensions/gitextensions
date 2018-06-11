@@ -1259,7 +1259,7 @@ namespace GitUI.CommandsDialogs
             CommitToolStripMenuItemClick(sender, e);
         }
 
-        private void SettingsClick(object sender, EventArgs e)
+        private void OnShowSettingsClick(object sender, EventArgs e)
         {
             var translation = AppSettings.Translation;
             UICommands.StartSettingsDialog(this);

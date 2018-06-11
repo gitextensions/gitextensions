@@ -29,7 +29,7 @@ namespace GitUI.Hotkey
             // Retrieve the modifiers, mask away the rest
             Keys modifier = key & Keys.Modifiers;
 
-            List<Keys> modifierList = new List<Keys>();
+            var modifierList = new List<Keys>();
 
             void AddIfContains(Keys m)
             {
@@ -48,11 +48,12 @@ namespace GitUI.Hotkey
 
         public static string ToText(this Keys key)
         {
-            return string.Join("+",
-              key.GetModifiers()
-              .Union(new[] { key.GetKeyCode() })
-              .Select(k => k.ToFormattedString())
-              .ToArray());
+            return string.Join(
+                "+",
+                key.GetModifiers()
+                    .Union(new[] { key.GetKeyCode() })
+                    .Select(k => k.ToFormattedString())
+                    .ToArray());
         }
 
         [CanBeNull]
@@ -87,8 +88,7 @@ namespace GitUI.Hotkey
             var culture = CultureInfo.CurrentCulture; // TODO: replace this with the GitExtensions language setting
 
             // for modifier keys this yields for example "Ctrl+None" thus we have to strip the rest after the +
-            var str = new KeysConverter().ConvertToString(null, culture, key).TakeUntilStr("+");
-            return str;
+            return new KeysConverter().ConvertToString(null, culture, key).TakeUntilStr("+");
         }
     }
 }

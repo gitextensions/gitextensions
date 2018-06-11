@@ -92,10 +92,7 @@ namespace GitUI
 
         public bool AlwaysRevisionGroups
         {
-            set
-            {
-                _alwaysRevisionGroups = value;
-            }
+            set => _alwaysRevisionGroups = value;
         }
 
         private void CreateOpenSubmoduleMenuItem()
@@ -129,8 +126,8 @@ namespace GitUI
             if (_selectedIndexChangeSubscription == null)
             {
                 _selectedIndexChangeSubscription = Observable.FromEventPattern(
-                    h => FileStatusListView.SelectedIndexChanged += h,
-                    h => FileStatusListView.SelectedIndexChanged -= h)
+                        h => FileStatusListView.SelectedIndexChanged += h,
+                        h => FileStatusListView.SelectedIndexChanged -= h)
                     .Where(x => _enableSelectedIndexChangeEvent)
                     .Throttle(SelectedIndexChangeThrottleDuration, MainThreadScheduler.Instance)
                     .ObserveOn(MainThreadScheduler.Instance)
@@ -147,11 +144,7 @@ namespace GitUI
 
         public bool FilterVisible
         {
-            get
-            {
-                return _filterVisible;
-            }
-
+            get { return _filterVisible; }
             set
             {
                 _filterVisible = value;
@@ -315,8 +308,9 @@ namespace GitUI
         {
             var pathFormatter = new PathFormatter(graphics, FileStatusListView.Font);
 
-            return pathFormatter.FormatTextForDrawing(FileStatusListView.ClientSize.Width - imageWidth,
-                                                      gitItemStatus.Name, gitItemStatus.OldName);
+            return pathFormatter.FormatTextForDrawing(
+                FileStatusListView.ClientSize.Width - imageWidth,
+                gitItemStatus.Name, gitItemStatus.OldName);
         }
 
         private void FileStatusListView_DrawItem(object sender, DrawListViewItemEventArgs e)
@@ -378,9 +372,11 @@ namespace GitUI
 
                     // Create a rectangle using the DragSize, with the mouse position being
                     // at the center of the rectangle.
-                    _dragBoxFromMouseDown = new Rectangle(new Point(e.X - (dragSize.Width / 2),
-                                                                   e.Y - (dragSize.Height / 2)),
-                                                            dragSize);
+                    _dragBoxFromMouseDown = new Rectangle(
+                        new Point(
+                            e.X - (dragSize.Width / 2),
+                            e.Y - (dragSize.Height / 2)),
+                        dragSize);
                 }
                 else
                 {
@@ -392,10 +388,7 @@ namespace GitUI
 
         public override ContextMenuStrip ContextMenuStrip
         {
-            get
-            {
-                return FileStatusListView.ContextMenuStrip;
-            }
+            get { return FileStatusListView.ContextMenuStrip; }
             set
             {
                 FileStatusListView.ContextMenuStrip = value;
@@ -506,21 +499,13 @@ namespace GitUI
         [Browsable(false)]
         public IEnumerable<GitItemStatus> AllItems
         {
-            get
-            {
-                return FileStatusListView.Items.Cast<ListViewItem>().
-                    Select(selectedItem => selectedItem.Tag as GitItemStatus);
-            }
+            get { return FileStatusListView.Items.Cast<ListViewItem>().Select(selectedItem => selectedItem.Tag as GitItemStatus); }
         }
 
         [Browsable(false)]
         public IEnumerable<GitItemStatus> SelectedItems
         {
-            get
-            {
-                return FileStatusListView.SelectedItems.Cast<ListViewItem>().
-                    Select(i => i.Tag as GitItemStatus);
-            }
+            get { return FileStatusListView.SelectedItems.Cast<ListViewItem>().Select(i => i.Tag as GitItemStatus); }
             set
             {
                 ClearSelected();
@@ -546,10 +531,7 @@ namespace GitUI
         [Browsable(false)]
         public GitItemStatus SelectedItem
         {
-            get
-            {
-                return SelectedItems.FirstOrDefault();
-            }
+            get { return SelectedItems.FirstOrDefault(); }
             set
             {
                 ClearSelected();
@@ -847,10 +829,7 @@ namespace GitUI
         [Browsable(false)]
         public IGitItemsWithParents GitItemStatusesWithParents
         {
-            get
-            {
-                return _itemsDictionary;
-            }
+            get { return _itemsDictionary; }
             private set
             {
                 _itemsDictionary = value ?? new GitItemsWithParents();
@@ -1006,12 +985,10 @@ namespace GitUI
                 return;
             }
 
-            var group = FileStatusListView.Groups.Cast<ListViewGroup>().
-                FirstOrDefault(gr => gr.Items.Count > 0);
+            var group = FileStatusListView.Groups.Cast<ListViewGroup>().FirstOrDefault(gr => gr.Items.Count > 0);
             if (group != null)
             {
-                ListViewItem sortedFirstGroupItem = FileStatusListView.Items.Cast<ListViewItem>().
-                    FirstOrDefault(item => item.Group == group);
+                ListViewItem sortedFirstGroupItem = FileStatusListView.Items.Cast<ListViewItem>().FirstOrDefault(item => item.Group == group);
                 if (sortedFirstGroupItem != null)
                 {
                     sortedFirstGroupItem.Selected = true;
@@ -1037,7 +1014,8 @@ namespace GitUI
             Refresh();
             FileStatusListView.BeginUpdate();
 
-            FileStatusListView.AutoResizeColumn(0,
+            FileStatusListView.AutoResizeColumn(
+                0,
                 ColumnHeaderAutoResizeStyle.HeaderSize);
             FileStatusListView.EndUpdate();
         }
@@ -1047,33 +1025,35 @@ namespace GitUI
             switch (e.KeyCode)
             {
                 case Keys.A:
+                {
+                    if (!e.Control)
                     {
-                        if (!e.Control)
-                        {
-                            break;
-                        }
-
-                        FileStatusListView.BeginUpdate();
-                        try
-                        {
-                            for (var i = 0; i < FileStatusListView.Items.Count; i++)
-                            {
-                                FileStatusListView.Items[i].Selected = true;
-                            }
-
-                            e.Handled = true;
-                        }
-                        finally
-                        {
-                            FileStatusListView.EndUpdate();
-                        }
-
                         break;
                     }
 
+                    FileStatusListView.BeginUpdate();
+                    try
+                    {
+                        for (var i = 0; i < FileStatusListView.Items.Count; i++)
+                        {
+                            FileStatusListView.Items[i].Selected = true;
+                        }
+
+                        e.Handled = true;
+                    }
+                    finally
+                    {
+                        FileStatusListView.EndUpdate();
+                    }
+
+                    break;
+                }
+
                 default:
+                {
                     KeyDown?.Invoke(sender, e);
                     break;
+                }
             }
         }
 
@@ -1323,7 +1303,6 @@ namespace GitUI
         private Regex _filter;
 
         #endregion Filtering
-
     }
 
     public class GitItemStatusWithParent

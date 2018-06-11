@@ -281,6 +281,7 @@ namespace GitUI.BranchTreePanel
                 }
             }
         }
+
         #endregion private classes
 
         [Pure]

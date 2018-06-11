@@ -18,7 +18,6 @@ using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Script;
 using GitUI.SpellChecker;
-using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using Timer = System.Windows.Forms.Timer;

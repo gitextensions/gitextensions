@@ -504,7 +504,7 @@ namespace GitUI.CommandsDialogs
             this.EditSettings.Name = "EditSettings";
             this.EditSettings.Size = new System.Drawing.Size(23, 22);
             this.EditSettings.ToolTipText = "Settings";
-            this.EditSettings.Click += new System.EventHandler(this.SettingsClick);
+            this.EditSettings.Click += new System.EventHandler(this.OnShowSettingsClick);
             // 
             // toolStripSeparator5
             // 
@@ -676,7 +676,6 @@ namespace GitUI.CommandsDialogs
             this.CommitInfoTabPage.Margin = new System.Windows.Forms.Padding(0);
             this.CommitInfoTabPage.Name = "CommitInfoTabPage";
             this.CommitInfoTabPage.Size = new System.Drawing.Size(644, 263);
-            this.CommitInfoTabPage.Padding = new System.Windows.Forms.Padding(0);
             this.CommitInfoTabPage.TabIndex = 2;
             this.CommitInfoTabPage.Text = "Commit";
             this.CommitInfoTabPage.UseVisualStyleBackColor = true;
@@ -699,7 +698,6 @@ namespace GitUI.CommandsDialogs
             this.TreeTabPage.Controls.Add(this.fileTree);
             this.TreeTabPage.Location = new System.Drawing.Point(4, 22);
             this.TreeTabPage.Name = "TreeTabPage";
-            this.TreeTabPage.Padding = new System.Windows.Forms.Padding(0);
             this.TreeTabPage.Size = new System.Drawing.Size(644, 263);
             this.TreeTabPage.TabIndex = 0;
             this.TreeTabPage.Text = "File tree";
@@ -719,7 +717,6 @@ namespace GitUI.CommandsDialogs
             this.DiffTabPage.Location = new System.Drawing.Point(4, 22);
             this.DiffTabPage.Name = "DiffTabPage";
             this.DiffTabPage.Size = new System.Drawing.Size(644, 263);
-            this.DiffTabPage.Padding = new System.Windows.Forms.Padding(0);
             this.DiffTabPage.TabIndex = 1;
             this.DiffTabPage.Text = "Diff";
             this.DiffTabPage.UseVisualStyleBackColor = true;
@@ -738,7 +735,6 @@ namespace GitUI.CommandsDialogs
             this.GpgInfoTabPage.Location = new System.Drawing.Point(4, 22);
             this.GpgInfoTabPage.Name = "GpgInfoTabPage";
             this.GpgInfoTabPage.Size = new System.Drawing.Size(644, 263);
-            this.GpgInfoTabPage.Padding = new System.Windows.Forms.Padding(0);
             this.GpgInfoTabPage.TabIndex = 3;
             this.GpgInfoTabPage.Text = "GPG";
             this.GpgInfoTabPage.UseVisualStyleBackColor = true;
@@ -1482,7 +1478,7 @@ namespace GitUI.CommandsDialogs
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsClick);
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.OnShowSettingsClick);
             // 
             // helpToolStripMenuItem
             // 
