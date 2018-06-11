@@ -76,6 +76,7 @@ namespace GitUI.CommandsDialogs
             // 
             // DiffSplitContainer
             // 
+            this.DiffSplitContainer.BackColor = System.Drawing.SystemColors.Control;
             this.DiffSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.DiffSplitContainer.Location = new System.Drawing.Point(0, 0);
@@ -394,7 +395,7 @@ namespace GitUI.CommandsDialogs
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.saveToolStripMenuItem.Text = "Save";
             // 
-            // RevisionDiff
+            // RevisionDiffControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

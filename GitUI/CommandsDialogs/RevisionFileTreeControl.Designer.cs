@@ -67,6 +67,7 @@
             // 
             // FileTreeSplitContainer
             // 
+            this.FileTreeSplitContainer.BackColor = System.Drawing.SystemColors.Control;
             this.FileTreeSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileTreeSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.FileTreeSplitContainer.Location = new System.Drawing.Point(0, 0);
@@ -331,7 +332,7 @@
             this.FileText.Size = new System.Drawing.Size(487, 303);
             this.FileText.TabIndex = 0;
             // 
-            // RevisionFileTree
+            // RevisionFileTreeControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
