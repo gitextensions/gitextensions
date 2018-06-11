@@ -79,7 +79,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                    && startNode.Ancestors.Any(a => a.IsRelative);
         }
 
-        public void Add(GitRevision revision, RevisionDataGridView.DataTypes types)
+        public void Add(GitRevision revision, RevisionNodeFlags flags)
         {
             var parentIds = revision.ParentGuids;
 
@@ -91,9 +91,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             Count++;
             node.Data = revision;
-            node.DataTypes = types;
+            node.Flags = flags;
             node.Index = AddedNodes.Count;
             AddedNodes.Add(node);
+
+            var isCheckedOut = flags.HasFlag(RevisionNodeFlags.CheckedOut);
 
             foreach (var parentId in parentIds ?? Array.Empty<string>())
             {
@@ -116,7 +118,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     // and is about to start a new branch. This will also mean that the last
                     // revisions are non-relative. Make sure a new junction is added and this
                     // is the start of a new branch (and color!)
-                    !types.HasFlag(RevisionDataGridView.DataTypes.CheckedOut))
+                    !isCheckedOut)
                 {
                     // The node isn't a junction point. Just the parent to the node's
                     // (only) ancestor junction.
@@ -145,35 +147,36 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 }
             }
 
-            bool isRelative = types.HasFlag(RevisionDataGridView.DataTypes.CheckedOut);
-            if (!isRelative && node.Descendants.Any(d => d.IsRelative))
-            {
-                isRelative = true;
-            }
+            var isRelative = isCheckedOut || node.Descendants.Any(d => d.IsRelative);
 
-            bool isRebuild = false;
+            var needsRebuild = false;
+
             foreach (var ancestor in node.Ancestors)
             {
                 ancestor.IsRelative = isRelative || ancestor.IsRelative;
 
                 // Uh, oh, we've already processed this lane. We'll have to update some rows.
                 var parent = ancestor.TryGetParent(node);
+
                 if (parent != null && parent.InLane != int.MaxValue)
                 {
-                    int resetTo = ancestor.Oldest.Descendants.Aggregate(ancestor.Oldest.InLane, (current, dd) => Math.Min(current, dd.Youngest.InLane));
-                    Debug.WriteLine("We have to start over at lane {0} because of {1}", resetTo, node);
-                    isRebuild = true;
+                    Debug.WriteLine("We have to start over at lane {0} because of {1}",
+                        ancestor.Oldest.Descendants.Aggregate(ancestor.Oldest.InLane, (current, dd) => Math.Min(current, dd.Youngest.InLane)),
+                        node);
+
+                    needsRebuild = true;
                     break;
                 }
             }
 
-            if (isRebuild)
+            if (needsRebuild)
             {
                 // TODO: It would be nice if we didn't have to start completely over...but it wouldn't
                 // be easy since we don't keep around all of the necessary lane state for each step.
-                int lastLane = _lanes.Count - 1;
+                var lastLaneIndex = _lanes.Count - 1;
+
                 _lanes.Clear();
-                _lanes.CacheTo(lastLane);
+                _lanes.CacheTo(lastLaneIndex);
 
                 // We need to redraw everything
                 Updated?.Invoke();

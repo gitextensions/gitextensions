@@ -16,6 +16,14 @@ using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid
 {
+    [Flags]
+    public enum RevisionNodeFlags
+    {
+        None = 0,
+        CheckedOut = 1,
+        HasRef = 2
+    }
+
     public sealed class RevisionDataGridView : DataGridView
     {
         #region EventArgs
@@ -33,14 +41,6 @@ namespace GitUI.UserControls.RevisionGrid
         #endregion
 
         #region DataType enum
-
-        [Flags]
-        public enum DataTypes
-        {
-            Normal = 0,
-            CheckedOut = 1,
-            Special = 2
-        }
 
         #endregion
 
@@ -380,7 +380,7 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
-        public void Add(GitRevision revision, DataTypes types)
+        public void Add(GitRevision revision, RevisionNodeFlags types = RevisionNodeFlags.None)
         {
             lock (_graphData)
             {
@@ -1161,37 +1161,55 @@ namespace GitUI.UserControls.RevisionGrid
                     LinearGradientMode.Horizontal);
             }
 
-            if (row.Node.Data == null)
-            {
-                nodeRect.Width = nodeRect.Height = _nodeDimension - 1;
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.FillEllipse(Brushes.White, nodeRect);
-                using (var pen = new Pen(Color.Red, 2))
-                {
-                    g.DrawEllipse(pen, nodeRect);
-                }
-            }
-            else if (row.Node.IsCheckedOut)
-            {
-                g.SmoothingMode = SmoothingMode.None;
-                g.FillRectangle(nodeBrush, nodeRect);
-                nodeRect.Inflate(1, 1);
-                var outlineColor = nodeColor == null ? Color.Black : ColorHelper.MakeColorDarker(nodeColor.Value, 0.3);
-                using (var pen = new Pen(outlineColor, 2))
-                {
-                    g.DrawRectangle(pen, nodeRect);
-                }
-            }
-            else if (row.Node.IsSpecial)
+            var square = row.Node.HasRef;
+            var hasOutline = row.Node.IsCheckedOut;
+
+            if (square)
             {
                 g.SmoothingMode = SmoothingMode.None;
                 g.FillRectangle(nodeBrush, nodeRect);
             }
-            else
+            else //// Circle
             {
                 nodeRect.Width = nodeRect.Height = _nodeDimension - 1;
+
                 g.SmoothingMode = SmoothingMode.AntiAlias;
                 g.FillEllipse(nodeBrush, nodeRect);
+            }
+
+            if (hasOutline)
+            {
+                nodeRect.Inflate(1, 1);
+
+                var outlineColor = nodeColor == null
+                    ? Color.Black
+                    : ColorHelper.MakeColorDarker(nodeColor.Value, 0.3);
+
+                using (var pen = new Pen(outlineColor, 2))
+                {
+                    if (square)
+                    {
+                        g.SmoothingMode = SmoothingMode.None;
+                        g.DrawRectangle(pen, nodeRect);
+                    }
+                    else //// Circle
+                    {
+                        g.SmoothingMode = SmoothingMode.AntiAlias;
+                        g.DrawEllipse(pen, nodeRect);
+                    }
+                }
+            }
+
+            if (row.Node.Data == null)
+            {
+                nodeRect.Inflate(1, 1);
+
+                using (var pen = new Pen(Color.Red, 2))
+                {
+                    g.SmoothingMode = SmoothingMode.AntiAlias;
+                    g.FillEllipse(Brushes.White, nodeRect);
+                    g.DrawEllipse(pen, nodeRect);
+                }
             }
 
             nodeBrush.Dispose();

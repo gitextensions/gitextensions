@@ -852,13 +852,19 @@ namespace GitUI
                     CheckUncommittedChanged(_filteredCurrentCheckout);
                 }
 
-                var dataTypes = revision.Guid == _filteredCurrentCheckout
-                    ? RevisionDataGridView.DataTypes.CheckedOut
-                    : revision.Refs.Count != 0
-                        ? RevisionDataGridView.DataTypes.Special
-                        : RevisionDataGridView.DataTypes.Normal;
+                var flags = RevisionNodeFlags.None;
 
-                _gridView.Add(revision, dataTypes);
+                if (revision.Guid == _filteredCurrentCheckout)
+                {
+                    flags = RevisionNodeFlags.CheckedOut;
+                }
+
+                if (revision.Refs.Count != 0)
+                {
+                    flags |= RevisionNodeFlags.HasRef;
+                }
+
+                _gridView.Add(revision, flags);
             }
 
             void OnRevisionReaderError(Exception exception)
@@ -1757,7 +1763,7 @@ namespace GitUI
                 Subject = Strings.GetWorkspaceText(),
                 ParentGuids = new[] { GitRevision.IndexGuid }
             };
-            _gridView.Add(unstagedRev, RevisionDataGridView.DataTypes.Normal);
+            _gridView.Add(unstagedRev);
 
             // Add index as virtual commit
             var stagedRev = new GitRevision(GitRevision.IndexGuid)
@@ -1771,7 +1777,7 @@ namespace GitUI
                 Subject = Strings.GetIndexText(),
                 ParentGuids = new[] { filteredCurrentCheckout }
             };
-            _gridView.Add(stagedRev, RevisionDataGridView.DataTypes.Normal);
+            _gridView.Add(stagedRev);
 
             UpdateArtificialCommitCount(_artificialStatus, unstagedRev, stagedRev);
         }
