@@ -194,7 +194,6 @@ namespace GitUI
             Graph.AddColumn(new CommitIdColumnProvider(this));
             Graph.AddColumn(_buildServerWatcher.ColumnProvider);
 
-            compareToBaseToolStripMenuItem.Enabled = false;
             fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
         }
 

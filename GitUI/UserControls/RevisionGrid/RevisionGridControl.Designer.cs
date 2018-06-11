@@ -282,6 +282,7 @@ namespace GitUI
             this.compareToBaseToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.compareToBaseToolStripMenuItem.Text = "Compare to BASE";
             this.compareToBaseToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.R;
+            this.compareToBaseToolStripMenuItem.Enabled = false;
             this.compareToBaseToolStripMenuItem.Click += new System.EventHandler(this.compareToBaseToolStripMenuItem_Click);
             // 
             // compareToolStripMenuItem
