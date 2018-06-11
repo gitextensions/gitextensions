@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using JetBrains.Annotations;
 
 namespace GitUI.BranchTreePanel
 {
@@ -193,12 +194,14 @@ namespace GitUI.BranchTreePanel
                 DefaultContextMenus.Add(type, menu);
             }
 
+            [CanBeNull]
             protected virtual ContextMenuStrip GetContextMenuStrip()
             {
                 DefaultContextMenus.TryGetValue(GetType(), out var result);
                 return result;
             }
 
+            [CanBeNull]
             protected IWin32Window ParentWindow()
             {
                 return TreeViewNode.TreeView.FindForm();
@@ -231,7 +234,8 @@ namespace GitUI.BranchTreePanel
                 return (Node)treeNode.Tag;
             }
 
-            private static T GetNodeSafe<T>(TreeNode treeNode) where T : Node
+            [CanBeNull]
+            private static T GetNodeSafe<T>([CanBeNull] TreeNode treeNode) where T : Node
             {
                 return treeNode?.Tag as T;
             }

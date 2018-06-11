@@ -1468,6 +1468,7 @@ namespace GitCommands
             return Application.ExecutablePath;
         }
 
+        [CanBeNull]
         public static string GetGitExtensionsDirectory()
         {
             return Path.GetDirectoryName(GetGitExtensionsFullPath());
@@ -1475,6 +1476,7 @@ namespace GitCommands
 
         private static RegistryKey _versionIndependentRegKey;
 
+        [CanBeNull]
         private static RegistryKey VersionIndependentRegKey
         {
             get

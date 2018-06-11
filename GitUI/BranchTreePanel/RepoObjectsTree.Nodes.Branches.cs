@@ -63,6 +63,7 @@ namespace GitUI.BranchTreePanel
                 ParentPath = dirs.Take(dirs.Length - 1).Join(PathSeparator.ToString());
             }
 
+            [CanBeNull]
             internal BaseBranchNode CreateRootNode(IDictionary<string, BaseBranchNode> nodes,
                 Func<Tree, string, BaseBranchNode> createPathNode)
             {

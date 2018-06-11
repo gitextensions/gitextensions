@@ -13,6 +13,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
 using GitUI.Script;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -85,7 +86,7 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormPush(GitUICommands commands)
+        public FormPush([CanBeNull] GitUICommands commands)
             : base(commands)
         {
             InitializeComponent();
