@@ -32,6 +32,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _debugId = debugIdNext++;
 
             AddNode(node);
+
             if (node != parent)
             {
                 node.Ancestors.Add(this);
@@ -57,14 +58,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             if (_nodeIndices.TryGetValue(parent, out var childIndex))
             {
-                if (childIndex > 0)
-                {
-                    return _nodes[childIndex - 1];
-                }
-                else
+                if (childIndex <= 0)
                 {
                     throw new ArgumentException("Parent has no children:\n" + parent);
                 }
+
+                return _nodes[childIndex - 1];
             }
 
             throw new ArgumentException("Junction:\n" + ToString() + "\ndoesn't contain this parent:\n" + parent);

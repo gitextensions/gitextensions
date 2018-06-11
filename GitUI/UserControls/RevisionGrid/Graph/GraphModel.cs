@@ -107,15 +107,16 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     continue;
                 }
 
-                if (node.Descendants.Count == 1 && node.Ancestors.Count <= 1
-                                                && node.Descendants[0].Oldest == node
-                                                && parent.Ancestors.Count == 0
+                if (node.Descendants.Count == 1 &&
+                    node.Ancestors.Count <= 1 &&
+                    node.Descendants[0].Oldest == node &&
+                    parent.Ancestors.Count == 0 &&
 
-                                                // If this is true, the current revision is in the middle of a branch
-                                                // and is about to start a new branch. This will also mean that the last
-                                                // revisions are non-relative. Make sure a new junction is added and this
-                                                // is the start of a new branch (and color!)
-                                                && !types.HasFlag(DvcsGraph.DataTypes.Active))
+                    // If this is true, the current revision is in the middle of a branch
+                    // and is about to start a new branch. This will also mean that the last
+                    // revisions are non-relative. Make sure a new junction is added and this
+                    // is the start of a new branch (and color!)
+                    !types.HasFlag(DvcsGraph.DataTypes.Active))
                 {
                     // The node isn't a junction point. Just the parent to the node's
                     // (only) ancestor junction.
@@ -277,7 +278,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         }
 
 #if false
-// TopoSorting is an easy way to detect if something has gone wrong with the graph
+            // TopoSorting is an easy way to detect if something has gone wrong with the graph
 
             public Node[] TopoSortedNodes()
             {
