@@ -16,7 +16,7 @@ using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid
 {
-    public sealed partial class DvcsGraph : DataGridView
+    public sealed partial class RevisionDataGridView : DataGridView
     {
         #region EventArgs
 
@@ -128,7 +128,7 @@ namespace GitUI.UserControls.RevisionGrid
         [CanBeNull]
         internal GraphColumnProvider GraphColumnProvider { get; set; }
 
-        public DvcsGraph()
+        public RevisionDataGridView()
         {
             _backgroundThread = new Thread(BackgroundThreadEntry)
             {

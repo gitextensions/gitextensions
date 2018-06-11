@@ -30,7 +30,7 @@ namespace GitUI.BuildServerIntegration
         private readonly CancellationTokenSequence _launchCancellation = new CancellationTokenSequence();
         private readonly object _buildServerCredentialsLock = new object();
         private readonly RevisionGridControl _revisionGrid;
-        private readonly DvcsGraph _revisions;
+        private readonly RevisionDataGridView _revisionGridView;
         private readonly Func<GitModule> _module;
         private readonly IRepoNameExtractor _repoNameExtractor;
         private IDisposable _buildStatusCancellationToken;
@@ -38,14 +38,14 @@ namespace GitUI.BuildServerIntegration
 
         internal BuildStatusColumnProvider ColumnProvider { get; }
 
-        public BuildServerWatcher(RevisionGridControl revisionGrid, DvcsGraph revisions, Func<GitModule> module)
+        public BuildServerWatcher(RevisionGridControl revisionGrid, RevisionDataGridView revisionGridView, Func<GitModule> module)
         {
             _revisionGrid = revisionGrid;
-            _revisions = revisions;
+            _revisionGridView = revisionGridView;
             _module = module;
 
             _repoNameExtractor = new RepoNameExtractor(_module);
-            ColumnProvider = new BuildStatusColumnProvider(revisionGrid, _module);
+            ColumnProvider = new BuildStatusColumnProvider(revisionGrid, revisionGridView, _module);
         }
 
         public async Task LaunchBuildServerInfoFetchOperationAsync()
@@ -58,7 +58,7 @@ namespace GitUI.BuildServerIntegration
 
             var buildServerAdapter = await GetBuildServerAdapterAsync().ConfigureAwait(false);
 
-            await _revisions.SwitchToMainThreadAsync(launchToken);
+            await _revisionGridView.SwitchToMainThreadAsync(launchToken);
 
             _buildServerAdapter?.Dispose();
             _buildServerAdapter = buildServerAdapter;
@@ -98,7 +98,7 @@ namespace GitUI.BuildServerIntegration
                                                .Subscribe(OnBuildInfoUpdate)
                     };
 
-            await _revisions.SwitchToMainThreadAsync(launchToken);
+            await _revisionGridView.SwitchToMainThreadAsync(launchToken);
 
             CancelBuildStatusFetchOperation();
             _buildStatusCancellationToken = cancellationToken;
@@ -256,14 +256,14 @@ namespace GitUI.BuildServerIntegration
 
             foreach (var commitHash in buildInfo.CommitHashList)
             {
-                var index = _revisions.TryGetRevisionIndex(commitHash);
+                var index = _revisionGridView.TryGetRevisionIndex(commitHash);
 
                 if (!index.HasValue)
                 {
                     continue;
                 }
 
-                var revision = _revisions.GetRevision(index.Value);
+                var revision = _revisionGridView.GetRevision(index.Value);
 
                 if (revision == null)
                 {
@@ -274,11 +274,11 @@ namespace GitUI.BuildServerIntegration
                 {
                     revision.BuildStatus = buildInfo;
 
-                    if (index.Value < _revisions.RowCount)
+                    if (index.Value < _revisionGridView.RowCount)
                     {
-                        if (_revisions.Rows[index.Value].Cells[ColumnProvider.Index].Displayed)
+                        if (_revisionGridView.Rows[index.Value].Cells[ColumnProvider.Index].Displayed)
                         {
-                            _revisions.UpdateCellValue(ColumnProvider.Index, index.Value);
+                            _revisionGridView.UpdateCellValue(ColumnProvider.Index, index.Value);
                         }
                     }
                 }

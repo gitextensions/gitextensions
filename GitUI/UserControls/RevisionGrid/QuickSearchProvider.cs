@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI
 {
@@ -12,14 +13,16 @@ namespace GitUI
     {
         private readonly Label _label;
         private readonly RevisionGridControl _grid;
+        private readonly RevisionDataGridView _gridView;
         private readonly Timer _quickSearchTimer;
 
         private string _lastQuickSearchString = "";
         private string _quickSearchString = "";
 
-        public QuickSearchProvider(RevisionGridControl grid)
+        public QuickSearchProvider(RevisionGridControl grid, RevisionDataGridView gridView)
         {
             _grid = grid;
+            _gridView = gridView;
 
             _label = new Label
             {
@@ -42,8 +45,8 @@ namespace GitUI
 
         public void OnKeyPress(KeyPressEventArgs e)
         {
-            var curIndex = _grid.Graph.SelectedRows.Count > 0
-                ? _grid.Graph.SelectedRows[0].Index
+            var curIndex = _gridView.SelectedRows.Count > 0
+                ? _gridView.SelectedRows[0].Index
                 : -1;
 
             curIndex = curIndex >= 0 ? curIndex : 0;
@@ -85,9 +88,9 @@ namespace GitUI
         public void NextResult(bool down)
         {
             var curIndex = -1;
-            if (_grid.Graph.SelectedRows.Count > 0)
+            if (_gridView.SelectedRows.Count > 0)
             {
-                curIndex = _grid.Graph.SelectedRows[0].Index;
+                curIndex = _gridView.SelectedRows[0].Index;
             }
 
             RestartQuickSearchTimer();

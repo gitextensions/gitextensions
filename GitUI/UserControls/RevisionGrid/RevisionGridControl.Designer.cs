@@ -20,7 +20,7 @@ namespace GitUI
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RevisionGridControl));
-            this.Graph = new DvcsGraph();
+            this._gridView = new RevisionDataGridView();
             this.mainContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.markRevisionAsBadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.markRevisionAsGoodToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,21 +67,21 @@ namespace GitUI
             this.rebaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebaseInteractivelyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebaseWithAdvOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.Graph)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._gridView)).BeginInit();
             this.mainContextMenu.SuspendLayout();
             this.SuspendLayout();
             //
             // Graph
             //
-            this.Graph.AllowUserToAddRows = false;
-            this.Graph.AllowUserToDeleteRows = false;
+            this._gridView.AllowUserToAddRows = false;
+            this._gridView.AllowUserToDeleteRows = false;
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Graph.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.Graph.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.Graph.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.Graph.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
-            this.Graph.ColumnHeadersVisible = false;
-            this.Graph.ContextMenuStrip = this.mainContextMenu;
+            this._gridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this._gridView.BackgroundColor = System.Drawing.SystemColors.Window;
+            this._gridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this._gridView.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this._gridView.ColumnHeadersVisible = false;
+            this._gridView.ContextMenuStrip = this.mainContextMenu;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -89,25 +89,25 @@ namespace GitUI
             dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.Graph.DefaultCellStyle = dataGridViewCellStyle4;
-            this.Graph.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Graph.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Graph.GridColor = System.Drawing.SystemColors.Window;
-            this.Graph.Location = new System.Drawing.Point(0, 0);
-            this.Graph.Name = "Graph";
-            this.Graph.ReadOnly = true;
-            this.Graph.RowHeadersVisible = false;
+            this._gridView.DefaultCellStyle = dataGridViewCellStyle4;
+            this._gridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._gridView.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this._gridView.GridColor = System.Drawing.SystemColors.Window;
+            this._gridView.Location = new System.Drawing.Point(0, 0);
+            this._gridView.Name = "_gridView";
+            this._gridView.ReadOnly = true;
+            this._gridView.RowHeadersVisible = false;
             dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Graph.RowsDefaultCellStyle = dataGridViewCellStyle6;
-            this.Graph.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Graph.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(185)))), ((int)(((byte)(235)))));
-            this.Graph.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            this.Graph.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
-            this.Graph.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Graph.Size = new System.Drawing.Size(682, 235);
-            this.Graph.StandardTab = true;
-            this.Graph.TabIndex = 0;
-            this.Graph.VirtualMode = true;
+            this._gridView.RowsDefaultCellStyle = dataGridViewCellStyle6;
+            this._gridView.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this._gridView.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(185)))), ((int)(((byte)(235)))));
+            this._gridView.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            this._gridView.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this._gridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this._gridView.Size = new System.Drawing.Size(682, 235);
+            this._gridView.StandardTab = true;
+            this._gridView.TabIndex = 0;
+            this._gridView.VirtualMode = true;
             // 
             // mainContextMenu
             // 
@@ -467,17 +467,17 @@ namespace GitUI
             // RevisionGrid
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.Graph);
+            this.Controls.Add(this._gridView);
             this.Name = "RevisionGridControl";
             this.Size = new System.Drawing.Size(682, 235);
-            ((System.ComponentModel.ISupportInitialize)(this.Graph)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._gridView)).EndInit();
             this.mainContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
         }
 
         #endregion
 
-        internal DvcsGraph Graph;
+        private RevisionDataGridView _gridView;
         private System.Windows.Forms.Timer SelectionTimer;
 
         private System.Windows.Forms.ContextMenuStrip mainContextMenu;

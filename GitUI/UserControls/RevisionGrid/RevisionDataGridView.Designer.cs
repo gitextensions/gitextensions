@@ -1,6 +1,6 @@
 ﻿namespace GitUI.UserControls.RevisionGrid
 {
-    partial class DvcsGraph
+    partial class RevisionDataGridView
     {
         #region Component Designer generated code
 

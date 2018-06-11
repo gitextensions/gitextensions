@@ -10,15 +10,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public string ObjectId { get; }
 
         public GitRevision Data { get; set; }
-        public DvcsGraph.DataTypes DataTypes { get; set; }
+        public RevisionDataGridView.DataTypes DataTypes { get; set; }
 
         public int InLane { get; set; } = int.MaxValue;
         public int Index { get; set; } = int.MaxValue;
 
         public Node(string objectId) => ObjectId = objectId;
 
-        public bool IsActive => DataTypes.HasFlag(DvcsGraph.DataTypes.Active);
-        public bool IsSpecial => DataTypes.HasFlag(DvcsGraph.DataTypes.Special);
+        public bool IsActive => DataTypes.HasFlag(RevisionDataGridView.DataTypes.Active);
+        public bool IsSpecial => DataTypes.HasFlag(RevisionDataGridView.DataTypes.Special);
 
         public override string ToString() => Data?.ToString() ?? $"{ObjectId} ({Index})";
     }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 
 namespace GitUI
@@ -9,11 +10,11 @@ namespace GitUI
     {
         private readonly ToolTip _toolTip = new ToolTip();
         private readonly Dictionary<Point, bool> _isTruncatedByCellPos = new Dictionary<Point, bool>();
-        private readonly RevisionGridControl _grid;
+        private readonly RevisionDataGridView _gridView;
 
-        public RevisionGridToolTipProvider(RevisionGridControl grid)
+        public RevisionGridToolTipProvider(RevisionDataGridView gridView)
         {
-            _grid = grid;
+            _gridView = gridView;
         }
 
         public void OnCellMouseEnter()
@@ -24,19 +25,19 @@ namespace GitUI
 
         public void OnCellMouseMove(int columnIndex, int rowIndex)
         {
-            var revision = _grid.Graph.GetRevision(rowIndex);
+            var revision = _gridView.GetRevision(rowIndex);
 
             if (revision == null)
             {
                 return;
             }
 
-            var oldText = _toolTip.GetToolTip(_grid.Graph);
+            var oldText = _toolTip.GetToolTip(_gridView);
             var newText = GetToolTipText();
 
             if (newText != oldText)
             {
-                _toolTip.SetToolTip(_grid.Graph, newText);
+                _toolTip.SetToolTip(_gridView, newText);
             }
 
             if (!_toolTip.Active)
@@ -48,7 +49,7 @@ namespace GitUI
 
             string GetToolTipText()
             {
-                if (_grid.Graph.Columns[columnIndex].Tag is ColumnProvider provider &&
+                if (_gridView.Columns[columnIndex].Tag is ColumnProvider provider &&
                     provider.TryGetToolTip(revision, out var toolTip) &&
                     !string.IsNullOrWhiteSpace(toolTip))
                 {
@@ -58,7 +59,7 @@ namespace GitUI
                 if (_isTruncatedByCellPos.TryGetValue(new Point(columnIndex, rowIndex), out var showToolTip)
                     && showToolTip)
                 {
-                    return _grid.Graph.Rows[rowIndex].Cells[columnIndex].FormattedValue?.ToString() ?? "";
+                    return _gridView.Rows[rowIndex].Cells[columnIndex].FormattedValue?.ToString() ?? "";
                 }
 
                 // no tooltip unless always active or truncated
