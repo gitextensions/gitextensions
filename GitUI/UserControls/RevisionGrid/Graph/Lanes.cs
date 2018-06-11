@@ -431,6 +431,100 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         #endregion
 
+        #region Nested type: Edge
+
+        private readonly struct Edge
+        {
+            public readonly int Start;
+            public readonly LaneInfo Data;
+
+            public Edge(LaneInfo data, int start)
+            {
+                Data = data;
+                Start = start;
+            }
+
+            public int End => Data.ConnectLane;
+
+            public override string ToString() => $"{Start}->{End}: {Data}";
+        }
+
+        #endregion
+
+        #region Nested type: LaneJunctionDetail
+
+        private sealed class LaneJunctionDetail
+        {
+            private int _index;
+            private Node _node;
+
+            public LaneJunctionDetail(Node n)
+            {
+                _node = n;
+            }
+
+            public LaneJunctionDetail(Junction j)
+            {
+                Junction = j;
+                Junction.CurrentState = Junction.State.Processing;
+                _index = 0;
+            }
+
+            public int Count
+            {
+                get
+                {
+                    if (_node != null)
+                    {
+                        return 1 - _index;
+                    }
+
+                    return Junction?.NodesCount - _index ?? 0;
+                }
+            }
+
+            public Junction Junction { get; private set; }
+
+            public Node Current => _node ?? (_index < Junction.NodesCount ? Junction[_index] : null);
+
+            public bool IsClear => Junction == null && _node == null;
+
+            public void Clear()
+            {
+                _node = null;
+                Junction = null;
+                _index = 0;
+            }
+
+            public void Next()
+            {
+                _index++;
+
+                if (Junction != null && _index >= Junction.NodesCount)
+                {
+                    Junction.CurrentState = Junction.State.Processed;
+                }
+            }
+
+            public override string ToString()
+            {
+                if (Junction != null)
+                {
+                    var nodeName = _index < Junction.NodesCount
+                        ? Junction[_index].ToString()
+                        : "(null)";
+
+                    return _index + "/" + Junction.NodesCount + "~" + nodeName + "~" + Junction;
+                }
+
+                return _node != null
+                    ? _index + "/n~" + _node + "~(null)"
+                    : "X/X~(null)~(null)";
+            }
+        }
+
+        #endregion
+
         #region Nested type: ActiveLaneRow
 
         private sealed class ActiveLaneRow : ILaneRow
@@ -722,100 +816,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             #endregion
-        }
-
-        #endregion
-
-        #region Nested type: Edge
-
-        private readonly struct Edge
-        {
-            public readonly int Start;
-            public readonly LaneInfo Data;
-
-            public Edge(LaneInfo data, int start)
-            {
-                Data = data;
-                Start = start;
-            }
-
-            public int End => Data.ConnectLane;
-
-            public override string ToString() => $"{Start}->{End}: {Data}";
-        }
-
-        #endregion
-
-        #region Nested type: LaneJunctionDetail
-
-        private sealed class LaneJunctionDetail
-        {
-            private int _index;
-            private Node _node;
-
-            public LaneJunctionDetail(Node n)
-            {
-                _node = n;
-            }
-
-            public LaneJunctionDetail(Junction j)
-            {
-                Junction = j;
-                Junction.CurrentState = Junction.State.Processing;
-                _index = 0;
-            }
-
-            public int Count
-            {
-                get
-                {
-                    if (_node != null)
-                    {
-                        return 1 - _index;
-                    }
-
-                    return Junction?.NodesCount - _index ?? 0;
-                }
-            }
-
-            public Junction Junction { get; private set; }
-
-            public Node Current => _node ?? (_index < Junction.NodesCount ? Junction[_index] : null);
-
-            public bool IsClear => Junction == null && _node == null;
-
-            public void Clear()
-            {
-                _node = null;
-                Junction = null;
-                _index = 0;
-            }
-
-            public void Next()
-            {
-                _index++;
-
-                if (Junction != null && _index >= Junction.NodesCount)
-                {
-                    Junction.CurrentState = Junction.State.Processed;
-                }
-            }
-
-            public override string ToString()
-            {
-                if (Junction != null)
-                {
-                    var nodeName = _index < Junction.NodesCount
-                        ? Junction[_index].ToString()
-                        : "(null)";
-
-                    return _index + "/" + Junction.NodesCount + "~" + nodeName + "~" + Junction;
-                }
-
-                return _node != null
-                    ? _index + "/n~" + _node + "~(null)"
-                    : "X/X~(null)~(null)";
-            }
         }
 
         #endregion
