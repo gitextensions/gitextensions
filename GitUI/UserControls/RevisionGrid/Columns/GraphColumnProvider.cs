@@ -30,7 +30,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
         {
-            _gridView.dataGrid_CellPainting(revision, e);
+            _gridView.OnGraphCellPainting(e, revision);
         }
 
         public override void Refresh()

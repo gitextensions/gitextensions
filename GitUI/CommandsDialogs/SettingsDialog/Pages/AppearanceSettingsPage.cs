@@ -11,10 +11,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class AppearanceSettingsPage : SettingsPageWithHeader
     {
-        private readonly TranslationString _noDictFile =
-            new TranslationString("None");
-        private readonly TranslationString _noDictFilesFound =
-            new TranslationString("No dictionary files found in: {0}");
+        private readonly TranslationString _noDictFile = new TranslationString("None");
+        private readonly TranslationString _noDictFilesFound = new TranslationString("No dictionary files found in: {0}");
         private readonly IImageCache _avatarCache;
 
         public AppearanceSettingsPage()

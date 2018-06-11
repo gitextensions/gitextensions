@@ -508,7 +508,7 @@ namespace GitUI.UserControls.RevisionGrid
                 .FileAndForget();
         }
 
-        public void dataGrid_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
+        public void OnGraphCellPainting(DataGridViewCellPaintingEventArgs e, object sender)
         {
             if (e.RowIndex < 0)
             {
