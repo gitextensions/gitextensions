@@ -135,7 +135,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.SetRowSpan(this.settingsTreeView, 2);
             this.settingsTreeView.Size = new System.Drawing.Size(194, 600);
             this.settingsTreeView.TabIndex = 1;
-            this.settingsTreeView.SettingsPageSelected += new System.EventHandler<GitUI.CommandsDialogs.SettingsDialog.SettingsPageSelectedEventArgs>(this.settingsTreeViewUserControl1_SettingsPageSelected);
+            this.settingsTreeView.SettingsPageSelected += new System.EventHandler<GitUI.CommandsDialogs.SettingsDialog.SettingsPageSelectedEventArgs>(this.OnSettingsPageSelected);
             //
             // panelCurrentSettingsPage
             //
