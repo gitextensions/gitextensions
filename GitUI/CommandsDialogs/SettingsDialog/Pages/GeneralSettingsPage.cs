@@ -27,6 +27,18 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             });
         }
 
+        protected override void OnRuntimeLoad()
+        {
+            base.OnRuntimeLoad();
+
+            // align 1st columns across all tables
+            var w = Math.Max(lblCommitsLimit.Width, lblDefaultCloneDestination.Width);
+            tlpnlBehaviour.ColumnStyles[0].SizeType = System.Windows.Forms.SizeType.Absolute;
+            tlpnlEmailSettings.ColumnStyles[0].SizeType = System.Windows.Forms.SizeType.Absolute;
+            tlpnlBehaviour.ColumnStyles[0].Width = w;
+            tlpnlEmailSettings.ColumnStyles[0].Width = w;
+        }
+
         protected override void SettingsToPage()
         {
             chkCheckForUncommittedChangesInCheckoutBranch.Checked = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
