@@ -38,7 +38,7 @@ namespace GitUI.UserControls.RevisionGrid
         public enum DataTypes
         {
             Normal = 0,
-            Active = 1,
+            CheckedOut = 1,
             Special = 2
         }
 
@@ -1171,7 +1171,7 @@ namespace GitUI.UserControls.RevisionGrid
                     g.DrawEllipse(pen, nodeRect);
                 }
             }
-            else if (row.Node.IsActive)
+            else if (row.Node.IsCheckedOut)
             {
                 g.SmoothingMode = SmoothingMode.None;
                 g.FillRectangle(nodeBrush, nodeRect);

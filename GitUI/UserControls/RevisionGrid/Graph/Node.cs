@@ -17,7 +17,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public Node(string objectId) => ObjectId = objectId;
 
-        public bool IsActive => DataTypes.HasFlag(RevisionDataGridView.DataTypes.Active);
+        public bool IsCheckedOut => DataTypes.HasFlag(RevisionDataGridView.DataTypes.CheckedOut);
         public bool IsSpecial => DataTypes.HasFlag(RevisionDataGridView.DataTypes.Special);
 
         public override string ToString() => Data?.ToString() ?? $"{ObjectId} ({Index})";
