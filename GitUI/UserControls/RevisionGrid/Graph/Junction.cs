@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
@@ -86,6 +87,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             Oldest.Ancestors.Remove(this);
         }
 
+        [CanBeNull]
         public Junction SplitIntoJunctionWith(Node node)
         {
             // The 'top' (Child->node) of the junction is retained by this.
@@ -111,6 +113,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return bottom;
         }
 
+        [CanBeNull]
         public Node TryGetParent(Node child)
         {
             return _nodeIndices.TryGetValue(child, out var childIndex) ? _nodes[childIndex + 1] : null;
