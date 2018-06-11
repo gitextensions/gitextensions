@@ -244,7 +244,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
-        public IEnumerable<Node> GetRefs()
+        public IReadOnlyList<Node> GetRefs()
         {
             var nodes = new List<Node>(capacity: _junctions.Count);
 
