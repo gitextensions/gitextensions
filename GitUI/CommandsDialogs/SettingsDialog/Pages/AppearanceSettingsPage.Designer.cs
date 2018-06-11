@@ -35,13 +35,6 @@
             this.downloadDictionary = new System.Windows.Forms.LinkLabel();
             this.Language = new System.Windows.Forms.ComboBox();
             this.helpTranslate = new System.Windows.Forms.LinkLabel();
-            this.gbFonts = new System.Windows.Forms.GroupBox();
-            this.commitFontChangeButton = new System.Windows.Forms.Button();
-            this.label34 = new System.Windows.Forms.Label();
-            this.diffFontChangeButton = new System.Windows.Forms.Button();
-            this.applicationFontChangeButton = new System.Windows.Forms.Button();
-            this.label26 = new System.Windows.Forms.Label();
-            this.label56 = new System.Windows.Forms.Label();
             this.gbGeneral = new System.Windows.Forms.GroupBox();
             this.chkShowRelativeDate = new System.Windows.Forms.CheckBox();
             this.chkShowCurrentBranchInVisualStudio = new System.Windows.Forms.CheckBox();
@@ -60,7 +53,6 @@
             this.applicationDialog = new System.Windows.Forms.FontDialog();
             this.commitFontDialog = new System.Windows.Forms.FontDialog();
             this.gbLanguages.SuspendLayout();
-            this.gbFonts.SuspendLayout();
             this.gbGeneral.SuspendLayout();
             this.gbAuthorImages.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._NO_TRANSLATE_DaysToCacheImages)).BeginInit();
@@ -68,7 +60,7 @@
             // 
             // gbLanguages
             // 
-            this.gbLanguages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.gbLanguages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbLanguages.Controls.Add(this.label49);
             this.gbLanguages.Controls.Add(this.label22);
@@ -144,89 +136,9 @@
             this.helpTranslate.Text = "Help translate";
             this.helpTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.helpTranslate_LinkClicked);
             // 
-            // gbFonts
-            // 
-            this.gbFonts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.gbFonts.Controls.Add(this.commitFontChangeButton);
-            this.gbFonts.Controls.Add(this.label34);
-            this.gbFonts.Controls.Add(this.diffFontChangeButton);
-            this.gbFonts.Controls.Add(this.applicationFontChangeButton);
-            this.gbFonts.Controls.Add(this.label26);
-            this.gbFonts.Controls.Add(this.label56);
-            this.gbFonts.Location = new System.Drawing.Point(3, 288);
-            this.gbFonts.Name = "gbFonts";
-            this.gbFonts.Size = new System.Drawing.Size(1351, 106);
-            this.gbFonts.TabIndex = 2;
-            this.gbFonts.TabStop = false;
-            this.gbFonts.Text = "Fonts";
-            // 
-            // commitFontChangeButton
-            // 
-            this.commitFontChangeButton.AutoSize = true;
-            this.commitFontChangeButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.commitFontChangeButton.Location = new System.Drawing.Point(283, 75);
-            this.commitFontChangeButton.Name = "commitFontChangeButton";
-            this.commitFontChangeButton.Size = new System.Drawing.Size(66, 23);
-            this.commitFontChangeButton.TabIndex = 5;
-            this.commitFontChangeButton.Text = "font name";
-            this.commitFontChangeButton.UseVisualStyleBackColor = true;
-            this.commitFontChangeButton.Click += new System.EventHandler(this.commitFontChangeButton_Click);
-            // 
-            // label34
-            // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(10, 80);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(65, 13);
-            this.label34.TabIndex = 4;
-            this.label34.Text = "Commit font";
-            // 
-            // diffFontChangeButton
-            // 
-            this.diffFontChangeButton.AutoSize = true;
-            this.diffFontChangeButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.diffFontChangeButton.Location = new System.Drawing.Point(283, 17);
-            this.diffFontChangeButton.Name = "diffFontChangeButton";
-            this.diffFontChangeButton.Size = new System.Drawing.Size(66, 23);
-            this.diffFontChangeButton.TabIndex = 1;
-            this.diffFontChangeButton.Text = "font name";
-            this.diffFontChangeButton.UseVisualStyleBackColor = true;
-            this.diffFontChangeButton.Click += new System.EventHandler(this.diffFontChangeButton_Click);
-            // 
-            // applicationFontChangeButton
-            // 
-            this.applicationFontChangeButton.AutoSize = true;
-            this.applicationFontChangeButton.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.applicationFontChangeButton.Location = new System.Drawing.Point(283, 46);
-            this.applicationFontChangeButton.Name = "applicationFontChangeButton";
-            this.applicationFontChangeButton.Size = new System.Drawing.Size(66, 23);
-            this.applicationFontChangeButton.TabIndex = 3;
-            this.applicationFontChangeButton.Text = "font name";
-            this.applicationFontChangeButton.UseVisualStyleBackColor = true;
-            this.applicationFontChangeButton.Click += new System.EventHandler(this.applicationFontChangeButton_Click);
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(10, 51);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(82, 13);
-            this.label26.TabIndex = 2;
-            this.label26.Text = "Application font";
-            // 
-            // label56
-            // 
-            this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(10, 22);
-            this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(55, 13);
-            this.label56.TabIndex = 0;
-            this.label56.Text = "Code font";
-            // 
             // gbGeneral
             // 
-            this.gbGeneral.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.gbGeneral.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbGeneral.Controls.Add(this.chkShowRelativeDate);
             this.gbGeneral.Controls.Add(this.chkShowCurrentBranchInVisualStudio);
@@ -295,7 +207,7 @@
             // 
             // gbAuthorImages
             // 
-            this.gbAuthorImages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.gbAuthorImages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbAuthorImages.Controls.Add(this.NoImageService);
             this.gbAuthorImages.Controls.Add(this.label53);
@@ -399,7 +311,6 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.gbLanguages);
-            this.Controls.Add(this.gbFonts);
             this.Controls.Add(this.gbGeneral);
             this.Controls.Add(this.gbAuthorImages);
             this.MinimumSize = new System.Drawing.Size(515, 510);
@@ -408,8 +319,6 @@
             this.Size = new System.Drawing.Size(1360, 773);
             this.gbLanguages.ResumeLayout(false);
             this.gbLanguages.PerformLayout();
-            this.gbFonts.ResumeLayout(false);
-            this.gbFonts.PerformLayout();
             this.gbGeneral.ResumeLayout(false);
             this.gbGeneral.PerformLayout();
             this.gbAuthorImages.ResumeLayout(false);
@@ -428,11 +337,6 @@
         private System.Windows.Forms.LinkLabel downloadDictionary;
         private System.Windows.Forms.ComboBox Language;
         private System.Windows.Forms.LinkLabel helpTranslate;
-        private System.Windows.Forms.GroupBox gbFonts;
-        private System.Windows.Forms.Button diffFontChangeButton;
-        private System.Windows.Forms.Button applicationFontChangeButton;
-        private System.Windows.Forms.Label label26;
-        private System.Windows.Forms.Label label56;
         private System.Windows.Forms.GroupBox gbGeneral;
         private System.Windows.Forms.CheckBox chkShowRelativeDate;
         private System.Windows.Forms.CheckBox chkShowCurrentBranchInVisualStudio;
@@ -449,8 +353,6 @@
         private System.Windows.Forms.CheckBox ShowAuthorGravatar;
         private System.Windows.Forms.FontDialog diffFontDialog;
         private System.Windows.Forms.FontDialog applicationDialog;
-        private System.Windows.Forms.Button commitFontChangeButton;
-        private System.Windows.Forms.Label label34;
         private System.Windows.Forms.FontDialog commitFontDialog;
     }
 }

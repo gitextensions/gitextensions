@@ -67,9 +67,10 @@ namespace GitUI.CommandsDialogs
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GeneralSettingsPage>(this), gitExtPageRef);
 
-            var appearanceSettingsPage = SettingsPageBase.Create<AppearanceSettingsPage>(this);
-            settingsTreeView.AddSettingsPage(appearanceSettingsPage, gitExtPageRef);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ColorsSettingsPage>(this), appearanceSettingsPage.PageReference);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceSettingsPage>(this), gitExtPageRef);
+            var appearanceSettingsPage = AppearanceSettingsPage.GetPageReference();
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ColorsSettingsPage>(this), appearanceSettingsPage);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceFontsSettingsPage>(this), appearanceSettingsPage);
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<RevisionLinksSettingsPage>(this), gitExtPageRef);
 
