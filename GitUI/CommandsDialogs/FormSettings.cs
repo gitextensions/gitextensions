@@ -6,6 +6,7 @@ using GitCommands.Utils;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -36,7 +37,7 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormSettings(GitUICommands commands, SettingsPageReference initalPage = null)
+        public FormSettings([CanBeNull] GitUICommands commands, SettingsPageReference initialPage = null)
             : base(commands)
         {
             InitializeComponent();
@@ -122,17 +123,17 @@ namespace GitUI.CommandsDialogs
                 settingsTreeView.AddSettingsPage(settingsPage, pluginsPageRef);
             }
 
-            settingsTreeView.GotoPage(initalPage);
+            settingsTreeView.GotoPage(initialPage);
             settingsTreeView.ResumeLayout();
 
             this.AdjustForDpiScaling();
         }
 
-        public static DialogResult ShowSettingsDialog(GitUICommands uiCommands, IWin32Window owner, SettingsPageReference initalPage = null)
+        public static DialogResult ShowSettingsDialog(GitUICommands uiCommands, IWin32Window owner, SettingsPageReference initialPage = null)
         {
             DialogResult result = DialogResult.None;
 
-            using (var form = new FormSettings(uiCommands, initalPage))
+            using (var form = new FormSettings(uiCommands, initialPage))
             {
                 AppSettings.UsingContainer(form._commonLogic.RepoDistSettingsSet.GlobalSettings, () =>
                 {
