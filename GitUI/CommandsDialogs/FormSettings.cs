@@ -277,17 +277,6 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
-        // TODO: needed?
-        private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            ////Cursor.Current = Cursors.WaitCursor;
-            ////if (DialogResult != DialogResult.Abort)
-            ////{
-            ////    e.Cancel = true;
-            ////}
-            ////Cursor.Current = Cursors.Default;
-        }
-
         public static readonly string HotkeySettingsName = "Scripts";
 
         private void buttonCancel_Click(object sender, EventArgs e)
