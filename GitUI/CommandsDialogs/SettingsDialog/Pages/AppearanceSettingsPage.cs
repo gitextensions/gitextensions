@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.UserControls;
 using Gravatar;
 using ResourceManager;
 
@@ -25,6 +26,31 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
 
             NoImageService.Items.AddRange(Enum.GetNames(typeof(DefaultImageType)));
+        }
+
+        protected override void OnRuntimeLoad()
+        {
+            base.OnRuntimeLoad();
+
+            // align 1st columns across all tables
+            var columnWidth = Math.Max(Math.Max(Math.Max(truncateLongFilenames.Width, lblCacheDays.Width), lblLanguage.Width), lblSpellingDictionary.Width);
+            tlpnlGeneral.ColumnStyles[0].SizeType = SizeType.Absolute;
+            tlpnlAuthor.ColumnStyles[0].SizeType = SizeType.Absolute;
+            tlpnlLanguage.ColumnStyles[0].SizeType = SizeType.Absolute;
+            tlpnlGeneral.ColumnStyles[0].Width = columnWidth;
+            tlpnlAuthor.ColumnStyles[0].Width = columnWidth;
+            tlpnlLanguage.ColumnStyles[0].Width = columnWidth;
+
+            // align 2nd columns across all tables
+            truncatePathMethod.AdjustWidthToFitContent();
+            Language.AdjustWidthToFitContent();
+            columnWidth = Math.Max(Math.Max(truncatePathMethod.Width, NoImageService.Width), Language.Width);
+            tlpnlGeneral.ColumnStyles[1].SizeType = SizeType.Absolute;
+            tlpnlAuthor.ColumnStyles[1].SizeType = SizeType.Absolute;
+            tlpnlLanguage.ColumnStyles[1].SizeType = SizeType.Absolute;
+            tlpnlGeneral.ColumnStyles[1].Width = columnWidth;
+            tlpnlAuthor.ColumnStyles[1].Width = columnWidth;
+            tlpnlLanguage.ColumnStyles[1].Width = columnWidth;
         }
 
         public static SettingsPageReference GetPageReference()
