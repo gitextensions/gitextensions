@@ -617,7 +617,7 @@ namespace GitUI.CommandsDialogs
             this.RemoteBranches.AllowUserToResizeRows = false;
             this.RemoteBranches.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.RemoteBranches.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.RemoteBranches.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.RemoteBranches.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RemoteBranches.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.RemoteBranches.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.BranchName,
