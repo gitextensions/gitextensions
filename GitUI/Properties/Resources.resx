@@ -599,9 +599,6 @@ agabden, crypto_rsa, gpongelli, ierof, leak, liiws, mserfli, palver123</value>
   <data name="Designers" xml:space="preserve">
     <value>Andréj Telle, Oliver Friedrich</value>
   </data>
-  <data name="Other" xml:space="preserve">
-    <value />
-  </data>
   <data name="Translators" xml:space="preserve">
     <value>79 collaborators on Transifex website, Gianni Rosa Gallina, Cheng Huang, Floyd Hung, superlongman, rferriz, gor, xaro, bleis-tift, Ralph Haußmann,
 Jasper Chien, Arkadiy Shapkin, ferow2k, Thibault D'Archivio, australiensun, Airat Salikhov, Dave Brotherstone,
