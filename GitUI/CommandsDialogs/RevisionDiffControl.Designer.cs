@@ -80,6 +80,7 @@ namespace GitUI.CommandsDialogs
             this.DiffSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.DiffSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.DiffSplitContainer.Margin = new System.Windows.Forms.Padding(0);
             this.DiffSplitContainer.Name = "DiffSplitContainer";
             // 
             // DiffSplitContainer.Panel1
@@ -400,6 +401,7 @@ namespace GitUI.CommandsDialogs
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.DiffSplitContainer);
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "RevisionDiffControl";
             this.Size = new System.Drawing.Size(729, 360);
             this.DiffSplitContainer.Panel1.ResumeLayout(false);

@@ -226,7 +226,9 @@ namespace GitUI.CommandsDialogs
             this.tabControl1.Controls.Add(this.BlameTab);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl1.Name = "tabControl1";
+            this.tabControl1.Padding = new System.Drawing.Point(0, 0);
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(748, 314);
             this.tabControl1.TabIndex = 0;
@@ -247,6 +249,7 @@ namespace GitUI.CommandsDialogs
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CommitDiff.Location = new System.Drawing.Point(0, 0);
+            this.CommitDiff.Margin = new System.Windows.Forms.Padding(0);
             this.CommitDiff.MinimumSize = new System.Drawing.Size(150, 148);
             this.CommitDiff.Name = "CommitDiff";
             this.CommitDiff.Size = new System.Drawing.Size(740, 288);
@@ -267,7 +270,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
             this.View.Location = new System.Drawing.Point(3, 3);
-            this.View.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.View.Margin = new System.Windows.Forms.Padding(0);
             this.View.Name = "View";
             this.View.Size = new System.Drawing.Size(734, 282);
             this.View.TabIndex = 0;
@@ -287,7 +290,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.Diff.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Diff.Location = new System.Drawing.Point(3, 3);
-            this.Diff.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Diff.Margin = new System.Windows.Forms.Padding(0);
             this.Diff.Name = "Diff";
             this.Diff.Size = new System.Drawing.Size(734, 282);
             this.Diff.TabIndex = 0;
@@ -306,7 +309,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.Blame.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Blame.Location = new System.Drawing.Point(0, 0);
-            this.Blame.Margin = new System.Windows.Forms.Padding(4);
+            this.Blame.Margin = new System.Windows.Forms.Padding(0);
             this.Blame.Name = "Blame";
             this.Blame.Size = new System.Drawing.Size(740, 288);
             this.Blame.TabIndex = 0;
