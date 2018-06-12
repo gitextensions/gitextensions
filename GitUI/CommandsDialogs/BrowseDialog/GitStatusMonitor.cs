@@ -283,7 +283,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _ignoredFilesPending = _ignoredFilesAreStale;
 
             // git-status with ignored files when needed only
-            string command = GitCommandHelpers.GetAllChangedFilesCmd(!_ignoredFilesPending, UntrackedFilesMode.Default);
+            string command = GitCommandHelpers.GetAllChangedFilesCmd(!_ignoredFilesPending, UntrackedFilesMode.Default, noLocks: true);
             return Module.RunGitCmd(command);
         }
 

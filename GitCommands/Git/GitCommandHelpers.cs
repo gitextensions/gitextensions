@@ -677,10 +677,11 @@ namespace GitCommands
             return args.ToString();
         }
 
-        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = IgnoreSubmodulesMode.None)
+        public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = IgnoreSubmodulesMode.None, bool noLocks = false)
         {
             var args = new ArgumentBuilder
             {
+                { noLocks && VersionInUse.SupportNoOptionalLocks, "--no-optional-locks" },
                 "status --porcelain -z",
                 untrackedFiles,
                 ignoreSubmodules,
