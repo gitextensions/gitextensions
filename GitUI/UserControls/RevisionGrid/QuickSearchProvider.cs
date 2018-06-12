@@ -148,12 +148,16 @@ namespace GitUI
             {
                 _label.ForeColor = SystemColors.InfoText;
 
-                using (WaitCursorScope.Enter())
+                // Prevent flickering when further typing is selecting the same row
+                if (_gridView.SelectedRows.Count != 1 || _gridView.SelectedRows[0].Index != matchIndex)
                 {
-                    _gridView.ClearSelection();
-                    _gridView.Rows[matchIndex.Value].Selected = true;
+                    using (WaitCursorScope.Enter())
+                    {
+                        _gridView.ClearSelection();
+                        _gridView.Rows[matchIndex.Value].Selected = true;
 
-                    _gridView.CurrentCell = _gridView.Rows[matchIndex.Value].Cells[1];
+                        _gridView.CurrentCell = _gridView.Rows[matchIndex.Value].Cells[1];
+                    }
                 }
             }
             else
