@@ -410,6 +410,19 @@ namespace GitUI.Editor.RichTextBoxExtension
             rtb.Select(position + length, 0);
         }
 
+        /** Fixes Rich Text for the Rich Text Box.
+         * NOTE: This will probably break any text which actually contains UTF-8 characters! */
+        private static string rtf4rtb(string rtf)
+        {
+            // Work-around Microsoft bug
+            if (rtf.StartsWith(@"{\urtf"))
+            {
+                return rtf.Remove(2, 1);
+            }
+
+            return rtf;
+        }
+
         private static void AddLink(this RichTextBox rtb, string text, string hyperlink)
         {
             int position = rtb.SelectionStart;
@@ -428,7 +441,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             {
                 string head = rtfText.Substring(0, idx);
                 string tail = rtfText.Substring(idx);
-                rtb.SelectedRtf = head + @"\v #" + hyperlink + @"\v0" + tail;
+                rtb.SelectedRtf = rtf4rtb(head + @"\v #" + hyperlink + @"\v0" + tail);
             }
 
             rtb.SelectedRtf = ("{\rtf1\ansi " + text + "\v #") + hyperlink + "\v0}";
@@ -1450,7 +1463,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                             {
                                 string head = rtfText.Substring(0, idx);
                                 string tail = rtfText.Substring(idx);
-                                rtb.SelectedRtf = head + @"\v #" + cs.hyperlink + @"\v0" + tail;
+                                rtb.SelectedRtf = rtf4rtb(head + @"\v #" + cs.hyperlink + @"\v0" + tail);
                                 length = rtb.TextLength - cs.hyperlinkStart;
                             }
                         }
