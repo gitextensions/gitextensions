@@ -204,10 +204,9 @@ namespace System
                 value = value.Substring(0, value.Length - 1);
             }
 
-            StringBuilder sb = new StringBuilder();
-            string[] lines = value.Split('\n');
+            var sb = new StringBuilder(capacity: value.Length);
 
-            foreach (string line in lines)
+            foreach (var line in value.Split('\n'))
             {
                 if (!shouldRemoveLine(line))
                 {
