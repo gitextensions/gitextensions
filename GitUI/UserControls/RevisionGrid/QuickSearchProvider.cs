@@ -140,16 +140,25 @@ namespace GitUI
                 return;
             }
 
-            var result = reverse
+            var matchIndex = reverse
                 ? SearchBackwards()
                 : SearchForward();
 
-            if (result.HasValue)
+            if (matchIndex.HasValue)
             {
-                _gridView.ClearSelection();
-                _gridView.Rows[result.Value].Selected = true;
+                _label.ForeColor = SystemColors.InfoText;
 
-                _gridView.CurrentCell = _gridView.Rows[result.Value].Cells[1];
+                using (WaitCursorScope.Enter())
+                {
+                    _gridView.ClearSelection();
+                    _gridView.Rows[matchIndex.Value].Selected = true;
+
+                    _gridView.CurrentCell = _gridView.Rows[matchIndex.Value].Cells[1];
+                }
+            }
+            else
+            {
+                _label.ForeColor = Color.DarkRed;
             }
 
             int? SearchForward()
