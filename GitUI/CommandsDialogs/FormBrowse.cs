@@ -228,7 +228,8 @@ namespace GitUI.CommandsDialogs
                     ////_revisionDiff.RefreshArtificial();
                 };
 
-                _toolStripGitStatus.Click += StatusClick;
+                // TODO: Replace with a status page?
+                _toolStripGitStatus.Click += CommitToolStripMenuItemClick;
                 ToolStrip.Items.Insert(ToolStrip.Items.IndexOf(toolStripButton1), _toolStripGitStatus);
                 ToolStrip.Items.Remove(toolStripButton1);
             }
@@ -1818,12 +1819,6 @@ namespace GitUI.CommandsDialogs
             {
                 MessageBox.Show(this, ex.Message);
             }
-        }
-
-        private void StatusClick(object sender, EventArgs e)
-        {
-            // TODO: Replace with a status page?
-            CommitToolStripMenuItemClick(sender, e);
         }
 
         private void CreateBranchToolStripMenuItemClick(object sender, EventArgs e)
