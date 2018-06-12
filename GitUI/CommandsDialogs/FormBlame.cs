@@ -15,6 +15,8 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
+
+            this.AdjustForDpiScaling();
         }
 
         public FormBlame(GitUICommands commands, string fileName, GitRevision revision, int? initialLine = null) : this(commands)
