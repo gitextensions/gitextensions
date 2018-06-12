@@ -120,9 +120,4 @@
   <metadata name="thanksTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="textBoxDescription.Text" xml:space="preserve">
-    <value>Git extensions - Visual Studio and Shell Explorer Extensions for Git
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</value>
-  </data>
 </root>

@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using GitCommands;
 using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
@@ -9,62 +13,57 @@ namespace GitUI.CommandsDialogs
     {
         public AboutBox()
         {
-            _contributersList = string.Join(", ", Coders, Translators, Designers, Other)
-                .Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-
             InitializeComponent();
             Translate();
             this.AdjustForDpiScaling();
-        }
 
-        private static string Coders => Resources.Coders.Replace(Environment.NewLine, " ");
+            _NO_TRANSLATE_labelVersionInfo.Text += AppSettings.ProductVersion;
 
-        private static string Translators => Resources.Translators.Replace(Environment.NewLine, " ");
+            // Click handlers
+            thanksTo.LinkClicked += delegate { ShowContributorsForm(); };
+            pictureDonate.Click += delegate { Process.Start(FormDonate.DonationUrl); };
+            okButton.Click += delegate { Close(); };
 
-        private static string Designers => Resources.Designers.Replace(Environment.NewLine, " ");
+            var contributorsList = GetContributorList();
+            var random = new Random();
 
-        private static string Other => Resources.Other.Replace(Environment.NewLine, " ");
-
-        private void okButton_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start(FormDonate.DonationUrl);
-        }
-
-        private void AboutBox_Load(object sender, EventArgs e)
-        {
-            thanksTimer_Tick(null, null);
+            thanksTimer.Tick += delegate { ThankNextContributor(); };
             thanksTimer.Enabled = true;
-            thanksTimer.Interval = 500;
+            thanksTimer.Interval = 1000;
             thanksTimer.Start();
-        }
 
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
+            ThankNextContributor();
 
-            _NO_TRANSLATE_labelVersionInfo.Text = string.Format("{0}{1}", _NO_TRANSLATE_labelVersionInfo.Text,
-                GitCommands.AppSettings.ProductVersion);
-        }
+            return;
 
-        private readonly string[] _contributersList;
-        private readonly Random _random = new Random();
-
-        private void thanksTimer_Tick(object sender, EventArgs e)
-        {
-            _NO_TRANSLATE_thanksToTicker.Text = _contributersList[_random.Next(_contributersList.Length - 1)].Trim();
-        }
-
-        private void _NO_TRANSLATE_thanksToTicker_Click(object sender, EventArgs e)
-        {
-            using (FormContributors formContributors = new FormContributors())
+            void ShowContributorsForm()
             {
-                formContributors.LoadContributors(Coders, Translators, Designers);
-                formContributors.ShowDialog(this);
+                using (var formContributors = new FormContributors())
+                {
+                    formContributors.ShowDialog(owner: this);
+                }
+            }
+
+            void ThankNextContributor()
+            {
+                // Select a contributor at random
+                var contributorName = contributorsList[random.Next(contributorsList.Count - 1)].Trim();
+
+                thanksTo.Text = $"Thanks to over {contributorsList.Count:#,##0} contributors: {contributorName}";
+            }
+
+            IReadOnlyList<string> GetContributorList()
+            {
+                var contributorListList = new[]
+                {
+                    Resources.Coders.Replace(Environment.NewLine, " "),
+                    Resources.Translators.Replace(Environment.NewLine, " "),
+                    Resources.Designers.Replace(Environment.NewLine, " "),
+                };
+
+                return contributorListList
+                    .SelectMany(list => list.Split(new[] { ", ", " " }, StringSplitOptions.RemoveEmptyEntries))
+                    .ToList();
             }
         }
     }
