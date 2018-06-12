@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
 using JetBrains.Annotations;
@@ -15,10 +16,7 @@ namespace GitUI
                 throw new ArgumentNullException(nameof(control));
             }
 
-            if (!DpiUtil.IsNonStandard)
-            {
-                return;
-            }
+            var isDpiScaled = DpiUtil.IsNonStandard;
 
             var queue = new Queue<Control>();
             queue.Enqueue(control);
@@ -34,55 +32,71 @@ namespace GitUI
                 switch (next)
                 {
                     case ButtonBase button:
-                        {
-                            if (button.Image != null)
-                            {
-                                button.Image = DpiUtil.Scale(button.Image);
-                            }
-
-                            break;
-                        }
-
-                    case PictureBox pictureBox:
-                        {
-                            if (pictureBox.Image != null)
-                            {
-                                pictureBox.Image = DpiUtil.Scale(pictureBox.Image);
-                            }
-
-                            break;
-                        }
-
-                    case TabControl tabControl:
-                        {
-                            tabControl.Padding = DpiUtil.Scale(tabControl.Padding);
-                            EnqueueChildren();
-                            break;
-                        }
-
-                    case SplitContainer splitContainer:
                     {
-                        if (splitContainer.Tag as string != "__DPI_SCALED__")
+                        if (isDpiScaled && button.Image != null)
                         {
-                            splitContainer.Tag = "__DPI_SCALED__";
-                            splitContainer.SplitterWidth = DpiUtil.Scale(splitContainer.SplitterWidth);
+                            button.Image = DpiUtil.Scale(button.Image);
                         }
 
                         break;
                     }
 
-                    default:
+                    case PictureBox pictureBox:
+                    {
+                        if (isDpiScaled && pictureBox.Image != null)
                         {
-                            if (next is TextBoxBase || next is UpDownBase)
-                            {
-                                // BUG: looks like a bug in WinForms - control's margin gets scaled beyond expectations
-                                // see https://github.com/gitextensions/gitextensions/issues/5098
-                                DpiUtil.ScaleDefaultMargins(next);
-                            }
-
-                            EnqueueChildren();
-                            break;
+                            pictureBox.Image = DpiUtil.Scale(pictureBox.Image);
                         }
+
+                        break;
+                    }
+
+                    case TabControl tabControl:
+                    {
+                        if (!isDpiScaled)
+                        {
+                            tabControl.Padding = new Point(8, 6);
+                        }
+                        else if (tabControl.Tag as string != "__DPI_SCALED__")
+                        {
+                            tabControl.Tag = "__DPI_SCALED__";
+                            tabControl.Padding = DpiUtil.Scale(new Point(8, 6));
+                        }
+
+                        EnqueueChildren();
+                        break;
+                    }
+
+                    case SplitContainer splitContainer:
+                    {
+                        const int splitterWidth = 8;
+
+                        if (!isDpiScaled)
+                        {
+                            splitContainer.SplitterWidth = splitterWidth;
+                        }
+                        else if (splitContainer.Tag as string != "__DPI_SCALED__")
+                        {
+                            splitContainer.Tag = "__DPI_SCALED__";
+                            splitContainer.SplitterWidth = DpiUtil.Scale(splitterWidth);
+                        }
+
+                        EnqueueChildren();
+                        break;
+                    }
+
+                    default:
+                    {
+                        if (next is TextBoxBase || next is UpDownBase)
+                        {
+                            // BUG: looks like a bug in WinForms - control's margin gets scaled beyond expectations
+                            // see https://github.com/gitextensions/gitextensions/issues/5098
+                            DpiUtil.ScaleDefaultMargins(next);
+                        }
+
+                        EnqueueChildren();
+                        break;
+                    }
                 }
 
                 void EnqueueChildren()
