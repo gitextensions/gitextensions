@@ -60,7 +60,6 @@
             // 
             // CommitInfo
             // 
-            this.CommitInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.CommitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CommitInfo.Location = new System.Drawing.Point(0, 0);
             this.CommitInfo.Margin = new System.Windows.Forms.Padding(0);
@@ -70,7 +69,6 @@
             // 
             // splitContainer2
             // 
-            this.splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
             this.splitContainer2.Margin = new System.Windows.Forms.Padding(0);
