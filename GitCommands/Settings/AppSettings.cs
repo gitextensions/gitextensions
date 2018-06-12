@@ -312,7 +312,7 @@ namespace GitCommands
 
         public static int CommitDialogNumberOfPreviousMessages
         {
-            get => GetInt("commitDialogNumberOfPreviousMessages", 4);
+            get => GetInt("commitDialogNumberOfPreviousMessages", 6);
             set => SetInt("commitDialogNumberOfPreviousMessages", value);
         }
 
