@@ -1170,7 +1170,7 @@ namespace GitUI
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow)
         {
-            return StartPushDialog(owner, pushOnShow, false, out _);
+            return StartPushDialog(owner, pushOnShow, forceWithLease: false, out _);
         }
 
         public bool StartApplyPatchDialog(IWin32Window owner, string patchFile = null)
