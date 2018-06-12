@@ -29,11 +29,13 @@ namespace GitUI
 
             _label = new Label
             {
-                Location = new Point(10, 10),
-                BorderStyle = BorderStyle.FixedSingle,
+                Location = new Point(0, 0),
+                Padding = new Padding(5, 4, 5, 4),
+                BorderStyle = BorderStyle.None,
                 ForeColor = SystemColors.InfoText,
                 BackColor = SystemColors.Info,
-                Visible = false
+                Visible = false,
+                UseMnemonic = false
             };
 
             _quickSearchTimer = new Timer { Interval = AppSettings.RevisionGridQuickSearchTimeout };
