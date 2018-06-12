@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
             this.RightSplitContainer = new System.Windows.Forms.SplitContainer();
             this.RevisionsSplitContainer = new System.Windows.Forms.SplitContainer();
             this.RevisionGrid = new GitUI.RevisionGridControl();
-            this.CommitInfoTabControl = new FullBleedTabControl();
+            this.CommitInfoTabControl = new GitUI.CommandsDialogs.FullBleedTabControl();
             this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
             this.RevisionInfo = new GitUI.CommitInfo.CommitInfo();
             this.TreeTabPage = new System.Windows.Forms.TabPage();
@@ -638,7 +638,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.RevisionsSplitContainer.Panel1.Controls.Add(this.RevisionGrid);
             this.RevisionsSplitContainer.Size = new System.Drawing.Size(650, 209);
-            this.RevisionsSplitContainer.SplitterDistance = 374;
+            this.RevisionsSplitContainer.SplitterDistance = 372;
             this.RevisionsSplitContainer.SplitterWidth = 6;
             this.RevisionsSplitContainer.TabIndex = 0;
             // 
@@ -648,7 +648,7 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.Size = new System.Drawing.Size(374, 209);
+            this.RevisionGrid.Size = new System.Drawing.Size(372, 209);
             this.RevisionGrid.TabIndex = 0;
             // 
             // CommitInfoTabControl
@@ -670,10 +670,10 @@ namespace GitUI.CommandsDialogs
             // CommitInfoTabPage
             // 
             this.CommitInfoTabPage.Controls.Add(this.RevisionInfo);
-            this.CommitInfoTabPage.Location = new System.Drawing.Point(4, 22);
+            this.CommitInfoTabPage.Location = new System.Drawing.Point(1, 21);
             this.CommitInfoTabPage.Margin = new System.Windows.Forms.Padding(0);
             this.CommitInfoTabPage.Name = "CommitInfoTabPage";
-            this.CommitInfoTabPage.Size = new System.Drawing.Size(642, 261);
+            this.CommitInfoTabPage.Size = new System.Drawing.Size(646, 264);
             this.CommitInfoTabPage.TabIndex = 2;
             this.CommitInfoTabPage.Text = "Commit";
             this.CommitInfoTabPage.UseVisualStyleBackColor = true;
@@ -687,17 +687,17 @@ namespace GitUI.CommandsDialogs
             this.RevisionInfo.Margin = new System.Windows.Forms.Padding(0);
             this.RevisionInfo.Name = "RevisionInfo";
             this.RevisionInfo.ShowBranchesAsLinks = true;
-            this.RevisionInfo.Size = new System.Drawing.Size(642, 261);
+            this.RevisionInfo.Size = new System.Drawing.Size(646, 264);
             this.RevisionInfo.TabIndex = 0;
             this.RevisionInfo.CommandClick += new System.EventHandler<GitUI.CommitInfo.CommandEventArgs>(this.RevisionInfo_CommandClick);
             // 
             // TreeTabPage
             // 
             this.TreeTabPage.Controls.Add(this.fileTree);
-            this.TreeTabPage.Location = new System.Drawing.Point(4, 22);
+            this.TreeTabPage.Location = new System.Drawing.Point(1, 21);
             this.TreeTabPage.Margin = new System.Windows.Forms.Padding(0);
             this.TreeTabPage.Name = "TreeTabPage";
-            this.TreeTabPage.Size = new System.Drawing.Size(642, 261);
+            this.TreeTabPage.Size = new System.Drawing.Size(646, 264);
             this.TreeTabPage.TabIndex = 0;
             this.TreeTabPage.Text = "File tree";
             this.TreeTabPage.UseVisualStyleBackColor = true;
@@ -708,16 +708,16 @@ namespace GitUI.CommandsDialogs
             this.fileTree.Location = new System.Drawing.Point(0, 0);
             this.fileTree.Margin = new System.Windows.Forms.Padding(0);
             this.fileTree.Name = "fileTree";
-            this.fileTree.Size = new System.Drawing.Size(642, 261);
+            this.fileTree.Size = new System.Drawing.Size(646, 264);
             this.fileTree.TabIndex = 0;
             // 
             // DiffTabPage
             // 
             this.DiffTabPage.Controls.Add(this.revisionDiff);
-            this.DiffTabPage.Location = new System.Drawing.Point(4, 22);
+            this.DiffTabPage.Location = new System.Drawing.Point(1, 21);
             this.DiffTabPage.Margin = new System.Windows.Forms.Padding(0);
             this.DiffTabPage.Name = "DiffTabPage";
-            this.DiffTabPage.Size = new System.Drawing.Size(642, 261);
+            this.DiffTabPage.Size = new System.Drawing.Size(646, 264);
             this.DiffTabPage.TabIndex = 1;
             this.DiffTabPage.Text = "Diff";
             this.DiffTabPage.UseVisualStyleBackColor = true;
@@ -728,16 +728,16 @@ namespace GitUI.CommandsDialogs
             this.revisionDiff.Location = new System.Drawing.Point(0, 0);
             this.revisionDiff.Margin = new System.Windows.Forms.Padding(0);
             this.revisionDiff.Name = "revisionDiff";
-            this.revisionDiff.Size = new System.Drawing.Size(642, 261);
+            this.revisionDiff.Size = new System.Drawing.Size(646, 264);
             this.revisionDiff.TabIndex = 0;
             // 
             // GpgInfoTabPage
             // 
             this.GpgInfoTabPage.Controls.Add(this.revisionGpgInfo1);
-            this.GpgInfoTabPage.Location = new System.Drawing.Point(4, 22);
+            this.GpgInfoTabPage.Location = new System.Drawing.Point(1, 21);
             this.GpgInfoTabPage.Margin = new System.Windows.Forms.Padding(0);
             this.GpgInfoTabPage.Name = "GpgInfoTabPage";
-            this.GpgInfoTabPage.Size = new System.Drawing.Size(642, 261);
+            this.GpgInfoTabPage.Size = new System.Drawing.Size(646, 264);
             this.GpgInfoTabPage.TabIndex = 3;
             this.GpgInfoTabPage.Text = "GPG";
             this.GpgInfoTabPage.UseVisualStyleBackColor = true;
@@ -749,7 +749,7 @@ namespace GitUI.CommandsDialogs
             this.revisionGpgInfo1.Margin = new System.Windows.Forms.Padding(0);
             this.revisionGpgInfo1.Name = "revisionGpgInfo1";
             this.revisionGpgInfo1.Padding = new System.Windows.Forms.Padding(8);
-            this.revisionGpgInfo1.Size = new System.Drawing.Size(642, 261);
+            this.revisionGpgInfo1.Size = new System.Drawing.Size(646, 264);
             this.revisionGpgInfo1.TabIndex = 0;
             // 
             // FilterToolTip
