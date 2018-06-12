@@ -344,7 +344,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.PictureBox);
             this.Controls.Add(this.fileviewerToolbar);
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "FileViewer";
             this.Size = new System.Drawing.Size(757, 518);
             this.contextMenu.ResumeLayout(false);
