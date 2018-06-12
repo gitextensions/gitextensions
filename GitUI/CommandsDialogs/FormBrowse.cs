@@ -1109,8 +1109,7 @@ namespace GitUI.CommandsDialogs
 
         private void PushToolStripMenuItemClick(object sender, EventArgs e)
         {
-            bool isSilent = (ModifierKeys & Keys.Shift) != 0;
-            UICommands.StartPushDialog(this, isSilent);
+            UICommands.StartPushDialog(this, pushOnShow: ModifierKeys.HasFlag(Keys.Shift));
         }
 
         private void PullToolStripMenuItemClick(object sender, EventArgs e)
