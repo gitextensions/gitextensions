@@ -141,7 +141,6 @@ namespace GitUI.CommandsDialogs
             CommitInfoTabControl.TabPages[1].ImageIndex = 1;
             CommitInfoTabControl.TabPages[2].ImageIndex = 2;
             CommitInfoTabControl.TabPages[3].ImageIndex = 3;
-            CommitInfoTabControl.Padding = DpiUtil.Scale(new Point(8, 6));
 
             if (!AppSettings.ShowGpgInformation.ValueOrDefault)
             {
