@@ -139,7 +139,7 @@ namespace GitUI
 
             _toolTipProvider = new RevisionGridToolTipProvider(_gridView);
 
-            _quickSearchProvider = new QuickSearchProvider(this, _gridView, () => Module.WorkingDir);
+            _quickSearchProvider = new QuickSearchProvider(_gridView, () => Module.WorkingDir);
 
             // Parent-child navigation can expect that SetSelectedRevision is always successful since it always uses first-parents
             _parentChildNavigationHistory = new ParentChildNavigationHistory(revision => SetSelectedRevision(revision));

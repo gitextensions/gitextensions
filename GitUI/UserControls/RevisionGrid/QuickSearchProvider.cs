@@ -14,7 +14,6 @@ namespace GitUI
     internal sealed class QuickSearchProvider
     {
         private readonly Label _label;
-        private readonly RevisionGridControl _grid;
         private readonly RevisionDataGridView _gridView;
         private readonly Timer _quickSearchTimer;
         private readonly IGitRevisionTester _gitRevisionTester;
@@ -22,9 +21,8 @@ namespace GitUI
         private string _lastQuickSearchString = "";
         private string _quickSearchString = "";
 
-        public QuickSearchProvider(RevisionGridControl grid, RevisionDataGridView gridView, Func<string> getWorkingDir)
+        public QuickSearchProvider(RevisionDataGridView gridView, Func<string> getWorkingDir)
         {
-            _grid = grid;
             _gridView = gridView;
 
             _gitRevisionTester = new GitRevisionTester(new FullPathResolver(getWorkingDir));
@@ -34,7 +32,8 @@ namespace GitUI
                 Location = new Point(10, 10),
                 BorderStyle = BorderStyle.FixedSingle,
                 ForeColor = SystemColors.InfoText,
-                BackColor = SystemColors.Info
+                BackColor = SystemColors.Info,
+                Visible = false
             };
 
             _quickSearchTimer = new Timer { Interval = AppSettings.RevisionGridQuickSearchTimeout };
@@ -45,7 +44,7 @@ namespace GitUI
                 HideQuickSearchString();
             };
 
-            _grid.Controls.Add(_label);
+            _gridView.Controls.Add(_label);
         }
 
         public void OnKeyPress(KeyPressEventArgs e)
