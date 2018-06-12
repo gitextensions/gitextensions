@@ -847,7 +847,10 @@ namespace GitUI
                     }
                 }
 
-                if (_filteredCurrentCheckout == revision.Guid && ShowUncommittedChanges() && !Module.IsBareRepository())
+                if (_filteredCurrentCheckout == revision.Guid &&
+                    ShowUncommittedChangesIfPossible &&
+                    AppSettings.RevisionGraphShowWorkingDirChanges &&
+                    !Module.IsBareRepository())
                 {
                     CheckUncommittedChanged(_filteredCurrentCheckout);
                 }
@@ -1702,11 +1705,6 @@ namespace GitUI
         {
             AppSettings.RelativeDate = !AppSettings.RelativeDate;
             Refresh();
-        }
-
-        private bool ShowUncommittedChanges()
-        {
-            return ShowUncommittedChangesIfPossible && AppSettings.RevisionGraphShowWorkingDirChanges;
         }
 
         public void InvalidateCount()
