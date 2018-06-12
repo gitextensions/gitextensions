@@ -575,15 +575,6 @@ namespace GitUI.CommandsDialogs
 
             Debug.Assert(_currentItem != null, "_currentItem != null");
 
-            // Prepare git command
-            string args = "apply --cached --whitespace=nowarn";
-
-            if (_currentItemStaged)
-            {
-                // staged
-                args += " --reverse";
-            }
-
             byte[] patch;
             if (!_currentItemStaged && _currentItem.IsNew)
             {
@@ -601,7 +592,16 @@ namespace GitUI.CommandsDialogs
 
             if (patch != null && patch.Length > 0)
             {
-                string output = Module.RunGitCmd(args, null, patch);
+                var args = new ArgumentBuilder
+                {
+                    "apply",
+                    "--cached",
+                    "--whitespace=nowarn",
+                    { _currentItemStaged,  "--reverse" }
+                };
+
+                string output = Module.RunGitCmd(args.ToString(), null, patch);
+
                 ProcessApplyOutput(output, patch);
             }
         }
@@ -670,15 +670,6 @@ namespace GitUI.CommandsDialogs
 
             Debug.Assert(_currentItem != null, "_currentItem != null");
 
-            // Prepare git command
-            string args = "apply --whitespace=nowarn";
-
-            if (_currentItemStaged)
-            {
-                // staged
-                args += " --reverse --index";
-            }
-
             byte[] patch;
 
             if (_currentItemStaged)
@@ -702,7 +693,15 @@ namespace GitUI.CommandsDialogs
 
             if (patch != null && patch.Length > 0)
             {
-                string output = Module.RunGitCmd(args, null, patch);
+                var args = new ArgumentBuilder
+                {
+                    "apply",
+                    "--whitespace=nowarn",
+                    { _currentItemStaged,  "--reverse --index" }
+                };
+
+                string output = Module.RunGitCmd(args.ToString(), null, patch);
+
                 if (EnvUtils.RunningOnWindows())
                 {
                     // remove file mode warnings on windows
