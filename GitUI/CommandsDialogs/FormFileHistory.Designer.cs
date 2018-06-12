@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs
             this.fullHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.copyToClipboardToolStripMenuItem = new GitUI.UserControls.RevisionGrid.CopyContextMenuItem();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControl1 = new GitUI.CommandsDialogs.FullBleedTabControl();
             this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
             this.CommitDiff = new GitUI.UserControls.CommitDiff();
             this.ViewTab = new System.Windows.Forms.TabPage();
@@ -237,9 +237,10 @@ namespace GitUI.CommandsDialogs
             // CommitInfoTabPage
             // 
             this.CommitInfoTabPage.Controls.Add(this.CommitDiff);
-            this.CommitInfoTabPage.Location = new System.Drawing.Point(4, 22);
+            this.CommitInfoTabPage.Location = new System.Drawing.Point(1, 21);
+            this.CommitInfoTabPage.Margin = new System.Windows.Forms.Padding(0);
             this.CommitInfoTabPage.Name = "CommitInfoTabPage";
-            this.CommitInfoTabPage.Size = new System.Drawing.Size(740, 288);
+            this.CommitInfoTabPage.Size = new System.Drawing.Size(744, 291);
             this.CommitInfoTabPage.TabIndex = 3;
             this.CommitInfoTabPage.Text = "Commit";
             // 
@@ -258,10 +259,10 @@ namespace GitUI.CommandsDialogs
             // ViewTab
             // 
             this.ViewTab.Controls.Add(this.View);
-            this.ViewTab.Location = new System.Drawing.Point(4, 22);
+            this.ViewTab.Location = new System.Drawing.Point(1, 21);
+            this.ViewTab.Margin = new System.Windows.Forms.Padding(0);
             this.ViewTab.Name = "ViewTab";
-            this.ViewTab.Padding = new System.Windows.Forms.Padding(3);
-            this.ViewTab.Size = new System.Drawing.Size(740, 288);
+            this.ViewTab.Size = new System.Drawing.Size(744, 291);
             this.ViewTab.TabIndex = 0;
             this.ViewTab.Text = "View";
             this.ViewTab.UseVisualStyleBackColor = true;
@@ -269,19 +270,19 @@ namespace GitUI.CommandsDialogs
             // View
             // 
             this.View.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.View.Location = new System.Drawing.Point(3, 3);
+            this.View.Location = new System.Drawing.Point(0, 0);
             this.View.Margin = new System.Windows.Forms.Padding(0);
             this.View.Name = "View";
-            this.View.Size = new System.Drawing.Size(734, 282);
+            this.View.Size = new System.Drawing.Size(744, 291);
             this.View.TabIndex = 0;
             // 
             // DiffTab
             // 
             this.DiffTab.Controls.Add(this.Diff);
-            this.DiffTab.Location = new System.Drawing.Point(4, 22);
+            this.DiffTab.Location = new System.Drawing.Point(1, 21);
+            this.DiffTab.Margin = new System.Windows.Forms.Padding(0);
             this.DiffTab.Name = "DiffTab";
-            this.DiffTab.Padding = new System.Windows.Forms.Padding(3);
-            this.DiffTab.Size = new System.Drawing.Size(740, 288);
+            this.DiffTab.Size = new System.Drawing.Size(744, 291);
             this.DiffTab.TabIndex = 1;
             this.DiffTab.Text = "Diff";
             this.DiffTab.UseVisualStyleBackColor = true;
@@ -289,18 +290,19 @@ namespace GitUI.CommandsDialogs
             // Diff
             // 
             this.Diff.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Diff.Location = new System.Drawing.Point(3, 3);
+            this.Diff.Location = new System.Drawing.Point(0, 0);
             this.Diff.Margin = new System.Windows.Forms.Padding(0);
             this.Diff.Name = "Diff";
-            this.Diff.Size = new System.Drawing.Size(734, 282);
+            this.Diff.Size = new System.Drawing.Size(744, 291);
             this.Diff.TabIndex = 0;
             // 
             // BlameTab
             // 
             this.BlameTab.Controls.Add(this.Blame);
-            this.BlameTab.Location = new System.Drawing.Point(4, 22);
+            this.BlameTab.Location = new System.Drawing.Point(1, 21);
+            this.BlameTab.Margin = new System.Windows.Forms.Padding(0);
             this.BlameTab.Name = "BlameTab";
-            this.BlameTab.Size = new System.Drawing.Size(740, 288);
+            this.BlameTab.Size = new System.Drawing.Size(744, 291);
             this.BlameTab.TabIndex = 2;
             this.BlameTab.Text = "Blame";
             this.BlameTab.UseVisualStyleBackColor = true;
@@ -311,7 +313,7 @@ namespace GitUI.CommandsDialogs
             this.Blame.Location = new System.Drawing.Point(0, 0);
             this.Blame.Margin = new System.Windows.Forms.Padding(0);
             this.Blame.Name = "Blame";
-            this.Blame.Size = new System.Drawing.Size(740, 288);
+            this.Blame.Size = new System.Drawing.Size(744, 291);
             this.Blame.TabIndex = 0;
             this.Blame.CommandClick += new System.EventHandler<GitUI.CommitInfo.CommandEventArgs>(this.Blame_CommandClick);
             // 
@@ -516,7 +518,7 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.TabControl tabControl1;
+        private GitUI.CommandsDialogs.FullBleedTabControl tabControl1;
         private System.Windows.Forms.TabPage CommitInfoTabPage;
         private UserControls.CommitDiff CommitDiff;
         private System.Windows.Forms.TabPage ViewTab;
