@@ -868,6 +868,42 @@ namespace GitUI
                 }
 
                 _gridView.Add(revision, flags);
+
+                void CheckUncommittedChanged(string filteredCurrentCheckout)
+                {
+                    var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
+                    var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
+
+                    // Add working directory as virtual commit
+                    var unstagedRev = new GitRevision(GitRevision.UnstagedGuid)
+                    {
+                        Author = userName,
+                        AuthorDate = DateTime.MaxValue,
+                        AuthorEmail = userEmail,
+                        Committer = userName,
+                        CommitDate = DateTime.MaxValue,
+                        CommitterEmail = userEmail,
+                        Subject = Strings.GetWorkspaceText(),
+                        ParentGuids = new[] { GitRevision.IndexGuid }
+                    };
+                    _gridView.Add(unstagedRev);
+
+                    // Add index as virtual commit
+                    var stagedRev = new GitRevision(GitRevision.IndexGuid)
+                    {
+                        Author = userName,
+                        AuthorDate = DateTime.MaxValue,
+                        AuthorEmail = userEmail,
+                        Committer = userName,
+                        CommitDate = DateTime.MaxValue,
+                        CommitterEmail = userEmail,
+                        Subject = Strings.GetIndexText(),
+                        ParentGuids = new[] { filteredCurrentCheckout }
+                    };
+                    _gridView.Add(stagedRev);
+
+                    UpdateArtificialCommitCount(_artificialStatus, unstagedRev, stagedRev);
+                }
             }
 
             void OnRevisionReaderError(Exception exception)
@@ -1741,42 +1777,6 @@ namespace GitUI
             _artificialStatus = status;
 
             _gridView.Invalidate();
-        }
-
-        private void CheckUncommittedChanged(string filteredCurrentCheckout)
-        {
-            var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
-            var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
-
-            // Add working directory as virtual commit
-            var unstagedRev = new GitRevision(GitRevision.UnstagedGuid)
-            {
-                Author = userName,
-                AuthorDate = DateTime.MaxValue,
-                AuthorEmail = userEmail,
-                Committer = userName,
-                CommitDate = DateTime.MaxValue,
-                CommitterEmail = userEmail,
-                Subject = Strings.GetWorkspaceText(),
-                ParentGuids = new[] { GitRevision.IndexGuid }
-            };
-            _gridView.Add(unstagedRev);
-
-            // Add index as virtual commit
-            var stagedRev = new GitRevision(GitRevision.IndexGuid)
-            {
-                Author = userName,
-                AuthorDate = DateTime.MaxValue,
-                AuthorEmail = userEmail,
-                Committer = userName,
-                CommitDate = DateTime.MaxValue,
-                CommitterEmail = userEmail,
-                Subject = Strings.GetIndexText(),
-                ParentGuids = new[] { filteredCurrentCheckout }
-            };
-            _gridView.Add(stagedRev);
-
-            UpdateArtificialCommitCount(_artificialStatus, unstagedRev, stagedRev);
         }
 
         internal void ToggleDrawNonRelativesGray()
