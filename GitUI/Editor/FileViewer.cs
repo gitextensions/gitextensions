@@ -619,6 +619,7 @@ namespace GitUI.Editor
             return fileName.EndsWith(".ico", StringComparison.CurrentCultureIgnoreCase);
         }
 
+        [CanBeNull]
         private Image GetImage(string fileName, string guid)
         {
             try
@@ -634,6 +635,7 @@ namespace GitUI.Editor
             }
         }
 
+        [CanBeNull]
         private Image GetImage(string fileName)
         {
             try
@@ -667,6 +669,7 @@ namespace GitUI.Editor
             return new MemoryStream(new BinaryReader(stream).ReadBytes((int)stream.Length));
         }
 
+        [CanBeNull]
         private string GetFileText(string fileName)
         {
             var path = File.Exists(fileName)
@@ -693,7 +696,7 @@ namespace GitUI.Editor
             _internalFileViewer.SetHighlighting("Default");
         }
 
-        private void ResetForText(string fileName)
+        private void ResetForText([CanBeNull] string fileName)
         {
             Reset(false, true);
 
