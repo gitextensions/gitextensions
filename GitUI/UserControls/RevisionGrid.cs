@@ -1836,22 +1836,14 @@ namespace GitUI
                         gitRefs.Sort(
                             (left, right) =>
                             {
-                                if (left.IsTag != right.IsTag)
+                                int leftTypeRank = RefTypeRank(left);
+                                int rightTypeRank = RefTypeRank(right);
+                                if (leftTypeRank == rightTypeRank)
                                 {
-                                    return right.IsTag.CompareTo(left.IsTag);
+                                    return left.Name.CompareTo(right.Name);
                                 }
 
-                                if (left.IsRemote != right.IsRemote)
-                                {
-                                    return left.IsRemote.CompareTo(right.IsRemote);
-                                }
-
-                                if (left.Selected != right.Selected)
-                                {
-                                    return right.Selected.CompareTo(left.Selected);
-                                }
-
-                                return left.Name.CompareTo(right.Name);
+                                return leftTypeRank.CompareTo(rightTypeRank);
                             });
 
                         foreach (var gitRef in gitRefs.Where(head => (!head.IsRemote || AppSettings.ShowRemoteBranches)))
@@ -1997,6 +1989,38 @@ namespace GitUI
                     var text = (string)e.FormattedValue;
                     DrawColumnText(e, text, rowFont, foreColor);
                 }
+            }
+
+            return;
+
+            int RefTypeRank(IGitRef gitRef)
+            {
+                if (gitRef.IsBisect)
+                {
+                    return 0;
+                }
+
+                if (gitRef.Selected)
+                {
+                    return 1;
+                }
+
+                if (gitRef.SelectedHeadMergeSource)
+                {
+                    return 2;
+                }
+
+                if (gitRef.IsHead)
+                {
+                    return 3;
+                }
+
+                if (gitRef.IsRemote)
+                {
+                    return 4;
+                }
+
+                return 5;
             }
         }
 
