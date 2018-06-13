@@ -640,7 +640,14 @@ namespace GitUI.Editor
         {
             try
             {
-                using (Stream stream = File.OpenRead(_fullPathResolver.Resolve(fileName)))
+                var path = _fullPathResolver.Resolve(fileName);
+
+                if (!File.Exists(path))
+                {
+                    return null;
+                }
+
+                using (Stream stream = File.OpenRead(path))
                 {
                     return CreateImage(fileName, stream);
                 }
