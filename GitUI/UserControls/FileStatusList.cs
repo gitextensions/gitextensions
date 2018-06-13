@@ -27,19 +27,22 @@ namespace GitUI
 
     public sealed partial class FileStatusList : GitModuleControl
     {
+        private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
+
+        private static ImageList _images;
+
         private readonly TranslationString _diffWithParent = new TranslationString("Diff with:");
         public readonly TranslationString CombinedDiff = new TranslationString("Combined Diff");
 
-        private IDisposable _selectedIndexChangeSubscription;
-        private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
-
-        private bool _filterVisible;
-        private ToolStripItem _openSubmoduleMenuItem;
-        private bool _alwaysRevisionGroups = false;
-
         private readonly IGitRevisionTester _revisionTester;
         private readonly IFullPathResolver _fullPathResolver;
-        public DescribeRevisionDelegate DescribeRevision;
+
+        private bool _filterVisible;
+        private bool _alwaysRevisionGroups;
+        private ToolStripItem _openSubmoduleMenuItem;
+        private IDisposable _selectedIndexChangeSubscription;
+
+        public DescribeRevisionDelegate DescribeRevision { get; set; }
 
         public FileStatusList()
         {
@@ -134,8 +137,6 @@ namespace GitUI
                     .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
             }
         }
-
-        private static ImageList _images;
 
         public void SetNoFilesText(string text)
         {
