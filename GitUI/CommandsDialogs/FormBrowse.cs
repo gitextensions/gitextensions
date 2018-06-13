@@ -2078,16 +2078,6 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private void toggleSplitViewLayout_Click(object sender, EventArgs e)
-        {
-            EnabledSplitViewLayout(RightSplitContainer.Panel2Collapsed);
-        }
-
-        private void EnabledSplitViewLayout(bool enabled)
-        {
-            RightSplitContainer.Panel2Collapsed = !enabled;
-        }
-
         public static void OpenContainingFolder(FileStatusList diffFiles, GitModule module)
         {
             if (!diffFiles.SelectedItems.Any())
@@ -2114,7 +2104,7 @@ namespace GitUI.CommandsDialogs
             // hide status in order to restore splitters against the full height (the most common case)
             statusStrip.Hide();
             _splitterManager.RestoreSplitters();
-            RefreshBranchTreeToggleButtonState();
+            RefreshLayoutToggleButtonStates();
         }
 
         protected void SaveSplitterPositions()
@@ -2927,17 +2917,33 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        #region Layout management
+
+        private void toggleSplitViewLayout_Click(object sender, EventArgs e)
+        {
+            EnabledSplitViewLayout(RightSplitContainer.Panel2Collapsed);
+        }
+
+        private void EnabledSplitViewLayout(bool enabled)
+        {
+            RightSplitContainer.Panel2Collapsed = !enabled;
+            RefreshLayoutToggleButtonStates();
+        }
+
         private void toggleBranchTreePanel_Click(object sender, EventArgs e)
         {
             MainSplitContainer.Panel1Collapsed = !MainSplitContainer.Panel1Collapsed;
             ReloadRepoObjectsTree();
-            RefreshBranchTreeToggleButtonState();
+            RefreshLayoutToggleButtonStates();
         }
 
-        private void RefreshBranchTreeToggleButtonState()
+        private void RefreshLayoutToggleButtonStates()
         {
             toggleBranchTreePanel.Checked = !MainSplitContainer.Panel1Collapsed;
+            toggleSplitViewLayout.Checked = !RightSplitContainer.Panel2Collapsed;
         }
+
+        #endregion
 
         private void manageWorktreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
