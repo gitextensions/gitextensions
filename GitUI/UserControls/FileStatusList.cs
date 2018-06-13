@@ -14,6 +14,7 @@ using GitCommands.Git;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 using GitUI.UserControls;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI
@@ -210,6 +211,7 @@ namespace GitUI
             }
         }
 
+        [CanBeNull]
         private ListViewItem FindPrevItemInGroups(int curIdx, ListViewGroup currentGroup)
         {
             List<ListViewGroup> searchInGroups = new List<ListViewGroup>();
@@ -539,6 +541,7 @@ namespace GitUI
             }
         }
 
+        [CanBeNull]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public GitItemStatus SelectedItem
@@ -580,6 +583,7 @@ namespace GitUI
             }
         }
 
+        [CanBeNull]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public GitRevision SelectedItemParent => SelectedItemParents.FirstOrDefault();
@@ -838,6 +842,7 @@ namespace GitUI
         }
 
         private IGitItemsWithParents _itemsDictionary = new GitItemsWithParents();
+
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public IGitItemsWithParents GitItemStatusesWithParents
