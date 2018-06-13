@@ -301,7 +301,7 @@
             // settingsButton
             // 
             this.settingsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.settingsButton.Image = global::GitUI.Properties.Resources.Settings;
+            this.settingsButton.Image = global::GitUI.Properties.Resources.IconSettings;
             this.settingsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.settingsButton.Name = "settingsButton";
             this.settingsButton.Size = new System.Drawing.Size(23, 20);
