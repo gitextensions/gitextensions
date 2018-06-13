@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
+using GitUI.Properties;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -90,7 +91,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "GotoCurrentRevision",
                     Text = "Go to current revision",
-                    Image = Properties.Resources.IconGotoCurrentRevision,
+                    Image = Resources.IconGotoCurrentRevision,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.SelectCurrentRevision),
                     ExecuteAction = SelectCurrentRevisionExecute
                 },
@@ -98,7 +99,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "GotoCommit",
                     Text = "Go to commit...",
-                    Image = Properties.Resources.IconGotoCommit,
+                    Image = Resources.IconGotoCommit,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.GoToCommit),
                     ExecuteAction = GotoCommitExcecute
                 },
@@ -107,6 +108,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "GotoChildCommit",
                     Text = "Go to child commit",
+                    Image = Resources.IconGoToChildCommit,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.GoToChild),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Commands.GoToChild)
                 },
@@ -114,6 +116,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "GotoParentCommit",
                     Text = "Go to parent commit",
+                    Image = Resources.IconGoToParentCommit,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.GoToParent),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Commands.GoToParent)
                 },
@@ -122,6 +125,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "NavigateBackward",
                     Text = "Navigate backward",
+                    Image = Resources.IconNavigateBackward,
                     ShortcutKeyDisplayString = (Keys.Alt | Keys.Left).ToShortcutKeyDisplayString(),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Commands.NavigateBackward)
                 },
@@ -129,6 +133,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "NavigateForward",
                     Text = "Navigate forward",
+                    Image = Resources.IconNavigateForward,
                     ShortcutKeyDisplayString = (Keys.Alt | Keys.Right).ToShortcutKeyDisplayString(),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Commands.NavigateForward)
                 },
@@ -348,7 +353,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "filterToolStripMenuItem",
                     Text = "Set advanced filter",
-                    Image = Properties.Resources.IconFilter,
+                    Image = Properties.Resources.IconEditFilter,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.RevisionFilter),
                     ExecuteAction = () => _revisionGrid.ShowRevisionFilterDialog()
                 },
@@ -356,7 +361,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "ToggleBranchTreePanel",
                     Text = "Toggle left panel",
-                    Image = Properties.MsVsImages.Branch_16x,
+                    Image = Properties.Resources.IconLayoutSidebar,
                     ExecuteAction = () => _revisionGrid.OnToggleBranchTreePanelRequested()
                 }
             };

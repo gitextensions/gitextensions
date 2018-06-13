@@ -327,7 +327,7 @@ namespace GitUI
             // 
             // checkoutRevisionToolStripMenuItem
             // 
-            this.checkoutRevisionToolStripMenuItem.Image = global::GitUI.Properties.Resources.RevisionCheckout;
+            this.checkoutRevisionToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCheckout;
             this.checkoutRevisionToolStripMenuItem.Name = "checkoutRevisionToolStripMenuItem";
             this.checkoutRevisionToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.checkoutRevisionToolStripMenuItem.Text = "Checkout revision";

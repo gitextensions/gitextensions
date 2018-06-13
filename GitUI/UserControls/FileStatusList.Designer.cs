@@ -83,6 +83,7 @@ namespace GitUI
             // FilterComboBox
             // 
             this.FilterComboBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.FilterComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.FilterComboBox.FormattingEnabled = true;
             this.FilterComboBox.Location = new System.Drawing.Point(0, 0);
             this.FilterComboBox.Name = "FilterComboBox";

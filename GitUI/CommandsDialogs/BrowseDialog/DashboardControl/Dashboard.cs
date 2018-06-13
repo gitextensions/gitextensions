@@ -106,9 +106,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                             panel.Controls.Add(lblContribute);
                             lblContribute.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
 
-                            CreateLink(panel, _develop.Text, Resources.develop.ToBitmap(), GitHubItem_Click);
-                            CreateLink(panel, _donate.Text, Resources.dollar.ToBitmap(), DonateItem_Click);
-                            CreateLink(panel, _translate.Text, Resources.EditItem, TranslateItem_Click);
+                            CreateLink(panel, _develop.Text, Resources.IconDevelop, GitHubItem_Click);
+                            CreateLink(panel, _donate.Text, Resources.IconDonate, DonateItem_Click);
+                            CreateLink(panel, _translate.Text, Resources.IconTranslate, TranslateItem_Click);
                             var lastControl = CreateLink(panel, _issues.Text, Resources.bug, IssuesItem_Click);
                             return lastControl;
                         },

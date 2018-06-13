@@ -55,28 +55,30 @@ namespace GitUI
             FileStatusListView.MouseMove += FileStatusListView_MouseMove;
             FileStatusListView.MouseDown += FileStatusListView_MouseDown;
 
+            const int rowHeight = 18;
+
             if (_images == null)
             {
                 _images = new ImageList
                 {
-                    ImageSize = DpiUtil.Scale(new Size(16, 16)), // Scale ImageSize and images scale automatically
+                    ImageSize = DpiUtil.Scale(new Size(16, rowHeight)), // Scale ImageSize and images scale automatically
                     Images =
                     {
-                        Resources.Removed, // 0
-                        Resources.Added, // 1
-                        Resources.Modified, // 2
-                        Resources.Renamed, // 3
-                        Resources.Copied, // 4
-                        Resources.IconSubmoduleDirty, // 5
-                        Resources.IconSubmoduleRevisionUp, // 6
-                        Resources.IconSubmoduleRevisionUpDirty, // 7
-                        Resources.IconSubmoduleRevisionDown, // 8
-                        Resources.IconSubmoduleRevisionDownDirty, // 9
-                        Resources.IconSubmoduleRevisionSemiUp, // 10
-                        Resources.IconSubmoduleRevisionSemiUpDirty, // 11
-                        Resources.IconSubmoduleRevisionSemiDown, // 12
-                        Resources.IconSubmoduleRevisionSemiDownDirty, // 13
-                        Resources.IconFileStatusUnknown // 14
+                        ScaleHeight(Resources.IconFileStatusRemoved), // 0
+                        ScaleHeight(Resources.IconFileStatusAdded), // 1
+                        ScaleHeight(Resources.IconFileStatusModified), // 2
+                        ScaleHeight(Resources.IconFileStatusRenamed), // 3
+                        ScaleHeight(Resources.IconFileStatusCopied), // 4
+                        ScaleHeight(Resources.IconSubmoduleDirty), // 5
+                        ScaleHeight(Resources.IconSubmoduleRevisionUp), // 6
+                        ScaleHeight(Resources.IconSubmoduleRevisionUpDirty), // 7
+                        ScaleHeight(Resources.IconSubmoduleRevisionDown), // 8
+                        ScaleHeight(Resources.IconSubmoduleRevisionDownDirty), // 9
+                        ScaleHeight(Resources.IconSubmoduleRevisionSemiUp), // 10
+                        ScaleHeight(Resources.IconSubmoduleRevisionSemiUpDirty), // 11
+                        ScaleHeight(Resources.IconSubmoduleRevisionSemiDown), // 12
+                        ScaleHeight(Resources.IconSubmoduleRevisionSemiDownDirty), // 13
+                        ScaleHeight(Resources.IconFileStatusUnknown) // 14
                     }
                 };
             }
@@ -91,6 +93,18 @@ namespace GitUI
             _filter = new Regex(".*");
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _revisionTester = new GitRevisionTester(_fullPathResolver);
+
+            Bitmap ScaleHeight(Bitmap input)
+            {
+                Debug.Assert(input.Height < rowHeight, "Can only increase row height");
+                var scaled = new Bitmap(input.Width, rowHeight, input.PixelFormat);
+                using (var g = Graphics.FromImage(scaled))
+                {
+                    g.DrawImageUnscaled(input, 0, (rowHeight - input.Height) / 2);
+                }
+
+                return scaled;
+            }
         }
 
         public bool AlwaysRevisionGroups

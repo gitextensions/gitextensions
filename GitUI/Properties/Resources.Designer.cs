@@ -22,7 +22,7 @@ namespace GitUI.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal partial class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -57,36 +57,6 @@ namespace GitUI.Properties {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Added {
-            get {
-                object obj = ResourceManager.GetObject("Added", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap arrow_refresh {
-            get {
-                object obj = ResourceManager.GetObject("arrow_refresh", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap arrow_refresh_dirty {
-            get {
-                object obj = ResourceManager.GetObject("arrow_refresh_dirty", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -136,6 +106,16 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap bggrey {
             get {
                 object obj = ResourceManager.GetObject("bggrey", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap branch {
+            get {
+                object obj = ResourceManager.GetObject("branch", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -258,16 +238,6 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Copied {
-            get {
-                object obj = ResourceManager.GetObject("Copied", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Cow {
             get {
                 object obj = ResourceManager.GetObject("Cow", resourceCulture);
@@ -307,16 +277,6 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap decrease {
-            get {
-                object obj = ResourceManager.GetObject("decrease", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Delete {
             get {
                 object obj = ResourceManager.GetObject("Delete", resourceCulture);
@@ -330,26 +290,6 @@ namespace GitUI.Properties {
         internal static string Designers {
             get {
                 return ResourceManager.GetString("Designers", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon develop {
-            get {
-                object obj = ResourceManager.GetObject("develop", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon dollar {
-            get {
-                object obj = ResourceManager.GetObject("dollar", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
             }
         }
         
@@ -386,9 +326,9 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap EditItem {
+        internal static System.Drawing.Bitmap edit_diff {
             get {
-                object obj = ResourceManager.GetObject("EditItem", resourceCulture);
+                object obj = ResourceManager.GetObject("edit_diff", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -426,9 +366,9 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Folder {
+        internal static System.Drawing.Bitmap FileNew {
             get {
-                object obj = ResourceManager.GetObject("Folder", resourceCulture);
+                object obj = ResourceManager.GetObject("FileNew", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -576,16 +516,6 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap history {
-            get {
-                object obj = ResourceManager.GetObject("history", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap IconAddToGitIgnore {
             get {
                 object obj = ResourceManager.GetObject("IconAddToGitIgnore", resourceCulture);
@@ -686,6 +616,36 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap IconChangelog {
+            get {
+                object obj = ResourceManager.GetObject("IconChangelog", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconCheckForUpdates {
+            get {
+                object obj = ResourceManager.GetObject("IconCheckForUpdates", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconCheckout {
+            get {
+                object obj = ResourceManager.GetObject("IconCheckout", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IconCherryPick {
             get {
                 object obj = ResourceManager.GetObject("IconCherryPick", resourceCulture);
@@ -736,9 +696,9 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap IconCommit {
+        internal static System.Drawing.Bitmap IconCommitSummary {
             get {
-                object obj = ResourceManager.GetObject("IconCommit", resourceCulture);
+                object obj = ResourceManager.GetObject("IconCommitSummary", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -769,6 +729,16 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap IconDeleteRemote {
             get {
                 object obj = ResourceManager.GetObject("IconDeleteRemote", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconDevelop {
+            get {
+                object obj = ResourceManager.GetObject("IconDevelop", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -816,9 +786,29 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap IconDonate {
+            get {
+                object obj = ResourceManager.GetObject("IconDonate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IconEditFile {
             get {
                 object obj = ResourceManager.GetObject("IconEditFile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconEditFilter {
+            get {
+                object obj = ResourceManager.GetObject("IconEditFilter", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -836,9 +826,69 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap IconFile {
+            get {
+                object obj = ResourceManager.GetObject("IconFile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IconFileHistory {
             get {
                 object obj = ResourceManager.GetObject("IconFileHistory", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconFileStatusAdded {
+            get {
+                object obj = ResourceManager.GetObject("IconFileStatusAdded", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconFileStatusCopied {
+            get {
+                object obj = ResourceManager.GetObject("IconFileStatusCopied", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconFileStatusModified {
+            get {
+                object obj = ResourceManager.GetObject("IconFileStatusModified", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconFileStatusRemoved {
+            get {
+                object obj = ResourceManager.GetObject("IconFileStatusRemoved", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconFileStatusRenamed {
+            get {
+                object obj = ResourceManager.GetObject("IconFileStatusRenamed", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -866,9 +916,9 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap IconFilter {
+        internal static System.Drawing.Bitmap IconFolderClosed {
             get {
-                object obj = ResourceManager.GetObject("IconFilter", resourceCulture);
+                object obj = ResourceManager.GetObject("IconFolderClosed", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -876,9 +926,9 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap IconFind {
+        internal static System.Drawing.Bitmap IconFolderOpen {
             get {
-                object obj = ResourceManager.GetObject("IconFind", resourceCulture);
+                object obj = ResourceManager.GetObject("IconFolderOpen", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -889,6 +939,36 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap IconFolderSubmodule {
             get {
                 object obj = ResourceManager.GetObject("IconFolderSubmodule", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconGitCommandLog {
+            get {
+                object obj = ResourceManager.GetObject("IconGitCommandLog", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconGitHub {
+            get {
+                object obj = ResourceManager.GetObject("IconGitHub", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconGoToChildCommit {
+            get {
+                object obj = ResourceManager.GetObject("IconGoToChildCommit", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -926,9 +1006,49 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap IconGoToParentCommit {
+            get {
+                object obj = ResourceManager.GetObject("IconGoToParentCommit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconInfo {
+            get {
+                object obj = ResourceManager.GetObject("IconInfo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IconKey {
             get {
                 object obj = ResourceManager.GetObject("IconKey", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconLayoutFooter {
+            get {
+                object obj = ResourceManager.GetObject("IconLayoutFooter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconLayoutSidebar {
+            get {
+                object obj = ResourceManager.GetObject("IconLayoutSidebar", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -959,6 +1079,46 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap IconMixed {
             get {
                 object obj = ResourceManager.GetObject("IconMixed", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconNavigateBackward {
+            get {
+                object obj = ResourceManager.GetObject("IconNavigateBackward", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconNavigateForward {
+            get {
+                object obj = ResourceManager.GetObject("IconNavigateForward", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconNumberOfLinesDecrease {
+            get {
+                object obj = ResourceManager.GetObject("IconNumberOfLinesDecrease", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconNumberOfLinesIncrease {
+            get {
+                object obj = ResourceManager.GetObject("IconNumberOfLinesIncrease", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1016,6 +1176,36 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap IconReloadRevisions {
+            get {
+                object obj = ResourceManager.GetObject("IconReloadRevisions", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconReloadRevisionsDirty {
+            get {
+                object obj = ResourceManager.GetObject("IconReloadRevisionsDirty", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconRemote {
+            get {
+                object obj = ResourceManager.GetObject("IconRemote", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IconRemotes {
             get {
                 object obj = ResourceManager.GetObject("IconRemotes", resourceCulture);
@@ -1039,6 +1229,16 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap IconRepoOpen {
             get {
                 object obj = ResourceManager.GetObject("IconRepoOpen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconReportBug {
+            get {
+                object obj = ResourceManager.GetObject("IconReportBug", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1146,9 +1346,29 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap IconShowEntireFile {
+            get {
+                object obj = ResourceManager.GetObject("IconShowEntireFile", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap IconShowFirstParent {
             get {
                 object obj = ResourceManager.GetObject("IconShowFirstParent", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconShowThisBranchOnly {
+            get {
+                object obj = ResourceManager.GetObject("IconShowThisBranchOnly", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1189,6 +1409,36 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap IconStaged {
             get {
                 object obj = ResourceManager.GetObject("IconStaged", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconStar {
+            get {
+                object obj = ResourceManager.GetObject("IconStar", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconStarDeselected {
+            get {
+                object obj = ResourceManager.GetObject("IconStarDeselected", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconStopTrackingFile {
+            get {
+                object obj = ResourceManager.GetObject("IconStopTrackingFile", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1316,26 +1566,6 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap IconTag1 {
-            get {
-                object obj = ResourceManager.GetObject("IconTag1", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap IconTag2 {
-            get {
-                object obj = ResourceManager.GetObject("IconTag2", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap IconTagCreate {
             get {
                 object obj = ResourceManager.GetObject("IconTagCreate", resourceCulture);
@@ -1349,6 +1579,46 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap IconTagDelete {
             get {
                 object obj = ResourceManager.GetObject("IconTagDelete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconTranslate {
+            get {
+                object obj = ResourceManager.GetObject("IconTranslate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconTreeCollapseAll {
+            get {
+                object obj = ResourceManager.GetObject("IconTreeCollapseAll", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconTreeExpandAll {
+            get {
+                object obj = ResourceManager.GetObject("IconTreeExpandAll", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap IconTreeExpandSubtree {
+            get {
+                object obj = ResourceManager.GetObject("IconTreeExpandSubtree", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1406,6 +1676,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap IconWorkTree {
+            get {
+                object obj = ResourceManager.GetObject("IconWorkTree", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ignore_all_whitespaces {
             get {
                 object obj = ResourceManager.GetObject("ignore_all_whitespaces", resourceCulture);
@@ -1426,26 +1706,6 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap increase {
-            get {
-                object obj = ResourceManager.GetObject("increase", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Info {
-            get {
-                object obj = ResourceManager.GetObject("Info", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap levelUp {
             get {
                 object obj = ResourceManager.GetObject("levelUp", resourceCulture);
@@ -1456,29 +1716,9 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap loadingpanel_animated {
+        internal static System.Drawing.Bitmap loadingpanel {
             get {
-                object obj = ResourceManager.GetObject("loadingpanel_animated", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap loadingpanel_static {
-            get {
-                object obj = ResourceManager.GetObject("loadingpanel_static", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Modified {
-            get {
-                object obj = ResourceManager.GetObject("Modified", resourceCulture);
+                object obj = ResourceManager.GetObject("loadingpanel", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -1606,16 +1846,6 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Removed {
-            get {
-                object obj = ResourceManager.GetObject("Removed", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Renamed {
             get {
                 object obj = ResourceManager.GetObject("Renamed", resourceCulture);
@@ -1626,69 +1856,9 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap RevisionCheckout {
-            get {
-                object obj = ResourceManager.GetObject("RevisionCheckout", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap rss {
-            get {
-                object obj = ResourceManager.GetObject("rss", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Select {
             get {
                 object obj = ResourceManager.GetObject("Select", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap showEntireFile {
-            get {
-                object obj = ResourceManager.GetObject("showEntireFile", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap SplitViewLayout {
-            get {
-                object obj = ResourceManager.GetObject("SplitViewLayout", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Star {
-            get {
-                object obj = ResourceManager.GetObject("Star", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap StarBw {
-            get {
-                object obj = ResourceManager.GetObject("StarBw", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

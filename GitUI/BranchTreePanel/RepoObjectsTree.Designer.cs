@@ -120,7 +120,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnReload
             // 
-            this.mnubtnReload.Image = global::GitUI.Properties.Resources.arrow_refresh;
+            this.mnubtnReload.Image = global::GitUI.Properties.Resources.IconReloadRevisions;
             this.mnubtnReload.Name = "mnubtnReload";
             this.mnubtnReload.Size = new System.Drawing.Size(136, 22);
             this.mnubtnReload.Text = "Reload";
@@ -181,14 +181,14 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnFilterLocalBranchInRevisionGrid
             // 
-            this.mnubtnFilterLocalBranchInRevisionGrid.Image = global::GitUI.Properties.Resources.IconFilter;
+            this.mnubtnFilterLocalBranchInRevisionGrid.Image = global::GitUI.Properties.Resources.IconShowThisBranchOnly;
             this.mnubtnFilterLocalBranchInRevisionGrid.Name = "mnubtnFilterLocalBranchInRevisionGrid";
             this.mnubtnFilterLocalBranchInRevisionGrid.Size = new System.Drawing.Size(191, 22);
             this.mnubtnFilterLocalBranchInRevisionGrid.Text = "Show this branch only";
             // 
             // mnubtnFilterRemoteBranchInRevisionGrid
             // 
-            this.mnubtnFilterRemoteBranchInRevisionGrid.Image = global::GitUI.Properties.Resources.IconFilter;
+            this.mnubtnFilterRemoteBranchInRevisionGrid.Image = global::GitUI.Properties.Resources.IconShowThisBranchOnly;
             this.mnubtnFilterRemoteBranchInRevisionGrid.Name = "mnubtnFilterRemoteBranchInRevisionGrid";
             this.mnubtnFilterRemoteBranchInRevisionGrid.Size = new System.Drawing.Size(193, 22);
             this.mnubtnFilterRemoteBranchInRevisionGrid.Text = "Show this branch only";
@@ -468,9 +468,9 @@ namespace GitUI.BranchTreePanel
             this.btnSearch.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnSearch.AutoSize = true;
             this.btnSearch.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnSearch.Image = global::GitUI.Properties.Resources.IconFind;
             this.btnSearch.FlatAppearance.BorderSize = 0;
             this.btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearch.Image = global::GitUI.Properties.Resources.IconPreview;
             this.btnSearch.Location = new System.Drawing.Point(248, 0);
             this.btnSearch.Margin = new System.Windows.Forms.Padding(0);
             this.btnSearch.Name = "btnSearch";
@@ -486,9 +486,9 @@ namespace GitUI.BranchTreePanel
             this.btnSettings.AutoSize = true;
             this.btnSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnSettings.ContextMenuStrip = this.menuSettings;
-            this.btnSettings.Image = global::GitUI.Properties.Resources.IconSettings;
             this.btnSettings.FlatAppearance.BorderSize = 0;
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSettings.Image = global::GitUI.Properties.Resources.IconSettings;
             this.btnSettings.Location = new System.Drawing.Point(265, 3);
             this.btnSettings.Margin = new System.Windows.Forms.Padding(0);
             this.btnSettings.Name = "btnSettings";

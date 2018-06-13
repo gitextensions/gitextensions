@@ -427,7 +427,7 @@ namespace GitUI.CommandsDialogs
             // pictureBox1
             // 
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.pictureBox1.BackgroundImage = global::GitUI.Properties.Resources.Info;
+            this.pictureBox1.BackgroundImage = global::GitUI.Properties.Resources.IconInfo;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pictureBox1.Location = new System.Drawing.Point(0, 5);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);

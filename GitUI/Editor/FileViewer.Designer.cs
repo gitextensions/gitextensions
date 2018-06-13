@@ -241,7 +241,7 @@
             // increaseNumberOfLines
             // 
             this.increaseNumberOfLines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.increaseNumberOfLines.Image = global::GitUI.Properties.Resources.increase;
+            this.increaseNumberOfLines.Image = global::GitUI.Properties.Resources.IconNumberOfLinesIncrease;
             this.increaseNumberOfLines.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.increaseNumberOfLines.Name = "increaseNumberOfLines";
             this.increaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
@@ -251,7 +251,7 @@
             // DecreaseNumberOfLines
             // 
             this.DecreaseNumberOfLines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.DecreaseNumberOfLines.Image = global::GitUI.Properties.Resources.decrease;
+            this.DecreaseNumberOfLines.Image = global::GitUI.Properties.Resources.IconNumberOfLinesDecrease;
             this.DecreaseNumberOfLines.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.DecreaseNumberOfLines.Name = "DecreaseNumberOfLines";
             this.DecreaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
@@ -266,7 +266,7 @@
             // showEntireFileButton
             // 
             this.showEntireFileButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.showEntireFileButton.Image = global::GitUI.Properties.Resources.showEntireFile;
+            this.showEntireFileButton.Image = global::GitUI.Properties.Resources.IconShowEntireFile;
             this.showEntireFileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.showEntireFileButton.Name = "showEntireFileButton";
             this.showEntireFileButton.Size = new System.Drawing.Size(23, 20);

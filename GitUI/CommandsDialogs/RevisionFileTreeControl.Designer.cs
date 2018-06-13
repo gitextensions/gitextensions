@@ -271,7 +271,7 @@
             // 
             // stopTrackingThisFileToolStripMenuItem
             // 
-            this.stopTrackingThisFileToolStripMenuItem.Image = global::GitUI.Properties.Resources.Removed;
+            this.stopTrackingThisFileToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconStopTrackingFile;
             this.stopTrackingThisFileToolStripMenuItem.Name = "stopTrackingThisFileToolStripMenuItem";
             this.stopTrackingThisFileToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
             this.stopTrackingThisFileToolStripMenuItem.Text = "Stop tracking this file";
@@ -292,7 +292,7 @@
             // 
             // findToolStripMenuItem
             // 
-            this.findToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFind;
+            this.findToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconPreview;
             this.findToolStripMenuItem.Name = "findToolStripMenuItem";
             this.findToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
             this.findToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
@@ -301,7 +301,7 @@
             // 
             // expandSubtreeToolStripMenuItem
             // 
-            this.expandSubtreeToolStripMenuItem.Image = global::GitUI.Properties.Resources.increase;
+            this.expandSubtreeToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconTreeExpandSubtree;
             this.expandSubtreeToolStripMenuItem.Name = "expandSubtreeToolStripMenuItem";
             this.expandSubtreeToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
             this.expandSubtreeToolStripMenuItem.Text = "Expand subtree (takes a while on large subtrees)";
@@ -309,7 +309,7 @@
             // 
             // expandAllToolStripMenuItem
             // 
-            this.expandAllToolStripMenuItem.Image = global::GitUI.Properties.Resources.increase;
+            this.expandAllToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconTreeExpandAll;
             this.expandAllToolStripMenuItem.Name = "expandAllToolStripMenuItem";
             this.expandAllToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
             this.expandAllToolStripMenuItem.Text = "Expand all (takes a while on large trees)";
@@ -317,7 +317,7 @@
             // 
             // collapseAllToolStripMenuItem
             // 
-            this.collapseAllToolStripMenuItem.Image = global::GitUI.Properties.Resources.decrease;
+            this.collapseAllToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconTreeCollapseAll;
             this.collapseAllToolStripMenuItem.Name = "collapseAllToolStripMenuItem";
             this.collapseAllToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
             this.collapseAllToolStripMenuItem.Text = "Collapse all";
