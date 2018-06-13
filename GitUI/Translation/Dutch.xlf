@@ -2918,7 +2918,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target>Instellingen</target>
         
       </trans-unit>

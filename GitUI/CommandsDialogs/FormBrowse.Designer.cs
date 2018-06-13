@@ -1467,13 +1467,13 @@ namespace GitUI.CommandsDialogs
             // toolStripSeparator15
             // 
             this.toolStripSeparator15.Name = "toolStripSeparator15";
-            this.toolStripSeparator15.Size = new System.Drawing.Size(113, 6);
+            this.toolStripSeparator15.Size = new System.Drawing.Size(177, 6);
             // 
             // pluginSettingsToolStripMenuItem
             // 
             this.pluginSettingsToolStripMenuItem.Name = "pluginSettingsToolStripMenuItem";
-            this.pluginSettingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.pluginSettingsToolStripMenuItem.Text = "Settings";
+            this.pluginSettingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pluginSettingsToolStripMenuItem.Text = "Plugin Settings";
             this.pluginSettingsToolStripMenuItem.Click += new System.EventHandler(this.PluginSettingsToolStripMenuItemClick);
             // 
             // settingsToolStripMenuItem

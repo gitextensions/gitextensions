@@ -2813,7 +2813,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target>설정</target>
         
       </trans-unit>

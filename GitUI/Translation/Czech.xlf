@@ -2879,7 +2879,7 @@ Chcete akci přerušit a odstranit ji ze seznamu repozitářů?</target>
         
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target>Nastavení</target>
         
       </trans-unit>

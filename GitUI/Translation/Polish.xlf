@@ -2885,7 +2885,7 @@ Chcesz przerwać, i usunąć go z listy ostatnich repozytoriów?</target>
         
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target>Ustawienia</target>
         
       </trans-unit>
