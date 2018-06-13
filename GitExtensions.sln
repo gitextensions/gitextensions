@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 15.0.27130.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{3D5CA0E0-EF51-4488-A8B7-86CC330D7AD8}"
 EndProject
@@ -182,6 +182,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{17FD2A
 		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
 		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtUtilsTests", "UnitTests\GitExtUtils\GitExtUtilsTests.csproj", "{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -705,6 +707,18 @@ Global
 		{92615565-CF33-4539-A0E6-610CE0734B8C}.ReleaseTC|Any CPU.Build.0 = Release|Any CPU
 		{92615565-CF33-4539-A0E6-610CE0734B8C}.ReleaseTC|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{92615565-CF33-4539-A0E6-610CE0734B8C}.ReleaseTC|Mixed Platforms.Build.0 = Release|Any CPU
+		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}.ReleaseTC|Any CPU.ActiveCfg = Release|Any CPU
+		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}.ReleaseTC|Any CPU.Build.0 = Release|Any CPU
+		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}.ReleaseTC|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF}.ReleaseTC|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -749,6 +763,7 @@ Global
 		{92615565-CF33-4539-A0E6-610CE0734B8C} = {F1B97F5D-CA42-4280-94A1-CE412BEA20DF}
 		{472B72D9-9336-4C8B-A199-300F0CA7669E} = {C5855184-8571-4AD0-A373-B98215BA56CA}
 		{17FD2A6B-4005-41DC-BFAC-59F936DF33AA} = {C5855184-8571-4AD0-A373-B98215BA56CA}
+		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}

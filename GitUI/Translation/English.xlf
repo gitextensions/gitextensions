@@ -7095,10 +7095,10 @@ global settings.
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitExtensionsSettingsPage" source-language="en">
+  <file datatype="plaintext" original="GeneralSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Extensions</source>
+        <source>General</source>
         <target />
       </trans-unit>
       <trans-unit id="btnDefaultDestinationBrowse.Text">

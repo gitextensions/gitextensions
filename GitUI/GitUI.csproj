@@ -219,6 +219,12 @@
     <Compile Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.Designer.cs">
       <DependentUpon>FormAvailableEncodings.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\AppearanceFontsSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\AppearanceFontsSettingsPage.Designer.cs">
+      <DependentUpon>AppearanceFontsSettingsPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\DiffViewerSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -364,7 +370,6 @@
     <Compile Include="UserControls\BranchSelector.Designer.cs">
       <DependentUpon>BranchSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\ComboBoxHelper.cs" />
     <Compile Include="UserControls\CommitDiff.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -724,11 +729,11 @@
       <DependentUpon>ConfirmationsSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\SettingsGroupPages.cs" />
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitExtensionsSettingsPage.cs">
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GeneralSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitExtensionsSettingsPage.Designer.cs">
-      <DependentUpon>GitExtensionsSettingsPage.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\SettingsDialog\Pages\GeneralSettingsPage.Designer.cs">
+      <DependentUpon>GeneralSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitSettingsPage.cs">
       <SubType>UserControl</SubType>
@@ -1177,6 +1182,9 @@
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.resx">
       <DependentUpon>FormAvailableEncodings.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\AppearanceFontsSettingsPage.resx">
+      <DependentUpon>AppearanceFontsSettingsPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\DiffViewerSettingsPage.resx">
       <DependentUpon>DiffViewerSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
@@ -1377,8 +1385,8 @@
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ConfirmationsSettingsPage.resx">
       <DependentUpon>ConfirmationsSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GitExtensionsSettingsPage.resx">
-      <DependentUpon>GitExtensionsSettingsPage.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GeneralSettingsPage.resx">
+      <DependentUpon>GeneralSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GitSettingsPage.resx">
       <DependentUpon>GitSettingsPage.cs</DependentUpon>

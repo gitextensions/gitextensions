@@ -1,5 +1,18 @@
 ﻿namespace GitUI.CommandsDialogs.SettingsDialog
 {
+    public class GitSettingsGroup : GroupSettingsPage
+    {
+        public GitSettingsGroup()
+            : base("Git")
+        {
+        }
+
+        public static SettingsPageReference GetPageReference()
+        {
+            return new SettingsPageReferenceByType(typeof(GitSettingsGroup));
+        }
+    }
+
     public class GitExtensionsSettingsGroup : GroupSettingsPage
     {
         public GitExtensionsSettingsGroup()

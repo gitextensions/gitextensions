@@ -13,7 +13,6 @@ using GitCommands.Remote;
 using GitCommands.UserRepositoryHistory;
 using GitUI.Properties;
 using GitUI.Script;
-using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -166,7 +165,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.DataSource = new[] { new GitRemote { Name = AllRemotes } }.Union(remotes).ToList();
             _NO_TRANSLATE_Remotes.DisplayMember = nameof(GitRemote.Name);
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
-            _NO_TRANSLATE_Remotes.ResizeComboBoxDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            _NO_TRANSLATE_Remotes.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
             if (selectedRemoteName.IsNullOrEmpty())
             {
@@ -269,7 +268,7 @@ namespace GitUI.CommandsDialogs
                 _heads.Insert(0, GitRef.NoHead(Module));
                 Branches.DataSource = _heads;
 
-                ComboBoxHelper.ResizeComboBoxDropDownWidth(Branches, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+                Branches.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
             }
         }
 
