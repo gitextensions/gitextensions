@@ -268,7 +268,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             // 
             // mnuConfigure
             // 
-            this.mnuConfigure.Image = global::GitUI.Properties.Resources.Settings;
+            this.mnuConfigure.Image = global::GitUI.Properties.Resources.IconSettings;
             this.mnuConfigure.Name = "mnuConfigure";
             this.mnuConfigure.Size = new System.Drawing.Size(218, 22);
             this.mnuConfigure.Text = "&Recent repositories settings";

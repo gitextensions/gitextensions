@@ -481,7 +481,7 @@ namespace GitUI.BranchTreePanel
             this.btnSettings.AutoSize = true;
             this.btnSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnSettings.ContextMenuStrip = this.menuSettings;
-            this.btnSettings.Image = global::GitUI.Properties.Resources.Settings;
+            this.btnSettings.Image = global::GitUI.Properties.Resources.IconSettings;
             this.btnSettings.Location = new System.Drawing.Point(265, 3);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Padding = new System.Windows.Forms.Padding(2);
