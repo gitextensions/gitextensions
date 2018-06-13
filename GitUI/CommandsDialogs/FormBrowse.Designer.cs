@@ -1472,6 +1472,7 @@ namespace GitUI.CommandsDialogs
             // 
             // pluginSettingsToolStripMenuItem
             // 
+            this.pluginSettingsToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconSettingsTools;
             this.pluginSettingsToolStripMenuItem.Name = "pluginSettingsToolStripMenuItem";
             this.pluginSettingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.pluginSettingsToolStripMenuItem.Text = "Plugin Settings";
