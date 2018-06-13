@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using GitUIPluginInterfaces;
 using Gravatar;
 using ResourceManager;
 
@@ -37,6 +38,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             tlpnlLanguage.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblLanguage, lblSpellingDictionary);
 
             // align 2nd columns across all tables
+            cbBranchOrderingCriteria.AdjustWidthToFitContent();
             truncatePathMethod.AdjustWidthToFitContent();
             Language.AdjustWidthToFitContent();
             tlpnlGeneral.AdjustWidthToSize(1, truncatePathMethod, NoImageService, Language);
@@ -94,6 +96,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Language.Text = AppSettings.Translation;
 
             truncatePathMethod.SelectedIndex = GetTruncatePathMethodIndex(AppSettings.TruncatePathMethod);
+            cbBranchOrderingCriteria.SelectedIndex = (int)AppSettings.BranchOrderingCriteria;
 
             Dictionary.Items.Clear();
             Dictionary.Items.Add(_noDictFile.Text);
@@ -135,6 +138,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RelativeDate = chkShowRelativeDate.Checked;
 
             AppSettings.Dictionary = Dictionary.SelectedIndex == 0 ? "none" : Dictionary.Text;
+            AppSettings.BranchOrderingCriteria = (GitRefsOrder)cbBranchOrderingCriteria.SelectedIndex;
         }
 
         private void Dictionary_DropDown(object sender, EventArgs e)
