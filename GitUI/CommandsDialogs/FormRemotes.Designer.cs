@@ -201,7 +201,7 @@ namespace GitUI.CommandsDialogs
             // SshBrowse
             // 
             this.SshBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SshBrowse.Image = global::GitUI.Properties.Resources.New;
+            this.SshBrowse.Image = global::GitUI.Properties.Resources.FileNew;
             this.SshBrowse.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SshBrowse.Location = new System.Drawing.Point(363, 3);
             this.SshBrowse.MinimumSize = new System.Drawing.Size(104, 0);

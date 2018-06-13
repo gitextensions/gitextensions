@@ -70,7 +70,7 @@
             // 
             // refreshToolStripMenuItem
             // 
-            this.refreshToolStripMenuItem.Image = global::GitUI.Properties.Resources.arrow_refresh;
+            this.refreshToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconReloadRevisions;
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.refreshToolStripMenuItem.Text = "Refresh image";

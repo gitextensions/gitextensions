@@ -459,7 +459,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (!string.IsNullOrWhiteSpace((e.Item.Tag as Repository)?.Category))
             {
                 var pointImage1 = new PointF(pointImage.X + imageList1.ImageSize.Width - 12, e.Bounds.Top + spacing2);
-                e.Graphics.DrawImage(Resources.Star, pointImage1.X, pointImage1.Y, 16, 16);
+                e.Graphics.DrawImage(Resources.IconStar, pointImage1.X, pointImage1.Y, 16, 16);
             }
 
             // render icon

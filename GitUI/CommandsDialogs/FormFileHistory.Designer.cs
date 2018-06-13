@@ -411,7 +411,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSplitLoad.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.loadHistoryOnShowToolStripMenuItem,
             this.loadBlameOnShowToolStripMenuItem});
-            this.toolStripSplitLoad.Image = global::GitUI.Properties.Resources.arrow_refresh;
+            this.toolStripSplitLoad.Image = global::GitUI.Properties.Resources.IconReloadRevisions;
             this.toolStripSplitLoad.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitLoad.Name = "toolStripSplitLoad";
             this.toolStripSplitLoad.Size = new System.Drawing.Size(32, 22);

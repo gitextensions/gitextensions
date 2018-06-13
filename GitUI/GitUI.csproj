@@ -278,6 +278,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MsVsImages.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="RevisionDiffInfoProvider.cs" />
     <Compile Include="RevisionDiffKind.cs" />
     <Compile Include="FormStatusOutputLog.cs" />
@@ -342,11 +347,6 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Script\PowerShellHelper.cs" />
     <Compile Include="Script\ScriptRunner.cs" />
     <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
@@ -707,9 +707,6 @@
     <Compile Include="Plugin\PluginRegistry.cs" />
     <Compile Include="ProcessOutputTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Custom.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Script\ScriptInfo.cs" />
     <Compile Include="Script\ScriptManager.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\CheckSettingsLogic.cs" />
@@ -1711,41 +1708,26 @@
     <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitRevision.datasource" />
     <None Include="Resources\Icons\3.png" />
-    <None Include="Resources\Icons\33.png" />
-    <None Include="Resources\Icons\35.png" />
     <None Include="Resources\Icons\4.png" />
-    <None Include="Resources\Icons\40.png" />
     <None Include="Resources\Icons\50.png" />
     <None Include="Resources\Icons\7.png" />
     <None Include="Resources\Icons\71.png" />
-    <None Include="Resources\Icons\77.png" />
-    <None Include="Resources\Icons\82.png" />
-    <None Include="Resources\Icons\Added.png" />
-    <None Include="Resources\Icons\arrow_refresh.png" />
-    <None Include="Resources\Icons\arrow_refresh_dirty.png" />
     <None Include="Resources\Icons\bash.png" />
     <None Include="Resources\Icons\BranchCheckout.png" />
     <None Include="Resources\Icons\BranchCreate.png" />
     <None Include="Resources\Icons\BranchDelete.png" />
     <None Include="Resources\Icons\bug.png" />
-    <None Include="Resources\Icons\Copied.png" />
     <None Include="Resources\Icons\Cow.png" />
     <None Include="Resources\Icons\Cow_sunglass.png" />
     <None Include="Resources\Icons\Cow_xmass.png" />
     <None Include="Resources\Icons\Delete.png" />
-    <None Include="Resources\Icons\develop.ico" />
-    <None Include="Resources\Icons\dollar.ico" />
     <None Include="Resources\Icons\Donate.jpg" />
     <None Include="Resources\Icons\double_arrow_down.png" />
     <None Include="Resources\Icons\double_arrow_up.png" />
-    <None Include="Resources\Icons\edit_clear_2_16.png" />
     <None Include="Resources\Icons\error.png" />
-    <None Include="Resources\Icons\folder_remote_2_16.png" />
     <None Include="Resources\Icons\HelpCommandMergeFastForward.png" />
     <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
-    <None Include="Resources\Icons\history.png" />
     <None Include="Resources\Icons\IconAddToGitIgnore.png" />
-    <None Include="Resources\Icons\IconBlame.png" />
     <None Include="Resources\Icons\IconBlank.png" />
     <None Include="Resources\Icons\IconCherryPick.png" />
     <None Include="Resources\Icons\IconClean.png" />
@@ -1753,20 +1735,13 @@
     <None Include="Resources\Icons\IconCloneRepoGithub.png" />
     <None Include="Resources\Icons\IconCommit.png" />
     <None Include="Resources\Icons\IconCopyToClipboard.png" />
-    <None Include="Resources\Icons\IconDiff.png" />
-    <None Include="Resources\Icons\IconDiffTool.png" />
     <None Include="Resources\Icons\IconDirty.png" />
     <None Include="Resources\Icons\IconDirtySubmodules.png" />
     <None Include="Resources\Icons\IconEditFile.png" />
     <None Include="Resources\Icons\IconEditGitIgnore.png" />
-    <None Include="Resources\Icons\IconFileHistory.png" />
-    <None Include="Resources\Icons\IconFileStatusUnknown.png" />
     <None Include="Resources\Icons\IconFileTree.png" />
-    <None Include="Resources\Icons\IconFilter.png" />
-    <None Include="Resources\Icons\IconFind.png" />
     <None Include="Resources\Icons\IconGotoCommit.png" />
     <None Include="Resources\Icons\IconGotoCurrentRevision.png" />
-    <None Include="Resources\Icons\IconGotoManual.png" />
     <None Include="Resources\Icons\IconMixed.png" />
     <None Include="Resources\Icons\IconPreview.png" />
     <None Include="Resources\Icons\IconRecoverLostObjects.png" />
@@ -1797,12 +1772,7 @@
     <None Include="Resources\Icons\IconSubmodulesUpdate.png" />
     <None Include="Resources\Icons\IconUnstage.png" />
     <None Include="Resources\Icons\IconUnstageAll.png" />
-    <None Include="Resources\Icons\IconViewFile.png" />
-    <None Include="Resources\Icons\IconWarning.png" />
     <None Include="Resources\Icons\loadingpanel.gif" />
-    <None Include="Resources\Icons\loadingpanel_static.png" />
-    <None Include="Resources\Icons\Modified.png" />
-    <None Include="Resources\Icons\nonprintchar.png" />
     <None Include="Resources\Icons\pageant.png" />
     <None Include="Resources\Icons\pageant_16.png" />
     <None Include="Resources\Icons\PullFetch.png" />
@@ -1811,19 +1781,11 @@
     <None Include="Resources\Icons\PullRebase.png" />
     <None Include="Resources\Icons\putty.png" />
     <None Include="Resources\Icons\puttygen.png" />
-    <None Include="Resources\Icons\RecentRepositories.png" />
-    <None Include="Resources\Icons\Removed.png" />
     <None Include="Resources\Icons\Renamed.png" />
-    <None Include="Resources\Icons\RevisionCheckout.png" />
-    <None Include="Resources\Icons\rss.png" />
-    <None Include="Resources\Icons\showEntireFile.png" />
-    <None Include="Resources\Icons\SplitViewLayout.png" />
     <None Include="Resources\Icons\stash.png" />
     <None Include="Resources\Icons\statistic.png" />
     <None Include="Resources\Icons\StatusHourglass.png" />
     <None Include="Resources\Icons\success.png" />
-    <None Include="Resources\Icons\TagCreate.png" />
-    <None Include="Resources\Icons\TagDelete.png" />
     <None Include="Resources\Icons\User.PNG" />
     <None Include="Translation\Czech.Plugins.xlf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -1925,11 +1887,24 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Icons\application-footer.png" />
+    <Content Include="Resources\Icons\application-sidebar.png" />
+    <Content Include="Resources\Icons\arrow-090.png" />
+    <Content Include="Resources\Icons\arrow-180.png" />
+    <Content Include="Resources\Icons\arrow-270.png" />
+    <Content Include="Resources\Icons\arrow-circle-double-green.png" />
+    <Content Include="Resources\Icons\arrow-circle-double-red.png" />
+    <Content Include="Resources\Icons\arrow.png" />
+    <Content Include="Resources\Icons\book-open.png" />
+    <Content Include="Resources\Icons\branch.png" />
+    <Content Include="Resources\Icons\broom.png" />
+    <Content Include="Resources\Icons\bug--pencil.png" />
+    <Content Include="Resources\Icons\bug--plus.png" />
+    <Content Include="Resources\Icons\checkout.png" />
+    <Content Include="Resources\Icons\clock-history.png" />
     <Content Include="Resources\Icons\commit_error.png" />
     <Content Include="Resources\Icons\commit_ok.png" />
     <Content Include="Resources\Icons\commit_warning.png" />
-    <Content Include="Resources\Icons\14.png" />
-    <Content Include="Resources\Icons\14_bw.png" />
     <Content Include="Resources\Icons\2.png" />
     <Content Include="Resources\Icons\21.png" />
     <Content Include="Resources\Icons\24.png" />
@@ -1941,37 +1916,52 @@
     <Content Include="Resources\Icons\53.png" />
     <Content Include="Resources\Icons\6.png" />
     <Content Include="Resources\Icons\8.png" />
-    <Content Include="Resources\Icons\86.png" />
     <Content Include="Resources\Icons\90.png" />
     <Content Include="Resources\Icons\bgblue.png" />
     <Content Include="Resources\Icons\bggrey.png" />
-    <Content Include="Resources\Icons\BuildCancelled.png" />
-    <Content Include="Resources\Icons\BuildFailed.png" />
-    <Content Include="Resources\Icons\BuildSuccessful.png" />
     <Content Include="Resources\Icons\bullet_add.png" />
     <Content Include="Resources\Icons\bullet_delete.png" />
-    <Content Include="Resources\Icons\decrease.png" />
+    <Content Include="Resources\Icons\currency.png" />
+    <Content Include="Resources\Icons\diff.png" />
+    <Content Include="Resources\Icons\document--minus.png" />
+    <Content Include="Resources\Icons\document--plus.png" />
+    <Content Include="Resources\Icons\document-broken.png" />
+    <Content Include="Resources\Icons\document-copied-small.png" />
+    <Content Include="Resources\Icons\document-copy.png" />
+    <Content Include="Resources\Icons\document-text.png" />
+    <Content Include="Resources\Icons\documents-stack.png" />
+    <Content Include="Resources\Icons\edit-code.png" />
+    <Content Include="Resources\Icons\edit-diff.png" />
+    <Content Include="Resources\Icons\edit-language.png" />
+    <Content Include="Resources\Icons\edit-pilcrow.png" />
+    <Content Include="Resources\Icons\edit-small-caps.png" />
+    <Content Include="Resources\Icons\exclamation-diamond-frame.png" />
     <Content Include="Resources\Icons\eye_closed.png" />
     <Content Include="Resources\Icons\eye_opened.png" />
+    <Content Include="Resources\Icons\folder-horizontal-open.png" />
+    <Content Include="Resources\Icons\folder-horizontal.png" />
+    <Content Include="Resources\Icons\folder-tree.png" />
     <Content Include="Resources\Icons\folder_error.png" />
     <Content Include="Resources\Icons\folder_git.png" />
+    <Content Include="Resources\Icons\funnel--arrow.png" />
+    <Content Include="Resources\Icons\funnel.png" />
+    <Content Include="Resources\Icons\gear.png" />
+    <Content Include="Resources\Icons\ghost.png" />
     <Content Include="Resources\Icons\gitex.png" />
+    <Content Include="Resources\Icons\github.png" />
     <Content Include="Resources\Icons\git_extensions_logo.png" />
     <Content Include="Resources\Icons\HelpCommandMerge.png" />
     <Content Include="Resources\Icons\HelpCommandRebase.png" />
     <Content Include="Resources\Icons\HelpPullFetch.png" />
     <Content Include="Resources\Icons\HelpPullMerge.png" />
     <Content Include="Resources\Icons\HelpPullRebase.png" />
-    <Content Include="Resources\Icons\IconArchiveRevision.png" />
-    <Content Include="Resources\Icons\IconBook.png" />
     <Content Include="Resources\Icons\IconBranch.png" />
     <Content Include="Resources\Icons\IconBranchCheckout.png" />
     <Content Include="Resources\Icons\IconBranchCreate.png" />
-    <Content Include="Resources\Icons\IconBrowseFileExplorer.png" />
     <Content Include="Resources\Icons\IconConsole.png" />
+    <Content Include="Resources\Icons\IconDeleteRemote.png" />
     <Content Include="Resources\Icons\IconFolderSubmodule.png" />
     <Content Include="Resources\Icons\IconKey.png" />
-    <Content Include="Resources\Icons\IconManageRemotes.png" />
     <Content Include="Resources\Icons\IconMerge.png" />
     <Content Include="Resources\Icons\IconRebase.png" />
     <Content Include="Resources\Icons\IconSaveAs.png" />
@@ -1979,7 +1969,6 @@
     <Content Include="Resources\Icons\IconUntrackedOnly.png" />
     <Content Include="Resources\Icons\ignore_all_whitespaces.png" />
     <Content Include="Resources\Icons\ignore_whitespaces.png" />
-    <Content Include="Resources\Icons\increase.png" />
     <None Include="Resources\Icons\VS2017Images\BranchRemote_16x.png" />
     <None Include="Resources\Icons\VS2017Images\Branch_16x.png" />
     <None Include="Resources\Icons\VS2017Images\CollapseAll_16x.png" />
@@ -1987,6 +1976,32 @@
     <None Include="Resources\Icons\VS2017Images\Folder_grey_16x.png" />
     <None Include="Resources\Icons\VS2017Images\Repository_16x.png" />
     <None Include="Resources\Icons\VS2017Images\Tag_16x.png" />
+    <Content Include="Resources\Icons\information.png" />
+    <Content Include="Resources\Icons\lifebuoy.png" />
+    <Content Include="Resources\Icons\light-bulb.png" />
+    <Content Include="Resources\Icons\magnifier.png" />
+    <Content Include="Resources\Icons\minus-small.png" />
+    <Content Include="Resources\Icons\minus.png" />
+    <Content Include="Resources\Icons\network-cloud.png" />
+    <Content Include="Resources\Icons\network-clouds.png" />
+    <Content Include="Resources\Icons\notebook-medium.png" />
+    <Content Include="Resources\Icons\pencil-small.png" />
+    <Content Include="Resources\Icons\pencil.png" />
+    <Content Include="Resources\Icons\pill.png" />
+    <Content Include="Resources\Icons\plus-small.png" />
+    <Content Include="Resources\Icons\plus.png" />
+    <Content Include="Resources\Icons\question-small-white.png" />
+    <Content Include="Resources\Icons\question-white.png" />
+    <Content Include="Resources\Icons\revert.png" />
+    <Content Include="Resources\Icons\safe.png" />
+    <Content Include="Resources\Icons\script-text.png" />
+    <Content Include="Resources\Icons\star-empty.png" />
+    <Content Include="Resources\Icons\star.png" />
+    <Content Include="Resources\Icons\tag--minus.png" />
+    <Content Include="Resources\Icons\tag--plus.png" />
+    <Content Include="Resources\Icons\toggle-expand.png" />
+    <Content Include="Resources\Icons\toggle.png" />
+    <Content Include="Resources\Icons\tree.png" />
     <Content Include="Resources\Icons\whitespace.png" />
     <Content Include="Resources\Icons\tag_error.png" />
     <Content Include="Resources\Icons\tag_ok.png" />

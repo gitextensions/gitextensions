@@ -131,7 +131,7 @@ namespace GitUI.CommandsDialogs
                 ImageSize = DpiUtil.Scale(new Size(16, 16)),
                 Images =
                 {
-                    Resources.IconCommit,
+                    Resources.IconCommitSummary,
                     Resources.IconFileTree,
                     Resources.IconDiff,
                     Resources.IconKey
@@ -460,8 +460,8 @@ namespace GitUI.CommandsDialogs
             this.InvokeAsync(() =>
             {
                 RefreshButton.Image = indexChanged && AppSettings.UseFastChecks && Module.IsValidGitWorkingDir()
-                                          ? Resources.arrow_refresh_dirty
-                                          : Resources.arrow_refresh;
+                                          ? Resources.IconReloadRevisionsDirty
+                                          : Resources.IconReloadRevisions;
             })
                 .FileAndForget();
         }
@@ -2472,7 +2472,7 @@ namespace GitUI.CommandsDialogs
                 return info.IsDirty ? Resources.IconSubmoduleRevisionSemiDownDirty : Resources.IconSubmoduleRevisionSemiDown;
             }
 
-            return info.IsDirty ? Resources.IconSubmoduleDirty : Resources.Modified;
+            return info.IsDirty ? Resources.IconSubmoduleDirty : Resources.IconFileStatusModified;
         }
 
         private static async Task GetSubmoduleStatusAsync(SubmoduleInfo info, CancellationToken cancelToken)

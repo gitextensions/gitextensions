@@ -71,7 +71,7 @@ namespace GitUI.CommandsDialogs
                     ImageSize = DpiUtil.Scale(new Size(16, 16)),
                     Images =
                     {
-                        Properties.Resources.IconCommit,
+                        Properties.Resources.IconCommitSummary,
                         Properties.Resources.IconViewFile,
                         Properties.Resources.IconDiff,
                         Properties.Resources.IconBlame

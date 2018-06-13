@@ -726,7 +726,7 @@ namespace GitUI.CommandsDialogs
             // toolRefreshItem
             //
             this.toolRefreshItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolRefreshItem.Image = global::GitUI.Properties.Resources.arrow_refresh;
+            this.toolRefreshItem.Image = global::GitUI.Properties.Resources.IconReloadRevisions;
             this.toolRefreshItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolRefreshItem.Name = "toolRefreshItem";
             this.toolRefreshItem.Size = new System.Drawing.Size(23, 20);

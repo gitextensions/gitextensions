@@ -373,7 +373,7 @@ namespace GitUI.CommandsDialogs
             // 
             // findInDiffToolStripMenuItem
             // 
-            this.findInDiffToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconFind;
+            this.findInDiffToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconPreview;
             this.findInDiffToolStripMenuItem.Name = "findInDiffToolStripMenuItem";
             this.findInDiffToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
             this.findInDiffToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
