@@ -98,11 +98,12 @@ namespace GitUI.BranchTreePanel
             this.treeMain.ContextMenuStrip = this.menuMain;
             this.treeMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeMain.FullRowSelect = true;
-            this.treeMain.Location = new System.Drawing.Point(3, 41);
+            this.treeMain.Location = new System.Drawing.Point(0, 32);
+            this.treeMain.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
             this.treeMain.Name = "treeMain";
             this.treeMain.PathSeparator = "/";
             this.treeMain.ShowNodeToolTips = true;
-            this.treeMain.Size = new System.Drawing.Size(294, 350);
+            this.treeMain.Size = new System.Drawing.Size(300, 350);
             this.treeMain.TabIndex = 3;
             this.treeMain.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnNodeSelected);
             // 
@@ -445,17 +446,18 @@ namespace GitUI.BranchTreePanel
             this.branchSearchPanel.Controls.Add(this.btnSearch, 2, 0);
             this.branchSearchPanel.Controls.Add(this.btnSettings, 3, 0);
             this.branchSearchPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.branchSearchPanel.Location = new System.Drawing.Point(3, 3);
+            this.branchSearchPanel.Location = new System.Drawing.Point(0, 0);
+            this.branchSearchPanel.Margin = new System.Windows.Forms.Padding(0);
             this.branchSearchPanel.Name = "branchSearchPanel";
             this.branchSearchPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.branchSearchPanel.Size = new System.Drawing.Size(294, 32);
+            this.branchSearchPanel.Size = new System.Drawing.Size(300, 26);
             this.branchSearchPanel.TabIndex = 4;
             // 
             // lblSearchBranch
             // 
             this.lblSearchBranch.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblSearchBranch.AutoSize = true;
-            this.lblSearchBranch.Location = new System.Drawing.Point(3, 9);
+            this.lblSearchBranch.Location = new System.Drawing.Point(3, 6);
             this.lblSearchBranch.Name = "lblSearchBranch";
             this.lblSearchBranch.Size = new System.Drawing.Size(44, 13);
             this.lblSearchBranch.TabIndex = 0;
@@ -467,7 +469,10 @@ namespace GitUI.BranchTreePanel
             this.btnSearch.AutoSize = true;
             this.btnSearch.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnSearch.Image = global::GitUI.Properties.Resources.IconFind;
-            this.btnSearch.Location = new System.Drawing.Point(233, 3);
+            this.btnSearch.FlatAppearance.BorderSize = 0;
+            this.btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSearch.Location = new System.Drawing.Point(248, 0);
+            this.btnSearch.Margin = new System.Windows.Forms.Padding(0);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Padding = new System.Windows.Forms.Padding(2);
             this.btnSearch.Size = new System.Drawing.Size(26, 26);
@@ -482,7 +487,10 @@ namespace GitUI.BranchTreePanel
             this.btnSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnSettings.ContextMenuStrip = this.menuSettings;
             this.btnSettings.Image = global::GitUI.Properties.Resources.IconSettings;
+            this.btnSettings.FlatAppearance.BorderSize = 0;
+            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettings.Location = new System.Drawing.Point(265, 3);
+            this.btnSettings.Margin = new System.Windows.Forms.Padding(0);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Padding = new System.Windows.Forms.Padding(2);
             this.btnSettings.Size = new System.Drawing.Size(26, 26);
