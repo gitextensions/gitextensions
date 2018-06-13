@@ -2911,7 +2911,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target>Einstellungen</target>
         
       </trans-unit>

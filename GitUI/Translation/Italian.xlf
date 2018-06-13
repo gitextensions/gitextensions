@@ -2870,7 +2870,7 @@ Vuoi rimuoverlo dalla lista dei repository recenti?</target>
         
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target>Impostazioni</target>
         
       </trans-unit>
