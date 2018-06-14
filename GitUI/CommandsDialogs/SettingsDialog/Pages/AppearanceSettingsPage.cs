@@ -32,16 +32,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             base.OnRuntimeLoad();
 
             // align 1st columns across all tables
-            tlpnlGeneral.AdjustWidthToSize(0, truncateLongFilenames.Width, lblCacheDays.Width, lblLanguage.Width, lblSpellingDictionary.Width);
-            tlpnlAuthor.AdjustWidthToSize(0, truncateLongFilenames.Width, lblCacheDays.Width, lblLanguage.Width, lblSpellingDictionary.Width);
-            tlpnlLanguage.AdjustWidthToSize(0, truncateLongFilenames.Width, lblCacheDays.Width, lblLanguage.Width, lblSpellingDictionary.Width);
+            tlpnlGeneral.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblLanguage, lblSpellingDictionary);
+            tlpnlAuthor.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblLanguage, lblSpellingDictionary);
+            tlpnlLanguage.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblLanguage, lblSpellingDictionary);
 
             // align 2nd columns across all tables
             truncatePathMethod.AdjustWidthToFitContent();
             Language.AdjustWidthToFitContent();
-            tlpnlGeneral.AdjustWidthToSize(1, truncatePathMethod.Width, NoImageService.Width, Language.Width);
-            tlpnlAuthor.AdjustWidthToSize(1, truncatePathMethod.Width, NoImageService.Width, Language.Width);
-            tlpnlLanguage.AdjustWidthToSize(1, truncatePathMethod.Width, NoImageService.Width, Language.Width);
+            tlpnlGeneral.AdjustWidthToSize(1, truncatePathMethod, NoImageService, Language);
+            tlpnlAuthor.AdjustWidthToSize(1, truncatePathMethod, NoImageService, Language);
+            tlpnlLanguage.AdjustWidthToSize(1, truncatePathMethod, NoImageService, Language);
         }
 
         public static SettingsPageReference GetPageReference()

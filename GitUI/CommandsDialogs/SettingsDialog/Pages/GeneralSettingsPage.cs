@@ -32,8 +32,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             base.OnRuntimeLoad();
 
             // align 1st columns across all tables
-            tlpnlBehaviour.AdjustWidthToSize(0, lblCommitsLimit.Width, lblDefaultCloneDestination.Width);
-            tlpnlEmailSettings.AdjustWidthToSize(0, lblCommitsLimit.Width, lblDefaultCloneDestination.Width);
+            tlpnlBehaviour.AdjustWidthToSize(0, lblCommitsLimit, lblDefaultCloneDestination);
+            tlpnlEmailSettings.AdjustWidthToSize(0, lblCommitsLimit, lblDefaultCloneDestination);
         }
 
         protected override void SettingsToPage()
