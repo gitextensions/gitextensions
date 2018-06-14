@@ -239,6 +239,14 @@ namespace GitUI
             float scale = (float)DpiUtil.DpiX / position.DeviceDpi;
 
             StartPosition = FormStartPosition.Manual;
+            if (FormBorderStyle == FormBorderStyle.Sizable ||
+                FormBorderStyle == FormBorderStyle.SizableToolWindow)
+            {
+                Size formSize = position.Rect.Size;
+                formSize.Width = (int)(formSize.Width * scale);
+                formSize.Height = (int)(formSize.Height * scale);
+                Size = formSize;
+            }
 
             if (Owner == null || !_windowCentred)
             {

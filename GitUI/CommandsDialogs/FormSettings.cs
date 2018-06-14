@@ -55,38 +55,27 @@ namespace GitUI.CommandsDialogs
             buttonDiscard.Visible = true;
 #endif
 
-            settingsTreeView.AddSettingsPage(new GitExtensionsSettingsGroup(), null);
-            SettingsPageReference gitExtPageRef = GitExtensionsSettingsGroup.GetPageReference();
-
             _commonLogic = new CommonLogic(Module);
             CheckSettingsLogic = new CheckSettingsLogic(_commonLogic);
 
             var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(this);
+
+            // Git Extensions settings
+            settingsTreeView.AddSettingsPage(new GitExtensionsSettingsGroup(), null);
+            var gitExtPageRef = GitExtensionsSettingsGroup.GetPageReference();
             settingsTreeView.AddSettingsPage(checklistSettingsPage, gitExtPageRef, true); // as root
 
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitSettingsPage>(this), gitExtPageRef);
-
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitExtensionsSettingsPage>(this), gitExtPageRef);
-
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<CommitDialogSettingsPage>(this), gitExtPageRef);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GeneralSettingsPage>(this), gitExtPageRef);
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceSettingsPage>(this), gitExtPageRef);
+            var appearanceSettingsPage = AppearanceSettingsPage.GetPageReference();
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ColorsSettingsPage>(this), appearanceSettingsPage);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AppearanceFontsSettingsPage>(this), appearanceSettingsPage);
+
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<RevisionLinksSettingsPage>(this), gitExtPageRef);
-
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ColorsSettingsPage>(this), gitExtPageRef);
-
-            var gitConfigSettingsSettingsPage = SettingsPageBase.Create<GitConfigSettingsPage>(this);
-            settingsTreeView.AddSettingsPage(gitConfigSettingsSettingsPage, gitExtPageRef);
-
-            var gitConfigAdvancedSettingsPage = SettingsPageBase.Create<GitConfigAdvancedSettingsPage>(this);
-            settingsTreeView.AddSettingsPage(gitConfigAdvancedSettingsPage, gitConfigSettingsSettingsPage.PageReference);
 
             var buildServerIntegrationSettingsPage = SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(this);
             settingsTreeView.AddSettingsPage(buildServerIntegrationSettingsPage, gitExtPageRef);
-
-            var sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this);
-            settingsTreeView.AddSettingsPage(sshSettingsPage, gitExtPageRef);
-            checklistSettingsPage.SshSettingsPage = sshSettingsPage;
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ScriptsSettingsPage>(this), gitExtPageRef);
 
@@ -99,15 +88,32 @@ namespace GitUI.CommandsDialogs
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<AdvancedSettingsPage>(this), gitExtPageRef);
             SettingsPageReference advancedPageRef = AdvancedSettingsPage.GetPageReference();
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ConfirmationsSettingsPage>(this), advancedPageRef);
 
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<DetailedSettingsPage>(this), gitExtPageRef);
             var detailedSettingsPage = DetailedSettingsPage.GetPageReference();
-
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ConfirmationsSettingsPage>(this), advancedPageRef);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<FormBrowseRepoSettingsPage>(this), detailedSettingsPage);
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<CommitDialogSettingsPage>(this), detailedSettingsPage);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<DiffViewerSettingsPage>(this), detailedSettingsPage);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ToolbarSettingsPage>(this), detailedSettingsPage);
 
+            var sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this);
+            settingsTreeView.AddSettingsPage(sshSettingsPage, gitExtPageRef);
+            checklistSettingsPage.SshSettingsPage = sshSettingsPage;
+
+            // Git settings
+            settingsTreeView.AddSettingsPage(new GitSettingsGroup(), null);
+            var gitPageRef = GitSettingsGroup.GetPageReference();
+
+            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<GitSettingsPage>(this), gitPageRef);
+
+            var gitConfigSettingsSettingsPage = SettingsPageBase.Create<GitConfigSettingsPage>(this);
+            settingsTreeView.AddSettingsPage(gitConfigSettingsSettingsPage, gitPageRef);
+
+            var gitConfigAdvancedSettingsPage = SettingsPageBase.Create<GitConfigAdvancedSettingsPage>(this);
+            settingsTreeView.AddSettingsPage(gitConfigAdvancedSettingsPage, gitPageRef);
+
+            // Plugins settings
             settingsTreeView.AddSettingsPage(new PluginsSettingsGroup(), null);
             SettingsPageReference pluginsPageRef = PluginsSettingsGroup.GetPageReference();
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<PluginRootIntroductionPage>(this), pluginsPageRef, true); // as root

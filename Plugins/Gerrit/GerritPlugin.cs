@@ -24,11 +24,15 @@ namespace Gerrit
         private readonly TranslationString _installCommitMsgHook = new TranslationString("Install Hook");
         private readonly TranslationString _installCommitMsgHookShortText = new TranslationString("Install commit-msg hook");
         private readonly TranslationString _installCommitMsgHookMessage = new TranslationString("Gerrit requires a commit-msg hook to be installed. Do you want to install the commit-msg hook into your repository?");
-        private readonly TranslationString _installCommitMsgHookFailed = new TranslationString("Could not download the commit-msg file. Please install the commit-msg hook manually.");
+        private readonly TranslationString _installCommitMsgHookFolderCreationFailed = new TranslationString("Could not create the hooks folder. Please create the folder manually and try again.");
+        private readonly TranslationString _installCommitMsgHookDownloadFileFailed = new TranslationString("Could not download the commit-msg file. Please install the commit-msg hook manually.");
         #endregion
 
         private static readonly Dictionary<string, bool> _validatedHooks = new Dictionary<string, bool>(StringComparer.OrdinalIgnoreCase);
         private static readonly object _syncRoot = new object();
+
+        private const string HooksFolderName = "hooks";
+        private const string CommitMessageHookFileName = "commit-msg";
 
         private bool _initialized;
         private ToolStripItem[] _gerritMenuItems;
@@ -90,7 +94,7 @@ namespace Gerrit
                 throw new ArgumentNullException(nameof(gitModule));
             }
 
-            string path = Path.Combine(gitModule.ResolveGitInternalPath("hooks"), "commit-msg");
+            string path = Path.Combine(gitModule.ResolveGitInternalPath(HooksFolderName), CommitMessageHookFileName);
 
             if (!File.Exists(path))
             {
@@ -289,9 +293,27 @@ namespace Gerrit
                 return;
             }
 
-            string path = Path.Combine(
-                _gitUiCommands.GitModule.ResolveGitInternalPath("hooks"),
-                "commit-msg");
+            var hooksFolderPath = _gitUiCommands.GitModule.ResolveGitInternalPath(HooksFolderName);
+            if (!Directory.Exists(hooksFolderPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(hooksFolderPath);
+                }
+                catch
+                {
+                    MessageBox.Show(
+                        _mainForm,
+                        _installCommitMsgHookFolderCreationFailed.Text,
+                        _installCommitMsgHookShortText.Text,
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+
+                    return;
+                }
+            }
+
+            var commitMessageHookPath = Path.Combine(hooksFolderPath, CommitMessageHookFileName);
 
             string content;
 
@@ -309,14 +331,14 @@ namespace Gerrit
             {
                 MessageBox.Show(
                     _mainForm,
-                    _installCommitMsgHookFailed.Text,
+                    _installCommitMsgHookDownloadFileFailed.Text,
                     _installCommitMsgHookShortText.Text,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
             else
             {
-                File.WriteAllText(path, content);
+                File.WriteAllText(commitMessageHookPath, content);
 
                 // Update the cache.
 

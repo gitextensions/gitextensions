@@ -21,7 +21,6 @@ using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Script;
-using GitUI.UserControls;
 using GitUI.UserControls.RevisionGridClasses;
 using GitUI.UserControls.ToolStripClasses;
 using GitUIPluginInterfaces;
@@ -356,9 +355,13 @@ namespace GitUI.CommandsDialogs
         }
 
         #region IBrowseRepo
+
         public void GoToRef(string refName, bool showNoRevisionMsg)
         {
-            RevisionGrid.GoToRef(refName, showNoRevisionMsg);
+            using (WaitCursorScope.Enter())
+            {
+                RevisionGrid.GoToRef(refName, showNoRevisionMsg);
+            }
         }
 
         #endregion
@@ -2901,7 +2904,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripBranches_DropDown_ResizeDropDownWidth(object sender, EventArgs e)
         {
-            ComboBoxHelper.ResizeComboBoxDropDownWidth(toolStripBranchFilterComboBox.ComboBox, AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
+            toolStripBranchFilterComboBox.ComboBox.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
         }
 
         private void toolStripMenuItemReflog_Click(object sender, EventArgs e)

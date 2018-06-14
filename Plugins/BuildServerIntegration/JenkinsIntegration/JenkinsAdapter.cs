@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Utils;
@@ -57,6 +58,7 @@ namespace JenkinsIntegration
 
         private readonly Dictionary<string, JenkinsCacheInfo> _lastBuildCache = new Dictionary<string, JenkinsCacheInfo>();
         private readonly List<string> _projectsUrls = new List<string>();
+        private Regex _ignoreBuilds;
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
@@ -93,6 +95,9 @@ namespace JenkinsIntegration
                     AddGetBuildUrl(projectUrl);
                 }
             }
+
+            var ignoreBuilds = config.GetString("IgnoreBuildBranch", string.Empty);
+            _ignoreBuilds = ignoreBuilds.IsNotNullOrWhitespace() ? new Regex(ignoreBuilds) : null;
         }
 
         /// <summary>
@@ -161,7 +166,7 @@ namespace JenkinsIntegration
                     }
                 }
 
-                // else: The server had no response (overloaded?)
+                // else: The server had no response (overloaded?) or a multibranch pipeline is not configured
                 if (timestamp == 0 && jobDescription["lastBuild"] != null && jobDescription["lastBuild"]["timestamp"] != null)
                 {
                     timestamp = jobDescription["lastBuild"]["timestamp"].ToObject<long>();
@@ -309,7 +314,7 @@ namespace JenkinsIntegration
             }
         }
 
-        private const string _jenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1],totalCount,failCount,skipCount],building,duration";
+        private const string _jenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1,branch[name]],totalCount,failCount,skipCount],building,duration";
 
         private BuildInfo CreateBuildInfo(JObject buildDescription)
         {
@@ -326,6 +331,23 @@ namespace JenkinsIntegration
                 if (element["lastBuiltRevision"] != null)
                 {
                     commitHashList.Add(element["lastBuiltRevision"]["SHA1"].ToObject<string>());
+                    var branches = element["lastBuiltRevision"]["branch"];
+                    if (_ignoreBuilds != null && branches != null)
+                    {
+                        // Ignore build events for specified branches
+                        foreach (var branch in branches)
+                        {
+                            var name = branch["name"];
+                            if (name != null)
+                            {
+                                var name2 = name.ToObject<string>();
+                                if (name2.IsNotNullOrWhitespace() && _ignoreBuilds.IsMatch(name2))
+                                {
+                                    return null;
+                                }
+                            }
+                        }
+                    }
                 }
 
                 if (element["totalCount"] != null)

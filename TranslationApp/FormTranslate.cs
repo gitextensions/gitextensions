@@ -259,7 +259,7 @@ namespace TranslationApp
                 MoveTranslationItems("FormSettings", "AppearanceSettingsPage");
                 MoveTranslationItems("FormSettings", "ChecklistSettingsPage");
                 MoveTranslationItems("FormSettings", "ColorsSettingsPage");
-                MoveTranslationItems("FormSettings", "GitExtensionsSettingsPage");
+                MoveTranslationItems("FormSettings", "GeneralSettingsPage");
                 MoveTranslationItems("FormSettings", "GitSettingsPage");
                 MoveTranslationItems("FormSettings", "GlobalSettingsSettingsPage");
                 MoveTranslationItems("FormSettings", "HotkeysSettingsPage");

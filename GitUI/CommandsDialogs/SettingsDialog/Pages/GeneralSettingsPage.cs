@@ -6,12 +6,12 @@ using GitCommands.UserRepositoryHistory;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class GitExtensionsSettingsPage : SettingsPageWithHeader
+    public partial class GeneralSettingsPage : SettingsPageWithHeader
     {
-        public GitExtensionsSettingsPage()
+        public GeneralSettingsPage()
         {
             InitializeComponent();
-            Text = "Git Extensions";
+            Text = "General";
             Translate();
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
@@ -25,6 +25,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                                                      .ToArray();
                 cbDefaultCloneDestination.Items.AddRange(historicPaths);
             });
+        }
+
+        protected override void OnRuntimeLoad()
+        {
+            base.OnRuntimeLoad();
+
+            // align 1st columns across all tables
+            tlpnlBehaviour.AdjustWidthToSize(0, lblCommitsLimit.Width, lblDefaultCloneDestination.Width);
+            tlpnlEmailSettings.AdjustWidthToSize(0, lblCommitsLimit.Width, lblDefaultCloneDestination.Width);
         }
 
         protected override void SettingsToPage()
