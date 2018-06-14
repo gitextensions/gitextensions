@@ -412,23 +412,21 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         private static void RtbSetSelectedRtf(RichTextBox rtb, string str)
         {
-            // Work around bug in DotNet Basically it assumes that incoming text is
-            // always in the default encoding so giving it a unicode string breaks
-            // throws an exception.
+            // Work around bug in DotNet.
+            // Basically it assumes that incoming text is always in the default
+            // encoding so giving it a unicode string throws an exception.
+            // (Bug #5005)
             try
             {
                 rtb.SelectedRtf = str;
             }
             catch (ArgumentException)
             {
-                /* NOTE: This will break any text which actually contains UTF-8 characters! */
+                // NOTE: This will break any text which actually contains UTF-8 characters!
                 if (str.StartsWith(@"{\urtf"))
                 {
                     // Convert "urtf" -> "rtf"
                     str = str.Remove(2, 1);
-
-                    // and get the string into a byte array
-                    // encodedBytes = Encoding.Unicode.GetBytes(str.Remove(2, 1));
 
                     // Encode unicode characters
                     var sb = new StringBuilder();
