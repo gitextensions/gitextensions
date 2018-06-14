@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor;
@@ -12,6 +13,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             Text = "Colors";
             Translate();
+        }
+
+        protected override void OnRuntimeLoad()
+        {
+            base.OnRuntimeLoad();
+
+            // align 1st columns across all tables
+            tlpnlRevisionGraph.AdjustWidthToSize(0, MulticolorBranches, lblColorLineRemoved);
+            tlpnlDiffView.AdjustWidthToSize(0, MulticolorBranches, lblColorLineRemoved);
+
+            // align 2nd columns across all tables
+            var colorControls = tlpnlRevisionGraph.Controls.Cast<Control>().Where(c => tlpnlRevisionGraph.GetColumn(c) == 1)
+                .Union(tlpnlDiffView.Controls.Cast<Control>().Where(c => tlpnlDiffView.GetColumn(c) == 1))
+                .ToArray();
+            tlpnlRevisionGraph.AdjustWidthToSize(1, colorControls);
+            tlpnlDiffView.AdjustWidthToSize(1, colorControls);
         }
 
         protected override void SettingsToPage()
