@@ -40,10 +40,6 @@ namespace GitUI.UserControls.RevisionGrid
 
         #endregion
 
-        #region DataType enum
-
-        #endregion
-
         [Description("Loading Handler. NOTE: This will often happen on a background thread so UI operations may not be safe!")]
         [Category("Behavior")]
         public event EventHandler<LoadingEventArgs> Loading;
