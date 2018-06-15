@@ -731,7 +731,7 @@ namespace GitUI.UserControls.RevisionGrid
             switch (_revisionGraphDrawStyleCache)
             {
                 case RevisionGraphDrawStyleEnum.DrawNonRelativesGray when !junction.IsRelative:
-                case RevisionGraphDrawStyleEnum.HighlightSelected when !junction.HighLight:
+                case RevisionGraphDrawStyleEnum.HighlightSelected when !junction.IsHighlighted:
                     return _nonRelativeColor;
             }
 
@@ -1143,7 +1143,7 @@ namespace GitUI.UserControls.RevisionGrid
             UpdateJunctionColors(row.Node.Ancestors);
 
             bool highlight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
-                             (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.HighLight)) ||
+                             (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.IsHighlighted)) ||
                              (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
 
             if (_junctionColors.Count == 1)
@@ -1267,7 +1267,7 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 foreach (var descendant in node.Descendants)
                 {
-                    childrenIds.Add(descendant.ChildOf(node).ObjectId);
+                    childrenIds.Add(descendant.GetChildOf(node).ObjectId);
                 }
             }
 

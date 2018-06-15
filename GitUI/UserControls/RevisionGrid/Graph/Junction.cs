@@ -5,21 +5,15 @@ using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
+    internal enum JunctionState
+    {
+        Unprocessed = 0x0000_0000,
+        Processing = 0x1000_0000,
+        Processed = 0x2000_0000,
+    }
+
     internal sealed class Junction
     {
-        #region State enum
-
-        private const uint StateMask = 0xF000_0000;
-
-        internal enum State
-        {
-            Unprocessed = 0x0000_0000,
-            Processing = 0x1000_0000,
-            Processed = 0x2000_0000,
-        }
-
-        #endregion
-
 #if DEBUG
         private static uint debugIdNext;
         private readonly uint _debugId;
@@ -29,7 +23,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private readonly Dictionary<Node, int> _nodeIndices = new Dictionary<Node, int>();
 
         /// <summary>
-        /// We pack <see cref="ColorIndex"/>, <see cref="CurrentState"/>, <see cref="IsRelative"/> and <see cref="HighLight"/> into a single field.
+        /// We pack <see cref="ColorIndex"/>, <see cref="State"/>, <see cref="IsRelative"/> and <see cref="IsHighlighted"/> into a single field.
         /// </summary>
         private uint _flags = 0x0000_FFFF;
 
@@ -53,7 +47,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public Node this[int index] => _nodes[index];
         public Node Youngest => _nodes[0];
         public Node Oldest => _nodes[_nodes.Count - 1];
-        public int NodesCount => _nodes.Count;
+        public int NodeCount => _nodes.Count;
 
         public int ColorIndex
         {
@@ -65,9 +59,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             set => _flags = (_flags & 0xFFFF_0000) | (uint)value;
         }
 
-        public State CurrentState
+        public JunctionState State
         {
-            get => (State)(_flags & StateMask);
+            get => (JunctionState)(_flags & 0xF000_0000);
             set => _flags = (_flags & 0x0FFF_FFFF) | (uint)value;
         }
 
@@ -87,7 +81,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
-        public bool HighLight
+        public bool IsHighlighted
         {
             get => (_flags & 0x0200_0000) != 0;
             set
@@ -103,7 +97,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
-        public Node ChildOf(Node parent)
+        public Node GetChildOf(Node parent)
         {
             if (_nodeIndices.TryGetValue(parent, out var childIndex))
             {
@@ -146,7 +140,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             // Add 1, since node was at the index
             index += 1;
-            while (index < NodesCount)
+            while (index < NodeCount)
             {
                 Node childNode = this[index];
                 RemoveNode(childNode);
@@ -166,7 +160,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         private void AddNode(Node node)
         {
-            _nodeIndices.Add(node, NodesCount);
+            _nodeIndices.Add(node, NodeCount);
             _nodes.Add(node);
         }
 
@@ -179,9 +173,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public override string ToString()
         {
 #if DEBUG
-            return string.Format("{3}: {0}--({2})--{1}", Youngest, Oldest, NodesCount, _debugId);
+            return string.Format("{3}: {0}--({2})--{1}", Youngest, Oldest, NodeCount, _debugId);
 #else
-            return string.Format("{3}: {0}--({2})", Youngest, Oldest, NodesCount);
+            return string.Format("{3}: {0}--({2})", Youngest, Oldest, NodeCount);
 #endif
         }
     }
