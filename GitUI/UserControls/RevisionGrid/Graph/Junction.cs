@@ -17,12 +17,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         #endregion
 
+#if DEBUG
         private static uint debugIdNext;
+        private readonly uint _debugId;
+#endif
 
         private readonly List<Node> _nodes = new List<Node>();
         private readonly Dictionary<Node, int> _nodeIndices = new Dictionary<Node, int>();
-
-        private readonly uint _debugId;
 
         public int ColorIndex { get; set; } = -1;
         public State CurrentState { get; set; } = State.Unprocessed;
@@ -31,7 +32,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public Junction(Node node, Node parent)
         {
+#if DEBUG
             _debugId = debugIdNext++;
+#endif
 
             AddNode(node);
 
@@ -47,7 +50,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             // Private constructor used by split. This junction will be a
             // ancestor of an existing junction.
+#if DEBUG
             _debugId = debugIdNext++;
+#endif
             node.Ancestors.Remove(descendant);
             AddNode(node);
         }
@@ -134,7 +139,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public override string ToString()
         {
+#if DEBUG
             return string.Format("{3}: {0}--({2})--{1}", Youngest, Oldest, NodesCount, _debugId);
+#else
+            return string.Format("{3}: {0}--({2})", Youngest, Oldest, NodesCount);
+#endif
         }
     }
 }
