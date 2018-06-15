@@ -1158,8 +1158,6 @@ namespace GitUI.UserControls.RevisionGrid
 
                 Color GetJunctionColor(Junction junction)
                 {
-                    ThreadHelper.AssertOnUIThread();
-
                     // Non relatives or non-highlighted in grey
                     switch (_revisionGraphDrawStyleCache)
                     {
