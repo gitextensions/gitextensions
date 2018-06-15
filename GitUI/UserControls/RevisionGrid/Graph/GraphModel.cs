@@ -37,12 +37,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             void ClearHighlights()
             {
-                foreach (var node in Nodes.Values)
+                foreach (var junction in _junctions)
                 {
-                    foreach (var junction in node.Ancestors)
-                    {
-                        junction.IsHighlighted = false;
-                    }
+                    junction.IsHighlighted = false;
                 }
             }
 
