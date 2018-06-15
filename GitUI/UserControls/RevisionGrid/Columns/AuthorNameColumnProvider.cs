@@ -5,13 +5,13 @@ using GitExtUtils.GitUI;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
 {
-    internal sealed class AuthorColumnProvider : ColumnProvider
+    internal sealed class AuthorNameColumnProvider : ColumnProvider
     {
         private readonly RevisionGridControl _grid;
         private readonly AuthorRevisionHighlighting _authorHighlighting;
 
-        public AuthorColumnProvider(RevisionGridControl grid, AuthorRevisionHighlighting authorHighlighting)
-            : base("Author")
+        public AuthorNameColumnProvider(RevisionGridControl grid, AuthorRevisionHighlighting authorHighlighting)
+            : base("Author Name")
         {
             _grid = grid;
             _authorHighlighting = authorHighlighting;
@@ -19,13 +19,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             Column = new DataGridViewTextBoxColumn
             {
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
-                HeaderText = "Author",
+                HeaderText = "Author Name",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 FillWeight = 80,
                 Width = DpiUtil.Scale(150)
             };
         }
+
+        public override void Refresh() => Column.Visible = AppSettings.ShowAuthorNameColumn;
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
         {

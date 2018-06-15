@@ -188,7 +188,7 @@ namespace GitUI
             _gridView.AddColumn(graphColumnProvider);
             _gridView.AddColumn(new MessageColumnProvider(this));
             _gridView.AddColumn(new AvatarColumnProvider(_gridView));
-            _gridView.AddColumn(new AuthorColumnProvider(this, _authorHighlighting));
+            _gridView.AddColumn(new AuthorNameColumnProvider(this, _authorHighlighting));
             _gridView.AddColumn(new DateColumnProvider(this));
             _gridView.AddColumn(new CommitIdColumnProvider(this));
             _gridView.AddColumn(_buildServerWatcher.ColumnProvider);
@@ -1938,12 +1938,7 @@ namespace GitUI
             ForceRefreshRevisions();
         }
 
-        internal void ToggleObjectIdColumn()
-        {
-            AppSettings.ShowObjectIdColumn = !AppSettings.ShowObjectIdColumn;
-            MenuCommands.TriggerMenuChanged();
-            Refresh();
-        }
+        #region Column visibilities
 
         internal void ToggleRevisionGraphColumn()
         {
@@ -1962,6 +1957,52 @@ namespace GitUI
 
             MenuCommands.TriggerMenuChanged();
         }
+
+        internal void ToggleAuthorAvatarColumn()
+        {
+            AppSettings.ShowAuthorAvatarColumn = !AppSettings.ShowAuthorAvatarColumn;
+            MenuCommands.TriggerMenuChanged();
+            Refresh();
+        }
+
+        internal void ToggleAuthorNameColumn()
+        {
+            AppSettings.ShowAuthorNameColumn = !AppSettings.ShowAuthorNameColumn;
+            MenuCommands.TriggerMenuChanged();
+            Refresh();
+        }
+
+        internal void ToggleDateColumn()
+        {
+            AppSettings.ShowDateColumn = !AppSettings.ShowDateColumn;
+            MenuCommands.TriggerMenuChanged();
+            Refresh();
+        }
+
+        internal void ToggleObjectIdColumn()
+        {
+            AppSettings.ShowObjectIdColumn = !AppSettings.ShowObjectIdColumn;
+            MenuCommands.TriggerMenuChanged();
+            Refresh();
+        }
+
+        internal void ToggleBuildStatusIconColumn()
+        {
+            ////Module.EffectiveSettings.BuildServer.ShowBuildIconInGrid.Value = !Module.EffectiveSettings.BuildServer.ShowBuildIconInGrid.Value;
+            AppSettings.ShowBuildStatusIconColumn = !AppSettings.ShowBuildStatusIconColumn;
+            MenuCommands.TriggerMenuChanged();
+            Refresh();
+        }
+
+        internal void ToggleBuildStatusTextColumn()
+        {
+            ////Module.EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.Value = !Module.EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.Value;
+            AppSettings.ShowBuildStatusTextColumn = !AppSettings.ShowBuildStatusTextColumn;
+            MenuCommands.TriggerMenuChanged();
+            Refresh();
+        }
+
+        #endregion
 
         internal void ToggleShowTags()
         {

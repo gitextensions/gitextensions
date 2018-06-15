@@ -368,7 +368,7 @@
     <Compile Include="UserControls\RevisionGrid\BareRepoControl.Designer.cs">
       <DependentUpon>BareRepoControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RevisionGrid\Columns\AuthorColumnProvider.cs" />
+    <Compile Include="UserControls\RevisionGrid\Columns\AuthorNameColumnProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\BuildStatusColumnProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\ColumnProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\CommitIdColumnProvider.cs" />
