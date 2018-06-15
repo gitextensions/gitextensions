@@ -34,24 +34,37 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void Refresh()
         {
-            UpdateWidth();
+            var settings = _module().EffectiveSettings.BuildServer;
+
+            var showIcon = AppSettings.ShowBuildStatusIconColumn;
+            var showText = AppSettings.ShowBuildStatusTextColumn;
+            var columnVisible = settings.EnableIntegration.ValueOrDefault &&
+                                (showIcon || showText);
+
+            Column.Visible = columnVisible;
+
+            if (columnVisible)
+            {
+                UpdateWidth();
+            }
 
             return;
 
             void UpdateWidth()
             {
-                if (_module().EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.Value == true)
+                Column.FillWeight = 50;
+                Column.Resizable = showText ? DataGridViewTriState.True : DataGridViewTriState.False;
+
+                var iconColumnWidth = DpiUtil.Scale(16);
+
+                if (showIcon && !showText)
                 {
-                    Column.Resizable = DataGridViewTriState.True;
-                    Column.FillWeight = 50;
-                    Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    Column.Width = iconColumnWidth;
+                    Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 }
                 else
                 {
-                    Column.Resizable = DataGridViewTriState.False;
-                    Column.Width = DpiUtil.Scale(16);
-                    Column.FillWeight = 50;
-                    Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 }
             }
         }
@@ -63,18 +76,27 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return;
             }
 
-            var size = DpiUtil.Scale(new Size(8, 8));
+            Size size;
 
-            var location = new Point(
-                e.CellBounds.Left + (size.Width / 2),
-                e.CellBounds.Top + ((e.CellBounds.Height - size.Height) / 2));
+            if (AppSettings.ShowBuildStatusIconColumn)
+            {
+                size = DpiUtil.Scale(new Size(8, 8));
 
-            var container = e.Graphics.BeginContainer();
-            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-            e.Graphics.FillEllipse(GetBrush(), new Rectangle(location, size));
-            e.Graphics.EndContainer(container);
+                var location = new Point(
+                    e.CellBounds.Left + (size.Width / 2),
+                    e.CellBounds.Top + ((e.CellBounds.Height - size.Height) / 2));
 
-            if (_module().EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.Value == true)
+                var container = e.Graphics.BeginContainer();
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                e.Graphics.FillEllipse(GetBrush(), new Rectangle(location, size));
+                e.Graphics.EndContainer(container);
+            }
+            else
+            {
+                size = default;
+            }
+
+            if (AppSettings.ShowBuildStatusTextColumn)
             {
                 _grid.DrawColumnText(
                     e,

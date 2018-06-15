@@ -45,7 +45,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     await this.SwitchToMainThreadAsync();
 
                     checkBoxEnableBuildServerIntegration.Enabled = true;
-                    checkBoxShowBuildSummary.Enabled = true;
                     BuildServerType.Enabled = true;
 
                     BuildServerType.DataSource = new[] { _noneItem.Text }.Concat(buildServerTypes).ToArray();
@@ -65,7 +64,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     await this.SwitchToMainThreadAsync();
 
                     checkBoxEnableBuildServerIntegration.SetNullableChecked(CurrentSettings.BuildServer.EnableIntegration.Value);
-                    checkBoxShowBuildSummary.SetNullableChecked(CurrentSettings.BuildServer.ShowBuildSummaryInGrid.Value);
 
                     BuildServerType.SelectedItem = CurrentSettings.BuildServer.Type.Value ?? _noneItem.Text;
                 });
@@ -74,7 +72,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             CurrentSettings.BuildServer.EnableIntegration.Value = checkBoxEnableBuildServerIntegration.GetNullableChecked();
-            CurrentSettings.BuildServer.ShowBuildSummaryInGrid.Value = checkBoxShowBuildSummary.GetNullableChecked();
 
             var selectedBuildServerType = GetSelectedBuildServerType();
 

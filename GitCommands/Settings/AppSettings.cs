@@ -901,17 +901,51 @@ namespace GitCommands
             set => SetBool("showtags", value);
         }
 
-        public static bool ShowObjectIdColumn
-        {
-            get => GetBool("showids", true);
-            set => SetBool("showids", value);
-        }
+        #region Revision grid column visibilities
 
         public static bool ShowRevisionGridGraphColumn
         {
             get => GetBool("showrevisiongridgraphcolumn", true);
             set => SetBool("showrevisiongridgraphcolumn", value);
         }
+
+        public static bool ShowAuthorAvatarColumn
+        {
+            get => GetBool("showrevisiongridauthoravatarcolumn", true);
+            set => SetBool("showrevisiongridauthoravatarcolumn", value);
+        }
+
+        public static bool ShowAuthorNameColumn
+        {
+            get => GetBool("showrevisiongridauthornamecolumn", true);
+            set => SetBool("showrevisiongridauthornamecolumn", value);
+        }
+
+        public static bool ShowDateColumn
+        {
+            get => GetBool("showrevisiongriddatecolumn", true);
+            set => SetBool("showrevisiongriddatecolumn", value);
+        }
+
+        public static bool ShowObjectIdColumn
+        {
+            get => GetBool("showids", true);
+            set => SetBool("showids", value);
+        }
+
+        public static bool ShowBuildStatusIconColumn
+        {
+            get => GetBool("showbuildstatusiconcolumn", true);
+            set => SetBool("showbuildstatusiconcolumn", value);
+        }
+
+        public static bool ShowBuildStatusTextColumn
+        {
+            get => GetBool("showbuildstatustextcolumn", false);
+            set => SetBool("showbuildstatustextcolumn", value);
+        }
+
+        #endregion
 
         public static bool ShowAuthorDate
         {

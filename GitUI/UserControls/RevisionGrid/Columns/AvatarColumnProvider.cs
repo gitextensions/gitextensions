@@ -31,6 +31,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             _gravatarService = new GravatarService(_avatarCache, _avatarImageNameProvider);
         }
 
+        public override void Refresh() => Column.Visible = AppSettings.ShowAuthorAvatarColumn;
+
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
         {
             if (revision.IsArtificial)

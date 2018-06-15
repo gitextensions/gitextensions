@@ -250,17 +250,52 @@ namespace GitUI.UserControls.RevisionGrid
 
                 new MenuCommand
                 {
-                    Name = "showRevisionGraphToolStripMenuItem",
+                    Name = "showRevisionGraphColumnToolStripMenuItem",
                     Text = "Show revision graph column",
                     ExecuteAction = () => _revisionGrid.ToggleRevisionGraphColumn(),
                     IsCheckedFunc = () => AppSettings.ShowRevisionGridGraphColumn
                 },
                 new MenuCommand
                 {
-                    Name = "showIdsToolStripMenuItem",
+                    Name = "showAuthorAvatarColumnToolStripMenuItem",
+                    Text = "Show author avatar column",
+                    ExecuteAction = () => _revisionGrid.ToggleAuthorAvatarColumn(),
+                    IsCheckedFunc = () => AppSettings.ShowAuthorAvatarColumn
+                },
+                new MenuCommand
+                {
+                    Name = "showAuthorNameColumnToolStripMenuItem",
+                    Text = "Show author name column",
+                    ExecuteAction = () => _revisionGrid.ToggleAuthorNameColumn(),
+                    IsCheckedFunc = () => AppSettings.ShowAuthorNameColumn
+                },
+                new MenuCommand
+                {
+                    Name = "showDateColumnToolStripMenuItem",
+                    Text = "Show date column",
+                    ExecuteAction = () => _revisionGrid.ToggleDateColumn(),
+                    IsCheckedFunc = () => AppSettings.ShowDateColumn
+                },
+                new MenuCommand
+                {
+                    Name = "showIdColumnToolStripMenuItem",
                     Text = "Show SHA-1 column",
                     ExecuteAction = () => _revisionGrid.ToggleObjectIdColumn(),
                     IsCheckedFunc = () => AppSettings.ShowObjectIdColumn
+                },
+                new MenuCommand
+                {
+                    Name = "showBuildStatusIconToolStripMenuItem",
+                    Text = "Show build status icon",
+                    ExecuteAction = () => _revisionGrid.ToggleBuildStatusIconColumn(),
+                    IsCheckedFunc = () => AppSettings.ShowBuildStatusIconColumn
+                },
+                new MenuCommand
+                {
+                    Name = "showBuildStatusTextToolStripMenuItem",
+                    Text = "Show build status text",
+                    ExecuteAction = () => _revisionGrid.ToggleBuildStatusTextColumn(),
+                    IsCheckedFunc = () => AppSettings.ShowBuildStatusTextColumn
                 },
 
                 MenuCommand.CreateSeparator(),
