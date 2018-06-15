@@ -1035,16 +1035,16 @@ namespace GitUI.UserControls.RevisionGrid
                             c1 = new Point(x1, yMid);
                         }
 
-                        g.SmoothingMode = sameLane ? SmoothingMode.None : SmoothingMode.AntiAlias;
-
                         using (var linePen = new Pen(lineBrush, _laneLineWidth))
                         {
                             if (sameLane)
                             {
+                                g.SmoothingMode = SmoothingMode.None;
                                 g.DrawLine(linePen, p0, p1);
                             }
                             else
                             {
+                                g.SmoothingMode = SmoothingMode.AntiAlias;
                                 g.DrawBezier(linePen, p0, c0, c1, p1);
                             }
                         }
