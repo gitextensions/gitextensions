@@ -307,7 +307,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 Node node = lane.Junction.Oldest;
                 foreach (Junction parent in node.Ancestors)
                 {
-                    if (parent.CurrentState != Junction.State.Unprocessed)
+                    if (parent.State != JunctionState.Unprocessed)
                     {
                         // This item is already in the lane list, no action needed
                         continue;
@@ -466,7 +466,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             public LaneJunctionDetail(Junction j)
             {
                 Junction = j;
-                Junction.CurrentState = Junction.State.Processing;
+                Junction.State = JunctionState.Processing;
                 _index = 0;
             }
 
@@ -479,13 +479,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         return 1 - _index;
                     }
 
-                    return Junction?.NodesCount - _index ?? 0;
+                    return Junction?.NodeCount - _index ?? 0;
                 }
             }
 
             public Junction Junction { get; private set; }
 
-            public Node Current => _node ?? (_index < Junction.NodesCount ? Junction[_index] : null);
+            public Node Current => _node ?? (_index < Junction.NodeCount ? Junction[_index] : null);
 
             public bool IsClear => Junction == null && _node == null;
 
@@ -500,9 +500,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             {
                 _index++;
 
-                if (Junction != null && _index >= Junction.NodesCount)
+                if (Junction != null && _index >= Junction.NodeCount)
                 {
-                    Junction.CurrentState = Junction.State.Processed;
+                    Junction.State = JunctionState.Processed;
                 }
             }
 
@@ -510,11 +510,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             {
                 if (Junction != null)
                 {
-                    var nodeName = _index < Junction.NodesCount
+                    var nodeName = _index < Junction.NodeCount
                         ? Junction[_index].ToString()
                         : "(null)";
 
-                    return _index + "/" + Junction.NodesCount + "~" + nodeName + "~" + Junction;
+                    return _index + "/" + Junction.NodeCount + "~" + nodeName + "~" + Junction;
                 }
 
                 return _node != null

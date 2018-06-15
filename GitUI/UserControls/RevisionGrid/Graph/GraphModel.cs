@@ -41,7 +41,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 {
                     foreach (var junction in node.Ancestors)
                     {
-                        junction.HighLight = false;
+                        junction.IsHighlighted = false;
                     }
                 }
             }
@@ -62,9 +62,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                     foreach (var junction in node.Ancestors)
                     {
-                        if (!junction.HighLight)
+                        if (!junction.IsHighlighted)
                         {
-                            junction.HighLight = true;
+                            junction.IsHighlighted = true;
 
                             stack.Push(junction.Oldest.ObjectId);
                         }
