@@ -19,7 +19,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _junctions = junctions;
         }
 
-        public IEnumerable<Junction> Junctions => _junctions;
+        public IReadOnlyList<Junction> Junctions => _junctions;
 
         public LaneInfo Clone()
         {

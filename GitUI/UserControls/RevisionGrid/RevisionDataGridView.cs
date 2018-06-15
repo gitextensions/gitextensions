@@ -87,9 +87,9 @@ namespace GitUI.UserControls.RevisionGrid
         private Font _normalFont;
         private Font _boldFont;
 
-        private readonly List<int> _adjacentColors = new List<int>(capacity: 3);
+        private readonly HashSet<int> _adjacentColors = new HashSet<int>();
         private readonly Random _random = new Random();
-        private readonly List<Color> _junctionColors = new List<Color>(4);
+        private readonly List<Color> _junctionColors = new List<Color>(capacity: 2);
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
 
@@ -1144,16 +1144,21 @@ namespace GitUI.UserControls.RevisionGrid
 
             return true;
 
-            void UpdateJunctionColors(IEnumerable<Junction> junctions)
+            void UpdateJunctionColors(IReadOnlyList<Junction> junctions)
             {
                 _junctionColors.Clear();
 
-                // Color of non-relative branches.
-                _junctionColors.AddRange(junctions.Select(GetJunctionColor));
-
-                if (_junctionColors.Count == 0)
+                // Select one or two colours to use when rendering this junction
+                if (junctions.Count == 0)
                 {
                     _junctionColors.Add(Color.Black);
+                }
+                else
+                {
+                    for (var i = 0; i < 2 && i < junctions.Count; i++)
+                    {
+                        _junctionColors.Add(GetJunctionColor(junctions[i]));
+                    }
                 }
 
                 Color GetJunctionColor(Junction junction)
@@ -1177,51 +1182,53 @@ namespace GitUI.UserControls.RevisionGrid
                         return _possibleColors[junction.ColorIndex];
                     }
 
-                    // NOTE we reuse _adjacentColors to avoid allocating lists during UI painting.
-                    // This is safe as we are always on the UI thread here.
-                    _adjacentColors.Clear();
-                    _adjacentColors.AddRange(
-                        from peer in GetPeers().SelectMany()
-                        where peer.ColorIndex != -1
-                        select peer.ColorIndex);
-
-                    int colorIndex = 0;
-
-                    if (_adjacentColors.Count == 0)
-                    {
-                        // This is an end-point. We need to 'pick' a new color
-                        colorIndex = 0;
-                    }
-                    else
-                    {
-                        // This is a parent branch, calculate new color based on parent branch
-                        int i;
-                        for (i = 0; i < _possibleColors.Count; i++)
-                        {
-                            colorIndex = i;
-                            if (!_adjacentColors.Contains(colorIndex))
-                            {
-                                break;
-                            }
-                        }
-
-                        if (i == _possibleColors.Count)
-                        {
-                            colorIndex = _random.Next(_possibleColors.Count);
-                        }
-                    }
+                    var colorIndex = FindDistinctColour();
 
                     junction.ColorIndex = colorIndex;
 
                     return _possibleColors[colorIndex];
 
-                    // Get adjacent (peer) junctions
-                    IEnumerable<IEnumerable<Junction>> GetPeers()
+                    int FindDistinctColour()
                     {
-                        yield return junction.Youngest.Ancestors;
-                        yield return junction.Youngest.Descendants;
-                        yield return junction.Oldest.Ancestors;
-                        yield return junction.Oldest.Descendants;
+                        // NOTE we reuse _adjacentColors to avoid allocating lists during UI painting.
+                        // This is safe as we are always on the UI thread here.
+                        _adjacentColors.Clear();
+                        AddAdjacentColors(junction.Youngest.Ancestors);
+                        AddAdjacentColors(junction.Youngest.Descendants);
+                        AddAdjacentColors(junction.Oldest.Ancestors);
+                        AddAdjacentColors(junction.Oldest.Descendants);
+
+                        if (_adjacentColors.Count == 0)
+                        {
+                            // This is an end-point. Use the first colour.
+                            return 0;
+                        }
+
+                        // This is a parent branch, calculate new color based on parent branch
+                        for (var i = 0; i < _possibleColors.Count; i++)
+                        {
+                            if (!_adjacentColors.Contains(i))
+                            {
+                                return i;
+                            }
+                        }
+
+                        // All colours are adjacent (highly uncommon!) so just pick one at random
+                        return _random.Next(_possibleColors.Count);
+
+                        void AddAdjacentColors(IReadOnlyList<Junction> peers)
+                        {
+                            // ReSharper disable once ForCanBeConvertedToForeach
+                            for (var i = 0; i < peers.Count; i++)
+                            {
+                                var peer = peers[i];
+                                var peerColorIndex = peer.ColorIndex;
+                                if (peerColorIndex != -1)
+                                {
+                                    _adjacentColors.Add(peerColorIndex);
+                                }
+                            }
+                        }
                     }
                 }
             }
