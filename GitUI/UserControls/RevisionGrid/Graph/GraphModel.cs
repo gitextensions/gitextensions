@@ -86,7 +86,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // If we haven't seen this node yet, create a new junction.
             if (!GetOrCreateNode(revision.Guid, out var node) && (parentIds == null || parentIds.Count == 0))
             {
-                _junctions.Add(new Junction(node, node));
+                _junctions.Add(new Junction(node));
             }
 
             Count++;
