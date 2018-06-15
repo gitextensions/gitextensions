@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
@@ -80,31 +81,21 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
-        public Junction(Node node, Node parent)
+        public Junction(Node node, [CanBeNull] Node parent = null)
         {
 #if DEBUG
+            Debug.Assert(!ReferenceEquals(node, parent), "!ReferenceEquals(node, parent)");
             _debugId = debugIdNext++;
 #endif
 
             AddNode(node);
 
-            if (node != parent)
+            if (parent != null)
             {
                 node.Ancestors.Add(this);
                 parent.Descendants.Add(this);
                 AddNode(parent);
             }
-        }
-
-        private Junction(Junction descendant, Node node)
-        {
-            // Private constructor used by split. This junction will be a
-            // ancestor of an existing junction.
-#if DEBUG
-            _debugId = debugIdNext++;
-#endif
-            node.Ancestors.Remove(descendant);
-            AddNode(node);
         }
 
         public Node Youngest => this[0];
@@ -153,7 +144,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return null;
             }
 
-            var bottom = new Junction(this, node);
+            var bottom = new Junction(node);
+            node.Ancestors.Remove(this);
 
             // Add 1, since node was at the index
             index += 1;
