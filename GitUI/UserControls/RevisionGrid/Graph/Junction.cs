@@ -24,9 +24,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         private readonly uint _debugId;
 
-        public State CurrentState = State.Unprocessed;
-        public bool IsRelative;
-        public bool HighLight;
+        public State CurrentState { get; set; } = State.Unprocessed;
+        public bool IsRelative { get; set; }
+        public bool HighLight { get; set; }
 
         public Junction(Node node, Node parent)
         {
