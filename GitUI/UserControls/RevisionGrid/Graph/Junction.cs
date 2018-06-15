@@ -8,11 +8,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     {
         #region State enum
 
+        private const uint StateMask = 0xF000_0000;
+
         internal enum State
         {
-            Unprocessed,
-            Processing,
-            Processed,
+            Unprocessed = 0x0000_0000,
+            Processing = 0x1000_0000,
+            Processed = 0x2000_0000,
         }
 
         #endregion
@@ -25,10 +27,58 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private readonly List<Node> _nodes = new List<Node>(capacity: 3);
         private readonly Dictionary<Node, int> _nodeIndices = new Dictionary<Node, int>();
 
-        public int ColorIndex { get; set; } = -1;
-        public State CurrentState { get; set; } = State.Unprocessed;
-        public bool IsRelative { get; set; }
-        public bool HighLight { get; set; }
+        /// <summary>
+        /// We pack <see cref="ColorIndex"/>, <see cref="CurrentState"/>, <see cref="IsRelative"/> and <see cref="HighLight"/> into a single field.
+        /// </summary>
+        private uint _flags = 0x0000_FFFF;
+
+        public int ColorIndex
+        {
+            get
+            {
+                var i = (int)(_flags & 0x0000_FFFF);
+                return i == 0x0000_FFFF ? -1 : i;
+            }
+            set => _flags = (_flags & 0xFFFF_0000) | (uint)value;
+        }
+
+        public State CurrentState
+        {
+            get => (State)(_flags & StateMask);
+            set => _flags = (_flags & 0x0FFF_FFFF) | (uint)value;
+        }
+
+        public bool IsRelative
+        {
+            get => (_flags & 0x0100_0000) != 0;
+            set
+            {
+                if (value)
+                {
+                    _flags |= 0x0100_0000;
+                }
+                else
+                {
+                    _flags &= unchecked((uint)~0x0100_0000);
+                }
+            }
+        }
+
+        public bool HighLight
+        {
+            get => (_flags & 0x0200_0000) != 0;
+            set
+            {
+                if (value)
+                {
+                    _flags |= 0x0200_0000;
+                }
+                else
+                {
+                    _flags &= unchecked((uint)~0x0200_0000);
+                }
+            }
+        }
 
         public Junction(Node node, Node parent)
         {
