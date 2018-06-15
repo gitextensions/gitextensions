@@ -393,6 +393,44 @@ namespace GitUI.Editor.RichTextBoxExtension
             return ((cf.dwEffects & CFE.LINK) == CFE.LINK);
         }
 
+        private static void RtbSetSelectedRtf(RichTextBox rtb, string str)
+        {
+            // Work around bug in DotNet.
+            // Basically it assumes that incoming text is always in the default
+            // encoding so giving it a unicode string throws an exception.
+            // (Bug #5005)
+            try
+            {
+                rtb.SelectedRtf = str;
+            }
+            catch (ArgumentException)
+            {
+                // NOTE: This will break any text which actually contains UTF-8 characters!
+                if (str.StartsWith(@"{\urtf"))
+                {
+                    // Convert "urtf" -> "rtf"
+                    str = str.Remove(2, 1);
+
+                    // Re-encode unicode characters; doesn't actually fix displaying
+                    // unicode characters though.
+                    var sb = new StringBuilder();
+                    foreach (var c in str)
+                    {
+                        if (c < 0x7f)
+                        {
+                            sb.Append(c);
+                        }
+                        else
+                        {
+                            sb.Append(@"\u" + Convert.ToUInt32(c) + "?");
+                        }
+                    }
+
+                    rtb.SelectedRtf = sb.ToString();
+                }
+            }
+        }
+
         static void AddLink(this RichTextBox rtb, string text)
         {
             int position = rtb.SelectionStart;
@@ -423,9 +461,12 @@ namespace GitUI.Editor.RichTextBoxExtension
             {
                 string head = rtfText.Substring(0, idx);
                 string tail = rtfText.Substring(idx);
-                rtb.SelectedRtf = head + @"\v #" + hyperlink + @"\v0" + tail;
+                RtbSetSelectedRtf(rtb, head + @"\v #" + hyperlink + @"\v0" + tail);
             }
-            rtb.SelectedRtf = ("{\rtf1\ansi " + text + "\v #") + hyperlink + "\v0}";
+
+            // What if 'text' or 'hyperlink' contain UTF characters? Shouldn't we either use \urtf or recode the text?
+            // Also, aren't we overwriting what we set above?
+            RtbSetSelectedRtf(rtb, (@"{\rtf1\ansi\ansicpg65001 " + text + @"\v #") + hyperlink + @"\v0}");
             rtb.Select(position, text.Length + hyperlink.Length + 1);
             rtb.SetLink(true);
             rtb.Select(position + text.Length + hyperlink.Length + 1, 0);
@@ -1413,7 +1454,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                             {
                                 string head = rtfText.Substring(0, idx);
                                 string tail = rtfText.Substring(idx);
-                                rtb.SelectedRtf = head + @"\v #" + cs.hyperlink + @"\v0" + tail;
+                                RtbSetSelectedRtf(rtb, head + @"\v #" + cs.hyperlink + @"\v0" + tail);
                                 length = rtb.TextLength - cs.hyperlinkStart;
                             }
                         }
