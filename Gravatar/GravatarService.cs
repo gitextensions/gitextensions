@@ -181,7 +181,6 @@ namespace Gravatar
 
         private Task<Image> LoadFromGravatarAsync(string imageFileName, string email, int imageSize, DefaultImageType defaultImageType)
         {
-            // TODO merge requests for the same file name, which causes exceptions when scrolling revision grid quickly
             var imageUrl = BuildGravatarUrl(email, imageSize, false, Rating.G, defaultImageType);
             return DownloadImageAsync(imageUrl, imageFileName);
         }
