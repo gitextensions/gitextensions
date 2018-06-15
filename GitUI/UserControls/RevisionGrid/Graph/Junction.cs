@@ -33,6 +33,28 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </summary>
         private uint _flags = 0x0000_FFFF;
 
+        public Junction(Node node, [CanBeNull] Node parent = null)
+        {
+#if DEBUG
+            Debug.Assert(!ReferenceEquals(node, parent), "!ReferenceEquals(node, parent)");
+            _debugId = debugIdNext++;
+#endif
+
+            AddNode(node);
+
+            if (parent != null)
+            {
+                node.Ancestors.Add(this);
+                parent.Descendants.Add(this);
+                AddNode(parent);
+            }
+        }
+
+        public Node this[int index] => _nodes[index];
+        public Node Youngest => _nodes[0];
+        public Node Oldest => _nodes[_nodes.Count - 1];
+        public int NodesCount => _nodes.Count;
+
         public int ColorIndex
         {
             get
@@ -81,27 +103,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
-        public Junction(Node node, [CanBeNull] Node parent = null)
-        {
-#if DEBUG
-            Debug.Assert(!ReferenceEquals(node, parent), "!ReferenceEquals(node, parent)");
-            _debugId = debugIdNext++;
-#endif
-
-            AddNode(node);
-
-            if (parent != null)
-            {
-                node.Ancestors.Add(this);
-                parent.Descendants.Add(this);
-                AddNode(parent);
-            }
-        }
-
-        public Node Youngest => this[0];
-
-        public Node Oldest => this[NodesCount - 1];
-
         public Node ChildOf(Node parent)
         {
             if (_nodeIndices.TryGetValue(parent, out var childIndex))
@@ -116,10 +117,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             throw new ArgumentException("Junction:\n" + ToString() + "\ndoesn't contain this parent:\n" + parent);
         }
-
-        public int NodesCount => _nodes.Count;
-
-        public Node this[int index] => _nodes[index];
 
         public void Add(Node parent)
         {
