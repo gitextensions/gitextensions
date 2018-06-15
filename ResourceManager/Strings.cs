@@ -17,8 +17,6 @@ namespace ResourceManager
 
         private static Lazy<Strings> _instance = new Lazy<Strings>();
 
-        private static Strings Instance => _instance.Value;
-
         public static void Reinit()
         {
             if (_instance.IsValueCreated)
@@ -27,74 +25,23 @@ namespace ResourceManager
             }
         }
 
-        public static string GetDateText()
-        {
-            return Instance._dateText.Text;
-        }
+        public static string Date => _instance.Value._dateText.Text;
+        public static string Author => _instance.Value._authorText.Text;
+        public static string AuthorDate => _instance.Value._authorDateText.Text;
+        public static string Committer => _instance.Value._committerText.Text;
+        public static string CommitDate => _instance.Value._commitDateText.Text;
+        public static string CommitHash => _instance.Value._commitHashText.Text;
+        public static string Message => _instance.Value._messageText.Text;
+        public static string Parents => _instance.Value._parentsText.Text;
+        public static string Children => _instance.Value._childrenText.Text;
+        public static string Workspace => _instance.Value._workspaceText.Text;
+        public static string Index => _instance.Value._indexText.Text;
+        public static string LoadingData => _instance.Value._loadingDataText.Text;
+        public static string UninterestingDiffOmitted => _instance.Value._uninterestingDiffOmitted.Text;
 
-        public static string GetAuthorText()
-        {
-            return Instance._authorText.Text;
-        }
-
-        public static string GetAuthorDateText()
-        {
-            return Instance._authorDateText.Text;
-        }
-
-        public static string GetCommitterText()
-        {
-            return Instance._committerText.Text;
-        }
-
-        public static string GetCommitDateText()
-        {
-            return Instance._commitDateText.Text;
-        }
-
-        public static string GetCommitHashText()
-        {
-            return Instance._commitHashText.Text;
-        }
-
-        public static string GetMessageText()
-        {
-            return Instance._messageText.Text;
-        }
-
-        public static string GetParentsText()
-        {
-            return Instance._parentsText.Text;
-        }
-
-        public static string GetChildrenText()
-        {
-            return Instance._childrenText.Text;
-        }
-
-        public static string GetWorkspaceText()
-        {
-            return Instance._workspaceText.Text;
-        }
-
-        public static string GetIndexText()
-        {
-            return Instance._indexText.Text;
-        }
-
-        public static string GetLoadingDataText()
-        {
-            return Instance._loadingDataText.Text;
-        }
-
-        public static readonly TranslationString BranchesText = new TranslationString("Branches");
-        public static readonly TranslationString RemotesText = new TranslationString("Remotes");
-        public static readonly TranslationString TagsText = new TranslationString("Tags");
-
-        public static string GetUninterestingDiffOmitted()
-        {
-            return Instance._uninterestingDiffOmitted.Text;
-        }
+        public static string Branches => _instance.Value._branchesText.Text;
+        public static string Remotes => _instance.Value._remotesText.Text;
+        public static string Tags => _instance.Value._tagsText.Text;
 
         private readonly TranslationString _dateText       = new TranslationString("Date");
         private readonly TranslationString _authorText     = new TranslationString("Author");
@@ -107,56 +54,55 @@ namespace ResourceManager
         private readonly TranslationString _childrenText   = new TranslationString("Children");
         private readonly TranslationString _workspaceText  = new TranslationString("Workspace");
         private readonly TranslationString _indexText      = new TranslationString("Index");
-
-        private readonly TranslationString _loadingDataText
-            = new TranslationString("Loading data...");
-
-        private readonly TranslationString _uninterestingDiffOmitted
-            = new TranslationString("Uninteresting diff hunks are omitted.");
+        private readonly TranslationString _loadingDataText = new TranslationString("Loading data...");
+        private readonly TranslationString _uninterestingDiffOmitted = new TranslationString("Uninteresting diff hunks are omitted.");
+        private readonly TranslationString _branchesText   = new TranslationString("Branches");
+        private readonly TranslationString _remotesText    = new TranslationString("Remotes");
+        private readonly TranslationString _tagsText       = new TranslationString("Tags");
 
         public static string GetNSecondsAgoText(int value)
         {
-            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._secondsAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._secondsAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNMinutesAgoText(int value)
         {
-            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._minutesAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._minutesAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNHoursAgoText(int value)
         {
-            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._hoursAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._hoursAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNDaysAgoText(int value)
         {
-            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._daysAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._daysAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNWeeksAgoText(int value)
         {
-            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._weeksAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._weeksAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNMonthsAgoText(int value)
         {
-            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._monthsAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._monthsAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetNYearsAgoText(int value)
         {
-            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._yearsAgo.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._yearsAgo.Text, value, Math.Abs(value));
         }
 
         public static string GetUnstagedCountText(int value)
         {
-            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._unstagedCountText.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._unstagedCountText.Text, value, Math.Abs(value));
         }
 
         public static string GetStagedCountText(int value)
         {
-            return Smart.Format(AppSettings.CurrentCultureInfo, Instance._stagedCountText.Text, value, Math.Abs(value));
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._stagedCountText.Text, value, Math.Abs(value));
         }
 
         private readonly TranslationString _secondsAgo = new TranslationString("{0} {1:second|seconds} ago");

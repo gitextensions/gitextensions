@@ -254,7 +254,7 @@ namespace GitUI.BranchTreePanel
             {
                 base.FillTreeViewNode();
 
-                TreeViewNode.Text = $@"{Strings.BranchesText} ({Nodes.Count})";
+                TreeViewNode.Text = $@"{Strings.Branches} ({Nodes.Count})";
 
                 var activeBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsActive);
                 if (activeBranch == null)
