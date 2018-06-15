@@ -67,13 +67,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             _e.Graphics.FillRectangle(_indicatorBackBrush, indicatorRect);
 
-/*
-            using (var path = RevisionGridRefRenderer.CreateRoundRectPath(indicatorRect, 2))
-            {
-                _e.Graphics.FillPath(_indicatorBackBrush, path);
-            }
-*/
-
             var x = indicatorRect.X + paddingX;
             var y = indicatorRect.Y + paddingTop;
 

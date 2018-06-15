@@ -7,7 +7,7 @@ using SmartFormat;
 namespace ResourceManager
 {
     /// <summary>Contains common string literals which are translated.</summary>
-    public class Strings : Translate
+    public sealed class Strings : Translate
     {
         // public only because of FormTranslate
         public Strings()
@@ -17,7 +17,7 @@ namespace ResourceManager
 
         private static Lazy<Strings> _instance = new Lazy<Strings>();
 
-        public static Strings Instance => _instance.Value;
+        private static Strings Instance => _instance.Value;
 
         public static void Reinit()
         {
