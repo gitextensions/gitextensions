@@ -24,6 +24,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         private readonly uint _debugId;
 
+        public int ColorIndex { get; set; } = -1;
         public State CurrentState { get; set; } = State.Unprocessed;
         public bool IsRelative { get; set; }
         public bool HighLight { get; set; }

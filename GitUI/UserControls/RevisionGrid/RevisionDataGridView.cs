@@ -51,7 +51,6 @@ namespace GitUI.UserControls.RevisionGrid
 
         private const int MaxLanes = 40;
 
-        private readonly Dictionary<Junction, int> _colorByJunction = new Dictionary<Junction, int>();
         private readonly Color _nonRelativeColor = Color.LightGray;
 
         private readonly GraphModel _graphData = new GraphModel();
@@ -397,7 +396,6 @@ namespace GitUI.UserControls.RevisionGrid
             lock (_graphData)
             {
                 SetRowCount(0);
-                _colorByJunction.Clear();
                 _graphData.Clear();
                 _graphDataCount = 0;
                 RebuildGraph();
@@ -743,9 +741,9 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             // See if this junction's colour has already been calculated
-            if (_colorByJunction.TryGetValue(junction, out var colorIndex))
+            if (junction.ColorIndex != -1)
             {
-                return _possibleColors[colorIndex];
+                return _possibleColors[junction.ColorIndex];
             }
 
             // NOTE we reuse _adjacentColors to avoid allocating lists during UI painting.
@@ -753,8 +751,10 @@ namespace GitUI.UserControls.RevisionGrid
             _adjacentColors.Clear();
             _adjacentColors.AddRange(
                 from peer in GetPeers().SelectMany()
-                where _colorByJunction.TryGetValue(peer, out colorIndex)
-                select colorIndex);
+                where peer.ColorIndex != -1
+                select peer.ColorIndex);
+
+            int colorIndex = 0;
 
             if (_adjacentColors.Count == 0)
             {
@@ -780,7 +780,8 @@ namespace GitUI.UserControls.RevisionGrid
                 }
             }
 
-            _colorByJunction[junction] = colorIndex;
+            junction.ColorIndex = colorIndex;
+
             return _possibleColors[colorIndex];
 
             // Get adjacent (peer) junctions
