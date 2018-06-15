@@ -107,7 +107,7 @@ namespace GitUI.BranchTreePanel
             {
                 base.FillTreeViewNode();
 
-                TreeViewNode.Text = $@"{Strings.TagsText} ({Nodes.Count})";
+                TreeViewNode.Text = $@"{Strings.Tags} ({Nodes.Count})";
 
                 TreeViewNode.Collapse();
             }

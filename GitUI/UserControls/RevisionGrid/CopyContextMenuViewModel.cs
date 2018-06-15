@@ -39,10 +39,10 @@ namespace GitUI.UserControls.RevisionGrid
 
             DetailItems = new[]
             {
-                new DetailItem(Strings.GetCommitHashText(), gitRevision.Guid, 15),
-                new DetailItem(Strings.GetMessageText(), gitRevision.Subject, 30),
-                new DetailItem(Strings.GetAuthorText(), gitRevision.Author),
-                new DetailItem(Strings.GetDateText(), gitRevision.CommitDate.ToString()),
+                new DetailItem(Strings.CommitHash, gitRevision.Guid, 15),
+                new DetailItem(Strings.Message, gitRevision.Subject, 30),
+                new DetailItem(Strings.Author, gitRevision.Author),
+                new DetailItem(Strings.Date, gitRevision.CommitDate.ToString()),
             };
 
             var gitRefListsForRevision = new GitRefListsForRevision(gitRevision);

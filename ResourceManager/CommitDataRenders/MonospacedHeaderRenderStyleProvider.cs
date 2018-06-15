@@ -25,13 +25,13 @@ namespace ResourceManager.CommitDataRenders
         {
             var strings = new[]
             {
-                Strings.GetAuthorText(),
-                Strings.GetAuthorDateText(),
-                Strings.GetCommitterText(),
-                Strings.GetCommitDateText(),
-                Strings.GetCommitHashText(),
-                Strings.GetChildrenText(),
-                Strings.GetParentsText()
+                Strings.Author,
+                Strings.AuthorDate,
+                Strings.Committer,
+                Strings.CommitDate,
+                Strings.CommitHash,
+                Strings.Children,
+                Strings.Parents
             };
 
             var maxLegnth = strings.Select(s => s.Length).Max();

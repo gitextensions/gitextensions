@@ -883,7 +883,7 @@ namespace GitUI
                         Committer = userName,
                         CommitDate = DateTime.MaxValue,
                         CommitterEmail = userEmail,
-                        Subject = Strings.GetWorkspaceText(),
+                        Subject = Strings.Workspace,
                         ParentGuids = new[] { GitRevision.IndexGuid }
                     };
                     _gridView.Add(unstagedRev);
@@ -897,7 +897,7 @@ namespace GitUI
                         Committer = userName,
                         CommitDate = DateTime.MaxValue,
                         CommitterEmail = userEmail,
-                        Subject = Strings.GetIndexText(),
+                        Subject = Strings.Index,
                         ParentGuids = new[] { filteredCurrentCheckout }
                     };
                     _gridView.Add(stagedRev);
