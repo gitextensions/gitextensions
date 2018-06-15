@@ -22,7 +22,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private readonly uint _debugId;
 #endif
 
-        private readonly List<Node> _nodes = new List<Node>();
+        private readonly List<Node> _nodes = new List<Node>(capacity: 3);
         private readonly Dictionary<Node, int> _nodeIndices = new Dictionary<Node, int>();
 
         public int ColorIndex { get; set; } = -1;
