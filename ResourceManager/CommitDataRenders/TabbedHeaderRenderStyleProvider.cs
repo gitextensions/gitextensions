@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -8,17 +8,9 @@ namespace ResourceManager.CommitDataRenders
 {
     public sealed class TabbedHeaderRenderStyleProvider : IHeaderRenderStyleProvider
     {
-        public Font GetFont(Graphics g)
-        {
-            return AppSettings.Font;
-        }
+        private readonly IReadOnlyList<int> _tabStops;
 
-        public int GetMaxWidth()
-        {
-            return 16;
-        }
-
-        public IEnumerable<int> GetTabStops()
+        public TabbedHeaderRenderStyleProvider()
         {
             var strings = new[]
             {
@@ -31,14 +23,18 @@ namespace ResourceManager.CommitDataRenders
                 Strings.Parents
             };
 
-            int tabStop = 0;
-            foreach (string s in strings)
-            {
-                tabStop = Math.Max(tabStop, TextRenderer.MeasureText(s + "  ", AppSettings.Font).Width);
-            }
+            var tabStop = strings
+                .Select(s => TextRenderer.MeasureText(s + "  ", AppSettings.Font).Width)
+                .Max();
 
             // simulate a two column layout even when there's more then one tab used
-            return new[] { tabStop, tabStop + 1, tabStop + 2, tabStop + 3 };
+            _tabStops = new[] { tabStop, tabStop + 1, tabStop + 2, tabStop + 3 };
         }
+
+        public Font GetFont(Graphics g) => AppSettings.Font;
+
+        public int GetMaxWidth() => 16;
+
+        public IEnumerable<int> GetTabStops() => _tabStops;
     }
 }
