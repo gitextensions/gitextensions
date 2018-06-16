@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 using GitUI.Properties;
 using Gravatar;
 
@@ -22,7 +23,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 HeaderText = "Avatar",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                Resizable = DataGridViewTriState.False
+                Resizable = DataGridViewTriState.False,
+                Width = DpiUtil.Scale(32)
             };
 
             _avatarImageNameProvider = new AvatarImageNameProvider();

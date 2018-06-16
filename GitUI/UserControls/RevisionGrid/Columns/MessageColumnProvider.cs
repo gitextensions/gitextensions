@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
@@ -25,7 +26,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 HeaderText = "Message",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                FillWeight = 150
+                FillWeight = 200,
+                Width = DpiUtil.Scale(400)
             };
         }
 
