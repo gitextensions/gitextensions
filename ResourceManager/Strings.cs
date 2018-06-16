@@ -52,8 +52,8 @@ namespace ResourceManager
         private readonly TranslationString _messageText    = new TranslationString("Message");
         private readonly TranslationString _parentsText    = new TranslationString("Parent(s)");
         private readonly TranslationString _childrenText   = new TranslationString("Children");
-        private readonly TranslationString _workspaceText  = new TranslationString("Workspace");
-        private readonly TranslationString _indexText      = new TranslationString("Index");
+        private readonly TranslationString _workspaceText  = new TranslationString("Working directory");
+        private readonly TranslationString _indexText      = new TranslationString("Commit index");
         private readonly TranslationString _loadingDataText = new TranslationString("Loading data...");
         private readonly TranslationString _uninterestingDiffOmitted = new TranslationString("Uninteresting diff hunks are omitted.");
         private readonly TranslationString _branchesText   = new TranslationString("Branches");
