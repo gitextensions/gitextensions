@@ -20,5 +20,6 @@ Please also read CONTRIBUTING.md.
 - GitExtensions version:
 - GIT version: 
 - OS version: 
+- .NET version: 
 
 **Did this work in previous version of GitExtensions (which)?**
