@@ -10958,7 +10958,7 @@ OpenSSHを使う場合、コマンドラインダイアログが表示されま�
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>子コミット</target>
         
       </trans-unit>
@@ -11023,7 +11023,7 @@ OpenSSHを使う場合、コマンドラインダイアログが表示されま�
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
         <target>親コミット</target>
         
       </trans-unit>

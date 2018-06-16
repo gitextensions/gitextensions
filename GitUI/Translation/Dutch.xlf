@@ -11088,7 +11088,7 @@ Als OpenSSH wordt gebruikt worden command line schermen getoond!
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>Kinderen</target>
         
       </trans-unit>
@@ -11153,7 +11153,7 @@ Als OpenSSH wordt gebruikt worden command line schermen getoond!
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
         <target>Ouder{s}</target>
         
       </trans-unit>

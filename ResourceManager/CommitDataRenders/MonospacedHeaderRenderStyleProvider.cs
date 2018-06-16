@@ -22,11 +22,11 @@ namespace ResourceManager.CommitDataRenders
                 Strings.Committer,
                 Strings.CommitDate,
                 Strings.CommitHash,
-                Strings.Children,
-                Strings.Parents
+                Strings.GetChildren(10), // assume text for plural case is longer
+                Strings.GetParents(10)
             };
 
-            _maxLength = strings.Select(s => s.Length).Max();
+            _maxLength = strings.Select(s => s.Length).Max() + 2;
         }
 
         public Font GetFont(Graphics g)
