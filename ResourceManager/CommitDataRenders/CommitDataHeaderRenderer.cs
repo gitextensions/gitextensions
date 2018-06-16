@@ -99,13 +99,13 @@ namespace ResourceManager.CommitDataRenders
 
             if (commitData.ChildrenGuids != null && commitData.ChildrenGuids.Count != 0)
             {
-                header.AppendLine(_labelFormatter.FormatLabel(Strings.Children, padding) + RenderHashCollection(commitData.ChildrenGuids, showRevisionsAsLinks));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetChildren(commitData.ChildrenGuids.Count), padding) + RenderHashCollection(commitData.ChildrenGuids, showRevisionsAsLinks));
             }
 
             var parentGuids = commitData.ParentGuids.Where(s => !string.IsNullOrEmpty(s)).ToList();
             if (parentGuids.Any())
             {
-                header.AppendLine(_labelFormatter.FormatLabel(Strings.Parents, padding) + RenderHashCollection(parentGuids, showRevisionsAsLinks));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetParents(parentGuids.Count), padding) + RenderHashCollection(parentGuids, showRevisionsAsLinks));
             }
 
             // remove the trailing newline character

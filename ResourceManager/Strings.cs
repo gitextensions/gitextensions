@@ -32,8 +32,6 @@ namespace ResourceManager
         public static string CommitDate => _instance.Value._commitDateText.Text;
         public static string CommitHash => _instance.Value._commitHashText.Text;
         public static string Message => _instance.Value._messageText.Text;
-        public static string Parents => _instance.Value._parentsText.Text;
-        public static string Children => _instance.Value._childrenText.Text;
         public static string Workspace => _instance.Value._workspaceText.Text;
         public static string Index => _instance.Value._indexText.Text;
         public static string LoadingData => _instance.Value._loadingDataText.Text;
@@ -50,8 +48,6 @@ namespace ResourceManager
         private readonly TranslationString _commitDateText = new TranslationString("Commit date");
         private readonly TranslationString _commitHashText = new TranslationString("Commit hash");
         private readonly TranslationString _messageText    = new TranslationString("Message");
-        private readonly TranslationString _parentsText    = new TranslationString("Parent(s)");
-        private readonly TranslationString _childrenText   = new TranslationString("Children");
         private readonly TranslationString _workspaceText  = new TranslationString("Working directory");
         private readonly TranslationString _indexText      = new TranslationString("Commit index");
         private readonly TranslationString _loadingDataText = new TranslationString("Loading data...");
@@ -59,6 +55,19 @@ namespace ResourceManager
         private readonly TranslationString _branchesText   = new TranslationString("Branches");
         private readonly TranslationString _remotesText    = new TranslationString("Remotes");
         private readonly TranslationString _tagsText       = new TranslationString("Tags");
+
+        public static string GetParents(int value)
+        {
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._parentsText.Text, value, Math.Abs(value));
+        }
+
+        public static string GetChildren(int value)
+        {
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._childrenText.Text, value, Math.Abs(value));
+        }
+
+        private readonly TranslationString _parentsText    = new TranslationString("{0:Parent|Parents}");
+        private readonly TranslationString _childrenText   = new TranslationString("{0:Child|Children}");
 
         public static string GetNSecondsAgoText(int value)
         {

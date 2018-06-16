@@ -11062,7 +11062,7 @@ When OpenSSH is used, command line dialogs are shown!
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>孩子</target>
         
       </trans-unit>
@@ -11127,7 +11127,7 @@ When OpenSSH is used, command line dialogs are shown!
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
         <target>父修订</target>
         
       </trans-unit>

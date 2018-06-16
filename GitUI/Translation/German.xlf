@@ -10990,7 +10990,7 @@ Bei der Verwendung von OpenSSH werden Kommandozeilendialoge angezeigt!
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>Kinder</target>
         
       </trans-unit>
@@ -11055,7 +11055,7 @@ Bei der Verwendung von OpenSSH werden Kommandozeilendialoge angezeigt!
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
         <target>Eltern</target>
         
       </trans-unit>

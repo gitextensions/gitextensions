@@ -10788,7 +10788,7 @@ Při použití OpenSSH se budou zobrazovat dialogy příkazové řádky!
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>Potomci</target>
         
       </trans-unit>
@@ -10853,7 +10853,7 @@ Při použití OpenSSH se budou zobrazovat dialogy příkazové řádky!
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
         <target>Rodič(e)</target>
         
       </trans-unit>

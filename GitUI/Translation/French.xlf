@@ -11089,7 +11089,7 @@ Quand OpenSSH est utilisé, des fenêtres de console sont affichés!
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>Enfant</target>
         
       </trans-unit>
@@ -11154,8 +11154,8 @@ Quand OpenSSH est utilisé, des fenêtres de console sont affichés!
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
-        <target>Parent(s)</target>
+        <source>{0:Parent|Parents}</source>
+        <target>{0:Parent|Parents}</target>
         
       </trans-unit>
       <trans-unit id="_secondsAgo.Text">

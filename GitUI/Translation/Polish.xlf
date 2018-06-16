@@ -10913,7 +10913,7 @@ Gdy jest używane OpenSSH, będą wyświetlane okna wiersza poleceń!
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>Dziecko</target>
         
       </trans-unit>
@@ -10978,7 +10978,7 @@ Gdy jest używane OpenSSH, będą wyświetlane okna wiersza poleceń!
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
         <target>Rodzic(e)</target>
         
       </trans-unit>
