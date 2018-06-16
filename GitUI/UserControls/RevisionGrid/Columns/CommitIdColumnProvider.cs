@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
@@ -25,7 +26,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 FillWeight = 20,
                 Resizable = DataGridViewTriState.True,
-                MinimumWidth = 16
+                MinimumWidth = DpiUtil.Scale(48)
             };
         }
 
