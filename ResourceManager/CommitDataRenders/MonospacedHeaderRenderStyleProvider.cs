@@ -11,17 +11,9 @@ namespace ResourceManager.CommitDataRenders
     /// </summary>
     public sealed class MonospacedHeaderRenderStyleProvider : IHeaderRenderStyleProvider
     {
-        public Font GetFont(Graphics g)
-        {
-            if (!AppSettings.Font.IsFixedWidth(g))
-            {
-                return new Font(FontFamily.GenericMonospace, AppSettings.Font.Size);
-            }
+        private readonly int _maxLength;
 
-            return AppSettings.Font;
-        }
-
-        public int GetMaxWidth()
+        public MonospacedHeaderRenderStyleProvider()
         {
             var strings = new[]
             {
@@ -34,13 +26,21 @@ namespace ResourceManager.CommitDataRenders
                 Strings.Parents
             };
 
-            var maxLegnth = strings.Select(s => s.Length).Max();
-            return maxLegnth + 2;
+            _maxLength = strings.Select(s => s.Length).Max();
         }
 
-        public IEnumerable<int> GetTabStops()
+        public Font GetFont(Graphics g)
         {
-            return Enumerable.Empty<int>();
+            if (!AppSettings.Font.IsFixedWidth(g))
+            {
+                return new Font(FontFamily.GenericMonospace, AppSettings.Font.Size);
+            }
+
+            return AppSettings.Font;
         }
+
+        public int GetMaxWidth() => _maxLength;
+
+        public IEnumerable<int> GetTabStops() => Enumerable.Empty<int>();
     }
 }
