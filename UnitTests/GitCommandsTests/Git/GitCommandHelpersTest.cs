@@ -630,6 +630,9 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(
                 "status --porcelain -z --untracked-files --ignore-submodules=all",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.All));
+            Assert.AreEqual(
+                "--no-optional-locks status --porcelain -z --untracked-files --ignore-submodules",
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default, noLocks: true));
         }
 
         [Test]
