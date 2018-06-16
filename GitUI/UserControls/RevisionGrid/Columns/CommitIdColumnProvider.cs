@@ -11,6 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 {
     internal sealed class CommitIdColumnProvider : ColumnProvider
     {
+        private readonly Dictionary<Font, int[]> _widthByLengthByFont = new Dictionary<Font, int[]>(capacity: 4);
         private readonly RevisionGridControl _grid;
 
         public CommitIdColumnProvider(RevisionGridControl grid)
@@ -32,22 +33,24 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void Refresh() => Column.Visible = AppSettings.ShowObjectIdColumn;
 
-        private readonly Dictionary<Font, int[]> _widthByLengthByFont = new Dictionary<Font, int[]>(capacity: 4);
-
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
         {
             if (!_widthByLengthByFont.TryGetValue(style.normalFont, out var widthByLength))
             {
-                widthByLength = Enumerable.Range(0, ObjectId.Sha1CharCount).Select(c => TextRenderer.MeasureText(new string('8', c), style.normalFont).Width).ToArray();
+                widthByLength = Enumerable.Range(0, ObjectId.Sha1CharCount + 1).Select(c => TextRenderer.MeasureText(new string('8', c), style.normalFont).Width).ToArray();
 
                 _widthByLengthByFont[style.normalFont] = widthByLength;
             }
 
-            if (!revision.IsArtificial)
+            if (revision.ObjectId != null && !revision.IsArtificial)
             {
                 var i = Array.FindIndex(widthByLength, w => w > Column.Width);
 
-                if (i > 1 && revision.ObjectId != null)
+                if (i == -1 && Column.Width > widthByLength[widthByLength.Length - 1])
+                {
+                    _grid.DrawColumnText(e, revision.ObjectId.ToString(), style.normalFont, style.foreColor, e.CellBounds, useEllipsis: false);
+                }
+                else if (i > 1)
                 {
                     _grid.DrawColumnText(e, revision.ObjectId.ToShortString(i - 1), style.normalFont, style.foreColor, e.CellBounds, useEllipsis: false);
                 }
