@@ -7,7 +7,6 @@ using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitUI;
-using Microsoft.VisualStudio.Threading;
 using Newtonsoft.Json;
 
 namespace VstsAndTfsIntegration
@@ -15,66 +14,82 @@ namespace VstsAndTfsIntegration
     /// <summary>
     /// For VSTS and TFS >=2015
     /// </summary>
-    public class TfsApiHelper : IDisposable
+    public class TfsApiHelper
     {
-        private HttpClient _httpClient;
-        private IEnumerable<BuildDefinition> _buildDefinitions;
+        private const string BuildDefinitionsUrl = "_apis/build/definitions?api-version=2.0";
+        private readonly HttpClient _httpClient;
+        private string _buildDefinitionsToQuery;
 
-        private HttpClient InitializeHttpClient(string serverUrl, string projectName, string personalAccessToken)
+        public TfsApiHelper(HttpClient httpClient)
         {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Add(
+            _httpClient = httpClient;
+        }
+
+        private void InitializeHttpClient(string serverUrl, string projectName, string personalAccessToken)
+        {
+            _httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
                 Convert.ToBase64String(
                     System.Text.Encoding.ASCII.GetBytes($":{personalAccessToken}")));
 
             var hostUri = new Uri(serverUrl);
 
             // Uri constructor takes care of ensuring there's a slash after serverUrl, as well as path encoding projectName.
-            client.BaseAddress = new Uri(hostUri, projectName + "/");
-            return client;
+            _httpClient.BaseAddress = new Uri(hostUri, projectName + "/");
         }
 
-        private async Task<IEnumerable<BuildDefinition>> GetBuildDefinitionsAsync(string teamCollection, string projectName, Regex buildDefinitionNameFilter)
+        private async Task<T> HttpGetAsync<T>(string url)
         {
-            var buildDefs = new List<BuildDefinition>();
-
-            using (var response = await _httpClient.GetAsync($"_apis/build/definitions?api-version=2.0"))
+            using (var response = await _httpClient.GetAsync(url))
             {
                 response.EnsureSuccessStatusCode();
                 string json = await response.Content.ReadAsStringAsync();
 
-                var buildDefinitions = JsonConvert.DeserializeObject<ListWrapper<BuildDefinition>>(json);
-
-                if (buildDefinitionNameFilter == null)
-                {
-                    buildDefs.AddRange(buildDefinitions.Value);
-                }
-                else
-                {
-                    foreach (var buildDefinition in buildDefinitions.Value)
-                    {
-                        if (buildDefinitionNameFilter.IsMatch(buildDefinition.Name))
-                        {
-                            buildDefs.Add(buildDefinition);
-                        }
-                    }
-                }
+                return JsonConvert.DeserializeObject<T>(json);
             }
-
-            return buildDefs;
         }
 
-        public void ConnectToTfsServer(string serverUrl, string teamCollection, string projectName, string restApiToken, Regex buildDefinitionNameFilter = null)
+        private async Task<string> GetBuildDefinitionsAsync(string buildDefinitionNameFilter)
+        {
+            var isNotFiltered = string.IsNullOrWhiteSpace(buildDefinitionNameFilter);
+            var buildDefinitionUriFilter = isNotFiltered ? string.Empty : "&name=" + buildDefinitionNameFilter;
+            var buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(BuildDefinitionsUrl + buildDefinitionUriFilter);
+            if (buildDefinitions.Count != 0)
+            {
+                return GetBuildDefinitionsIds(buildDefinitions.Value);
+            }
+
+            if (isNotFiltered)
+            {
+                return null;
+            }
+
+            buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(BuildDefinitionsUrl);
+
+            var tfsBuildDefinitionNameFilter = new Regex(buildDefinitionNameFilter, RegexOptions.Compiled);
+            return GetBuildDefinitionsIds(buildDefinitions.Value.Where(b => tfsBuildDefinitionNameFilter.IsMatch(b.Name)));
+        }
+
+        private string GetBuildDefinitionsIds(IEnumerable<BuildDefinition> buildDefinitions)
+        {
+            if (buildDefinitions != null && buildDefinitions.Any())
+            {
+                return string.Join(",", buildDefinitions.Select(b => b.Id));
+            }
+
+            return null;
+        }
+
+        public void ConnectToTfsServer(string serverUrl, string teamCollection, string projectName, string restApiToken, string buildDefinitionNameFilter)
         {
             try
             {
-                _httpClient = InitializeHttpClient(serverUrl, projectName, restApiToken);
+                InitializeHttpClient(serverUrl, projectName, restApiToken);
 
-                var taskServerInit = ThreadHelper.JoinableTaskFactory.RunAsync(async () => await GetBuildDefinitionsAsync(teamCollection, projectName, buildDefinitionNameFilter));
-                _buildDefinitions = taskServerInit.Join();
+                var taskServerInit = ThreadHelper.JoinableTaskFactory.RunAsync(async () => await GetBuildDefinitionsAsync(buildDefinitionNameFilter));
+                _buildDefinitionsToQuery = taskServerInit.Join();
             }
             catch (Exception ex)
             {
@@ -82,36 +97,19 @@ namespace VstsAndTfsIntegration
             }
         }
 
-        public async Task<IReadOnlyList<Build>> QueryBuildsAsync(DateTime? sinceDate, bool? running)
+        public async Task<IEnumerable<Build>> QueryBuildsAsync(DateTime? sinceDate, bool? running)
         {
-            if (_buildDefinitions == null)
+            if (_buildDefinitionsToQuery == null)
             {
-                return new List<Build>();
+                return Enumerable.Empty<Build>();
             }
 
-            var result = new List<Build>();
-            string buildDefIds = string.Join(",", _buildDefinitions.Select(b => b.Id));
-            using (HttpResponseMessage response = await _httpClient.GetAsync(
-                $"_apis/build/builds?api-version=2.0&definitions={buildDefIds}"))
-            {
-                response.EnsureSuccessStatusCode();
-                string json = await response.Content.ReadAsStringAsync();
+            var builds = (await HttpGetAsync<ListWrapper<Build>>($"_apis/build/builds?api-version=2.0&definitions={_buildDefinitionsToQuery}")).Value;
 
-                var builds = JsonConvert.DeserializeObject<ListWrapper<Build>>(json).Value;
-
-                return builds
-                    .Where(b => !running.HasValue || (running.Value == b.IsInProgress))
-                    .Where(b => !sinceDate.HasValue || (b.StartTime >= sinceDate.Value))
-                    .ToList();
-            }
-        }
-
-        public void Dispose()
-        {
-            if (_httpClient != null)
-            {
-                _httpClient.Dispose();
-            }
+            return builds
+                .Where(b => !running.HasValue || running.Value == b.IsInProgress)
+                .Where(b => !sinceDate.HasValue || b.StartTime >= sinceDate.Value)
+                .ToList();
         }
     }
 
@@ -132,7 +130,7 @@ namespace VstsAndTfsIntegration
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string url { get; set; }
+        public string Url { get; set; }
     }
 
     /// <summary>

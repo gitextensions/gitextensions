@@ -101,9 +101,9 @@ namespace VstsAndTfsIntegration.Settings
             labelBuildIdFilter.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             labelBuildIdFilter.Location = new System.Drawing.Point(257, 161);
             labelBuildIdFilter.Name = "labelBuildIdFilter";
-            labelBuildIdFilter.Size = new System.Drawing.Size(90, 32);
+            labelBuildIdFilter.Size = new System.Drawing.Size(628, 32);
             labelBuildIdFilter.TabIndex = 8;
-            labelBuildIdFilter.Text = "Regexp";
+            labelBuildIdFilter.Text = "If needed, use the \'*\' wildcard or enter a Regular Expression";
             // 
             // RestApiTokenLabel
             // 

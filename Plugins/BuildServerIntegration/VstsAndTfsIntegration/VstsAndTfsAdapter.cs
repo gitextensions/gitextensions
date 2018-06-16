@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.Composition;
+using System.Net.Http;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text;
@@ -40,8 +41,13 @@ namespace VstsAndTfsIntegration
         private string _tfsServer;
         private string _tfsTeamCollectionName;
         private string _projectName;
-        private Regex _tfsBuildDefinitionNameFilter;
         private string _restApiToken;
+        private readonly HttpClient _httpClient;
+
+        public VstsAndTfsAdapter()
+        {
+            _httpClient = new HttpClient();
+        }
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
         {
@@ -66,10 +72,8 @@ namespace VstsAndTfsIntegration
                 return;
             }
 
-            _tfsBuildDefinitionNameFilter = new Regex(tfsBuildDefinitionNameFilterSetting, RegexOptions.Compiled);
-
-            _tfsHelper = new TfsApiHelper();
-            _tfsHelper.ConnectToTfsServer(_tfsServer, _tfsTeamCollectionName, _projectName, _restApiToken, _tfsBuildDefinitionNameFilter);
+            _tfsHelper = new TfsApiHelper(_httpClient);
+            _tfsHelper.ConnectToTfsServer(_tfsServer, _tfsTeamCollectionName, _projectName, _restApiToken, tfsBuildDefinitionNameFilterSetting);
         }
 
         /// <summary>
@@ -187,6 +191,7 @@ namespace VstsAndTfsIntegration
 
         public void Dispose()
         {
+            _httpClient?.Dispose();
             GC.SuppressFinalize(this);
         }
     }
