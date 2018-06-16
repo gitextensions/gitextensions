@@ -26,9 +26,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 HeaderText = "Build Status",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-
-                FillWeight = 50,
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                FillWeight = 20,
+                Width = DpiUtil.Scale(80)
             };
         }
 

@@ -22,8 +22,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 HeaderText = "Date",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                FillWeight = 80,
-                Width = DpiUtil.Scale(135)
+                FillWeight = 20,
+                Width = DpiUtil.Scale(100)
             };
         }
 
