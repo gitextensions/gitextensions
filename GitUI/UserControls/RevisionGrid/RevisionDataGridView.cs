@@ -509,12 +509,6 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
-            if (Rows[e.RowIndex].Height != RowTemplate.Height)
-            {
-                Rows[e.RowIndex].Height = RowTemplate.Height;
-                UpdateDataAndGraphColumnWidth();
-            }
-
             if (!e.State.HasFlag(DataGridViewElementStates.Visible) || e.ColumnIndex != 0)
             {
                 return;
