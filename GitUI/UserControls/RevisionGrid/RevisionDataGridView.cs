@@ -752,9 +752,10 @@ namespace GitUI.UserControls.RevisionGrid
         /// <summary>
         /// Draws the required row into <see cref="_graphBitmap"/>, or retrieves an equivalent one from the cache.
         /// </summary>
-        /// <returns>The rectangle within <see cref="_graphBitmap"/> at which the drawn image exists.</returns>
         private bool PaintGraphCell(int rowIndex, Rectangle cellBounds, Graphics graphics)
         {
+            ThreadHelper.AssertOnUIThread();
+
             if (rowIndex < 0 || _graphData.Count == 0 || _graphData.Count <= rowIndex)
             {
                 return false;
@@ -929,297 +930,295 @@ namespace GitUI.UserControls.RevisionGrid
                     _cacheCount = 0;
                 }
             }
-        }
 
-        private bool DrawItem(Graphics g, [CanBeNull] ILaneRow row)
-        {
-            ThreadHelper.AssertOnUIThread();
-
-            if (row == null || row.NodeLane == -1)
+            bool DrawItem(Graphics g, ILaneRow row)
             {
-                return false;
-            }
-
-            // Clip to the area we're drawing in, but draw 1 pixel past so
-            // that the top/bottom of the line segment's anti-aliasing isn't
-            // visible in the final rendering.
-            int top = g.RenderingOrigin.Y + (_rowHeight / 2);
-            var laneRect = new Rectangle(0, top, Width, _rowHeight);
-            Region oldClip = g.Clip;
-            var newClip = new Region(laneRect);
-            newClip.Intersect(oldClip);
-            g.Clip = newClip;
-            g.Clear(Color.Transparent);
-
-            // Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
-            _revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
-
-            var oldSmoothingMode = g.SmoothingMode;
-
-            for (int lane = 0; lane < row.Count; lane++)
-            {
-                int mid = g.RenderingOrigin.X + (int)((lane + 0.5) * _laneWidth);
-
-                for (int item = 0; item < row.LaneInfoCount(lane); item++)
+                if (row == null || row.NodeLane == -1)
                 {
-                    LaneInfo laneInfo = row[lane, item];
+                    return false;
+                }
 
-                    UpdateJunctionColors(laneInfo.Junctions);
+                // Clip to the area we're drawing in, but draw 1 pixel past so
+                // that the top/bottom of the line segment's anti-aliasing isn't
+                // visible in the final rendering.
+                int top = g.RenderingOrigin.Y + (_rowHeight / 2);
+                var laneRect = new Rectangle(0, top, Width, _rowHeight);
+                Region oldClip = g.Clip;
+                var newClip = new Region(laneRect);
+                newClip.Intersect(oldClip);
+                g.Clip = newClip;
+                g.Clear(Color.Transparent);
 
-                    // Create the brush for drawing the line
-                    Brush lineBrush = null;
-                    try
+                // Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
+                _revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
+
+                var oldSmoothingMode = g.SmoothingMode;
+
+                for (int lane = 0; lane < row.Count; lane++)
+                {
+                    int mid = g.RenderingOrigin.X + (int)((lane + 0.5) * _laneWidth);
+
+                    for (int item = 0; item < row.LaneInfoCount(lane); item++)
                     {
-                        if (_junctionColors.Count == 1 || !AppSettings.StripedBranchChange)
+                        LaneInfo laneInfo = row[lane, item];
+
+                        UpdateJunctionColors(laneInfo.Junctions);
+
+                        // Create the brush for drawing the line
+                        Brush lineBrush = null;
+                        try
                         {
-                            if (_junctionColors[0] != _nonRelativeColor)
+                            if (_junctionColors.Count == 1 || !AppSettings.StripedBranchChange)
                             {
-                                lineBrush = new SolidBrush(GetAdjustedLineColor(_junctionColors[0]));
-                            }
-                            else if (_junctionColors.Count > 1 && _junctionColors[1] != _nonRelativeColor)
-                            {
-                                lineBrush = new SolidBrush(GetAdjustedLineColor(_junctionColors[1]));
+                                if (_junctionColors[0] != _nonRelativeColor)
+                                {
+                                    lineBrush = new SolidBrush(GetAdjustedLineColor(_junctionColors[0]));
+                                }
+                                else if (_junctionColors.Count > 1 && _junctionColors[1] != _nonRelativeColor)
+                                {
+                                    lineBrush = new SolidBrush(GetAdjustedLineColor(_junctionColors[1]));
+                                }
+                                else
+                                {
+                                    lineBrush = new SolidBrush(GetAdjustedLineColor(_nonRelativeColor));
+                                }
                             }
                             else
                             {
-                                lineBrush = new SolidBrush(GetAdjustedLineColor(_nonRelativeColor));
+                                Color lastRealColor = _junctionColors.LastOrDefault(c => c != _nonRelativeColor);
+
+                                if (lastRealColor.IsEmpty)
+                                {
+                                    lineBrush = new SolidBrush(GetAdjustedLineColor(_nonRelativeColor));
+                                }
+                                else
+                                {
+                                    lineBrush = new HatchBrush(HatchStyle.DarkDownwardDiagonal, GetAdjustedLineColor(_junctionColors[0]), lastRealColor);
+                                }
                             }
-                        }
-                        else
-                        {
-                            Color lastRealColor = _junctionColors.LastOrDefault(c => c != _nonRelativeColor);
 
-                            if (lastRealColor.IsEmpty)
-                            {
-                                lineBrush = new SolidBrush(GetAdjustedLineColor(_nonRelativeColor));
-                            }
-                            else
-                            {
-                                lineBrush = new HatchBrush(HatchStyle.DarkDownwardDiagonal, GetAdjustedLineColor(_junctionColors[0]), lastRealColor);
-                            }
-                        }
+                            Color GetAdjustedLineColor(Color c) => ColorHelper.MakeColorDarker(c, amount: 0.1);
 
-                        Color GetAdjustedLineColor(Color c) => ColorHelper.MakeColorDarker(c, amount: 0.1);
+                            // Precalculate line endpoints
+                            bool sameLane = laneInfo.ConnectLane == lane;
+                            int x0 = mid;
+                            int y0 = top - 1;
+                            int x1 = sameLane ? x0 : mid + ((laneInfo.ConnectLane - lane) * _laneWidth);
+                            int y1 = top + _rowHeight;
 
-                        // Precalculate line endpoints
-                        bool sameLane = laneInfo.ConnectLane == lane;
-                        int x0 = mid;
-                        int y0 = top - 1;
-                        int x1 = sameLane ? x0 : mid + ((laneInfo.ConnectLane - lane) * _laneWidth);
-                        int y1 = top + _rowHeight;
+                            var p0 = new Point(x0, y0);
+                            var p1 = new Point(x1, y1);
 
-                        var p0 = new Point(x0, y0);
-                        var p1 = new Point(x1, y1);
-
-                        // Precalculate curve control points when needed
-                        Point c0, c1;
-                        if (sameLane)
-                        {
-                            // We are drawing between two points in the same
-                            // lane, so there will be no curve
-                            c0 = c1 = default;
-                        }
-                        else
-                        {
-                            // Left shifting int is fast equivalent of dividing by two,
-                            // thus computing the average of y0 and y1.
-                            var yMid = (y0 + y1) >> 1;
-
-                            c0 = new Point(x0, yMid);
-                            c1 = new Point(x1, yMid);
-                        }
-
-                        using (var linePen = new Pen(lineBrush, _laneLineWidth))
-                        {
+                            // Precalculate curve control points when needed
+                            Point c0, c1;
                             if (sameLane)
                             {
-                                g.SmoothingMode = SmoothingMode.None;
-                                g.DrawLine(linePen, p0, p1);
+                                // We are drawing between two points in the same
+                                // lane, so there will be no curve
+                                c0 = c1 = default;
                             }
                             else
                             {
-                                g.SmoothingMode = SmoothingMode.AntiAlias;
-                                g.DrawBezier(linePen, p0, c0, c1, p1);
+                                // Left shifting int is fast equivalent of dividing by two,
+                                // thus computing the average of y0 and y1.
+                                var yMid = (y0 + y1) >> 1;
+
+                                c0 = new Point(x0, yMid);
+                                c1 = new Point(x1, yMid);
+                            }
+
+                            using (var linePen = new Pen(lineBrush, _laneLineWidth))
+                            {
+                                if (sameLane)
+                                {
+                                    g.SmoothingMode = SmoothingMode.None;
+                                    g.DrawLine(linePen, p0, p1);
+                                }
+                                else
+                                {
+                                    g.SmoothingMode = SmoothingMode.AntiAlias;
+                                    g.DrawBezier(linePen, p0, c0, c1, p1);
+                                }
                             }
                         }
-                    }
-                    finally
-                    {
-                        lineBrush?.Dispose();
-                    }
-                }
-            }
-
-            // Reset graphics options
-            g.Clip = oldClip;
-
-            // Draw node
-            var nodeRect = new Rectangle(
-                g.RenderingOrigin.X + ((_laneWidth - _nodeDimension) / 2) + (row.NodeLane * _laneWidth),
-                g.RenderingOrigin.Y + ((_rowHeight - _nodeDimension) / 2),
-                _nodeDimension,
-                _nodeDimension);
-
-            Color? nodeColor = null;
-            Brush nodeBrush;
-
-            UpdateJunctionColors(row.Node.Ancestors);
-
-            bool highlight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
-                             (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.IsHighlighted)) ||
-                             (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
-
-            if (_junctionColors.Count == 1)
-            {
-                nodeColor = highlight ? _junctionColors[0] : _nonRelativeColor;
-                nodeBrush = new SolidBrush(nodeColor.Value);
-            }
-            else
-            {
-                nodeBrush = new LinearGradientBrush(
-                    nodeRect, _junctionColors[0], _junctionColors[1],
-                    LinearGradientMode.Horizontal);
-            }
-
-            var square = row.Node.HasRef;
-            var hasOutline = row.Node.IsCheckedOut;
-
-            if (square)
-            {
-                g.SmoothingMode = SmoothingMode.None;
-                g.FillRectangle(nodeBrush, nodeRect);
-            }
-            else //// Circle
-            {
-                nodeRect.Width = nodeRect.Height = _nodeDimension - 1;
-
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.FillEllipse(nodeBrush, nodeRect);
-            }
-
-            if (hasOutline)
-            {
-                nodeRect.Inflate(1, 1);
-
-                var outlineColor = nodeColor == null
-                    ? Color.Black
-                    : ColorHelper.MakeColorDarker(nodeColor.Value, 0.3);
-
-                using (var pen = new Pen(outlineColor, 2))
-                {
-                    if (square)
-                    {
-                        g.SmoothingMode = SmoothingMode.None;
-                        g.DrawRectangle(pen, nodeRect);
-                    }
-                    else //// Circle
-                    {
-                        g.SmoothingMode = SmoothingMode.AntiAlias;
-                        g.DrawEllipse(pen, nodeRect);
+                        finally
+                        {
+                            lineBrush?.Dispose();
+                        }
                     }
                 }
-            }
 
-            if (row.Node.Data == null)
-            {
-                nodeRect.Inflate(1, 1);
+                // Reset graphics options
+                g.Clip = oldClip;
 
-                using (var pen = new Pen(Color.Red, 2))
+                // Draw node
+                var nodeRect = new Rectangle(
+                    g.RenderingOrigin.X + ((_laneWidth - _nodeDimension) / 2) + (row.NodeLane * _laneWidth),
+                    g.RenderingOrigin.Y + ((_rowHeight - _nodeDimension) / 2),
+                    _nodeDimension,
+                    _nodeDimension);
+
+                Color? nodeColor = null;
+                Brush nodeBrush;
+
+                UpdateJunctionColors(row.Node.Ancestors);
+
+                bool highlight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
+                                 (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.IsHighlighted)) ||
+                                 (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
+
+                if (_junctionColors.Count == 1)
                 {
-                    g.SmoothingMode = SmoothingMode.AntiAlias;
-                    g.FillEllipse(Brushes.White, nodeRect);
-                    g.DrawEllipse(pen, nodeRect);
-                }
-            }
-
-            nodeBrush.Dispose();
-
-            g.SmoothingMode = oldSmoothingMode;
-
-            return true;
-
-            void UpdateJunctionColors(IReadOnlyList<Junction> junctions)
-            {
-                _junctionColors.Clear();
-
-                // Select one or two colours to use when rendering this junction
-                if (junctions.Count == 0)
-                {
-                    _junctionColors.Add(Color.Black);
+                    nodeColor = highlight ? _junctionColors[0] : _nonRelativeColor;
+                    nodeBrush = new SolidBrush(nodeColor.Value);
                 }
                 else
                 {
-                    for (var i = 0; i < 2 && i < junctions.Count; i++)
+                    nodeBrush = new LinearGradientBrush(
+                        nodeRect, _junctionColors[0], _junctionColors[1],
+                        LinearGradientMode.Horizontal);
+                }
+
+                var square = row.Node.HasRef;
+                var hasOutline = row.Node.IsCheckedOut;
+
+                if (square)
+                {
+                    g.SmoothingMode = SmoothingMode.None;
+                    g.FillRectangle(nodeBrush, nodeRect);
+                }
+                else //// Circle
+                {
+                    nodeRect.Width = nodeRect.Height = _nodeDimension - 1;
+
+                    g.SmoothingMode = SmoothingMode.AntiAlias;
+                    g.FillEllipse(nodeBrush, nodeRect);
+                }
+
+                if (hasOutline)
+                {
+                    nodeRect.Inflate(1, 1);
+
+                    var outlineColor = nodeColor == null
+                        ? Color.Black
+                        : ColorHelper.MakeColorDarker(nodeColor.Value, 0.3);
+
+                    using (var pen = new Pen(outlineColor, 2))
                     {
-                        _junctionColors.Add(GetJunctionColor(junctions[i]));
+                        if (square)
+                        {
+                            g.SmoothingMode = SmoothingMode.None;
+                            g.DrawRectangle(pen, nodeRect);
+                        }
+                        else //// Circle
+                        {
+                            g.SmoothingMode = SmoothingMode.AntiAlias;
+                            g.DrawEllipse(pen, nodeRect);
+                        }
                     }
                 }
 
-                Color GetJunctionColor(Junction junction)
+                if (row.Node.Data == null)
                 {
-                    // Non relatives or non-highlighted in grey
-                    switch (_revisionGraphDrawStyleCache)
+                    nodeRect.Inflate(1, 1);
+
+                    using (var pen = new Pen(Color.Red, 2))
                     {
-                        case RevisionGraphDrawStyleEnum.DrawNonRelativesGray when !junction.IsRelative:
-                        case RevisionGraphDrawStyleEnum.HighlightSelected when !junction.IsHighlighted:
-                            return _nonRelativeColor;
+                        g.SmoothingMode = SmoothingMode.AntiAlias;
+                        g.FillEllipse(Brushes.White, nodeRect);
+                        g.DrawEllipse(pen, nodeRect);
                     }
+                }
 
-                    if (!AppSettings.MulticolorBranches)
+                nodeBrush.Dispose();
+
+                g.SmoothingMode = oldSmoothingMode;
+
+                return true;
+
+                void UpdateJunctionColors(IReadOnlyList<Junction> junctions)
+                {
+                    _junctionColors.Clear();
+
+                    // Select one or two colours to use when rendering this junction
+                    if (junctions.Count == 0)
                     {
-                        return AppSettings.GraphColor;
+                        _junctionColors.Add(Color.Black);
                     }
-
-                    // See if this junction's colour has already been calculated
-                    if (junction.ColorIndex != -1)
+                    else
                     {
-                        return _possibleColors[junction.ColorIndex];
-                    }
-
-                    var colorIndex = FindDistinctColour();
-
-                    junction.ColorIndex = colorIndex;
-
-                    return _possibleColors[colorIndex];
-
-                    int FindDistinctColour()
-                    {
-                        // NOTE we reuse _adjacentColors to avoid allocating lists during UI painting.
-                        // This is safe as we are always on the UI thread here.
-                        _adjacentColors.Clear();
-                        AddAdjacentColors(junction.Youngest.Ancestors);
-                        AddAdjacentColors(junction.Youngest.Descendants);
-                        AddAdjacentColors(junction.Oldest.Ancestors);
-                        AddAdjacentColors(junction.Oldest.Descendants);
-
-                        if (_adjacentColors.Count == 0)
+                        for (var i = 0; i < 2 && i < junctions.Count; i++)
                         {
-                            // This is an end-point. Use the first colour.
-                            return 0;
+                            _junctionColors.Add(GetJunctionColor(junctions[i]));
+                        }
+                    }
+
+                    Color GetJunctionColor(Junction junction)
+                    {
+                        // Non relatives or non-highlighted in grey
+                        switch (_revisionGraphDrawStyleCache)
+                        {
+                            case RevisionGraphDrawStyleEnum.DrawNonRelativesGray when !junction.IsRelative:
+                            case RevisionGraphDrawStyleEnum.HighlightSelected when !junction.IsHighlighted:
+                                return _nonRelativeColor;
                         }
 
-                        // This is a parent branch, calculate new color based on parent branch
-                        for (var i = 0; i < _possibleColors.Count; i++)
+                        if (!AppSettings.MulticolorBranches)
                         {
-                            if (!_adjacentColors.Contains(i))
+                            return AppSettings.GraphColor;
+                        }
+
+                        // See if this junction's colour has already been calculated
+                        if (junction.ColorIndex != -1)
+                        {
+                            return _possibleColors[junction.ColorIndex];
+                        }
+
+                        var colorIndex = FindDistinctColour();
+
+                        junction.ColorIndex = colorIndex;
+
+                        return _possibleColors[colorIndex];
+
+                        int FindDistinctColour()
+                        {
+                            // NOTE we reuse _adjacentColors to avoid allocating lists during UI painting.
+                            // This is safe as we are always on the UI thread here.
+                            _adjacentColors.Clear();
+                            AddAdjacentColors(junction.Youngest.Ancestors);
+                            AddAdjacentColors(junction.Youngest.Descendants);
+                            AddAdjacentColors(junction.Oldest.Ancestors);
+                            AddAdjacentColors(junction.Oldest.Descendants);
+
+                            if (_adjacentColors.Count == 0)
                             {
-                                return i;
+                                // This is an end-point. Use the first colour.
+                                return 0;
                             }
-                        }
 
-                        // All colours are adjacent (highly uncommon!) so just pick one at random
-                        return _random.Next(_possibleColors.Count);
-
-                        void AddAdjacentColors(IReadOnlyList<Junction> peers)
-                        {
-                            // ReSharper disable once ForCanBeConvertedToForeach
-                            for (var i = 0; i < peers.Count; i++)
+                            // This is a parent branch, calculate new color based on parent branch
+                            for (var i = 0; i < _possibleColors.Count; i++)
                             {
-                                var peer = peers[i];
-                                var peerColorIndex = peer.ColorIndex;
-                                if (peerColorIndex != -1)
+                                if (!_adjacentColors.Contains(i))
                                 {
-                                    _adjacentColors.Add(peerColorIndex);
+                                    return i;
+                                }
+                            }
+
+                            // All colours are adjacent (highly uncommon!) so just pick one at random
+                            return _random.Next(_possibleColors.Count);
+
+                            void AddAdjacentColors(IReadOnlyList<Junction> peers)
+                            {
+                                // ReSharper disable once ForCanBeConvertedToForeach
+                                for (var i = 0; i < peers.Count; i++)
+                                {
+                                    var peer = peers[i];
+                                    var peerColorIndex = peer.ColorIndex;
+                                    if (peerColorIndex != -1)
+                                    {
+                                        _adjacentColors.Add(peerColorIndex);
+                                    }
                                 }
                             }
                         }
