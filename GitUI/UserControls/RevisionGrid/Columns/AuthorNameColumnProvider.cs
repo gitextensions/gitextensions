@@ -35,7 +35,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 var font = _authorHighlighting.IsHighlighted(revision) ? style.boldFont : style.normalFont;
 
-                _grid.DrawColumnText(e, (string)e.FormattedValue, font, style.foreColor, e.CellBounds.ReduceLeft(TextCellLeftMargin));
+                _grid.DrawColumnText(e, (string)e.FormattedValue, font, style.foreColor, e.CellBounds.ReduceLeft(ColumnLeftMargin));
             }
         }
 

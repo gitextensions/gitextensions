@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
@@ -10,7 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     /// </summary>
     internal abstract class ColumnProvider
     {
-        protected const int TextCellLeftMargin = 4;
+        public int ColumnLeftMargin { get; } = DpiUtil.Scale(6);
 
         /// <summary>The DataGrid column object that models this column.</summary>
         public DataGridViewColumn Column { get; protected set; }

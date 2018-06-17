@@ -1,7 +1,6 @@
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
-using GitExtUtils.GitUI;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
 {
@@ -23,7 +22,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                Width = DpiUtil.Scale(70),
                 Resizable = DataGridViewTriState.False
             };
         }
