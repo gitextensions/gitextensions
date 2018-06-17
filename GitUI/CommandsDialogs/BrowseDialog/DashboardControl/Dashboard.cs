@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
-using GitUI.Editor;
 using GitUI.Properties;
 using ResourceManager;
 
