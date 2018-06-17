@@ -159,6 +159,8 @@ namespace GitUI
             }
         }
 
+        public bool FilterFocused => FilterComboBox.Focused;
+
         public override bool Focused => FileStatusListView.Focused;
 
         public new void Focus()

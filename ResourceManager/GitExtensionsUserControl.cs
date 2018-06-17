@@ -127,6 +127,37 @@ namespace ResourceManager
             return false;
         }
 
+        /// <summary>
+        /// Returns whether the given [combination of] key[s] represents a keypress which is used for text input by default.
+        /// <remarks>Can be used to ignore hotkeys which would prevent from typing text into an input control if it's focused.</remarks>
+        /// </summary>
+        /// <param name="multiLine">Should be set to true for multi-line input controls to match keys for vertical movement, too.</param>
+        public static bool IsTextEditKey(Keys keys, bool multiLine = false)
+        {
+            keys &= ~Keys.Shift; // ignore the SHIFT key as modifier
+            switch (keys)
+            {
+                case Keys key when (key >= Keys.A && key <= Keys.Z) || (key >= Keys.D0 && key <= Keys.D9) || (key >= Keys.Oem1 && key <= Keys.Oem102):
+                case Keys.Space:
+                case Keys.Back:
+                case Keys.Delete:
+                case Keys.Insert:
+                case Keys.Left:
+                case Keys.Right:
+                case Keys.Home:
+                case Keys.End:
+                    return true;
+
+                case Keys.Up:
+                case Keys.Down:
+                case Keys.PageUp:
+                case Keys.PageDown:
+                    return multiLine;
+            }
+
+            return false;
+        }
+
         #endregion
     }
 }
