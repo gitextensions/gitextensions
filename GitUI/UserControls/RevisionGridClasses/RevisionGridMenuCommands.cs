@@ -356,6 +356,7 @@ namespace GitUI.UserControls.RevisionGridClasses
                 {
                     Name = "ToggleBranchTreePanel",
                     Text = "Toggle left panel",
+                    Image = Properties.MsVsImages.Branch_16x,
                     ExecuteAction = () => _revisionGrid.OnToggleBranchTreePanelRequested()
                 }
             };
