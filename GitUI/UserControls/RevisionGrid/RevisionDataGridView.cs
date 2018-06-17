@@ -46,7 +46,6 @@ namespace GitUI.UserControls.RevisionGrid
 
         private readonly int _nodeDimension = DpiUtil.Scale(10);
         private readonly int _laneWidth = DpiUtil.Scale(16);
-        private readonly int _laneSidePadding = DpiUtil.Scale(8);
         private readonly int _laneLineWidth = DpiUtil.Scale(2);
 
         private const int MaxLanes = 40;
@@ -709,7 +708,7 @@ namespace GitUI.UserControls.RevisionGrid
                     laneCount = Math.Min(Math.Max(laneCount, width), maxLanes);
                 }
 
-                var columnWidth = (_laneWidth * laneCount) + (_laneSidePadding * 2);
+                var columnWidth = (_laneWidth * laneCount) + GraphColumnProvider.ColumnLeftMargin;
                 if (graphColumn.Width != columnWidth && columnWidth > graphColumn.MinimumWidth)
                 {
                     graphColumn.Width = columnWidth;
@@ -859,7 +858,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                     // Get the x,y value of the current item's upper left in the cache
                     var curCacheRow = (_cacheHeadRow + index - _cacheHead) % _cacheCountMax;
-                    var x = _laneSidePadding;
+                    var x = GraphColumnProvider.ColumnLeftMargin;
                     var y = curCacheRow * _rowHeight;
 
                     var laneRect = new Rectangle(0, y, Width, _rowHeight);

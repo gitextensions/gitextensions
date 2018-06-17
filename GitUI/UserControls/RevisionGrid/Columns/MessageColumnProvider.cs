@@ -41,7 +41,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             var superprojectRefs = new List<IGitRef>();
 
-            var offset = 0;
+            var offset = ColumnLeftMargin;
 
             #region Draw super project references (for submodules)
 
