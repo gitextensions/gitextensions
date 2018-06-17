@@ -514,7 +514,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
-            if (RenderRow(e.RowIndex, e.CellBounds, e.Graphics))
+            if (PaintGraphCell(e.RowIndex, e.CellBounds, e.Graphics))
             {
                 e.Handled = true;
             }
@@ -750,10 +750,10 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         /// <summary>
-        /// Draws the required row into <see cref="_graphData"/>, or retrieves an equivalent one from the cache.
+        /// Draws the required row into <see cref="_graphBitmap"/>, or retrieves an equivalent one from the cache.
         /// </summary>
-        /// <returns>The rectangle within <see cref="_graphData"/> at which the drawn image exists.</returns>
-        private bool RenderRow(int rowIndex, Rectangle cellBounds, Graphics graphics)
+        /// <returns>The rectangle within <see cref="_graphBitmap"/> at which the drawn image exists.</returns>
+        private bool PaintGraphCell(int rowIndex, Rectangle cellBounds, Graphics graphics)
         {
             if (rowIndex < 0 || _graphData.Count == 0 || _graphData.Count <= rowIndex)
             {
