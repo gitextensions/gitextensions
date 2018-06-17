@@ -30,10 +30,11 @@ namespace GitUI
             _label = new Label
             {
                 Location = new Point(0, 0),
-                Padding = new Padding(5, 4, 5, 4),
+                Padding = new Padding(7, 5, 5, 5),
                 BorderStyle = BorderStyle.None,
                 ForeColor = SystemColors.InfoText,
                 BackColor = SystemColors.Info,
+                Font = new Font(FontFamily.GenericSansSerif, 11, FontStyle.Bold),
                 Visible = false,
                 UseMnemonic = false
             };
