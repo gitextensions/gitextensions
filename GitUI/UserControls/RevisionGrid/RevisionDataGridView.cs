@@ -504,7 +504,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void OnGraphCellPainting(DataGridViewCellPaintingEventArgs e, object sender)
         {
-            if (e.RowIndex < 0)
+            if (!RevisionGraphVisible || e.RowIndex < 0)
             {
                 return;
             }
@@ -819,7 +819,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return true;
             }
 
-            if (!RevisionGraphVisible || !DrawVisibleGraph())
+            if (!DrawVisibleGraph())
             {
                 return false;
             }
