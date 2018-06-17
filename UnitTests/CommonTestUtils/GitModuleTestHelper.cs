@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using GitCommands;
-using GitUIPluginInterfaces;
 
 namespace CommonTestUtils
 {

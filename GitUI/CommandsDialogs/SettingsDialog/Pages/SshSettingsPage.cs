@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using GitCommands;
 using GitCommands.Utils;
-using GitUI.Editor;
 using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages

@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using GitCommands;
-using GitUI.Editor;
 using ResourceManager;
 
 namespace GitUI.UserControls
