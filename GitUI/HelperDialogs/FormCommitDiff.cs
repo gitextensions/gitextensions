@@ -9,6 +9,8 @@ namespace GitUI.HelperDialogs
         {
             InitializeComponent();
             Translate();
+
+            this.AdjustForDpiScaling();
         }
 
         private FormCommitDiff()
