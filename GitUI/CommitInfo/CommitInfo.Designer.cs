@@ -182,6 +182,7 @@ namespace GitUI.CommitInfo
             this._RevisionHeader.Margin = new System.Windows.Forms.Padding(0);
             this._RevisionHeader.Name = "_RevisionHeader";
             this._RevisionHeader.ReadOnly = true;
+            this._RevisionHeader.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this._RevisionHeader.Size = new System.Drawing.Size(797, 98);
             this._RevisionHeader.TabIndex = 0;
             this._RevisionHeader.Text = "";
