@@ -4,13 +4,13 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
-using ResourceManager;
 using GitUI.Hotkey;
-using System.Threading.Tasks;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
@@ -80,9 +80,12 @@ namespace GitUI.CommandsDialogs
 
         protected override bool ExecuteCommand(int cmd)
         {
-            Commands command = (Commands)cmd;
+            if (DiffFiles.FilterFocused && IsTextEditKey(GetShortcutKeys(cmd)))
+            {
+                return false;
+            }
 
-            switch (command)
+            switch ((Commands)cmd)
             {
                 case Commands.DeleteSelectedFiles: return DeleteSelectedFiles();
                 default: return base.ExecuteCommand(cmd);
@@ -376,7 +379,7 @@ namespace GitUI.CommandsDialogs
         {
             GitItemStatus item = DiffFiles.SelectedItem;
 
-            if (item.IsTracked)
+            if (item != null && item.IsTracked)
             {
                 GitRevision revision = _revisionGrid.GetSelectedRevisions().FirstOrDefault();
                 UICommands.StartFileHistoryDialog(this, item.Name, revision, true, true);
@@ -467,7 +470,7 @@ namespace GitUI.CommandsDialogs
         {
             GitItemStatus item = DiffFiles.SelectedItem;
 
-            if (item.IsTracked)
+            if (item != null && item.IsTracked)
             {
                 GitRevision revision = _revisionGrid.GetSelectedRevisions().FirstOrDefault();
                 UICommands.StartFileHistoryDialog(this, item.Name, revision, false);
@@ -819,7 +822,7 @@ namespace GitUI.CommandsDialogs
             }
             RefreshArtificial();
         }
-        
+
         private void diffUpdateSubmoduleMenuItem_Click(object sender, EventArgs e)
         {
             var unStagedFiles = DiffFiles.SelectedItems.ToList();
