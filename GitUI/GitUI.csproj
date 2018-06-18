@@ -1055,11 +1055,11 @@
     <Compile Include="GitExtensionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\FormGitLog.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormGitCommandLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\FormGitLog.Designer.cs">
-      <DependentUpon>FormGitLog.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\BrowseDialog\FormGitCommandLog.Designer.cs">
+      <DependentUpon>FormGitCommandLog.cs</DependentUpon>
     </Compile>
     <Compile Include="GitUICommands.cs" />
     <Compile Include="UserControls\GravatarControl.cs">
@@ -1594,8 +1594,8 @@
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormGitLog.resx">
-      <DependentUpon>FormGitLog.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormGitCommandLog.resx">
+      <DependentUpon>FormGitCommandLog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\GravatarControl.resx">
