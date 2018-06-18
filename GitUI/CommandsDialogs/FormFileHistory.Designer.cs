@@ -4,17 +4,10 @@ namespace GitUI.CommandsDialogs
 {
     partial class FormFileHistory
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
@@ -44,7 +37,6 @@ namespace GitUI.CommandsDialogs
             this.Diff = new GitUI.Editor.FileViewer();
             this.BlameTab = new System.Windows.Forms.TabPage();
             this.Blame = new GitUI.Blame.BlameControl();
-            this.eventLog1 = new System.Diagnostics.EventLog();
             this.ToolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripBranchFilterComboBox = new System.Windows.Forms.ToolStripComboBox();
@@ -74,7 +66,6 @@ namespace GitUI.CommandsDialogs
             this.ViewTab.SuspendLayout();
             this.DiffTab.SuspendLayout();
             this.BlameTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
             this.ToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -316,10 +307,6 @@ namespace GitUI.CommandsDialogs
             this.Blame.TabIndex = 0;
             this.Blame.CommandClick += new System.EventHandler<GitUI.CommitInfo.CommandEventArgs>(this.Blame_CommandClick);
             // 
-            // eventLog1
-            // 
-            this.eventLog1.SynchronizingObject = this;
-            // 
             // ToolStrip
             // 
             this.ToolStrip.GripMargin = new System.Windows.Forms.Padding(0);
@@ -506,7 +493,6 @@ namespace GitUI.CommandsDialogs
             this.ViewTab.ResumeLayout(false);
             this.DiffTab.ResumeLayout(false);
             this.BlameTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
             this.ToolStrip.ResumeLayout(false);
             this.ToolStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -523,7 +509,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.TabPage ViewTab;
         private System.Windows.Forms.TabPage DiffTab;
         private System.Windows.Forms.TabPage BlameTab;
-        private System.Diagnostics.EventLog eventLog1;
         private FileViewer View;
         private FileViewer Diff;
         private RevisionGridControl FileChanges;
