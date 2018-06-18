@@ -877,12 +877,6 @@ namespace GitCommands
             set => SetBool("showgitnotes", value);
         }
 
-        public static bool ShowIndicatorForMultilineMessage
-        {
-            get => GetBool("showindicatorformultilinemessage", true);
-            set => SetBool("showindicatorformultilinemessage", value);
-        }
-
         public static bool ShowAnnotatedTagsMessages
         {
             get => GetBool("showannotatedtagsmessages", true);
