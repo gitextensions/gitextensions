@@ -43,8 +43,7 @@ namespace GitUI.UserControls.RevisionGrid
                 // Add items for branches
                 if (branchNames.Any())
                 {
-                    // TODO translate text
-                    var caption = new ToolStripMenuItem { Text = "Branch name:" };
+                    var caption = new ToolStripMenuItem { Text = Strings.Branches };
                     MenuUtil.SetAsCaptionMenuItem(caption, Owner);
                     DropDownItems.Add(caption);
 
@@ -59,8 +58,7 @@ namespace GitUI.UserControls.RevisionGrid
                 // Add items for tags
                 if (tagNames.Any())
                 {
-                    // TODO translate text
-                    var caption = new ToolStripMenuItem { Text = "Tag name:" };
+                    var caption = new ToolStripMenuItem { Text = Strings.Tags };
                     MenuUtil.SetAsCaptionMenuItem(caption, Owner);
                     DropDownItems.Add(caption);
 
