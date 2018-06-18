@@ -148,7 +148,17 @@ namespace GitUI.UserControls.RevisionGrid
             RowPrePaint += OnRowPrePaint;
             Resize += OnResize;
 
-            _graphData.Updated += graphData_Updated;
+            _graphData.Updated += () =>
+            {
+                // We have to post this since the thread owns a lock on GraphData that we'll
+                // need in order to re-draw the graph.
+                this.InvokeAsync(() =>
+                    {
+                        ClearDrawCache();
+                        Invalidate();
+                    })
+                    .FileAndForget();
+            };
 
             VirtualMode = true;
             Clear();
@@ -473,18 +483,6 @@ namespace GitUI.UserControls.RevisionGrid
                     UpdatingVisibleRows = false;
                 }
             }
-        }
-
-        private void graphData_Updated()
-        {
-            // We have to post this since the thread owns a lock on GraphData that we'll
-            // need in order to re-draw the graph.
-            this.InvokeAsync(() =>
-                {
-                    ClearDrawCache();
-                    Invalidate();
-                })
-                .FileAndForget();
         }
 
         public void OnGraphCellPainting(DataGridViewCellPaintingEventArgs e, object sender)
