@@ -37,6 +37,8 @@
             this._NO_TRANSLATE_labelProductName = new System.Windows.Forms.Label();
             this.thanksTo = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
+            this.linkLabelIcons = new System.Windows.Forms.LinkLabel();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureDonate)).BeginInit();
             this.SuspendLayout();
@@ -48,8 +50,7 @@
             // okButton
             // 
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.okButton.Location = new System.Drawing.Point(468, 478);
-            this.okButton.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.okButton.Location = new System.Drawing.Point(468, 588);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(176, 48);
             this.okButton.TabIndex = 24;
@@ -95,8 +96,8 @@
             this.pictureDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pictureDonate.Cursor = System.Windows.Forms.Cursors.Hand;
             this.pictureDonate.Image = global::GitUI.Properties.Resources.Donate;
-            this.pictureDonate.Location = new System.Drawing.Point(468, 386);
-            this.pictureDonate.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.pictureDonate.Location = new System.Drawing.Point(468, 496);
+            this.pictureDonate.Margin = new System.Windows.Forms.Padding(6);
             this.pictureDonate.Name = "pictureDonate";
             this.pictureDonate.Size = new System.Drawing.Size(176, 64);
             this.pictureDonate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -110,9 +111,9 @@
             this._NO_TRANSLATE_labelProductName.Margin = new System.Windows.Forms.Padding(0);
             this._NO_TRANSLATE_labelProductName.MaximumSize = new System.Drawing.Size(0, 34);
             this._NO_TRANSLATE_labelProductName.Name = "_NO_TRANSLATE_labelProductName";
-            this._NO_TRANSLATE_labelProductName.Size = new System.Drawing.Size(634, 25);
+            this._NO_TRANSLATE_labelProductName.Size = new System.Drawing.Size(635, 25);
             this._NO_TRANSLATE_labelProductName.TabIndex = 19;
-            this._NO_TRANSLATE_labelProductName.Text = "Git extensions - Visual Studio and Shell Explorer Extensions for Git";
+            this._NO_TRANSLATE_labelProductName.Text = "Git Extensions - Visual Studio and Shell Explorer Extensions for Git";
             this._NO_TRANSLATE_labelProductName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // thanksTo
@@ -134,21 +135,49 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.ForeColor = System.Drawing.SystemColors.GrayText;
-            this.label1.Location = new System.Drawing.Point(462, 286);
+            this.label1.Location = new System.Drawing.Point(462, 396);
             this.label1.Margin = new System.Windows.Forms.Padding(0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(644, 90);
+            this.label1.Size = new System.Drawing.Size(634, 90);
             this.label1.TabIndex = 27;
             this.label1.Text = "This program is distributed in the hope that it will be useful, but WITHOUT ANY W" +
     "ARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A P" +
     "ARTICULAR PURPOSE.";
             // 
-            // AboutBox
+            // linkLabelIcons
+            // 
+            this.linkLabelIcons.AutoSize = true;
+            this.linkLabelIcons.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.linkLabelIcons.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.linkLabelIcons.Location = new System.Drawing.Point(463, 338);
+            this.linkLabelIcons.Margin = new System.Windows.Forms.Padding(0);
+            this.linkLabelIcons.Name = "linkLabelIcons";
+            this.linkLabelIcons.Size = new System.Drawing.Size(435, 27);
+            this.linkLabelIcons.TabIndex = 28;
+            this.linkLabelIcons.TabStop = true;
+            this.linkLabelIcons.Text = "Some icons by Yusuke Kamiyamane (CCA3)";
+            this.linkLabelIcons.UseMnemonic = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(462, 285);
+            this.label2.Margin = new System.Windows.Forms.Padding(0);
+            this.label2.MaximumSize = new System.Drawing.Size(0, 34);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(420, 25);
+            this.label2.TabIndex = 29;
+            this.label2.Text = "Git Extensions is open source. Get involved!";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // FormAbout
             // 
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(192F, 192F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1186, 606);
+            this.ClientSize = new System.Drawing.Size(1182, 696);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.linkLabelIcons);
             this.Controls.Add(this.logoPictureBox);
             this.Controls.Add(this._NO_TRANSLATE_labelCopyright);
             this.Controls.Add(this._NO_TRANSLATE_labelVersionInfo);
@@ -158,7 +187,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.thanksTo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormAbout";
@@ -183,5 +212,7 @@
         private System.Windows.Forms.Timer thanksTimer;
         private System.Windows.Forms.LinkLabel thanksTo;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.LinkLabel linkLabelIcons;
+        private System.Windows.Forms.Label label2;
     }
 }
