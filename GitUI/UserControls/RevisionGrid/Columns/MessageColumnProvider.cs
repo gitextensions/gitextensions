@@ -22,20 +22,19 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             Column = new DataGridViewTextBoxColumn
             {
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
                 HeaderText = "Message",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                FillWeight = 200,
-                Width = DpiUtil.Scale(400)
+                Width = DpiUtil.Scale(500)
             };
         }
 
-        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
+        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
         {
             var isRowSelected = e.State.HasFlag(DataGridViewElementStates.Selected);
 
-            var indicator = new MultilineIndicator(e, revision, style);
+            var indicator = new MultilineIndicator(e, revision);
 
             var messageBounds = indicator.RemainingCellBounds;
 
@@ -49,17 +48,17 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 if (spi.Conflict_Base == revision.Guid)
                 {
-                    DrawSuperProjectRef("Base");
+                    DrawSuperProjectRef("Base", style.normalFont);
                 }
 
                 if (spi.Conflict_Local == revision.Guid)
                 {
-                    DrawSuperProjectRef("Local");
+                    DrawSuperProjectRef("Local", style.normalFont);
                 }
 
                 if (spi.Conflict_Remote == revision.Guid)
                 {
-                    DrawSuperProjectRef("Remote");
+                    DrawSuperProjectRef("Remote", style.normalFont);
                 }
 
                 if (spi.Refs?.ContainsKey(revision.Guid) == true)
@@ -68,11 +67,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         spi.Refs[revision.Guid].Where(RevisionGridControl.ShowRemoteRef));
                 }
 
-                void DrawSuperProjectRef(string label)
+                void DrawSuperProjectRef(string label, Font normalFont)
                 {
                     RevisionGridRefRenderer.DrawRef(
                         isRowSelected,
-                        style.normalFont,
+                        normalFont,
                         ref offset,
                         label,
                         Color.OrangeRed,

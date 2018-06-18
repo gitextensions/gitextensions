@@ -51,24 +51,17 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             void UpdateWidth()
             {
-                Column.FillWeight = 50;
                 Column.Resizable = showText ? DataGridViewTriState.True : DataGridViewTriState.False;
-
-                var iconColumnWidth = DpiUtil.Scale(16);
+                Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
 
                 if (showIcon && !showText)
                 {
-                    Column.Width = iconColumnWidth;
-                    Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                }
-                else
-                {
-                    Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    Column.Width = DpiUtil.Scale(16);
                 }
             }
         }
 
-        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
+        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
         {
             if (revision.BuildStatus == null)
             {
@@ -101,11 +94,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     e,
                     (string)e.FormattedValue,
                     style.normalFont,
-                    GetColor(),
+                    GetColor(style.foreColor),
                     bounds: e.CellBounds.ReduceLeft(size.Width * 2));
             }
 
-            Color GetColor()
+            Color GetColor(Color foreColor)
             {
                 var isSelected = _gridView.Rows[e.RowIndex].Selected;
 
@@ -122,7 +115,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     case BuildInfo.BuildStatus.Stopped:
                         return isSelected ? Color.LightGray : Color.Gray;
                     case BuildInfo.BuildStatus.Unknown:
-                        return style.foreColor;
+                        return foreColor;
                     default:
                         throw new InvalidOperationException("Unsupported build status enum value.");
                 }

@@ -27,7 +27,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public Rectangle RemainingCellBounds => _isMultiline ? _e.CellBounds.ReduceRight(_indicatorReservedWidth) : _e.CellBounds;
 
-        public MultilineIndicator(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
+        public MultilineIndicator(DataGridViewCellPaintingEventArgs e, GitRevision revision)
         {
             _e = e;
 

@@ -40,6 +40,19 @@ namespace GitUI.UserControls.RevisionGrid
 
         #endregion
 
+        private static readonly SolidBrush _alternatingRowBackgroundBrush = new SolidBrush(Color.FromArgb(250, 250, 250));
+        private static readonly IReadOnlyList<Color> _graphColors = new[]
+        {
+            Color.FromArgb(240, 36, 117),
+            Color.FromArgb(52, 152, 219),
+            Color.FromArgb(46, 204, 113),
+            Color.FromArgb(142, 68, 173),
+            Color.FromArgb(231, 76, 60),
+            Color.FromArgb(40, 40, 40),
+            Color.FromArgb(26, 188, 156),
+            Color.FromArgb(241, 196, 15)
+        };
+
         [Description("Loading Handler. NOTE: This will often happen on a background thread so UI operations may not be safe!")]
         [Category("Behavior")]
         public event EventHandler<LoadingEventArgs> Loading;
@@ -53,18 +66,6 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly Color _nonRelativeColor = Color.LightGray;
 
         private readonly GraphModel _graphData = new GraphModel();
-
-        private static readonly IReadOnlyList<Color> _possibleColors = new[]
-        {
-            Color.FromArgb(240, 36, 117),
-            Color.FromArgb(52, 152, 219),
-            Color.FromArgb(46, 204, 113),
-            Color.FromArgb(142, 68, 173),
-            Color.FromArgb(231, 76, 60),
-            Color.FromArgb(40, 40, 40),
-            Color.FromArgb(26, 188, 156),
-            Color.FromArgb(241, 196, 15)
-        };
 
         private readonly AutoResetEvent _backgroundEvent = new AutoResetEvent(false);
         private readonly Thread _backgroundThread;
@@ -127,7 +128,7 @@ namespace GitUI.UserControls.RevisionGrid
             _backgroundThread = new Thread(BackgroundThreadEntry)
             {
                 IsBackground = true,
-                Name = "DvcsGraph.backgroundThread"
+                Name = "RevisionDataGridView.backgroundThread"
             };
             _backgroundThread.Start();
 
@@ -144,6 +145,7 @@ namespace GitUI.UserControls.RevisionGrid
                     provider.OnCellFormatting(e, GetRevision(e.RowIndex));
                 }
             };
+            RowPrePaint += OnRowPrePaint;
             Resize += OnResize;
 
             _graphData.Updated += graphData_Updated;
@@ -152,6 +154,16 @@ namespace GitUI.UserControls.RevisionGrid
             Clear();
 
             return;
+
+            void OnRowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+            {
+                if (e.PaintParts.HasFlag(DataGridViewPaintParts.Background))
+                {
+                    // Draw row background
+                    var backBrush = GetBackground(e.State, e.RowIndex);
+                    e.Graphics.FillRectangle(backBrush, e.RowBounds);
+                }
+            }
 
             void InitializeComponent()
             {
@@ -298,6 +310,33 @@ namespace GitUI.UserControls.RevisionGrid
             Columns.Add(columnProvider.Column);
         }
 
+        private Color GetForeground(DataGridViewElementStates state, int rowIndex)
+        {
+            if (state.HasFlag(DataGridViewElementStates.Selected))
+            {
+                return SystemColors.HighlightText;
+            }
+
+            return AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(rowIndex)
+                ? Color.Gray
+                : Color.Black;
+        }
+
+        private static Brush GetBackground(DataGridViewElementStates state, int rowIndex)
+        {
+            if (state.HasFlag(DataGridViewElementStates.Selected))
+            {
+                return SystemBrushes.Highlight;
+            }
+
+            if (AppSettings.RevisionGraphDrawAlternateBackColor && rowIndex % 2 == 0)
+            {
+                return _alternatingRowBackgroundBrush;
+            }
+
+            return Brushes.White;
+        }
+
         private void OnCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             var revision = GetRevision(e.RowIndex);
@@ -312,65 +351,12 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
             {
-                var (backBrush, backColor, disposeBackBrush, foreColor) = GetStyle();
+                var backBrush = GetBackground(e.State, e.RowIndex);
+                var foreColor = GetForeground(e.State, e.RowIndex);
 
-                // Draw cell background
-                e.Graphics.FillRectangle(backBrush, e.CellBounds);
-
-                provider.OnCellPainting(e, revision, (backBrush, backColor, foreColor, _normalFont, _boldFont));
-
-                if (disposeBackBrush)
-                {
-                    backBrush.Dispose();
-                }
+                provider.OnCellPainting(e, revision, (backBrush, foreColor, _normalFont, _boldFont));
 
                 e.Handled = true;
-            }
-
-            return;
-
-            (Brush backBrush, Color backColor, bool disposeBackBrush, Color foreColor) GetStyle()
-            {
-                if (e.State.HasFlag(DataGridViewElementStates.Selected))
-                {
-                    return (SystemBrushes.Highlight, SystemColors.Highlight, false, SystemColors.HighlightText);
-                }
-
-                (Brush brush, Color color, bool disposeBrush) back;
-
-                if (AppSettings.RevisionGraphDrawAlternateBackColor && e.RowIndex % 2 == 0)
-                {
-                    var hsl = new HslColor(e.CellStyle.BackColor);
-                    const double adjustment = 0.03;
-                    var c = hsl.WithBrightness(hsl.L > 0.5 ? hsl.L - adjustment : hsl.L + adjustment).ToColor();
-                    back = (new SolidBrush(c), c, true);
-                }
-                else
-                {
-                    var c = e.CellStyle.BackColor;
-                    back = (new SolidBrush(c), c, true);
-                }
-
-                var foreColor = Color.Gray;
-
-                if (AppSettings.RevisionGraphDrawNonRelativesTextGray && !RowIsRelative(e.RowIndex))
-                {
-                    // If necessary, adjust the fore color to create adequate lightness contrast with the background
-                    var foreHsl = new HslColor(foreColor);
-                    var backHsl = new HslColor(back.color);
-                    if (Math.Abs(foreHsl.L - backHsl.L) < 0.5)
-                    {
-                        foreColor = foreHsl
-                            .WithBrightness(backHsl.L > 0.5 ? foreHsl.L - 0.5 : foreHsl.L + 0.5)
-                            .ToColor();
-                    }
-                }
-                else
-                {
-                    foreColor = ColorHelper.GetForeColorForBackColor(back.color);
-                }
-
-                return (back.brush, back.color, back.disposeBrush, foreColor);
             }
         }
 
@@ -1170,14 +1156,14 @@ namespace GitUI.UserControls.RevisionGrid
                         // See if this junction's colour has already been calculated
                         if (junction.ColorIndex != -1)
                         {
-                            return _possibleColors[junction.ColorIndex];
+                            return _graphColors[junction.ColorIndex];
                         }
 
                         var colorIndex = FindDistinctColour();
 
                         junction.ColorIndex = colorIndex;
 
-                        return _possibleColors[colorIndex];
+                        return _graphColors[colorIndex];
 
                         int FindDistinctColour()
                         {
@@ -1196,7 +1182,7 @@ namespace GitUI.UserControls.RevisionGrid
                             }
 
                             // This is a parent branch, calculate new color based on parent branch
-                            for (var i = 0; i < _possibleColors.Count; i++)
+                            for (var i = 0; i < _graphColors.Count; i++)
                             {
                                 if (!_adjacentColors.Contains(i))
                                 {
@@ -1205,7 +1191,7 @@ namespace GitUI.UserControls.RevisionGrid
                             }
 
                             // All colours are adjacent (highly uncommon!) so just pick one at random
-                            return _random.Next(_possibleColors.Count);
+                            return _random.Next(_graphColors.Count);
 
                             void AddAdjacentColors(IReadOnlyList<Junction> peers)
                             {
@@ -1307,6 +1293,29 @@ namespace GitUI.UserControls.RevisionGrid
                     base.OnKeyDown(e);
                     break;
             }
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            var hit = HitTest(e.X, e.Y);
+
+            if (hit.Type == DataGridViewHitTestType.None)
+            {
+                // Work around the fact that clicking in the space to the right of the last column does not
+                // actually select the row. Instead, we test if the click would hit if done to the far left
+                // of the row, and if so, pretend that's what happened.
+                const int fakeX = 5;
+
+                hit = HitTest(fakeX, e.Y);
+
+                if (hit.Type == DataGridViewHitTestType.Cell && hit.RowIndex != -1)
+                {
+                    base.OnMouseDown(new MouseEventArgs(e.Button, e.Clicks, fakeX, e.Y, e.Delta));
+                    return;
+                }
+            }
+
+            base.OnMouseDown(e);
         }
     }
 }
