@@ -26,6 +26,8 @@ namespace Gerrit
         {
             InitializeComponent();
             Translate();
+
+            Publish.Image = GitUI.Properties.Resources.IconPush;
         }
 
         private void PublishClick(object sender, EventArgs e)
