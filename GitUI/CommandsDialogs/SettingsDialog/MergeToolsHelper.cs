@@ -74,6 +74,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         }
                     }
                 }
+
+                string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+                if (!string.IsNullOrEmpty(localAppDataPath))
+                {
+                    path = Path.Combine(localAppDataPath, location);
+                    if (Directory.Exists(path))
+                    {
+                        string fullName = Path.Combine(path, fileName);
+                        if (File.Exists(fullName))
+                        {
+                            return fullName;
+                        }
+                    }
+                }
             }
 
             return string.Empty;

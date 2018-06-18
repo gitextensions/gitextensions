@@ -19,7 +19,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 "notepad",
                 GetNotepadPP(),
                 GetSublimeText3(),
-                GetVsCode()
+                GetVsCode(),
+                GetAtom()
             };
         }
 
@@ -33,6 +34,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private static string GetVsCode()
         {
             return GetEditorCommandLine("Visual Studio Code", "code.exe", " --wait", "Microsoft VS Code");
+        }
+
+        [NotNull]
+        private static string GetAtom()
+        {
+            return GetEditorCommandLine("Atom", "atom.exe", " --wait", "atom");
         }
 
         [NotNull]
