@@ -39,11 +39,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     continue;
                 }
 
+                string fullName = string.Empty;
                 string programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles");
 
-                if (CheckFileExists(programFilesPath, location, ref fileName))
+                if (CheckFileExists(programFilesPath, location, fileName, out fullName))
                 {
-                    return fileName;
+                    return fullName;
                 }
 
                 if (IntPtr.Size == 8
@@ -51,35 +52,36 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 {
                     programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
 
-                    if (CheckFileExists(programFilesPath, location, ref fileName))
+                    if (CheckFileExists(programFilesPath, location, fileName, out fullName))
                     {
-                        return fileName;
+                        return fullName;
                     }
                 }
 
                 string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-                if (CheckFileExists(localAppDataPath, location, ref fileName))
+                if (CheckFileExists(localAppDataPath, location, fileName, out fullName))
                 {
-                    return fileName;
+                    return fullName;
                 }
             }
 
             return string.Empty;
         }
 
-        private static bool CheckFileExists(string path, string location, ref string fileName)
+        private static bool CheckFileExists(string path, string location, string fileName, out string fullName)
         {
             if (!string.IsNullOrEmpty(path))
             {
                 path = Path.Combine(path, location);
                 if (Directory.Exists(path))
                 {
-                    fileName = Path.Combine(path, fileName);
-                    return File.Exists(fileName);
+                    fullName = Path.Combine(path, fileName);
+                    return File.Exists(fullName);
                 }
             }
 
+            fullName = string.Empty;
             return false;
         }
 
