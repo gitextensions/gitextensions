@@ -10,10 +10,11 @@ namespace GitUI.UserControls.RevisionGrid
     {
         private readonly string _value;
 
-        public CopyToClipboardToolStripMenuItem(string text, string value)
+        public CopyToClipboardToolStripMenuItem(string text, string value, Keys shortcutKeys)
             : base(text)
         {
             _value = value;
+            ShortcutKeys = shortcutKeys;
             Click += CopyToClipboard;
         }
 
