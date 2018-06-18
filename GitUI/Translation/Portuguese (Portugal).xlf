@@ -6586,7 +6586,7 @@ global settings.
   <file datatype="plaintext" original="GitSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git</source>
+        <source>Paths</source>
 
       </trans-unit>
       <trans-unit id="BrowseGitBinPath.Text">
@@ -6610,7 +6610,7 @@ global settings.
 
       </trans-unit>
       <trans-unit id="groupBox7.Text">
-        <source>Git</source>
+        <source>Paths</source>
 
       </trans-unit>
       <trans-unit id="groupBox8.Text">
