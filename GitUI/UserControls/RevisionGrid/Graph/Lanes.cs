@@ -807,7 +807,23 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                 public int CountNext(int lane)
                 {
-                    return EdgeList.Count(e => e.End == lane);
+                    // This is called quite a bit (as much as 5% of background thread processing),
+                    // so avoid using Enumerable.Count(predicate).
+                    var count = 0;
+
+                    // ReSharper disable once LoopCanBeConvertedToQuery
+                    // ReSharper disable once ForCanBeConvertedToForeach
+                    for (var index = 0; index < EdgeList.Count; index++)
+                    {
+                        var e = EdgeList[index];
+
+                        if (e.End == lane)
+                        {
+                            count++;
+                        }
+                    }
+
+                    return count;
                 }
             }
 
