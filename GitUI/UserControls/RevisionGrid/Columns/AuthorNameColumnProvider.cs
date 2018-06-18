@@ -18,18 +18,17 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             Column = new DataGridViewTextBoxColumn
             {
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
                 HeaderText = "Author Name",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                FillWeight = 20,
-                Width = DpiUtil.Scale(100)
+                Width = DpiUtil.Scale(130)
             };
         }
 
         public override void Refresh() => Column.Visible = AppSettings.ShowAuthorNameColumn;
 
-        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
+        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
         {
             if (!revision.IsArtificial)
             {

@@ -21,24 +21,24 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             Column = new DataGridViewTextBoxColumn
             {
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
                 HeaderText = "Commit ID",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                FillWeight = 20,
                 Resizable = DataGridViewTriState.True,
-                Width = DpiUtil.Scale(48),
+                Width = DpiUtil.Scale(60),
                 MinimumWidth = DpiUtil.Scale(32)
             };
         }
 
         public override void Refresh() => Column.Visible = AppSettings.ShowObjectIdColumn;
 
-        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
+        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
         {
             if (!_widthByLengthByFont.TryGetValue(style.normalFont, out var widthByLength))
             {
-                widthByLength = Enumerable.Range(0, ObjectId.Sha1CharCount + 1).Select(c => TextRenderer.MeasureText(new string('8', c), style.normalFont).Width).ToArray();
+                var normalFont = style.normalFont;
+                widthByLength = Enumerable.Range(0, ObjectId.Sha1CharCount + 1).Select(c => TextRenderer.MeasureText(new string('8', c), normalFont).Width).ToArray();
 
                 _widthByLengthByFont[style.normalFont] = widthByLength;
             }

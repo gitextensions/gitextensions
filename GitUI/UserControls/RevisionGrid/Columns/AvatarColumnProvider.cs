@@ -35,7 +35,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void Refresh() => Column.Visible = AppSettings.ShowAuthorAvatarColumn;
 
-        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, (Brush backBrush, Color backColor, Color foreColor, Font normalFont, Font boldFont) style)
+        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
         {
             if (revision.IsArtificial)
             {
