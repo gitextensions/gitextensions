@@ -101,7 +101,7 @@ namespace GitUI.UserControls.RevisionGrid
                     Text = "Go to commit...",
                     Image = Resources.IconGotoCommit,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.GoToCommit),
-                    ExecuteAction = GotoCommitExcecute
+                    ExecuteAction = GotoCommitExecute
                 },
                 MenuCommand.CreateSeparator(),
                 new MenuCommand
@@ -368,7 +368,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "showFirstParent",
                     Text = "Show first parents",
-                    Image = Properties.Resources.IconShowFirstParent,
+                    Image = Resources.IconShowFirstParent,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.ShowFirstParent),
                     ExecuteAction = () => _revisionGrid.ShowFirstParent(),
                     IsCheckedFunc = () => AppSettings.ShowFirstParent
@@ -377,7 +377,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "filterToolStripMenuItem",
                     Text = "Set advanced filter",
-                    Image = Properties.Resources.IconEditFilter,
+                    Image = Resources.IconEditFilter,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.RevisionFilter),
                     ExecuteAction = () => _revisionGrid.ShowRevisionFilterDialog()
                 },
@@ -385,7 +385,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "ToggleBranchTreePanel",
                     Text = "Toggle left panel",
-                    Image = Properties.Resources.IconLayoutSidebar,
+                    Image = Resources.IconLayoutSidebar,
                     ExecuteAction = () => _revisionGrid.OnToggleBranchTreePanelRequested()
                 }
             };
@@ -413,7 +413,7 @@ namespace GitUI.UserControls.RevisionGrid
             _revisionGrid.ExecuteCommand(RevisionGridControl.Commands.SelectCurrentRevision);
         }
 
-        public void GotoCommitExcecute()
+        public void GotoCommitExecute()
         {
             using (var formGoToCommit = new FormGoToCommit(_revisionGrid.UICommands))
             {

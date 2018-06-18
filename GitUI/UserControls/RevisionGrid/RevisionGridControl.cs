@@ -2379,7 +2379,7 @@ namespace GitUI
                 case Commands.ShowRemoteBranches: ToggleShowRemoteBranches(); break;
                 case Commands.ShowFirstParent: ShowFirstParent(); break;
                 case Commands.SelectCurrentRevision: SetSelectedRevision(new GitRevision(CurrentCheckout)); break;
-                case Commands.GoToCommit: MenuCommands.GotoCommitExcecute(); break;
+                case Commands.GoToCommit: MenuCommands.GotoCommitExecute(); break;
                 case Commands.GoToParent: goToParentToolStripMenuItem_Click(); break;
                 case Commands.GoToChild: goToChildToolStripMenuItem_Click(); break;
                 case Commands.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
