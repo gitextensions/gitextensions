@@ -10,7 +10,6 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
-using GitUI.UserControls.RevisionGrid;
 using JetBrains.Annotations;
 using ResourceManager;
 
