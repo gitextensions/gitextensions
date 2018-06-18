@@ -120,8 +120,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                     if (gitRef.IsTag &&
                         gitRef.IsDereference && // see note on using IsDereference in CommitInfo class
-                        AppSettings.ShowAnnotatedTagsMessages &&
-                        AppSettings.ShowIndicatorForMultilineMessage)
+                        AppSettings.ShowAnnotatedTagsMessages)
                     {
                         name = name + " [...]";
                     }

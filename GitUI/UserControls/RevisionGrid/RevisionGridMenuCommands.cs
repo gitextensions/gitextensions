@@ -351,17 +351,6 @@ namespace GitUI.UserControls.RevisionGrid
                     ExecuteAction = () => _revisionGrid.ToggleShowGitNotes(),
                     IsCheckedFunc = () => AppSettings.ShowGitNotes
                 },
-                new MenuCommand
-                {
-                    Name = "showIsMessageMultilineToolStripMenuItem",
-                    Text = "Show indicator for multiline message",
-                    ExecuteAction = () =>
-                    {
-                        AppSettings.ShowIndicatorForMultilineMessage = !AppSettings.ShowIndicatorForMultilineMessage;
-                        _revisionGrid.ForceRefreshRevisions();
-                    },
-                    IsCheckedFunc = () => AppSettings.ShowIndicatorForMultilineMessage
-                },
 
                 MenuCommand.CreateSeparator(),
 

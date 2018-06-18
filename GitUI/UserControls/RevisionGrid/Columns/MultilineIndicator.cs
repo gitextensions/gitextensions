@@ -31,7 +31,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             _e = e;
 
-            _isMultiline = revision.HasMultiLineMessage && AppSettings.ShowIndicatorForMultilineMessage;
+            _isMultiline = revision.HasMultiLineMessage;
 
             if (_isMultiline)
             {
