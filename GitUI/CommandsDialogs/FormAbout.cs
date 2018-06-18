@@ -9,9 +9,9 @@ using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class AboutBox : GitExtensionsForm
+    public sealed partial class FormAbout : GitExtensionsForm
     {
-        public AboutBox()
+        public FormAbout()
         {
             InitializeComponent();
             Translate();

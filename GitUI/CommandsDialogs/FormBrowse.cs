@@ -1159,7 +1159,7 @@ namespace GitUI.CommandsDialogs
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
         {
-            using (var frm = new AboutBox())
+            using (var frm = new FormAbout())
             {
                 frm.ShowDialog(this);
             }

@@ -1,6 +1,6 @@
 ﻿namespace GitUI.CommandsDialogs
 {
-    partial class AboutBox
+    partial class FormAbout
     {
         /// <summary>
         /// Required designer variable.
@@ -161,7 +161,7 @@
             this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "AboutBox";
+            this.Name = "FormAbout";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "About";
