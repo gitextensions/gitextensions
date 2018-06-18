@@ -355,7 +355,7 @@ namespace GitUI.UserControls
                 group.Mask = NativeMethods.ListViewGroupMask.State;
 
                 var handleRef = new HandleRef(this, Handle);
-                group.IGroupId = groupId < 0 ? groupId : groupIndex;
+                group.IGroupId = groupId > 0 ? groupId : groupIndex;
                 NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SETGROUPINFO, (IntPtr)group.IGroupId, ref group);
             }
         }
