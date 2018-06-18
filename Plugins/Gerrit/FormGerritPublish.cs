@@ -38,21 +38,15 @@ namespace Gerrit
 
         private static string PushCmd(string remote, string toBranch)
         {
-            remote = remote.ToPosixPath();
-
-            toBranch = GitRefName.GetFullBranchName(toBranch);
-
-            const string fromBranch = "HEAD";
-
-            toBranch = toBranch?.Replace(" ", "");
-
-            var sprogressOption = "";
-            if (GitCommandHelpers.VersionInUse.PushCanAskForProgress)
+            var args = new ArgumentBuilder
             {
-                sprogressOption = "--progress ";
-            }
+                "push",
+                { GitCommandHelpers.VersionInUse.PushCanAskForProgress, "--progress" },
+                remote.ToPosixPath().Trim().Quote(),
+                $"HEAD:{GitRefName.GetFullBranchName(toBranch)?.Replace(" ", "")}"
+            };
 
-            return string.Format("push {0}\"{1}\" {2}:{3}", sprogressOption, remote.Trim(), fromBranch, toBranch);
+            return args.ToString();
         }
 
         private bool PublishChange(IWin32Window owner)
