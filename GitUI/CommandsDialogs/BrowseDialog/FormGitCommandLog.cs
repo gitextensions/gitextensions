@@ -53,9 +53,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private static void RefreshListBox(ListBox log, string[] items)
         {
-            var isLastIndexSeleted = log.Items.Count == 0 || log.SelectedIndex == log.Items.Count - 1;
+            var isLastIndexSelected = log.Items.Count == 0 || log.SelectedIndex == log.Items.Count - 1;
             var lastIndex = -1;
-            if (!isLastIndexSeleted)
+            if (!isLastIndexSelected)
             {
                 lastIndex = log.SelectedIndex;
             }
@@ -77,7 +77,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             // select the very last item first, then select the previously selected item, if any
             log.SelectedIndex = log.Items.Count - 1;
-            if (isLastIndexSeleted)
+            if (isLastIndexSelected)
             {
                 log.SelectedIndex = log.Items.Count - 1;
             }
