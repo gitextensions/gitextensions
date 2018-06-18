@@ -22,6 +22,7 @@ namespace GitUI.CommandsDialogs
             // Click handlers
             thanksTo.LinkClicked += delegate { ShowContributorsForm(); };
             pictureDonate.Click += delegate { Process.Start(FormDonate.DonationUrl); };
+            linkLabelIcons.LinkClicked += delegate { Process.Start("http://p.yusukekamiyamane.com/"); };
             okButton.Click += delegate { Close(); };
 
             var contributorsList = GetContributorList();
