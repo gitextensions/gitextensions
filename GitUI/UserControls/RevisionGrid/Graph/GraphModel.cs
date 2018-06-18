@@ -25,7 +25,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         }
 
         [CanBeNull]
-        public ILaneRow this[int col] => _lanes[col];
+        public ILaneRow this[int row] => _lanes[row];
 
         public int CachedCount => _lanes.CachedCount;
 
