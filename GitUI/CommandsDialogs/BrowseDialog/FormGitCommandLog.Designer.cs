@@ -2,7 +2,7 @@
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
-    partial class FormGitLog
+    partial class FormGitCommandLog
     {
         /// <summary>
         /// Required designer variable.
@@ -211,7 +211,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.ClientSize = new System.Drawing.Size(659, 470);
             this.Controls.Add(this.alwaysOnTopCheckBox);
             this.Controls.Add(this.TabControl);
-            this.Name = "FormGitLog";
+            this.Name = "FormGitCommandLog";
             this.Text = "Log";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.GitLogForm_FormClosed);
             this.Load += new System.EventHandler(this.GitLogFormLoad);

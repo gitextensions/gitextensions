@@ -1192,7 +1192,7 @@ namespace GitUI.CommandsDialogs
 
         private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
         {
-            FormGitLog.ShowOrActivate(this);
+            FormGitCommandLog.ShowOrActivate(this);
         }
 
         private void CheckoutBranchToolStripMenuItemClick(object sender, EventArgs e)

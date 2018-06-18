@@ -7,9 +7,9 @@ using GitCommands;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
-    public sealed partial class FormGitLog : GitExtensionsForm
+    public sealed partial class FormGitCommandLog : GitExtensionsForm
     {
-        private FormGitLog()
+        private FormGitCommandLog()
             : base(true)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -162,13 +162,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         #region Single instance static members
 
-        private static FormGitLog instance;
+        private static FormGitCommandLog instance;
 
         public static void ShowOrActivate(IWin32Window owner)
         {
             if (instance == null)
             {
-                (instance = new FormGitLog()).Show(owner);
+                (instance = new FormGitCommandLog()).Show(owner);
             }
             else if (instance.WindowState == FormWindowState.Minimized)
             {
