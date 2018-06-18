@@ -38,7 +38,7 @@ namespace GitCommands
 
             if (bucket is string s)
             {
-                if (EqualsAtIndex(source, index, s))
+                if (EqualsAtIndex(source, index, length, s))
                 {
                     return s;
                 }
@@ -55,7 +55,7 @@ namespace GitCommands
                 for (var i = 0; i < list.Count; i++)
                 {
                     var item = list[i];
-                    if (item.Length == length && EqualsAtIndex(source, index, item))
+                    if (EqualsAtIndex(source, index, length, item))
                     {
                         return item;
                     }
@@ -137,11 +137,16 @@ namespace GitCommands
         #region Zero-allocation equality and hashing from substrings
 
         [Pure]
-        internal static unsafe bool EqualsAtIndex(string source, int index, string comparand)
+        internal static unsafe bool EqualsAtIndex(string source, int index, int length, string comparand)
         {
             var len = comparand.Length;
 
-            if (index + comparand.Length > source.Length)
+            if (len != length)
+            {
+                return false;
+            }
+
+            if (index + length > source.Length)
             {
                 throw new InvalidOperationException("Index and length extend beyond end of source string.");
             }

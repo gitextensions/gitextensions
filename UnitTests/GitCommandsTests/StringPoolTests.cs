@@ -74,34 +74,40 @@ namespace GitCommandsTests
                 {
                     const string format = "index={0} length={1}";
 
-                    Assert.True(StringPool.EqualsAtIndex(s, index, s.Substring(index, length)), format, index, length);
+                    Assert.True(StringPool.EqualsAtIndex(s, index, length, s.Substring(index, length)), format, index, length);
 
                     if (length < s.Length)
                     {
-                        Assert.False(StringPool.EqualsAtIndex(s, index, s.Substring(index, length) + 'Z'), format, index, length);
+                        Assert.False(StringPool.EqualsAtIndex(s, index, length, s.Substring(index, length) + 'Z'), format, index, length);
                     }
 
                     if (index > 0 && length > 0)
                     {
-                        Assert.False(StringPool.EqualsAtIndex(s, index - 1, s.Substring(index, length)), format, index, length);
-                        Assert.False(StringPool.EqualsAtIndex(s, index, s.Substring(index - 1, length)), format, index, length);
+                        Assert.False(StringPool.EqualsAtIndex(s, index - 1, length, s.Substring(index, length)), format, index, length);
+                        Assert.False(StringPool.EqualsAtIndex(s, index, length, s.Substring(index - 1, length)), format, index, length);
                     }
 
                     if (index + length < s.Length)
                     {
                         if (length == 0)
                         {
-                            Assert.True(StringPool.EqualsAtIndex(s, index + 1, s.Substring(index, length)), format, index, length);
-                            Assert.True(StringPool.EqualsAtIndex(s, index, s.Substring(index + 1, length)), format, index, length);
+                            Assert.True(StringPool.EqualsAtIndex(s, index + 1, length, s.Substring(index, length)), format, index, length);
+                            Assert.True(StringPool.EqualsAtIndex(s, index, length, s.Substring(index + 1, length)), format, index, length);
                         }
                         else
                         {
-                            Assert.False(StringPool.EqualsAtIndex(s, index + 1, s.Substring(index, length)), format, index, length);
-                            Assert.False(StringPool.EqualsAtIndex(s, index, s.Substring(index + 1, length)), format, index, length);
+                            Assert.False(StringPool.EqualsAtIndex(s, index + 1, length, s.Substring(index, length)), format, index, length);
+                            Assert.False(StringPool.EqualsAtIndex(s, index, length, s.Substring(index + 1, length)), format, index, length);
                         }
                     }
                 }
             }
+        }
+
+        [Test]
+        public void EqualsAtIndex_Substring()
+        {
+            Assert.False(StringPool.EqualsAtIndex("janusz@gitext.pl", 0, 16, "janusz"));
         }
 
         [Test]
