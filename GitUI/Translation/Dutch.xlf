@@ -8875,7 +8875,7 @@ and deze zal weer in het commit overzicht zichtbaar worden.</target>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="nl">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Config</source>
+        <source>Config</source>
         <target>Globale instelingen</target>
         
       </trans-unit>

@@ -8439,7 +8439,7 @@ Context menu for additional operations</source>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Config</source>
+        <source>Config</source>
         <target>全域Git設定</target>
         
       </trans-unit>

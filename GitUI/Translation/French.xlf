@@ -8877,7 +8877,7 @@ du menu contextuel pour des opérations supplémentaires</target>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="fr">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Config</source>
+        <source>Config</source>
         <target>Configuration de Git</target>
         
       </trans-unit>

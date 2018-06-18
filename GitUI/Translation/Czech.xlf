@@ -8712,7 +8712,7 @@ menu na tlačítku Obnovit pro další operace</target>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Config</source>
+        <source>Config</source>
         <target>Nastavení Gitu</target>
         
       </trans-unit>

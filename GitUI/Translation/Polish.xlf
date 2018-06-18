@@ -8736,7 +8736,7 @@ Odzyskaj. Użyj menu kontekstowego dla dodatkowych operacji.</target>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="pl">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Config</source>
+        <source>Config</source>
         <target>Konfiguracja Git</target>
         
       </trans-unit>

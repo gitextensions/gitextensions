@@ -7231,7 +7231,7 @@ Context menu for additional operations</source>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="ro">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Config</source>
+        <source>Config</source>
         
       </trans-unit>
       <trans-unit id="BrowseCommitTemplate.Text">

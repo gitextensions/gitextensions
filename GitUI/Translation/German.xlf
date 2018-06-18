@@ -8851,7 +8851,7 @@ Mehr Optionen im Kontextmenü</target>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="de">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Config</source>
+        <source>Config</source>
         <target>Git Konfiguration</target>
         
       </trans-unit>
