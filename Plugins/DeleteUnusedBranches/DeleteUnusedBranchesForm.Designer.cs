@@ -59,6 +59,7 @@
             this.mergedIntoBranch = new System.Windows.Forms.TextBox();
             this.olderThanDays = new System.Windows.Forms.NumericUpDown();
             this.RefreshBtn = new System.Windows.Forms.Button();
+            this.SelectAllBtn = new System.Windows.Forms.Button();
             this.includeUnmergedBranches = new System.Windows.Forms.CheckBox();
             this.useRegexCaseInsensitive = new System.Windows.Forms.CheckBox();
             this.regexDoesNotMatch = new System.Windows.Forms.CheckBox();
@@ -210,6 +211,7 @@
             this.tableLayoutPanel2.Controls.Add(this.buttonSettings, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.Cancel, 3, 0);
             this.tableLayoutPanel2.Controls.Add(this.Delete, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.SelectAllBtn, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 365);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -383,6 +385,17 @@
             this.RefreshBtn.UseVisualStyleBackColor = true;
             this.RefreshBtn.Click += new System.EventHandler(this.Refresh_Click);
             // 
+            // SelectAllBtn
+            // 
+            this.SelectAllBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)));
+            this.SelectAllBtn.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.SelectAllBtn.Name = "SelectAllBtn";
+            this.SelectAllBtn.Size = new System.Drawing.Size(75, 25);
+            this.SelectAllBtn.TabIndex = 3;
+            this.SelectAllBtn.Text = "Select All";
+            this.SelectAllBtn.UseVisualStyleBackColor = true;
+            this.SelectAllBtn.Click += new System.EventHandler(this.SelectAll_Click);
+            // 
             // includeUnmergedBranches
             // 
             this.includeUnmergedBranches.AutoSize = true;
@@ -460,6 +473,7 @@
         private System.Windows.Forms.TextBox regexFilter;
         private System.Windows.Forms.CheckBox useRegexFilter;
         private System.Windows.Forms.Button RefreshBtn;
+        private System.Windows.Forms.Button SelectAllBtn;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox mergedIntoBranch;

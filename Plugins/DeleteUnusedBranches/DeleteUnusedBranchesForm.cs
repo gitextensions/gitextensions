@@ -212,6 +212,16 @@ namespace DeleteUnusedBranches
             ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
         }
 
+        private void SelectAll_Click(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in BranchesGrid.Rows)
+            {
+                DataGridViewCheckBoxCell cell =
+                    (DataGridViewCheckBoxCell)row.Cells[nameof(deleteDataGridViewCheckBoxColumn)];
+                cell.Value = true;
+            }
+        }
+
         private void BranchesGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             // track only “Deleted” column
