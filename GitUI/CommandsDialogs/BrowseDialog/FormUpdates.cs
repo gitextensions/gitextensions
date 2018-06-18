@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Git.hub;
 using GitCommands;
 using GitCommands.Config;
+using GitUI.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -25,19 +26,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public IWin32Window OwnerWindow;
         public Version CurrentVersion { get; }
         public bool UpdateFound;
-        public string UpdateUrl;
-        public string NewVersion;
+        public string UpdateUrl = "";
+        public string NewVersion = "";
 
         public FormUpdates(Version currentVersion)
         {
+            CurrentVersion = currentVersion;
+
             InitializeComponent();
             Translate();
-            UpdateFound = false;
+
             progressBar1.Visible = true;
-            CurrentVersion = currentVersion;
-            UpdateUrl = "";
-            NewVersion = "";
             progressBar1.Style = ProgressBarStyle.Marquee;
+
+            Icon = Resources.git_extensions_logo_final;
         }
 
         private void CloseButtonClick(object sender, EventArgs e)
