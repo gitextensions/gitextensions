@@ -57,7 +57,7 @@ namespace GitUI.CommandsDialogs
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _longShaProvider = new LongShaProvider(() => Module);
 
-            copyToClipboardToolStripMenuItem.GetViewModel = () => new CopyContextMenuViewModel(FileChanges.GetSelectedRevisions().FirstOrDefault());
+            copyToClipboardToolStripMenuItem.SetRevisionFunc(() => FileChanges.GetSelectedRevisions().FirstOrDefault());
 
             this.AdjustForDpiScaling();
 

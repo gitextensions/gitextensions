@@ -1,69 +1,116 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
+using JetBrains.Annotations;
+using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
 {
-    public partial class CopyContextMenuItem : ToolStripMenuItem
+    public sealed class CopyContextMenuItem : ToolStripMenuItem
     {
+        [CanBeNull] private Func<GitRevision> _revisionFunc;
+
         public CopyContextMenuItem()
         {
-            InitializeComponent();
-        }
+            Image = Properties.Resources.IconCopyToClipboard;
+            Text = "Copy to clipboard";
 
-        [Browsable(false)]
-        public Func<CopyContextMenuViewModel> GetViewModel { get; set; }
+            // Add a dummy copy item, so that the shortcut key works.
+            // This item will never be seen by the user, as the submenu is rebuilt on opening.
+            AddItem("Dummy item", r => r.Guid, Keys.Control | Keys.C, showShortcutKeys: false);
 
-        [Browsable(false)]
-        private CopyContextMenuViewModel ViewModel => GetViewModel?.Invoke();
+            DropDownOpening += OnDropDownOpening;
 
-        private void copyToClipboardToolStripMenuItem_DropDownOpened(object sender, EventArgs e)
-        {
-            var r = ViewModel;
-            if (r == null)
+            void OnDropDownOpening(object sender, EventArgs e)
             {
-                return;
+                var revision = _revisionFunc?.Invoke();
+
+                if (revision == null)
+                {
+                    HideDropDown();
+                    return;
+                }
+
+                DropDownItems.Clear();
+
+                var refLists = new GitRefListsForRevision(revision);
+                var branchNames = refLists.GetAllBranchNames();
+                var tagNames = refLists.GetAllTagNames();
+
+                // Add items for branches
+                if (branchNames.Any())
+                {
+                    // TODO translate text
+                    var caption = new ToolStripMenuItem { Text = "Branch name:" };
+                    MenuUtil.SetAsCaptionMenuItem(caption, Owner);
+                    DropDownItems.Add(caption);
+
+                    foreach (var name in branchNames)
+                    {
+                        AddItem(name, _ => name);
+                    }
+
+                    DropDownItems.Add(new ToolStripSeparator());
+                }
+
+                // Add items for tags
+                if (tagNames.Any())
+                {
+                    // TODO translate text
+                    var caption = new ToolStripMenuItem { Text = "Tag name:" };
+                    MenuUtil.SetAsCaptionMenuItem(caption, Owner);
+                    DropDownItems.Add(caption);
+
+                    foreach (var name in tagNames)
+                    {
+                        AddItem(name, _ => name);
+                    }
+
+                    DropDownItems.Add(new ToolStripSeparator());
+                }
+
+                // Add other items
+                AddItem($"{Strings.CommitHash}     ({revision.Guid.ShortenTo(15)})", r => r.Guid, Keys.Control | Keys.C);
+                AddItem($"{Strings.Message}     ({revision.Subject.ShortenTo(30)})", r => r.Body ?? r.Subject);
+                AddItem($"{Strings.Author}     ({revision.Author})", r => r.Author);
+
+                if (revision.AuthorDate == revision.CommitDate)
+                {
+                    AddItem($"{Strings.Date}     ({revision.CommitDate})", r => r.CommitDate.ToString());
+                }
+                else
+                {
+                    AddItem($"{Strings.AuthorDate}     ({revision.AuthorDate})", r => r.AuthorDate.ToString());
+                    AddItem($"{Strings.CommitDate}     ({revision.CommitDate})", r => r.CommitDate.ToString());
+                }
             }
 
-            MenuUtil.SetAsCaptionMenuItem(branchNameCopyToolStripMenuItem, Owner);
-            MenuUtil.SetAsCaptionMenuItem(tagNameCopyToolStripMenuItem, Owner);
-
-            CleanupDynamicallyAddedItems();
-
-            AddRefNameItems(branchNameCopyToolStripMenuItem, ViewModel.BranchNames);
-            AddRefNameItems(tagNameCopyToolStripMenuItem, ViewModel.TagNames);
-            AddDetailItems();
-        }
-
-        private void CleanupDynamicallyAddedItems()
-        {
-            DropDownItems
-                .OfType<CopyToClipboardToolStripMenuItem>()
-                .ToArray()
-                .ForEach(i => DropDownItems.Remove(i));
-        }
-
-        private void AddDetailItems()
-        {
-            InsertItemsAfterItem(separatorAfterRefNames, ViewModel.DetailItems.Select(i => new CopyToClipboardToolStripMenuItem(i.Text, i.Value, i.ShortcutKeys)).ToArray());
-            separatorAfterRefNames.Visible = ViewModel.SeparatorVisible;
-        }
-
-        private void AddRefNameItems(ToolStripItem captionItem, IReadOnlyList<string> gitNameList)
-        {
-            InsertItemsAfterItem(captionItem, gitNameList.Select(name => new CopyToClipboardToolStripMenuItem(name, name, Keys.None)).ToArray());
-            captionItem.Visible = gitNameList.Any();
-        }
-
-        private void InsertItemsAfterItem(ToolStripItem anchorItem, CopyToClipboardToolStripMenuItem[] items)
-        {
-            var startIndex = DropDownItems.IndexOf(anchorItem) + 1;
-            for (var i = 0; i < items.Length; ++i)
+            void AddItem(string displayText, Func<GitRevision, string> clipboardText, Keys shortcutKeys = Keys.None, bool showShortcutKeys = true)
             {
-                DropDownItems.Insert(startIndex + i, items[i]);
+                var item = new ToolStripMenuItem
+                {
+                    Text = displayText,
+                    ShortcutKeys = shortcutKeys,
+                    ShowShortcutKeys = showShortcutKeys
+                };
+
+                item.Click += delegate
+                {
+                    var revision = _revisionFunc?.Invoke();
+                    if (revision != null)
+                    {
+                        Clipboard.SetText(clipboardText(revision));
+                    }
+                };
+
+                DropDownItems.Add(item);
             }
+        }
+
+        public void SetRevisionFunc(Func<GitRevision> revisionFunc)
+        {
+            _revisionFunc = revisionFunc;
         }
     }
 }
