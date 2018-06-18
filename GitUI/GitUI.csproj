@@ -450,14 +450,7 @@
     <Compile Include="UserControls\RevisionGrid\CopyContextMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UserControls\RevisionGrid\CopyContextMenuItem.Designer.cs">
-      <DependentUpon>CopyContextMenuItem.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\RevisionGrid\CaptionCustomMenuRenderer.cs" />
     <Compile Include="UserControls\RevisionGrid\CopyContextMenuViewModel.cs" />
-    <Compile Include="UserControls\RevisionGrid\CopyToClipboardToolStripMenuItem.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="UserControls\RevisionGrid\GitRefListsForRevision.cs" />
     <Compile Include="UserControls\RevisionGrid\MenuUtil.cs" />
     <Compile Include="UserControls\RevisionGrid\NavigationHistory.cs" />

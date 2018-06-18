@@ -159,14 +159,12 @@ namespace GitUI.CommandsDialogs
             this.firstDiffCaptionMenuItem.Enabled = false;
             this.firstDiffCaptionMenuItem.Name = "firstDiffCaptionMenuItem";
             this.firstDiffCaptionMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.firstDiffCaptionMenuItem.Tag = "caption";
             // 
             // selectedDiffCaptionMenuItem
             // 
             this.selectedDiffCaptionMenuItem.Enabled = false;
             this.selectedDiffCaptionMenuItem.Name = "selectedDiffCaptionMenuItem";
             this.selectedDiffCaptionMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.selectedDiffCaptionMenuItem.Tag = "caption";
             // 
             // firstToSelectedToolStripMenuItem
             // 
