@@ -39,10 +39,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     continue;
                 }
 
-                string fullName = string.Empty;
                 string programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles");
 
-                if (CheckFileExists(programFilesPath, location, fileName, out fullName))
+                if (CheckFileExists(programFilesPath, location, fileName, out string fullName))
                 {
                     return fullName;
                 }
