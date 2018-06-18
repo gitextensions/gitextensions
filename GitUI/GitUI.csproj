@@ -1880,6 +1880,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\IconCommitId.png" />
+    <None Include="Resources\IconDate.png" />
+    <None Include="Resources\IconMessage.png" />
     <Content Include="Resources\Icons\application-footer.png" />
     <Content Include="Resources\Icons\application-sidebar.png" />
     <Content Include="Resources\Icons\arrow-090.png" />
@@ -2004,6 +2007,8 @@
     <Content Include="Resources\Icons\tag_ok.png" />
     <Content Include="Resources\Icons\tag_warning.png" />
     <Content Include="Resources\Icons\x_with_arrow_32.png" />
+    <None Include="Resources\IconUser.png" />
+    <None Include="Resources\IconTag.png" />
     <Content Include="Translation\Czech.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
