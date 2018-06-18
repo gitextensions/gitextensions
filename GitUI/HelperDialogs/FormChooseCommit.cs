@@ -69,7 +69,7 @@ namespace GitUI.HelperDialogs
 
         private void buttonGotoCommit_Click(object sender, EventArgs e)
         {
-            revisionGrid.MenuCommands.GotoCommitExcecute();
+            revisionGrid.MenuCommands.GotoCommitExecute();
         }
 
         private void linkLabelParent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

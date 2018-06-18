@@ -106,7 +106,7 @@ namespace Gravatar
                 // do nothing
             }
 
-            OnInvalidated(EventArgs.Empty);
+            Invalidated?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -133,7 +133,8 @@ namespace Gravatar
                     }
                 }
             });
-            OnInvalidated(EventArgs.Empty);
+
+            Invalidated?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -162,7 +163,7 @@ namespace Gravatar
                 // do nothing
             }
 
-            OnInvalidated(EventArgs.Empty);
+            Invalidated?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -217,12 +218,6 @@ namespace Gravatar
             }
 
             return file.LastWriteTime < DateTime.Now.AddDays(-_cacheDays);
-        }
-
-        private void OnInvalidated(EventArgs e)
-        {
-            var handler = Invalidated;
-            handler?.Invoke(this, e);
         }
     }
 }
