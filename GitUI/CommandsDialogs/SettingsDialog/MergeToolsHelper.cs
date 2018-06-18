@@ -41,19 +41,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
                 string programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles");
 
-                string path;
-
-                if (!string.IsNullOrEmpty(programFilesPath))
+                if (CheckFileExists(programFilesPath, location, ref fileName))
                 {
-                    path = Path.Combine(programFilesPath, location);
-                    if (Directory.Exists(path))
-                    {
-                        string fullName = Path.Combine(path, fileName);
-                        if (File.Exists(fullName))
-                        {
-                            return fullName;
-                        }
-                    }
+                    return fileName;
                 }
 
                 if (IntPtr.Size == 8
@@ -61,37 +51,36 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 {
                     programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
 
-                    if (!string.IsNullOrEmpty(programFilesPath))
+                    if (CheckFileExists(programFilesPath, location, ref fileName))
                     {
-                        path = Path.Combine(programFilesPath, location);
-                        if (Directory.Exists(path))
-                        {
-                            string fullName = Path.Combine(path, fileName);
-                            if (File.Exists(fullName))
-                            {
-                                return fullName;
-                            }
-                        }
+                        return fileName;
                     }
                 }
 
                 string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-                if (!string.IsNullOrEmpty(localAppDataPath))
+                if (CheckFileExists(localAppDataPath, location, ref fileName))
                 {
-                    path = Path.Combine(localAppDataPath, location);
-                    if (Directory.Exists(path))
-                    {
-                        string fullName = Path.Combine(path, fileName);
-                        if (File.Exists(fullName))
-                        {
-                            return fullName;
-                        }
-                    }
+                    return fileName;
                 }
             }
 
             return string.Empty;
+        }
+
+        private static bool CheckFileExists(string path, string location, ref string fileName)
+        {
+            if (!string.IsNullOrEmpty(path))
+            {
+                path = Path.Combine(path, location);
+                if (Directory.Exists(path))
+                {
+                    fileName = Path.Combine(path, fileName);
+                    return File.Exists(fileName);
+                }
+            }
+
+            return false;
         }
 
         private static string UnquoteString(string str)
