@@ -1166,9 +1166,39 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap IconGitForWindows {
+            get {
+                object obj = ResourceManager.GetObject("IconGitForWindows", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconGitGui {
+            get {
+                object obj = ResourceManager.GetObject("IconGitGui", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap IconPreview {
             get {
                 object obj = ResourceManager.GetObject("IconPreview", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconGitk {
+            get {
+                object obj = ResourceManager.GetObject("IconGitk", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
