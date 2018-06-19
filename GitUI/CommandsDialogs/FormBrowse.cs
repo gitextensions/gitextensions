@@ -403,7 +403,17 @@ namespace GitUI.CommandsDialogs
                 RevisionGrid.Focus();
                 RevisionGrid.IndexWatcher.Reset();
 
-                RevisionGrid.IndexWatcher.Changed += _indexWatcher_Changed;
+                RevisionGrid.IndexWatcher.Changed += (_, indexChangedEventArgs) =>
+                {
+                    bool indexChanged = indexChangedEventArgs.IsIndexChanged;
+                    this.InvokeAsync(() =>
+                        {
+                            RefreshButton.Image = indexChanged && AppSettings.UseFastChecks && Module.IsValidGitWorkingDir()
+                                ? Resources.IconReloadRevisionsDirty
+                                : Resources.IconReloadRevisions;
+                        })
+                        .FileAndForget();
+                };
             }
 
             try
@@ -420,18 +430,6 @@ namespace GitUI.CommandsDialogs
             {
                 // This code is just for fun, we do not want the program to crash because of it.
             }
-        }
-
-        private void _indexWatcher_Changed(object sender, IndexChangedEventArgs e)
-        {
-            bool indexChanged = e.IsIndexChanged;
-            this.InvokeAsync(() =>
-            {
-                RefreshButton.Image = indexChanged && AppSettings.UseFastChecks && Module.IsValidGitWorkingDir()
-                                          ? Resources.IconReloadRevisionsDirty
-                                          : Resources.IconReloadRevisions;
-            })
-                .FileAndForget();
         }
 
         /// <summary>
