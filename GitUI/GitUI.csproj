@@ -354,6 +354,12 @@
     <Compile Include="Script\PowerShellHelper.cs" />
     <Compile Include="Script\ScriptRunner.cs" />
     <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
+    <Compile Include="Script\FilePrompt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Script\FilePrompt.Designer.cs">
+      <DependentUpon>FilePrompt.cs</DependentUpon>
+    </Compile>
     <Compile Include="SplitterManager.cs" />
     <Compile Include="SpellChecker\SpellCheckerHelper.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractor.cs" />
@@ -1240,6 +1246,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MsVsImages.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Script\FilePrompt.resx">
+      <DependentUpon>FilePrompt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\BranchSelector.resx">
       <DependentUpon>BranchSelector.cs</DependentUpon>
