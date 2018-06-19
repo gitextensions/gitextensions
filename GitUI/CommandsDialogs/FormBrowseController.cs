@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using GitCommands;
 using GitCommands.Gpg;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -18,6 +19,7 @@ namespace GitUI.CommandsDialogs
             _gitGpgController = gitGpgController;
         }
 
+        [ItemCanBeNull]
         public async Task<GpgInfo> LoadGpgInfoAsync(GitRevision revision)
         {
             if (!AppSettings.ShowGpgInformation.ValueOrDefault || string.IsNullOrWhiteSpace(revision?.Guid))
