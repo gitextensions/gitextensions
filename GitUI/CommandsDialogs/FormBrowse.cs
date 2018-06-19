@@ -401,6 +401,32 @@ namespace GitUI.CommandsDialogs
             base.OnFormClosing(e);
         }
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            _splitterManager.SaveSplitters();
+            base.OnClosing(e);
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            UnregisterPlugins();
+            base.OnClosed(e);
+        }
+
+        public override void AddTranslationItems(ITranslation translation)
+        {
+            base.AddTranslationItems(translation);
+            TranslationUtils.AddTranslationItemsFromFields(Name, _filterRevisionsHelper, translation);
+            TranslationUtils.AddTranslationItemsFromFields(Name, _filterBranchHelper, translation);
+        }
+
+        public override void TranslateItems(ITranslation translation)
+        {
+            base.TranslateItems(translation);
+            TranslationUtils.TranslateItemsFromFields(Name, _filterRevisionsHelper, translation);
+            TranslationUtils.TranslateItemsFromFields(Name, _filterBranchHelper, translation);
+        }
+
         public override void CancelButtonClick(object sender, EventArgs e)
         {
             // If a filter is applied, clear it
@@ -2077,24 +2103,6 @@ namespace GitUI.CommandsDialogs
             RefreshLayoutToggleButtonStates();
         }
 
-        private void SaveSplitterPositions()
-        {
-            _splitterManager.SaveSplitters();
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            base.OnClosing(e);
-            SaveSplitterPositions();
-        }
-
-        protected override void OnClosed(EventArgs e)
-        {
-            UnregisterPlugins();
-
-            base.OnClosed(e);
-        }
-
         private void CommandsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             // Most options do not make sense for artificial commits or no revision selected at all
@@ -2122,20 +2130,6 @@ namespace GitUI.CommandsDialogs
             deleteTagToolStripMenuItem.Enabled =
             archiveToolStripMenuItem.Enabled =
               enabled;
-        }
-
-        public override void AddTranslationItems(ITranslation translation)
-        {
-            base.AddTranslationItems(translation);
-            TranslationUtils.AddTranslationItemsFromFields(Name, _filterRevisionsHelper, translation);
-            TranslationUtils.AddTranslationItemsFromFields(Name, _filterBranchHelper, translation);
-        }
-
-        public override void TranslateItems(ITranslation translation)
-        {
-            base.TranslateItems(translation);
-            TranslationUtils.TranslateItemsFromFields(Name, _filterRevisionsHelper, translation);
-            TranslationUtils.TranslateItemsFromFields(Name, _filterBranchHelper, translation);
         }
 
         private void dontSetAsDefaultToolStripMenuItem_Click(object sender, EventArgs e)
