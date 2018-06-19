@@ -287,7 +287,8 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Commands.StashPop, Keys.Control | Keys.Alt | Keys.Down),
                     Hk(FormBrowse.Commands.CloseRepository, Keys.Control | Keys.W),
                     Hk(FormBrowse.Commands.OpenSettings, Keys.Control | Keys.Oemcomma),
-                    Hk(FormBrowse.Commands.OpenWithDifftool, OpenWithDifftoolHotkey)),
+                    Hk(FormBrowse.Commands.OpenWithDifftool, OpenWithDifftoolHotkey),
+                    Hk(FormBrowse.Commands.ToggleBranchTreePanel, Keys.Control | Keys.Alt | Keys.C)),
                 new HotkeySettings(
                     RevisionGridControl.HotkeySettingsName,
                     Hk(RevisionGridControl.Commands.RevisionFilter, Keys.Control | Keys.F),
@@ -313,8 +314,7 @@ namespace GitUI.Hotkey
                     Hk(RevisionGridControl.Commands.SelectAsBaseToCompare, Keys.Control | Keys.L),
                     Hk(RevisionGridControl.Commands.CompareToBase, Keys.Control | Keys.R),
                     Hk(RevisionGridControl.Commands.GoToCommit, Keys.Control | Keys.Shift | Keys.G),
-                    Hk(RevisionGridControl.Commands.CreateFixupCommit, Keys.Control | Keys.X),
-                    Hk(RevisionGridControl.Commands.ToggleBranchTreePanel, Keys.Control | Keys.Alt | Keys.C)),
+                    Hk(RevisionGridControl.Commands.CreateFixupCommit, Keys.Control | Keys.X)),
                 new HotkeySettings(
                     FileViewer.HotkeySettingsName,
                     Hk(FileViewer.Commands.Find, Keys.Control | Keys.F),

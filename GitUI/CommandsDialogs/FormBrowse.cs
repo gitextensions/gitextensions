@@ -168,7 +168,6 @@ namespace GitUI.CommandsDialogs
                 }
             }).FileAndForget();
 
-            RevisionGrid.OnToggleBranchTreePanelRequested = () => toggleBranchTreePanel_Click(null, null);
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
             repoObjectsTree.SetBranchFilterer(_filterBranchHelper);
@@ -1972,7 +1971,8 @@ namespace GitUI.CommandsDialogs
             StashPop = 17,
             FocusFilter = 18,
             OpenWithDifftool = 19,
-            OpenSettings = 20
+            OpenSettings = 20,
+            ToggleBranchTreePanel = 21
         }
 
         private void AddNotes()
@@ -2037,6 +2037,7 @@ namespace GitUI.CommandsDialogs
                 case Commands.StashPop: UICommands.StashPop(this); break;
                 case Commands.OpenWithDifftool: OpenWithDifftool(); break;
                 case Commands.OpenSettings: OnShowSettingsClick(null, null); break;
+                case Commands.ToggleBranchTreePanel: toggleBranchTreePanel_Click(null, null); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
