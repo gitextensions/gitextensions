@@ -15,6 +15,7 @@ namespace GitCommands
         private static readonly GitVersion v2_5_1 = new GitVersion("2.5.1");
         private static readonly GitVersion v2_7_0 = new GitVersion("2.7.0");
         private static readonly GitVersion v2_9_0 = new GitVersion("2.9.0");
+        private static readonly GitVersion v2_15_2 = new GitVersion("2.15.2");
         private static readonly GitVersion v2_16_3 = new GitVersion("2.16.3");
 
         public static readonly GitVersion LastSupportedVersion = v2_9_0;
@@ -98,6 +99,8 @@ namespace GitCommands
         {
             get { return a == 0 && b == 0 && c == 0 && d == 0; }
         }
+
+        public bool SupportNoOptionalLocks => this >= v2_15_2;
 
         // Returns true if it's possible to pass given string as command line
         // argument to git for searching.

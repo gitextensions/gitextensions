@@ -286,7 +286,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private string RunStatusCommand()
         {
-            string command = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default);
+            string command = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
             return Module.RunGitCmd(command);
         }
 
