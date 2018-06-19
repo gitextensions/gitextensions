@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Git.Extensions;
+using GitCommands.Logging;
 using GitCommands.Patches;
 using GitCommands.Settings;
 using GitCommands.Utils;
@@ -523,14 +524,9 @@ namespace GitCommands
                 startInfo.CreateNoWindow = true;
             }
 
-            var startCmd = AppSettings.GitLog.Log(fileName, arguments);
+            var operation = CommandLog.LogProcessStart(fileName, arguments);
             var startProcess = Process.Start(startInfo);
-
-            startProcess.Exited += (sender, args) =>
-            {
-                startCmd.LogEnd();
-            };
-
+            startProcess.Exited += (s, e) => operation.LogProcessEnd();
             return startProcess;
         }
 
@@ -3142,9 +3138,9 @@ namespace GitCommands
             }
             catch
             {
-                // Catch all parser errors, and ignore them all!
+                // Catch all parser errors, and ignore them!
                 // We should never get here...
-                AppSettings.GitLog.Log("Error parsing output from command: " + args + "\n\nPlease report a bug!");
+                Debug.WriteLine("Error parsing output from command: {0}\n\nPlease report a bug!", args);
 
                 return new GitBlame(Array.Empty<GitBlameLine>());
             }
