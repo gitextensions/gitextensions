@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
+using Gource.Properties;
 using ICSharpCode.SharpZipLib.Zip;
 using ResourceManager;
 
@@ -36,6 +37,7 @@ namespace Gource
         {
             SetNameAndDescription("Gource");
             Translate();
+            Icon = Resources.IconGource;
         }
 
         private readonly StringSetting _gourcePath = new StringSetting("Path to Gource", "");

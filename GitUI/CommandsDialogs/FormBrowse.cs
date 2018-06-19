@@ -495,7 +495,7 @@ namespace GitUI.CommandsDialogs
                 // Add the plugin to the Plugins menu, if not already added
                 if (!existingPluginMenus.Contains(plugin))
                 {
-                    var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
+                    var item = new ToolStripMenuItem { Text = plugin.Description, Image = plugin.Icon, Tag = plugin };
                     item.Click += delegate
                     {
                         if (plugin.Execute(new GitUIEventArgs(this, UICommands)))

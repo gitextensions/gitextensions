@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Gerrit.Properties;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -46,6 +47,7 @@ namespace Gerrit
         {
             SetNameAndDescription("Gerrit Code Review");
             Translate();
+            Icon = Resources.IconGerrit;
         }
 
         public override void Register(IGitUICommands gitUiCommands)

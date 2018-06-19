@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
+using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
@@ -7,6 +9,9 @@ namespace GitUIPluginInterfaces
         string Name { get; }
 
         string Description { get; }
+
+        [CanBeNull]
+        Image Icon { get; }
 
         IGitPluginSettingsContainer SettingsContainer { get; set; }
 

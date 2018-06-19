@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using BackgroundFetch.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -15,6 +16,7 @@ namespace BackgroundFetch
         {
             SetNameAndDescription("Periodic background fetch");
             Translate();
+            Icon = Resources.IconBackgroundFetch;
         }
 
         private IDisposable _cancellationToken;
@@ -62,13 +64,13 @@ namespace BackgroundFetch
                     Observable.Timer(TimeSpan.FromSeconds(Math.Max(5, fetchInterval)))
                               .SelectMany(i =>
                               {
-                                  // if git not runing - start fetch immediately
+                                  // if git not running - start fetch immediately
                                   if (!gitModule.IsRunningGitProcess())
                                   {
                                       return Observable.Return(i);
                                   }
 
-                                  // in other case - every 5 seconds check if git still runnnig
+                                  // in other case - every 5 seconds check if git still running
                                   return Observable
                                       .Interval(TimeSpan.FromSeconds(5))
                                       .SkipWhile(ii => gitModule.IsRunningGitProcess())
