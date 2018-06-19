@@ -610,7 +610,6 @@ namespace GitUI.CommandsDialogs
             // 
             this.MainSplitContainer.Panel2.Controls.Add(this.RightSplitContainer);
             this.MainSplitContainer.Size = new System.Drawing.Size(923, 502);
-            this.MainSplitContainer.SplitterDistance = 267;
             this.MainSplitContainer.SplitterWidth = 6;
             this.MainSplitContainer.TabIndex = 1;
             // 
