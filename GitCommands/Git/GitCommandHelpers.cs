@@ -315,8 +315,15 @@ namespace GitCommands
 
         public static string CherryPickCmd(string cherry, bool commit, string arguments)
         {
-            string cherryPickCmd = commit ? "cherry-pick" : "cherry-pick --no-commit";
-            return cherryPickCmd + " " + arguments + " \"" + cherry + "\"";
+            var args = new ArgumentBuilder
+            {
+                "cherry-pick",
+                { !commit, "--no-commit" },
+                arguments,
+                cherry.Quote()
+            };
+
+            return args.ToString();
         }
 
         public static string DeleteTagCmd(string tagName)
