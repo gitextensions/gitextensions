@@ -135,6 +135,7 @@ namespace GitUI.CommandsDialogs
             commandsToolStripMenuItem.DropDownOpening += CommandsToolStripMenuItem_DropDownOpening;
 
             MainSplitContainer.Visible = false;
+            MainSplitContainer.SplitterDistance = DpiUtil.Scale(120);
 
             // set tab page images
             CommitInfoTabControl.ImageList = new ImageList
