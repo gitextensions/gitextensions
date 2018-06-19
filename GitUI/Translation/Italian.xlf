@@ -2796,7 +2796,7 @@ Vuoi rimuoverlo dalla lista dei repository recenti?</target>
         
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target>Log Gitcommand</target>
         
       </trans-unit>

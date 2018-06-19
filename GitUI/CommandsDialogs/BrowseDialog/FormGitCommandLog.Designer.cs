@@ -212,7 +212,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.Controls.Add(this.alwaysOnTopCheckBox);
             this.Controls.Add(this.TabControl);
             this.Name = "FormGitCommandLog";
-            this.Text = "Log";
+            this.Text = "Git Command Log";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.GitLogForm_FormClosed);
             this.Load += new System.EventHandler(this.GitLogFormLoad);
             this.TabControl.ResumeLayout(false);

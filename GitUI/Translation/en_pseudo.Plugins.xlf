@@ -2831,7 +2831,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target>[Ɠīŧƈǿḿḿȧƞḓ ŀǿɠ ϖϕ衋ϵ靐ϕǈϑ靐ǲ ſ]</target>
         
       </trans-unit>
