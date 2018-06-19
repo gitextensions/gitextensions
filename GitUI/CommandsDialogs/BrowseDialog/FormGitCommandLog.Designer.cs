@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.TabControl = new System.Windows.Forms.TabControl();
+            this.TabControl = new GitUI.CommandsDialogs.FullBleedTabControl();
             this.tabPageCommandLog = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.LogItems = new System.Windows.Forms.ListBox();
@@ -75,10 +75,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // 
             this.tabPageCommandLog.BackColor = System.Drawing.SystemColors.ControlLight;
             this.tabPageCommandLog.Controls.Add(this.splitContainer2);
-            this.tabPageCommandLog.Location = new System.Drawing.Point(4, 22);
+            this.tabPageCommandLog.Location = new System.Drawing.Point(1, 21);
             this.tabPageCommandLog.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageCommandLog.Name = "tabPageCommandLog";
-            this.tabPageCommandLog.Size = new System.Drawing.Size(651, 416);
+            this.tabPageCommandLog.Size = new System.Drawing.Size(655, 419);
             this.tabPageCommandLog.TabIndex = 0;
             this.tabPageCommandLog.Text = "Command log";
             // 
@@ -98,18 +98,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.LogOutput);
-            this.splitContainer2.Size = new System.Drawing.Size(651, 416);
-            this.splitContainer2.SplitterDistance = 334;
+            this.splitContainer2.Size = new System.Drawing.Size(655, 419);
+            this.splitContainer2.SplitterDistance = 337;
             this.splitContainer2.TabIndex = 1;
             // 
             // LogItems
             // 
+            this.LogItems.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LogItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LogItems.FormattingEnabled = true;
             this.LogItems.Location = new System.Drawing.Point(0, 0);
             this.LogItems.Margin = new System.Windows.Forms.Padding(0);
             this.LogItems.Name = "LogItems";
-            this.LogItems.Size = new System.Drawing.Size(651, 334);
+            this.LogItems.Size = new System.Drawing.Size(655, 337);
             this.LogItems.TabIndex = 0;
             this.LogItems.SelectedIndexChanged += new System.EventHandler(this.LogItems_SelectedIndexChanged);
             this.LogItems.ContextMenuStrip = logContextMenuStrip;
@@ -122,7 +123,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.LogOutput.Location = new System.Drawing.Point(0, 0);
             this.LogOutput.Margin = new System.Windows.Forms.Padding(0);
             this.LogOutput.Name = "LogOutput";
-            this.LogOutput.Size = new System.Drawing.Size(651, 78);
+            this.LogOutput.Size = new System.Drawing.Size(655, 78);
             this.LogOutput.TabIndex = 0;
             this.LogOutput.Text = "";
             // 
@@ -130,10 +131,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // 
             this.tabPageCommandCache.BackColor = System.Drawing.SystemColors.ControlLight;
             this.tabPageCommandCache.Controls.Add(this.splitContainer1);
-            this.tabPageCommandCache.Location = new System.Drawing.Point(4, 22);
+            this.tabPageCommandCache.Location = new System.Drawing.Point(1, 21);
             this.tabPageCommandCache.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageCommandCache.Name = "tabPageCommandCache";
-            this.tabPageCommandCache.Size = new System.Drawing.Size(651, 416);
+            this.tabPageCommandCache.Size = new System.Drawing.Size(655, 419);
             this.tabPageCommandCache.TabIndex = 1;
             this.tabPageCommandCache.Text = "Command cache";
             // 
@@ -151,18 +152,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.commandCacheOutput);
-            this.splitContainer1.Size = new System.Drawing.Size(651, 416);
-            this.splitContainer1.SplitterDistance = 183;
+            this.splitContainer1.Size = new System.Drawing.Size(655, 419);
+            this.splitContainer1.SplitterDistance = 184;
             this.splitContainer1.TabIndex = 0;
             // 
             // CommandCacheItems
             // 
+            this.CommandCacheItems.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.CommandCacheItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CommandCacheItems.FormattingEnabled = true;
             this.CommandCacheItems.Location = new System.Drawing.Point(0, 0);
             this.CommandCacheItems.Margin = new System.Windows.Forms.Padding(0);
             this.CommandCacheItems.Name = "CommandCacheItems";
-            this.CommandCacheItems.Size = new System.Drawing.Size(651, 183);
+            this.CommandCacheItems.Size = new System.Drawing.Size(655, 184);
             this.CommandCacheItems.TabIndex = 0;
             this.CommandCacheItems.SelectedIndexChanged += new System.EventHandler(this.CommandCacheItems_SelectedIndexChanged);
             // 
@@ -174,7 +176,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.commandCacheOutput.Location = new System.Drawing.Point(0, 0);
             this.commandCacheOutput.Margin = new System.Windows.Forms.Padding(0);
             this.commandCacheOutput.Name = "commandCacheOutput";
-            this.commandCacheOutput.Size = new System.Drawing.Size(651, 229);
+            this.commandCacheOutput.Size = new System.Drawing.Size(655, 231);
             this.commandCacheOutput.TabIndex = 0;
             this.commandCacheOutput.Text = "";
             // 
@@ -234,7 +236,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         #endregion
 
-        private System.Windows.Forms.TabControl TabControl;
+        private FullBleedTabControl TabControl;
         private System.Windows.Forms.TabPage tabPageCommandLog;
         private System.Windows.Forms.TabPage tabPageCommandCache;
         private System.Windows.Forms.SplitContainer splitContainer1;
