@@ -122,6 +122,8 @@ namespace GitUI.CommandsDialogs
             _showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
             InitializeComponent();
 
+            commandsToolStripMenuItem.DropDownOpening += CommandsToolStripMenuItem_DropDownOpening;
+
             MainSplitContainer.Visible = false;
 
             // set tab page images

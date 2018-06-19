@@ -1167,7 +1167,6 @@ namespace GitUI.CommandsDialogs
             this.commandsToolStripMenuItem.Name = "commandsToolStripMenuItem";
             this.commandsToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
             this.commandsToolStripMenuItem.Text = "&Commands";
-            this.commandsToolStripMenuItem.DropDownOpening += CommandsToolStripMenuItem_DropDownOpening;
             // 
             // commitToolStripMenuItem
             // 
