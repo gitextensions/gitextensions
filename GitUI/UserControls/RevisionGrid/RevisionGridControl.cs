@@ -91,7 +91,6 @@ namespace GitUI
 
         // NOTE internal properties aren't serialised
 
-        internal Action OnToggleBranchTreePanelRequested { get; set; }
         internal string QuickRevisionFilter { get; set; } = "";
         internal bool InMemFilterIgnoreCase { get; set; } = true;
         internal string InMemAuthorFilter { get; set; } = "";
@@ -351,11 +350,6 @@ namespace GitUI
             {
                 SetSelectedRevision(_navigationHistory.NavigateForward());
             }
-        }
-
-        private void ToggleBranchTreePanel()
-        {
-            OnToggleBranchTreePanelRequested();
         }
 
         public void DisableContextMenu()
@@ -2354,8 +2348,7 @@ namespace GitUI
             SelectAsBaseToCompare = 23,
             CompareToBase = 24,
             CreateFixupCommit = 25,
-            ToggleShowTags = 26,
-            ToggleBranchTreePanel = 27
+            ToggleShowTags = 26
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -2388,7 +2381,6 @@ namespace GitUI
                 case Commands.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(null, null); break;
                 case Commands.CompareToBase: compareToBaseToolStripMenuItem_Click(null, null); break;
                 case Commands.CreateFixupCommit: FixupCommitToolStripMenuItemClick(null, null); break;
-                case Commands.ToggleBranchTreePanel: ToggleBranchTreePanel(); break;
                 default:
                 {
                     bool result = base.ExecuteCommand(cmd);
