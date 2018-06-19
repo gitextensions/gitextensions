@@ -2360,9 +2360,7 @@ namespace GitUI
 
         protected override bool ExecuteCommand(int cmd)
         {
-            var command = (Commands)cmd;
-
-            switch (command)
+            switch ((Commands)cmd)
             {
                 case Commands.ToggleRevisionGraph: ToggleRevisionGraphColumn(); break;
                 case Commands.RevisionFilter: ShowRevisionFilterDialog(); break;

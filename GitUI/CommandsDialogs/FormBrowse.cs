@@ -104,7 +104,6 @@ namespace GitUI.CommandsDialogs
         private readonly IAppTitleGenerator _appTitleGenerator;
         private readonly ILongShaProvider _longShaProvider;
         private readonly WindowsJumpListManager _windowsJumpListManager;
-        private static bool _showRevisionInfoNextToRevisionGrid;
         private bool _startWithDashboard;
 
         /// <summary>
@@ -119,8 +118,6 @@ namespace GitUI.CommandsDialogs
         public FormBrowse([CanBeNull] GitUICommands commands, string filter)
             : base(true, commands)
         {
-            // Save value for commit info panel, may be changed
-            _showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
             InitializeComponent();
 
             commandsToolStripMenuItem.DropDownOpening += CommandsToolStripMenuItem_DropDownOpening;
@@ -300,37 +297,6 @@ namespace GitUI.CommandsDialogs
             }
 
             _startWithDashboard = startWithDashboard;
-        }
-
-        private void LayoutRevisionInfo()
-        {
-            // Handle must be created prior to insertion
-            _ = CommitInfoTabControl.Handle;
-
-            if (_showRevisionInfoNextToRevisionGrid)
-            {
-                RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
-                RevisionsSplitContainer.SplitterDistance = RevisionsSplitContainer.Width - 420;
-                RevisionInfo.DisplayAvatarOnRight();
-                CommitInfoTabControl.SuspendLayout();
-                CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
-
-                // Move difftab to left
-                CommitInfoTabControl.RemoveIfExists(DiffTabPage);
-                CommitInfoTabControl.TabPages.Insert(0, DiffTabPage);
-                CommitInfoTabControl.SelectedTab = DiffTabPage;
-                CommitInfoTabControl.ResumeLayout(true);
-                RevisionsSplitContainer.Panel2Collapsed = false;
-            }
-            else
-            {
-                RevisionInfo.DisplayAvatarOnLeft();
-                CommitInfoTabControl.SuspendLayout();
-                CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
-                CommitInfoTabControl.ResumeLayout(true);
-                RevisionInfo.Parent = CommitInfoTabControl.Controls[0];
-                RevisionsSplitContainer.Panel2Collapsed = true;
-            }
         }
 
         private void ManageWorktreeSupport()
@@ -996,7 +962,7 @@ namespace GitUI.CommandsDialogs
 
         private void FillCommitInfo()
         {
-            if (!_showRevisionInfoNextToRevisionGrid && CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
+            if (!AppSettings.ShowRevisionInfoNextToRevisionGrid && CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
             {
                 return;
             }
@@ -1264,10 +1230,18 @@ namespace GitUI.CommandsDialogs
         private void OnShowSettingsClick(object sender, EventArgs e)
         {
             var translation = AppSettings.Translation;
+            var showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
+
             UICommands.StartSettingsDialog(this);
+
             if (translation != AppSettings.Translation)
             {
                 Translate();
+            }
+
+            if (showRevisionInfoNextToRevisionGrid != AppSettings.ShowRevisionInfoNextToRevisionGrid)
+            {
+                LayoutRevisionInfo();
             }
 
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
@@ -1275,11 +1249,6 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.ReloadTranslation();
             fileTree.ReloadHotkeys();
             revisionDiff.ReloadHotkeys();
-            if (_showRevisionInfoNextToRevisionGrid != AppSettings.ShowRevisionInfoNextToRevisionGrid)
-            {
-                _showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
-                LayoutRevisionInfo();
-            }
 
             _dashboard?.RefreshContent();
         }
@@ -2918,12 +2887,6 @@ namespace GitUI.CommandsDialogs
             EnabledSplitViewLayout(RightSplitContainer.Panel2Collapsed);
         }
 
-        private void EnabledSplitViewLayout(bool enabled)
-        {
-            RightSplitContainer.Panel2Collapsed = !enabled;
-            RefreshLayoutToggleButtonStates();
-        }
-
         private void toggleBranchTreePanel_Click(object sender, EventArgs e)
         {
             MainSplitContainer.Panel1Collapsed = !MainSplitContainer.Panel1Collapsed;
@@ -2931,10 +2894,55 @@ namespace GitUI.CommandsDialogs
             RefreshLayoutToggleButtonStates();
         }
 
+        private void toggleCommitInfoOnRight_Click(object sender, EventArgs e)
+        {
+            AppSettings.ShowRevisionInfoNextToRevisionGrid = !AppSettings.ShowRevisionInfoNextToRevisionGrid;
+            LayoutRevisionInfo();
+            RefreshLayoutToggleButtonStates();
+        }
+
+        private void EnabledSplitViewLayout(bool enabled)
+        {
+            RightSplitContainer.Panel2Collapsed = !enabled;
+            RefreshLayoutToggleButtonStates();
+        }
+
         private void RefreshLayoutToggleButtonStates()
         {
             toggleBranchTreePanel.Checked = !MainSplitContainer.Panel1Collapsed;
             toggleSplitViewLayout.Checked = !RightSplitContainer.Panel2Collapsed;
+            toggleCommitInfoOnRight.Checked = AppSettings.ShowRevisionInfoNextToRevisionGrid;
+        }
+
+        private void LayoutRevisionInfo()
+        {
+            // Handle must be created prior to insertion
+            _ = CommitInfoTabControl.Handle;
+
+            if (AppSettings.ShowRevisionInfoNextToRevisionGrid)
+            {
+                RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
+                RevisionsSplitContainer.SplitterDistance = RevisionsSplitContainer.Width - 420;
+                RevisionInfo.DisplayAvatarOnRight();
+                CommitInfoTabControl.SuspendLayout();
+                CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
+
+                // Move difftab to left
+                CommitInfoTabControl.RemoveIfExists(DiffTabPage);
+                CommitInfoTabControl.TabPages.Insert(0, DiffTabPage);
+                CommitInfoTabControl.SelectedTab = DiffTabPage;
+                CommitInfoTabControl.ResumeLayout(true);
+                RevisionsSplitContainer.Panel2Collapsed = false;
+            }
+            else
+            {
+                RevisionInfo.DisplayAvatarOnLeft();
+                CommitInfoTabControl.SuspendLayout();
+                CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
+                CommitInfoTabControl.ResumeLayout(true);
+                RevisionInfo.Parent = CommitInfoTabControl.Controls[0];
+                RevisionsSplitContainer.Panel2Collapsed = true;
+            }
         }
 
         #endregion

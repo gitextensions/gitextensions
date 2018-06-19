@@ -1875,6 +1875,7 @@
     <None Include="Resources\IconGitk.png" />
     <None Include="Resources\IconGitGui.png" />
     <None Include="Resources\IconGitForWindows.png" />
+    <None Include="Resources\IconLayoutSidebarRight.png" />
     <Content Include="Resources\Icons\application-footer.png" />
     <Content Include="Resources\Icons\application-sidebar.png" />
     <Content Include="Resources\Icons\arrow-090.png" />

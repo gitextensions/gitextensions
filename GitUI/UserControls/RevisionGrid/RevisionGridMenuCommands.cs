@@ -380,13 +380,6 @@ namespace GitUI.UserControls.RevisionGrid
                     Image = Resources.IconEditFilter,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.RevisionFilter),
                     ExecuteAction = () => _revisionGrid.ShowRevisionFilterDialog()
-                },
-                new MenuCommand
-                {
-                    Name = "ToggleBranchTreePanel",
-                    Text = "Toggle left panel",
-                    Image = Resources.IconLayoutSidebar,
-                    ExecuteAction = () => _revisionGrid.OnToggleBranchTreePanelRequested()
                 }
             };
         }
