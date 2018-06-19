@@ -35,26 +35,27 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.tabPageCommandLog = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.LogItems = new System.Windows.Forms.ListBox();
+            this.logContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.saveToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.LogOutput = new System.Windows.Forms.RichTextBox();
             this.tabPageCommandCache = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.CommandCacheItems = new System.Windows.Forms.ListBox();
             this.commandCacheOutput = new System.Windows.Forms.RichTextBox();
-            this.alwaysOnTopCheckBox = new System.Windows.Forms.CheckBox();
-            this.logContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.saveToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.chkAlwaysOnTop = new System.Windows.Forms.CheckBox();
+            this.chkWordWrap = new System.Windows.Forms.CheckBox();
             this.TabControl.SuspendLayout();
             this.tabPageCommandLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.logContextMenuStrip.SuspendLayout();
             this.tabPageCommandCache.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.logContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // TabControl
@@ -105,6 +106,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // LogItems
             // 
             this.LogItems.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.LogItems.ContextMenuStrip = this.logContextMenuStrip;
             this.LogItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LogItems.FormattingEnabled = true;
             this.LogItems.Location = new System.Drawing.Point(0, 0);
@@ -113,7 +115,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.LogItems.Size = new System.Drawing.Size(655, 337);
             this.LogItems.TabIndex = 0;
             this.LogItems.SelectedIndexChanged += new System.EventHandler(this.LogItems_SelectedIndexChanged);
-            this.LogItems.ContextMenuStrip = logContextMenuStrip;
+            // 
+            // logContextMenuStrip
+            // 
+            this.logContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToFileToolStripMenuItem});
+            this.logContextMenuStrip.Name = "logContextMenuStrip";
+            this.logContextMenuStrip.Size = new System.Drawing.Size(132, 26);
+            // 
+            // saveToFileToolStripMenuItem
+            // 
+            this.saveToFileToolStripMenuItem.Name = "saveToFileToolStripMenuItem";
+            this.saveToFileToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.saveToFileToolStripMenuItem.Text = "Save to file";
+            this.saveToFileToolStripMenuItem.Click += SaveToFileToolStripMenuItem_Click;
             // 
             // LogOutput
             // 
@@ -180,38 +195,38 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.commandCacheOutput.TabIndex = 0;
             this.commandCacheOutput.Text = "";
             // 
-            // alwaysOnTopCheckBox
+            // chkAlwaysOnTop
             // 
-            this.alwaysOnTopCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.alwaysOnTopCheckBox.AutoSize = true;
-            this.alwaysOnTopCheckBox.Location = new System.Drawing.Point(4, 451);
-            this.alwaysOnTopCheckBox.Name = "alwaysOnTopCheckBox";
-            this.alwaysOnTopCheckBox.Size = new System.Drawing.Size(94, 17);
-            this.alwaysOnTopCheckBox.TabIndex = 2;
-            this.alwaysOnTopCheckBox.Text = "Always on top";
-            this.alwaysOnTopCheckBox.UseVisualStyleBackColor = true;
-            this.alwaysOnTopCheckBox.CheckedChanged += new System.EventHandler(this.alwaysOnTopCheckBox_CheckedChanged);
+            this.chkAlwaysOnTop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.chkAlwaysOnTop.AutoSize = true;
+            this.chkAlwaysOnTop.Location = new System.Drawing.Point(4, 451);
+            this.chkAlwaysOnTop.Name = "chkAlwaysOnTop";
+            this.chkAlwaysOnTop.Size = new System.Drawing.Size(94, 17);
+            this.chkAlwaysOnTop.TabIndex = 2;
+            this.chkAlwaysOnTop.Text = "Always on top";
+            this.chkAlwaysOnTop.UseVisualStyleBackColor = true;
+            this.chkAlwaysOnTop.CheckedChanged += new System.EventHandler(this.alwaysOnTopCheckBox_CheckedChanged);
             // 
-            // logContextMenuStrip
+            // chkWordWrap
             // 
-            this.logContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveToFileToolStripMenuItem});
-            this.logContextMenuStrip.Name = "logContextMenuStrip";
-            this.logContextMenuStrip.Size = new System.Drawing.Size(132, 26);
+            this.chkWordWrap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.chkWordWrap.AutoSize = true;
+            this.chkWordWrap.Checked = true;
+            this.chkWordWrap.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkWordWrap.Location = new System.Drawing.Point(104, 451);
+            this.chkWordWrap.Name = "chkWordWrap";
+            this.chkWordWrap.Size = new System.Drawing.Size(79, 17);
+            this.chkWordWrap.TabIndex = 3;
+            this.chkWordWrap.Text = "Word wrap";
+            this.chkWordWrap.UseVisualStyleBackColor = true;
             // 
-            // saveToFileToolStripMenuItem
-            // 
-            this.saveToFileToolStripMenuItem.Name = "saveToFileToolStripMenuItem";
-            this.saveToFileToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
-            this.saveToFileToolStripMenuItem.Text = "Save to file";
-            this.saveToFileToolStripMenuItem.Click += SaveToFileToolStripMenuItem_Click;
-            // 
-            // FormGitLog
+            // FormGitCommandLog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(659, 470);
-            this.Controls.Add(this.alwaysOnTopCheckBox);
+            this.Controls.Add(this.chkWordWrap);
+            this.Controls.Add(this.chkAlwaysOnTop);
             this.Controls.Add(this.TabControl);
             this.Name = "FormGitCommandLog";
             this.Text = "Git Command Log";
@@ -223,12 +238,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.logContextMenuStrip.ResumeLayout(false);
             this.tabPageCommandCache.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.logContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -245,8 +260,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.ListBox LogItems;
         private System.Windows.Forms.RichTextBox LogOutput;
-        private CheckBox alwaysOnTopCheckBox;
+        private CheckBox chkAlwaysOnTop;
         private ContextMenuStrip logContextMenuStrip;
         private ToolStripMenuItem saveToFileToolStripMenuItem;
+        private CheckBox chkWordWrap;
     }
 }
