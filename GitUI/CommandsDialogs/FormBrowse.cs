@@ -294,6 +294,107 @@ namespace GitUI.CommandsDialogs
             this.AdjustForDpiScaling();
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _submodulesStatusSequence?.Dispose();
+                _formBrowseMenus?.Dispose();
+                _filterRevisionsHelper?.Dispose();
+                _filterBranchHelper?.Dispose();
+                components?.Dispose();
+                _gitStatusMonitor?.Dispose();
+                _windowsJumpListManager?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            _windowsJumpListManager.CreateJumpList(
+                Handle,
+                new WindowsThumbnailToolbarButtons(
+                    new WindowsThumbnailToolbarButton(toolStripButton1.Text, toolStripButton1.Image, ToolStripButton1Click),
+                    new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
+                    new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
+
+            SetSplitterPositions();
+            HideVariableMainMenuItems();
+
+            RevisionGrid.Load();
+            _filterBranchHelper.InitToolStripBranchFilter();
+
+            using (WaitCursorScope.Enter())
+            {
+                LayoutRevisionInfo();
+                InternalInitialize(false);
+                RevisionGrid.Focus();
+                RevisionGrid.IndexWatcher.Reset();
+
+                RevisionGrid.IndexWatcher.Changed += (_, indexChangedEventArgs) =>
+                {
+                    bool indexChanged = indexChangedEventArgs.IsIndexChanged;
+                    this.InvokeAsync(() =>
+                        {
+                            RefreshButton.Image = indexChanged && AppSettings.UseFastChecks && Module.IsValidGitWorkingDir()
+                                ? Resources.IconReloadRevisionsDirty
+                                : Resources.IconReloadRevisions;
+                        })
+                        .FileAndForget();
+                };
+            }
+
+            try
+            {
+                if (AppSettings.PlaySpecialStartupSound)
+                {
+                    using (var cowMoo = Resources.cow_moo)
+                    {
+                        new System.Media.SoundPlayer(cowMoo).Play();
+                    }
+                }
+            }
+            catch
+            {
+                // This code is just for fun, we do not want the program to crash because of it.
+            }
+
+            base.OnLoad(e);
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            this.InvokeAsyncDoNotUseInNewCode(OnActivate);
+            base.OnActivated(e);
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            SaveApplicationSettings();
+            base.OnFormClosing(e);
+        }
+
+        public override void CancelButtonClick(object sender, EventArgs e)
+        {
+            // If a filter is applied, clear it
+            if (RevisionGrid.FilterIsApplied(false))
+            {
+                // Clear filter
+                _filterRevisionsHelper.SetFilter(string.Empty);
+            }
+
+            // If a branch filter is applied by text or using the menus "Show current branch only"
+            else if (RevisionGrid.FilterIsApplied(true) || AppSettings.BranchFilterEnabled)
+            {
+                // Clear branch filter
+                _filterBranchHelper.SetBranchFilter(string.Empty, true);
+
+                // Execute the "Show all branches" menu option
+                RevisionGrid.ShowAllBranches();
+            }
+        }
+
         private void ManageWorktreeSupport()
         {
             if (!GitCommandHelpers.VersionInUse.SupportWorktree)
@@ -376,57 +477,6 @@ namespace GitUI.CommandsDialogs
             toolPanel.BottomToolStripPanelVisible = true;
             toolPanel.LeftToolStripPanelVisible = true;
             toolPanel.RightToolStripPanelVisible = true;
-        }
-
-        private void BrowseLoad(object sender, EventArgs e)
-        {
-            _windowsJumpListManager.CreateJumpList(
-                Handle,
-                new WindowsThumbnailToolbarButtons(
-                    new WindowsThumbnailToolbarButton(toolStripButton1.Text, toolStripButton1.Image, ToolStripButton1Click),
-                    new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
-                    new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
-
-            SetSplitterPositions();
-            HideVariableMainMenuItems();
-
-            RevisionGrid.Load();
-            _filterBranchHelper.InitToolStripBranchFilter();
-
-            using (WaitCursorScope.Enter())
-            {
-                LayoutRevisionInfo();
-                InternalInitialize(false);
-                RevisionGrid.Focus();
-                RevisionGrid.IndexWatcher.Reset();
-
-                RevisionGrid.IndexWatcher.Changed += (_, indexChangedEventArgs) =>
-                {
-                    bool indexChanged = indexChangedEventArgs.IsIndexChanged;
-                    this.InvokeAsync(() =>
-                        {
-                            RefreshButton.Image = indexChanged && AppSettings.UseFastChecks && Module.IsValidGitWorkingDir()
-                                ? Resources.IconReloadRevisionsDirty
-                                : Resources.IconReloadRevisions;
-                        })
-                        .FileAndForget();
-                };
-            }
-
-            try
-            {
-                if (AppSettings.PlaySpecialStartupSound)
-                {
-                    using (var cowMoo = Resources.cow_moo)
-                    {
-                        new System.Media.SoundPlayer(cowMoo).Play();
-                    }
-                }
-            }
-            catch
-            {
-                // This code is just for fun, we do not want the program to crash because of it.
-            }
         }
 
         /// <summary>
@@ -1270,11 +1320,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void FormBrowseFormClosing(object sender, FormClosingEventArgs e)
-        {
-            SaveApplicationSettings();
-        }
-
         private static void SaveApplicationSettings()
         {
             AppSettings.SaveSettings();
@@ -1522,26 +1567,6 @@ namespace GitUI.CommandsDialogs
         private void CloseToolStripMenuItemClick(object sender, EventArgs e)
         {
             SetWorkingDir("");
-        }
-
-        public override void CancelButtonClick(object sender, EventArgs e)
-        {
-            // If a filter is applied, clear it
-            if (RevisionGrid.FilterIsApplied(false))
-            {
-                // Clear filter
-                _filterRevisionsHelper.SetFilter(string.Empty);
-            }
-
-            // If a branch filter is applied by text or using the menus "Show current branch only"
-            else if (RevisionGrid.FilterIsApplied(true) || AppSettings.BranchFilterEnabled)
-            {
-                // Clear branch filter
-                _filterBranchHelper.SetBranchFilter(string.Empty, true);
-
-                // Execute the "Show all branches" menu option
-                RevisionGrid.ShowAllBranches();
-            }
         }
 
         private void UserManualToolStripMenuItemClick(object sender, EventArgs e)
@@ -2652,11 +2677,6 @@ namespace GitUI.CommandsDialogs
             PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
-        private void FormBrowse_Activated(object sender, EventArgs e)
-        {
-            this.InvokeAsyncDoNotUseInNewCode(OnActivate);
-        }
-
         /// <summary>
         /// Adds a tab with console interface to Git over the current working copy. Recreates the terminal on tab activation if user exits the shell.
         /// </summary>
@@ -2834,26 +2854,6 @@ namespace GitUI.CommandsDialogs
             }
 
             _terminal.RunningSession.WriteInputTextAsync(command + Environment.NewLine);
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _submodulesStatusSequence?.Dispose();
-                _formBrowseMenus?.Dispose();
-                _filterRevisionsHelper?.Dispose();
-                _filterBranchHelper?.Dispose();
-                components?.Dispose();
-                _gitStatusMonitor?.Dispose();
-                _windowsJumpListManager?.Dispose();
-            }
-
-            base.Dispose(disposing);
         }
 
         private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)
