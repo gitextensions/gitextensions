@@ -2386,11 +2386,11 @@ namespace GitUI.CommandsDialogs
             return spmenu;
         }
 
-        private DateTime _previousUpdateTime;
+        private DateTime _previousSubmoduleUpdateTime;
 
         private void LoadSubmodulesIntoDropDownMenu()
         {
-            TimeSpan elapsed = DateTime.Now - _previousUpdateTime;
+            TimeSpan elapsed = DateTime.Now - _previousSubmoduleUpdateTime;
             if (elapsed.TotalSeconds > 15)
             {
                 UpdateSubmodulesList();
@@ -2479,7 +2479,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateSubmodulesList()
         {
-            _previousUpdateTime = DateTime.Now;
+            _previousSubmoduleUpdateTime = DateTime.Now;
 
             // Cancel any previous async activities:
             var cancelToken = _submodulesStatusSequence.Next();
@@ -2632,7 +2632,7 @@ namespace GitUI.CommandsDialogs
                 // time, performance would be extremely slow with many submodules (> 100).
                 toolStripButtonLevelUp.DropDownItems.AddRange(newItems.ToArray());
 
-                _previousUpdateTime = DateTime.Now;
+                _previousSubmoduleUpdateTime = DateTime.Now;
             });
         }
 
