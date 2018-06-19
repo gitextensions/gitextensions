@@ -1110,7 +1110,7 @@ namespace GitUI.CommandsDialogs
             // 
             // gitBashToolStripMenuItem
             // 
-            this.gitBashToolStripMenuItem.Image = global::GitUI.Properties.Resources.bash;
+            this.gitBashToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconGitForWindows;
             this.gitBashToolStripMenuItem.Name = "gitBashToolStripMenuItem";
             this.gitBashToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.gitBashToolStripMenuItem.Text = "Git bash";
@@ -1118,6 +1118,7 @@ namespace GitUI.CommandsDialogs
             // 
             // gitGUIToolStripMenuItem
             // 
+            this.gitGUIToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconGitGui;
             this.gitGUIToolStripMenuItem.Name = "gitGUIToolStripMenuItem";
             this.gitGUIToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.gitGUIToolStripMenuItem.Text = "Git GUI";
@@ -1125,6 +1126,7 @@ namespace GitUI.CommandsDialogs
             // 
             // kGitToolStripMenuItem
             // 
+            this.kGitToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconGitk;
             this.kGitToolStripMenuItem.Name = "kGitToolStripMenuItem";
             this.kGitToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
             this.kGitToolStripMenuItem.Text = "GitK";
