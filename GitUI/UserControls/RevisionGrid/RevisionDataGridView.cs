@@ -763,24 +763,6 @@ namespace GitUI.UserControls.RevisionGrid
                                 var p0 = new Point(x0, y0);
                                 var p1 = new Point(x1, y1);
 
-                                // Precalculate curve control points when needed
-                                Point c0, c1;
-                                if (sameLane)
-                                {
-                                    // We are drawing between two points in the same
-                                    // lane, so there will be no curve
-                                    c0 = c1 = default;
-                                }
-                                else
-                                {
-                                    // Left shifting int is fast equivalent of dividing by two,
-                                    // thus computing the average of y0 and y1.
-                                    var yMid = (y0 + y1) >> 1;
-
-                                    c0 = new Point(x0, yMid);
-                                    c1 = new Point(x1, yMid);
-                                }
-
                                 using (var linePen = new Pen(lineBrush, _laneLineWidth))
                                 {
                                     if (sameLane)
@@ -790,6 +772,11 @@ namespace GitUI.UserControls.RevisionGrid
                                     }
                                     else
                                     {
+                                        // Left shifting int is fast equivalent of dividing by two,
+                                        // thus computing the average of y0 and y1.
+                                        var yMid = (y0 + y1) >> 1;
+                                        var c0 = new Point(x0, yMid);
+                                        var c1 = new Point(x1, yMid);
                                         g.SmoothingMode = SmoothingMode.AntiAlias;
                                         g.DrawBezier(linePen, p0, c0, c1, p1);
                                     }
