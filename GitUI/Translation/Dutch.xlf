@@ -10681,6 +10681,7 @@ Als dit een centrale opslagplaats is (zonder werk directory)
       <trans-unit id="_scriptSettingsPageHelpDisplayContent.Text">
         <source>User Input:
 {UserInput}
+{UserFile}
 
 Working Dir:
 {WorkingDir}
@@ -10719,6 +10720,7 @@ Current Branch:
 {cDefaultRemotePathFromUrl}</source>
         <target>Gebruikers Invoer:
 {UserInput}
+{UserFile}
 
 Werk Directory:
 {WorkingDir}

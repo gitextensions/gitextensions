@@ -10383,6 +10383,7 @@ Pokud je toto centrální repozitář (holý repozitář bez pracovní složky):
       <trans-unit id="_scriptSettingsPageHelpDisplayContent.Text">
         <source>User Input:
 {UserInput}
+{UserFile}
 
 Working Dir:
 {WorkingDir}
@@ -10421,6 +10422,7 @@ Current Branch:
 {cDefaultRemotePathFromUrl}</source>
         <target>Uživatelský vstup:
 {UserInput}
+{UserFile}
 
 Pracovní složka:
 {WorkingDir}
