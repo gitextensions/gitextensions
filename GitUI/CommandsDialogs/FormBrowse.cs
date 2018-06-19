@@ -479,25 +479,6 @@ namespace GitUI.CommandsDialogs
             toolPanel.RightToolStripPanelVisible = true;
         }
 
-        /// <summary>
-        ///   Execute plugin
-        /// </summary>
-        private void ItemClick(object sender, EventArgs e)
-        {
-            var menuItem = sender as ToolStripMenuItem;
-
-            if (menuItem?.Tag is IGitPlugin plugin)
-            {
-                var eventArgs = new GitUIEventArgs(this, UICommands);
-
-                bool refresh = plugin.Execute(eventArgs);
-                if (refresh)
-                {
-                    RefreshRevisions();
-                }
-            }
-        }
-
         private void UpdatePluginMenu(bool validWorkingDir)
         {
             foreach (ToolStripItem item in pluginsToolStripMenuItem.DropDownItems)
@@ -509,13 +490,20 @@ namespace GitUI.CommandsDialogs
         private void RegisterPlugins()
         {
             var existingPluginMenus = pluginsToolStripMenuItem.DropDownItems.OfType<ToolStripMenuItem>().ToLookup(c => c.Tag);
+
             foreach (var plugin in PluginRegistry.Plugins)
             {
                 // Add the plugin to the Plugins menu, if not already added
                 if (!existingPluginMenus.Contains(plugin))
                 {
                     var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
-                    item.Click += ItemClick;
+                    item.Click += delegate
+                    {
+                        if (plugin.Execute(new GitUIEventArgs(this, UICommands)))
+                        {
+                            RefreshRevisions();
+                        }
+                    };
                     pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
                 }
 
