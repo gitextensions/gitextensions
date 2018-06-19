@@ -26,6 +26,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             LogOutput.Font = font;
             commandCacheOutput.Font = font;
 
+            chkWordWrap.CheckedChanged += delegate
+            {
+                LogOutput.WordWrap = chkWordWrap.Checked;
+                commandCacheOutput.WordWrap = chkWordWrap.Checked;
+            };
+
             this.AdjustForDpiScaling();
         }
 
@@ -129,7 +135,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void alwaysOnTopCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             TopMost = !TopMost;
-            alwaysOnTopCheckBox.Checked = TopMost;
+            chkAlwaysOnTop.Checked = TopMost;
         }
 
         private void SaveToFileToolStripMenuItem_Click(object sender, System.EventArgs e)
