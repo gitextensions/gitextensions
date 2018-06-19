@@ -384,11 +384,12 @@ namespace GitUI.CommandsDialogs
 
         private void BrowseLoad(object sender, EventArgs e)
         {
-            var buttons = new WindowsThumbnailToolbarButtons(
-                new WindowsThumbnailToolbarButton(toolStripButton1.Text, toolStripButton1.Image, ToolStripButton1Click),
-                new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
-                new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick));
-            _windowsJumpListManager.CreateJumpList(Handle, buttons);
+            _windowsJumpListManager.CreateJumpList(
+                Handle,
+                new WindowsThumbnailToolbarButtons(
+                    new WindowsThumbnailToolbarButton(toolStripButton1.Text, toolStripButton1.Image, ToolStripButton1Click),
+                    new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
+                    new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
 
             SetSplitterPositions();
             HideVariableMainMenuItems();
