@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -104,7 +105,7 @@ namespace GitUI.CommandsDialogs
         private readonly ILongShaProvider _longShaProvider;
         private readonly WindowsJumpListManager _windowsJumpListManager;
         private static bool _showRevisionInfoNextToRevisionGrid;
-        private bool _startWithDashboard = false;
+        private bool _startWithDashboard;
 
         /// <summary>
         /// For VS designer
@@ -1586,7 +1587,7 @@ namespace GitUI.CommandsDialogs
             {
                 Process.Start("http://git-extensions-documentation.readthedocs.org/en/release-2.51/");
             }
-            catch (System.ComponentModel.Win32Exception)
+            catch (Win32Exception)
             {
             }
         }
@@ -2105,7 +2106,7 @@ namespace GitUI.CommandsDialogs
             _splitterManager.SaveSplitters();
         }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             base.OnClosing(e);
             SaveSplitterPositions();
