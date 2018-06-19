@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using Bitbucket.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -16,6 +17,8 @@ namespace Bitbucket
         {
             SetNameAndDescription("Bitbucket Server");
             Translate();
+
+            Icon = Resources.IconPluginBitbucket;
         }
 
         public override bool Execute(GitUIEventArgs args)

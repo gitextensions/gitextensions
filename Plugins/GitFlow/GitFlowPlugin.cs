@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using GitFlow.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -11,6 +12,7 @@ namespace GitFlow
         {
             SetNameAndDescription("GitFlow");
             Translate();
+            Icon = Resource.IconGitFlow;
         }
 
         public override bool Execute(GitUIEventArgs args)

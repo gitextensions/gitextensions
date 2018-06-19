@@ -63,6 +63,16 @@ namespace DeleteUnusedBranches.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap IconDeleteUnusedBranches {
+            get {
+                object obj = ResourceManager.GetObject("IconDeleteUnusedBranches", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap loadingpanel {
             get {
                 object obj = ResourceManager.GetObject("loadingpanel", resourceCulture);

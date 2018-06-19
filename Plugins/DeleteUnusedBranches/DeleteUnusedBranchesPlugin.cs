@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using DeleteUnusedBranches.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -11,6 +12,7 @@ namespace DeleteUnusedBranches
         {
             SetNameAndDescription("Delete obsolete branches");
             Translate();
+            Icon = Resources.IconDeleteUnusedBranches;
         }
 
         private readonly StringSetting _mergedInBranch = new StringSetting("Branch where all branches should be merged in", "HEAD");

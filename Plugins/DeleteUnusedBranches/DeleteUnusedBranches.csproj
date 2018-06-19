@@ -101,5 +101,8 @@
   <ItemGroup>
     <None Include="Resources\loadingpanel.gif" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\IconDeleteUnusedBranches.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

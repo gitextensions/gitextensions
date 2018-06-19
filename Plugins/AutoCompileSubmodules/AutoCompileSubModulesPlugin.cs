@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using AutoCompileSubmodules.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -20,6 +21,7 @@ namespace AutoCompileSubmodules
         {
             SetNameAndDescription("Auto compile SubModules");
             Translate();
+            Icon = Resources.IconAutoCompileSubmodules;
         }
 
         private readonly BoolSetting _msBuildEnabled = new BoolSetting("Enabled", false);

@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
+using Github3.Properties;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager;
@@ -89,6 +90,8 @@ namespace Github3
             }
 
             github = new Client();
+
+            Icon = Resources.IconGitHub;
         }
 
         public override IEnumerable<ISetting> GetSettings()

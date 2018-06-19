@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using GitStatistics.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -11,6 +12,7 @@ namespace GitStatistics
         {
             SetNameAndDescription("Statistics");
             Translate();
+            Icon = Resources.IconGitStatistics;
         }
 
         private readonly StringSetting _codeFiles = new StringSetting("Code files",
