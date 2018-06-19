@@ -2844,7 +2844,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</target>
         
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target>Journal des commandes Git</target>
         
       </trans-unit>

@@ -1610,7 +1610,7 @@ namespace GitUI.CommandsDialogs
             this.gitcommandLogToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconGitCommandLog;
             this.gitcommandLogToolStripMenuItem.Name = "gitcommandLogToolStripMenuItem";
             this.gitcommandLogToolStripMenuItem.Size = new System.Drawing.Size(217, 22);
-            this.gitcommandLogToolStripMenuItem.Text = "Gitcommand log";
+            this.gitcommandLogToolStripMenuItem.Text = "Git command log";
             this.gitcommandLogToolStripMenuItem.Click += new System.EventHandler(this.GitcommandLogToolStripMenuItemClick);
             // 
             // toolStripSeparator7

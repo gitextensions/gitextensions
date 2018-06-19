@@ -2843,7 +2843,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target>Git commando logboek</target>
         
       </trans-unit>

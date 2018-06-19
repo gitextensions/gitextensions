@@ -2811,7 +2811,7 @@ Chcesz przerwać, i usunąć go z listy ostatnich repozytoriów?</target>
         
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target>Dziennik komend Git</target>
         
       </trans-unit>

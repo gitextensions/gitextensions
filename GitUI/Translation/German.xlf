@@ -2836,7 +2836,7 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target>Git Kommandozeilen Log</target>
         
       </trans-unit>
