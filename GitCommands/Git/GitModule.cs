@@ -540,6 +540,7 @@ namespace GitCommands
         /// <summary>
         /// Run command, console window is visible
         /// </summary>
+        [CanBeNull]
         public Process RunExternalCmdDetachedShowConsole(string cmd, string arguments)
         {
             try
