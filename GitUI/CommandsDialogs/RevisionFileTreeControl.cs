@@ -167,12 +167,12 @@ See the changes in the commit form.");
                     TreeNode lastMatchedNode = null;
 
                     // Load state
-                    var currenNodes = tvGitTree.Nodes;
+                    var currentNodes = tvGitTree.Nodes;
                     TreeNode matchedNode = null;
-                    while (_lastSelectedNodes.Count > 0 && currenNodes != null)
+                    while (_lastSelectedNodes.Count > 0 && currentNodes != null)
                     {
                         var next = _lastSelectedNodes.Pop();
-                        foreach (TreeNode node in currenNodes)
+                        foreach (TreeNode node in currentNodes)
                         {
                             if (node.Text != next && next.Length != 40)
                             {
@@ -186,12 +186,12 @@ See the changes in the commit form.");
 
                         if (matchedNode == null)
                         {
-                            currenNodes = null;
+                            currentNodes = null;
                         }
                         else
                         {
                             lastMatchedNode = matchedNode;
-                            currenNodes = matchedNode.Nodes;
+                            currentNodes = matchedNode.Nodes;
                         }
                     }
 
