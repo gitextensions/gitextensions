@@ -32,7 +32,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public partial class FormBrowse : GitModuleForm, IBrowseRepo
+    public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         #region Translation
 
@@ -2051,7 +2051,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        protected void SetSplitterPositions()
+        private void SetSplitterPositions()
         {
             _splitterManager.AddSplitter(RevisionsSplitContainer, nameof(RevisionsSplitContainer));
             _splitterManager.AddSplitter(MainSplitContainer, nameof(MainSplitContainer));
@@ -2066,7 +2066,7 @@ namespace GitUI.CommandsDialogs
             RefreshLayoutToggleButtonStates();
         }
 
-        protected void SaveSplitterPositions()
+        private void SaveSplitterPositions()
         {
             _splitterManager.SaveSplitters();
         }
