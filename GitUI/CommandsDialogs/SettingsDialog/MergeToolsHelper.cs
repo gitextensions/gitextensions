@@ -39,49 +39,38 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     continue;
                 }
 
+                string fullName = string.Empty;
                 string programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles");
 
-                if (CheckFileExists(programFilesPath, location, fileName, out string fullName))
+                if (CheckFileExists(programFilesPath))
                 {
                     return fullName;
                 }
 
-                if (IntPtr.Size == 8
-                    || (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
-                {
-                    programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+                programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
 
-                    if (CheckFileExists(programFilesPath, location, fileName, out fullName))
-                    {
-                        return fullName;
-                    }
+                if ((IntPtr.Size == 8 ||
+                    !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))) &&
+                    CheckFileExists(programFilesPath))
+                {
+                    return fullName;
                 }
 
                 string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
-                if (CheckFileExists(localAppDataPath, location, fileName, out fullName))
+                if (CheckFileExists(localAppDataPath))
                 {
                     return fullName;
                 }
-            }
 
-            return string.Empty;
-        }
-
-        private static bool CheckFileExists(string path, string location, string fileName, out string fullName)
-        {
-            if (!string.IsNullOrEmpty(path))
-            {
-                path = Path.Combine(path, location);
-                if (Directory.Exists(path))
+                bool CheckFileExists(string path)
                 {
-                    fullName = Path.Combine(path, fileName);
+                    fullName = Path.Combine(path, location, fileName);
                     return File.Exists(fullName);
                 }
             }
 
-            fullName = string.Empty;
-            return false;
+            return string.Empty;
         }
 
         private static string UnquoteString(string str)
