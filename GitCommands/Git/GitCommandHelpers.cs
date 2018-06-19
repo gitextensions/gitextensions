@@ -254,6 +254,7 @@ namespace GitCommands
             }
         }
 
+        [CanBeNull]
         private static Process StartProcessAndReadAllBytes(string arguments, string cmd, string workDir, out byte[] stdOutput, out byte[] stdError, byte[] stdInput)
         {
             if (string.IsNullOrEmpty(cmd))

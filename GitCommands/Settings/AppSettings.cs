@@ -117,6 +117,7 @@ namespace GitCommands
                 });
         }
 
+        [CanBeNull]
         public static string GetInstallDir()
         {
             if (IsPortable())
@@ -133,6 +134,7 @@ namespace GitCommands
             return dir;
         }
 
+        [CanBeNull]
         public static string GetResourceDir()
         {
 #if DEBUG
