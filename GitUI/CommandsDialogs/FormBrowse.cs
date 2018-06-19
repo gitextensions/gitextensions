@@ -115,9 +115,11 @@ namespace GitUI.CommandsDialogs
             Translate();
         }
 
-        public FormBrowse([CanBeNull] GitUICommands commands, string filter)
+        public FormBrowse([CanBeNull] GitUICommands commands, string filter, string selectCommit = null, bool startWithDashboard = false)
             : base(true, commands)
         {
+            _startWithDashboard = startWithDashboard;
+
             InitializeComponent();
 
             commandsToolStripMenuItem.DropDownOpening += CommandsToolStripMenuItem_DropDownOpening;
@@ -284,18 +286,12 @@ namespace GitUI.CommandsDialogs
             menuStrip1.BackColor = toolBackColor;
             toolPanel.TopToolStripPanel.BackColor = toolBackColor;
 
-            this.AdjustForDpiScaling();
-        }
-
-        public FormBrowse(GitUICommands commands, string filter, string selectCommit, bool startWithDashboard = false)
-            : this(commands, filter)
-        {
             if (!string.IsNullOrEmpty(selectCommit))
             {
                 RevisionGrid.InitialObjectId = _longShaProvider.Get(selectCommit);
             }
 
-            _startWithDashboard = startWithDashboard;
+            this.AdjustForDpiScaling();
         }
 
         private void ManageWorktreeSupport()
