@@ -2350,38 +2350,55 @@ namespace GitUI.CommandsDialogs
             PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
-        private void RemoveSubmoduleButtons()
-        {
-            foreach (var item in toolStripButtonLevelUp.DropDownItems)
-            {
-                if (item is ToolStripMenuItem toolStripButton)
-                {
-                    toolStripButton.Click -= SubmoduleToolStripButtonClick;
-                }
-            }
-
-            toolStripButtonLevelUp.DropDownItems.Clear();
-        }
-
-        private string GetModuleBranch(string path)
-        {
-            string branch = GitModule.GetSelectedBranchFast(path);
-            return string.Format("[{0}]", DetachedHeadParser.IsDetachedHead(branch) ? _noBranchTitle.Text : branch);
-        }
+        #region Submodules
 
         private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info, string textFormat = "{0}")
         {
-            var spmenu = new ToolStripMenuItem(string.Format(textFormat, info.Text));
-            spmenu.Click += SubmoduleToolStripButtonClick;
-            spmenu.Width = 200;
-            spmenu.Tag = info.Path;
+            var item = new ToolStripMenuItem(string.Format(textFormat, info.Text))
+            {
+                Width = 200,
+                Tag = info.Path,
+                Image = GetSubmoduleItemImage()
+            };
+
             if (info.Bold)
             {
-                spmenu.Font = new Font(spmenu.Font, FontStyle.Bold);
+                item.Font = new Font(item.Font, FontStyle.Bold);
             }
 
-            spmenu.Image = GetItemImage(info);
-            return spmenu;
+            item.Click += SubmoduleToolStripButtonClick;
+
+            return item;
+
+            Image GetSubmoduleItemImage()
+            {
+                if (info.Status == null)
+                {
+                    return Resources.IconFolderSubmodule;
+                }
+
+                if (info.Status == SubmoduleStatus.FastForward)
+                {
+                    return info.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
+                }
+
+                if (info.Status == SubmoduleStatus.Rewind)
+                {
+                    return info.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
+                }
+
+                if (info.Status == SubmoduleStatus.NewerTime)
+                {
+                    return info.IsDirty ? Resources.IconSubmoduleRevisionSemiUpDirty : Resources.IconSubmoduleRevisionSemiUp;
+                }
+
+                if (info.Status == SubmoduleStatus.OlderTime)
+                {
+                    return info.IsDirty ? Resources.IconSubmoduleRevisionSemiDownDirty : Resources.IconSubmoduleRevisionSemiDown;
+                }
+
+                return info.IsDirty ? Resources.IconSubmoduleDirty : Resources.IconFileStatusModified;
+            }
         }
 
         private DateTime _previousSubmoduleUpdateTime;
@@ -2413,36 +2430,6 @@ namespace GitUI.CommandsDialogs
             public SubmoduleInfo TopProject;
             public SubmoduleInfo Superproject;
             public string CurrentSubmoduleName;
-        }
-
-        private static Image GetItemImage(SubmoduleInfo info)
-        {
-            if (info.Status == null)
-            {
-                return Resources.IconFolderSubmodule;
-            }
-
-            if (info.Status == SubmoduleStatus.FastForward)
-            {
-                return info.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
-            }
-
-            if (info.Status == SubmoduleStatus.Rewind)
-            {
-                return info.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
-            }
-
-            if (info.Status == SubmoduleStatus.NewerTime)
-            {
-                return info.IsDirty ? Resources.IconSubmoduleRevisionSemiUpDirty : Resources.IconSubmoduleRevisionSemiUp;
-            }
-
-            if (info.Status == SubmoduleStatus.OlderTime)
-            {
-                return info.IsDirty ? Resources.IconSubmoduleRevisionSemiDownDirty : Resources.IconSubmoduleRevisionSemiDown;
-            }
-
-            return info.IsDirty ? Resources.IconSubmoduleDirty : Resources.IconFileStatusModified;
         }
 
         private static async Task GetSubmoduleStatusAsync(SubmoduleInfo info, CancellationToken cancelToken)
@@ -2632,7 +2619,29 @@ namespace GitUI.CommandsDialogs
 
                 _previousSubmoduleUpdateTime = DateTime.Now;
             });
+
+            void RemoveSubmoduleButtons()
+            {
+                foreach (var item in toolStripButtonLevelUp.DropDownItems)
+                {
+                    if (item is ToolStripMenuItem toolStripButton)
+                    {
+                        toolStripButton.Click -= SubmoduleToolStripButtonClick;
+                    }
+                }
+
+                toolStripButtonLevelUp.DropDownItems.Clear();
+            }
+
+            string GetModuleBranch(string path)
+            {
+                var branch = GitModule.GetSelectedBranchFast(path);
+                var text = DetachedHeadParser.IsDetachedHead(branch) ? _noBranchTitle.Text : branch;
+                return $"[{text}]";
+            }
         }
+
+        #endregion
 
         private void toolStripButtonLevelUp_ButtonClick(object sender, EventArgs e)
         {
