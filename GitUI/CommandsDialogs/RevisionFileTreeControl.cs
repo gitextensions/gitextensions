@@ -11,6 +11,7 @@ using GitCommands.Git;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -310,6 +311,7 @@ See the changes in the commit form.");
             }
         }
 
+        [CanBeNull]
         private string SaveSelectedItemToTempFile()
         {
             if (tvGitTree.SelectedNode?.Tag is GitItem gitItem &&
