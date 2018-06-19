@@ -25,6 +25,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator0 = new System.Windows.Forms.ToolStripSeparator();
             this.toggleBranchTreePanel = new System.Windows.Forms.ToolStripButton();
             this.toggleSplitViewLayout = new System.Windows.Forms.ToolStripButton();
+            this.toggleCommitInfoOnRight = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonLevelUp = new System.Windows.Forms.ToolStripSplitButton();
             this._NO_TRANSLATE_Workingdir = new System.Windows.Forms.ToolStripSplitButton();
@@ -234,6 +235,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator0,
             this.toggleBranchTreePanel,
             this.toggleSplitViewLayout,
+            this.toggleCommitInfoOnRight,
             this.toolStripSeparator17,
             this.toolStripButtonLevelUp,
             this._NO_TRANSLATE_Workingdir,
@@ -260,7 +262,7 @@ namespace GitUI.CommandsDialogs
             this.ToolStrip.Location = new System.Drawing.Point(3, 0);
             this.ToolStrip.Name = "ToolStrip";
             this.ToolStrip.Padding = new System.Windows.Forms.Padding(0);
-            this.ToolStrip.Size = new System.Drawing.Size(919, 25);
+            this.ToolStrip.Size = new System.Drawing.Size(920, 25);
             this.ToolStrip.TabIndex = 0;
             // 
             // RefreshButton
@@ -281,8 +283,7 @@ namespace GitUI.CommandsDialogs
             // toggleBranchTreePanel
             // 
             this.toggleBranchTreePanel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toggleBranchTreePanel.Image = global::GitUI.Properties.Resources.IconLayoutSidebar;
-            this.toggleBranchTreePanel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toggleBranchTreePanel.Image = global::GitUI.Properties.Resources.IconLayoutSidebarLeft;
             this.toggleBranchTreePanel.Name = "toggleBranchTreePanel";
             this.toggleBranchTreePanel.Size = new System.Drawing.Size(23, 22);
             this.toggleBranchTreePanel.ToolTipText = "Toggle left panel";
@@ -296,6 +297,15 @@ namespace GitUI.CommandsDialogs
             this.toggleSplitViewLayout.Size = new System.Drawing.Size(23, 22);
             this.toggleSplitViewLayout.ToolTipText = "Toggle split view layout";
             this.toggleSplitViewLayout.Click += new System.EventHandler(this.toggleSplitViewLayout_Click);
+            // 
+            // toggleCommitInfoOnRight
+            // 
+            this.toggleCommitInfoOnRight.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toggleCommitInfoOnRight.Image = global::GitUI.Properties.Resources.IconLayoutSidebarRight;
+            this.toggleCommitInfoOnRight.Name = "toggleCommitInfoOnRight";
+            this.toggleCommitInfoOnRight.Size = new System.Drawing.Size(23, 22);
+            this.toggleCommitInfoOnRight.ToolTipText = "Toggle commit info at right";
+            this.toggleCommitInfoOnRight.Click += new System.EventHandler(this.toggleCommitInfoOnRight_Click);
             // 
             // toolStripSeparator17
             // 
@@ -582,7 +592,7 @@ namespace GitUI.CommandsDialogs
             this.ShowFirstParent.Image = global::GitUI.Properties.Resources.IconShowFirstParent;
             this.ShowFirstParent.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ShowFirstParent.Name = "ShowFirstParent";
-            this.ShowFirstParent.Size = new System.Drawing.Size(23, 22);
+            this.ShowFirstParent.Size = new System.Drawing.Size(23, 20);
             this.ShowFirstParent.ToolTipText = "Show first parents";
             // 
             // MainSplitContainer
@@ -646,7 +656,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.RevisionsSplitContainer.Panel1.Controls.Add(this.RevisionGrid);
             this.RevisionsSplitContainer.Size = new System.Drawing.Size(650, 209);
-            this.RevisionsSplitContainer.SplitterDistance = 356;
+            this.RevisionsSplitContainer.SplitterDistance = 350;
             this.RevisionsSplitContainer.SplitterWidth = 6;
             this.RevisionsSplitContainer.TabIndex = 0;
             // 
@@ -656,7 +666,7 @@ namespace GitUI.CommandsDialogs
             this.RevisionGrid.Location = new System.Drawing.Point(0, 0);
             this.RevisionGrid.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.RevisionGrid.Name = "RevisionGrid";
-            this.RevisionGrid.Size = new System.Drawing.Size(344, 209);
+            this.RevisionGrid.Size = new System.Drawing.Size(350, 209);
             this.RevisionGrid.TabIndex = 0;
             // 
             // CommitInfoTabControl
@@ -1867,5 +1877,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem createAStashToolStripMenuItem;
         private ToolStripMenuItem undoLastCommitToolStripMenuItem;
         private ToolStripMenuItem tsmiFavouriteRepositories;
+        private ToolStripButton toggleCommitInfoOnRight;
     }
 }

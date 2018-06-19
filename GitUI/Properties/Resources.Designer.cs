@@ -1076,9 +1076,19 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap IconLayoutSidebar {
+        public static System.Drawing.Bitmap IconLayoutSidebarLeft {
             get {
-                object obj = ResourceManager.GetObject("IconLayoutSidebar", resourceCulture);
+                object obj = ResourceManager.GetObject("IconLayoutSidebarLeft", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap IconLayoutSidebarRight {
+            get {
+                object obj = ResourceManager.GetObject("IconLayoutSidebarRight", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
