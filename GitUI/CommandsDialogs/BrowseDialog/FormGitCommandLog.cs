@@ -20,8 +20,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             InitializeComponent();
             Translate();
 
-            LogItems.Font = new Font(FontFamily.GenericMonospace, 9);
-            CommandCacheItems.Font = new Font(FontFamily.GenericMonospace, 9);
+            var font = new Font(FontFamily.GenericMonospace, 9);
+            LogItems.Font = font;
+            CommandCacheItems.Font = font;
+            LogOutput.Font = font;
+            commandCacheOutput.Font = font;
         }
 
         private void GitLogFormLoad(object sender, EventArgs e)
