@@ -100,7 +100,6 @@ namespace GitUI.CommandsDialogs
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
         private readonly IFormBrowseController _controller;
         private readonly ICommitDataManager _commitDataManager;
-        private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
         private readonly IAppTitleGenerator _appTitleGenerator;
         private readonly ILongShaProvider _longShaProvider;
         private readonly WindowsJumpListManager _windowsJumpListManager;
@@ -264,9 +263,9 @@ namespace GitUI.CommandsDialogs
                 _longShaProvider = new LongShaProvider(() => Module);
             }
 
-            _repositoryDescriptionProvider = new RepositoryDescriptionProvider(new GitDirectoryResolver());
-            _appTitleGenerator = new AppTitleGenerator(_repositoryDescriptionProvider);
-            _windowsJumpListManager = new WindowsJumpListManager(_repositoryDescriptionProvider);
+            var repositoryDescriptionProvider = new RepositoryDescriptionProvider(new GitDirectoryResolver());
+            _appTitleGenerator = new AppTitleGenerator(repositoryDescriptionProvider);
+            _windowsJumpListManager = new WindowsJumpListManager(repositoryDescriptionProvider);
 
             FillBuildReport();  // Ensure correct page visibility
             RevisionGrid.ShowBuildServerInfo = true;
