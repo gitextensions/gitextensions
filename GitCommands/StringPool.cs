@@ -15,8 +15,8 @@ namespace GitCommands
     /// </summary>
     public sealed class StringPool
     {
-        private object[] _buckets = new object[4];
-        private int _capacity = 3;
+        private object[] _buckets = new object[2048];
+        private int _capacity = 1536;
 
         /// <summary>
         /// Gets the number of items unique strings in the pool.
