@@ -105,6 +105,17 @@ namespace GitUI.CommandsDialogs
         private readonly WindowsJumpListManager _windowsJumpListManager;
         private bool _startWithDashboard;
 
+        [Flags]
+        private enum UpdateTargets
+        {
+            None = 1,
+            DiffList = 2,
+            FileTree = 4,
+            CommitInfo = 8
+        }
+
+        private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
+
         /// <summary>
         /// For VS designer
         /// </summary>
@@ -239,7 +250,23 @@ namespace GitUI.CommandsDialogs
                 PuTTYToolStripMenuItem.Visible = false;
             }
 
-            RevisionGrid.SelectionChanged += RevisionGridSelectionChanged;
+            RevisionGrid.SelectionChanged += (sender, e) =>
+            {
+                try
+                {
+                    _selectedRevisionUpdatedTargets = UpdateTargets.None;
+
+                    FillFileTree();
+                    FillDiff();
+                    FillCommitInfo();
+                    ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
+                    FillBuildReport();
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(ex.Message);
+                }
+            };
             _filterRevisionsHelper.SetFilter(filter);
 
             HotkeysEnabled = true;
@@ -1046,34 +1073,6 @@ namespace GitUI.CommandsDialogs
 
             // Note: FillBuildReport will check if tab is visible and revision is OK
             _buildReportTabPageExtension.FillBuildReport(revision);
-        }
-
-        [Flags]
-        internal enum UpdateTargets
-        {
-            None = 1,
-            DiffList = 2,
-            FileTree = 4,
-            CommitInfo = 8
-        }
-
-        private UpdateTargets _selectedRevisionUpdatedTargets = UpdateTargets.None;
-        private void RevisionGridSelectionChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                _selectedRevisionUpdatedTargets = UpdateTargets.None;
-
-                FillFileTree();
-                FillDiff();
-                FillCommitInfo();
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
-                FillBuildReport();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
         }
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
