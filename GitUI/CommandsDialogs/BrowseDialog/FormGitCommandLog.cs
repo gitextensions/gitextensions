@@ -25,6 +25,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             CommandCacheItems.Font = font;
             LogOutput.Font = font;
             commandCacheOutput.Font = font;
+
+            this.AdjustForDpiScaling();
         }
 
         private void GitLogFormLoad(object sender, EventArgs e)
