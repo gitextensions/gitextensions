@@ -127,7 +127,6 @@
     <Compile Include="SshPathLocator.cs" />
     <Compile Include="Git\IndexLockManager.cs" />
     <Compile Include="Git\GitTreeParser.cs" />
-    <Compile Include="Logging\CommandLogEntry.cs" />
     <Compile Include="PathEqualityComparer.cs" />
     <Compile Include="RemoteActionResult.cs" />
     <Compile Include="Remote\GitRemote.cs" />
@@ -161,7 +160,7 @@
     </Compile>
     <Compile Include="Git\GitSubmoduleStatus.cs" />
     <Compile Include="LockableNotifier.cs" />
-    <Compile Include="Logging\CommandLogger.cs" />
+    <Compile Include="Logging\CommandLog.cs" />
     <Compile Include="CommitHelper.cs" />
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Config\ConfigSection.cs" />

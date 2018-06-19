@@ -8,7 +8,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using GitCommands.Logging;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -60,8 +59,6 @@ namespace GitCommands
             });
 
             SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath));
-
-            GitLog = new CommandLogger();
 
             if (!File.Exists(SettingsFilePath))
             {
@@ -1049,8 +1046,6 @@ namespace GitCommands
             get => GetBool("StartWithRecentWorkingDir", false);
             set => SetBool("StartWithRecentWorkingDir", value);
         }
-
-        public static CommandLogger GitLog { get; }
 
         public static string Plink
         {

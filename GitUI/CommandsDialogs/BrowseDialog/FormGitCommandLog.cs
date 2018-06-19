@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Logging;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -17,11 +19,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             ShowInTaskbar = true;
             InitializeComponent();
             Translate();
+
+            LogItems.Font = new Font(FontFamily.GenericMonospace, 9);
+            CommandCacheItems.Font = new Font(FontFamily.GenericMonospace, 9);
         }
 
         private void GitLogFormLoad(object sender, EventArgs e)
         {
-            AppSettings.GitLog.CommandsChanged += OnCommandsLogChanged;
+            CommandLog.CommandsChanged += OnGitCommandLogChanged;
             GitCommandCache.CachedCommandsChanged += OnCachedCommandsLogChanged;
 
             RefreshLogItems();
@@ -30,7 +35,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void GitLogForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            AppSettings.GitLog.CommandsChanged -= OnCommandsLogChanged;
+            CommandLog.CommandsChanged -= OnGitCommandLogChanged;
             GitCommandCache.CachedCommandsChanged -= OnCachedCommandsLogChanged;
             instance = null;
         }
@@ -39,7 +44,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (TabControl.SelectedTab == tabPageCommandLog)
             {
-                RefreshListBox(LogItems, AppSettings.GitLog.GetCommands().Select(cle => cle.ToString()).ToArray());
+                RefreshListBox(LogItems, CommandLog.Commands.Select(cle => cle.ToString()).ToArray());
             }
         }
 
@@ -128,19 +133,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 Title = Name,
                 DefaultExt = ".txt",
-                AddExtension = true
+                AddExtension = true,
+                Filter = "All files (*.*)|*.*"
             })
             {
-                fileDialog.Filter =
-                    "All files (*.*)|*.*";
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    File.WriteAllText(fileDialog.FileName, AppSettings.GitLog.ToString());
+                    var contents = string.Join(Environment.NewLine, CommandLog.Commands.Select(cle => cle.ToString()));
+                    File.WriteAllText(fileDialog.FileName, contents);
                 }
             }
         }
 
-        private void OnCommandsLogChanged(object sender, EventArgs e)
+        private void OnGitCommandLogChanged()
         {
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
