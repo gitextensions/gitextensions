@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.chkShowRevisionInfoNextToRevisionGrid = new System.Windows.Forms.CheckBox();
+            this.chkShowGpgInformation = new System.Windows.Forms.CheckBox();
             this.ConEmuGB = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBoxConsoleSettings = new System.Windows.Forms.GroupBox();
@@ -40,7 +40,6 @@
             this.cboTerminal = new System.Windows.Forms.ComboBox();
             this._NO_TRANSLATE_cboStyle = new System.Windows.Forms.ComboBox();
             this.chkChowConsoleTab = new System.Windows.Forms.CheckBox();
-            this.chkShowGpgInformation = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.ConEmuGB.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -53,31 +52,26 @@
             this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.chkShowGpgInformation, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.chkShowRevisionInfoNextToRevisionGrid, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.chkShowGpgInformation, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.ConEmuGB, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 4;
+            this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1160, 634);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1020, 1447);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
-            // chkShowRevisionInfoNextToRevisionGrid
+            // chkShowGpgInformation
             // 
-            this.chkShowRevisionInfoNextToRevisionGrid.AutoSize = true;
-            this.chkShowRevisionInfoNextToRevisionGrid.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.chkShowRevisionInfoNextToRevisionGrid.Dock = System.Windows.Forms.DockStyle.Top;
-            this.chkShowRevisionInfoNextToRevisionGrid.Location = new System.Drawing.Point(3, 198);
-            this.chkShowRevisionInfoNextToRevisionGrid.Name = "chkShowRevisionInfoNextToRevisionGrid";
-            this.chkShowRevisionInfoNextToRevisionGrid.Size = new System.Drawing.Size(1154, 17);
-            this.chkShowRevisionInfoNextToRevisionGrid.TabIndex = 6;
-            this.chkShowRevisionInfoNextToRevisionGrid.Text = "Show revision details next to the revision list";
-            this.chkShowRevisionInfoNextToRevisionGrid.UseVisualStyleBackColor = true;
+            this.chkShowGpgInformation.AutoSize = true;
+            this.chkShowGpgInformation.Location = new System.Drawing.Point(3, 198);
+            this.chkShowGpgInformation.Name = "chkShowGpgInformation";
+            this.chkShowGpgInformation.Size = new System.Drawing.Size(132, 17);
+            this.chkShowGpgInformation.TabIndex = 7;
+            this.chkShowGpgInformation.Text = "Show GPG information";
+            this.chkShowGpgInformation.UseVisualStyleBackColor = true;
             // 
             // ConEmuGB
             // 
@@ -88,7 +82,7 @@
             this.ConEmuGB.Location = new System.Drawing.Point(3, 3);
             this.ConEmuGB.Name = "ConEmuGB";
             this.ConEmuGB.Padding = new System.Windows.Forms.Padding(8);
-            this.ConEmuGB.Size = new System.Drawing.Size(1154, 189);
+            this.ConEmuGB.Size = new System.Drawing.Size(1014, 189);
             this.ConEmuGB.TabIndex = 0;
             this.ConEmuGB.TabStop = false;
             this.ConEmuGB.Text = "Console emulator";
@@ -107,7 +101,7 @@
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(1138, 159);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(998, 159);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
             // groupBoxConsoleSettings
@@ -125,7 +119,7 @@
             this.groupBoxConsoleSettings.Margin = new System.Windows.Forms.Padding(17, 2, 3, 2);
             this.groupBoxConsoleSettings.Name = "groupBoxConsoleSettings";
             this.groupBoxConsoleSettings.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBoxConsoleSettings.Size = new System.Drawing.Size(1118, 132);
+            this.groupBoxConsoleSettings.Size = new System.Drawing.Size(978, 132);
             this.groupBoxConsoleSettings.TabIndex = 3;
             this.groupBoxConsoleSettings.TabStop = false;
             this.groupBoxConsoleSettings.Text = "Console settings (a restart is needed to take effect)";
@@ -242,23 +236,13 @@
             this.chkChowConsoleTab.UseVisualStyleBackColor = true;
             this.chkChowConsoleTab.CheckedChanged += new System.EventHandler(this.chkChowConsoleTab_CheckedChanged);
             // 
-            // chkShowGpgInformation
-            // 
-            this.chkShowGpgInformation.AutoSize = true;
-            this.chkShowGpgInformation.Location = new System.Drawing.Point(3, 221);
-            this.chkShowGpgInformation.Name = "chkShowGpgInformation";
-            this.chkShowGpgInformation.Size = new System.Drawing.Size(132, 17);
-            this.chkShowGpgInformation.TabIndex = 7;
-            this.chkShowGpgInformation.Text = "Show GPG information";
-            this.chkShowGpgInformation.UseVisualStyleBackColor = true;
-            // 
             // FormBrowseRepoSettingsPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "FormBrowseRepoSettingsPage";
-            this.Size = new System.Drawing.Size(1160, 634);
+            this.Size = new System.Drawing.Size(1020, 1447);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.ConEmuGB.ResumeLayout(false);
@@ -285,7 +269,6 @@
         private System.Windows.Forms.ComboBox cboTerminal;
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_cboStyle;
         private System.Windows.Forms.CheckBox chkChowConsoleTab;
-        private System.Windows.Forms.CheckBox chkShowRevisionInfoNextToRevisionGrid;
         private System.Windows.Forms.CheckBox chkShowGpgInformation;
     }
 }
