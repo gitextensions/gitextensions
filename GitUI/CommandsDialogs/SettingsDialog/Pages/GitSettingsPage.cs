@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public GitSettingsPage()
         {
             InitializeComponent();
-            Text = "Git";
+            Text = "Paths";
             Translate();
         }
 

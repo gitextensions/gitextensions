@@ -13,13 +13,13 @@ namespace GitExtUtilsTests
         [Test]
         public void AdjustWidthToSize_should_throw_if_table_null()
         {
-            ((Action)(() => ((TableLayoutPanel)null).AdjustWidthToSize(0, 0))).Should().Throw<ArgumentNullException>();
+            ((Action)(() => ((TableLayoutPanel)null).AdjustWidthToSize(0, Array.Empty<Control>()))).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void AdjustWidthToSize_should_throw_if_table_has_no_columns()
         {
-            ((Action)(() => new TableLayoutPanel().AdjustWidthToSize(0, 0))).Should().Throw<ArgumentException>()
+            ((Action)(() => new TableLayoutPanel().AdjustWidthToSize(0, Array.Empty<Control>()))).Should().Throw<ArgumentException>()
                 .WithMessage("The table must have at least one column");
         }
 
@@ -30,9 +30,9 @@ namespace GitExtUtilsTests
             {
                 ColumnCount = 3
             };
-            ((Action)(() => table.AdjustWidthToSize(-1, 0))).Should().Throw<ArgumentOutOfRangeException>()
+            ((Action)(() => table.AdjustWidthToSize(-1, Array.Empty<Control>()))).Should().Throw<ArgumentOutOfRangeException>()
                 .WithMessage("Column index must be within [0, 2] range\nParameter name: columnIndex\nActual value was -1.");
-            ((Action)(() => table.AdjustWidthToSize(3, 0))).Should().Throw<ArgumentOutOfRangeException>()
+            ((Action)(() => table.AdjustWidthToSize(3, Array.Empty<Control>()))).Should().Throw<ArgumentOutOfRangeException>()
                 .WithMessage("Column index must be within [0, 2] range\nParameter name: columnIndex\nActual value was 3.");
         }
 
@@ -53,8 +53,8 @@ namespace GitExtUtilsTests
             {
                 ColumnCount = 3
             };
-            ((Action)(() => table.AdjustWidthToSize(0, Array.Empty<float>()))).Should().Throw<ArgumentException>()
-                .WithMessage("At least one width is required\nParameter name: widths");
+            ((Action)(() => table.AdjustWidthToSize(0, Array.Empty<Control>()))).Should().Throw<ArgumentException>()
+                .WithMessage("At least one control is required\nParameter name: controls");
         }
 
         [Test]
@@ -69,10 +69,14 @@ namespace GitExtUtilsTests
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             table.ColumnStyles[0].SizeType = SizeType.AutoSize;
 
-            table.AdjustWidthToSize(0, 3f, 6f, 1f, 10f, 2f);
+            table.AdjustWidthToSize(0, new Label { Width = 3, Margin = new Padding(3) },
+                new TextBox { Width = 6, Margin = new Padding(3) },
+                new Label { Width = 9, Margin = new Padding(3) },
+                new TextBox { Width = 10, Margin = new Padding(3) },
+                new CheckBox { Width = 3, Margin = new Padding(3) });
 
             table.ColumnStyles[0].SizeType.Should().Be(SizeType.Absolute);
-            table.ColumnStyles[0].Width.Should().Be(10f);
+            table.ColumnStyles[0].Width.Should().Be(16f);
         }
     }
 }

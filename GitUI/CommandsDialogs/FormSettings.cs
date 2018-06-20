@@ -95,7 +95,6 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<FormBrowseRepoSettingsPage>(this), detailedSettingsPage);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<CommitDialogSettingsPage>(this), detailedSettingsPage);
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<DiffViewerSettingsPage>(this), detailedSettingsPage);
-            settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ToolbarSettingsPage>(this), detailedSettingsPage);
 
             var sshSettingsPage = SettingsPageBase.Create<SshSettingsPage>(this);
             settingsTreeView.AddSettingsPage(sshSettingsPage, gitExtPageRef);

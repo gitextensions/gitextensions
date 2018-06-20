@@ -8875,7 +8875,7 @@ and deze zal weer in het commit overzicht zichtbaar worden.</target>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="nl">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Config</source>
+        <source>Config</source>
         <target>Globale instelingen</target>
         
       </trans-unit>
@@ -9220,8 +9220,8 @@ Controleer bestandstoegang.</target>
   <file datatype="plaintext" original="GitSettingsPage" source-language="en" target-language="nl">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git</source>
-        <target>Git</target>
+        <source>Paths</source>
+        <target>Paths</target>
         
       </trans-unit>
       <trans-unit id="BrowseGitBinPath.Text">
@@ -9250,8 +9250,8 @@ Controleer bestandstoegang.</target>
         
       </trans-unit>
       <trans-unit id="groupBox7.Text">
-        <source>Git</source>
-        <target>Git</target>
+        <source>Paths</source>
+        <target>Paths</target>
         
       </trans-unit>
       <trans-unit id="groupBox8.Text">

@@ -8877,7 +8877,7 @@ du menu contextuel pour des opérations supplémentaires</target>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="fr">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Config</source>
+        <source>Config</source>
         <target>Configuration de Git</target>
         
       </trans-unit>
@@ -9221,8 +9221,8 @@ Vérifiez si le fichier est accessible.</target>
   <file datatype="plaintext" original="GitSettingsPage" source-language="en" target-language="fr">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git</source>
-        <target>Git</target>
+        <source>Paths</source>
+        <target>Paths</target>
         
       </trans-unit>
       <trans-unit id="BrowseGitBinPath.Text">
@@ -9251,8 +9251,8 @@ Vérifiez si le fichier est accessible.</target>
         
       </trans-unit>
       <trans-unit id="groupBox7.Text">
-        <source>Git</source>
-        <target>Git</target>
+        <source>Paths</source>
+        <target>Paths</target>
         
       </trans-unit>
       <trans-unit id="groupBox8.Text">

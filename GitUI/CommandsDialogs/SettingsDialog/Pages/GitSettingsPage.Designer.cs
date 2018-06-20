@@ -28,65 +28,57 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.TableLayoutPanel tlpnlEnvironment;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GitSettingsPage));
-            this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            System.Windows.Forms.TableLayoutPanel tlpnlGitPaths;
+            System.Windows.Forms.TableLayoutPanel tlpnlMain;
             this.ChangeHomeButton = new System.Windows.Forms.Button();
-            this.label51 = new System.Windows.Forms.Label();
+            this.lblGlobalConfigPath = new System.Windows.Forms.Label();
             this.homeIsSetToLabel = new System.Windows.Forms.Label();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label50 = new System.Windows.Forms.Label();
             this.downloadGitForWindows = new System.Windows.Forms.LinkLabel();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
+            this.lblGitCommand = new System.Windows.Forms.Label();
+            this.lblShPath = new System.Windows.Forms.Label();
             this.BrowseGitBinPath = new System.Windows.Forms.Button();
             this.GitBinPath = new System.Windows.Forms.TextBox();
             this.GitPath = new System.Windows.Forms.TextBox();
             this.BrowseGitPath = new System.Windows.Forms.Button();
-            this.groupBox8.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.groupBox7.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.gbEnvironment = new System.Windows.Forms.GroupBox();
+            this.gbPaths = new System.Windows.Forms.GroupBox();
+            tlpnlEnvironment = new System.Windows.Forms.TableLayoutPanel();
+            tlpnlGitPaths = new System.Windows.Forms.TableLayoutPanel();
+            tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
+            tlpnlEnvironment.SuspendLayout();
+            tlpnlGitPaths.SuspendLayout();
+            tlpnlMain.SuspendLayout();
+            this.gbEnvironment.SuspendLayout();
+            this.gbPaths.SuspendLayout();
             this.SuspendLayout();
             // 
-            // groupBox8
+            // tlpnlEnvironment
             // 
-            this.groupBox8.AutoSize = true;
-            this.groupBox8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox8.Controls.Add(this.tableLayoutPanel2);
-            this.groupBox8.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox8.Location = new System.Drawing.Point(0, 126);
-            this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Padding = new System.Windows.Forms.Padding(12);
-            this.groupBox8.Size = new System.Drawing.Size(1297, 140);
-            this.groupBox8.TabIndex = 1;
-            this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Environment";
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.ChangeHomeButton, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.label51, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.homeIsSetToLabel, 0, 1);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 26);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 3;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1273, 102);
-            this.tableLayoutPanel2.TabIndex = 1;
+            tlpnlEnvironment.AutoSize = true;
+            tlpnlEnvironment.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpnlEnvironment.ColumnCount = 1;
+            tlpnlEnvironment.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpnlEnvironment.Controls.Add(this.ChangeHomeButton, 0, 3);
+            tlpnlEnvironment.Controls.Add(this.lblGlobalConfigPath, 0, 0);
+            tlpnlEnvironment.Controls.Add(this.homeIsSetToLabel, 0, 2);
+            tlpnlEnvironment.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpnlEnvironment.Location = new System.Drawing.Point(8, 22);
+            tlpnlEnvironment.Name = "tlpnlEnvironment";
+            tlpnlEnvironment.RowCount = 4;
+            tlpnlEnvironment.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpnlEnvironment.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            tlpnlEnvironment.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpnlEnvironment.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpnlEnvironment.Size = new System.Drawing.Size(609, 98);
+            tlpnlEnvironment.TabIndex = 0;
             // 
             // ChangeHomeButton
             // 
             this.ChangeHomeButton.AutoSize = true;
-            this.ChangeHomeButton.Location = new System.Drawing.Point(3, 74);
+            this.ChangeHomeButton.Location = new System.Drawing.Point(3, 70);
             this.ChangeHomeButton.Name = "ChangeHomeButton";
             this.ChangeHomeButton.Size = new System.Drawing.Size(90, 25);
             this.ChangeHomeButton.TabIndex = 2;
@@ -94,76 +86,61 @@
             this.ChangeHomeButton.UseVisualStyleBackColor = true;
             this.ChangeHomeButton.Click += new System.EventHandler(this.ChangeHomeButton_Click);
             // 
-            // label51
+            // lblGlobalConfigPath
             // 
-            this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point(3, 0);
-            this.label51.Margin = new System.Windows.Forms.Padding(3, 0, 3, 24);
-            this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(568, 26);
-            this.label51.TabIndex = 0;
-            this.label51.Text = resources.GetString("label51.Text");
+            this.lblGlobalConfigPath.AutoSize = true;
+            this.lblGlobalConfigPath.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblGlobalConfigPath.Location = new System.Drawing.Point(3, 0);
+            this.lblGlobalConfigPath.Name = "lblGlobalConfigPath";
+            this.lblGlobalConfigPath.Size = new System.Drawing.Size(603, 26);
+            this.lblGlobalConfigPath.TabIndex = 0;
+            this.lblGlobalConfigPath.Text = resources.GetString("lblGlobalConfigPath.Text");
             // 
             // homeIsSetToLabel
             // 
             this.homeIsSetToLabel.AutoSize = true;
-            this.homeIsSetToLabel.Location = new System.Drawing.Point(3, 50);
+            this.homeIsSetToLabel.Location = new System.Drawing.Point(3, 46);
             this.homeIsSetToLabel.Margin = new System.Windows.Forms.Padding(3, 0, 3, 8);
             this.homeIsSetToLabel.Name = "homeIsSetToLabel";
             this.homeIsSetToLabel.Size = new System.Drawing.Size(100, 13);
             this.homeIsSetToLabel.TabIndex = 1;
             this.homeIsSetToLabel.Text = "HOME is set to: {0}";
             // 
-            // groupBox7
+            // tlpnlGitPaths
             // 
-            this.groupBox7.AutoSize = true;
-            this.groupBox7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox7.Controls.Add(this.tableLayoutPanel1);
-            this.groupBox7.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox7.Location = new System.Drawing.Point(0, 0);
-            this.groupBox7.Margin = new System.Windows.Forms.Padding(4);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Padding = new System.Windows.Forms.Padding(12);
-            this.groupBox7.Size = new System.Drawing.Size(1297, 126);
-            this.groupBox7.TabIndex = 0;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Git";
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.label50, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.downloadGitForWindows, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label13, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label14, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.BrowseGitBinPath, 2, 2);
-            this.tableLayoutPanel1.Controls.Add(this.GitBinPath, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.GitPath, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.BrowseGitPath, 2, 1);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 26);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 4;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1273, 88);
-            this.tableLayoutPanel1.TabIndex = 0;
+            tlpnlGitPaths.AutoSize = true;
+            tlpnlGitPaths.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tlpnlGitPaths.ColumnCount = 3;
+            tlpnlGitPaths.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpnlGitPaths.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpnlGitPaths.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpnlGitPaths.Controls.Add(this.label50, 0, 0);
+            tlpnlGitPaths.Controls.Add(this.downloadGitForWindows, 0, 3);
+            tlpnlGitPaths.Controls.Add(this.lblGitCommand, 0, 1);
+            tlpnlGitPaths.Controls.Add(this.lblShPath, 0, 2);
+            tlpnlGitPaths.Controls.Add(this.BrowseGitBinPath, 2, 2);
+            tlpnlGitPaths.Controls.Add(this.GitBinPath, 1, 2);
+            tlpnlGitPaths.Controls.Add(this.GitPath, 1, 1);
+            tlpnlGitPaths.Controls.Add(this.BrowseGitPath, 2, 1);
+            tlpnlGitPaths.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpnlGitPaths.Location = new System.Drawing.Point(8, 22);
+            tlpnlGitPaths.Name = "tlpnlGitPaths";
+            tlpnlGitPaths.RowCount = 4;
+            tlpnlGitPaths.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpnlGitPaths.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpnlGitPaths.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpnlGitPaths.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpnlGitPaths.Size = new System.Drawing.Size(609, 84);
+            tlpnlGitPaths.TabIndex = 0;
             // 
             // label50
             // 
             this.label50.AutoSize = true;
-            this.tableLayoutPanel1.SetColumnSpan(this.label50, 3);
+            tlpnlGitPaths.SetColumnSpan(this.label50, 3);
             this.label50.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label50.Location = new System.Drawing.Point(3, 0);
             this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(1267, 13);
+            this.label50.Size = new System.Drawing.Size(603, 13);
             this.label50.TabIndex = 0;
             this.label50.Text = "Git Extensions can use Git for Windows or cygwin to access git repositories. Set " +
     "the correct paths below.";
@@ -174,7 +151,7 @@
             this.downloadGitForWindows.AutoSize = true;
             this.downloadGitForWindows.Dock = System.Windows.Forms.DockStyle.Fill;
             this.downloadGitForWindows.LinkColor = System.Drawing.SystemColors.HotTrack;
-            this.downloadGitForWindows.Location = new System.Drawing.Point(3, 75);
+            this.downloadGitForWindows.Location = new System.Drawing.Point(3, 71);
             this.downloadGitForWindows.Name = "downloadGitForWindows";
             this.downloadGitForWindows.Size = new System.Drawing.Size(291, 13);
             this.downloadGitForWindows.TabIndex = 7;
@@ -183,35 +160,35 @@
             this.downloadGitForWindows.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.downloadGitForWindows.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.downloadGitForWindows_LinkClicked);
             // 
-            // label13
+            // lblGitCommand
             // 
-            this.label13.AutoSize = true;
-            this.label13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label13.Location = new System.Drawing.Point(3, 13);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(291, 31);
-            this.label13.TabIndex = 1;
-            this.label13.Text = "Command used to run git (git.cmd or git.exe)";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblGitCommand.AutoSize = true;
+            this.lblGitCommand.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblGitCommand.Location = new System.Drawing.Point(3, 13);
+            this.lblGitCommand.Name = "lblGitCommand";
+            this.lblGitCommand.Size = new System.Drawing.Size(291, 29);
+            this.lblGitCommand.TabIndex = 1;
+            this.lblGitCommand.Text = "Command used to run git (git.cmd or git.exe)";
+            this.lblGitCommand.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label14
+            // lblShPath
             // 
-            this.label14.AutoSize = true;
-            this.label14.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label14.Location = new System.Drawing.Point(3, 44);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(291, 31);
-            this.label14.TabIndex = 4;
-            this.label14.Text = "Path to linux tools (sh). Leave empty when it is in the path.";
-            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblShPath.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblShPath.Location = new System.Drawing.Point(3, 42);
+            this.lblShPath.Name = "lblShPath";
+            this.lblShPath.Size = new System.Drawing.Size(291, 29);
+            this.lblShPath.TabIndex = 4;
+            this.lblShPath.Text = "Path to linux tools (sh). Leave empty when it is in the path.";
+            this.lblShPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // BrowseGitBinPath
             // 
             this.BrowseGitBinPath.AutoSize = true;
+            this.BrowseGitBinPath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BrowseGitBinPath.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BrowseGitBinPath.Location = new System.Drawing.Point(1195, 47);
+            this.BrowseGitBinPath.Location = new System.Drawing.Point(554, 45);
             this.BrowseGitBinPath.Name = "BrowseGitBinPath";
-            this.BrowseGitBinPath.Size = new System.Drawing.Size(75, 25);
+            this.BrowseGitBinPath.Size = new System.Drawing.Size(52, 23);
             this.BrowseGitBinPath.TabIndex = 6;
             this.BrowseGitBinPath.Text = "Browse";
             this.BrowseGitBinPath.UseVisualStyleBackColor = true;
@@ -219,73 +196,117 @@
             // 
             // GitBinPath
             // 
-            this.GitBinPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.GitBinPath.Location = new System.Drawing.Point(300, 49);
+            this.GitBinPath.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GitBinPath.Location = new System.Drawing.Point(300, 45);
             this.GitBinPath.MaxLength = 300;
             this.GitBinPath.Name = "GitBinPath";
-            this.GitBinPath.Size = new System.Drawing.Size(889, 21);
+            this.GitBinPath.Size = new System.Drawing.Size(248, 21);
             this.GitBinPath.TabIndex = 5;
             this.GitBinPath.TextChanged += new System.EventHandler(this.GitBinPath_TextChanged);
             // 
             // GitPath
             // 
-            this.GitPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.GitPath.Location = new System.Drawing.Point(300, 18);
+            this.GitPath.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GitPath.Location = new System.Drawing.Point(300, 16);
             this.GitPath.MaxLength = 300;
             this.GitPath.Name = "GitPath";
-            this.GitPath.Size = new System.Drawing.Size(889, 21);
+            this.GitPath.Size = new System.Drawing.Size(248, 21);
             this.GitPath.TabIndex = 2;
             this.GitPath.TextChanged += new System.EventHandler(this.GitPath_TextChanged);
             // 
             // BrowseGitPath
             // 
             this.BrowseGitPath.AutoSize = true;
+            this.BrowseGitPath.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BrowseGitPath.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BrowseGitPath.Location = new System.Drawing.Point(1195, 16);
+            this.BrowseGitPath.Location = new System.Drawing.Point(554, 16);
             this.BrowseGitPath.Name = "BrowseGitPath";
-            this.BrowseGitPath.Size = new System.Drawing.Size(75, 25);
+            this.BrowseGitPath.Size = new System.Drawing.Size(52, 23);
             this.BrowseGitPath.TabIndex = 3;
             this.BrowseGitPath.Text = "Browse";
             this.BrowseGitPath.UseVisualStyleBackColor = true;
             this.BrowseGitPath.Click += new System.EventHandler(this.BrowseGitPath_Click);
             // 
+            // tlpnlMain
+            // 
+            tlpnlMain.ColumnCount = 1;
+            tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tlpnlMain.Controls.Add(this.gbEnvironment, 0, 1);
+            tlpnlMain.Controls.Add(this.gbPaths, 0, 0);
+            tlpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            tlpnlMain.Location = new System.Drawing.Point(8, 8);
+            tlpnlMain.Name = "tlpnlMain";
+            tlpnlMain.RowCount = 3;
+            tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            tlpnlMain.Size = new System.Drawing.Size(631, 598);
+            tlpnlMain.TabIndex = 0;
+            // 
+            // gbEnvironment
+            // 
+            this.gbEnvironment.AutoSize = true;
+            this.gbEnvironment.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gbEnvironment.Controls.Add(tlpnlEnvironment);
+            this.gbEnvironment.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gbEnvironment.Location = new System.Drawing.Point(3, 123);
+            this.gbEnvironment.Name = "gbEnvironment";
+            this.gbEnvironment.Padding = new System.Windows.Forms.Padding(8);
+            this.gbEnvironment.Size = new System.Drawing.Size(625, 128);
+            this.gbEnvironment.TabIndex = 1;
+            this.gbEnvironment.TabStop = false;
+            this.gbEnvironment.Text = "Environment";
+            // 
+            // gbPaths
+            // 
+            this.gbPaths.AutoSize = true;
+            this.gbPaths.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gbPaths.Controls.Add(tlpnlGitPaths);
+            this.gbPaths.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gbPaths.Location = new System.Drawing.Point(3, 3);
+            this.gbPaths.Name = "gbPaths";
+            this.gbPaths.Padding = new System.Windows.Forms.Padding(8);
+            this.gbPaths.Size = new System.Drawing.Size(625, 114);
+            this.gbPaths.TabIndex = 0;
+            this.gbPaths.TabStop = false;
+            this.gbPaths.Text = "Paths";
+            // 
             // GitSettingsPage
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.groupBox8);
-            this.Controls.Add(this.groupBox7);
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.Controls.Add(tlpnlMain);
             this.Name = "GitSettingsPage";
-            this.Size = new System.Drawing.Size(1297, 592);
-            this.groupBox8.ResumeLayout(false);
-            this.groupBox8.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
-            this.groupBox7.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.Padding = new System.Windows.Forms.Padding(8);
+            this.Size = new System.Drawing.Size(647, 614);
+            tlpnlEnvironment.ResumeLayout(false);
+            tlpnlEnvironment.PerformLayout();
+            tlpnlGitPaths.ResumeLayout(false);
+            tlpnlGitPaths.PerformLayout();
+            tlpnlMain.ResumeLayout(false);
+            tlpnlMain.PerformLayout();
+            this.gbEnvironment.ResumeLayout(false);
+            this.gbEnvironment.PerformLayout();
+            this.gbPaths.ResumeLayout(false);
+            this.gbPaths.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.GroupBox gbEnvironment;
         private System.Windows.Forms.Label homeIsSetToLabel;
         private System.Windows.Forms.Button ChangeHomeButton;
-        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.GroupBox gbPaths;
         private System.Windows.Forms.LinkLabel downloadGitForWindows;
         private System.Windows.Forms.Button BrowseGitBinPath;
         private System.Windows.Forms.TextBox GitPath;
         private System.Windows.Forms.Button BrowseGitPath;
         private System.Windows.Forms.TextBox GitBinPath;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.Label label51;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label lblGlobalConfigPath;
+        private System.Windows.Forms.Label lblGitCommand;
         private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.Label lblShPath;
     }
 }

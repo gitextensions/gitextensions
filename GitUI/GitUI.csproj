@@ -262,12 +262,6 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\GitConfigAdvancedSettingsPage.Designer.cs">
       <DependentUpon>GitConfigAdvancedSettingsPage.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ToolbarSettingsPage.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\SettingsDialog\Pages\ToolbarSettingsPage.Designer.cs">
-      <DependentUpon>ToolbarSettingsPage.cs</DependentUpon>
-    </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -684,7 +678,6 @@
       <DependentUpon>FormCherryPick.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\GitFileTreeComparer.cs" />
-    <Compile Include="Lemmings.cs" />
     <Compile Include="Plugin\GitPluginSettingsContainer.cs" />
     <Compile Include="Plugin\PluginRegistry.cs" />
     <Compile Include="ProcessOutputTimer.cs" />
@@ -1202,9 +1195,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\GitConfigAdvancedSettingsPage.resx">
       <DependentUpon>GitConfigAdvancedSettingsPage.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ToolbarSettingsPage.resx">
-      <DependentUpon>ToolbarSettingsPage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.resx">
       <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>

@@ -8712,7 +8712,7 @@ menu na tlačítku Obnovit pro další operace</target>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Config</source>
+        <source>Config</source>
         <target>Nastavení Gitu</target>
         
       </trans-unit>
@@ -9043,8 +9043,8 @@ Check if file is accessible.</source>
   <file datatype="plaintext" original="GitSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git</source>
-        <target>Git</target>
+        <source>Paths</source>
+        <target>Paths</target>
         
       </trans-unit>
       <trans-unit id="BrowseGitBinPath.Text">
@@ -9073,8 +9073,8 @@ Check if file is accessible.</source>
         
       </trans-unit>
       <trans-unit id="groupBox7.Text">
-        <source>Git</source>
-        <target>Git</target>
+        <source>Paths</source>
+        <target>Paths</target>
         
       </trans-unit>
       <trans-unit id="groupBox8.Text">

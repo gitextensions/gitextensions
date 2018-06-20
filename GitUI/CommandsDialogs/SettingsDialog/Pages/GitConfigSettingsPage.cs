@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public GitConfigSettingsPage()
         {
             InitializeComponent();
-            Text = "Git Config";
+            Text = "Config";
             Translate();
         }
 

@@ -182,7 +182,7 @@ namespace GitUITests.CommandsDialogs
             var items = new[] { new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file1.txt"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2.txt") };
             var item = new GitItem(0, GitObjectType.Tree, ObjectId.Random(), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
-            var image = Resources.cow_head;
+            var image = Resources.git_extensions_logo_final_mixed;
             _iconProvider.Get(Arg.Any<string>(), Arg.Is<string>(x => x.EndsWith(".txt"))).Returns(image);
 
             _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);

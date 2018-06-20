@@ -124,12 +124,6 @@
   <data name="Cow_sunglass" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/Cow_sunglass.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="x_with_arrow_lightblue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/x-with-arrow_lightblue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="x_with_arrow_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/x-with-arrow_yellow.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="IconSettingsTools" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/71.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -163,17 +157,11 @@
   <data name="nonprintchar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/nonprintchar.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="cow_head_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/cow-head-blue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="ChangeLog" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/ChangeLog.md;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="stash" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/stash.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="git_extensions_logo_final_mixed_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/git-extensions-logo-final_mixed_blue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="bug" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/bug.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -202,9 +190,6 @@
   <data name="double_arrow_down" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/double_arrow_down.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="git_extensions_logo_final_mixed_red" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/git-extensions-logo-final_mixed_red.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="IconStaged" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/IconStaged.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -214,26 +199,14 @@
   <data name="pageant" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/pageant.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="x_with_arrow_purple" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/x-with-arrow_purple.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Options" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/26.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="git_extensions_logo_final_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/git-extensions-logo-final_green.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="dollar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/dollar.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="cow_head_purple" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/cow-head-purple.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="New" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/21.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="git_extensions_logo_final_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/git-extensions-logo-final_blue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconSolveMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/50.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -253,9 +226,6 @@
   <data name="double_arrow_up" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/double_arrow_up.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="git_extensions_logo_final_mixed_lightblue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/git-extensions-logo-final_mixed_lightblue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="IconPull" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/4.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -268,9 +238,6 @@
   <data name="develop" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/develop.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="x_with_arrow_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/x-with-arrow_green.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="success" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/success.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -279,9 +246,6 @@
   </data>
   <data name="increase" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/increase.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="git_extensions_logo_final_lightblue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/git-extensions-logo-final_lightblue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconClean" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/IconClean.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -292,17 +256,8 @@
   <data name="git_extensions_logo_final" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../../Bin/Logo/git-extensions-logo-final.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="git_extensions_logo_final_mixed_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/git-extensions-logo-final_mixed_green.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="showEntireFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/showEntireFile.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cow_head_red" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/cow-head-red.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="git_extensions_logo_final_mixed_purple" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/git-extensions-logo-final_mixed_purple.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Select" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/90.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -310,26 +265,14 @@
   <data name="Folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/40.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="cow_head_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/cow-head-yellow.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="whitespace" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/whitespace.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cow_head_green" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/cow-head-green.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Added" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/Added.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="x_with_arrow_red" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/x-with-arrow_red.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="decrease" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/decrease.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="x_with_arrow_blue" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/x-with-arrow_blue.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="arrow_refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/arrow_refresh.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -352,14 +295,8 @@
   <data name="Copied" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/Copied.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="git_extensions_logo_final_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/git-extensions-logo-final_yellow.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="bash" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/bash.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="git_extensions_logo_final_red" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/git-extensions-logo-final_red.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Info" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/49.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -376,9 +313,6 @@
   <data name="arrow_refresh_dirty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/arrow_refresh_dirty.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="git_extensions_logo_final_purple" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/git-extensions-logo-final_purple.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="IconTag1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/33.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -388,14 +322,8 @@
   <data name="Renamed" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/Renamed.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="cow_head" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/cow-head.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="IconMaintenance" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/82.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="git_extensions_logo_final_mixed_yellow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../../Bin/Logo/git-extensions-logo-final_mixed_yellow.ico;System.Drawing.Icon, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Removed" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/Removed.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

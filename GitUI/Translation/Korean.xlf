@@ -8365,7 +8365,7 @@ Context menu for additional operations</source>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en" target-language="ko">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Config</source>
+        <source>Config</source>
         
       </trans-unit>
       <trans-unit id="BrowseCommitTemplate.Text">
@@ -8679,7 +8679,7 @@ Check if file is accessible.</source>
   <file datatype="plaintext" original="GitSettingsPage" source-language="en" target-language="ko">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git</source>
+        <source>Paths</source>
         
       </trans-unit>
       <trans-unit id="BrowseGitBinPath.Text">
@@ -8708,7 +8708,7 @@ Check if file is accessible.</source>
         
       </trans-unit>
       <trans-unit id="groupBox7.Text">
-        <source>Git</source>
+        <source>Paths</source>
         
       </trans-unit>
       <trans-unit id="groupBox8.Text">

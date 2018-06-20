@@ -8857,7 +8857,7 @@ Context menu for additional operations</source>
   <file datatype="plaintext" original="GitConfigSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git Config</source>
+        <source>Config</source>
         <target>[Ɠīŧ Ƈǿƞƒīɠ ǲ衋ς ϕẛϕϱΰϐ]</target>
         
       </trans-unit>
@@ -9202,7 +9202,7 @@ Check if file is accessible.</source>
   <file datatype="plaintext" original="GitSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
-        <source>Git</source>
+        <source>Paths</source>
         <target>[Ɠīŧ ǋϵ靐]</target>
         
       </trans-unit>
@@ -9232,7 +9232,7 @@ Check if file is accessible.</source>
         
       </trans-unit>
       <trans-unit id="groupBox7.Text">
-        <source>Git</source>
+        <source>Paths</source>
         <target>[Ɠīŧ ϕϵϰ]</target>
         
       </trans-unit>

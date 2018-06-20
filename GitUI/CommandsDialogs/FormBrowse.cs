@@ -1987,7 +1987,7 @@ namespace GitUI.CommandsDialogs
             QuickFetch = 11,
             QuickPull = 12,
             QuickPush = 13,
-            RotateApplicationIcon = 14,
+            /* deprecated: RotateApplicationIcon = 14, */
             CloseRepository = 15,
             Stash = 16,
             StashPop = 17,
@@ -2051,7 +2051,6 @@ namespace GitUI.CommandsDialogs
                 case Commands.QuickFetch: QuickFetch(); break;
                 case Commands.QuickPull: UICommands.StartPullDialogAndPullImmediately(this); break;
                 case Commands.QuickPush: UICommands.StartPushDialog(this, true); break;
-                case Commands.RotateApplicationIcon: RotateApplicationIcon(); break;
                 case Commands.CloseRepository: CloseToolStripMenuItemClick(null, null); break;
                 case Commands.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
                 case Commands.StashPop: UICommands.StashPop(this); break;

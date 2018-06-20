@@ -28,7 +28,6 @@
           <Directory Id="InstallerDir" Name="Installer" />
           <Directory Id="DictionariesDir" Name="Dictionaries" />
           <Directory Id="TranslationsDir" Name="Translation" />
-          <Directory Id="IconsDir" Name="Icons" />
           <Directory Id="DiffScriptsDir" Name="Diff-Scripts" />
           <Directory Id="DirConEmu" Name="ConEmu" />
         </Directory>
@@ -321,23 +320,6 @@
       </Component>
       <Component Id="System.Net.Http.Formatting.dll" Guid="*">
         <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\$(var.Configuration)\System.Net.Http.Formatting.dll" />
-      </Component>
-    </DirectoryRef>
-    <DirectoryRef Id="IconsDir">
-      <Component Id="Blue.ico" Guid="*">
-        <File Source="..\bin\logo\git-extensions-logo-final_mixed_blue.ico" />
-      </Component>
-      <Component Id="Green.ico" Guid="*">
-        <File Source="..\bin\logo\git-extensions-logo-final_mixed_green.ico" />
-      </Component>
-      <Component Id="Purple.ico" Guid="*">
-        <File Source="..\bin\logo\git-extensions-logo-final_mixed_purple.ico" />
-      </Component>
-      <Component Id="Red.ico" Guid="*">
-        <File Source="..\bin\logo\git-extensions-logo-final_mixed_red.ico" />
-      </Component>
-      <Component Id="Yellow.ico" Guid="*">
-        <File Source="..\bin\logo\git-extensions-logo-final_mixed_yellow.ico" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="DiffScriptsDir">
@@ -708,13 +690,6 @@
       </Feature>
       <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
         <ComponentRef Id="GitExtensions.desktop" />
-      </Feature>
-      <Feature Id="Icons" Title="Extra application icons" Level="2">
-        <ComponentRef Id="Blue.ico" />
-        <ComponentRef Id="Green.ico" />
-        <ComponentRef Id="Purple.ico" />
-        <ComponentRef Id="Red.ico" />
-        <ComponentRef Id="Yellow.ico" />
       </Feature>
       <Feature Id="DiffScripts" Title="Custom merge scripts" Level="1">
         <ComponentRef Id="mergedoc.js" />

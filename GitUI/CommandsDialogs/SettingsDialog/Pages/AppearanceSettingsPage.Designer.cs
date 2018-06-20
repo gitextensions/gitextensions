@@ -31,11 +31,13 @@
             System.Windows.Forms.TableLayoutPanel tlpnlMain;
             this.gbGeneral = new System.Windows.Forms.GroupBox();
             this.tlpnlGeneral = new System.Windows.Forms.TableLayoutPanel();
+            this.cbBranchOrderingCriteria = new System.Windows.Forms.ComboBox();
             this.chkShowRelativeDate = new System.Windows.Forms.CheckBox();
             this.truncatePathMethod = new System.Windows.Forms.ComboBox();
             this.truncateLongFilenames = new System.Windows.Forms.Label();
             this.chkEnableAutoScale = new System.Windows.Forms.CheckBox();
             this.chkShowCurrentBranchInVisualStudio = new System.Windows.Forms.CheckBox();
+            this.lblBranchOrder = new System.Windows.Forms.Label();
             this.gbLanguages = new System.Windows.Forms.GroupBox();
             this.tlpnlLanguage = new System.Windows.Forms.TableLayoutPanel();
             this.Dictionary = new System.Windows.Forms.ComboBox();
@@ -82,7 +84,7 @@
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
-            tlpnlMain.Size = new System.Drawing.Size(2465, 1355);
+            tlpnlMain.Size = new System.Drawing.Size(757, 515);
             tlpnlMain.TabIndex = 0;
             // 
             // gbGeneral
@@ -94,7 +96,7 @@
             this.gbGeneral.Location = new System.Drawing.Point(3, 3);
             this.gbGeneral.Name = "gbGeneral";
             this.gbGeneral.Padding = new System.Windows.Forms.Padding(8);
-            this.gbGeneral.Size = new System.Drawing.Size(2459, 126);
+            this.gbGeneral.Size = new System.Drawing.Size(751, 153);
             this.gbGeneral.TabIndex = 0;
             this.gbGeneral.TabStop = false;
             this.gbGeneral.Text = "General";
@@ -107,21 +109,37 @@
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpnlGeneral.Controls.Add(this.cbBranchOrderingCriteria, 1, 3);
             this.tlpnlGeneral.Controls.Add(this.chkShowRelativeDate, 0, 0);
-            this.tlpnlGeneral.Controls.Add(this.truncatePathMethod, 1, 3);
-            this.tlpnlGeneral.Controls.Add(this.truncateLongFilenames, 0, 3);
+            this.tlpnlGeneral.Controls.Add(this.truncatePathMethod, 1, 4);
+            this.tlpnlGeneral.Controls.Add(this.truncateLongFilenames, 0, 4);
             this.tlpnlGeneral.Controls.Add(this.chkEnableAutoScale, 0, 2);
             this.tlpnlGeneral.Controls.Add(this.chkShowCurrentBranchInVisualStudio, 0, 1);
+            this.tlpnlGeneral.Controls.Add(this.lblBranchOrder, 0, 3);
             this.tlpnlGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlGeneral.Location = new System.Drawing.Point(8, 22);
             this.tlpnlGeneral.Name = "tlpnlGeneral";
-            this.tlpnlGeneral.RowCount = 4;
+            this.tlpnlGeneral.RowCount = 5;
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.Size = new System.Drawing.Size(2443, 96);
+            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlGeneral.Size = new System.Drawing.Size(735, 123);
             this.tlpnlGeneral.TabIndex = 0;
+            // 
+            // cbBranchOrderingCriteria
+            // 
+            this.cbBranchOrderingCriteria.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cbBranchOrderingCriteria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbBranchOrderingCriteria.FormattingEnabled = true;
+            this.cbBranchOrderingCriteria.Items.AddRange(new object[] {
+            "Last access date",
+            "Alphabetically"});
+            this.cbBranchOrderingCriteria.Location = new System.Drawing.Point(130, 72);
+            this.cbBranchOrderingCriteria.Name = "cbBranchOrderingCriteria";
+            this.cbBranchOrderingCriteria.Size = new System.Drawing.Size(154, 21);
+            this.cbBranchOrderingCriteria.TabIndex = 4;
             // 
             // chkShowRelativeDate
             // 
@@ -130,7 +148,7 @@
             this.chkShowRelativeDate.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkShowRelativeDate.Location = new System.Drawing.Point(3, 3);
             this.chkShowRelativeDate.Name = "chkShowRelativeDate";
-            this.chkShowRelativeDate.Size = new System.Drawing.Size(256, 17);
+            this.chkShowRelativeDate.Size = new System.Drawing.Size(281, 17);
             this.chkShowRelativeDate.TabIndex = 0;
             this.chkShowRelativeDate.Text = "Show relative date instead of full date";
             this.chkShowRelativeDate.UseVisualStyleBackColor = true;
@@ -145,16 +163,16 @@
             "Compact",
             "Trim start",
             "Filename only"});
-            this.truncatePathMethod.Location = new System.Drawing.Point(130, 72);
+            this.truncatePathMethod.Location = new System.Drawing.Point(130, 99);
             this.truncatePathMethod.Name = "truncatePathMethod";
-            this.truncatePathMethod.Size = new System.Drawing.Size(129, 21);
+            this.truncatePathMethod.Size = new System.Drawing.Size(154, 21);
             this.truncatePathMethod.TabIndex = 4;
             // 
             // truncateLongFilenames
             // 
             this.truncateLongFilenames.AutoSize = true;
             this.truncateLongFilenames.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.truncateLongFilenames.Location = new System.Drawing.Point(3, 69);
+            this.truncateLongFilenames.Location = new System.Drawing.Point(3, 96);
             this.truncateLongFilenames.Name = "truncateLongFilenames";
             this.truncateLongFilenames.Size = new System.Drawing.Size(121, 27);
             this.truncateLongFilenames.TabIndex = 3;
@@ -168,7 +186,7 @@
             this.chkEnableAutoScale.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkEnableAutoScale.Location = new System.Drawing.Point(3, 49);
             this.chkEnableAutoScale.Name = "chkEnableAutoScale";
-            this.chkEnableAutoScale.Size = new System.Drawing.Size(256, 17);
+            this.chkEnableAutoScale.Size = new System.Drawing.Size(281, 17);
             this.chkEnableAutoScale.TabIndex = 2;
             this.chkEnableAutoScale.Text = "Auto scale user interface when high DPI is used";
             this.chkEnableAutoScale.UseVisualStyleBackColor = true;
@@ -180,10 +198,21 @@
             this.chkShowCurrentBranchInVisualStudio.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkShowCurrentBranchInVisualStudio.Location = new System.Drawing.Point(3, 26);
             this.chkShowCurrentBranchInVisualStudio.Name = "chkShowCurrentBranchInVisualStudio";
-            this.chkShowCurrentBranchInVisualStudio.Size = new System.Drawing.Size(256, 17);
+            this.chkShowCurrentBranchInVisualStudio.Size = new System.Drawing.Size(281, 17);
             this.chkShowCurrentBranchInVisualStudio.TabIndex = 1;
             this.chkShowCurrentBranchInVisualStudio.Text = "Show current branch in Visual Studio";
             this.chkShowCurrentBranchInVisualStudio.UseVisualStyleBackColor = true;
+            // 
+            // lblBranchOrder
+            // 
+            this.lblBranchOrder.AutoSize = true;
+            this.lblBranchOrder.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblBranchOrder.Location = new System.Drawing.Point(3, 69);
+            this.lblBranchOrder.Name = "lblBranchOrder";
+            this.lblBranchOrder.Size = new System.Drawing.Size(121, 27);
+            this.lblBranchOrder.TabIndex = 5;
+            this.lblBranchOrder.Text = "Branch order";
+            this.lblBranchOrder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // gbLanguages
             // 
@@ -191,10 +220,10 @@
             this.gbLanguages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbLanguages.Controls.Add(this.tlpnlLanguage);
             this.gbLanguages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbLanguages.Location = new System.Drawing.Point(3, 277);
+            this.gbLanguages.Location = new System.Drawing.Point(3, 304);
             this.gbLanguages.Name = "gbLanguages";
             this.gbLanguages.Padding = new System.Windows.Forms.Padding(8);
-            this.gbLanguages.Size = new System.Drawing.Size(2459, 84);
+            this.gbLanguages.Size = new System.Drawing.Size(751, 84);
             this.gbLanguages.TabIndex = 2;
             this.gbLanguages.TabStop = false;
             this.gbLanguages.Text = "Language";
@@ -220,7 +249,7 @@
             this.tlpnlLanguage.RowCount = 2;
             this.tlpnlLanguage.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlLanguage.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlLanguage.Size = new System.Drawing.Size(2443, 54);
+            this.tlpnlLanguage.Size = new System.Drawing.Size(735, 54);
             this.tlpnlLanguage.TabIndex = 0;
             // 
             // Dictionary
@@ -300,10 +329,10 @@
             this.gbAuthorImages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbAuthorImages.Controls.Add(this.tlpnlAuthor);
             this.gbAuthorImages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbAuthorImages.Location = new System.Drawing.Point(3, 135);
+            this.gbAuthorImages.Location = new System.Drawing.Point(3, 162);
             this.gbAuthorImages.Name = "gbAuthorImages";
             this.gbAuthorImages.Padding = new System.Windows.Forms.Padding(8);
-            this.gbAuthorImages.Size = new System.Drawing.Size(2459, 136);
+            this.gbAuthorImages.Size = new System.Drawing.Size(751, 136);
             this.gbAuthorImages.TabIndex = 1;
             this.gbAuthorImages.TabStop = false;
             this.gbAuthorImages.Text = "Author images";
@@ -330,7 +359,7 @@
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlAuthor.Size = new System.Drawing.Size(2443, 106);
+            this.tlpnlAuthor.Size = new System.Drawing.Size(735, 106);
             this.tlpnlAuthor.TabIndex = 0;
             // 
             // ShowAuthorGravatar
@@ -427,7 +456,7 @@
             this.MinimumSize = new System.Drawing.Size(258, 255);
             this.Name = "AppearanceSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(2481, 1371);
+            this.Size = new System.Drawing.Size(773, 531);
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             this.gbGeneral.ResumeLayout(false);
@@ -475,5 +504,7 @@
         private System.Windows.Forms.TableLayoutPanel tlpnlLanguage;
         private System.Windows.Forms.TableLayoutPanel tlpnlGeneral;
         private System.Windows.Forms.TableLayoutPanel tlpnlAuthor;
+        private System.Windows.Forms.Label lblBranchOrder;
+        private System.Windows.Forms.ComboBox cbBranchOrderingCriteria;
     }
 }
