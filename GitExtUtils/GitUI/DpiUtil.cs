@@ -52,6 +52,23 @@ namespace GitExtUtils.GitUI
         public static bool IsNonStandard => DpiX != 96 || DpiY != 96;
 
         /// <summary>
+        /// BUG: looks like a bug in WinForms - control's margin gets scaled beyond expectations
+        /// For example, if the design was done at 100% and Windows is set to scale to 200%, NUD's margins gets set at 96...
+        /// </summary>
+        /// <param name="control">The control that needs to have margins reset to default values and scaled appropriately.</param>
+        public static void ScaleDefaultMargins([NotNull] Control control)
+        {
+            if (control is Label)
+            {
+                control.Margin = Scale(new Padding(3, 0, 3, 0));
+            }
+            else
+            {
+                control.Margin = Scale(new Padding(3));
+            }
+        }
+
+        /// <summary>
         /// Returns a scaled copy of <paramref name="size"/> which takes equivalent
         /// screen space at the current DPI as the original would at 96 DPI.
         /// </summary>
