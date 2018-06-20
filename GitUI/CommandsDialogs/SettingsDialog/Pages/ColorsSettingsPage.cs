@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
-using GitExtUtils.GitUI;
 using GitUI.Editor;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -14,36 +12,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             Text = "Colors";
             Translate();
-        }
-
-        private static int GetIconStyleIndex(string text)
-        {
-            switch (text.ToLowerInvariant())
-            {
-                case "large":
-                    return 1;
-                case "small":
-                    return 2;
-                case "cow":
-                    return 3;
-                default:
-                    return 0;
-            }
-        }
-
-        private static string GetIconStyleString(int index)
-        {
-            switch (index)
-            {
-                case 1:
-                    return "large";
-                case 2:
-                    return "small";
-                case 3:
-                    return "cow";
-                default:
-                    return "default";
-            }
         }
 
         protected override void SettingsToPage()
@@ -94,19 +62,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_ColorAuthoredRevisions.BackColor = AppSettings.AuthoredRevisionsColor;
             _NO_TRANSLATE_ColorAuthoredRevisions.Text = AppSettings.AuthoredRevisionsColor.Name;
             _NO_TRANSLATE_ColorAuthoredRevisions.ForeColor = ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorAuthoredRevisions.BackColor);
-
-            string iconColor = AppSettings.IconColor.ToLower();
-            DefaultIcon.Checked = iconColor == "default";
-            BlueIcon.Checked = iconColor == "blue";
-            GreenIcon.Checked = iconColor == "green";
-            PurpleIcon.Checked = iconColor == "purple";
-            RedIcon.Checked = iconColor == "red";
-            YellowIcon.Checked = iconColor == "yellow";
-            RandomIcon.Checked = iconColor == "random";
-
-            IconStyle.SelectedIndex = GetIconStyleIndex(AppSettings.IconStyle);
-
-            ShowIconPreview();
         }
 
         protected override void PageToSettings()
@@ -131,69 +86,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DiffAddedExtraColor = _NO_TRANSLATE_ColorAddedLineDiffLabel.BackColor;
             AppSettings.DiffRemovedExtraColor = _NO_TRANSLATE_ColorRemovedLineDiffLabel.BackColor;
             AppSettings.DiffSectionColor = _NO_TRANSLATE_ColorSectionLabel.BackColor;
-
-            AppSettings.IconColor = GetSelectedApplicationIconColor();
-            AppSettings.IconStyle = GetIconStyleString(IconStyle.SelectedIndex);
-        }
-
-        private string GetSelectedApplicationIconColor()
-        {
-            if (BlueIcon.Checked)
-            {
-                return "blue";
-            }
-
-            if (LightblueIcon.Checked)
-            {
-                return "lightblue";
-            }
-
-            if (GreenIcon.Checked)
-            {
-                return "green";
-            }
-
-            if (PurpleIcon.Checked)
-            {
-                return "purple";
-            }
-
-            if (RedIcon.Checked)
-            {
-                return "red";
-            }
-
-            if (YellowIcon.Checked)
-            {
-                return "yellow";
-            }
-
-            if (RandomIcon.Checked)
-            {
-                return "random";
-            }
-
-            return "default";
-        }
-
-        private void IconStyle_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (IsLoadingSettings)
-            {
-                return;
-            }
-
-            ShowIconPreview();
-        }
-
-        private void IconColor_CheckedChanged(object sender, EventArgs e)
-        {
-            if (IsLoadingSettings)
-            {
-                return;
-            }
-
-            ShowIconPreview();
         }
 
         private void MulticolorBranches_CheckedChanged(object sender, EventArgs e)
@@ -207,44 +99,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 _NO_TRANSLATE_ColorGraphLabel.Visible = true;
                 StripedBanchChange.Enabled = false;
-            }
-        }
-
-        private void ShowIconPreview()
-        {
-            switch (IconStyle.SelectedIndex)
-            {
-                case 0:
-                    IconPreview.Image = GetIcon("Large", 32);
-                    IconPreviewSmall.Image = GetIcon("Small", 16);
-                    break;
-                case 1:
-                    IconPreview.Image = GetIcon("Small", 32);
-                    IconPreviewSmall.Image = GetIcon("Small", 16);
-                    break;
-                case 2:
-                    IconPreview.Image = GetIcon("Large", 32);
-                    IconPreviewSmall.Image = GetIcon("Large", 16);
-                    break;
-                case 3:
-                    IconPreview.Image = GetIcon("Cow", 32);
-                    IconPreviewSmall.Image = GetIcon("Cow", 16);
-                    break;
-            }
-
-            Image GetIcon(string name, int size)
-            {
-                var icon = GitExtensionsForm.GetApplicationIcon(name, GetSelectedApplicationIconColor());
-
-                var targetWidth = (int)(DpiUtil.ScaleX * size);
-                var targetHeight = (int)(DpiUtil.ScaleY * size);
-
-                if (icon.Width != targetWidth && icon.Height != targetHeight)
-                {
-                    icon = new Icon(icon, targetWidth, targetHeight);
-                }
-
-                return icon.ToBitmap();
             }
         }
 

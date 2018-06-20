@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,7 +47,6 @@ namespace GitUI
         }
 
         public IGitModule GitModule => Module;
-        public Icon FormIcon => GitExtensionsForm.ApplicationIcon;
 
         #region IGitUICommands Members
 

@@ -276,66 +276,6 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon cow_head {
-            get {
-                object obj = ResourceManager.GetObject("cow_head", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon cow_head_blue {
-            get {
-                object obj = ResourceManager.GetObject("cow_head_blue", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon cow_head_green {
-            get {
-                object obj = ResourceManager.GetObject("cow_head_green", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon cow_head_purple {
-            get {
-                object obj = ResourceManager.GetObject("cow_head_purple", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon cow_head_red {
-            get {
-                object obj = ResourceManager.GetObject("cow_head_red", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon cow_head_yellow {
-            get {
-                object obj = ResourceManager.GetObject("cow_head_yellow", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
         /// </summary>
         internal static System.IO.UnmanagedMemoryStream cow_moo {
@@ -546,129 +486,9 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon git_extensions_logo_final_blue {
-            get {
-                object obj = ResourceManager.GetObject("git_extensions_logo_final_blue", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon git_extensions_logo_final_green {
-            get {
-                object obj = ResourceManager.GetObject("git_extensions_logo_final_green", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon git_extensions_logo_final_lightblue {
-            get {
-                object obj = ResourceManager.GetObject("git_extensions_logo_final_lightblue", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
         internal static System.Drawing.Icon git_extensions_logo_final_mixed {
             get {
                 object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon git_extensions_logo_final_mixed_blue {
-            get {
-                object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed_blue", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon git_extensions_logo_final_mixed_green {
-            get {
-                object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed_green", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon git_extensions_logo_final_mixed_lightblue {
-            get {
-                object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed_lightblue", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon git_extensions_logo_final_mixed_purple {
-            get {
-                object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed_purple", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon git_extensions_logo_final_mixed_red {
-            get {
-                object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed_red", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon git_extensions_logo_final_mixed_yellow {
-            get {
-                object obj = ResourceManager.GetObject("git_extensions_logo_final_mixed_yellow", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon git_extensions_logo_final_purple {
-            get {
-                object obj = ResourceManager.GetObject("git_extensions_logo_final_purple", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon git_extensions_logo_final_red {
-            get {
-                object obj = ResourceManager.GetObject("git_extensions_logo_final_red", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon git_extensions_logo_final_yellow {
-            get {
-                object obj = ResourceManager.GetObject("git_extensions_logo_final_yellow", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -1875,15 +1695,13 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap StarBw
-        {
-            get
-            {
+        internal static System.Drawing.Bitmap StarBw {
+            get {
                 object obj = ResourceManager.GetObject("StarBw", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
@@ -2033,66 +1851,6 @@ namespace GitUI.Properties {
             get {
                 object obj = ResourceManager.GetObject("x_with_arrow_32", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon x_with_arrow_blue {
-            get {
-                object obj = ResourceManager.GetObject("x_with_arrow_blue", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon x_with_arrow_green {
-            get {
-                object obj = ResourceManager.GetObject("x_with_arrow_green", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon x_with_arrow_lightblue {
-            get {
-                object obj = ResourceManager.GetObject("x_with_arrow_lightblue", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon x_with_arrow_purple {
-            get {
-                object obj = ResourceManager.GetObject("x_with_arrow_purple", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon x_with_arrow_red {
-            get {
-                object obj = ResourceManager.GetObject("x_with_arrow_red", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon x_with_arrow_yellow {
-            get {
-                object obj = ResourceManager.GetObject("x_with_arrow_yellow", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
             }
         }
     }

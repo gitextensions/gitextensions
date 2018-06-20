@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Drawing;
-using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
@@ -39,12 +37,6 @@ namespace GitUI.CommandsDialogs
 
         private void AboutBox_Load(object sender, EventArgs e)
         {
-            Bitmap image = Lemmings.GetPictureBoxImage(DateTime.Now);
-            if (image != null)
-            {
-                logoPictureBox.Image = DpiUtil.Scale(image);
-            }
-
             thanksTimer_Tick(null, null);
             thanksTimer.Enabled = true;
             thanksTimer.Interval = 500;

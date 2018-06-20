@@ -28,20 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.gbAppIcon = new System.Windows.Forms.GroupBox();
-            this.label55 = new System.Windows.Forms.Label();
-            this.IconPreviewSmall = new System.Windows.Forms.PictureBox();
-            this.IconPreview = new System.Windows.Forms.PictureBox();
-            this.IconStyle = new System.Windows.Forms.ComboBox();
-            this.label54 = new System.Windows.Forms.Label();
-            this.LightblueIcon = new System.Windows.Forms.RadioButton();
-            this.RandomIcon = new System.Windows.Forms.RadioButton();
-            this.YellowIcon = new System.Windows.Forms.RadioButton();
-            this.RedIcon = new System.Windows.Forms.RadioButton();
-            this.GreenIcon = new System.Windows.Forms.RadioButton();
-            this.PurpleIcon = new System.Windows.Forms.RadioButton();
-            this.BlueIcon = new System.Windows.Forms.RadioButton();
-            this.DefaultIcon = new System.Windows.Forms.RadioButton();
             this.gbRevisionGraph = new System.Windows.Forms.GroupBox();
             this.chkDrawAlternateBackColor = new System.Windows.Forms.CheckBox();
             this.HighlightAuthoredRevisions = new System.Windows.Forms.CheckBox();
@@ -72,178 +58,9 @@
             this.label31 = new System.Windows.Forms.Label();
             this.label29 = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorAddedLineLabel = new System.Windows.Forms.Label();
-            this.gbAppIcon.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.IconPreviewSmall)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.IconPreview)).BeginInit();
             this.gbRevisionGraph.SuspendLayout();
             this.gbDiffView.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // gbAppIcon
-            // 
-            this.gbAppIcon.Controls.Add(this.label55);
-            this.gbAppIcon.Controls.Add(this.IconPreviewSmall);
-            this.gbAppIcon.Controls.Add(this.IconPreview);
-            this.gbAppIcon.Controls.Add(this.IconStyle);
-            this.gbAppIcon.Controls.Add(this.label54);
-            this.gbAppIcon.Controls.Add(this.LightblueIcon);
-            this.gbAppIcon.Controls.Add(this.RandomIcon);
-            this.gbAppIcon.Controls.Add(this.YellowIcon);
-            this.gbAppIcon.Controls.Add(this.RedIcon);
-            this.gbAppIcon.Controls.Add(this.GreenIcon);
-            this.gbAppIcon.Controls.Add(this.PurpleIcon);
-            this.gbAppIcon.Controls.Add(this.BlueIcon);
-            this.gbAppIcon.Controls.Add(this.DefaultIcon);
-            this.gbAppIcon.Location = new System.Drawing.Point(402, 3);
-            this.gbAppIcon.Name = "gbAppIcon";
-            this.gbAppIcon.Size = new System.Drawing.Size(321, 279);
-            this.gbAppIcon.TabIndex = 1;
-            this.gbAppIcon.TabStop = false;
-            this.gbAppIcon.Text = "Application Icon";
-            // 
-            // label55
-            // 
-            this.label55.AutoSize = true;
-            this.label55.Location = new System.Drawing.Point(13, 55);
-            this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(54, 13);
-            this.label55.TabIndex = 2;
-            this.label55.Text = "Icon color";
-            // 
-            // IconPreviewSmall
-            // 
-            this.IconPreviewSmall.Location = new System.Drawing.Point(227, 66);
-            this.IconPreviewSmall.Name = "IconPreviewSmall";
-            this.IconPreviewSmall.Size = new System.Drawing.Size(16, 16);
-            this.IconPreviewSmall.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.IconPreviewSmall.TabIndex = 13;
-            this.IconPreviewSmall.TabStop = false;
-            // 
-            // IconPreview
-            // 
-            this.IconPreview.Location = new System.Drawing.Point(265, 50);
-            this.IconPreview.Name = "IconPreview";
-            this.IconPreview.Size = new System.Drawing.Size(32, 32);
-            this.IconPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.IconPreview.TabIndex = 12;
-            this.IconPreview.TabStop = false;
-            // 
-            // IconStyle
-            // 
-            this.IconStyle.FormattingEnabled = true;
-            this.IconStyle.Items.AddRange(new object[] {
-            "Default",
-            "Large",
-            "Small",
-            "Cow"});
-            this.IconStyle.Location = new System.Drawing.Point(111, 23);
-            this.IconStyle.Name = "IconStyle";
-            this.IconStyle.Size = new System.Drawing.Size(121, 21);
-            this.IconStyle.TabIndex = 1;
-            this.IconStyle.SelectedIndexChanged += new System.EventHandler(this.IconStyle_SelectedIndexChanged);
-            // 
-            // label54
-            // 
-            this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(13, 26);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(54, 13);
-            this.label54.TabIndex = 0;
-            this.label54.Text = "Icon style";
-            // 
-            // LightblueIcon
-            // 
-            this.LightblueIcon.AutoSize = true;
-            this.LightblueIcon.Location = new System.Drawing.Point(111, 81);
-            this.LightblueIcon.Name = "LightblueIcon";
-            this.LightblueIcon.Size = new System.Drawing.Size(71, 17);
-            this.LightblueIcon.TabIndex = 4;
-            this.LightblueIcon.TabStop = true;
-            this.LightblueIcon.Text = "Light blue";
-            this.LightblueIcon.UseVisualStyleBackColor = true;
-            // 
-            // RandomIcon
-            // 
-            this.RandomIcon.AutoSize = true;
-            this.RandomIcon.Location = new System.Drawing.Point(111, 250);
-            this.RandomIcon.Name = "RandomIcon";
-            this.RandomIcon.Size = new System.Drawing.Size(64, 17);
-            this.RandomIcon.TabIndex = 10;
-            this.RandomIcon.TabStop = true;
-            this.RandomIcon.Text = "Random";
-            this.RandomIcon.UseVisualStyleBackColor = true;
-            // 
-            // YellowIcon
-            // 
-            this.YellowIcon.AutoSize = true;
-            this.YellowIcon.Location = new System.Drawing.Point(111, 222);
-            this.YellowIcon.Name = "YellowIcon";
-            this.YellowIcon.Size = new System.Drawing.Size(55, 17);
-            this.YellowIcon.TabIndex = 9;
-            this.YellowIcon.TabStop = true;
-            this.YellowIcon.Text = "Yellow";
-            this.YellowIcon.UseVisualStyleBackColor = true;
-            this.YellowIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
-            // 
-            // RedIcon
-            // 
-            this.RedIcon.AutoSize = true;
-            this.RedIcon.Location = new System.Drawing.Point(111, 194);
-            this.RedIcon.Name = "RedIcon";
-            this.RedIcon.Size = new System.Drawing.Size(44, 17);
-            this.RedIcon.TabIndex = 8;
-            this.RedIcon.TabStop = true;
-            this.RedIcon.Text = "Red";
-            this.RedIcon.UseVisualStyleBackColor = true;
-            this.RedIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
-            // 
-            // GreenIcon
-            // 
-            this.GreenIcon.AutoSize = true;
-            this.GreenIcon.Location = new System.Drawing.Point(111, 165);
-            this.GreenIcon.Name = "GreenIcon";
-            this.GreenIcon.Size = new System.Drawing.Size(54, 17);
-            this.GreenIcon.TabIndex = 7;
-            this.GreenIcon.TabStop = true;
-            this.GreenIcon.Text = "Green";
-            this.GreenIcon.UseVisualStyleBackColor = true;
-            this.GreenIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
-            // 
-            // PurpleIcon
-            // 
-            this.PurpleIcon.AutoSize = true;
-            this.PurpleIcon.Location = new System.Drawing.Point(111, 137);
-            this.PurpleIcon.Name = "PurpleIcon";
-            this.PurpleIcon.Size = new System.Drawing.Size(55, 17);
-            this.PurpleIcon.TabIndex = 6;
-            this.PurpleIcon.TabStop = true;
-            this.PurpleIcon.Text = "Purple";
-            this.PurpleIcon.UseVisualStyleBackColor = true;
-            this.PurpleIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
-            // 
-            // BlueIcon
-            // 
-            this.BlueIcon.AutoSize = true;
-            this.BlueIcon.Location = new System.Drawing.Point(111, 109);
-            this.BlueIcon.Name = "BlueIcon";
-            this.BlueIcon.Size = new System.Drawing.Size(45, 17);
-            this.BlueIcon.TabIndex = 5;
-            this.BlueIcon.TabStop = true;
-            this.BlueIcon.Text = "Blue";
-            this.BlueIcon.UseVisualStyleBackColor = true;
-            this.BlueIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
-            // 
-            // DefaultIcon
-            // 
-            this.DefaultIcon.AutoSize = true;
-            this.DefaultIcon.Location = new System.Drawing.Point(111, 53);
-            this.DefaultIcon.Name = "DefaultIcon";
-            this.DefaultIcon.Size = new System.Drawing.Size(60, 17);
-            this.DefaultIcon.TabIndex = 3;
-            this.DefaultIcon.TabStop = true;
-            this.DefaultIcon.Text = "Default";
-            this.DefaultIcon.UseVisualStyleBackColor = true;
-            this.DefaultIcon.CheckedChanged += new System.EventHandler(this.IconColor_CheckedChanged);
             // 
             // gbRevisionGraph
             // 
@@ -598,15 +415,10 @@
             // ColorsSettingsPage
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.gbAppIcon);
             this.Controls.Add(this.gbRevisionGraph);
             this.Controls.Add(this.gbDiffView);
             this.Name = "ColorsSettingsPage";
-            this.Size = new System.Drawing.Size(1360, 856);
-            this.gbAppIcon.ResumeLayout(false);
-            this.gbAppIcon.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.IconPreviewSmall)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.IconPreview)).EndInit();
+            this.Size = new System.Drawing.Size(773, 614);
             this.gbRevisionGraph.ResumeLayout(false);
             this.gbRevisionGraph.PerformLayout();
             this.gbDiffView.ResumeLayout(false);
@@ -616,21 +428,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.GroupBox gbAppIcon;
-        private System.Windows.Forms.Label label55;
-        private System.Windows.Forms.PictureBox IconPreviewSmall;
-        private System.Windows.Forms.PictureBox IconPreview;
-        private System.Windows.Forms.ComboBox IconStyle;
-        private System.Windows.Forms.Label label54;
-        private System.Windows.Forms.RadioButton LightblueIcon;
-        private System.Windows.Forms.RadioButton RandomIcon;
-        private System.Windows.Forms.RadioButton YellowIcon;
-        private System.Windows.Forms.RadioButton RedIcon;
-        private System.Windows.Forms.RadioButton GreenIcon;
-        private System.Windows.Forms.RadioButton PurpleIcon;
-        private System.Windows.Forms.RadioButton BlueIcon;
-        private System.Windows.Forms.RadioButton DefaultIcon;
         private System.Windows.Forms.GroupBox gbRevisionGraph;
         private System.Windows.Forms.CheckBox DrawNonRelativesTextGray;
         private System.Windows.Forms.CheckBox DrawNonRelativesGray;

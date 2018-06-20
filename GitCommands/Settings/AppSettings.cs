@@ -502,18 +502,6 @@ namespace GitCommands
             set => SetBool("enableautoscale", value);
         }
 
-        public static string IconColor
-        {
-            get => GetString("iconcolor", "default");
-            set => SetString("iconcolor", value);
-        }
-
-        public static string IconStyle
-        {
-            get => GetString("iconstyle", "default");
-            set => SetString("iconstyle", value);
-        }
-
         /// <summary>
         /// Gets the size of the commit author avatar. Set to 80px.
         /// </summary>

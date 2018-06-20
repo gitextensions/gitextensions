@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces
@@ -18,7 +17,6 @@ namespace GitUIPluginInterfaces
         string GitCommand(string arguments);
         IGitRemoteCommand CreateRemoteCommand();
         void CacheAvatar(string email);
-        Icon FormIcon { get; }
 
         /// <summary>
         /// RepoChangedNotifier.Notify() should be called after each action that changess repo state
