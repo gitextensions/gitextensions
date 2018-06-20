@@ -76,7 +76,7 @@
             this.cbDeleteNewFilesAndDirectories.Name = "cbDeleteNewFilesAndDirectories";
             this.cbDeleteNewFilesAndDirectories.Size = new System.Drawing.Size(251, 20);
             this.cbDeleteNewFilesAndDirectories.TabIndex = 3;
-            this.cbDeleteNewFilesAndDirectories.Text = "Also delete new files and/or directories";
+            this.cbDeleteNewFilesAndDirectories.Text = "Also delete &new files and/or directories";
             this.cbDeleteNewFilesAndDirectories.UseVisualStyleBackColor = true;
             // 
             // label2
