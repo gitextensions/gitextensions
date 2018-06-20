@@ -10659,7 +10659,6 @@ If this is a central repository (bare repository without a working directory):
       <trans-unit id="_scriptSettingsPageHelpDisplayContent.Text">
         <source>User Input:
 {UserInput}
-{UserFile}
 
 Working Dir:
 {WorkingDir}
@@ -10698,7 +10697,6 @@ Current Branch:
 {cDefaultRemotePathFromUrl}</source>
         <target>[Ŭşḗř Īƞƥŭŧ:
 {UserInput}
-{UserFile}
 
 Ẇǿřķīƞɠ Ḓīř:
 {WorkingDir}

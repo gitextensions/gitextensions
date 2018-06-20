@@ -10048,7 +10048,6 @@ If this is a central repository (bare repository without a working directory):
       <trans-unit id="_scriptSettingsPageHelpDisplayContent.Text">
         <source>User Input:
 {UserInput}
-{UserFile}
 
 Working Dir:
 {WorkingDir}

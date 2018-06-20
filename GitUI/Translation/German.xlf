@@ -10583,7 +10583,6 @@ Wenn dies ein zentralisiertes Repository ist (ein sogenanntes Bare Repository):
       <trans-unit id="_scriptSettingsPageHelpDisplayContent.Text">
         <source>User Input:
 {UserInput}
-{UserFile}
 
 Working Dir:
 {WorkingDir}
@@ -10622,7 +10621,6 @@ Current Branch:
 {cDefaultRemotePathFromUrl}</source>
         <target>Benutzereingabe:
 {UserInput}
-{UserFile}
 
 Arbeitsverzeichnis:
 {WorkingDir}

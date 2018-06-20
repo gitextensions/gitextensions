@@ -10455,7 +10455,6 @@ Si se trata de un repositorio central (repositorio sin un directorio de trabajo)
       <trans-unit id="_scriptSettingsPageHelpDisplayContent.Text">
         <source>User Input:
 {UserInput}
-{UserFile}
 
 Working Dir:
 {WorkingDir}

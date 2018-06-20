@@ -10683,7 +10683,6 @@ Si c'est un dépôt central (dépôt nu sans répertoire de travail) :
       <trans-unit id="_scriptSettingsPageHelpDisplayContent.Text">
         <source>User Input:
 {UserInput}
-{UserFile}
 
 Working Dir:
 {WorkingDir}
@@ -10722,7 +10721,6 @@ Current Branch:
 {cDefaultRemotePathFromUrl}</source>
         <target>Saisie utilisateur :
 {UserInput}
-{UserFile}
 
 Répertoire de travail:
 {WorkingDir}

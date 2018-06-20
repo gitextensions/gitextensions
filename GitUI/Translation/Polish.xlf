@@ -10507,7 +10507,6 @@ Jeżeli to centralne repozytorium (nagie repozytorium - bez katalogu roboczego):
       <trans-unit id="_scriptSettingsPageHelpDisplayContent.Text">
         <source>User Input:
 {UserInput}
-{UserFile}
 
 Working Dir:
 {WorkingDir}
@@ -10546,7 +10545,6 @@ Current Branch:
 {cDefaultRemotePathFromUrl}</source>
         <target>Dane użytkownika:
 {UserInput}
-{UserFile}
 
 Katalog roboczy:
 {WorkingDir}
