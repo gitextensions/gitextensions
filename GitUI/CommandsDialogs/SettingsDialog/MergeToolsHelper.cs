@@ -340,8 +340,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 case "kdiff3":
                     return "";
-                case "winmerge":
-                    return "\"" + exeFile + "\" -e -u -dl \"Original\" -dr \"Modified\" \"$MERGED\" \"$REMOTE\"";
             }
 
             return AutoConfigMergeToolCmd(mergeToolText, exeFile);
@@ -376,6 +374,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "\"" + exeFile + "\" --wait \"$MERGED\" ";
                 case "vsdiffmerge":
                     return "\"" + exeFile + "\" /m \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\"";
+                case "winmerge":
+                    return "\"" + exeFile + "\" -e -u  -wl -wr -fm -dl \"Mine: $LOCAL\" -dm \"Merged: $BASE\" -dr \"Theirs: $REMOTE\" \"$LOCAL\" \"$BASE\" \"$REMOTE\" -o \"$MERGED\"";
             }
 
             // other commands supported natively by git for windows
