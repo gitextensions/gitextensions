@@ -40,7 +40,7 @@ namespace GitCommands.Git
             Remote = remote;
         }
 
-        public override string GitComandName()
+        public override string GitCommandName()
         {
             return "checkout";
         }

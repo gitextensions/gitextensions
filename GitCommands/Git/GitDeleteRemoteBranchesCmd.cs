@@ -25,7 +25,7 @@ namespace GitCommands.Git
             _branches = branchLocalNames.ToList();
         }
 
-        public override string GitComandName()
+        public override string GitCommandName()
         {
             return "push";
         }

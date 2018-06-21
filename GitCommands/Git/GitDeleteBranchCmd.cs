@@ -21,7 +21,7 @@ namespace GitCommands
             _force = force;
         }
 
-        public override string GitComandName()
+        public override string GitCommandName()
         {
             return "branch";
         }
