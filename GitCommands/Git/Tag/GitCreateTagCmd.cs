@@ -15,7 +15,7 @@ namespace GitCommands.Git.Tag
 
         public string TagMessageFileName { get; }
 
-        public override string GitComandName()
+        public override string GitCommandName()
         {
             return "tag";
         }

@@ -36,7 +36,7 @@ namespace GitCommandsTests.Git
         public void TestGitCommandName()
         {
             GitCheckoutBranchCmd cmd = GetInstance(true);
-            Assert.AreEqual(cmd.GitComandName(), "checkout");
+            Assert.AreEqual(cmd.GitCommandName(), "checkout");
         }
 
         [Test]
