@@ -42,12 +42,7 @@ namespace GitExtensionsVSIX
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (package == null)
-            {
-                throw new ArgumentNullException(nameof(package));
-            }
-
-            _package = package;
+            _package = package ?? throw new ArgumentNullException(nameof(package));
             _application = dte;
             _commandService = menuCommandService;
 

@@ -204,12 +204,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         public void SetRulesTextAsOnDisk([NotNull] string text)
         {
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            _sRulesTextAsOnDisk = text;
+            _sRulesTextAsOnDisk = text ?? throw new ArgumentNullException(nameof(text));
         }
 
         /// <summary>
