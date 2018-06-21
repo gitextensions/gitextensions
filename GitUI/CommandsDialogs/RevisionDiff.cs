@@ -99,6 +99,11 @@ namespace GitUI.CommandsDialogs
 
         protected override bool ExecuteCommand(int cmd)
         {
+            if (DiffFiles.FilterFocused && IsTextEditKey(GetShortcutKeys(cmd)))
+            {
+                return false;
+            }
+
             switch ((Command)cmd)
             {
                 case Command.DeleteSelectedFiles: return DeleteSelectedFiles();
@@ -456,7 +461,7 @@ namespace GitUI.CommandsDialogs
         {
             GitItemStatus item = DiffFiles.SelectedItem;
 
-            if (item.IsTracked)
+            if (item != null && item.IsTracked)
             {
                 UICommands.StartFileHistoryDialog(this, item.Name, DiffFiles.Revision, true, true);
             }
@@ -538,7 +543,7 @@ namespace GitUI.CommandsDialogs
         {
             GitItemStatus item = DiffFiles.SelectedItem;
 
-            if (item.IsTracked)
+            if (item != null && item.IsTracked)
             {
                 UICommands.StartFileHistoryDialog(this, item.Name, DiffFiles.Revision);
             }
