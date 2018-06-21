@@ -34,37 +34,44 @@ namespace GitUI
                 switch (next)
                 {
                     case ButtonBase button:
-                    {
-                        if (button.Image != null)
                         {
-                            button.Image = DpiUtil.Scale(button.Image);
-                        }
+                            if (button.Image != null)
+                            {
+                                button.Image = DpiUtil.Scale(button.Image);
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
 
                     case PictureBox pictureBox:
-                    {
-                        if (pictureBox.Image != null)
                         {
-                            pictureBox.Image = DpiUtil.Scale(pictureBox.Image);
+                            if (pictureBox.Image != null)
+                            {
+                                pictureBox.Image = DpiUtil.Scale(pictureBox.Image);
+                            }
+
+                            break;
                         }
 
-                        break;
-                    }
-
                     case TabControl tabControl:
-                    {
-                        tabControl.Padding = DpiUtil.Scale(tabControl.Padding);
-                        EnqueueChildren();
-                        break;
-                    }
+                        {
+                            tabControl.Padding = DpiUtil.Scale(tabControl.Padding);
+                            EnqueueChildren();
+                            break;
+                        }
 
                     default:
-                    {
-                        EnqueueChildren();
-                        break;
-                    }
+                        {
+                            if (next is TextBoxBase || next is UpDownBase)
+                            {
+                                // BUG: looks like a bug in WinForms - control's margin gets scaled beyond expectations
+                                // see https://github.com/gitextensions/gitextensions/issues/5098
+                                DpiUtil.ScaleDefaultMargins(next);
+                            }
+
+                            EnqueueChildren();
+                            break;
+                        }
                 }
 
                 void EnqueueChildren()

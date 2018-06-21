@@ -44,6 +44,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             T result = new T();
 
+            result.AdjustForDpiScaling();
+
             result.Init(pageHost);
 
             return result;

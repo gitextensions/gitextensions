@@ -33,9 +33,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             base.OnRuntimeLoad();
 
             // align 1st columns across all tables
-            tlpnlGeneral.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblLanguage, lblSpellingDictionary);
-            tlpnlAuthor.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblLanguage, lblSpellingDictionary);
-            tlpnlLanguage.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblLanguage, lblSpellingDictionary);
+            tlpnlGeneral.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
+            tlpnlAuthor.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
+            tlpnlLanguage.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
 
             // align 2nd columns across all tables
             cbBranchOrderingCriteria.AdjustWidthToFitContent();

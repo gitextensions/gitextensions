@@ -173,6 +173,7 @@
             // 
             // lblShPath
             // 
+            this.lblShPath.AutoSize = true;
             this.lblShPath.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblShPath.Location = new System.Drawing.Point(3, 42);
             this.lblShPath.Name = "lblShPath";
