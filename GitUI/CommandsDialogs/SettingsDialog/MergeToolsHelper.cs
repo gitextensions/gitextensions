@@ -39,40 +39,34 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     continue;
                 }
 
+                string fullName = string.Empty;
                 string programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles");
 
-                string path;
-
-                if (!string.IsNullOrEmpty(programFilesPath))
+                if (CheckFileExists(programFilesPath))
                 {
-                    path = Path.Combine(programFilesPath, location);
-                    if (Directory.Exists(path))
-                    {
-                        string fullName = Path.Combine(path, fileName);
-                        if (File.Exists(fullName))
-                        {
-                            return fullName;
-                        }
-                    }
+                    return fullName;
                 }
 
-                if (IntPtr.Size == 8
-                    || (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
-                {
-                    programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+                programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
 
-                    if (!string.IsNullOrEmpty(programFilesPath))
-                    {
-                        path = Path.Combine(programFilesPath, location);
-                        if (Directory.Exists(path))
-                        {
-                            string fullName = Path.Combine(path, fileName);
-                            if (File.Exists(fullName))
-                            {
-                                return fullName;
-                            }
-                        }
-                    }
+                if ((IntPtr.Size == 8 ||
+                    !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))) &&
+                    CheckFileExists(programFilesPath))
+                {
+                    return fullName;
+                }
+
+                string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+                if (CheckFileExists(localAppDataPath))
+                {
+                    return fullName;
+                }
+
+                bool CheckFileExists(string path)
+                {
+                    fullName = Path.Combine(path, location, fileName);
+                    return File.Exists(fullName);
                 }
             }
 
