@@ -1160,6 +1160,10 @@ namespace GitCommands
             set => SetColor("diffaddedextracolor", value);
         }
 
+        #endregion
+
+        #region Fonts
+
         public static Font DiffFont
         {
             get => GetFont("difffont", new Font("Courier New", 10));
