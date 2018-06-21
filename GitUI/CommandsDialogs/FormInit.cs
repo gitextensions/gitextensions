@@ -39,8 +39,10 @@ namespace GitUI.CommandsDialogs
                 await this.SwitchToMainThreadAsync();
                 Directory.DataSource = repositoryHistory;
                 Directory.DisplayMember = nameof(Repository.Path);
-                Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath : dir;
             });
+
+            Directory.SelectedIndex = -1;
+            Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath : dir;
         }
 
         private void InitClick(object sender, EventArgs e)
