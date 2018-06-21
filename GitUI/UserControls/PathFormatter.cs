@@ -22,18 +22,8 @@ namespace GitUI
 
         public PathFormatter(Graphics graphics, Font font)
         {
-            if (graphics == null)
-            {
-                throw new ArgumentNullException(nameof(graphics));
-            }
-
-            if (font == null)
-            {
-                throw new ArgumentNullException(nameof(font));
-            }
-
-            _graphics = graphics;
-            _font = font;
+            _graphics = graphics ?? throw new ArgumentNullException(nameof(graphics));
+            _font = font ?? throw new ArgumentNullException(nameof(font));
         }
 
         private static string TruncatePath(string path, int length)
