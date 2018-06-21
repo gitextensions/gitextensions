@@ -84,5 +84,19 @@ namespace GitUI.CommandsDialogs
                 Directory.Text = userSelectedPath;
             }
         }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FormInit _form;
+
+            public TestAccessor(FormInit form)
+            {
+                _form = form;
+            }
+
+            public ComboBox DirectoryCombo => _form.Directory;
+        }
     }
 }
