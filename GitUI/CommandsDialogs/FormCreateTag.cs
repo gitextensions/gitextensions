@@ -80,14 +80,16 @@ namespace GitUI.CommandsDialogs
 
         private string CreateTag()
         {
-            if (string.IsNullOrWhiteSpace(commitPickerSmallControl1.SelectedCommitHash))
+            var objectId = commitPickerSmallControl1.SelectedCommitHash;
+
+            if (string.IsNullOrWhiteSpace(objectId))
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                 return string.Empty;
             }
 
             var createTagArgs = new GitCreateTagArgs(textBoxTagName.Text,
-                                                     commitPickerSmallControl1.SelectedCommitHash,
+                                                     objectId,
                                                      GetSelectedOperation(annotate.SelectedIndex),
                                                      tagMessage.Text,
                                                      textBoxGpgKey.Text,
