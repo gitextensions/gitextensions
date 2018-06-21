@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace GitCommands.Git.Tag
 {
     public sealed class GitCreateTagCmd : GitCommand
     {
-        public GitCreateTagCmd(GitCreateTagArgs args, string tagMessageFileName)
+        public GitCreateTagCmd(GitCreateTagArgs args, [CanBeNull] string tagMessageFileName)
         {
             Arguments = args;
             TagMessageFileName = tagMessageFileName;
@@ -13,6 +14,7 @@ namespace GitCommands.Git.Tag
 
         public GitCreateTagArgs Arguments { get; }
 
+        [CanBeNull]
         public string TagMessageFileName { get; }
 
         public override string GitCommandName()
