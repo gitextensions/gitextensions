@@ -224,7 +224,7 @@ namespace GitUI
             Controls.Add(content);
         }
 
-        internal void DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds, bool useEllipsis = true)
+        internal int DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds, bool useEllipsis = true)
         {
             var flags = TextFormatFlags.NoPrefix | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding;
 
@@ -245,6 +245,8 @@ namespace GitUI
             TextRenderer.DrawText(e.Graphics, text, font, bounds, color, flags);
 
             _toolTipProvider.SetTruncation(e.ColumnIndex, e.RowIndex, truncated: size.Width > bounds.Width);
+
+            return size.Width;
         }
 
         internal IndexWatcher IndexWatcher => _indexWatcher.Value;
@@ -866,6 +868,7 @@ namespace GitUI
 
                 void CheckUncommittedChanged(string filteredCurrentCheckout)
                 {
+                    _changeCount = new ChangeCount[] { new ChangeCount(), new ChangeCount() };
                     var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
                     var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
@@ -1743,6 +1746,47 @@ namespace GitUI
             _artificialStatus = null;
         }
 
+        public class ChangeCount
+        {
+            // Count for artificial commits
+            public int Changed { get; set; }
+            public int New { get; set; }
+            public int Deleted { get; set; }
+            public int SubmodulesChanged { get; set; }
+            public int SubmodulesDirty { get; set; }
+        }
+
+        private int GetChangeCountIndex(string guid)
+        {
+            if (guid != GitRevision.UnstagedGuid && guid != GitRevision.IndexGuid)
+            {
+                throw new ArgumentException("Invalid revision for GetChangeCount", guid);
+            }
+
+            return guid == GitRevision.UnstagedGuid ? 0 : 1;
+        }
+
+        private ChangeCount[] _changeCount;
+
+        public bool IsCountUpdated
+        {
+            get
+            {
+                return _changeCount != null;
+            }
+        }
+
+        public ChangeCount GetChangeCount(string guid)
+        {
+            var index = GetChangeCountIndex(guid);
+            if (_changeCount == null)
+            {
+                return null;
+            }
+
+            return _changeCount[index];
+        }
+
         public void UpdateArtificialCommitCount(
             [CanBeNull] IReadOnlyList<GitItemStatus> status,
             [CanBeNull] GitRevision unstagedRev = null,
@@ -1758,20 +1802,31 @@ namespace GitUI
 
             if (unstagedRev != null)
             {
-                var count = status.Count(item => item.Staged == StagedStatus.WorkTree);
-                unstagedRev.SubjectCount = Strings.GetUnstagedCountText(count);
+                var items = status.Where(item => item.Staged == StagedStatus.WorkTree);
+                UpdateChangeCount(GitRevision.UnstagedGuid, items);
             }
 
             if (stagedRev != null)
             {
-                var count = status.Count(item => item.Staged == StagedStatus.Index);
-                stagedRev.SubjectCount = Strings.GetStagedCountText(count);
+                var items = status.Where(item => item.Staged == StagedStatus.Index);
+                UpdateChangeCount(GitRevision.IndexGuid, items);
             }
 
-            // cache the status, if commits do not exist or for a refresh
+            // cache the status for a refresh
             _artificialStatus = status;
 
             _gridView.Invalidate();
+            return;
+
+            void UpdateChangeCount(string rev, IEnumerable<GitItemStatus> items)
+            {
+                var changeCount = _changeCount[GetChangeCountIndex(rev)];
+                changeCount.Changed = items.Count(item => !item.IsNew && !item.IsDeleted && !item.IsSubmodule);
+                changeCount.New = items.Count(item => item.IsNew && !item.IsSubmodule);
+                changeCount.Deleted = items.Count(item => item.IsDeleted && !item.IsSubmodule);
+                changeCount.SubmodulesChanged = items.Count(item => item.IsSubmodule && item.IsChanged);
+                changeCount.SubmodulesDirty = items.Count(item => item.IsSubmodule && !item.IsTracked);
+            }
         }
 
         internal void ToggleDrawNonRelativesGray()

@@ -104,16 +104,6 @@ namespace ResourceManager
             return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._yearsAgo.Text, value, Math.Abs(value));
         }
 
-        public static string GetUnstagedCountText(int value)
-        {
-            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._unstagedCountText.Text, value, Math.Abs(value));
-        }
-
-        public static string GetStagedCountText(int value)
-        {
-            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._stagedCountText.Text, value, Math.Abs(value));
-        }
-
         private readonly TranslationString _secondsAgo = new TranslationString("{0} {1:second|seconds} ago");
         private readonly TranslationString _minutesAgo = new TranslationString("{0} {1:minute|minutes} ago");
         private readonly TranslationString _hoursAgo   = new TranslationString("{0} {1:hour|hours} ago");
@@ -121,8 +111,5 @@ namespace ResourceManager
         private readonly TranslationString _weeksAgo   = new TranslationString("{0} {1:week|weeks} ago");
         private readonly TranslationString _monthsAgo  = new TranslationString("{0} {1:month|months} ago");
         private readonly TranslationString _yearsAgo   = new TranslationString("{0} {1:year|years} ago");
-
-        private readonly TranslationString _unstagedCountText = new TranslationString("{0} {1:file|files} with unstaged changes");
-        private readonly TranslationString _stagedCountText   = new TranslationString("{0} {1:file|files} with staged changes");
     }
 }
