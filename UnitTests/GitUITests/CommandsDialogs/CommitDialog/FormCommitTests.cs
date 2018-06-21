@@ -48,15 +48,15 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         {
             var generatedCommitMessage = Guid.NewGuid().ToString();
 
-            RunFormCommitTest(formCommit =>
+            RunFormTest(form =>
             {
-                Assert.IsEmpty(formCommit.GetTestAccessor().Message.Text);
-                formCommit.GetTestAccessor().Message.Text = generatedCommitMessage;
+                Assert.IsEmpty(form.GetTestAccessor().Message.Text);
+                form.GetTestAccessor().Message.Text = generatedCommitMessage;
             });
 
-            RunFormCommitTest(formCommit =>
+            RunFormTest(form =>
             {
-                Assert.AreEqual(generatedCommitMessage, formCommit.GetTestAccessor().Message.Text);
+                Assert.AreEqual(generatedCommitMessage, form.GetTestAccessor().Message.Text);
             });
         }
 
@@ -66,18 +66,18 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         {
             var generatedCommitMessage = Guid.NewGuid().ToString();
 
-            RunFormCommitTest(
-                formCommit =>
+            RunFormTest(
+                form =>
                 {
                     string prefix = commitKind.ToString().ToLowerInvariant();
-                    Assert.AreEqual($"{prefix}! A commit message", formCommit.GetTestAccessor().Message.Text);
-                    formCommit.GetTestAccessor().Message.Text = generatedCommitMessage;
+                    Assert.AreEqual($"{prefix}! A commit message", form.GetTestAccessor().Message.Text);
+                    form.GetTestAccessor().Message.Text = generatedCommitMessage;
                 },
                 commitKind);
 
-            RunFormCommitTest(formCommit =>
+            RunFormTest(form =>
             {
-                Assert.IsEmpty(formCommit.GetTestAccessor().Message.Text);
+                Assert.IsEmpty(form.GetTestAccessor().Message.Text);
             });
         }
 
@@ -86,9 +86,9 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         {
             var generatedCommitMessage = Guid.NewGuid().ToString();
 
-            RunFormCommitTest(formCommit =>
+            RunFormTest(form =>
             {
-                var commitMessageToolStripMenuItem = formCommit.GetTestAccessor().CommitMessageToolStripMenuItem;
+                var commitMessageToolStripMenuItem = form.GetTestAccessor().CommitMessageToolStripMenuItem;
 
                 // Verify the message appears correctly
                 commitMessageToolStripMenuItem.ShowDropDown();
@@ -96,42 +96,42 @@ namespace GitUITests.CommandsDialogs.CommitDialog
 
                 // Verify the message is selected correctly
                 commitMessageToolStripMenuItem.DropDownItems[0].PerformClick();
-                Assert.AreEqual("A commit message", formCommit.GetTestAccessor().Message.Text);
+                Assert.AreEqual("A commit message", form.GetTestAccessor().Message.Text);
             });
         }
 
-        private void RunFormCommitTest(Action<FormCommit> testDriver, CommitKind commitKind = CommitKind.Normal)
+        private void RunFormTest(Action<FormCommit> testDriver, CommitKind commitKind = CommitKind.Normal)
         {
-            RunFormCommitTest(
-                formCommit =>
+            RunFormTest(
+                form =>
                 {
-                    testDriver(formCommit);
+                    testDriver(form);
                     return Task.CompletedTask;
                 },
                 commitKind);
         }
 
-        private void RunFormCommitTest(Func<FormCommit, Task> testDriverAsync, CommitKind commitKind = CommitKind.Normal)
+        private void RunFormTest(Func<FormCommit, Task> testDriverAsync, CommitKind commitKind = CommitKind.Normal)
         {
             UITest.RunForm(
                 () =>
                 {
                     switch (commitKind)
                     {
-                    case CommitKind.Normal:
-                        Assert.True(_commands.StartCommitDialog(owner: null));
-                        break;
+                        case CommitKind.Normal:
+                            Assert.True(_commands.StartCommitDialog(owner: null));
+                            break;
 
-                    case CommitKind.Squash:
-                        Assert.True(_commands.StartSquashCommitDialog(owner: null, _referenceRepository.Module.GetRevision("HEAD")));
-                        break;
+                        case CommitKind.Squash:
+                            Assert.True(_commands.StartSquashCommitDialog(owner: null, _referenceRepository.Module.GetRevision("HEAD")));
+                            break;
 
-                    case CommitKind.Fixup:
-                        Assert.True(_commands.StartFixupCommitDialog(owner: null, _referenceRepository.Module.GetRevision("HEAD")));
-                        break;
+                        case CommitKind.Fixup:
+                            Assert.True(_commands.StartFixupCommitDialog(owner: null, _referenceRepository.Module.GetRevision("HEAD")));
+                            break;
 
-                    default:
-                        throw new ArgumentException($"Unsupported commit kind: {commitKind}", nameof(commitKind));
+                        default:
+                            throw new ArgumentException($"Unsupported commit kind: {commitKind}", nameof(commitKind));
                     }
                 },
                 testDriverAsync);
