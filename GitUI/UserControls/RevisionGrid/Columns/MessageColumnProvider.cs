@@ -145,19 +145,31 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 RevisionGridRefRenderer.DrawRef(isRowSelected, font, ref offset, gitRefName, headColor, arrowType, messageBounds, e.Graphics, dashedLine: true);
             }
 
-            // Add fake "refs" for artificial commits
             if (revision.IsArtificial)
             {
+                // Add fake "refs" for artificial commits
                 RevisionGridRefRenderer.DrawRef(isRowSelected, style.normalFont, ref offset, revision.Subject, AppSettings.OtherTagColor, RefArrowType.None, messageBounds, e.Graphics, dashedLine: false, fill: true);
+
+                // Summary of changes
+                var count = _grid.GetChangeCount(revision.Guid);
+                if (count != null && _grid.IsCountUpdated)
+                {
+                    ArtificialCount(count.Changed, Properties.Resources.IconFileStatusModified, style.normalFont, style.foreColor);
+                    ArtificialCount(count.New, Properties.Resources.IconFileStatusAdded, style.normalFont, style.foreColor);
+                    ArtificialCount(count.Deleted, Properties.Resources.IconFileStatusRemoved, style.normalFont, style.foreColor);
+                    ArtificialCount(count.Submodules, Properties.Resources.IconSubmodulesManage, style.normalFont, style.foreColor);
+                }
             }
+            else
+            {
+                // Draw the summary text
+                var text = (string)e.FormattedValue;
+                var bounds = messageBounds.ReduceLeft(offset);
+                _grid.DrawColumnText(e, text, hasSelectedRef ? style.boldFont : style.normalFont, style.foreColor, bounds);
 
-            // Draw the summary text
-            var text = (string)e.FormattedValue;
-            var bounds = messageBounds.ReduceLeft(offset);
-            _grid.DrawColumnText(e, text, hasSelectedRef ? style.boldFont : style.normalFont, style.foreColor, bounds);
-
-            // Draw the multi-line indicator
-            indicator.Render();
+                // Draw the multi-line indicator
+                indicator.Render();
+            }
 
             return;
 
@@ -199,14 +211,40 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 return true;
             }
+
+            void ArtificialCount(int count, Image icon, Font font, Color foreColor)
+            {
+                const int padding = 5;
+                var imageSize = e.CellBounds.Height - padding - padding;
+                if (count > 0)
+                {
+                    Image i = icon;
+                    var rect = new Rectangle(
+                        messageBounds.Left + offset + padding,
+                        e.CellBounds.Top + padding,
+                        imageSize,
+                        imageSize);
+
+                    var container = e.Graphics.BeginContainer();
+                    e.Graphics.DrawImage(i, rect);
+                    e.Graphics.EndContainer(container);
+                    offset += imageSize + padding + padding;
+
+                    var text = count.ToString();
+                    var bounds = messageBounds.ReduceLeft(offset);
+                    offset += _grid.DrawColumnText(e, text, font, foreColor, bounds) + padding;
+                }
+            }
         }
 
         public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
         {
-            e.Value = revision.IsArtificial
-                ? revision.SubjectCount.TrimStart()
-                : revision.Subject.TrimStart();
-            e.FormattingApplied = true;
+            if (!revision.IsArtificial)
+            {
+                e.Value = revision.Subject;
+
+                e.FormattingApplied = true;
+            }
         }
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
