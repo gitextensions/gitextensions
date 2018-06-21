@@ -32,6 +32,10 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             Translate();
 
+            Directory.DataSource = Repositories.RepositoryHistory.Repositories;
+            Directory.DisplayMember = "Path";
+            Directory.SelectedIndex = -1;
+
             if (string.IsNullOrEmpty(dir))
             {
                 Directory.Text = AppSettings.DefaultCloneDestinationPath;
@@ -42,23 +46,17 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void DirectoryDropDown(object sender, EventArgs e)
-        {
-            Directory.DataSource = Repositories.RepositoryHistory.Repositories;
-            Directory.DisplayMember = "Path";
-        }
-
         private void InitClick(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(Directory.Text))
             {
-                MessageBox.Show(this, _chooseDirectory.Text,_chooseDirectoryCaption.Text);
+                MessageBox.Show(this, _chooseDirectory.Text, _chooseDirectoryCaption.Text);
                 return;
             }
 
             if (File.Exists(Directory.Text))
             {
-                MessageBox.Show(this, _chooseDirectoryNotFile.Text,_chooseDirectoryNotFileCaption.Text);
+                MessageBox.Show(this, _chooseDirectoryNotFile.Text, _chooseDirectoryNotFileCaption.Text);
                 return;
             }
 
