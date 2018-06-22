@@ -77,6 +77,9 @@ namespace DeleteUnusedBranches
             regexDoesNotMatch.Checked = _settings.RegexInvertedFlag;
             includeUnmergedBranches.Checked = _settings.IncludeUnmergedBranchesFlag;
 
+            checkBoxHeaderCell.OnCheckBoxClicked += new CheckBoxClickedHandler(CheckBoxHeader_OnCheckBoxClicked);
+            deleteDataGridViewCheckBoxColumn.HeaderText = string.Empty;
+
             BranchesGrid.DataSource = _branches;
         }
 
@@ -212,15 +215,29 @@ namespace DeleteUnusedBranches
             ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
         }
 
+        private void CheckBoxHeader_OnCheckBoxClicked(bool state)
+        {
+            for (int i = 0; i < BranchesGrid.Rows.Count; i++)
+            {
+                DataGridViewRow row = BranchesGrid.Rows[i];
+                DataGridViewCheckBoxCell cell =
+                    (DataGridViewCheckBoxCell)row.Cells[nameof(deleteDataGridViewCheckBoxColumn)];
+                cell.Value = state;
+            }
+
+            BranchesGrid.EndEdit();
+        }
+
         private void BranchesGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // track only “Deleted” column
-            if (e.ColumnIndex != 0)
+            // track only “Deleted” column, ignoring the checkbox header
+            if (e.ColumnIndex != 0 || e.RowIndex == -1)
             {
                 return;
             }
 
             BranchesGrid.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            checkBoxHeaderCell.SetValue(_branches.All(b => b.Delete));
             lblStatus.Text = GetDefaultStatusText();
         }
 
