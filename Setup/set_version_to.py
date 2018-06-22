@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""Update version in GitExtension source files
+"""
+
 import argparse, sys
 import re
 
