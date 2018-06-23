@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using GitCommands;
+using GitExtUtils.GitUI;
 
 namespace GitUI.UserControls
 {
@@ -11,9 +12,13 @@ namespace GitUI.UserControls
         {
             InitializeComponent();
             Translate();
+
             DiffText.ExtraDiffArgumentsChanged += DiffText_ExtraDiffArgumentsChanged;
             DiffFiles.Focus();
             DiffFiles.SetDiffs();
+
+            splitContainer1.SplitterDistance = DpiUtil.Scale(200);
+            splitContainer2.SplitterDistance = DpiUtil.Scale(260);
         }
 
         public void SetRevision(string revisionGuid, string fileToSelect)
