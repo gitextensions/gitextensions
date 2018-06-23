@@ -51,12 +51,6 @@ namespace GitUI
                     _authoredRevisionsBrush.Dispose();
                     _authoredRevisionsBrush = null;
                 }
-
-                if (_fontOfSHAColumn != null)
-                {
-                    _fontOfSHAColumn.Dispose();
-                    _fontOfSHAColumn = null;
-                }
             }
 
             if (disposing && (components != null))
@@ -265,8 +259,8 @@ namespace GitUI
             this.IdDataGridViewColumn.ReadOnly = true;
             this.IdDataGridViewColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.IdDataGridViewColumn.Visible = false;
-            this.IdDataGridViewColumn.FillWeight = 20f;
-            this.IdDataGridViewColumn.Resizable = DataGridViewTriState.False;
+            this.IdDataGridViewColumn.FillWeight = 7f;
+            this.IdDataGridViewColumn.MinimumWidth = 80;
             // 
             // mainContextMenu
             // 

@@ -98,6 +98,7 @@ namespace GitCommands
                 /* Author date     */ "%at%n" +
                 /* Commit date     */ "%ct%n" +
                 /* Encoding        */ "%e%n" +
+                /* Abbrev Object ID*/ "%h%n" +
 
                 // Items below here must be decoded as strings to support non-ASCII
 
@@ -336,13 +337,14 @@ namespace GitCommands
 
             #endregion
 
-            #region Encoded string valies (names, emails, subject, body)
+            #region Encoded string values (names, emails, subject, body)
 
             // Finally, decode the names, email, subject and body strings using the required text encoding
             var s = encoding.GetString(array, offset, lastOffset - offset);
 
             var reader = new StringLineReader(s);
 
+            var abbrevObjectId = reader.ReadLine(stringPool);
             var author = reader.ReadLine(stringPool);
             var authorEmail = reader.ReadLine(stringPool);
             var committer = reader.ReadLine(stringPool);
@@ -371,6 +373,7 @@ namespace GitCommands
             {
                 // TODO are we really sure we can't make Revision.Guid an ObjectId?
                 Guid = objectIdStr,
+                AbbrevGuid = abbrevObjectId,
 
                 // TODO take IReadOnlyList<ObjectId> instead
                 ParentGuids = parentIds.ToArray(p => p.ToString()),

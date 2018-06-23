@@ -334,8 +334,7 @@ namespace GitUI
                 _normalFont = value;
                 MessageDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
                 DateDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
-                _fontOfSHAColumn = new Font("Consolas", _normalFont.SizeInPoints);
-                IdDataGridViewColumn.DefaultCellStyle.Font = _fontOfSHAColumn;
+                IdDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
                 IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
                 IsMessageMultilineDataGridViewColumn.Width = TextRenderer.MeasureText(MultilineMessageIndicator, NormalFont).Width;
 
@@ -1971,8 +1970,8 @@ namespace GitUI
                     if (!revision.IsArtificial)
                     {
                         // do not show artificial GUID
-                        var text = revision.Guid;
-                        DrawColumnText(e, text, _fontOfSHAColumn, foreColor);
+                        var text = revision.AbbrevGuid;
+                        DrawColumnText(e, text, rowFont, foreColor);
                     }
                 }
                 else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
@@ -3206,7 +3205,6 @@ namespace GitUI
         }
 
         private bool _settingsLoaded;
-        private Font _fontOfSHAColumn;
 
         private void RunScript(object sender, EventArgs e)
         {
