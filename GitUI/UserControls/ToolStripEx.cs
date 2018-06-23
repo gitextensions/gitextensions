@@ -17,6 +17,11 @@ namespace GitUI
         /// </remarks>
         public bool ClickThrough { get; set; } = true;
 
+        public ToolStripEx()
+        {
+            Renderer = new BorderlessToolStripRenderer();
+        }
+
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
@@ -26,6 +31,22 @@ namespace GitUI
                 m.Result == (IntPtr)NativeConstants.MA_ACTIVATEANDEAT)
             {
                 m.Result = (IntPtr)NativeConstants.MA_ACTIVATE;
+            }
+        }
+
+        private sealed class BorderlessToolStripRenderer : ToolStripSystemRenderer
+        {
+            protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
+            {
+                if (e.ToolStrip.GetType() == typeof(ToolStripEx))
+                {
+                    // skip border
+                }
+                else
+                {
+                    // render border
+                    base.OnRenderToolStripBorder(e);
+                }
             }
         }
     }
