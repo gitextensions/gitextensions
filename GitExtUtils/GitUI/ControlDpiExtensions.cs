@@ -36,6 +36,7 @@ namespace GitUI
                         if (isDpiScaled && button.Image != null)
                         {
                             button.Image = DpiUtil.Scale(button.Image);
+                            button.Padding = DpiUtil.Scale(new Padding(4, 0, 4, 0));
                         }
 
                         break;
