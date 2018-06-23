@@ -235,9 +235,7 @@ namespace GitUI.CommandsDialogs
             // 
             // CommitDiff
             // 
-            this.CommitDiff.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.CommitDiff.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CommitDiff.Location = new System.Drawing.Point(0, 0);
             this.CommitDiff.Margin = new System.Windows.Forms.Padding(0);
             this.CommitDiff.MinimumSize = new System.Drawing.Size(150, 148);
