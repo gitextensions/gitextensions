@@ -87,15 +87,26 @@ namespace GitUI
                         break;
                     }
 
+                    case TextBoxBase textBox when next.Margin == new Padding(12):
+                    {
+                        // Work around a bug in WinForms where the control's margin gets scaled beyond expectations
+                        // see https://github.com/gitextensions/gitextensions/issues/5098
+                        textBox.Margin = DpiUtil.Scale(new Padding(3));
+                        EnqueueChildren();
+                        break;
+                    }
+
+                    case UpDownBase upDown when next.Margin == new Padding(96):
+                    {
+                        // Work around a bug in WinForms where the control's margin gets scaled beyond expectations
+                        // see https://github.com/gitextensions/gitextensions/issues/5098
+                        upDown.Margin = DpiUtil.Scale(new Padding(3));
+                        EnqueueChildren();
+                        break;
+                    }
+
                     default:
                     {
-                        if (next is TextBoxBase || next is UpDownBase)
-                        {
-                            // BUG: looks like a bug in WinForms - control's margin gets scaled beyond expectations
-                            // see https://github.com/gitextensions/gitextensions/issues/5098
-                            DpiUtil.ScaleDefaultMargins(next);
-                        }
-
                         EnqueueChildren();
                         break;
                     }
