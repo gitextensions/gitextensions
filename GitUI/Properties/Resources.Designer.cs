@@ -1046,6 +1046,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap IconHideStatusBar {
+            get {
+                object obj = ResourceManager.GetObject("IconHideStatusBar", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap IconInfo {
             get {
                 object obj = ResourceManager.GetObject("IconInfo", resourceCulture);

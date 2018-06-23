@@ -76,7 +76,7 @@ namespace GitUI.CommandsDialogs
             this.revisionGpgInfo1 = new GitUI.CommandsDialogs.RevisionGpgInfoControl();
             this.FilterToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.closeStatusBarItem = new System.Windows.Forms.ToolStripStatusLabel();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.initNewRepositoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -781,7 +781,7 @@ namespace GitUI.CommandsDialogs
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1});
+            this.closeStatusBarItem});
             this.statusStrip.Location = new System.Drawing.Point(0, 551);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
@@ -790,10 +790,10 @@ namespace GitUI.CommandsDialogs
             // 
             // toolStripStatusLabel1
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(14, 17);
-            this.toolStripStatusLabel1.Text = "X";
-            this.toolStripStatusLabel1.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
+            this.closeStatusBarItem.Name = "closeStatusBarItem";
+            this.closeStatusBarItem.Size = new System.Drawing.Size(14, 17);
+            this.closeStatusBarItem.Image = global::GitUI.Properties.Resources.IconHideStatusBar;
+            this.closeStatusBarItem.Click += new System.EventHandler(this.toolStripStatusLabel1_Click);
             // 
             // fileToolStripMenuItem
             // 
@@ -1747,7 +1747,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripDropDownButton toolStripBranchFilterDropDownButton;
         private ToolStripDropDownButton toolStripRevisionFilterDropDownButton;
         private StatusStrip statusStrip;
-        private ToolStripStatusLabel toolStripStatusLabel1;
+        private ToolStripStatusLabel closeStatusBarItem;
         private ToolStripSplitButton branchSelect;
         private ToolStripButton toggleBranchTreePanel;
         private ToolStripButton toggleSplitViewLayout;
