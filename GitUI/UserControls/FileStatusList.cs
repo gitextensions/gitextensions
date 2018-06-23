@@ -750,12 +750,12 @@ namespace GitUI
                 return 0;
             }
 
-            if (gitItemStatus.IsNew || !gitItemStatus.IsTracked)
+            if (gitItemStatus.IsNew || (!gitItemStatus.IsTracked && !gitItemStatus.IsSubmodule))
             {
                 return 1;
             }
 
-            if (gitItemStatus.IsChanged || gitItemStatus.IsConflict)
+            if (gitItemStatus.IsChanged || gitItemStatus.IsConflict || gitItemStatus.IsSubmodule)
             {
                 if (!gitItemStatus.IsSubmodule || gitItemStatus.GetSubmoduleStatusAsync() == null ||
                     !gitItemStatus.GetSubmoduleStatusAsync().IsCompleted)

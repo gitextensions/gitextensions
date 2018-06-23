@@ -115,13 +115,13 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void TestGetAllChangedFilesFromString()
+        public void TestGetDiffChangedFilesFromString()
         {
             GitModule module = new GitModule(null);
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
-                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
@@ -129,7 +129,7 @@ namespace GitCommandsTests.Git
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "\0\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
-                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
@@ -137,7 +137,7 @@ namespace GitCommandsTests.Git
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\nM\0testfile.txt\0";
-                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
@@ -145,18 +145,32 @@ namespace GitCommandsTests.Git
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "M  testfile.txt\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\n";
-                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
+        }
 
+        [Test]
+        public void TestGetStatusChangedFilesFromString()
+        {
+            GitModule module = new GitModule(null);
             {
                 // git status --porcelain --untracked-files=no -z
-                string statusString = "M  adfs.h\0M  dir.c\0\r\nwarning: LF will be replaced by CRLF in adfs.h.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in dir.c.\nThe file will have its original line endings in your working directory.";
-                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, false);
+                string statusString = "M  adfs.h\0M  dir.c\0";
+                var status = GitCommandHelpers.GetStatusChangedFilesFromString(module, statusString);
                 Assert.IsTrue(status.Count == 2);
                 Assert.IsTrue(status[0].Name == "adfs.h");
                 Assert.IsTrue(status[1].Name == "dir.c");
+            }
+
+            {
+                // git status --porcelain --untracked-files -z
+                string statusString = "M  adfs.h\0M  dir.c\0";
+                var status = GitCommandHelpers.GetStatusChangedFilesFromString(module, statusString);
+                Assert.IsTrue(status.Count == 2);
+                Assert.IsTrue(status[0].Name == "adfs.h");
+                Assert.IsTrue(status[1].Name == "untracked_file");
             }
         }
 

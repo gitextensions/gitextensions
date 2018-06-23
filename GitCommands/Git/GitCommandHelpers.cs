@@ -778,10 +778,39 @@ namespace GitCommands
             return status;
         }
 
-        /*
-               source: https://git-scm.com/docs/git-status
-        */
-        public static IReadOnlyList<GitItemStatus> GetAllChangedFilesFromString(IGitModule module, string statusString, bool fromDiff = false)
+        /// <summary>
+        /// Parse the output from git-diff --name-status
+        /// https://git-scm.com/docs/git-diff
+        /// The Git revisions are required to determine if the GitItemStatus are WorkTree or Index
+        /// </summary>
+        /// <param name="module">The Git module</param>
+        /// <param name="statusString">output from the git command</param>
+        /// <param name="firstRevision">from revision string</param>
+        /// <param name="secondRevision">to revision</param>
+        /// <param name="parentToSecond">The parent for the second revision</param>
+        /// <returns>list with the parsed GitItemStatus</returns>
+        public static IReadOnlyList<GitItemStatus> GetDiffChangedFilesFromString(IGitModule module, string statusString, [CanBeNull]string firstRevision = null, [CanBeNull]string secondRevision = null, [CanBeNull]string parentToSecond = null)
+        {
+            return GetAllChangedFilesFromString_v1(module, statusString, true);
+        }
+
+        /// <summary>
+        /// Parse the output from git-status --porcelain -z
+        /// https://git-scm.com/docs/git-status
+        /// </summary>
+        /// <param name="module">The Git module</param>
+        /// <param name="statusString">output from the git command</param>
+        /// <returns>list with the parsed GitItemStatus</returns>
+        public static IReadOnlyList<GitItemStatus> GetStatusChangedFilesFromString(IGitModule module, string statusString)
+        {
+            return GetAllChangedFilesFromString_v1(module, statusString, false);
+        }
+
+        /// <summary>
+        /// Parse git-status --porcelain=1 and git-diff --name-status
+        /// Outputs are similar, except that git-status has status for both worktree and index
+        /// </summary>
+        private static IReadOnlyList<GitItemStatus> GetAllChangedFilesFromString_v1(IGitModule module, string statusString, bool fromDiff)
         {
             var diffFiles = new List<GitItemStatus>();
 
@@ -991,7 +1020,6 @@ namespace GitCommands
                 IsChanged = x == 'M',
                 IsDeleted = x == 'D',
                 IsSkipWorktree = x == 'S',
-                IsRenamed = false,
                 IsTracked = (x != '?' && x != '!' && x != ' ') || !isNew,
                 IsIgnored = x == '!',
                 IsConflict = x == 'U'
