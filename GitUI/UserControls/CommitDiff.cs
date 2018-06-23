@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GitCommands;
 using GitExtUtils.GitUI;
+using JetBrains.Annotations;
 
 namespace GitUI.UserControls
 {
@@ -21,7 +22,7 @@ namespace GitUI.UserControls
             splitContainer2.SplitterDistance = DpiUtil.Scale(260);
         }
 
-        public void SetRevision(string revisionGuid, string fileToSelect)
+        public void SetRevision(string revisionGuid, [CanBeNull] string fileToSelect)
         {
             // We cannot use the GitRevision from revision grid. When a filtered commit list
             // is shown (file history/normal filter) the parent guids are not the 'real' parents,
