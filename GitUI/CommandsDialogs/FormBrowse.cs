@@ -22,7 +22,6 @@ using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Script;
-using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.ToolStripClasses;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -305,13 +304,15 @@ namespace GitUI.CommandsDialogs
             FillTerminalTab();
             ManageWorktreeSupport();
 
-            var toolBackColor = ColorHelper.MakeColorDarker(SystemColors.Control, 0.05);
+            var toolBackColor = Color.FromArgb(218, 218, 218);
+            BackColor = toolBackColor;
             ToolStrip.BackColor = toolBackColor;
             toolStripBranchFilterComboBox.BackColor = toolBackColor;
             toolStripRevisionFilterTextBox.BackColor = toolBackColor;
             toolStripRevisionFilterDropDownButton.BackColor = toolBackColor;
             menuStrip1.BackColor = toolBackColor;
             toolPanel.TopToolStripPanel.BackColor = toolBackColor;
+            statusStrip.BackColor = toolBackColor;
 
             if (!string.IsNullOrEmpty(selectCommit))
             {
