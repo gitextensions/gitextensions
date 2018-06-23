@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace GitUI.Script
@@ -26,8 +26,7 @@ namespace GitUI.Script
 
         private void btn_Browse_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
-            string separator = "; ";
+            string separator = " ";
             using (var browseDialog = new OpenFileDialog
             {
                 Multiselect = true,
@@ -36,19 +35,8 @@ namespace GitUI.Script
             {
                 if (browseDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    if (browseDialog.FileNames.Length > 0)
-                    {
-                        sb.Append(browseDialog.FileNames[0]);
-                    }
-
-                    for (int i = 1; i < browseDialog.FileNames.Length; i++)
-                    {
-                        sb.Append(separator);
-                        sb.Append(browseDialog.FileNames[i]);
-                    }
+                    txt_FilePath.Text = string.Join(separator, browseDialog.FileNames.Select(x => $"\"{x}\""));
                 }
-
-                txt_FilePath.Text = sb.ToString();
             }
         }
     }
