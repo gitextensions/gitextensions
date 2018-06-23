@@ -38,7 +38,7 @@ namespace GitCommands
 
             if (bucket is string s)
             {
-                if (EqualsAtIndex(source, index, s))
+                if (s.Length == length && EqualsAtIndex(source, index, s))
                 {
                     return s;
                 }
