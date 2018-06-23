@@ -39,8 +39,10 @@ namespace GitUI.CommandsDialogs
                 await this.SwitchToMainThreadAsync();
                 Directory.DataSource = repositoryHistory;
                 Directory.DisplayMember = nameof(Repository.Path);
-                Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath : dir;
             });
+
+            Directory.SelectedIndex = -1;
+            Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath : dir;
         }
 
         private void InitClick(object sender, EventArgs e)
@@ -81,6 +83,20 @@ namespace GitUI.CommandsDialogs
             {
                 Directory.Text = userSelectedPath;
             }
+        }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FormInit _form;
+
+            public TestAccessor(FormInit form)
+            {
+                _form = form;
+            }
+
+            public ComboBox DirectoryCombo => _form.Directory;
         }
     }
 }
