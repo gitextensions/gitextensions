@@ -515,7 +515,7 @@ namespace GitUI.CommandsDialogs
             // 
             // GitBash
             // 
-            this.GitBash.Image = global::GitUI.Properties.Resources.bash;
+            this.GitBash.Image = global::GitUI.Properties.Resources.IconGitForWindows;
             this.GitBash.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.GitBash.Name = "GitBash";
             this.GitBash.Size = new System.Drawing.Size(23, 22);
