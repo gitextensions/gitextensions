@@ -5,26 +5,23 @@ using System.Windows.Forms.VisualStyles;
 
 namespace DeleteUnusedBranches
 {
-    public delegate void CheckBoxClickedHandler(bool state);
-
-    public class DataGridViewCheckBoxHeaderCellEventArgs : EventArgs
-    {
-        public DataGridViewCheckBoxHeaderCellEventArgs(bool value)
-        {
-            Checked = value;
-        }
-
-        public bool Checked { get; }
-    }
-
-    internal class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCell
+    public class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCell
     {
         private Point _checkBoxLocation;
         private Size _checkBoxSize;
-        private bool _checked = false;
         private Point _cellLocation = new Point();
         private CheckBoxState _cbState = CheckBoxState.UncheckedNormal;
-        public event CheckBoxClickedHandler OnCheckBoxClicked;
+        private bool _checked = false;
+
+        public bool Checked
+        {
+            get { return _checked; }
+            set
+            {
+                _checked = value;
+                DataGridView.InvalidateCell(this);
+            }
+        }
 
         public DataGridViewCheckBoxHeaderCell()
         {
@@ -46,6 +43,7 @@ namespace DeleteUnusedBranches
                 dataGridViewElementState, value,
                 formattedValue, errorText, cellStyle,
                 advancedBorderStyle, paintParts);
+
             Point p = new Point();
             Size s = CheckBoxRenderer.GetGlyphSize(graphics, CheckBoxState.UncheckedNormal);
             p.X = cellBounds.Location.X + (cellBounds.Width / 2) - (s.Width / 2);
@@ -53,6 +51,7 @@ namespace DeleteUnusedBranches
             _cellLocation = cellBounds.Location;
             _checkBoxLocation = p;
             _checkBoxSize = s;
+
             if (_checked)
             {
                 _cbState = CheckBoxState.CheckedNormal;
@@ -68,13 +67,19 @@ namespace DeleteUnusedBranches
         protected override void OnMouseClick(DataGridViewCellMouseEventArgs e)
         {
             Point p = new Point(e.X + _cellLocation.X, e.Y + _cellLocation.Y);
-            if (p.X >= _checkBoxLocation.X && p.X <= _checkBoxLocation.X + _checkBoxSize.Width
-            && p.Y >= _checkBoxLocation.Y && p.Y <= _checkBoxLocation.Y + _checkBoxSize.Height)
+            if (p.X >= _checkBoxLocation.X &&
+                p.X <= _checkBoxLocation.X + _checkBoxSize.Width &&
+                p.Y >= _checkBoxLocation.Y &&
+                p.Y <= _checkBoxLocation.Y + _checkBoxSize.Height)
             {
-                _checked = !_checked;
-                if (OnCheckBoxClicked != null)
+                Checked = !Checked;
+                if (CheckBoxClicked != null)
                 {
-                    OnCheckBoxClicked(_checked);
+                    CheckBoxHeaderCellEventArgs args = new CheckBoxHeaderCellEventArgs
+                    {
+                        Checked = Checked
+                    };
+                    OnCheckBoxClicked(args);
                     DataGridView.InvalidateCell(this);
                 }
             }
@@ -82,10 +87,11 @@ namespace DeleteUnusedBranches
             base.OnMouseClick(e);
         }
 
-        public void SetValue(bool value)
+        protected virtual void OnCheckBoxClicked(CheckBoxHeaderCellEventArgs e)
         {
-            _checked = value;
-            DataGridView.InvalidateCell(this);
+            CheckBoxClicked?.Invoke(this, e);
         }
+
+        public event EventHandler<CheckBoxHeaderCellEventArgs> CheckBoxClicked;
     }
 }
