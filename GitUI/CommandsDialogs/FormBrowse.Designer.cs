@@ -260,8 +260,8 @@ namespace GitUI.CommandsDialogs
             this.ToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.ToolStrip.Location = new System.Drawing.Point(3, 0);
             this.ToolStrip.Name = "ToolStrip";
-            this.ToolStrip.Padding = new System.Windows.Forms.Padding(0);
             this.ToolStrip.Size = new System.Drawing.Size(920, 25);
+            this.ToolStrip.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
             this.ToolStrip.TabIndex = 0;
             // 
             // RefreshButton
@@ -618,6 +618,7 @@ namespace GitUI.CommandsDialogs
             this.repoObjectsTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.repoObjectsTree.Location = new System.Drawing.Point(0, 0);
             this.repoObjectsTree.MinimumSize = new System.Drawing.Size(190, 0);
+            this.repoObjectsTree.Margin = new System.Windows.Forms.Padding(0);
             this.repoObjectsTree.Name = "repoObjectsTree";
             this.repoObjectsTree.Size = new System.Drawing.Size(267, 502);
             this.repoObjectsTree.TabIndex = 0;
@@ -626,6 +627,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.RightSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RightSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.RightSplitContainer.Margin = new System.Windows.Forms.Padding(0);
             this.RightSplitContainer.Name = "RightSplitContainer";
             this.RightSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -648,6 +650,7 @@ namespace GitUI.CommandsDialogs
             this.RevisionsSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.RevisionsSplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.RevisionsSplitContainer.Location = new System.Drawing.Point(0, 0);
+            this.RevisionsSplitContainer.Margin = new System.Windows.Forms.Padding(0);
             this.RevisionsSplitContainer.Name = "RevisionsSplitContainer";
             // 
             // RevisionsSplitContainer.Panel1
@@ -783,6 +786,7 @@ namespace GitUI.CommandsDialogs
             this.closeStatusBarItem});
             this.statusStrip.Location = new System.Drawing.Point(0, 551);
             this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Padding = new System.Windows.Forms.Padding(0);
             this.statusStrip.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.statusStrip.Size = new System.Drawing.Size(923, 22);
             this.statusStrip.TabIndex = 4;
@@ -1632,6 +1636,7 @@ namespace GitUI.CommandsDialogs
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(923, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4);
             this.menuStrip1.TabIndex = 0;
             // 
             // toolPanel
@@ -1642,10 +1647,15 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolPanel.ContentPanel.Controls.Add(this.MainSplitContainer);
             this.toolPanel.ContentPanel.Size = new System.Drawing.Size(923, 502);
+            this.toolPanel.ContentPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.toolPanel.ContentPanel.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
+            this.toolPanel.ContentPanel.Size = new System.Drawing.Size(1846, 1023);
             this.toolPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolPanel.LeftToolStripPanelVisible = false;
             this.toolPanel.Location = new System.Drawing.Point(0, 24);
+            this.toolPanel.Margin = new System.Windows.Forms.Padding(0);
             this.toolPanel.Name = "toolPanel";
+            this.toolPanel.Padding = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.toolPanel.RightToolStripPanelVisible = false;
             this.toolPanel.Size = new System.Drawing.Size(923, 527);
             this.toolPanel.TabIndex = 1;
