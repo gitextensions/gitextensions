@@ -345,6 +345,12 @@ namespace GitCommands
             set => DetailedSettingsPath.SetBool("ShowRevisionInfoNextToRevisionGrid", value);
         }
 
+        public static bool ShowSplitViewLayout
+        {
+            get => DetailedSettingsPath.GetBool("ShowSplitViewLayout", true);
+            set => DetailedSettingsPath.SetBool("ShowSplitViewLayout", value);
+        }
+
         public static bool ProvideAutocompletion
         {
             get => GetBool("provideautocompletion", true);

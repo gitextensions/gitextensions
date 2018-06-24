@@ -349,6 +349,7 @@ namespace GitUI.CommandsDialogs
 
             SetSplitterPositions();
             HideVariableMainMenuItems();
+            RefreshSplitViewLayout();
 
             RevisionGrid.Load();
             _filterBranchHelper.InitToolStripBranchFilter();
@@ -2018,7 +2019,9 @@ namespace GitUI.CommandsDialogs
         private void FindFileInSelectedCommit()
         {
             CommitInfoTabControl.SelectedTab = TreeTabPage;
-            EnabledSplitViewLayout(enabled: true);
+
+            AppSettings.ShowSplitViewLayout = true;
+            RefreshSplitViewLayout();
 
             fileTree.InvokeFindFileDialog();
         }
@@ -2874,7 +2877,8 @@ namespace GitUI.CommandsDialogs
 
         private void toggleSplitViewLayout_Click(object sender, EventArgs e)
         {
-            EnabledSplitViewLayout(RightSplitContainer.Panel2Collapsed);
+            AppSettings.ShowSplitViewLayout = !AppSettings.ShowSplitViewLayout;
+            RefreshSplitViewLayout();
         }
 
         private void toggleBranchTreePanel_Click(object sender, EventArgs e)
@@ -2891,16 +2895,16 @@ namespace GitUI.CommandsDialogs
             RefreshLayoutToggleButtonStates();
         }
 
-        private void EnabledSplitViewLayout(bool enabled)
+        private void RefreshSplitViewLayout()
         {
-            RightSplitContainer.Panel2Collapsed = !enabled;
+            RightSplitContainer.Panel2Collapsed = !AppSettings.ShowSplitViewLayout;
             RefreshLayoutToggleButtonStates();
         }
 
         private void RefreshLayoutToggleButtonStates()
         {
             toggleBranchTreePanel.Checked = !MainSplitContainer.Panel1Collapsed;
-            toggleSplitViewLayout.Checked = !RightSplitContainer.Panel2Collapsed;
+            toggleSplitViewLayout.Checked = AppSettings.ShowSplitViewLayout;
             toggleCommitInfoOnRight.Checked = AppSettings.ShowRevisionInfoNextToRevisionGrid;
         }
 
