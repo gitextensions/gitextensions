@@ -136,6 +136,20 @@ namespace GitCommands
 
         #region Zero-allocation equality and hashing from substrings
 
+        /// <summary>
+        /// Determines whether <paramref name="comparand"/> exists at <paramref name="index"/> in <paramref name="source"/>.
+        /// </summary>
+        /// <remarks>
+        /// <para>Any content within <paramref name="source"/> outside of the range denoted by <paramref name="index"/>
+        /// and length of <paramref name="comparand"/> is ignored.</para>
+        /// <para>This method performs no allocation.</para>
+        /// </remarks>
+        /// <param name="source">The string to search in for <paramref name="comparand"/>.</param>
+        /// <param name="index">The offset within <paramref name="source"/> at which to start looking for <paramref name="comparand"/>.</param>
+        /// <param name="comparand">The string to search for in <paramref name="source"/>.</param>
+        /// <returns><c>true</c> if the string is found at the required position, otherwise <c>false</c>.</returns>
+        /// <exception cref="InvalidOperationException"><paramref name="comparand"/> at <paramref name="index"/> would extend beyond the
+        /// range of <paramref name="source"/>.</exception>
         [Pure]
         internal static unsafe bool EqualsAtIndex(string source, int index, string comparand)
         {
