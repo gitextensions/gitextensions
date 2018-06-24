@@ -755,29 +755,6 @@ namespace GitUI.CommandsDialogs
             UpdateSubmodulesList();
         }
 
-        internal Keys GetShortcutKeys(Commands cmd)
-        {
-            return GetShortcutKeys((int)cmd);
-        }
-
-        /// <summary>
-        /// Add shortcuts to the menu items
-        /// </summary>
-        private void SetShortcutKeyDisplayStringsFromHotkeySettings()
-        {
-            gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitBash).ToShortcutKeyDisplayString();
-            commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.Commit).ToShortcutKeyDisplayString();
-            stashChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.Stash).ToShortcutKeyDisplayString();
-            stashPopToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.StashPop).ToShortcutKeyDisplayString();
-            closeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CloseRepository).ToShortcutKeyDisplayString();
-            gitGUIToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGui).ToShortcutKeyDisplayString();
-            kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGitK).ToShortcutKeyDisplayString();
-            checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CheckoutBranch).ToShortcutKeyDisplayString();
-            settingsToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.OpenSettings).ToShortcutKeyDisplayString();
-
-            // TODO: add more
-        }
-
         private void RefreshWorkingDirCombo()
         {
             var path = Module.WorkingDir;
@@ -1998,6 +1975,29 @@ namespace GitUI.CommandsDialogs
             OpenWithDifftool = 19,
             OpenSettings = 20,
             ToggleBranchTreePanel = 21
+        }
+
+        internal Keys GetShortcutKeys(Commands cmd)
+        {
+            return GetShortcutKeys((int)cmd);
+        }
+
+        /// <summary>
+        /// Add shortcuts to the menu items
+        /// </summary>
+        private void SetShortcutKeyDisplayStringsFromHotkeySettings()
+        {
+            gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitBash).ToShortcutKeyDisplayString();
+            commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.Commit).ToShortcutKeyDisplayString();
+            stashChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.Stash).ToShortcutKeyDisplayString();
+            stashPopToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.StashPop).ToShortcutKeyDisplayString();
+            closeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CloseRepository).ToShortcutKeyDisplayString();
+            gitGUIToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGui).ToShortcutKeyDisplayString();
+            kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGitK).ToShortcutKeyDisplayString();
+            checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CheckoutBranch).ToShortcutKeyDisplayString();
+            settingsToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.OpenSettings).ToShortcutKeyDisplayString();
+
+            // TODO: add more
         }
 
         private void AddNotes()
