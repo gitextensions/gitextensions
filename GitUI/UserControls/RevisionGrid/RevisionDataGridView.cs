@@ -767,7 +767,7 @@ namespace GitUI.UserControls.RevisionGrid
                                 {
                                     if (sameLane)
                                     {
-                                        g.SmoothingMode = SmoothingMode.None;
+                                        g.SmoothingMode = SmoothingMode.AntiAlias;
                                         g.DrawLine(linePen, p0, p1);
                                     }
                                     else
