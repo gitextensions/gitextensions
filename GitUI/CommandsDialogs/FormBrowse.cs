@@ -1028,12 +1028,12 @@ namespace GitUI.CommandsDialogs
 
         private void FillCommitInfo()
         {
-            if (!AppSettings.ShowRevisionInfoNextToRevisionGrid && CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
+            if (_selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.CommitInfo))
             {
                 return;
             }
 
-            if (_selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.CommitInfo))
+            if (!AppSettings.ShowRevisionInfoNextToRevisionGrid && CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
             {
                 return;
             }
