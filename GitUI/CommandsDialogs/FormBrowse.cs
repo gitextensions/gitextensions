@@ -507,13 +507,12 @@ namespace GitUI.CommandsDialogs
 
             if (_dashboard == null)
             {
-                _dashboard = new Dashboard();
+                _dashboard = new Dashboard { Dock = DockStyle.Fill };
                 _dashboard.GitModuleChanged += SetGitModule;
                 toolPanel.ContentPanel.Controls.Add(_dashboard);
-                _dashboard.Dock = DockStyle.Fill;
             }
 
-            Text = _appTitleGenerator.Generate(string.Empty, false, string.Empty);
+            Text = _appTitleGenerator.Generate();
 
             _dashboard.RefreshContent();
             _dashboard.Visible = true;
@@ -2027,7 +2026,7 @@ namespace GitUI.CommandsDialogs
         private void FindFileInSelectedCommit()
         {
             CommitInfoTabControl.SelectedTab = TreeTabPage;
-            EnabledSplitViewLayout(true);
+            EnabledSplitViewLayout(enabled: true);
 
             fileTree.InvokeFindFileDialog();
         }
