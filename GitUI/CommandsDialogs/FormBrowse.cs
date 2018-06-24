@@ -1041,12 +1041,14 @@ namespace GitUI.CommandsDialogs
 
             _selectedRevisionUpdatedTargets |= UpdateTargets.CommitInfo;
 
-            if (RevisionGrid.GetSelectedRevisions().Count == 0)
+            var selectedRevisions = RevisionGrid.GetSelectedRevisions();
+
+            if (selectedRevisions.Count == 0)
             {
                 return;
             }
 
-            var revision = RevisionGrid.GetSelectedRevisions()[0];
+            var revision = selectedRevisions[0];
 
             var children = RevisionGrid.GetRevisionChildren(revision.Guid);
             RevisionInfo.SetRevisionWithChildren(revision, children);
