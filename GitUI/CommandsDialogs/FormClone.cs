@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs
                 }
                 //if the From field is empty, then fill it with the current repository remote URL in hope
                 //that the cloned repository is hosted on the same server
-                if (_NO_TRANSLATE_From.Text.IsNullOrWhiteSpace())
+                if (_NO_TRANSLATE_From.Text.IsNullOrWhiteSpace() && Module.IsValidGitWorkingDir())
                 {
                     var currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
                     if (currentBranchRemote.IsNullOrEmpty())
