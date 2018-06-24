@@ -59,16 +59,17 @@ namespace GitCommands.UserRepositoryHistory
         /// <returns>If the repository has description, returns that description, else returns <c>null</c>.</returns>
         private string ReadRepositoryDescription(string workingDir)
         {
-            var repositoryPath = _gitDirectoryResolver.Resolve(workingDir);
-            var repositoryDescriptionFilePath = Path.Combine(repositoryPath, RepositoryDescriptionFileName);
-            if (!File.Exists(repositoryDescriptionFilePath))
+            var gitDir = _gitDirectoryResolver.Resolve(workingDir);
+            var descriptionFilePath = Path.Combine(gitDir, RepositoryDescriptionFileName);
+
+            if (!File.Exists(descriptionFilePath))
             {
                 return null;
             }
 
             try
             {
-                var repositoryDescription = File.ReadLines(repositoryDescriptionFilePath).FirstOrDefault();
+                var repositoryDescription = File.ReadLines(descriptionFilePath).FirstOrDefault();
                 return string.Equals(repositoryDescription, DefaultDescription, StringComparison.CurrentCulture)
                     ? null
                     : repositoryDescription;
