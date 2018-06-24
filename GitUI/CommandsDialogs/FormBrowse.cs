@@ -496,10 +496,12 @@ namespace GitUI.CommandsDialogs
 
         private void ShowDashboard()
         {
+            toolPanel.SuspendLayout();
             toolPanel.TopToolStripPanelVisible = false;
             toolPanel.BottomToolStripPanelVisible = false;
             toolPanel.LeftToolStripPanelVisible = false;
             toolPanel.RightToolStripPanelVisible = false;
+            toolPanel.ResumeLayout();
 
             MainSplitContainer.Visible = false;
 
@@ -527,10 +529,12 @@ namespace GitUI.CommandsDialogs
             }
 
             _dashboard.Visible = false;
+            toolPanel.SuspendLayout();
             toolPanel.TopToolStripPanelVisible = true;
             toolPanel.BottomToolStripPanelVisible = true;
             toolPanel.LeftToolStripPanelVisible = true;
             toolPanel.RightToolStripPanelVisible = true;
+            toolPanel.ResumeLayout();
         }
 
         private void UpdatePluginMenu(bool validWorkingDir)
