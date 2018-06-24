@@ -712,7 +712,7 @@ namespace GitUI.CommandsDialogs
 
                 RefreshWorkingDirCombo();
                 var branchName = !string.IsNullOrEmpty(branchSelect.Text) ? branchSelect.Text : _noBranchTitle.Text;
-                Text = _appTitleGenerator.Generate(Module.WorkingDir, validBrowseDir, branchName);
+                Text = _appTitleGenerator.Generate(Module?.WorkingDir, validBrowseDir, branchName);
 
                 OnActivate();
 
