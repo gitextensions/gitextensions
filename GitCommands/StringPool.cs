@@ -86,28 +86,29 @@ namespace GitCommands
             _capacity *= 2;
 
             var newBuckets = new object[_buckets.Length * 2];
+            var lists = new Stack<List<string>>();
 
             for (var i = 0; i < _buckets.Length; i++)
             {
-                var entry = _buckets[i];
-
-                if (entry == null)
-                {
-                    continue;
-                }
-
-                switch (entry)
+                switch (_buckets[i])
                 {
                     case string s:
+                    {
                         HashString(s);
                         break;
+                    }
+
                     case List<string> list:
+                    {
                         for (var j = 0; j < list.Count; j++)
                         {
                             HashString(list[j]);
                         }
 
+                        list.Clear();
+                        lists.Push(list);
                         break;
+                    }
                 }
             }
 
@@ -116,20 +117,36 @@ namespace GitCommands
             void HashString(string s)
             {
                 var hash = GetSubstringHashCode(s, 0, s.Length);
-                var newPos = Math.Abs(hash % newBuckets.Length);
-                var newBucket = newBuckets[newPos];
+                var index = Math.Abs(hash % newBuckets.Length);
 
-                switch (newBucket)
+                switch (newBuckets[index])
                 {
                     case null:
-                        newBuckets[newPos] = s;
+                    {
+                        newBuckets[index] = s;
                         break;
+                    }
+
+                    case string old when lists.Count != 0:
+                    {
+                        var list = lists.Pop();
+                        list.Add(old);
+                        list.Add(s);
+                        newBuckets[index] = list;
+                        break;
+                    }
+
                     case string old:
-                        newBuckets[newPos] = new List<string>(2) { old, s };
+                    {
+                        newBuckets[index] = new List<string>(2) { old, s };
                         break;
+                    }
+
                     case List<string> list:
+                    {
                         list.Add(s);
                         break;
+                    }
                 }
             }
         }
