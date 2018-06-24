@@ -767,18 +767,24 @@ namespace GitUI.UserControls.RevisionGrid
                                 {
                                     if (sameLane)
                                     {
-                                        g.SmoothingMode = SmoothingMode.AntiAlias;
+                                        g.SmoothingMode = SmoothingMode.None;
                                         g.DrawLine(linePen, p0, p1);
                                     }
                                     else
                                     {
+                                        // Anti-aliasing seems to introduce an offset of two thirds
+                                        // of a pixel to the right - compensate it.
+                                        g.SmoothingMode = SmoothingMode.AntiAlias;
+                                        float offset = -0.667F;
+
                                         // Left shifting int is fast equivalent of dividing by two,
                                         // thus computing the average of y0 and y1.
                                         var yMid = (y0 + y1) >> 1;
-                                        var c0 = new Point(x0, yMid);
-                                        var c1 = new Point(x1, yMid);
-                                        g.SmoothingMode = SmoothingMode.AntiAlias;
-                                        g.DrawBezier(linePen, p0, c0, c1, p1);
+                                        var c0 = new PointF(offset + x0, yMid);
+                                        var c1 = new PointF(offset + x1, yMid);
+                                        var e0 = new PointF(offset + p0.X, p0.Y);
+                                        var e1 = new PointF(offset + p1.X, p1.Y);
+                                        g.DrawBezier(linePen, e0, c0, c1, e1);
                                     }
                                 }
                             }
