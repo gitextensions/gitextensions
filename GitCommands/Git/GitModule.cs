@@ -1152,34 +1152,6 @@ namespace GitCommands
             return parents.Length > 1;
         }
 
-        private static string ProccessDiffNotes(int startIndex, string[] lines)
-        {
-            int endIndex = lines.Length - 1;
-            if (lines[endIndex] == "Notes:")
-            {
-                endIndex--;
-            }
-
-            var message = new StringBuilder();
-            bool notesStart = false;
-            for (int i = startIndex; i <= endIndex; i++)
-            {
-                string line = lines[i];
-                if (notesStart)
-                {
-                    line = "    " + line;
-                }
-
-                message.AppendLine(line);
-                if (lines[i] == "Notes:")
-                {
-                    notesStart = true;
-                }
-            }
-
-            return message.ToString();
-        }
-
         public GitRevision GetRevision(string commit, bool shortFormat = false, bool loadRefs = false)
         {
             const string formatString =
@@ -1220,7 +1192,7 @@ namespace GitCommands
             }
             else
             {
-                string message = ProccessDiffNotes(10, lines);
+                string message = ProcessDiffNotes(10);
 
                 // commit message is not reencoded by git when format is given
                 revision.Body = ReEncodeCommitMessage(message, revision.MessageEncoding);
@@ -1235,6 +1207,34 @@ namespace GitCommands
             }
 
             return revision;
+
+            string ProcessDiffNotes(int startIndex)
+            {
+                int endIndex = lines.Length - 1;
+                if (lines[endIndex] == "Notes:")
+                {
+                    endIndex--;
+                }
+
+                var message = new StringBuilder();
+                bool notesStart = false;
+                for (int i = startIndex; i <= endIndex; i++)
+                {
+                    string line = lines[i];
+                    if (notesStart)
+                    {
+                        line = "    " + line;
+                    }
+
+                    message.AppendLine(line);
+                    if (lines[i] == "Notes:")
+                    {
+                        notesStart = true;
+                    }
+                }
+
+                return message.ToString();
+            }
         }
 
         public string[] GetParents(string commit)
