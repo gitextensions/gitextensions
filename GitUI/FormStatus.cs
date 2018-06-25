@@ -13,7 +13,7 @@ namespace GitUI
     {
         private readonly bool _useDialogSettings;
 
-        private DispatcherFrameModalControler _modalControler;
+        private DispatcherFrameModalController _modalController;
 
         public FormStatus() : this(true)
         {
@@ -171,7 +171,7 @@ namespace GitUI
             }
             finally
             {
-                _modalControler?.EndModal(isSuccess);
+                _modalController?.EndModal(isSuccess);
             }
         }
 
@@ -200,8 +200,8 @@ namespace GitUI
             KeepDialogOpen.Visible = false;
             Abort.Visible = false;
             _showOnError = true;
-            _modalControler = new DispatcherFrameModalControler(this, owner);
-            _modalControler.BeginModal();
+            _modalController = new DispatcherFrameModalController(this, owner);
+            _modalController.BeginModal();
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -217,7 +217,7 @@ namespace GitUI
                 return;
             }
 
-            if (_modalControler != null)
+            if (_modalController != null)
             {
                 return;
             }
@@ -305,13 +305,13 @@ namespace GitUI
         }
     }
 
-    internal class DispatcherFrameModalControler
+    internal class DispatcherFrameModalController
     {
         private readonly DispatcherFrame _dispatcherFrame = new DispatcherFrame();
         private readonly FormStatus _formStatus;
         private readonly IWin32Window _owner;
 
-        public DispatcherFrameModalControler(FormStatus formStatus, IWin32Window owner)
+        public DispatcherFrameModalController(FormStatus formStatus, IWin32Window owner)
         {
             _formStatus = formStatus;
             _owner = owner;
