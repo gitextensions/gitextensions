@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -60,6 +61,7 @@ namespace GitUI
             WindowPositions = new List<WindowPosition>();
         }
 
+        [CanBeNull]
         public WindowPosition Get(string name)
         {
             return WindowPositions.FirstOrDefault(r => r.Name == name);
@@ -71,6 +73,7 @@ namespace GitUI
             WindowPositions.Add(pos);
         }
 
+        [CanBeNull]
         public static WindowPositionList Load()
         {
             if (!File.Exists(ConfigFilePath))
