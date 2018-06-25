@@ -256,21 +256,25 @@ namespace GitUI.CommitInfo
                 string GetLinksForRevision()
                 {
                     var links = _gitRevisionExternalLinksParser.Parse(revision, Module.EffectiveSettings).Distinct();
-                    var linksString = string.Empty;
+                    var linksString = new StringBuilder();
 
+                    linksString.AppendLine();
+                    linksString.Append(WebUtility.HtmlEncode(_trsLinksRelatedToRevision.Text));
+                    linksString.Append(' ');
+
+                    var any = false;
                     foreach (var link in links)
                     {
-                        linksString = linksString.Combine(", ", _linkFactory.CreateLink(link.Caption, link.URI));
+                        if (any)
+                        {
+                            linksString.Append(", ");
+                        }
+
+                        linksString.Append(_linkFactory.CreateLink(link.Caption, link.URI));
+                        any = true;
                     }
 
-                    if (linksString.IsNullOrEmpty())
-                    {
-                        return string.Empty;
-                    }
-                    else
-                    {
-                        return Environment.NewLine + WebUtility.HtmlEncode(_trsLinksRelatedToRevision.Text) + " " + linksString;
-                    }
+                    return any ? linksString.ToString() : "";
                 }
             }
 
