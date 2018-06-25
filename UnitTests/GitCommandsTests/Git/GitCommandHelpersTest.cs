@@ -121,7 +121,7 @@ namespace GitCommandsTests.Git
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString);
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, GitRevision.IndexGuid);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
@@ -129,7 +129,7 @@ namespace GitCommandsTests.Git
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "\0\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString);
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, GitRevision.IndexGuid);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
@@ -137,7 +137,7 @@ namespace GitCommandsTests.Git
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\nM\0testfile.txt\0";
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString);
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, GitRevision.IndexGuid);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
@@ -145,8 +145,26 @@ namespace GitCommandsTests.Git
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "M  testfile.txt\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\n";
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString);
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, GitRevision.IndexGuid);
                 Assert.IsTrue(status.Count == 1);
+                Assert.IsTrue(status[0].Name == "testfile.txt");
+            }
+
+            {
+                // git diff -M -C -z --cached --name-status
+                // Ignore unmerged (in conflict) if revision is work tree
+                string statusString = "M  testfile.txt\0U  testfile.txt\0";
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, GitRevision.UnstagedGuid);
+                Assert.IsTrue(status.Count == 1);
+                Assert.IsTrue(status[0].Name == "testfile.txt");
+            }
+
+            {
+                // git diff -M -C -z --cached --name-status
+                // Include unmerged (in conflict) if revision is index
+                string statusString = "M  testfile.txt\0U  testfile2.txt\0";
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, GitRevision.IndexGuid);
+                Assert.IsTrue(status.Count == 2);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
         }

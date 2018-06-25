@@ -2399,7 +2399,7 @@ namespace GitCommands
             noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
             string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
             string result = noCache ? RunGitCmd(cmd) : RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
-            var resultCollection = GitCommandHelpers.GetDiffChangedFilesFromString(this, result).ToList();
+            var resultCollection = GitCommandHelpers.GetDiffChangedFilesFromString(this, result, secondRevision).ToList();
             if (firstRevision == GitRevision.UnstagedGuid || secondRevision == GitRevision.UnstagedGuid)
             {
                 // For unstaged the untracked must be added too
@@ -2564,7 +2564,7 @@ namespace GitCommands
                 return stagedFiles.Where(f => f.IsStaged).ToList();
             }
 
-            return GitCommandHelpers.GetDiffChangedFilesFromString(this, status);
+            return GitCommandHelpers.GetDiffChangedFilesFromString(this, status, GitRevision.IndexGuid);
         }
 
         public IReadOnlyList<GitItemStatus> GetStagedFilesWithSubmodulesStatus()

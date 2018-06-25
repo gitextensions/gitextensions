@@ -791,7 +791,7 @@ namespace GitCommands
         /// <returns>list with the parsed GitItemStatus</returns>
         public static IReadOnlyList<GitItemStatus> GetDiffChangedFilesFromString(IGitModule module, string statusString, [CanBeNull]string firstRevision = null, [CanBeNull]string secondRevision = null, [CanBeNull]string parentToSecond = null)
         {
-            return GetAllChangedFilesFromString_v1(module, statusString, true);
+            return GetAllChangedFilesFromString_v1(module, statusString, true, secondRevision);
         }
 
         /// <summary>
@@ -803,14 +803,14 @@ namespace GitCommands
         /// <returns>list with the parsed GitItemStatus</returns>
         public static IReadOnlyList<GitItemStatus> GetStatusChangedFilesFromString(IGitModule module, string statusString)
         {
-            return GetAllChangedFilesFromString_v1(module, statusString, false);
+            return GetAllChangedFilesFromString_v1(module, statusString, false, null);
         }
 
         /// <summary>
         /// Parse git-status --porcelain=1 and git-diff --name-status
         /// Outputs are similar, except that git-status has status for both worktree and index
         /// </summary>
-        private static IReadOnlyList<GitItemStatus> GetAllChangedFilesFromString_v1(IGitModule module, string statusString, bool fromDiff)
+        private static IReadOnlyList<GitItemStatus> GetAllChangedFilesFromString_v1(IGitModule module, string statusString, bool fromDiff, string diffToRevision)
         {
             var diffFiles = new List<GitItemStatus>();
 
@@ -876,6 +876,12 @@ namespace GitCommands
                 char x = status[0];
                 char y = status.Length > 1 ? status[1] : ' ';
 
+                if (fromDiff && diffToRevision == GitRevision.UnstagedGuid && x == 'U')
+                {
+                    // git-diff has two lines to inform that a file is modified and has a merge conflict
+                    continue;
+                }
+
                 if (x != '?' && x != '!' && x != ' ')
                 {
                     GitItemStatus gitItemStatusX;
@@ -891,7 +897,9 @@ namespace GitCommands
                         gitItemStatusX = GitItemStatusFromStatusCharacter(fileName, x);
                     }
 
-                    gitItemStatusX.IsStaged = true;
+                    // IsStaged can only be set for git-diff when comparing HEAD -> Index (not set at all)
+                    // TODO: Change IsStaged to enum values
+                    gitItemStatusX.IsStaged = !fromDiff;
                     if (submodules.Contains(gitItemStatusX.Name))
                     {
                         gitItemStatusX.IsSubmodule = true;

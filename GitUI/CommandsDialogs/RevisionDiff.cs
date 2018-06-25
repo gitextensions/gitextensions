@@ -469,11 +469,8 @@ namespace GitUI.CommandsDialogs
 
         private void StageFileToolStripMenuItemClick(object sender, EventArgs e)
         {
-            // IsStaged is set by default, so that cannot be trusted, must be limited when selecting
-            var files = DiffFiles.SelectedItemsWithParent
-                .Where(it => it.ParentRevision.Guid == GitRevision.IndexGuid)
-                .Select(it => it.Item)
-                .ToList();
+            // files must be limited when selecting to index -> worktree
+            var files = DiffFiles.SelectedItems.ToList();
 
             Module.StageFiles(files, out _);
             RefreshArtificial();
@@ -481,8 +478,9 @@ namespace GitUI.CommandsDialogs
 
         private void UnstageFileToolStripMenuItemClick(object sender, EventArgs e)
         {
+            // files must be limited to HEAD -> index
             var files = new List<GitItemStatus>();
-            foreach (var item in DiffFiles.SelectedItems.Where(i => i.IsStaged))
+            foreach (var item in DiffFiles.SelectedItems)
             {
                 if (!item.IsNew)
                 {
