@@ -1245,14 +1245,9 @@ namespace GitCommands
 
         public GitRevision[] GetParentsRevisions(string commit)
         {
-            string[] parents = GetParents(commit);
-            var parentsRevisions = new GitRevision[parents.Length];
-            for (int i = 0; i < parents.Length; i++)
-            {
-                parentsRevisions[i] = GetRevision(parents[i], shortFormat: true);
-            }
-
-            return parentsRevisions;
+            return GetParents(commit)
+                .Select(parent => GetRevision(parent, shortFormat: true))
+                .ToArray();
         }
 
         public string ShowSha1(string sha1)
