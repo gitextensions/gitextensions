@@ -22,7 +22,7 @@ namespace GitUI
         private readonly IAvatarService _avatarService;
         private readonly ICommitTemplateManager _commitTemplateManager;
         private readonly IFullPathResolver _fullPathResolver;
-        private readonly IFindFilePredicateProvider _fildFilePredicateProvider;
+        private readonly IFindFilePredicateProvider _findFilePredicateProvider;
 
         public GitModule Module { get; private set; }
         public ILockableNotifier RepoChangedNotifier { get; }
@@ -38,7 +38,7 @@ namespace GitUI
             IImageCache avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
             _avatarService = new AvatarService(avatarCache);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _fildFilePredicateProvider = new FindFilePredicateProvider();
+            _findFilePredicateProvider = new FindFilePredicateProvider();
         }
 
         public GitUICommands([CanBeNull] string workingDir)
@@ -315,20 +315,20 @@ namespace GitUI
 
         #region Checkout
 
-        public bool StartCheckoutBranch(IWin32Window owner, string branch = "", bool remote = false, string[] containRevisons = null)
+        public bool StartCheckoutBranch(IWin32Window owner, string branch = "", bool remote = false, string[] containRevisions = null)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutBranch, PostCheckoutBranch, () =>
             {
-                using (var form = new FormCheckoutBranch(this, branch, remote, containRevisons))
+                using (var form = new FormCheckoutBranch(this, branch, remote, containRevisions))
                 {
                     return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
                 }
             });
         }
 
-        public bool StartCheckoutBranch(IWin32Window owner, string[] containRevisons)
+        public bool StartCheckoutBranch(IWin32Window owner, string[] containRevisions)
         {
-            return StartCheckoutBranch(owner, "", false, containRevisons);
+            return StartCheckoutBranch(owner, "", false, containRevisions);
         }
 
         public bool StartCheckoutBranch(string branch, bool remote)
@@ -1696,7 +1696,7 @@ namespace GitUI
         {
             var candidates = Module.GetFullTree("HEAD");
 
-            var predicate = _fildFilePredicateProvider.Get(name, Module.WorkingDir);
+            var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
 
             return candidates.Where(predicate);
         }

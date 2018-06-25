@@ -7,7 +7,7 @@ namespace Gravatar
     public enum DefaultImageType
     {
         /// <summary>
-        /// Return an HTTP 404 respose.
+        /// Return an HTTP 404 response.
         /// </summary>
         None = 0,
 

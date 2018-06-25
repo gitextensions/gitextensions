@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _resetCaption = new TranslationString("Reset branch");
         #endregion
 
-        private readonly string[] _containRevisons;
+        private readonly string[] _containRevisions;
         private readonly bool _isLoading;
         private readonly string _rbResetBranchDefaultText;
         private bool? _isDirtyDir;
@@ -68,14 +68,14 @@ namespace GitUI.CommandsDialogs
             Shown += FormCheckoutBranch_Shown;
         }
 
-        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, string[] containRevisons = null)
+        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, string[] containRevisions = null)
             : this(commands)
         {
             _isLoading = true;
 
             try
             {
-                _containRevisons = containRevisons;
+                _containRevisions = containRevisions;
 
                 LocalBranch.Checked = !remote;
                 Remotebranch.Checked = remote;
@@ -89,7 +89,7 @@ namespace GitUI.CommandsDialogs
                     Branches.SelectedItem = branch;
                 }
 
-                if (containRevisons != null)
+                if (containRevisions != null)
                 {
                     if (Branches.Items.Count == 0)
                     {
@@ -209,7 +209,7 @@ namespace GitUI.CommandsDialogs
 
                 IEnumerable<string> branchNames;
 
-                if (_containRevisons == null)
+                if (_containRevisions == null)
                 {
                     var branches = LocalBranch.Checked ? GetLocalBranches() : GetRemoteBranches();
 
@@ -222,7 +222,7 @@ namespace GitUI.CommandsDialogs
 
                 Branches.Items.AddRange(branchNames.Where(name => name.IsNotNullOrWhitespace()).ToArray());
 
-                if (_containRevisons != null && Branches.Items.Count == 1)
+                if (_containRevisions != null && Branches.Items.Count == 1)
                 {
                     Branches.SelectedIndex = 0;
                 }
@@ -506,20 +506,20 @@ namespace GitUI.CommandsDialogs
         private IReadOnlyList<string> GetContainsRevisionBranches()
         {
             var result = new HashSet<string>();
-            if (_containRevisons.Length > 0)
+            if (_containRevisions.Length > 0)
             {
-                var branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisons[0], LocalBranch.Checked,
+                var branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisions[0], LocalBranch.Checked,
                         !LocalBranch.Checked)
                         .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
                                     !a.EndsWith("/HEAD"));
                 result.UnionWith(branches);
             }
 
-            for (int index = 1; index < _containRevisons.Length; index++)
+            for (int index = 1; index < _containRevisions.Length; index++)
             {
-                var containRevison = _containRevisons[index];
+                var containRevision = _containRevisions[index];
                 var branches =
-                    Module.GetAllBranchesWhichContainGivenCommit(containRevison, LocalBranch.Checked,
+                    Module.GetAllBranchesWhichContainGivenCommit(containRevision, LocalBranch.Checked,
                         !LocalBranch.Checked)
                         .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
                                     !a.EndsWith("/HEAD"));

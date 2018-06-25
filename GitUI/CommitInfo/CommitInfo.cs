@@ -327,8 +327,8 @@ namespace GitUI.CommitInfo
                         //      }
                         //
                         // The 2nd one is a dereference: a link between the tag and the object which it references.
-                        // GitRevions.Refs by design contains GitRef's where Guid's are equal to the GitRevision.Guid,
-                        // so this collection contains only derefencing GitRef's - just because GitRef_2 has the same
+                        // GitRevision.Refs by design contains GitRefs where Guids are equal to the GitRevision.Guid,
+                        // so this collection contains only dereferencing GitRef's - just because GitRef_2 has the same
                         // Guid as the GitRevision, while GitRef_1 doesn't. So annotated tag's GitRef would always be
                         // of 2nd type in GitRevision.Refs collection, i.e. the one that has IsDereference==true.
                         #endregion
