@@ -1587,23 +1587,18 @@ namespace GitCommands
             _indexLockManager.UnlockIndex(includeSubmodules);
         }
 
-        public string FormatPatch(string from, string to, string output, int start)
+        public string FormatPatch(string from, string to, string output, int? start = null)
         {
-            output = output.ToPosixPath();
+            var args = new ArgumentBuilder
+            {
+                "format-patch",
+                "-M -C -B",
+                { start != null, $"-- start-number {start}" },
+                $"{from.Quote()}..{to.Quote()}",
+                $"-o {output.ToPosixPath().Quote()}"
+            };
 
-            var result = RunGitCmd("format-patch -M -C -B --start-number " + start + " \"" + from + "\"..\"" + to +
-                                "\" -o \"" + output + "\"");
-
-            return result;
-        }
-
-        public string FormatPatch(string from, string to, string output)
-        {
-            output = output.ToPosixPath();
-
-            var result = RunGitCmd("format-patch -M -C -B \"" + from + "\"..\"" + to + "\" -o \"" + output + "\"");
-
-            return result;
+            return RunGitCmd(args.ToString());
         }
 
         public string CheckoutFiles(IEnumerable<string> fileList, string revision, bool force)
