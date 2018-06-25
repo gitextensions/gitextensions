@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
+using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
 
@@ -277,6 +278,7 @@ namespace GitUI
         ///   doesn't exist, or would not be visible on any screen in the user's
         ///   current display setup.
         /// </returns>
+        [CanBeNull]
         private static WindowPosition LookupWindowPosition(string name)
         {
             try

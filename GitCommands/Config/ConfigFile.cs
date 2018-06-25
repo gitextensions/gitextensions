@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitCommands.Config
 {
@@ -277,6 +278,7 @@ namespace GitCommands.Config
             _configSections.Remove(configSection);
         }
 
+        [CanBeNull]
         public IConfigSection FindConfigSection(string name)
         {
             var configSectionToFind = new ConfigSection(name, true);
@@ -284,6 +286,7 @@ namespace GitCommands.Config
             return FindConfigSection(configSectionToFind);
         }
 
+        [CanBeNull]
         private IConfigSection FindConfigSection(IConfigSection configSectionToFind)
         {
             return ConfigSections.FirstOrDefault(configSectionToFind.Equals);

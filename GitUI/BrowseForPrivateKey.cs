@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -12,6 +13,7 @@ namespace GitUI
         /// <summary>
         /// Prompts the user to browse for a key, and attempts to load it. Returns the path to the key, if successful.
         /// </summary>
+        [CanBeNull]
         public static string BrowseAndLoad(IWin32Window parent)
         {
             var path = Browse(parent);
@@ -29,6 +31,7 @@ namespace GitUI
         /// <summary>
         /// Prompts the user to browse for a key. Returns the path chosen, or null.
         /// </summary>
+        [CanBeNull]
         public static string Browse(IWin32Window parent)
         {
             using (var dialog = new OpenFileDialog
