@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
@@ -94,6 +95,8 @@ namespace GitUIPluginInterfaces
         /// <summary>Indicates whether the repository is in a 'detached HEAD' state.</summary>
         bool IsDetachedHead();
 
+        [ContractAnnotation("=>false,fullSha1:null")]
+        [ContractAnnotation("=>true,fullSha1:notnull")]
         bool IsExistingCommitHash(string sha1Fragment, out string fullSha1);
 
         /// <summary>Gets the path to the git application executable.</summary>
