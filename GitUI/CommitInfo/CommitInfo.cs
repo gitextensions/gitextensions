@@ -50,10 +50,8 @@ namespace GitUI.CommitInfo
         {
             InitializeComponent();
             Translate();
-            GitUICommandsSourceSet += (a, uiCommandsSource) =>
-            {
-                _sortedRefs = null;
-            };
+
+            GitUICommandsSourceSet += (s, e) => _sortedRefs = null;
 
             _commitDataManager = new CommitDataManager(() => Module);
 
@@ -88,22 +86,14 @@ namespace GitUI.CommitInfo
 
         private void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
         {
-            string link = _linkFactory.ParseLink(e.LinkText);
-            HandleLink(link, sender);
-        }
+            var link = _linkFactory.ParseLink(e.LinkText);
 
-        private void HandleLink(string link, object sender)
-        {
             try
             {
                 var result = new Uri(link);
                 if (result.Scheme == "gitext")
                 {
-                    if (CommandClick != null)
-                    {
-                        string path = result.AbsolutePath.TrimStart('/');
-                        CommandClick(sender, new CommandEventArgs(result.Host, path));
-                    }
+                    CommandClick?.Invoke(sender, new CommandEventArgs(result.Host, result.AbsolutePath.TrimStart('/')));
                 }
                 else
                 {
