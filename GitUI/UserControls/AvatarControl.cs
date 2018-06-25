@@ -13,13 +13,13 @@ using ResourceManager;
 
 namespace GitUI
 {
-    public partial class GravatarControl : GitExtensionsControl
+    public partial class AvatarControl : GitExtensionsControl
     {
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
         private readonly IImageCache _avatarCache;
         private readonly IAvatarService _avatarService;
 
-        public GravatarControl()
+        public AvatarControl()
         {
             InitializeComponent();
             Translate();

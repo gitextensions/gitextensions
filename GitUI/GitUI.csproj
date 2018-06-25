@@ -1062,11 +1062,11 @@
       <DependentUpon>FormGitCommandLog.cs</DependentUpon>
     </Compile>
     <Compile Include="GitUICommands.cs" />
-    <Compile Include="UserControls\GravatarControl.cs">
+    <Compile Include="UserControls\AvatarControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\GravatarControl.Designer.cs">
-      <DependentUpon>GravatarControl.cs</DependentUpon>
+    <Compile Include="UserControls\AvatarControl.Designer.cs">
+      <DependentUpon>AvatarControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\MergeConflictHandler.cs" />
     <Compile Include="CommandsDialogs\FormApplyPatch.cs">
@@ -1598,8 +1598,8 @@
       <DependentUpon>FormGitCommandLog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\GravatarControl.resx">
-      <DependentUpon>GravatarControl.cs</DependentUpon>
+    <EmbeddedResource Include="UserControls\AvatarControl.resx">
+      <DependentUpon>AvatarControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormApplyPatch.resx">

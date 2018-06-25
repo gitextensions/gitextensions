@@ -1,6 +1,6 @@
 ﻿namespace GitUI
 {
-    partial class GravatarControl
+    partial class AvatarControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -153,7 +153,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this._gravatarImg);
             this.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this.Name = "GravatarControl";
+            this.Name = "AvatarControl";
             this.Size = new System.Drawing.Size(96, 96);
             ((System.ComponentModel.ISupportInitialize)(this._gravatarImg)).EndInit();
             this.contextMenuStrip.ResumeLayout(false);
