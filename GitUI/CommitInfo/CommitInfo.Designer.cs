@@ -1,7 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
-
-namespace GitUI.CommitInfo
+﻿namespace GitUI.CommitInfo
 {
     partial class CommitInfo
     {
@@ -33,7 +30,7 @@ namespace GitUI.CommitInfo
         {
             this.components = new System.ComponentModel.Container();
             this.tableLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.gravatar1 = new GitUI.GravatarControl();
+            this.avatarControl = new GitUI.AvatarControl();
             this.RevisionInfo = new System.Windows.Forms.RichTextBox();
             this.commitInfoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyCommitInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,7 +56,7 @@ namespace GitUI.CommitInfo
             this.tableLayout.ColumnCount = 2;
             this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayout.Controls.Add(this.gravatar1, 0, 0);
+            this.tableLayout.Controls.Add(this.avatarControl, 0, 0);
             this.tableLayout.Controls.Add(this.RevisionInfo, 1, 1);
             this.tableLayout.Controls.Add(this._RevisionHeader, 1, 0);
             this.tableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -192,13 +189,13 @@ namespace GitUI.CommitInfo
             // 
             // gravatar1
             // 
-            this.gravatar1.BackColor = System.Drawing.SystemColors.Window;
-            this.gravatar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gravatar1.Location = new System.Drawing.Point(0, 0);
-            this.gravatar1.Margin = new System.Windows.Forms.Padding(0);
-            this.gravatar1.Name = "gravatar1";
-            this.gravatar1.Size = new System.Drawing.Size(96, 98);
-            this.gravatar1.TabIndex = 1;
+            this.avatarControl.BackColor = System.Drawing.SystemColors.Window;
+            this.avatarControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.avatarControl.Location = new System.Drawing.Point(0, 0);
+            this.avatarControl.Margin = new System.Windows.Forms.Padding(0);
+            this.avatarControl.Name = "avatarControl";
+            this.avatarControl.Size = new System.Drawing.Size(96, 98);
+            this.avatarControl.TabIndex = 1;
             // 
             // CommitInfo
             // 
@@ -217,7 +214,7 @@ namespace GitUI.CommitInfo
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayout;
-        private GravatarControl gravatar1;
+        private AvatarControl avatarControl;
         private System.Windows.Forms.RichTextBox RevisionInfo;
         private System.Windows.Forms.ContextMenuStrip commitInfoContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesToolStripMenuItem;

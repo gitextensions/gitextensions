@@ -239,11 +239,11 @@ namespace GitUI.CommitInfo
             {
                 var showAvatar = AppSettings.ShowAuthorGravatar;
 
-                gravatar1.Visible = showAvatar;
+                avatarControl.Visible = showAvatar;
 
                 if (showAvatar)
                 {
-                    gravatar1.LoadImage(_revision.AuthorEmail ?? _revision.CommitterEmail);
+                    avatarControl.LoadImage(_revision.AuthorEmail ?? _revision.CommitterEmail);
                 }
             }
         }
@@ -426,10 +426,10 @@ namespace GitUI.CommitInfo
                 revInfoSpan = 1;
             }
 
-            tableLayout.SetColumn(gravatar1, gravatarIndex);
+            tableLayout.SetColumn(avatarControl, gravatarIndex);
             tableLayout.SetColumn(_RevisionHeader, revInfoIndex);
             tableLayout.SetColumn(RevisionInfo, revInfoIndex);
-            tableLayout.SetRowSpan(gravatar1, gravatarSpan);
+            tableLayout.SetRowSpan(avatarControl, gravatarSpan);
             tableLayout.SetColumnSpan(RevisionInfo, revInfoSpan);
             tableLayout.ResumeLayout(true);
         }
