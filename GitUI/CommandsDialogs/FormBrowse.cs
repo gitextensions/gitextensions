@@ -2919,7 +2919,7 @@ namespace GitUI.CommandsDialogs
             {
                 RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
                 RevisionsSplitContainer.SplitterDistance = RevisionsSplitContainer.Width - DpiUtil.Scale(420);
-                RevisionInfo.DisplayAvatarOnRight();
+                RevisionInfo.SetAvatarPosition(right: true);
                 CommitInfoTabControl.SuspendLayout();
                 CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
 
@@ -2932,7 +2932,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                RevisionInfo.DisplayAvatarOnLeft();
+                RevisionInfo.SetAvatarPosition(right: false);
                 CommitInfoTabControl.SuspendLayout();
                 CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
                 CommitInfoTabControl.ResumeLayout(true);

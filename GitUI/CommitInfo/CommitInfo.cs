@@ -395,7 +395,7 @@ namespace GitUI.CommitInfo
             }
         }
 
-        private void DisplayAvatarSetup(bool right)
+        public void SetAvatarPosition(bool right)
         {
             tableLayout.SuspendLayout();
             tableLayout.ColumnStyles.Clear();
@@ -425,16 +425,6 @@ namespace GitUI.CommitInfo
             tableLayout.SetRowSpan(avatarControl, gravatarSpan);
             tableLayout.SetColumnSpan(RevisionInfo, revInfoSpan);
             tableLayout.ResumeLayout(true);
-        }
-
-        public void DisplayAvatarOnRight()
-        {
-            DisplayAvatarSetup(true);
-        }
-
-        public void DisplayAvatarOnLeft()
-        {
-            DisplayAvatarSetup(false);
         }
 
         private void UpdateRevisionInfo()
