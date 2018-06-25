@@ -16,7 +16,6 @@ using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
@@ -25,6 +24,8 @@ namespace GitUI.CommitInfo
 {
     public partial class CommitInfo : GitModuleControl
     {
+        public event EventHandler<CommandEventArgs> CommandClick;
+
         private readonly TranslationString _containedInBranches = new TranslationString("Contained in branches:");
         private readonly TranslationString _containedInNoBranch = new TranslationString("Contained in no branch");
         private readonly TranslationString _containedInTags = new TranslationString("Contained in tags:");
@@ -46,6 +47,22 @@ namespace GitUI.CommitInfo
         private readonly IExternalLinkRevisionParser _externalLinkRevisionParser;
         private readonly IGitRemoteManager _gitRemoteManager;
         private readonly GitDescribeProvider _gitDescribeProvider;
+
+        private GitRevision _revision;
+        private IReadOnlyList<string> _children;
+        private string _revisionInfo;
+        private string _linksInfo;
+        private IDictionary<string, string> _annotatedTagsMessages;
+        private string _annotatedTagsInfo;
+        private List<string> _tags;
+        private string _tagInfo;
+        private List<string> _branches;
+        private string _branchInfo;
+        private string _gitDescribeInfo;
+        private IList<string> _sortedRefs;
+
+        [DefaultValue(false)]
+        public bool ShowBranchesAsLinks { get; set; }
 
         public CommitInfo()
         {
@@ -80,10 +97,13 @@ namespace GitUI.CommitInfo
             addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)FormBrowse.Commands.AddNotes).ToShortcutKeyDisplayString();
         }
 
-        [DefaultValue(false)]
-        public bool ShowBranchesAsLinks { get; set; }
-
-        public event EventHandler<CommandEventArgs> CommandClick;
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        public GitRevision Revision
+        {
+            get => _revision;
+            set => SetRevisionWithChildren(value, null);
+        }
 
         private void RevisionInfoLinkClicked(object sender, LinkClickedEventArgs e)
         {
@@ -113,8 +133,6 @@ namespace GitUI.CommitInfo
             }
         }
 
-        private GitRevision _revision;
-        private IReadOnlyList<string> _children;
         public void SetRevisionWithChildren(GitRevision revision, IReadOnlyList<string> children)
         {
             _revision = revision;
@@ -122,25 +140,6 @@ namespace GitUI.CommitInfo
 
             ReloadCommitInfo();
         }
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        [Browsable(false)]
-        public GitRevision Revision
-        {
-            get => _revision;
-            set => SetRevisionWithChildren(value, null);
-        }
-
-        private string _revisionInfo;
-        private string _linksInfo;
-        private IDictionary<string, string> _annotatedTagsMessages;
-        private string _annotatedTagsInfo;
-        private List<string> _tags;
-        private string _tagInfo;
-        private List<string> _branches;
-        private string _branchInfo;
-        private string _gitDescribeInfo;
-        private IList<string> _sortedRefs;
 
         private void ReloadCommitInfo()
         {
@@ -408,45 +407,6 @@ namespace GitUI.CommitInfo
             }
         }
 
-        private sealed class ItemTpComparer : IComparer<string>
-        {
-            private readonly IList<string> _otherList;
-            private readonly string _prefix;
-
-            public ItemTpComparer(IList<string> otherList, string prefix)
-            {
-                _otherList = otherList;
-                _prefix = prefix;
-            }
-
-            public int Compare(string a, string b)
-            {
-                return IndexOf(a) - IndexOf(b);
-
-                int IndexOf(string s)
-                {
-                    var head = s.StartsWith("remotes/") ? "refs/" : _prefix;
-                    var tail = s;
-                    var headLength = head.Length;
-                    var length = headLength + s.Length;
-
-                    for (var i = 0; i < _otherList.Count; i++)
-                    {
-                        var other = _otherList[i];
-
-                        if (other.Length == length &&
-                            other.StartsWith(head) &&
-                            other.IndexOf(tail, headLength) == headLength)
-                        {
-                            return i;
-                        }
-                    }
-
-                    return -1;
-                }
-            }
-        }
-
         public void SetAvatarPosition(bool right)
         {
             tableLayout.SuspendLayout();
@@ -705,6 +665,45 @@ namespace GitUI.CommitInfo
         private void _RevisionHeader_ContentsResized(object sender, ContentsResizedEventArgs e)
         {
             _RevisionHeader.Height = Math.Max(e.NewRectangle.Height, DpiUtil.Scale(AppSettings.AuthorImageSize));
+        }
+
+        private sealed class ItemTpComparer : IComparer<string>
+        {
+            private readonly IList<string> _otherList;
+            private readonly string _prefix;
+
+            public ItemTpComparer(IList<string> otherList, string prefix)
+            {
+                _otherList = otherList;
+                _prefix = prefix;
+            }
+
+            public int Compare(string a, string b)
+            {
+                return IndexOf(a) - IndexOf(b);
+
+                int IndexOf(string s)
+                {
+                    var head = s.StartsWith("remotes/") ? "refs/" : _prefix;
+                    var tail = s;
+                    var headLength = head.Length;
+                    var length = headLength + s.Length;
+
+                    for (var i = 0; i < _otherList.Count; i++)
+                    {
+                        var other = _otherList[i];
+
+                        if (other.Length == length &&
+                            other.StartsWith(head) &&
+                            other.IndexOf(tail, headLength) == headLength)
+                        {
+                            return i;
+                        }
+                    }
+
+                    return -1;
+                }
+            }
         }
     }
 }
