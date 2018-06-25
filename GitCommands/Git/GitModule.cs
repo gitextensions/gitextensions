@@ -1283,28 +1283,28 @@ namespace GitCommands
             }
         }
 
-        public KeyValuePair<char, string> GetSuperprojectCurrentCheckout()
+        public (char code, string currentCommitId) GetSuperprojectCurrentCheckout()
         {
             if (SuperprojectModule == null)
             {
-                return new KeyValuePair<char, string>(' ', "");
+                return (' ', "");
             }
 
             var lines = SuperprojectModule.RunGitCmd("submodule status --cached " + _submodulePath).Split('\n');
 
             if (lines.Length == 0)
             {
-                return new KeyValuePair<char, string>(' ', "");
+                return (' ', "");
             }
 
             string submodule = lines[0];
             if (submodule.Length < 43)
             {
-                return new KeyValuePair<char, string>(' ', "");
+                return (' ', "");
             }
 
             var currentCommitGuid = submodule.Substring(1, 40).Trim();
-            return new KeyValuePair<char, string>(submodule[0], currentCommitGuid);
+            return (submodule[0], currentCommitGuid);
         }
 
         public bool ExistsMergeCommit(string startRev, string endRev)
