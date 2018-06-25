@@ -488,10 +488,20 @@ namespace GitUI.CommitInfo
                 }
             }
 
-            string body = _revisionInfo;
+            string body;
             if (Revision != null && !Revision.IsArtificial)
             {
-                body += "\n" + _annotatedTagsInfo + _linksInfo + _branchInfo + _tagInfo + _gitDescribeInfo;
+                body = new StringBuilder().AppendLine(_revisionInfo)
+                    .Append(_annotatedTagsInfo)
+                    .Append(_linksInfo)
+                    .Append(_branchInfo)
+                    .Append(_tagInfo)
+                    .Append(_gitDescribeInfo)
+                    .ToString();
+            }
+            else
+            {
+                body = _revisionInfo;
             }
 
             RevisionInfo.SuspendLayout();
