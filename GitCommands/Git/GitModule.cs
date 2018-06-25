@@ -341,7 +341,7 @@ namespace GitCommands
         }
 
         /// <summary>Indicates whether the specified directory contains a git repository.</summary>
-        public static bool IsValidGitWorkingDir(string dir)
+        public static bool IsValidGitWorkingDir([CanBeNull] string dir)
         {
             if (string.IsNullOrEmpty(dir))
             {
@@ -991,6 +991,7 @@ namespace GitCommands
             return refs.Where(showRemoteRef).ToDictionary(r => r, r => GetSubmoduleCommitHash(filename, r.Name));
         }
 
+        [CanBeNull]
         private static string GetSortedRefsCommand()
         {
             if (AppSettings.ShowSuperprojectRemoteBranches)
@@ -1008,6 +1009,7 @@ namespace GitCommands
             return null;
         }
 
+        [CanBeNull]
         private IGitItem GetSubmoduleCommitHash(string filename, string refName)
         {
             string str = RunGitCmd("ls-tree " + refName + " \"" + filename + "\"");
@@ -1082,6 +1084,7 @@ namespace GitCommands
         }
 
         /// <summary>Runs a bash or shell command.</summary>
+        [CanBeNull]
         public Process RunBash(string bashCommand = null)
         {
             if (EnvUtils.RunningOnUnix())
@@ -1330,6 +1333,7 @@ namespace GitCommands
             return new ConfigFile(WorkingDir + ".gitmodules", true);
         }
 
+        [CanBeNull]
         public string GetCurrentSubmoduleLocalPath()
         {
             if (SuperprojectModule == null)
@@ -1438,7 +1442,8 @@ namespace GitCommands
             }
         }
 
-        public string FindGitSuperprojectPath(out string submoduleName, out string submodulePath)
+        [CanBeNull]
+        public string FindGitSuperprojectPath(out string submoduleName, [CanBeNull] out string submodulePath)
         {
             submoduleName = null;
             submodulePath = null;
@@ -1472,8 +1477,7 @@ namespace GitCommands
                 }
             }
 
-            if (File.Exists(WorkingDir + ".git") &&
-                superprojectPath == null)
+            if (superprojectPath == null && File.Exists(WorkingDir + ".git"))
             {
                 var lines = File.ReadLines(WorkingDir + ".git");
                 foreach (string line in lines)
@@ -1514,8 +1518,7 @@ namespace GitCommands
 
         public string GetSubmoduleSummary(string submodule)
         {
-            var arguments = string.Format("submodule summary {0}", submodule);
-            return RunGitCmd(arguments);
+            return RunGitCmd($"submodule summary {submodule}");
         }
 
         public string ResetSoft(string commit, string file = null)
@@ -1670,7 +1673,7 @@ namespace GitCommands
             GitCommandHelpers.RunCmd(AppSettings.Pageant, "\"" + sshKeyFile + "\"");
         }
 
-        public string GetPuttyKeyFileForRemote(string remote)
+        public string GetPuttyKeyFileForRemote([CanBeNull] string remote)
         {
             if (string.IsNullOrEmpty(remote) ||
                 string.IsNullOrEmpty(AppSettings.Pageant) ||
@@ -1683,7 +1686,7 @@ namespace GitCommands
             return GetSetting(string.Format("remote.{0}.puttykeyfile", remote));
         }
 
-        public string FetchCmd(string remote, string remoteBranch, string localBranch, bool? fetchTags = false, bool isUnshallow = false, bool prune = false)
+        public string FetchCmd([CanBeNull] string remote, [CanBeNull] string remoteBranch, [CanBeNull] string localBranch, bool? fetchTags = false, bool isUnshallow = false, bool prune = false)
         {
             var args = new ArgumentBuilder
             {
@@ -2236,7 +2239,7 @@ namespace GitCommands
             return RunGitCmd("branch -m \"" + name + "\" \"" + newName + "\"");
         }
 
-        public string AddRemote(string name, string path)
+        public string AddRemote([CanBeNull] string name, string path)
         {
             var location = path.ToPosixPath();
 
@@ -2591,7 +2594,8 @@ namespace GitCommands
             return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.All).Count > 0;
         }
 
-        public Patch GetCurrentChanges(string fileName, string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
+        [CanBeNull]
+        public Patch GetCurrentChanges(string fileName, [CanBeNull] string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
             var args = new ArgumentBuilder
             {
@@ -2621,6 +2625,7 @@ namespace GitCommands
             return null;
         }
 
+        [CanBeNull]
         public string GetFileContents(GitItemStatus file)
         {
             var contents = new StringBuilder();
@@ -2664,7 +2669,7 @@ namespace GitCommands
         }
 
         /// <summary>Dirty but fast. This sometimes fails.</summary>
-        public static string GetSelectedBranchFast(string repositoryPath)
+        public static string GetSelectedBranchFast([CanBeNull] string repositoryPath)
         {
             if (string.IsNullOrEmpty(repositoryPath))
             {
@@ -3028,6 +3033,7 @@ namespace GitCommands
         /// Returns tag's message. If the lightweight tag is passed, corresponding commit message
         /// is returned.
         /// </summary>
+        [CanBeNull]
         public string GetTagMessage(string tag)
         {
             if (string.IsNullOrWhiteSpace(tag))
@@ -3378,6 +3384,7 @@ namespace GitCommands
             return string.Empty;
         }
 
+        [CanBeNull]
         public Stream GetFileStream(string blob)
         {
             try
@@ -3458,7 +3465,7 @@ namespace GitCommands
                 : null;
         }
 
-        public SubmoduleStatus CheckSubmoduleStatus(string commit, string oldCommit, CommitData data, CommitData olddata, bool loaddata = false)
+        public SubmoduleStatus CheckSubmoduleStatus(string commit, [CanBeNull] string oldCommit, CommitData data, CommitData olddata, bool loaddata = false)
         {
             if (!IsValidGitWorkingDir() || oldCommit == null)
             {
@@ -3703,6 +3710,7 @@ namespace GitCommands
         // there was a bug: Git before v1.8.4 did not recode commit message when format is given
         // Lossless encoding is used, because LogOutputEncoding might not be lossless and not recoded
         // characters could be replaced by replacement character while reencoding to LogOutputEncoding
+        [CanBeNull]
         public string ReEncodeCommitMessage(string s, [CanBeNull] string toEncodingName)
         {
             Encoding encoding;
@@ -3882,6 +3890,7 @@ namespace GitCommands
             return RunGitCmdResult("rm --cached " + filename).ExitedSuccessfully;
         }
 
+        [CanBeNull]
         public string GetDescribe(string commit)
         {
             string info = RunGitCmd("describe --tags --first-parent " + commit).TrimEnd();
