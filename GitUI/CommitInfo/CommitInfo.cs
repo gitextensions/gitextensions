@@ -16,6 +16,7 @@ using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
@@ -256,6 +257,8 @@ namespace GitUI.CommitInfo
             UpdateRevisionInfo();
         }
 
+        [ContractAnnotation("refs:null=>null")]
+        [ContractAnnotation("refs:notnull=>notnull")]
         private IDictionary<string, string> GetAnnotatedTagsMessages(IReadOnlyList<IGitRef> refs)
         {
             if (refs == null)
