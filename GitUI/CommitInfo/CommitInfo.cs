@@ -493,17 +493,17 @@ namespace GitUI.CommitInfo
             IEnumerable<string> tagNames,
             IDictionary<string, string> annotatedTagsMessages)
         {
-            string result = string.Empty;
+            var result = new StringBuilder();
 
-            foreach (string tag in tagNames)
+            foreach (var tag in tagNames)
             {
                 if (annotatedTagsMessages.TryGetValue(tag, out var annotatedContents))
                 {
-                    result += "<u>" + tag + "</u>: " + annotatedContents + Environment.NewLine;
+                    result.Append("<u>").Append(tag).Append("</u>: ").Append(annotatedContents).AppendLine();
                 }
             }
 
-            if (result.IsNullOrEmpty())
+            if (result.Length == 0)
             {
                 return string.Empty;
             }
