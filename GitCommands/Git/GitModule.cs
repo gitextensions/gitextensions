@@ -1210,26 +1210,28 @@ namespace GitCommands
 
             string ProcessDiffNotes(int startIndex)
             {
-                int endIndex = lines.Length - 1;
+                var endIndex = lines.Length - 1;
+
                 if (lines[endIndex] == "Notes:")
                 {
                     endIndex--;
                 }
 
                 var message = new StringBuilder();
-                bool notesStart = false;
-                for (int i = startIndex; i <= endIndex; i++)
+                var inNoteSection = false;
+
+                for (var i = startIndex; i <= endIndex; i++)
                 {
-                    string line = lines[i];
-                    if (notesStart)
+                    if (inNoteSection)
                     {
-                        line = "    " + line;
+                        message.Append("    ");
                     }
 
-                    message.AppendLine(line);
+                    message.AppendLine(lines[i]);
+
                     if (lines[i] == "Notes:")
                     {
-                        notesStart = true;
+                        inNoteSection = true;
                     }
                 }
 
