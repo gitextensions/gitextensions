@@ -38,6 +38,6 @@ namespace Gravatar
         /// <summary>
         /// Return an 8-bit-style face based on the email hash.
         /// </summary>
-        Retro,
+        Retro
     }
 }
