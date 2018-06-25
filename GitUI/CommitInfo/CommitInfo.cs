@@ -408,7 +408,7 @@ namespace GitUI.CommitInfo
             }
         }
 
-        private class ItemTpComparer : IComparer<string>
+        private sealed class ItemTpComparer : IComparer<string>
         {
             private readonly IList<string> _otherList;
             private readonly string _prefix;
@@ -421,27 +421,29 @@ namespace GitUI.CommitInfo
 
             public int Compare(string a, string b)
             {
-                if (a.StartsWith("remotes/"))
-                {
-                    a = "refs/" + a;
-                }
-                else
-                {
-                    a = _prefix + a;
-                }
+                return IndexOf(a) - IndexOf(b);
 
-                if (b.StartsWith("remotes/"))
+                int IndexOf(string s)
                 {
-                    b = "refs/" + b;
-                }
-                else
-                {
-                    b = _prefix + b;
-                }
+                    var head = s.StartsWith("remotes/") ? "refs/" : _prefix;
+                    var tail = s;
+                    var headLength = head.Length;
+                    var length = headLength + s.Length;
 
-                int i = _otherList.IndexOf(a);
-                int j = _otherList.IndexOf(b);
-                return i - j;
+                    for (var i = 0; i < _otherList.Count; i++)
+                    {
+                        var other = _otherList[i];
+
+                        if (other.Length == length &&
+                            other.StartsWith(head) &&
+                            other.IndexOf(tail, headLength) == headLength)
+                        {
+                            return i;
+                        }
+                    }
+
+                    return -1;
+                }
             }
         }
 
