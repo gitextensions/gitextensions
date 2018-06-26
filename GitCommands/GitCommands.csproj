@@ -109,6 +109,7 @@
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
     <Compile Include="Remote\GitRemoteManager.cs" />
     <Compile Include="Remote\RepoNameExtractor.cs" />
+    <Compile Include="Settings\DefaultImageType.cs" />
     <Compile Include="UserRepositoryHistory\IRepositoryManager.cs" />
     <Compile Include="UserRepositoryHistory\IRepositorySerialiser.cs" />
     <Compile Include="UserRepositoryHistory\Legacy\Repository.cs" />

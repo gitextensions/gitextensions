@@ -16,7 +16,6 @@ namespace GitUIPluginInterfaces
         IGitModule GitModule { get; }
         string GitCommand(string arguments);
         IGitRemoteCommand CreateRemoteCommand();
-        void CacheAvatar(string email);
 
         /// <summary>
         /// RepoChangedNotifier.Notify() should be called after each action that changes repo state

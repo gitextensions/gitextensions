@@ -766,7 +766,7 @@ namespace GitCommandsTests.Config
         [Test]
         public void TwoSections_ValueInTheLast()
         {
-            // test for bug reporten in https://github.com/gitextensions/gitextensions/pull/3151/commits/282c6c1df45024c3c997f1a79aa7aba5a96a1a68
+            // test for bug reported in https://github.com/gitextensions/gitextensions/pull/3151/commits/282c6c1df45024c3c997f1a79aa7aba5a96a1a68
             string configFileContent = @"
 [status]
 [status]

@@ -457,6 +457,7 @@
             this.Name = "AppearanceSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(773, 531);
+            this.Text = "Appearance";
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             this.gbGeneral.ResumeLayout(false);

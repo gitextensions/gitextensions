@@ -104,8 +104,6 @@ namespace GitUIPluginInterfaces
 
         Version AppVersion { get; }
 
-        string GravatarCacheDir { get; }
-
         string GetSubmoduleFullPath(string localPath);
 
         IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo();

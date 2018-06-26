@@ -31,16 +31,10 @@
             this.components = new System.ComponentModel.Container();
             this._gravatarImg = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearImagecacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.noImageGeneratorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.noneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.identiconToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.monsterIdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.wavatarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.retroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.registerAtGravatarcomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.registerGravatarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this._gravatarImg)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -60,21 +54,12 @@
             // contextMenuStrip
             // 
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshToolStripMenuItem,
             this.clearImagecacheToolStripMenuItem,
-            this.noImageGeneratorToolStripMenuItem,
+            this.defaultImageToolStripMenuItem,
             this.toolStripSeparator1,
-            this.registerAtGravatarcomToolStripMenuItem});
+            this.registerGravatarToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
             this.contextMenuStrip.Size = new System.Drawing.Size(203, 120);
-            // 
-            // refreshToolStripMenuItem
-            // 
-            this.refreshToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconReloadRevisions;
-            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
-            this.refreshToolStripMenuItem.Text = "Refresh image";
-            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.RefreshToolStripMenuItemClick);
             // 
             // clearImagecacheToolStripMenuItem
             // 
@@ -82,59 +67,14 @@
             this.clearImagecacheToolStripMenuItem.Name = "clearImagecacheToolStripMenuItem";
             this.clearImagecacheToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.clearImagecacheToolStripMenuItem.Text = "Clear image cache";
+            this.clearImagecacheToolStripMenuItem.Click += new System.EventHandler(this.OnClearCacheClick);
             // 
             // noImageGeneratorToolStripMenuItem
             // 
-            this.noImageGeneratorToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.noneToolStripMenuItem,
-            this.identiconToolStripMenuItem,
-            this.monsterIdToolStripMenuItem,
-            this.wavatarToolStripMenuItem,
-            this.retroToolStripMenuItem});
-            this.noImageGeneratorToolStripMenuItem.Name = "noImageGeneratorToolStripMenuItem";
-            this.noImageGeneratorToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
-            this.noImageGeneratorToolStripMenuItem.Text = "No image service";
-            this.noImageGeneratorToolStripMenuItem.DropDownOpening += new System.EventHandler(this.noImageGeneratorToolStripMenuItem_DropDownOpening);
-            // 
-            // noneToolStripMenuItem
-            // 
-            this.noneToolStripMenuItem.CheckOnClick = true;
-            this.noneToolStripMenuItem.Name = "noneToolStripMenuItem";
-            this.noneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.noneToolStripMenuItem.Text = "None";
-            this.noneToolStripMenuItem.Click += new System.EventHandler(this.noImageService_Click);
-            // 
-            // identiconToolStripMenuItem
-            // 
-            this.identiconToolStripMenuItem.CheckOnClick = true;
-            this.identiconToolStripMenuItem.Name = "identiconToolStripMenuItem";
-            this.identiconToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.identiconToolStripMenuItem.Text = "Identicon";
-            this.identiconToolStripMenuItem.Click += new System.EventHandler(this.noImageService_Click);
-            // 
-            // monsterIdToolStripMenuItem
-            // 
-            this.monsterIdToolStripMenuItem.CheckOnClick = true;
-            this.monsterIdToolStripMenuItem.Name = "monsterIdToolStripMenuItem";
-            this.monsterIdToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.monsterIdToolStripMenuItem.Text = "Monster Id";
-            this.monsterIdToolStripMenuItem.Click += new System.EventHandler(this.noImageService_Click);
-            // 
-            // wavatarToolStripMenuItem
-            // 
-            this.wavatarToolStripMenuItem.CheckOnClick = true;
-            this.wavatarToolStripMenuItem.Name = "wavatarToolStripMenuItem";
-            this.wavatarToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.wavatarToolStripMenuItem.Text = "Wavatar";
-            this.wavatarToolStripMenuItem.Click += new System.EventHandler(this.noImageService_Click);
-            // 
-            // retroToolStripMenuItem
-            // 
-            this.retroToolStripMenuItem.CheckOnClick = true;
-            this.retroToolStripMenuItem.Name = "retroToolStripMenuItem";
-            this.retroToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.retroToolStripMenuItem.Text = "Retro";
-            this.retroToolStripMenuItem.Click += new System.EventHandler(this.noImageService_Click);
+            this.defaultImageToolStripMenuItem.Name = "defaultImageToolStripMenuItem";
+            this.defaultImageToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.defaultImageToolStripMenuItem.Text = "Default image";
+            this.defaultImageToolStripMenuItem.DropDownOpening += new System.EventHandler(this.OnDefaultImageDropDownOpening);
             // 
             // toolStripSeparator1
             // 
@@ -143,10 +83,10 @@
             // 
             // registerAtGravatarcomToolStripMenuItem
             // 
-            this.registerAtGravatarcomToolStripMenuItem.Name = "registerAtGravatarcomToolStripMenuItem";
-            this.registerAtGravatarcomToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
-            this.registerAtGravatarcomToolStripMenuItem.Text = "Register at gravatar.com";
-            this.registerAtGravatarcomToolStripMenuItem.Click += new System.EventHandler(this.RegisterAtGravatarcomToolStripMenuItemClick);
+            this.registerGravatarToolStripMenuItem.Name = "registerGravatarToolStripMenuItem";
+            this.registerGravatarToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.registerGravatarToolStripMenuItem.Text = "Register at gravatar.com";
+            this.registerGravatarToolStripMenuItem.Click += new System.EventHandler(this.OnRegisterGravatarClick);
             // 
             // GravatarControl
             // 
@@ -165,15 +105,9 @@
 
         private System.Windows.Forms.PictureBox _gravatarImg;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem registerAtGravatarcomToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem registerGravatarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearImagecacheToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem noImageGeneratorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem identiconToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem monsterIdToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem wavatarToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem noneToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem retroToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultImageToolStripMenuItem;
     }
 }

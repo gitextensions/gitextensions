@@ -24,6 +24,7 @@ using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
+using Gravatar;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
@@ -186,7 +187,7 @@ namespace GitUI
             _gridView.GraphColumnProvider = graphColumnProvider;
             _gridView.AddColumn(graphColumnProvider);
             _gridView.AddColumn(new MessageColumnProvider(this));
-            _gridView.AddColumn(new AvatarColumnProvider(_gridView));
+            _gridView.AddColumn(new AvatarColumnProvider(_gridView, AvatarService.Default));
             _gridView.AddColumn(new AuthorNameColumnProvider(this, _authorHighlighting));
             _gridView.AddColumn(new DateColumnProvider(this));
             _gridView.AddColumn(new CommitIdColumnProvider(this));
