@@ -36,12 +36,12 @@ namespace GitCommandsTests.Config
             return Path.GetTempPath();
         }
 
-        private string GetConfigFileName()
+        private static string GetConfigFileName()
         {
             return Path.Combine(GetTempFolder(), "testconfigfile");
         }
 
-        private string GetDefaultConfigFileContent()
+        private static string GetDefaultConfigFileContent()
         {
             StringBuilder content = new StringBuilder();
             content.AppendLine("[section1]");
