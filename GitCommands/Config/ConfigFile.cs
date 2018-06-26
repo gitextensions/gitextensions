@@ -11,6 +11,9 @@ namespace GitCommands.Config
 {
     public class ConfigFile
     {
+        private static Encoding GetEncoding() => GitModule.SystemEncoding;
+        public static readonly char[] CommentChars = { ';', '#' };
+
         private readonly List<IConfigSection> _configSections = new List<IConfigSection>();
 
         public string FileName { get; }
@@ -42,17 +45,9 @@ namespace GitCommands.Config
             return ConfigSections.Where(section => section.SectionName.Equals(sectionName, StringComparison.OrdinalIgnoreCase));
         }
 
-        private static Encoding GetEncoding()
-        {
-            return GitModule.SystemEncoding;
-        }
-
-        public static readonly char[] CommentChars = { ';', '#' };
-
         public void LoadFromString(string str)
         {
-            ConfigFileParser parser = new ConfigFileParser(this);
-            parser.Parse(str);
+            new ConfigFileParser(this).Parse(str);
         }
 
         public static string EscapeValue(string value)
@@ -73,6 +68,18 @@ namespace GitCommands.Config
         public void Save()
         {
             Save(FileName);
+        }
+
+        public void Save(string fileName)
+        {
+            try
+            {
+                FileInfoExtensions.MakeFileTemporaryWritable(fileName, x => File.WriteAllText(fileName, GetAsString(), GetEncoding()));
+            }
+            catch (Exception ex)
+            {
+                ExceptionUtils.ShowException(ex, false);
+            }
         }
 
         public string GetAsString()
@@ -102,18 +109,6 @@ namespace GitCommands.Config
             }
 
             return configFileContent.ToString();
-        }
-
-        public void Save(string fileName)
-        {
-            try
-            {
-                FileInfoExtensions.MakeFileTemporaryWritable(fileName, x => File.WriteAllText(fileName, GetAsString(), GetEncoding()));
-            }
-            catch (Exception ex)
-            {
-                ExceptionUtils.ShowException(ex, false);
-            }
         }
 
         private void SetStringValue(string setting, string value)
