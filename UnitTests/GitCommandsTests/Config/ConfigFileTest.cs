@@ -65,13 +65,13 @@ namespace GitCommandsTests.Config
             return Module.RunGitCmd(args).TrimEnd('\n');
         }
 
-        public void CheckValueIsEqual(ConfigFile configFile, string key, string expectedValue)
+        private void CheckValueIsEqual(ConfigFile configFile, string key, string expectedValue)
         {
             Assert.AreEqual(GetConfigValue(configFile.FileName, key), configFile.GetValue(key), "git config --get");
             Assert.AreEqual(expectedValue, configFile.GetValue(key), "ConfigFile");
         }
 
-        public void CheckIsNotEqual(ConfigFile configFile, string key, string expectedValue)
+        private void CheckIsNotEqual(ConfigFile configFile, string key, string expectedValue)
         {
             Assert.AreNotEqual(GetConfigValue(configFile.FileName, key), expectedValue, "git config --get");
             Assert.AreNotEqual(expectedValue, configFile.GetValue(key), "ConfigFile");
