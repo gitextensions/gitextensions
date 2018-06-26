@@ -6,7 +6,7 @@ rem
 rem Update this version number with every release
 rem
 setlocal
-set version=2.51.02
+set version=2.51.03
 if not "%APPVEYOR_BUILD_VERSION%"=="" set version=%APPVEYOR_BUILD_VERSION%
 set normal=GitExtensions-%version%-Mono.zip
 set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"

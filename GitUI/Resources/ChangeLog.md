@@ -1,6 +1,23 @@
 Changelog
 =========
 
+### [Version 2.51.03] (26 June 2018)
+
+#### Features:
+* Set recommended version Git version to 2.17.1 - PR [5095]
+* RTF round-trip bug causes System.ArgumentException: File format is not valid - Issue [5005]
+* Recheck filter against displayed file name when working in the fileNameOnlyMode mode. - Issue [4991]
+* Crash on opening repository in Recent list. - Issue [4549]
+* Add Atom Editor to Git Config section - Issue [2507]
+
+#### Fixes:
+* Repository init dialog shows incorrect location - Issue [5107]
+* Git-status in the background should use --no-optional-locks - Issue [5066]
+* Typing 'b' or 'h' into the Diff Filter Files text box doesn't insert the character - Issue [5065]
+* Customized window size is not kept - Issue [5021]
+* Commit index count dissapears on refresh - Issue [4483]
+
+
 ### [Version 2.51.02] (24 May 2018)
 
 #### Highlights:
@@ -2531,3 +2548,16 @@ Changelog
 [4174]:https://github.com/gitextensions/gitextensions/issues/4174
 [4099]:https://github.com/gitextensions/gitextensions/issues/4099
 [3828]:https://github.com/gitextensions/gitextensions/issues/3828
+
+
+[Version 2.51.03]:https://github.com/gitextensions/gitextensions/releases/tag/v2.51.03
+[5107]:https://github.com/gitextensions/gitextensions/issues/5107
+[5095]:https://github.com/gitextensions/gitextensions/pull/5095
+[5066]:https://github.com/gitextensions/gitextensions/issues/5066
+[5065]:https://github.com/gitextensions/gitextensions/issues/5065
+[5021]:https://github.com/gitextensions/gitextensions/issues/5021
+[5005]:https://github.com/gitextensions/gitextensions/issues/5005
+[4991]:https://github.com/gitextensions/gitextensions/issues/4991
+[4549]:https://github.com/gitextensions/gitextensions/issues/4549
+[4483]:https://github.com/gitextensions/gitextensions/issues/4483
+[2507]:https://github.com/gitextensions/gitextensions/issues/2507

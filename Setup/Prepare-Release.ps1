@@ -4,11 +4,11 @@
 
 [CmdletBinding()]
 Param(
-    #[Parameter(Mandatory=$True, Position=1)]
+    [Parameter(Mandatory=$True, Position=1)]
     [string] $oldVersion,
-    #[Parameter(Mandatory=$True, Position=2)]
+    [Parameter(Mandatory=$True, Position=2)]
     [string] $newVersion,
-    #[Parameter(Mandatory=$True, Position=3)]
+    [Parameter(Mandatory=$True, Position=3)]
     [string] $milestones
 )
 
@@ -68,19 +68,19 @@ function Generate-Changelog {
 		$issueLinks += "[$($issue.number)]:$($issue.html_url)"
 	}
 
-	"### Version $milestoneTitle ($milestoneDue)" | Out-File $changelogFile
-	"`r`n#### Features:" | Out-File $changelogFile -Append
+	"### Version $milestoneTitle ($milestoneDue)" | Out-File $changelogFile -Encoding utf8
+	"`r`n#### Features:" | Out-File $changelogFile -Append -Encoding utf8
 	$pullrequests | ForEach-Object {
 		$issue = $_;
-		"* $($issue.title) - $($issue.customTitle) [$($issue.number)]" | Out-File $changelogFile -Append
+		"* $($issue.title) - $($issue.customTitle) [$($issue.number)]" | Out-File $changelogFile -Append -Encoding utf8
 	}
-	"`r`n#### Fixes:" | Out-File $changelogFile -Append
+	"`r`n#### Fixes:" | Out-File $changelogFile -Append -Encoding utf8
 	$issues | ForEach-Object {
 		$issue = $_;
-		"* $($issue.title) - $($issue.customTitle) [$($issue.number)]" | Out-File $changelogFile -Append
+		"* $($issue.title) - $($issue.customTitle) [$($issue.number)]" | Out-File $changelogFile -Append -Encoding utf8
 	}
-	"`r`n" | Out-File $changelogFile -Append
-	$issueLinks | Out-File $changelogFile -Append
+	"`r`n" | Out-File $changelogFile -Append -Encoding utf8
+	$issueLinks | Out-File $changelogFile -Append -Encoding utf8
 }
 
 function Update-Contributors {
@@ -95,6 +95,7 @@ function Update-Contributors {
     # \r=13, \n=10, comma=44
     $contributors = $rawContributors.Split(13, 10, 44).Trim() | Where { $_ } 
 
+    [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
     $cmd = "git shortlog v$originalVersion..HEAD -s --no-merges";
     Write-Host "Getting contributors by running: $cmd";
     $result = iex $cmd
@@ -205,7 +206,7 @@ try {
     Write-Host ----------------------------------------------------------------------
     # preparing the build artifacts
     $env:SKIP_PAUSE=1
-    .\BuildInstallers.VS2015.cmd
+    .\BuildInstallers.VS2017.cmd
 
     Write-Host ----------------------------------------------------------------------
     Write-Host Package PDBs
