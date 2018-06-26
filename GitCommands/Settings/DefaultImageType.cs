@@ -1,4 +1,4 @@
-namespace Gravatar
+namespace GitCommands
 {
     /// <summary>
     /// Services that gravatar provides in order to provide avatars in

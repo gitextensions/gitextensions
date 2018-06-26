@@ -428,8 +428,38 @@ namespace GitCommands
             set => SetBool("commitinfoshowtagthiscommitderivesfrom", value);
         }
 
+        #region Avatars
+
         [NotNull]
         public static string GravatarCachePath => Path.Combine(ApplicationDataPath.Value, "Images\\");
+
+        public static DefaultImageType GravatarDefaultImageType
+        {
+            get => Enum.TryParse(GetString("GravatarDefaultImageType", "Identicon"), out DefaultImageType type)
+                ? type
+                : DefaultImageType.Identicon;
+            set => SetString("GravatarDefaultImageType", value.ToString());
+        }
+
+        /// <summary>
+        /// Gets the size of the commit author avatar. Set to 80px.
+        /// </summary>
+        /// <remarks>The value should be scaled with DPI.</remarks>
+        public static int AuthorImageSize => 80;
+
+        public static int AuthorImageCacheDays
+        {
+            get => GetInt("authorimagecachedays", 5);
+            set => SetInt("authorimagecachedays", value);
+        }
+
+        public static bool ShowAuthorGravatar
+        {
+            get => GetBool("showauthorgravatar", true);
+            set => SetBool("showauthorgravatar", value);
+        }
+
+        #endregion
 
         [NotNull]
         public static string Translation
@@ -514,24 +544,6 @@ namespace GitCommands
         {
             get => GetBool("enableautoscale", true);
             set => SetBool("enableautoscale", value);
-        }
-
-        /// <summary>
-        /// Gets the size of the commit author avatar. Set to 80px.
-        /// </summary>
-        /// <remarks>The value should be scaled with DPI.</remarks>
-        public static int AuthorImageSize => 80;
-
-        public static int AuthorImageCacheDays
-        {
-            get => GetInt("authorimagecachedays", 5);
-            set => SetInt("authorimagecachedays", value);
-        }
-
-        public static bool ShowAuthorGravatar
-        {
-            get => GetBool("showauthorgravatar", true);
-            set => SetBool("showauthorgravatar", value);
         }
 
         public static bool CloseCommitDialogAfterCommit
@@ -998,12 +1010,6 @@ namespace GitCommands
         {
             get => GetInt("revisiongridquicksearchtimeout", 4000);
             set => SetInt("revisiongridquicksearchtimeout", value);
-        }
-
-        public static string GravatarDefaultImageType
-        {
-            get => GetString("gravatarfallbackservice", "Identicon");
-            set => SetString("gravatarfallbackservice", value);
         }
 
         /// <summary>Gets or sets the path to the git application executable.</summary>

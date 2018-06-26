@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
@@ -10,13 +11,17 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 {
     internal sealed class AvatarColumnProvider : ColumnProvider
     {
-        private readonly IImageCache _avatarCache;
-        private readonly IAvatarService _avatarService;
-        private readonly IImageNameProvider _avatarImageNameProvider;
+        private readonly RevisionDataGridView _revisionGridView;
+        private readonly IAvatarProvider _avatarProvider;
 
-        public AvatarColumnProvider(RevisionDataGridView revisionGridView)
+        public AvatarColumnProvider(RevisionDataGridView revisionGridView, IAvatarProvider avatarProvider)
             : base("Avatar")
         {
+            _revisionGridView = revisionGridView;
+            _avatarProvider = avatarProvider;
+
+            _avatarProvider.CacheCleared += _revisionGridView.Invalidate;
+
             Column = new DataGridViewTextBoxColumn
             {
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
@@ -26,11 +31,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 Resizable = DataGridViewTriState.False,
                 Width = DpiUtil.Scale(32)
             };
-
-            _avatarImageNameProvider = new AvatarImageNameProvider();
-            _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
-            _avatarCache.Invalidated += (s, e) => revisionGridView.Invalidate();
-            _avatarService = new AvatarService(_avatarCache, _avatarImageNameProvider);
         }
 
         public override void Refresh() => Column.Visible = AppSettings.ShowAuthorAvatarColumn;
@@ -42,28 +42,37 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return;
             }
 
-            var imageName = _avatarImageNameProvider.Get(revision.AuthorEmail);
-
-            var image = _avatarCache.GetImage(imageName);
-
-            if (image == null)
-            {
-                image = Resources.User;
-
-                // kick off download operation, will likely display the avatar during the next round of repaint
-                if (!string.IsNullOrWhiteSpace(revision.AuthorEmail))
-                {
-                    _avatarService
-                        .GetAvatarAsync(revision.AuthorEmail, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType)
-                        .FileAndForget();
-                }
-            }
-
             Column.Width = e.CellBounds.Height;
 
             const int padding = 3;
 
             var imageSize = e.CellBounds.Height - padding - padding;
+
+            Image image;
+            var imageTask = _avatarProvider.GetAvatarAsync(revision.AuthorEmail, imageSize);
+
+            if (imageTask.Status == TaskStatus.RanToCompletion)
+            {
+                #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+                image = imageTask.Result;
+                #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
+            }
+            else
+            {
+                // Image is not yet loaded -- use a placeholder for now
+                image = Resources.User;
+
+                // One the image has loaded, invalidate for repaint
+                imageTask.ContinueWith(
+                    t =>
+                    {
+                        if (t.Status == TaskStatus.RanToCompletion)
+                        {
+                            _revisionGridView.Invalidate();
+                        }
+                    }, TaskScheduler.Current)
+                    .FileAndForget();
+            }
 
             var rect = new Rectangle(
                 e.CellBounds.Left + padding,

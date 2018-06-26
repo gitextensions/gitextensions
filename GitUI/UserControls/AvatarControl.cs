@@ -13,11 +13,10 @@ using ResourceManager;
 
 namespace GitUI
 {
-    public partial class AvatarControl : GitExtensionsControl
+    public sealed partial class AvatarControl : GitExtensionsControl
     {
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
-        private readonly IImageCache _avatarCache;
-        private readonly IAvatarService _avatarService;
+        private readonly IAvatarProvider _avatarProvider = AvatarService.Default;
 
         public AvatarControl()
         {
@@ -26,19 +25,37 @@ namespace GitUI
 
             clearImagecacheToolStripMenuItem.Click += delegate { ClearCache(); };
 
-            noneToolStripMenuItem.Tag = DefaultImageType.None;
-            identiconToolStripMenuItem.Tag = DefaultImageType.Identicon;
-            monsterIdToolStripMenuItem.Tag = DefaultImageType.MonsterId;
-            wavatarToolStripMenuItem.Tag = DefaultImageType.Wavatar;
-            retroToolStripMenuItem.Tag = DefaultImageType.Retro;
+            foreach (DefaultImageType type in Enum.GetValues(typeof(DefaultImageType)))
+            {
+                var item = new ToolStripMenuItem
+                {
+                    CheckOnClick = true,
+                    Tag = type,
+                    Text = type.ToString()
+                };
 
-            // We cache avatar images on disk...
-            var persistentCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
+                item.Click += delegate
+                {
+                    AppSettings.GravatarDefaultImageType = type;
+                    ClearCache();
+                };
 
-            // And in memory...
-            _avatarCache = new MruImageCache(persistentCache);
+                defaultImageToolStripMenuItem.DropDownItems.Add(item);
+            }
 
-            _avatarService = new AvatarService(_avatarCache);
+            return;
+
+            void ClearCache()
+            {
+                ThreadHelper.JoinableTaskFactory
+                    .RunAsync(
+                        async () =>
+                        {
+                            await _avatarProvider.ClearCacheAsync().ConfigureAwait(true);
+                            await UpdateGravatarAsync().ConfigureAwait(false);
+                        })
+                    .FileAndForget();
+            }
         }
 
         [CanBeNull]
@@ -83,7 +100,7 @@ namespace GitUI
             }
 
             var token = _cancellationTokenSequence.Next();
-            var image = await _avatarService.GetAvatarAsync(email, Math.Max(size.Width, size.Height), AppSettings.GravatarDefaultImageType);
+            var image = await _avatarProvider.GetAvatarAsync(email, Math.Max(size.Width, size.Height));
 
             if (!token.IsCancellationRequested)
             {
@@ -91,7 +108,7 @@ namespace GitUI
             }
         }
 
-        private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
+        private void OnClearCacheClick(object sender, EventArgs e)
         {
             var email = Email;
 
@@ -104,13 +121,13 @@ namespace GitUI
                 .RunAsync(
                     async () =>
                     {
-                        await _avatarService.DeleteAvatarAsync(email).ConfigureAwait(true);
+                        await _avatarProvider.ClearCacheAsync().ConfigureAwait(true);
                         await UpdateGravatarAsync().ConfigureAwait(false);
                     })
                 .FileAndForget();
         }
 
-        private void RegisterAtGravatarcomToolStripMenuItemClick(object sender, EventArgs e)
+        private void OnRegisterGravatarClick(object sender, EventArgs e)
         {
             try
             {
@@ -122,47 +139,35 @@ namespace GitUI
             }
         }
 
-        private void ClearCache()
+        private void OnDefaultImageDropDownOpening(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory
-                .RunAsync(
-                    async () =>
-                    {
-                        await _avatarCache.ClearAsync().ConfigureAwait(true);
-                        await UpdateGravatarAsync().ConfigureAwait(false);
-                    })
-                .FileAndForget();
-        }
+            var defaultImageType = AppSettings.GravatarDefaultImageType;
 
-        private void noImageService_Click(object sender, EventArgs e)
-        {
-            var tag = (sender as ToolStripMenuItem)?.Tag;
-
-            if (tag is DefaultImageType type)
-            {
-                AppSettings.GravatarDefaultImageType = type.ToString();
-
-                ClearCache();
-            }
-        }
-
-        private void noImageGeneratorToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
-        {
-            var defaultImageType = _avatarService.GetDefaultImageType(AppSettings.GravatarDefaultImageType);
             ToolStripMenuItem selectedItem = null;
-            foreach (ToolStripMenuItem menu in noImageGeneratorToolStripMenuItem.DropDownItems)
+            ToolStripMenuItem noneItem = null;
+            foreach (ToolStripMenuItem menu in defaultImageToolStripMenuItem.DropDownItems)
             {
                 menu.Checked = false;
-                if ((DefaultImageType)menu.Tag == defaultImageType)
+
+                var type = (DefaultImageType)menu.Tag;
+
+                if (type == defaultImageType)
                 {
                     selectedItem = menu;
                 }
+
+                if (type == DefaultImageType.None)
+                {
+                    noneItem = menu;
+                }
             }
+
+            Debug.Assert(noneItem != null && selectedItem != null, "noneItem != null && selectedItem != null");
 
             if (selectedItem == null)
             {
-                AppSettings.GravatarDefaultImageType = DefaultImageType.None.ToString();
-                selectedItem = noneToolStripMenuItem;
+                AppSettings.GravatarDefaultImageType = DefaultImageType.None;
+                selectedItem = noneItem;
             }
 
             selectedItem.Checked = true;

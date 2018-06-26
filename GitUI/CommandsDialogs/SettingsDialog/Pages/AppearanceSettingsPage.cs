@@ -13,15 +13,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private readonly TranslationString _noDictFile = new TranslationString("None");
         private readonly TranslationString _noDictFilesFound = new TranslationString("No dictionary files found in: {0}");
-        private readonly IImageCache _avatarCache;
 
         public AppearanceSettingsPage()
         {
             InitializeComponent();
-            Text = "Appearance";
             Translate();
-
-            _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
 
             NoImageService.Items.AddRange(Enum.GetNames(typeof(DefaultImageType)));
         }
@@ -86,7 +82,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowCurrentBranchInVisualStudio.Checked = AppSettings.ShowCurrentBranchInVisualStudio;
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AuthorImageCacheDays;
             ShowAuthorGravatar.Checked = AppSettings.ShowAuthorGravatar;
-            NoImageService.Text = AppSettings.GravatarDefaultImageType;
+            NoImageService.Text = AppSettings.GravatarDefaultImageType.ToString();
 
             Language.Items.Clear();
             Language.Items.Add("English");
@@ -131,7 +127,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 
             AppSettings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
-            AppSettings.GravatarDefaultImageType = NoImageService.Text;
+
+            if (Enum.TryParse<DefaultImageType>(NoImageService.Text, ignoreCase: true, out var type))
+            {
+                AppSettings.GravatarDefaultImageType = type;
+            }
 
             AppSettings.RelativeDate = chkShowRelativeDate.Checked;
 
@@ -165,7 +165,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ClearImageCache_Click(object sender, EventArgs e)
         {
-            _avatarCache.ClearAsync();
+            ThreadHelper.JoinableTaskFactory.Run(AvatarService.Default.ClearCacheAsync);
+            ThreadHelper.JoinableTaskFactory.Run(async () => await AvatarService.Default.ClearCacheAsync());
         }
 
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

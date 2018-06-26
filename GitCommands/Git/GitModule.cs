@@ -127,8 +127,6 @@ namespace GitCommands
 
         public Version AppVersion => AppSettings.AppVersion;
 
-        public string GravatarCacheDir => AppSettings.GravatarCachePath;
-
         private bool _superprojectInit;
         private GitModule _superprojectModule;
         private string _submoduleName;
