@@ -23,7 +23,10 @@ namespace GitCommands.Config
 
             try
             {
-                Load();
+                if (!string.IsNullOrEmpty(Path.GetFileName(FileName)) && File.Exists(FileName))
+                {
+                    new ConfigFileParser(this).Parse();
+                }
             }
             catch (Exception ex)
             {
@@ -42,17 +45,6 @@ namespace GitCommands.Config
         private static Encoding GetEncoding()
         {
             return GitModule.SystemEncoding;
-        }
-
-        private void Load()
-        {
-            if (string.IsNullOrEmpty(Path.GetFileName(FileName)) || !File.Exists(FileName))
-            {
-                return;
-            }
-
-            ConfigFileParser parser = new ConfigFileParser(this);
-            parser.Parse();
         }
 
         public static readonly char[] CommentChars = { ';', '#' };
