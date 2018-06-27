@@ -1971,7 +1971,7 @@ namespace GitUI
                     {
                         // do not show artificial GUID
                         var text = revision.Guid;
-                        DrawColumnText(e, text, _fontOfSHAColumn, foreColor);
+                        DrawColumnText(e, text, rowFont, foreColor);
                     }
                 }
                 else if (columnIndex == BuildServerWatcher.BuildStatusImageColumnIndex)
@@ -3205,7 +3205,6 @@ namespace GitUI
         }
 
         private bool _settingsLoaded;
-        private Font _fontOfSHAColumn;
 
         private void RunScript(object sender, EventArgs e)
         {
