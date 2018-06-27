@@ -14,8 +14,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
 
-            this.label1.Font = FontUtil.MainInstructionFont;
-            this.label1.ForeColor = FontUtil.MainInstructionColor;
+            label1.Font = FontUtil.MainInstructionFont;
+            label1.ForeColor = FontUtil.MainInstructionColor;
             Translate();
         }
 
@@ -42,44 +42,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
             }
 
-            this.lvTranslations.LargeImageList = imageList;
+            lvTranslations.LargeImageList = imageList;
 
             foreach (string translation in translations)
             {
                 if (imageList.Images.ContainsKey(translation))
                 {
-                    this.lvTranslations.Items.Add(new ListViewItem(translation, translation) { Tag = translation });
-                }
-                if (File.Exists(Path.Combine(Translator.GetTranslationDir(), translation + ".gif")))
-                {
-                    translationImage.BackgroundImage = Image.FromFile(Path.Combine(Translator.GetTranslationDir(), translation + ".gif"));
+                    lvTranslations.Items.Add(new ListViewItem(translation, translation) { Tag = translation });
                 }
                 else
                 {
-                    this.lvTranslations.Items.Add(new ListViewItem(translation) { Tag = translation });
+                    lvTranslations.Items.Add(new ListViewItem(translation) { Tag = translation });
                 }
-
-                translationImage.Cursor = Cursors.Hand;
-                translationImage.Tag = translation;
-                translationImage.Click += translationImage_Click;
-
-                Controls.Add(translationImage);
-
-                    TextAlign = ContentAlignment.TopCenter
-                };
-                }
-                label.Click += translationImage_Click;
-                Controls.Add(label);
             }
-
-            Height = 34 + y + imageHeight + labelHeight + SystemInformation.CaptionHeight + 37;
-            }
-            label2.Top = Height - SystemInformation.CaptionHeight - 25;
-        }
-
-        {
-            AppSettings.Translation = ((Control)sender).Tag.ToString();
-            Close();
         }
 
         private void FormChooseTranslation_FormClosing(object sender, FormClosingEventArgs e)
@@ -88,6 +63,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 AppSettings.Translation = "English";
             }
+        }
 
         private void lvTranslations_ItemActivate(object sender, EventArgs e)
         {

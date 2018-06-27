@@ -7,21 +7,19 @@
     {
         static FontUtil()
         {
-            var hTheme = NativeMethods.OpenThemeData(IntPtr.Zero, "TEXTSTYLE");
-            if (hTheme != IntPtr.Zero)
+            var themeHandle = NativeMethods.OpenThemeData(IntPtr.Zero, "TEXTSTYLE");
+            if (themeHandle != IntPtr.Zero)
             {
                 // TODO: use C# 7.0 out var parameters
-                NativeMethods.LOGFONT pFont;
-                NativeMethods.GetThemeFont(hTheme, IntPtr.Zero, NativeMethods.TEXT_MAININSTRUCTION, 0, NativeMethods.TMT_FONT, out pFont);
+                NativeMethods.GetThemeFont(themeHandle, IntPtr.Zero, NativeMethods.TEXT_MAININSTRUCTION, 0, NativeMethods.TMT_FONT, out var logFont);
 
-                MainInstructionFont = Font.FromLogFont(pFont);
+                MainInstructionFont = Font.FromLogFont(logFont);
 
-                NativeMethods.COLORREF pColor;
-                NativeMethods.GetThemeColor(hTheme, NativeMethods.TEXT_MAININSTRUCTION, 0, NativeMethods.TMT_TEXTCOLOR, out pColor);
+                NativeMethods.GetThemeColor(themeHandle, NativeMethods.TEXT_MAININSTRUCTION, 0, NativeMethods.TMT_TEXTCOLOR, out var colorRef);
 
-                MainInstructionColor = Color.FromArgb(pColor.R, pColor.G, pColor.B);
+                MainInstructionColor = Color.FromArgb(colorRef.R, colorRef.G, colorRef.B);
 
-                NativeMethods.CloseThemeData(hTheme);
+                NativeMethods.CloseThemeData(themeHandle);
             }
             else
             {

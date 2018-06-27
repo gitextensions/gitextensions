@@ -101,18 +101,18 @@ namespace GitUI
 
         [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
         internal static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
-        
+
         [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
-        internal static extern IntPtr OpenThemeData(IntPtr hWnd, String classList);
+        internal static extern IntPtr OpenThemeData(IntPtr hWnd, string classList);
 
         [DllImport("uxtheme.dll", ExactSpelling = true)]
-        internal static extern Int32 CloseThemeData(IntPtr hTheme);
+        internal static extern int CloseThemeData(IntPtr hTheme);
 
         [DllImport("uxtheme", ExactSpelling = true)]
-        internal static extern Int32 GetThemeColor(IntPtr hTheme, int iPartId, int iStateId, int iPropId, out COLORREF pColor);
+        internal static extern int GetThemeColor(IntPtr hTheme, int iPartId, int iStateId, int iPropId, out COLORREF pColor);
 
         [DllImport("uxtheme", ExactSpelling = true, CharSet = CharSet.Unicode)]
-        internal static extern Int32 GetThemeFont(IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, int iPropId, out LOGFONT pFont);
+        internal static extern int GetThemeFont(IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, int iPropId, out LOGFONT pFont);
 
         #endregion
     }

@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
     {
-        private Font _diffFont;
+        private Font _fixedWidthFont;
         private Font _applicationFont;
         private Font _commitFont;
 
@@ -21,20 +21,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void SettingsToPage()
         {
             SetCurrentApplicationFont(AppSettings.Font);
-            SetCurrentDiffFont(AppSettings.DiffFont);
+            SetCurrentDiffFont(AppSettings.FixedWidthFont);
             SetCurrentCommitFont(AppSettings.CommitFont);
         }
 
         protected override void PageToSettings()
         {
-            AppSettings.DiffFont = _diffFont;
+            AppSettings.FixedWidthFont = _fixedWidthFont;
             AppSettings.Font = _applicationFont;
             AppSettings.CommitFont = _commitFont;
         }
 
         private void diffFontChangeButton_Click(object sender, EventArgs e)
         {
-            diffFontDialog.Font = _diffFont;
+            diffFontDialog.Font = _fixedWidthFont;
             DialogResult result = diffFontDialog.ShowDialog(this);
 
             if (result == DialogResult.OK || result == DialogResult.Yes)
@@ -67,7 +67,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void SetCurrentDiffFont(Font newFont)
         {
-            _diffFont = newFont;
+            _fixedWidthFont = newFont;
             SetFontButtonText(newFont, diffFontChangeButton);
         }
 
