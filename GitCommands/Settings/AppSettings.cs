@@ -682,6 +682,12 @@ namespace GitCommands
             set => SetBool("RebaseAutostash", value);
         }
 
+        public static bool SkipRebaseDialog
+        {
+            get => GetBool("SkipRebaseDialog", false);
+            set => SetBool("SkipRebaseDialog", value);
+        }
+
         public static LocalChangesAction CheckoutBranchAction
         {
             get => GetEnum("checkoutbranchaction", LocalChangesAction.DontChange);
