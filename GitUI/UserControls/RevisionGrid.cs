@@ -328,14 +328,13 @@ namespace GitUI
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public Font NormalFont
         {
-            get { return _normalFont; }
+            get => _normalFont;
             set
             {
                 _normalFont = value;
                 MessageDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
                 DateDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
-                _fontOfSHAColumn = AppSettings.FixedWidthFont;
-                IdDataGridViewColumn.DefaultCellStyle.Font = _fontOfSHAColumn;
+                IdDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
                 IsMessageMultilineDataGridViewColumn.DefaultCellStyle.Font = _normalFont;
                 IsMessageMultilineDataGridViewColumn.Width = TextRenderer.MeasureText(MultilineMessageIndicator, NormalFont).Width;
 
