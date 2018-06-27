@@ -139,9 +139,8 @@ namespace GitUITests.CommandsDialogs
         public void BrowseDiff_StageMenus_Unstaged(bool t)
         {
             var rev = new GitRevision(GitRevision.UnstagedGuid);
-            var selectionInfo = new ContextMenuSelectionInfo(rev, firstIsParent: t);
-            _controller.ShouldShowMenuStage(selectionInfo).Should().Be(t);
-            _controller.ShouldShowMenuUnstage(selectionInfo).Should().BeFalse();
+            var selectionInfo = new ContextMenuSelectionInfo(rev, isAnyItemStaged: t);
+            _controller.ShouldShowMenuUnstage(selectionInfo).Should().Be(t);
         }
 
         [TestCase(true)]
@@ -149,9 +148,8 @@ namespace GitUITests.CommandsDialogs
         public void BrowseDiff_StageMenus_Index(bool t)
         {
             var rev = new GitRevision(GitRevision.UnstagedGuid);
-            var selectionInfo = new ContextMenuSelectionInfo(rev, firstIsParent: t);
+            var selectionInfo = new ContextMenuSelectionInfo(rev, isAnyItemUnstaged: t);
             _controller.ShouldShowMenuStage(selectionInfo).Should().Be(t);
-            _controller.ShouldShowMenuUnstage(selectionInfo).Should().BeFalse();
         }
 
         #endregion

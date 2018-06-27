@@ -1,9 +1,18 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
+    public enum StagedStatus
+    {
+        Unknown = 0,
+        None,
+        WorkTree,
+        Index
+    }
+
     public class GitItemStatus : IComparable<GitItemStatus>
     {
         private JoinableTask<GitSubmoduleStatus> _submoduleStatus;
@@ -21,9 +30,30 @@ namespace GitCommands
         public bool IsConflict { get; set; }
         public bool IsAssumeUnchanged { get; set; }
         public bool IsSkipWorktree { get; set; }
-        public bool IsStaged { get; set; } = true;
         public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }
+        private StagedStatus StagedUnsafe { get; set; } = StagedStatus.Unknown;
+        public StagedStatus Staged
+        {
+            get
+            {
+                // Staged is not available in all scenarios, this is temporary (?) to catch usage
+                if (StagedUnsafe == StagedStatus.Unknown)
+                {
+#if DEBUG
+                    Debug.Assert(false, "StagedStatus is not set - this throws in Release builds. Continue should generally be OK.");
+#else
+                    throw new ArgumentException("StagedStatus is not set", StagedUnsafe.ToString());
+#endif
+                }
+
+                return StagedUnsafe;
+            }
+            set
+            {
+                StagedUnsafe = value;
+            }
+        }
 
         public Task<GitSubmoduleStatus> GetSubmoduleStatusAsync()
         {

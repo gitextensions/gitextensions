@@ -3043,17 +3043,16 @@ namespace GitUI
                 return;
             }
 
-            int staged = status.Count(item => item.IsStaged);
-            int unstaged = status.Count - staged;
-
             if (unstagedRev != null)
             {
-                unstagedRev.SubjectCount = "(" + unstaged + ") ";
+                var count = status.Count(item => item.Staged == StagedStatus.WorkTree);
+                unstagedRev.SubjectCount = "(" + count + ") ";
             }
 
             if (stagedRev != null)
             {
-                stagedRev.SubjectCount = "(" + staged + ") ";
+                var count = status.Count(item => item.Staged == StagedStatus.Index);
+                stagedRev.SubjectCount = "(" + count + ") ";
             }
 
             // cache the status, if commits do not exist or for a refresh

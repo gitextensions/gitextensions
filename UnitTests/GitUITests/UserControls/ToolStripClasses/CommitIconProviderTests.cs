@@ -23,7 +23,7 @@ namespace GitUITests.UserControls.ToolStripClasses
         {
             return new GitItemStatus
             {
-                IsStaged = isStaged,
+                Staged = isStaged ? StagedStatus.Index : StagedStatus.WorkTree,
                 IsTracked = isTracked,
                 IsSubmodule = isSubmodule
             };
@@ -66,7 +66,7 @@ namespace GitUITests.UserControls.ToolStripClasses
         {
             var commitIcon = _commitIconProvider.GetCommitIcon(new[]
             {
-                CreateGitItemStatus(true),
+                CreateGitItemStatus(isStaged: true),
                 CreateGitItemStatus()
             });
 
@@ -78,8 +78,8 @@ namespace GitUITests.UserControls.ToolStripClasses
         {
             var commitIcon = _commitIconProvider.GetCommitIcon(new[]
             {
-                CreateGitItemStatus(true),
-                CreateGitItemStatus(true)
+                CreateGitItemStatus(isStaged: true),
+                CreateGitItemStatus(isStaged: true)
             });
 
             Assert.AreEqual(CommitIconProvider.IconStaged, commitIcon);

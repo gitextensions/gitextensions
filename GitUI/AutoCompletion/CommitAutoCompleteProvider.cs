@@ -116,7 +116,7 @@ namespace GitUI.AutoCompletion
 
         private static string GetChangedFileText(GitModule module, GitItemStatus file)
         {
-            var changes = module.GetCurrentChanges(file.Name, file.OldName, file.IsStaged, "-U1000000", module.FilesEncoding);
+            var changes = module.GetCurrentChanges(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000", module.FilesEncoding);
 
             if (changes != null)
             {

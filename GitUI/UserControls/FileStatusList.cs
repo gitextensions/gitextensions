@@ -1171,7 +1171,7 @@ namespace GitUI
 
                     foreach (var rev in parentRevs)
                     {
-                        dictionary.Add(rev, Module.GetDiffFilesWithSubmodulesStatus(rev.Guid, Revision.Guid));
+                        dictionary.Add(rev, Module.GetDiffFilesWithSubmodulesStatus(rev.Guid, Revision.Guid, Revision.ParentGuids.FirstOrDefault()));
                     }
 
                     // Show combined (merge conflicts) only when all first (A) are parents to selected (B)

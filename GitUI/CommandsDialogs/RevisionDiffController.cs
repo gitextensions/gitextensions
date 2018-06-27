@@ -28,6 +28,8 @@ namespace GitUI.CommandsDialogs
             bool isAnyCombinedDiff = false,
             bool isSingleGitItemSelected = true,
             bool isAnyItemSelected = true,
+            bool isAnyItemStaged = false,
+            bool isAnyItemUnstaged = false,
             bool isBareRepository = false,
             bool singleFileExists = true,
             bool isAnyTracked = true,
@@ -38,6 +40,8 @@ namespace GitUI.CommandsDialogs
             IsAnyCombinedDiff = isAnyCombinedDiff;
             IsSingleGitItemSelected = isSingleGitItemSelected;
             IsAnyItemSelected = isAnyItemSelected;
+            IsAnyItemStaged = isAnyItemStaged;
+            IsAnyItemUnstaged = isAnyItemUnstaged;
             IsBareRepository = isBareRepository;
             SingleFileExists = singleFileExists;
             IsAnyTracked = isAnyTracked;
@@ -49,6 +53,8 @@ namespace GitUI.CommandsDialogs
         public bool IsAnyCombinedDiff { get; }
         public bool IsSingleGitItemSelected { get; }
         public bool IsAnyItemSelected { get; }
+        public bool IsAnyItemStaged { get; }
+        public bool IsAnyItemUnstaged { get; }
         public bool IsBareRepository { get; }
         public bool SingleFileExists { get; }
         public bool IsAnyTracked { get; }
@@ -93,12 +99,12 @@ namespace GitUI.CommandsDialogs
         // Stage/unstage must limit the selected items, IsStaged is not reflecting Staged status
         public bool ShouldShowMenuStage(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.FirstIsParent && selectionInfo.SelectedRevision.Guid == GitRevision.UnstagedGuid;
+            return selectionInfo.IsAnyItemUnstaged;
         }
 
         public bool ShouldShowMenuUnstage(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.FirstIsParent && selectionInfo.SelectedRevision.Guid == GitRevision.IndexGuid;
+            return selectionInfo.IsAnyItemStaged;
         }
 
         public bool ShouldShowSubmoduleMenus(ContextMenuSelectionInfo selectionInfo)
