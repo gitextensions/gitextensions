@@ -38,7 +38,7 @@ namespace GitCommands
 
             foreach (var branch in branches)
             {
-                yield return " :\"" + branch.LocalName + "\"";
+                yield return " :refs/heads/\"" + branch.LocalName + "\"";
             }
         }
 
