@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Threading.Tasks;
 
-namespace Gravatar
+namespace GitUI.Avatars
 {
     public sealed class BackupAvatarProvider : IAvatarProvider
     {

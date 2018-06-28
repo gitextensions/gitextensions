@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitUI.Avatars;
 using GitUI.Properties;
-using Gravatar;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
 {

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GitCommands;
 
-namespace Gravatar
+namespace GitUI.Avatars
 {
     public sealed class AvatarDownloader : IAvatarProvider
     {

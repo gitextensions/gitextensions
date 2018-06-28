@@ -6,7 +6,7 @@ using System.IO.Abstractions;
 using System.Threading.Tasks;
 using GitCommands;
 
-namespace Gravatar
+namespace GitUI.Avatars
 {
     /// <summary>
     /// Decorates an avatar provider, adding persistent caching to the file system.

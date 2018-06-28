@@ -64,6 +64,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="System.IO.Abstractions">
+      <Version>2.0.0.144</Version>
+    </PackageReference>
     <PackageReference Include="System.Reactive" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +75,13 @@
     </Compile>
     <Compile Include="AutoCompletion\CommitAutoCompleteProvider.cs" />
     <Compile Include="AutoCompletion\IAutoCompleteProvider.cs" />
+    <Compile Include="Avatars\AvatarDownloader.cs" />
+    <Compile Include="Avatars\AvatarMemoryCache.cs" />
+    <Compile Include="Avatars\AvatarPersistentCache.cs" />
+    <Compile Include="Avatars\AvatarService.cs" />
+    <Compile Include="Avatars\BackupAvatarProvider.cs" />
+    <Compile Include="Avatars\IAvatarProvider.cs" />
+    <Compile Include="Avatars\MruCache.cs" />
     <Compile Include="BranchTreePanel\RepoObjectsTree.ContextActions.cs">
       <SubType>UserControl</SubType>
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>
@@ -1641,10 +1651,6 @@
     <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj">
       <Project>{0f1f1168-a4b2-4fa2-b17b-735140d17f39}</Project>
       <Name>GitExtUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Gravatar\Gravatar.csproj">
-      <Project>{4041B976-50D0-4C6E-ABAF-7E67458A1264}</Project>
-      <Name>Gravatar</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetSpell.SpellChecker\SpellChecker.csproj">
       <Project>{A426EE0B-E52E-4D74-AF24-06797142D7B2}</Project>

@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Gravatar;
+using GitUI.Avatars;
 using NUnit.Framework;
 
-namespace GravatarTests
+namespace GitUITests.Avatars
 {
     [TestFixture]
     public sealed class AvatarMemoryCacheTests : AvatarCacheTestBase

@@ -36,8 +36,6 @@ xcopy /y ..\GitExtensions\bin\%Configuration%\System.ValueTuple.dll GitExtension
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\GitUIPluginInterfaces.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitExtensions\bin\%Configuration%\Gravatar.dll GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\ICSharpCode.SharpZipLib.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\ICSharpCode.TextEditor.dll GitExtensions\
@@ -223,8 +221,6 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\GitUI.pdb GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\GitUIPluginInterfaces.pdb GitExtensions\
-IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\GitExtensions\bin\%Configuration%\Gravatar.pdb GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\NBug.pdb GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1

@@ -6,11 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using GitCommands;
-using Gravatar;
+using GitUI.Avatars;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GravatarTests
+namespace GitUITests.Avatars
 {
     [TestFixture]
     public sealed class AvatarPersistentCacheTests : AvatarCacheTestBase

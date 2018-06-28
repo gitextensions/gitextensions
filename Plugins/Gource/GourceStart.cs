@@ -6,8 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitUI;
+using GitUI.Avatars;
 using GitUIPluginInterfaces;
-using Gravatar;
 
 namespace Gource
 {
