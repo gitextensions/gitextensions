@@ -4,6 +4,11 @@ namespace DeleteUnusedBranches
 {
     public class CheckBoxHeaderCellEventArgs : EventArgs
     {
-        public bool Checked { get; set; }
+        public CheckBoxHeaderCellEventArgs(bool checkedValue)
+        {
+            Checked = checkedValue;
+        }
+
+        public bool Checked { get; }
     }
 }

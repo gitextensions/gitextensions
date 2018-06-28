@@ -9,17 +9,19 @@ namespace DeleteUnusedBranches
     {
         private Point _checkBoxLocation;
         private Size _checkBoxSize;
-        private Point _cellLocation = new Point();
-        private CheckBoxState _cbState = CheckBoxState.UncheckedNormal;
-        private bool _checked = false;
+        private Point _cellLocation;
+        private bool _checked;
 
         public bool Checked
         {
             get { return _checked; }
             set
             {
-                _checked = value;
-                DataGridView.InvalidateCell(this);
+                if (_checked != value)
+                {
+                    _checked = value;
+                    DataGridView.InvalidateCell(this);
+                }
             }
         }
 
@@ -51,17 +53,18 @@ namespace DeleteUnusedBranches
             _cellLocation = cellBounds.Location;
             _checkBoxLocation = p;
             _checkBoxSize = s;
+            CheckBoxState checkboxState;
 
             if (_checked)
             {
-                _cbState = CheckBoxState.CheckedNormal;
+                checkboxState = CheckBoxState.CheckedNormal;
             }
             else
             {
-                _cbState = CheckBoxState.UncheckedNormal;
+                checkboxState = CheckBoxState.UncheckedNormal;
             }
 
-            CheckBoxRenderer.DrawCheckBox(graphics, _checkBoxLocation, _cbState);
+            CheckBoxRenderer.DrawCheckBox(graphics, _checkBoxLocation, checkboxState);
         }
 
         protected override void OnMouseClick(DataGridViewCellMouseEventArgs e)
@@ -75,11 +78,7 @@ namespace DeleteUnusedBranches
                 Checked = !Checked;
                 if (CheckBoxClicked != null)
                 {
-                    CheckBoxHeaderCellEventArgs args = new CheckBoxHeaderCellEventArgs
-                    {
-                        Checked = Checked
-                    };
-                    OnCheckBoxClicked(args);
+                    OnCheckBoxClicked(new CheckBoxHeaderCellEventArgs(Checked));
                     DataGridView.InvalidateCell(this);
                 }
             }
