@@ -29,7 +29,7 @@ namespace GitUI.Editor
             this.ignoreWhitespaceChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ignoreAllWhitespaceChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.increaseNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.descreaseNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.decreaseNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showEntireFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.treatAllFilesAsTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,7 +69,7 @@ namespace GitUI.Editor
             this.ignoreWhitespaceChangesToolStripMenuItem,
             this.ignoreAllWhitespaceChangesToolStripMenuItem,
             this.increaseNumberOfLinesToolStripMenuItem,
-            this.descreaseNumberOfLinesToolStripMenuItem,
+            this.decreaseNumberOfLinesToolStripMenuItem,
             this.showEntireFileToolStripMenuItem,
             this.toolStripSeparator2,
             this.treatAllFilesAsTextToolStripMenuItem,
@@ -151,10 +151,10 @@ namespace GitUI.Editor
             // 
             // descreaseNumberOfLinesToolStripMenuItem
             // 
-            this.descreaseNumberOfLinesToolStripMenuItem.Name = "descreaseNumberOfLinesToolStripMenuItem";
-            this.descreaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.descreaseNumberOfLinesToolStripMenuItem.Text = "Decrease number of lines visible";
-            this.descreaseNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.DescreaseNumberOfLinesToolStripMenuItemClick);
+            this.decreaseNumberOfLinesToolStripMenuItem.Name = "decreaseNumberOfLinesToolStripMenuItem";
+            this.decreaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.decreaseNumberOfLinesToolStripMenuItem.Text = "Decrease number of lines visible";
+            this.decreaseNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.DecreaseNumberOfLinesToolStripMenuItemClick);
             // 
             // showEntireFileToolStripMenuItem
             // 
@@ -248,7 +248,7 @@ namespace GitUI.Editor
             this.increaseNumberOfLines.Name = "increaseNumberOfLines";
             this.increaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
             this.increaseNumberOfLines.ToolTipText = "Increase number of visible lines";
-            this.increaseNumberOfLines.Click += new System.EventHandler(this.IncreaseNumberOfLinesClick);
+            this.increaseNumberOfLines.Click += new System.EventHandler(this.IncreaseNumberOfLinesToolStripMenuItemClick);
             // 
             // DecreaseNumberOfLines
             // 
@@ -258,7 +258,7 @@ namespace GitUI.Editor
             this.DecreaseNumberOfLines.Name = "DecreaseNumberOfLines";
             this.DecreaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
             this.DecreaseNumberOfLines.ToolTipText = "Decrease number of visible lines";
-            this.DecreaseNumberOfLines.Click += new System.EventHandler(this.DecreaseNumberOfLinesClick);
+            this.DecreaseNumberOfLines.Click += new System.EventHandler(this.DecreaseNumberOfLinesToolStripMenuItemClick);
             // 
             // toolStripSeparator4
             // 
@@ -273,7 +273,7 @@ namespace GitUI.Editor
             this.showEntireFileButton.Name = "showEntireFileButton";
             this.showEntireFileButton.Size = new System.Drawing.Size(23, 20);
             this.showEntireFileButton.ToolTipText = "Show entire file";
-            this.showEntireFileButton.Click += new System.EventHandler(this.ShowEntireFileButtonClick);
+            this.showEntireFileButton.Click += new System.EventHandler(this.ShowEntireFileToolStripMenuItemClick);
             // 
             // showNonPrintChars
             // 
@@ -283,7 +283,7 @@ namespace GitUI.Editor
             this.showNonPrintChars.Name = "showNonPrintChars";
             this.showNonPrintChars.Size = new System.Drawing.Size(23, 20);
             this.showNonPrintChars.ToolTipText = "Show nonprinting characters";
-            this.showNonPrintChars.Click += new System.EventHandler(this.ShowNonPrintCharsClick);
+            this.showNonPrintChars.Click += new System.EventHandler(this.ShowNonprintableCharactersToolStripMenuItemClick);
             // 
             // ignoreWhiteSpaces
             // 
@@ -292,7 +292,7 @@ namespace GitUI.Editor
             this.ignoreWhiteSpaces.Name = "ignoreWhiteSpaces";
             this.ignoreWhiteSpaces.Size = new System.Drawing.Size(23, 4);
             this.ignoreWhiteSpaces.ToolTipText = "Ignore leading and trailing whitespace changes";
-            this.ignoreWhiteSpaces.Click += new System.EventHandler(this.ignoreWhiteSpaces_Click);
+            this.ignoreWhiteSpaces.Click += new System.EventHandler(this.IgnoreWhitespaceChangesToolStripMenuItemClick);
             // 
             // encodingToolStripComboBox
             // 
@@ -366,7 +366,7 @@ namespace GitUI.Editor
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem ignoreWhitespaceChangesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem increaseNumberOfLinesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem descreaseNumberOfLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem decreaseNumberOfLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showEntireFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem treatAllFilesAsTextToolStripMenuItem;
