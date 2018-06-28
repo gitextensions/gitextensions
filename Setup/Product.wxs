@@ -61,11 +61,8 @@
       <Component Id="GitExtensions.exe.config" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\GitExtensions.exe.config" />
       </Component>
-      <Component Id="Gravatar.dll" Guid="*">
-        <File Source="..\Gravatar\bin\$(var.Configuration)\Gravatar.dll" />
-      </Component>
       <Component Id="System.IO.Abstractions.dll" Guid="*">
-        <File Source="..\Gravatar\bin\$(var.Configuration)\System.IO.Abstractions.dll" />
+        <File Source="..\GitUI\bin\$(var.Configuration)\System.IO.Abstractions.dll" />
       </Component>
       <Component Id="GitCommands.dll" Guid="*">
         <File Source="..\GitCommands\bin\$(var.Configuration)\GitCommands.dll" />
@@ -561,7 +558,6 @@
       <ComponentRef Id="gitex.cmd" />
       <ComponentRef Id="GitExtensions.exe" />
       <ComponentRef Id="GitExtensions.exe.config" />
-      <ComponentRef Id="Gravatar.dll" />
       <ComponentRef Id="GitCommands.dll" />
       <ComponentRef Id="GitExtUtils.dll" />
       <ComponentRef Id="GitUI.dll" />

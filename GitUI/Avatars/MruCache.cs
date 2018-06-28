@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace Gravatar
+namespace GitUI.Avatars
 {
     // TODO consider moving this type (and associated test fixture) to a more general assembly
 

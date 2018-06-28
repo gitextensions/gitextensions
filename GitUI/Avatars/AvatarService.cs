@@ -1,4 +1,4 @@
-﻿namespace Gravatar
+﻿namespace GitUI.Avatars
 {
     public static class AvatarService
     {

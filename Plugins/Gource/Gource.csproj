@@ -70,9 +70,9 @@
       <Project>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</Project>
       <Name>GitExtUtils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Gravatar\Gravatar.csproj">
-      <Project>{4041B976-50D0-4C6E-ABAF-7E67458A1264}</Project>
-      <Name>Gravatar</Name>
+    <ProjectReference Include="..\..\GitUI\GitUI.csproj">
+      <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
+      <Name>GitUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>

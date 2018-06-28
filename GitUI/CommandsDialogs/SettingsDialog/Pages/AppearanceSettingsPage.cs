@@ -3,8 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Avatars;
 using GitUIPluginInterfaces;
-using Gravatar;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Gravatar;
+using GitUI.Avatars;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
-namespace GravatarTests
+namespace GitUITests.Avatars
 {
     [TestFixture]
     public sealed class BackupAvatarProviderTests : AvatarTestBase

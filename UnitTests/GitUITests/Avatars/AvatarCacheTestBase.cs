@@ -2,7 +2,7 @@
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GravatarTests
+namespace GitUITests.Avatars
 {
     public abstract class AvatarCacheTestBase : AvatarTestBase
     {
@@ -17,18 +17,11 @@ namespace GravatarTests
         [Test]
         public async Task ClearCacheAsync_removes_all_images_from_cache()
         {
-////            var eventFired = false;
-////            _cache.CacheCleared += () => eventFired = true;
-
             await MissAsync(_email1, _img1);
             await MissAsync(_email2, _img2);
             await MissAsync(_email3, _img3);
 
-////            Assert.False(eventFired);
-
             await _cache.ClearCacheAsync();
-
-////            Assert.True(eventFired);
 
 #pragma warning disable 4014
             _inner.Received(1).ClearCacheAsync();

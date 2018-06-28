@@ -2,11 +2,11 @@
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
-using Gravatar;
+using GitUI.Avatars;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace GravatarTests
+namespace GitUITests.Avatars
 {
     public abstract class AvatarTestBase
     {
