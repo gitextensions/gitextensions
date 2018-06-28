@@ -29,27 +29,27 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this._gravatarImg = new System.Windows.Forms.PictureBox();
+            this._avatarImage = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.clearImagecacheToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.defaultImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.registerGravatarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this._gravatarImg)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._avatarImage)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // _gravatarImg
             // 
-            this._gravatarImg.ContextMenuStrip = this.contextMenuStrip;
-            this._gravatarImg.Image = global::GitUI.Properties.Resources.User;
-            this._gravatarImg.Location = new System.Drawing.Point(0, 0);
-            this._gravatarImg.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-            this._gravatarImg.Name = "_gravatarImg";
-            this._gravatarImg.Size = new System.Drawing.Size(96, 96);
-            this._gravatarImg.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this._gravatarImg.TabIndex = 0;
-            this._gravatarImg.TabStop = false;
+            this._avatarImage.ContextMenuStrip = this.contextMenuStrip;
+            this._avatarImage.Image = global::GitUI.Properties.Resources.User;
+            this._avatarImage.Location = new System.Drawing.Point(0, 0);
+            this._avatarImage.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
+            this._avatarImage.Name = "_avatarImage";
+            this._avatarImage.Size = new System.Drawing.Size(96, 96);
+            this._avatarImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this._avatarImage.TabIndex = 0;
+            this._avatarImage.TabStop = false;
             // 
             // contextMenuStrip
             // 
@@ -91,11 +91,11 @@
             // GravatarControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this._gravatarImg);
+            this.Controls.Add(this._avatarImage);
             this.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.Name = "AvatarControl";
             this.Size = new System.Drawing.Size(96, 96);
-            ((System.ComponentModel.ISupportInitialize)(this._gravatarImg)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._avatarImage)).EndInit();
             this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -103,7 +103,7 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox _gravatarImg;
+        private System.Windows.Forms.PictureBox _avatarImage;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem registerGravatarToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearImagecacheToolStripMenuItem;

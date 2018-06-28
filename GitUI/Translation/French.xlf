@@ -135,7 +135,7 @@ Cette action sera effectuée sans avertissement durant le chargement d'une branc
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target>Obtenir l'image de l'auteur depuis gravatar.com</target>
         
       </trans-unit>

@@ -131,7 +131,7 @@ Diese Aktion wird dann ohne Warnung beim Auschecken eines Branch angewendet.</ta
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target>Autor Bild von gravatar.com laden</target>
         
       </trans-unit>

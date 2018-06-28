@@ -187,7 +187,7 @@
             this._RevisionHeader.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
             this._RevisionHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this._RevisionHeader_MouseDown);
             // 
-            // gravatar1
+            // avatarControl
             // 
             this.avatarControl.BackColor = System.Drawing.SystemColors.Window;
             this.avatarControl.Dock = System.Windows.Forms.DockStyle.Fill;
