@@ -1,4 +1,6 @@
-﻿namespace GitUI.Editor
+﻿using System.Windows.Forms;
+
+namespace GitUI.Editor
 {
     partial class FileViewer
     {
@@ -296,6 +298,7 @@
             // 
             this.encodingToolStripComboBox.Name = "encodingToolStripComboBox";
             this.encodingToolStripComboBox.Size = new System.Drawing.Size(140, 23);
+            this.encodingToolStripComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             this.encodingToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.encodingToolStripComboBox_SelectedIndexChanged);
             // 
             // settingsButton
