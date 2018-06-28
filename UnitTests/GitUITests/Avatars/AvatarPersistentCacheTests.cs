@@ -38,7 +38,7 @@ namespace GitUITests.Avatars
             _fileInfoFactory.FromFileName(Arg.Any<string>()).Returns(_fileInfo);
             _fileSystem.FileInfo.Returns(_fileInfoFactory);
 
-            _folderPath = AppSettings.GravatarCachePath;
+            _folderPath = AppSettings.AvatarImageCachePath;
 
             _cache = new AvatarPersistentCache(_inner, _fileSystem);
         }
@@ -88,7 +88,7 @@ namespace GitUITests.Avatars
 
             image.Should().NotBeNull();
             _ = _fileInfo.Received(1).LastWriteTime;
-            _fileSystem.Received(1).File.OpenRead(Path.Combine(AppSettings.GravatarCachePath, $"{_email1}.{_size}px.png"));
+            _fileSystem.Received(1).File.OpenRead(Path.Combine(AppSettings.AvatarImageCachePath, $"{_email1}.{_size}px.png"));
         }
 
         [Test]

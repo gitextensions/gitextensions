@@ -52,7 +52,7 @@ namespace GitUI
                         async () =>
                         {
                             await _avatarProvider.ClearCacheAsync().ConfigureAwait(true);
-                            await UpdateGravatarAsync().ConfigureAwait(false);
+                            await UpdateAvatarAsync().ConfigureAwait(false);
                         })
                     .FileAndForget();
             }
@@ -71,29 +71,29 @@ namespace GitUI
             }
 
             Email = email;
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateGravatarAsync()).FileAndForget();
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateAvatarAsync()).FileAndForget();
         }
 
         private void RefreshImage(Image image)
         {
-            _gravatarImg.Image = image ?? Resources.User;
-            _gravatarImg.Refresh();
+            _avatarImage.Image = image ?? Resources.User;
+            _avatarImage.Refresh();
         }
 
-        private async Task UpdateGravatarAsync()
+        private async Task UpdateAvatarAsync()
         {
             await this.SwitchToMainThreadAsync();
 
             // resize our control (I'm not using AutoSize for a reason)
-            var size = new Size(AppSettings.AuthorImageSize, AppSettings.AuthorImageSize);
+            var size = new Size(AppSettings.AuthorImageSizeInCommitInfo, AppSettings.AuthorImageSizeInCommitInfo);
 
             DpiUtil.Scale(ref size);
 
-            Size = _gravatarImg.Size = size;
+            Size = _avatarImage.Size = size;
 
             var email = Email;
 
-            if (!AppSettings.ShowAuthorGravatar || string.IsNullOrWhiteSpace(email))
+            if (!AppSettings.ShowAuthorAvatarInCommitInfo || string.IsNullOrWhiteSpace(email))
             {
                 RefreshImage(Resources.User);
                 return;
@@ -122,7 +122,7 @@ namespace GitUI
                     async () =>
                     {
                         await _avatarProvider.ClearCacheAsync().ConfigureAwait(true);
-                        await UpdateGravatarAsync().ConfigureAwait(false);
+                        await UpdateAvatarAsync().ConfigureAwait(false);
                     })
                 .FileAndForget();
         }

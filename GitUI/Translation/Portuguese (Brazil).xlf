@@ -130,7 +130,7 @@ Esta ação será executada sem aviso enquanto estiver indo para um branch.</tar
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target>Obter a imagem do autor a partir do gravatar.com</target>
         
       </trans-unit>

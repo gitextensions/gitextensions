@@ -431,7 +431,7 @@ namespace GitCommands
         #region Avatars
 
         [NotNull]
-        public static string GravatarCachePath => Path.Combine(ApplicationDataPath.Value, "Images\\");
+        public static string AvatarImageCachePath => Path.Combine(ApplicationDataPath.Value, "Images\\");
 
         public static DefaultImageType GravatarDefaultImageType
         {
@@ -445,15 +445,15 @@ namespace GitCommands
         /// Gets the size of the commit author avatar. Set to 80px.
         /// </summary>
         /// <remarks>The value should be scaled with DPI.</remarks>
-        public static int AuthorImageSize => 80;
+        public static int AuthorImageSizeInCommitInfo => 80;
 
-        public static int AuthorImageCacheDays
+        public static int AvatarImageCacheDays
         {
             get => GetInt("authorimagecachedays", 5);
             set => SetInt("authorimagecachedays", value);
         }
 
-        public static bool ShowAuthorGravatar
+        public static bool ShowAuthorAvatarInCommitInfo
         {
             get => GetBool("showauthorgravatar", true);
             set => SetBool("showauthorgravatar", value);

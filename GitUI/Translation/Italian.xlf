@@ -131,7 +131,7 @@ Questa azione verrà eseguita senza preavviso durante il checkout del ramo.</tar
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target>Prendi immagine autore da gravatar.com</target>
         
       </trans-unit>

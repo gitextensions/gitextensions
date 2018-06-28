@@ -135,7 +135,7 @@ Esta acción se realizará sin preguntar al hacer checkout de una rama.</target>
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target>Obtener la imagen del autor de gravatar.com</target>
         
       </trans-unit>

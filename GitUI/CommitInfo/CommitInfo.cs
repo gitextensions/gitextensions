@@ -228,7 +228,7 @@ namespace GitUI.CommitInfo
 
             void LoadAuthorImage()
             {
-                var showAvatar = AppSettings.ShowAuthorGravatar;
+                var showAvatar = AppSettings.ShowAuthorAvatarInCommitInfo;
 
                 avatarControl.Visible = showAvatar;
 
@@ -412,30 +412,30 @@ namespace GitUI.CommitInfo
         {
             tableLayout.SuspendLayout();
             tableLayout.ColumnStyles.Clear();
-            int gravatarIndex, revInfoIndex, gravatarSpan, revInfoSpan;
+            int avatarIndex, revInfoIndex, avatarSpan, revInfoSpan;
             if (right)
             {
                 tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
                 tableLayout.ColumnStyles.Add(new ColumnStyle());
-                gravatarIndex = 1;
+                avatarIndex = 1;
                 revInfoIndex = 0;
-                gravatarSpan = 1;
+                avatarSpan = 1;
                 revInfoSpan = 2;
             }
             else
             {
                 tableLayout.ColumnStyles.Add(new ColumnStyle());
                 tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-                gravatarIndex = 0;
+                avatarIndex = 0;
                 revInfoIndex = 1;
-                gravatarSpan = 2;
+                avatarSpan = 2;
                 revInfoSpan = 1;
             }
 
-            tableLayout.SetColumn(avatarControl, gravatarIndex);
+            tableLayout.SetColumn(avatarControl, avatarIndex);
             tableLayout.SetColumn(_RevisionHeader, revInfoIndex);
             tableLayout.SetColumn(RevisionInfo, revInfoIndex);
-            tableLayout.SetRowSpan(avatarControl, gravatarSpan);
+            tableLayout.SetRowSpan(avatarControl, avatarSpan);
             tableLayout.SetColumnSpan(RevisionInfo, revInfoSpan);
             tableLayout.ResumeLayout(true);
         }
@@ -675,7 +675,7 @@ namespace GitUI.CommitInfo
 
         private void _RevisionHeader_ContentsResized(object sender, ContentsResizedEventArgs e)
         {
-            _RevisionHeader.Height = Math.Max(e.NewRectangle.Height, DpiUtil.Scale(AppSettings.AuthorImageSize));
+            _RevisionHeader.Height = Math.Max(e.NewRectangle.Height, DpiUtil.Scale(AppSettings.AuthorImageSizeInCommitInfo));
         }
 
         private sealed class ItemTpComparer : IComparer<string>

@@ -134,7 +134,7 @@ Ta akcja będzie wykonywana bez ostrzeżenia podczas przełączania gałęzi.</t
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target>Pobierz obrazek autora z gravatar.com</target>
         
       </trans-unit>

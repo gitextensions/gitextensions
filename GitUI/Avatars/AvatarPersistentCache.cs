@@ -34,7 +34,7 @@ namespace GitUI.Avatars
         /// <inheritdoc />
         public async Task<Image> GetAvatarAsync(string email, int imageSize)
         {
-            var cacheDir = AppSettings.GravatarCachePath;
+            var cacheDir = AppSettings.AvatarImageCachePath;
             var path = Path.Combine(cacheDir, $"{email}.{imageSize}px.png");
 
             var image = ReadImage();
@@ -91,7 +91,7 @@ namespace GitUI.Avatars
                 {
                     var info = _fileSystem.FileInfo.FromFileName(fileName);
 
-                    var cacheDays = AppSettings.AuthorImageCacheDays;
+                    var cacheDays = AppSettings.AvatarImageCacheDays;
                     if (cacheDays < 1)
                     {
                         cacheDays = DefaultCacheDays;
@@ -106,7 +106,7 @@ namespace GitUI.Avatars
         /// <inheritdoc />
         public async Task ClearCacheAsync()
         {
-            var cachePath = AppSettings.GravatarCachePath;
+            var cachePath = AppSettings.AvatarImageCachePath;
 
             if (_fileSystem.Directory.Exists(cachePath))
             {
