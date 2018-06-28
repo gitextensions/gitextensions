@@ -166,7 +166,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void ClearImageCache_Click(object sender, EventArgs e)
         {
             ThreadHelper.JoinableTaskFactory.Run(AvatarService.Default.ClearCacheAsync);
-            ThreadHelper.JoinableTaskFactory.Run(async () => await AvatarService.Default.ClearCacheAsync());
         }
 
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
