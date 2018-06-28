@@ -13,20 +13,25 @@ namespace GitUI.Script
             InitializeComponent();
         }
 
-        private void btn_OK_Click(object sender, EventArgs e)
-        {
-            FileInput = txt_FilePath.Text;
-            Close();
-        }
-
-        private void FilePrompt_Shown(object sender, EventArgs e)
+        protected override void OnShown(EventArgs e)
         {
             txt_FilePath.Focus();
         }
 
-        private void btn_Browse_Click(object sender, EventArgs e)
+        private void Btn_OK_Click(object sender, EventArgs e)
         {
-            string separator = " ";
+            if (!string.IsNullOrEmpty(txt_FilePath.Text))
+            {
+                FileInput = txt_FilePath.Text;
+                DialogResult = DialogResult.OK;
+            }
+
+            Close();
+        }
+
+        private void Btn_Browse_Click(object sender, EventArgs e)
+        {
+            const string separator = " ";
             using (var browseDialog = new OpenFileDialog
             {
                 Multiselect = true,
@@ -35,7 +40,7 @@ namespace GitUI.Script
             {
                 if (browseDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    txt_FilePath.Text = string.Join(separator, browseDialog.FileNames.Select(x => $"\"{x}\""));
+                    txt_FilePath.Text = string.Join(separator, browseDialog.FileNames.Select(x => StringExtensions.Quote(x)));
                 }
             }
         }

@@ -44,7 +44,7 @@
             this.btn_OK.TabIndex = 0;
             this.btn_OK.Text = "&OK";
             this.btn_OK.UseVisualStyleBackColor = true;
-            this.btn_OK.Click += new System.EventHandler(this.btn_OK_Click);
+            this.btn_OK.Click += new System.EventHandler(this.Btn_OK_Click);
             // 
             // btn_Browse
             // 
@@ -55,7 +55,7 @@
             this.btn_Browse.TabIndex = 0;
             this.btn_Browse.Text = "Browse";
             this.btn_Browse.UseVisualStyleBackColor = true;
-            this.btn_Browse.Click += new System.EventHandler(this.btn_Browse_Click);
+            this.btn_Browse.Click += new System.EventHandler(this.Btn_Browse_Click);
             // 
             // txt_FilePath
             // 
@@ -89,7 +89,6 @@
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "FilePrompt";
             this.Text = "FilePrompt";
-            this.Shown += new System.EventHandler(this.FilePrompt_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
