@@ -16,6 +16,7 @@ using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
@@ -59,7 +60,7 @@ namespace GitUI.CommitInfo
         private List<string> _branches;
         private string _branchInfo;
         private string _gitDescribeInfo;
-        private IList<string> _sortedRefs;
+        [CanBeNull] private IList<string> _sortedRefs;
 
         [DefaultValue(false)]
         public bool ShowBranchesAsLinks { get; set; }
