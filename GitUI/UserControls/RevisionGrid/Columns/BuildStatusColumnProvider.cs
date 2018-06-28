@@ -10,6 +10,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 {
     internal sealed class BuildStatusColumnProvider : ColumnProvider
     {
+        private const int IconColumnWidth = 16;
+        private const int TextColumnWidth = 80;
+
         private readonly RevisionGridControl _grid;
         private readonly RevisionDataGridView _gridView;
         private readonly Func<GitModule> _module;
@@ -26,8 +29,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 HeaderText = "Build Status",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                FillWeight = 20,
-                Width = DpiUtil.Scale(80)
+                Width = DpiUtil.Scale(TextColumnWidth)
             };
         }
 
@@ -54,9 +56,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 Column.Resizable = showText ? DataGridViewTriState.True : DataGridViewTriState.False;
                 Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
 
+                var iconColumnWidth = DpiUtil.Scale(IconColumnWidth);
+
                 if (showIcon && !showText)
                 {
-                    Column.Width = DpiUtil.Scale(16);
+                    Column.Width = iconColumnWidth;
+                }
+                else if (showText && Column.Width == iconColumnWidth)
+                {
+                    Column.Width = DpiUtil.Scale(TextColumnWidth);
                 }
             }
         }
