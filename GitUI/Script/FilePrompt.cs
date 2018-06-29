@@ -40,7 +40,7 @@ namespace GitUI.Script
             {
                 if (browseDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    txt_FilePath.Text = string.Join(separator, browseDialog.FileNames.Select(x => StringExtensions.Quote(x)));
+                    txt_FilePath.Text = string.Join(separator, browseDialog.FileNames.Select(fileName => fileName.Quote()));
                 }
             }
         }
