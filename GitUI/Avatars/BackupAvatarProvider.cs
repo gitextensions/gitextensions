@@ -27,7 +27,7 @@ namespace GitUI.Avatars
         {
             try
             {
-                return await _inner.GetAvatarAsync(email, imageSize);
+                return await _inner.GetAvatarAsync(email, imageSize) ?? _backupImage;
             }
             catch
             {
