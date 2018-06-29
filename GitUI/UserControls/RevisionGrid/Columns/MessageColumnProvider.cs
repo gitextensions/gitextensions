@@ -204,8 +204,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
         {
             e.Value = revision.IsArtificial
-                ? revision.SubjectCount
-                : revision.Subject;
+                ? revision.SubjectCount.TrimStart()
+                : revision.Subject.TrimStart();
             e.FormattingApplied = true;
         }
 
