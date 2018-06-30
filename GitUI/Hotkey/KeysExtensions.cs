@@ -64,6 +64,11 @@ namespace GitUI.Hotkey
                 return ",";
             }
 
+            if (key == Keys.Decimal)
+            {
+                return ".";
+            }
+
             // Get the string representation
             var str = key.ToCultureSpecificString();
 
