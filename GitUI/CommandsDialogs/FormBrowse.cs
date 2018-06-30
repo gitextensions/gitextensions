@@ -307,12 +307,14 @@ namespace GitUI.CommandsDialogs
             var toolBackColor = Color.FromArgb(218, 218, 218);
             BackColor = toolBackColor;
             ToolStrip.BackColor = toolBackColor;
-            toolStripBranchFilterComboBox.BackColor = toolBackColor;
-            toolStripRevisionFilterTextBox.BackColor = toolBackColor;
             toolStripRevisionFilterDropDownButton.BackColor = toolBackColor;
             menuStrip1.BackColor = toolBackColor;
             toolPanel.TopToolStripPanel.BackColor = toolBackColor;
             statusStrip.BackColor = toolBackColor;
+
+            var toolTextBoxBackColor = Color.FromArgb(235, 235, 235);
+            toolStripBranchFilterComboBox.BackColor = toolTextBoxBackColor;
+            toolStripRevisionFilterTextBox.BackColor = toolTextBoxBackColor;
 
             if (!string.IsNullOrEmpty(selectCommit))
             {
