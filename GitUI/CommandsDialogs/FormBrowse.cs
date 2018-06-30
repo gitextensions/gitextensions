@@ -1887,43 +1887,37 @@ namespace GitUI.CommandsDialogs
             AddBranchesMenuItems();
 
             PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
-        }
 
-        private void AddCheckoutBranchMenuItem()
-        {
-            var checkoutBranchItem = new ToolStripMenuItem(checkoutBranchToolStripMenuItem.Text)
+            void AddCheckoutBranchMenuItem()
             {
-                ShortcutKeys = checkoutBranchToolStripMenuItem.ShortcutKeys,
-                ShortcutKeyDisplayString = checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString
-            };
-            branchSelect.DropDownItems.Add(checkoutBranchItem);
-            checkoutBranchItem.Click += CheckoutBranchToolStripMenuItemClick;
-        }
-
-        private void AddBranchesMenuItems()
-        {
-            foreach (string branchName in GetBranchNames())
-            {
-                ToolStripItem toolStripItem = branchSelect.DropDownItems.Add(branchName);
-                toolStripItem.Click += BranchSelectToolStripItem_Click;
+                var checkoutBranchItem = new ToolStripMenuItem(checkoutBranchToolStripMenuItem.Text)
+                {
+                    ShortcutKeys = checkoutBranchToolStripMenuItem.ShortcutKeys,
+                    ShortcutKeyDisplayString = checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString
+                };
+                branchSelect.DropDownItems.Add(checkoutBranchItem);
+                checkoutBranchItem.Click += CheckoutBranchToolStripMenuItemClick;
             }
-        }
 
-        private IEnumerable<string> GetBranchNames()
-        {
-            IEnumerable<string> branchNames = Module.GetRefs(false, order: AppSettings.BranchOrderingCriteria).Select(b => b.Name);
+            void AddBranchesMenuItems()
+            {
+                foreach (var branchName in GetBranchNames())
+                {
+                    var toolStripItem = branchSelect.DropDownItems.Add(branchName);
+                    toolStripItem.Click
+                        += delegate { UICommands.StartCheckoutBranch(this, toolStripItem.Text); };
+                }
 
-            // Make sure there are never more than a 100 branches added to the menu
-            // GitExtensions will hang when the drop down is too large...
-            branchNames = branchNames.Take(100);
-
-            return branchNames;
-        }
-
-        private void BranchSelectToolStripItem_Click(object sender, EventArgs e)
-        {
-            var toolStripItem = (ToolStripItem)sender;
-            UICommands.StartCheckoutBranch(this, toolStripItem.Text);
+                IEnumerable<string> GetBranchNames()
+                {
+                    // Make sure there are never more than a 100 branches added to the menu
+                    // GitExtensions will hang when the drop down is too large...
+                    return Module
+                        .GetRefs(tags: false, order: AppSettings.BranchOrderingCriteria)
+                        .Select(b => b.Name)
+                        .Take(100);
+                }
+            }
         }
 
         private void _forkCloneMenuItem_Click(object sender, EventArgs e)
