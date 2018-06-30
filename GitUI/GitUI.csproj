@@ -1967,8 +1967,11 @@
     <Content Include="Resources\Icons\IconConsole.png" />
     <Content Include="Resources\Icons\IconDeleteRemote.png" />
     <Content Include="Resources\Icons\IconFolderSubmodule.png" />
+    <None Include="Resources\Icons\IconHideStatusBar.png" />
     <Content Include="Resources\Icons\IconKey.png" />
     <Content Include="Resources\Icons\IconMerge.png" />
+    <None Include="Resources\Icons\IconNumberOfLinesDecrease.png" />
+    <None Include="Resources\Icons\IconNumberOfLinesIncrease.png" />
     <Content Include="Resources\Icons\IconRebase.png" />
     <Content Include="Resources\Icons\IconSaveAs.png" />
     <Content Include="Resources\Icons\IconSubmoduleAdded.png" />

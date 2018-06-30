@@ -674,12 +674,6 @@ Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87</value>
   <data name="IconFileTree" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\IconFileTree.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="IconNumberOfLinesDecrease" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\minus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="IconNumberOfLinesIncrease" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\plus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="IconPreview" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\magnifier.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -841,5 +835,11 @@ Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87</value>
   </data>
   <data name="IconHideStatusBar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\IconHideStatusBar.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconNumberOfLinesDecrease" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconNumberOfLinesDecrease.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconNumberOfLinesIncrease" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconNumberOfLinesIncrease.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
