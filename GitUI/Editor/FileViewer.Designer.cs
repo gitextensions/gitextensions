@@ -192,6 +192,7 @@ namespace GitUI.Editor
             // fileviewerToolbar
             // 
             this.fileviewerToolbar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.fileviewerToolbar.BackColor = System.Drawing.SystemColors.Control;
             this.fileviewerToolbar.ClickThrough = true;
             this.fileviewerToolbar.Dock = System.Windows.Forms.DockStyle.None;
             this.fileviewerToolbar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -296,6 +297,8 @@ namespace GitUI.Editor
             // 
             // encodingToolStripComboBox
             // 
+            this.encodingToolStripComboBox.FlatStyle = FlatStyle.Flat;
+            this.encodingToolStripComboBox.BackColor = System.Drawing.SystemColors.Control;
             this.encodingToolStripComboBox.Name = "encodingToolStripComboBox";
             this.encodingToolStripComboBox.Size = new System.Drawing.Size(140, 23);
             this.encodingToolStripComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
