@@ -66,6 +66,9 @@ namespace GitUI.CommandsDialogs
 
             ApplyLayout();
             Shown += FormCheckoutBranch_Shown;
+
+            this.AdjustForDpiScaling();
+
             return;
 
             void FormCheckoutBranch_Shown(object sender, EventArgs e)
