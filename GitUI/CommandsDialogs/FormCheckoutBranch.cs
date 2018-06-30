@@ -66,6 +66,13 @@ namespace GitUI.CommandsDialogs
 
             ApplyLayout();
             Shown += FormCheckoutBranch_Shown;
+            return;
+
+            void FormCheckoutBranch_Shown(object sender, EventArgs e)
+            {
+                Shown -= FormCheckoutBranch_Shown;
+                RecalculateSizeConstraints();
+            }
         }
 
         public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, string[] containRevisions = null)
@@ -231,6 +238,32 @@ namespace GitUI.CommandsDialogs
                     Branches.Text = null;
                 }
             }
+
+            IReadOnlyList<string> GetContainsRevisionBranches()
+            {
+                var result = new HashSet<string>();
+                if (_containRevisions.Length > 0)
+                {
+                    var branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisions[0], LocalBranch.Checked,
+                            !LocalBranch.Checked)
+                        .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
+                                    !a.EndsWith("/HEAD"));
+                    result.UnionWith(branches);
+                }
+
+                for (int index = 1; index < _containRevisions.Length; index++)
+                {
+                    var containRevision = _containRevisions[index];
+                    var branches =
+                        Module.GetAllBranchesWhichContainGivenCommit(containRevision, LocalBranch.Checked,
+                                !LocalBranch.Checked)
+                            .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
+                                        !a.EndsWith("/HEAD"));
+                    result.IntersectWith(branches);
+                }
+
+                return result.ToList();
+            }
         }
 
         private void OkClick(object sender, EventArgs e)
@@ -385,13 +418,15 @@ namespace GitUI.CommandsDialogs
             }
 
             return DialogResult.None;
-        }
 
-        private void BranchTypeChanged()
-        {
-            if (!_isLoading)
+            IGitRef GetLocalBranchRef(string name)
             {
-                PopulateBranches();
+                return GetLocalBranches().FirstOrDefault(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            }
+
+            IGitRef GetRemoteBranchRef(string name)
+            {
+                return GetRemoteBranches().FirstOrDefault(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
             }
         }
 
@@ -404,7 +439,12 @@ namespace GitUI.CommandsDialogs
         private void RemoteBranchCheckedChanged(object sender, EventArgs e)
         {
             RecalculateSizeConstraints();
-            BranchTypeChanged();
+
+            if (!_isLoading)
+            {
+                PopulateBranches();
+            }
+
             Branches_SelectedIndexChanged(sender, e);
         }
 
@@ -415,21 +455,6 @@ namespace GitUI.CommandsDialogs
             {
                 txtCustomBranchName.SelectAll();
             }
-        }
-
-        private bool LocalBranchExists(string name)
-        {
-            return GetLocalBranches().Any(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-        }
-
-        private IGitRef GetLocalBranchRef(string name)
-        {
-            return GetLocalBranches().FirstOrDefault(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-        }
-
-        private IGitRef GetRemoteBranchRef(string name)
-        {
-            return GetRemoteBranches().FirstOrDefault(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         private void Branches_SelectedIndexChanged(object sender, EventArgs e)
@@ -481,6 +506,13 @@ namespace GitUI.CommandsDialogs
                         lbChanges.Text = text;
                     });
             }
+
+            return;
+
+            bool LocalBranchExists(string name)
+            {
+                return GetLocalBranches().Any(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            }
         }
 
         private IEnumerable<IGitRef> GetLocalBranches()
@@ -503,41 +535,9 @@ namespace GitUI.CommandsDialogs
             return _remoteBranches;
         }
 
-        private IReadOnlyList<string> GetContainsRevisionBranches()
-        {
-            var result = new HashSet<string>();
-            if (_containRevisions.Length > 0)
-            {
-                var branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisions[0], LocalBranch.Checked,
-                        !LocalBranch.Checked)
-                        .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
-                                    !a.EndsWith("/HEAD"));
-                result.UnionWith(branches);
-            }
-
-            for (int index = 1; index < _containRevisions.Length; index++)
-            {
-                var containRevision = _containRevisions[index];
-                var branches =
-                    Module.GetAllBranchesWhichContainGivenCommit(containRevision, LocalBranch.Checked,
-                        !LocalBranch.Checked)
-                        .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
-                                    !a.EndsWith("/HEAD"));
-                result.IntersectWith(branches);
-            }
-
-            return result.ToList();
-        }
-
         private void FormCheckoutBranch_Activated(object sender, EventArgs e)
         {
             Branches.Focus();
-        }
-
-        private void FormCheckoutBranch_Shown(object sender, EventArgs e)
-        {
-            Shown -= FormCheckoutBranch_Shown;
-            RecalculateSizeConstraints();
         }
 
         private void RecalculateSizeConstraints()
