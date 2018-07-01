@@ -169,7 +169,7 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormCommit(GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null)
-            : base(true, commands)
+            : base(enablePositionRestore: true, commands)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -261,6 +261,10 @@ namespace GitUI.CommandsDialogs
             CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
             splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
             splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
+
+            // By calling this in the constructor, we prevent flickering caused by resizing the
+            // form, for example when it is restored to maximised, but first drawn as a smaller window.
+            RestorePosition();
 
             void ConfigureMessageBox()
             {
