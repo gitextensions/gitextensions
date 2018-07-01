@@ -34,14 +34,14 @@ namespace GitUI.Hotkey
         }
         #endregion
 
-        private static readonly List<Keys> UsedKeys = new List<Keys>();
+        private static readonly HashSet<Keys> _usedKeys = new HashSet<Keys>();
 
         /// <summary>
         /// Returns whether the hotkey is already assigned.
         /// </summary>
         public static bool IsUniqueKey(Keys keyData)
         {
-            return UsedKeys.Contains(keyData);
+            return _usedKeys.Contains(keyData);
         }
 
         public static HotkeyCommand[] LoadHotkeys(string name)
@@ -52,16 +52,16 @@ namespace GitUI.Hotkey
 
             UpdateUsedKeys(allSettings);
 
-            foreach (HotkeySettings hs in allSettings)
+            foreach (var setting in allSettings)
             {
-                if (hs.Name == name)
+                if (setting.Name == name)
                 {
-                    settings = hs;
+                    settings = setting;
                 }
 
-                if (hs.Name == "Scripts")
+                if (setting.Name == "Scripts")
                 {
-                    scriptKeys = hs;
+                    scriptKeys = setting;
                 }
             }
 
@@ -86,15 +86,15 @@ namespace GitUI.Hotkey
 
         private static void UpdateUsedKeys(HotkeySettings[] settings)
         {
-            UsedKeys.Clear();
+            _usedKeys.Clear();
 
-            foreach (HotkeySettings hs in settings)
+            foreach (var setting in settings)
             {
-                foreach (var hotkeyCommand in hs.Commands)
+                foreach (var command in setting.Commands)
                 {
-                    if (hotkeyCommand != null && !UsedKeys.Contains(hotkeyCommand.KeyData))
+                    if (command != null)
                     {
-                        UsedKeys.Add(hotkeyCommand.KeyData);
+                        _usedKeys.Add(command.KeyData);
                     }
                 }
             }
@@ -116,6 +116,7 @@ namespace GitUI.Hotkey
             }
             catch
             {
+                // ignore
             }
         }
 
@@ -127,83 +128,76 @@ namespace GitUI.Hotkey
             }
 
             var defaultCommands = new Dictionary<string, HotkeyCommand>();
-            FillDictionaryWithCommands(defaultCommands, defaultSettings);
-            AssignHotkeysFromLoaded(defaultCommands, loadedSettings);
-        }
 
-        private static void AssignHotkeysFromLoaded(Dictionary<string, HotkeyCommand> defaultCommands, HotkeySettings[] loadedSettings)
-        {
-            foreach (HotkeySettings setting in loadedSettings)
+            FillDictionaryWithCommands();
+            AssignHotkeysFromLoaded();
+
+            void AssignHotkeysFromLoaded()
             {
-                if (setting != null)
+                foreach (var setting in loadedSettings)
                 {
-                    foreach (HotkeyCommand command in setting.Commands)
+                    if (setting != null)
                     {
-                        if (command != null)
+                        foreach (var command in setting.Commands)
                         {
-                            string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
-                            if (defaultCommands.TryGetValue(dictKey, out var defaultCommand))
+                            if (command != null)
                             {
-                                defaultCommand.KeyData = command.KeyData;
+                                string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
+                                if (defaultCommands.TryGetValue(dictKey, out var defaultCommand))
+                                {
+                                    defaultCommand.KeyData = command.KeyData;
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        private static void FillDictionaryWithCommands(Dictionary<string, HotkeyCommand> dict, HotkeySettings[] settings)
-        {
-            foreach (HotkeySettings setting in settings)
+            void FillDictionaryWithCommands()
             {
-                foreach (HotkeyCommand command in setting.Commands)
+                foreach (var setting in defaultSettings)
                 {
-                    if (command != null)
+                    foreach (var command in setting.Commands)
                     {
-                        string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
-                        dict.Add(dictKey, command);
+                        if (command != null)
+                        {
+                            string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
+                            defaultCommands.Add(dictKey, command);
+                        }
                     }
                 }
             }
-        }
 
-        private static string CalcDictionaryKey(string settingName, int commandCode)
-        {
-            return settingName + ":" + commandCode;
+            string CalcDictionaryKey(string settingName, int commandCode) => settingName + ":" + commandCode;
         }
 
         [CanBeNull]
         private static HotkeySettings[] LoadSerializedSettings()
         {
-            HotkeySettings[] settings = null;
-
             MigrateSettings();
 
             if (!string.IsNullOrWhiteSpace(AppSettings.SerializedHotkeys))
             {
-                settings = LoadSerializedSettings(AppSettings.SerializedHotkeys);
+                return LoadSerializedSettings(AppSettings.SerializedHotkeys);
             }
 
-            return settings;
+            return null;
         }
 
         [CanBeNull]
         private static HotkeySettings[] LoadSerializedSettings(string serializedHotkeys)
         {
-            HotkeySettings[] settings = null;
-
             try
             {
                 using (var reader = new StringReader(serializedHotkeys))
                 {
-                    settings = Serializer.Deserialize(reader) as HotkeySettings[];
+                    return (HotkeySettings[])Serializer.Deserialize(reader);
                 }
             }
             catch
             {
+                return null;
             }
-
-            return settings;
         }
 
         private static void MigrateSettings()
@@ -342,7 +336,7 @@ namespace GitUI.Hotkey
             HotkeyCommand[] LoadScriptHotkeys()
             {
                 /* define unusable int for identifying a shortcut for a custom script is pressed
-                 * all integers above 9000 represent a scripthotkey
+                 * all integers above 9000 represent a script hotkey
                  * these integers are never matched in the 'switch' routine on a form and
                  * therefore execute the 'default' action
                  */
