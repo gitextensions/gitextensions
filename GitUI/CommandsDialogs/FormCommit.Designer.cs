@@ -901,7 +901,7 @@ namespace GitUI.CommandsDialogs
             this.selectionFilter.Name = "selectionFilter";
             this.selectionFilter.Size = new System.Drawing.Size(121, 25);
             this.selectionFilter.SelectedIndexChanged += new System.EventHandler(this.FilterIndexChanged);
-            this.selectionFilter.TextChanged += new System.EventHandler(this.FilterChanged);
+            this.selectionFilter.TextChanged += new System.EventHandler(this.FilterTextChanged);
             //
             // LoadingStaged
             //
