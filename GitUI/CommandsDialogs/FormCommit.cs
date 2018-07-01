@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -244,6 +246,17 @@ namespace GitUI.CommandsDialogs
 
             this.AdjustForDpiScaling();
 
+            _splitterManager.AddSplitter(splitMain, "splitMain");
+            _splitterManager.AddSplitter(splitRight, "splitRight");
+            _splitterManager.RestoreSplitters();
+
+            SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
+            Reset.Visible = AppSettings.ShowResetAllChanges;
+            ResetUnStaged.Visible = AppSettings.ShowResetUnstagedChanges;
+            CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
+            splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
+            splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
+
             void ConfigureMessageBox()
             {
                 Message.Enabled = _useFormCommitMessage;
@@ -257,18 +270,20 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            const int TVM_SETEXTENDEDSTYLE = 0x1100 + 44;
+            const int TVS_EX_DOUBLEBUFFER = 0x0004;
+
+            SendMessage(Handle, TVM_SETEXTENDEDSTYLE, (IntPtr)TVS_EX_DOUBLEBUFFER, (IntPtr)TVS_EX_DOUBLEBUFFER);
+            base.OnHandleCreated(e);
+        }
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hwnd, int msg, IntPtr wp, IntPtr lp);
+
         private void FormCommit_Load(object sender, EventArgs e)
         {
-            _splitterManager.AddSplitter(splitMain, "splitMain");
-            _splitterManager.AddSplitter(splitRight, "splitRight");
-            _splitterManager.RestoreSplitters();
-
-            SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
-            Reset.Visible = AppSettings.ShowResetAllChanges;
-            ResetUnStaged.Visible = AppSettings.ShowResetUnstagedChanges;
-            CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
-            splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
-            splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
             showUntrackedFilesToolStripMenuItem.Checked = Module.EffectiveConfigFile.GetValue("status.showUntrackedFiles") != "no";
             MinimizeBox = Owner == null;
         }

@@ -56,6 +56,9 @@ namespace GitUI
 
             public void RestoreFromSettings(ISettingsSource settings)
             {
+                Splitter.BeginInit();
+                Splitter.SuspendLayout();
+
                 _latestFontSize = settings.GetFloat(FontSizeSettingsKey) ?? DesignTimeFontSize;
 
                 int? prevSize = settings.GetInt(SizeSettingsKey);
@@ -72,7 +75,7 @@ namespace GitUI
                         switch (Splitter.FixedPanel)
                         {
                             case FixedPanel.None:
-                                SetSplitterDistance(1F * SplitterSize * prevDistance.Value / prevSize.Value);
+                                SetSplitterDistance((float)SplitterSize * prevDistance.Value / prevSize.Value);
                                 break;
                             case FixedPanel.Panel1:
                                 SetSplitterDistance(prevDistance.Value);
@@ -88,6 +91,9 @@ namespace GitUI
                 AdjustToCurrentFontSize();
 
                 Splitter.Panel1Collapsed = settings.GetBool(Panel1CollapsedSettingsKey, defaultValue: false);
+
+                Splitter.ResumeLayout();
+                Splitter.EndInit();
             }
 
             private void AdjustToCurrentFontSize()
