@@ -95,18 +95,7 @@ namespace GitUI
                 }
 
                 ProgressBar.Value = Math.Min(100, progressValue);
-
-                if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-                {
-                    try
-                    {
-                        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                        TaskbarManager.Instance.SetProgressValue(progressValue, 100);
-                    }
-                    catch (InvalidOperationException)
-                    {
-                    }
-                }
+                TaskbarProgress.SetProgress(TaskbarProgressBarState.Normal, progressValue, 100);
             }
 
             // Show last progress message in the title, unless it's showin in the control body already
@@ -142,21 +131,12 @@ namespace GitUI
                 Ok.Focus();
                 AcceptButton = Ok;
                 Abort.Enabled = false;
-                if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-                {
-                    try
-                    {
-                        TaskbarManager.Instance.SetProgressState(
-                            isSuccess
-                                ? TaskbarProgressBarState.Normal
-                                : TaskbarProgressBarState.Error);
-
-                        TaskbarManager.Instance.SetProgressValue(100, 100);
-                    }
-                    catch (InvalidOperationException)
-                    {
-                    }
-                }
+                TaskbarProgress.SetProgress(
+                    isSuccess
+                        ? TaskbarProgressBarState.Normal
+                        : TaskbarProgressBarState.Error,
+                    100,
+                    100);
 
                 picBoxSuccessFail.Image = isSuccess
                     ? Properties.Resources.success
@@ -244,16 +224,7 @@ namespace GitUI
 
             StartPosition = FormStartPosition.CenterParent;
 
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-            {
-                try
-                {
-                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Indeterminate);
-                }
-                catch (InvalidOperationException)
-                {
-                }
-            }
+            TaskbarProgress.SetIndeterminate();
 
             Reset();
             ProcessCallback(this);
@@ -292,16 +263,7 @@ namespace GitUI
 
         internal void AfterClosed()
         {
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-            {
-                try
-                {
-                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
-                }
-                catch (InvalidOperationException)
-                {
-                }
-            }
+            TaskbarProgress.Clear();
         }
     }
 
