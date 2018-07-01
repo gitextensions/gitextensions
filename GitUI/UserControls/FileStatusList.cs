@@ -499,28 +499,20 @@ namespace GitUI
             }
         }
 
-        public int UnfilteredItemsCount()
-        {
-            if (GitItemStatusesWithParents == null)
-            {
-                return 0;
-            }
-            else
-            {
-                return GitItemStatusesWithParents.Sum(pair => pair.Value.Count);
-            }
-        }
+        public int UnfilteredItemsCount => GitItemStatusesWithParents?.Sum(pair => pair.Value.Count) ?? 0;
+
+        public int AllItemsCount => FileStatusListView.Items.Count;
 
         [Browsable(false)]
         public IEnumerable<GitItemStatus> AllItems
         {
-            get { return FileStatusListView.Items.Cast<ListViewItem>().Select(selectedItem => selectedItem.Tag as GitItemStatus); }
+            get => FileStatusListView.Items.Cast<ListViewItem>().Select(selectedItem => (GitItemStatus)selectedItem.Tag);
         }
 
         [Browsable(false)]
         public IEnumerable<GitItemStatus> SelectedItems
         {
-            get { return FileStatusListView.SelectedItems.Cast<ListViewItem>().Select(i => i.Tag as GitItemStatus); }
+            get { return FileStatusListView.SelectedItems.Cast<ListViewItem>().Select(i => (GitItemStatus)i.Tag); }
             set
             {
                 ClearSelected();

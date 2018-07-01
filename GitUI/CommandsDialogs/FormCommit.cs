@@ -221,7 +221,13 @@ namespace GitUI.CommandsDialogs
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
             skipWorktreeToolStripMenuItem.ToolTipText = _skipWorktreeToolTip.Text;
             assumeUnchangedToolStripMenuItem.ToolTipText = _assumeUnchangedToolTip.Text;
-            toolAuthor.Control.PreviewKeyDown += ToolAuthor_PreviewKeyDown;
+            toolAuthor.Control.PreviewKeyDown += (_, e) =>
+            {
+                if (e.Alt)
+                {
+                    e.IsInputKey = true;
+                }
+            };
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
 
             /* If not changed, by default show "no sign commit" */
@@ -237,51 +243,17 @@ namespace GitUI.CommandsDialogs
             ((ToolStripDropDownMenu)commitMessageToolStripMenuItem.DropDown).ShowCheckMargin = false;
 
             this.AdjustForDpiScaling();
-        }
 
-        private void ConfigureMessageBox()
-        {
-            Message.Enabled = _useFormCommitMessage;
-
-            commitMessageToolStripMenuItem.Enabled = _useFormCommitMessage;
-            commitTemplatesToolStripMenuItem.Enabled = _useFormCommitMessage;
-
-            Message.WatermarkText = _useFormCommitMessage
-                ? _enterCommitMessageHint.Text
-                : _commitMessageDisabled.Text;
-        }
-
-        private void AssignCommitMessageFromTemplate()
-        {
-            if (!IsUICommandsInitialized)
+            void ConfigureMessageBox()
             {
-                return;
-            }
+                Message.Enabled = _useFormCommitMessage;
 
-            try
-            {
-                Message.Text = _commitTemplate = _commitTemplateManager.LoadGitCommitTemplate();
-                return;
-            }
-            catch (FileNotFoundException ex)
-            {
-                MessageBox.Show(this, string.Format(_templateNotFound.Text, ex.FileName),
-                    _templateNotFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message,
-                    _templateLoadErrorCapion.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+                commitMessageToolStripMenuItem.Enabled = _useFormCommitMessage;
+                commitTemplatesToolStripMenuItem.Enabled = _useFormCommitMessage;
 
-            Message.Text = _commitTemplate = string.Empty;
-        }
-
-        private static void ToolAuthor_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            if (e.Alt)
-            {
-                e.IsInputKey = true;
+                Message.WatermarkText = _useFormCommitMessage
+                    ? _enterCommitMessageHint.Text
+                    : _commitMessageDisabled.Text;
             }
         }
 
@@ -295,15 +267,10 @@ namespace GitUI.CommandsDialogs
             Reset.Visible = AppSettings.ShowResetAllChanges;
             ResetUnStaged.Visible = AppSettings.ShowResetUnstagedChanges;
             CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
-            AdjustCommitButtonPanelHeight();
-            showUntrackedFilesToolStripMenuItem.Checked = Module.EffectiveConfigFile.GetValue("status.showUntrackedFiles") != "no";
-            MinimizeBox = Owner == null;
-        }
-
-        private void AdjustCommitButtonPanelHeight()
-        {
             splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
             splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
+            showUntrackedFilesToolStripMenuItem.Checked = Module.EffectiveConfigFile.GetValue("status.showUntrackedFiles") != "no";
+            MinimizeBox = Owner == null;
         }
 
         private void FormCommitFormClosing(object sender, FormClosingEventArgs e)
@@ -1091,7 +1058,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (_useFormCommitMessage && !ValidCommitMessage())
+            if (_useFormCommitMessage && !IsCommitMessageValid())
             {
                 return;
             }
@@ -1191,70 +1158,60 @@ namespace GitUI.CommandsDialogs
             {
                 MessageBox.Show(this, string.Format("Exception: {0}", e.Message));
             }
-        }
 
-        private bool ValidCommitMessage()
-        {
-            if (AppSettings.CommitValidationMaxCntCharsFirstLine > 0)
+            bool IsCommitMessageValid()
             {
-                var firstLine = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                if (firstLine.Length > AppSettings.CommitValidationMaxCntCharsFirstLine)
+                if (AppSettings.CommitValidationMaxCntCharsFirstLine > 0)
                 {
-                    if (MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                    var firstLine = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                    if (firstLine.Length > AppSettings.CommitValidationMaxCntCharsFirstLine &&
+                        MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                     {
                         return false;
                     }
                 }
-            }
 
-            if (AppSettings.CommitValidationMaxCntCharsPerLine > 0)
-            {
-                var lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var line in lines)
+                if (AppSettings.CommitValidationMaxCntCharsPerLine > 0)
                 {
-                    if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine)
+                    var lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var line in lines)
                     {
-                        if (MessageBox.Show(this, string.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                        if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine &&
+                            MessageBox.Show(this, string.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                         {
                             return false;
                         }
                     }
                 }
-            }
 
-            if (AppSettings.CommitValidationSecondLineMustBeEmpty)
-            {
-                var lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-                if (lines.Length > 2)
+                if (AppSettings.CommitValidationSecondLineMustBeEmpty)
                 {
-                    if (lines[1].Length != 0)
+                    var lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+                    if (lines.Length > 2 &&
+                        lines[1].Length != 0 &&
+                        MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                     {
-                        if (MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                        return false;
+                    }
+                }
+
+                if (!AppSettings.CommitValidationRegEx.IsNullOrEmpty())
+                {
+                    try
+                    {
+                        if (!Regex.IsMatch(Message.Text, AppSettings.CommitValidationRegEx) &&
+                            MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                         {
                             return false;
                         }
                     }
-                }
-            }
-
-            if (!AppSettings.CommitValidationRegEx.IsNullOrEmpty())
-            {
-                try
-                {
-                    if (!Regex.IsMatch(Message.Text, AppSettings.CommitValidationRegEx))
+                    catch
                     {
-                        if (MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
-                        {
-                            return false;
-                        }
                     }
                 }
-                catch
-                {
-                }
-            }
 
-            return true;
+                return true;
+            }
         }
 
         private void RescanChanges()
@@ -1580,8 +1537,8 @@ namespace GitUI.CommandsDialogs
 
         private void Staged_DataSourceChanged(object sender, EventArgs e)
         {
-            int stagedCount = Staged.UnfilteredItemsCount();
-            int totalFilesCount = stagedCount + Unstaged.UnfilteredItemsCount();
+            int stagedCount = Staged.UnfilteredItemsCount;
+            int totalFilesCount = stagedCount + Unstaged.UnfilteredItemsCount;
             commitStagedCount.Text = stagedCount + "/" + totalFilesCount;
         }
 
@@ -1959,9 +1916,31 @@ namespace GitUI.CommandsDialogs
             {
                 Message.Text = message;
             }
-            else
+            else if (IsUICommandsInitialized)
             {
                 AssignCommitMessageFromTemplate();
+            }
+
+            void AssignCommitMessageFromTemplate()
+            {
+                var text = "";
+                try
+                {
+                    text = _commitTemplateManager.LoadGitCommitTemplate();
+                }
+                catch (FileNotFoundException ex)
+                {
+                    MessageBox.Show(this, string.Format(_templateNotFound.Text, ex.FileName),
+                        _templateNotFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, ex.Message,
+                        _templateLoadErrorCapion.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                Message.Text = text;
+                _commitTemplate = text;
             }
         }
 
@@ -2264,30 +2243,19 @@ namespace GitUI.CommandsDialogs
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (!SenderToFileStatusList(sender, out var list))
+            if (!SenderToFileStatusList(sender, out var list) || !list.SelectedItems.Any())
             {
                 return;
             }
 
-            if (!list.SelectedItems.Any())
-            {
-                return;
-            }
-
-            var item = list.SelectedItem;
-            var fileName = item.Name;
+            var fileName = list.SelectedItem.Name;
 
             Process.Start(_fullPathResolver.Resolve(fileName).ToNativePath());
         }
 
         private void OpenWithToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (!SenderToFileStatusList(sender, out var list))
-            {
-                return;
-            }
-
-            if (!list.SelectedItems.Any())
+            if (!SenderToFileStatusList(sender, out var list) || !list.SelectedItems.Any())
             {
                 return;
             }
@@ -2300,12 +2268,7 @@ namespace GitUI.CommandsDialogs
 
         private void FilenameToClipboardToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (!SenderToFileStatusList(sender, out var list))
-            {
-                return;
-            }
-
-            if (!list.SelectedItems.Any())
+            if (!SenderToFileStatusList(sender, out var list) || !list.SelectedItems.Any())
             {
                 return;
             }
@@ -2411,7 +2374,7 @@ namespace GitUI.CommandsDialogs
 
         private void CommitAndPush_Click(object sender, EventArgs e)
         {
-            CheckForStagedAndCommit(Amend.Checked, true);
+            CheckForStagedAndCommit(Amend.Checked, push: true);
         }
 
         private void FormCommitActivated(object sender, EventArgs e)
@@ -2495,53 +2458,49 @@ namespace GitUI.CommandsDialogs
 
         private void FormCommit_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Control && e.KeyCode == Keys.Enter && !Message.ContainsFocus)
+            switch (e.KeyData)
             {
-                FocusCommitMessage();
-                e.Handled = true;
+                case Keys.Control | Keys.Enter when !Message.ContainsFocus:
+                {
+                    FocusCommitMessage();
+                    e.Handled = true;
+                    break;
+                }
+
+                case Keys.Control | Keys.P:
+                case Keys.Alt | Keys.Up:
+                case Keys.Alt | Keys.Left:
+                {
+                    MoveSelection(-1);
+                    e.Handled = true;
+                    break;
+                }
+
+                case Keys.Control | Keys.N:
+                case Keys.Alt | Keys.Down:
+                case Keys.Alt | Keys.Right:
+                {
+                    MoveSelection(+1);
+                    e.Handled = true;
+                    break;
+                }
             }
 
-            if ((e.Control && e.KeyCode == Keys.P)
-                || (e.Alt && e.KeyCode == Keys.Up)
-                || (e.Alt && e.KeyCode == Keys.Left))
+            void MoveSelection(int direction)
             {
-                SelectPreviousFile();
-                e.Handled = true;
-            }
-
-            if ((e.Control && e.KeyCode == Keys.N)
-                || (e.Alt && e.KeyCode == Keys.Down)
-                || (e.Alt && e.KeyCode == Keys.Right))
-            {
-                SelectNextFile();
-                e.Handled = true;
-            }
-        }
-
-        private void SelectNextFile()
-        {
-            SelectFileInListWithDirection(+1);
-        }
-
-        private void SelectPreviousFile()
-        {
-            SelectFileInListWithDirection(-1);
-        }
-
-        private void SelectFileInListWithDirection(int direction)
-        {
-            var list = Message.Focused ? Staged : _currentFilesList;
-            _currentFilesList = list;
-            var itemsCount = list.AllItems.Count();
-            if (itemsCount != 0)
-            {
-                list.SelectedIndex = (list.SelectedIndex + direction + itemsCount) % itemsCount;
+                var list = Message.Focused ? Staged : _currentFilesList;
+                _currentFilesList = list;
+                var itemsCount = list.AllItemsCount;
+                if (itemsCount != 0)
+                {
+                    list.SelectedIndex = (list.SelectedIndex + direction + itemsCount) % itemsCount;
+                }
             }
         }
 
         private void ExecuteCommitCommand()
         {
-            CheckForStagedAndCommit(Amend.Checked, false);
+            CheckForStagedAndCommit(Amend.Checked, push: false);
         }
 
         private void Message_KeyDown(object sender, KeyEventArgs e)
@@ -2568,94 +2527,6 @@ namespace GitUI.CommandsDialogs
         private void Message_TextAssigned(object sender, EventArgs e)
         {
             Message_TextChanged(sender, e);
-        }
-
-        private bool FormatLine(int line)
-        {
-            int limit1 = AppSettings.CommitValidationMaxCntCharsFirstLine;
-            int limitX = AppSettings.CommitValidationMaxCntCharsPerLine;
-            bool empty2 = AppSettings.CommitValidationSecondLineMustBeEmpty;
-
-            bool textHasChanged = false;
-
-            if (limit1 > 0 && line == 0)
-            {
-                ColorTextAsNecessary(line, limit1, false);
-            }
-
-            if (empty2 && line == 1)
-            {
-                // Ensure next line. Optionally add a bullet.
-                Message.EnsureEmptyLine(AppSettings.CommitValidationIndentAfterFirstLine, 1);
-                Message.ChangeTextColor(2, 0, Message.LineLength(2), Color.Black);
-                if (FormatLine(2))
-                {
-                    textHasChanged = true;
-                }
-            }
-
-            if (limitX > 0 && line >= (empty2 ? 2 : 1))
-            {
-                if (AppSettings.CommitValidationAutoWrap)
-                {
-                    if (WrapIfNecessary(line, limitX))
-                    {
-                        textHasChanged = true;
-                    }
-                }
-
-                ColorTextAsNecessary(line, limitX, textHasChanged);
-            }
-
-            return textHasChanged;
-        }
-
-        private bool WrapIfNecessary(int line, int lineLimit)
-        {
-            if (Message.LineLength(line) > lineLimit)
-            {
-                var oldText = Message.Line(line);
-                var newText = WordWrapper.WrapSingleLine(oldText, lineLimit);
-                if (!string.Equals(oldText, newText))
-                {
-                    Message.ReplaceLine(line, newText);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private void ColorTextAsNecessary(int line, int lineLimit, bool fullRefresh)
-        {
-            var lineLength = Message.LineLength(line);
-            int offset = 0;
-            bool textAppended = false;
-            if (!fullRefresh && _formattedLines.Count > line)
-            {
-                offset = _formattedLines[line].CommonPrefix(Message.Line(line)).Length;
-                textAppended = offset > 0 && offset == _formattedLines[line].Length;
-            }
-
-            int len = Math.Min(lineLimit, lineLength) - offset;
-
-            if (!textAppended && len > 0)
-            {
-                Message.ChangeTextColor(line, offset, len, Color.Black);
-            }
-
-            if (lineLength > lineLimit)
-            {
-                if (offset <= lineLimit || !textAppended)
-                {
-                    offset = Math.Max(offset, lineLimit);
-                    len = lineLength - offset;
-                    if (len > 0)
-                    {
-                        Message.ChangeTextColor(line, offset, len, Color.Red);
-                    }
-                }
-            }
         }
 
         private readonly List<string> _formattedLines = new List<string>();
@@ -2695,6 +2566,12 @@ namespace GitUI.CommandsDialogs
 
         private void FormatAllText(int startLine)
         {
+            int limit1 = AppSettings.CommitValidationMaxCntCharsFirstLine;
+            int limitX = AppSettings.CommitValidationMaxCntCharsPerLine;
+            bool empty2 = AppSettings.CommitValidationSecondLineMustBeEmpty;
+            bool commitValidationAutoWrap = AppSettings.CommitValidationAutoWrap;
+            bool commitValidationIndentAfterFirstLine = AppSettings.CommitValidationIndentAfterFirstLine;
+
             var lineCount = Message.LineCount();
             TrimFormattedLines(lineCount);
             for (int line = startLine; line < lineCount; line++)
@@ -2707,6 +2584,87 @@ namespace GitUI.CommandsDialogs
                     {
                         FormatAllText(line);
                     }
+                }
+            }
+
+            bool FormatLine(int line)
+            {
+                var changed = false;
+
+                if (limit1 > 0 && line == 0)
+                {
+                    ColorTextAsNecessary(limit1, false);
+                }
+
+                if (empty2 && line == 1)
+                {
+                    // Ensure next line. Optionally add a bullet.
+                    Message.EnsureEmptyLine(commitValidationIndentAfterFirstLine, 1);
+                    Message.ChangeTextColor(2, 0, Message.LineLength(2), Color.Black);
+                    if (FormatLine(2))
+                    {
+                        changed = true;
+                    }
+                }
+
+                if (limitX > 0 && line >= (empty2 ? 2 : 1))
+                {
+                    if (commitValidationAutoWrap && WrapIfNecessary())
+                    {
+                        changed = true;
+                    }
+
+                    ColorTextAsNecessary(limitX, changed);
+                }
+
+                return changed;
+
+                void ColorTextAsNecessary(int lineLimit, bool fullRefresh)
+                {
+                    var lineLength = Message.LineLength(line);
+                    int offset = 0;
+                    bool textAppended = false;
+                    if (!fullRefresh && _formattedLines.Count > line)
+                    {
+                        offset = _formattedLines[line].CommonPrefix(Message.Line(line)).Length;
+                        textAppended = offset > 0 && offset == _formattedLines[line].Length;
+                    }
+
+                    int len = Math.Min(lineLimit, lineLength) - offset;
+
+                    if (!textAppended && len > 0)
+                    {
+                        Message.ChangeTextColor(line, offset, len, Color.Black);
+                    }
+
+                    if (lineLength > lineLimit)
+                    {
+                        if (offset <= lineLimit || !textAppended)
+                        {
+                            offset = Math.Max(offset, lineLimit);
+                            len = lineLength - offset;
+                            if (len > 0)
+                            {
+                                Message.ChangeTextColor(line, offset, len, Color.Red);
+                            }
+                        }
+                    }
+                }
+
+                bool WrapIfNecessary()
+                {
+                    if (Message.LineLength(line) > limitX)
+                    {
+                        var oldText = Message.Line(line);
+                        var newText = WordWrapper.WrapSingleLine(oldText, limitX);
+                        if (!string.Equals(oldText, newText))
+                        {
+                            Message.ReplaceLine(line, newText);
+                            return true;
+                        }
+                    }
+
+                    return false;
                 }
             }
         }
@@ -2745,7 +2703,7 @@ namespace GitUI.CommandsDialogs
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void signOffToolStripMenuItem_Click(object snder, EventArgs e)
+        private void signOffToolStripMenuItem_Click(object sender, EventArgs e)
         {
             signOffToolStripMenuItem.Checked = !signOffToolStripMenuItem.Checked;
         }
@@ -2765,19 +2723,15 @@ namespace GitUI.CommandsDialogs
         private void gpgSignCommitChanged(object sender, EventArgs e)
         {
             // Change the icon for commit button
-            if (gpgSignCommitToolStripComboBox.SelectedIndex > 0)
-            {
-                Commit.Image = Properties.Resources.IconKey;
-            }
-            else
-            {
-                Commit.Image = Properties.Resources.IconClean;
-            }
+            Commit.Image = gpgSignCommitToolStripComboBox.SelectedIndex > 0
+                ? Properties.Resources.IconKey
+                : Properties.Resources.IconClean;
 
             toolStripGpgKeyTextBox.Visible = gpgSignCommitToolStripComboBox.SelectedIndex == 2;
         }
 
         private long _lastUserInputTime;
+
         private void FilterChanged(object sender, EventArgs e)
         {
             var currentTime = DateTime.Now.Ticks;
@@ -2842,15 +2796,15 @@ namespace GitUI.CommandsDialogs
             Unstaged.SetSelectionFilter(selectionFilter.Text);
         }
 
-        private void ToogleShowSelectionFilter(object sender, EventArgs e)
+        private void ToggleShowSelectionFilter(object sender, EventArgs e)
         {
             toolbarSelectionFilter.Visible = selectionFilterToolStripMenuItem.Checked;
         }
 
         private void commitSubmoduleChanges_Click(object sender, EventArgs e)
         {
-            GitUICommands submodulCommands = new GitUICommands(_fullPathResolver.Resolve(_currentItem.Name.EnsureTrailingPathSeparator()));
-            submodulCommands.StartCommitDialog(this);
+            var submoduleCommands = new GitUICommands(_fullPathResolver.Resolve(_currentItem.Name.EnsureTrailingPathSeparator()));
+            submoduleCommands.StartCommitDialog(this);
             Initialize();
         }
 
@@ -2972,98 +2926,8 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void viewHistoryMenuItem_Click(object sender, EventArgs e)
-        {
-            ViewFileHistoryMenuItem_Click(sender, e);
-        }
-
-        private void openFolderMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenToolStripMenuItemClick(sender, e);
-        }
-
-        private void openDiffMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenWithDifftoolToolStripMenuItemClick(sender, e);
-        }
-
-        private void copyFolderNameMenuItem_Click(object sender, EventArgs e)
-        {
-            FilenameToClipboardToolStripMenuItemClick(sender, e);
-        }
-
-        private void LoadCommitTemplates()
-        {
-            commitTemplatesToolStripMenuItem.DropDownItems.Clear();
-
-            // Add registered templates
-            foreach (var item in _commitTemplateManager.RegisteredTemplates)
-            {
-                CreateToolStripItem(item);
-            }
-
-            AddSeparator();
-
-            // Add templates from settings
-            foreach (var item in CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>())
-            {
-                CreateToolStripItem(item);
-            }
-
-            AddSeparator();
-
-            // Add a settings item
-            AddSettingsItem();
-
-            return;
-
-            void CreateToolStripItem(CommitTemplateItem item)
-            {
-                if (string.IsNullOrEmpty(item.Name))
-                {
-                    return;
-                }
-
-                var toolStripItem = new ToolStripMenuItem(item.Name);
-                toolStripItem.Click += (s, e) =>
-                {
-                    try
-                    {
-                        Message.Text = item.Text;
-                        Message.Focus();
-                    }
-                    catch
-                    {
-                    }
-                };
-                commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
-            }
-
-            void AddSeparator()
-            {
-                if (commitTemplatesToolStripMenuItem.DropDownItems.Count != 0)
-                {
-                    commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
-                }
-            }
-
-            void AddSettingsItem()
-            {
-                var settingsItem = new ToolStripMenuItem(_commitTemplateSettings.Text);
-                settingsItem.Click += (s, e) =>
-                {
-                    using (var frm = new FormCommitTemplateSettings())
-                    {
-                        frm.ShowDialog(this);
-                    }
-
-                    _shouldReloadCommitTemplates = true;
-                };
-                commitTemplatesToolStripMenuItem.DropDownItems.Add(settingsItem);
-            }
-        }
-
         private int _alreadyLoadedTemplatesCount = -1;
+
         private void commitTemplatesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             var registeredTemplatesCount = _commitTemplateManager.RegisteredTemplates.Count();
@@ -3072,6 +2936,79 @@ namespace GitUI.CommandsDialogs
                 LoadCommitTemplates();
                 _shouldReloadCommitTemplates = false;
                 _alreadyLoadedTemplatesCount = registeredTemplatesCount;
+            }
+
+            return;
+
+            void LoadCommitTemplates()
+            {
+                commitTemplatesToolStripMenuItem.DropDownItems.Clear();
+
+                // Add registered templates
+                foreach (var item in _commitTemplateManager.RegisteredTemplates)
+                {
+                    CreateToolStripItem(item);
+                }
+
+                AddSeparator();
+
+                // Add templates from settings
+                foreach (var item in CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>())
+                {
+                    CreateToolStripItem(item);
+                }
+
+                AddSeparator();
+
+                // Add a settings item
+                AddSettingsItem();
+
+                return;
+
+                void CreateToolStripItem(CommitTemplateItem item)
+                {
+                    if (string.IsNullOrEmpty(item.Name))
+                    {
+                        return;
+                    }
+
+                    var toolStripItem = new ToolStripMenuItem(item.Name);
+                    toolStripItem.Click += delegate
+                    {
+                        try
+                        {
+                            Message.Text = item.Text;
+                            Message.Focus();
+                        }
+                        catch
+                        {
+                        }
+                    };
+                    commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
+                }
+
+                void AddSeparator()
+                {
+                    if (commitTemplatesToolStripMenuItem.DropDownItems.Count != 0)
+                    {
+                        commitTemplatesToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+                    }
+                }
+
+                void AddSettingsItem()
+                {
+                    var settingsItem = new ToolStripMenuItem(_commitTemplateSettings.Text);
+                    settingsItem.Click += delegate
+                    {
+                        using (var frm = new FormCommitTemplateSettings())
+                        {
+                            frm.ShowDialog(this);
+                        }
+
+                        _shouldReloadCommitTemplates = true;
+                    };
+                    commitTemplatesToolStripMenuItem.DropDownItems.Add(settingsItem);
+                }
             }
         }
 
@@ -3105,7 +3042,7 @@ namespace GitUI.CommandsDialogs
             OpenContainingFolder(Staged);
         }
 
-        private void toolStripMenuItem4_Click(object sender, EventArgs e)
+        private void interactiveAddToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (Unstaged.SelectedItem == null)
             {
@@ -3201,7 +3138,7 @@ namespace GitUI.CommandsDialogs
 
         private void Message_Enter(object sender, EventArgs e)
         {
-            if (Staged.AllItems.Count() != 0 && !Staged.SelectedItems.Any())
+            if (Staged.AllItemsCount != 0 && !Staged.SelectedItems.Any())
             {
                 _currentFilesList = Staged;
                 Staged.SelectedIndex = 0;
