@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
-using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
 
 namespace GitUI
@@ -47,17 +46,7 @@ namespace GitUI
             void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
             {
                 SavePosition(GetType().Name);
-
-                if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-                {
-                    try
-                    {
-                        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
-                    }
-                    catch (InvalidOperationException)
-                    {
-                    }
-                }
+                TaskbarProgress.Clear();
             }
         }
 
