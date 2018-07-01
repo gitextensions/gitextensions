@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitUI
@@ -9,12 +10,10 @@ namespace GitUI
     {
         private readonly List<SplitterData> _splitters = new List<SplitterData>();
         private readonly ISettingsSource _settings;
-        private readonly float _designTimeFontSize;
 
-        public SplitterManager(ISettingsSource settings, float designTimeFontSize = 8.25F)
+        public SplitterManager(ISettingsSource settings)
         {
             _settings = settings;
-            _designTimeFontSize = designTimeFontSize;
         }
 
         public void AddSplitter(SplitContainer splitter, string settingName, int? defaultDistance = null)
@@ -24,7 +23,7 @@ namespace GitUI
                 Splitter = splitter,
                 SettingName = settingName,
                 DefaultDistance = defaultDistance,
-                DesignTimeFontSize = _designTimeFontSize
+                Dpi = DpiUtil.DpiX
             });
         }
 
@@ -42,14 +41,12 @@ namespace GitUI
         {
             public SplitContainer Splitter;
             public string SettingName;
+            public int Dpi;
             public int? DefaultDistance;
-            public float DesignTimeFontSize;
-            private float? _latestFontSize;
 
-            private int SplitterSize => Splitter.Orientation == Orientation.Horizontal
-                ? Splitter.Height
-                : Splitter.Width;
+            private int SplitterSize => Splitter.Orientation == Orientation.Horizontal ? Splitter.Height : Splitter.Width;
             private string SizeSettingsKey => SettingName + "_Size";
+            private string DpiSettingsKey => SettingName + "_Dpi";
             private string DistanceSettingsKey => SettingName + "_Distance";
             private string FontSizeSettingsKey => SettingName + "_FontSize";
             private string Panel1CollapsedSettingsKey => SettingName + "_Panel1Collapsed";
@@ -59,36 +56,33 @@ namespace GitUI
                 Splitter.BeginInit();
                 Splitter.SuspendLayout();
 
-                _latestFontSize = settings.GetFloat(FontSizeSettingsKey) ?? DesignTimeFontSize;
-
-                int? prevSize = settings.GetInt(SizeSettingsKey);
-                int? prevDistance = settings.GetInt(DistanceSettingsKey);
+                int prevDpi = settings.GetInt(DpiSettingsKey) ?? DpiUtil.DpiX;
+                int prevSize = settings.GetInt(SizeSettingsKey) ?? 0;
+                int prevDistance = settings.GetInt(DistanceSettingsKey) ?? 0;
 
                 if (prevSize > 0 && prevDistance > 0)
                 {
-                    if (SplitterSize == prevSize)
+                    if (SplitterSize == prevSize && Dpi == prevDpi)
                     {
-                        SetSplitterDistance(prevDistance.Value);
+                        SetSplitterDistance(prevDistance);
                     }
                     else
                     {
                         switch (Splitter.FixedPanel)
                         {
                             case FixedPanel.None:
-                                SetSplitterDistance((float)SplitterSize * prevDistance.Value / prevSize.Value);
+                                SetSplitterDistance((float)SplitterSize * prevDistance / prevSize);
                                 break;
                             case FixedPanel.Panel1:
-                                SetSplitterDistance(prevDistance.Value);
+                                SetSplitterDistance(DpiUtil.Scale(prevDistance, prevDpi));
                                 break;
                             case FixedPanel.Panel2:
-                                int panel2PrevSize = prevSize.Value - prevDistance.Value;
+                                int panel2PrevSize = DpiUtil.Scale(prevSize, prevDpi) - DpiUtil.Scale(prevDistance, prevDpi);
                                 SetSplitterDistance(SplitterSize - panel2PrevSize);
                                 break;
                         }
                     }
                 }
-
-                AdjustToCurrentFontSize();
 
                 Splitter.Panel1Collapsed = settings.GetBool(Panel1CollapsedSettingsKey, defaultValue: false);
 
@@ -96,39 +90,9 @@ namespace GitUI
                 Splitter.EndInit();
             }
 
-            private void AdjustToCurrentFontSize()
-            {
-                if (_latestFontSize.Value != 0 && Splitter.Font.Size != 0 && _latestFontSize.Value != Splitter.Font.Size)
-                {
-                    float scaleFactor = CalculateScaleFactor();
-
-                    if (scaleFactor != 0)
-                    {
-                        switch (Splitter.FixedPanel)
-                        {
-                            case FixedPanel.Panel1:
-                                SetSplitterDistance(Splitter.SplitterDistance + (Splitter.SplitterDistance * scaleFactor));
-                                break;
-                            case FixedPanel.Panel2:
-                                int panel2Size = SplitterSize - Splitter.SplitterDistance;
-                                SetSplitterDistance(Splitter.SplitterDistance - (panel2Size * scaleFactor));
-                                break;
-                        }
-                    }
-                }
-
-                _latestFontSize = Splitter.Font.Size;
-
-                return;
-
-                float CalculateScaleFactor()
-                {
-                    return (Splitter.Font.Size / _latestFontSize.Value) - 1;
-                }
-            }
-
             public void SaveToSettings(ISettingsSource settings)
             {
+                settings.SetInt(DpiSettingsKey, Dpi);
                 settings.SetInt(SizeSettingsKey, SplitterSize);
                 settings.SetInt(DistanceSettingsKey, Splitter.SplitterDistance);
                 settings.SetFloat(FontSizeSettingsKey, Splitter.Font.Size);
@@ -149,13 +113,6 @@ namespace GitUI
                     {
                         Splitter.SplitterDistance = DefaultDistance.Value;
                     }
-                    else
-                    {
-                        // Both the value and default are invalid.
-                        // Don't attempt to change the SplitterDistance
-                        // Use design time font size to adjust to the current font size
-                        _latestFontSize = DesignTimeFontSize;
-                    }
                 }
                 catch
                 {
@@ -164,10 +121,8 @@ namespace GitUI
 
                 bool IsValidSplitterDistance(int d)
                 {
-                    var limit = SplitterSize;
-
                     return d > Splitter.Panel1MinSize &&
-                           d < limit - Splitter.Panel2MinSize;
+                           d < SplitterSize - Splitter.Panel2MinSize;
                 }
             }
         }
