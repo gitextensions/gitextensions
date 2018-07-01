@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
+using JetBrains.Annotations;
 
 namespace ResourceManager.Xliff
 {
@@ -16,6 +17,7 @@ namespace ResourceManager.Xliff
             }
         }
 
+        [CanBeNull]
         public static TranslationFile Deserialize(string path)
         {
             if (!File.Exists(path))

@@ -52,6 +52,7 @@ namespace GitCommands.UserRepositoryHistory
         /// <param name="repositories">A list of user's git repositories.</param>
         /// <returns>A serialised list of user's git repositories, if successful; otherwise <see langword="null"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="repositories"/> is <see langword="null"/>.</exception>
+        [CanBeNull]
         [ContractAnnotation("repositories:null=>halt")]
         public string Serialize([NotNull]IEnumerable<Repository> repositories)
         {

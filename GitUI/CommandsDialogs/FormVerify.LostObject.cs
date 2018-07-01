@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using GitCommands;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -69,6 +70,7 @@ namespace GitUI.CommandsDialogs
                 Hash = hash;
             }
 
+            [CanBeNull]
             public static LostObject TryParse(GitModule module, string raw)
             {
                 if (string.IsNullOrEmpty(raw))

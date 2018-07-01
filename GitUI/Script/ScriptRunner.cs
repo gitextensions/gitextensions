@@ -7,6 +7,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitUI.Script
 {
@@ -497,6 +498,7 @@ namespace GitUI.Script
             return selectedRevision;
         }
 
+        [CanBeNull]
         private static GitRevision GetCurrentRevision(GitModule module, RevisionGridControl revisionGrid, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
                                                       List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches,
                                                       GitRevision currentRevision)

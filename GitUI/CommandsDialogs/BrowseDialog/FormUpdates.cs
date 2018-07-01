@@ -10,6 +10,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -172,6 +173,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public ReleaseType ReleaseType;
         public string DownloadPage;
 
+        [CanBeNull]
         public static ReleaseVersion FromSection(IConfigSection section)
         {
             Version ver;

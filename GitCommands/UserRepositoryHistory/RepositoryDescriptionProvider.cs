@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using GitCommands.Git;
+using JetBrains.Annotations;
 
 namespace GitCommands.UserRepositoryHistory
 {
@@ -57,6 +58,7 @@ namespace GitCommands.UserRepositoryHistory
         /// </summary>
         /// <param name="workingDir">Path to repository.</param>
         /// <returns>If the repository has description, returns that description, else returns <c>null</c>.</returns>
+        [CanBeNull]
         private string ReadRepositoryDescription(string workingDir)
         {
             var gitDir = _gitDirectoryResolver.Resolve(workingDir);

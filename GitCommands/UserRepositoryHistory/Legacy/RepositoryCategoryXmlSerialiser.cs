@@ -20,7 +20,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         /// <param name="serialised">A serialised list of categorised user's git repositories.</param>
         /// <returns>A list of categorised user's git repositories.</returns>
         /// <exception cref="ArgumentException"><paramref name="serialised"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        [ContractAnnotation("serialised:null=>halt")]
+        [CanBeNull]
         public IReadOnlyList<RepositoryCategory> Deserialize([NotNull] string serialised)
         {
             if (string.IsNullOrEmpty(serialised))

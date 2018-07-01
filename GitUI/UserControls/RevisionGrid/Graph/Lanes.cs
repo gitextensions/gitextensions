@@ -485,6 +485,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             public Junction Junction { get; private set; }
 
+            [CanBeNull]
             public Node Current => _node ?? (_index < Junction.NodeCount ? Junction[_index] : null);
 
             public bool IsClear => Junction == null && _node == null;

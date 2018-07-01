@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -11,9 +12,11 @@ namespace GitCommands
         string[] GetCommandLineArgs();
 
         /// <inheritdoc cref="Environment.GetEnvironmentVariable(string)" />
+        [CanBeNull]
         string GetEnvironmentVariable(string variable);
 
         /// <inheritdoc cref="Environment.GetEnvironmentVariable(string,EnvironmentVariableTarget)" />
+        [CanBeNull]
         string GetEnvironmentVariable(string variable, EnvironmentVariableTarget target);
 
         /// <inheritdoc cref="Environment.GetFolderPath(Environment.SpecialFolder)" />

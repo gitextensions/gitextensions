@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -252,6 +253,7 @@ namespace Bitbucket
             });
         }
 
+        [ItemCanBeNull]
         private async Task<Commit> GetCommitInfoAsync(Repository repo, string branch)
         {
             if (repo == null || string.IsNullOrWhiteSpace(branch))

@@ -348,6 +348,7 @@ namespace Gerrit
             }
         }
 
+        [ItemCanBeNull]
         private async Task<string> DownloadFromScpAsync(GerritSettings settings)
         {
             // This is a very quick and dirty "implementation" of the scp
@@ -412,12 +413,14 @@ namespace Gerrit
             _gitUiCommands.RepoChangedNotifier.Notify();
         }
 
+        [CanBeNull]
         private T FindControl<T>(Control form, Func<T, bool> predicate)
             where T : Control
         {
             return FindControl(form.Controls, predicate);
         }
 
+        [CanBeNull]
         private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
             where T : Control
         {

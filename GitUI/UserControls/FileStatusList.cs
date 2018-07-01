@@ -253,6 +253,7 @@ namespace GitUI
             return null;
         }
 
+        [CanBeNull]
         private ListViewItem FindNextItemInGroups(int curIdx, ListViewGroup currentGroup)
         {
             List<ListViewGroup> searchInGroups = new List<ListViewGroup>();
