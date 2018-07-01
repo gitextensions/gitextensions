@@ -321,6 +321,7 @@ namespace GitUI.CommandsDialogs
                 RevisionGrid.InitialObjectId = _longShaProvider.Get(selectCommit);
             }
 
+            RestorePosition();
             this.AdjustForDpiScaling();
         }
 
