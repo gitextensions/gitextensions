@@ -1274,8 +1274,15 @@ namespace GitUI.CommandsDialogs
 
                 ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
 
-                var errorOccurred = !FormProcess.ShowDialog(this, Module.CommitCmd(amend, signOffToolStripMenuItem.Checked, toolAuthor.Text, _useFormCommitMessage, noVerifyToolStripMenuItem.Checked,
-                                                                                    gpgSignCommitToolStripComboBox.SelectedIndex > 0, toolStripGpgKeyTextBox.Text));
+                var commitCmd = Module.CommitCmd(
+                    amend,
+                    signOffToolStripMenuItem.Checked,
+                    toolAuthor.Text,
+                    _useFormCommitMessage,
+                    noVerifyToolStripMenuItem.Checked,
+                    gpgSignCommitToolStripComboBox.SelectedIndex > 0,
+                    toolStripGpgKeyTextBox.Text);
+                var errorOccurred = !FormProcess.ShowDialog(this, commitCmd);
 
                 UICommands.RepoChangedNotifier.Notify();
 
