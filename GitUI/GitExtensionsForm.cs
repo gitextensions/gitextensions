@@ -140,8 +140,7 @@ namespace GitUI
         ///   the settings</param>
         private void RestorePosition(string name)
         {
-            if (!Visible ||
-                WindowState == FormWindowState.Minimized)
+            if (WindowState == FormWindowState.Minimized)
             {
                 return;
             }
