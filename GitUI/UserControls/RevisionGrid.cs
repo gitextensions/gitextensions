@@ -3029,6 +3029,11 @@ namespace GitUI
             Revisions.Add(rev, dataTypes);
         }
 
+        public void InvalidateCount()
+        {
+            _artificialStatus = null;
+        }
+
         public void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus> status)
         {
             GitRevision unstagedRev = GetRevision(GitRevision.UnstagedGuid);

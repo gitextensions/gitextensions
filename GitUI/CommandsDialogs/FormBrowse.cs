@@ -1757,6 +1757,7 @@ namespace GitUI.CommandsDialogs
             var module = e.GitModule;
             HideVariableMainMenuItems();
             UnregisterPlugins();
+            RevisionGrid.InvalidateCount();
 
             UICommands = new GitUICommands(module);
             if (Module.IsValidGitWorkingDir())
