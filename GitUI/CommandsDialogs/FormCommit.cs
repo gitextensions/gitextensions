@@ -270,6 +270,22 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _unstagedLoader.Dispose();
+                _interactiveAddSequence.Dispose();
+
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+            }
+
+            base.Dispose(disposing);
+        }
+
         protected override void OnHandleCreated(EventArgs e)
         {
             const int TVM_SETEXTENDEDSTYLE = 0x1100 + 44;
@@ -3118,26 +3134,6 @@ namespace GitUI.CommandsDialogs
         private void toolAuthor_Leave(object sender, EventArgs e)
         {
             UpdateAuthorInfo();
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _unstagedLoader.Dispose();
-                _interactiveAddSequence.Dispose();
-
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-            }
-
-            base.Dispose(disposing);
         }
 
         private void createBranchToolStripButton_Click(object sender, EventArgs e)
