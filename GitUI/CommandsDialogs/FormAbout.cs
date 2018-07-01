@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
                 };
 
                 return contributorListList
-                    .SelectMany(list => list.Split(new[] { ", ", " " }, StringSplitOptions.RemoveEmptyEntries))
+                    .SelectMany(list => list.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries))
                     .ToList();
             }
         }
