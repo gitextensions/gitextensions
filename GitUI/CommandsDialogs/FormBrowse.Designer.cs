@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.manageStashesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createAStashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonCommit = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonPull = new System.Windows.Forms.ToolStripSplitButton();
             this.mergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebaseToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -241,7 +241,7 @@ namespace GitUI.CommandsDialogs
             this.branchSelect,
             this.toolStripSeparator1,
             this.toolStripSplitStash,
-            this.toolStripButton1,
+            this.toolStripButtonCommit,
             this.toolStripButtonPull,
             this.toolStripButtonPush,
             this.toolStripSeparator2,
@@ -407,12 +407,12 @@ namespace GitUI.CommandsDialogs
             // 
             // toolStripButton1
             // 
-            this.toolStripButton1.Image = global::GitUI.Properties.Resources.IconClean;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(71, 22);
-            this.toolStripButton1.Text = "Commit";
-            this.toolStripButton1.Click += new System.EventHandler(this.CommitToolStripMenuItemClick);
+            this.toolStripButtonCommit.Image = global::GitUI.Properties.Resources.IconClean;
+            this.toolStripButtonCommit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonCommit.Name = "toolStripButtonCommit";
+            this.toolStripButtonCommit.Size = new System.Drawing.Size(71, 22);
+            this.toolStripButtonCommit.Text = "Commit";
+            this.toolStripButtonCommit.Click += new System.EventHandler(this.CommitToolStripMenuItemClick);
             // 
             // toolStripButtonPull
             // 
@@ -1719,7 +1719,7 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.BindingSource gitItemBindingSource;
         private GitUI.RevisionGridControl RevisionGrid;
         private ToolStripEx ToolStrip;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton toolStripButtonCommit;
         private System.Windows.Forms.ToolStripSplitButton _NO_TRANSLATE_Workingdir;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator0;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
