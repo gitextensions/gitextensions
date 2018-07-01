@@ -72,7 +72,6 @@
             this._NO_TRANSLATE_labelCopyright.AutoSize = true;
             this._NO_TRANSLATE_labelCopyright.Location = new System.Drawing.Point(462, 188);
             this._NO_TRANSLATE_labelCopyright.Margin = new System.Windows.Forms.Padding(0);
-            this._NO_TRANSLATE_labelCopyright.MaximumSize = new System.Drawing.Size(0, 34);
             this._NO_TRANSLATE_labelCopyright.Name = "_NO_TRANSLATE_labelCopyright";
             this._NO_TRANSLATE_labelCopyright.Size = new System.Drawing.Size(443, 25);
             this._NO_TRANSLATE_labelCopyright.TabIndex = 21;
@@ -84,7 +83,6 @@
             this._NO_TRANSLATE_labelVersionInfo.AutoSize = true;
             this._NO_TRANSLATE_labelVersionInfo.Location = new System.Drawing.Point(462, 142);
             this._NO_TRANSLATE_labelVersionInfo.Margin = new System.Windows.Forms.Padding(0);
-            this._NO_TRANSLATE_labelVersionInfo.MaximumSize = new System.Drawing.Size(0, 34);
             this._NO_TRANSLATE_labelVersionInfo.Name = "_NO_TRANSLATE_labelVersionInfo";
             this._NO_TRANSLATE_labelVersionInfo.Size = new System.Drawing.Size(88, 25);
             this._NO_TRANSLATE_labelVersionInfo.TabIndex = 0;
@@ -109,7 +107,6 @@
             this._NO_TRANSLATE_labelProductName.AutoSize = true;
             this._NO_TRANSLATE_labelProductName.Location = new System.Drawing.Point(462, 96);
             this._NO_TRANSLATE_labelProductName.Margin = new System.Windows.Forms.Padding(0);
-            this._NO_TRANSLATE_labelProductName.MaximumSize = new System.Drawing.Size(0, 34);
             this._NO_TRANSLATE_labelProductName.Name = "_NO_TRANSLATE_labelProductName";
             this._NO_TRANSLATE_labelProductName.Size = new System.Drawing.Size(635, 25);
             this._NO_TRANSLATE_labelProductName.TabIndex = 19;
@@ -163,7 +160,6 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(462, 285);
             this.label2.Margin = new System.Windows.Forms.Padding(0);
-            this.label2.MaximumSize = new System.Drawing.Size(0, 34);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(420, 25);
             this.label2.TabIndex = 29;
