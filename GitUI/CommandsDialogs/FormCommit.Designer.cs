@@ -1474,11 +1474,6 @@ namespace GitUI.CommandsDialogs
             this.Name = "FormCommit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit";
-            this.Activated += new System.EventHandler(this.FormCommitActivated);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCommitFormClosing);
-            this.Load += new System.EventHandler(this.FormCommit_Load);
-            this.Shown += new System.EventHandler(this.FormCommitShown);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormCommit_KeyUp);
             this.UnstagedFileContext.ResumeLayout(false);
             this.StagedFileContext.ResumeLayout(false);
             this.UnstagedSubmoduleContext.ResumeLayout(false);

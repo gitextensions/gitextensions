@@ -150,6 +150,7 @@ namespace GitUI.CommandsDialogs
         private string _userEmail = "";
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
         private readonly IFullPathResolver _fullPathResolver;
+        private bool _bypassActivatedEventHandler;
 
         /// <summary>
         /// For VS designer
@@ -276,11 +277,7 @@ namespace GitUI.CommandsDialogs
             {
                 _unstagedLoader.Dispose();
                 _interactiveAddSequence.Dispose();
-
-                if (components != null)
-                {
-                    components.Dispose();
-                }
+                components?.Dispose();
             }
 
             base.Dispose(disposing);
@@ -298,13 +295,22 @@ namespace GitUI.CommandsDialogs
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hwnd, int msg, IntPtr wp, IntPtr lp);
 
-        private void FormCommit_Load(object sender, EventArgs e)
+        protected override void OnActivated(EventArgs e)
         {
-            showUntrackedFilesToolStripMenuItem.Checked = Module.EffectiveConfigFile.GetValue("status.showUntrackedFiles") != "no";
-            MinimizeBox = Owner == null;
+            if (!_bypassActivatedEventHandler)
+            {
+                if (AppSettings.RefreshCommitDialogOnFormFocus)
+                {
+                    RescanChanges();
+                }
+
+                UpdateAuthorInfo();
+            }
+
+            base.OnActivated(e);
         }
 
-        private void FormCommitFormClosing(object sender, FormClosingEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
             Message.CancelAutoComplete();
 
@@ -317,6 +323,128 @@ namespace GitUI.CommandsDialogs
 
             _splitterManager.SaveSplitters();
             AppSettings.CommitDialogSelectionFilter = toolbarSelectionFilter.Visible;
+
+            base.OnFormClosing(e);
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            showUntrackedFilesToolStripMenuItem.Checked = Module.EffectiveConfigFile.GetValue("status.showUntrackedFiles") != "no";
+            MinimizeBox = Owner == null;
+            base.OnLoad(e);
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            if (!_initialized)
+            {
+                Initialize();
+            }
+
+            AcceptButton = Commit;
+
+            string message;
+
+            switch (_commitKind)
+            {
+                case CommitKind.Fixup:
+                    message = $"fixup! {_editedCommit.Subject}";
+                    break;
+                case CommitKind.Squash:
+                    message = $"squash! {_editedCommit.Subject}";
+                    break;
+                default:
+                    message = Module.GetMergeMessage();
+
+                    if (string.IsNullOrEmpty(message))
+                    {
+                        message = CommitHelper.GetCommitMessage(Module);
+                        Amend.Checked = CommitHelper.GetAmendState(Module);
+                    }
+
+                    break;
+            }
+
+            if (_useFormCommitMessage && !string.IsNullOrEmpty(message))
+            {
+                Message.Text = message;
+            }
+            else if (IsUICommandsInitialized)
+            {
+                AssignCommitMessageFromTemplate();
+            }
+
+            base.OnShown(e);
+
+            return;
+
+            void AssignCommitMessageFromTemplate()
+            {
+                var text = "";
+                try
+                {
+                    text = _commitTemplateManager.LoadGitCommitTemplate();
+                }
+                catch (FileNotFoundException ex)
+                {
+                    MessageBox.Show(this, string.Format(_templateNotFound.Text, ex.FileName),
+                        _templateNotFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, ex.Message,
+                        _templateLoadErrorCapion.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                Message.Text = text;
+                _commitTemplate = text;
+            }
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            switch (e.KeyData)
+            {
+                case Keys.Control | Keys.Enter when !Message.ContainsFocus:
+                {
+                    FocusCommitMessage();
+                    e.Handled = true;
+                    break;
+                }
+
+                case Keys.Control | Keys.P:
+                case Keys.Alt | Keys.Up:
+                case Keys.Alt | Keys.Left:
+                {
+                    MoveSelection(-1);
+                    e.Handled = true;
+                    break;
+                }
+
+                case Keys.Control | Keys.N:
+                case Keys.Alt | Keys.Down:
+                case Keys.Alt | Keys.Right:
+                {
+                    MoveSelection(+1);
+                    e.Handled = true;
+                    break;
+                }
+            }
+
+            base.OnKeyUp(e);
+
+            return;
+
+            void MoveSelection(int direction)
+            {
+                var list = Message.Focused ? Staged : _currentFilesList;
+                _currentFilesList = list;
+                var itemsCount = list.AllItemsCount;
+                if (itemsCount != 0)
+                {
+                    list.SelectedIndex = (list.SelectedIndex + direction + itemsCount) % itemsCount;
+                }
+            }
         }
 
         private void SelectedDiff_ContextMenuOpening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -1912,69 +2040,6 @@ namespace GitUI.CommandsDialogs
             Initialize();
         }
 
-        private void FormCommitShown(object sender, EventArgs e)
-        {
-            if (!_initialized)
-            {
-                Initialize();
-            }
-
-            AcceptButton = Commit;
-
-            string message;
-
-            switch (_commitKind)
-            {
-                case CommitKind.Fixup:
-                    message = string.Format("fixup! {0}", _editedCommit.Subject);
-                    break;
-                case CommitKind.Squash:
-                    message = string.Format("squash! {0}", _editedCommit.Subject);
-                    break;
-                default:
-                    message = Module.GetMergeMessage();
-
-                    if (string.IsNullOrEmpty(message))
-                    {
-                        message = CommitHelper.GetCommitMessage(Module);
-                        Amend.Checked = CommitHelper.GetAmendState(Module);
-                    }
-
-                    break;
-            }
-
-            if (_useFormCommitMessage && !string.IsNullOrEmpty(message))
-            {
-                Message.Text = message;
-            }
-            else if (IsUICommandsInitialized)
-            {
-                AssignCommitMessageFromTemplate();
-            }
-
-            void AssignCommitMessageFromTemplate()
-            {
-                var text = "";
-                try
-                {
-                    text = _commitTemplateManager.LoadGitCommitTemplate();
-                }
-                catch (FileNotFoundException ex)
-                {
-                    MessageBox.Show(this, string.Format(_templateNotFound.Text, ex.FileName),
-                        _templateNotFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(this, ex.Message,
-                        _templateLoadErrorCapion.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-
-                Message.Text = text;
-                _commitTemplate = text;
-            }
-        }
-
         private void SetCommitMessageFromTextBox(string commitMessageText)
         {
             // Save last commit message in settings. This way it can be used in multiple repositories.
@@ -2372,13 +2437,13 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                Activated -= FormCommitActivated;
+                _bypassActivatedEventHandler = true;
 
                 action();
             }
             finally
             {
-                Activated += FormCommitActivated;
+                _bypassActivatedEventHandler = true;
             }
         }
 
@@ -2406,16 +2471,6 @@ namespace GitUI.CommandsDialogs
         private void CommitAndPush_Click(object sender, EventArgs e)
         {
             CheckForStagedAndCommit(Amend.Checked, push: true);
-        }
-
-        private void FormCommitActivated(object sender, EventArgs e)
-        {
-            if (AppSettings.RefreshCommitDialogOnFormFocus)
-            {
-                RescanChanges();
-            }
-
-            UpdateAuthorInfo();
         }
 
         private void UpdateAuthorInfo()
@@ -2484,48 +2539,6 @@ namespace GitUI.CommandsDialogs
             {
                 ExecuteCommitCommand();
                 e.Handled = true;
-            }
-        }
-
-        private void FormCommit_KeyUp(object sender, KeyEventArgs e)
-        {
-            switch (e.KeyData)
-            {
-                case Keys.Control | Keys.Enter when !Message.ContainsFocus:
-                {
-                    FocusCommitMessage();
-                    e.Handled = true;
-                    break;
-                }
-
-                case Keys.Control | Keys.P:
-                case Keys.Alt | Keys.Up:
-                case Keys.Alt | Keys.Left:
-                {
-                    MoveSelection(-1);
-                    e.Handled = true;
-                    break;
-                }
-
-                case Keys.Control | Keys.N:
-                case Keys.Alt | Keys.Down:
-                case Keys.Alt | Keys.Right:
-                {
-                    MoveSelection(+1);
-                    e.Handled = true;
-                    break;
-                }
-            }
-
-            void MoveSelection(int direction)
-            {
-                var list = Message.Focused ? Staged : _currentFilesList;
-                _currentFilesList = list;
-                var itemsCount = list.AllItemsCount;
-                if (itemsCount != 0)
-                {
-                    list.SelectedIndex = (list.SelectedIndex + direction + itemsCount) % itemsCount;
-                }
             }
         }
 
