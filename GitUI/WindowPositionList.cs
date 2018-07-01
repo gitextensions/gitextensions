@@ -45,6 +45,7 @@ namespace GitUI
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
 
         private static readonly string ConfigFilePath = Path.Combine(AppDataDir, "WindowPositions.xml");
+        private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(WindowPositionList));
 
         static WindowPositionList()
         {
@@ -82,10 +83,9 @@ namespace GitUI
 
             try
             {
-                using (
-                    var stream = File.Open(ConfigFilePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
+                using (var stream = File.Open(ConfigFilePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    return new XmlSerializer(typeof(WindowPositionList)).Deserialize(stream) as WindowPositionList;
+                    return (WindowPositionList)_serializer.Deserialize(stream);
                 }
             }
             catch
@@ -98,7 +98,7 @@ namespace GitUI
         {
             using (var stream = File.Open(ConfigFilePath, FileMode.Create, FileAccess.Write))
             {
-                new XmlSerializer(typeof(WindowPositionList)).Serialize(stream, this);
+                _serializer.Serialize(stream, this);
             }
         }
     }
