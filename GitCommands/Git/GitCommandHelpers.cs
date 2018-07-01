@@ -857,7 +857,7 @@ namespace GitCommands
         public static string GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = IgnoreSubmodulesMode.None, bool noLocks = false)
         {
             StringBuilder stringBuilder = new StringBuilder( 
-                noLocks && VersionInUse.SupportNoOptionalLocks ? "--no-optional-locks" : ""
+                (noLocks && VersionInUse.SupportNoOptionalLocks ? "--no-optional-locks " : "")
                 + "status --porcelain -z");
 
             switch (untrackedFiles)
