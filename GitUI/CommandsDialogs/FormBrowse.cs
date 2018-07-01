@@ -345,7 +345,7 @@ namespace GitUI.CommandsDialogs
             _windowsJumpListManager.CreateJumpList(
                 Handle,
                 new WindowsThumbnailToolbarButtons(
-                    new WindowsThumbnailToolbarButton(toolStripButton1.Text, toolStripButton1.Image, ToolStripButton1Click),
+                    new WindowsThumbnailToolbarButton(toolStripButton1.Text, toolStripButton1.Image, CommitToolStripMenuItemClick),
                     new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
                     new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
 
@@ -1263,11 +1263,6 @@ namespace GitUI.CommandsDialogs
         private void MergeBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartMergeBranchDialog(this, null);
-        }
-
-        private void ToolStripButton1Click(object sender, EventArgs e)
-        {
-            CommitToolStripMenuItemClick(sender, e);
         }
 
         private void OnShowSettingsClick(object sender, EventArgs e)
