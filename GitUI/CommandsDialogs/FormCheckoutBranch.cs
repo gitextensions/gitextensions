@@ -48,8 +48,8 @@ namespace GitUI.CommandsDialogs
         private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
         private readonly Dictionary<Control, int> _controls = new Dictionary<Control, int>();
 
-        private IEnumerable<IGitRef> _localBranches;
-        private IEnumerable<IGitRef> _remoteBranches;
+        private IReadOnlyList<IGitRef> _localBranches;
+        private IReadOnlyList<IGitRef> _remoteBranches;
 
         private FormCheckoutBranch()
             : this(null)
@@ -532,7 +532,7 @@ namespace GitUI.CommandsDialogs
         {
             if (_remoteBranches == null)
             {
-                _remoteBranches = Module.GetRefs(true, true).Where(h => h.IsRemote && !h.IsTag);
+                _remoteBranches = Module.GetRefs(true, true).Where(h => h.IsRemote && !h.IsTag).ToList();
             }
 
             return _remoteBranches;
