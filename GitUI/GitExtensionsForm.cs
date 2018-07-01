@@ -156,7 +156,10 @@ namespace GitUI
 
             float scale = (float)DpiUtil.DpiX / position.DeviceDpi;
 
+            SuspendLayout();
+
             StartPosition = FormStartPosition.Manual;
+
             if (FormBorderStyle == FormBorderStyle.Sizable ||
                 FormBorderStyle == FormBorderStyle.SizableToolWindow)
             {
@@ -190,6 +193,8 @@ namespace GitUI
             {
                 WindowState = position.State;
             }
+
+            ResumeLayout();
         }
 
         private static Rectangle? FindWindowScreen(Point location)
