@@ -18,7 +18,8 @@ namespace GitUI
     public class GitExtensionsForm : GitExtensionsFormBase
     {
         /// <summary>indicates whether the <see cref="Form"/>'s position will be restored</summary>
-        private readonly bool _enablePositionRestore;
+        private bool _needsPositionRestore;
+        private bool _needsPositionSave;
 
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
         public GitExtensionsForm()
@@ -31,7 +32,8 @@ namespace GitUI
         /// will be restored upon being re-opened.</param>
         protected GitExtensionsForm(bool enablePositionRestore)
         {
-            _enablePositionRestore = enablePositionRestore;
+            _needsPositionSave = enablePositionRestore;
+            _needsPositionRestore = enablePositionRestore;
 
             Icon = Resources.git_extensions_logo_final;
             FormClosing += GitExtensionsForm_FormClosing;
@@ -49,10 +51,7 @@ namespace GitUI
 
         private void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_enablePositionRestore)
-            {
-                SavePosition(GetType().Name);
-            }
+            SavePosition(GetType().Name);
 
             if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
             {
@@ -110,10 +109,7 @@ namespace GitUI
 
         protected override void OnLoad(EventArgs e)
         {
-            if (_enablePositionRestore)
-            {
-                RestorePosition(GetType().Name);
-            }
+            RestorePosition();
 
             // Should be called after restoring position
             base.OnLoad(e);
@@ -125,6 +121,7 @@ namespace GitUI
         }
 
         /// <summary>Invoked at runtime during the <see cref="OnLoad"/> method.</summary>
+        /// <remarks>In particular, this method is not invoked when running in a designer.</remarks>
         protected virtual void OnRuntimeLoad(EventArgs e)
         {
         }
@@ -136,10 +133,13 @@ namespace GitUI
         ///   nothing if there is no entry for the form in the settings, or the
         ///   setting would be invisible on the current display configuration.
         /// </summary>
-        /// <param name = "name">The name to use when looking up the position in
-        ///   the settings</param>
-        private void RestorePosition(string name)
+        protected virtual void RestorePosition()
         {
+            if (!_needsPositionRestore)
+            {
+                return;
+            }
+
             if (WindowState == FormWindowState.Minimized)
             {
                 return;
@@ -147,7 +147,8 @@ namespace GitUI
 
             _windowCentred = StartPosition == FormStartPosition.CenterParent;
 
-            var position = LookupWindowPosition(name);
+            var position = LookupWindowPosition(GetType().Name);
+
             if (position == null)
             {
                 return;
@@ -179,7 +180,8 @@ namespace GitUI
             else
             {
                 // Calculate location for modal form with parent
-                Location = new Point(Owner.Left + (Owner.Width / 2) - (Width / 2),
+                Location = new Point(
+                    Owner.Left + (Owner.Width / 2) - (Width / 2),
                     Math.Max(0, Owner.Top + (Owner.Height / 2) - (Height / 2)));
             }
 
@@ -229,6 +231,13 @@ namespace GitUI
         ///   settings</param>
         private void SavePosition(string name)
         {
+            if (!_needsPositionSave)
+            {
+                return;
+            }
+
+            _needsPositionSave = false;
+
             try
             {
                 var rectangle =
