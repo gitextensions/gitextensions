@@ -146,8 +146,6 @@ namespace GitUI.CommandsDialogs
         private readonly AsyncLoader _unstagedLoader;
         private readonly bool _useFormCommitMessage;
         private readonly CancellationTokenSequence _interactiveAddSequence = new CancellationTokenSequence();
-        private string _userName = "";
-        private string _userEmail = "";
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
         private readonly IFullPathResolver _fullPathResolver;
         private bool _bypassActivatedEventHandler;
@@ -2475,34 +2473,14 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateAuthorInfo()
         {
-            GetUserSettings();
+            var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
+            var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
-            string committer = string.Format("{0} {1} <{2}>", _commitCommitterInfo.Text, _userName, _userEmail);
+            var committer = $"{_commitCommitterInfo.Text} {userName} <{userEmail}>";
 
-            string author;
-            if (string.IsNullOrEmpty(toolAuthor.Text) || string.IsNullOrEmpty(toolAuthor.Text.Trim()))
-            {
-                author = string.Format("{0} {1} <{2}>", _commitAuthorInfo.Text, _userName, _userEmail);
-            }
-            else
-            {
-                author = string.Format("{0} {1}", _commitAuthorInfo.Text, toolAuthor.Text);
-            }
-
-            if (author != string.Format("{0} {1} <{2}>", _commitAuthorInfo.Text, _userName, _userEmail))
-            {
-                commitAuthorStatus.Text = string.Format("{0} {1}", committer, author);
-            }
-            else
-            {
-                commitAuthorStatus.Text = committer;
-            }
-        }
-
-        private void GetUserSettings()
-        {
-            _userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
-            _userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
+            commitAuthorStatus.Text = string.IsNullOrEmpty(toolAuthor.Text?.Trim())
+                ? committer
+                : $"{committer} {_commitAuthorInfo.Text} {toolAuthor.Text}";
         }
 
         private static bool SenderToFileStatusList(object sender, out FileStatusList list)
