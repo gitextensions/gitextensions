@@ -425,6 +425,58 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
+        public string GetLaneInfo(int x, int rowIndex)
+        {
+            int lane = x / _laneWidth;
+            var laneInfoText = new System.Text.StringBuilder();
+            lock (_graphModel)
+            {
+                Graph.ILaneRow laneRow = _graphModel[rowIndex];
+                if (laneRow != null)
+                {
+                    Node node = null;
+                    if (lane == laneRow.NodeLane)
+                    {
+                        node = laneRow.Node;
+                        if (!node.Data.IsArtificial)
+                        {
+                            laneInfoText.AppendLine(node.Data.Guid);
+                        }
+                    }
+                    else if (lane >= 0 && lane < laneRow.Count)
+                    {
+                        for (int laneInfoIndex = 0, laneInfoCount = laneRow.LaneInfoCount(lane); laneInfoIndex < laneInfoCount; ++laneInfoIndex)
+                        {
+                            // search for next node below this row
+                            Graph.LaneInfo laneInfo = laneRow[lane, laneInfoIndex];
+                            Junction firstJunction = laneInfo.Junctions.First();
+                            for (int nodeIndex = 0, nodeCount = firstJunction.NodeCount; nodeIndex < nodeCount; ++nodeIndex)
+                            {
+                                Node laneNode = firstJunction[nodeIndex];
+                                if (laneNode.Index > rowIndex)
+                                {
+                                    node = laneNode;
+                                    break; // from for (nodes)
+                                }
+                            }
+                        }
+                    }
+
+                    if (node != null)
+                    {
+                        if (laneInfoText.Length > 0)
+                        {
+                            laneInfoText.AppendLine();
+                        }
+
+                        laneInfoText.Append(node.Data.Subject);
+                    }
+                }
+            }
+
+            return laneInfoText.ToString();
+        }
+
         public void Prune()
         {
             lock (_graphModel)

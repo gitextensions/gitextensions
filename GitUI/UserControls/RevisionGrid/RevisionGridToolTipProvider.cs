@@ -23,9 +23,9 @@ namespace GitUI
             _toolTip.AutoPopDelay = 32767;
         }
 
-        public void OnCellMouseMove(int columnIndex, int rowIndex)
+        public void OnCellMouseMove(DataGridViewCellMouseEventArgs e)
         {
-            var revision = _gridView.GetRevision(rowIndex);
+            var revision = _gridView.GetRevision(e.RowIndex);
 
             if (revision == null)
             {
@@ -49,17 +49,17 @@ namespace GitUI
 
             string GetToolTipText()
             {
-                if (_gridView.Columns[columnIndex].Tag is ColumnProvider provider &&
-                    provider.TryGetToolTip(revision, out var toolTip) &&
+                if (_gridView.Columns[e.ColumnIndex].Tag is ColumnProvider provider &&
+                    provider.TryGetToolTip(e, revision, out var toolTip) &&
                     !string.IsNullOrWhiteSpace(toolTip))
                 {
                     return toolTip;
                 }
 
-                if (_isTruncatedByCellPos.TryGetValue(new Point(columnIndex, rowIndex), out var showToolTip)
+                if (_isTruncatedByCellPos.TryGetValue(new Point(e.ColumnIndex, e.RowIndex), out var showToolTip)
                     && showToolTip)
                 {
-                    return _gridView.Rows[rowIndex].Cells[columnIndex].FormattedValue?.ToString() ?? "";
+                    return _gridView.Rows[e.RowIndex].Cells[e.ColumnIndex].FormattedValue?.ToString() ?? "";
                 }
 
                 // no tooltip unless always active or truncated
