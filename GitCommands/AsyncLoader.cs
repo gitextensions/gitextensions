@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using GitUI;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
@@ -72,6 +73,7 @@ namespace GitCommands
             return LoadAsync(token => loadContent(), onLoaded);
         }
 
+        [ItemCanBeNull]
         public async Task<T> LoadAsync<T>(Func<CancellationToken, T> loadContent, Action<T> onLoaded)
         {
             if (Volatile.Read(ref _disposed) != 0)

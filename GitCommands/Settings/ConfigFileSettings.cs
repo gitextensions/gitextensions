@@ -51,6 +51,7 @@ namespace GitCommands.Settings
                 ConfigFileSettingsCache.Create(configPath, false, allowCache));
         }
 
+        [CanBeNull]
         public static ConfigFileSettings CreateSystemWide(bool allowCache = true)
         {
             // Git 2.xx

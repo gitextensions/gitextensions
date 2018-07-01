@@ -17,6 +17,7 @@ using GitCommands.Utils;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using Newtonsoft.Json.Linq;
 
@@ -316,6 +317,7 @@ namespace JenkinsIntegration
 
         private const string _jenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1,branch[name]],totalCount,failCount,skipCount],building,duration";
 
+        [CanBeNull]
         private BuildInfo CreateBuildInfo(JObject buildDescription)
         {
             var idValue = buildDescription["number"].ToObject<string>();

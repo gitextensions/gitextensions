@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using JetBrains.Annotations;
 
 namespace GitCommands.Git
 {
@@ -128,6 +129,7 @@ namespace GitCommands.Git
         /// Artificial "commits" are options, handle aliases too
         /// (order and handling of empty arguments is not handled here)
         /// </summary>
+        [CanBeNull]
         private static string ArtificialToDiffOptions(string rev)
         {
             if (rev.IsNullOrEmpty() || rev == GitRevision.UnstagedGuid)

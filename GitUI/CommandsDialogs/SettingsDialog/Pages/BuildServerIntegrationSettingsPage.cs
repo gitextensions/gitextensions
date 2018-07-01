@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands.Remote;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -102,6 +103,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
+        [CanBeNull]
         private IBuildServerSettingsUserControl CreateBuildServerSettingsUserControl()
         {
             if (BuildServerType.SelectedIndex == 0 || string.IsNullOrEmpty(Module.WorkingDir))

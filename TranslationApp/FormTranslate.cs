@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using GitUI;
+using JetBrains.Annotations;
 using ResourceManager;
 using ResourceManager.Xliff;
 using TranslationUtl = ResourceManager.Xliff.TranslationUtl;
@@ -337,6 +338,7 @@ namespace TranslationApp
         */
         #endregion
 
+        [CanBeNull]
         private string GetSelectedLanguageCode()
         {
             if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text) || _NO_TRANSLATE_languageCode.Text.Length < 2)

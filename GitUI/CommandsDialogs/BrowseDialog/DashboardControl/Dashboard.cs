@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
@@ -198,6 +199,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             handler?.Invoke(this, e);
         }
 
+        [CanBeNull]
         private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate) where T : Control
         {
             foreach (Control control in controls)

@@ -20,6 +20,7 @@ using GitCommands.Utils;
 using GitUI;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace TeamCityIntegration
@@ -546,6 +547,7 @@ namespace TeamCityIntegration
             _httpClient?.Dispose();
         }
 
+        [CanBeNull]
         public Project GetProjectsTree()
         {
             var projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetProjectsResponseAsync(CancellationToken.None));

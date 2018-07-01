@@ -6,6 +6,7 @@ using GitCommands;
 using GitCommands.Git.Tag;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -69,6 +70,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        [CanBeNull]
         private LostObject CurrentItem => Warnings.SelectedRows.Count == 0 ? null : _filteredLostObjects[Warnings.SelectedRows[0].Index];
 
         #region Event Handlers

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace Gerrit
@@ -149,6 +150,7 @@ namespace Gerrit
             return true;
         }
 
+        [CanBeNull]
         private string GetTopic(string targetBranch)
         {
             string branchName = GetBranchName(targetBranch);

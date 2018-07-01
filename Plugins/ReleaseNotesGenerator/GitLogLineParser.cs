@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 
 namespace ReleaseNotesGenerator
 {
@@ -13,6 +14,7 @@ namespace ReleaseNotesGenerator
     {
         private static readonly Regex LogLineRegex = new Regex("^([a-zA-Z0-9]{1,})@(.*)", RegexOptions.Compiled);
 
+        [CanBeNull]
         public LogLine Parse(string line)
         {
             if (string.IsNullOrWhiteSpace(line))

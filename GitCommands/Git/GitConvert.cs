@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
     public static class GitConvert
     {
+        [CanBeNull]
         public static byte[] ConvertCrLfToWorktree(byte[] buf)
         {
             if (buf == null)

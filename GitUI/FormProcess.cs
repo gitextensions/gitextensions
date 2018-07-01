@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.UserControls;
+using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -26,7 +27,7 @@ namespace GitUI
         {
         }
 
-        public FormProcess(ConsoleOutputControl outputControl, string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
+        public FormProcess(ConsoleOutputControl outputControl, [CanBeNull] string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
             : base(outputControl, useDialogSettings)
         {
             ProcessCallback = ProcessStart;

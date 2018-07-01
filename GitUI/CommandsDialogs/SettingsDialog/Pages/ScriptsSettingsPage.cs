@@ -6,6 +6,7 @@ using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Script;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -314,6 +315,7 @@ Current Branch:
             return ResizeBitmap(b, 12, 12);
         }
 
+        [CanBeNull]
         public Bitmap ResizeBitmap(Bitmap b, int width, int height)
         {
             if (b == null)

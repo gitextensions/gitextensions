@@ -165,6 +165,7 @@ namespace GitUI
             }
         }
 
+        [CanBeNull]
         private static MaskPanel FindMaskPanel(Control control)
         {
             return control.Controls.Cast<Control>().OfType<MaskPanel>().FirstOrDefault();

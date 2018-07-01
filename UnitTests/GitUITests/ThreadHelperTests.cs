@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitUI;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using NUnit.Framework;
 
@@ -256,6 +257,7 @@ namespace GitUITests
                 private set;
             }
 
+            [CanBeNull]
             public string Message => Exception?.Message;
 
             public void Dispose()

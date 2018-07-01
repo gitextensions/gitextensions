@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
@@ -27,6 +28,7 @@ namespace GitUI.UserControls.RevisionGrid
         /// <summary>
         /// Gets the ref selected by the user.
         /// </summary>
+        [CanBeNull]
         public IGitRef SelectedRef => (lbxRefs.SelectedItem as DisplyGitRef)?.Item;
 
         public void Init(Action action, IReadOnlyList<IGitRef> refs)

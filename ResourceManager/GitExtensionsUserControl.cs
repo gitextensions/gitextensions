@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using JetBrains.Annotations;
 
 namespace ResourceManager
 {
@@ -115,6 +116,7 @@ namespace ResourceManager
             return GetHotkeyCommand(commandCode)?.KeyData ?? Keys.None;
         }
 
+        [CanBeNull]
         private HotkeyCommand GetHotkeyCommand(int commandCode)
         {
             return Hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode);

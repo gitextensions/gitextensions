@@ -204,6 +204,7 @@ namespace GitCommands
             return StartProcessAndReadLines(arguments, cmd, workDir, stdInput);
         }
 
+        [CanBeNull]
         private static Process StartProcessAndReadAllText(string arguments, string cmd, string workDir, out string stdOutput, out string stdError, string stdInput)
         {
             if (string.IsNullOrEmpty(cmd))
@@ -715,6 +716,7 @@ namespace GitCommands
             return GetCurrentSubmoduleChanges(module, submodule, submodule, false);
         }
 
+        [CanBeNull]
         public static GitSubmoduleStatus GetSubmoduleStatus(string text, GitModule module, string fileName)
         {
             if (string.IsNullOrEmpty(text))
@@ -1200,6 +1202,7 @@ namespace GitCommands
             return args.ToString();
         }
 
+        [CanBeNull]
         public static string GetFileExtension(string fileName)
         {
             if (fileName.Contains(".") && fileName.LastIndexOf(".") < fileName.Length)

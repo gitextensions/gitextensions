@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces.RepositoryHosts;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -123,13 +124,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 ex => { ex.Handled = false; });
         }
 
-        private IHostedRemote MyRemote
-        {
-            get
-            {
-                return _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
-            }
-        }
+        [CanBeNull]
+        private IHostedRemote MyRemote => _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
 
         private void LoadMyBranches()
         {

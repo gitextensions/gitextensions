@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
+using JetBrains.Annotations;
 using Microsoft.Win32;
 using ResourceManager;
 
@@ -108,6 +109,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return value ?? string.Empty;
         }
 
+        [CanBeNull]
         public string GetGlobalEditor()
         {
             string editor = Environment.GetEnvironmentVariable("GIT_EDITOR");
@@ -149,6 +151,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             combo.Text = encoding?.EncodingName ?? "";
         }
 
+        [CanBeNull]
         public Encoding ComboToEncoding(ComboBox combo)
         {
             return combo.SelectedItem as Encoding;

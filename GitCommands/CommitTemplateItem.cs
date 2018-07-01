@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using GitCommands.Utils;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -53,6 +54,7 @@ namespace GitCommands
             AppSettings.CommitTemplates = strVal ?? string.Empty;
         }
 
+        [CanBeNull]
         public static CommitTemplateItem[] LoadFromSettings()
         {
             string serializedString = AppSettings.CommitTemplates;
@@ -70,6 +72,7 @@ namespace GitCommands
             return JsonSerializer.Serialize(items);
         }
 
+        [CanBeNull]
         private static CommitTemplateItem[] DeserializeCommitTemplates(string serializedString, out bool shouldBeUpdated)
         {
             shouldBeUpdated = false;

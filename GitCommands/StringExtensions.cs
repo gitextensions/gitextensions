@@ -102,6 +102,7 @@ namespace System
         }
 
         [Pure]
+        [CanBeNull]
         public static string Combine([CanBeNull] this string left, [NotNull] string sep, [CanBeNull] string right)
         {
             if (left.IsNullOrEmpty())
