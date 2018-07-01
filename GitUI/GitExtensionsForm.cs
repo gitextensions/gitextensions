@@ -42,70 +42,28 @@ namespace GitUI
             cancelButton.Click += CancelButtonClick;
 
             CancelButton = cancelButton;
+
+            void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
+            {
+                SavePosition(GetType().Name);
+
+                if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
+                {
+                    try
+                    {
+                        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                    }
+                }
+            }
         }
 
         public virtual void CancelButtonClick(object sender, EventArgs e)
         {
             Close();
         }
-
-        private void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SavePosition(GetType().Name);
-
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-            {
-                try
-                {
-                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
-                }
-                catch (InvalidOperationException)
-                {
-                }
-            }
-        }
-
-        #region icon
-
-        /// <summary>Specifies a Git Extensions' color index.</summary>
-        protected enum ColorIndex
-        {
-            Default,
-            Blue,
-            Green,
-            LightBlue,
-            Purple,
-            Red,
-            Yellow,
-            Unknown = -1
-        }
-
-        protected static ColorIndex GetColorIndexByName(string color)
-        {
-            switch (color)
-            {
-                case "default":
-                    return ColorIndex.Default;
-                case "blue":
-                    return ColorIndex.Blue;
-                case "green":
-                    return ColorIndex.Green;
-                case "lightblue":
-                    return ColorIndex.LightBlue;
-                case "purple":
-                    return ColorIndex.Purple;
-                case "red":
-                    return ColorIndex.Red;
-                case "yellow":
-                    return ColorIndex.Yellow;
-                case "random":
-                    return (ColorIndex)new Random(DateTime.Now.Millisecond).Next(7);
-            }
-
-            return ColorIndex.Unknown;
-        }
-
-        #endregion icon
 
         protected override void OnLoad(EventArgs e)
         {
