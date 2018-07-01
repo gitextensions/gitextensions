@@ -240,8 +240,8 @@ namespace GitUI.CommandsDialogs
 
                 // TODO: Replace with a status page?
                 _toolStripGitStatus.Click += CommitToolStripMenuItemClick;
-                ToolStrip.Items.Insert(ToolStrip.Items.IndexOf(toolStripButton1), _toolStripGitStatus);
-                ToolStrip.Items.Remove(toolStripButton1);
+                ToolStrip.Items.Insert(ToolStrip.Items.IndexOf(toolStripButtonCommit), _toolStripGitStatus);
+                ToolStrip.Items.Remove(toolStripButtonCommit);
             }
 
             if (!EnvUtils.RunningOnWindows())
@@ -346,7 +346,7 @@ namespace GitUI.CommandsDialogs
             _windowsJumpListManager.CreateJumpList(
                 Handle,
                 new WindowsThumbnailToolbarButtons(
-                    new WindowsThumbnailToolbarButton(toolStripButton1.Text, toolStripButton1.Image, CommitToolStripMenuItemClick),
+                    new WindowsThumbnailToolbarButton(toolStripButtonCommit.Text, toolStripButtonCommit.Image, CommitToolStripMenuItemClick),
                     new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
                     new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
 
@@ -645,7 +645,7 @@ namespace GitUI.CommandsDialogs
                 fileExplorerToolStripMenuItem.Enabled = validBrowseDir;
                 manageRemoteRepositoriesToolStripMenuItem1.Enabled = validBrowseDir;
                 branchSelect.Enabled = validBrowseDir;
-                toolStripButton1.Enabled = validBrowseDir && !bareRepository;
+                toolStripButtonCommit.Enabled = validBrowseDir && !bareRepository;
                 if (_toolStripGitStatus != null)
                 {
                     _toolStripGitStatus.Enabled = validBrowseDir && !Module.IsBareRepository();
