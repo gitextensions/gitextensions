@@ -154,7 +154,7 @@ namespace GitUI
                 return;
             }
 
-            float scale = (float)DpiUtil.DpiX / position.DeviceDpi;
+            _needsPositionRestore = false;
 
             SuspendLayout();
 
@@ -163,21 +163,16 @@ namespace GitUI
             if (FormBorderStyle == FormBorderStyle.Sizable ||
                 FormBorderStyle == FormBorderStyle.SizableToolWindow)
             {
-                Size formSize = position.Rect.Size;
-                formSize.Width = (int)(formSize.Width * scale);
-                formSize.Height = (int)(formSize.Height * scale);
-                Size = formSize;
+                Size = DpiUtil.Scale(position.Rect.Size, originalDpi: position.DeviceDpi);
             }
 
             if (Owner == null || !_windowCentred)
             {
-                Point location = position.Rect.Location;
-                location.X = (int)(location.X * scale);
-                location.Y = (int)(location.Y * scale);
-                Rectangle? rect = FindWindowScreen(location);
-                if (rect != null)
+                var location = DpiUtil.Scale(position.Rect.Location, originalDpi: position.DeviceDpi);
+
+                if (FindWindowScreen(location) is Rectangle rect)
                 {
-                    location.Y = rect.Value.Y;
+                    location.Y = rect.Y;
                 }
 
                 DesktopLocation = location;
