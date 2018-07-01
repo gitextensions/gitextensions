@@ -95,6 +95,18 @@ namespace GitExtUtils.GitUI
         }
 
         /// <summary>
+        /// Returns a scaled copy of <paramref name="i"/> which has equivalent
+        /// length on screen at the current DPI as the original would at
+        /// <paramref name="originalDpi"/>.
+        /// </summary>
+        public static int Scale(int i, int originalDpi)
+        {
+            var scale = (float)DpiX / originalDpi;
+
+            return (int)(i * scale);
+        }
+
+        /// <summary>
         /// Returns a scaled copy of measurement <paramref name="i"/> which has
         /// equivalent length on screen at the current DPI at the original would
         /// at 96 DPI.
@@ -102,6 +114,18 @@ namespace GitExtUtils.GitUI
         public static float Scale(float i)
         {
             return (float)Math.Round(i * ScaleX);
+        }
+
+        /// <summary>
+        /// Returns a scaled copy of <paramref name="f"/> which has equivalent
+        /// length on screen at the current DPI as the original would at
+        /// <paramref name="originalDpi"/>.
+        /// </summary>
+        public static float Scale(float f, int originalDpi)
+        {
+            var scale = (float)DpiX / originalDpi;
+
+            return f * scale;
         }
 
         /// <summary>

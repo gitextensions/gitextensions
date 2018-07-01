@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
-using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
 
@@ -17,9 +16,11 @@ namespace GitUI
     /// <remarks>Includes support for font, hotkey, icon, translation, and position restore.</remarks>
     public class GitExtensionsForm : GitExtensionsFormBase
     {
-        /// <summary>indicates whether the <see cref="Form"/>'s position will be restored</summary>
+        private static WindowPositionList _windowPositionList;
+
         private bool _needsPositionRestore;
         private bool _needsPositionSave;
+        private bool _windowCentred;
 
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
         public GitExtensionsForm()
@@ -84,8 +85,6 @@ namespace GitUI
         {
         }
 
-        private bool _windowCentred;
-
         /// <summary>
         ///   Restores the position of a form from the user settings. Does
         ///   nothing if there is no entry for the form in the settings, or the
@@ -113,6 +112,16 @@ namespace GitUI
             }
 
             _needsPositionRestore = false;
+
+            if (!Screen.AllScreens.Any(screen => screen.WorkingArea.IntersectsWith(position.Rect)))
+            {
+                if (position.State == FormWindowState.Maximized)
+                {
+                    WindowState = FormWindowState.Maximized;
+                }
+
+                return;
+            }
 
             SuspendLayout();
 
@@ -149,37 +158,54 @@ namespace GitUI
             }
 
             ResumeLayout();
-        }
 
-        private static Rectangle? FindWindowScreen(Point location)
-        {
-            SortedDictionary<float, Rectangle> distance = new SortedDictionary<float, Rectangle>();
-            foreach (var rect in from screen in Screen.AllScreens
-                                 select screen.WorkingArea)
+            return;
+
+            Rectangle? FindWindowScreen(Point location)
             {
-                if (rect.Contains(location) && !distance.ContainsKey(0.0f))
+                var distance = new SortedDictionary<float, Rectangle>();
+
+                foreach (var rect in Screen.AllScreens.Select(screen => screen.WorkingArea))
                 {
-                    return null; // title in screen
+                    if (rect.Contains(location) && !distance.ContainsKey(0.0f))
+                    {
+                        return null; // title in screen
+                    }
+
+                    int midPointX = rect.X + (rect.Width / 2);
+                    int midPointY = rect.Y + (rect.Height / 2);
+                    float d = (float)Math.Sqrt(((location.X - midPointX) * (location.X - midPointX)) +
+                                               ((location.Y - midPointY) * (location.Y - midPointY)));
+                    distance.Add(d, rect);
                 }
 
-                int midPointX = rect.X + (rect.Width / 2);
-                int midPointY = rect.Y + (rect.Height / 2);
-                float d = (float)Math.Sqrt(((location.X - midPointX) * (location.X - midPointX)) +
-                    ((location.Y - midPointY) * (location.Y - midPointY)));
-                distance.Add(d, rect);
+                return distance.FirstOrDefault().Value;
             }
 
-            if (distance.Count > 0)
+            WindowPosition LookupWindowPosition(string name)
             {
-                return distance.First().Value;
-            }
-            else
-            {
+                try
+                {
+                    if (_windowPositionList == null)
+                    {
+                        _windowPositionList = WindowPositionList.Load();
+                    }
+
+                    var pos = _windowPositionList?.Get(name);
+
+                    if (pos != null && !pos.Rect.IsEmpty)
+                    {
+                        return pos;
+                    }
+                }
+                catch (Exception)
+                {
+                    // TODO: how to restore a corrupted config?
+                }
+
                 return null;
             }
         }
-
-        private static WindowPositionList _windowPositionList;
 
         /// <summary>
         ///   Save the position of a form to the user settings. Hides the window
@@ -198,20 +224,22 @@ namespace GitUI
 
             try
             {
-                var rectangle =
-                    WindowState == FormWindowState.Normal
-                        ? DesktopBounds
-                        : RestoreBounds;
+                var rectangle = WindowState == FormWindowState.Normal
+                    ? DesktopBounds
+                    : RestoreBounds;
 
-                var formWindowState =
-                    WindowState == FormWindowState.Maximized
-                        ? FormWindowState.Maximized
-                        : FormWindowState.Normal;
+                var formWindowState = WindowState == FormWindowState.Maximized
+                    ? FormWindowState.Maximized
+                    : FormWindowState.Normal;
 
-                // Write to the user settings:
                 if (_windowPositionList == null)
                 {
                     _windowPositionList = WindowPositionList.Load();
+
+                    if (_windowPositionList == null)
+                    {
+                        return;
+                    }
                 }
 
                 WindowPosition windowPosition = _windowPositionList.Get(name);
@@ -231,46 +259,8 @@ namespace GitUI
             }
             catch (Exception)
             {
-                // TODO: howto restore a corrupted config?
+                // TODO: how to restore a corrupted config?
             }
-        }
-
-        /// <summary>
-        ///   Looks up a window in the user settings and returns its saved position.
-        /// </summary>
-        /// <param name = "name">The name.</param>
-        /// <returns>
-        ///   The saved window position if it exists. Null if the entry
-        ///   doesn't exist, or would not be visible on any screen in the user's
-        ///   current display setup.
-        /// </returns>
-        [CanBeNull]
-        private static WindowPosition LookupWindowPosition(string name)
-        {
-            try
-            {
-                if (_windowPositionList == null)
-                {
-                    _windowPositionList = WindowPositionList.Load();
-                }
-
-                var position = _windowPositionList?.Get(name);
-                if (position == null || position.Rect.IsEmpty)
-                {
-                    return null;
-                }
-
-                if (Screen.AllScreens.Any(screen => screen.WorkingArea.IntersectsWith(position.Rect)))
-                {
-                    return position;
-                }
-            }
-            catch (Exception)
-            {
-                // TODO: howto restore a corrupted config?
-            }
-
-            return null;
         }
     }
 }
