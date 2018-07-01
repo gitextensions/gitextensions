@@ -41,8 +41,6 @@ namespace GitUI
     [Serializable]
     public class WindowPositionList
     {
-        public List<WindowPosition> WindowPositions { get; set; }
-
         private static readonly string AppDataDir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
 
@@ -56,9 +54,10 @@ namespace GitUI
             }
         }
 
+        public List<WindowPosition> WindowPositions { get; set; } = new List<WindowPosition>();
+
         protected WindowPositionList()
         {
-            WindowPositions = new List<WindowPosition>();
         }
 
         [CanBeNull]
