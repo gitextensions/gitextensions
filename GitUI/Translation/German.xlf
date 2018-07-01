@@ -3016,8 +3016,8 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         
       </trans-unit>
       <trans-unit id="stashToolStripMenuItem.Text">
-        <source>Stash changes...</source>
-        <target>Änderungen stashen...</target>
+        <source>Manage stashes...</source>
+        <target>Stashes verwalten...</target>
         
       </trans-unit>
       <trans-unit id="synchronizeAllSubmodulesToolStripMenuItem.Text">
@@ -3086,8 +3086,8 @@ Wollen Sie abbrechen und es von der Liste der zuletzt verwendeten Repositorys st
         
       </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
-        <source>Stash changes</source>
-        <target>Änderungen stashen</target>
+        <source>Manage stashes</source>
+        <target>Stashes verwalten</target>
         
       </trans-unit>
       <trans-unit id="toolStripStatusLabel1.Text">

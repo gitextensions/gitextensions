@@ -2343,7 +2343,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <target />
       </trans-unit>
       <trans-unit id="stashToolStripMenuItem.Text">
-        <source>Stash changes...</source>
+        <source>Manage stashes...</source>
         <target />
       </trans-unit>
       <trans-unit id="synchronizeAllSubmodulesToolStripMenuItem.Text">
@@ -2403,7 +2403,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripSplitStash.ToolTipText">
-        <source>Stash changes</source>
+        <source>Manage stashes</source>
         <target />
       </trans-unit>
       <trans-unit id="toolStripStatusLabel1.Text">
