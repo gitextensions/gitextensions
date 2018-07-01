@@ -413,7 +413,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(71, 22);
             this.toolStripButton1.Text = "Commit";
-            this.toolStripButton1.Click += new System.EventHandler(this.ToolStripButton1Click);
+            this.toolStripButton1.Click += new System.EventHandler(this.CommitToolStripMenuItemClick);
             // 
             // toolStripButtonPull
             // 
