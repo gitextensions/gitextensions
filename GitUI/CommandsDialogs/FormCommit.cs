@@ -130,25 +130,35 @@ namespace GitUI.CommandsDialogs
             + Environment.NewLine + "Git will never check if the file has changed that will improve status check performance.");
         #endregion
 
+        private event Action OnStageAreaLoaded;
+
         private readonly ICommitTemplateManager _commitTemplateManager;
-        private FileStatusList _currentFilesList;
-        private bool _skipUpdate;
-        private GitItemStatus _currentItem;
-        private bool _currentItemStaged;
         private readonly CommitKind _commitKind;
         private readonly GitRevision _editedCommit;
         private readonly ToolStripMenuItem _stageSelectedLinesToolStripMenuItem;
         private readonly ToolStripMenuItem _resetSelectedLinesToolStripMenuItem;
-        private string _commitTemplate;
-        private bool IsMergeCommit { get; set; }
-        private bool _shouldRescanChanges = true;
-        private bool _shouldReloadCommitTemplates = true;
-        private readonly AsyncLoader _unstagedLoader;
-        private readonly bool _useFormCommitMessage;
+        private readonly AsyncLoader _unstagedLoader = new AsyncLoader();
+        private readonly bool _useFormCommitMessage = AppSettings.UseFormCommitMessage;
         private readonly CancellationTokenSequence _interactiveAddSequence = new CancellationTokenSequence();
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
         private readonly IFullPathResolver _fullPathResolver;
+        private readonly List<string> _formattedLines = new List<string>();
+
+        private FileStatusList _currentFilesList;
+        private bool _skipUpdate;
+        private GitItemStatus _currentItem;
+        private bool _currentItemStaged;
+        private string _commitTemplate;
+        private bool _isMergeCommit;
+        private bool _shouldRescanChanges = true;
+        private bool _shouldReloadCommitTemplates = true;
         private bool _bypassActivatedEventHandler;
+        private bool _loadUnstagedOutputFirstTime = true;
+        private bool _initialized;
+        private bool _selectedDiffReloaded = true;
+        private List<GitItemStatus> _currentSelection;
+        private long _lastUserInputTime;
+        private int _alreadyLoadedTemplatesCount = -1;
 
         /// <summary>
         /// For VS designer
@@ -163,9 +173,8 @@ namespace GitUI.CommandsDialogs
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            _unstagedLoader = new AsyncLoader();
-
-            _useFormCommitMessage = AppSettings.UseFormCommitMessage;
+            _commitKind = commitKind;
+            _editedCommit = editedCommit;
 
             InitializeComponent();
 
@@ -201,9 +210,6 @@ namespace GitUI.CommandsDialogs
             Staged.SetNoFilesText(_noStagedChanges.Text);
 
             ConfigureMessageBox();
-
-            _commitKind = commitKind;
-            _editedCommit = editedCommit;
 
             HotkeysEnabled = true;
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
@@ -687,8 +693,6 @@ namespace GitUI.CommandsDialogs
                 }, false);
         }
 
-        private bool _selectedDiffReloaded = true;
-
         private void StageSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
             // to prevent multiple clicks
@@ -859,8 +863,6 @@ namespace GitUI.CommandsDialogs
             Text = string.Format(_formTitle.Text, currentBranchName, Module.WorkingDir);
         }
 
-        private bool _initialized;
-
         private void Initialize(bool loadUnstaged = true)
         {
             _initialized = true;
@@ -892,7 +894,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateMergeHead()
         {
-            IsMergeCommit = Module.RevParse("MERGE_HEAD") != null;
+            _isMergeCommit = Module.RevParse("MERGE_HEAD") != null;
         }
 
         private void InitializedStaged()
@@ -903,10 +905,6 @@ namespace GitUI.CommandsDialogs
                 Staged.SetDiffs(new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD"), Module.GetStagedFilesWithSubmodulesStatus());
             }
         }
-
-        private event Action OnStageAreaLoaded;
-
-        private bool _loadUnstagedOutputFirstTime = true;
 
         /// <summary>
         ///   Loads the unstaged output.
@@ -1108,7 +1106,6 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private List<GitItemStatus> _currentSelection;
         private void ClearDiffViewIfNoFilesLeft()
         {
             llShowPreview.Hide();
@@ -1143,7 +1140,7 @@ namespace GitUI.CommandsDialogs
 
             if (Staged.IsEmpty)
             {
-                return IsMergeCommit ? ConfirmEmptyMergeCommit() : ConfirmAndStageAllUnstaged();
+                return _isMergeCommit ? ConfirmEmptyMergeCommit() : ConfirmAndStageAllUnstaged();
             }
 
             return true;
@@ -1422,7 +1419,7 @@ namespace GitUI.CommandsDialogs
 
             OnStageAreaLoaded += StageAreaLoaded;
 
-            if (IsMergeCommit)
+            if (_isMergeCommit)
             {
                 Staged.SelectAll();
                 Unstage(canUseUnstageAll: false);
@@ -2551,8 +2548,6 @@ namespace GitUI.CommandsDialogs
             Message_TextChanged(sender, e);
         }
 
-        private readonly List<string> _formattedLines = new List<string>();
-
         private bool DidFormattedLineChange(int lineNumber)
         {
             // line not formated yet
@@ -2752,8 +2747,6 @@ namespace GitUI.CommandsDialogs
             toolStripGpgKeyTextBox.Visible = gpgSignCommitToolStripComboBox.SelectedIndex == 2;
         }
 
-        private long _lastUserInputTime;
-
         private void FilterChanged(object sender, EventArgs e)
         {
             var currentTime = DateTime.Now.Ticks;
@@ -2947,8 +2940,6 @@ namespace GitUI.CommandsDialogs
                 frm.ShowDialog(this);
             }
         }
-
-        private int _alreadyLoadedTemplatesCount = -1;
 
         private void commitTemplatesToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
