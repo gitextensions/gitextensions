@@ -40,11 +40,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                   !_grid.ShouldHideGraph(inclBranchFilter: false);
         }
 
-        public override bool TryGetToolTip(GitRevision revision, out string toolTip)
+        public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
         {
             if (!revision.IsArtificial)
             {
-                toolTip = revision.Guid;
+                toolTip = _gridView.GetLaneInfo(e.X - ColumnLeftMargin, e.RowIndex);
                 return true;
             }
 

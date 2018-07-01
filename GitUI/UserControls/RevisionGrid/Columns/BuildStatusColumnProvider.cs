@@ -158,7 +158,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             e.FormattingApplied = true;
         }
 
-        public override bool TryGetToolTip(GitRevision revision, out string toolTip)
+        public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
         {
             if (revision.BuildStatus != null)
             {
@@ -166,7 +166,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return true;
             }
 
-            return base.TryGetToolTip(revision, out toolTip);
+            return base.TryGetToolTip(e, revision, out toolTip);
         }
     }
 }

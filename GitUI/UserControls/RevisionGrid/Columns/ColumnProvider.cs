@@ -38,7 +38,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
         [ContractAnnotation("=>false,toolTip:null")]
         [ContractAnnotation("=>true,toolTip:notnull")]
-        public virtual bool TryGetToolTip(GitRevision revision, [CanBeNull] out string toolTip)
+        public virtual bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [CanBeNull] out string toolTip)
         {
             toolTip = default;
             return false;

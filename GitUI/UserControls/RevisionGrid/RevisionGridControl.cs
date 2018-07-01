@@ -173,7 +173,7 @@ namespace GitUI
             _gridView.MouseDoubleClick += OnGridViewDoubleClick;
             _gridView.MouseClick += OnGridViewMouseClick;
             _gridView.MouseEnter += (_, e) => _toolTipProvider.OnCellMouseEnter();
-            _gridView.CellMouseMove += (_, e) => _toolTipProvider.OnCellMouseMove(e.ColumnIndex, e.RowIndex);
+            _gridView.CellMouseMove += (_, e) => _toolTipProvider.OnCellMouseMove(e);
             _gridView.Loading += OnGridViewLoading;
 
             // Allow to drop patch file on revision grid
