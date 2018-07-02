@@ -66,6 +66,7 @@ namespace GitUI
         }
 
         [Conditional("DEBUG")]
+        [DebuggerStepThrough]
         public static void AssertOnUIThread()
         {
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)

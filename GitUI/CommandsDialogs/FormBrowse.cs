@@ -81,27 +81,25 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _undoLastCommitCaption = new TranslationString("Undo last commit");
         #endregion
 
-        private Dashboard _dashboard;
-        private ToolStripItem _rebase;
-        private ToolStripItem _bisect;
-        private ToolStripItem _warning;
-
+        private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
+        private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
         private readonly ToolStripMenuItem _toolStripGitStatus;
         private readonly GitStatusMonitor _gitStatusMonitor;
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
         private readonly FilterBranchHelper _filterBranchHelper;
-
-        private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
-        private BuildReportTabPageExtension _buildReportTabPageExtension;
-
         private readonly FormBrowseMenus _formBrowseMenus;
-        private ConEmuControl _terminal;
-        private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
         private readonly IFormBrowseController _controller;
         private readonly ICommitDataManager _commitDataManager;
         private readonly IAppTitleGenerator _appTitleGenerator;
         private readonly ILongShaProvider _longShaProvider;
         private readonly WindowsJumpListManager _windowsJumpListManager;
+
+        private BuildReportTabPageExtension _buildReportTabPageExtension;
+        private ConEmuControl _terminal;
+        private Dashboard _dashboard;
+        private ToolStripItem _rebase;
+        private ToolStripItem _bisect;
+        private ToolStripItem _warning;
         private bool _startWithDashboard;
 
         [Flags]
@@ -815,13 +813,13 @@ namespace GitUI.CommandsDialogs
 
         private void LoadUserMenu()
         {
-            var scripts = ScriptManager.GetScripts().Where(script => script.Enabled
-                && script.OnEvent == ScriptEvent.ShowInUserMenuBar).ToList();
+            var scripts = ScriptManager.GetScripts()
+                .Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)
+                .ToList();
 
             for (int i = ToolStrip.Items.Count - 1; i >= 0; i--)
             {
-                if (ToolStrip.Items[i].Tag != null &&
-                    ToolStrip.Items[i].Tag as string == "userscript")
+                if (ToolStrip.Items[i].Tag as string == "userscript")
                 {
                     ToolStrip.Items.RemoveAt(i);
                 }
@@ -834,34 +832,29 @@ namespace GitUI.CommandsDialogs
 
             ToolStrip.Items.Add(new ToolStripSeparator { Tag = "userscript" });
 
-            foreach (ScriptInfo scriptInfo in scripts)
+            foreach (var script in scripts)
             {
-                var tempButton = new ToolStripButton
+                var button = new ToolStripButton
                 {
                     // store scriptname
-                    Text = scriptInfo.Name,
+                    Text = script.Name,
                     Tag = "userscript",
                     Enabled = true,
                     Visible = true,
-                    Image = scriptInfo.GetIcon(),
+                    Image = script.GetIcon(),
                     DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
-                    ////Image = GitUI.Properties.Resources.bug,
-                    ////Icon = "Cow"
                 };
 
-                // add handler
-                tempButton.Click += UserMenu_Click;
+                button.Click += delegate
+                {
+                    if (ScriptRunner.RunScript(this, Module, script.Name, RevisionGrid))
+                    {
+                        RevisionGrid.RefreshRevisions();
+                    }
+                };
 
                 // add to toolstrip
-                ToolStrip.Items.Add(tempButton);
-            }
-        }
-
-        private void UserMenu_Click(object sender, EventArgs e)
-        {
-            if (ScriptRunner.RunScript(this, Module, ((ToolStripButton)sender).Text, RevisionGrid))
-            {
-                RevisionGrid.RefreshRevisions();
+                ToolStrip.Items.Add(button);
             }
         }
 

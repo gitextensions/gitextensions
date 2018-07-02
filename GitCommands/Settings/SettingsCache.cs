@@ -23,7 +23,7 @@ namespace GitCommands
             LockedAction<object>(() =>
             {
                 action();
-                return null;
+                return default;
             });
         }
 
