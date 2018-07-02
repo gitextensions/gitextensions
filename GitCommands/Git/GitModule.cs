@@ -1742,19 +1742,23 @@ namespace GitCommands
         public string GetRebaseDir()
         {
             string gitDirectory = GetGitDirectory();
-            if (Directory.Exists(gitDirectory + "rebase-merge" + Path.DirectorySeparatorChar))
+
+            var rebaseMergeDir = gitDirectory + "rebase-merge" + Path.DirectorySeparatorChar;
+            if (Directory.Exists(rebaseMergeDir))
             {
-                return gitDirectory + "rebase-merge" + Path.DirectorySeparatorChar;
+                return rebaseMergeDir;
             }
 
-            if (Directory.Exists(gitDirectory + "rebase-apply" + Path.DirectorySeparatorChar))
+            var rebaseApplyDir = gitDirectory + "rebase-apply" + Path.DirectorySeparatorChar;
+            if (Directory.Exists(rebaseApplyDir))
             {
-                return gitDirectory + "rebase-apply" + Path.DirectorySeparatorChar;
+                return rebaseApplyDir;
             }
 
-            if (Directory.Exists(gitDirectory + "rebase" + Path.DirectorySeparatorChar))
+            var rebaseDir = gitDirectory + "rebase" + Path.DirectorySeparatorChar;
+            if (Directory.Exists(rebaseDir))
             {
-                return gitDirectory + "rebase" + Path.DirectorySeparatorChar;
+                return rebaseDir;
             }
 
             return "";
@@ -2092,8 +2096,10 @@ namespace GitCommands
 
             int.TryParse(nextFile, out var next);
 
-            var files = Directory.Exists(GetRebaseDir())
-                ? Directory.GetFiles(GetRebaseDir())
+            var rebaseDir = GetRebaseDir();
+
+            var files = Directory.Exists(rebaseDir)
+                ? Directory.GetFiles(rebaseDir)
                 : Array.Empty<string>();
 
             foreach (var fullFileName in files)
@@ -2113,11 +2119,11 @@ namespace GitCommands
                         IsSkipped = n < next
                     };
 
-                if (File.Exists(GetRebaseDir() + file))
+                if (File.Exists(rebaseDir + file))
                 {
                     string key = null;
                     string value = "";
-                    foreach (var line in File.ReadLines(GetRebaseDir() + file))
+                    foreach (var line in File.ReadLines(rebaseDir + file))
                     {
                         var m = HeadersMatch.Match(line);
                         if (key == null)
