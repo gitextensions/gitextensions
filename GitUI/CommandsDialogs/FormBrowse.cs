@@ -486,12 +486,16 @@ namespace GitUI.CommandsDialogs
 
         private void RegisterPlugins()
         {
+            var existingPluginMenus = pluginsToolStripMenuItem.DropDownItems.OfType<ToolStripMenuItem>().ToLookup(c => c.Tag);
             foreach (var plugin in PluginRegistry.Plugins)
             {
-                // Add the plugin to the Plugins menu
-                var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
-                item.Click += ItemClick;
-                pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
+                // Add the plugin to the Plugins menu, if not already added
+                if (!existingPluginMenus.Contains(plugin))
+                {
+                    var item = new ToolStripMenuItem { Text = plugin.Description, Tag = plugin };
+                    item.Click += ItemClick;
+                    pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
+                }
 
                 // Allow the plugin to perform any self-registration actions
                 plugin.Register(UICommands);
@@ -506,7 +510,7 @@ namespace GitUI.CommandsDialogs
                 _repositoryHostsToolStripMenuItem.Text = PluginRegistry.GitHosters[0].Description;
             }
 
-            UpdatePluginMenu(Module.IsValidGitWorkingDir());
+            UpdatePluginMenu(Module?.IsValidGitWorkingDir() ?? false);
         }
 
         private void UnregisterPlugins()
