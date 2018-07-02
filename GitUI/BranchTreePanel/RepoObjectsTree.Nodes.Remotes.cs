@@ -38,7 +38,7 @@ namespace GitUI.BranchTreePanel
                     .Select(branch => branch.Name);
 
                 token.ThrowIfCancellationRequested();
-                var remotes = Module.GetRemotes(allowEmpty: true);
+                var remotes = Module.GetRemotes();
                 foreach (var branchPath in branches)
                 {
                     token.ThrowIfCancellationRequested();

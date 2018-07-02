@@ -116,7 +116,7 @@ namespace GitUIPluginInterfaces
         /// Retrieves registered remotes by running <c>git remote show</c> command.
         /// </summary>
         /// <returns>Registered remotes.</returns>
-        string[] GetRemotes(bool allowEmpty = true);
+        IReadOnlyList<string> GetRemotes();
 
         /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
         string GetCurrentRemote();

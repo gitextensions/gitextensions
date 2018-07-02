@@ -2249,14 +2249,9 @@ namespace GitCommands
                     : RunGitCmd(string.Format("remote add \"{0}\" \"{1}\"", name, location));
         }
 
-        public string[] GetRemotes(bool allowEmpty = true)
+        public IReadOnlyList<string> GetRemotes()
         {
-            string remotes = RunGitCmd("remote show");
-
-            // TODO why allowEmpty? splitting on \n always produces a meaningless blank line at the end
-            return allowEmpty
-                ? remotes.Split('\n')
-                : remotes.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            return ReadGitOutputLines("remote show").ToList();
         }
 
         public IEnumerable<string> GetSettings(string setting)
@@ -2898,11 +2893,11 @@ namespace GitCommands
             const string remoteBranchPrefixForMergedBranches = "remotes/";
             const string refsPrefix = "refs/";
 
-            string[] mergedBranches = RunGitCmd(GitCommandHelpers.MergedBranches(includeRemote: true)).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            var remotes = GetRemotes();
 
-            var remotes = GetRemotes(allowEmpty: false);
+            var args = GitCommandHelpers.MergedBranches(includeRemote: true);
 
-            return mergedBranches
+            return ReadGitOutputLines(args)
                 .Select(b => b.Trim())
                 .Where(b => b.StartsWith(remoteBranchPrefixForMergedBranches))
                 .Select(b => string.Concat(refsPrefix, b))
