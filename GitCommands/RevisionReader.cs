@@ -247,7 +247,34 @@ namespace GitCommands
             var lastOffset = chunk.Offset + chunk.Count;
 
             // Next we have zero or more parent IDs separated by ' ' and terminated by '\n'
-            var parentIds = new List<ObjectId>(capacity: 1);
+            var parentIds = new ObjectId[CountParents(offset)];
+            var parentIndex = 0;
+
+            int CountParents(int baseOffset)
+            {
+                if (array[baseOffset] == '\n')
+                {
+                    return 0;
+                }
+
+                var count = 1;
+
+                while (true)
+                {
+                    baseOffset += ObjectId.Sha1CharCount;
+                    var c = array[baseOffset];
+
+                    if (c != ' ')
+                    {
+                        break;
+                    }
+
+                    count++;
+                    baseOffset++;
+                }
+
+                return count;
+            }
 
             while (true)
             {
@@ -279,7 +306,7 @@ namespace GitCommands
                     return false;
                 }
 
-                parentIds.Add(parentId);
+                parentIds[parentIndex++] = parentId;
                 offset += ObjectId.Sha1CharCount;
             }
 
