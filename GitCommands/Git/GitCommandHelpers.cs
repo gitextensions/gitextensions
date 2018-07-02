@@ -782,8 +782,6 @@ namespace GitCommands
 
         /// <summary>
         /// Parse the output from git-diff --name-status
-        /// https://git-scm.com/docs/git-diff
-        /// The Git revisions are required to determine if the GitItemStatus are WorkTree or Index
         /// </summary>
         /// <param name="module">The Git module</param>
         /// <param name="statusString">output from the git command</param>
@@ -791,6 +789,8 @@ namespace GitCommands
         /// <param name="secondRevision">to revision</param>
         /// <param name="parentToSecond">The parent for the second revision</param>
         /// <returns>list with the parsed GitItemStatus</returns>
+        /// <seealso href="https://git-scm.com/docs/git-diff"/>
+        /// <remarks>Git revisions are required to determine if the <see cref="GitItemStatus"/> are WorkTree or Index.</remarks>
         public static IReadOnlyList<GitItemStatus> GetDiffChangedFilesFromString(IGitModule module, string statusString, [CanBeNull]string firstRevision, [CanBeNull]string secondRevision, [CanBeNull]string parentToSecond)
         {
             StagedStatus staged = StagedStatus.Unknown;
@@ -802,8 +802,8 @@ namespace GitCommands
             {
                 staged = StagedStatus.Index;
             }
-            else if ((firstRevision.IsNotNullOrWhitespace() && !GitRevisionExtensions.IsArtificial(firstRevision)) ||
-                (secondRevision.IsNotNullOrWhitespace() && !GitRevisionExtensions.IsArtificial(secondRevision)) ||
+            else if ((firstRevision.IsNotNullOrWhitespace() && !firstRevision.IsArtificial()) ||
+                (secondRevision.IsNotNullOrWhitespace() && !secondRevision.IsArtificial()) ||
                 parentToSecond.IsNotNullOrWhitespace())
             {
                 // This cannot be a worktree/index file
@@ -815,14 +815,14 @@ namespace GitCommands
 
         /// <summary>
         /// Parse the output from git-status --porcelain -z
-        /// https://git-scm.com/docs/git-status
         /// </summary>
         /// <param name="module">The Git module</param>
         /// <param name="statusString">output from the git command</param>
         /// <returns>list with the parsed GitItemStatus</returns>
+        /// <seealso href="https://git-scm.com/docs/git-status"/>
         public static IReadOnlyList<GitItemStatus> GetStatusChangedFilesFromString(IGitModule module, string statusString)
         {
-            return GetAllChangedFilesFromString_v1(module, statusString, false, StagedStatus.Unknown);
+            return GetAllChangedFilesFromString_v1(module, statusString, false, StagedStatus.Index);
         }
 
         /// <summary>
@@ -899,19 +899,19 @@ namespace GitCommands
                 if (x != '?' && x != '!' && x != ' ')
                 {
                     GitItemStatus gitItemStatusX;
+                    var stagedX = fromDiff ? staged : StagedStatus.Index;
                     if (x == 'R' || x == 'C')
                     {
                         // Find renamed files...
                         string nextfile = n + 1 < files.Length ? files[n + 1] : "";
-                        gitItemStatusX = GitItemStatusFromCopyRename(fromDiff, nextfile, fileName, x, status);
+                        gitItemStatusX = GitItemStatusFromCopyRename(stagedX, fromDiff, nextfile, fileName, x, status);
                         n++;
                     }
                     else
                     {
-                        gitItemStatusX = GitItemStatusFromStatusCharacter(fileName, x);
+                        gitItemStatusX = GitItemStatusFromStatusCharacter(stagedX, fileName, x);
                     }
 
-                    gitItemStatusX.Staged = fromDiff ? staged : StagedStatus.Index;
                     if (submodules.Contains(gitItemStatusX.Name))
                     {
                         gitItemStatusX.IsSubmodule = true;
@@ -926,19 +926,19 @@ namespace GitCommands
                 }
 
                 GitItemStatus gitItemStatusY;
+                var stagedY = StagedStatus.WorkTree;
                 if (y == 'R' || y == 'C')
                 {
                     // Find renamed files...
                     string nextfile = n + 1 < files.Length ? files[n + 1] : "";
-                    gitItemStatusY = GitItemStatusFromCopyRename(false, nextfile, fileName, y, status);
+                    gitItemStatusY = GitItemStatusFromCopyRename(stagedY, false, nextfile, fileName, y, status);
                     n++;
                 }
                 else
                 {
-                    gitItemStatusY = GitItemStatusFromStatusCharacter(fileName, y);
+                    gitItemStatusY = GitItemStatusFromStatusCharacter(stagedY, fileName, y);
                 }
 
-                gitItemStatusY.Staged = StagedStatus.WorkTree;
                 if (submodules.Contains(gitItemStatusY.Name))
                 {
                     gitItemStatusY.IsSubmodule = true;
@@ -963,7 +963,7 @@ namespace GitCommands
                 }
 
                 string fileName = line.Substring(line.IndexOf(' ') + 1);
-                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(fileName, statusCharacter);
+                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.Unknown, fileName, statusCharacter);
                 gitItemStatus.IsAssumeUnchanged = true;
                 result.Add(gitItemStatus);
             }
@@ -980,7 +980,7 @@ namespace GitCommands
                 char statusCharacter = line[0];
 
                 string fileName = line.Substring(line.IndexOf(' ') + 1);
-                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(fileName, statusCharacter);
+                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.Unknown, fileName, statusCharacter);
                 if (gitItemStatus.IsSkipWorktree)
                 {
                     result.Add(gitItemStatus);
@@ -990,7 +990,7 @@ namespace GitCommands
             return result;
         }
 
-        private static GitItemStatus GitItemStatusFromCopyRename(bool fromDiff, string nextfile, string fileName, char x, string status)
+        private static GitItemStatus GitItemStatusFromCopyRename(StagedStatus staged, bool fromDiff, string nextfile, string fileName, char x, string status)
         {
             var gitItemStatus = new GitItemStatus();
 
@@ -1024,10 +1024,12 @@ namespace GitCommands
                 gitItemStatus.RenameCopyPercentage = status.Substring(1);
             }
 
+            gitItemStatus.Staged = staged;
+
             return gitItemStatus;
         }
 
-        private static GitItemStatus GitItemStatusFromStatusCharacter(string fileName, char x)
+        private static GitItemStatus GitItemStatusFromStatusCharacter(StagedStatus staged, string fileName, char x)
         {
             var isNew = x == 'A' || x == '?' || x == '!';
 
@@ -1040,7 +1042,8 @@ namespace GitCommands
                 IsSkipWorktree = x == 'S',
                 IsTracked = (x != '?' && x != '!' && x != ' ') || !isNew,
                 IsIgnored = x == '!',
-                IsConflict = x == 'U'
+                IsConflict = x == 'U',
+                Staged = staged
             };
         }
 

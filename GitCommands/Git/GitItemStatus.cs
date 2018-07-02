@@ -32,26 +32,21 @@ namespace GitCommands
         public bool IsSkipWorktree { get; set; }
         public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }
-        private StagedStatus StagedUnsafe { get; set; } = StagedStatus.Unknown;
+
+        // Staged is three state and has no default status
+        private StagedStatus _staged { get; set; } = StagedStatus.Unknown;
         public StagedStatus Staged
         {
             get
             {
-                // Staged is not available in all scenarios, this is temporary (?) to catch usage
-                if (StagedUnsafe == StagedStatus.Unknown)
-                {
-#if DEBUG
-                    Debug.Assert(false, "StagedStatus is not set - this throws in Release builds. Continue should generally be OK.");
-#else
-                    throw new ArgumentException("StagedStatus is not set", StagedUnsafe.ToString());
-#endif
-                }
+                // Catch usage of unset accesses
+                Debug.Assert(_staged != StagedStatus.Unknown, "Staged is used without being set. Continue should generally be OK.");
 
-                return StagedUnsafe;
+                return _staged;
             }
             set
             {
-                StagedUnsafe = value;
+                _staged = value;
             }
         }
 

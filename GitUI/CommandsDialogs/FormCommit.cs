@@ -808,7 +808,7 @@ namespace GitUI.CommandsDialogs
                 {
                     stagedFiles.Add(fileStatus);
                 }
-                else
+                else if (fileStatus.Staged == StagedStatus.WorkTree)
                 {
                     unstagedFiles.Add(fileStatus);
                 }
