@@ -1120,7 +1120,7 @@ namespace GitUI.CommandsDialogs
             this.flowCommitButtons.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowCommitButtons.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowCommitButtons.Location = new System.Drawing.Point(0, 0);
-            this.flowCommitButtons.Margin = new System.Windows.Forms.Padding(0, 0, 6, 0);
+            this.flowCommitButtons.Margin = new System.Windows.Forms.Padding(6, 6, 6, 0);
             this.flowCommitButtons.Name = "flowCommitButtons";
             this.tableLayoutPanel1.SetRowSpan(this.flowCommitButtons, 2);
             this.flowCommitButtons.Size = new System.Drawing.Size(171, 192);
