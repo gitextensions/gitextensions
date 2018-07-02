@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
@@ -428,10 +429,10 @@ namespace GitUI.UserControls.RevisionGrid
         public string GetLaneInfo(int x, int rowIndex)
         {
             int lane = x / _laneWidth;
-            var laneInfoText = new System.Text.StringBuilder();
+            var laneInfoText = new StringBuilder();
             lock (_graphModel)
             {
-                Graph.ILaneRow laneRow = _graphModel[rowIndex];
+                ILaneRow laneRow = _graphModel[rowIndex];
                 if (laneRow != null)
                 {
                     Node node = null;
@@ -448,7 +449,7 @@ namespace GitUI.UserControls.RevisionGrid
                         for (int laneInfoIndex = 0, laneInfoCount = laneRow.LaneInfoCount(lane); laneInfoIndex < laneInfoCount; ++laneInfoIndex)
                         {
                             // search for next node below this row
-                            Graph.LaneInfo laneInfo = laneRow[lane, laneInfoIndex];
+                            LaneInfo laneInfo = laneRow[lane, laneInfoIndex];
                             Junction firstJunction = laneInfo.Junctions.First();
                             for (int nodeIndex = 0, nodeCount = firstJunction.NodeCount; nodeIndex < nodeCount; ++nodeIndex)
                             {
