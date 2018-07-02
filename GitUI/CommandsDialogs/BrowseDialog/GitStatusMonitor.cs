@@ -304,7 +304,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            var allChangedFiles = GitCommandHelpers.GetAllChangedFilesFromString(Module, updatedStatus);
+            var allChangedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(Module, updatedStatus);
             OnGitWorkingDirectoryStatusChanged(new GitWorkingDirectoryStatusEventArgs(allChangedFiles.Where(item => !item.IsIgnored)));
             if (_ignoredFilesPending)
             {

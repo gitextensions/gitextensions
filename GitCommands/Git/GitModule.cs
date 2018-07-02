@@ -2387,19 +2387,19 @@ namespace GitCommands
             return noCache ? RunGitCmd(cmd) : RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
         }
 
-        public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string firstRevision, string secondRevision)
+        public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string firstRevision, string secondRevision, string parentToSecond)
         {
-            var status = GetDiffFiles(firstRevision, secondRevision);
+            var status = GetDiffFiles(firstRevision, secondRevision, parentToSecond);
             GetSubmoduleStatus(status, firstRevision, secondRevision);
             return status;
         }
 
-        public IReadOnlyList<GitItemStatus> GetDiffFiles(string firstRevision, string secondRevision, bool noCache = false)
+        public IReadOnlyList<GitItemStatus> GetDiffFiles(string firstRevision, string secondRevision, string parentToSecond, bool noCache = false)
         {
             noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
             string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
             string result = noCache ? RunGitCmd(cmd) : RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
-            var resultCollection = GitCommandHelpers.GetAllChangedFilesFromString(this, result, true).ToList();
+            var resultCollection = GitCommandHelpers.GetDiffChangedFilesFromString(this, result, firstRevision, secondRevision, parentToSecond).ToList();
             if (firstRevision == GitRevision.UnstagedGuid || secondRevision == GitRevision.UnstagedGuid)
             {
                 // For unstaged the untracked must be added too
@@ -2425,7 +2425,7 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetStashDiffFiles(string stashName)
         {
-            var resultCollection = GetDiffFiles(stashName + "^", stashName, true).ToList();
+            var resultCollection = GetDiffFiles(stashName + "^", stashName, stashName + "^", true).ToList();
 
             // shows untracked files
             string untrackedTreeHash = RunGitCmd("log " + stashName + "^3 --pretty=format:\"%T\" --max-count=1");
@@ -2451,9 +2451,9 @@ namespace GitCommands
                     IsNew = true,
                     IsChanged = false,
                     IsDeleted = false,
-                    IsStaged = false,
                     Name = file.Name,
-                    TreeGuid = file.Guid
+                    TreeGuid = file.Guid,
+                    Staged = StagedStatus.None
                 }).ToList();
 
             // Doesn't work with removed submodules
@@ -2474,7 +2474,7 @@ namespace GitCommands
             UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default)
         {
             var status = RunGitCmd(GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles, untrackedFiles));
-            var result = GitCommandHelpers.GetAllChangedFilesFromString(this, status).ToList();
+            var result = GitCommandHelpers.GetStatusChangedFilesFromString(this, status).ToList();
 
             if (!excludeAssumeUnchangedFiles || !excludeSkipWorktreeFiles)
             {
@@ -2513,7 +2513,7 @@ namespace GitCommands
                     {
                         await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
-                        var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, localItem.Name, localItem.OldName, localItem.IsStaged);
+                        var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, localItem.Name, localItem.OldName, localItem.Staged == StagedStatus.Index);
                         if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                         {
                             var submodule = submoduleStatus.GetSubmodule(this);
@@ -2560,11 +2560,11 @@ namespace GitCommands
                 // This command is a little more expensive because it will return both staged and unstaged files
                 string command = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.No);
                 status = RunGitCmd(command, SystemEncoding);
-                IReadOnlyList<GitItemStatus> stagedFiles = GitCommandHelpers.GetAllChangedFilesFromString(this, status, false);
-                return stagedFiles.Where(f => f.IsStaged).ToList();
+                IReadOnlyList<GitItemStatus> stagedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(this, status);
+                return stagedFiles.Where(f => f.Staged == StagedStatus.Index).ToList();
             }
 
-            return GitCommandHelpers.GetAllChangedFilesFromString(this, status, true);
+            return GitCommandHelpers.GetDiffChangedFilesFromString(this, status, "HEAD", GitRevision.IndexGuid, "HEAD");
         }
 
         public IReadOnlyList<GitItemStatus> GetStagedFilesWithSubmodulesStatus()
@@ -2576,19 +2576,19 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetUnstagedFiles()
         {
-            return GetAllChangedFiles().Where(x => !x.IsStaged).ToArray();
+            return GetAllChangedFiles().Where(x => x.Staged == StagedStatus.WorkTree).ToArray();
         }
 
         public IReadOnlyList<GitItemStatus> GetUnstagedFilesWithSubmodulesStatus()
         {
-            return GetAllChangedFilesWithSubmodulesStatus().Where(x => !x.IsStaged).ToArray();
+            return GetAllChangedFilesWithSubmodulesStatus().Where(x => x.Staged == StagedStatus.WorkTree).ToArray();
         }
 
         public IReadOnlyList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode = IgnoreSubmodulesMode.None)
         {
             string command = GitCommandHelpers.GetAllChangedFilesCmd(true, untrackedFilesMode, ignoreSubmodulesMode);
             string status = RunGitCmd(command);
-            return GitCommandHelpers.GetAllChangedFilesFromString(this, status);
+            return GitCommandHelpers.GetStatusChangedFilesFromString(this, status);
         }
 
         /// <summary>Indicates whether there are any changes to the repository,
@@ -3846,9 +3846,9 @@ namespace GitCommands
                     IsConflict = true,
                     IsTracked = true,
                     IsDeleted = false,
-                    IsStaged = false,
                     IsNew = false,
                     Name = file,
+                    Staged = StagedStatus.None
                 }).ToList();
         }
 

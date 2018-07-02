@@ -300,7 +300,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     IsNew = false,
                     IsDeleted = false,
                     IsTracked = true,
-                    Name = match.Groups[2].Value.Trim()
+                    Name = match.Groups[2].Value.Trim(),
+                    Staged = StagedStatus.None
                 };
 
                 giss.Add(gis);

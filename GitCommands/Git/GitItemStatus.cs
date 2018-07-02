@@ -1,9 +1,18 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
+    public enum StagedStatus
+    {
+        Unknown = 0,
+        None,
+        WorkTree,
+        Index
+    }
+
     public class GitItemStatus : IComparable<GitItemStatus>
     {
         private JoinableTask<GitSubmoduleStatus> _submoduleStatus;
@@ -21,9 +30,25 @@ namespace GitCommands
         public bool IsConflict { get; set; }
         public bool IsAssumeUnchanged { get; set; }
         public bool IsSkipWorktree { get; set; }
-        public bool IsStaged { get; set; } = true;
         public bool IsSubmodule { get; set; }
         public string RenameCopyPercentage { get; set; }
+
+        // Staged is three state and has no default status
+        private StagedStatus _staged { get; set; } = StagedStatus.Unknown;
+        public StagedStatus Staged
+        {
+            get
+            {
+                // Catch usage of unset accesses
+                Debug.Assert(_staged != StagedStatus.Unknown, "Staged is used without being set. Continue should generally be OK.");
+
+                return _staged;
+            }
+            set
+            {
+                _staged = value;
+            }
+        }
 
         public Task<GitSubmoduleStatus> GetSubmoduleStatusAsync()
         {

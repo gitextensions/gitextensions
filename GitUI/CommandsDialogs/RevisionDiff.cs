@@ -259,6 +259,8 @@ namespace GitUI.CommandsDialogs
             // No changes to files in bare repos
             bool isBareRepository = Module.IsBareRepository();
             bool isAnyTracked = DiffFiles.SelectedItems.Any(item => item.IsTracked);
+            bool isAnyStaged = DiffFiles.SelectedItems.Any(item => item.Staged == StagedStatus.Index);
+            bool isAnyUnstaged = DiffFiles.SelectedItems.Any(item => item.Staged == StagedStatus.WorkTree);
             bool isAnySubmodule = DiffFiles.SelectedItems.Any(item => item.IsSubmodule);
             bool singleFileExists = isExactlyOneItemSelected && File.Exists(_fullPathResolver.Resolve(DiffFiles.SelectedItem.Name));
 
@@ -267,6 +269,8 @@ namespace GitUI.CommandsDialogs
                 isAnyCombinedDiff: isAnyCombinedDiff,
                 isSingleGitItemSelected: isExactlyOneItemSelected,
                 isAnyItemSelected: isAnyItemSelected,
+                isAnyItemStaged: isAnyStaged,
+                isAnyItemUnstaged: isAnyUnstaged,
                 isBareRepository: isBareRepository,
                 singleFileExists: singleFileExists,
                 isAnyTracked: isAnyTracked,
@@ -469,11 +473,7 @@ namespace GitUI.CommandsDialogs
 
         private void StageFileToolStripMenuItemClick(object sender, EventArgs e)
         {
-            // IsStaged is set by default, so that cannot be trusted, must be limited when selecting
-            var files = DiffFiles.SelectedItemsWithParent
-                .Where(it => it.ParentRevision.Guid == GitRevision.IndexGuid)
-                .Select(it => it.Item)
-                .ToList();
+            var files = DiffFiles.SelectedItems.Where(item => item.Staged == StagedStatus.WorkTree).ToList();
 
             Module.StageFiles(files, out _);
             RefreshArtificial();
@@ -482,7 +482,7 @@ namespace GitUI.CommandsDialogs
         private void UnstageFileToolStripMenuItemClick(object sender, EventArgs e)
         {
             var files = new List<GitItemStatus>();
-            foreach (var item in DiffFiles.SelectedItems.Where(i => i.IsStaged))
+            foreach (var item in DiffFiles.SelectedItems.Where(item => item.Staged == StagedStatus.Index))
             {
                 if (!item.IsNew)
                 {
@@ -728,7 +728,7 @@ namespace GitUI.CommandsDialogs
                 if (DiffFiles.Revision?.Guid == GitRevision.IndexGuid)
                 {
                     var files = new List<GitItemStatus>();
-                    var stagedItems = selectedItems.Where(item => item.IsStaged);
+                    var stagedItems = selectedItems.Where(item => item.Staged == StagedStatus.Index);
                     foreach (var item in stagedItems)
                     {
                         if (!item.IsNew)
