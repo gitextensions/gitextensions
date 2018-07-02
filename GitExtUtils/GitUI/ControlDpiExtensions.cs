@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
@@ -24,6 +25,13 @@ namespace GitUI
             while (queue.Count != 0)
             {
                 var next = queue.Dequeue();
+
+                if (next is IComponent component && component.Site?.DesignMode == true)
+                {
+                    // If we are in design mode, don't scale anything as the designer may
+                    // write scaled values back to InitializeComponent.
+                    return;
+                }
 
                 // NOTE we can't automatically scale TreeView or ListView here as
                 // adjustment must be done before images are added to the
