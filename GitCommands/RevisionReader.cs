@@ -251,7 +251,7 @@ namespace GitCommands
 
             while (true)
             {
-                if (offset >= lastOffset - 21)
+                if (offset >= lastOffset - ObjectId.Sha1CharCount - 1)
                 {
                     revision = default;
                     return false;
