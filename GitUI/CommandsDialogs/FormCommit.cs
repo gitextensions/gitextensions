@@ -16,6 +16,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Patches;
 using GitCommands.Utils;
+using GitExtUtils.GitUI;
 using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.HelperDialogs;
@@ -251,6 +252,8 @@ namespace GitUI.CommandsDialogs
             ((ToolStripDropDownMenu)commitMessageToolStripMenuItem.DropDown).ShowCheckMargin = false;
 
             this.AdjustForDpiScaling();
+
+            selectionFilter.Size = DpiUtil.Scale(selectionFilter.Size);
 
             _splitterManager.AddSplitter(splitMain, "splitMain");
             _splitterManager.AddSplitter(splitRight, "splitRight");
