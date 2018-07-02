@@ -50,7 +50,7 @@ namespace Gerrit
                 throw new GerritSettingsException(_settingsErrorProjectNotEntered.Text);
             }
 
-            var remotes = _module.GetRemotes(true);
+            var remotes = _module.GetRemotes();
 
             if (!remotes.Contains(DefaultRemote))
             {

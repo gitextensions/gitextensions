@@ -296,7 +296,8 @@ namespace GitCommands.Remote
         private void PopulateRemotes(List<GitRemote> allRemotes, bool enabled)
         {
             var module = GetModule();
-            Func<string[]> func;
+
+            Func<IReadOnlyList<string>> func;
             if (enabled)
             {
                 func = () => module.GetRemotes();
