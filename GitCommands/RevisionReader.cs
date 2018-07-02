@@ -108,8 +108,6 @@ namespace GitCommands
                 /* Commit subject  */ "%s%n%n" +
                 /* Commit body     */ "%b";
 
-            // TODO add AppBuilderExtensions support for flags enums, starting with RefFilterOptions, then use it in the below construction
-
             var arguments = BuildArguments();
 
             var sw = Stopwatch.StartNew();
