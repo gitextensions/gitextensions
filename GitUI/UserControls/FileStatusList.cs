@@ -6,7 +6,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -37,7 +39,6 @@ namespace GitUI
         private readonly IGitRevisionTester _revisionTester;
         private readonly IFullPathResolver _fullPathResolver;
 
-        private bool _filterVisible;
         private bool _alwaysRevisionGroups;
         private ToolStripItem _openSubmoduleMenuItem;
         private IDisposable _selectedIndexChangeSubscription;
@@ -47,6 +48,7 @@ namespace GitUI
         public FileStatusList()
         {
             InitializeComponent();
+            InitialiseFiltering();
             CreateOpenSubmoduleMenuItem();
             Translate();
             FilterVisible = false;
@@ -90,7 +92,6 @@ namespace GitUI
             Controls.SetChildIndex(NoFiles, 0);
             NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
 
-            _filter = new Regex(".*");
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _revisionTester = new GitRevisionTester(_fullPathResolver);
 
@@ -904,7 +905,7 @@ namespace GitUI
 
                 foreach (var item in statuses)
                 {
-                    if (_filter.IsMatch(item.Name))
+                    if (_filter?.IsMatch(item.Name) ?? true)
                     {
                         var text = item.Name;
                         if (clientSizeWidth)
@@ -917,7 +918,7 @@ namespace GitUI
                             // we need to put filename in list-item text -> then horizontal scrollbar
                             // will have proper width (by the longest filename, and not all path)
                             text = PathFormatter.FormatTextForFileNameOnly(item.Name, item.OldName);
-                            if (!_filter.IsMatch(text))
+                            if (!_filter?.IsMatch(text) ?? true)
                             {
                                 continue;
                             }
@@ -1198,15 +1199,10 @@ namespace GitUI
 
         #region Filtering
 
-        private long _lastUserInputTime;
         private string _toolTipText = "";
-
-        private static Regex RegexForFiltering(string value)
-        {
-            return string.IsNullOrEmpty(value)
-                ? new Regex(".", RegexOptions.Compiled)
-                : new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        }
+        private readonly Subject<string> _filterSubject = new Subject<string>();
+        [CanBeNull] private Regex _filter;
+        private bool _filterVisible;
 
         public void SetFilter(string value)
         {
@@ -1216,27 +1212,27 @@ namespace GitUI
 
         private int FilterFiles(string value)
         {
-            _filter = RegexForFiltering(value);
+            _filter = string.IsNullOrEmpty(value)
+                ? null
+                : new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             UpdateFileStatusListView(true);
             return FileStatusListView.Items.Count;
         }
 
-        private void FilterComboBox_TextUpdate(object sender, EventArgs e)
+        private void InitialiseFiltering()
         {
-            var currentTime = DateTime.Now.Ticks;
-            if (_lastUserInputTime == 0)
-            {
-                long timerLastChanged = currentTime;
-                var timer = new Timer { Interval = 250 };
-                timer.Tick += (s, a) =>
-                {
-                    if (NoUserInput(timerLastChanged))
+            // TODO this code is very similar to code in FormCommit
+            _filterSubject
+                .Throttle(TimeSpan.FromMilliseconds(250))
+                .ObserveOn(SynchronizationContext.Current)
+                .Subscribe(
+                    filterText =>
                     {
                         _toolTipText = "";
                         var fileCount = 0;
                         try
                         {
-                            fileCount = FilterFiles(FilterComboBox.Text);
+                            fileCount = FilterFiles(filterText);
                         }
                         catch (ArgumentException ae)
                         {
@@ -1245,31 +1241,17 @@ namespace GitUI
 
                         if (fileCount > 0)
                         {
-                            AddToSelectionFilter(FilterComboBox.Text);
+                            AddToSelectionFilter(filterText);
                         }
+                    });
 
-                        timer.Stop();
-                        _lastUserInputTime = 0;
-                    }
-
-                    timerLastChanged = _lastUserInputTime;
-                };
-
-                timer.Start();
-            }
-
-            _lastUserInputTime = currentTime;
-        }
-
-        private bool NoUserInput(long timerLastChanged)
-        {
-            return timerLastChanged == _lastUserInputTime;
-        }
-
-        private void AddToSelectionFilter(string filter)
-        {
-            if (!FilterComboBox.Items.Cast<string>().Any(candiate => candiate == filter))
+            void AddToSelectionFilter(string filter)
             {
+                if (FilterComboBox.Items.Cast<string>().Any(candidate => candidate == filter))
+                {
+                    return;
+                }
+
                 const int SelectionFilterMaxLength = 10;
                 if (FilterComboBox.Items.Count == SelectionFilterMaxLength)
                 {
@@ -1278,6 +1260,13 @@ namespace GitUI
 
                 FilterComboBox.Items.Insert(0, filter);
             }
+        }
+
+        private void FilterComboBox_TextUpdate(object sender, EventArgs e)
+        {
+            var filterText = FilterComboBox.Text;
+
+            _filterSubject.OnNext(filterText);
         }
 
         private void FilterComboBox_MouseEnter(object sender, EventArgs e)
@@ -1307,8 +1296,6 @@ namespace GitUI
         {
             FilterComboBox.Focus();
         }
-
-        private Regex _filter;
 
         #endregion Filtering
     }

@@ -4,10 +4,12 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -22,7 +24,6 @@ using GitUI.Script;
 using GitUI.SpellChecker;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
-using Timer = System.Windows.Forms.Timer;
 
 namespace GitUI.CommandsDialogs
 {
@@ -141,6 +142,7 @@ namespace GitUI.CommandsDialogs
         private readonly bool _useFormCommitMessage = AppSettings.UseFormCommitMessage;
         private readonly CancellationTokenSequence _interactiveAddSequence = new CancellationTokenSequence();
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
+        private readonly Subject<string> _selectionFilterSubject = new Subject<string>();
         private readonly IFullPathResolver _fullPathResolver;
         private readonly List<string> _formattedLines = new List<string>();
 
@@ -157,7 +159,6 @@ namespace GitUI.CommandsDialogs
         private bool _initialized;
         private bool _selectedDiffReloaded = true;
         private List<GitItemStatus> _currentSelection;
-        private long _lastUserInputTime;
         private int _alreadyLoadedTemplatesCount = -1;
 
         /// <summary>
@@ -266,6 +267,52 @@ namespace GitUI.CommandsDialogs
             // form, for example when it is restored to maximised, but first drawn as a smaller window.
             RestorePosition();
 
+            // TODO this code is very similar to code in FileStatusList
+            _selectionFilterSubject
+                .Throttle(TimeSpan.FromMilliseconds(250))
+                .ObserveOn(SynchronizationContext.Current)
+                .Subscribe(
+                filterText =>
+                    {
+                        ThreadHelper.AssertOnUIThread();
+
+                        var matchCount = 0;
+                        try
+                        {
+                            matchCount = Unstaged.SetSelectionFilter(filterText);
+                            selectionFilter.ToolTipText = _selectionFilterToolTip.Text;
+                        }
+                        catch (ArgumentException ae)
+                        {
+                            selectionFilter.ToolTipText = string.Format(_selectionFilterErrorToolTip.Text, ae.Message);
+                        }
+
+                        if (matchCount > 0)
+                        {
+                            AddToSelectionFilter();
+                        }
+
+                        void AddToSelectionFilter()
+                        {
+                            if (selectionFilter.Items.Cast<string>().Any(s => s == filterText))
+                            {
+                                // Item is already in the list
+                                return;
+                            }
+
+                            const int SelectionFilterMaxLength = 10;
+
+                            while (selectionFilter.Items.Count >= SelectionFilterMaxLength)
+                            {
+                                // Remove the last item
+                                selectionFilter.Items.RemoveAt(SelectionFilterMaxLength - 1);
+                            }
+
+                            // Insert the next term at the start of the filter control
+                            selectionFilter.Items.Insert(0, filterText);
+                        }
+                    });
+
             void ConfigureMessageBox()
             {
                 Message.Enabled = _useFormCommitMessage;
@@ -330,7 +377,6 @@ namespace GitUI.CommandsDialogs
             }
 
             _splitterManager.SaveSplitters();
-            AppSettings.CommitDialogSelectionFilter = toolbarSelectionFilter.Visible;
 
             base.OnFormClosing(e);
         }
@@ -631,12 +677,6 @@ namespace GitUI.CommandsDialogs
             }
 
             return true;
-        }
-
-        private void SetVisibilityOfSelectionFilter(bool visible)
-        {
-            selectionFilterToolStripMenuItem.Checked = visible;
-            toolbarSelectionFilter.Visible = visible;
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -2760,70 +2800,33 @@ namespace GitUI.CommandsDialogs
             toolStripGpgKeyTextBox.Visible = gpgSignCommitToolStripComboBox.SelectedIndex == 2;
         }
 
-        private void FilterTextChanged(object sender, EventArgs e)
+        #region Selection filtering
+
+        private void SetVisibilityOfSelectionFilter(bool visible)
         {
-            // TODO do this with Rx
-            var currentTime = DateTime.Now.Ticks;
-            if (_lastUserInputTime == 0)
-            {
-                long timerLastChanged = currentTime;
-                var timer = new Timer { Interval = 250 };
-                timer.Tick += delegate
-                {
-                    if (timerLastChanged == _lastUserInputTime)
-                    {
-                        var selectionCount = 0;
-                        try
-                        {
-                            selectionCount = Unstaged.SetSelectionFilter(selectionFilter.Text);
-                            selectionFilter.ToolTipText = _selectionFilterToolTip.Text;
-                        }
-                        catch (ArgumentException ae)
-                        {
-                            selectionFilter.ToolTipText = string.Format(_selectionFilterErrorToolTip.Text, ae.Message);
-                        }
-
-                        if (selectionCount > 0)
-                        {
-                            AddToSelectionFilter(selectionFilter.Text);
-                        }
-
-                        timer.Stop();
-                        _lastUserInputTime = 0;
-                    }
-
-                    timerLastChanged = _lastUserInputTime;
-                };
-
-                timer.Start();
-            }
-
-            _lastUserInputTime = currentTime;
-
-            void AddToSelectionFilter(string filter)
-            {
-                if (!selectionFilter.Items.Cast<string>().Any(candiate => candiate == filter))
-                {
-                    const int SelectionFilterMaxLength = 10;
-                    if (selectionFilter.Items.Count == SelectionFilterMaxLength)
-                    {
-                        selectionFilter.Items.RemoveAt(SelectionFilterMaxLength - 1);
-                    }
-
-                    selectionFilter.Items.Insert(0, filter);
-                }
-            }
+            selectionFilterToolStripMenuItem.Checked = visible;
+            toolbarSelectionFilter.Visible = visible;
         }
 
-        private void FilterIndexChanged(object sender, EventArgs e)
+        private void OnSelectionFilterTextChanged(object sender, EventArgs e)
+        {
+            _selectionFilterSubject.OnNext(selectionFilter.Text);
+        }
+
+        private void OnSelectionFilterIndexChanged(object sender, EventArgs e)
         {
             Unstaged.SetSelectionFilter(selectionFilter.Text);
         }
 
         private void ToggleShowSelectionFilter(object sender, EventArgs e)
         {
-            toolbarSelectionFilter.Visible = selectionFilterToolStripMenuItem.Checked;
+            var visible = !AppSettings.CommitDialogSelectionFilter;
+
+            AppSettings.CommitDialogSelectionFilter = visible;
+            toolbarSelectionFilter.Visible = visible;
         }
+
+        #endregion
 
         private void commitSubmoduleChanges_Click(object sender, EventArgs e)
         {
