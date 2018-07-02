@@ -420,7 +420,7 @@ Please make sure there are linux tools installed (through Git for Windows or cyg
         <target />
       </trans-unit>
       <trans-unit id="_mergeToolXConfigured.Text">
-        <source>There is a custom mergetool configured.</source>
+        <source>There is a mergetool configured: {0}</source>
         <target />
       </trans-unit>
       <trans-unit id="_mergeToolXConfiguredNeedsCmd.Text">

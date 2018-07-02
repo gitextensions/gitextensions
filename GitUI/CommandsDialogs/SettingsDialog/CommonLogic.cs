@@ -54,6 +54,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public const string GitExtensionsShellEx32Name = "GitExtensionsShellEx32.dll";
         public const string GitExtensionsShellEx64Name = "GitExtensionsShellEx64.dll";
 
+        public string GetGlobalDiffTool()
+        {
+            return ConfigFileSettingsSet.GlobalSettings.GetValue("diff.guitool");
+        }
+
+        public void SetGlobalDiffTool(string value)
+        {
+            ConfigFileSettingsSet.GlobalSettings.SetValue("diff.guitool", value);
+        }
+
+        public bool IsDiffTool(string toolName)
+        {
+            return GetGlobalDiffTool().Equals(toolName,
+                StringComparison.CurrentCultureIgnoreCase);
+        }
+
         public string GetGlobalMergeTool()
         {
             return ConfigFileSettingsSet.GlobalSettings.GetValue("merge.tool");

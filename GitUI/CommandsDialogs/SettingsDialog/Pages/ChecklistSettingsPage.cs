@@ -97,7 +97,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             new TranslationString("There is a custom mergetool configured: {0}");
 
         private readonly TranslationString _mergeToolXConfigured =
-            new TranslationString("There is a custom mergetool configured.");
+            new TranslationString("There is a mergetool configured: {0}");
 
         private readonly TranslationString _linuxToolsSshFound =
             new TranslationString("Linux tools (sh) found on your computer.");
@@ -532,7 +532,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private bool CheckDiffToolConfiguration()
         {
             DiffTool.Visible = true;
-            if (string.IsNullOrEmpty(CheckSettingsLogic.GetDiffToolFromConfig(CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.GlobalSettings)))
+            if (string.IsNullOrEmpty(CommonLogic.GetGlobalDiffTool()))
             {
                 RenderSettingUnset(DiffTool, DiffTool_Fix, _adviceDiffToolConfiguration.Text);
                 return false;
@@ -540,7 +540,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             if (EnvUtils.RunningOnWindows())
             {
-                if (CheckSettingsLogic.GetDiffToolFromConfig(CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.GlobalSettings).Equals("kdiff3", StringComparison.CurrentCultureIgnoreCase))
+                if (CommonLogic.IsDiffTool("kdiff3"))
                 {
                     string p = GetGlobalSetting("difftool.kdiff3.path");
                     if (string.IsNullOrEmpty(p) || !File.Exists(p))
@@ -554,7 +554,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
             }
 
-            string difftool = CheckSettingsLogic.GetDiffToolFromConfig(CheckSettingsLogic.CommonLogic.ConfigFileSettingsSet.GlobalSettings);
+            string difftool = CommonLogic.GetGlobalDiffTool().ToLowerInvariant();
             RenderSettingSet(DiffTool, DiffTool_Fix, string.Format(_diffToolXConfigured.Text, difftool));
             return true;
         }
@@ -568,6 +568,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 return false;
             }
 
+            string mergetool = CommonLogic.GetGlobalMergeTool().ToLowerInvariant();
             if (EnvUtils.RunningOnWindows())
             {
                 if (CommonLogic.IsMergeTool("kdiff3"))
@@ -583,7 +584,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     return true;
                 }
 
-                string mergetool = CommonLogic.GetGlobalMergeTool().ToLowerInvariant();
                 if (mergetool == "p4merge" || mergetool == "tmerge" || mergetool == "meld")
                 {
                     string p = GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
@@ -598,7 +598,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 }
             }
 
-            RenderSettingSet(MergeTool, MergeTool_Fix, _mergeToolXConfigured.Text);
+            RenderSettingSet(MergeTool, MergeTool_Fix, string.Format(_mergeToolXConfigured.Text, mergetool));
             return true;
         }
 
