@@ -154,6 +154,7 @@ namespace GitUI.CommandsDialogs
             this.commitCursorColumnLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.commitCursorColumn = new System.Windows.Forms.ToolStripStatusLabel();
             this.commitEndPadding = new System.Windows.Forms.ToolStripStatusLabel();
+            this.stopTrackingThisFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UnstagedFileContext.SuspendLayout();
             this.StagedFileContext.SuspendLayout();
             this.UnstagedSubmoduleContext.SuspendLayout();
@@ -203,6 +204,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator5,
             this.addFileToGitIgnoreToolStripMenuItem,
             this.addFileToGitInfoExcludeLocallyToolStripMenuItem,
+            this.stopTrackingThisFileToolStripMenuItem,
             this.skipWorktreeToolStripMenuItem,
             this.doNotSkipWorktreeToolStripMenuItem,
             this.assumeUnchangedToolStripMenuItem,
@@ -1458,6 +1460,14 @@ namespace GitUI.CommandsDialogs
             this.commitEndPadding.AutoSize = false;
             this.commitEndPadding.Name = "commitEndPadding";
             this.commitEndPadding.Size = new System.Drawing.Size(1, 17);
+            //
+            // stopTrackingThisFileToolStripMenuItem
+            //
+            this.stopTrackingThisFileToolStripMenuItem.Image = global::GitUI.Properties.Images.StopTrackingFile;
+            this.stopTrackingThisFileToolStripMenuItem.Name = "stopTrackingThisFileToolStripMenuItem";
+            this.stopTrackingThisFileToolStripMenuItem.Size = new System.Drawing.Size(428, 38);
+            this.stopTrackingThisFileToolStripMenuItem.Text = "Stop tracking this file";
+            this.stopTrackingThisFileToolStripMenuItem.Click += new System.EventHandler(this.stopTrackingThisFileToolStripMenuItem_Click);
             // 
             // FormCommit
             //
@@ -1649,5 +1659,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator14;
         private ToolStripTextBox toolStripGpgKeyTextBox;
         private ToolStripComboBox gpgSignCommitToolStripComboBox;
+        private ToolStripMenuItem stopTrackingThisFileToolStripMenuItem;
     }
 }

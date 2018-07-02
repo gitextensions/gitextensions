@@ -35,6 +35,7 @@ namespace GitUI.CommandsDialogs
     {
         #region Translation
 
+        private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _amendCommit =
             new TranslationString("You are about to rewrite history." + Environment.NewLine +
                                   "Only use amend if the commit is not published yet!" + Environment.NewLine +
@@ -95,7 +96,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _stageDetails = new TranslationString("Stage Details");
         private readonly TranslationString _stageFiles = new TranslationString("Stage {0} files");
         private readonly TranslationString _selectOnlyOneFile = new TranslationString("You must have only one file selected.");
-        private readonly TranslationString _selectOnlyOneFileCaption = new TranslationString("Error");
 
         private readonly TranslationString _stageSelectedLines = new TranslationString("Stage selected line(s)");
         private readonly TranslationString _unstageSelectedLines = new TranslationString("Unstage selected line(s)");
@@ -134,6 +134,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _assumeUnchangedToolTip = new TranslationString("Tell git to not check the status of this file for performance benefits."
             + Environment.NewLine + "Use this feature when a file is big and never change."
             + Environment.NewLine + "Git will never check if the file has changed that will improve status check performance.");
+        private readonly TranslationString _stopTrackingFail = new TranslationString("Fail to stop tracking the file '{0}'.");
         #endregion
 
         private event Action OnStageAreaLoaded;
@@ -2565,7 +2566,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                MessageBox.Show(this, _selectOnlyOneFile.Text, _selectOnlyOneFileCaption.Text);
+                MessageBox.Show(this, _selectOnlyOneFile.Text, _error.Text);
             }
         }
 
@@ -3159,6 +3160,25 @@ namespace GitUI.CommandsDialogs
             public EditNetSpell Message => _formCommit.Message;
 
             public ToolStripDropDownButton CommitMessageToolStripMenuItem => _formCommit.commitMessageToolStripMenuItem;
+        }
+
+        private void stopTrackingThisFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Unstaged.SelectedItem == null || !Unstaged.SelectedItem.IsTracked)
+            {
+                return;
+            }
+
+            var filename = Unstaged.SelectedItem.Name;
+
+            if (Module.StopTrackingFile(filename))
+            {
+                RescanChanges();
+            }
+            else
+            {
+                MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 
