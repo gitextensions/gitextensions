@@ -316,6 +316,10 @@ namespace GitUI.CommandsDialogs
             toolStripBranchFilterComboBox.BackColor = toolTextBoxBackColor;
             toolStripRevisionFilterTextBox.BackColor = toolTextBoxBackColor;
 
+            // Scale tool strip items according to DPI
+            toolStripBranchFilterComboBox.Size = DpiUtil.Scale(toolStripBranchFilterComboBox.Size);
+            toolStripRevisionFilterTextBox.Size = DpiUtil.Scale(toolStripRevisionFilterTextBox.Size);
+
             if (!string.IsNullOrEmpty(selectCommit))
             {
                 RevisionGrid.InitialObjectId = _longShaProvider.Get(selectCommit);
