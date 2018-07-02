@@ -604,12 +604,8 @@ namespace GitCommands
         [NotNull]
         public Process RunGitCmdDetached(string arguments, Encoding encoding = null)
         {
-            if (encoding == null)
-            {
-                encoding = SystemEncoding;
-            }
-
-            return GitCommandHelpers.StartProcess(AppSettings.GitCommand, arguments, WorkingDir, encoding);
+            return GitCommandHelpers.StartProcess(
+                AppSettings.GitCommand, arguments, WorkingDir, encoding ?? SystemEncoding);
         }
 
         /// <summary>
