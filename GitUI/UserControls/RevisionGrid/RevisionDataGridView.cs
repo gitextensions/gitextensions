@@ -470,7 +470,8 @@ namespace GitUI.UserControls.RevisionGrid
                             laneInfoText.AppendLine();
                         }
 
-                        laneInfoText.Append(node.Data.Subject);
+                        var revision = node.Data;
+                        laneInfoText.Append(revision.Body ?? revision.Subject);
                     }
                 }
             }
