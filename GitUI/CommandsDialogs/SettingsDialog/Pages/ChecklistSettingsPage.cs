@@ -155,6 +155,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private readonly TranslationString _shCanBeRunCaption =
             new TranslationString("Locate linux tools");
+
+        private readonly TranslationString _gcmDetectedCaption = new TranslationString("Obsolete git-credential-winstore.exe detected");
         #endregion
 
         private const string _putty = "PuTTY";
@@ -448,6 +450,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     isValid = CheckGitExtensionRegistrySettings() && isValid;
                     isValid = CheckGitExe() && isValid;
                     isValid = CheckSSHSettings() && isValid;
+                    isValid = CheckGitCredentialWinStore() && isValid;
                 }
             }
             catch (Exception ex)
@@ -471,6 +474,30 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             return retValue;
+        }
+
+        /// <summary>
+        /// The Git Credential Manager for Windows (GCM) provides secure Git credential storage for Windows.
+        /// It's the successor to the Windows Credential Store for Git (git-credential-winstore), which is no longer maintained.
+        /// Check whether the user has an outdated setting pointing to git-credential-winstore and, if so,
+        /// notify the user and point to our GitHub thread with more information.
+        /// </summary>
+        /// <seealso href="https://github.com/gitextensions/gitextensions/issues/3511#issuecomment-313633897"/>
+        private bool CheckGitCredentialWinStore()
+        {
+            var setting = GetGlobalSetting(SettingKeyString.CredentialHelper) ?? string.Empty;
+            if (setting.IndexOf("git-credential-winstore.exe", StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                GcmDetected.Visible = false;
+                GcmDetectedFix.Visible = false;
+                return true;
+            }
+
+            GcmDetected.Visible = true;
+            GcmDetectedFix.Visible = true;
+
+            RenderSettingUnset(GcmDetected, GcmDetectedFix, _gcmDetectedCaption.Text);
+            return false;
         }
 
         private bool CheckTranslationConfigSettings()
@@ -676,6 +703,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return true;
         }
 
+        /// <summary>
+        /// Renders settings as configured or not depending on the supplied condition.
+        /// </summary>
         private bool RenderSettingSetUnset(Func<bool> condition, Button settingButton, Button settingFixButton,
             string textSettingUnset, string textSettingGood)
         {
@@ -690,6 +720,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return true;
         }
 
+        /// <summary>
+        /// Renders settings as correctly configured.
+        /// </summary>
         private static void RenderSettingSet(Button settingButton, Button settingFixButton, string text)
         {
             settingButton.BackColor = Color.PaleGreen;
@@ -698,6 +731,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             settingFixButton.Visible = false;
         }
 
+        /// <summary>
+        /// Renders settings as misconfigured.
+        /// </summary>
         private static void RenderSettingUnset(Button settingButton, Button settingFixButton, string text)
         {
             settingButton.BackColor = Color.LavenderBlush;
@@ -712,6 +748,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             settingButton.ForeColor = Color.Black;
             settingButton.Text = text;
             settingFixButton.Visible = true;
+        }
+
+        private void GcmDetectedFix_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://github.com/gitextensions/gitextensions/wiki/How-To:-fix-GitCredentialWinStore-missing");
         }
     }
 }
