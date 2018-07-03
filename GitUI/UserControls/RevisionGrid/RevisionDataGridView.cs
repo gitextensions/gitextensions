@@ -1256,9 +1256,9 @@ namespace GitUI.UserControls.RevisionGrid
             using (var g = Graphics.FromHwnd(Handle))
             {
                 RowTemplate.Height = (int)g.MeasureString("By", _normalFont).Height + 9;
-
-                OnResize(null, null);
             }
+
+            OnResize(null, null);
 
             // Refresh column providers
             foreach (DataGridViewColumn column in Columns)
