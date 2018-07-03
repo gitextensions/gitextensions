@@ -1250,12 +1250,15 @@ namespace GitUI.UserControls.RevisionGrid
 
             ClearDrawCache();
 
-            // TODO why was this removed? if we only set the font when the control is created then it cannot update when settings change
+            // TODO allow custom grid font
+            ////NormalFont = AppSettings.RevisionGridFont;
             ////NormalFont = new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
 
+            // TODO allow custom grid row spacing
             using (var g = Graphics.FromHwnd(Handle))
             {
                 RowTemplate.Height = (int)g.MeasureString("By", _normalFont).Height + 9;
+                //// + AppSettings.GridRowSpacing
             }
 
             OnResize(null, null);
