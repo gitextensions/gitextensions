@@ -88,7 +88,7 @@ namespace GitCommands
             }
         }
 
-        private struct BufStatistic
+        private readonly struct BufStatistic
         {
             public readonly long cntNul;
             public readonly long cntCr;
