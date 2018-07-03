@@ -452,6 +452,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             private int _index;
             private Node _node;
 
+            public Junction Junction { get; private set; }
+
             public LaneJunctionDetail(Node n)
             {
                 _node = n;
@@ -476,8 +478,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     return Junction?.NodeCount - _index ?? 0;
                 }
             }
-
-            public Junction Junction { get; private set; }
 
             [CanBeNull]
             public Node Current => _node ?? (_index < Junction.NodeCount ? Junction[_index] : null);
@@ -526,13 +526,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             private Edges _edges;
 
-            public Edge[] EdgeList => _edges.EdgeList.ToArray();
-
-            #region LaneRow Members
-
             public int NodeLane { get; set; } = -1;
 
             public Node Node { get; set; }
+
+            public Edge[] EdgeList => _edges.EdgeList.ToArray();
 
             public int Count => _edges.CountCurrent();
 
@@ -542,8 +540,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             public LaneInfo this[int col, int row] => _edges.Current(col, row);
-
-            #endregion
 
             public void Add(int lane, LaneInfo data)
             {
@@ -833,6 +829,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             private readonly Edge[] _edges;
 
+            public int NodeLane { get; }
+
+            public Node Node { get; }
+
             public SavedLaneRow(Node node)
             {
                 Node = node;
@@ -846,12 +846,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 Node = activeRow.Node;
                 _edges = activeRow.EdgeList;
             }
-
-            #region ILaneRow
-
-            public int NodeLane { get; }
-
-            public Node Node { get; }
 
             public LaneInfo this[int col, int row]
             {
@@ -901,8 +895,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             {
                 return _edges.Count(edge => edge.Start == lane);
             }
-
-            #endregion
 
             public override string ToString()
             {
