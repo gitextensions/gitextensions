@@ -75,7 +75,7 @@ namespace VstsAndTfsIntegration
         }
 
         [CanBeNull]
-        private string GetBuildDefinitionsIds(IEnumerable<BuildDefinition> buildDefinitions)
+        private static string GetBuildDefinitionsIds(IEnumerable<BuildDefinition> buildDefinitions)
         {
             if (buildDefinitions != null && buildDefinitions.Any())
             {

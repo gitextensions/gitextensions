@@ -414,7 +414,7 @@ namespace Gerrit
         }
 
         [CanBeNull]
-        private T FindControl<T>(Control form, Func<T, bool> predicate)
+        private static T FindControl<T>(Control form, Func<T, bool> predicate)
             where T : Control
         {
             return FindControl(form.Controls, predicate);

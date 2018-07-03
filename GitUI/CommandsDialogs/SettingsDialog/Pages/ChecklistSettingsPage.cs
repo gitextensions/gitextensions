@@ -718,7 +718,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// <summary>
         /// Renders settings as configured or not depending on the supplied condition.
         /// </summary>
-        private bool RenderSettingSetUnset(Func<bool> condition, Button settingButton, Button settingFixButton,
+        private static bool RenderSettingSetUnset(Func<bool> condition, Button settingButton, Button settingFixButton,
             string textSettingUnset, string textSettingGood)
         {
             settingButton.Visible = true;
