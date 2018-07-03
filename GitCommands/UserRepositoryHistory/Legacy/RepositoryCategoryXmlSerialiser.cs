@@ -9,7 +9,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
 {
     /// <summary>
     /// Provides the ability to deserialise collections of categorised user's git repositories.
-    /// This functionality is provided for backwards compatilbity ONLY and is purposed for
+    /// This functionality is provided for backwards compatibility ONLY and is purposed for
     /// migration of categorised user's git repositories from version prior to v3.
     /// </summary>
     internal sealed class RepositoryCategoryXmlSerialiser : IRepositorySerialiser<RepositoryCategory>

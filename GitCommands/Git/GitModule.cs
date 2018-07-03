@@ -506,7 +506,7 @@ namespace GitCommands
         }
 
         [NotNull]
-        private static Process StartProccess([NotNull] string fileName, [NotNull] string arguments, [NotNull] string workingDir, bool showConsole)
+        private static Process StartProcess([NotNull] string fileName, [NotNull] string arguments, [NotNull] string workingDir, bool showConsole)
         {
             EnvironmentConfiguration.SetEnvironmentVariables();
 
@@ -543,7 +543,7 @@ namespace GitCommands
         {
             try
             {
-                return StartProccess(cmd, arguments, WorkingDir, showConsole: true);
+                return StartProcess(cmd, arguments, WorkingDir, showConsole: true);
             }
             catch (Exception ex)
             {
@@ -560,7 +560,7 @@ namespace GitCommands
         {
             try
             {
-                using (var process = StartProccess(cmd, arguments, WorkingDir, showConsole: true))
+                using (var process = StartProcess(cmd, arguments, WorkingDir, showConsole: true))
                 {
                     process.WaitForExit();
                 }
@@ -579,7 +579,7 @@ namespace GitCommands
         {
             try
             {
-                return StartProccess(fileName, arguments, workingDir, showConsole: false);
+                return StartProcess(fileName, arguments, workingDir, showConsole: false);
             }
             catch (Exception ex)
             {

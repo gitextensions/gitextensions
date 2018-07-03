@@ -36,13 +36,13 @@ namespace GitCommands
             Text = string.Empty;
         }
 
-        private CommitTemplateItem(SerializationInfo info, StreamingContext ctxt)
+        private CommitTemplateItem(SerializationInfo info, StreamingContext context)
         {
             Name = (string)info.GetValue("Name", typeof(string));
             Text = (string)info.GetValue("Text", typeof(string));
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Name", Name);
             info.AddValue("Text", Text);

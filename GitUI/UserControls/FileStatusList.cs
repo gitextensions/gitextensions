@@ -1097,7 +1097,7 @@ namespace GitUI
                 : new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
-        private int SelectFiles(Regex selctionFilter)
+        private int SelectFiles(Regex selectionFilter)
         {
             try
             {
@@ -1107,7 +1107,7 @@ namespace GitUI
                 int i = 0;
                 foreach (var item in items)
                 {
-                    FileStatusListView.Items[i].Selected = selctionFilter.IsMatch(item.Name);
+                    FileStatusListView.Items[i].Selected = selectionFilter.IsMatch(item.Name);
                     i++;
                 }
 
