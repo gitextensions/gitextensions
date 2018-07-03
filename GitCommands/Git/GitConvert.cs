@@ -157,7 +157,7 @@ namespace GitCommands
             return bufStatistic;
         }
 
-        public static bool IsBinary(byte[] buf)
+        private static bool IsBinary(byte[] buf)
         {
             BufStatistic bufStatistic = GetBufStatistic(buf);
             if (bufStatistic.cntNul > 0)
