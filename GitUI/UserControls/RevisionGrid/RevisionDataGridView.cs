@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -57,6 +58,9 @@ namespace GitUI.UserControls.RevisionGrid
         [Description("Loading Handler. NOTE: This will often happen on a background thread so UI operations may not be safe!")]
         [Category("Behavior")]
         public event EventHandler<LoadingEventArgs> Loading;
+
+        private readonly ConcurrentDictionary<int, bool> _isRelativeByIndex = new ConcurrentDictionary<int, bool>();
+        private readonly ConcurrentDictionary<int, GitRevision> _revisionByRowIndex = new ConcurrentDictionary<int, GitRevision>();
 
         private readonly int _nodeDimension = DpiUtil.Scale(10);
         private readonly int _laneWidth = DpiUtil.Scale(16);
@@ -400,29 +404,40 @@ namespace GitUI.UserControls.RevisionGrid
 
         public bool RowIsRelative(int rowIndex)
         {
-            lock (_graphModel)
+            return _isRelativeByIndex.GetOrAdd(rowIndex, IsRelative);
+
+            bool IsRelative(int index)
             {
-                ILaneRow row = _graphModel[rowIndex];
-                if (row == null)
+                lock (_graphModel)
                 {
-                    return false;
-                }
+                    var laneRow = _graphModel[index];
 
-                if (row.Node.Ancestors.Count > 0)
-                {
-                    return row.Node.Ancestors[0].IsRelative;
-                }
+                    if (laneRow == null)
+                    {
+                        return false;
+                    }
 
-                return true;
+                    if (laneRow.Node.Ancestors.Count > 0)
+                    {
+                        return laneRow.Node.Ancestors[0].IsRelative;
+                    }
+
+                    return true;
+                }
             }
         }
 
         [CanBeNull]
         public GitRevision GetRevision(int rowIndex)
         {
-            lock (_graphModel)
+            return _revisionByRowIndex.GetOrAdd(rowIndex, Create);
+
+            GitRevision Create(int row)
             {
-                return _graphModel[rowIndex]?.Node.Data;
+                lock (_graphModel)
+                {
+                    return _graphModel[row]?.Node.Data;
+                }
             }
         }
 
@@ -484,6 +499,8 @@ namespace GitUI.UserControls.RevisionGrid
             lock (_graphModel)
             {
                 _graphModel.Prune();
+                _revisionByRowIndex.Clear();
+                _isRelativeByIndex.Clear();
 
                 SetRowCount(_graphModel.Count);
             }
@@ -1228,6 +1245,9 @@ namespace GitUI.UserControls.RevisionGrid
 
         public override void Refresh()
         {
+            _revisionByRowIndex.Clear();
+            _isRelativeByIndex.Clear();
+
             ClearDrawCache();
 
             // TODO why was this removed? if we only set the font when the control is created then it cannot update when settings change
