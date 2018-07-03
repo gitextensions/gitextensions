@@ -203,7 +203,7 @@ namespace GitUITests
             }
         }
 
-        private SplitContainer CreateVerticalSplitContainer()
+        private static SplitContainer CreateVerticalSplitContainer()
         {
             return new SplitContainer
             {

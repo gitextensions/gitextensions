@@ -10,7 +10,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
     [TestFixture]
     public class FormUpdateFixture
     {
-        private string GetReleasesConfigFileText()
+        private static string GetReleasesConfigFileText()
         {
             ConfigFile configFile = new ConfigFile("", true);
             configFile.SetValue("Version \"2.47\".ReleaseType", "Major");
