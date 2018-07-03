@@ -157,8 +157,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     ArtificialCount(count.Changed, Properties.Resources.IconFileStatusModified, style.normalFont, style.foreColor);
                     ArtificialCount(count.New, Properties.Resources.IconFileStatusAdded, style.normalFont, style.foreColor);
                     ArtificialCount(count.Deleted, Properties.Resources.IconFileStatusRemoved, style.normalFont, style.foreColor);
-                    ArtificialCount(count.Submodules, Properties.Resources.IconSubmodulesManage, style.normalFont, style.foreColor);
-                }
+                    ArtificialCount(count.SubmodulesChanged, Properties.Resources.IconSubmoduleRevisionDown, style.normalFont, style.foreColor);
+                    ArtificialCount(count.SubmodulesDirty, Properties.Resources.IconSubmoduleDirty, style.normalFont, style.foreColor);
+                 }
             }
             else
             {

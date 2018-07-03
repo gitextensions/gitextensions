@@ -1752,7 +1752,8 @@ namespace GitUI
             public int Changed { get; set; }
             public int New { get; set; }
             public int Deleted { get; set; }
-            public int Submodules { get; set; }
+            public int SubmodulesChanged { get; set; }
+            public int SubmodulesDirty { get; set; }
         }
 
         private int GetChangeCountIndex(string guid)
@@ -1802,15 +1803,13 @@ namespace GitUI
             if (unstagedRev != null)
             {
                 var items = status.Where(item => item.Staged == StagedStatus.WorkTree);
-                var changeCount = _changeCount[GetChangeCountIndex(GitRevision.UnstagedGuid)];
-                UpdateChangeCount(items, changeCount);
+                UpdateChangeCount(GitRevision.UnstagedGuid, items);
             }
 
             if (stagedRev != null)
             {
                 var items = status.Where(item => item.Staged == StagedStatus.Index);
-                var changeCount = _changeCount[GetChangeCountIndex(GitRevision.IndexGuid)];
-                UpdateChangeCount(items, changeCount);
+                UpdateChangeCount(GitRevision.IndexGuid, items);
             }
 
             // cache the status for a refresh
@@ -1819,12 +1818,14 @@ namespace GitUI
             _gridView.Invalidate();
             return;
 
-            void UpdateChangeCount(IEnumerable<GitItemStatus> items, ChangeCount changeCount)
+            void UpdateChangeCount(string rev, IEnumerable<GitItemStatus> items)
             {
-                changeCount.Changed = items.Count(item => item.IsTracked && !item.IsSubmodule);
+                var changeCount = _changeCount[GetChangeCountIndex(rev)];
+                changeCount.Changed = items.Count(item => !item.IsNew && !item.IsDeleted && !item.IsSubmodule);
                 changeCount.New = items.Count(item => item.IsNew && !item.IsSubmodule);
                 changeCount.Deleted = items.Count(item => item.IsDeleted && !item.IsSubmodule);
-                changeCount.Submodules = items.Count(item => item.IsSubmodule);
+                changeCount.SubmodulesChanged = items.Count(item => item.IsSubmodule && item.IsChanged);
+                changeCount.SubmodulesDirty = items.Count(item => item.IsSubmodule && !item.IsTracked);
             }
         }
 
