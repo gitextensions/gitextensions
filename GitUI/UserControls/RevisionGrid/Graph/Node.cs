@@ -9,7 +9,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public List<Junction> Descendants { get; } = new List<Junction>(capacity: 2);
         public string ObjectId { get; }
 
-        public GitRevision Data { get; set; }
+        public GitRevision Revision { get; set; }
         public RevisionNodeFlags Flags { get; set; }
 
         public int InLane { get; set; } = int.MaxValue;
@@ -20,6 +20,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public bool IsCheckedOut => Flags.HasFlag(RevisionNodeFlags.CheckedOut);
         public bool HasRef => Flags.HasFlag(RevisionNodeFlags.HasRef);
 
-        public override string ToString() => Data?.ToString() ?? $"{ObjectId} ({Index})";
+        public override string ToString() => Revision?.ToString() ?? $"{ObjectId} ({Index})";
     }
 }

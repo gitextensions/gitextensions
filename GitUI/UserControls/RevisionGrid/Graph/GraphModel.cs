@@ -16,7 +16,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private int _processedNodes;
 
         public List<Node> AddedNodes { get; } = new List<Node>();
-        public Dictionary<string, Node> Nodes { get; } = new Dictionary<string, Node>();
+        public Dictionary<string, Node> NodeByObjectId { get; } = new Dictionary<string, Node>();
         public int Count { get; private set; }
 
         public GraphModel()
@@ -52,7 +52,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 {
                     var id = stack.Pop();
 
-                    if (!Nodes.TryGetValue(id, out var node))
+                    if (!NodeByObjectId.TryGetValue(id, out var node))
                     {
                         continue;
                     }
@@ -72,7 +72,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public bool IsRevisionRelative(string guid)
         {
-            return Nodes.TryGetValue(guid, out var startNode)
+            return NodeByObjectId.TryGetValue(guid, out var startNode)
                    && startNode.Ancestors.Any(a => a.IsRelative);
         }
 
@@ -87,7 +87,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             Count++;
-            node.Data = revision;
+            node.Revision = revision;
             node.Flags = flags;
             node.Index = AddedNodes.Count;
             AddedNodes.Add(node);
@@ -188,7 +188,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             AddedNodes.Clear();
             _junctions.Clear();
-            Nodes.Clear();
+            NodeByObjectId.Clear();
             _lanes.Clear();
             Count = 0;
         }
@@ -230,12 +230,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public void Prune()
         {
-            var nodesToRemove = Nodes.Values.Where(n => n.Data == null).ToList();
+            var nodesToRemove = NodeByObjectId.Values.Where(n => n.Revision == null).ToList();
 
             // Remove all nodes that don't have a value associated with them.
             foreach (var node in nodesToRemove)
             {
-                Nodes.Remove(node.ObjectId);
+                NodeByObjectId.Remove(node.ObjectId);
 
                 // This guy should have been at the end of some junctions
                 foreach (Junction j in node.Descendants)
@@ -267,10 +267,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         private bool GetOrCreateNode(string objectId, [NotNull] out Node node)
         {
-            if (!Nodes.TryGetValue(objectId, out node))
+            if (!NodeByObjectId.TryGetValue(objectId, out node))
             {
                 node = new Node(objectId);
-                Nodes.Add(objectId, node);
+                NodeByObjectId.Add(objectId, node);
                 return false;
             }
 

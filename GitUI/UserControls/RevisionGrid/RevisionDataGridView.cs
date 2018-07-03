@@ -436,7 +436,7 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 lock (_graphModel)
                 {
-                    return _graphModel[row]?.Node.Data;
+                    return _graphModel[row]?.Node.Revision;
                 }
             }
         }
@@ -454,9 +454,9 @@ namespace GitUI.UserControls.RevisionGrid
                     if (lane == laneRow.NodeLane)
                     {
                         node = laneRow.Node;
-                        if (!node.Data.IsArtificial)
+                        if (!node.Revision.IsArtificial)
                         {
-                            laneInfoText.AppendLine(node.Data.Guid);
+                            laneInfoText.AppendLine(node.Revision.Guid);
                         }
                     }
                     else if (lane >= 0 && lane < laneRow.Count)
@@ -485,7 +485,7 @@ namespace GitUI.UserControls.RevisionGrid
                             laneInfoText.AppendLine();
                         }
 
-                        var revision = node.Data;
+                        var revision = node.Revision;
                         laneInfoText.Append(revision.Body ?? revision.Subject);
                     }
                 }
@@ -936,7 +936,7 @@ namespace GitUI.UserControls.RevisionGrid
                         }
                     }
 
-                    if (row.Node.Data == null)
+                    if (row.Node.Revision == null)
                     {
                         nodeRect.Inflate(1, 1);
 
@@ -1295,7 +1295,7 @@ namespace GitUI.UserControls.RevisionGrid
         [CanBeNull]
         public GitRevision GetRevision(string guid)
         {
-            return _graphModel.Nodes.TryGetValue(guid, out var node) ? node.Data : null;
+            return _graphModel.NodeByObjectId.TryGetValue(guid, out var node) ? node.Revision : null;
         }
 
         public int? TryGetRevisionIndex(string guid)
@@ -1305,7 +1305,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return null;
             }
 
-            return guid != null && _graphModel.Nodes.TryGetValue(guid, out var node) ? (int?)node.Index : null;
+            return guid != null && _graphModel.NodeByObjectId.TryGetValue(guid, out var node) ? (int?)node.Index : null;
         }
 
         public IReadOnlyList<string> GetRevisionChildren(string guid)
@@ -1315,7 +1315,7 @@ namespace GitUI.UserControls.RevisionGrid
             // We do not need a lock here since we load the data from the first commit and walk through all
             // parents. Children are always loaded, since we start at the newest commit.
             // With lock, loading the commit info slows down terribly.
-            if (_graphModel.Nodes.TryGetValue(guid, out var node))
+            if (_graphModel.NodeByObjectId.TryGetValue(guid, out var node))
             {
                 foreach (var descendant in node.Descendants)
                 {

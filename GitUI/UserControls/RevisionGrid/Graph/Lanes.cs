@@ -119,8 +119,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                 // NOTE: We could also compare with sourceGraph sourceGraph.AddedNodes[sourceGraph.processedNodes],
                 // since it should always be the same value
-                if (_currentRow.Node?.Data == null ||
-                    (lane.Current.Data != null && lane.Current.Index < _currentRow.Node.Index))
+                if (_currentRow.Node?.Revision == null ||
+                    (lane.Current.Revision != null && lane.Current.Index < _currentRow.Node.Index))
                 {
                     _currentRow.Node = lane.Current;
                     _currentRow.NodeLane = curLane;
@@ -140,7 +140,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             // If this row doesn't contain data, we're to the end of the valid entries.
-            if (_currentRow.Node.Data == null)
+            if (_currentRow.Node.Revision == null)
             {
                 return false;
             }
