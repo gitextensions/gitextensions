@@ -419,13 +419,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         #region IEnumerable<LaneRow>
 
-        public IEnumerator<ILaneRow> GetEnumerator()
-        {
-            for (var i = 0; i < _laneRows.Count; i++)
-            {
-                yield return this[i];
-            }
-        }
+        public IEnumerator<ILaneRow> GetEnumerator() => _laneRows.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
