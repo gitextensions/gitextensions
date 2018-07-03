@@ -1099,11 +1099,11 @@ namespace GitUI.UserControls.RevisionGrid
 
             void UpdateGraph(int fromIndex, in int toIndex)
             {
-                lock (_graphModel)
-                {
-                    var rowIndex = fromIndex;
+                var rowIndex = fromIndex;
 
-                    while (rowIndex < toIndex)
+                while (rowIndex < toIndex)
+                {
+                    lock (_graphModel)
                     {
                         // Cache the next item
                         if (!_graphModel.CacheTo(rowIndex))
