@@ -82,22 +82,11 @@ namespace GitCommands
 
             public long cntPrintable;
             public long cntNonPrintable;
-
-            public void ResetBufStatistic()
-            {
-                cntNul = 0;
-                cntCr = 0;
-                cntLf = 0;
-                cntCrlf = 0;
-                cntPrintable = 0;
-                cntNonPrintable = 0;
-            }
         }
 
         private static BufStatistic GetBufStatistic(byte[] buf)
         {
             BufStatistic bufStatistic = new BufStatistic();
-            bufStatistic.ResetBufStatistic();
 
             if (buf == null)
             {
