@@ -30,7 +30,7 @@ namespace GitCommands
                 return buf;
             }
 
-            if (IsBinary(buf))
+            if (IsBinary(bufStatistic))
             {
                 return buf;
             }
@@ -157,9 +157,8 @@ namespace GitCommands
             return bufStatistic;
         }
 
-        private static bool IsBinary(byte[] buf)
+        private static bool IsBinary(BufStatistic bufStatistic)
         {
-            BufStatistic bufStatistic = GetBufStatistic(buf);
             if (bufStatistic.cntNul > 0)
             {
                 return true;
