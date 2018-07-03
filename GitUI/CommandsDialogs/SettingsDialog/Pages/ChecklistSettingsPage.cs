@@ -699,13 +699,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             GitExtensionsInstall.Visible = true;
-            if (string.IsNullOrEmpty(AppSettings.GetInstallDir()))
+
+            var installDir = AppSettings.GetInstallDir();
+
+            if (string.IsNullOrEmpty(installDir))
             {
                 RenderSettingUnset(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsMissing.Text);
                 return false;
             }
 
-            if (AppSettings.GetInstallDir() != null && AppSettings.GetInstallDir().EndsWith(".exe"))
+            if (installDir.EndsWith(".exe"))
             {
                 RenderSettingUnset(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsFaulty.Text);
                 return false;
