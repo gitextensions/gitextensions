@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using GitCommands;
 using GitCommands.Git;
 using NUnit.Framework;
@@ -211,8 +211,9 @@ namespace GitCommandsTests.Git
         {
             GitModule module = new GitModule(null);
             {
-                // git status --porcelain --untracked-files=no -z
-                string statusString = "M  adfs.h\0M  dir.c\0";
+                // git status --porcelain=2 --untracked-files=no -z
+                // porcelain v1: string statusString = "M  adfs.h\0M  dir.c\0";
+                string statusString = "#Header\03 unknown info\01 .M S..U 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c adfs.h\01 .M SCM. 160000 160000 160000 6bd3b036fc5718a51a0d27cde134c7019798c3ce 6bd3b036fc5718a51a0d27cde134c7019798c3ce dir.c\0\r\nwarning: LF will be replaced by CRLF in adfs.h.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in dir.c.\nThe file will have its original line endings in your working directory.";
                 var status = GitCommandHelpers.GetStatusChangedFilesFromString(module, statusString);
                 Assert.IsTrue(status.Count == 2);
                 Assert.IsTrue(status[0].Name == "adfs.h");
@@ -220,8 +221,9 @@ namespace GitCommandsTests.Git
             }
 
             {
-                // git status --porcelain --untracked-files -z
-                string statusString = "M  adfs.h\0?? untracked_file\0";
+                // git status --porcelain=2 --untracked-files -z
+                // porcelain v1: string statusString = "M  adfs.h\0?? untracked_file\0";
+                string statusString = "1 .M S..U 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c adfs.h\0? untracked_file\0";
                 var status = GitCommandHelpers.GetStatusChangedFilesFromString(module, statusString);
                 Assert.IsTrue(status.Count == 2);
                 Assert.IsTrue(status[0].Name == "adfs.h");
@@ -229,8 +231,9 @@ namespace GitCommandsTests.Git
             }
 
             {
-                // git status --porcelain --ignored-files -z
-                string statusString = "M  adfs.h\0!! ignored_file\0";
+                // git status --porcelain=2 --ignored-files -z
+                // porcelain v1: string statusString = ".M  adfs.h\0!! ignored_file\0";
+                string statusString = "1 .M S..U 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c adfs.h\0! ignored_file\0";
                 var status = GitCommandHelpers.GetStatusChangedFilesFromString(module, statusString);
                 Assert.IsTrue(status.Count == 2);
                 Assert.IsTrue(status[0].Name == "adfs.h");
@@ -679,37 +682,37 @@ namespace GitCommandsTests.Git
         public void GetAllChangedFilesCmd()
         {
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules --ignored",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules --ignored",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: false, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files=no --ignore-submodules",
+                "status --porcelain=2 -z --untracked-files=no --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.No, IgnoreSubmodulesMode.Default));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files=normal --ignore-submodules",
+                "status --porcelain=2 -z --untracked-files=normal --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Normal, IgnoreSubmodulesMode.Default));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files=all --ignore-submodules",
+                "status --porcelain=2 -z --untracked-files=all --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.All, IgnoreSubmodulesMode.Default));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules=none",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules=none",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.None));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules=none",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules=none",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules=untracked",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules=untracked",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Untracked));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules=dirty",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules=dirty",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Dirty));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules=all",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules=all",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.All));
             Assert.AreEqual(
-                "--no-optional-locks status --porcelain -z --untracked-files --ignore-submodules",
+                "--no-optional-locks status --porcelain=2 -z --untracked-files --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default, noLocks: true));
         }
 

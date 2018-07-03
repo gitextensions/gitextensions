@@ -15,6 +15,7 @@ namespace GitCommands
         private static readonly GitVersion v2_5_1 = new GitVersion("2.5.1");
         private static readonly GitVersion v2_7_0 = new GitVersion("2.7.0");
         private static readonly GitVersion v2_9_0 = new GitVersion("2.9.0");
+        private static readonly GitVersion v2_11_0 = new GitVersion("2.11.0");
         private static readonly GitVersion v2_15_2 = new GitVersion("2.15.2");
         private static readonly GitVersion v2_16_3 = new GitVersion("2.16.3");
 
@@ -61,6 +62,8 @@ namespace GitCommands
         public bool SupportWorktreeList => this >= v2_7_0;
 
         public bool SupportMergeUnrelatedHistory => this >= v2_9_0;
+
+        public bool SupportStatusPorcelainV2 => this >= v2_11_0;
 
         public bool SupportNoOptionalLocks => this >= v2_15_2;
 
