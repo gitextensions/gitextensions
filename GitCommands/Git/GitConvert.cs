@@ -13,7 +13,7 @@ namespace GitCommands
                 return buf;
             }
 
-            BufStatistic bufStatistic = GetBufStatistic(buf);
+            var bufStatistic = new BufStatistic(buf);
 
             if (bufStatistic.cntLf == 0)
             {
@@ -30,7 +30,7 @@ namespace GitCommands
                 return buf;
             }
 
-            if (IsBinary(bufStatistic))
+            if (IsBinary())
             {
                 return buf;
             }
@@ -71,6 +71,21 @@ namespace GitCommands
             }
 
             return byteList.ToArray();
+
+            bool IsBinary()
+            {
+                if (bufStatistic.cntNul > 0)
+                {
+                    return true;
+                }
+
+                if ((bufStatistic.cntPrintable / 128) < bufStatistic.cntNonPrintable)
+                {
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         private struct BufStatistic
@@ -152,21 +167,6 @@ namespace GitCommands
                     }
                 }
             }
-        }
-
-        private static bool IsBinary(BufStatistic bufStatistic)
-        {
-            if (bufStatistic.cntNul > 0)
-            {
-                return true;
-            }
-
-            if ((bufStatistic.cntPrintable / 128) < bufStatistic.cntNonPrintable)
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }
