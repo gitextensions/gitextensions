@@ -30,8 +30,9 @@
         {
             System.Windows.Forms.GroupBox groupBox1;
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.GcmDetectedFix = new System.Windows.Forms.Button();
+            this.GcmDetected = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
-            this.Rescan = new System.Windows.Forms.Button();
             this.translationConfig_Fix = new System.Windows.Forms.Button();
             this.CheckAtStartup = new System.Windows.Forms.CheckBox();
             this.GitFound = new System.Windows.Forms.Button();
@@ -52,6 +53,7 @@
             this.DiffTool = new System.Windows.Forms.Button();
             this.ShellExtensionsRegistered = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.Rescan = new System.Windows.Forms.Button();
             groupBox1 = new System.Windows.Forms.GroupBox();
             groupBox1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -68,7 +70,7 @@
             groupBox1.Location = new System.Drawing.Point(0, 0);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new System.Windows.Forms.Padding(12);
-            groupBox1.Size = new System.Drawing.Size(1421, 460);
+            groupBox1.Size = new System.Drawing.Size(1015, 478);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             // 
@@ -79,9 +81,11 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.GcmDetectedFix, 1, 10);
+            this.tableLayoutPanel1.Controls.Add(this.GcmDetected, 0, 10);
             this.tableLayoutPanel1.Controls.Add(this.label11, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.translationConfig_Fix, 1, 9);
-            this.tableLayoutPanel1.Controls.Add(this.CheckAtStartup, 0, 10);
+            this.tableLayoutPanel1.Controls.Add(this.CheckAtStartup, 0, 11);
             this.tableLayoutPanel1.Controls.Add(this.GitFound, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.translationConfig, 0, 9);
             this.tableLayoutPanel1.Controls.Add(this.SshConfig_Fix, 1, 8);
@@ -100,9 +104,9 @@
             this.tableLayoutPanel1.Controls.Add(this.DiffTool, 0, 4);
             this.tableLayoutPanel1.Controls.Add(this.ShellExtensionsRegistered, 0, 5);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 32);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 26);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 13;
+            this.tableLayoutPanel1.RowCount = 14;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -116,8 +120,41 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1397, 380);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(991, 404);
             this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // GcmDetectedFix
+            // 
+            this.GcmDetectedFix.AutoSize = true;
+            this.GcmDetectedFix.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GcmDetectedFix.Location = new System.Drawing.Point(903, 348);
+            this.GcmDetectedFix.Name = "GcmDetectedFix";
+            this.GcmDetectedFix.Size = new System.Drawing.Size(85, 30);
+            this.GcmDetectedFix.TabIndex = 20;
+            this.GcmDetectedFix.Text = "Repair";
+            this.GcmDetectedFix.UseVisualStyleBackColor = true;
+            this.GcmDetectedFix.Visible = false;
+            this.GcmDetectedFix.Click += new System.EventHandler(this.GcmDetectedFix_Click);
+            // 
+            // GcmDetected
+            // 
+            this.GcmDetected.AutoSize = true;
+            this.GcmDetected.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.GcmDetected.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.GcmDetected.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.GcmDetected.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GcmDetected.FlatAppearance.BorderSize = 0;
+            this.GcmDetected.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.GcmDetected.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.GcmDetected.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.GcmDetected.Location = new System.Drawing.Point(3, 348);
+            this.GcmDetected.Name = "GcmDetected";
+            this.GcmDetected.Size = new System.Drawing.Size(894, 30);
+            this.GcmDetected.TabIndex = 19;
+            this.GcmDetected.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.GcmDetected.UseVisualStyleBackColor = false;
+            this.GcmDetected.Visible = false;
             // 
             // label11
             // 
@@ -127,29 +164,18 @@
             this.label11.Location = new System.Drawing.Point(3, 0);
             this.label11.Name = "label11";
             this.label11.Padding = new System.Windows.Forms.Padding(0, 0, 0, 8);
-            this.label11.Size = new System.Drawing.Size(1391, 27);
+            this.label11.Size = new System.Drawing.Size(985, 21);
             this.label11.TabIndex = 0;
             this.label11.Text = "The checklist below validates the basic settings needed for GitExtensions to work" +
     " properly.";
-            // 
-            // Rescan
-            // 
-            this.Rescan.AutoSize = true;
-            this.Rescan.Location = new System.Drawing.Point(1244, 3);
-            this.Rescan.Name = "Rescan";
-            this.Rescan.Size = new System.Drawing.Size(150, 30);
-            this.Rescan.TabIndex = 20;
-            this.Rescan.Text = "Save and rescan";
-            this.Rescan.UseVisualStyleBackColor = true;
-            this.Rescan.Click += new System.EventHandler(this.SaveAndRescan_Click);
             // 
             // translationConfig_Fix
             // 
             this.translationConfig_Fix.AutoSize = true;
             this.translationConfig_Fix.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.translationConfig_Fix.Location = new System.Drawing.Point(1319, 318);
+            this.translationConfig_Fix.Location = new System.Drawing.Point(903, 312);
             this.translationConfig_Fix.Name = "translationConfig_Fix";
-            this.translationConfig_Fix.Size = new System.Drawing.Size(75, 30);
+            this.translationConfig_Fix.Size = new System.Drawing.Size(85, 30);
             this.translationConfig_Fix.TabIndex = 18;
             this.translationConfig_Fix.Text = "Repair";
             this.translationConfig_Fix.UseVisualStyleBackColor = true;
@@ -160,10 +186,10 @@
             // 
             this.CheckAtStartup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.CheckAtStartup.AutoSize = true;
-            this.CheckAtStartup.Location = new System.Drawing.Point(3, 354);
+            this.CheckAtStartup.Location = new System.Drawing.Point(3, 384);
             this.CheckAtStartup.Name = "CheckAtStartup";
-            this.CheckAtStartup.Size = new System.Drawing.Size(1310, 23);
-            this.CheckAtStartup.TabIndex = 19;
+            this.CheckAtStartup.Size = new System.Drawing.Size(894, 17);
+            this.CheckAtStartup.TabIndex = 21;
             this.CheckAtStartup.Text = "Check settings at startup (disables automatically if all settings are correct)";
             this.CheckAtStartup.UseVisualStyleBackColor = true;
             this.CheckAtStartup.Click += new System.EventHandler(this.CheckAtStartup_CheckedChanged);
@@ -179,9 +205,9 @@
             this.GitFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.GitFound.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.GitFound.Location = new System.Drawing.Point(3, 30);
+            this.GitFound.Location = new System.Drawing.Point(3, 24);
             this.GitFound.Name = "GitFound";
-            this.GitFound.Size = new System.Drawing.Size(1310, 30);
+            this.GitFound.Size = new System.Drawing.Size(894, 30);
             this.GitFound.TabIndex = 1;
             this.GitFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.GitFound.UseVisualStyleBackColor = false;
@@ -199,9 +225,9 @@
             this.translationConfig.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.translationConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.translationConfig.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.translationConfig.Location = new System.Drawing.Point(3, 318);
+            this.translationConfig.Location = new System.Drawing.Point(3, 312);
             this.translationConfig.Name = "translationConfig";
-            this.translationConfig.Size = new System.Drawing.Size(1310, 30);
+            this.translationConfig.Size = new System.Drawing.Size(894, 30);
             this.translationConfig.TabIndex = 17;
             this.translationConfig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.translationConfig.UseVisualStyleBackColor = false;
@@ -212,9 +238,9 @@
             // 
             this.SshConfig_Fix.AutoSize = true;
             this.SshConfig_Fix.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SshConfig_Fix.Location = new System.Drawing.Point(1319, 282);
+            this.SshConfig_Fix.Location = new System.Drawing.Point(903, 276);
             this.SshConfig_Fix.Name = "SshConfig_Fix";
-            this.SshConfig_Fix.Size = new System.Drawing.Size(75, 30);
+            this.SshConfig_Fix.Size = new System.Drawing.Size(85, 30);
             this.SshConfig_Fix.TabIndex = 16;
             this.SshConfig_Fix.Text = "Repair";
             this.SshConfig_Fix.UseVisualStyleBackColor = true;
@@ -225,9 +251,9 @@
             // 
             this.GitFound_Fix.AutoSize = true;
             this.GitFound_Fix.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GitFound_Fix.Location = new System.Drawing.Point(1319, 30);
+            this.GitFound_Fix.Location = new System.Drawing.Point(903, 24);
             this.GitFound_Fix.Name = "GitFound_Fix";
-            this.GitFound_Fix.Size = new System.Drawing.Size(75, 30);
+            this.GitFound_Fix.Size = new System.Drawing.Size(85, 30);
             this.GitFound_Fix.TabIndex = 2;
             this.GitFound_Fix.Text = "Repair";
             this.GitFound_Fix.UseVisualStyleBackColor = true;
@@ -238,9 +264,9 @@
             // 
             this.GitExtensionsInstall_Fix.AutoSize = true;
             this.GitExtensionsInstall_Fix.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GitExtensionsInstall_Fix.Location = new System.Drawing.Point(1319, 246);
+            this.GitExtensionsInstall_Fix.Location = new System.Drawing.Point(903, 240);
             this.GitExtensionsInstall_Fix.Name = "GitExtensionsInstall_Fix";
-            this.GitExtensionsInstall_Fix.Size = new System.Drawing.Size(75, 30);
+            this.GitExtensionsInstall_Fix.Size = new System.Drawing.Size(85, 30);
             this.GitExtensionsInstall_Fix.TabIndex = 14;
             this.GitExtensionsInstall_Fix.Text = "Repair";
             this.GitExtensionsInstall_Fix.UseVisualStyleBackColor = true;
@@ -258,9 +284,9 @@
             this.SshConfig.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.SshConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SshConfig.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.SshConfig.Location = new System.Drawing.Point(3, 282);
+            this.SshConfig.Location = new System.Drawing.Point(3, 276);
             this.SshConfig.Name = "SshConfig";
-            this.SshConfig.Size = new System.Drawing.Size(1310, 30);
+            this.SshConfig.Size = new System.Drawing.Size(894, 30);
             this.SshConfig.TabIndex = 15;
             this.SshConfig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SshConfig.UseVisualStyleBackColor = false;
@@ -278,9 +304,9 @@
             this.UserNameSet.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.UserNameSet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.UserNameSet.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.UserNameSet.Location = new System.Drawing.Point(3, 66);
+            this.UserNameSet.Location = new System.Drawing.Point(3, 60);
             this.UserNameSet.Name = "UserNameSet";
-            this.UserNameSet.Size = new System.Drawing.Size(1310, 30);
+            this.UserNameSet.Size = new System.Drawing.Size(894, 30);
             this.UserNameSet.TabIndex = 3;
             this.UserNameSet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.UserNameSet.UseVisualStyleBackColor = false;
@@ -291,9 +317,9 @@
             // 
             this.GitBinFound_Fix.AutoSize = true;
             this.GitBinFound_Fix.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GitBinFound_Fix.Location = new System.Drawing.Point(1319, 210);
+            this.GitBinFound_Fix.Location = new System.Drawing.Point(903, 204);
             this.GitBinFound_Fix.Name = "GitBinFound_Fix";
-            this.GitBinFound_Fix.Size = new System.Drawing.Size(75, 30);
+            this.GitBinFound_Fix.Size = new System.Drawing.Size(85, 30);
             this.GitBinFound_Fix.TabIndex = 12;
             this.GitBinFound_Fix.Text = "Repair";
             this.GitBinFound_Fix.UseVisualStyleBackColor = true;
@@ -304,9 +330,9 @@
             // 
             this.UserNameSet_Fix.AutoSize = true;
             this.UserNameSet_Fix.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.UserNameSet_Fix.Location = new System.Drawing.Point(1319, 66);
+            this.UserNameSet_Fix.Location = new System.Drawing.Point(903, 60);
             this.UserNameSet_Fix.Name = "UserNameSet_Fix";
-            this.UserNameSet_Fix.Size = new System.Drawing.Size(75, 30);
+            this.UserNameSet_Fix.Size = new System.Drawing.Size(85, 30);
             this.UserNameSet_Fix.TabIndex = 4;
             this.UserNameSet_Fix.Text = "Repair";
             this.UserNameSet_Fix.UseVisualStyleBackColor = true;
@@ -317,9 +343,9 @@
             // 
             this.ShellExtensionsRegistered_Fix.AutoSize = true;
             this.ShellExtensionsRegistered_Fix.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ShellExtensionsRegistered_Fix.Location = new System.Drawing.Point(1319, 174);
+            this.ShellExtensionsRegistered_Fix.Location = new System.Drawing.Point(903, 168);
             this.ShellExtensionsRegistered_Fix.Name = "ShellExtensionsRegistered_Fix";
-            this.ShellExtensionsRegistered_Fix.Size = new System.Drawing.Size(75, 30);
+            this.ShellExtensionsRegistered_Fix.Size = new System.Drawing.Size(85, 30);
             this.ShellExtensionsRegistered_Fix.TabIndex = 10;
             this.ShellExtensionsRegistered_Fix.Text = "Repair";
             this.ShellExtensionsRegistered_Fix.UseVisualStyleBackColor = true;
@@ -337,9 +363,9 @@
             this.MergeTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.MergeTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MergeTool.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.MergeTool.Location = new System.Drawing.Point(3, 102);
+            this.MergeTool.Location = new System.Drawing.Point(3, 96);
             this.MergeTool.Name = "MergeTool";
-            this.MergeTool.Size = new System.Drawing.Size(1310, 30);
+            this.MergeTool.Size = new System.Drawing.Size(894, 30);
             this.MergeTool.TabIndex = 5;
             this.MergeTool.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.MergeTool.UseVisualStyleBackColor = false;
@@ -357,9 +383,9 @@
             this.GitExtensionsInstall.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitExtensionsInstall.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.GitExtensionsInstall.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.GitExtensionsInstall.Location = new System.Drawing.Point(3, 246);
+            this.GitExtensionsInstall.Location = new System.Drawing.Point(3, 240);
             this.GitExtensionsInstall.Name = "GitExtensionsInstall";
-            this.GitExtensionsInstall.Size = new System.Drawing.Size(1310, 30);
+            this.GitExtensionsInstall.Size = new System.Drawing.Size(894, 30);
             this.GitExtensionsInstall.TabIndex = 13;
             this.GitExtensionsInstall.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.GitExtensionsInstall.UseVisualStyleBackColor = false;
@@ -377,9 +403,9 @@
             this.GitBinFound.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.GitBinFound.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.GitBinFound.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.GitBinFound.Location = new System.Drawing.Point(3, 210);
+            this.GitBinFound.Location = new System.Drawing.Point(3, 204);
             this.GitBinFound.Name = "GitBinFound";
-            this.GitBinFound.Size = new System.Drawing.Size(1310, 30);
+            this.GitBinFound.Size = new System.Drawing.Size(894, 30);
             this.GitBinFound.TabIndex = 11;
             this.GitBinFound.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.GitBinFound.UseVisualStyleBackColor = false;
@@ -390,9 +416,9 @@
             // 
             this.DiffTool_Fix.AutoSize = true;
             this.DiffTool_Fix.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DiffTool_Fix.Location = new System.Drawing.Point(1319, 138);
+            this.DiffTool_Fix.Location = new System.Drawing.Point(903, 132);
             this.DiffTool_Fix.Name = "DiffTool_Fix";
-            this.DiffTool_Fix.Size = new System.Drawing.Size(75, 30);
+            this.DiffTool_Fix.Size = new System.Drawing.Size(85, 30);
             this.DiffTool_Fix.TabIndex = 8;
             this.DiffTool_Fix.Text = "Repair";
             this.DiffTool_Fix.UseVisualStyleBackColor = true;
@@ -403,9 +429,9 @@
             // 
             this.MergeTool_Fix.AutoSize = true;
             this.MergeTool_Fix.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MergeTool_Fix.Location = new System.Drawing.Point(1319, 102);
+            this.MergeTool_Fix.Location = new System.Drawing.Point(903, 96);
             this.MergeTool_Fix.Name = "MergeTool_Fix";
-            this.MergeTool_Fix.Size = new System.Drawing.Size(75, 30);
+            this.MergeTool_Fix.Size = new System.Drawing.Size(85, 30);
             this.MergeTool_Fix.TabIndex = 6;
             this.MergeTool_Fix.Text = "Repair";
             this.MergeTool_Fix.UseVisualStyleBackColor = true;
@@ -423,9 +449,9 @@
             this.DiffTool.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.DiffTool.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.DiffTool.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.DiffTool.Location = new System.Drawing.Point(3, 138);
+            this.DiffTool.Location = new System.Drawing.Point(3, 132);
             this.DiffTool.Name = "DiffTool";
-            this.DiffTool.Size = new System.Drawing.Size(1310, 30);
+            this.DiffTool.Size = new System.Drawing.Size(894, 30);
             this.DiffTool.TabIndex = 7;
             this.DiffTool.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.DiffTool.UseVisualStyleBackColor = false;
@@ -443,9 +469,9 @@
             this.ShellExtensionsRegistered.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
             this.ShellExtensionsRegistered.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ShellExtensionsRegistered.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.ShellExtensionsRegistered.Location = new System.Drawing.Point(3, 174);
+            this.ShellExtensionsRegistered.Location = new System.Drawing.Point(3, 168);
             this.ShellExtensionsRegistered.Name = "ShellExtensionsRegistered";
-            this.ShellExtensionsRegistered.Size = new System.Drawing.Size(1310, 30);
+            this.ShellExtensionsRegistered.Size = new System.Drawing.Size(894, 30);
             this.ShellExtensionsRegistered.TabIndex = 9;
             this.ShellExtensionsRegistered.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ShellExtensionsRegistered.UseVisualStyleBackColor = false;
@@ -458,19 +484,31 @@
             this.flowLayoutPanel1.Controls.Add(this.Rescan);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 412);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 430);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(1397, 36);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(991, 36);
             this.flowLayoutPanel1.TabIndex = 1;
             this.flowLayoutPanel1.WrapContents = false;
             // 
+            // Rescan
+            // 
+            this.Rescan.AutoSize = true;
+            this.Rescan.Location = new System.Drawing.Point(838, 3);
+            this.Rescan.Name = "Rescan";
+            this.Rescan.Size = new System.Drawing.Size(150, 30);
+            this.Rescan.TabIndex = 0;
+            this.Rescan.Text = "Save and rescan";
+            this.Rescan.UseVisualStyleBackColor = true;
+            this.Rescan.Click += new System.EventHandler(this.SaveAndRescan_Click);
+            // 
             // ChecklistSettingsPage
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(groupBox1);
             this.MinimumSize = new System.Drawing.Size(680, 460);
             this.Name = "ChecklistSettingsPage";
-            this.Size = new System.Drawing.Size(1421, 1158);
+            this.Size = new System.Drawing.Size(1015, 608);
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -507,5 +545,7 @@
         private System.Windows.Forms.Button GitExtensionsInstall;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Button GcmDetectedFix;
+        private System.Windows.Forms.Button GcmDetected;
     }
 }

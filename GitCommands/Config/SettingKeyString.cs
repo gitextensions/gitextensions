@@ -12,6 +12,11 @@
         public static string BranchRemote = "branch.{0}.remote";
 
         /// <summary>
+        /// "credential.helper"
+        /// </summary>
+        public static string CredentialHelper = "credential.helper";
+
+        /// <summary>
         /// "remote.{0}.push"
         /// </summary>
         public static string RemotePush = "remote.{0}.push";
