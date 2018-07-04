@@ -374,7 +374,6 @@
     <Compile Include="UserControls\RevisionGrid\Graph\Junction.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\LaneInfo.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\LaneJunctionDetail.cs" />
-    <Compile Include="UserControls\RevisionGrid\Graph\Lanes.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\Node.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\SavedLaneRow.cs" />
     <Compile Include="UserControls\RevisionGrid\RefArrowType.cs" />
