@@ -26,9 +26,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             };
         }
 
-        public override void Refresh() => Column.Visible = AppSettings.ShowAuthorNameColumn;
+        public override void Refresh(int rowHeight, in VisibleRowRange range) => Column.Visible = AppSettings.ShowAuthorNameColumn;
 
-        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
+        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
         {
             if (!revision.IsArtificial)
             {

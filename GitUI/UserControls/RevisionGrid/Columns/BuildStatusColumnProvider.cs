@@ -33,7 +33,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             };
         }
 
-        public override void Refresh()
+        public override void Refresh(int rowHeight, in VisibleRowRange range)
         {
             var settings = _module().EffectiveSettings.BuildServer;
 
@@ -69,7 +69,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
         }
 
-        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
+        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
         {
             if (revision.BuildStatus == null)
             {

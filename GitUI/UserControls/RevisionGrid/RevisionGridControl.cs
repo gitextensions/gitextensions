@@ -89,6 +89,7 @@ namespace GitUI
         private string[] _currentCheckoutParents;
         private bool _settingsLoaded;
         private ISet<string> _ambiguousRefs;
+        private readonly GraphColumnProvider _graphColumnProvider;
 
         // NOTE internal properties aren't serialised
 
@@ -162,7 +163,6 @@ namespace GitUI
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
             HotkeysEnabled = true;
 
-            _gridView.NormalFont = AppSettings.Font;
             _gridView.ShowCellToolTips = false;
 
             _gridView.KeyPress += (_, e) => _quickSearchProvider.OnKeyPress(e);
@@ -174,7 +174,13 @@ namespace GitUI
             _gridView.MouseClick += OnGridViewMouseClick;
             _gridView.MouseEnter += (_, e) => _toolTipProvider.OnCellMouseEnter();
             _gridView.CellMouseMove += (_, e) => _toolTipProvider.OnCellMouseMove(e);
-            _gridView.Loading += OnGridViewLoading;
+            _gridView.Loading += (_, e) =>
+            {
+                // Since this can happen on a background thread, we'll just set a
+                // flag and deal with it next time we paint (a bit of a hack, but
+                // it works)
+                _isLoading = e.IsLoading;
+            };
 
             // Allow to drop patch file on revision grid
             _gridView.AllowDrop = true;
@@ -183,9 +189,8 @@ namespace GitUI
 
             _buildServerWatcher = new BuildServerWatcher(this, _gridView, () => Module);
 
-            var graphColumnProvider = new GraphColumnProvider(this, _gridView);
-            _gridView.GraphColumnProvider = graphColumnProvider;
-            _gridView.AddColumn(graphColumnProvider);
+            _graphColumnProvider = new GraphColumnProvider(this, _gridView._graphModel);
+            _gridView.AddColumn(_graphColumnProvider);
             _gridView.AddColumn(new MessageColumnProvider(this));
             _gridView.AddColumn(new AvatarColumnProvider(_gridView, AvatarService.Default));
             _gridView.AddColumn(new AuthorNameColumnProvider(this, _authorHighlighting));
@@ -260,12 +265,6 @@ namespace GitUI
             set => _gridView.MultiSelect = value;
         }
 
-        internal RevisionGraphDrawStyleEnum RevisionGraphDrawStyle
-        {
-            get => _gridView.RevisionGraphDrawStyle;
-            set => _gridView.RevisionGraphDrawStyle = value;
-        }
-
         private static void FillMenuFromMenuCommands(IEnumerable<MenuCommand> menuCommands, ToolStripDropDownItem targetItem)
         {
             foreach (var menuCommand in menuCommands)
@@ -285,14 +284,6 @@ namespace GitUI
         {
             _fixedRevisionFilter = filter.revision;
             _fixedPathFilter = filter.path;
-        }
-
-        private void OnGridViewLoading(object sender, RevisionDataGridView.LoadingEventArgs e)
-        {
-            // Since this can happen on a background thread, we'll just set a
-            // flag and deal with it next time we paint (a bit of a hack, but
-            // it works)
-            _isLoading = e.IsLoading;
         }
 
         #region Quick search
@@ -326,6 +317,8 @@ namespace GitUI
             }
         }
 
+        #region Navigation
+
         private void ResetNavigationHistory()
         {
             var selectedRevisions = GetSelectedRevisions();
@@ -354,6 +347,8 @@ namespace GitUI
                 SetSelectedRevision(_navigationHistory.NavigateForward());
             }
         }
+
+        #endregion
 
         public void DisableContextMenu()
         {
@@ -552,8 +547,9 @@ namespace GitUI
 
         private void HighlightBranch(string id)
         {
-            RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
-            _gridView.HighlightBranch(id);
+            _graphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
+            _graphColumnProvider.HighlightBranch(id);
+            _gridView.Update();
         }
 
         public string DescribeRevision(GitRevision revision, int maxLength = 0)
@@ -673,7 +669,7 @@ namespace GitUI
 
             try
             {
-                RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+                _graphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
 
                 // Apply filter from revision filter dialog
                 _branchFilter = _revisionFilter.GetBranchFilter();
@@ -2125,12 +2121,12 @@ namespace GitUI
                 refName = sha1;
             }
 
-            var revisionGuid = Module.RevParse(refName);
+            var revisionGuid = Module.RevParse(refName)?.ToString();
             if (revisionGuid != null)
             {
-                if (_isLoading || !SetSelectedRevision(new GitRevision(revisionGuid.ToString())))
+                if (_isLoading || !SetSelectedRevision(revisionGuid))
                 {
-                    InitialObjectId = revisionGuid.ToString();
+                    InitialObjectId = revisionGuid;
                     _gridView.SelectedObjectIds = null;
                     _selectedObjectIds = null;
                 }

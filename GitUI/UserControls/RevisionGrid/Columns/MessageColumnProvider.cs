@@ -33,7 +33,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             };
         }
 
-        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
+        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
         {
             var isRowSelected = e.State.HasFlag(DataGridViewElementStates.Selected);
 
