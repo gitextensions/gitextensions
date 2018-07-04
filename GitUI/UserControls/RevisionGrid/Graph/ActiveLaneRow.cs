@@ -110,6 +110,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return newLaneRow;
         }
 
+#if DEBUG
         public override string ToString()
         {
             var str = new StringBuilder();
@@ -139,5 +140,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             return str.ToString();
         }
+#endif
     }
 }

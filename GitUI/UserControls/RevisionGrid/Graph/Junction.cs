@@ -170,13 +170,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _nodes.Remove(node);
         }
 
-        public override string ToString()
-        {
 #if DEBUG
-            return string.Format("{3}: {0}--({2})--{1}", Youngest, Oldest, NodeCount, _debugId);
-#else
-            return string.Format("{3}: {0}--({2})", Youngest, Oldest, NodeCount);
+        public override string ToString() => $"{_debugId}: {Youngest}--({NodeCount})--{Oldest}";
 #endif
-        }
     }
 }

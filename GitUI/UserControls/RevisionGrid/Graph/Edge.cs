@@ -13,6 +13,8 @@
 
         public int End => Data.ConnectLane;
 
+#if DEBUG
         public override string ToString() => $"{Start}->{End}: {Data}";
+#endif
     }
 }

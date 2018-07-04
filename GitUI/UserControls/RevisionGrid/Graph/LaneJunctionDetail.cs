@@ -56,6 +56,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
+#if DEBUG
         public override string ToString()
         {
             if (Junction != null)
@@ -64,12 +65,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     ? Junction[_index].ToString()
                     : "(null)";
 
-                return _index + "/" + Junction.NodeCount + "~" + nodeName + "~" + Junction;
+                return $"{_index}/{Junction.NodeCount}~{nodeName}~{Junction}";
             }
 
             return _node != null
-                ? _index + "/n~" + _node + "~(null)"
+                ? $"{_index}/n~{_node}~(null)"
                 : "X/X~(null)~(null)";
         }
+#endif
     }
 }

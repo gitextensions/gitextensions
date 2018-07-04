@@ -74,6 +74,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return _edges.Count(edge => edge.Start == lane);
         }
 
+#if DEBUG
         public override string ToString()
         {
             string s = NodeLane + "/" + Count + ": ";
@@ -96,5 +97,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             s += Node;
             return s;
         }
+#endif
     }
 }

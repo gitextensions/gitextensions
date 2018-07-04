@@ -20,6 +20,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public bool IsCheckedOut => Flags.HasFlag(RevisionNodeFlags.CheckedOut);
         public bool HasRef => Flags.HasFlag(RevisionNodeFlags.HasRef);
 
+#if DEBUG
         public override string ToString() => Revision?.ToString() ?? $"{ObjectId} ({Index})";
+#endif
     }
 }

@@ -39,9 +39,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _junctions.TrimExcess();
         }
 
-        public override string ToString()
-        {
-            return ConnectLane.ToString();
-        }
+#if DEBUG
+        public override string ToString() => ConnectLane.ToString();
+#endif
     }
 }
