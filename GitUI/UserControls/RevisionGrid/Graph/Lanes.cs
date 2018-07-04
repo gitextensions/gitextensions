@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
-    internal sealed class Lanes : IEnumerable<ILaneRow>
+    internal sealed class Lanes
     {
         private readonly ActiveLaneRow _currentRow = new ActiveLaneRow();
         private readonly List<LaneJunctionDetail> _laneNodes = new List<LaneJunctionDetail>();
@@ -414,13 +413,5 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             return curLane;
         }
-
-        #region IEnumerable<LaneRow>
-
-        public IEnumerator<ILaneRow> GetEnumerator() => _laneRows.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        #endregion
     }
 }
