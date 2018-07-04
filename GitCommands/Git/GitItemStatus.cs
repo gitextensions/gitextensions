@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;

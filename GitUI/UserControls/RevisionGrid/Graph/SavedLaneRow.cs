@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
@@ -77,25 +78,29 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 #if DEBUG
         public override string ToString()
         {
-            string s = NodeLane + "/" + Count + ": ";
-            for (int i = 0; i < Count; i++)
+            var s = new StringBuilder()
+                .Append(NodeLane).Append('/').Append(Count).Append(": ");
+
+            for (var i = 0; i < Count; i++)
             {
                 if (i == NodeLane)
                 {
-                    s += "*";
+                    s.Append('*');
                 }
 
-                s += "{";
-                for (int j = 0; j < LaneInfoCount(i); j++)
+                s.Append('{');
+
+                for (var j = 0; j < LaneInfoCount(i); j++)
                 {
-                    s += " " + this[i, j];
+                    s.Append(' ').Append(this[i, j]);
                 }
 
-                s += " }, ";
+                s.Append(" }, ");
             }
 
-            s += Node;
-            return s;
+            s.Append(Node);
+
+            return s.ToString();
         }
 #endif
     }
