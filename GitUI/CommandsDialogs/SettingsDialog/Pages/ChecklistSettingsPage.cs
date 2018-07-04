@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -433,34 +434,45 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public bool CheckSettings()
         {
-            bool isValid = true;
-            try
-            {
-                // once a check fails, we want isValid to stay false
-                isValid = CheckGitCmdValid();
-                isValid = CheckGlobalUserSettingsValid() && isValid;
-                isValid = CheckEditorTool() && isValid;
-                isValid = CheckMergeTool() && isValid;
-                isValid = CheckDiffToolConfiguration() && isValid;
-                isValid = CheckTranslationConfigSettings() && isValid;
+            var isValid = PerformChecks();
+            CheckAtStartup.Checked = IsCheckAtStartupChecked(isValid);
+            return isValid;
 
-                if (EnvUtils.RunningOnWindows())
+            bool PerformChecks()
+            {
+                bool result = true;
+                foreach (var func in CheckFuncs())
                 {
-                    isValid = CheckGitExtensionsInstall() && isValid;
-                    isValid = CheckGitExtensionRegistrySettings() && isValid;
-                    isValid = CheckGitExe() && isValid;
-                    isValid = CheckSSHSettings() && isValid;
-                    isValid = CheckGitCredentialWinStore() && isValid;
+                    try
+                    {
+                        result &= func();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(this, e.Message);
+                    }
+                }
+
+                return result;
+
+                IEnumerable<Func<bool>> CheckFuncs()
+                {
+                    yield return CheckGlobalUserSettingsValid;
+                    yield return CheckEditorTool;
+                    yield return CheckMergeTool;
+                    yield return CheckDiffToolConfiguration;
+                    yield return CheckTranslationConfigSettings;
+
+                    if (EnvUtils.RunningOnWindows())
+                    {
+                        yield return CheckGitExtensionsInstall;
+                        yield return CheckGitExtensionRegistrySettings;
+                        yield return CheckGitExe;
+                        yield return CheckSSHSettings;
+                        yield return CheckGitCredentialWinStore;
+                    }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message);
-            }
-
-            CheckAtStartup.Checked = IsCheckAtStartupChecked(isValid);
-
-            return isValid;
         }
 
         private static bool IsCheckAtStartupChecked(bool isValid)
