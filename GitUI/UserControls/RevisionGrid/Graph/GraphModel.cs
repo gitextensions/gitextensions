@@ -278,106 +278,106 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         }
 
 #if false
-            // TopoSorting is an easy way to detect if something has gone wrong with the graph
+        // TopoSorting is an easy way to detect if something has gone wrong with the graph
 
-            public Node[] TopoSortedNodes()
+        public Node[] TopoSortedNodes()
+        {
+            // http://en.wikipedia.org/wiki/Topological_ordering
+            // L ? Empty list that will contain the sorted nodes
+            // S ? Set of all nodes with no incoming edges
+
+            // function visit(node n)
+            //    if n has not been visited yet then
+            //        mark n as visited
+            //        for each node m with an edge from n to m do
+            //            visit(m)
+            //        add n to L
+
+            // for each node n in S do
+            //    visit(n)
+
+            var l = new Queue<Node>();
+            var s = new Queue<Node>();
+            var p = new Queue<Node>();
+            foreach (var refNode in GetRefs())
             {
-                // http://en.wikipedia.org/wiki/Topological_ordering
-                // L ? Empty list that will contain the sorted nodes
-                // S ? Set of all nodes with no incoming edges
-
-                // function visit(node n)
-                //    if n has not been visited yet then
-                //        mark n as visited
-                //        for each node m with an edge from n to m do
-                //            visit(m)
-                //        add n to L
-
-                // for each node n in S do
-                //    visit(n)
-
-                var l = new Queue<Node>();
-                var s = new Queue<Node>();
-                var p = new Queue<Node>();
-                foreach (var refNode in GetRefs())
+                foreach (var junction in refNode.Ancestors)
                 {
-                    foreach (var junction in refNode.Ancestors)
+                    if (!s.Contains(junction.Oldest))
                     {
-                        if (!s.Contains(junction.Oldest))
-                        {
-                            s.Enqueue(junction.Oldest);
-                        }
-
-                        if (!s.Contains(junction.Youngest))
-                        {
-                            s.Enqueue(junction.Youngest);
-                        }
-                    }
-                }
-
-                Visit visit = null;
-                Visit localVisit = visit;
-                visit = (Node n) =>
-                {
-                    if (!p.Contains(n))
-                    {
-                        p.Enqueue(n);
-                        foreach (Junction e in n.Ancestors)
-                        {
-                            if (localVisit != null)
-                            {
-                                localVisit(e.Oldest);
-                            }
-                        }
-
-                        l.Enqueue(n);
-                        return true;
+                        s.Enqueue(junction.Oldest);
                     }
 
-                    return false;
-                };
-                foreach (Node n in s)
-                {
-                    visit(n);
-                }
-
-                // Sanity check
-                var j = new Queue<Junction>();
-                var x = new Queue<Node>();
-                foreach (Node n in l)
-                {
-                    foreach (Junction e in n.Descendants)
+                    if (!s.Contains(junction.Youngest))
                     {
-                        if (x.Contains(e.Youngest))
-                        {
-                            Debugger.Break();
-                        }
-
-                        if (!j.Contains(e))
-                        {
-                            j.Enqueue(e);
-                        }
-                    }
-
-                    x.Enqueue(n);
-                }
-
-                if (j.Count != _junctions.Count)
-                {
-                    foreach (var junction in _junctions)
-                    {
-                        if (!j.Contains(junction))
-                        {
-                            if (junction.Oldest != junction.Youngest)
-                            {
-                                Debug.WriteLine("*** {0} *** {1} {2}", junction, Nodes.Count, _junctions.Count);
-                            }
-                        }
+                        s.Enqueue(junction.Youngest);
                     }
                 }
-
-                return l.ToArray();
             }
+
+            Visit visit = null;
+            Visit localVisit = visit;
+            visit = (Node n) =>
+            {
+                if (!p.Contains(n))
+                {
+                    p.Enqueue(n);
+                    foreach (Junction e in n.Ancestors)
+                    {
+                        if (localVisit != null)
+                        {
+                            localVisit(e.Oldest);
+                        }
+                    }
+
+                    l.Enqueue(n);
+                    return true;
+                }
+
+                return false;
+            };
+            foreach (Node n in s)
+            {
+                visit(n);
+            }
+
+            // Sanity check
+            var j = new Queue<Junction>();
+            var x = new Queue<Node>();
+            foreach (Node n in l)
+            {
+                foreach (Junction e in n.Descendants)
+                {
+                    if (x.Contains(e.Youngest))
+                    {
+                        Debugger.Break();
+                    }
+
+                    if (!j.Contains(e))
+                    {
+                        j.Enqueue(e);
+                    }
+                }
+
+                x.Enqueue(n);
+            }
+
+            if (j.Count != _junctions.Count)
+            {
+                foreach (var junction in _junctions)
+                {
+                    if (!j.Contains(junction))
+                    {
+                        if (junction.Oldest != junction.Youngest)
+                        {
+                            Debug.WriteLine("*** {0} *** {1} {2}", junction, Nodes.Count, _junctions.Count);
+                        }
+                    }
+                }
+            }
+
+            return l.ToArray();
+        }
 #endif
     }
 }
