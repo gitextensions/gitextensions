@@ -39,11 +39,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _junctions.TrimExcess();
         }
 
-        public static implicit operator int(LaneInfo a)
-        {
-            return a.ConnectLane;
-        }
-
         public override string ToString()
         {
             return ConnectLane.ToString();
