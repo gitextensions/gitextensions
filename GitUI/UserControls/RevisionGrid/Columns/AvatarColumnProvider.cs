@@ -44,8 +44,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             Column.Width = e.CellBounds.Height;
 
-            const int padding = 3;
-
+            var padding = DpiUtil.Scale(2);
             var imageSize = e.CellBounds.Height - padding - padding;
 
             Image image;
