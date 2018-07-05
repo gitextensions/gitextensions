@@ -35,7 +35,11 @@ namespace GitUI.Script
             using (var browseDialog = new OpenFileDialog
             {
                 Multiselect = true,
-                InitialDirectory = "."
+                InitialDirectory = ".",
+                AutoUpgradeEnabled = true,
+                CheckFileExists = true,
+                CheckPathExists = true,
+                ValidateNames = true
             })
             {
                 if (browseDialog.ShowDialog(this) == DialogResult.OK)

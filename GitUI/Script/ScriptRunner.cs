@@ -415,18 +415,15 @@ namespace GitUI.Script
                     case "{UserFiles}":
                         using (FilePrompt prompt = new FilePrompt())
                         {
-                            if (prompt.ShowDialog() == DialogResult.OK)
+                            if (prompt.ShowDialog(owner) != DialogResult.OK)
                             {
-                                argument = argument.Replace(option, prompt.FileInput);
+                                return false;
                             }
-                            else
-                            {
-                                argument = argument.Replace(option, string.Empty);
-                                break;
-                            }
+
+                            argument = argument.Replace(option, prompt.FileInput);
+                            break;
                         }
 
-                        break;
                     case "{WorkingDir}":
                         argument = argument.Replace(option, module.WorkingDir);
                         break;
