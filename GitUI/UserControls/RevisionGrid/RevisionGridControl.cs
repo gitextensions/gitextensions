@@ -1756,7 +1756,7 @@ namespace GitUI
             public int SubmodulesDirty { get; set; }
         }
 
-        private int GetChangeCountIndex(string guid)
+        private static int GetChangeCountIndex(string guid)
         {
             if (guid != GitRevision.UnstagedGuid && guid != GitRevision.IndexGuid)
             {
@@ -1768,23 +1768,14 @@ namespace GitUI
 
         private ChangeCount[] _changeCount;
 
-        public bool IsCountUpdated
-        {
-            get
-            {
-                return _changeCount != null;
-            }
-        }
+        public bool IsCountUpdated => _changeCount != null;
 
+        [CanBeNull]
         public ChangeCount GetChangeCount(string guid)
         {
             var index = GetChangeCountIndex(guid);
-            if (_changeCount == null)
-            {
-                return null;
-            }
 
-            return _changeCount[index];
+            return _changeCount?[index];
         }
 
         public void UpdateArtificialCommitCount(
@@ -1803,13 +1794,13 @@ namespace GitUI
             if (unstagedRev != null)
             {
                 var items = status.Where(item => item.Staged == StagedStatus.WorkTree);
-                UpdateChangeCount(GitRevision.UnstagedGuid, items);
+                UpdateChangeCount(GitRevision.UnstagedGuid, items.ToList());
             }
 
             if (stagedRev != null)
             {
                 var items = status.Where(item => item.Staged == StagedStatus.Index);
-                UpdateChangeCount(GitRevision.IndexGuid, items);
+                UpdateChangeCount(GitRevision.IndexGuid, items.ToList());
             }
 
             // cache the status for a refresh
@@ -1818,7 +1809,7 @@ namespace GitUI
             _gridView.Invalidate();
             return;
 
-            void UpdateChangeCount(string rev, IEnumerable<GitItemStatus> items)
+            void UpdateChangeCount(string rev, IReadOnlyList<GitItemStatus> items)
             {
                 var changeCount = _changeCount[GetChangeCountIndex(rev)];
                 changeCount.Changed = items.Count(item => !item.IsNew && !item.IsDeleted && !item.IsSubmodule);

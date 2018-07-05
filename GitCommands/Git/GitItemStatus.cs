@@ -36,7 +36,7 @@ namespace GitCommands
         public string RenameCopyPercentage { get; set; }
 
         // Staged is three state and has no default status
-        private StagedStatus _staged { get; set; } = StagedStatus.Unknown;
+        private StagedStatus _staged = StagedStatus.Unknown;
         public StagedStatus Staged
         {
             get
