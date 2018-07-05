@@ -250,7 +250,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             if (!revision.IsArtificial)
             {
-                e.Value = revision.Subject;
+                e.Value = revision.Subject.Trim();
 
                 e.FormattingApplied = true;
             }
