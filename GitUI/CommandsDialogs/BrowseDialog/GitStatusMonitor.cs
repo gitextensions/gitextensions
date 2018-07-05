@@ -150,6 +150,37 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             UICommandsSource = commandsSource ?? throw new ArgumentNullException(nameof(commandsSource));
             UICommandsSource.GitUICommandsChanged += commandsSource_GitUICommandsChanged;
             commandsSource_activate(commandsSource);
+
+            void commandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
+            {
+                var oldCommands = e.OldCommands;
+                if (oldCommands != null)
+                {
+                    oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;
+                    oldCommands.PreCheckoutRevision -= GitUICommands_PreCheckout;
+                    oldCommands.PostCheckoutBranch -= GitUICommands_PostCheckout;
+                    oldCommands.PostCheckoutRevision -= GitUICommands_PostCheckout;
+                    oldCommands.PostEditGitIgnore -= GitUICommands_PostEditGitIgnore;
+                }
+
+                commandsSource_activate(sender as IGitUICommandsSource);
+            }
+
+            void commandsSource_activate(IGitUICommandsSource sender)
+            {
+                var newCommands = sender.UICommands;
+                if (newCommands != null)
+                {
+                    newCommands.PreCheckoutBranch += GitUICommands_PreCheckout;
+                    newCommands.PreCheckoutRevision += GitUICommands_PreCheckout;
+                    newCommands.PostCheckoutBranch += GitUICommands_PostCheckout;
+                    newCommands.PostCheckoutRevision += GitUICommands_PostCheckout;
+                    newCommands.PostEditGitIgnore += GitUICommands_PostEditGitIgnore;
+
+                    var module = newCommands.Module;
+                    StartWatchingChanges(module.WorkingDir, module.WorkingDirGitDir);
+                }
+            }
         }
 
         protected void OnGitStatusMonitorStateChanged(GitStatusMonitorStateEventArgs e)
@@ -329,37 +360,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             // Enforce a minimal time between updates, to not update too frequently
             _nextUpdateTime = Math.Max(next, _previousUpdateTime + _currentUpdateInterval);
-        }
-
-        private void commandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
-        {
-            var oldCommands = e.OldCommands;
-            if (oldCommands != null)
-            {
-                oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;
-                oldCommands.PreCheckoutRevision -= GitUICommands_PreCheckout;
-                oldCommands.PostCheckoutBranch -= GitUICommands_PostCheckout;
-                oldCommands.PostCheckoutRevision -= GitUICommands_PostCheckout;
-                oldCommands.PostEditGitIgnore -= GitUICommands_PostEditGitIgnore;
-            }
-
-            commandsSource_activate(sender as IGitUICommandsSource);
-        }
-
-        private void commandsSource_activate(IGitUICommandsSource sender)
-        {
-            var newCommands = sender.UICommands;
-            if (newCommands != null)
-            {
-                newCommands.PreCheckoutBranch += GitUICommands_PreCheckout;
-                newCommands.PreCheckoutRevision += GitUICommands_PreCheckout;
-                newCommands.PostCheckoutBranch += GitUICommands_PostCheckout;
-                newCommands.PostCheckoutRevision += GitUICommands_PostCheckout;
-                newCommands.PostEditGitIgnore += GitUICommands_PostEditGitIgnore;
-
-                var module = newCommands.Module;
-                StartWatchingChanges(module.WorkingDir, module.WorkingDirGitDir);
-            }
         }
 
         private void GitDirChanged(object sender, FileSystemEventArgs e)
