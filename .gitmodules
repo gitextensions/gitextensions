@@ -10,3 +10,6 @@
 [submodule "Externals/conemu-inside"]
 	path = Externals/conemu-inside
 	url = https://github.com/gitextensions/conemu-inside.git
+[submodule "Externals/ICSharpCode.TextEditor"]
+	path = Externals/ICSharpCode.TextEditor
+	url = https://github.com/gitextensions/ICSharpCode.TextEditor.git
