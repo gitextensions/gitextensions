@@ -1364,6 +1364,7 @@ namespace GitUI.CommandsDialogs
             //
             // commitStatusStrip
             //
+            this.commitStatusStrip.BackColor = System.Drawing.Color.FromArgb(218, 218, 218);
             this.commitStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.commitAuthorStatus,
             this.toolStripStatusBranchIcon,

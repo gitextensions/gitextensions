@@ -782,6 +782,7 @@ namespace GitUI.CommandsDialogs
             // 
             // statusStrip
             // 
+            this.statusStrip.BackColor = System.Drawing.Color.FromArgb(218, 218, 218);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.closeStatusBarItem});
             this.statusStrip.Location = new System.Drawing.Point(0, 551);
