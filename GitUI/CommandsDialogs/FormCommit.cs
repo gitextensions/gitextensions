@@ -180,6 +180,8 @@ namespace GitUI.CommandsDialogs
 
             InitializeComponent();
 
+            splitRight.Panel2MinSize = DpiUtil.Scale(100);
+
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;
 

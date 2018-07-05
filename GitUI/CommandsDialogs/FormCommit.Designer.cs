@@ -1032,7 +1032,6 @@ namespace GitUI.CommandsDialogs
             // splitRight.Panel2
             //
             this.splitRight.Panel2.Controls.Add(this.tableLayoutPanel1);
-            this.splitRight.Panel2MinSize = 145;
             this.splitRight.Size = new System.Drawing.Size(517, 622);
             this.splitRight.SplitterDistance = 426;
             this.splitRight.TabIndex = 0;
