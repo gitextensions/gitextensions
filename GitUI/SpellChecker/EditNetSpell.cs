@@ -21,6 +21,8 @@ namespace GitUI.SpellChecker
     [DefaultEvent("TextChanged")]
     public partial class EditNetSpell : GitModuleControl
     {
+        public event EventHandler TextAssigned;
+
         private readonly TranslationString _cutMenuItemText = new TranslationString("Cut");
         private readonly TranslationString _copyMenuItemText = new TranslationString("Copy");
         private readonly TranslationString _pasteMenuItemText = new TranslationString("Paste");
@@ -56,7 +58,6 @@ namespace GitUI.SpellChecker
 
         public Font TextBoxFont { get; set; }
 
-        public EventHandler TextAssigned;
         public bool IsUndoInProgress;
 
         public EditNetSpell()
