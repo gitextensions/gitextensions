@@ -1758,12 +1758,12 @@ namespace GitUI
 
         private static int GetChangeCountIndex(string guid)
         {
-            if (guid != GitRevision.UnstagedGuid && guid != GitRevision.IndexGuid)
+            switch (guid)
             {
-                throw new ArgumentException("Invalid revision for GetChangeCount", guid);
+                case GitRevision.UnstagedGuid: return 0;
+                case GitRevision.IndexGuid: return 1;
+                default: throw new ArgumentException("Invalid revision for GetChangeCount", guid);
             }
-
-            return guid == GitRevision.UnstagedGuid ? 0 : 1;
         }
 
         private ChangeCount[] _changeCount;
