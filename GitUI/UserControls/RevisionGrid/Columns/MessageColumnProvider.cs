@@ -43,23 +43,25 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             var offset = ColumnLeftMargin;
 
+            var normalFont = style.normalFont;
+
             #region Draw super project references (for submodules)
 
             if (_grid.TryGetSuperProjectInfo(out var spi))
             {
                 if (spi.Conflict_Base == revision.Guid)
                 {
-                    DrawSuperProjectRef("Base", style.normalFont);
+                    DrawSuperProjectRef("Base");
                 }
 
                 if (spi.Conflict_Local == revision.Guid)
                 {
-                    DrawSuperProjectRef("Local", style.normalFont);
+                    DrawSuperProjectRef("Local");
                 }
 
                 if (spi.Conflict_Remote == revision.Guid)
                 {
-                    DrawSuperProjectRef("Remote", style.normalFont);
+                    DrawSuperProjectRef("Remote");
                 }
 
                 if (spi.Refs?.ContainsKey(revision.Guid) == true)
@@ -68,7 +70,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         spi.Refs[revision.Guid].Where(RevisionGridControl.ShowRemoteRef));
                 }
 
-                void DrawSuperProjectRef(string label, Font normalFont)
+                void DrawSuperProjectRef(string label)
                 {
                     RevisionGridRefRenderer.DrawRef(
                         isRowSelected,
@@ -108,7 +110,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                     var font = gitRef.IsSelected
                         ? style.boldFont
-                        : style.normalFont;
+                        : normalFont;
 
                     var superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
 
@@ -141,7 +143,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     : gitRef.IsSelectedHeadMergeSource
                         ? RefArrowType.NotFilled
                         : RefArrowType.None;
-                var font = gitRef.IsSelected ? style.boldFont : style.normalFont;
+                var font = gitRef.IsSelected ? style.boldFont : normalFont;
 
                 RevisionGridRefRenderer.DrawRef(isRowSelected, font, ref offset, gitRefName, headColor, arrowType, messageBounds, e.Graphics, dashedLine: true);
             }
@@ -151,22 +153,22 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 var baseOffset = offset;
 
                 // Add fake "refs" for artificial commits
-                RevisionGridRefRenderer.DrawRef(isRowSelected, style.normalFont, ref offset, revision.Subject, AppSettings.OtherTagColor, RefArrowType.None, messageBounds, e.Graphics, dashedLine: false, fill: true);
+                RevisionGridRefRenderer.DrawRef(isRowSelected, normalFont, ref offset, revision.Subject, AppSettings.OtherTagColor, RefArrowType.None, messageBounds, e.Graphics, dashedLine: false, fill: true);
 
                 var max = Math.Max(
-                    TextRenderer.MeasureText(Strings.Workspace, style.normalFont).Width,
-                    TextRenderer.MeasureText(Strings.Index, style.normalFont).Width);
+                    TextRenderer.MeasureText(Strings.Workspace, normalFont).Width,
+                    TextRenderer.MeasureText(Strings.Index, normalFont).Width);
                 offset = baseOffset + max + DpiUtil.Scale(6);
 
                 // Summary of changes
                 var count = _grid.GetChangeCount(revision.Guid);
                 if (count != null && _grid.IsCountUpdated)
                 {
-                    ArtificialCount(count.Changed, Properties.Resources.IconFileStatusModified, style.normalFont, style.foreColor);
-                    ArtificialCount(count.New, Properties.Resources.IconFileStatusAdded, style.normalFont, style.foreColor);
-                    ArtificialCount(count.Deleted, Properties.Resources.IconFileStatusRemoved, style.normalFont, style.foreColor);
-                    ArtificialCount(count.SubmodulesChanged, Properties.Resources.IconSubmoduleRevisionDown, style.normalFont, style.foreColor);
-                    ArtificialCount(count.SubmodulesDirty, Properties.Resources.IconSubmoduleDirty, style.normalFont, style.foreColor);
+                    DrawArtificialCount(count.Changed, Properties.Resources.IconFileStatusModified);
+                    DrawArtificialCount(count.New, Properties.Resources.IconFileStatusAdded);
+                    DrawArtificialCount(count.Deleted, Properties.Resources.IconFileStatusRemoved);
+                    DrawArtificialCount(count.SubmodulesChanged, Properties.Resources.IconSubmoduleRevisionDown);
+                    DrawArtificialCount(count.SubmodulesDirty, Properties.Resources.IconSubmoduleDirty);
                  }
             }
             else
@@ -174,7 +176,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 // Draw the summary text
                 var text = (string)e.FormattedValue;
                 var bounds = messageBounds.ReduceLeft(offset);
-                _grid.DrawColumnText(e, text, hasSelectedRef ? style.boldFont : style.normalFont, style.foreColor, bounds);
+                _grid.DrawColumnText(e, text, hasSelectedRef ? style.boldFont : normalFont, style.foreColor, bounds);
 
                 // Draw the multi-line indicator
                 indicator.Render();
@@ -221,28 +223,36 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return true;
             }
 
-            void ArtificialCount(int count, Image icon, Font font, Color foreColor)
+            void DrawArtificialCount(int count, Image icon)
             {
-                const int padding = 5;
-                var imageSize = e.CellBounds.Height - padding - padding;
-                if (count > 0)
+                if (count == 0)
                 {
-                    Image i = icon;
-                    var rect = new Rectangle(
-                        messageBounds.Left + offset + padding,
-                        e.CellBounds.Top + padding,
-                        imageSize,
-                        imageSize);
-
-                    var container = e.Graphics.BeginContainer();
-                    e.Graphics.DrawImage(i, rect);
-                    e.Graphics.EndContainer(container);
-                    offset += imageSize + padding + padding;
-
-                    var text = count.ToString();
-                    var bounds = messageBounds.ReduceLeft(offset);
-                    offset += _grid.DrawColumnText(e, text, font, foreColor, bounds) + padding;
+                    return;
                 }
+
+                var imageVerticalPadding = DpiUtil.Scale(6);
+                var textHorizontalPadding = DpiUtil.Scale(4);
+                var imageSize = e.CellBounds.Height - imageVerticalPadding - imageVerticalPadding;
+                var imageRect = new Rectangle(
+                    messageBounds.Left + offset,
+                    e.CellBounds.Top + imageVerticalPadding,
+                    imageSize,
+                    imageSize);
+
+                var container = e.Graphics.BeginContainer();
+                e.Graphics.DrawImage(icon, imageRect);
+                e.Graphics.EndContainer(container);
+                offset += imageSize + textHorizontalPadding;
+
+                var text = count.ToString();
+                var bounds = messageBounds.ReduceLeft(offset);
+                var color = e.State.HasFlag(DataGridViewElementStates.Selected)
+                    ? SystemColors.HighlightText
+                    : SystemColors.ControlText;
+                var textWidth = Math.Max(
+                    _grid.DrawColumnText(e, text, normalFont, color, bounds),
+                    TextRenderer.MeasureText("88", normalFont).Width);
+                offset += textWidth + textHorizontalPadding;
             }
         }
 
