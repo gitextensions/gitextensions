@@ -77,31 +77,32 @@ namespace GitCommands
 
         public override string ToString()
         {
-            string toString;
+            var str = new StringBuilder();
+
             if (IsRenamed)
             {
-                toString = string.Concat("Renamed\n   ", OldName, "\nto\n   ", Name, "");
+                str.Append("Renamed\n   ").Append(OldName).Append("\nto\n   ").Append(Name);
             }
             else if (IsCopied)
             {
-                toString = string.Concat("Copied\n   ", OldName, "\nto\n   ", Name, "");
+                str.Append("Copied\n   ").Append(OldName).Append("\nto\n   ").Append(Name);
             }
             else
             {
-                toString = Name;
+                str.Append(Name);
             }
 
             if (IsConflict)
             {
-                toString += " (Conflict)";
+                str.Append(" (Conflict)");
             }
 
             if (!string.IsNullOrEmpty(RenameCopyPercentage))
             {
-                toString += string.Concat("\nSimilarity ", RenameCopyPercentage, "%");
+                str.Append("\nSimilarity ").Append(RenameCopyPercentage).Append('%');
             }
 
-            return toString;
+            return str.ToString();
         }
     }
 }

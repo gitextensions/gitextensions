@@ -92,7 +92,7 @@ namespace GitUI.CommandsDialogs
             FileChanges.ShowBuildServerInfo = true;
 
             FileName = fileName;
-            SetTitle(string.Empty);
+            SetTitle();
 
             Diff.ExtraDiffArgumentsChanged += (sender, e) => UpdateSelectedFileViewers();
 
@@ -304,16 +304,20 @@ namespace GitUI.CommandsDialogs
             UpdateSelectedFileViewers();
         }
 
-        private void SetTitle(string fileName)
+        private void SetTitle([CanBeNull] string alternativeFileName = null)
         {
-            Text = string.Format("File History - {0}", FileName);
+            var str = new StringBuilder()
+                .Append("File History - ")
+                .Append(FileName);
 
-            if (!fileName.IsNullOrEmpty() && fileName != FileName)
+            if (!alternativeFileName.IsNullOrEmpty() && alternativeFileName != FileName)
             {
-                Text = Text + string.Format(" ({0})", fileName);
+                str.Append(" (").Append(alternativeFileName).Append(')');
             }
 
-            Text += " - " + Module.WorkingDir;
+            str.Append(" - ").Append(PathUtil.GetDisplayPath(Module.WorkingDir));
+
+            Text = str.ToString();
         }
 
         private void UpdateSelectedFileViewers(bool force = false)
