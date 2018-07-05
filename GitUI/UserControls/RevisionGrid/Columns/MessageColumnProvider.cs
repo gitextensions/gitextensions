@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitUI.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -162,14 +163,14 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 offset = baseOffset + max + DpiUtil.Scale(6);
 
                 // Summary of changes
-                var count = _grid.GetChangeCount(revision.Guid);
-                if (count != null && _grid.IsCountUpdated)
+                var changes = _grid.GetChangeCount(revision.Guid);
+                if (changes != null && _grid.IsCountUpdated)
                 {
-                    DrawArtificialCount(count.Changed, Properties.Resources.IconFileStatusModified);
-                    DrawArtificialCount(count.New, Properties.Resources.IconFileStatusAdded);
-                    DrawArtificialCount(count.Deleted, Properties.Resources.IconFileStatusRemoved);
-                    DrawArtificialCount(count.SubmodulesChanged, Properties.Resources.IconSubmoduleRevisionDown);
-                    DrawArtificialCount(count.SubmodulesDirty, Properties.Resources.IconSubmoduleDirty);
+                    DrawArtificialCount(changes.Changed, Resources.IconFileStatusModified);
+                    DrawArtificialCount(changes.New, Resources.IconFileStatusAdded);
+                    DrawArtificialCount(changes.Deleted, Resources.IconFileStatusRemoved);
+                    DrawArtificialCount(changes.SubmodulesChanged, Resources.IconSubmoduleRevisionDown);
+                    DrawArtificialCount(changes.SubmodulesDirty, Resources.IconSubmoduleDirty);
                  }
             }
             else
@@ -224,9 +225,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return true;
             }
 
-            void DrawArtificialCount(int count, Image icon)
+            void DrawArtificialCount(IReadOnlyList<GitItemStatus> items, Image icon)
             {
-                if (count == 0)
+                if (items == null || items.Count == 0)
                 {
                     return;
                 }
@@ -245,7 +246,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 e.Graphics.EndContainer(container);
                 offset += imageSize + textHorizontalPadding;
 
-                var text = count.ToString();
+                var text = items.Count.ToString();
                 var bounds = messageBounds.ReduceLeft(offset);
                 var color = e.State.HasFlag(DataGridViewElementStates.Selected)
                     ? SystemColors.HighlightText
@@ -283,20 +284,46 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 {
                     var str = new StringBuilder();
 
-                    void Append(int count, string singular)
+                    void Append(IReadOnlyList<GitItemStatus> items, string singular)
                     {
-                        if (count != 0)
+                        if (items.Count == 0)
                         {
-                            str.Append(count).Append(' ');
+                            return;
+                        }
 
-                            if (count == 1)
+                        if (str.Length != 0)
+                        {
+                            str.AppendLine();
+                        }
+
+                        str.Append(items.Count).Append(' ');
+
+                        if (items.Count == 1)
+                        {
+                            str.AppendLine(singular);
+                        }
+                        else
+                        {
+                            str.Append(singular).AppendLine("s");
+                        }
+
+                        const int maxItems = 5;
+
+                        for (var i = 0; i < maxItems && i < items.Count; i++)
+                        {
+                            str.Append("- ").AppendLine(items[i].Name);
+                        }
+
+                        if (items.Count > maxItems)
+                        {
+                            var unlistedCount = items.Count - maxItems;
+                            str.Append("- (").Append(unlistedCount).Append(" more file");
+                            if (unlistedCount != 1)
                             {
-                                str.AppendLine(singular);
+                                str.Append('s');
                             }
-                            else
-                            {
-                                str.Append(singular).AppendLine("s");
-                            }
+
+                            str.Append(')').AppendLine();
                         }
                     }
 

@@ -868,7 +868,7 @@ namespace GitUI
 
                 void CheckUncommittedChanged(string filteredCurrentCheckout)
                 {
-                    _changeCount = new ChangeCount[] { new ChangeCount(), new ChangeCount() };
+                    _changeCount = new[] { new ChangeCount(), new ChangeCount() };
                     var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
                     var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
@@ -1749,11 +1749,11 @@ namespace GitUI
         public class ChangeCount
         {
             // Count for artificial commits
-            public int Changed { get; set; }
-            public int New { get; set; }
-            public int Deleted { get; set; }
-            public int SubmodulesChanged { get; set; }
-            public int SubmodulesDirty { get; set; }
+            public IReadOnlyList<GitItemStatus> Changed { get; set; }
+            public IReadOnlyList<GitItemStatus> New { get; set; }
+            public IReadOnlyList<GitItemStatus> Deleted { get; set; }
+            public IReadOnlyList<GitItemStatus> SubmodulesChanged { get; set; }
+            public IReadOnlyList<GitItemStatus> SubmodulesDirty { get; set; }
         }
 
         private static int GetChangeCountIndex(string guid)
@@ -1812,11 +1812,11 @@ namespace GitUI
             void UpdateChangeCount(string rev, IReadOnlyList<GitItemStatus> items)
             {
                 var changeCount = _changeCount[GetChangeCountIndex(rev)];
-                changeCount.Changed = items.Count(item => !item.IsNew && !item.IsDeleted && !item.IsSubmodule);
-                changeCount.New = items.Count(item => item.IsNew && !item.IsSubmodule);
-                changeCount.Deleted = items.Count(item => item.IsDeleted && !item.IsSubmodule);
-                changeCount.SubmodulesChanged = items.Count(item => item.IsSubmodule && item.IsChanged);
-                changeCount.SubmodulesDirty = items.Count(item => item.IsSubmodule && !item.IsTracked);
+                changeCount.Changed = items.Where(item => !item.IsNew && !item.IsDeleted && !item.IsSubmodule).ToList();
+                changeCount.New = items.Where(item => item.IsNew && !item.IsSubmodule).ToList();
+                changeCount.Deleted = items.Where(item => item.IsDeleted && !item.IsSubmodule).ToList();
+                changeCount.SubmodulesChanged = items.Where(item => item.IsSubmodule && item.IsChanged).ToList();
+                changeCount.SubmodulesDirty = items.Where(item => item.IsSubmodule && !item.IsTracked).ToList();
             }
         }
 
