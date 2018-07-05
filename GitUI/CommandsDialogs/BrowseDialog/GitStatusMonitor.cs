@@ -56,7 +56,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public GitStatusMonitor()
         {
-            _previousUpdateTime = 0;
             InitializeComponent();
 
             ignoredFilesTimer.Interval = MaxUpdatePeriod;
@@ -305,7 +304,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             if (_ignoredFilesPending)
             {
                 _ignoredFilesPending = false;
-                _ignoredFiles = new HashSet<string>(allChangedFiles.Where(item => item.IsIgnored).Select(item => item.Name).ToArray());
+                _ignoredFiles = new HashSet<string>(allChangedFiles.Where(item => item.IsIgnored).Select(item => item.Name));
                 if (_statusIsUpToDate)
                 {
                     _ignoredFilesAreStale = false;
