@@ -147,7 +147,11 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
                 {
-                    provider.OnCellFormatting(e, GetRevision(e.RowIndex));
+                    var revision = GetRevision(e.RowIndex);
+                    if (revision != null)
+                    {
+                        provider.OnCellFormatting(e, revision);
+                    }
                 }
             };
             RowPrePaint += OnRowPrePaint;
