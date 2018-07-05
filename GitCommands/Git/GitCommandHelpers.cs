@@ -834,7 +834,7 @@ namespace GitCommands
         {
             if (VersionInUse.SupportStatusPorcelainV2)
             {
-                return GetAllChangedFilesFromString_v2(module, statusString);
+                return GetAllChangedFilesFromString_v2(statusString);
             }
             else
             {
@@ -845,10 +845,9 @@ namespace GitCommands
         /// <summary>
         /// Parse the output from git-status --porcelain=2
         /// </summary>
-        /// <param name="module">The Git module</param>
         /// <param name="statusString">output from the git command</param>
         /// <returns>list with the parsed GitItemStatus</returns>
-        private static IReadOnlyList<GitItemStatus> GetAllChangedFilesFromString_v2(IGitModule module, string statusString)
+        private static IReadOnlyList<GitItemStatus> GetAllChangedFilesFromString_v2(string statusString)
         {
             var diffFiles = new List<GitItemStatus>();
 
