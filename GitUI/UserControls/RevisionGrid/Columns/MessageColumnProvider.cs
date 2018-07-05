@@ -286,7 +286,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                     void Append(IReadOnlyList<GitItemStatus> items, string singular)
                     {
-                        if (items.Count == 0)
+                        if (items == null || items.Count == 0)
                         {
                             return;
                         }
