@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
-    public partial class GitStatusMonitor : IDisposable
+    public sealed class GitStatusMonitor : IDisposable
     {
         /// <summary>
         /// We often change several files at once.
@@ -32,6 +34,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly FileSystemWatcher _workTreeWatcher = new FileSystemWatcher();
         private readonly FileSystemWatcher _gitDirWatcher = new FileSystemWatcher();
         private readonly FileSystemWatcher _globalIgnoreWatcher = new FileSystemWatcher();
+
+        private readonly Timer _timerRefresh;
+        private readonly Timer _ignoredFilesTimer;
+
         private string _globalIgnoreFilePath;
         private bool _ignoredFilesAreStale;
         private string _gitPath;
@@ -56,9 +62,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public GitStatusMonitor()
         {
-            InitializeComponent();
+            _timerRefresh = new Timer
+            {
+                Enabled = true,
+                Interval = 500
+            };
+            _timerRefresh.Tick += timerRefresh_Tick;
 
-            ignoredFilesTimer.Interval = MaxUpdatePeriod;
+            _ignoredFilesTimer = new Timer { Interval = MaxUpdatePeriod };
+            _ignoredFilesTimer.Tick += ignoredFilesTimer_Tick;
+
             CurrentStatus = GitStatusMonitorState.Stopped;
 
             // Setup a file watcher to detect changes to our files. When they
@@ -94,6 +107,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _globalIgnoreWatcher.NotifyFilter = NotifyFilters.LastWrite;
         }
 
+        public void Dispose()
+        {
+            _workTreeWatcher.Dispose();
+            _gitDirWatcher.Dispose();
+            _globalIgnoreWatcher.Dispose();
+            _ignoredFilesTimer.Dispose();
+            _timerRefresh.Dispose();
+        }
+
         private GitStatusMonitorState CurrentStatus
         {
             get { return _currentStatus; }
@@ -104,7 +126,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 {
                     case GitStatusMonitorState.Stopped:
                         {
-                            timerRefresh.Stop();
+                            _timerRefresh.Stop();
                             _workTreeWatcher.EnableRaisingEvents = false;
                             _gitDirWatcher.EnableRaisingEvents = false;
                             _globalIgnoreWatcher.EnableRaisingEvents = false;
@@ -114,7 +136,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                     case GitStatusMonitorState.Paused:
                         {
-                            timerRefresh.Stop();
+                            _timerRefresh.Stop();
                             _workTreeWatcher.EnableRaisingEvents = false;
                             _gitDirWatcher.EnableRaisingEvents = false;
                             _globalIgnoreWatcher.EnableRaisingEvents = false;
@@ -124,7 +146,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                     case GitStatusMonitorState.Running:
                         {
-                            timerRefresh.Start();
+                            _timerRefresh.Start();
                             _workTreeWatcher.EnableRaisingEvents = true;
                             _gitDirWatcher.EnableRaisingEvents = !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
                             _globalIgnoreWatcher.EnableRaisingEvents = !string.IsNullOrWhiteSpace(_globalIgnoreWatcher.Path);
@@ -137,7 +159,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         throw new NotSupportedException();
                 }
 
-                OnGitStatusMonitorStateChanged(new GitStatusMonitorStateEventArgs(_currentStatus));
+                GitStatusMonitorStateChanged?.Invoke(this, new GitStatusMonitorStateEventArgs(_currentStatus));
             }
         }
 
@@ -183,16 +205,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
-        protected void OnGitStatusMonitorStateChanged(GitStatusMonitorStateEventArgs e)
-        {
-            GitStatusMonitorStateChanged?.Invoke(this, e);
-        }
-
-        protected void OnGitWorkingDirectoryStatusChanged(GitWorkingDirectoryStatusEventArgs e)
-        {
-            GitWorkingDirectoryStatusChanged?.Invoke(this, e);
-        }
-
         private void GlobalIgnoreChanged(object sender, FileSystemEventArgs e)
         {
             if (e.FullPath == _globalIgnoreFilePath)
@@ -231,7 +243,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void StartWatchingChanges(string workTreePath, string gitDirPath)
         {
             // reset status info, it was outdated
-            OnGitWorkingDirectoryStatusChanged(new GitWorkingDirectoryStatusEventArgs());
+            GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs());
 
             try
             {
@@ -253,8 +265,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     _previousUpdateTime = 0;
                     _ignoredFilesAreStale = true;
                     _ignoredFiles = new HashSet<string>();
-                    ignoredFilesTimer.Stop();
-                    ignoredFilesTimer.Start();
+                    _ignoredFilesTimer.Stop();
+                    _ignoredFilesTimer.Start();
                     CurrentStatus = GitStatusMonitorState.Running;
                 }
                 else
@@ -331,7 +343,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
 
             var allChangedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(Module, updatedStatus);
-            OnGitWorkingDirectoryStatusChanged(new GitWorkingDirectoryStatusEventArgs(allChangedFiles.Where(item => !item.IsIgnored)));
+            GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs(allChangedFiles.Where(item => !item.IsIgnored)));
             if (_ignoredFilesPending)
             {
                 _ignoredFilesPending = false;

@@ -484,9 +484,6 @@
     <Compile Include="UserControls\TextEventArgs.cs" />
     <Compile Include="UserControls\ToolStripClasses\CommitIconProvider.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.cs" />
-    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.Designer.cs">
-      <DependentUpon>GitStatusMonitor.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\WebBrowserCtrl.cs">
       <SubType>Component</SubType>
     </Compile>
