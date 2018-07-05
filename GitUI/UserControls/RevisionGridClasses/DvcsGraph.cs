@@ -74,7 +74,7 @@ namespace GitUI.RevisionGridClasses
             };
 
         private int _backgroundScrollTo;
-        private readonly Thread _backgroundThread;
+        private Thread _backgroundThread;
         private volatile bool _shouldRun = LicenseManager.UsageMode != LicenseUsageMode.Designtime;
         private int _cacheCount; // Number of elements in the cache.
         private int _cacheCountMax; // Number of elements allowed in the cache. Is based on control height.
@@ -98,6 +98,7 @@ namespace GitUI.RevisionGridClasses
         {
             _backgroundThread = new Thread(BackgroundThreadEntry)
             {
+                Priority = ThreadPriority.Lowest,
                 IsBackground = true,
                 Name = "DvcsGraph.backgroundThread"
             };
@@ -296,10 +297,9 @@ namespace GitUI.RevisionGridClasses
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         public void Clear()
         {
-            lock (_backgroundThread)
-            {
-                _backgroundScrollTo = 0;
-            }
+            _backgroundThread.Abort();
+
+            _backgroundScrollTo = 0;
 
             lock (_graphData)
             {
@@ -309,6 +309,15 @@ namespace GitUI.RevisionGridClasses
                 _graphDataCount = 0;
                 RebuildGraph();
             }
+
+            _backgroundThread = new Thread(BackgroundThreadEntry)
+            {
+                Priority = ThreadPriority.Lowest,
+                IsBackground = true,
+                Name = "DvcsGraph.backgroundThread"
+            };
+
+            _backgroundThread.Start();
         }
 
         public bool RowIsRelative(int rowIndex)
@@ -585,10 +594,13 @@ namespace GitUI.RevisionGridClasses
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void BackgroundThreadEntry()
         {
+            bool keepRunning = false;
             while (_shouldRun)
             {
-                if (_backgroundEvent.WaitOne(500))
+                if (keepRunning || _backgroundEvent.WaitOne(500))
                 {
+                    keepRunning = false;
+
                     lock (_backgroundEvent)
                     {
                         if (!_shouldRun)
@@ -611,7 +623,8 @@ namespace GitUI.RevisionGridClasses
 
                         if (RevisionGraphVisible)
                         {
-                            UpdateGraph(curCount, scrollTo);
+                            UpdateGraph(curCount, Math.Min(curCount + 10, scrollTo));
+                            keepRunning = curCount < scrollTo;
                         }
                         else
                         {
@@ -626,9 +639,9 @@ namespace GitUI.RevisionGridClasses
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void UpdateGraph(int curCount, int scrollTo)
         {
-            lock (_graphData)
+            while (curCount < scrollTo)
             {
-                while (curCount < scrollTo)
+                // lock (_graphData)
                 {
                     // Cache the next item
                     if (!_graphData.CacheTo(curCount))
@@ -694,9 +707,10 @@ namespace GitUI.RevisionGridClasses
 
             int targetBottom = _visibleBottom + 250;
             targetBottom = Math.Min(targetBottom, _graphData.Count);
-            if (_backgroundScrollTo < targetBottom)
+
+            _backgroundScrollTo = targetBottom;
+            if (targetBottom > 0)
             {
-                _backgroundScrollTo = targetBottom;
                 _backgroundEvent.Set();
             }
         }

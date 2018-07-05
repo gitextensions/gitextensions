@@ -78,10 +78,12 @@ namespace GitUI.RevisionGridClasses
 
             public bool CacheTo(int row)
             {
+                int handled = 0;
                 bool isValid = true;
-                while (isValid && row >= CachedCount)
+                while (handled < 3 && isValid && row >= CachedCount)
                 {
                     isValid = MoveNext();
+                    handled++;
                 }
 
                 return isValid;
