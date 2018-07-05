@@ -292,6 +292,7 @@ namespace DeleteUnusedBranches
 
             _branches.Clear();
             _branches.AddRange(branches);
+            checkBoxHeaderCell.Checked = _branches.All(b => b.Delete);
             _branches.ResetBindings();
 
             IsRefreshing = false;
