@@ -19,7 +19,15 @@ namespace GitUI.UserControls
                 async () =>
                 {
                     await Task.Delay(normalizedTime, token);
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+                    if (ThreadHelper.JoinableTaskContext.IsOnMainThread)
+                    {
+                        await Task.Yield();
+                    }
+                    else
+                    {
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+                    }
+
                     disposable.Disposable = action(this, state);
                 });
             return new CompositeDisposable(cancellationDisposable, disposable);
