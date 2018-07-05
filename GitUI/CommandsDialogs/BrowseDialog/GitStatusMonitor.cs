@@ -245,32 +245,33 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            if (Environment.TickCount >= _nextUpdateTime ||
-                (Environment.TickCount < 0 && _nextUpdateTime > 0))
+            if (Environment.TickCount < _nextUpdateTime && (Environment.TickCount >= 0 || _nextUpdateTime <= 0))
             {
-                // If the previous status call hasn't exited yet, we'll wait until it is
-                // so we don't queue up a bunch of commands
-                if (_commandIsRunning ||
-
-                    // don't update status while repository is being modyfied by GitExt
-                    // or while any git process is running, mostly repository status will change
-                    // after these actions. Moreover, calling git status while other git command is performed
-                    // can cause repository crash
-                    UICommandsSource.UICommands.RepoChangedNotifier.IsLocked ||
-                    (GitCommandHelpers.VersionInUse.RaceConditionWhenGitStatusIsUpdatingIndex && Module.IsRunningGitProcess()))
-                {
-                    _statusIsUpToDate = false; // tell that computed status isn't up to date
-                    return;
-                }
-
-                _commandIsRunning = true;
-                _statusIsUpToDate = true;
-                _previousUpdateTime = Environment.TickCount;
-                AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, OnUpdateStatusError);
-
-                // Schedule update every 5 min, even if we don't know that anything changed
-                CalculateNextUpdateTime(MaxUpdatePeriod);
+                return;
             }
+
+            // If the previous status call hasn't exited yet, we'll wait until it is
+            // so we don't queue up a bunch of commands
+            if (_commandIsRunning ||
+
+                // don't update status while repository is being modified by GitExt
+                // or while any git process is running, mostly repository status will change
+                // after these actions. Moreover, calling git status while other git command is performed
+                // can cause repository crash
+                UICommandsSource.UICommands.RepoChangedNotifier.IsLocked ||
+                (GitCommandHelpers.VersionInUse.RaceConditionWhenGitStatusIsUpdatingIndex && Module.IsRunningGitProcess()))
+            {
+                _statusIsUpToDate = false; // tell that computed status isn't up to date
+                return;
+            }
+
+            _commandIsRunning = true;
+            _statusIsUpToDate = true;
+            _previousUpdateTime = Environment.TickCount;
+            AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, OnUpdateStatusError);
+
+            // Schedule update every 5 min, even if we don't know that anything changed
+            CalculateNextUpdateTime(MaxUpdatePeriod);
         }
 
         private string RunStatusCommand()
@@ -290,7 +291,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void UpdatedStatusReceived(string updatedStatus)
         {
-            // Adjust the interval between updates. (This does not affect an update already scheculed).
+            // Adjust the interval between updates. (This does not affect an update already scheduled).
             _currentUpdateInterval = Math.Max(MinUpdateInterval, 3 * (Environment.TickCount - _previousUpdateTime));
             _commandIsRunning = false;
 
