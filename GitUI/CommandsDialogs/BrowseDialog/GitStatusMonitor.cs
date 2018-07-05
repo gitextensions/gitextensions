@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -67,10 +66,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 Enabled = true,
                 Interval = 500
             };
-            _timerRefresh.Tick += timerRefresh_Tick;
+            _timerRefresh.Tick += delegate { Update(); };
 
             _ignoredFilesTimer = new Timer { Interval = MaxUpdatePeriod };
-            _ignoredFilesTimer.Tick += ignoredFilesTimer_Tick;
+            _ignoredFilesTimer.Tick += delegate { _ignoredFilesAreStale = true; };
 
             CurrentStatus = GitStatusMonitorState.Stopped;
 
@@ -105,6 +104,81 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _globalIgnoreWatcher.Error += WorkTreeWatcherError;
             _globalIgnoreWatcher.IncludeSubdirectories = false;
             _globalIgnoreWatcher.NotifyFilter = NotifyFilters.LastWrite;
+
+            return;
+
+            void WorkTreeWatcherError(object sender, ErrorEventArgs e)
+            {
+                // Called for instance at buffer overflow
+                CalculateNextUpdateTime(UpdateDelay);
+            }
+
+            void GitDirChanged(object sender, FileSystemEventArgs e)
+            {
+                // git directory changed
+                if (e.FullPath.Length == _gitPath.Length)
+                {
+                    return;
+                }
+
+                if (e.FullPath.EndsWith("\\index.lock"))
+                {
+                    return;
+                }
+
+                // submodules directory's subdir changed
+                // cut/paste/rename/delete operations are not expected on directories inside nested .git dirs
+                if (e.FullPath.StartsWith(_submodulesPath) && Directory.Exists(e.FullPath))
+                {
+                    return;
+                }
+
+                CalculateNextUpdateTime(UpdateDelay);
+            }
+
+            void WorkTreeChanged(object sender, FileSystemEventArgs e)
+            {
+                // Update already scheduled?
+                if (_nextUpdateTime < Environment.TickCount + UpdateDelay)
+                {
+                    return;
+                }
+
+                var fileName = e.FullPath.Substring(_workTreeWatcher.Path.Length).ToPosixPath();
+                if (_ignoredFiles.Contains(fileName))
+                {
+                    return;
+                }
+
+                if (e.FullPath.StartsWith(_gitPath))
+                {
+                    GitDirChanged(sender, e);
+                    return;
+                }
+
+                // new submodule .git file
+                if (e.FullPath.EndsWith("\\.git"))
+                {
+                    return;
+                }
+
+                // old submodule .git\index.lock file
+                if (e.FullPath.EndsWith("\\.git\\index.lock"))
+                {
+                    return;
+                }
+
+                CalculateNextUpdateTime(UpdateDelay);
+            }
+
+            void GlobalIgnoreChanged(object sender, FileSystemEventArgs e)
+            {
+                if (e.FullPath == _globalIgnoreFilePath)
+                {
+                    _ignoredFilesAreStale = true;
+                    CalculateNextUpdateTime(UpdateDelay);
+                }
+            }
         }
 
         public void Dispose()
@@ -171,7 +245,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             UICommandsSource = commandsSource ?? throw new ArgumentNullException(nameof(commandsSource));
             UICommandsSource.GitUICommandsChanged += commandsSource_GitUICommandsChanged;
+
             commandsSource_activate(commandsSource);
+
+            return;
 
             void commandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
             {
@@ -203,41 +280,22 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     StartWatchingChanges(module.WorkingDir, module.WorkingDirGitDir);
                 }
             }
-        }
 
-        private void GlobalIgnoreChanged(object sender, FileSystemEventArgs e)
-        {
-            if (e.FullPath == _globalIgnoreFilePath)
+            void GitUICommands_PreCheckout(object sender, GitUIEventArgs e)
             {
+                CurrentStatus = GitStatusMonitorState.Paused;
+            }
+
+            void GitUICommands_PostCheckout(object sender, GitUIPostActionEventArgs e)
+            {
+                CurrentStatus = GitStatusMonitorState.Running;
+            }
+
+            void GitUICommands_PostEditGitIgnore(object sender, GitUIEventArgs e)
+            {
+                _ignoredFiles = new HashSet<string>();
                 _ignoredFilesAreStale = true;
-                CalculateNextUpdateTime(UpdateDelay);
             }
-        }
-
-        /// <summary>
-        /// Determine what file contains the global ignores.
-        /// </summary>
-        /// <remarks>
-        /// According to https://git-scm.com/docs/git-config, the following are checked in order:
-        ///  - core.excludesFile configuration,
-        ///  - $XDG_CONFIG_HOME/git/ignore, if XDG_CONFIG_HOME is set and not empty,
-        ///  - $HOME/.config/git/ignore.
-        ///  </remarks>
-        private string DetermineGlobalIgnoreFilePath()
-        {
-            string globalExcludeFile = Module.GetEffectiveSetting("core.excludesFile");
-            if (!string.IsNullOrWhiteSpace(globalExcludeFile))
-            {
-                return Path.GetFullPath(globalExcludeFile);
-            }
-
-            string xdgConfigHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
-            if (!string.IsNullOrWhiteSpace(xdgConfigHome))
-            {
-                return Path.GetFullPath(Path.Combine(xdgConfigHome, "git/ignore"));
-            }
-
-            return Path.GetFullPath(Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".config/git/ignore"));
         }
 
         private void StartWatchingChanges(string workTreePath, string gitDirPath)
@@ -278,6 +336,30 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 // no-op
             }
+
+            return;
+
+            string DetermineGlobalIgnoreFilePath()
+            {
+                // According to https://git-scm.com/docs/git-config, the following are checked in order:
+                //  - core.excludesFile configuration,
+                //  - $XDG_CONFIG_HOME/git/ignore, if XDG_CONFIG_HOME is set and not empty,
+                //  - $HOME/.config/git/ignore.
+
+                string globalExcludeFile = Module.GetEffectiveSetting("core.excludesFile");
+                if (!string.IsNullOrWhiteSpace(globalExcludeFile))
+                {
+                    return Path.GetFullPath(globalExcludeFile);
+                }
+
+                string xdgConfigHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
+                if (!string.IsNullOrWhiteSpace(xdgConfigHome))
+                {
+                    return Path.GetFullPath(Path.Combine(xdgConfigHome, "git/ignore"));
+                }
+
+                return Path.GetFullPath(Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".config/git/ignore"));
+            }
         }
 
         private void Update()
@@ -314,50 +396,52 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             // Schedule update every 5 min, even if we don't know that anything changed
             CalculateNextUpdateTime(MaxUpdatePeriod);
-        }
 
-        private string RunStatusCommand()
-        {
-            _ignoredFilesPending = _ignoredFilesAreStale;
+            return;
 
-            // git-status with ignored files when needed only
-            string command = GitCommandHelpers.GetAllChangedFilesCmd(!_ignoredFilesPending, UntrackedFilesMode.Default, noLocks: true);
-            return Module.RunGitCmd(command);
-        }
-
-        private void OnUpdateStatusError(AsyncErrorEventArgs e)
-        {
-            _commandIsRunning = false;
-            CurrentStatus = GitStatusMonitorState.Stopped;
-        }
-
-        private void UpdatedStatusReceived(string updatedStatus)
-        {
-            // Adjust the interval between updates. (This does not affect an update already scheduled).
-            _currentUpdateInterval = Math.Max(MinUpdateInterval, 3 * (Environment.TickCount - _previousUpdateTime));
-            _commandIsRunning = false;
-
-            if (CurrentStatus != GitStatusMonitorState.Running)
+            string RunStatusCommand()
             {
-                return;
+                _ignoredFilesPending = _ignoredFilesAreStale;
+
+                // git-status with ignored files when needed only
+                string command = GitCommandHelpers.GetAllChangedFilesCmd(!_ignoredFilesPending, UntrackedFilesMode.Default, noLocks: true);
+                return Module.RunGitCmd(command);
             }
 
-            var allChangedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(Module, updatedStatus);
-            GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs(allChangedFiles.Where(item => !item.IsIgnored)));
-            if (_ignoredFilesPending)
+            void UpdatedStatusReceived(string updatedStatus)
             {
-                _ignoredFilesPending = false;
-                _ignoredFiles = new HashSet<string>(allChangedFiles.Where(item => item.IsIgnored).Select(item => item.Name));
-                if (_statusIsUpToDate)
+                // Adjust the interval between updates. (This does not affect an update already scheduled).
+                _currentUpdateInterval = Math.Max(MinUpdateInterval, 3 * (Environment.TickCount - _previousUpdateTime));
+                _commandIsRunning = false;
+
+                if (CurrentStatus != GitStatusMonitorState.Running)
                 {
-                    _ignoredFilesAreStale = false;
+                    return;
+                }
+
+                var allChangedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(Module, updatedStatus);
+                GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs(allChangedFiles.Where(item => !item.IsIgnored)));
+                if (_ignoredFilesPending)
+                {
+                    _ignoredFilesPending = false;
+                    _ignoredFiles = new HashSet<string>(allChangedFiles.Where(item => item.IsIgnored).Select(item => item.Name));
+                    if (_statusIsUpToDate)
+                    {
+                        _ignoredFilesAreStale = false;
+                    }
+                }
+
+                if (!_statusIsUpToDate)
+                {
+                    // Still not up-to-date, but present what received, GetAllChangedFilesCmd() is the heavy command
+                    CalculateNextUpdateTime(UpdateDelay);
                 }
             }
 
-            if (!_statusIsUpToDate)
+            void OnUpdateStatusError(AsyncErrorEventArgs e)
             {
-                // Still not up-to-date, but present what received, GetAllChangedFilesCmd() is the heavy command
-                CalculateNextUpdateTime(UpdateDelay);
+                _commandIsRunning = false;
+                CurrentStatus = GitStatusMonitorState.Stopped;
             }
         }
 
@@ -372,96 +456,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             // Enforce a minimal time between updates, to not update too frequently
             _nextUpdateTime = Math.Max(next, _previousUpdateTime + _currentUpdateInterval);
-        }
-
-        private void GitDirChanged(object sender, FileSystemEventArgs e)
-        {
-            // git directory changed
-            if (e.FullPath.Length == _gitPath.Length)
-            {
-                return;
-            }
-
-            if (e.FullPath.EndsWith("\\index.lock"))
-            {
-                return;
-            }
-
-            // submodules directory's subdir changed
-            // cut/paste/rename/delete operations are not expected on directories inside nested .git dirs
-            if (e.FullPath.StartsWith(_submodulesPath) && Directory.Exists(e.FullPath))
-            {
-                return;
-            }
-
-            CalculateNextUpdateTime(UpdateDelay);
-        }
-
-        private void GitUICommands_PreCheckout(object sender, GitUIEventArgs e)
-        {
-            CurrentStatus = GitStatusMonitorState.Paused;
-        }
-
-        private void GitUICommands_PostCheckout(object sender, GitUIPostActionEventArgs e)
-        {
-            CurrentStatus = GitStatusMonitorState.Running;
-        }
-
-        private void GitUICommands_PostEditGitIgnore(object sender, GitUIEventArgs e)
-        {
-            _ignoredFiles = new HashSet<string>();
-            _ignoredFilesAreStale = true;
-        }
-
-        private void ignoredFilesTimer_Tick(object sender, EventArgs e)
-        {
-            _ignoredFilesAreStale = true;
-        }
-
-        private void timerRefresh_Tick(object sender, EventArgs e)
-        {
-            Update();
-        }
-
-        // Called for instance at buffer overflow
-        private void WorkTreeWatcherError(object sender, ErrorEventArgs e)
-        {
-            CalculateNextUpdateTime(UpdateDelay);
-        }
-
-        private void WorkTreeChanged(object sender, FileSystemEventArgs e)
-        {
-            // Update already scheduled?
-            if (_nextUpdateTime < Environment.TickCount + UpdateDelay)
-            {
-                return;
-            }
-
-            var fileName = e.FullPath.Substring(_workTreeWatcher.Path.Length).ToPosixPath();
-            if (_ignoredFiles.Contains(fileName))
-            {
-                return;
-            }
-
-            if (e.FullPath.StartsWith(_gitPath))
-            {
-                GitDirChanged(sender, e);
-                return;
-            }
-
-            // new submodule .git file
-            if (e.FullPath.EndsWith("\\.git"))
-            {
-                return;
-            }
-
-            // old submodule .git\index.lock file
-            if (e.FullPath.EndsWith("\\.git\\index.lock"))
-            {
-                return;
-            }
-
-            CalculateNextUpdateTime(UpdateDelay);
         }
     }
 }
