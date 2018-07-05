@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
@@ -272,6 +273,43 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 toolTip = revision.Body ?? revision.Subject + "\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.";
                 return true;
+            }
+
+            if (revision.IsArtificial)
+            {
+                var stats = _grid.GetChangeCount(revision.Guid);
+
+                if (stats != null)
+                {
+                    var str = new StringBuilder();
+
+                    void Append(int count, string singular)
+                    {
+                        if (count != 0)
+                        {
+                            str.Append(count).Append(' ');
+
+                            if (count == 1)
+                            {
+                                str.AppendLine(singular);
+                            }
+                            else
+                            {
+                                str.Append(singular).AppendLine("s");
+                            }
+                        }
+                    }
+
+                    // TODO use translation strings here
+                    Append(stats.Changed, "changed file");
+                    Append(stats.Deleted, "deleted file");
+                    Append(stats.New, "new file");
+                    Append(stats.SubmodulesChanged, "changed submodule");
+                    Append(stats.SubmodulesDirty, "dirty submodule");
+
+                    toolTip = str.ToString();
+                    return true;
+                }
             }
 
             return base.TryGetToolTip(e, revision, out toolTip);

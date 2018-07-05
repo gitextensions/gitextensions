@@ -65,10 +65,11 @@ namespace GitCommands
 
         public int CompareTo(GitItemStatus other)
         {
-            int value = (Name ?? "").CompareTo(other.Name ?? "");
+            int value = StringComparer.InvariantCulture.Compare(Name, other.Name);
+
             if (value == 0)
             {
-                value = (OldName ?? "").CompareTo(other.OldName ?? "");
+                value = StringComparer.InvariantCulture.Compare(OldName, other.OldName);
             }
 
             return value;
