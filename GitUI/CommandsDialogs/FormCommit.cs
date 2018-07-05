@@ -1598,6 +1598,7 @@ namespace GitUI.CommandsDialogs
                     var files = new List<GitItemStatus>();
                     var allFiles = new List<GitItemStatus>();
 
+                    var shouldRescanChanges = false;
                     foreach (var item in Staged.SelectedItems)
                     {
                         toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
@@ -1609,6 +1610,11 @@ namespace GitUI.CommandsDialogs
                             if (item.IsRenamed)
                             {
                                 Module.UnstageFileToRemove(item.OldName);
+                            }
+
+                            if (item.IsDeleted)
+                            {
+                                shouldRescanChanges = true;
                             }
                         }
                         else
@@ -1684,6 +1690,11 @@ namespace GitUI.CommandsDialogs
                         _currentFilesList = Unstaged;
                         RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
                         Unstaged.Focus();
+                    }
+
+                    if (shouldRescanChanges)
+                    {
+                        RescanChanges();
                     }
                 }
                 catch (Exception ex)
