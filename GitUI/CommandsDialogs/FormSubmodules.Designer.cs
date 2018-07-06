@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs
+﻿using System.Windows.Forms;
+
+namespace GitUI.CommandsDialogs
 {
     partial class FormSubmodules
     {
@@ -128,14 +130,15 @@
             this.Submodules.AllowUserToDeleteRows = false;
             this.Submodules.AllowUserToResizeRows = false;
             this.Submodules.AutoGenerateColumns = false;
+            this.Submodules.BorderStyle = BorderStyle.None;
             this.Submodules.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.Submodules.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.nameDataGridViewTextBoxColumn,
             this.Status});
             this.Submodules.DataSource = this.gitSubmoduleBindingSource;
             this.Submodules.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Submodules.Location = new System.Drawing.Point(4, 4);
-            this.Submodules.Margin = new System.Windows.Forms.Padding(4);
+            this.Submodules.Location = new System.Drawing.Point(0, 0);
+            this.Submodules.Margin = new System.Windows.Forms.Padding(0);
             this.Submodules.MultiSelect = false;
             this.Submodules.Name = "Submodules";
             this.Submodules.ReadOnly = true;

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.SubmodulesDialog;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -27,6 +28,7 @@ namespace GitUI.CommandsDialogs
             nameDataGridViewTextBoxColumn.DataPropertyName = nameof(GitSubmoduleInfo.Name);
             Status.DataPropertyName = nameof(GitSubmoduleInfo.Status);
             gitSubmoduleBindingSource.DataSource = _modules;
+            splitContainer1.SplitterDistance = DpiUtil.Scale(222);
 
             this.AdjustForDpiScaling();
         }
