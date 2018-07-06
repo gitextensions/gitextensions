@@ -278,13 +278,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private string[] GetCategories()
         {
-            var categories = listView1.Items.Cast<ListViewItem>()
-                                            .Select(lvi => (lvi.Tag as Repository)?.Category)
-                                            .Where(category => !string.IsNullOrWhiteSpace(category))
-                                            .OrderBy(x => x)
-                                            .Distinct()
-                                            .ToArray();
-            return categories;
+            return listView1.Items.Cast<ListViewItem>()
+                .Select(lvi => (lvi.Tag as Repository)?.Category)
+                .Where(category => !string.IsNullOrWhiteSpace(category))
+                .OrderBy(x => x)
+                .Distinct()
+                .ToArray();
         }
 
         [CanBeNull]
@@ -557,7 +556,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     item.Tag = category;
                     item.Click += tsmiCategory_Click;
                     return item;
-                }).ToArray());
+                }).ToArray<ToolStripItem>());
                 tsmiCategories.DropDownItems.Add(new ToolStripSeparator());
             }
 
