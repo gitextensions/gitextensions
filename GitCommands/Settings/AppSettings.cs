@@ -570,12 +570,6 @@ namespace GitCommands
             set => SetBool("stageinsuperprojectaftercommit", value);
         }
 
-        public static bool PlaySpecialStartupSound
-        {
-            get => GetBool("PlaySpecialStartupSound", false);
-            set => SetBool("PlaySpecialStartupSound", value);
-        }
-
         public static bool FollowRenamesInFileHistory
         {
             get => GetBool("followrenamesinfilehistory", true);

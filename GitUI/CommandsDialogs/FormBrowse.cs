@@ -379,21 +379,6 @@ namespace GitUI.CommandsDialogs
                 };
             }
 
-            try
-            {
-                if (AppSettings.PlaySpecialStartupSound)
-                {
-                    using (var cowMoo = Resources.cow_moo)
-                    {
-                        new System.Media.SoundPlayer(cowMoo).Play();
-                    }
-                }
-            }
-            catch
-            {
-                // This code is just for fun, we do not want the program to crash because of it.
-            }
-
             base.OnLoad(e);
         }
 

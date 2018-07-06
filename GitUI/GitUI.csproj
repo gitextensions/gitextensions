@@ -1710,9 +1710,6 @@
     <None Include="Resources\Icons\BranchCreate.png" />
     <None Include="Resources\Icons\BranchDelete.png" />
     <None Include="Resources\Icons\bug.png" />
-    <None Include="Resources\Icons\Cow.png" />
-    <None Include="Resources\Icons\Cow_sunglass.png" />
-    <None Include="Resources\Icons\Cow_xmass.png" />
     <None Include="Resources\Icons\Delete.png" />
     <None Include="Resources\Icons\Donate.jpg" />
     <None Include="Resources\Icons\double_arrow_down.png" />
@@ -1879,13 +1876,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\IconCommitId.png" />
-    <None Include="Resources\IconDate.png" />
-    <None Include="Resources\IconMessage.png" />
-    <None Include="Resources\IconGitk.png" />
-    <None Include="Resources\IconGitGui.png" />
-    <None Include="Resources\IconGitForWindows.png" />
-    <None Include="Resources\IconLayoutSidebarRight.png" />
     <Content Include="Resources\Icons\application-footer.png" />
     <Content Include="Resources\Icons\application-sidebar.png" />
     <Content Include="Resources\Icons\arrow-090.png" />
@@ -1957,18 +1947,29 @@
     <Content Include="Resources\Icons\IconBranch.png" />
     <Content Include="Resources\Icons\IconBranchCheckout.png" />
     <Content Include="Resources\Icons\IconBranchCreate.png" />
+    <Content Include="Resources\Icons\IconCommitId.png" />
     <Content Include="Resources\Icons\IconConsole.png" />
+    <Content Include="Resources\Icons\IconDate.png" />
     <Content Include="Resources\Icons\IconDeleteRemote.png" />
+    <Content Include="Resources\Icons\IconFileStatusAdded.png" />
+    <Content Include="Resources\Icons\IconFileStatusRemoved.png" />
     <Content Include="Resources\Icons\IconFolderSubmodule.png" />
     <None Include="Resources\Icons\IconHideStatusBar.png" />
+    <Content Include="Resources\Icons\IconGitForWindows.png" />
+    <Content Include="Resources\Icons\IconGitGui.png" />
+    <Content Include="Resources\Icons\IconGitk.png" />
     <Content Include="Resources\Icons\IconKey.png" />
+    <Content Include="Resources\Icons\IconLayoutSidebarRight.png" />
     <Content Include="Resources\Icons\IconMerge.png" />
     <None Include="Resources\Icons\IconNumberOfLinesDecrease.png" />
     <None Include="Resources\Icons\IconNumberOfLinesIncrease.png" />
+    <Content Include="Resources\Icons\IconMessage.png" />
     <Content Include="Resources\Icons\IconRebase.png" />
     <Content Include="Resources\Icons\IconSaveAs.png" />
     <Content Include="Resources\Icons\IconSubmoduleAdded.png" />
+    <Content Include="Resources\Icons\IconTag.png" />
     <Content Include="Resources\Icons\IconUntrackedOnly.png" />
+    <Content Include="Resources\Icons\IconUser.png" />
     <Content Include="Resources\Icons\ignore_all_whitespaces.png" />
     <Content Include="Resources\Icons\ignore_whitespaces.png" />
     <None Include="Resources\Icons\VS2017Images\BranchRemote_16x.png" />
@@ -1983,7 +1984,6 @@
     <Content Include="Resources\Icons\light-bulb.png" />
     <Content Include="Resources\Icons\magnifier.png" />
     <Content Include="Resources\Icons\minus-small.png" />
-    <Content Include="Resources\Icons\minus.png" />
     <Content Include="Resources\Icons\network-cloud.png" />
     <Content Include="Resources\Icons\network-clouds.png" />
     <Content Include="Resources\Icons\notebook-medium.png" />
@@ -1991,7 +1991,6 @@
     <Content Include="Resources\Icons\pencil.png" />
     <Content Include="Resources\Icons\pill.png" />
     <Content Include="Resources\Icons\plus-small.png" />
-    <Content Include="Resources\Icons\plus.png" />
     <Content Include="Resources\Icons\question-small-white.png" />
     <Content Include="Resources\Icons\question-white.png" />
     <Content Include="Resources\Icons\revert.png" />
@@ -2013,8 +2012,6 @@
     <Content Include="Resources\Icons\tag_ok.png" />
     <Content Include="Resources\Icons\tag_warning.png" />
     <Content Include="Resources\Icons\x_with_arrow_32.png" />
-    <None Include="Resources\IconUser.png" />
-    <None Include="Resources\IconTag.png" />
     <Content Include="Translation\Czech.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2144,7 +2141,6 @@
     <None Include="..\Bin\Logo\x-with-arrow_yellow.ico">
       <Link>Resources\ApplicationIcons\x-with-arrow_yellow.ico</Link>
     </None>
-    <Content Include="Resources\Sounds\cow-moo.wav" />
     <None Include="Properties\DataSources\GitUI.Script.ScriptInfo.datasource" />
     <None Include="Properties\DataSources\GitCommands.Repository.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitSubmodule.datasource" />
