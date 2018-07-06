@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         private void FormGoToCommit_Load(object sender, EventArgs e)

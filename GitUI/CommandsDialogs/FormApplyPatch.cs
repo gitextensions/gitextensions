@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs
             : base(true, commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             if (commands != null)
             {
                 EnableButtons();

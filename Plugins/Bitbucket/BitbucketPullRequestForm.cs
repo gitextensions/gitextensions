@@ -17,18 +17,17 @@ namespace Bitbucket
     public partial class BitbucketPullRequestForm : GitExtensionsFormBase
     {
         private readonly TranslationString _yourRepositoryIsNotInBitbucket = new TranslationString("Your repository is not hosted in Bitbucket.");
-        private readonly TranslationString _commited = new TranslationString("{0} committed\n{1}");
+        private readonly TranslationString _committed = new TranslationString("{0} committed\n{1}");
         private readonly TranslationString _success = new TranslationString("Success");
         private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _linkLabelToolTip = new TranslationString("Right-click to copy link");
 
-        private readonly Settings _settings;
+        [CanBeNull] private readonly Settings _settings;
         private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
 
         public BitbucketPullRequestForm(BitbucketPlugin plugin, ISettingsSource settings, GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
-            Translate();
 
             // NOTE ddlBranchSource and ddlBranchTarget both have string items so do not need a display member
             ddlRepositorySource.DisplayMember = nameof(Repository.DisplayName);
@@ -53,7 +52,7 @@ namespace Bitbucket
                 _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
             toolTipLink.SetToolTip(lblLinkViewPull, _linkLabelToolTip.Text);
 
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
         private void BitbucketPullRequestFormLoad(object sender, EventArgs e)
@@ -274,7 +273,7 @@ namespace Bitbucket
             }
             else
             {
-                label.Text = string.Format(_commited.Text,
+                label.Text = string.Format(_committed.Text,
                     commit.AuthorName, commit.Message);
             }
         }

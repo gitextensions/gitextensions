@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs
             : base(uiCommands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             Sha.DataPropertyName = nameof(RefLine.Sha);
             Ref.DataPropertyName = nameof(RefLine.Ref);

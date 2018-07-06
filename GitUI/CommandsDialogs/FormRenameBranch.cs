@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs
             _branchNameNormaliser = new GitBranchNameNormaliser();
 
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             BranchNameTextBox.Text = defaultBranch;
             _oldName = defaultBranch;
         }

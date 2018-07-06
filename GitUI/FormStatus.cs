@@ -24,16 +24,17 @@ namespace GitUI
         {
         }
 
-        public FormStatus(ConsoleOutputControl consoleOutput, bool useDialogSettings)
+        public FormStatus([CanBeNull] ConsoleOutputControl consoleOutput, bool useDialogSettings)
             : base(true)
         {
             _useDialogSettings = useDialogSettings;
+
             ConsoleOutput = consoleOutput ?? ConsoleOutputControl.CreateInstance();
             ConsoleOutput.Dock = DockStyle.Fill;
             ConsoleOutput.Terminated += delegate { Close(); }; // This means the control is not visible anymore, no use in keeping. Expected scenario: user hits ESC in the prompt after the git process exits
 
             InitializeComponent();
-            Translate();
+
             if (_useDialogSettings)
             {
                 KeepDialogOpen.Checked = !AppSettings.CloseProcessDialog;
@@ -43,7 +44,7 @@ namespace GitUI
                 KeepDialogOpen.Hide();
             }
 
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
         public FormStatus(Action<FormStatus> process, Action<FormStatus> abort)
@@ -53,7 +54,7 @@ namespace GitUI
             AbortCallback = abort;
         }
 
-        protected readonly ConsoleOutputControl ConsoleOutput; // Naming: protected stuff must be CLS-compliant here
+        protected readonly ConsoleOutputControl ConsoleOutput;
         public Action<FormStatus> ProcessCallback;
         public Action<FormStatus> AbortCallback;
         private bool _errorOccurred;

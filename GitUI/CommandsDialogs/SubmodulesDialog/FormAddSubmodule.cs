@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {

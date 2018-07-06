@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs
             CouldBeOrphan = true;
 
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             groupBox1.AutoSize = true;
 

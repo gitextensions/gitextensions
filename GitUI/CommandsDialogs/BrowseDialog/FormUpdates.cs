@@ -35,7 +35,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             CurrentVersion = currentVersion;
 
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             progressBar1.Visible = true;
             progressBar1.Style = ProgressBarStyle.Marquee;

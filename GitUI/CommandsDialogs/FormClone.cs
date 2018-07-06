@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs
         {
             _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             _openedFromProtocolHandler = openedFromProtocolHandler;
             _url = url;
             _defaultBranchItems = new[] { _branchDefaultRemoteHead.Text, _branchNone.Text };

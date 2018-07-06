@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         public FormBisect(RevisionGridControl revisionGrid)

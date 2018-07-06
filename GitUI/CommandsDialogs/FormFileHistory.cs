@@ -58,7 +58,7 @@ namespace GitUI.CommandsDialogs
 
             copyToClipboardToolStripMenuItem.SetRevisionFunc(() => FileChanges.GetSelectedRevisions().FirstOrDefault());
 
-            this.AdjustForDpiScaling();
+            InitializeComplete();
 
             return;
 
@@ -87,8 +87,6 @@ namespace GitUI.CommandsDialogs
             : this(commands)
         {
             FileChanges.InitialObjectId = revision?.Guid;
-            Translate();
-
             FileChanges.ShowBuildServerInfo = true;
 
             FileName = fileName;

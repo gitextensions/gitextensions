@@ -9,7 +9,7 @@ namespace Gerrit
         public FormPluginInformation()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         public static void ShowSubmitted(IWin32Window owner, string change)

@@ -15,6 +15,7 @@ using GitExtUtils.GitUI;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -97,7 +98,7 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         public bool ErrorOccurred { get; private set; }
-        private List<IGitRef> _heads;
+        [CanBeNull] private List<IGitRef> _heads;
         private string _branch;
         private bool _bInternalUpdate;
         private const string AllRemotes = "[ All ]";
@@ -105,20 +106,16 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
 
         private FormPull()
-            : this(null, null, null)
         {
+            InitializeComponent();
+            InitializeComplete();
         }
 
         public FormPull(GitUICommands commands, string defaultRemoteBranch, string defaultRemote)
             : base(commands)
         {
             InitializeComponent();
-            Translate();
-
-            if (commands == null)
-            {
-                return;
-            }
+            InitializeComplete();
 
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;

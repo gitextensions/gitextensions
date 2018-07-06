@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs
 
             _selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
 
-            Translate();
+            InitializeComplete();
             Warnings.AutoGenerateColumns = false;
 
             columnIsLostObjectSelected.DataPropertyName = "IsSelected"; // TODO this property is not on the bound type

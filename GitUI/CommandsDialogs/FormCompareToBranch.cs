@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs
             MaximizeBox = false;
             ShowInTaskbar = false;
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             if (!IsUICommandsInitialized)
             {
                 // UICommands is not initialized in translation unit test.

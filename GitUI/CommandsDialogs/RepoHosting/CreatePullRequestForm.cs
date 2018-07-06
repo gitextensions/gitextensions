@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _chooseRemote = chooseRemote;
             _currentBranch = chooseBranch;
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             _prevTitle = _titleTB.Text;
             _pullReqTargetsCB.DisplayMember = nameof(IHostedRemote.DisplayData);
         }

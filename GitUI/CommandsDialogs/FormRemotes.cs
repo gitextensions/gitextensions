@@ -87,7 +87,7 @@ Inactive remote is completely invisible to git.");
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             // remove text from 'new' and 'delete' buttons because now they are represented by icons
             New.Text = string.Empty;
@@ -105,7 +105,6 @@ Inactive remote is completely invisible to git.");
             RemoteCombo.DataPropertyName = nameof(IGitRef.TrackingRemote);
             MergeWith.DataPropertyName = nameof(IGitRef.MergeWith);
 
-            this.AdjustForDpiScaling();
             Remotes.Columns[0].Width = DpiUtil.Scale(120);
         }
 

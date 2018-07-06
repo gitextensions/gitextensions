@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
             if (AppSettings.AlwaysShowAdvOpt)

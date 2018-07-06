@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             annotate.Items.AddRange(DropwdownTagOperation);
             annotate.SelectedIndex = 0;

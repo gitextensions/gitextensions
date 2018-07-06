@@ -29,7 +29,7 @@ namespace Gerrit
             : base(uiCommand)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         private void DownloadClick(object sender, EventArgs e)

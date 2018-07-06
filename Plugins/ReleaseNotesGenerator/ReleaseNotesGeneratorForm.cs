@@ -28,7 +28,7 @@ namespace ReleaseNotesGenerator
         public ReleaseNotesGeneratorForm(GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             _gitUiCommands = gitUiCommands;
             _gitLogLineParser = new GitLogLineParser();

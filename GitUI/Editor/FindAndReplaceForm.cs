@@ -47,7 +47,7 @@ namespace GitUI
         public FindAndReplaceForm()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             _search = new TextEditorSearcher();
 
             ShowInTaskbar = false;

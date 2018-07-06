@@ -33,7 +33,7 @@ namespace FindLargeFiles
             commitCountDataGridViewTextBoxColumn.Width = DpiUtil.Scale(88);
             lastCommitDateDataGridViewTextBoxColumn.Width = DpiUtil.Scale(103);
 
-            Translate();
+            InitializeComplete();
 
             sHADataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.SHA);
             pathDataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.Path);

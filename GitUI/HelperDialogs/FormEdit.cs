@@ -6,7 +6,7 @@
             : base(true, commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             Viewer.ViewTextAsync("", text);
             Viewer.IsReadOnly = false;
         }

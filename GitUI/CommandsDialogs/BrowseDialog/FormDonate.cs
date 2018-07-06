@@ -11,8 +11,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public FormDonate()
         {
             InitializeComponent();
-            Translate();
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
         private void PictureBox1Click(object sender, EventArgs e)

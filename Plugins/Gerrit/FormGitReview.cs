@@ -52,7 +52,7 @@ namespace Gerrit
             : base(true)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             UICommands = (GitUICommands)uiCommands;
             if (UICommands != null)

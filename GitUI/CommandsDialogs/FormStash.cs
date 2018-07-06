@@ -21,9 +21,11 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _cannotBeUndone = new TranslationString("This action cannot be undone.");
         private readonly TranslationString _areYouSure = new TranslationString("Are you sure you want to drop the stash? This action cannot be undone.");
         private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
-        public bool ManageStashes { get; set; }
 
         private readonly AsyncLoader _asyncLoader = new AsyncLoader();
+
+        public bool ManageStashes { get; set; }
+        private GitStash _currentWorkingDirStashItem;
 
         private FormStash()
             : this(null)
@@ -35,14 +37,8 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Loading.Image = Properties.Resources.loadingpanel;
-            Translate();
-            View.ExtraDiffArgumentsChanged += ViewExtraDiffArgumentsChanged;
-            this.AdjustForDpiScaling();
-        }
-
-        private void ViewExtraDiffArgumentsChanged(object sender, EventArgs e)
-        {
-            StashedSelectedIndexChanged(null, null);
+            View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(null, null); };
+            InitializeComplete();
         }
 
         private void FormStashFormClosing(object sender, FormClosingEventArgs e)
@@ -58,8 +54,6 @@ namespace GitUI.CommandsDialogs
 
             ResizeStashesWidth();
         }
-
-        private GitStash _currentWorkingDirStashItem;
 
         private void Initialize()
         {

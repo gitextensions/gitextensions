@@ -38,14 +38,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
             : base(commands)
         {
             InitializeComponent();
-            Translate();
             _selectHostedRepoCB.DisplayMember = nameof(IHostedRemote.DisplayData);
             _loader.LoadingError += (sender, ex) =>
                 {
                     MessageBox.Show(this, ex.Exception.ToString(), _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.UnMask();
                 };
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
         public ViewPullRequestsForm(GitUICommands commands, IRepositoryHostPlugin gitHoster)

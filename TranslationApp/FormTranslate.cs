@@ -37,7 +37,7 @@ namespace TranslationApp
             : base(true)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             translateCategories.DisplayMember = nameof(TranslationCategory.Name);
 

@@ -193,8 +193,6 @@ namespace GitUI.CommandsDialogs
 
             Loading.Image = Properties.Resources.loadingpanel;
 
-            Translate();
-
             SolveMergeconflicts.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
 
             SelectedDiff.ExtraDiffArgumentsChanged += SelectedDiffExtraDiffArgumentsChanged;
@@ -253,8 +251,6 @@ namespace GitUI.CommandsDialogs
             ((ToolStripDropDownMenu)commitMessageToolStripMenuItem.DropDown).ShowImageMargin = false;
             ((ToolStripDropDownMenu)commitMessageToolStripMenuItem.DropDown).ShowCheckMargin = false;
 
-            this.AdjustForDpiScaling();
-
             selectionFilter.Size = DpiUtil.Scale(selectionFilter.Size);
 
             _splitterManager.AddSplitter(splitMain, "splitMain");
@@ -267,6 +263,8 @@ namespace GitUI.CommandsDialogs
             CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
             splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
             splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
+
+            InitializeComplete();
 
             // By calling this in the constructor, we prevent flickering caused by resizing the
             // form, for example when it is restored to maximised, but first drawn as a smaller window.

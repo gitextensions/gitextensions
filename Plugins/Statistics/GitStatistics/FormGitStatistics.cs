@@ -62,7 +62,6 @@ namespace GitStatistics
             _codeFilePattern = codeFilePattern;
             _countSubmodule = countSubmodule;
             InitializeComponent();
-            Translate();
 
             TotalLinesOfCode.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 9.75F, FontStyle.Bold, GraphicsUnit.Point);
             TotalLinesOfCode2.Font = TotalLinesOfCode.Font;
@@ -70,7 +69,7 @@ namespace GitStatistics
             TotalCommits.Font = TotalLinesOfCode.Font;
             LoadingLabel.Font = TotalLinesOfCode.Font;
 
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
         private void FormGitStatisticsSizeChanged(object sender, EventArgs e)

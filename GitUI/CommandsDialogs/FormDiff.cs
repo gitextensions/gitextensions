@@ -40,7 +40,7 @@ namespace GitUI.CommandsDialogs
             _firstParentIsValid = firstParentIsValid;
 
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             _toolTipControl.SetToolTip(btnAnotherBaseBranch, _anotherBranchTooltip.Text);
             _toolTipControl.SetToolTip(btnAnotherHeadBranch, _anotherBranchTooltip.Text);

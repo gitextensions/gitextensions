@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             lbSubmodule.Text = filename;
             _filename = filename;
         }

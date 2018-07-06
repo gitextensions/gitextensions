@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs
             : base(true, commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         private void FormArchive_Load(object sender, EventArgs e)

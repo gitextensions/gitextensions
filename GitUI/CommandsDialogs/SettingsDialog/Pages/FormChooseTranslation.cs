@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public FormChooseTranslation()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         protected override void OnLoad(EventArgs e)

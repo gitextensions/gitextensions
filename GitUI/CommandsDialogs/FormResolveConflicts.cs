@@ -98,7 +98,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             _offerCommit = offerCommit;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
 

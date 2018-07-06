@@ -7,24 +7,22 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public partial class FormOpenDirectory : GitExtensionsForm
     {
-        private readonly TranslationString _warningOpenFailed =
-            new TranslationString("Directory does not exist.");
+        private readonly TranslationString _warningOpenFailed = new TranslationString("Directory does not exist.");
+        private readonly TranslationString _warningOpenFailedCaption = new TranslationString("Error");
 
-        private readonly TranslationString _warningOpenFailedCaption =
-            new TranslationString("Error");
-
-        private GitModule _choosenModule;
+        [CanBeNull] private GitModule _choosenModule;
 
         public FormOpenDirectory(GitModule currentModule)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
@@ -36,8 +34,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 _NO_TRANSLATE_Directory.Focus();
                 _NO_TRANSLATE_Directory.Select();
             });
-
-            this.AdjustForDpiScaling();
         }
 
         protected override void OnRuntimeLoad(EventArgs e)

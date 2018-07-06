@@ -20,7 +20,7 @@ namespace GitUI.UserControls.RevisionGrid
         public FormQuickGitRefSelector()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             lbxRefs.DisplayMember = nameof(DisplyGitRef.Label);
         }

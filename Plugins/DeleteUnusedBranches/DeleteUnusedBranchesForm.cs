@@ -49,7 +49,6 @@ namespace DeleteUnusedBranches
             dateDataGridViewTextBoxColumn.Width = DpiUtil.Scale(175);
             Author.Width = DpiUtil.Scale(91);
 
-            Translate();
             imgLoading.Image = Resources.loadingpanel;
 
             deleteDataGridViewCheckBoxColumn.DataPropertyName = nameof(Branch.Delete);
@@ -58,7 +57,7 @@ namespace DeleteUnusedBranches
             Author.DataPropertyName = nameof(Branch.Author);
             Message.DataPropertyName = nameof(Branch.Message);
 
-            this.AdjustForDpiScaling();
+            InitializeComplete();
 
             ThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshObsoleteBranchesAsync());
         }

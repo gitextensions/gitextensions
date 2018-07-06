@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs
             Revision = revision;
             InitializeComponent();
 
-            Translate();
+            InitializeComplete();
         }
 
         public GitRevision Revision { get; set; }

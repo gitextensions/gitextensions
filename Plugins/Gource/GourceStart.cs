@@ -16,7 +16,7 @@ namespace Gource
         public GourceStart(string pathToGource, GitUIEventArgs gitUIArgs, string gourceArguments)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             PathToGource = pathToGource;
             GitUIArgs = gitUIArgs;
             GitWorkingDir = gitUIArgs?.GitModule.WorkingDir;

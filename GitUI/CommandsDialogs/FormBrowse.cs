@@ -119,7 +119,7 @@ namespace GitUI.CommandsDialogs
         private FormBrowse()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         public FormBrowse([CanBeNull] GitUICommands commands, string filter, string selectCommit = null, bool startWithDashboard = false)
@@ -183,8 +183,6 @@ namespace GitUI.CommandsDialogs
             repoObjectsTree.SetBranchFilterer(_filterBranchHelper);
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
             revisionDiff.Bind(RevisionGrid, fileTree);
-
-            Translate();
 
             // Activation of the control requires restart of Browse, limit also deactivation for consistency
             bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
@@ -323,8 +321,8 @@ namespace GitUI.CommandsDialogs
                 RevisionGrid.InitialObjectId = _longShaProvider.Get(selectCommit);
             }
 
+            InitializeComplete();
             RestorePosition();
-            this.AdjustForDpiScaling();
         }
 
         protected override void Dispose(bool disposing)
@@ -1257,7 +1255,7 @@ namespace GitUI.CommandsDialogs
 
             if (translation != AppSettings.Translation)
             {
-                Translate();
+                InitializeComplete();
             }
 
             if (showRevisionInfoNextToRevisionGrid != AppSettings.ShowRevisionInfoNextToRevisionGrid)

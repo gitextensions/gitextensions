@@ -12,9 +12,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormSubmodules : GitModuleForm
     {
-        private readonly TranslationString _removeSelectedSubmodule =
-             new TranslationString("Are you sure you want remove the selected submodule?");
-
+        private readonly TranslationString _removeSelectedSubmodule = new TranslationString("Are you sure you want remove the selected submodule?");
         private readonly TranslationString _removeSelectedSubmoduleCaption = new TranslationString("Remove");
 
         private readonly BindingList<IGitSubmoduleInfo> _modules = new BindingList<IGitSubmoduleInfo>();
@@ -24,13 +22,13 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+
             nameDataGridViewTextBoxColumn.DataPropertyName = nameof(GitSubmoduleInfo.Name);
             Status.DataPropertyName = nameof(GitSubmoduleInfo.Status);
             gitSubmoduleBindingSource.DataSource = _modules;
             splitContainer1.SplitterDistance = DpiUtil.Scale(222);
 
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
         private void AddSubmoduleClick(object sender, EventArgs e)

@@ -1,5 +1,6 @@
 ﻿using System;
 using GitCommands;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -14,12 +15,11 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
-
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
-        public FormBlame(GitUICommands commands, string fileName, GitRevision revision, int? initialLine = null) : this(commands)
+        public FormBlame(GitUICommands commands, string fileName, [CanBeNull] GitRevision revision, int? initialLine = null)
+            : this(commands)
         {
             if (string.IsNullOrEmpty(fileName))
             {

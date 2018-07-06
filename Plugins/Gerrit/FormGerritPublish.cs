@@ -26,7 +26,7 @@ namespace Gerrit
             : base(uiCommand)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             Publish.Image = GitUI.Properties.Resources.IconPush;
         }

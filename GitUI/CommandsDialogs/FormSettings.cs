@@ -45,7 +45,6 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
             _translatedTitle = Text;
 
             settingsTreeView.SuspendLayout();
@@ -135,7 +134,7 @@ namespace GitUI.CommandsDialogs
             settingsTreeView.GotoPage(initialPage);
             settingsTreeView.ResumeLayout();
 
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
         public static DialogResult ShowSettingsDialog(GitUICommands uiCommands, IWin32Window owner, SettingsPageReference initialPage = null)

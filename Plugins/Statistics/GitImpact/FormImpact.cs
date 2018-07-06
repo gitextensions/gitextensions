@@ -14,7 +14,7 @@ namespace GitImpact
         public FormImpact(IGitModule module)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             UpdateAuthorInfo("");
             if (module != null)
             {

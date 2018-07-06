@@ -15,8 +15,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
         public FormContributors()
         {
             InitialiseComponent();
-            Translate();
-            this.AdjustForDpiScaling();
+            InitializeComplete();
 
             void InitialiseComponent()
             {

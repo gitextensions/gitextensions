@@ -48,7 +48,7 @@ namespace GitFlow
         public GitFlowForm(GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             _gitUiCommands = gitUiCommands;
 

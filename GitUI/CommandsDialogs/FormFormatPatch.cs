@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             if (commands != null)
             {
                 MailFrom.Text = Module.GetEffectiveSetting(SettingKeyString.UserEmail);

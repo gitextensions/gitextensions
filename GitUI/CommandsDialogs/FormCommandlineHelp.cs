@@ -5,7 +5,7 @@
         public FormCommandlineHelp()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
     }
 }

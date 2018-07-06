@@ -11,7 +11,7 @@ namespace GitUI
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
     {
-        private GitUICommands _uiCommands;
+        [CanBeNull] private GitUICommands _uiCommands;
 
         /// <inheritdoc />
         [Browsable(false)]

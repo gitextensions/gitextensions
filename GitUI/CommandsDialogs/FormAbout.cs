@@ -14,8 +14,7 @@ namespace GitUI.CommandsDialogs
         public FormAbout()
         {
             InitializeComponent();
-            Translate();
-            this.AdjustForDpiScaling();
+            InitializeComplete();
 
             _NO_TRANSLATE_labelVersionInfo.Text += AppSettings.ProductVersion;
 

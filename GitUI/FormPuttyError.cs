@@ -8,8 +8,6 @@ namespace GitUI
     /// </summary>
     public partial class FormPuttyError : GitExtensionsForm
     {
-        public string KeyPath { get; private set; }
-
         /// <summary>Shows the "SSH error" dialog modally, and returns the path to the key, if one was loaded.</summary>
         public static bool AskForKey(IWin32Window parent, out string keyPath)
         {
@@ -21,11 +19,12 @@ namespace GitUI
             }
         }
 
+        public string KeyPath { get; private set; }
+
         public FormPuttyError()
         {
             InitializeComponent();
-            Translate();
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
         private void LoadSSHKey_Click(object sender, EventArgs e)

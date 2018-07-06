@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             ShowInTaskbar = true;
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             var font = new Font(FontFamily.GenericMonospace, 9);
             LogItems.Font = font;
@@ -31,8 +31,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 LogOutput.WordWrap = chkWordWrap.Checked;
                 commandCacheOutput.WordWrap = chkWordWrap.Checked;
             };
-
-            this.AdjustForDpiScaling();
         }
 
         private void GitLogFormLoad(object sender, EventArgs e)

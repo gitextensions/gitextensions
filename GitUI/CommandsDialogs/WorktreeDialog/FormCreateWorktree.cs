@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             InitializeComponent();
             _branchesLoader = new AsyncLoader();
             _invalidCharsInPath = Path.GetInvalidFileNameChars();
-            Translate();
+            InitializeComplete();
         }
 
         private string GetWorktreeDirectory()

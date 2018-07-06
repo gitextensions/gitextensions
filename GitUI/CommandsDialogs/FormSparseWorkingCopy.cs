@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs
             var sparse = new FormSparseWorkingCopyViewModel(commands);
             BindToViewModelGlobal(sparse);
             CreateView(sparse);
-            Translate();
+            InitializeComplete();
         }
 
         private void BindSaveOnClose([NotNull] FormSparseWorkingCopyViewModel sparse)
