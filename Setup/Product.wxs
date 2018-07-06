@@ -86,7 +86,7 @@
         <File Source="..\Plugins\GitUIPluginInterfaces\bin\$(var.Configuration)\GitUIPluginInterfaces.dll" />
       </Component>
       <Component Id="ICSharpCode.TextEditor.dll" Guid="*">
-        <File Source="..\bin\ICSharpCode.TextEditor.dll" />
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\ICSharpCode.TextEditor.dll" />
       </Component>
       <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
         <File Source="..\bin\ICSharpCode.SharpZipLib.dll" />
