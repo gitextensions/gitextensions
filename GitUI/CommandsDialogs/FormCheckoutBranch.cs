@@ -284,24 +284,27 @@ namespace GitUI.CommandsDialogs
             // if the user hits [Enter] at any point, we need to trigger txtCustomBranchName Leave event
             Ok.Focus();
 
-            GitCheckoutBranchCmd cmd = new GitCheckoutBranchCmd(Branches.Text.Trim(), Remotebranch.Checked);
+            var branchName = Branches.Text.Trim();
+            var isRemote = Remotebranch.Checked;
+            var newBranchName = (string)null;
+            var newBranchMode = CheckoutNewBranchMode.DontCreate;
 
-            if (Remotebranch.Checked)
+            if (isRemote)
             {
                 if (rbCreateBranchWithCustomName.Checked)
                 {
-                    cmd.NewBranchName = txtCustomBranchName.Text.Trim();
-                    cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.Create;
-                    if (cmd.NewBranchName.IsNullOrWhiteSpace())
+                    newBranchName = txtCustomBranchName.Text.Trim();
+                    newBranchMode = CheckoutNewBranchMode.Create;
+                    if (newBranchName.IsNullOrWhiteSpace())
                     {
                         MessageBox.Show(_customBranchNameIsEmpty.Text, Text);
                         DialogResult = DialogResult.None;
                         return DialogResult.None;
                     }
 
-                    if (!Module.CheckBranchFormat(cmd.NewBranchName))
+                    if (!Module.CheckBranchFormat(newBranchName))
                     {
-                        MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, cmd.NewBranchName), Text);
+                        MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, newBranchName), Text);
                         DialogResult = DialogResult.None;
                         return DialogResult.None;
                     }
@@ -309,7 +312,7 @@ namespace GitUI.CommandsDialogs
                 else if (rbResetBranch.Checked)
                 {
                     IGitRef localBranchRef = GetLocalBranchRef(_localBranchName);
-                    IGitRef remoteBranchRef = GetRemoteBranchRef(cmd.BranchName);
+                    IGitRef remoteBranchRef = GetRemoteBranchRef(branchName);
                     if (localBranchRef != null && remoteBranchRef != null)
                     {
                         var mergeBaseGuid = Module.GetMergeBase(localBranchRef.Guid, remoteBranchRef.Guid);
@@ -331,36 +334,30 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
-                    cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.Reset;
-                    cmd.NewBranchName = _localBranchName;
+                    newBranchMode = CheckoutNewBranchMode.Reset;
+                    newBranchName = _localBranchName;
                 }
                 else
                 {
-                    cmd.NewBranchAction = GitCheckoutBranchCmd.NewBranch.DontCreate;
-                    cmd.NewBranchName = null;
+                    newBranchMode = CheckoutNewBranchMode.DontCreate;
                 }
             }
 
-            LocalChangesAction changes = ChangesMode;
-            if (changes != LocalChangesAction.Reset &&
-                chkSetLocalChangesActionAsDefault.Checked)
+            var localChanges = ChangesMode;
+            if (localChanges != LocalChangesAction.Reset && chkSetLocalChangesActionAsDefault.Checked)
             {
-                AppSettings.CheckoutBranchAction = changes;
+                AppSettings.CheckoutBranchAction = localChanges;
             }
 
-            if ((Visible || AppSettings.UseDefaultCheckoutBranchAction) && HasUncommittedChanges)
+            if ((!Visible && !AppSettings.UseDefaultCheckoutBranchAction) || !HasUncommittedChanges)
             {
-                cmd.LocalChanges = changes;
-            }
-            else
-            {
-                cmd.LocalChanges = LocalChangesAction.DontChange;
+                localChanges = LocalChangesAction.DontChange;
             }
 
             IWin32Window owner = Visible ? this : Owner;
 
             bool stash = false;
-            if (changes == LocalChangesAction.Stash)
+            if (localChanges == LocalChangesAction.Stash)
             {
                 if (_isDirtyDir == null && Visible)
                 {
@@ -378,7 +375,7 @@ namespace GitUI.CommandsDialogs
 
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 
-            if (UICommands.StartCommandLineProcessDialog(owner, cmd))
+            if (UICommands.StartCommandLineProcessDialog(owner, new GitCheckoutBranchCmd(branchName, isRemote, localChanges, newBranchMode, newBranchName)))
             {
                 if (stash)
                 {

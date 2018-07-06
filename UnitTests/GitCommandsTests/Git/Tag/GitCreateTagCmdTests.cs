@@ -52,7 +52,7 @@ namespace GitCommandsTests.Git.Tag
             var args = new GitCreateTagArgs(TagName, Revision, (TagOperation)10);
             var cmd = new GitCreateTagCmd(args, TagMessageFile);
 
-            Assert.Throws<NotSupportedException>(() => cmd.ToLine());
+            Assert.Throws<NotSupportedException>(() => _ = cmd.Arguments);
         }
 
         [TestCase(true, "tag -f -s -F \"c:/.git/TAGMESSAGE\" \"bla\" -- \"0123456789\"")]
@@ -62,7 +62,7 @@ namespace GitCommandsTests.Git.Tag
             var args = new GitCreateTagArgs(TagName, Revision, TagOperation.SignWithDefaultKey, TagMessage, KeyId, force);
             var cmd = new GitCreateTagCmd(args, TagMessageFile);
 
-            var cmdLine = cmd.ToLine();
+            var cmdLine = cmd.Arguments;
 
             Assert.AreEqual(expected, cmdLine);
         }
@@ -76,7 +76,7 @@ namespace GitCommandsTests.Git.Tag
             var args = new GitCreateTagArgs(TagName, Revision, operation, signKeyId: KeyId, force: true);
             var cmd = new GitCreateTagCmd(args, TagMessageFile);
 
-            var actualCmdLine = cmd.ToLine();
+            var actualCmdLine = cmd.Arguments;
 
             Assert.AreEqual(expected, actualCmdLine);
         }

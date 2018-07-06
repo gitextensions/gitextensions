@@ -16,37 +16,22 @@ namespace GitCommands
             _force = force;
         }
 
-        public override string GitCommandName()
-        {
-            return "branch";
-        }
+        public override bool AccessesRemote => false;
+        public override bool ChangesRepoState => true;
 
-        protected override IEnumerable<string> CollectArguments()
+        protected override ArgumentBuilder BuildArguments()
         {
-            yield return _force ? "-D" : "-d";
-
             var hasRemoteBranch = _branches.Any(branch => branch.IsRemote);
             var hasNonRemoteBranch = _branches.Any(branch => !branch.IsRemote);
 
-            if (hasRemoteBranch)
+            return new ArgumentBuilder
             {
-                yield return hasNonRemoteBranch ? "-a" : "-r";
-            }
-
-            foreach (var branch in _branches)
-            {
-                yield return "\"" + branch.Name + "\"";
-            }
-        }
-
-        public override bool AccessesRemote()
-        {
-            return false;
-        }
-
-        public override bool ChangesRepoState()
-        {
-            return true;
+                "branch",
+                { _force, "-D", "-d" },
+                { hasRemoteBranch && hasNonRemoteBranch, "-a" },
+                { hasRemoteBranch && !hasNonRemoteBranch, "-r" },
+                _branches.Select(branch => branch.Name.Quote())
+            };
         }
     }
 }
