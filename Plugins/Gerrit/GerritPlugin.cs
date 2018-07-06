@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
@@ -147,8 +146,8 @@ namespace Gerrit
 
             // Find the controls we're going to extend.
 
-            var menuStrip = FindControl<MenuStrip>(form, p => p.Name == "menuStrip1");
-            var toolStrip = FindControl<ToolStrip>(form, p => p.Name == "ToolStrip");
+            var menuStrip = form.FindDescendantsOfType<MenuStrip>(p => p.Name == "menuStrip1");
+            var toolStrip = form.FindDescendantsOfType<ToolStrip>(p => p.Name == "ToolStrip");
 
             if (menuStrip == null)
             {
@@ -411,35 +410,6 @@ namespace Gerrit
             }
 
             _gitUiCommands.RepoChangedNotifier.Notify();
-        }
-
-        [CanBeNull]
-        private static T FindControl<T>(Control form, Func<T, bool> predicate)
-            where T : Control
-        {
-            return FindControl(form.Controls, predicate);
-        }
-
-        [CanBeNull]
-        private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
-            where T : Control
-        {
-            foreach (Control control in controls)
-            {
-                if (control is T result && predicate(result))
-                {
-                    return result;
-                }
-
-                result = FindControl(control.Controls, predicate);
-
-                if (result != null)
-                {
-                    return result;
-                }
-            }
-
-            return null;
         }
 
         public override bool Execute(GitUIEventArgs args)
