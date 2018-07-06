@@ -121,14 +121,26 @@ namespace GitUI
                 return;
             }
 
-            var jumpList = JumpList.CreateJumpListForIndividualWindow(TaskbarManager.Instance.ApplicationId, windowHandle);
-            jumpList.ClearAllUserTasks();
-            jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
-            jumpList.Refresh();
+            CreateJumpList();
 
             CreateTaskbarButtons(windowHandle, buttons);
 
             return;
+
+            void CreateJumpList()
+            {
+                try
+                {
+                    var jumpList = JumpList.CreateJumpListForIndividualWindow(TaskbarManager.Instance.ApplicationId, windowHandle);
+                    jumpList.ClearAllUserTasks();
+                    jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
+                    jumpList.Refresh();
+                }
+                catch
+                {
+                    // have seen a COM exception here that caused the UI to stop loading
+                }
+            }
 
             void CreateTaskbarButtons(IntPtr handle, WindowsThumbnailToolbarButtons thumbButtons)
             {
