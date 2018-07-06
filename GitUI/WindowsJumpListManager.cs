@@ -127,6 +127,33 @@ namespace GitUI
             jumpList.Refresh();
 
             CreateTaskbarButtons(windowHandle, buttons);
+
+            return;
+
+            void CreateTaskbarButtons(IntPtr handle, WindowsThumbnailToolbarButtons thumbButtons)
+            {
+                if (!_toolbarButtonsCreated)
+                {
+                    _commitButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Commit.Image, 48, true), thumbButtons.Commit.Text);
+                    _commitButton.Click += thumbButtons.Commit.Click;
+
+                    _pushButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Push.Image, 48, true), thumbButtons.Push.Text);
+                    _pushButton.Click += thumbButtons.Push.Click;
+
+                    _pullButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Pull.Image, 48, true), thumbButtons.Pull.Text);
+                    _pullButton.Click += thumbButtons.Pull.Click;
+
+                    _toolbarButtonsCreated = true;
+
+                    // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
+                    TaskbarManager.Instance.ThumbnailToolBars.AddButtons(handle, _commitButton, _pullButton, _pushButton);
+                    TaskbarManager.Instance.ApplicationId = "GitExtensions";
+                }
+
+                _commitButton.Enabled = true;
+                _pushButton.Enabled = true;
+                _pullButton.Enabled = true;
+            }
         }
 
         /// <summary>
@@ -142,31 +169,6 @@ namespace GitUI
             _commitButton.Enabled = false;
             _pushButton.Enabled = false;
             _pullButton.Enabled = false;
-        }
-
-        private void CreateTaskbarButtons(IntPtr handle, WindowsThumbnailToolbarButtons thumbButtons)
-        {
-            if (!_toolbarButtonsCreated)
-            {
-                _commitButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Commit.Image, 48, true), thumbButtons.Commit.Text);
-                _commitButton.Click += thumbButtons.Commit.Click;
-
-                _pushButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Push.Image, 48, true), thumbButtons.Push.Text);
-                _pushButton.Click += thumbButtons.Push.Click;
-
-                _pullButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Pull.Image, 48, true), thumbButtons.Pull.Text);
-                _pullButton.Click += thumbButtons.Pull.Click;
-
-                _toolbarButtonsCreated = true;
-
-                // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
-                TaskbarManager.Instance.ThumbnailToolBars.AddButtons(handle, _commitButton, _pullButton, _pushButton);
-                TaskbarManager.Instance.ApplicationId = "GitExtensions";
-            }
-
-            _commitButton.Enabled = true;
-            _pushButton.Enabled = true;
-            _pullButton.Enabled = true;
         }
 
         /// <summary>
