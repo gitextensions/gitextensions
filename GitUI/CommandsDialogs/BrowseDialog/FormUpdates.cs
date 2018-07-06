@@ -39,8 +39,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             progressBar1.Visible = true;
             progressBar1.Style = ProgressBarStyle.Marquee;
-
-            Icon = Resources.git_extensions_logo_final;
         }
 
         private void CloseButtonClick(object sender, EventArgs e)

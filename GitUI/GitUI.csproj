@@ -1936,7 +1936,6 @@
     <Content Include="Resources\Icons\funnel.png" />
     <Content Include="Resources\Icons\gear.png" />
     <Content Include="Resources\Icons\ghost.png" />
-    <Content Include="Resources\Icons\gitex.png" />
     <Content Include="Resources\Icons\github.png" />
     <Content Include="Resources\Icons\git_extensions_logo.png" />
     <Content Include="Resources\Icons\HelpCommandMerge.png" />
@@ -2060,87 +2059,6 @@
     <Content Include="Translation\Traditional Chinese.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="..\Bin\Logo\cow-head-blue.ico">
-      <Link>Resources\ApplicationIcons\cow-head-blue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\cow-head-green.ico">
-      <Link>Resources\ApplicationIcons\cow-head-green.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\cow-head-purple.ico">
-      <Link>Resources\ApplicationIcons\cow-head-purple.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\cow-head-red.ico">
-      <Link>Resources\ApplicationIcons\cow-head-red.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\cow-head-yellow.ico">
-      <Link>Resources\ApplicationIcons\cow-head-yellow.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\cow-head.ico">
-      <Link>Resources\ApplicationIcons\cow-head.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_blue.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_blue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_green.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_green.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_lightblue.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_lightblue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_blue.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_blue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_green.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_green.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_lightblue.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_lightblue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_purple.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_purple.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_red.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_red.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_yellow.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_yellow.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_purple.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_purple.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_red.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_red.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_yellow.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_yellow.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow_blue.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow_blue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow_green.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow_green.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow_lightblue.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow_lightblue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow_purple.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow_purple.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow_red.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow_red.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow_yellow.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow_yellow.ico</Link>
-    </None>
     <None Include="Properties\DataSources\GitUI.Script.ScriptInfo.datasource" />
     <None Include="Properties\DataSources\GitCommands.Repository.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitSubmodule.datasource" />

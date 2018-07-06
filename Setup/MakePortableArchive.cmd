@@ -204,7 +204,7 @@ xcopy /y ..\bin\plink.exe GitExtensions\PuTTY\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\puttygen.exe GitExtensions\PuTTY\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\bin\Logo\git-extensions-logo-final-256.ico GitExtensions\
+xcopy /y ..\Logo\git-extensions-logo.ico GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 
 IF "%ARCHIVE_WITH_PDB%"=="" GOTO create_archive

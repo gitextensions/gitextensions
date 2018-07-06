@@ -12,7 +12,7 @@
     <AssemblyName>GitExtensions</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ApplicationIcon>..\Bin\Logo\git-extensions-logo-final_mixed-256.ico</ApplicationIcon>
+    <ApplicationIcon>..\Logo\git-extensions-logo.ico</ApplicationIcon>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
   </PropertyGroup>
@@ -55,27 +55,8 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="app.config" />
     <None Include="app.manifest" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Externals\NBug\NBug\NBug.csproj">
@@ -104,15 +85,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Bin\Logo\cow-head-256.ico">
-      <Link>Resources\cow-head-256.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final-256.ico">
-      <Link>Resources\git-extensions-logo-final-256.ico</Link>
-    </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final_mixed-256.ico">
-      <Link>Resources\git-extensions-logo-final_mixed-256.ico</Link>
-    </Content>
     <EmbeddedResource Include="AutoCompleteRegexes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

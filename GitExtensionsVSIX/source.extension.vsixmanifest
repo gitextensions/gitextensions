@@ -7,8 +7,8 @@
         <MoreInfo>http://gitextensions.github.io/</MoreInfo>
         <License>Resources\LICENSE.md</License>
         <GettingStartedGuide>https://git-extensions-documentation.readthedocs.io/en/latest/</GettingStartedGuide>
-        <Icon>Resources\git-extensions-logo-final-32.png</Icon>
-        <PreviewImage>Resources\git-extensions-logo-final-256.png</PreviewImage>
+        <Icon>Resources\git-extensions-logo-32px.png</Icon>
+        <PreviewImage>Resources\git-extensions-logo-256px.png</PreviewImage>
         <Tags>Git, Git Extensions</Tags>
     </Metadata>
 

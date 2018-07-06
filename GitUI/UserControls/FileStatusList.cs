@@ -120,7 +120,7 @@ namespace GitUI
                 Name = "openSubmoduleMenuItem",
                 Tag = "1",
                 Text = "Open with Git Extensions",
-                Image = Resources.gitex
+                Image = Resources.git_extensions_logo
             };
             _openSubmoduleMenuItem.Click += (s, ea) => { ThreadHelper.JoinableTaskFactory.RunAsync(() => OpenSubmoduleAsync()); };
         }

@@ -126,13 +126,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final-256.png">
-      <Link>Resources\git-extensions-logo-final-256.png</Link>
+    <Content Include="..\Logo\git-extensions-logo-256px.png">
+      <Link>Resources\git-extensions-logo-256px.png</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final-32.png">
-      <Link>Resources\git-extensions-logo-final-32.png</Link>
+    <Content Include="..\Logo\git-extensions-logo-32px.png">
+      <Link>Resources\git-extensions-logo-32px.png</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

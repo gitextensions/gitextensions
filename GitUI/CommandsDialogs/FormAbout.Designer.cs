@@ -58,7 +58,7 @@
             // 
             // logoPictureBox
             // 
-            this.logoPictureBox.Image = global::GitUI.Properties.Resources.git_extensions_logo_final_128;
+            this.logoPictureBox.Image = global::GitUI.Properties.Resources.git_extensions_logo_256;
             this.logoPictureBox.Location = new System.Drawing.Point(100, 98);
             this.logoPictureBox.Margin = new System.Windows.Forms.Padding(0);
             this.logoPictureBox.Name = "logoPictureBox";

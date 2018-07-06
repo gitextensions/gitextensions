@@ -10,7 +10,7 @@
     <Condition Message=".NET Framework 4.6.1 must be installed prior to installation of Git Extensions.">
         Installed OR WIX_IS_NETFRAMEWORK_461_OR_LATER_INSTALLED
     </Condition>
-    <Icon Id="gitextensions.ico" SourceFile="../bin/logo/git-extensions-logo-final-256.ico" />
+    <Icon Id="gitextensions.ico" SourceFile="..\Logo\git-extensions-logo.ico" />
     <?include AddRemove.wxi?>
     <?include EnableUpgrades.wxi?>
     <UIRef Id="WixUI_GitExtensions" />
@@ -43,7 +43,7 @@
     <PropertyRef Id="VS2015DEVENV" />
     <DirectoryRef Id="INSTALLDIR">
       <Component Id="gitextensions.ico" Guid="*">
-        <File Source="..\bin\logo\git-extensions-logo-final-256.ico" />
+        <File Source="..\Logo\git-extensions-logo.ico" />
       </Component>
       <Component Id="gitex.cmd" Guid="*">
         <File Source="..\bin\gitex.cmd" />

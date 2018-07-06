@@ -561,7 +561,7 @@ namespace GitUI.CommandsDialogs
             //
             // openSubmoduleMenuItem
             //
-            this.openSubmoduleMenuItem.Image = global::GitUI.Properties.Resources.gitex;
+            this.openSubmoduleMenuItem.Image = global::GitUI.Properties.Resources.git_extensions_logo;
             this.openSubmoduleMenuItem.Name = "openSubmoduleMenuItem";
             this.openSubmoduleMenuItem.Size = new System.Drawing.Size(228, 22);
             this.openSubmoduleMenuItem.Tag = "1";

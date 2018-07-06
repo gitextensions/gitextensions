@@ -35,7 +35,7 @@ namespace GitUI
             _needsPositionSave = enablePositionRestore;
             _needsPositionRestore = enablePositionRestore;
 
-            Icon = Resources.git_extensions_logo_final;
+            Icon = Resources.git_extensions_logo_icon;
             FormClosing += GitExtensionsForm_FormClosing;
 
             var cancelButton = new Button();

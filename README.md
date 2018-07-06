@@ -1,4 +1,4 @@
-![Git Extensions logo](https://cdn.rawgit.com/gitextensions/gitextensions/master/Bin/Logo/git-extensions-logo-final.svg) 
+![Git Extensions logo](https://cdn.rawgit.com/gitextensions/gitextensions/master/Logo/git-extensions-logo.svg) 
 
 # Git Extensions
 
