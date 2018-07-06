@@ -64,7 +64,7 @@ namespace GitUI.CommandsDialogs
             {
                 var parents = Module.GetParentsRevisions(Revision.Guid);
 
-                for (int i = 0; i < parents.Length; i++)
+                for (int i = 0; i < parents.Count; i++)
                 {
                     var item = new ListViewItem(i + 1 + "");
                     item.SubItems.Add(parents[i].Subject);

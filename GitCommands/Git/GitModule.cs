@@ -1145,8 +1145,7 @@ namespace GitCommands
 
         public bool IsMerge(string commit)
         {
-            string[] parents = GetParents(commit);
-            return parents.Length > 1;
+            return GetParents(commit).Count > 1;
         }
 
         public GitRevision GetRevision(string commit, bool shortFormat = false, bool loadRefs = false)
@@ -1236,17 +1235,16 @@ namespace GitCommands
             }
         }
 
-        public string[] GetParents(string commit)
+        public IReadOnlyList<string> GetParents(string commit)
         {
-            string output = RunGitCmd("log -n 1 --format=format:%P \"" + commit + "\"");
-            return output.Split(' ');
+            return RunGitCmd($"log -n 1 --format=format:%P \"{commit}\"").Split(' ');
         }
 
-        public GitRevision[] GetParentsRevisions(string commit)
+        public IReadOnlyList<GitRevision> GetParentsRevisions(string commit)
         {
             return GetParents(commit)
                 .Select(parent => GetRevision(parent, shortFormat: true))
-                .ToArray();
+                .ToList();
         }
 
         public string ShowSha1(string sha1)
@@ -2963,11 +2961,11 @@ namespace GitCommands
         /// <param name="sha1">The sha1.</param>
         /// <param name="getLocal">Pass true to include local branches</param>
         /// <param name="getRemote">Pass true to include remote branches</param>
-        public IEnumerable<string> GetAllBranchesWhichContainGivenCommit(string sha1, bool getLocal, bool getRemote)
+        public IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(string sha1, bool getLocal, bool getRemote)
         {
             if (!getLocal && !getRemote)
             {
-                return Enumerable.Empty<string>();
+                return Array.Empty<string>();
             }
 
             var args = new ArgumentBuilder
@@ -2982,7 +2980,7 @@ namespace GitCommands
 
             if (IsGitErrorMessage(info))
             {
-                return Enumerable.Empty<string>();
+                return Array.Empty<string>();
             }
 
             string[] result = info.Split(new[] { '\r', '\n', '*' }, StringSplitOptions.RemoveEmptyEntries);
@@ -3007,13 +3005,13 @@ namespace GitCommands
         /// Gets all tags which contain the given commit.
         /// </summary>
         /// <param name="sha1">The sha1.</param>
-        public IEnumerable<string> GetAllTagsWhichContainGivenCommit(string sha1)
+        public IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(string sha1)
         {
             string info = RunGitCmd("tag --contains " + sha1, SystemEncoding);
 
             if (IsGitErrorMessage(info))
             {
-                return Enumerable.Empty<string>();
+                return Array.Empty<string>();
             }
 
             return info.Split(new[] { '\r', '\n', '*', ' ' }, StringSplitOptions.RemoveEmptyEntries);
