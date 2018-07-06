@@ -26,7 +26,6 @@ namespace GitExtensionsVSIX
         /// </summary>
         private readonly Package _package;
 
-        private readonly Dictionary<string, VsixCommandBase> _commandsByName = new Dictionary<string, VsixCommandBase>();
         private readonly Dictionary<int, VsixCommandBase> _commands = new Dictionary<int, VsixCommandBase>();
 
         private readonly _DTE _application;
@@ -59,50 +58,44 @@ namespace GitExtensionsVSIX
 
         private void RegisterCommands()
         {
-            ////RegisterCommand("Difftool_Selection", new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
-            RegisterCommand("Difftool", new ToolbarCommand<OpenWithDiftool>(), gitExtDiffCommand);
-            ////RegisterCommand("ShowFileHistory_Selection", new ToolbarCommand<FileHistory>(runForSelection: true));
-            RegisterCommand("ShowFileHistory", new ToolbarCommand<FileHistory>(), gitExtHistoryCommand);
-            ////RegisterCommand("ResetChanges_Selection", new ToolbarCommand<Revert>(runForSelection: true));
-            RegisterCommand("ResetChanges", new ToolbarCommand<Revert>(), gitExtResetFileCommand);
-            RegisterCommand("Browse", new ToolbarCommand<Browse>(), gitExtBrowseCommand);
-            RegisterCommand("Clone", new ToolbarCommand<Clone>(), gitExtCloneCommand);
-            RegisterCommand("CreateNewRepository", new ToolbarCommand<Init>(), gitExtNewCommand);
-            RegisterCommand("Commit", new Commit(), gitExtCommitCommand);
-            RegisterCommand("Pull", new ToolbarCommand<Pull>(), gitExtPullCommand);
-            RegisterCommand("Push", new ToolbarCommand<Push>(), gitExtPushCommand);
-            RegisterCommand("Stash", new ToolbarCommand<Stash>(), gitExtStashCommand);
-            RegisterCommand("Remotes", new ToolbarCommand<Remotes>(), gitExtRemotesCommand);
-            RegisterCommand("GitIgnore", new ToolbarCommand<GitIgnore>(), gitExtGitIgnoreCommand);
-            RegisterCommand("ApplyPatch", new ToolbarCommand<ApplyPatch>(), gitExtApplyPatchCommand);
-            RegisterCommand("FormatPatch", new ToolbarCommand<FormatPatch>(), gitExtFormatPatchCommand);
-            RegisterCommand("ViewChanges", new ToolbarCommand<ViewChanges>(), gitExtViewChangesCommand);
-            RegisterCommand("Blame", new ToolbarCommand<Blame>(), gitExtBlameCommand);
-            RegisterCommand("FindFile", new ToolbarCommand<FindFile>(), gitExtFindFileCommand);
-            RegisterCommand("SwitchBranch", new ToolbarCommand<SwitchBranch>(), gitExtCheckoutCommand);
-            RegisterCommand("CreateBranch", new ToolbarCommand<CreateBranch>(), gitExtCreateBranchCommand);
-            RegisterCommand("Merge", new ToolbarCommand<Merge>(), gitExtMergeCommand);
-            RegisterCommand("Rebase", new ToolbarCommand<Rebase>(), gitExtRebaseCommand);
-            RegisterCommand("SolveMergeConflicts", new ToolbarCommand<SolveMergeConflicts>(), gitExtSolveConflictsCommand);
-            RegisterCommand("CherryPick", new ToolbarCommand<Cherry>(), gitExtCherryPickCommand);
-            RegisterCommand("Bash", new ToolbarCommand<Bash>(), gitExtBashCommand);
-            RegisterCommand("Settings", new ToolbarCommand<Settings>(), gitExtSettingsCommand);
-            RegisterCommand("About", new ToolbarCommand<About>(), gitExtAboutCommand);
+            ////RegisterCommand(new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
+            RegisterCommand(new ToolbarCommand<OpenWithDiftool>(), gitExtDiffCommand);
+            ////RegisterCommand(new ToolbarCommand<FileHistory>(runForSelection: true));
+            RegisterCommand(new ToolbarCommand<FileHistory>(), gitExtHistoryCommand);
+            ////RegisterCommand(new ToolbarCommand<Revert>(runForSelection: true));
+            RegisterCommand(new ToolbarCommand<Revert>(), gitExtResetFileCommand);
+            RegisterCommand(new ToolbarCommand<Browse>(), gitExtBrowseCommand);
+            RegisterCommand(new ToolbarCommand<Clone>(), gitExtCloneCommand);
+            RegisterCommand(new ToolbarCommand<Init>(), gitExtNewCommand);
+            RegisterCommand(new Commit(), gitExtCommitCommand);
+            RegisterCommand(new ToolbarCommand<Pull>(), gitExtPullCommand);
+            RegisterCommand(new ToolbarCommand<Push>(), gitExtPushCommand);
+            RegisterCommand(new ToolbarCommand<Stash>(), gitExtStashCommand);
+            RegisterCommand(new ToolbarCommand<Remotes>(), gitExtRemotesCommand);
+            RegisterCommand(new ToolbarCommand<GitIgnore>(), gitExtGitIgnoreCommand);
+            RegisterCommand(new ToolbarCommand<ApplyPatch>(), gitExtApplyPatchCommand);
+            RegisterCommand(new ToolbarCommand<FormatPatch>(), gitExtFormatPatchCommand);
+            RegisterCommand(new ToolbarCommand<ViewChanges>(), gitExtViewChangesCommand);
+            RegisterCommand(new ToolbarCommand<Blame>(), gitExtBlameCommand);
+            RegisterCommand(new ToolbarCommand<FindFile>(), gitExtFindFileCommand);
+            RegisterCommand(new ToolbarCommand<SwitchBranch>(), gitExtCheckoutCommand);
+            RegisterCommand(new ToolbarCommand<CreateBranch>(), gitExtCreateBranchCommand);
+            RegisterCommand(new ToolbarCommand<Merge>(), gitExtMergeCommand);
+            RegisterCommand(new ToolbarCommand<Rebase>(), gitExtRebaseCommand);
+            RegisterCommand(new ToolbarCommand<SolveMergeConflicts>(), gitExtSolveConflictsCommand);
+            RegisterCommand(new ToolbarCommand<Cherry>(), gitExtCherryPickCommand);
+            RegisterCommand(new ToolbarCommand<Bash>(), gitExtBashCommand);
+            RegisterCommand(new ToolbarCommand<Settings>(), gitExtSettingsCommand);
+            RegisterCommand(new ToolbarCommand<About>(), gitExtAboutCommand);
         }
 
-        private void RegisterCommand(string commandName, CommandBase command, int id)
+        private void RegisterCommand(CommandBase command, int id)
         {
-            RegisterCommand(commandName, new VsixCommandBase(command), id);
-        }
-
-        private void RegisterCommand(string commandName, VsixCommandBase command, int id)
-        {
-            _commandsByName[commandName] = command;
             var commandId = new CommandID(CommandSet, id);
             var menuCommand = new OleMenuCommand(MenuItemCallback, commandId);
             menuCommand.BeforeQueryStatus += MenuCommand_BeforeQueryStatus;
             _commandService.AddCommand(menuCommand);
-            _commands[id] = command;
+            _commands[id] = new VsixCommandBase(command);
         }
 
         private void MenuCommand_BeforeQueryStatus(object sender, EventArgs e)
