@@ -36,6 +36,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 _NO_TRANSLATE_Directory.Focus();
                 _NO_TRANSLATE_Directory.Select();
             });
+
+            this.AdjustForDpiScaling();
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
