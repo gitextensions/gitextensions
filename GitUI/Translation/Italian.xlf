@@ -1236,7 +1236,7 @@ Verificare che Git (Git for Windows o Cygwin) sia installato o impostare il coma
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>L'elemento selezionato non è un repository git valido.
 
 Vuoi rimuoverlo dalla lista dei repository recenti?</target>
@@ -2705,7 +2705,7 @@ confrontare con la prima:</target>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>L'elemento selezionato non è un repository git valido.
 
 Vuoi rimuoverlo dalla lista dei repository recenti?</target>

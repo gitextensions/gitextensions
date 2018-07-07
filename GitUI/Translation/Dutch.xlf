@@ -1253,7 +1253,7 @@ Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad hand
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>Het geselecteerde item is geen geldige git directory.
 
 Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geopend' lijst?</target>
@@ -2751,7 +2751,7 @@ compare with first:</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>Het geselecteerde item is geen geldige git directory.
 
 Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geopend' lijst?</target>

@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _configureWorkingDirMenu = new TranslationString("Configure this menu");
 
         private readonly TranslationString _directoryIsNotAValidRepositoryCaption = new TranslationString("Open");
-        private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort and remove it from the recent repositories list?");
+        private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to remove it from the recent repositories list?");
 
         private readonly TranslationString _updateCurrentSubmodule = new TranslationString("Update current submodule");
 

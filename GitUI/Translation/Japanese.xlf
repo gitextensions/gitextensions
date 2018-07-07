@@ -1249,7 +1249,7 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>選択されたものは、正しい Git リポジトリではありません。
 中断し、“最近開いたリポジトリ”のリストから消去しますか？</target>
         
@@ -2737,7 +2737,7 @@ compare with first:</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>選択されたものは、正しい Git リポジトリではありません。
 中断して、“最近のリポジトリ”から消去しますか？</target>
         

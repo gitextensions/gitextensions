@@ -1213,7 +1213,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>這不是一個正確的GIT版本庫，
 
 你要終止同時將它移除？</target>
@@ -2655,7 +2655,7 @@ compare with first:</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>這不是一個正確的GIT版本庫，
 
 你要終止同時將它移除？</target>

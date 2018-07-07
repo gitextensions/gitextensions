@@ -1250,7 +1250,7 @@ Por favor asegúrese que git (Git for Windows o cygwin) está instalado o config
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>El elemento seleccionado no es un repositorio Git válido.
 
 ¿Quiere abortar y eliminarlo de la lista de repositorios recientes?</target>
@@ -2736,7 +2736,7 @@ compare with first:</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>El elemento seleccionado no es un repositorio git válido.
 ¿Desea abortar y eliminarlo de la lista de repositorios recientes?</target>
         

@@ -1215,7 +1215,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>선택된 Git 저장소는 더이상 유효하지 않습니다.
 
 실행을 취소하고 이 아이템을 최근 사용된 저장소에서 제거하시겠습니까?</target>
@@ -2658,7 +2658,7 @@ compare with first:</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>선택된 Git 저장소는 더이상 유효하지 않습니다.
 
 실행을 취소하고 이 아이템을 최근 사용된 저장소에서 제거하시겠습니까?</target>

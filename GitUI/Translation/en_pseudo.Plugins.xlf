@@ -1246,7 +1246,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>[Ŧħḗ şḗŀḗƈŧḗḓ īŧḗḿ īş ƞǿŧ ȧ ṽȧŀīḓ ɠīŧ řḗƥǿşīŧǿřẏ.
 
 Ḓǿ ẏǿŭ ẇȧƞŧ ŧǿ ȧƀǿřŧ ȧƞḓ řḗḿǿṽḗ īŧ ƒřǿḿ ŧħḗ řḗƈḗƞŧ řḗƥǿşīŧǿřīḗş ŀīşŧ? ΐϑǲ ϑϵϖǋǈϵΐſ ϰϖϱς ςǲ]</target>
@@ -2739,7 +2739,7 @@ compare with first:</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>[Ŧħḗ şḗŀḗƈŧḗḓ īŧḗḿ īş ƞǿŧ ȧ ṽȧŀīḓ ɠīŧ řḗƥǿşīŧǿřẏ.
 
 Ḓǿ ẏǿŭ ẇȧƞŧ ŧǿ ȧƀǿřŧ ȧƞḓ řḗḿǿṽḗ īŧ ƒřǿḿ ŧħḗ řḗƈḗƞŧ řḗƥǿşīŧǿřīḗş ŀīşŧ? ǋẛΰ ıǋϕǋſ衋鶱ϰ ΐǲϑΐ ϕǅ]</target>
