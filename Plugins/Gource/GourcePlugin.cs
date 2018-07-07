@@ -157,22 +157,10 @@ namespace Gource
                         Directory.CreateDirectory(fullDirPath);
                     }
 
-                    var streamWriter = File.Create(fullPath);
-                    var data = new byte[2048];
-                    while (true)
+                    using (var fileStream = File.Create(fullPath))
                     {
-                        var size = s.Read(data, 0, data.Length);
-                        if (size > 0)
-                        {
-                            streamWriter.Write(data, 0, size);
-                        }
-                        else
-                        {
-                            break;
-                        }
+                        s.CopyTo(fileStream);
                     }
-
-                    streamWriter.Close();
                 }
 
                 s.Close();
