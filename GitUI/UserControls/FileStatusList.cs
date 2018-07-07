@@ -31,7 +31,7 @@ namespace GitUI
     {
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
 
-        private static ImageList _images;
+        [CanBeNull] private static ImageList _images;
 
         private readonly TranslationString _diffWithParent = new TranslationString("Diff with:");
         public readonly TranslationString CombinedDiff = new TranslationString("Combined Diff");
@@ -41,7 +41,7 @@ namespace GitUI
 
         private bool _alwaysRevisionGroups;
         private ToolStripItem _openSubmoduleMenuItem;
-        private IDisposable _selectedIndexChangeSubscription;
+        [CanBeNull] private IDisposable _selectedIndexChangeSubscription;
 
         public DescribeRevisionDelegate DescribeRevision { get; set; }
 

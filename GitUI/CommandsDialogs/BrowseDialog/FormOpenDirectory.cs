@@ -82,6 +82,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             return directories.Distinct().ToList();
         }
 
+        [CanBeNull]
         public static GitModule OpenModule(IWin32Window owner, GitModule currentModule)
         {
             using (var open = new FormOpenDirectory(currentModule))

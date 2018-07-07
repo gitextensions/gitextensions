@@ -23,6 +23,7 @@ using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Script;
 using GitUI.SpellChecker;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -136,7 +137,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly ICommitTemplateManager _commitTemplateManager;
         private readonly CommitKind _commitKind;
-        private readonly GitRevision _editedCommit;
+        [CanBeNull] private readonly GitRevision _editedCommit;
         private readonly ToolStripMenuItem _stageSelectedLinesToolStripMenuItem;
         private readonly ToolStripMenuItem _resetSelectedLinesToolStripMenuItem;
         private readonly AsyncLoader _unstagedLoader = new AsyncLoader();
@@ -170,7 +171,7 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormCommit(GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null)
+        public FormCommit([CanBeNull] GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null)
             : base(enablePositionRestore: true, commands)
         {
             ThreadHelper.ThrowIfNotOnUIThread();

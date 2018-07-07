@@ -94,7 +94,7 @@ namespace GitUI.CommandsDialogs
         private readonly ILongShaProvider _longShaProvider;
         private readonly WindowsJumpListManager _windowsJumpListManager;
 
-        private BuildReportTabPageExtension _buildReportTabPageExtension;
+        [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
         private ConEmuControl _terminal;
         private Dashboard _dashboard;
         private ToolStripItem _rebase;

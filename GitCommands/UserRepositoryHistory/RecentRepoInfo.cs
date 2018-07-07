@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace GitCommands.UserRepositoryHistory
 {
     public class RecentRepoInfo
     {
         public Repository Repo { get; set; }
-        public string Caption { get; set; }
+        [CanBeNull] public string Caption { get; set; }
         public bool MostRecent { get; set; }
-        public DirectoryInfo DirInfo { get; set; }
-        public string ShortName { get; set; }
+        [CanBeNull] public DirectoryInfo DirInfo { get; set; }
+        [CanBeNull] public string ShortName { get; set; }
         public string DirName { get; set; }
 
         public RecentRepoInfo(Repository repo, bool mostRecent)
@@ -40,10 +41,7 @@ namespace GitCommands.UserRepositoryHistory
 
         public bool FullPath => DirInfo == null;
 
-        public override string ToString()
-        {
-            return Repo.ToString();
-        }
+        public override string ToString() => Repo.ToString();
     }
 
     public class RecentRepoSplitter

@@ -24,7 +24,7 @@ namespace GitUI
 
         public GitModule Module { get; private set; }
         public ILockableNotifier RepoChangedNotifier { get; }
-        public IBrowseRepo BrowseRepo { get; set; }
+        [CanBeNull] public IBrowseRepo BrowseRepo { get; set; }
 
         public GitUICommands([NotNull] GitModule module)
         {
@@ -82,7 +82,7 @@ namespace GitUI
             return await Module.RunCmdAsync(cmd, arguments).ConfigureAwait(false);
         }
 
-        private bool RequiresValidWorkingDir(object owner)
+        private bool RequiresValidWorkingDir([CanBeNull] object owner)
         {
             if (!Module.IsValidGitWorkingDir())
             {
@@ -264,8 +264,12 @@ namespace GitUI
         /// <param name="postEvent">Event invoked after performing action</param>
         /// <param name="action">Action to do. Return true to indicate that the action was successfully done.</param>
         /// <returns>true if action was successfully done, false otherwise</returns>
-        private bool DoActionOnRepo(IWin32Window owner, bool requiresValidWorkingDir, bool changesRepo,
-            EventHandler<GitUIEventArgs> preEvent, EventHandler<GitUIPostActionEventArgs> postEvent,
+        private bool DoActionOnRepo(
+            [CanBeNull] IWin32Window owner,
+            bool requiresValidWorkingDir,
+            bool changesRepo,
+            EventHandler<GitUIEventArgs> preEvent,
+            EventHandler<GitUIPostActionEventArgs> postEvent,
             [InstantHandle] Func<bool> action)
         {
             bool actionDone = false;
@@ -1201,12 +1205,12 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, null, null, Action);
         }
 
-        private bool InvokeEvent(IWin32Window ownerForm, [CanBeNull] EventHandler<GitUIEventArgs> gitUIEventHandler)
+        private bool InvokeEvent([CanBeNull] IWin32Window ownerForm, [CanBeNull] EventHandler<GitUIEventArgs> gitUIEventHandler)
         {
             return InvokeEvent(this, ownerForm, gitUIEventHandler);
         }
 
-        private void InvokePostEvent(IWin32Window ownerForm, bool actionDone, EventHandler<GitUIPostActionEventArgs> gitUIEventHandler)
+        private void InvokePostEvent([CanBeNull] IWin32Window ownerForm, bool actionDone, EventHandler<GitUIPostActionEventArgs> gitUIEventHandler)
         {
             if (gitUIEventHandler != null)
             {
