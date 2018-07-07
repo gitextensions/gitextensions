@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private readonly TranslationString _directoryIsNotAValidRepositoryCaption = new TranslationString("Open");
         private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort it from the recent repositories list?");
 
-        private Font _secondaryFont;
+        private readonly Font _secondaryFont;
         private static readonly Color DefaultFavouriteColor = Color.DarkGoldenrod;
         private static readonly Color DefaultBranchNameColor = SystemColors.HotTrack;
         private Color _favouriteColor = DefaultFavouriteColor;

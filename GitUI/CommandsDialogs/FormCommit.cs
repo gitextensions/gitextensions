@@ -32,6 +32,7 @@ namespace GitUI.CommandsDialogs
     public sealed partial class FormCommit : GitModuleForm
     {
         #region Translation
+
         private readonly TranslationString _amendCommit =
             new TranslationString("You are about to rewrite history." + Environment.NewLine +
                                   "Only use amend if the commit is not published yet!" + Environment.NewLine +

@@ -79,6 +79,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _undoLastCommitText = new TranslationString("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
         private readonly TranslationString _undoLastCommitCaption = new TranslationString("Undo last commit");
+
         #endregion
 
         private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
@@ -698,7 +699,7 @@ namespace GitUI.CommandsDialogs
                     ShowRevisions();
                 }
 
-                RefreshWorkingDirCombo();
+                RefreshWorkingDirComboText();
                 var branchName = !string.IsNullOrEmpty(branchSelect.Text) ? branchSelect.Text : _noBranchTitle.Text;
                 Text = _appTitleGenerator.Generate(Module?.WorkingDir, validBrowseDir, branchName);
 
@@ -749,7 +750,8 @@ namespace GitUI.CommandsDialogs
 
         #region Working directory combo box
 
-        private void RefreshWorkingDirCombo()
+        /// <summary>Updates the text shown on the combo button itself.</summary>
+        private void RefreshWorkingDirComboText()
         {
             var path = Module.WorkingDir;
 
@@ -760,8 +762,10 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            var recentRepositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
-            List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
+            var recentRepositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
+                () => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
+
+            var mostRecentRepos = new List<RecentRepoInfo>();
             using (var graphics = CreateGraphics())
             {
                 var splitter = new RecentRepoSplitter
@@ -771,16 +775,9 @@ namespace GitUI.CommandsDialogs
                 };
                 splitter.SplitRecentRepos(recentRepositoryHistory, mostRecentRepos, mostRecentRepos);
 
-                RecentRepoInfo ri = mostRecentRepos.Find((e) => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
+                var ri = mostRecentRepos.Find(e => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
 
-                if (ri == null)
-                {
-                    _NO_TRANSLATE_Workingdir.Text = path;
-                }
-                else
-                {
-                    _NO_TRANSLATE_Workingdir.Text = ri.Caption;
-                }
+                _NO_TRANSLATE_Workingdir.Text = PathUtil.GetDisplayPath(ri?.Caption ?? path);
 
                 if (AppSettings.RecentReposComboMinWidth > 0)
                 {
@@ -811,22 +808,21 @@ namespace GitUI.CommandsDialogs
 
             _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
 
-            var toolStripItem = new ToolStripMenuItem(openToolStripMenuItem.Text, openToolStripMenuItem.Image);
-            toolStripItem.ShortcutKeys = openToolStripMenuItem.ShortcutKeys;
-            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
-            toolStripItem.Click += (hs, he) => OpenToolStripMenuItemClick(hs, he);
+            var mnuOpenLocalRepository = new ToolStripMenuItem(openToolStripMenuItem.Text, openToolStripMenuItem.Image) { ShortcutKeys = openToolStripMenuItem.ShortcutKeys };
+            mnuOpenLocalRepository.Click += OpenToolStripMenuItemClick;
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(mnuOpenLocalRepository);
 
-            toolStripItem = new ToolStripMenuItem(_configureWorkingDirMenu.Text);
-            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
-            toolStripItem.Click += (hs, he) =>
+            var mnuRecentReposSettings = new ToolStripMenuItem(_configureWorkingDirMenu.Text);
+            mnuRecentReposSettings.Click += (hs, he) =>
             {
                 using (var frm = new FormRecentReposSettings())
                 {
                     frm.ShowDialog(this);
                 }
 
-                RefreshWorkingDirCombo();
+                RefreshWorkingDirComboText();
             };
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(mnuRecentReposSettings);
 
             PreventToolStripSplitButtonClosing((ToolStripSplitButton)sender);
         }
@@ -1654,9 +1650,9 @@ namespace GitUI.CommandsDialogs
                     };
                     menuItemCategory.DropDownItems.Add(item);
 
-                    item.Click += (hs, he) => ChangeWorkingDir(r.Repo.Path);
+                    item.Click += delegate { ChangeWorkingDir(r.Repo.Path); };
 
-                    if (!r.Repo.Path.Equals(r.Caption))
+                    if (r.Repo.Path != r.Caption)
                     {
                         item.ToolTipText = r.Repo.Path;
                     }
@@ -1718,7 +1714,7 @@ namespace GitUI.CommandsDialogs
 
                 item.Click += (hs, he) => ChangeWorkingDir(repo.Path);
 
-                if (!repo.Path.Equals(caption))
+                if (repo.Path != caption)
                 {
                     item.ToolTipText = repo.Path;
                 }
@@ -2134,7 +2130,7 @@ namespace GitUI.CommandsDialogs
 
         private void DoPullAction(Action action)
         {
-            var actLactPullAction = Module.LastPullAction;
+            var actLastPullAction = Module.LastPullAction;
             try
             {
                 action();
@@ -2143,7 +2139,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (!AppSettings.SetNextPullActionAsDefault)
                 {
-                    Module.LastPullAction = actLactPullAction;
+                    Module.LastPullAction = actLastPullAction;
                     Module.LastPullActionToFormPullAction();
                 }
 
@@ -2155,10 +2151,10 @@ namespace GitUI.CommandsDialogs
         private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DoPullAction(() =>
-                {
-                    Module.LastPullAction = AppSettings.PullAction.Merge;
-                    PullToolStripMenuItemClick(sender, e);
-                });
+            {
+                Module.LastPullAction = AppSettings.PullAction.Merge;
+                PullToolStripMenuItemClick(sender, e);
+            });
         }
 
         private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -2258,35 +2254,37 @@ namespace GitUI.CommandsDialogs
 
         private void RevisionInfo_CommandClick(object sender, CommitInfo.CommandEventArgs e)
         {
-            if (e.Command == "gotocommit")
+            switch (e.Command)
             {
-                var revision = _longShaProvider.Get(e.Data);
-                var found = RevisionGrid.SetSelectedRevision(revision);
+                case "gotocommit":
+                    var revision = _longShaProvider.Get(e.Data);
+                    var found = RevisionGrid.SetSelectedRevision(revision);
 
-                // When 'git log --first-parent' filtration is used, user can click on child commit
-                // that is not present in the shown git log. User still wants to see the child commit
-                // and to make it possible we add explicit branch filter and refresh.
-                if (AppSettings.ShowFirstParent && !found)
-                {
-                    _filterBranchHelper.SetBranchFilter(revision, refresh: true);
-                    RevisionGrid.SetSelectedRevision(revision);
-                }
-            }
-            else if (e.Command == "gotobranch" || e.Command == "gototag")
-            {
-                CommitData commit = _commitDataManager.GetCommitData(e.Data, out _);
-                if (commit != null)
-                {
-                    RevisionGrid.SetSelectedRevision(new GitRevision(commit.Guid.ToString()));
-                }
-            }
-            else if (e.Command == "navigatebackward")
-            {
-                RevisionGrid.NavigateBackward();
-            }
-            else if (e.Command == "navigateforward")
-            {
-                RevisionGrid.NavigateForward();
+                    // When 'git log --first-parent' filtration is used, user can click on child commit
+                    // that is not present in the shown git log. User still wants to see the child commit
+                    // and to make it possible we add explicit branch filter and refresh.
+                    if (AppSettings.ShowFirstParent && !found)
+                    {
+                        _filterBranchHelper.SetBranchFilter(revision, refresh: true);
+                        RevisionGrid.SetSelectedRevision(revision);
+                    }
+
+                    break;
+                case "gotobranch":
+                case "gototag":
+                    CommitData commit = _commitDataManager.GetCommitData(e.Data, out _);
+                    if (commit != null)
+                    {
+                        RevisionGrid.SetSelectedRevision(new GitRevision(commit.Guid.ToString()));
+                    }
+
+                    break;
+                case "navigatebackward":
+                    RevisionGrid.NavigateBackward();
+                    break;
+                case "navigateforward":
+                    RevisionGrid.NavigateForward();
+                    break;
             }
         }
 
