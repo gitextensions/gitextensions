@@ -54,40 +54,38 @@ namespace Gource
 
         public override bool Execute(GitUIEventArgs args)
         {
-            IGitModule gitUiCommands = args.GitModule;
-            var ownerForm = args.OwnerForm;
-            if (!gitUiCommands.IsValidGitWorkingDir())
+            if (!args.GitModule.IsValidGitWorkingDir())
             {
-                MessageBox.Show(ownerForm, _currentDirectoryIsNotValidGit.Text);
+                MessageBox.Show(args.OwnerForm, _currentDirectoryIsNotValidGit.Text);
                 return false;
             }
 
             var pathToGource = _gourcePath.ValueOrDefault(Settings);
 
-            if (!string.IsNullOrEmpty(pathToGource))
+            if (!File.Exists(pathToGource))
             {
-                if (!File.Exists(pathToGource))
+                var result = MessageBox.Show(
+                    args.OwnerForm,
+                    string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
                 {
-                    if (MessageBox.Show(ownerForm,
-                            string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo) ==
-                        DialogResult.Yes)
-                    {
-                        Settings.SetValue(_gourcePath.Name, _gourcePath.DefaultValue, s => s);
-                        pathToGource = _gourcePath.DefaultValue;
-                    }
+                    Settings.SetValue(_gourcePath.Name, _gourcePath.DefaultValue, s => s);
+                    pathToGource = _gourcePath.DefaultValue;
                 }
             }
 
             if (string.IsNullOrEmpty(pathToGource))
             {
-                if (MessageBox.Show(ownerForm, _doYouWantDownloadGource.Text, _download.Text,
-                    MessageBoxButtons.YesNo) == DialogResult.Yes)
+                if (MessageBox.Show(
+                        args.OwnerForm, _doYouWantDownloadGource.Text, _download.Text,
+                        MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     var gourceUrl = SearchForGourceUrl();
 
                     if (string.IsNullOrEmpty(gourceUrl))
                     {
-                        MessageBox.Show(ownerForm, _cannotFindGource.Text);
+                        MessageBox.Show(args.OwnerForm, _cannotFindGource.Text);
                         return false;
                     }
 
@@ -103,20 +101,20 @@ namespace Gource
                         var newGourcePath = Path.Combine(downloadDir, "gource\\gource.exe");
                         if (File.Exists(newGourcePath))
                         {
-                            MessageBox.Show(ownerForm, _gourceDownloadedAndUnzipped.Text);
+                            MessageBox.Show(args.OwnerForm, _gourceDownloadedAndUnzipped.Text);
                             pathToGource = newGourcePath;
                         }
                     }
                     else
                     {
-                        MessageBox.Show(ownerForm, _downloadingFailed.Text);
+                        MessageBox.Show(args.OwnerForm, _downloadingFailed.Text);
                     }
                 }
             }
 
             using (var gourceStart = new GourceStart(pathToGource, args, _gourceArguments.ValueOrDefault(Settings)))
             {
-                gourceStart.ShowDialog(ownerForm);
+                gourceStart.ShowDialog(args.OwnerForm);
                 Settings.SetValue(_gourceArguments.Name, gourceStart.GourceArguments, s => s);
                 Settings.SetValue(_gourcePath.Name, gourceStart.PathToGource, s => s);
             }
@@ -126,44 +124,48 @@ namespace Gource
 
         #endregion IGitPlugin Members
 
-        public static void UnZipFiles(string zipPathAndFile, string outputFolder, bool deleteZipFile)
+        private static void UnZipFiles(string zipPathAndFile, string outputFolder, bool deleteZipFile)
         {
             try
             {
-                var s = new ZipInputStream(File.OpenRead(zipPathAndFile));
-
-                ZipEntry theEntry;
-                while ((theEntry = s.GetNextEntry()) != null)
+                if (outputFolder != "")
                 {
-                    var directoryName = outputFolder;
-                    var fileName = Path.GetFileName(theEntry.Name);
+                    Directory.CreateDirectory(outputFolder);
+                }
 
-                    // create directory
-                    if (directoryName != "")
+                using (var zipFileStream = File.OpenRead(zipPathAndFile))
+                using (var zipInputStream = new ZipInputStream(zipFileStream))
+                {
+                    while (true)
                     {
-                        Directory.CreateDirectory(directoryName);
-                    }
+                        var entry = zipInputStream.GetNextEntry();
 
-                    if (fileName == string.Empty || theEntry.Name.IndexOf(".ini") >= 0)
-                    {
-                        continue;
-                    }
+                        if (entry == null)
+                        {
+                            break;
+                        }
 
-                    var fullPath = Path.Combine(directoryName, theEntry.Name);
-                    fullPath = fullPath.Replace("\\ ", "\\");
-                    var fullDirPath = Path.GetDirectoryName(fullPath);
-                    if (fullDirPath != null && !Directory.Exists(fullDirPath))
-                    {
-                        Directory.CreateDirectory(fullDirPath);
-                    }
+                        var fileName = Path.GetFileName(entry.Name);
 
-                    using (var fileStream = File.Create(fullPath))
-                    {
-                        s.CopyTo(fileStream);
+                        if (fileName == string.Empty || entry.Name.Contains(".ini"))
+                        {
+                            continue;
+                        }
+
+                        var fullPath = Path.Combine(outputFolder, entry.Name).Replace("\\ ", "\\");
+                        var fullDirPath = Path.GetDirectoryName(fullPath);
+                        if (fullDirPath != null && !Directory.Exists(fullDirPath))
+                        {
+                            Directory.CreateDirectory(fullDirPath);
+                        }
+
+                        using (var fileStream = File.Create(fullPath))
+                        {
+                            zipInputStream.CopyTo(fileStream);
+                        }
                     }
                 }
 
-                s.Close();
                 if (deleteZipFile)
                 {
                     File.Delete(zipPathAndFile);
@@ -175,7 +177,7 @@ namespace Gource
             }
         }
 
-        public int DownloadFile(string remoteFilename, string localFilename)
+        private static int DownloadFile(string remoteFilename, string localFilename)
         {
             // Function will return the number of bytes processed
             // to the caller. Initialize to 0 here.
