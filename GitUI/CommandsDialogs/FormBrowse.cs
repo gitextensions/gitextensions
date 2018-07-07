@@ -1533,7 +1533,7 @@ namespace GitUI.CommandsDialogs
 
             DialogResult dialogResult = MessageBox.Show(this, _directoryIsNotAValidRepository.Text,
                                                         _directoryIsNotAValidRepositoryCaption.Text,
-                                                        MessageBoxButtons.YesNoCancel,
+                                                        MessageBoxButtons.YesNo,
                                                         MessageBoxIcon.Exclamation,
                                                         MessageBoxDefaultButton.Button1);
             if (dialogResult != DialogResult.Yes)
