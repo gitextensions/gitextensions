@@ -747,6 +747,8 @@ namespace GitUI.CommandsDialogs
             UpdateSubmodulesList();
         }
 
+        #region Working directory combo box
+
         private void RefreshWorkingDirCombo()
         {
             var path = Module.WorkingDir;
@@ -793,6 +795,56 @@ namespace GitUI.CommandsDialogs
                 }
             }
         }
+
+        private void WorkingdirDropDownOpening(object sender, EventArgs e)
+        {
+            _NO_TRANSLATE_Workingdir.DropDownItems.Clear();
+
+            var tsmiCategorisedRepos = new ToolStripMenuItem(tsmiFavouriteRepositories.Text, tsmiFavouriteRepositories.Image);
+            PopulateFavouriteRepositoriesMenu(tsmiCategorisedRepos);
+            if (tsmiCategorisedRepos.DropDownItems.Count > 0)
+            {
+                _NO_TRANSLATE_Workingdir.DropDownItems.Add(tsmiCategorisedRepos);
+            }
+
+            PopulateRecentRepositoriesMenu(_NO_TRANSLATE_Workingdir);
+
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
+
+            var toolStripItem = new ToolStripMenuItem(openToolStripMenuItem.Text, openToolStripMenuItem.Image);
+            toolStripItem.ShortcutKeys = openToolStripMenuItem.ShortcutKeys;
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
+            toolStripItem.Click += (hs, he) => OpenToolStripMenuItemClick(hs, he);
+
+            toolStripItem = new ToolStripMenuItem(_configureWorkingDirMenu.Text);
+            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
+            toolStripItem.Click += (hs, he) =>
+            {
+                using (var frm = new FormRecentReposSettings())
+                {
+                    frm.ShowDialog(this);
+                }
+
+                RefreshWorkingDirCombo();
+            };
+
+            PreventToolStripSplitButtonClosing((ToolStripSplitButton)sender);
+        }
+
+        private void WorkingdirClick(object sender, EventArgs e)
+        {
+            _NO_TRANSLATE_Workingdir.ShowDropDown();
+        }
+
+        private void _NO_TRANSLATE_Workingdir_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                OpenToolStripMenuItemClick(sender, e);
+            }
+        }
+
+        #endregion
 
         private void LoadUserMenu()
         {
@@ -1212,11 +1264,6 @@ namespace GitUI.CommandsDialogs
         private void WarningClick(object sender, EventArgs e)
         {
             UICommands.StartResolveConflictsDialog(this);
-        }
-
-        private void WorkingdirClick(object sender, EventArgs e)
-        {
-            _NO_TRANSLATE_Workingdir.ShowDropDown();
         }
 
         private void CurrentBranchClick(object sender, EventArgs e)
@@ -1676,41 +1723,6 @@ namespace GitUI.CommandsDialogs
                     item.ToolTipText = repo.Path;
                 }
             }
-        }
-
-        private void WorkingdirDropDownOpening(object sender, EventArgs e)
-        {
-            _NO_TRANSLATE_Workingdir.DropDownItems.Clear();
-
-            var tsmiCategorisedRepos = new ToolStripMenuItem(tsmiFavouriteRepositories.Text, tsmiFavouriteRepositories.Image);
-            PopulateFavouriteRepositoriesMenu(tsmiCategorisedRepos);
-            if (tsmiCategorisedRepos.DropDownItems.Count > 0)
-            {
-                _NO_TRANSLATE_Workingdir.DropDownItems.Add(tsmiCategorisedRepos);
-            }
-
-            PopulateRecentRepositoriesMenu(_NO_TRANSLATE_Workingdir);
-
-            _NO_TRANSLATE_Workingdir.DropDownItems.Add(new ToolStripSeparator());
-
-            var toolStripItem = new ToolStripMenuItem(openToolStripMenuItem.Text, openToolStripMenuItem.Image);
-            toolStripItem.ShortcutKeys = openToolStripMenuItem.ShortcutKeys;
-            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
-            toolStripItem.Click += (hs, he) => OpenToolStripMenuItemClick(hs, he);
-
-            toolStripItem = new ToolStripMenuItem(_configureWorkingDirMenu.Text);
-            _NO_TRANSLATE_Workingdir.DropDownItems.Add(toolStripItem);
-            toolStripItem.Click += (hs, he) =>
-            {
-                using (var frm = new FormRecentReposSettings())
-                {
-                    frm.ShowDialog(this);
-                }
-
-                RefreshWorkingDirCombo();
-            };
-
-            PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
         public void SetWorkingDir(string path)
@@ -2234,14 +2246,6 @@ namespace GitUI.CommandsDialogs
             }
 
             AppSettings.SetNextPullActionAsDefault = false;
-        }
-
-        private void _NO_TRANSLATE_Workingdir_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                OpenToolStripMenuItemClick(sender, e);
-            }
         }
 
         private void branchSelect_MouseUp(object sender, MouseEventArgs e)
