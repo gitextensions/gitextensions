@@ -921,7 +921,7 @@ namespace GitUI.CommandsDialogs
             await this.SwitchToMainThreadAsync();
 
             branchNameLabel.Text = currentBranchName;
-            Text = string.Format(_formTitle.Text, currentBranchName, Module.WorkingDir);
+            Text = string.Format(_formTitle.Text, currentBranchName, PathUtil.GetDisplayPath(Module.WorkingDir));
         }
 
         private void Initialize(bool loadUnstaged = true)

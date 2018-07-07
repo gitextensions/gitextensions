@@ -1644,7 +1644,7 @@ namespace GitUI.CommandsDialogs
 
                 repos.ForEach(r =>
                 {
-                    var item = new ToolStripMenuItem(r.Caption)
+                    var item = new ToolStripMenuItem(r.Caption ?? "")
                     {
                         DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
                     };

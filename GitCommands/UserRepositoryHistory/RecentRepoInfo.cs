@@ -104,6 +104,11 @@ namespace GitCommands.UserRepositoryHistory
                 {
                     AddToOrderedSignDir(orderedRepos, ri, signDir);
                 }
+
+                if (ri.Caption != null)
+                {
+                    ri.Caption = PathUtil.GetDisplayPath(ri.Caption);
+                }
             }
 
             int r = mostRecentRepos.Count - 1;
