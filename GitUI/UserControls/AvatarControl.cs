@@ -131,7 +131,7 @@ namespace GitUI
         {
             try
             {
-                Process.Start(@"http://www.gravatar.com");
+                Process.Start("https://www.gravatar.com");
             }
             catch (Exception ex)
             {
