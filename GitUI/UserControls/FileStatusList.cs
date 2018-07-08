@@ -905,55 +905,57 @@ namespace GitUI
 
                 foreach (var item in statuses)
                 {
-                    if (_filter?.IsMatch(item.Name) ?? true)
+                    if (!(_filter?.IsMatch(item.Name) ?? true))
                     {
-                        var text = item.Name;
-                        if (clientSizeWidth)
-                        {
-                            // list-item has client width, so we don't need horizontal scrollbar (which is determined by this text width)
-                            text = string.Empty;
-                        }
-                        else if (fileNameOnlyMode)
-                        {
-                            // we need to put filename in list-item text -> then horizontal scrollbar
-                            // will have proper width (by the longest filename, and not all path)
-                            text = PathFormatter.FormatTextForFileNameOnly(item.Name, item.OldName);
-                            if (!_filter?.IsMatch(text) ?? true)
-                            {
-                                continue;
-                            }
-
-                            text = AppendItemSubmoduleStatus(text, item);
-                        }
-
-                        var listItem = new ListViewItem(text, group)
-                        {
-                            ImageIndex = GetItemImageIndex(item)
-                        };
-
-                        if (item.GetSubmoduleStatusAsync() != null && !item.GetSubmoduleStatusAsync().IsCompleted)
-                        {
-                            var capturedItem = item;
-
-                            ThreadHelper.JoinableTaskFactory.RunAsync(
-                                async () =>
-                                {
-                                    await item.GetSubmoduleStatusAsync();
-
-                                    await this.SwitchToMainThreadAsync();
-
-                                    listItem.ImageIndex = GetItemImageIndex(capturedItem);
-                                });
-                        }
-
-                        if (previouslySelectedItems.Contains(item))
-                        {
-                            listItem.Selected = true;
-                        }
-
-                        listItem.Tag = item;
-                        list.Add(listItem);
+                        continue;
                     }
+
+                    var text = item.Name;
+                    if (clientSizeWidth)
+                    {
+                        // list-item has client width, so we don't need horizontal scrollbar (which is determined by this text width)
+                        text = string.Empty;
+                    }
+                    else if (fileNameOnlyMode)
+                    {
+                        // we need to put filename in list-item text -> then horizontal scrollbar
+                        // will have proper width (by the longest filename, and not all path)
+                        text = PathFormatter.FormatTextForFileNameOnly(item.Name, item.OldName);
+                        if (!_filter?.IsMatch(text) ?? true)
+                        {
+                            continue;
+                        }
+
+                        text = AppendItemSubmoduleStatus(text, item);
+                    }
+
+                    var listItem = new ListViewItem(text, group)
+                    {
+                        ImageIndex = GetItemImageIndex(item)
+                    };
+
+                    if (item.GetSubmoduleStatusAsync() != null && !item.GetSubmoduleStatusAsync().IsCompleted)
+                    {
+                        var capturedItem = item;
+
+                        ThreadHelper.JoinableTaskFactory.RunAsync(
+                            async () =>
+                            {
+                                await item.GetSubmoduleStatusAsync();
+
+                                await this.SwitchToMainThreadAsync();
+
+                                listItem.ImageIndex = GetItemImageIndex(capturedItem);
+                            });
+                    }
+
+                    if (previouslySelectedItems.Contains(item))
+                    {
+                        listItem.Selected = true;
+                    }
+
+                    listItem.Tag = item;
+                    list.Add(listItem);
                 }
             }
 
