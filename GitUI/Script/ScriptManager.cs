@@ -193,9 +193,10 @@ namespace GitUI.Script
                 Scripts = new BindingList<ScriptInfo>();
 
                 string[] scripts = inputString.Split(new[] { scriptSeparator }, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < scripts.Length; i++)
+
+                foreach (var script in scripts)
                 {
-                    string[] parameters = scripts[i].Split(new[] { paramSeparator }, StringSplitOptions.None);
+                    string[] parameters = script.Split(new[] { paramSeparator }, StringSplitOptions.None);
 
                     Scripts.Add(new ScriptInfo
                     {
