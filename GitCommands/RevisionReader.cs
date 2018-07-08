@@ -90,7 +90,7 @@ namespace GitCommands
             const string fullFormat =
 
                 // These header entries can all be decoded from the bytes directly.
-                // Each hash is 20 bytes long. There is always a
+                // Each hash is 20 bytes long.
 
                 /* Object ID       */ "%H" +
                 /* Tree ID         */ "%T" +
@@ -99,7 +99,7 @@ namespace GitCommands
                 /* Commit date     */ "%ct%n" +
                 /* Encoding        */ "%e%n" +
 
-                // Items below here must be decoded as strings to support non-ASCII
+                // Items below here must be decoded as strings to support non-ASCII.
 
                 /* Author name     */ "%aN%n" +
                 /* Author email    */ "%aE%n" +
