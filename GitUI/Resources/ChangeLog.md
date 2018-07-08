@@ -1,6 +1,13 @@
 Changelog
 =========
 
+### [Version 2.51.04] (8 July 2018)
+
+#### Fixes:
+* A number of changed files on Commit button is always '2' - Issue [5127]
+* Error on push deleting a remote branch when a tag with the same name exists - Issue [5119]
+
+
 ### [Version 2.51.03] (26 June 2018)
 
 #### Features:
@@ -2561,3 +2568,8 @@ Changelog
 [4549]:https://github.com/gitextensions/gitextensions/issues/4549
 [4483]:https://github.com/gitextensions/gitextensions/issues/4483
 [2507]:https://github.com/gitextensions/gitextensions/issues/2507
+
+
+[Version 2.51.04]:https://github.com/gitextensions/gitextensions/releases/tag/v2.51.04
+[5127]:https://github.com/gitextensions/gitextensions/issues/5127
+[5119]:https://github.com/gitextensions/gitextensions/issues/5119
