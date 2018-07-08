@@ -24,7 +24,7 @@ using Newtonsoft.Json.Linq;
 namespace JenkinsIntegration
 {
     [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class JenkinsIntegrationMetadata : BuildServerAdapterMetadataAttribute
     {
         public JenkinsIntegrationMetadata(string buildServerType)

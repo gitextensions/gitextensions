@@ -19,7 +19,7 @@ using Newtonsoft.Json.Linq;
 namespace AppVeyorIntegration
 {
     [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class AppVeyorIntegrationMetadata : BuildServerAdapterMetadataAttribute
     {
         public AppVeyorIntegrationMetadata(string buildServerType)

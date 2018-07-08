@@ -11,7 +11,7 @@ using NUnit.Framework.Interfaces;
 
 namespace CommonTestUtils
 {
-    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Assembly)]
     public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestAction
     {
         private DenyExecutionSynchronizationContext _denyExecutionSynchronizationContext;

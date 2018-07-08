@@ -16,7 +16,7 @@ using TfsInterop.Interface;
 namespace TfsIntegration
 {
     [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class TfsIntegrationMetadata : BuildServerAdapterMetadataAttribute
     {
         public TfsIntegrationMetadata(string buildServerType)

@@ -26,7 +26,7 @@ using Microsoft.VisualStudio.Threading;
 namespace TeamCityIntegration
 {
     [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class TeamCityIntegrationMetadataAttribute : BuildServerAdapterMetadataAttribute
     {
         public TeamCityIntegrationMetadataAttribute(string buildServerType)

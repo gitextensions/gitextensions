@@ -12,7 +12,7 @@ using GitUIPluginInterfaces.BuildServerIntegration;
 namespace VstsAndTfsIntegration
 {
     [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class VstsAndTfsIntegrationMetadata : BuildServerAdapterMetadataAttribute
     {
         public VstsAndTfsIntegrationMetadata(string buildServerType)

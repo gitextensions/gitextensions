@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace GitUIPluginInterfaces.BuildServerIntegration
 {
     [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class)]
     public class BuildServerAdapterMetadataAttribute : ExportAttribute
     {
         public BuildServerAdapterMetadataAttribute(string buildServerType)
