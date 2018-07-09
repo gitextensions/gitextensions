@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Patches;
 using GitCommands.Settings;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
@@ -555,9 +556,8 @@ namespace GitUI.Editor
                                 ResetForImage();
                                 if (image != null)
                                 {
-                                    // TODO review whether we need DPI scaling here
-                                    if (image.Size.Height > PictureBox.Size.Height ||
-                                        image.Size.Width > PictureBox.Size.Width)
+                                    var size = DpiUtil.Scale(image.Size);
+                                    if (size.Height > PictureBox.Size.Height || size.Width > PictureBox.Size.Width)
                                     {
                                         PictureBox.SizeMode = PictureBoxSizeMode.Zoom;
                                     }
@@ -567,7 +567,7 @@ namespace GitUI.Editor
                                     }
                                 }
 
-                                PictureBox.Image = image;
+                                PictureBox.Image = image == null ? null : DpiUtil.Scale(image);
                             });
             }
 
