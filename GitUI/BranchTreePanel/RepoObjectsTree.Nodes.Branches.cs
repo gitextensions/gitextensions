@@ -260,11 +260,5 @@ namespace GitUI.BranchTreePanel
         }
 
         #endregion private classes
-
-        [Pure]
-        public static GitRef CreateBranchRef(GitModule module, string name)
-        {
-            return new GitRef(module, guid: null, completeName: GitRefName.RefsHeadsPrefix + name);
-        }
     }
 }
