@@ -49,6 +49,8 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Branch.cs" />
+    <Compile Include="CheckBoxHeaderCellEventArgs.cs" />
+    <Compile Include="DataGridViewCheckBoxHeaderCell.cs" />
     <Compile Include="DeleteUnusedBranchesFormSettings.cs" />
     <Compile Include="DeleteUnusedBranchesPlugin.cs" />
     <Compile Include="DeleteUnusedBranchesForm.cs">
