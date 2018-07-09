@@ -33,7 +33,7 @@ namespace GitUI.BranchTreePanel
             _currentToken = _reloadCancellation.Next();
             InitializeComponent();
             InitImageList();
-            InitiliazeSearchBox();
+            InitializeSearchBox();
             treeMain.PreviewKeyDown += OnPreviewKeyDown;
 
             btnSearch.PreviewKeyDown += OnPreviewKeyDown;
@@ -211,7 +211,7 @@ namespace GitUI.BranchTreePanel
             treeMain.SelectedImageKey = treeMain.ImageKey;
         }
 
-        private void InitiliazeSearchBox()
+        private void InitializeSearchBox()
         {
             _txtBranchCriterion = new SearchControl<string>(SearchForBranch, i => { });
             _txtBranchCriterion.OnTextEntered += () =>
