@@ -175,7 +175,7 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(MsVsImages.BranchRemote_16x);
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Resources.BranchRemote);
             }
         }
 
@@ -198,7 +198,7 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(MsVsImages.Repository_16x);
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Resources.IconRemote);
             }
         }
     }

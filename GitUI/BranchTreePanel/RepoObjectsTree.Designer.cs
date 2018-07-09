@@ -133,7 +133,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnCollapseAll
             // 
-            this.mnubtnCollapseAll.Image = global::GitUI.Properties.MsVsImages.CollapseAll_16x;
+            this.mnubtnCollapseAll.Image = global::GitUI.Properties.Resources.CollapseAll;
             this.mnubtnCollapseAll.Name = "mnubtnCollapseAll";
             this.mnubtnCollapseAll.Size = new System.Drawing.Size(230, 38);
             this.mnubtnCollapseAll.Text = "Collapse All";
@@ -141,7 +141,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnExpandAll
             // 
-            this.mnubtnExpandAll.Image = global::GitUI.Properties.MsVsImages.ExpandAll_16x;
+            this.mnubtnExpandAll.Image = global::GitUI.Properties.Resources.ExpandAll;
             this.mnubtnExpandAll.Name = "mnubtnExpandAll";
             this.mnubtnExpandAll.Size = new System.Drawing.Size(230, 38);
             this.mnubtnExpandAll.Text = "Expand All";
@@ -267,7 +267,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnFetchCreateBranch
             // 
-            this.mnubtnFetchCreateBranch.Image = global::GitUI.Properties.MsVsImages.Branch_16x;
+            this.mnubtnFetchCreateBranch.Image = global::GitUI.Properties.Resources.IconBranch;
             this.mnubtnFetchCreateBranch.Name = "mnubtnFetchCreateBranch";
             this.mnubtnFetchCreateBranch.Size = new System.Drawing.Size(346, 38);
             this.mnubtnFetchCreateBranch.Text = "Fetc&h && Create Branch";
@@ -304,7 +304,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnCreateBranchBasedOnRemoteBranch
             // 
-            this.mnubtnCreateBranchBasedOnRemoteBranch.Image = global::GitUI.Properties.MsVsImages.Branch_16x;
+            this.mnubtnCreateBranchBasedOnRemoteBranch.Image = global::GitUI.Properties.Resources.IconBranch;
             this.mnubtnCreateBranchBasedOnRemoteBranch.Name = "mnubtnCreateBranchBasedOnRemoteBranch";
             this.mnubtnCreateBranchBasedOnRemoteBranch.Size = new System.Drawing.Size(346, 38);
             this.mnubtnCreateBranchBasedOnRemoteBranch.Text = "Create &Branch...";
@@ -351,7 +351,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnCreateBranchForTag
             // 
-            this.mnubtnCreateBranchForTag.Image = global::GitUI.Properties.MsVsImages.Branch_16x;
+            this.mnubtnCreateBranchForTag.Image = global::GitUI.Properties.Resources.IconBranch;
             this.mnubtnCreateBranchForTag.Name = "mnubtnCreateBranchForTag";
             this.mnubtnCreateBranchForTag.Size = new System.Drawing.Size(270, 38);
             this.mnubtnCreateBranchForTag.Text = "Create &Branch...";

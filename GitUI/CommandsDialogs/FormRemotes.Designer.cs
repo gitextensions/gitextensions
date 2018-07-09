@@ -467,7 +467,7 @@ namespace GitUI.CommandsDialogs
             // 
             // New
             // 
-            this.New.Image = global::GitUI.Properties.Resources.IconMaintenance;
+            this.New.Image = global::GitUI.Properties.Resources.RemoteAdd;
             this.New.Location = new System.Drawing.Point(7, 3);
             this.New.Name = "New";
             this.New.Size = new System.Drawing.Size(26, 26);
@@ -478,7 +478,7 @@ namespace GitUI.CommandsDialogs
             // 
             // Delete
             // 
-            this.Delete.Image = global::GitUI.Properties.Resources.IconDeleteRemote;
+            this.Delete.Image = global::GitUI.Properties.Resources.RemoteDelete;
             this.Delete.Location = new System.Drawing.Point(7, 35);
             this.Delete.Name = "Delete";
             this.Delete.Size = new System.Drawing.Size(26, 26);

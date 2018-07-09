@@ -257,13 +257,43 @@
     <value>../Resources/Icons/Delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconBranch" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../Resources/Icons/IconBranch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>../Resources/Icons/Branch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconBranchDocument" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/BranchDocument.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconBranchLocal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/BranchLocal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconBranchRemote" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/BranchRemote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconLocalBranchRoot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/IconLocalBranchRoot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconRemoteBranchRoot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/IconRemoteBranchRoot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconBranchCheckout" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/BranchCheckout.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconBranchCreate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/BranchCreate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BranchRemote" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BranchRemote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CollapseAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\CollapseAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="ExpandAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\ExpandAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BranchSeparator" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\BranchFolder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TagHorizontal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconTagHorizontal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/IconMerge.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -428,8 +458,11 @@ Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87</value>
   <data name="IconShowFirstParent" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/IconShowFirstParent.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="IconDeleteRemote" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>../Resources/Icons/IconDeleteRemote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="RemoteAdd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/IconRemoteAdd.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RemoteDelete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>../Resources/Icons/IconRemoteDelete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconBlank" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/IconBlank.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -614,8 +647,11 @@ Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87</value>
   <data name="IconRemotes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\network-clouds.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="RemoteRepo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\RemoteRepo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="IconShowThisBranchOnly" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\funnel--arrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Resources\Icons\IconShowThisBranchOnly.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconStopTrackingFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\document--minus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -632,9 +668,6 @@ Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87</value>
   <data name="IconTreeExpandSubtree" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\toggle-expand.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="branch" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\branch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="edit_diff" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\edit-diff.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -642,7 +675,7 @@ Alexander Eifler, Marcelo Ghelman, ghanique, olshevskiy87</value>
     <value>..\Resources\Icons\checkout.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconCommitSummary" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\information.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Resources\Icons\IconCommit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconDiff" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\diff.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

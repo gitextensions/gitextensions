@@ -46,7 +46,7 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(MsVsImages.Tag_16x);
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Resources.TagHorizontal);
             }
 
             public void Checkout()
