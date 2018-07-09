@@ -37,7 +37,6 @@ namespace GitCommands
             // TODO: this looks like an incorrect behaviour, rev.Guid must be validated and set to "" if null or empty.
             Guid = guid;
             Subject = "";
-            SubjectCount = "";
         }
 
         public IReadOnlyList<IGitRef> Refs { get; set; } = Array.Empty<IGitRef>();
@@ -55,6 +54,7 @@ namespace GitCommands
         public string CommitterEmail { get; set; }
         public DateTime CommitDate { get; set; }
 
+        [CanBeNull]
         public BuildInfo BuildStatus
         {
             get => _buildStatus;
@@ -71,9 +71,6 @@ namespace GitCommands
         }
 
         public string Subject { get; set; }
-
-        // Count for artificial commits (could be changed to object lists)
-        public string SubjectCount { get; set; }
         public string Body { get; set; }
         public bool HasMultiLineMessage { get; set; }
 
@@ -98,7 +95,7 @@ namespace GitCommands
                 sha = sha.Substring(0, 4) + ".." + sha.Substring(sha.Length - 4, 4);
             }
 
-            return string.Format("{0}:{1}{2}", sha, SubjectCount, Subject);
+            return string.Format("{0}:{1}", sha, Subject);
         }
 
         public static string ToShortSha(string sha)
@@ -124,6 +121,7 @@ namespace GitCommands
 
         public bool HasParent => ParentGuids != null && ParentGuids.Count > 0;
 
+        [CanBeNull]
         public string FirstParentGuid => ParentGuids?.FirstOrDefault();
 
         public event PropertyChangedEventHandler PropertyChanged;

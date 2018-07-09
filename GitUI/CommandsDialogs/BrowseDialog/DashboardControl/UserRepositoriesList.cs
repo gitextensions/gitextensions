@@ -11,6 +11,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 using GitUI.UserControls;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
@@ -276,6 +277,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             handler?.Invoke(this, args);
         }
 
+        [CanBeNull]
         private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate) where T : Control
         {
             foreach (Control control in controls)
@@ -306,6 +308,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             return categories;
         }
 
+        [CanBeNull]
         private static Repository GetSelectedRepository(ToolStripItem menuItem)
         {
             // Retrieve the ContextMenuStrip that owns this ToolStripItem
@@ -321,6 +324,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             return selected;
         }
 
+        [CanBeNull]
         private Repository GetSelectedRepository()
         {
             if (listView1.SelectedItems.Count < 1)
@@ -459,7 +463,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (!string.IsNullOrWhiteSpace((e.Item.Tag as Repository)?.Category))
             {
                 var pointImage1 = new PointF(pointImage.X + imageList1.ImageSize.Width - 12, e.Bounds.Top + spacing2);
-                e.Graphics.DrawImage(Resources.Star, pointImage1.X, pointImage1.Y, 16, 16);
+                e.Graphics.DrawImage(Resources.IconStar, pointImage1.X, pointImage1.Y, 16, 16);
             }
 
             // render icon

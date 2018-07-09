@@ -5,9 +5,12 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using JetBrains.Annotations;
 
 namespace ResourceManager
 {
+    // NOTE do not make this class abstract as it breaks the WinForms designer in VS
+
     /// <summary>Provides translation and hotkey plumbing for GitEx <see cref="UserControl"/>s.</summary>
     public class GitExtensionsControl : UserControl, ITranslate
     {
@@ -113,6 +116,7 @@ namespace ResourceManager
             return GetHotkeyCommand(commandCode)?.KeyData ?? Keys.None;
         }
 
+        [CanBeNull]
         private HotkeyCommand GetHotkeyCommand(int commandCode)
         {
             return Hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode);

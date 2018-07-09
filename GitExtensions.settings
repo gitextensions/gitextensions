@@ -34,14 +34,6 @@
   </item>
   <item>
     <key>
-      <string>BuildServer.ShowBuildSummaryInGrid</string>
-    </key>
-    <value>
-      <string>true</string>
-    </value>
-  </item>
-  <item>
-    <key>
       <string>BuildServer.TeamCity.BuildIdFilter</string>
     </key>
     <value>

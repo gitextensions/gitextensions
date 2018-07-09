@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs
         private readonly Func<string, IEnumerable<T>> _getCandidates;
         private readonly Action<Size> _onSizeChanged;
         private readonly AsyncLoader _backgroundLoader = new AsyncLoader();
-        private bool _isUpdatingTextFromCode = false;
+        private bool _isUpdatingTextFromCode;
         public event Action OnTextEntered;
         public event Action OnCancelled;
 
@@ -26,31 +26,22 @@ namespace GitUI.CommandsDialogs
         public SearchControl([NotNull]Func<string, IEnumerable<T>> getCandidates, Action<Size> onSizeChanged)
         {
             InitializeComponent();
-            txtSearchBox.LostFocus += TxtSearchBoxOnLostFocus;
-            listBoxSearchResult.LostFocus += ListBoxSearchResultOnLostFocus;
+
+            txtSearchBox.LostFocus += delegate { CloseDropDownWhenLostFocus(); };
+            listBoxSearchResult.LostFocus += delegate { CloseDropDownWhenLostFocus(); };
             listBoxSearchResult.Left = Left;
             txtSearchBox.Select();
 
             _getCandidates = getCandidates;
             _onSizeChanged = onSizeChanged;
             AutoFit();
-        }
 
-        private void ListBoxSearchResultOnLostFocus(object sender, EventArgs eventArgs)
-        {
-            CloseDropdownWhenLostFocus();
-        }
-
-        private void TxtSearchBoxOnLostFocus(object sender, EventArgs eventArgs)
-        {
-            CloseDropdownWhenLostFocus();
-        }
-
-        private void CloseDropdownWhenLostFocus()
-        {
-            if (!txtSearchBox.Focused && !listBoxSearchResult.Focused)
+            void CloseDropDownWhenLostFocus()
             {
-                CloseDropdown();
+                if (!txtSearchBox.Focused && !listBoxSearchResult.Focused)
+                {
+                    CloseDropdown();
+                }
             }
         }
 

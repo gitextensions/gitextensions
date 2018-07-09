@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace Bitbucket
 {
@@ -13,6 +14,7 @@ namespace Bitbucket
         private const string BitbucketSshRegex =
             @"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?([\w\-]+))\/(?<repo>([\w\-]+)).git";
 
+        [CanBeNull]
         public static Settings Parse(IGitModule gitModule, ISettingsSource settings, BitbucketPlugin plugin)
         {
             var result = new Settings

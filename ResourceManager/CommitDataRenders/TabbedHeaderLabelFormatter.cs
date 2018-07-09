@@ -9,25 +9,20 @@ namespace ResourceManager.CommitDataRenders
     {
         public string FormatLabel(string label, int desiredLength)
         {
-            return FillToLength(WebUtility.HtmlEncode(label) + ":", desiredLength);
-        }
+            return FillToLength(WebUtility.HtmlEncode(label) + ":");
 
-        public string FormatLabelPlain(string label, int desiredLength)
-        {
-            return FillToLength(label + ":", desiredLength);
-        }
-
-        private static string FillToLength(string input, int length)
-        {
-            // length
-            const int tabsize = 4;
-            if (input.Length < length)
+            string FillToLength(string input)
             {
-                int l = length - input.Length;
-                return input + new string('\t', (l / tabsize) + (l % tabsize == 0 ? 0 : 1));
-            }
+                const int tabSize = 4;
 
-            return input;
+                if (input.Length < desiredLength)
+                {
+                    int l = desiredLength - input.Length;
+                    return input + new string('\t', (l / tabSize) + (l % tabSize == 0 ? 0 : 1));
+                }
+
+                return input;
+            }
         }
     }
 }

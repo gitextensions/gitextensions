@@ -89,14 +89,14 @@ namespace GitUI.BranchTreePanel
 
             CancelBackgroundTasks();
 
-            var localBranchesRootNode = new TreeNode(Strings.BranchesText.Text)
+            var localBranchesRootNode = new TreeNode(Strings.Branches)
             {
                 ImageKey = nameof(MsVsImages.Repository_16x),
             };
             localBranchesRootNode.SelectedImageKey = localBranchesRootNode.ImageKey;
             AddTree(new BranchTree(localBranchesRootNode, newSource));
 
-            var remoteBranchesRootNode = new TreeNode(Strings.RemotesText.Text)
+            var remoteBranchesRootNode = new TreeNode(Strings.Remotes)
             {
                 ImageKey = nameof(MsVsImages.Repository_16x),
             };
@@ -124,7 +124,7 @@ namespace GitUI.BranchTreePanel
 
         private void AddTags()
         {
-            _tagTreeRootNode = new TreeNode(Strings.TagsText.Text) { ImageKey = nameof(MsVsImages.Tag_16x) };
+            _tagTreeRootNode = new TreeNode(Strings.Tags) { ImageKey = nameof(MsVsImages.Tag_16x) };
             _tagTreeRootNode.SelectedImageKey = _tagTreeRootNode.ImageKey;
             _tagTree = new TagTree(_tagTreeRootNode, UICommandsSource);
             AddTree(_tagTree);

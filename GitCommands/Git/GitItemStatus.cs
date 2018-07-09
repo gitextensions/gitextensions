@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
@@ -50,6 +51,7 @@ namespace GitCommands
             }
         }
 
+        [CanBeNull]
         public Task<GitSubmoduleStatus> GetSubmoduleStatusAsync()
         {
             return _submoduleStatus?.JoinAsync();

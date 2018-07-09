@@ -27,15 +27,11 @@
             this.showChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BlameFile = new GitUI.Editor.FileViewer();
             this.blameTooltip = new System.Windows.Forms.ToolTip(this.components);
-
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -44,6 +40,7 @@
             // 
             // splitContainer1
             // 
+            this.splitContainer1.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
@@ -64,20 +61,18 @@
             // 
             // CommitInfo
             // 
-            this.CommitInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.CommitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.CommitInfo.Location = new System.Drawing.Point(0, 0);
-            this.CommitInfo.Margin = new System.Windows.Forms.Padding(4);
+            this.CommitInfo.Margin = new System.Windows.Forms.Padding(0);
             this.CommitInfo.Name = "CommitInfo";
             this.CommitInfo.Size = new System.Drawing.Size(858, 160);
             this.CommitInfo.TabIndex = 5;
             // 
             // splitContainer2
             // 
-            this.splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Margin = new System.Windows.Forms.Padding(4);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(0);
             this.splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
@@ -97,9 +92,9 @@
             this.BlameCommitter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BlameCommitter.IsReadOnly = false;
             this.BlameCommitter.Location = new System.Drawing.Point(0, 0);
-            this.BlameCommitter.Margin = new System.Windows.Forms.Padding(4);
+            this.BlameCommitter.Margin = new System.Windows.Forms.Padding(0);
             this.BlameCommitter.Name = "BlameCommitter";
-            this.BlameCommitter.Size = new System.Drawing.Size(184, 574);
+            this.BlameCommitter.Size = new System.Drawing.Size(186, 576);
             this.BlameCommitter.TabIndex = 5;
             this.BlameCommitter.TabStop = false;
             // 
@@ -145,9 +140,9 @@
             this.BlameFile.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BlameFile.IsReadOnly = false;
             this.BlameFile.Location = new System.Drawing.Point(0, 0);
-            this.BlameFile.Margin = new System.Windows.Forms.Padding(4);
+            this.BlameFile.Margin = new System.Windows.Forms.Padding(0);
             this.BlameFile.Name = "BlameFile";
-            this.BlameFile.Size = new System.Drawing.Size(666, 574);
+            this.BlameFile.Size = new System.Drawing.Size(666, 576);
             this.BlameFile.TabIndex = 0;
             // 
             // BlameControl
@@ -159,15 +154,11 @@
             this.Size = new System.Drawing.Size(858, 740);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
-
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-
             this.splitContainer2.ResumeLayout(false);
             this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);

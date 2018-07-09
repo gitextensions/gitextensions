@@ -32,12 +32,9 @@
             this.gbRevisionGraph = new System.Windows.Forms.GroupBox();
             this.tlpnlRevisionGraph = new System.Windows.Forms.TableLayoutPanel();
             this.MulticolorBranches = new System.Windows.Forms.CheckBox();
-            this._NO_TRANSLATE_ColorAuthoredRevisions = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorRemoteBranchLabel = new System.Windows.Forms.Label();
-            this.lblColorAuthored = new System.Windows.Forms.Label();
             this.lblColorBranchRemote = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorOtherLabel = new System.Windows.Forms.Label();
-            this.HighlightAuthoredRevisions = new System.Windows.Forms.CheckBox();
             this.lblColorLabel = new System.Windows.Forms.Label();
             this.chkDrawAlternateBackColor = new System.Windows.Forms.CheckBox();
             this.DrawNonRelativesTextGray = new System.Windows.Forms.CheckBox();
@@ -48,7 +45,6 @@
             this._NO_TRANSLATE_ColorBranchLabel = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorTagLabel = new System.Windows.Forms.Label();
             this.lblColorTag = new System.Windows.Forms.Label();
-            this.BranchBorders = new System.Windows.Forms.CheckBox();
             this.gbDiffView = new System.Windows.Forms.GroupBox();
             this.tlpnlDiffView = new System.Windows.Forms.TableLayoutPanel();
             this.lblColorLineRemoved = new System.Windows.Forms.Label();
@@ -110,12 +106,9 @@
             this.tlpnlRevisionGraph.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlRevisionGraph.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpnlRevisionGraph.Controls.Add(this.MulticolorBranches, 0, 0);
-            this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorAuthoredRevisions, 1, 11);
             this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorRemoteBranchLabel, 1, 9);
-            this.tlpnlRevisionGraph.Controls.Add(this.lblColorAuthored, 0, 11);
             this.tlpnlRevisionGraph.Controls.Add(this.lblColorBranchRemote, 0, 9);
             this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorOtherLabel, 1, 10);
-            this.tlpnlRevisionGraph.Controls.Add(this.HighlightAuthoredRevisions, 0, 6);
             this.tlpnlRevisionGraph.Controls.Add(this.lblColorLabel, 0, 10);
             this.tlpnlRevisionGraph.Controls.Add(this.chkDrawAlternateBackColor, 0, 2);
             this.tlpnlRevisionGraph.Controls.Add(this.DrawNonRelativesTextGray, 0, 5);
@@ -126,7 +119,6 @@
             this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorBranchLabel, 1, 8);
             this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorTagLabel, 1, 7);
             this.tlpnlRevisionGraph.Controls.Add(this.lblColorTag, 0, 7);
-            this.tlpnlRevisionGraph.Controls.Add(this.BranchBorders, 0, 3);
             this.tlpnlRevisionGraph.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlRevisionGraph.Location = new System.Drawing.Point(8, 22);
             this.tlpnlRevisionGraph.Name = "tlpnlRevisionGraph";
@@ -158,20 +150,6 @@
             this.MulticolorBranches.UseVisualStyleBackColor = true;
             this.MulticolorBranches.CheckedChanged += new System.EventHandler(this.MulticolorBranches_CheckedChanged);
             // 
-            // _NO_TRANSLATE_ColorAuthoredRevisions
-            // 
-            this._NO_TRANSLATE_ColorAuthoredRevisions.AutoSize = true;
-            this._NO_TRANSLATE_ColorAuthoredRevisions.BackColor = System.Drawing.Color.Red;
-            this._NO_TRANSLATE_ColorAuthoredRevisions.Cursor = System.Windows.Forms.Cursors.Hand;
-            this._NO_TRANSLATE_ColorAuthoredRevisions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._NO_TRANSLATE_ColorAuthoredRevisions.Location = new System.Drawing.Point(181, 237);
-            this._NO_TRANSLATE_ColorAuthoredRevisions.Name = "_NO_TRANSLATE_ColorAuthoredRevisions";
-            this._NO_TRANSLATE_ColorAuthoredRevisions.Size = new System.Drawing.Size(26, 19);
-            this._NO_TRANSLATE_ColorAuthoredRevisions.TabIndex = 17;
-            this._NO_TRANSLATE_ColorAuthoredRevisions.Text = "Red";
-            this._NO_TRANSLATE_ColorAuthoredRevisions.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this._NO_TRANSLATE_ColorAuthoredRevisions.Click += new System.EventHandler(this.ColorLabel_Click);
-            // 
             // _NO_TRANSLATE_ColorRemoteBranchLabel
             // 
             this._NO_TRANSLATE_ColorRemoteBranchLabel.AutoSize = true;
@@ -185,17 +163,6 @@
             this._NO_TRANSLATE_ColorRemoteBranchLabel.Text = "Red";
             this._NO_TRANSLATE_ColorRemoteBranchLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this._NO_TRANSLATE_ColorRemoteBranchLabel.Click += new System.EventHandler(this.ColorLabel_Click);
-            // 
-            // lblColorAuthored
-            // 
-            this.lblColorAuthored.AutoSize = true;
-            this.lblColorAuthored.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblColorAuthored.Location = new System.Drawing.Point(3, 240);
-            this.lblColorAuthored.Margin = new System.Windows.Forms.Padding(3);
-            this.lblColorAuthored.Name = "lblColorAuthored";
-            this.lblColorAuthored.Size = new System.Drawing.Size(172, 13);
-            this.lblColorAuthored.TabIndex = 16;
-            this.lblColorAuthored.Text = "Color authored revisions";
             // 
             // lblColorBranchRemote
             // 
@@ -221,17 +188,6 @@
             this._NO_TRANSLATE_ColorOtherLabel.Text = "Red";
             this._NO_TRANSLATE_ColorOtherLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this._NO_TRANSLATE_ColorOtherLabel.Click += new System.EventHandler(this.ColorLabel_Click);
-            // 
-            // HighlightAuthoredRevisions
-            // 
-            this.HighlightAuthoredRevisions.AutoSize = true;
-            this.HighlightAuthoredRevisions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.HighlightAuthoredRevisions.Location = new System.Drawing.Point(3, 141);
-            this.HighlightAuthoredRevisions.Name = "HighlightAuthoredRevisions";
-            this.HighlightAuthoredRevisions.Size = new System.Drawing.Size(172, 17);
-            this.HighlightAuthoredRevisions.TabIndex = 7;
-            this.HighlightAuthoredRevisions.Text = "Highlight authored revisions";
-            this.HighlightAuthoredRevisions.UseVisualStyleBackColor = true;
             // 
             // lblColorLabel
             // 
@@ -351,17 +307,6 @@
             this.lblColorTag.Size = new System.Drawing.Size(172, 13);
             this.lblColorTag.TabIndex = 8;
             this.lblColorTag.Text = "Color tag";
-            // 
-            // BranchBorders
-            // 
-            this.BranchBorders.AutoSize = true;
-            this.BranchBorders.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BranchBorders.Location = new System.Drawing.Point(3, 72);
-            this.BranchBorders.Name = "BranchBorders";
-            this.BranchBorders.Size = new System.Drawing.Size(172, 17);
-            this.BranchBorders.TabIndex = 4;
-            this.BranchBorders.Text = "Draw branch borders";
-            this.BranchBorders.UseVisualStyleBackColor = true;
             // 
             // gbDiffView
             // 
@@ -538,6 +483,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(tlpnlMain);
             this.Name = "ColorsSettingsPage";
+            this.Text = "Colors";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(1001, 614);
             tlpnlMain.ResumeLayout(false);
@@ -561,7 +507,6 @@
         private System.Windows.Forms.CheckBox DrawNonRelativesGray;
         private System.Windows.Forms.Label _NO_TRANSLATE_ColorGraphLabel;
         private System.Windows.Forms.CheckBox StripedBanchChange;
-        private System.Windows.Forms.CheckBox BranchBorders;
         private System.Windows.Forms.CheckBox MulticolorBranches;
         private System.Windows.Forms.Label lblColorBranchRemote;
         private System.Windows.Forms.Label _NO_TRANSLATE_ColorRemoteBranchLabel;
@@ -582,9 +527,6 @@
         private System.Windows.Forms.Label lblColorSection;
         private System.Windows.Forms.Label lblColorLineAdded;
         private System.Windows.Forms.Label _NO_TRANSLATE_ColorAddedLineLabel;
-        private System.Windows.Forms.CheckBox HighlightAuthoredRevisions;
-        private System.Windows.Forms.Label _NO_TRANSLATE_ColorAuthoredRevisions;
-        private System.Windows.Forms.Label lblColorAuthored;
         private System.Windows.Forms.CheckBox chkDrawAlternateBackColor;
         private System.Windows.Forms.TableLayoutPanel tlpnlRevisionGraph;
         private System.Windows.Forms.TableLayoutPanel tlpnlDiffView;

@@ -52,7 +52,7 @@ namespace ResourceManagerTests.CommitDataRenders
                                    "<a href='gitext://gotocommit/" + _data.ChildrenGuids[0] + "'>" + GitRevision.ToShortSha(_data.ChildrenGuids[0]) + "</a> " +
                                    "<a href='gitext://gotocommit/" + _data.ChildrenGuids[1] + "'>" + GitRevision.ToShortSha(_data.ChildrenGuids[1]) + "</a> " +
                                    "<a href='gitext://gotocommit/" + _data.ChildrenGuids[2] + "'>" + GitRevision.ToShortSha(_data.ChildrenGuids[2]) + "</a>" + Environment.NewLine +
-                                 "Parent(s):		" +
+                                 "Parents:		" +
                                    "<a href='gitext://gotocommit/" + _data.ParentGuids[0] + "'>" + GitRevision.ToShortSha(_data.ParentGuids[0]) + "</a> " +
                                    "<a href='gitext://gotocommit/" + _data.ParentGuids[1] + "'>" + GitRevision.ToShortSha(_data.ParentGuids[1]) + "</a>";
 
@@ -73,7 +73,7 @@ namespace ResourceManagerTests.CommitDataRenders
                                    GitRevision.ToShortSha(_data.ChildrenGuids[0]) + " " +
                                    GitRevision.ToShortSha(_data.ChildrenGuids[1]) + " " +
                                    GitRevision.ToShortSha(_data.ChildrenGuids[2]) + Environment.NewLine +
-                                 "Parent(s):		" +
+                                 "Parents:		" +
                                    GitRevision.ToShortSha(_data.ParentGuids[0]) + " " +
                                    GitRevision.ToShortSha(_data.ParentGuids[1]);
 
@@ -94,7 +94,7 @@ namespace ResourceManagerTests.CommitDataRenders
                                    "<a href='gitext://gotocommit/" + _data.ChildrenGuids[0] + "'>" + GitRevision.ToShortSha(_data.ChildrenGuids[0]) + "</a> " +
                                    "<a href='gitext://gotocommit/" + _data.ChildrenGuids[1] + "'>" + GitRevision.ToShortSha(_data.ChildrenGuids[1]) + "</a> " +
                                    "<a href='gitext://gotocommit/" + _data.ChildrenGuids[2] + "'>" + GitRevision.ToShortSha(_data.ChildrenGuids[2]) + "</a>" + Environment.NewLine +
-                                 "Parent(s):   " +
+                                 "Parents:     " +
                                    "<a href='gitext://gotocommit/" + _data.ParentGuids[0] + "'>" + GitRevision.ToShortSha(_data.ParentGuids[0]) + "</a> " +
                                    "<a href='gitext://gotocommit/" + _data.ParentGuids[1] + "'>" + GitRevision.ToShortSha(_data.ParentGuids[1]) + "</a>";
 
@@ -115,7 +115,7 @@ namespace ResourceManagerTests.CommitDataRenders
                                    GitRevision.ToShortSha(_data.ChildrenGuids[0]) + " " +
                                    GitRevision.ToShortSha(_data.ChildrenGuids[1]) + " " +
                                    GitRevision.ToShortSha(_data.ChildrenGuids[2]) + Environment.NewLine +
-                                 "Parent(s):   " +
+                                 "Parents:     " +
                                    GitRevision.ToShortSha(_data.ParentGuids[0]) + " " +
                                    GitRevision.ToShortSha(_data.ParentGuids[1]);
 

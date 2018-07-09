@@ -4,10 +4,8 @@ using System.Net.Http;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
@@ -144,7 +142,7 @@ namespace VstsAndTfsIntegration
             var buildInfo = new BuildInfo
             {
                 Id = buildDetail.BuildNumber,
-                StartDate = buildDetail.StartTime.HasValue ? buildDetail.StartTime.Value : DateTime.Now.AddHours(1),
+                StartDate = buildDetail.StartTime ?? DateTime.Now.AddHours(1),
                 Status = buildDetail.IsInProgress ? BuildInfo.BuildStatus.InProgress : MapResult(buildDetail.Result),
                 Description = buildDetail.BuildNumber + " (" + (buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result) + " " + duration + ")",
                 CommitHashList = new[] { buildDetail.SourceVersion },
@@ -182,10 +180,10 @@ namespace VstsAndTfsIntegration
 
             if (duration.Minutes != 0)
             {
-                s.Append($"{duration.Minutes.ToString("00")}m");
+                s.Append($"{duration.Minutes:00}m");
             }
 
-            s.Append($"{duration.Seconds.ToString("00")}s");
+            s.Append($"{duration.Seconds:00}s");
             return s.ToString();
         }
 

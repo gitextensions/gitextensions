@@ -14,24 +14,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void Init(ISettingsPageHost pageHost)
         {
             base.Init(pageHost);
-            BindSettingsWithControls();
-        }
 
-        protected override void SettingsToPage()
-        {
-            chkShowRevisionInfoNextToRevisionGrid.Checked = AppSettings.ShowRevisionInfoNextToRevisionGrid;
-            chkShowRevisionInfoNextToRevisionGrid.Visible = true;
-            base.SettingsToPage();
-        }
-
-        protected override void PageToSettings()
-        {
-            AppSettings.ShowRevisionInfoNextToRevisionGrid = chkShowRevisionInfoNextToRevisionGrid.Checked;
-            base.PageToSettings();
-        }
-
-        private void BindSettingsWithControls()
-        {
+            // Bind settings with controls
             AddSettingBinding(AppSettings.ShowConEmuTab, chkChowConsoleTab);
             AddSettingBinding(AppSettings.ConEmuStyle, _NO_TRANSLATE_cboStyle);
             AddSettingBinding(AppSettings.ConEmuTerminal, cboTerminal);

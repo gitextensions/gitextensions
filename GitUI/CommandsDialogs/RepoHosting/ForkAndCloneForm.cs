@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces.RepositoryHosts;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -400,6 +401,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
         }
 
+        [CanBeNull]
         private string GetTargetDir()
         {
             string targetDir = _destinationTB.Text.Trim();

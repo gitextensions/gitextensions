@@ -36,12 +36,12 @@ namespace GitCommandsTests.Config
             return Path.GetTempPath();
         }
 
-        private string GetConfigFileName()
+        private static string GetConfigFileName()
         {
             return Path.Combine(GetTempFolder(), "testconfigfile");
         }
 
-        private string GetDefaultConfigFileContent()
+        private static string GetDefaultConfigFileContent()
         {
             StringBuilder content = new StringBuilder();
             content.AppendLine("[section1]");
@@ -65,13 +65,13 @@ namespace GitCommandsTests.Config
             return Module.RunGitCmd(args).TrimEnd('\n');
         }
 
-        public void CheckValueIsEqual(ConfigFile configFile, string key, string expectedValue)
+        private void CheckValueIsEqual(ConfigFile configFile, string key, string expectedValue)
         {
             Assert.AreEqual(GetConfigValue(configFile.FileName, key), configFile.GetValue(key), "git config --get");
             Assert.AreEqual(expectedValue, configFile.GetValue(key), "ConfigFile");
         }
 
-        public void CheckIsNotEqual(ConfigFile configFile, string key, string expectedValue)
+        private void CheckIsNotEqual(ConfigFile configFile, string key, string expectedValue)
         {
             Assert.AreNotEqual(GetConfigValue(configFile.FileName, key), expectedValue, "git config --get");
             Assert.AreNotEqual(expectedValue, configFile.GetValue(key), "ConfigFile");
@@ -766,7 +766,7 @@ namespace GitCommandsTests.Config
         [Test]
         public void TwoSections_ValueInTheLast()
         {
-            // test for bug reporten in https://github.com/gitextensions/gitextensions/pull/3151/commits/282c6c1df45024c3c997f1a79aa7aba5a96a1a68
+            // test for bug reported in https://github.com/gitextensions/gitextensions/pull/3151/commits/282c6c1df45024c3c997f1a79aa7aba5a96a1a68
             string configFileContent = @"
 [status]
 [status]

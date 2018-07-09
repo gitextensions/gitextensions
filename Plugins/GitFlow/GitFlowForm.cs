@@ -73,7 +73,7 @@ namespace GitFlow
 
             if (isGitFlowInited)
             {
-                var remotes = _gitUiCommands.GitModule.GetRemotes(true).Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
+                var remotes = _gitUiCommands.GitModule.GetRemotes().Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
                 cbRemote.DataSource = remotes;
                 btnPull.Enabled = btnPublish.Enabled = remotes.Any();
 

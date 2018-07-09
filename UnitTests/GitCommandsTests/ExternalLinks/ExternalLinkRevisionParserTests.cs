@@ -8,6 +8,7 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.ExternalLinks;
 using GitCommands.Remote;
+using JetBrains.Annotations;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -163,6 +164,7 @@ namespace GitCommandsTests.ExternalLinks
             return remotes;
         }
 
+        [CanBeNull]
         private static IReadOnlyList<ExternalLinkDefinition> Parse(string xml)
         {
             var serializer = new XmlSerializer(typeof(List<ExternalLinkDefinition>));

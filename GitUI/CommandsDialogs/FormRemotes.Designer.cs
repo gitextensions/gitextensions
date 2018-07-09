@@ -201,7 +201,7 @@ namespace GitUI.CommandsDialogs
             // SshBrowse
             // 
             this.SshBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SshBrowse.Image = global::GitUI.Properties.Resources.New;
+            this.SshBrowse.Image = global::GitUI.Properties.Resources.FileNew;
             this.SshBrowse.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SshBrowse.Location = new System.Drawing.Point(363, 3);
             this.SshBrowse.MinimumSize = new System.Drawing.Size(104, 0);
@@ -617,7 +617,7 @@ namespace GitUI.CommandsDialogs
             this.RemoteBranches.AllowUserToResizeRows = false;
             this.RemoteBranches.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.RemoteBranches.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.RemoteBranches.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.RemoteBranches.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RemoteBranches.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.RemoteBranches.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.BranchName,

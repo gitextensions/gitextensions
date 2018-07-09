@@ -37,17 +37,12 @@ namespace GitUI
             }
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentException("Can not assign null value to UICommandsSource");
-                }
-
                 if (_uiCommandsSource != null)
                 {
                     throw new ArgumentException("UICommandsSource is already set");
                 }
 
-                _uiCommandsSource = value;
+                _uiCommandsSource = value ?? throw new ArgumentException("Can not assign null value to UICommandsSource");
                 OnUICommandsSourceChanged(_uiCommandsSource);
             }
         }
@@ -132,12 +127,7 @@ namespace GitUI
                     }
                 }
 
-                if (cmdsSrc == null)
-                {
-                    throw new InvalidOperationException("The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?");
-                }
-
-                UICommandsSource = cmdsSrc;
+                UICommandsSource = cmdsSrc ?? throw new InvalidOperationException("The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?");
             }
         }
 
@@ -151,7 +141,7 @@ namespace GitUI
         /// and returns true if any executed.</summary>
         private bool ExecuteScriptCommand(int command)
         {
-            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGrid);
+            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGridControl);
         }
 
         /// <summary>Raises the <see cref="GitUICommandsSourceSet"/> event.</summary>

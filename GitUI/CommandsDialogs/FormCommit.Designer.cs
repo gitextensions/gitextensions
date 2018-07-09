@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs
             this.assumeUnchangedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.doNotAssumeUnchangedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.interactiveAddtoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.interactiveAddToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.StageInSuperproject = new System.Windows.Forms.CheckBox();
             this.StagedFileContext = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -117,13 +117,11 @@ namespace GitUI.CommandsDialogs
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.SelectedDiff = new GitUI.Editor.FileViewer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.Message = new GitUI.SpellChecker.EditNetSpell();
             this.flowCommitButtons = new System.Windows.Forms.FlowLayoutPanel();
             this.Commit = new System.Windows.Forms.Button();
             this.CommitAndPush = new System.Windows.Forms.Button();
             this.Amend = new System.Windows.Forms.CheckBox();
-            this.emptyLabel = new System.Windows.Forms.Label();
             this.Reset = new System.Windows.Forms.Button();
             this.ResetUnStaged = new System.Windows.Forms.Button();
             this.toolbarCommit = new GitUI.ToolStripEx();
@@ -180,7 +178,6 @@ namespace GitUI.CommandsDialogs
             this.splitRight.Panel2.SuspendLayout();
             this.splitRight.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.flowCommitButtons.SuspendLayout();
             this.toolbarCommit.SuspendLayout();
             this.commitStatusStrip.SuspendLayout();
@@ -211,7 +208,7 @@ namespace GitUI.CommandsDialogs
             this.assumeUnchangedToolStripMenuItem,
             this.doNotAssumeUnchangedToolStripMenuItem,
             this.toolStripSeparator4,
-            this.interactiveAddtoolStripMenuItem});
+            this.interactiveAddToolStripMenuItem});
             this.UnstagedFileContext.Name = "UnstagedFileContext";
             this.UnstagedFileContext.Size = new System.Drawing.Size(233, 414);
             this.UnstagedFileContext.Opening += UnstagedFileContext_Opening;
@@ -371,16 +368,16 @@ namespace GitUI.CommandsDialogs
             //
             // interactiveAddtoolStripMenuItem
             //
-            this.interactiveAddtoolStripMenuItem.Name = "interactiveAddtoolStripMenuItem";
-            this.interactiveAddtoolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.interactiveAddtoolStripMenuItem.Text = "Interactive Add";
-            this.interactiveAddtoolStripMenuItem.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
+            this.interactiveAddToolStripMenuItem.Name = "interactiveAddToolStripMenuItem";
+            this.interactiveAddToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.interactiveAddToolStripMenuItem.Text = "Interactive Add";
+            this.interactiveAddToolStripMenuItem.Click += new System.EventHandler(this.interactiveAddToolStripMenuItem_Click);
             //
             // StageInSuperproject
             //
             this.StageInSuperproject.AutoSize = true;
-            this.StageInSuperproject.Location = new System.Drawing.Point(2, 66);
-            this.StageInSuperproject.Margin = new System.Windows.Forms.Padding(2);
+            this.StageInSuperproject.Location = new System.Drawing.Point(0, 70);
+            this.StageInSuperproject.Margin = new System.Windows.Forms.Padding(0, 9, 0, 3);
             this.StageInSuperproject.Name = "StageInSuperproject";
             this.StageInSuperproject.Size = new System.Drawing.Size(130, 17);
             this.StageInSuperproject.TabIndex = 13;
@@ -555,7 +552,7 @@ namespace GitUI.CommandsDialogs
             this.viewHistoryMenuItem.Name = "viewHistoryMenuItem";
             this.viewHistoryMenuItem.Size = new System.Drawing.Size(228, 22);
             this.viewHistoryMenuItem.Text = "View history";
-            this.viewHistoryMenuItem.Click += new System.EventHandler(this.viewHistoryMenuItem_Click);
+            this.viewHistoryMenuItem.Click += new System.EventHandler(this.ViewFileHistoryMenuItem_Click);
             //
             // toolStripSeparator15
             //
@@ -577,7 +574,7 @@ namespace GitUI.CommandsDialogs
             this.openFolderMenuItem.Name = "openFolderMenuItem";
             this.openFolderMenuItem.Size = new System.Drawing.Size(228, 22);
             this.openFolderMenuItem.Text = "Open containing folder";
-            this.openFolderMenuItem.Click += new System.EventHandler(this.openFolderMenuItem_Click);
+            this.openFolderMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItemClick);
             //
             // openDiffMenuItem
             //
@@ -586,7 +583,7 @@ namespace GitUI.CommandsDialogs
             this.openDiffMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.openDiffMenuItem.Size = new System.Drawing.Size(228, 22);
             this.openDiffMenuItem.Text = "Open with difftool";
-            this.openDiffMenuItem.Click += new System.EventHandler(this.openDiffMenuItem_Click);
+            this.openDiffMenuItem.Click += new System.EventHandler(this.OpenWithDifftoolToolStripMenuItemClick);
             //
             // toolStripSeparator16
             //
@@ -599,7 +596,7 @@ namespace GitUI.CommandsDialogs
             this.copyFolderNameMenuItem.Name = "copyFolderNameMenuItem";
             this.copyFolderNameMenuItem.Size = new System.Drawing.Size(228, 22);
             this.copyFolderNameMenuItem.Text = "Copy folder name";
-            this.copyFolderNameMenuItem.Click += new System.EventHandler(this.copyFolderNameMenuItem_Click);
+            this.copyFolderNameMenuItem.Click += new System.EventHandler(this.FilenameToClipboardToolStripMenuItemClick);
             //
             // gitItemStatusBindingSource
             //
@@ -656,6 +653,7 @@ namespace GitUI.CommandsDialogs
             this.splitLeft.Panel2.Controls.Add(this.toolbarStaged);
             this.splitLeft.Size = new System.Drawing.Size(397, 622);
             this.splitLeft.SplitterDistance = 274;
+            this.splitLeft.SplitterWidth = 6;
             this.splitLeft.TabIndex = 3;
             this.splitLeft.TabStop = false;
             //
@@ -728,7 +726,7 @@ namespace GitUI.CommandsDialogs
             // toolRefreshItem
             //
             this.toolRefreshItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolRefreshItem.Image = global::GitUI.Properties.Resources.arrow_refresh;
+            this.toolRefreshItem.Image = global::GitUI.Properties.Resources.IconReloadRevisions;
             this.toolRefreshItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolRefreshItem.Name = "toolRefreshItem";
             this.toolRefreshItem.Size = new System.Drawing.Size(23, 20);
@@ -868,7 +866,7 @@ namespace GitUI.CommandsDialogs
             this.selectionFilterToolStripMenuItem.Name = "selectionFilterToolStripMenuItem";
             this.selectionFilterToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
             this.selectionFilterToolStripMenuItem.Text = "Selection filter";
-            this.selectionFilterToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ToogleShowSelectionFilter);
+            this.selectionFilterToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ToggleShowSelectionFilter);
             //
             // toolStripProgressBar1
             //
@@ -902,8 +900,8 @@ namespace GitUI.CommandsDialogs
             //
             this.selectionFilter.Name = "selectionFilter";
             this.selectionFilter.Size = new System.Drawing.Size(121, 25);
-            this.selectionFilter.SelectedIndexChanged += new System.EventHandler(this.FilterIndexChanged);
-            this.selectionFilter.TextChanged += new System.EventHandler(this.FilterChanged);
+            this.selectionFilter.SelectedIndexChanged += new System.EventHandler(this.OnSelectionFilterIndexChanged);
+            this.selectionFilter.TextChanged += new System.EventHandler(this.OnSelectionFilterTextChanged);
             //
             // LoadingStaged
             //
@@ -912,7 +910,7 @@ namespace GitUI.CommandsDialogs
             this.LoadingStaged.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LoadingStaged.Location = new System.Drawing.Point(0, 28);
             this.LoadingStaged.Name = "LoadingStaged";
-            this.LoadingStaged.Size = new System.Drawing.Size(397, 316);
+            this.LoadingStaged.Size = new System.Drawing.Size(397, 314);
             this.LoadingStaged.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.LoadingStaged.TabIndex = 17;
             this.LoadingStaged.TabStop = false;
@@ -926,7 +924,7 @@ namespace GitUI.CommandsDialogs
             this.Staged.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Staged.Name = "Staged";
             this.Staged.SelectFirstItemOnSetItems = false;
-            this.Staged.Size = new System.Drawing.Size(397, 316);
+            this.Staged.Size = new System.Drawing.Size(397, 314);
             this.Staged.TabIndex = 0;
             this.Staged.SelectedIndexChanged += new System.EventHandler(this.StagedSelectionChanged);
             this.Staged.DataSourceChanged += new System.EventHandler(this.Staged_DataSourceChanged);
@@ -1080,10 +1078,11 @@ namespace GitUI.CommandsDialogs
             //
             // tableLayoutPanel1
             //
+            this.tableLayoutPanel1.BackColor = System.Drawing.SystemColors.Control;
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.Message, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.flowCommitButtons, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.toolbarCommit, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1094,24 +1093,15 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(517, 192);
             this.tableLayoutPanel1.TabIndex = 8;
-            //
-            // panel1
-            //
-            this.panel1.Controls.Add(this.Message);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(178, 31);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(336, 158);
-            this.panel1.TabIndex = 7;
-            //
+            // 
             // Message
-            //
+            // 
             this.Message.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Message.Location = new System.Drawing.Point(0, 0);
+            this.Message.Location = new System.Drawing.Point(177, 28);
             this.Message.Margin = new System.Windows.Forms.Padding(0);
             this.Message.Name = "Message";
-            this.Message.Size = new System.Drawing.Size(336, 158);
-            this.Message.TabIndex = 0;
+            this.Message.Size = new System.Drawing.Size(340, 164);
+            this.Message.TabIndex = 7;
             this.Message.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F);
             this.Message.SelectionChanged += new System.EventHandler(this.Message_SelectionChanged);
             this.Message.Enter += new System.EventHandler(this.Message_Enter);
@@ -1125,16 +1115,15 @@ namespace GitUI.CommandsDialogs
             this.flowCommitButtons.Controls.Add(this.CommitAndPush);
             this.flowCommitButtons.Controls.Add(this.StageInSuperproject);
             this.flowCommitButtons.Controls.Add(this.Amend);
-            this.flowCommitButtons.Controls.Add(this.emptyLabel);
             this.flowCommitButtons.Controls.Add(this.Reset);
             this.flowCommitButtons.Controls.Add(this.ResetUnStaged);
             this.flowCommitButtons.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowCommitButtons.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowCommitButtons.Location = new System.Drawing.Point(0, 0);
-            this.flowCommitButtons.Margin = new System.Windows.Forms.Padding(0);
+            this.flowCommitButtons.Margin = new System.Windows.Forms.Padding(6, 6, 6, 0);
             this.flowCommitButtons.Name = "flowCommitButtons";
             this.tableLayoutPanel1.SetRowSpan(this.flowCommitButtons, 2);
-            this.flowCommitButtons.Size = new System.Drawing.Size(175, 192);
+            this.flowCommitButtons.Size = new System.Drawing.Size(171, 192);
             this.flowCommitButtons.TabIndex = 1;
             this.flowCommitButtons.WrapContents = false;
             //
@@ -1142,8 +1131,8 @@ namespace GitUI.CommandsDialogs
             //
             this.Commit.Image = global::GitUI.Properties.Resources.IconClean;
             this.Commit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Commit.Location = new System.Drawing.Point(1, 3);
-            this.Commit.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
+            this.Commit.Location = new System.Drawing.Point(0, 0);
+            this.Commit.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
             this.Commit.Name = "Commit";
             this.Commit.Size = new System.Drawing.Size(171, 26);
             this.Commit.TabIndex = 1;
@@ -1156,8 +1145,8 @@ namespace GitUI.CommandsDialogs
             //
             this.CommitAndPush.Image = global::GitUI.Properties.Resources.ArrowUp;
             this.CommitAndPush.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.CommitAndPush.Location = new System.Drawing.Point(1, 35);
-            this.CommitAndPush.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
+            this.CommitAndPush.Location = new System.Drawing.Point(0, 32);
+            this.CommitAndPush.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.CommitAndPush.Name = "CommitAndPush";
             this.CommitAndPush.Size = new System.Drawing.Size(171, 26);
             this.CommitAndPush.TabIndex = 9;
@@ -1169,7 +1158,8 @@ namespace GitUI.CommandsDialogs
             // Amend
             // 
             this.Amend.AutoSize = true;
-            this.Amend.Location = new System.Drawing.Point(3, 88);
+            this.Amend.Location = new System.Drawing.Point(0, 93);
+            this.Amend.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.Amend.Name = "Amend";
             this.Amend.Size = new System.Drawing.Size(97, 17);
             this.Amend.TabIndex = 0;
@@ -1177,20 +1167,12 @@ namespace GitUI.CommandsDialogs
             this.Amend.UseVisualStyleBackColor = true;
             this.Amend.CheckedChanged += new System.EventHandler(this.Amend_CheckedChanged);
             // 
-            // emptyLabel
-            // 
-            this.emptyLabel.AutoSize = true;
-            this.emptyLabel.Location = new System.Drawing.Point(3, 108);
-            this.emptyLabel.Name = "emptyLabel";
-            this.emptyLabel.Size = new System.Drawing.Size(0, 13);
-            this.emptyLabel.TabIndex = 15;
-            // 
             // Reset
-            //
+            // 
             this.Reset.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
             this.Reset.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.Reset.Location = new System.Drawing.Point(1, 124);
-            this.Reset.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
+            this.Reset.Location = new System.Drawing.Point(0, 122);
+            this.Reset.Margin = new System.Windows.Forms.Padding(0, 9, 0, 3);
             this.Reset.Name = "Reset";
             this.Reset.Size = new System.Drawing.Size(171, 26);
             this.Reset.TabIndex = 11;
@@ -1203,8 +1185,8 @@ namespace GitUI.CommandsDialogs
             //
             this.ResetUnStaged.Image = global::GitUI.Properties.Resources.IconResetWorkingDirChanges;
             this.ResetUnStaged.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ResetUnStaged.Location = new System.Drawing.Point(1, 156);
-            this.ResetUnStaged.Margin = new System.Windows.Forms.Padding(1, 3, 3, 3);
+            this.ResetUnStaged.Location = new System.Drawing.Point(0, 154);
+            this.ResetUnStaged.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.ResetUnStaged.Name = "ResetUnStaged";
             this.ResetUnStaged.Size = new System.Drawing.Size(171, 26);
             this.ResetUnStaged.TabIndex = 14;
@@ -1225,11 +1207,11 @@ namespace GitUI.CommandsDialogs
             this.toolStripMenuItem3,
             this.commitTemplatesToolStripMenuItem,
             this.createBranchToolStripButton});
-            this.toolbarCommit.Location = new System.Drawing.Point(175, 0);
+            this.toolbarCommit.Location = new System.Drawing.Point(177, 0);
             this.toolbarCommit.Name = "toolbarCommit";
             this.toolbarCommit.Padding = new System.Windows.Forms.Padding(1, 1, 2, 1);
             this.toolbarCommit.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolbarCommit.Size = new System.Drawing.Size(342, 28);
+            this.toolbarCommit.Size = new System.Drawing.Size(340, 28);
             this.toolbarCommit.Stretch = true;
             this.toolbarCommit.TabIndex = 5;
             //
@@ -1352,7 +1334,6 @@ namespace GitUI.CommandsDialogs
             this.gpgSignCommitToolStripComboBox.MaxDropDownItems = 3;
             this.gpgSignCommitToolStripComboBox.Name = "gpgSignCommitToolStripComboBox";
             this.gpgSignCommitToolStripComboBox.Size = new System.Drawing.Size(230, 23);
-            this.gpgSignCommitToolStripComboBox.Text = "Sign commit with default key";
             this.gpgSignCommitToolStripComboBox.SelectedIndexChanged += new System.EventHandler(this.gpgSignCommitChanged);
             // 
             // toolStripGpgKeyTextBox
@@ -1493,11 +1474,6 @@ namespace GitUI.CommandsDialogs
             this.Name = "FormCommit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Commit";
-            this.Activated += new System.EventHandler(this.FormCommitActivated);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormCommitFormClosing);
-            this.Load += new System.EventHandler(this.FormCommit_Load);
-            this.Shown += new System.EventHandler(this.FormCommitShown);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormCommit_KeyUp);
             this.UnstagedFileContext.ResumeLayout(false);
             this.StagedFileContext.ResumeLayout(false);
             this.UnstagedSubmoduleContext.ResumeLayout(false);
@@ -1530,7 +1506,6 @@ namespace GitUI.CommandsDialogs
             this.splitRight.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.panel1.ResumeLayout(false);
             this.flowCommitButtons.ResumeLayout(false);
             this.flowCommitButtons.PerformLayout();
             this.toolbarCommit.ResumeLayout(false);
@@ -1649,7 +1624,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator stagedToolStripSeparator18;
         private ToolStripMenuItem stagedCopyPathToolStripMenuItem14;
         private ToolStripSeparator toolStripSeparator12;
-        private ToolStripMenuItem interactiveAddtoolStripMenuItem;
+        private ToolStripMenuItem interactiveAddToolStripMenuItem;
         private TableLayoutPanel tableLayoutPanel1;
         private StatusStrip commitStatusStrip;
         private ToolStripStatusLabel commitAuthorStatus;
@@ -1660,7 +1635,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripStatusLabel commitCursorColumnLabel;
         private ToolStripStatusLabel commitCursorColumn;
         private ToolStripStatusLabel commitEndPadding;
-        private Panel panel1;
         private EditNetSpell Message;
         private FlowLayoutPanel flowCommitButtons;
         private Button Commit;
@@ -1672,7 +1646,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem resetUnstagedChangesToolStripMenuItem;
         private ToolStripMenuItem noVerifyToolStripMenuItem;
         private ToolStripButton createBranchToolStripButton;
-        private Label emptyLabel;
         private ToolStripStatusLabel toolStripStatusBranchIcon;
         private ToolStripStatusLabel branchNameLabel;
         private ToolStripSeparator toolStripSeparator14;

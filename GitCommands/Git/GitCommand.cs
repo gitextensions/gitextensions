@@ -17,7 +17,7 @@ namespace GitCommands
         protected abstract IEnumerable<string> CollectArguments();
 
         /// <returns>name of git command eg. push, pull</returns>
-        public abstract string GitComandName();
+        public abstract string GitCommandName();
 
         /// <returns>if command accesses remote repository</returns>
         public abstract bool AccessesRemote();
@@ -29,12 +29,12 @@ namespace GitCommands
         public virtual string ToLine()
         {
             Validate();
-            return GitComandName() + " " + CollectArguments().Join(" ");
+            return GitCommandName() + " " + CollectArguments().Join(" ");
         }
 
         public override string ToString()
         {
-            return GitComandName() + " " + CollectArguments().Join(" ");
+            return GitCommandName() + " " + CollectArguments().Join(" ");
         }
 
         /// <summary>

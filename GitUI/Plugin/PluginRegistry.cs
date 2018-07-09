@@ -3,6 +3,7 @@ using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
+using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -35,6 +36,7 @@ namespace GitUI
             }
         }
 
+        [CanBeNull]
         public static IRepositoryHostPlugin TryGetGitHosterForModule(GitModule module)
         {
             if (!module.IsValidGitWorkingDir())

@@ -1,6 +1,6 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using GitCommands;
+using GitCommands.Logging;
 
 namespace GitUI.Script
 {
@@ -20,13 +20,10 @@ namespace GitUI.Script
                 UseShellExecute = false
             };
 
-            var startCmd = AppSettings.GitLog.Log(filename, psarguments);
+            var operation = CommandLog.LogProcessStart(filename, psarguments);
             var startProcess = Process.Start(startInfo);
 
-            startProcess.Exited += (sender, args) =>
-            {
-                startCmd.LogEnd();
-            };
+            startProcess.Exited += (s, e) => operation.LogProcessEnd();
         }
     }
 }

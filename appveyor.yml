@@ -42,7 +42,6 @@ test_script:
     $testAssemblies = @(
         "UnitTests\GitCommandsTests\bin\Release\GitCommandsTests.dll"
         "UnitTests\GitUITests\bin\Release\GitUITests.dll"
-        "UnitTests\GravatarTests\bin\Release\GravatarTests.dll"
         "UnitTests\Plugins\ReleaseNotesGeneratorTests\bin\Release\ReleaseNotesGeneratorTests.dll"
         "UnitTests\ResourceManagerTests\bin\Release\ResourceManagerTests.dll"
     )

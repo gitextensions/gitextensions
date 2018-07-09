@@ -23,7 +23,7 @@ namespace GitCommands
             LockedAction<object>(() =>
             {
                 action();
-                return null;
+                return default;
             });
         }
 
@@ -38,6 +38,7 @@ namespace GitCommands
         protected abstract void SaveImpl();
         protected abstract void LoadImpl();
         protected abstract void SetValueImpl(string key, string value);
+        [CanBeNull]
         protected abstract string GetValueImpl(string key);
         protected abstract bool NeedRefresh();
         protected abstract void ClearImpl();

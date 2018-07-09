@@ -8,6 +8,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -17,6 +18,7 @@ namespace GitUI.CommandsDialogs
         /// Locates the node by the label.
         /// </summary>
         /// <returns>The first node matching the label, if one found; otherwise <see langword="null"/>.</returns>
+        [CanBeNull]
         TreeNode Find(TreeNodeCollection nodes, string label);
 
         /// <summary>

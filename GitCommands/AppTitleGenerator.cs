@@ -13,7 +13,7 @@ namespace GitCommands
         /// <param name="workingDir">Path to repository.</param>
         /// <param name="isValidWorkingDir">Indicates whether the given path contains a valid repository.</param>
         /// <param name="branchName">Current branch name.</param>
-        string Generate(string workingDir, bool isValidWorkingDir, string branchName);
+        string Generate(string workingDir = null, bool isValidWorkingDir = false, string branchName = null);
     }
 
     /// <summary>
@@ -21,13 +21,11 @@ namespace GitCommands
     /// </summary>
     public sealed class AppTitleGenerator : IAppTitleGenerator
     {
-        private const string DefaultTitle = "Git Extensions";
-        private const string RepositoryTitleFormat = "{0} ({1}) - Git Extensions";
-        private readonly IRepositoryDescriptionProvider _repositoryDescriptionProvider;
+        private readonly IRepositoryDescriptionProvider _description;
 
-        public AppTitleGenerator(IRepositoryDescriptionProvider repositoryDescriptionProvider)
+        public AppTitleGenerator(IRepositoryDescriptionProvider description)
         {
-            _repositoryDescriptionProvider = repositoryDescriptionProvider;
+            _description = description;
         }
 
         /// <summary>
@@ -36,19 +34,22 @@ namespace GitCommands
         /// <param name="workingDir">Path to repository.</param>
         /// <param name="isValidWorkingDir">Indicates whether the given path contains a valid repository.</param>
         /// <param name="branchName">Current branch name.</param>
-        public string Generate(string workingDir, bool isValidWorkingDir, string branchName)
+        public string Generate(string workingDir = null, bool isValidWorkingDir = false, string branchName = null)
         {
             if (string.IsNullOrWhiteSpace(workingDir) || !isValidWorkingDir)
             {
-                return DefaultTitle;
+                return "Git Extensions";
             }
 
-            string repositoryDescription = _repositoryDescriptionProvider.Get(workingDir);
-            var title = string.Format(RepositoryTitleFormat, repositoryDescription, (branchName ?? "no branch").Trim('(', ')'));
+            branchName = branchName?.Trim('(', ')') ?? "no branch";
+
+            var description = _description.Get(workingDir);
+
 #if DEBUG
-            title += " -> DEBUG <-";
+            return $"{description} ({branchName}) - Git Extensions [DEBUG]";
+#else
+            return $"{description} ({branchName}) - Git Extensions";
 #endif
-            return title;
         }
     }
 }

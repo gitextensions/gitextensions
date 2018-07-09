@@ -9,6 +9,8 @@ namespace GitUI.HelperDialogs
         {
             InitializeComponent();
             Translate();
+
+            this.AdjustForDpiScaling();
         }
 
         private FormCommitDiff()
@@ -19,13 +21,9 @@ namespace GitUI.HelperDialogs
         public FormCommitDiff(GitUICommands commands, string revisionGuid)
             : this(commands)
         {
-            CommitDiff.TextChanged += CommitDiff_TextChanged;
-            CommitDiff.SetRevision(revisionGuid, null);
-        }
+            CommitDiff.TextChanged += (s, e) => Text = CommitDiff.Text;
 
-        private void CommitDiff_TextChanged(object sender, EventArgs e)
-        {
-            Text = CommitDiff.Text;
+            CommitDiff.SetRevision(revisionGuid, fileToSelect: null);
         }
     }
 }

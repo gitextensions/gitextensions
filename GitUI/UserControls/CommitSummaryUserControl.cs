@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using GitCommands;
-using GitUI.Editor;
 using ResourceManager;
 
 namespace GitUI.UserControls
@@ -48,7 +47,7 @@ namespace GitUI.UserControls
             {
                 _revision = value;
 
-                labelAuthorCaption.Text = Strings.GetAuthorText() + ":";
+                labelAuthorCaption.Text = Strings.Author + ":";
                 labelTagsCaption.Text = _tagsCaption;
                 labelBranchesCaption.Text = _branchesCaption;
 
@@ -56,7 +55,7 @@ namespace GitUI.UserControls
                 {
                     groupBox1.Text = GitRevision.ToShortSha(Revision.Guid);
                     labelAuthor.Text = string.Format("{0}", Revision.Author);
-                    labelDate.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
+                    labelDate.Text = string.Format(Strings.CommitDate + ": {0}", Revision.CommitDate);
                     labelMessage.Text = string.Format("{0}", Revision.Subject);
 
                     var tagList = Revision.Refs.Where(r => r.IsTag).ToList();

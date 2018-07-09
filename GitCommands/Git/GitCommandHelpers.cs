@@ -84,21 +84,21 @@ namespace GitCommands
         {
             EnvironmentConfiguration.SetEnvironmentVariables();
 
-            var startCmd = AppSettings.GitLog.Log(fileName, arguments);
+            var operation = CommandLog.LogProcessStart(fileName, arguments);
 
             var startInfo = CreateProcessStartInfo(fileName, arguments, workingDirectory, outputEncoding);
-            var startProcess = Process.Start(startInfo);
-            startProcess.EnableRaisingEvents = true;
+            var process = Process.Start(startInfo);
+            process.EnableRaisingEvents = true;
 
             void ProcessExited(object sender, EventArgs args)
             {
-                startProcess.Exited -= ProcessExited;
-                startCmd.LogEnd();
+                process.Exited -= ProcessExited;
+                operation.LogProcessEnd();
             }
 
-            startProcess.Exited += ProcessExited;
+            process.Exited += ProcessExited;
 
-            return startProcess;
+            return process;
         }
 
         public static bool UseSsh(string arguments)
@@ -204,6 +204,7 @@ namespace GitCommands
             return StartProcessAndReadLines(arguments, cmd, workDir, stdInput);
         }
 
+        [CanBeNull]
         private static Process StartProcessAndReadAllText(string arguments, string cmd, string workDir, out string stdOutput, out string stdError, string stdInput)
         {
             if (string.IsNullOrEmpty(cmd))
@@ -254,6 +255,7 @@ namespace GitCommands
             }
         }
 
+        [CanBeNull]
         private static Process StartProcessAndReadAllBytes(string arguments, string cmd, string workDir, out byte[] stdOutput, out byte[] stdError, byte[] stdInput)
         {
             if (string.IsNullOrEmpty(cmd))
@@ -314,8 +316,15 @@ namespace GitCommands
 
         public static string CherryPickCmd(string cherry, bool commit, string arguments)
         {
-            string cherryPickCmd = commit ? "cherry-pick" : "cherry-pick --no-commit";
-            return cherryPickCmd + " " + arguments + " \"" + cherry + "\"";
+            var args = new ArgumentBuilder
+            {
+                "cherry-pick",
+                { !commit, "--no-commit" },
+                arguments,
+                cherry.Quote()
+            };
+
+            return args.ToString();
         }
 
         public static string DeleteTagCmd(string tagName)
@@ -707,6 +716,7 @@ namespace GitCommands
             return GetCurrentSubmoduleChanges(module, submodule, submodule, false);
         }
 
+        [CanBeNull]
         public static GitSubmoduleStatus GetSubmoduleStatus(string text, GitModule module, string fileName)
         {
             if (string.IsNullOrEmpty(text))
@@ -1192,6 +1202,7 @@ namespace GitCommands
             return args.ToString();
         }
 
+        [CanBeNull]
         public static string GetFileExtension(string fileName)
         {
             if (fileName.Contains(".") && fileName.LastIndexOf(".") < fileName.Length)

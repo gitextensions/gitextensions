@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using JetBrains.Annotations;
 using TfsInterop.Interface;
 
 namespace TfsIntegration
@@ -85,6 +86,7 @@ namespace TfsIntegration
             }
         }
 
+        [CanBeNull]
         private ITfsHelper LoadAssemblyAndConnectToServer(string assembly)
         {
             try

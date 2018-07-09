@@ -48,8 +48,20 @@
     <PackageReference Include="LibGit2Sharp" Version="0.25.0" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="System.IO.Abstractions">
+      <Version>2.0.0.144</Version>
+    </PackageReference>
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers">
+      <Version>2.0.0.143</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Avatars\AvatarCacheTestBase.cs" />
+    <Compile Include="Avatars\AvatarMemoryCacheTests.cs" />
+    <Compile Include="Avatars\AvatarPersistentCacheTests.cs" />
+    <Compile Include="Avatars\AvatarTestBase.cs" />
+    <Compile Include="Avatars\BackupAvatarProviderTests.cs" />
+    <Compile Include="Avatars\MruCacheTests.cs" />
     <Compile Include="CancellationTokenSequenceTests.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\FormInitTests.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\FormCommitTests.cs" />
@@ -66,7 +78,7 @@
     <Compile Include="ThreadHelperTests.cs" />
     <Compile Include="TranslationTest.cs" />
     <Compile Include="UITest.cs" />
-    <Compile Include="UserControls\AuthorEmailBasedRevisionHighlightingFixture.cs" />
+    <Compile Include="UserControls\AuthorRevisionHighlightingFixture.cs" />
     <Compile Include="UserControls\ConsoleEmulatorOutputControlFixture.cs" />
     <Compile Include="Editor\Diff\DiffLineNumAnalyzerFixture.cs" />
     <Compile Include="Editor\Diff\LinePrefixHelperFixture.cs" />

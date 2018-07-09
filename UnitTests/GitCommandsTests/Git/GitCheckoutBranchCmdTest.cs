@@ -9,7 +9,7 @@ namespace GitCommandsTests.Git
     [TestFixture]
     public class GitCheckoutBranchCmdTest
     {
-        private GitCheckoutBranchCmd GetInstance(bool remote)
+        private static GitCheckoutBranchCmd GetInstance(bool remote)
         {
             return new GitCheckoutBranchCmd("branchName", remote);
         }
@@ -36,7 +36,7 @@ namespace GitCommandsTests.Git
         public void TestGitCommandName()
         {
             GitCheckoutBranchCmd cmd = GetInstance(true);
-            Assert.AreEqual(cmd.GitComandName(), "checkout");
+            Assert.AreEqual(cmd.GitCommandName(), "checkout");
         }
 
         [Test]

@@ -60,7 +60,7 @@ namespace GitCommandsTests
         {
             var title = _appTitleGenerator.Generate("a", true, null);
 
-            title.Should().Be($"{ShortName} (no branch) - Git Extensions -> DEBUG <-");
+            title.Should().Be($"{ShortName} (no branch) - Git Extensions [DEBUG]");
         }
 #endif
     }

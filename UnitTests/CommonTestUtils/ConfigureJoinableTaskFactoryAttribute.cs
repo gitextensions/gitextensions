@@ -99,7 +99,7 @@ namespace CommonTestUtils
 
             internal Thread MainThread => _mainThread;
 
-            private void MainThreadStart() => throw new InvalidOperationException("This thread should never be started.");
+            private static void MainThreadStart() => throw new InvalidOperationException("This thread should never be started.");
 
             internal void ThrowIfSwitchOccurred()
             {
@@ -154,7 +154,7 @@ namespace CommonTestUtils
                 return new DenyExecutionSynchronizationContext(_underlyingContext.CreateCopy(), _mainThread, _failedTransfer);
             }
 
-            private void ThrowFailedTransferExceptionForCapture()
+            private static void ThrowFailedTransferExceptionForCapture()
             {
                 throw new InvalidOperationException("Tests cannot use SwitchToMainThreadAsync unless they are marked with ApartmentState.STA.");
             }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.UserControls.RevisionGridClasses;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
 namespace GitUI.HelperDialogs
@@ -24,14 +24,14 @@ namespace GitUI.HelperDialogs
             : this(commands)
         {
             revisionGrid.MultiSelect = false;
-            revisionGrid.ShowUncommitedChangesIfPossible = showArtificial && !revisionGrid.Module.IsBareRepository();
+            revisionGrid.ShowUncommittedChangesIfPossible = showArtificial && !revisionGrid.Module.IsBareRepository();
 
             if (!string.IsNullOrEmpty(preselectCommit))
             {
                 var guid = Module.RevParse(preselectCommit);
                 if (guid != null)
                 {
-                    revisionGrid.SetInitialRevision(guid.ToString());
+                    revisionGrid.InitialObjectId = guid.ToString();
                 }
             }
         }
@@ -69,7 +69,7 @@ namespace GitUI.HelperDialogs
 
         private void buttonGotoCommit_Click(object sender, EventArgs e)
         {
-            revisionGrid.MenuCommands.GotoCommitExcecute();
+            revisionGrid.MenuCommands.GotoCommitExecute();
         }
 
         private void linkLabelParent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

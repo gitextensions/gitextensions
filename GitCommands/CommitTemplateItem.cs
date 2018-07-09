@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using GitCommands.Utils;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -35,13 +36,13 @@ namespace GitCommands
             Text = string.Empty;
         }
 
-        private CommitTemplateItem(SerializationInfo info, StreamingContext ctxt)
+        private CommitTemplateItem(SerializationInfo info, StreamingContext context)
         {
             Name = (string)info.GetValue("Name", typeof(string));
             Text = (string)info.GetValue("Text", typeof(string));
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Name", Name);
             info.AddValue("Text", Text);
@@ -53,6 +54,7 @@ namespace GitCommands
             AppSettings.CommitTemplates = strVal ?? string.Empty;
         }
 
+        [CanBeNull]
         public static CommitTemplateItem[] LoadFromSettings()
         {
             string serializedString = AppSettings.CommitTemplates;
@@ -70,6 +72,7 @@ namespace GitCommands
             return JsonSerializer.Serialize(items);
         }
 
+        [CanBeNull]
         private static CommitTemplateItem[] DeserializeCommitTemplates(string serializedString, out bool shouldBeUpdated)
         {
             shouldBeUpdated = false;

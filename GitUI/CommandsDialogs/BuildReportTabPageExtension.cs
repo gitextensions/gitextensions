@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.UserControls;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -173,6 +174,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        [CanBeNull]
         private static string DetermineFavIconUrl(HtmlDocument htmlDocument)
         {
             var links = htmlDocument.GetElementsByTagName("link");
@@ -199,6 +201,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        [ItemCanBeNull]
         private static async Task<Stream> DownloadRemoteImageFileAsync(string uri)
         {
             var request = (HttpWebRequest)WebRequest.Create(uri);

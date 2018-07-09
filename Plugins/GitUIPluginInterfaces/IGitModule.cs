@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
@@ -94,14 +95,14 @@ namespace GitUIPluginInterfaces
         /// <summary>Indicates whether the repository is in a 'detached HEAD' state.</summary>
         bool IsDetachedHead();
 
+        [ContractAnnotation("=>false,fullSha1:null")]
+        [ContractAnnotation("=>true,fullSha1:notnull")]
         bool IsExistingCommitHash(string sha1Fragment, out string fullSha1);
 
         /// <summary>Gets the path to the git application executable.</summary>
         string GitCommand { get; }
 
         Version AppVersion { get; }
-
-        string GravatarCacheDir { get; }
 
         string GetSubmoduleFullPath(string localPath);
 
@@ -115,7 +116,7 @@ namespace GitUIPluginInterfaces
         /// Retrieves registered remotes by running <c>git remote show</c> command.
         /// </summary>
         /// <returns>Registered remotes.</returns>
-        string[] GetRemotes(bool allowEmpty = true);
+        IReadOnlyList<string> GetRemotes();
 
         /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
         string GetCurrentRemote();

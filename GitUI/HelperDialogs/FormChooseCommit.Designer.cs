@@ -30,7 +30,7 @@
         {
             this.btnOK = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.revisionGrid = new GitUI.RevisionGrid();
+            this.revisionGrid = new GitUI.RevisionGridControl();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonGotoCommit = new System.Windows.Forms.Button();
@@ -88,10 +88,9 @@
             this.revisionGrid.Margin = new System.Windows.Forms.Padding(4);
             this.revisionGrid.MinimumSize = new System.Drawing.Size(250, 125);
             this.revisionGrid.Name = "revisionGrid";
-            this.revisionGrid.RevisionGraphDrawStyle = GitUI.RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
             this.revisionGrid.Size = new System.Drawing.Size(1097, 466);
             this.revisionGrid.TabIndex = 0;
-            this.revisionGrid.DoubleClickRevision += new System.EventHandler<GitUI.UserControls.RevisionGridClasses.DoubleClickRevisionEventArgs>(this.revisionGrid_DoubleClickRevision);
+            this.revisionGrid.DoubleClickRevision += new System.EventHandler<GitUI.UserControls.RevisionGrid.DoubleClickRevisionEventArgs>(this.revisionGrid_DoubleClickRevision);
             this.revisionGrid.SelectionChanged += new System.EventHandler(this.revisionGrid_SelectionChanged);
             // 
             // flowLayoutPanel1
@@ -193,7 +192,7 @@
 
         #endregion
 
-        private RevisionGrid revisionGrid;
+        private RevisionGridControl revisionGrid;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands.Settings;
+using JetBrains.Annotations;
 
 namespace GitCommands.ExternalLinks
 {
@@ -70,6 +71,7 @@ namespace GitCommands.ExternalLinks
         }
 
         // TODO: refactor and outsource to the centralised SettingsSerialiser implementations.
+        [CanBeNull]
         private static IReadOnlyList<ExternalLinkDefinition> LoadFromXmlString(string xmlString)
         {
             if (string.IsNullOrWhiteSpace(xmlString))

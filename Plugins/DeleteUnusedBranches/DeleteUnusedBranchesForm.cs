@@ -22,7 +22,7 @@ namespace DeleteUnusedBranches
         private readonly TranslationString _dangerousAction = new TranslationString("DANGEROUS ACTION!\nBranches will be deleted on the remote '{0}'. This can not be undone.\nAre you sure you want to continue?");
         private readonly TranslationString _deletingBranches = new TranslationString("Deleting branches...");
         private readonly TranslationString _deletingUnmergedBranches = new TranslationString("Deleting unmerged branches will result in dangling commits. Use with caution!");
-        private readonly TranslationString _chooseBrancesToDelete = new TranslationString("Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.");
+        private readonly TranslationString _chooseBranchesToDelete = new TranslationString("Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.");
         private readonly TranslationString _pressToSearch = new TranslationString("Press '{0}' to search for branches to delete.");
         private readonly TranslationString _cancel = new TranslationString("Cancel");
         private readonly TranslationString _searchBranches = new TranslationString("Search branches");
@@ -169,7 +169,7 @@ namespace DeleteUnusedBranches
                     // TODO: use GitCommandHelpers.PushMultipleCmd after moving this window to GE (see FormPush as example)
                     var remoteBranchNameOffset = remoteBranchPrefix.Length;
                     var remoteBranchNames = string.Join(" ", remoteBranches.Select(branch => ":" + branch.Name.Substring(remoteBranchNameOffset)));
-                    _gitCommands.RunGitCmd(string.Format("push {0} {1}", remoteName, remoteBranchNames));
+                    _gitCommands.RunGitCmd($"push {remoteName} {remoteBranchNames}");
                 }
 
                 if (localBranches.Count > 0)
@@ -204,7 +204,7 @@ namespace DeleteUnusedBranches
 
         private void ClearResults(object sender, EventArgs e)
         {
-            instructionLabel.Text = string.Format(_chooseBrancesToDelete.Text, mergedIntoBranch.Text);
+            instructionLabel.Text = string.Format(_chooseBranchesToDelete.Text, mergedIntoBranch.Text);
             lblStatus.Text = string.Format(_pressToSearch.Text, RefreshBtn.Text);
             _branches.Clear();
             _branches.ResetBindings();
@@ -261,8 +261,8 @@ namespace DeleteUnusedBranches
                 mergedIntoBranch.Text,
                 _NO_TRANSLATE_Remote.Text,
                 useRegexFilter.Checked ? regexFilter.Text : null,
-                useRegexCaseInsensitive.Checked ? useRegexCaseInsensitive.Checked : false,
-                regexDoesNotMatch.Checked ? regexDoesNotMatch.Checked : false,
+                useRegexCaseInsensitive.Checked && useRegexCaseInsensitive.Checked,
+                regexDoesNotMatch.Checked && regexDoesNotMatch.Checked,
                 TimeSpan.FromDays((int)olderThanDays.Value),
                 _refreshCancellation.Token);
 
@@ -320,7 +320,7 @@ namespace DeleteUnusedBranches
             return string.Format(_branchesSelected.Text, _branches.Count(b => b.Delete), _branches.Count);
         }
 
-        private struct RefreshContext
+        private readonly struct RefreshContext
         {
             public RefreshContext(IGitModule commands, bool includeRemotes, bool includeUnmerged, string referenceBranch,
                 string remoteRepositoryName, string regexFilter, bool regexIgnoreCase, bool regexDoesNotMatch,

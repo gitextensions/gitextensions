@@ -94,6 +94,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -103,7 +104,7 @@
     <None Include="Resources\loadingpanel.gif" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\loadingpanel_static.png" />
+    <None Include="Resources\IconDeleteUnusedBranches.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

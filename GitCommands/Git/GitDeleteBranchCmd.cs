@@ -12,16 +12,11 @@ namespace GitCommands
 
         public GitDeleteBranchCmd(IReadOnlyCollection<IGitRef> branches, bool force)
         {
-            if (branches == null)
-            {
-                throw new ArgumentNullException(nameof(branches));
-            }
-
-            _branches = branches;
+            _branches = branches ?? throw new ArgumentNullException(nameof(branches));
             _force = force;
         }
 
-        public override string GitComandName()
+        public override string GitCommandName()
         {
             return "branch";
         }

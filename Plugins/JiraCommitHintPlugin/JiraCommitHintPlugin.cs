@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Atlassian.Jira;
 using GitUI;
 using GitUIPluginInterfaces;
+using JiraCommitHintPlugin.Properties;
 using NString;
 using ResourceManager;
 
@@ -52,6 +53,7 @@ namespace JiraCommitHintPlugin
         public JiraCommitHintPlugin()
         {
             Description = description;
+            Icon = Resources.IconJira;
         }
 
         public override bool Execute(GitUIEventArgs args)

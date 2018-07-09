@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace GitCommands.Git.Tag
 {
     public sealed class GitCreateTagCmd : GitCommand
     {
-        public GitCreateTagCmd(GitCreateTagArgs args, string tagMessageFileName)
+        public GitCreateTagCmd(GitCreateTagArgs args, [CanBeNull] string tagMessageFileName)
         {
             Arguments = args;
             TagMessageFileName = tagMessageFileName;
@@ -13,9 +14,10 @@ namespace GitCommands.Git.Tag
 
         public GitCreateTagArgs Arguments { get; }
 
+        [CanBeNull]
         public string TagMessageFileName { get; }
 
-        public override string GitComandName()
+        public override string GitCommandName()
         {
             return "tag";
         }
@@ -28,6 +30,7 @@ namespace GitCommands.Git.Tag
             }
 
             string operationArg = GetArgumentForOperation();
+
             if (!string.IsNullOrWhiteSpace(operationArg))
             {
                 yield return operationArg;
@@ -41,31 +44,31 @@ namespace GitCommands.Git.Tag
             yield return Arguments.TagName.Trim().Quote();
             yield return "--";
             yield return Arguments.Revision.Quote();
-        }
 
-        private string GetArgumentForOperation()
-        {
-            switch (Arguments.Operation)
+            string GetArgumentForOperation()
             {
-                /* Lightweight */
-                case TagOperation.Lightweight:
-                    return null;
+                switch (Arguments.Operation)
+                {
+                    /* Lightweight */
+                    case TagOperation.Lightweight:
+                        return null;
 
-                /* Annotate */
-                case TagOperation.Annotate:
-                    return "-a";
+                    /* Annotate */
+                    case TagOperation.Annotate:
+                        return "-a";
 
-                /* Sign with default GPG */
-                case TagOperation.SignWithDefaultKey:
-                    return "-s";
+                    /* Sign with default GPG */
+                    case TagOperation.SignWithDefaultKey:
+                        return "-s";
 
-                /* Sign with specific GPG */
-                case TagOperation.SignWithSpecificKey:
-                    return $"-u {Arguments.SignKeyId}";
+                    /* Sign with specific GPG */
+                    case TagOperation.SignWithSpecificKey:
+                        return $"-u {Arguments.SignKeyId}";
 
-                /* Error */
-                default:
-                    throw new NotSupportedException($"Invalid tag operation: {Arguments.Operation}");
+                    /* Error */
+                    default:
+                        throw new NotSupportedException($"Invalid tag operation: {Arguments.Operation}");
+                }
             }
         }
 

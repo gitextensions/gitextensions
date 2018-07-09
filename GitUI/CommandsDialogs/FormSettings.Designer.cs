@@ -135,7 +135,7 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel3.SetRowSpan(this.settingsTreeView, 2);
             this.settingsTreeView.Size = new System.Drawing.Size(194, 600);
             this.settingsTreeView.TabIndex = 1;
-            this.settingsTreeView.SettingsPageSelected += new System.EventHandler<GitUI.CommandsDialogs.SettingsDialog.SettingsPageSelectedEventArgs>(this.settingsTreeViewUserControl1_SettingsPageSelected);
+            this.settingsTreeView.SettingsPageSelected += new System.EventHandler<GitUI.CommandsDialogs.SettingsDialog.SettingsPageSelectedEventArgs>(this.OnSettingsPageSelected);
             //
             // panelCurrentSettingsPage
             //
@@ -222,7 +222,6 @@ namespace GitUI.CommandsDialogs
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Settings";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSettings_FormClosing);
             this.Load += new System.EventHandler(this.FormSettings_Load);
             this.Shown += new System.EventHandler(this.FormSettings_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();

@@ -34,26 +34,16 @@ namespace GitUI.BranchTreePanel
                 return FullPath.GetHashCode();
             }
 
-            private bool Equals(BaseBranchNode other)
-            {
-                if (other == null)
-                {
-                    return false;
-                }
-
-                return ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath);
-            }
-
             public override bool Equals(object obj)
             {
-                return Equals(obj as BaseBranchNode);
+                return obj is BaseBranchNode other && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath));
             }
 
             protected BaseBranchNode(Tree tree, string fullPath)
                 : base(tree)
             {
                 fullPath = fullPath.Trim();
-                if (fullPath.IsNullOrEmpty())
+                if (string.IsNullOrEmpty(fullPath))
                 {
                     throw new ArgumentNullException(nameof(fullPath));
                 }
@@ -63,10 +53,11 @@ namespace GitUI.BranchTreePanel
                 ParentPath = dirs.Take(dirs.Length - 1).Join(PathSeparator.ToString());
             }
 
+            [CanBeNull]
             internal BaseBranchNode CreateRootNode(IDictionary<string, BaseBranchNode> nodes,
                 Func<Tree, string, BaseBranchNode> createPathNode)
             {
-                if (ParentPath.IsNullOrEmpty())
+                if (string.IsNullOrEmpty(ParentPath))
                 {
                     return this;
                 }
@@ -126,12 +117,7 @@ namespace GitUI.BranchTreePanel
 
             public override bool Equals(object obj)
             {
-                if (!base.Equals(obj))
-                {
-                    return false;
-                }
-
-                return obj is LocalBranchNode localBranchNode && IsActive == localBranchNode.IsActive;
+                return base.Equals(obj) && obj is LocalBranchNode localBranchNode && IsActive == localBranchNode.IsActive;
             }
 
             public override int GetHashCode()
@@ -141,14 +127,11 @@ namespace GitUI.BranchTreePanel
 
             internal override void OnDoubleClick()
             {
-                base.OnDoubleClick();
                 Checkout();
             }
 
             internal override void OnSelected()
             {
-                base.OnSelected();
-
                 SelectRevision();
             }
 
@@ -271,7 +254,7 @@ namespace GitUI.BranchTreePanel
             {
                 base.FillTreeViewNode();
 
-                TreeViewNode.Text = $@"{Strings.BranchesText} ({Nodes.Count})";
+                TreeViewNode.Text = $@"{Strings.Branches} ({Nodes.Count})";
 
                 var activeBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsActive);
                 if (activeBranch == null)
@@ -280,6 +263,7 @@ namespace GitUI.BranchTreePanel
                 }
             }
         }
+
         #endregion private classes
 
         [Pure]

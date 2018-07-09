@@ -2,6 +2,7 @@
 using System.IO;
 using GitCommands;
 using GitCommands.Utils;
+using JetBrains.Annotations;
 using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
@@ -13,6 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return settings.GlobalSettings.GetValue(setting);
         }
 
+        [CanBeNull]
         public static string GetFullPath(string fileName)
         {
             PathUtil.TryFindFullPath(fileName, out var fullPath);
@@ -73,6 +75,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return string.Empty;
         }
 
+        [CanBeNull]
         private static string UnquoteString(string str)
         {
             if (string.IsNullOrEmpty(str))
@@ -89,6 +92,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return str;
         }
 
+        [CanBeNull]
         public static string FindPathForKDiff(string pathFromConfig)
         {
             if (string.IsNullOrEmpty(pathFromConfig) || !File.Exists(pathFromConfig))
@@ -124,6 +128,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return null;
         }
 
+        [CanBeNull]
         public static string GetDiffToolExeFile(string difftoolText)
         {
             string diffTool = difftoolText.ToLowerInvariant();
@@ -249,6 +254,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return "";
         }
 
+        [CanBeNull]
         public static string GetMergeToolExeFile(string mergeToolText)
         {
             string mergeTool = mergeToolText.ToLowerInvariant();

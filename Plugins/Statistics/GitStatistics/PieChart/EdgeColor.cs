@@ -6,7 +6,7 @@ namespace GitStatistics.PieChart
     /// <summary>
     ///   Structure representing edge color used for rendering.
     /// </summary>
-    public struct EdgeColor
+    public static class EdgeColor
     {
         private const float BrightnessThreshold = 0.4F;
 

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Gerrit.Properties;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -46,6 +47,7 @@ namespace Gerrit
         {
             SetNameAndDescription("Gerrit Code Review");
             Translate();
+            Icon = Resources.IconGerrit;
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -346,6 +348,7 @@ namespace Gerrit
             }
         }
 
+        [ItemCanBeNull]
         private async Task<string> DownloadFromScpAsync(GerritSettings settings)
         {
             // This is a very quick and dirty "implementation" of the scp
@@ -410,12 +413,14 @@ namespace Gerrit
             _gitUiCommands.RepoChangedNotifier.Notify();
         }
 
-        private T FindControl<T>(Control form, Func<T, bool> predicate)
+        [CanBeNull]
+        private static T FindControl<T>(Control form, Func<T, bool> predicate)
             where T : Control
         {
             return FindControl(form.Controls, predicate);
         }
 
+        [CanBeNull]
         private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
             where T : Control
         {

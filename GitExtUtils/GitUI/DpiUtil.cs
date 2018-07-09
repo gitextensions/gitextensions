@@ -52,23 +52,6 @@ namespace GitExtUtils.GitUI
         public static bool IsNonStandard => DpiX != 96 || DpiY != 96;
 
         /// <summary>
-        /// BUG: looks like a bug in WinForms - control's margin gets scaled beyond expectations
-        /// For example, if the design was done at 100% and Windows is set to scale to 200%, NUD's margins gets set at 96...
-        /// </summary>
-        /// <param name="control">The control that needs to have margins reset to default values and scaled appropriately.</param>
-        public static void ScaleDefaultMargins([NotNull] Control control)
-        {
-            if (control is Label)
-            {
-                control.Margin = Scale(new Padding(3, 0, 3, 0));
-            }
-            else
-            {
-                control.Margin = Scale(new Padding(3));
-            }
-        }
-
-        /// <summary>
         /// Returns a scaled copy of <paramref name="size"/> which takes equivalent
         /// screen space at the current DPI as the original would at 96 DPI.
         /// </summary>
@@ -76,6 +59,19 @@ namespace GitExtUtils.GitUI
         {
             Scale(ref size);
             return size;
+        }
+
+        /// <summary>
+        /// Returns a scaled copy of <paramref name="size"/> which takes equivalent
+        /// screen space at the current DPI as the original would at <paramref name="originalDpi"/>.
+        /// </summary>
+        public static Size Scale(Size size, int originalDpi)
+        {
+            var scale = (float)DpiX / originalDpi;
+
+            return new Size(
+                (int)(size.Width * scale),
+                (int)(size.Height * scale));
         }
 
         /// <summary>
@@ -99,6 +95,18 @@ namespace GitExtUtils.GitUI
         }
 
         /// <summary>
+        /// Returns a scaled copy of <paramref name="i"/> which has equivalent
+        /// length on screen at the current DPI as the original would at
+        /// <paramref name="originalDpi"/>.
+        /// </summary>
+        public static int Scale(int i, int originalDpi)
+        {
+            var scale = (float)DpiX / originalDpi;
+
+            return (int)(i * scale);
+        }
+
+        /// <summary>
         /// Returns a scaled copy of measurement <paramref name="i"/> which has
         /// equivalent length on screen at the current DPI at the original would
         /// at 96 DPI.
@@ -108,11 +116,40 @@ namespace GitExtUtils.GitUI
             return (float)Math.Round(i * ScaleX);
         }
 
+        /// <summary>
+        /// Returns a scaled copy of <paramref name="f"/> which has equivalent
+        /// length on screen at the current DPI as the original would at
+        /// <paramref name="originalDpi"/>.
+        /// </summary>
+        public static float Scale(float f, int originalDpi)
+        {
+            var scale = (float)DpiX / originalDpi;
+
+            return f * scale;
+        }
+
+        /// <summary>
+        /// Modifies <paramref name="point"/> in place so that it has equivalent physical
+        /// screen position at the current DPI as the original value would at 96 DPI.
+        /// </summary>
         public static Point Scale(Point point)
         {
             return new Point(
                 (int)(point.X * ScaleX),
                 (int)(point.Y * ScaleY));
+        }
+
+        /// <summary>
+        /// Modifies <paramref name="point"/> in place so that it has equivalent physical
+        /// screen position at the current DPI as the original value would at <paramref name="originalDpi"/>.
+        /// </summary>
+        public static Point Scale(Point point, int originalDpi)
+        {
+            var scale = (float)DpiX / originalDpi;
+
+            return new Point(
+                (int)(point.X * scale),
+                (int)(point.Y * scale));
         }
 
         /// <summary>

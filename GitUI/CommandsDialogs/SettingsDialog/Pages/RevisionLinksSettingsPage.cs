@@ -1,6 +1,7 @@
 ﻿using System;
 using GitCommands.ExternalLinks;
 using GitExtUtils.GitUI;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -56,6 +57,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_Categories.DataSource = effectiveLinkDefinitions;
         }
 
+        [CanBeNull]
         private ExternalLinkDefinition SelectedLinkDefinition => _NO_TRANSLATE_Categories.SelectedItem as ExternalLinkDefinition;
 
         private void CategoryChanged()

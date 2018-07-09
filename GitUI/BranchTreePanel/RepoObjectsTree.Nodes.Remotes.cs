@@ -14,17 +14,16 @@ namespace GitUI.BranchTreePanel
 {
     public partial class RepoObjectsTree
     {
-        private class RemoteBranchTree : Tree
+        private sealed class RemoteBranchTree : Tree
         {
             public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
             {
-                uiCommands.GitUICommandsChanged += UiCommands_GitUICommandsChanged;
-            }
-
-            private void UiCommands_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
-            {
-                TreeViewNode.TreeView.SelectedNode = null;
+                // TODO unsubscribe this event as needed
+                uiCommands.GitUICommandsChanged += (sender, e) =>
+                {
+                    TreeViewNode.TreeView.SelectedNode = null;
+                };
             }
 
             protected override async Task LoadNodesAsync(CancellationToken token)
@@ -39,8 +38,7 @@ namespace GitUI.BranchTreePanel
                     .Select(branch => branch.Name);
 
                 token.ThrowIfCancellationRequested();
-                var remotes = Module.GetRemotes(allowEmpty: true);
-                var branchFullPaths = new List<string>();
+                var remotes = Module.GetRemotes();
                 foreach (var branchPath in branches)
                 {
                     token.ThrowIfCancellationRequested();
@@ -57,8 +55,6 @@ namespace GitUI.BranchTreePanel
                     {
                         Nodes.AddNode(parent);
                     }
-
-                    branchFullPaths.Add(remoteBranchNode.FullPath);
                 }
             }
 
@@ -104,22 +100,23 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            private struct RemoteBranchInfo
+            private readonly struct RemoteBranchInfo
             {
-                public string Remote { get; set; }
+                public string Remote { get; }
+                public string BranchName { get; }
 
-                public string BranchName { get; set; }
+                public RemoteBranchInfo(string remote, string branchName)
+                {
+                    Remote = remote;
+                    BranchName = branchName;
+                }
             }
 
             private RemoteBranchInfo GetRemoteBranchInfo()
             {
                 var remote = FullPath.Split('/').First();
                 var branch = FullPath.Substring(remote.Length + 1);
-                return new RemoteBranchInfo
-                {
-                    Remote = remote,
-                    BranchName = branch
-                };
+                return new RemoteBranchInfo(remote, branch);
             }
 
             public void CreateBranch()

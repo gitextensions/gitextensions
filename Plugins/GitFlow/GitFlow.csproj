@@ -102,6 +102,7 @@
     <Content Include="..\..\GitUI\Resources\Icons\success.png">
       <Link>Properties\success.png</Link>
     </Content>
+    <None Include="Resources\IconGitFlow.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

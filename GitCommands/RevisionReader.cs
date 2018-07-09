@@ -108,8 +108,6 @@ namespace GitCommands
                 /* Commit subject  */ "%s%n%n" +
                 /* Commit body     */ "%b";
 
-            // TODO add AppBuilderExtensions support for flags enums, starting with RefFilterOptions, then use it in the below construction
-
             var arguments = BuildArguments();
 
             var sw = Stopwatch.StartNew();
@@ -135,9 +133,16 @@ namespace GitCommands
                     {
                         if (revisionPredicate == null || revisionPredicate(revision))
                         {
-                            // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
-                            // Full commit message is used in InMemFilter but later it's not needed
-                            revision.Body = null;
+                            // The full commit message body is used initially in InMemFilter, after which it isn't
+                            // strictly needed and can be re-populated asynchronously.
+                            //
+                            // We keep full multiline message bodies within the last six months.
+                            // Commits earlier than that have their properties set to null and the
+                            // memory will be GCd.
+                            if (DateTime.Now - revision.AuthorDate > TimeSpan.FromDays(30 * 6))
+                            {
+                                revision.Body = null;
+                            }
 
                             // Look up any refs associate with this revision
                             revision.Refs = refsByObjectId[revision.Guid].AsReadOnlyList();
@@ -201,7 +206,7 @@ namespace GitCommands
 
             if (selectedRef != null)
             {
-                selectedRef.Selected = true;
+                selectedRef.IsSelected = true;
 
                 var localConfigFile = module.LocalConfigFile;
                 var selectedHeadMergeSource = refs.FirstOrDefault(
@@ -211,7 +216,7 @@ namespace GitCommands
 
                 if (selectedHeadMergeSource != null)
                 {
-                    selectedHeadMergeSource.SelectedHeadMergeSource = true;
+                    selectedHeadMergeSource.IsSelectedHeadMergeSource = true;
                 }
             }
         }
@@ -242,11 +247,38 @@ namespace GitCommands
             var lastOffset = chunk.Offset + chunk.Count;
 
             // Next we have zero or more parent IDs separated by ' ' and terminated by '\n'
-            var parentIds = new List<ObjectId>(capacity: 1);
+            var parentIds = new ObjectId[CountParents(offset)];
+            var parentIndex = 0;
+
+            int CountParents(int baseOffset)
+            {
+                if (array[baseOffset] == '\n')
+                {
+                    return 0;
+                }
+
+                var count = 1;
+
+                while (true)
+                {
+                    baseOffset += ObjectId.Sha1CharCount;
+                    var c = array[baseOffset];
+
+                    if (c != ' ')
+                    {
+                        break;
+                    }
+
+                    count++;
+                    baseOffset++;
+                }
+
+                return count;
+            }
 
             while (true)
             {
-                if (offset >= lastOffset - 21)
+                if (offset >= lastOffset - ObjectId.Sha1CharCount - 1)
                 {
                     revision = default;
                     return false;
@@ -274,7 +306,7 @@ namespace GitCommands
                     return false;
                 }
 
-                parentIds.Add(parentId);
+                parentIds[parentIndex++] = parentId;
                 offset += ObjectId.Sha1CharCount;
             }
 
@@ -336,7 +368,7 @@ namespace GitCommands
 
             #endregion
 
-            #region Encoded string valies (names, emails, subject, body)
+            #region Encoded string values (names, emails, subject, body)
 
             // Finally, decode the names, email, subject and body strings using the required text encoding
             var s = encoding.GetString(array, offset, lastOffset - offset);

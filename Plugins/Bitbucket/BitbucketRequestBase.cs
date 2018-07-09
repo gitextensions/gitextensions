@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp;
@@ -76,6 +77,7 @@ namespace Bitbucket
             };
         }
 
+        [CanBeNull]
         protected abstract object RequestBody { get; }
         protected abstract Method RequestMethod { get; }
         protected abstract string ApiUrl { get; }

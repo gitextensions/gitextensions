@@ -164,7 +164,7 @@
             // btRefresh
             // 
             this.btRefresh.ForeColor = System.Drawing.Color.Black;
-            this.btRefresh.Image = global::GitUI.Properties.Resources.arrow_refresh;
+            this.btRefresh.Image = global::GitUI.Properties.Resources.IconReloadRevisions;
             this.btRefresh.Location = new System.Drawing.Point(552, 152);
             this.btRefresh.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btRefresh.Name = "btRefresh";

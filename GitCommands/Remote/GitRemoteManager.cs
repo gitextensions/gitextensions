@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitCommands.Remote
 {
@@ -100,6 +101,7 @@ namespace GitCommands.Remote
         /// </summary>
         /// <returns>The <see cref="GitRef.Name"/> if found, otheriwse <see langword="null"/>.</returns>
         // TODO: moved verbatim from FormPush.cs, perhaps needs refactoring
+        [CanBeNull]
         public string GetDefaultPushRemote(GitRemote remote, string branch)
         {
             if (remote == null)
@@ -294,7 +296,8 @@ namespace GitCommands.Remote
         private void PopulateRemotes(List<GitRemote> allRemotes, bool enabled)
         {
             var module = GetModule();
-            Func<string[]> func;
+
+            Func<IReadOnlyList<string>> func;
             if (enabled)
             {
                 func = () => module.GetRemotes();

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands.Remote;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -45,7 +46,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     await this.SwitchToMainThreadAsync();
 
                     checkBoxEnableBuildServerIntegration.Enabled = true;
-                    checkBoxShowBuildSummary.Enabled = true;
                     BuildServerType.Enabled = true;
 
                     BuildServerType.DataSource = new[] { _noneItem.Text }.Concat(buildServerTypes).ToArray();
@@ -65,7 +65,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     await this.SwitchToMainThreadAsync();
 
                     checkBoxEnableBuildServerIntegration.SetNullableChecked(CurrentSettings.BuildServer.EnableIntegration.Value);
-                    checkBoxShowBuildSummary.SetNullableChecked(CurrentSettings.BuildServer.ShowBuildSummaryInGrid.Value);
 
                     BuildServerType.SelectedItem = CurrentSettings.BuildServer.Type.Value ?? _noneItem.Text;
                 });
@@ -74,7 +73,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             CurrentSettings.BuildServer.EnableIntegration.Value = checkBoxEnableBuildServerIntegration.GetNullableChecked();
-            CurrentSettings.BuildServer.ShowBuildSummaryInGrid.Value = checkBoxShowBuildSummary.GetNullableChecked();
 
             var selectedBuildServerType = GetSelectedBuildServerType();
 
@@ -105,6 +103,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
+        [CanBeNull]
         private IBuildServerSettingsUserControl CreateBuildServerSettingsUserControl()
         {
             if (BuildServerType.SelectedIndex == 0 || string.IsNullOrEmpty(Module.WorkingDir))

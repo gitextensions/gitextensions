@@ -89,7 +89,6 @@
     <Compile Include="FileHelper.cs" />
     <Compile Include="FullPathResolver.cs" />
     <Compile Include="GitRevisionInfoProvider.cs" />
-    <Compile Include="Git\AuthorEmailEqualityComparer.cs" />
     <Compile Include="Git\GitDescribeProvider.cs" />
     <Compile Include="Git\DetachedHeadParser.cs" />
     <Compile Include="Git\EnvironmentConfiguration.cs" />
@@ -110,6 +109,7 @@
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
     <Compile Include="Remote\GitRemoteManager.cs" />
     <Compile Include="Remote\RepoNameExtractor.cs" />
+    <Compile Include="Settings\DefaultImageType.cs" />
     <Compile Include="UserRepositoryHistory\IRepositoryManager.cs" />
     <Compile Include="UserRepositoryHistory\IRepositorySerialiser.cs" />
     <Compile Include="UserRepositoryHistory\Legacy\Repository.cs" />
@@ -128,7 +128,6 @@
     <Compile Include="SshPathLocator.cs" />
     <Compile Include="Git\IndexLockManager.cs" />
     <Compile Include="Git\GitTreeParser.cs" />
-    <Compile Include="Logging\CommandLogEntry.cs" />
     <Compile Include="PathEqualityComparer.cs" />
     <Compile Include="RemoteActionResult.cs" />
     <Compile Include="Remote\GitRemote.cs" />
@@ -162,7 +161,7 @@
     </Compile>
     <Compile Include="Git\GitSubmoduleStatus.cs" />
     <Compile Include="LockableNotifier.cs" />
-    <Compile Include="Logging\CommandLogger.cs" />
+    <Compile Include="Logging\CommandLog.cs" />
     <Compile Include="CommitHelper.cs" />
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Config\ConfigSection.cs" />

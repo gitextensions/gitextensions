@@ -65,11 +65,11 @@ namespace ResourceManager
             {
                 if (guid == GitRevision.UnstagedGuid)
                 {
-                    linkText = Strings.GetCurrentUnstagedChanges();
+                    linkText = Strings.Workspace;
                 }
                 else if (guid == GitRevision.IndexGuid)
                 {
-                    linkText = Strings.GetCurrentIndex();
+                    linkText = Strings.Index;
                 }
                 else if (preserveGuidInLinkText)
                 {

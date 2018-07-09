@@ -3,27 +3,21 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Avatars;
 using GitUIPluginInterfaces;
-using Gravatar;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class AppearanceSettingsPage : SettingsPageWithHeader
     {
-        private readonly TranslationString _noDictFile =
-            new TranslationString("None");
-        private readonly TranslationString _noDictFilesFound =
-            new TranslationString("No dictionary files found in: {0}");
-        private readonly IImageCache _avatarCache;
+        private readonly TranslationString _noDictFile = new TranslationString("None");
+        private readonly TranslationString _noDictFilesFound = new TranslationString("No dictionary files found in: {0}");
 
         public AppearanceSettingsPage()
         {
             InitializeComponent();
-            Text = "Appearance";
             Translate();
-
-            _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
 
             NoImageService.Items.AddRange(Enum.GetNames(typeof(DefaultImageType)));
         }
@@ -86,9 +80,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkEnableAutoScale.Checked = AppSettings.EnableAutoScale;
 
             chkShowCurrentBranchInVisualStudio.Checked = AppSettings.ShowCurrentBranchInVisualStudio;
-            _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AuthorImageCacheDays;
-            ShowAuthorGravatar.Checked = AppSettings.ShowAuthorGravatar;
-            NoImageService.Text = AppSettings.GravatarDefaultImageType;
+            _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
+            ShowAuthorAvatar.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
+            NoImageService.Text = AppSettings.GravatarDefaultImageType.ToString();
 
             Language.Items.Clear();
             Language.Items.Add("English");
@@ -130,10 +124,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.Translation = Language.Text;
             Strings.Reinit();
 
-            AppSettings.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
+            AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 
-            AppSettings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
-            AppSettings.GravatarDefaultImageType = NoImageService.Text;
+            AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatar.Checked;
+
+            if (Enum.TryParse<DefaultImageType>(NoImageService.Text, ignoreCase: true, out var type))
+            {
+                AppSettings.GravatarDefaultImageType = type;
+            }
 
             AppSettings.RelativeDate = chkShowRelativeDate.Checked;
 
@@ -167,7 +165,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ClearImageCache_Click(object sender, EventArgs e)
         {
-            _avatarCache.ClearAsync();
+            ThreadHelper.JoinableTaskFactory.Run(AvatarService.Default.ClearCacheAsync);
         }
 
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

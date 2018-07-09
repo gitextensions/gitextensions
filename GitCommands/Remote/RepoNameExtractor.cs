@@ -41,7 +41,7 @@ namespace GitCommands.Remote
             {
                 // No remote for the branch, for instance a submodule. Use first remote.
                 var remotes = module.GetRemotes();
-                if (remotes.Length > 0)
+                if (remotes.Count > 0)
                 {
                     remoteName = remotes[0];
                 }

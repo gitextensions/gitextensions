@@ -6,7 +6,7 @@ namespace GitStatistics.PieChart
     /// <summary>
     ///   Color utility structure.
     /// </summary>
-    public struct ColorUtil
+    public static class ColorUtil
     {
         /// <summary>
         ///   Small brightness change factor.

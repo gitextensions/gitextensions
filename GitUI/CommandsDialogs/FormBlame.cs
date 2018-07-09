@@ -15,6 +15,8 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             Translate();
+
+            this.AdjustForDpiScaling();
         }
 
         public FormBlame(GitUICommands commands, string fileName, GitRevision revision, int? initialLine = null) : this(commands)
@@ -25,19 +27,15 @@ namespace GitUI.CommandsDialogs
             }
 
             FileName = fileName;
-            if (revision == null)
-            {
-                revision = Module.GetRevision("Head");
-            }
 
-            blameControl1.LoadBlame(revision, null, fileName, null, null, Module.FilesEncoding, initialLine);
+            blameControl1.LoadBlame(revision ?? Module.GetRevision("Head"), null, fileName, null, null, Module.FilesEncoding, initialLine);
         }
 
         public string FileName { get; set; }
 
         private void FormBlameLoad(object sender, EventArgs e)
         {
-            Text = string.Format("Blame ({0})", FileName);
+            Text = $"Blame ({FileName})";
         }
     }
 }

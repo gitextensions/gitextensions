@@ -11,7 +11,6 @@ using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
-using Gravatar;
 using JetBrains.Annotations;
 
 namespace GitUI
@@ -19,10 +18,9 @@ namespace GitUI
     /// <summary>Contains methods to invoke GitEx forms, dialogs, etc.</summary>
     public sealed class GitUICommands : IGitUICommands
     {
-        private readonly IAvatarService _gravatarService;
         private readonly ICommitTemplateManager _commitTemplateManager;
         private readonly IFullPathResolver _fullPathResolver;
-        private readonly IFindFilePredicateProvider _fildFilePredicateProvider;
+        private readonly IFindFilePredicateProvider _findFilePredicateProvider;
 
         public GitModule Module { get; private set; }
         public ILockableNotifier RepoChangedNotifier { get; }
@@ -35,10 +33,8 @@ namespace GitUI
             RepoChangedNotifier = new ActionNotifier(
                 () => InvokeEvent(null, PostRepositoryChanged));
 
-            IImageCache avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
-            _gravatarService = new GravatarService(avatarCache);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _fildFilePredicateProvider = new FindFilePredicateProvider();
+            _findFilePredicateProvider = new FindFilePredicateProvider();
         }
 
         public GitUICommands([CanBeNull] string workingDir)
@@ -95,11 +91,6 @@ namespace GitUI
             }
 
             return true;
-        }
-
-        public void CacheAvatar(string email)
-        {
-            _gravatarService.GetAvatarAsync(email, AppSettings.AuthorImageSize, AppSettings.GravatarDefaultImageType);
         }
 
         public bool StartBatchFileProcessDialog(string batchFile)
@@ -315,20 +306,20 @@ namespace GitUI
 
         #region Checkout
 
-        public bool StartCheckoutBranch(IWin32Window owner, string branch = "", bool remote = false, string[] containRevisons = null)
+        public bool StartCheckoutBranch(IWin32Window owner, string branch = "", bool remote = false, string[] containRevisions = null)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutBranch, PostCheckoutBranch, () =>
             {
-                using (var form = new FormCheckoutBranch(this, branch, remote, containRevisons))
+                using (var form = new FormCheckoutBranch(this, branch, remote, containRevisions))
                 {
                     return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
                 }
             });
         }
 
-        public bool StartCheckoutBranch(IWin32Window owner, string[] containRevisons)
+        public bool StartCheckoutBranch(IWin32Window owner, string[] containRevisions)
         {
-            return StartCheckoutBranch(owner, "", false, containRevisons);
+            return StartCheckoutBranch(owner, "", false, containRevisions);
         }
 
         public bool StartCheckoutBranch(string branch, bool remote)
@@ -1170,7 +1161,7 @@ namespace GitUI
 
         public bool StartPushDialog(IWin32Window owner, bool pushOnShow)
         {
-            return StartPushDialog(owner, pushOnShow, false, out _);
+            return StartPushDialog(owner, pushOnShow, forceWithLease: false, out _);
         }
 
         public bool StartApplyPatchDialog(IWin32Window owner, string patchFile = null)
@@ -1373,7 +1364,7 @@ namespace GitUI
             switch (args[1])
             {
                 case "about":
-                    Application.Run(new AboutBox
+                    Application.Run(new FormAbout
                     {
                         StartPosition = FormStartPosition.CenterScreen
                     });
@@ -1696,7 +1687,7 @@ namespace GitUI
         {
             var candidates = Module.GetFullTree("HEAD");
 
-            var predicate = _fildFilePredicateProvider.Get(name, Module.WorkingDir);
+            var predicate = _findFilePredicateProvider.Get(name, Module.WorkingDir);
 
             return candidates.Where(predicate);
         }

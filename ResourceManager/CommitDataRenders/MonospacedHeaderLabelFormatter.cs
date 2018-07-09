@@ -11,10 +11,5 @@ namespace ResourceManager.CommitDataRenders
         {
             return (WebUtility.HtmlEncode(label) + ":").PadRight(desiredLength);
         }
-
-        public string FormatLabelPlain(string label, int desiredLength)
-        {
-            return (label + ":").PadRight(desiredLength);
-        }
     }
 }

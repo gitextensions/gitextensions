@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
     public static class GitConvert
     {
+        [CanBeNull]
         public static byte[] ConvertCrLfToWorktree(byte[] buf)
         {
             if (buf == null)
@@ -11,7 +13,7 @@ namespace GitCommands
                 return buf;
             }
 
-            BufStatistic bufStatistic = GetBufStatistic(buf);
+            var bufStatistic = new BufStatistic(buf);
 
             if (bufStatistic.cntLf == 0)
             {
@@ -28,7 +30,7 @@ namespace GitCommands
                 return buf;
             }
 
-            if (IsBinary(buf))
+            if (IsBinary())
             {
                 return buf;
             }
@@ -69,19 +71,33 @@ namespace GitCommands
             }
 
             return byteList.ToArray();
+
+            bool IsBinary()
+            {
+                if (bufStatistic.cntNul > 0)
+                {
+                    return true;
+                }
+
+                if ((bufStatistic.cntPrintable / 128) < bufStatistic.cntNonPrintable)
+                {
+                    return true;
+                }
+
+                return false;
+            }
         }
 
-        private struct BufStatistic
+        private readonly struct BufStatistic
         {
-            public long cntNul;
-            public long cntCr;
-            public long cntLf;
-            public long cntCrlf;
+            public readonly long cntNul;
+            public readonly long cntCr;
+            public readonly long cntLf;
+            public readonly long cntCrlf;
+            public readonly long cntPrintable;
+            public readonly long cntNonPrintable;
 
-            public long cntPrintable;
-            public long cntNonPrintable;
-
-            public void ResetBufStatistic()
+            public BufStatistic(byte[] buf)
             {
                 cntNul = 0;
                 cntCr = 0;
@@ -89,97 +105,68 @@ namespace GitCommands
                 cntCrlf = 0;
                 cntPrintable = 0;
                 cntNonPrintable = 0;
-            }
-        }
 
-        private static BufStatistic GetBufStatistic(byte[] buf)
-        {
-            BufStatistic bufStatistic = new BufStatistic();
-            bufStatistic.ResetBufStatistic();
-
-            if (buf == null)
-            {
-                return bufStatistic;
-            }
-
-            for (long i = 0; i < buf.Length; i++)
-            {
-                if (buf[i] == 0x0D)
+                for (long i = 0; i < buf.Length; i++)
                 {
-                    bufStatistic.cntCr++;
-                    if (i + 1 < buf.Length)
+                    if (buf[i] == 0x0D)
                     {
-                        if (buf[i + 1] == 0x0A)
+                        cntCr++;
+                        if (i + 1 < buf.Length)
                         {
-                            bufStatistic.cntCrlf++;
+                            if (buf[i + 1] == 0x0A)
+                            {
+                                cntCrlf++;
+                            }
+                        }
+
+                        continue;
+                    }
+
+                    if (buf[i] == 0x0A)
+                    {
+                        cntLf++;
+                        continue;
+                    }
+
+                    if (buf[i] == 0x7F)
+                    {
+                        cntNonPrintable++;
+                    }
+                    else if (buf[i] < 0x20)
+                    {
+                        switch (buf[i])
+                        {
+                            case 0x08:
+                            case 0x09:
+                            case 0x1B:
+                            case 0x0C:
+                                cntPrintable++;
+                                break;
+
+                            case 0:
+                                cntNul++;
+                                cntNonPrintable++;
+                                break;
+
+                            default:
+                                cntNonPrintable++;
+                                break;
                         }
                     }
-
-                    continue;
-                }
-
-                if (buf[i] == 0x0A)
-                {
-                    bufStatistic.cntLf++;
-                    continue;
-                }
-
-                if (buf[i] == 0x7F)
-                {
-                    bufStatistic.cntNonPrintable++;
-                }
-                else if (buf[i] < 0x20)
-                {
-                    switch (buf[i])
+                    else
                     {
-                        case 0x08:
-                        case 0x09:
-                        case 0x1B:
-                        case 0x0C:
-                            bufStatistic.cntPrintable++;
-                            break;
-
-                        case 0:
-                            bufStatistic.cntNul++;
-                            bufStatistic.cntNonPrintable++;
-                            break;
-
-                        default:
-                            bufStatistic.cntNonPrintable++;
-                            break;
+                        cntPrintable++;
                     }
                 }
-                else
+
+                if (buf.Length >= 1)
                 {
-                    bufStatistic.cntPrintable++;
+                    if (buf[buf.Length - 1] == 0x1A)
+                    {
+                        cntNonPrintable--;
+                    }
                 }
             }
-
-            if (buf.Length >= 1)
-            {
-                if (buf[buf.Length - 1] == 0x1A)
-                {
-                    bufStatistic.cntNonPrintable--;
-                }
-            }
-
-            return bufStatistic;
-        }
-
-        public static bool IsBinary(byte[] buf)
-        {
-            BufStatistic bufStatistic = GetBufStatistic(buf);
-            if (bufStatistic.cntNul > 0)
-            {
-                return true;
-            }
-
-            if ((bufStatistic.cntPrintable / 128) < bufStatistic.cntNonPrintable)
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }

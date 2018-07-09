@@ -9,6 +9,7 @@ using GitCommands.Remote;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -174,6 +175,7 @@ Inactive remote is completely invisible to git.");
             }
         }
 
+        [CanBeNull]
         private IGitRef GetHeadForSelectedRemoteBranch()
         {
             if (RemoteBranches.SelectedRows.Count != 1)

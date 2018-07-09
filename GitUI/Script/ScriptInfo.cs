@@ -1,4 +1,6 @@
-﻿namespace GitUI.Script
+﻿using JetBrains.Annotations;
+
+namespace GitUI.Script
 {
     public enum ScriptEvent
     {
@@ -53,6 +55,7 @@
         /// Gets the associated bitmap.
         /// </summary>
         /// <returns>Bitmap image</returns>
+        [CanBeNull]
         public System.Drawing.Bitmap GetIcon()
         {
             // Get all resources

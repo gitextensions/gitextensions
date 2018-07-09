@@ -7,6 +7,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
+using JetBrains.Annotations;
 
 namespace GitUI.Script
 {
@@ -14,6 +15,7 @@ namespace GitUI.Script
     {
         private static BindingList<ScriptInfo> Scripts { get; set; }
 
+        [CanBeNull]
         public static BindingList<ScriptInfo> GetScripts()
         {
             if (Scripts == null)
@@ -42,6 +44,7 @@ namespace GitUI.Script
             }
         }
 
+        [CanBeNull]
         public static ScriptInfo GetScript(string key)
         {
             foreach (ScriptInfo script in GetScripts())
@@ -63,6 +66,7 @@ namespace GitUI.Script
             }
         }
 
+        [CanBeNull]
         public static string SerializeIntoXml()
         {
             try
