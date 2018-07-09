@@ -87,7 +87,6 @@ namespace GitUI.BranchTreePanel
             private void FillTagTree(IEnumerable<IGitRef> tags, CancellationToken token)
             {
                 var nodes = new Dictionary<string, BaseBranchNode>();
-                var branchFullPaths = new List<string>();
                 foreach (var tag in tags)
                 {
                     token.ThrowIfCancellationRequested();
@@ -98,8 +97,6 @@ namespace GitUI.BranchTreePanel
                     {
                         Nodes.AddNode(parent);
                     }
-
-                    branchFullPaths.Add(branchNode.FullPath);
                 }
             }
 
