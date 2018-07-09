@@ -477,7 +477,7 @@ namespace GitUI.Editor
             // Check for binary file.
             if (FileHelper.IsBinaryFileAccordingToContent(text))
             {
-                _internalFileViewer.SetText("Binary file: " + fileName + " (Detected)", openWithDifftool);
+                _internalFileViewer.SetText($"Binary file: {fileName} (Detected)", openWithDifftool);
                 TextLoaded?.Invoke(this, null);
                 return Task.CompletedTask;
             }
@@ -574,7 +574,7 @@ namespace GitUI.Editor
             // Check binary from extension/attributes (a secondary check for file contents before display)
             else if (FileHelper.IsBinaryFile(Module, fileName))
             {
-                return ViewTextAsync(fileName, "Binary file: " + fileName, openWithDifftool);
+                return ViewTextAsync(fileName, $"Binary file: {fileName}", openWithDifftool);
             }
             else
             {
