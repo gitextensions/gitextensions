@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -199,25 +198,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             handler?.Invoke(this, e);
         }
 
-        private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate) where T : Control
-        {
-            foreach (Control control in controls)
-            {
-                if (control is T result && predicate(result))
-                {
-                    return result;
-                }
-
-                result = FindControl(control.Controls, predicate);
-                if (result != null)
-                {
-                    return result;
-                }
-            }
-
-            return null;
-        }
-
         private void dashboard_ParentChanged(object sender, EventArgs e)
         {
             if (Parent == null)
@@ -236,7 +216,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             var form = Application.OpenForms.Cast<Form>().FirstOrDefault(x => x.Name == nameof(FormBrowse));
             if (form != null)
             {
-                var menuStrip = FindControl<MenuStrip>(form.Controls, p => p.Name == "menuStrip1");
+                var menuStrip = form.FindDescendantsOfType<MenuStrip>(p => p.Name == "menuStrip1");
                 var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
                 dashboardMenu?.DropDownItems.Add(showCurrentBranchMenuItem);
             }
