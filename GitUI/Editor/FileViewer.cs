@@ -477,7 +477,16 @@ namespace GitUI.Editor
             // Check for binary file.
             if (FileHelper.IsBinaryFileAccordingToContent(text))
             {
-                _internalFileViewer.SetText($"Binary file: {fileName} (Detected)", openWithDifftool);
+                try
+                {
+                    var fileInfo = new FileInfo(Path.GetFullPath(_fullPathResolver.Resolve(fileName)));
+                    _internalFileViewer.SetText($"Binary file detected: {fileName} ({fileInfo.Length:#,##0} bytes)", openWithDifftool);
+                }
+                catch
+                {
+                    _internalFileViewer.SetText($"Binary file: {fileName} (Detected)", openWithDifftool);
+                }
+
                 TextLoaded?.Invoke(this, null);
                 return Task.CompletedTask;
             }
