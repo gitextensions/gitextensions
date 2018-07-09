@@ -734,5 +734,27 @@ namespace GitUI.UserControls.RevisionGrid
 
             base.OnMouseDown(e);
         }
+
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            if (ModifierKeys.HasFlag(Keys.Shift))
+            {
+                int currentIndex = HorizontalScrollingOffset;
+                int scrollLines = DpiUtil.Scale(32);
+
+                if (e.Delta > 0)
+                {
+                    HorizontalScrollingOffset = Math.Max(0, currentIndex - scrollLines);
+                }
+                else if (e.Delta < 0)
+                {
+                    HorizontalScrollingOffset = currentIndex + scrollLines;
+                }
+            }
+            else
+            {
+                base.OnMouseWheel(e);
+            }
+        }
     }
 }
