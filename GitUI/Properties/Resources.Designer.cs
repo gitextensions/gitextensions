@@ -151,7 +151,6 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Changelog
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap bullet_add {
@@ -172,19 +171,20 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 
+        ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///### [Version 2.51.00] (28 Jan 2018)
+        ///### [Version 2.51.02] (24 May 2018)
+        ///
+        ///#### Highlights:
+        ///* Simplified installer - Git and KDiff3 installers are no longer installed as part of GitExtensions&apos;s installation. The user will have to install external apps and tools separately.
+        ///* Fixes to address a number of layout issues for high DPI monitors.
         ///
         ///#### Features:
-        ///* Commandline difftool raised Assert - PR [4386]
-        ///* Replace lightbulb images - PR [4351]
-        ///* Rename arguments related to diff to firstRevision, secondRevision to â€¦ - PR [4344]
-        ///* Use built-in stream.CopyTo method in SynchronizedProcessReader - PR [4343]
-        ///* Add icons in the browse form command menu - PR [4331]
-        ///* Display some missing shortcuts in Browse form menus - PR [4330]
-        ///* FormBrowse: Add option to display reflog references [rest of string was truncated]&quot;;.
+        ///* Remove Git and KDiff3 from installer 2.51 - PR [4933]
+        ///* Check for recommended Git version 2.51 - PR [4932]
+        ///* Check for recommended Git version - PR [4929]
+        ///* [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -1708,16 +1708,6 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap stash {
             get {
                 object obj = ResourceManager.GetObject("stash", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap statistic {
-            get {
-                object obj = ResourceManager.GetObject("statistic", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
