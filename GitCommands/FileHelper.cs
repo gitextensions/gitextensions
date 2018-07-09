@@ -167,22 +167,17 @@ namespace GitCommands
                     if (c == '\0')
                     {
                         nullCount++;
+                        if (nullCount > 5)
+                        {
+                            return true;
+                        }
                     }
-
-                    if (nullCount > 5)
-                    {
-                        break;
-                    }
-                }
-
-                if (nullCount > 5)
-                {
-                    return true;
                 }
             }
 
             return false;
         }
+
         #endregion
     }
 }
