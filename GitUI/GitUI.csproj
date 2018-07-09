@@ -281,6 +281,11 @@
     <Compile Include="Editor\GitHighlightingStrategyBase.cs" />
     <Compile Include="Editor\RebaseTodoHighlightingStrategy.cs" />
     <Compile Include="FindFilePredicateProvider.cs" />
+    <Compile Include="Properties\Images.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Images.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1241,6 +1246,10 @@
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.resx">
       <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\BranchSelector.resx">
       <DependentUpon>BranchSelector.cs</DependentUpon>
     </EmbeddedResource>
@@ -1601,11 +1610,11 @@
       <DependentUpon>PatchGrid.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Include="Properties\Images.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <CustomToolNamespace>GitUI.Properties</CustomToolNamespace>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <LastGenOutput>Images.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGrid\RevisionGridControl.resx">
       <DependentUpon>RevisionGridControl.cs</DependentUpon>
@@ -1703,8 +1712,6 @@
     <None Include="Resources\Icons\bug.png" />
     <None Include="Resources\Icons\Delete.png" />
     <None Include="Resources\Icons\Donate.jpg" />
-    <None Include="Resources\Icons\double_arrow_down.png" />
-    <None Include="Resources\Icons\double_arrow_up.png" />
     <None Include="Resources\Icons\error.png" />
     <None Include="Resources\Icons\HelpCommandMergeFastForward.png" />
     <None Include="Resources\Icons\HelpPullMergeFastForward.png" />

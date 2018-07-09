@@ -25,7 +25,7 @@ namespace GitUI.UserControls.RevisionGrid
             // _image
             //
             this._image.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._image.Image = global::GitUI.Properties.Resources.error;
+            this._image.Image = global::GitUI.Properties.Images.StatusBadgeError;
             this._image.Location = new System.Drawing.Point(0, 0);
             this._image.Name = "_image";
             this._image.Size = new System.Drawing.Size(2080, 1447);

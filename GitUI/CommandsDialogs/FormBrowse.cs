@@ -142,10 +142,10 @@ namespace GitUI.CommandsDialogs
                 ImageSize = DpiUtil.Scale(new Size(16, 16)),
                 Images =
                 {
-                    Resources.IconCommitSummary,
-                    Resources.IconFileTree,
-                    Resources.IconDiff,
-                    Resources.IconKey
+                    Images.CommitSummary,
+                    Images.FileTree,
+                    Images.Diff,
+                    Images.Key
                 }
             };
             CommitInfoTabControl.TabPages[0].ImageIndex = 0;
@@ -371,8 +371,8 @@ namespace GitUI.CommandsDialogs
                     this.InvokeAsync(() =>
                         {
                             RefreshButton.Image = indexChanged && AppSettings.UseFastChecks && Module.IsValidGitWorkingDir()
-                                ? Resources.IconReloadRevisionsDirty
-                                : Resources.IconReloadRevisions;
+                                ? Images.ReloadRevisionsDirty
+                                : Images.ReloadRevisions;
                         })
                         .FileAndForget();
                 };
@@ -2198,27 +2198,27 @@ namespace GitUI.CommandsDialogs
             switch (Module.LastPullAction)
             {
                 case AppSettings.PullAction.Fetch:
-                    toolStripButtonPull.Image = Resources.PullFetch;
+                    toolStripButtonPull.Image = Images.PullFetch;
                     toolStripButtonPull.ToolTipText = _pullFetch.Text;
                     break;
 
                 case AppSettings.PullAction.FetchAll:
-                    toolStripButtonPull.Image = Resources.PullFetchAll;
+                    toolStripButtonPull.Image = Images.PullFetchAll;
                     toolStripButtonPull.ToolTipText = _pullFetchAll.Text;
                     break;
 
                 case AppSettings.PullAction.Merge:
-                    toolStripButtonPull.Image = Resources.PullMerge;
+                    toolStripButtonPull.Image = Images.PullMerge;
                     toolStripButtonPull.ToolTipText = _pullMerge.Text;
                     break;
 
                 case AppSettings.PullAction.Rebase:
-                    toolStripButtonPull.Image = Resources.PullRebase;
+                    toolStripButtonPull.Image = Images.PullRebase;
                     toolStripButtonPull.ToolTipText = _pullRebase.Text;
                     break;
 
                 default:
-                    toolStripButtonPull.Image = Resources.IconPull;
+                    toolStripButtonPull.Image = Images.Pull;
                     toolStripButtonPull.ToolTipText = _pullOpenDialog.Text;
                     break;
             }
@@ -2352,30 +2352,30 @@ namespace GitUI.CommandsDialogs
             {
                 if (info.Status == null)
                 {
-                    return Resources.IconFolderSubmodule;
+                    return Images.FolderSubmodule;
                 }
 
                 if (info.Status == SubmoduleStatus.FastForward)
                 {
-                    return info.IsDirty ? Resources.IconSubmoduleRevisionUpDirty : Resources.IconSubmoduleRevisionUp;
+                    return info.IsDirty ? Images.SubmoduleRevisionUpDirty : Images.SubmoduleRevisionUp;
                 }
 
                 if (info.Status == SubmoduleStatus.Rewind)
                 {
-                    return info.IsDirty ? Resources.IconSubmoduleRevisionDownDirty : Resources.IconSubmoduleRevisionDown;
+                    return info.IsDirty ? Images.SubmoduleRevisionDownDirty : Images.SubmoduleRevisionDown;
                 }
 
                 if (info.Status == SubmoduleStatus.NewerTime)
                 {
-                    return info.IsDirty ? Resources.IconSubmoduleRevisionSemiUpDirty : Resources.IconSubmoduleRevisionSemiUp;
+                    return info.IsDirty ? Images.SubmoduleRevisionSemiUpDirty : Images.SubmoduleRevisionSemiUp;
                 }
 
                 if (info.Status == SubmoduleStatus.OlderTime)
                 {
-                    return info.IsDirty ? Resources.IconSubmoduleRevisionSemiDownDirty : Resources.IconSubmoduleRevisionSemiDown;
+                    return info.IsDirty ? Images.SubmoduleRevisionSemiDownDirty : Images.SubmoduleRevisionSemiDown;
                 }
 
-                return info.IsDirty ? Resources.IconSubmoduleDirty : Resources.IconFileStatusModified;
+                return info.IsDirty ? Images.SubmoduleDirty : Images.FileStatusModified;
             }
         }
 
@@ -2677,7 +2677,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 const string imageKey = "Resources.IconConsole";
-                CommitInfoTabControl.ImageList.Images.Add(imageKey, Resources.IconConsole);
+                CommitInfoTabControl.ImageList.Images.Add(imageKey, Images.Console);
                 CommitInfoTabControl.Controls.Add(tabpage = new TabPage(tabpageCaption));
                 tabpage.Name = tabpageCaption;
                 tabpage.ImageKey = imageKey;

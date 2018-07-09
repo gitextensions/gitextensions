@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using GitCommands;
+using GitUI.Properties;
 using GitUI.UserControls;
 using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Taskbar;
@@ -140,8 +141,8 @@ namespace GitUI
                     100);
 
                 picBoxSuccessFail.Image = isSuccess
-                    ? Properties.Resources.success
-                    : Properties.Resources.error;
+                    ? Images.StatusBadgeSuccess
+                    : Images.StatusBadgeError;
 
                 _errorOccurred = !isSuccess;
 

@@ -11,7 +11,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             InitializeComponent();
 
-            _image.Image = Resources.loadingpanel;
+            _image.Image = Images.LoadingAnimation;
             Dock = DockStyle.Fill;
 
             this.AdjustForDpiScaling();

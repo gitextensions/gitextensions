@@ -91,7 +91,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "GotoCurrentRevision",
                     Text = "Go to current revision",
-                    Image = Resources.IconGotoCurrentRevision,
+                    Image = Images.GotoCurrentRevision,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.SelectCurrentRevision),
                     ExecuteAction = SelectCurrentRevisionExecute
                 },
@@ -99,7 +99,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "GotoCommit",
                     Text = "Go to commit...",
-                    Image = Resources.IconGotoCommit,
+                    Image = Images.GotoCommit,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.GoToCommit),
                     ExecuteAction = GotoCommitExecute
                 },
@@ -108,7 +108,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "GotoChildCommit",
                     Text = "Go to child commit",
-                    Image = Resources.IconGoToChildCommit,
+                    Image = Images.GoToChildCommit,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.GoToChild),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Commands.GoToChild)
                 },
@@ -116,7 +116,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "GotoParentCommit",
                     Text = "Go to parent commit",
-                    Image = Resources.IconGoToParentCommit,
+                    Image = Images.GoToParentCommit,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.GoToParent),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Commands.GoToParent)
                 },
@@ -125,7 +125,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "NavigateBackward",
                     Text = "Navigate backward",
-                    Image = Resources.IconNavigateBackward,
+                    Image = Images.NavigateBackward,
                     ShortcutKeyDisplayString = (Keys.Alt | Keys.Left).ToShortcutKeyDisplayString(),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Commands.NavigateBackward)
                 },
@@ -133,7 +133,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "NavigateForward",
                     Text = "Navigate forward",
-                    Image = Resources.IconNavigateForward,
+                    Image = Images.NavigateForward,
                     ShortcutKeyDisplayString = (Keys.Alt | Keys.Right).ToShortcutKeyDisplayString(),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Commands.NavigateForward)
                 },
@@ -368,7 +368,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "showFirstParent",
                     Text = "Show first parents",
-                    Image = Resources.IconShowFirstParent,
+                    Image = Images.ShowFirstParent,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.ShowFirstParent),
                     ExecuteAction = () => _revisionGrid.ShowFirstParent(),
                     IsCheckedFunc = () => AppSettings.ShowFirstParent
@@ -377,7 +377,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "filterToolStripMenuItem",
                     Text = "Set advanced filter",
-                    Image = Resources.IconEditFilter,
+                    Image = Images.EditFilter,
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.RevisionFilter),
                     ExecuteAction = () => _revisionGrid.ShowRevisionFilterDialog()
                 }

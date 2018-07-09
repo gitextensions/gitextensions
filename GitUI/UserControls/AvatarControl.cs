@@ -66,7 +66,7 @@ namespace GitUI
         {
             if (string.IsNullOrEmpty(email))
             {
-                RefreshImage(Resources.User);
+                RefreshImage(Images.User80);
                 return;
             }
 
@@ -76,7 +76,7 @@ namespace GitUI
 
         private void RefreshImage(Image image)
         {
-            _avatarImage.Image = image ?? Resources.User;
+            _avatarImage.Image = image ?? Images.User80;
             _avatarImage.Refresh();
         }
 
@@ -95,7 +95,7 @@ namespace GitUI
 
             if (!AppSettings.ShowAuthorAvatarInCommitInfo || string.IsNullOrWhiteSpace(email))
             {
-                RefreshImage(Resources.User);
+                RefreshImage(Images.User80);
                 return;
             }
 

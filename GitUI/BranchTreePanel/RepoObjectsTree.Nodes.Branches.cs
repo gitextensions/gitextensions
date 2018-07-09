@@ -108,7 +108,7 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Resources.IconBranchDocument);
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.BranchDocument);
                 if (IsActive)
                 {
                     TreeViewNode.NodeFont = new Font(TreeViewNode.NodeFont, FontStyle.Bold);
@@ -158,7 +158,7 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Resources.BranchSeparator);
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.BranchFolder);
             }
         }
 

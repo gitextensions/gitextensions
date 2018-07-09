@@ -59,8 +59,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             imageList1.Images.Clear();
             imageList1.ImageSize = DpiUtil.Scale(imageList1.ImageSize);
-            imageList1.Images.Add(Resources.folder_git);
-            imageList1.Images.Add(Resources.folder_error);
+            imageList1.Images.Add(Images.DashboardFolderGit);
+            imageList1.Images.Add(Images.DashboardFolderError);
 
             this.AdjustForDpiScaling();
         }
@@ -441,7 +441,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             if (!string.IsNullOrWhiteSpace((e.Item.Tag as Repository)?.Category))
             {
                 var pointImage1 = new PointF(pointImage.X + imageList1.ImageSize.Width - 12, e.Bounds.Top + spacing2);
-                e.Graphics.DrawImage(Resources.IconStar, pointImage1.X, pointImage1.Y, 16, 16);
+                e.Graphics.DrawImage(Images.Star, pointImage1.X, pointImage1.Y, 16, 16);
             }
 
             // render icon

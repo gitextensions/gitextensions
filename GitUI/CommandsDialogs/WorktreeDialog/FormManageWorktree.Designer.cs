@@ -126,7 +126,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             // 
             this.Open.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
             this.Open.HeaderText = "Open";
-            this.Open.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
+            this.Open.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
             this.Open.Name = "Open";
             this.Open.ReadOnly = true;
             this.Open.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -137,7 +137,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             this.Delete.DefaultCellStyle = dataGridViewCellStyle1;
             this.Delete.HeaderText = "Delete";
-            this.Delete.Image = global::GitUI.Properties.Resources.Delete;
+            this.Delete.Image = global::GitUI.Properties.Images.Delete;
             this.Delete.Name = "Delete";
             this.Delete.ReadOnly = true;
             this.Delete.Resizable = System.Windows.Forms.DataGridViewTriState.False;

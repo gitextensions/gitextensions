@@ -315,7 +315,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.refreshToolStripButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.refreshToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.refreshToolStripButton.Image = global::GitUI.Properties.Resources.IconReloadRevisions;
+            this.refreshToolStripButton.Image = global::GitUI.Properties.Images.ReloadRevisions;
             this.refreshToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.refreshToolStripButton.Name = "refreshToolStripButton";
             this.refreshToolStripButton.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
@@ -329,7 +329,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripButton_customMessage.CheckOnClick = true;
             this.toolStripButton_customMessage.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripButton_customMessage.Enabled = false;
-            this.toolStripButton_customMessage.Image = global::GitUI.Properties.Resources.IconFileStatusModified;
+            this.toolStripButton_customMessage.Image = global::GitUI.Properties.Images.FileStatusModified;
             this.toolStripButton_customMessage.ImageTransparentColor = System.Drawing.Color.White;
             this.toolStripButton_customMessage.Name = "toolStripButton_customMessage";
             this.toolStripButton_customMessage.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;

@@ -15,7 +15,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public CopyContextMenuItem()
         {
-            Image = Resources.IconCopyToClipboard;
+            Image = Images.CopyToClipboard;
             Text = "Copy to clipboard";
 
             // Add a dummy copy item, so that the shortcut key works.
@@ -49,7 +49,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                     foreach (var name in branchNames)
                     {
-                        AddItem(name, _ => name, Resources.IconBranch);
+                        AddItem(name, _ => name, Images.Branch);
                     }
 
                     DropDownItems.Add(new ToolStripSeparator());
@@ -64,25 +64,25 @@ namespace GitUI.UserControls.RevisionGrid
 
                     foreach (var name in tagNames)
                     {
-                        AddItem(name, _ => name, Resources.IconTag);
+                        AddItem(name, _ => name, Images.Tag);
                     }
 
                     DropDownItems.Add(new ToolStripSeparator());
                 }
 
                 // Add other items
-                AddItem($"{Strings.CommitHash}     ({revision.Guid.ShortenTo(15)})", r => r.Guid, Resources.IconCommitId, Keys.Control | Keys.C);
-                AddItem($"{Strings.Message}     ({revision.Subject.ShortenTo(30)})", r => r.Body ?? r.Subject, Resources.IconMessage);
-                AddItem($"{Strings.Author}     ({revision.Author})", r => r.Author, Resources.IconAuthor);
+                AddItem($"{Strings.CommitHash}     ({revision.Guid.ShortenTo(15)})", r => r.Guid, Images.CommitId, Keys.Control | Keys.C);
+                AddItem($"{Strings.Message}     ({revision.Subject.ShortenTo(30)})", r => r.Body ?? r.Subject, Images.Message);
+                AddItem($"{Strings.Author}     ({revision.Author})", r => r.Author, Images.Author);
 
                 if (revision.AuthorDate == revision.CommitDate)
                 {
-                    AddItem($"{Strings.Date}     ({revision.CommitDate})", r => r.CommitDate.ToString(), Resources.IconDate);
+                    AddItem($"{Strings.Date}     ({revision.CommitDate})", r => r.CommitDate.ToString(), Images.Date);
                 }
                 else
                 {
-                    AddItem($"{Strings.AuthorDate}     ({revision.AuthorDate})", r => r.AuthorDate.ToString(), Resources.IconDate);
-                    AddItem($"{Strings.CommitDate}     ({revision.CommitDate})", r => r.CommitDate.ToString(), Resources.IconDate);
+                    AddItem($"{Strings.AuthorDate}     ({revision.AuthorDate})", r => r.AuthorDate.ToString(), Images.Date);
+                    AddItem($"{Strings.CommitDate}     ({revision.CommitDate})", r => r.CommitDate.ToString(), Images.Date);
                 }
             }
 

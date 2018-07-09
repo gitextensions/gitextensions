@@ -136,7 +136,7 @@
             // 
             this.Save.AutoSize = true;
             this.Save.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Save.Image = global::GitUI.Properties.Resources.IconSave;
+            this.Save.Image = global::GitUI.Properties.Images.Save;
             this.Save.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.Save.Location = new System.Drawing.Point(463, 3);
             this.Save.Name = "Save";

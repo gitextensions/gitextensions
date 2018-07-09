@@ -120,7 +120,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnReload
             // 
-            this.mnubtnReload.Image = global::GitUI.Properties.Resources.IconReloadRevisions;
+            this.mnubtnReload.Image = global::GitUI.Properties.Images.ReloadRevisions;
             this.mnubtnReload.Name = "mnubtnReload";
             this.mnubtnReload.Size = new System.Drawing.Size(230, 38);
             this.mnubtnReload.Text = "Reload";
@@ -133,7 +133,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnCollapseAll
             // 
-            this.mnubtnCollapseAll.Image = global::GitUI.Properties.Resources.CollapseAll;
+            this.mnubtnCollapseAll.Image = global::GitUI.Properties.Images.CollapseAll;
             this.mnubtnCollapseAll.Name = "mnubtnCollapseAll";
             this.mnubtnCollapseAll.Size = new System.Drawing.Size(230, 38);
             this.mnubtnCollapseAll.Text = "Collapse All";
@@ -141,7 +141,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnExpandAll
             // 
-            this.mnubtnExpandAll.Image = global::GitUI.Properties.Resources.ExpandAll;
+            this.mnubtnExpandAll.Image = global::GitUI.Properties.Images.ExpandAll;
             this.mnubtnExpandAll.Name = "mnubtnExpandAll";
             this.mnubtnExpandAll.Size = new System.Drawing.Size(230, 38);
             this.mnubtnExpandAll.Text = "Expand All";
@@ -160,7 +160,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnuBtnCheckoutLocal
             // 
-            this.mnuBtnCheckoutLocal.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
+            this.mnuBtnCheckoutLocal.Image = global::GitUI.Properties.Images.BranchCheckout;
             this.mnuBtnCheckoutLocal.Name = "mnuBtnCheckoutLocal";
             this.mnuBtnCheckoutLocal.Size = new System.Drawing.Size(342, 38);
             this.mnuBtnCheckoutLocal.Text = "Checkout";
@@ -173,7 +173,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnBranchDelete
             // 
-            this.mnubtnBranchDelete.Image = global::GitUI.Properties.Resources.IconBranchDelete;
+            this.mnubtnBranchDelete.Image = global::GitUI.Properties.Images.BranchDelete;
             this.mnubtnBranchDelete.Name = "mnubtnBranchDelete";
             this.mnubtnBranchDelete.Size = new System.Drawing.Size(342, 38);
             this.mnubtnBranchDelete.Text = "Delete";
@@ -181,21 +181,21 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnFilterLocalBranchInRevisionGrid
             // 
-            this.mnubtnFilterLocalBranchInRevisionGrid.Image = global::GitUI.Properties.Resources.IconShowThisBranchOnly;
+            this.mnubtnFilterLocalBranchInRevisionGrid.Image = global::GitUI.Properties.Images.ShowThisBranchOnly;
             this.mnubtnFilterLocalBranchInRevisionGrid.Name = "mnubtnFilterLocalBranchInRevisionGrid";
             this.mnubtnFilterLocalBranchInRevisionGrid.Size = new System.Drawing.Size(342, 38);
             this.mnubtnFilterLocalBranchInRevisionGrid.Text = "Show this branch only";
             // 
             // mnubtnFilterRemoteBranchInRevisionGrid
             // 
-            this.mnubtnFilterRemoteBranchInRevisionGrid.Image = global::GitUI.Properties.Resources.IconShowThisBranchOnly;
+            this.mnubtnFilterRemoteBranchInRevisionGrid.Image = global::GitUI.Properties.Images.ShowThisBranchOnly;
             this.mnubtnFilterRemoteBranchInRevisionGrid.Name = "mnubtnFilterRemoteBranchInRevisionGrid";
             this.mnubtnFilterRemoteBranchInRevisionGrid.Size = new System.Drawing.Size(346, 38);
             this.mnubtnFilterRemoteBranchInRevisionGrid.Text = "Show this branch only";
             // 
             // mnubtnBranchCheckout
             // 
-            this.mnubtnBranchCheckout.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
+            this.mnubtnBranchCheckout.Image = global::GitUI.Properties.Images.BranchCheckout;
             this.mnubtnBranchCheckout.Name = "mnubtnBranchCheckout";
             this.mnubtnBranchCheckout.Size = new System.Drawing.Size(346, 38);
             this.mnubtnBranchCheckout.Text = "&Checkout";
@@ -216,7 +216,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnuBtnManageRemotesFromRootNode
             // 
-            this.mnuBtnManageRemotesFromRootNode.Image = global::GitUI.Properties.Resources.IconRemotes;
+            this.mnuBtnManageRemotesFromRootNode.Image = global::GitUI.Properties.Images.Remotes;
             this.mnuBtnManageRemotesFromRootNode.Name = "mnuBtnManageRemotesFromRootNode";
             this.mnuBtnManageRemotesFromRootNode.Size = new System.Drawing.Size(287, 38);
             this.mnuBtnManageRemotesFromRootNode.Text = "&Manage remotes";
@@ -244,7 +244,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnRemoteBranchFetchAndCheckout
             // 
-            this.mnubtnRemoteBranchFetchAndCheckout.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
+            this.mnubtnRemoteBranchFetchAndCheckout.Image = global::GitUI.Properties.Images.BranchCheckout;
             this.mnubtnRemoteBranchFetchAndCheckout.Name = "mnubtnRemoteBranchFetchAndCheckout";
             this.mnubtnRemoteBranchFetchAndCheckout.Size = new System.Drawing.Size(346, 38);
             this.mnubtnRemoteBranchFetchAndCheckout.Text = "&Fetch && Checkout";
@@ -252,14 +252,14 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnPullFromRemoteBranch
             // 
-            this.mnubtnPullFromRemoteBranch.Image = global::GitUI.Properties.Resources.IconPull;
+            this.mnubtnPullFromRemoteBranch.Image = global::GitUI.Properties.Images.Pull;
             this.mnubtnPullFromRemoteBranch.Name = "mnubtnPullFromRemoteBranch";
             this.mnubtnPullFromRemoteBranch.Size = new System.Drawing.Size(346, 38);
             this.mnubtnPullFromRemoteBranch.Text = "Fetch && Merge (&Pull)";
             // 
             // mnubtnFetchRebase
             // 
-            this.mnubtnFetchRebase.Image = global::GitUI.Properties.Resources.IconRebase;
+            this.mnubtnFetchRebase.Image = global::GitUI.Properties.Images.Rebase;
             this.mnubtnFetchRebase.Name = "mnubtnFetchRebase";
             this.mnubtnFetchRebase.Size = new System.Drawing.Size(346, 38);
             this.mnubtnFetchRebase.Text = "Fetch && Re&base";
@@ -267,7 +267,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnFetchCreateBranch
             // 
-            this.mnubtnFetchCreateBranch.Image = global::GitUI.Properties.Resources.IconBranch;
+            this.mnubtnFetchCreateBranch.Image = global::GitUI.Properties.Images.Branch;
             this.mnubtnFetchCreateBranch.Name = "mnubtnFetchCreateBranch";
             this.mnubtnFetchCreateBranch.Size = new System.Drawing.Size(346, 38);
             this.mnubtnFetchCreateBranch.Text = "Fetc&h && Create Branch";
@@ -275,7 +275,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnFetchOneBranch
             // 
-            this.mnubtnFetchOneBranch.Image = global::GitUI.Properties.Resources.IconStage;
+            this.mnubtnFetchOneBranch.Image = global::GitUI.Properties.Images.Stage;
             this.mnubtnFetchOneBranch.Name = "mnubtnFetchOneBranch";
             this.mnubtnFetchOneBranch.Size = new System.Drawing.Size(346, 38);
             this.mnubtnFetchOneBranch.Text = "Fe&tch";
@@ -288,7 +288,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnMergeBranch
             // 
-            this.mnubtnMergeBranch.Image = global::GitUI.Properties.Resources.IconMerge;
+            this.mnubtnMergeBranch.Image = global::GitUI.Properties.Images.Merge;
             this.mnubtnMergeBranch.Name = "mnubtnMergeBranch";
             this.mnubtnMergeBranch.Size = new System.Drawing.Size(346, 38);
             this.mnubtnMergeBranch.Text = "&Merge";
@@ -296,7 +296,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnRebase
             // 
-            this.mnubtnRebase.Image = global::GitUI.Properties.Resources.IconRebase;
+            this.mnubtnRebase.Image = global::GitUI.Properties.Images.Rebase;
             this.mnubtnRebase.Name = "mnubtnRebase";
             this.mnubtnRebase.Size = new System.Drawing.Size(346, 38);
             this.mnubtnRebase.Text = "&Rebase";
@@ -304,7 +304,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnCreateBranchBasedOnRemoteBranch
             // 
-            this.mnubtnCreateBranchBasedOnRemoteBranch.Image = global::GitUI.Properties.Resources.IconBranch;
+            this.mnubtnCreateBranchBasedOnRemoteBranch.Image = global::GitUI.Properties.Images.Branch;
             this.mnubtnCreateBranchBasedOnRemoteBranch.Name = "mnubtnCreateBranchBasedOnRemoteBranch";
             this.mnubtnCreateBranchBasedOnRemoteBranch.Size = new System.Drawing.Size(346, 38);
             this.mnubtnCreateBranchBasedOnRemoteBranch.Text = "Create &Branch...";
@@ -312,7 +312,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnReset
             // 
-            this.mnubtnReset.Image = global::GitUI.Properties.Resources.IconResetCurrentBranchToHere;
+            this.mnubtnReset.Image = global::GitUI.Properties.Images.ResetCurrentBranchToHere;
             this.mnubtnReset.Name = "mnubtnReset";
             this.mnubtnReset.Size = new System.Drawing.Size(346, 38);
             this.mnubtnReset.Text = "Re&set";
@@ -325,7 +325,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnDeleteRemoteBranch
             // 
-            this.mnubtnDeleteRemoteBranch.Image = global::GitUI.Properties.Resources.IconBranchDelete;
+            this.mnubtnDeleteRemoteBranch.Image = global::GitUI.Properties.Images.BranchDelete;
             this.mnubtnDeleteRemoteBranch.Name = "mnubtnDeleteRemoteBranch";
             this.mnubtnDeleteRemoteBranch.Size = new System.Drawing.Size(346, 38);
             this.mnubtnDeleteRemoteBranch.Text = "&Delete";
@@ -333,7 +333,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnFetchAllBranchesFromARemote
             // 
-            this.mnubtnFetchAllBranchesFromARemote.Image = global::GitUI.Properties.Resources.IconStage;
+            this.mnubtnFetchAllBranchesFromARemote.Image = global::GitUI.Properties.Images.Stage;
             this.mnubtnFetchAllBranchesFromARemote.Name = "mnubtnFetchAllBranchesFromARemote";
             this.mnubtnFetchAllBranchesFromARemote.Size = new System.Drawing.Size(287, 38);
             this.mnubtnFetchAllBranchesFromARemote.Text = "&Fetch";
@@ -351,7 +351,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnCreateBranchForTag
             // 
-            this.mnubtnCreateBranchForTag.Image = global::GitUI.Properties.Resources.IconBranch;
+            this.mnubtnCreateBranchForTag.Image = global::GitUI.Properties.Images.Branch;
             this.mnubtnCreateBranchForTag.Name = "mnubtnCreateBranchForTag";
             this.mnubtnCreateBranchForTag.Size = new System.Drawing.Size(270, 38);
             this.mnubtnCreateBranchForTag.Text = "Create &Branch...";
@@ -359,7 +359,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnuBtnCheckoutTag
             // 
-            this.mnuBtnCheckoutTag.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
+            this.mnuBtnCheckoutTag.Image = global::GitUI.Properties.Images.BranchCheckout;
             this.mnuBtnCheckoutTag.Name = "mnuBtnCheckoutTag";
             this.mnuBtnCheckoutTag.Size = new System.Drawing.Size(270, 38);
             this.mnuBtnCheckoutTag.Text = "&Checkout";
@@ -372,7 +372,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnDeleteTag
             // 
-            this.mnubtnDeleteTag.Image = global::GitUI.Properties.Resources.IconBranchDelete;
+            this.mnubtnDeleteTag.Image = global::GitUI.Properties.Images.BranchDelete;
             this.mnubtnDeleteTag.Name = "mnubtnDeleteTag";
             this.mnubtnDeleteTag.Size = new System.Drawing.Size(270, 38);
             this.mnubtnDeleteTag.Text = "&Delete";
@@ -388,7 +388,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnDeleteAllBranches
             // 
-            this.mnubtnDeleteAllBranches.Image = global::GitUI.Properties.Resources.IconBranchDelete;
+            this.mnubtnDeleteAllBranches.Image = global::GitUI.Properties.Images.BranchDelete;
             this.mnubtnDeleteAllBranches.Name = "mnubtnDeleteAllBranches";
             this.mnubtnDeleteAllBranches.Size = new System.Drawing.Size(210, 38);
             this.mnubtnDeleteAllBranches.Text = "Delete All";
@@ -412,7 +412,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnManageRemotes
             // 
-            this.mnubtnManageRemotes.Image = global::GitUI.Properties.Resources.IconRemotes;
+            this.mnubtnManageRemotes.Image = global::GitUI.Properties.Images.Remotes;
             this.mnubtnManageRemotes.Name = "mnubtnManageRemotes";
             this.mnubtnManageRemotes.Size = new System.Drawing.Size(287, 38);
             this.mnubtnManageRemotes.Text = "&Manage remotes";
@@ -471,7 +471,7 @@ namespace GitUI.BranchTreePanel
             this.btnSearch.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnSearch.FlatAppearance.BorderSize = 0;
             this.btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSearch.Image = global::GitUI.Properties.Resources.IconPreview;
+            this.btnSearch.Image = global::GitUI.Properties.Images.Preview;
             this.btnSearch.Location = new System.Drawing.Point(248, 0);
             this.btnSearch.Margin = new System.Windows.Forms.Padding(0);
             this.btnSearch.Name = "btnSearch";
@@ -489,7 +489,7 @@ namespace GitUI.BranchTreePanel
             this.btnSettings.ContextMenuStrip = this.menuSettings;
             this.btnSettings.FlatAppearance.BorderSize = 0;
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSettings.Image = global::GitUI.Properties.Resources.IconSettings;
+            this.btnSettings.Image = global::GitUI.Properties.Images.Settings;
             this.btnSettings.Location = new System.Drawing.Point(274, 0);
             this.btnSettings.Margin = new System.Windows.Forms.Padding(0);
             this.btnSettings.Name = "btnSettings";

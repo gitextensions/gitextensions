@@ -187,7 +187,7 @@ namespace GitUI
             // 
             // checkoutBranchToolStripMenuItem
             // 
-            this.checkoutBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBranchCheckout;
+            this.checkoutBranchToolStripMenuItem.Image = global::GitUI.Properties.Images.BranchCheckout;
             this.checkoutBranchToolStripMenuItem.Name = "checkoutBranchToolStripMenuItem";
             this.checkoutBranchToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.checkoutBranchToolStripMenuItem.Text = "Checkout branch";
@@ -195,7 +195,7 @@ namespace GitUI
             // 
             // mergeBranchToolStripMenuItem
             // 
-            this.mergeBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconMerge;
+            this.mergeBranchToolStripMenuItem.Image = global::GitUI.Properties.Images.Merge;
             this.mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
             this.mergeBranchToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.mergeBranchToolStripMenuItem.Text = "Merge into current branch";
@@ -207,14 +207,14 @@ namespace GitUI
             this.rebaseToolStripMenuItem,
             this.rebaseInteractivelyToolStripMenuItem,
             this.rebaseWithAdvOptionsToolStripMenuItem});
-            this.rebaseOnToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconRebase;
+            this.rebaseOnToolStripMenuItem.Image = global::GitUI.Properties.Images.Rebase;
             this.rebaseOnToolStripMenuItem.Name = "rebaseOnToolStripMenuItem";
             this.rebaseOnToolStripMenuItem.Size = new System.Drawing.Size(270, 22);
             this.rebaseOnToolStripMenuItem.Text = "Rebase current branch on";
             // 
             // resetCurrentBranchToHereToolStripMenuItem
             // 
-            this.resetCurrentBranchToHereToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetCurrentBranchToHere;
+            this.resetCurrentBranchToHereToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetCurrentBranchToHere;
             this.resetCurrentBranchToHereToolStripMenuItem.Name = "resetCurrentBranchToHereToolStripMenuItem";
             this.resetCurrentBranchToHereToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.resetCurrentBranchToHereToolStripMenuItem.Text = "Reset current branch to here";
@@ -227,7 +227,7 @@ namespace GitUI
             // 
             // createNewBranchToolStripMenuItem
             // 
-            this.createNewBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBranchCreate;
+            this.createNewBranchToolStripMenuItem.Image = global::GitUI.Properties.Images.BranchCreate;
             this.createNewBranchToolStripMenuItem.Name = "createNewBranchToolStripMenuItem";
             this.createNewBranchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
             this.createNewBranchToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
@@ -236,14 +236,14 @@ namespace GitUI
             // 
             // renameBranchToolStripMenuItem
             // 
-            this.renameBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.Renamed;
+            this.renameBranchToolStripMenuItem.Image = global::GitUI.Properties.Images.Renamed;
             this.renameBranchToolStripMenuItem.Name = "renameBranchToolStripMenuItem";
             this.renameBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.renameBranchToolStripMenuItem.Text = "Rename branch";
             // 
             // deleteBranchToolStripMenuItem
             // 
-            this.deleteBranchToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconBranchDelete;
+            this.deleteBranchToolStripMenuItem.Image = global::GitUI.Properties.Images.BranchDelete;
             this.deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
             this.deleteBranchToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.deleteBranchToolStripMenuItem.Text = "Delete branch";
@@ -305,7 +305,7 @@ namespace GitUI
             // 
             // createTagToolStripMenuItem
             // 
-            this.createTagToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconTagCreate;
+            this.createTagToolStripMenuItem.Image = global::GitUI.Properties.Images.TagCreate;
             this.createTagToolStripMenuItem.Name = "createTagToolStripMenuItem";
             this.createTagToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
             this.createTagToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
@@ -314,7 +314,7 @@ namespace GitUI
             // 
             // deleteTagToolStripMenuItem
             // 
-            this.deleteTagToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconTagDelete;
+            this.deleteTagToolStripMenuItem.Image = global::GitUI.Properties.Images.TagDelete;
             this.deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
             this.deleteTagToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.deleteTagToolStripMenuItem.Text = "Delete tag";
@@ -327,7 +327,7 @@ namespace GitUI
             // 
             // checkoutRevisionToolStripMenuItem
             // 
-            this.checkoutRevisionToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCheckout;
+            this.checkoutRevisionToolStripMenuItem.Image = global::GitUI.Properties.Images.Checkout;
             this.checkoutRevisionToolStripMenuItem.Name = "checkoutRevisionToolStripMenuItem";
             this.checkoutRevisionToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.checkoutRevisionToolStripMenuItem.Text = "Checkout revision";
@@ -335,7 +335,7 @@ namespace GitUI
             // 
             // revertCommitToolStripMenuItem
             // 
-            this.revertCommitToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconRevertCommit;
+            this.revertCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.RevertCommit;
             this.revertCommitToolStripMenuItem.Name = "revertCommitToolStripMenuItem";
             this.revertCommitToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.revertCommitToolStripMenuItem.Text = "Revert commit";
@@ -343,7 +343,7 @@ namespace GitUI
             // 
             // cherryPickCommitToolStripMenuItem
             // 
-            this.cherryPickCommitToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCherryPick;
+            this.cherryPickCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.CherryPick;
             this.cherryPickCommitToolStripMenuItem.Name = "cherryPickCommitToolStripMenuItem";
             this.cherryPickCommitToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.cherryPickCommitToolStripMenuItem.Text = "Cherry pick commit";
@@ -351,7 +351,7 @@ namespace GitUI
             // 
             // archiveRevisionToolStripMenuItem
             // 
-            this.archiveRevisionToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconArchiveRevision;
+            this.archiveRevisionToolStripMenuItem.Image = global::GitUI.Properties.Images.ArchiveRevision;
             this.archiveRevisionToolStripMenuItem.Name = "archiveRevisionToolStripMenuItem";
             this.archiveRevisionToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.archiveRevisionToolStripMenuItem.Text = "Archive revision";
@@ -359,6 +359,7 @@ namespace GitUI
             // 
             // manipulateCommitToolStripMenuItem
             // 
+            this.manipulateCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.Advanced;
             this.manipulateCommitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.editCommitToolStripMenuItem,
             this.rewordCommitToolStripMenuItem,

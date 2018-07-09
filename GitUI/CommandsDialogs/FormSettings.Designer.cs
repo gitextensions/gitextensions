@@ -79,7 +79,7 @@ namespace GitUI.CommandsDialogs
             //
             // pictureBox2
             //
-            this.pictureBox2.Image = global::GitUI.Properties.Resources.error;
+            this.pictureBox2.Image = global::GitUI.Properties.Images.StatusBadgeError;
             this.pictureBox2.Location = new System.Drawing.Point(3, 4);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(54, 50);

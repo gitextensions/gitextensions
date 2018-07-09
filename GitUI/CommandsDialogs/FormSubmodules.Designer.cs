@@ -211,7 +211,7 @@ namespace GitUI.CommandsDialogs
             // UpdateSubmodule
             // 
             this.UpdateSubmodule.AutoSize = true;
-            this.UpdateSubmodule.Image = global::GitUI.Properties.Resources.IconSubmodulesUpdate;
+            this.UpdateSubmodule.Image = global::GitUI.Properties.Images.SubmodulesUpdate;
             this.UpdateSubmodule.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.UpdateSubmodule.Location = new System.Drawing.Point(255, 4);
             this.UpdateSubmodule.Margin = new System.Windows.Forms.Padding(4);
@@ -225,7 +225,7 @@ namespace GitUI.CommandsDialogs
             // SynchronizeSubmodule
             // 
             this.SynchronizeSubmodule.AutoSize = true;
-            this.SynchronizeSubmodule.Image = global::GitUI.Properties.Resources.IconSubmodulesSync;
+            this.SynchronizeSubmodule.Image = global::GitUI.Properties.Images.SubmodulesSync;
             this.SynchronizeSubmodule.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SynchronizeSubmodule.Location = new System.Drawing.Point(103, 4);
             this.SynchronizeSubmodule.Margin = new System.Windows.Forms.Padding(4);
@@ -439,7 +439,7 @@ namespace GitUI.CommandsDialogs
             // Pull
             // 
             this.Pull.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.Pull.BackgroundImage = global::GitUI.Properties.Resources.IconPull;
+            this.Pull.BackgroundImage = global::GitUI.Properties.Images.Pull;
             this.Pull.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.Pull.Location = new System.Drawing.Point(0, 0);
             this.Pull.Margin = new System.Windows.Forms.Padding(0);

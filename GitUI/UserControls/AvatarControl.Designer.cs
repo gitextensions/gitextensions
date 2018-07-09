@@ -42,7 +42,7 @@
             // _gravatarImg
             // 
             this._avatarImage.ContextMenuStrip = this.contextMenuStrip;
-            this._avatarImage.Image = global::GitUI.Properties.Resources.User;
+            this._avatarImage.Image = global::GitUI.Properties.Images.User80;
             this._avatarImage.Location = new System.Drawing.Point(0, 0);
             this._avatarImage.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this._avatarImage.Name = "_avatarImage";
@@ -63,7 +63,7 @@
             // 
             // clearImagecacheToolStripMenuItem
             // 
-            this.clearImagecacheToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCleanupRepo;
+            this.clearImagecacheToolStripMenuItem.Image = global::GitUI.Properties.Images.CleanupRepo;
             this.clearImagecacheToolStripMenuItem.Name = "clearImagecacheToolStripMenuItem";
             this.clearImagecacheToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.clearImagecacheToolStripMenuItem.Text = "Clear image cache";

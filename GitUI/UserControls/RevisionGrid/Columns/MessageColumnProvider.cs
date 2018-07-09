@@ -166,11 +166,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 var changes = _grid.GetChangeCount(revision.Guid);
                 if (changes != null && _grid.IsCountUpdated)
                 {
-                    DrawArtificialCount(changes.Changed, Resources.IconFileStatusModified);
-                    DrawArtificialCount(changes.New, Resources.IconFileStatusAdded);
-                    DrawArtificialCount(changes.Deleted, Resources.IconFileStatusRemoved);
-                    DrawArtificialCount(changes.SubmodulesChanged, Resources.IconSubmoduleRevisionDown);
-                    DrawArtificialCount(changes.SubmodulesDirty, Resources.IconSubmoduleDirty);
+                    DrawArtificialCount(changes.Changed, Images.FileStatusModified);
+                    DrawArtificialCount(changes.New, Images.FileStatusAdded);
+                    DrawArtificialCount(changes.Deleted, Images.FileStatusRemoved);
+                    DrawArtificialCount(changes.SubmodulesChanged, Images.SubmoduleRevisionDown);
+                    DrawArtificialCount(changes.SubmodulesDirty, Images.SubmoduleDirty);
                  }
             }
             else

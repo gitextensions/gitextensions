@@ -88,7 +88,7 @@ namespace GitUI.Editor
             // 
             // cherrypickSelectedLinesToolStripMenuItem
             // 
-            this.cherrypickSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCherryPick;
+            this.cherrypickSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.CherryPick;
             this.cherrypickSelectedLinesToolStripMenuItem.Name = "cherrypickSelectedLinesToolStripMenuItem";
             this.cherrypickSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.cherrypickSelectedLinesToolStripMenuItem.Text = "Cherry pick selected lines";
@@ -219,7 +219,7 @@ namespace GitUI.Editor
             // nextChangeButton
             // 
             this.nextChangeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.nextChangeButton.Image = global::GitUI.Properties.Resources.ArrowDown;
+            this.nextChangeButton.Image = global::GitUI.Properties.Images.ArrowDown;
             this.nextChangeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.nextChangeButton.Name = "nextChangeButton";
             this.nextChangeButton.Size = new System.Drawing.Size(23, 20);
@@ -229,7 +229,7 @@ namespace GitUI.Editor
             // previousChangeButton
             // 
             this.previousChangeButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.previousChangeButton.Image = global::GitUI.Properties.Resources.ArrowUp;
+            this.previousChangeButton.Image = global::GitUI.Properties.Images.ArrowUp;
             this.previousChangeButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.previousChangeButton.Name = "previousChangeButton";
             this.previousChangeButton.Size = new System.Drawing.Size(23, 20);
@@ -244,7 +244,7 @@ namespace GitUI.Editor
             // increaseNumberOfLines
             // 
             this.increaseNumberOfLines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.increaseNumberOfLines.Image = global::GitUI.Properties.Resources.IconNumberOfLinesIncrease;
+            this.increaseNumberOfLines.Image = global::GitUI.Properties.Images.NumberOfLinesIncrease;
             this.increaseNumberOfLines.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.increaseNumberOfLines.Name = "increaseNumberOfLines";
             this.increaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
@@ -254,7 +254,7 @@ namespace GitUI.Editor
             // DecreaseNumberOfLines
             // 
             this.DecreaseNumberOfLines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.DecreaseNumberOfLines.Image = global::GitUI.Properties.Resources.IconNumberOfLinesDecrease;
+            this.DecreaseNumberOfLines.Image = global::GitUI.Properties.Images.NumberOfLinesDecrease;
             this.DecreaseNumberOfLines.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.DecreaseNumberOfLines.Name = "DecreaseNumberOfLines";
             this.DecreaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
@@ -269,7 +269,7 @@ namespace GitUI.Editor
             // showEntireFileButton
             // 
             this.showEntireFileButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.showEntireFileButton.Image = global::GitUI.Properties.Resources.IconShowEntireFile;
+            this.showEntireFileButton.Image = global::GitUI.Properties.Images.ShowEntireFile;
             this.showEntireFileButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.showEntireFileButton.Name = "showEntireFileButton";
             this.showEntireFileButton.Size = new System.Drawing.Size(23, 20);
@@ -279,7 +279,7 @@ namespace GitUI.Editor
             // showNonPrintChars
             // 
             this.showNonPrintChars.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.showNonPrintChars.Image = global::GitUI.Properties.Resources.nonprintchar;
+            this.showNonPrintChars.Image = global::GitUI.Properties.Images.ShowWhitespace;
             this.showNonPrintChars.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.showNonPrintChars.Name = "showNonPrintChars";
             this.showNonPrintChars.Size = new System.Drawing.Size(23, 20);
@@ -307,7 +307,7 @@ namespace GitUI.Editor
             // settingsButton
             // 
             this.settingsButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.settingsButton.Image = global::GitUI.Properties.Resources.IconSettings;
+            this.settingsButton.Image = global::GitUI.Properties.Images.Settings;
             this.settingsButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.settingsButton.Name = "settingsButton";
             this.settingsButton.Size = new System.Drawing.Size(23, 20);
@@ -339,7 +339,7 @@ namespace GitUI.Editor
             // 
             // resetSelectedLinesToolStripMenuItem
             // 
-            this.revertSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconResetFileTo;
+            this.revertSelectedLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetFileTo;
             this.revertSelectedLinesToolStripMenuItem.Name = "revertSelectedLinesToolStripMenuItem";
             this.revertSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.revertSelectedLinesToolStripMenuItem.Text = "Revert selected lines";

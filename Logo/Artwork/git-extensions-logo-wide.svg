@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="520"
+   height="100"
+   viewBox="0 0 137.58332 26.458331"
+   version="1.1"
+   id="svg962"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="git-extensions-logo-wide.svg"
+   inkscape:export-filename="C:\Users\Drew\Dev\tools\gitextensions\GitUI\Resources\git-extensions-logo-512px.png"
+   inkscape:export-xdpi="614.40002"
+   inkscape:export-ydpi="614.40002">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="4.2076923"
+     inkscape:cx="99.145039"
+     inkscape:cy="120.23707"
+     inkscape:document-units="mm"
+     inkscape:current-layer="svg962"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1322"
+     inkscape:window-height="2020"
+     inkscape:window-x="-11"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     units="px"
+     inkscape:showpageshadow="false"
+     inkscape:snap-text-baseline="false"
+     inkscape:snap-page="true"
+     inkscape:snap-grids="true"
+     inkscape:snap-global="true">
+    <sodipodi:guide
+       position="5.0940108,21.165952"
+       orientation="0,1"
+       id="guide862"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="19.437574,0.44019481"
+       orientation="0,1"
+       id="guide864"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <defs
+     id="defs956">
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1693"
+       id="linearGradient1679"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.3434293,0,0,0.34392869,231.66636,-262.87554)"
+       x1="-643.7851"
+       y1="803.31519"
+       x2="-628.5108"
+       y2="819.4704" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient1693">
+      <stop
+         style="stop-color:#d93a2c;stop-opacity:1;"
+         offset="0"
+         id="stop1685" />
+      <stop
+         id="stop1687"
+         offset="0.38345525"
+         style="stop-color:#d93a2c;stop-opacity:1" />
+      <stop
+         id="stop1689"
+         offset="0.44689324"
+         style="stop-color:#232323;stop-opacity:1" />
+      <stop
+         style="stop-color:#d93a2c;stop-opacity:1"
+         offset="1"
+         id="stop1691" />
+    </linearGradient>
+  </defs>
+  <metadata
+     id="metadata959">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="g860"
+     transform="matrix(0.9668242,0,0,0.98337538,-2.0821965,0.0102955)"
+     style="stroke-width:1.02557313">
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:url(#linearGradient1679);stroke-width:1.02557302"
+       d="m 7.4224536,5.371381 c 0,0 -4.7214836,0 -4.7214836,0 0,4.1677318 2.0199158,7.054467 4.5732447,9.3909 0,0 6.9001153,5.473305 6.9001153,5.473305 2.006313,1.755404 3.490516,3.66996 3.490516,6.211937 0,0 4.59336,0 4.59336,0 -0.01,-4.005391 -1.973075,-6.723848 -4.484574,-8.978311 0,0 0,6.87e-4 0,6.87e-4 0,0 -6.911516,-5.498831 -6.911516,-5.498831 C 8.8705655,10.162334 7.4224536,8.139543 7.4224536,5.3719311 c 0,0 0,-5.501e-4 0,-5.501e-4"
+       id="red" />
+    <path
+       inkscape:connector-curvature="0"
+       style="fill:#4fb850;stroke-width:1.02557302"
+       d="m 2.70097,26.447523 c 0,-3.852327 1.4325229,-6.459698 4.2540145,-8.695159 0,0 7.0480035,-5.584115 7.0480035,-5.584115 2.197883,-1.741377 3.660633,-3.9187206 3.661858,-6.7901423 0,0 -2.793701,-0.00625 -2.793701,-0.00625 0,0 5.10567,-5.37402029 5.10567,-5.37402029 0,0 5.139861,5.37402029 5.139861,5.37402029 0,0 -2.851144,0 -2.851144,0 -0.0038,4.4183679 -2.145066,7.4781313 -4.979296,9.7774363 0,0 -7.4131507,6.014006 -7.4131507,6.014006 -1.6461557,1.335488 -2.4503316,3.179513 -2.4503316,5.284937 0,0.02825 -4.7107827,-0.01 -4.7217837,-2.26e-4 0,0 0,-4.87e-4 0,-4.87e-4"
+       id="green" />
+  </g>
+  <flowRoot
+     xml:space="preserve"
+     id="flowRoot822"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.33333302px;line-height:125%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:end;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.11084211px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     transform="matrix(0.23937701,0,0,0.23699423,1.9247512,5.0175402)"><flowRegion
+       id="flowRegion824"
+       style="stroke-width:1.11084211px"><rect
+         id="rect826"
+         width="420.5"
+         height="100.25"
+         x="99.75"
+         y="0.25000033"
+         style="stroke-width:1.11084211px" /></flowRegion><flowPara
+       id="flowPara830"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.66666794px;line-height:100%;font-family:'Josefin Sans';-inkscape-font-specification:'Josefin Sans';text-align:start;text-anchor:start;stroke-width:1.08008718px">GIT</flowPara><flowPara
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:50.66666794px;line-height:100%;font-family:'Josefin Sans';-inkscape-font-specification:'Josefin Sans';text-align:start;text-anchor:start;stroke-width:1.08008718px"
+       id="flowPara846">EXTENSIONS</flowPara></flowRoot>  <flowRoot
+     transform="matrix(0.24379905,0,0,0.24379905,1.2550306,41.948862)"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.33333302px;line-height:125%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:end;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.08525169px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     id="flowRoot842"
+     xml:space="preserve"><flowRegion
+       style="stroke-width:1.08525169px"
+       id="flowRegion836"><rect
+         style="stroke-width:1.08525169px"
+         y="0.25000033"
+         x="99.75"
+         height="100.25"
+         width="420.5"
+         id="rect834" /></flowRegion><flowPara
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:50.66666794px;line-height:100%;font-family:'Josefin Sans';-inkscape-font-specification:'Josefin Sans';text-align:start;text-anchor:start;stroke-width:1.05520523px"
+       id="flowPara838">Git</flowPara><flowPara
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:50.66666794px;line-height:100%;font-family:'Josefin Sans';-inkscape-font-specification:'Josefin Sans';text-align:start;text-anchor:start;stroke-width:1.05520523px"
+       id="flowPara840">Extensions</flowPara></flowRoot>  <flowRoot
+     transform="matrix(0.24379905,0,0,0.24379905,1.2550306,73.01201)"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:13.33333302px;line-height:125%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:end;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.08525169px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     id="flowRoot856"
+     xml:space="preserve"><flowRegion
+       style="stroke-width:1.08525169px"
+       id="flowRegion850"><rect
+         style="stroke-width:1.08525169px"
+         y="0.25000033"
+         x="99.75"
+         height="100.25"
+         width="420.5"
+         id="rect848" /></flowRegion><flowPara
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:50.66666794px;line-height:100%;font-family:'Josefin Sans';-inkscape-font-specification:'Josefin Sans';text-align:start;text-anchor:start;stroke-width:1.05520523px"
+       id="flowPara852">GIT</flowPara><flowPara
+       id="flowPara854"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:50.66666794px;line-height:100%;font-family:'Josefin Sans';-inkscape-font-specification:'Josefin Sans';text-align:start;text-anchor:start;stroke-width:1.05520523px">EXTENSIONS</flowPara></flowRoot></svg>

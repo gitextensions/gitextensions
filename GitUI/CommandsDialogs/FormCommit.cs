@@ -21,6 +21,7 @@ using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
+using GitUI.Properties;
 using GitUI.Script;
 using GitUI.SpellChecker;
 using JetBrains.Annotations;
@@ -193,7 +194,7 @@ namespace GitUI.CommandsDialogs
                 _commitTemplateManager = new CommitTemplateManager(Module);
             }
 
-            Loading.Image = Properties.Resources.loadingpanel;
+            Loading.Image = Images.LoadingAnimation;
 
             SolveMergeconflicts.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
 
@@ -2799,8 +2800,8 @@ namespace GitUI.CommandsDialogs
         {
             // Change the icon for commit button
             Commit.Image = gpgSignCommitToolStripComboBox.SelectedIndex > 0
-                ? Properties.Resources.IconKey
-                : Properties.Resources.IconClean;
+                ? Images.Key
+                : Images.RepoStateClean;
 
             toolStripGpgKeyTextBox.Visible = gpgSignCommitToolStripComboBox.SelectedIndex == 2;
         }

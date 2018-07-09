@@ -59,7 +59,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             else
             {
                 // Image is not yet loaded -- use a placeholder for now
-                image = Resources.User;
+                image = Images.User80;
 
                 // One the image has loaded, invalidate for repaint
                 imageTask.ContinueWith(

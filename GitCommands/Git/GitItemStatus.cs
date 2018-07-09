@@ -53,10 +53,7 @@ namespace GitCommands
 
                 return _staged;
             }
-            set
-            {
-                _staged = value;
-            }
+            set { _staged = value; }
         }
 
         #region Flags

@@ -1,56 +1,68 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using GitCommands;
+using GitUI.Properties;
 
 namespace GitUI.UserControls.ToolStripClasses
 {
     internal class CommitIconProvider : ICommitIconProvider
     {
-        internal static readonly Bitmap IconClean = Properties.Resources.IconClean;
+        // Images properties allocate on each call, so cache our images.
 
-        internal static readonly Bitmap IconDirty = Properties.Resources.IconDirty;
-
-        internal static readonly Bitmap IconDirtySubmodules = Properties.Resources.IconDirtySubmodules;
-
-        internal static readonly Bitmap IconStaged = Properties.Resources.IconStaged;
-
-        internal static readonly Bitmap IconMixed = Properties.Resources.IconMixed;
-
-        internal static readonly Bitmap IconUntrackedOnly = Properties.Resources.IconUntrackedOnly;
+        internal static readonly Bitmap IconClean = Images.RepoStateClean;
+        internal static readonly Bitmap IconDirty = Images.RepoStateDirty;
+        internal static readonly Bitmap IconDirtySubmodules = Images.RepoStateDirtySubmodules;
+        internal static readonly Bitmap IconStaged = Images.RepoStateStaged;
+        internal static readonly Bitmap IconMixed = Images.RepoStateMixed;
+        internal static readonly Bitmap IconUntrackedOnly = Images.RepoStateUntrackedOnly;
 
         public Image GetCommitIcon(IReadOnlyList<GitItemStatus> allChangedFiles)
         {
-            var stagedCount = allChangedFiles.Count(status => status.Staged == StagedStatus.Index);
-            var unstagedCount = allChangedFiles.Count - stagedCount;
-            var unstagedSubmodulesCount = allChangedFiles.Count(status => status.IsSubmodule && status.Staged == StagedStatus.WorkTree);
-            var notTrackedCount = allChangedFiles.Count(status => !status.IsTracked);
+            var stagedCount = 0;
+            var unstagedSubmodulesCount = 0;
+            var notTrackedCount = 0;
 
-            return GetStatusIcon(stagedCount, unstagedCount, unstagedSubmodulesCount, notTrackedCount);
-        }
-
-        private static Image GetStatusIcon(
-            int stagedCount,
-            int unstagedCount,
-            int unstagedSubmodulesCount,
-            int notTrackedCount)
-        {
-            if (stagedCount == 0 && unstagedCount == 0)
+            foreach (var status in allChangedFiles)
             {
-                return IconClean;
-            }
-
-            if (stagedCount == 0)
-            {
-                if (notTrackedCount == unstagedCount)
+                if (status.Staged == StagedStatus.Index)
                 {
-                    return IconUntrackedOnly;
+                    stagedCount++;
                 }
 
-                return unstagedCount != unstagedSubmodulesCount ? IconDirty : IconDirtySubmodules;
+                if (status.Staged == StagedStatus.WorkTree && status.IsSubmodule)
+                {
+                    unstagedSubmodulesCount++;
+                }
+
+                if (!status.IsTracked)
+                {
+                    notTrackedCount++;
+                }
             }
 
-            return unstagedCount == 0 ? IconStaged : IconMixed;
+            return GetStatusIcon();
+
+            Image GetStatusIcon()
+            {
+                var unstagedCount = allChangedFiles.Count - stagedCount;
+
+                if (stagedCount == 0 && unstagedCount == 0)
+                {
+                    return IconClean;
+                }
+
+                if (stagedCount == 0)
+                {
+                    if (notTrackedCount == unstagedCount)
+                    {
+                        return IconUntrackedOnly;
+                    }
+
+                    return unstagedCount != unstagedSubmodulesCount ? IconDirty : IconDirtySubmodules;
+                }
+
+                return unstagedCount == 0 ? IconStaged : IconMixed;
+            }
         }
     }
 

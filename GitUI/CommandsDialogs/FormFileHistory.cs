@@ -10,6 +10,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
+using GitUI.Properties;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -70,10 +71,10 @@ namespace GitUI.CommandsDialogs
                     ImageSize = DpiUtil.Scale(new Size(16, 16)),
                     Images =
                     {
-                        Properties.Resources.IconCommitSummary,
-                        Properties.Resources.IconViewFile,
-                        Properties.Resources.IconDiff,
-                        Properties.Resources.IconBlame
+                        Images.CommitSummary,
+                        Images.ViewFile,
+                        Images.Diff,
+                        Images.Blame
                     }
                 };
                 tabControl1.TabPages[0].ImageIndex = 0;

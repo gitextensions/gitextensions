@@ -58,7 +58,7 @@
             // 
             // logoPictureBox
             // 
-            this.logoPictureBox.Image = global::GitUI.Properties.Resources.git_extensions_logo_256;
+            this.logoPictureBox.Image = global::GitUI.Properties.Images.GitExtensionsLogo256;
             this.logoPictureBox.Location = new System.Drawing.Point(100, 98);
             this.logoPictureBox.Margin = new System.Windows.Forms.Padding(0);
             this.logoPictureBox.Name = "logoPictureBox";
@@ -93,7 +93,7 @@
             // 
             this.pictureDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pictureDonate.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureDonate.Image = global::GitUI.Properties.Resources.Donate;
+            this.pictureDonate.Image = global::GitUI.Properties.Images.DonateBadge;
             this.pictureDonate.Location = new System.Drawing.Point(468, 496);
             this.pictureDonate.Margin = new System.Windows.Forms.Padding(6);
             this.pictureDonate.Name = "pictureDonate";

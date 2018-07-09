@@ -10,6 +10,7 @@ using GitCommands;
 using GitCommands.Patches;
 using GitExtUtils.GitUI;
 using GitUI.Editor;
+using GitUI.Properties;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -175,7 +176,7 @@ namespace GitUI
         {
             public MaskPanel()
             {
-                Image = DpiUtil.Scale(Properties.Resources.loadingpanel);
+                Image = DpiUtil.Scale(Images.LoadingAnimation);
                 SizeMode = PictureBoxSizeMode.CenterImage;
                 BackColor = SystemColors.AppWorkspace;
             }

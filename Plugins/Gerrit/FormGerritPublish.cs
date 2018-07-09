@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Properties;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -28,7 +29,7 @@ namespace Gerrit
             InitializeComponent();
             InitializeComplete();
 
-            Publish.Image = GitUI.Properties.Resources.IconPush;
+            Publish.Image = Images.Push;
         }
 
         private void PublishClick(object sender, EventArgs e)

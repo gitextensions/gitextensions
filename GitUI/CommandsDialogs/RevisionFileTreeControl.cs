@@ -11,6 +11,7 @@ using GitCommands.Git;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
+using GitUI.Properties;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -269,9 +270,9 @@ See the changes in the commit form.");
                 ImageSize = DpiUtil.Scale(new Size(16, 16)), // Scale ImageSize and images scale automatically
                 Images =
                 {
-                    Properties.Resources.IconFile, // File
-                    Properties.Resources.IconFolderClosed, // Folder
-                    Properties.Resources.IconFolderSubmodule // Submodule
+                    Images.File, // File
+                    Images.FolderClosed, // Folder
+                    Images.FolderSubmodule // Submodule
                 }
             };
 

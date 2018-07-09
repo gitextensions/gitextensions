@@ -132,7 +132,7 @@
             // 
             this.Push.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.Push.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Push.Image = global::GitUI.Properties.Resources.ArrowUp;
+            this.Push.Image = global::GitUI.Properties.Images.ArrowUp;
             this.Push.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Push.Location = new System.Drawing.Point(470, 253);
             this.Push.Name = "Push";
@@ -435,7 +435,7 @@
             // LoadSSHKey
             // 
             this.LoadSSHKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
+            this.LoadSSHKey.Image = global::GitUI.Properties.Images.Putty;
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoadSSHKey.Location = new System.Drawing.Point(315, 253);
             this.LoadSSHKey.Name = "LoadSSHKey";
@@ -481,7 +481,7 @@
             // AddRemote
             // 
             this.AddRemote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddRemote.Image = global::GitUI.Properties.Resources.IconRemotes;
+            this.AddRemote.Image = global::GitUI.Properties.Images.Remotes;
             this.AddRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.AddRemote.Location = new System.Drawing.Point(396, 17);
             this.AddRemote.Name = "AddRemote";

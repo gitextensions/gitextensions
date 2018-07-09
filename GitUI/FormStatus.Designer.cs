@@ -130,7 +130,7 @@ namespace GitUI
             // picBoxSuccessFail
             // 
             this.picBoxSuccessFail.Dock = System.Windows.Forms.DockStyle.Right;
-            this.picBoxSuccessFail.Image = global::GitUI.Properties.Resources.StatusHourglass;
+            this.picBoxSuccessFail.Image = global::GitUI.Properties.Images.StatusBadgeWaiting;
             this.picBoxSuccessFail.Location = new System.Drawing.Point(3, 3);
             this.picBoxSuccessFail.Name = "picBoxSuccessFail";
             this.picBoxSuccessFail.Size = new System.Drawing.Size(47, 50);

@@ -8,6 +8,7 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Patches;
 using GitExtUtils.GitUI;
+using GitUI.Properties;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -37,7 +38,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Loading.Image = Properties.Resources.loadingpanel;
+            Loading.Image = Images.LoadingAnimation;
             View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(null, null); };
             splitContainer1.SplitterDistance = DpiUtil.Scale(280);
             InitializeComplete();

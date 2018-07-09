@@ -66,21 +66,21 @@ namespace GitUI
                     ImageSize = DpiUtil.Scale(new Size(16, rowHeight)), // Scale ImageSize and images scale automatically
                     Images =
                     {
-                        ScaleHeight(Resources.IconFileStatusRemoved), // 0
-                        ScaleHeight(Resources.IconFileStatusAdded), // 1
-                        ScaleHeight(Resources.IconFileStatusModified), // 2
-                        ScaleHeight(Resources.IconFileStatusRenamed), // 3
-                        ScaleHeight(Resources.IconFileStatusCopied), // 4
-                        ScaleHeight(Resources.IconSubmoduleDirty), // 5
-                        ScaleHeight(Resources.IconSubmoduleRevisionUp), // 6
-                        ScaleHeight(Resources.IconSubmoduleRevisionUpDirty), // 7
-                        ScaleHeight(Resources.IconSubmoduleRevisionDown), // 8
-                        ScaleHeight(Resources.IconSubmoduleRevisionDownDirty), // 9
-                        ScaleHeight(Resources.IconSubmoduleRevisionSemiUp), // 10
-                        ScaleHeight(Resources.IconSubmoduleRevisionSemiUpDirty), // 11
-                        ScaleHeight(Resources.IconSubmoduleRevisionSemiDown), // 12
-                        ScaleHeight(Resources.IconSubmoduleRevisionSemiDownDirty), // 13
-                        ScaleHeight(Resources.IconFileStatusUnknown) // 14
+                        ScaleHeight(Images.FileStatusRemoved), // 0
+                        ScaleHeight(Images.FileStatusAdded), // 1
+                        ScaleHeight(Images.FileStatusModified), // 2
+                        ScaleHeight(Images.FileStatusRenamed), // 3
+                        ScaleHeight(Images.FileStatusCopied), // 4
+                        ScaleHeight(Images.SubmoduleDirty), // 5
+                        ScaleHeight(Images.SubmoduleRevisionUp), // 6
+                        ScaleHeight(Images.SubmoduleRevisionUpDirty), // 7
+                        ScaleHeight(Images.SubmoduleRevisionDown), // 8
+                        ScaleHeight(Images.SubmoduleRevisionDownDirty), // 9
+                        ScaleHeight(Images.SubmoduleRevisionSemiUp), // 10
+                        ScaleHeight(Images.SubmoduleRevisionSemiUpDirty), // 11
+                        ScaleHeight(Images.SubmoduleRevisionSemiDown), // 12
+                        ScaleHeight(Images.SubmoduleRevisionSemiDownDirty), // 13
+                        ScaleHeight(Images.FileStatusUnknown) // 14
                     }
                 };
             }
@@ -120,7 +120,7 @@ namespace GitUI
                 Name = "openSubmoduleMenuItem",
                 Tag = "1",
                 Text = "Open with Git Extensions",
-                Image = Resources.git_extensions_logo
+                Image = Images.GitExtensionsLogo16
             };
             _openSubmoduleMenuItem.Click += (s, ea) => { ThreadHelper.JoinableTaskFactory.RunAsync(() => OpenSubmoduleAsync()); };
         }

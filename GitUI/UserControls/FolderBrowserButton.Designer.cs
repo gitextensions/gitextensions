@@ -34,7 +34,7 @@
             // buttonBrowse
             // 
             this.buttonBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonBrowse.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
+            this.buttonBrowse.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
             this.buttonBrowse.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonBrowse.Location = new System.Drawing.Point(0, 0);
             this.buttonBrowse.MinimumSize = new System.Drawing.Size(100, 25);

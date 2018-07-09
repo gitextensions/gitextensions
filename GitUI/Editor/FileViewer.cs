@@ -15,6 +15,7 @@ using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
 using GitUI.Hotkey;
+using GitUI.Properties;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -88,12 +89,12 @@ namespace GitUI.Editor
 
             IgnoreWhitespaceChanges = AppSettings.IgnoreWhitespaceChanges;
             ignoreWhiteSpaces.Checked = IgnoreWhitespaceChanges;
-            ignoreWhiteSpaces.Image = Properties.Resources.ignore_whitespaces;
+            ignoreWhiteSpaces.Image = Images.WhitespaceIgnore;
             ignoreWhitespaceChangesToolStripMenuItem.Checked = IgnoreWhitespaceChanges;
             ignoreWhitespaceChangesToolStripMenuItem.Image = ignoreWhiteSpaces.Image;
 
             ignoreAllWhitespaces.Checked = AppSettings.IgnoreAllWhitespaceChanges;
-            ignoreAllWhitespaces.Image = Properties.Resources.ignore_all_whitespaces;
+            ignoreAllWhitespaces.Image = Images.WhitespaceIgnoreAll;
             ignoreAllWhitespaceChangesToolStripMenuItem.Checked = ignoreAllWhitespaces.Checked;
             ignoreAllWhitespaceChangesToolStripMenuItem.Image = ignoreAllWhitespaces.Image;
 

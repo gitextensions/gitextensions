@@ -86,7 +86,7 @@
             // label1
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label1.Image = global::GitUI.Properties.Resources.IconWarning;
+            this.label1.Image = global::GitUI.Properties.Images.Warning;
             this.label1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label1.Location = new System.Drawing.Point(3, 19);
             this.label1.Name = "label1";
@@ -118,7 +118,7 @@
             // toolStripSaveButton
             // 
             this.toolStripSaveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripSaveButton.Image = global::GitUI.Properties.Resources.IconSave;
+            this.toolStripSaveButton.Image = global::GitUI.Properties.Images.Save;
             this.toolStripSaveButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSaveButton.Name = "toolStripSaveButton";
             this.toolStripSaveButton.Size = new System.Drawing.Size(23, 22);

@@ -63,7 +63,7 @@
             // Load
             // 
             this.Load.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Load.Image = global::GitUI.Properties.Resources.IconRepoOpen;
+            this.Load.Image = global::GitUI.Properties.Images.RepoOpen;
             this.Load.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Load.Location = new System.Drawing.Point(448, 45);
             this.Load.Name = "Load";
@@ -86,7 +86,7 @@
             // folderGoUpbutton
             // 
             this.folderGoUpbutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.folderGoUpbutton.Image = global::GitUI.Properties.Resources.levelUp;
+            this.folderGoUpbutton.Image = global::GitUI.Properties.Images.NavigateUp;
             this.folderGoUpbutton.Location = new System.Drawing.Point(448, 10);
             this.folderGoUpbutton.Name = "folderGoUpbutton";
             this.folderGoUpbutton.Size = new System.Drawing.Size(26, 25);

@@ -43,7 +43,7 @@
             // 
             this.Delete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Delete.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.Delete.Image = global::GitUI.Properties.Resources.IconBranchDelete;
+            this.Delete.Image = global::GitUI.Properties.Images.BranchDelete;
             this.Delete.Location = new System.Drawing.Point(439, 65);
             this.Delete.Name = "Delete";
             this.Delete.Size = new System.Drawing.Size(120, 25);
@@ -77,8 +77,8 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::GitUI.Properties.Resources.IconWarning;
-            this.pictureBox1.InitialImage = global::GitUI.Properties.Resources.IconWarning;
+            this.pictureBox1.Image = global::GitUI.Properties.Images.Warning;
+            this.pictureBox1.InitialImage = global::GitUI.Properties.Images.Warning;
             this.pictureBox1.Location = new System.Drawing.Point(12, 142);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(21, 20);

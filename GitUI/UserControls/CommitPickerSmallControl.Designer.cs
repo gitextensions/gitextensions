@@ -83,7 +83,7 @@
             // buttonPickCommit
             // 
             this.buttonPickCommit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPickCommit.Image = global::GitUI.Properties.Resources.IconSelectRevision;
+            this.buttonPickCommit.Image = global::GitUI.Properties.Images.SelectRevision;
             this.buttonPickCommit.Location = new System.Drawing.Point(107, 0);
             this.buttonPickCommit.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.buttonPickCommit.Name = "buttonPickCommit";

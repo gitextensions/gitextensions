@@ -120,7 +120,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::GitUI.Properties.Resources.Conflict;
+            this.pictureBox1.Image = global::GitUI.Properties.Images.Conflict;
             this.pictureBox1.Location = new System.Drawing.Point(10, 5);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(16, 16);

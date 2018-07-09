@@ -118,7 +118,7 @@ namespace GitUI.CommandsDialogs
             // 
             // openWithDifftoolToolStripMenuItem
             // 
-            this.openWithDifftoolToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconDiffTool;
+            this.openWithDifftoolToolStripMenuItem.Image = global::GitUI.Properties.Images.Diff;
             this.openWithDifftoolToolStripMenuItem.Name = "openWithDifftoolToolStripMenuItem";
             this.openWithDifftoolToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
             this.openWithDifftoolToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
@@ -134,7 +134,7 @@ namespace GitUI.CommandsDialogs
             // 
             // saveAsToolStripMenuItem
             // 
-            this.saveAsToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconSaveAs;
+            this.saveAsToolStripMenuItem.Image = global::GitUI.Properties.Images.SaveAs;
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(339, 22);
             this.saveAsToolStripMenuItem.Text = "Save as";
@@ -156,7 +156,7 @@ namespace GitUI.CommandsDialogs
             // 
             // revertCommitToolStripMenuItem
             // 
-            this.revertCommitToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconRevertCommit;
+            this.revertCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.RevertCommit;
             this.revertCommitToolStripMenuItem.Name = "revertCommitToolStripMenuItem";
             this.revertCommitToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.revertCommitToolStripMenuItem.Text = "Revert commit";
@@ -164,7 +164,7 @@ namespace GitUI.CommandsDialogs
             // 
             // cherryPickThisCommitToolStripMenuItem
             // 
-            this.cherryPickThisCommitToolStripMenuItem.Image = global::GitUI.Properties.Resources.IconCherryPick;
+            this.cherryPickThisCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.CherryPick;
             this.cherryPickThisCommitToolStripMenuItem.Name = "cherryPickThisCommitToolStripMenuItem";
             this.cherryPickThisCommitToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.cherryPickThisCommitToolStripMenuItem.Text = "Cherry pick commit";
@@ -344,7 +344,7 @@ namespace GitUI.CommandsDialogs
             // toolStripBranchFilterDropDownButton
             // 
             this.toolStripBranchFilterDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripBranchFilterDropDownButton.Image = global::GitUI.Properties.Resources.IconEditFilter;
+            this.toolStripBranchFilterDropDownButton.Image = global::GitUI.Properties.Images.EditFilter;
             this.toolStripBranchFilterDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripBranchFilterDropDownButton.Name = "toolStripBranchFilterDropDownButton";
             this.toolStripBranchFilterDropDownButton.Size = new System.Drawing.Size(29, 22);
@@ -369,7 +369,7 @@ namespace GitUI.CommandsDialogs
             // toolStripRevisionFilterDropDownButton
             // 
             this.toolStripRevisionFilterDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripRevisionFilterDropDownButton.Image = global::GitUI.Properties.Resources.IconEditFilter;
+            this.toolStripRevisionFilterDropDownButton.Image = global::GitUI.Properties.Images.EditFilter;
             this.toolStripRevisionFilterDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripRevisionFilterDropDownButton.Name = "toolStripRevisionFilterDropDownButton";
             this.toolStripRevisionFilterDropDownButton.Size = new System.Drawing.Size(29, 22);
@@ -377,7 +377,7 @@ namespace GitUI.CommandsDialogs
             // ShowFirstParent
             // 
             this.ShowFirstParent.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ShowFirstParent.Image = global::GitUI.Properties.Resources.IconShowFirstParent;
+            this.ShowFirstParent.Image = global::GitUI.Properties.Images.ShowFirstParent;
             this.ShowFirstParent.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ShowFirstParent.Name = "ShowFirstParent";
             this.ShowFirstParent.Size = new System.Drawing.Size(23, 22);
@@ -394,7 +394,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSplitLoad.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.loadHistoryOnShowToolStripMenuItem,
             this.loadBlameOnShowToolStripMenuItem});
-            this.toolStripSplitLoad.Image = global::GitUI.Properties.Resources.IconReloadRevisions;
+            this.toolStripSplitLoad.Image = global::GitUI.Properties.Images.ReloadRevisions;
             this.toolStripSplitLoad.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitLoad.Name = "toolStripSplitLoad";
             this.toolStripSplitLoad.Size = new System.Drawing.Size(32, 22);
@@ -422,7 +422,7 @@ namespace GitUI.CommandsDialogs
             // ShowFullHistory
             // 
             this.ShowFullHistory.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ShowFullHistory.Image = global::GitUI.Properties.Resources.IconFileHistory;
+            this.ShowFullHistory.Image = global::GitUI.Properties.Images.FileHistory;
             this.ShowFullHistory.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ShowFullHistory.Name = "ShowFullHistory";
             this.ShowFullHistory.Size = new System.Drawing.Size(23, 22);
@@ -436,7 +436,7 @@ namespace GitUI.CommandsDialogs
             this.ignoreWhitespaceToolStripMenuItem,
             this.detectMoveAndCopyInThisFileToolStripMenuItem,
             this.detectMoveAndCopyInAllFilesToolStripMenuItem});
-            this.toolStripBlameOptions.Image = global::GitUI.Properties.Resources.IconBlame;
+            this.toolStripBlameOptions.Image = global::GitUI.Properties.Images.Blame;
             this.toolStripBlameOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripBlameOptions.Name = "toolStripBlameOptions";
             this.toolStripBlameOptions.Size = new System.Drawing.Size(29, 22);

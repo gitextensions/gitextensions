@@ -8,6 +8,7 @@ using GitCommands.Config;
 using GitCommands.Remote;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
+using GitUI.Properties;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -164,12 +165,12 @@ Inactive remote is completely invisible to git.");
         {
             if (disabled)
             {
-                btnToggleState.Image = DpiUtil.Scale(Properties.Resources.eye_opened);
+                btnToggleState.Image = DpiUtil.Scale(Images.EyeOpened);
                 toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Activate.Text ?? "").Trim());
             }
             else
             {
-                btnToggleState.Image = DpiUtil.Scale(Properties.Resources.eye_closed);
+                btnToggleState.Image = DpiUtil.Scale(Images.EyeClosed);
                 toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Deactivate.Text ?? "").Trim());
             }
         }

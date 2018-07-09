@@ -58,7 +58,7 @@
             // 
             // commitSignPicture
             // 
-            this.commitSignPicture.Image = global::GitUI.Properties.Resources.commit_ok;
+            this.commitSignPicture.Image = global::GitUI.Properties.Images.CommitSignatureOk;
             this.commitSignPicture.Location = new System.Drawing.Point(3, 3);
             this.commitSignPicture.Name = "commitSignPicture";
             this.commitSignPicture.Size = new System.Drawing.Size(32, 32);
@@ -68,7 +68,7 @@
             // 
             // tagSignPicture
             // 
-            this.tagSignPicture.Image = global::GitUI.Properties.Resources.commit_ok;
+            this.tagSignPicture.Image = global::GitUI.Properties.Images.CommitSignatureOk;
             this.tagSignPicture.Location = new System.Drawing.Point(3, 126);
             this.tagSignPicture.Name = "tagSignPicture";
             this.tagSignPicture.Size = new System.Drawing.Size(32, 32);

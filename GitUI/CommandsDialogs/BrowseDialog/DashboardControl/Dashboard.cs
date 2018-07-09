@@ -104,10 +104,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                             panel.Controls.Add(lblContribute);
                             lblContribute.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
 
-                            CreateLink(panel, _develop.Text, Resources.IconDevelop, GitHubItem_Click);
-                            CreateLink(panel, _donate.Text, Resources.IconDonate, DonateItem_Click);
-                            CreateLink(panel, _translate.Text, Resources.IconTranslate, TranslateItem_Click);
-                            var lastControl = CreateLink(panel, _issues.Text, Resources.bug, IssuesItem_Click);
+                            CreateLink(panel, _develop.Text, Images.Develop, GitHubItem_Click);
+                            CreateLink(panel, _donate.Text, Images.DollarSign, DonateItem_Click);
+                            CreateLink(panel, _translate.Text, Images.Translate, TranslateItem_Click);
+                            var lastControl = CreateLink(panel, _issues.Text, Images.Bug, IssuesItem_Click);
                             return lastControl;
                         },
                         (panel, lastControl) =>
@@ -120,13 +120,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     AddLinks(flpnlStart,
                         panel =>
                         {
-                            CreateLink(panel, _createRepository.Text, Resources.IconRepoCreate, createItem_Click);
-                            CreateLink(panel, _openRepository.Text, Resources.IconRepoOpen, openItem_Click);
-                            var lastControl = CreateLink(panel, _cloneRepository.Text, Resources.IconCloneRepoGit, cloneItem_Click);
+                            CreateLink(panel, _createRepository.Text, Images.RepoCreate, createItem_Click);
+                            CreateLink(panel, _openRepository.Text, Images.RepoOpen, openItem_Click);
+                            var lastControl = CreateLink(panel, _cloneRepository.Text, Images.CloneRepoGit, cloneItem_Click);
 
                             foreach (var gitHoster in PluginRegistry.GitHosters)
                             {
-                                lastControl = CreateLink(panel, string.Format(_cloneFork.Text, gitHoster.Description), Resources.IconCloneRepoGithub,
+                                lastControl = CreateLink(panel, string.Format(_cloneFork.Text, gitHoster.Description), Images.CloneRepoGithub,
                                     (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged));
                             }
 

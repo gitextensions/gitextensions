@@ -47,7 +47,7 @@
             // Preview
             //
             this.Preview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Preview.Image = global::GitUI.Properties.Resources.IconPreview;
+            this.Preview.Image = global::GitUI.Properties.Images.Preview;
             this.Preview.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Preview.Location = new System.Drawing.Point(50, 278);
             this.Preview.Name = "Preview";
@@ -60,7 +60,7 @@
             // Cleanup
             //
             this.Cleanup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Cleanup.Image = global::GitUI.Properties.Resources.IconCleanupRepo;
+            this.Cleanup.Image = global::GitUI.Properties.Images.CleanupRepo;
             this.Cleanup.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Cleanup.Location = new System.Drawing.Point(176, 278);
             this.Cleanup.Name = "Cleanup";

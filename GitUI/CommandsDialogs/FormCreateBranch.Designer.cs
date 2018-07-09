@@ -133,7 +133,7 @@
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Ok.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.Ok.Image = global::GitUI.Properties.Resources.IconBranchCreate;
+            this.Ok.Image = global::GitUI.Properties.Images.BranchCreate;
             this.Ok.Location = new System.Drawing.Point(317, 146);
             this.Ok.MinimumSize = new System.Drawing.Size(0, 30);
             this.Ok.Name = "Ok";

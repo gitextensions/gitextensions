@@ -10,11 +10,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             InitializeComponent();
             InitializeComplete();
-        }
 
-        private void FormChangeLog1Load(object sender, EventArgs e)
-        {
-            ChangeLog.Text = Resources.ChangeLog;
+            Load += (s, e) => ChangeLog.Text = Resources.ChangeLog;
         }
     }
 }

@@ -92,14 +92,14 @@ namespace GitUI.BranchTreePanel
 
             var localBranchesRootNode = new TreeNode(Strings.Branches)
             {
-                ImageKey = nameof(Resources.IconLocalBranchRoot),
+                ImageKey = nameof(Images.BranchLocalRoot),
             };
             localBranchesRootNode.SelectedImageKey = localBranchesRootNode.ImageKey;
             AddTree(new BranchTree(localBranchesRootNode, newSource));
 
             var remoteBranchesRootNode = new TreeNode(Strings.Remotes)
             {
-                ImageKey = nameof(Resources.IconRemoteBranchRoot),
+                ImageKey = nameof(Images.BranchRemoteRoot),
             };
             remoteBranchesRootNode.SelectedImageKey = remoteBranchesRootNode.ImageKey;
             _remoteTree = new RemoteBranchTree(remoteBranchesRootNode, newSource)
@@ -125,7 +125,7 @@ namespace GitUI.BranchTreePanel
 
         private void AddTags()
         {
-            _tagTreeRootNode = new TreeNode(Strings.Tags) { ImageKey = nameof(Resources.TagHorizontal) };
+            _tagTreeRootNode = new TreeNode(Strings.Tags) { ImageKey = nameof(Images.TagHorizontal) };
             _tagTreeRootNode.SelectedImageKey = _tagTreeRootNode.ImageKey;
             _tagTree = new TagTree(_tagTreeRootNode, UICommandsSource);
             AddTree(_tagTree);
@@ -203,14 +203,14 @@ namespace GitUI.BranchTreePanel
                 ImageSize = DpiUtil.Scale(new Size(16, 16 + rowPadding + rowPadding)), // Scale ImageSize and images scale automatically
                 Images =
                 {
-                    { nameof(Resources.IconBranchDocument), Pad(Resources.IconBranchDocument) },
-                    { nameof(Resources.IconBranch), Pad(Resources.IconBranch) },
-                    { nameof(Resources.IconRemote), Pad(Resources.RemoteRepo) },
-                    { nameof(Resources.IconLocalBranchRoot), Pad(Resources.IconLocalBranchRoot) },
-                    { nameof(Resources.IconRemoteBranchRoot), Pad(Resources.IconRemoteBranchRoot) },
-                    { nameof(Resources.BranchRemote), Pad(Resources.BranchRemote) },
-                    { nameof(Resources.BranchSeparator), Pad(Resources.BranchSeparator) },
-                    { nameof(Resources.TagHorizontal), Pad(Resources.TagHorizontal) },
+                    { nameof(Images.BranchDocument), Pad(Images.BranchDocument) },
+                    { nameof(Images.Branch), Pad(Images.Branch) },
+                    { nameof(Images.Remote), Pad(Images.RemoteRepo) },
+                    { nameof(Images.BranchLocalRoot), Pad(Images.BranchLocalRoot) },
+                    { nameof(Images.BranchRemoteRoot), Pad(Images.BranchRemoteRoot) },
+                    { nameof(Images.BranchRemote), Pad(Images.BranchRemote) },
+                    { nameof(Images.BranchFolder), Pad(Images.BranchFolder) },
+                    { nameof(Images.TagHorizontal), Pad(Images.TagHorizontal) },
                 }
             };
             treeMain.SelectedImageKey = treeMain.ImageKey;
