@@ -578,6 +578,7 @@ namespace GitUI.Editor
                                 }
 
                                 PictureBox.Image = image == null ? null : DpiUtil.Scale(image);
+                                _internalFileViewer.SetText("", () => { });
                             });
             }
 
