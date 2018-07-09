@@ -603,7 +603,6 @@ namespace GitUI.CommandsDialogs
                 editgitattributesToolStripMenuItem.Enabled = validBrowseDir;
                 editmailmapToolStripMenuItem.Enabled = validBrowseDir;
                 toolStripSplitStash.Enabled = validBrowseDir && !bareRepository;
-                commitcountPerUserToolStripMenuItem.Enabled = validBrowseDir;
                 _createPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
                 _viewPullRequestsToolStripMenuItem.Enabled = validBrowseDir;
 
@@ -1281,14 +1280,6 @@ namespace GitUI.CommandsDialogs
         private void RefreshButtonClick(object sender, EventArgs e)
         {
             RefreshRevisions();
-        }
-
-        private void CommitcountPerUserToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            using (var frm = new FormCommitCount(UICommands))
-            {
-                frm.ShowDialog(this);
-            }
         }
 
         private void KGitToolStripMenuItemClick(object sender, EventArgs e)

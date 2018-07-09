@@ -859,12 +859,6 @@
     <Compile Include="CommandsDialogs\FormCommandlineHelp.Designer.cs">
       <DependentUpon>FormCommandlineHelp.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\FormCommitCount.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\FormCommitCount.Designer.cs">
-      <DependentUpon>FormCommitCount.cs</DependentUpon>
-    </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardCategoryTitle.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1453,10 +1447,6 @@
       <DependentUpon>FormCommandlineHelp.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormCommitCount.resx">
-      <DependentUpon>FormCommitCount.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\FormDashboardCategoryTitle.resx">
       <DependentUpon>FormDashboardCategoryTitle.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1792,7 +1782,6 @@
     <None Include="Resources\Icons\showEntireFile.png" />
     <None Include="Resources\Icons\SplitViewLayout.png" />
     <None Include="Resources\Icons\stash.png" />
-    <None Include="Resources\Icons\statistic.png" />
     <None Include="Resources\Icons\StatusHourglass.png" />
     <None Include="Resources\Icons\success.png" />
     <None Include="Resources\Icons\TagCreate.png" />
