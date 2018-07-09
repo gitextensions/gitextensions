@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -195,9 +196,11 @@ namespace GitUI.BranchTreePanel
 
         private void InitImageList()
         {
+            const int rowPadding = 1; // added to top and bottom, so doubled -- this value is scaled *after*, so consider 96dpi here
+
             treeMain.ImageList = new ImageList
             {
-                ImageSize = DpiUtil.Scale(new Size(16, 16)), // Scale ImageSize and images scale automatically
+                ImageSize = DpiUtil.Scale(new Size(16, 16 + rowPadding + rowPadding)), // Scale ImageSize and images scale automatically
                 Images =
                 {
                     { nameof(Resources.IconBranchDocument), Pad(Resources.IconBranchDocument) },
@@ -211,6 +214,16 @@ namespace GitUI.BranchTreePanel
                 }
             };
             treeMain.SelectedImageKey = treeMain.ImageKey;
+
+            Image Pad(Image image)
+            {
+                var padded = new Bitmap(image.Width, image.Height + rowPadding + rowPadding, PixelFormat.Format32bppArgb);
+                using (var g = Graphics.FromImage(padded))
+                {
+                    g.DrawImageUnscaled(image, 0, rowPadding);
+                    return padded;
+                }
+            }
         }
 
         private void InitializeSearchBox()
