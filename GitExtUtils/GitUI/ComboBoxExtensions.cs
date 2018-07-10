@@ -12,9 +12,14 @@ namespace GitUI
                 throw new ArgumentNullException(nameof(comboBox));
             }
 
-            var calculatedWidth = GetPreferredDropDownWidth(comboBox);
-            comboBox.Width = calculatedWidth;
-            comboBox.DropDownWidth = calculatedWidth;
+            var width = GetPreferredDropDownWidth(comboBox);
+
+            comboBox.Width = width;
+
+            if (width != 0)
+            {
+                comboBox.DropDownWidth = width;
+            }
         }
 
         public static void ResizeDropDownWidth(this ComboBox comboBox, int minWidth, int maxWidth)
