@@ -332,7 +332,7 @@ namespace GitUI
 
         private void FileStatusListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            if (e?.Item?.Tag is GitItemStatus gitItemStatus)
+            if (e.Item?.Tag is GitItemStatus gitItemStatus)
             {
                 var imageWidth = 0;
                 if (e.Item.ImageList != null && e.Item.ImageIndex != -1)
@@ -586,8 +586,8 @@ namespace GitUI
             get
             {
                 return FileStatusListView.SelectedItems.Cast<ListViewItem>()
-                    .Where(i => i.Group?.Tag as GitRevision != null)
-                    .Select(i => i.Group.Tag as GitRevision);
+                    .Where(i => i.Group?.Tag is GitRevision)
+                    .Select(i => (GitRevision)i.Group.Tag);
             }
         }
 
@@ -598,8 +598,8 @@ namespace GitUI
             get
             {
                 return FileStatusListView.SelectedItems.Cast<ListViewItem>()
-                    .Where(i => i.Group?.Tag as GitRevision != null)
-                    .Select(i => new GitItemStatusWithParent(i.Group.Tag as GitRevision, i.Tag as GitItemStatus));
+                    .Where(i => i.Group?.Tag is GitRevision)
+                    .Select(i => new GitItemStatusWithParent((GitRevision)i.Group.Tag, i.Tag as GitItemStatus));
             }
         }
 
@@ -1135,7 +1135,7 @@ namespace GitUI
 
         public void SetDiffs(IReadOnlyList<GitRevision> revisions)
         {
-            Revision = revisions?.FirstOrDefault();
+            Revision = revisions.FirstOrDefault();
 
             var dictionary = new GitItemsWithParents();
 
@@ -1145,7 +1145,7 @@ namespace GitUI
                 if (revisions.Count == 1)
                 {
                     // Note: RevisionGrid could in some forms be used to get the parent guids
-                    parentRevs = Revision.ParentGuids.Select(item => new GitRevision(item)).ToArray();
+                    parentRevs = Revision.ParentGuids?.Select(item => new GitRevision(item)).ToArray();
                 }
                 else
                 {
