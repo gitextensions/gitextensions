@@ -796,8 +796,9 @@ namespace GitUI
             FileStatusListView.Groups.Clear();
             FileStatusListView.Items.Clear();
 
-            var clientSizeWidth = AppSettings.TruncatePathMethod == "compact" || AppSettings.TruncatePathMethod == "trimstart";
-            var fileNameOnlyMode = AppSettings.TruncatePathMethod == "fileNameOnly";
+            var truncateMethod = AppSettings.TruncatePathMethod;
+            var clientSizeWidth = truncateMethod == TruncatePathMethod.Compact || truncateMethod == TruncatePathMethod.TrimStart;
+            var fileNameOnlyMode = truncateMethod == TruncatePathMethod.FileNameOnly;
 
             var list = new List<ListViewItem>();
             foreach (var (revision, statuses) in GitItemStatusesWithParents)

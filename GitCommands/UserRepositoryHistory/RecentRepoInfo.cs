@@ -46,12 +46,8 @@ namespace GitCommands.UserRepositoryHistory
 
     public class RecentRepoSplitter
     {
-        public static readonly string ShorteningStrategy_None = "";
-        public static readonly string ShorteningStrategy_MostSignDir = "MostSignDir";
-        public static readonly string ShorteningStrategy_MiddleDots = "MiddleDots";
-
         public int MaxRecentRepositories { get; set; }
-        public string ShorteningStrategy { get; set; }
+        public ShorteningRecentRepoPathStrategy ShorteningStrategy { get; set; }
         public bool SortMostRecentRepos { get; set; }
         public bool SortLessRecentRepos { get; set; }
         public int RecentReposComboMinWidth { get; set; }
@@ -75,8 +71,8 @@ namespace GitCommands.UserRepositoryHistory
             var mostRecentRepos = new List<RecentRepoInfo>();
             var lessRecentRepos = new List<RecentRepoInfo>();
 
-            bool middleDot = ShorteningStrategy == ShorteningStrategy_MiddleDots;
-            bool signDir = ShorteningStrategy == ShorteningStrategy_MostSignDir;
+            var middleDot = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MiddleDots;
+            var signDir = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MostSignDir;
 
             int n = Math.Min(MaxRecentRepositories, recentRepositories.Count);
 

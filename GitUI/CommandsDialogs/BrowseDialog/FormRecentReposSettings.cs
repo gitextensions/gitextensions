@@ -37,6 +37,29 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             comboMinWidthEdit.Value = AppSettings.RecentReposComboMinWidth;
             SetNumericUpDownValue(_NO_TRANSLATE_maxRecentRepositories, AppSettings.MaxMostRecentRepositories);
             SetNumericUpDownValue(_NO_TRANSLATE_RecentRepositoriesHistorySize, AppSettings.RecentRepositoriesHistorySize);
+
+            void SetNumericUpDownValue(NumericUpDown control, int value)
+            {
+                control.Value = Math.Min(Math.Max(control.Minimum, value), control.Maximum);
+            }
+
+            void SetShorteningStrategy(ShorteningRecentRepoPathStrategy strategy)
+            {
+                switch (strategy)
+                {
+                    case ShorteningRecentRepoPathStrategy.None:
+                        dontShortenRB.Checked = true;
+                        break;
+                    case ShorteningRecentRepoPathStrategy.MostSignDir:
+                        mostSigDirRB.Checked = true;
+                        break;
+                    case ShorteningRecentRepoPathStrategy.MiddleDots:
+                        middleDotRB.Checked = true;
+                        break;
+                    default:
+                        throw new Exception("Unhandled shortening strategy: " + strategy);
+                }
+            }
         }
 
         private void SaveSettings()
@@ -51,43 +74,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.SaveRecentHistoryAsync(_repositoryHistory));
         }
 
-        private string GetShorteningStrategy()
+        private ShorteningRecentRepoPathStrategy GetShorteningStrategy()
         {
             if (dontShortenRB.Checked)
             {
-                return RecentRepoSplitter.ShorteningStrategy_None;
+                return ShorteningRecentRepoPathStrategy.None;
             }
             else if (mostSigDirRB.Checked)
             {
-                return RecentRepoSplitter.ShorteningStrategy_MostSignDir;
+                return ShorteningRecentRepoPathStrategy.MostSignDir;
             }
             else if (middleDotRB.Checked)
             {
-                return RecentRepoSplitter.ShorteningStrategy_MiddleDots;
+                return ShorteningRecentRepoPathStrategy.MiddleDots;
             }
             else
             {
                 throw new Exception("Can not figure shortening strategy");
-            }
-        }
-
-        private void SetShorteningStrategy(string strategy)
-        {
-            if (strategy == RecentRepoSplitter.ShorteningStrategy_None)
-            {
-                dontShortenRB.Checked = true;
-            }
-            else if (strategy == RecentRepoSplitter.ShorteningStrategy_MostSignDir)
-            {
-                mostSigDirRB.Checked = true;
-            }
-            else if (strategy == RecentRepoSplitter.ShorteningStrategy_MiddleDots)
-            {
-                middleDotRB.Checked = true;
-            }
-            else
-            {
-                throw new Exception("Unhandled shortening strategy: " + strategy);
             }
         }
 

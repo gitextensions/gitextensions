@@ -45,36 +45,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return new SettingsPageReferenceByType(typeof(AppearanceSettingsPage));
         }
 
-        private static int GetTruncatePathMethodIndex(string text)
-        {
-            switch (text.ToLowerInvariant())
-            {
-                case "compact":
-                    return 1;
-                case "trimstart":
-                    return 2;
-                case "filenameonly":
-                    return 3;
-                default:
-                    return 0;
-            }
-        }
-
-        private static string GetTruncatePathMethodString(int index)
-        {
-            switch (index)
-            {
-                case 1:
-                    return "compact";
-                case 2:
-                    return "trimstart";
-                case 3:
-                    return "fileNameOnly";
-                default:
-                    return "none";
-            }
-        }
-
         protected override void SettingsToPage()
         {
             chkEnableAutoScale.Checked = AppSettings.EnableAutoScale;
@@ -113,6 +83,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             chkShowRelativeDate.Checked = AppSettings.RelativeDate;
+
+            return;
+
+            int GetTruncatePathMethodIndex(TruncatePathMethod method)
+            {
+                switch (method)
+                {
+                    case TruncatePathMethod.Compact:
+                        return 1;
+                    case TruncatePathMethod.TrimStart:
+                        return 2;
+                    case TruncatePathMethod.FileNameOnly:
+                        return 3;
+                    default:
+                        return 0;
+                }
+            }
         }
 
         protected override void PageToSettings()
@@ -137,6 +124,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             AppSettings.Dictionary = Dictionary.SelectedIndex == 0 ? "none" : Dictionary.Text;
             AppSettings.BranchOrderingCriteria = (GitRefsOrder)cbBranchOrderingCriteria.SelectedIndex;
+
+            return;
+
+            TruncatePathMethod GetTruncatePathMethodString(int index)
+            {
+                switch (index)
+                {
+                    case 1:
+                        return TruncatePathMethod.Compact;
+                    case 2:
+                        return TruncatePathMethod.TrimStart;
+                    case 3:
+                        return TruncatePathMethod.FileNameOnly;
+                    default:
+                        return TruncatePathMethod.None;
+                }
+            }
         }
 
         private void Dictionary_DropDown(object sender, EventArgs e)

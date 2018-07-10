@@ -28,15 +28,15 @@ namespace GitUI
 
         public string FormatTextForDrawing(int width, string name, string oldName)
         {
-            string truncatePathMethod = AppSettings.TruncatePathMethod;
+            var truncatePathMethod = AppSettings.TruncatePathMethod;
 
-            if (truncatePathMethod == "fileNameOnly")
+            if (truncatePathMethod == TruncatePathMethod.FileNameOnly)
             {
                 return FormatTextForFileNameOnly(name, oldName);
             }
 
-            if ((!truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) || !EnvUtils.RunningOnWindows()) &&
-                !truncatePathMethod.Equals("trimStart", StringComparison.OrdinalIgnoreCase))
+            if ((truncatePathMethod != TruncatePathMethod.Compact || !EnvUtils.RunningOnWindows()) &&
+                truncatePathMethod != TruncatePathMethod.TrimStart)
             {
                 return FormatString(name, oldName, 0, false);
             }
@@ -103,16 +103,16 @@ namespace GitUI
                 }
 
                 // The win32 method PathCompactPathEx is only supported on Windows
-                string truncatePathMethod = AppSettings.TruncatePathMethod;
-                if (truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) &&
-                    EnvUtils.RunningOnWindows())
+                var truncatePathMethod = AppSettings.TruncatePathMethod;
+
+                if (truncatePathMethod == TruncatePathMethod.Compact && EnvUtils.RunningOnWindows())
                 {
                     var result = new StringBuilder(length);
                     NativeMethods.PathCompactPathEx(result, path, length, 0);
                     return result.ToString();
                 }
 
-                if (truncatePathMethod.Equals("trimStart", StringComparison.OrdinalIgnoreCase))
+                if (truncatePathMethod == TruncatePathMethod.TrimStart)
                 {
                     return "..." + path.Substring(path.Length - length);
                 }

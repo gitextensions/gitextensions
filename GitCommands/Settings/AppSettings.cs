@@ -18,10 +18,28 @@ namespace GitCommands
 {
     public enum LocalChangesAction
     {
+        // DO NOT RENAME THESE -- doing so will break user preferences
         DontChange,
         Merge,
         Reset,
         Stash
+    }
+
+    public enum TruncatePathMethod
+    {
+        // DO NOT RENAME THESE -- doing so will break user preferences
+        None,
+        Compact,
+        TrimStart,
+        FileNameOnly
+    }
+
+    public enum ShorteningRecentRepoPathStrategy
+    {
+        // DO NOT RENAME THESE -- doing so will break user preferences
+        None,
+        MostSignDir,
+        MiddleDots
     }
 
     public static class AppSettings
@@ -361,11 +379,10 @@ namespace GitCommands
             set => SetBool("provideautocompletion", value);
         }
 
-        [NotNull]
-        public static string TruncatePathMethod
+        public static TruncatePathMethod TruncatePathMethod
         {
-            get => GetString("truncatepathmethod", "none");
-            set => SetString("truncatepathmethod", value);
+            get => GetEnum("truncatepathmethod", TruncatePathMethod.None);
+            set => SetEnum("truncatepathmethod", value);
         }
 
         public static bool ShowGitStatusInBrowseToolbar
@@ -1352,10 +1369,10 @@ namespace GitCommands
             set => SetInt("RecursiveSubmodules", value);
         }
 
-        public static string ShorteningRecentRepoPathStrategy
+        public static ShorteningRecentRepoPathStrategy ShorteningRecentRepoPathStrategy
         {
-            get => GetString("ShorteningRecentRepoPathStrategy", "");
-            set => SetString("ShorteningRecentRepoPathStrategy", value);
+            get => GetEnum("ShorteningRecentRepoPathStrategy", ShorteningRecentRepoPathStrategy.None);
+            set => SetEnum("ShorteningRecentRepoPathStrategy", value);
         }
 
         public static int MaxMostRecentRepositories
