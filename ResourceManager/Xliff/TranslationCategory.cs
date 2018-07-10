@@ -33,9 +33,6 @@ namespace ResourceManager.Xliff
         [XmlElement(ElementName = "body")]
         public TranslationBody Body { get; set; } = new TranslationBody();
 
-        public int CompareTo(TranslationCategory other)
-        {
-            return Name.CompareTo(other.Name);
-        }
+        public int CompareTo(TranslationCategory other) => StringComparer.InvariantCulture.Compare(Name, other.Name);
     }
 }
