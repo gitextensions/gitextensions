@@ -26,13 +26,13 @@ namespace GitCommands.ExternalLinks
             try
             {
                 link.Caption = string.Format(Caption, groupsArray);
-                link.URI = Format.Replace("%COMMIT_HASH%", revision.Guid);
-                link.URI = string.Format(link.URI, groupsArray);
+                link.Uri = Format.Replace("%COMMIT_HASH%", revision.Guid);
+                link.Uri = string.Format(link.Uri, groupsArray);
                 IsValid = true;
             }
             catch (Exception e)
             {
-                link.URI = e.Message + ": " + Format + " " + groupsArray;
+                link.Uri = e.Message + ": " + Format + " " + groupsArray;
                 IsValid = false;
             }
 

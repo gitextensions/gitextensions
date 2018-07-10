@@ -44,7 +44,7 @@ namespace GitCommandsTests.ExternalLinks
                 new ExternalLink
                 {
                     Caption = "Issue 3657",
-                    URI = "https://github.com/gitextensions/gitextensions/issues/3657"
+                    Uri = "https://github.com/gitextensions/gitextensions/issues/3657"
                 }
             };
 
@@ -62,7 +62,7 @@ namespace GitCommandsTests.ExternalLinks
                 new ExternalLink
                 {
                     Caption = "Issue 3657",
-                    URI = "https://github.com/jbialobr/gitextensions/issues/3657"
+                    Uri = "https://github.com/jbialobr/gitextensions/issues/3657"
                 }
             };
 
@@ -80,12 +80,12 @@ namespace GitCommandsTests.ExternalLinks
                 new ExternalLink
                 {
                     Caption = "Issue 3657",
-                    URI = "https://github.com/gitextensions/gitextensions/issues/3657"
+                    Uri = "https://github.com/gitextensions/gitextensions/issues/3657"
                 },
                 new ExternalLink
                 {
                     Caption = "Issue 3657",
-                    URI = "https://github.com/jbialobr/gitextensions/issues/3657"
+                    Uri = "https://github.com/jbialobr/gitextensions/issues/3657"
                 }
             };
 
@@ -104,17 +104,17 @@ namespace GitCommandsTests.ExternalLinks
                 new ExternalLink
                 {
                     Caption = "Issue 3657",
-                    URI = "https://github.com/jbialobr/gitextensions/issues/3657"
+                    Uri = "https://github.com/jbialobr/gitextensions/issues/3657"
                 },
                 new ExternalLink
                 {
                     Caption = "Issue 3657",
-                    URI = "https://github.com/gitextensions/gitextensions/issues/3657"
+                    Uri = "https://github.com/gitextensions/gitextensions/issues/3657"
                 },
                 new ExternalLink
                 {
                     Caption = "Issue 3657",
-                    URI = "https://github.com/russkie/gitextensions/issues/3657"
+                    Uri = "https://github.com/russkie/gitextensions/issues/3657"
                 }
             };
 
@@ -132,7 +132,7 @@ namespace GitCommandsTests.ExternalLinks
                 new ExternalLink
                 {
                     Caption = "Issue 3657",
-                    URI = "https://github.com/gitextensions/gitextensions/issues/3657"
+                    Uri = "https://github.com/gitextensions/gitextensions/issues/3657"
                 }
             };
 

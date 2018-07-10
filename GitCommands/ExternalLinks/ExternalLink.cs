@@ -6,17 +6,17 @@ namespace GitCommands.ExternalLinks
     public class ExternalLink : SimpleStructured
     {
         public string Caption { get; set; }
-        public string URI { get; set; }
+        public string Uri { get; set; }
 
         protected internal override IEnumerable<object> InlinedStructure()
         {
             yield return Caption;
-            yield return URI;
+            yield return Uri;
         }
 
         public override int GetHashCode()
         {
-            return URI.GetHashCode();
+            return Uri.GetHashCode();
         }
     }
 }

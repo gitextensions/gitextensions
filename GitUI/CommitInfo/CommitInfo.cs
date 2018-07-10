@@ -270,7 +270,7 @@ namespace GitUI.CommitInfo
                             linksString.Append(", ");
                         }
 
-                        linksString.Append(_linkFactory.CreateLink(link.Caption, link.URI));
+                        linksString.Append(_linkFactory.CreateLink(link.Caption, link.Uri));
                         any = true;
                     }
 
