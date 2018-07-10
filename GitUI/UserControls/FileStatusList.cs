@@ -29,6 +29,7 @@ namespace GitUI
 
     public sealed partial class FileStatusList : GitModuleControl
     {
+        private static readonly StringFormat FilePathStringFormat = new StringFormat { LineAlignment = StringAlignment.Center, Trimming = StringTrimming.None, FormatFlags = StringFormatFlags.NoWrap };
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
 
         [CanBeNull] private static ImageList _images;
@@ -314,24 +315,19 @@ namespace GitUI
                 var imageWidth = 0;
                 if (e.Item.ImageList != null && e.Item.ImageIndex != -1)
                 {
-                    imageWidth = e.Item.ImageList.Images[e.Item.ImageIndex].Width;
+                    var image = e.Item.ImageList.Images[e.Item.ImageIndex];
+                    imageWidth = image.Width;
+                    e.Graphics.DrawImageUnscaled(image, e.Item.Position.X, e.Item.Position.Y);
                 }
 
-                string text = GetItemText(e.Graphics, imageWidth);
+                var pathFormatter = new PathFormatter(e.Graphics, FileStatusListView.Font);
+                var textStartX = e.Item.Position.X + imageWidth;
+                var textSpace = e.Item.Bounds.Width - textStartX;
+                var text = pathFormatter.FormatTextForDrawing(textSpace, gitItemStatus.Name, gitItemStatus.OldName);
                 text = AppendItemSubmoduleStatus(text, gitItemStatus);
 
-                e.Item.Text = text;
-            }
-
-            e.DrawDefault = true;
-
-            string GetItemText(Graphics graphics, int imageWidth)
-            {
-                var pathFormatter = new PathFormatter(graphics, FileStatusListView.Font);
-
-                return pathFormatter.FormatTextForDrawing(
-                    FileStatusListView.ClientSize.Width - imageWidth,
-                    gitItemStatus.Name, gitItemStatus.OldName);
+                var textRect = new RectangleF(textStartX, e.Item.Bounds.Top, textSpace, e.Item.Bounds.Height);
+                e.Graphics.DrawString(text, FileStatusListView.Font, SystemBrushes.ControlText, textRect, FilePathStringFormat);
             }
         }
 
