@@ -430,7 +430,7 @@ namespace GitUI.Editor
                         var status = ThreadHelper.JoinableTaskFactory.Run(() => getStatusAsync());
                         if (status == null)
                         {
-                            return (text: string.Format("Submodule \"{0}\" has unresolved conflicts", fileName),
+                            return (text: $"Submodule \"{fileName}\" has unresolved conflicts",
                                     openWithDifftool: null /* not applicable */);
                         }
 

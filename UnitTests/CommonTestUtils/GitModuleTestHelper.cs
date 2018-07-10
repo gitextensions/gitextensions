@@ -125,8 +125,7 @@ namespace CommonTestUtils
                 tempPath = "/private" + tempPath;
             }
 
-            string tempDirectory = Path.Combine(tempPath, Path.GetRandomFileName());
-            return tempDirectory;
+            return Path.Combine(tempPath, Path.GetRandomFileName());
         }
     }
 }

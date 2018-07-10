@@ -23,7 +23,7 @@ namespace GitUI
 
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
         public GitExtensionsForm()
-            : this(false)
+            : this(enablePositionRestore: false)
         {
         }
 
@@ -40,7 +40,6 @@ namespace GitUI
 
             var cancelButton = new Button();
             cancelButton.Click += CancelButtonClick;
-
             CancelButton = cancelButton;
 
             void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -73,6 +72,8 @@ namespace GitUI
         protected virtual void OnRuntimeLoad(EventArgs e)
         {
         }
+
+        #region Save & restore position
 
         /// <summary>
         ///   Restores the position of a form from the user settings. Does
@@ -251,5 +252,7 @@ namespace GitUI
                 // TODO: how to restore a corrupted config?
             }
         }
+
+        #endregion
     }
 }

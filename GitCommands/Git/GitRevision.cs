@@ -92,7 +92,7 @@ namespace GitCommands
             var sha = Guid;
             if (sha.Length > 8)
             {
-                sha = sha.Substring(0, 4) + ".." + sha.Substring(sha.Length - 4, 4);
+                sha = sha.Substring(0, 8);
             }
 
             return string.Format("{0}:{1}", sha, Subject);
@@ -124,6 +124,8 @@ namespace GitCommands
         [CanBeNull]
         public string FirstParentGuid => ParentGuids?.FirstOrDefault();
 
+        #region INotifyPropertyChanged
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -131,6 +133,8 @@ namespace GitCommands
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
 
         /// <summary>
         /// Returns a value indicating whether <paramref name="id"/> is a valid SHA-1 hash.

@@ -26,36 +26,6 @@ namespace GitUI
             _font = font ?? throw new ArgumentNullException(nameof(font));
         }
 
-        private static string TruncatePath(string path, int length)
-        {
-            if (path.Length == length)
-            {
-                return path;
-            }
-
-            if (length <= 0)
-            {
-                return string.Empty;
-            }
-
-            // The win32 method PathCompactPathEx is only supported on Windows
-            string truncatePathMethod = AppSettings.TruncatePathMethod;
-            if (truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) &&
-                EnvUtils.RunningOnWindows())
-            {
-                var result = new StringBuilder(length);
-                NativeMethods.PathCompactPathEx(result, path, length, 0);
-                return result.ToString();
-            }
-
-            if (truncatePathMethod.Equals("trimStart", StringComparison.OrdinalIgnoreCase))
-            {
-                return "..." + path.Substring(path.Length - length);
-            }
-
-            return path; ////.Substring(0, length+1);
-        }
-
         public string FormatTextForDrawing(int width, string name, string oldName)
         {
             string truncatePathMethod = AppSettings.TruncatePathMethod;
@@ -119,6 +89,36 @@ namespace GitUI
             }
 
             return TruncatePath(name, name.Length - step);
+
+            string TruncatePath(string path, int length)
+            {
+                if (path.Length == length)
+                {
+                    return path;
+                }
+
+                if (length <= 0)
+                {
+                    return string.Empty;
+                }
+
+                // The win32 method PathCompactPathEx is only supported on Windows
+                string truncatePathMethod = AppSettings.TruncatePathMethod;
+                if (truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) &&
+                    EnvUtils.RunningOnWindows())
+                {
+                    var result = new StringBuilder(length);
+                    NativeMethods.PathCompactPathEx(result, path, length, 0);
+                    return result.ToString();
+                }
+
+                if (truncatePathMethod.Equals("trimStart", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "..." + path.Substring(path.Length - length);
+                }
+
+                return path;
+            }
         }
     }
 }

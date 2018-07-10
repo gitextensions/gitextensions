@@ -139,20 +139,6 @@ namespace GitUI
             _enableSelectedIndexChangeEvent = true;
         }
 
-        private void EnsureSelectedIndexChangeSubscription()
-        {
-            if (_selectedIndexChangeSubscription == null)
-            {
-                _selectedIndexChangeSubscription = Observable.FromEventPattern(
-                        h => FileStatusListView.SelectedIndexChanged += h,
-                        h => FileStatusListView.SelectedIndexChanged -= h)
-                    .Where(x => _enableSelectedIndexChangeEvent)
-                    .Throttle(SelectedIndexChangeThrottleDuration, MainThreadScheduler.Instance)
-                    .ObserveOn(MainThreadScheduler.Instance)
-                    .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
-            }
-        }
-
         public void SetNoFilesText(string text)
         {
             NoFiles.Text = text;
@@ -200,7 +186,7 @@ namespace GitUI
 
             if (searchBackward)
             {
-                var nextItem = FindPrevItemInGroups(curIdx, currentGroup);
+                var nextItem = FindPrevItemInGroups();
                 if (nextItem == null)
                 {
                     return loop ? GetLastIndex() : curIdx;
@@ -210,7 +196,7 @@ namespace GitUI
             }
             else
             {
-                var nextItem = FindNextItemInGroups(curIdx, currentGroup);
+                var nextItem = FindNextItemInGroups();
                 if (nextItem == null)
                 {
                     return loop ? 0 : curIdx;
@@ -218,116 +204,107 @@ namespace GitUI
 
                 return nextItem.Index;
             }
-        }
 
-        [CanBeNull]
-        private ListViewItem FindPrevItemInGroups(int curIdx, ListViewGroup currentGroup)
-        {
-            List<ListViewGroup> searchInGroups = new List<ListViewGroup>();
-            bool foundCurrentGroup = false;
-            for (int i = FileStatusListView.Groups.Count - 1; i >= 0; i--)
+            ListViewItem FindPrevItemInGroups()
             {
-                if (FileStatusListView.Groups[i] == currentGroup)
+                var searchInGroups = new List<ListViewGroup>();
+                var foundCurrentGroup = false;
+                for (var i = FileStatusListView.Groups.Count - 1; i >= 0; i--)
                 {
-                    foundCurrentGroup = true;
-                }
-
-                if (foundCurrentGroup)
-                {
-                    searchInGroups.Add(FileStatusListView.Groups[i]);
-                }
-            }
-
-            foreach (ListViewGroup grp in searchInGroups)
-            {
-                for (int i = curIdx - 1; i >= 0; i--)
-                {
-                    if (FileStatusListView.Items[i].Group == grp)
+                    if (FileStatusListView.Groups[i] == currentGroup)
                     {
-                        return FileStatusListView.Items[i];
+                        foundCurrentGroup = true;
+                    }
+
+                    if (foundCurrentGroup)
+                    {
+                        searchInGroups.Add(FileStatusListView.Groups[i]);
                     }
                 }
 
-                curIdx = FileStatusListView.Items.Count;
-            }
-
-            return null;
-        }
-
-        [CanBeNull]
-        private ListViewItem FindNextItemInGroups(int curIdx, ListViewGroup currentGroup)
-        {
-            List<ListViewGroup> searchInGroups = new List<ListViewGroup>();
-            bool foundCurrentGroup = false;
-            for (int i = 0; i < FileStatusListView.Groups.Count; i++)
-            {
-                if (FileStatusListView.Groups[i] == currentGroup)
+                var idx = curIdx;
+                foreach (var grp in searchInGroups)
                 {
-                    foundCurrentGroup = true;
-                }
-
-                if (foundCurrentGroup)
-                {
-                    searchInGroups.Add(FileStatusListView.Groups[i]);
-                }
-            }
-
-            foreach (ListViewGroup grp in searchInGroups)
-            {
-                for (int i = curIdx + 1; i < FileStatusListView.Items.Count; i++)
-                {
-                    if (FileStatusListView.Items[i].Group == grp)
+                    for (var i = idx - 1; i >= 0; i--)
                     {
-                        return FileStatusListView.Items[i];
+                        if (FileStatusListView.Items[i].Group == grp)
+                        {
+                            return FileStatusListView.Items[i];
+                        }
+                    }
+
+                    idx = FileStatusListView.Items.Count;
+                }
+
+                return null;
+            }
+
+            ListViewItem FindNextItemInGroups()
+            {
+                var searchInGroups = new List<ListViewGroup>();
+                var foundCurrentGroup = false;
+                for (var i = 0; i < FileStatusListView.Groups.Count; i++)
+                {
+                    if (FileStatusListView.Groups[i] == currentGroup)
+                    {
+                        foundCurrentGroup = true;
+                    }
+
+                    if (foundCurrentGroup)
+                    {
+                        searchInGroups.Add(FileStatusListView.Groups[i]);
                     }
                 }
 
-                curIdx = -1;
+                var idx = curIdx;
+                foreach (var grp in searchInGroups)
+                {
+                    for (var i = idx + 1; i < FileStatusListView.Items.Count; i++)
+                    {
+                        if (FileStatusListView.Items[i].Group == grp)
+                        {
+                            return FileStatusListView.Items[i];
+                        }
+                    }
+
+                    idx = -1;
+                }
+
+                return null;
             }
 
-            return null;
-        }
-
-        private int GetLastIndex()
-        {
-            if (FileStatusListView.Items.Count == 0)
+            int GetLastIndex()
             {
+                if (FileStatusListView.Items.Count == 0)
+                {
+                    return -1;
+                }
+
+                if (FileStatusListView.Groups.Count < 2)
+                {
+                    return FileStatusListView.Items.Count - 1;
+                }
+
+                ListViewGroup lastNonEmptyGroup = null;
+                for (int i = FileStatusListView.Groups.Count - 1; i >= 0; i--)
+                {
+                    if (FileStatusListView.Groups[i].Items.Count > 0)
+                    {
+                        lastNonEmptyGroup = FileStatusListView.Groups[i];
+                        break;
+                    }
+                }
+
+                for (int i = FileStatusListView.Items.Count - 1; i >= 0; i--)
+                {
+                    if (FileStatusListView.Items[i].Group == lastNonEmptyGroup)
+                    {
+                        return i;
+                    }
+                }
+
                 return -1;
             }
-
-            if (FileStatusListView.Groups.Count < 2)
-            {
-                return FileStatusListView.Items.Count - 1;
-            }
-
-            ListViewGroup lastNonEmptyGroup = null;
-            for (int i = FileStatusListView.Groups.Count - 1; i >= 0; i--)
-            {
-                if (FileStatusListView.Groups[i].Items.Count > 0)
-                {
-                    lastNonEmptyGroup = FileStatusListView.Groups[i];
-                    break;
-                }
-            }
-
-            for (int i = FileStatusListView.Items.Count - 1; i >= 0; i--)
-            {
-                if (FileStatusListView.Items[i].Group == lastNonEmptyGroup)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
-        private string GetItemText(Graphics graphics, GitItemStatus gitItemStatus, int imageWidth)
-        {
-            var pathFormatter = new PathFormatter(graphics, FileStatusListView.Font);
-
-            return pathFormatter.FormatTextForDrawing(
-                FileStatusListView.ClientSize.Width - imageWidth,
-                gitItemStatus.Name, gitItemStatus.OldName);
         }
 
         private void FileStatusListView_DrawItem(object sender, DrawListViewItemEventArgs e)
@@ -340,13 +317,22 @@ namespace GitUI
                     imageWidth = e.Item.ImageList.Images[e.Item.ImageIndex].Width;
                 }
 
-                string text = GetItemText(e.Graphics, gitItemStatus, imageWidth);
+                string text = GetItemText(e.Graphics, imageWidth);
                 text = AppendItemSubmoduleStatus(text, gitItemStatus);
 
                 e.Item.Text = text;
             }
 
             e.DrawDefault = true;
+
+            string GetItemText(Graphics graphics, int imageWidth)
+            {
+                var pathFormatter = new PathFormatter(graphics, FileStatusListView.Font);
+
+                return pathFormatter.FormatTextForDrawing(
+                    FileStatusListView.ClientSize.Width - imageWidth,
+                    gitItemStatus.Name, gitItemStatus.OldName);
+            }
         }
 
         private static string AppendItemSubmoduleStatus(string text, GitItemStatus item)
@@ -738,68 +724,6 @@ namespace GitUI
             SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private static int GetItemImageIndex(GitItemStatus gitItemStatus)
-        {
-            if (gitItemStatus.IsDeleted)
-            {
-                return 0;
-            }
-
-            if (gitItemStatus.IsNew || (!gitItemStatus.IsTracked && !gitItemStatus.IsSubmodule))
-            {
-                return 1;
-            }
-
-            if (gitItemStatus.IsChanged || gitItemStatus.IsConflict || gitItemStatus.IsSubmodule)
-            {
-                if (!gitItemStatus.IsSubmodule || gitItemStatus.GetSubmoduleStatusAsync() == null ||
-                    !gitItemStatus.GetSubmoduleStatusAsync().IsCompleted)
-                {
-                    return 2;
-                }
-
-                var status = gitItemStatus.GetSubmoduleStatusAsync().CompletedResult();
-                if (status == null)
-                {
-                    return 2;
-                }
-
-                if (status.Status == SubmoduleStatus.FastForward)
-                {
-                    return 6 + (status.IsDirty ? 1 : 0);
-                }
-
-                if (status.Status == SubmoduleStatus.Rewind)
-                {
-                    return 8 + (status.IsDirty ? 1 : 0);
-                }
-
-                if (status.Status == SubmoduleStatus.NewerTime)
-                {
-                    return 10 + (status.IsDirty ? 1 : 0);
-                }
-
-                if (status.Status == SubmoduleStatus.OlderTime)
-                {
-                    return 12 + (status.IsDirty ? 1 : 0);
-                }
-
-                return !status.IsDirty ? 2 : 5;
-            }
-
-            if (gitItemStatus.IsRenamed)
-            {
-                return 3;
-            }
-
-            if (gitItemStatus.IsCopied)
-            {
-                return 4;
-            }
-
-            return 14; // icon unknown
-        }
-
         [Browsable(false)]
         [DefaultValue(true)]
         public bool IsEmpty => GitItemStatuses == null || !GitItemStatuses.Any();
@@ -910,7 +834,7 @@ namespace GitUI
                         continue;
                     }
 
-                    var text = item.Name;
+                    string text;
                     if (clientSizeWidth)
                     {
                         // list-item has client width, so we don't need horizontal scrollbar (which is determined by this text width)
@@ -927,6 +851,10 @@ namespace GitUI
                         }
 
                         text = AppendItemSubmoduleStatus(text, item);
+                    }
+                    else
+                    {
+                        text = item.Name;
                     }
 
                     var listItem = new ListViewItem(text, group)
@@ -974,16 +902,94 @@ namespace GitUI
             FileStatusListView_SizeChanged(null, null);
             FileStatusListView.SetGroupState(ListViewGroupState.Collapsible);
             FileStatusListView.EndUpdate();
-        }
 
-        private string GetDescriptionForRevision(string sha1)
-        {
-            if (DescribeRevision != null)
+            return;
+
+            void EnsureSelectedIndexChangeSubscription()
             {
-                return DescribeRevision(sha1);
+                if (_selectedIndexChangeSubscription == null)
+                {
+                    _selectedIndexChangeSubscription = Observable.FromEventPattern(
+                            h => FileStatusListView.SelectedIndexChanged += h,
+                            h => FileStatusListView.SelectedIndexChanged -= h)
+                        .Where(x => _enableSelectedIndexChangeEvent)
+                        .Throttle(SelectedIndexChangeThrottleDuration, MainThreadScheduler.Instance)
+                        .ObserveOn(MainThreadScheduler.Instance)
+                        .Subscribe(_ => FileStatusListView_SelectedIndexChanged());
+                }
             }
 
-            return sha1.ShortenTo(8);
+            int GetItemImageIndex(GitItemStatus gitItemStatus)
+            {
+                if (gitItemStatus.IsDeleted)
+                {
+                    return 0;
+                }
+
+                if (gitItemStatus.IsNew || (!gitItemStatus.IsTracked && !gitItemStatus.IsSubmodule))
+                {
+                    return 1;
+                }
+
+                if (gitItemStatus.IsChanged || gitItemStatus.IsConflict || gitItemStatus.IsSubmodule)
+                {
+                    if (!gitItemStatus.IsSubmodule || gitItemStatus.GetSubmoduleStatusAsync() == null ||
+                        !gitItemStatus.GetSubmoduleStatusAsync().IsCompleted)
+                    {
+                        return 2;
+                    }
+
+                    var status = gitItemStatus.GetSubmoduleStatusAsync().CompletedResult();
+                    if (status == null)
+                    {
+                        return 2;
+                    }
+
+                    if (status.Status == SubmoduleStatus.FastForward)
+                    {
+                        return 6 + (status.IsDirty ? 1 : 0);
+                    }
+
+                    if (status.Status == SubmoduleStatus.Rewind)
+                    {
+                        return 8 + (status.IsDirty ? 1 : 0);
+                    }
+
+                    if (status.Status == SubmoduleStatus.NewerTime)
+                    {
+                        return 10 + (status.IsDirty ? 1 : 0);
+                    }
+
+                    if (status.Status == SubmoduleStatus.OlderTime)
+                    {
+                        return 12 + (status.IsDirty ? 1 : 0);
+                    }
+
+                    return !status.IsDirty ? 2 : 5;
+                }
+
+                if (gitItemStatus.IsRenamed)
+                {
+                    return 3;
+                }
+
+                if (gitItemStatus.IsCopied)
+                {
+                    return 4;
+                }
+
+                return 14; // icon unknown
+            }
+
+            string GetDescriptionForRevision(string sha1)
+            {
+                if (DescribeRevision != null)
+                {
+                    return DescribeRevision(sha1);
+                }
+
+                return sha1.ShortenTo(8);
+            }
         }
 
         [DefaultValue(true)]
@@ -1071,6 +1077,34 @@ namespace GitUI
         public int SetSelectionFilter(string selectionFilter)
         {
             return SelectFiles(RegexForSelecting(selectionFilter));
+
+            int SelectFiles(Regex regex)
+            {
+                try
+                {
+                    SuspendLayout();
+
+                    var i = 0;
+                    foreach (var item in AllItems)
+                    {
+                        FileStatusListView.Items[i].Selected = regex.IsMatch(item.Name);
+                        i++;
+                    }
+
+                    return FileStatusListView.SelectedIndices.Count;
+                }
+                finally
+                {
+                    ResumeLayout(true);
+                }
+            }
+
+            Regex RegexForSelecting(string value)
+            {
+                return string.IsNullOrEmpty(value)
+                    ? new Regex("^$", RegexOptions.Compiled)
+                    : new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            }
         }
 
         public void SelectAll()
@@ -1086,35 +1120,6 @@ namespace GitUI
                     FileStatusListView.Items[i].Selected = true;
                     i++;
                 }
-            }
-            finally
-            {
-                ResumeLayout(true);
-            }
-        }
-
-        private static Regex RegexForSelecting(string value)
-        {
-            return string.IsNullOrEmpty(value)
-                ? new Regex("^$", RegexOptions.Compiled)
-                : new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        }
-
-        private int SelectFiles(Regex selectionFilter)
-        {
-            try
-            {
-                SuspendLayout();
-
-                var items = AllItems;
-                int i = 0;
-                foreach (var item in items)
-                {
-                    FileStatusListView.Items[i].Selected = selectionFilter.IsMatch(item.Name);
-                    i++;
-                }
-
-                return FileStatusListView.SelectedIndices.Count;
             }
             finally
             {
@@ -1172,12 +1177,12 @@ namespace GitUI
 
                     // Show combined (merge conflicts) only when all first (A) are parents to selected (B)
                     var isMergeCommit = AppSettings.ShowDiffForAllParents &&
-                                        Revision.ParentGuids != null && Revision.ParentGuids.Count() > 1 &&
+                                        Revision.ParentGuids != null && Revision.ParentGuids.Count > 1 &&
                                         _revisionTester.AllFirstAreParentsToSelected(parentRevs, Revision);
                     if (isMergeCommit)
                     {
                         var conflicts = Module.GetCombinedDiffFileList(Revision.Guid);
-                        if (conflicts.Any())
+                        if (conflicts.Count != 0)
                         {
                             // Create an artificial commit
                             var rev = new GitRevision(GitRevision.CombinedDiffGuid);
@@ -1302,10 +1307,10 @@ namespace GitUI
         #endregion Filtering
     }
 
-    public class GitItemStatusWithParent
+    public sealed class GitItemStatusWithParent
     {
-        public readonly GitRevision ParentRevision;
-        public readonly GitItemStatus Item;
+        public GitRevision ParentRevision { get; }
+        public GitItemStatus Item { get; }
 
         public GitItemStatusWithParent(GitRevision parent, GitItemStatus item)
         {

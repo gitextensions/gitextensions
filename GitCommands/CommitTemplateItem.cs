@@ -10,19 +10,8 @@ namespace GitCommands
     [Serializable]
     public sealed class CommitTemplateItem : ISerializable
     {
-        private string _name;
-        public string Name
-        {
-            get => _name;
-            set => _name = value;
-        }
-
-        private string _text;
-        public string Text
-        {
-            get => _text;
-            set => _text = value;
-        }
+        public string Name { get; set; }
+        public string Text { get; set; }
 
         public CommitTemplateItem(string name, string text)
         {
@@ -107,7 +96,7 @@ namespace GitCommands
 
                     shouldBeUpdated = true;
                 }
-                catch (Exception /*e*/)
+                catch (Exception)
                 {
                     return null;
                 }
@@ -125,9 +114,8 @@ namespace GitCommands
         public override Type BindToType(string assemblyName, string typeName)
         {
             typeName = typeName.Replace(OldNamespace, NewNamespace);
-            ////assemblyName = assemblyName.Replace(OldNamespace, NewNamespace);
-            var type = Type.GetType(string.Format("{0}, {1}", typeName, assemblyName));
-            return type;
+
+            return Type.GetType($"{typeName}, {assemblyName}");
         }
     }
 }

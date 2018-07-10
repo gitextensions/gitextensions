@@ -552,8 +552,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 tsmiCategories.DropDownItems.Add(tsmiCategoryNone);
                 tsmiCategories.DropDownItems.AddRange(categories.Select(category =>
                 {
-                    var item = new ToolStripMenuItem(category);
-                    item.Tag = category;
+                    var item = new ToolStripMenuItem(category) { Tag = category };
                     item.Click += tsmiCategory_Click;
                     return item;
                 }).ToArray<ToolStripItem>());

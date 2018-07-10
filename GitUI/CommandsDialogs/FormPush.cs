@@ -28,6 +28,7 @@ namespace GitUI.CommandsDialogs
         private const string PushColumnName = "Push";
         private const string ForceColumnName = "Force";
         private const string DeleteColumnName = "Delete";
+
         private string _currentBranchName;
         private GitRemote _currentBranchRemote;
         private bool _candidateForRebasingMergeCommit;
@@ -118,47 +119,47 @@ namespace GitUI.CommandsDialogs
                 _remoteManager = new GitRemoteManager(() => Module);
                 Init();
             }
+
+            void Init()
+            {
+                _gitRefs = Module.GetRefs();
+                if (GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesCheck)
+                {
+                    RecursiveSubmodules.Enabled = true;
+                    RecursiveSubmodules.SelectedIndex = AppSettings.RecursiveSubmodules;
+                    if (!GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesOnDemand)
+                    {
+                        RecursiveSubmodules.Items.RemoveAt(2);
+                    }
+                }
+                else
+                {
+                    RecursiveSubmodules.Enabled = false;
+                    RecursiveSubmodules.SelectedIndex = 0;
+                }
+
+                _currentBranchName = Module.GetSelectedBranch();
+
+                // refresh registered git remotes
+                UserGitRemotes = _remoteManager.LoadRemotes(false).ToList();
+                BindRemotesDropDown(null);
+
+                UpdateBranchDropDown();
+                UpdateRemoteBranchDropDown();
+
+                Push.Focus();
+
+                if (AppSettings.AlwaysShowAdvOpt)
+                {
+                    ShowOptions_LinkClicked(null, null);
+                }
+            }
         }
 
         /// <summary>
         /// Gets the list of remotes configured in .git/config file.
         /// </summary>
         private List<GitRemote> UserGitRemotes { get; set; }
-
-        private void Init()
-        {
-            _gitRefs = Module.GetRefs();
-            if (GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesCheck)
-            {
-                RecursiveSubmodules.Enabled = true;
-                RecursiveSubmodules.SelectedIndex = AppSettings.RecursiveSubmodules;
-                if (!GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesOnDemand)
-                {
-                    RecursiveSubmodules.Items.RemoveAt(2);
-                }
-            }
-            else
-            {
-                RecursiveSubmodules.Enabled = false;
-                RecursiveSubmodules.SelectedIndex = 0;
-            }
-
-            _currentBranchName = Module.GetSelectedBranch();
-
-            // refresh registered git remotes
-            UserGitRemotes = _remoteManager.LoadRemotes(false).ToList();
-            BindRemotesDropDown(null);
-
-            UpdateBranchDropDown();
-            UpdateRemoteBranchDropDown();
-
-            Push.Focus();
-
-            if (AppSettings.AlwaysShowAdvOpt)
-            {
-                ShowOptions_LinkClicked(null, null);
-            }
-        }
 
         public DialogResult PushAndShowDialogWhenFailed(IWin32Window owner = null)
         {

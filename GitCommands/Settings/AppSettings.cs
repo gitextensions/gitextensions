@@ -78,7 +78,7 @@ namespace GitCommands
             get
             {
                 var value = GetString("AutoNormaliseSymbol", "_");
-                return (value == "+") ? "" : value;
+                return value == "+" ? "" : value;
             }
             set
             {
@@ -161,6 +161,8 @@ namespace GitCommands
             WriteStringRegValue("InstallDir", dir);
         }
 
+        #region Registry helpers
+
         private static bool ReadBoolRegKey(string key, bool defaultValue)
         {
             object obj = VersionIndependentRegKey.GetValue(key);
@@ -191,6 +193,8 @@ namespace GitCommands
         {
             VersionIndependentRegKey.SetValue(key, value);
         }
+
+        #endregion
 
         public static bool CheckSettings
         {

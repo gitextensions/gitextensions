@@ -96,8 +96,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             MostRecentLB.Items.Clear();
             LessRecentLB.Items.Clear();
 
-            List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
-            List<RecentRepoInfo> lessRecentRepos = new List<RecentRepoInfo>();
+            var mostRecentRepos = new List<RecentRepoInfo>();
+            var lessRecentRepos = new List<RecentRepoInfo>();
 
             var splitter = new RecentRepoSplitter
             {
@@ -119,12 +119,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 splitter.Graphics.Dispose();
             }
 
-            foreach (RecentRepoInfo repo in mostRecentRepos)
+            foreach (var repo in mostRecentRepos)
             {
                 MostRecentLB.Items.Add(new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption });
             }
 
-            foreach (RecentRepoInfo repo in lessRecentRepos)
+            foreach (var repo in lessRecentRepos)
             {
                 LessRecentLB.Items.Add(new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption });
             }
@@ -143,11 +143,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 MostRecentLB.Columns[0].Width = width;
                 LessRecentLB.Columns[0].Width = width;
             }
-        }
-
-        private static void SetNumericUpDownValue(NumericUpDown control, int value)
-        {
-            control.Value = Math.Min(Math.Max(control.Minimum, value), control.Maximum);
         }
 
         private void sortMostRecentRepos_CheckedChanged(object sender, EventArgs e)

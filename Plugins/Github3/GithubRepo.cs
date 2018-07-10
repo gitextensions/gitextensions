@@ -74,9 +74,7 @@ namespace Github3
         public string CloneReadOnlyUrl => _repo.GitUrl;
 
         public List<IHostedBranch> Branches
-        {
-            get { return _repo.GetBranches().Select(branch => (IHostedBranch)new GithubBranch(branch)).ToList(); }
-        }
+            => _repo.GetBranches().Select(branch => new GithubBranch(branch)).ToList<IHostedBranch>();
 
         public IHostedRepository Fork()
         {
@@ -109,9 +107,6 @@ namespace Github3
             return pullrequest.Number;
         }
 
-        public override string ToString()
-        {
-            return Owner + "/" + Name;
-        }
+        public override string ToString() => $"{Owner}/{Name}";
     }
 }

@@ -1187,254 +1187,254 @@ namespace GitUI.CommandsDialogs
         {
             BypassFormActivatedEventHandler(() =>
             {
-                if (ConfirmOrStageCommit(amend))
+                if (ConfirmOrStageCommit())
                 {
-                    DoCommit(amend, push);
+                    DoCommit();
                 }
             });
-        }
 
-        private bool ConfirmOrStageCommit(bool amend)
-        {
-            if (amend)
+            bool ConfirmOrStageCommit()
             {
-                return ConfirmAmendCommit();
-            }
-
-            if (Staged.IsEmpty)
-            {
-                return _isMergeCommit ? ConfirmEmptyMergeCommit() : ConfirmAndStageAllUnstaged();
-            }
-
-            return true;
-        }
-
-        private bool ConfirmAmendCommit()
-        {
-            // This is an amend commit.  Confirm the user understands the implications.  We don't want to prompt for an empty
-            // commit, because amend may be used just to change the commit message or timestamp.
-            if (!AppSettings.DontConfirmAmend)
-            {
-                if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                if (amend)
                 {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private bool ConfirmEmptyMergeCommit()
-        {
-            // it is a merge commit, so user can commit just for merging two branches even the changeset is empty,
-            // but also user may forget to add files, so only ask for confirmation that user really wants to commit an empty changeset
-            if (MessageBox.Show(this, _noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private bool ConfirmAndStageAllUnstaged()
-        {
-            if (Unstaged.IsEmpty)
-            {
-                MessageBox.Show(this, _noFilesStagedAndNothingToCommit.Text, _noStagedChanges.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return false;
-            }
-
-            // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
-            if (MessageBox.Show(this, _noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-            {
-                return false;
-            }
-
-            StageAllAccordingToFilter();
-
-            // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
-            if (Staged.IsEmpty)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private void DoCommit(bool amend, bool push)
-        {
-            if (Module.InTheMiddleOfConflictedMerge())
-            {
-                MessageBox.Show(this, _mergeConflicts.Text, _mergeConflictsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (_useFormCommitMessage && (string.IsNullOrEmpty(Message.Text) || Message.Text == _commitTemplate))
-            {
-                MessageBox.Show(this, _enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                return;
-            }
-
-            if (_useFormCommitMessage && !IsCommitMessageValid())
-            {
-                return;
-            }
-
-            if (!AppSettings.DontConfirmCommitIfNoBranch && Module.IsDetachedHead() && !Module.InTheMiddleOfRebase())
-            {
-                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(
-                    this,
-                    _notOnBranchCaption.Text,
-                    _notOnBranchMainInstruction.Text,
-                    _notOnBranch.Text,
-                    _notOnBranchButtons.Text,
-                    true);
-                switch (idx)
-                {
-                    case 0:
-                        string revision = _editedCommit != null ? _editedCommit.Guid : "";
-                        if (!UICommands.StartCheckoutBranch(this, new[] { revision }))
-                        {
-                            return;
-                        }
-
-                        break;
-                    case 1:
-                        if (!UICommands.StartCreateBranchDialog(this, _editedCommit))
-                        {
-                            return;
-                        }
-
-                        break;
-                    case -1:
-                        return;
-                }
-            }
-
-            try
-            {
-                if (_useFormCommitMessage)
-                {
-                    SetCommitMessageFromTextBox(Message.Text);
+                    return ConfirmAmendCommit();
                 }
 
-                ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
-
-                var commitCmd = Module.CommitCmd(
-                    amend,
-                    signOffToolStripMenuItem.Checked,
-                    toolAuthor.Text,
-                    _useFormCommitMessage,
-                    noVerifyToolStripMenuItem.Checked,
-                    gpgSignCommitToolStripComboBox.SelectedIndex > 0,
-                    toolStripGpgKeyTextBox.Text);
-                var errorOccurred = !FormProcess.ShowDialog(this, commitCmd);
-
-                UICommands.RepoChangedNotifier.Notify();
-
-                if (errorOccurred)
+                if (Staged.IsEmpty)
                 {
-                    return;
-                }
-
-                Amend.Checked = false;
-                noVerifyToolStripMenuItem.Checked = false;
-
-                ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
-
-                Message.Text = string.Empty;
-                CommitHelper.SetCommitMessage(Module, string.Empty, Amend.Checked);
-
-                bool pushCompleted = true;
-                if (push)
-                {
-                    bool pushForced = AppSettings.CommitAndPushForcedWhenAmend && amend;
-                    UICommands.StartPushDialog(this, true, pushForced, out pushCompleted);
-                }
-
-                if (pushCompleted && Module.SuperprojectModule != null && AppSettings.StageInSuperprojectAfterCommit)
-                {
-                    Module.SuperprojectModule.StageFile(Module.SubmodulePath);
-                }
-
-                if (AppSettings.CloseCommitDialogAfterCommit)
-                {
-                    Close();
-                    return;
-                }
-
-                if (Unstaged.GitItemStatuses.Any())
-                {
-                    InitializedStaged();
-                    return;
-                }
-
-                if (AppSettings.CloseCommitDialogAfterLastCommit)
-                {
-                    Close();
-                }
-                else
-                {
-                    InitializedStaged();
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(this, string.Format("Exception: {0}", e.Message));
-            }
-
-            bool IsCommitMessageValid()
-            {
-                if (AppSettings.CommitValidationMaxCntCharsFirstLine > 0)
-                {
-                    var firstLine = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
-                    if (firstLine.Length > AppSettings.CommitValidationMaxCntCharsFirstLine &&
-                        MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
-                    {
-                        return false;
-                    }
-                }
-
-                if (AppSettings.CommitValidationMaxCntCharsPerLine > 0)
-                {
-                    var lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var line in lines)
-                    {
-                        if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine &&
-                            MessageBox.Show(this, string.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
-                        {
-                            return false;
-                        }
-                    }
-                }
-
-                if (AppSettings.CommitValidationSecondLineMustBeEmpty)
-                {
-                    var lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-                    if (lines.Length > 2 &&
-                        lines[1].Length != 0 &&
-                        MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
-                    {
-                        return false;
-                    }
-                }
-
-                if (!AppSettings.CommitValidationRegEx.IsNullOrEmpty())
-                {
-                    try
-                    {
-                        if (!Regex.IsMatch(Message.Text, AppSettings.CommitValidationRegEx) &&
-                            MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
-                        {
-                            return false;
-                        }
-                    }
-                    catch
-                    {
-                    }
+                    return _isMergeCommit ? ConfirmEmptyMergeCommit() : ConfirmAndStageAllUnstaged();
                 }
 
                 return true;
+
+                bool ConfirmAmendCommit()
+                {
+                    // This is an amend commit.  Confirm the user understands the implications.  We don't want to prompt for an empty
+                    // commit, because amend may be used just to change the commit message or timestamp.
+                    if (!AppSettings.DontConfirmAmend)
+                    {
+                        if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo) != DialogResult.Yes)
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+
+                bool ConfirmEmptyMergeCommit()
+                {
+                    // it is a merge commit, so user can commit just for merging two branches even the changeset is empty,
+                    // but also user may forget to add files, so only ask for confirmation that user really wants to commit an empty changeset
+                    if (MessageBox.Show(this, _noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                bool ConfirmAndStageAllUnstaged()
+                {
+                    if (Unstaged.IsEmpty)
+                    {
+                        MessageBox.Show(this, _noFilesStagedAndNothingToCommit.Text, _noStagedChanges.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return false;
+                    }
+
+                    // there are no staged files, but there are unstaged files. Most probably user forgot to stage them.
+                    if (MessageBox.Show(this, _noFilesStagedButSuggestToCommitAllUnstaged.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                    {
+                        return false;
+                    }
+
+                    StageAllAccordingToFilter();
+
+                    // if staging failed (i.e. line endings conflict), user already got error message, don't try to commit empty changeset.
+                    if (Staged.IsEmpty)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+            }
+
+            void DoCommit()
+            {
+                if (Module.InTheMiddleOfConflictedMerge())
+                {
+                    MessageBox.Show(this, _mergeConflicts.Text, _mergeConflictsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (_useFormCommitMessage && (string.IsNullOrEmpty(Message.Text) || Message.Text == _commitTemplate))
+                {
+                    MessageBox.Show(this, _enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    return;
+                }
+
+                if (_useFormCommitMessage && !IsCommitMessageValid())
+                {
+                    return;
+                }
+
+                if (!AppSettings.DontConfirmCommitIfNoBranch && Module.IsDetachedHead() && !Module.InTheMiddleOfRebase())
+                {
+                    int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(
+                        this,
+                        _notOnBranchCaption.Text,
+                        _notOnBranchMainInstruction.Text,
+                        _notOnBranch.Text,
+                        _notOnBranchButtons.Text,
+                        true);
+                    switch (idx)
+                    {
+                        case 0:
+                            string revision = _editedCommit != null ? _editedCommit.Guid : "";
+                            if (!UICommands.StartCheckoutBranch(this, new[] { revision }))
+                            {
+                                return;
+                            }
+
+                            break;
+                        case 1:
+                            if (!UICommands.StartCreateBranchDialog(this, _editedCommit))
+                            {
+                                return;
+                            }
+
+                            break;
+                        case -1:
+                            return;
+                    }
+                }
+
+                try
+                {
+                    if (_useFormCommitMessage)
+                    {
+                        SetCommitMessageFromTextBox(Message.Text);
+                    }
+
+                    ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
+
+                    var commitCmd = Module.CommitCmd(
+                        amend,
+                        signOffToolStripMenuItem.Checked,
+                        toolAuthor.Text,
+                        _useFormCommitMessage,
+                        noVerifyToolStripMenuItem.Checked,
+                        gpgSignCommitToolStripComboBox.SelectedIndex > 0,
+                        toolStripGpgKeyTextBox.Text);
+                    var errorOccurred = !FormProcess.ShowDialog(this, commitCmd);
+
+                    UICommands.RepoChangedNotifier.Notify();
+
+                    if (errorOccurred)
+                    {
+                        return;
+                    }
+
+                    Amend.Checked = false;
+                    noVerifyToolStripMenuItem.Checked = false;
+
+                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
+
+                    Message.Text = string.Empty;
+                    CommitHelper.SetCommitMessage(Module, string.Empty, Amend.Checked);
+
+                    bool pushCompleted = true;
+                    if (push)
+                    {
+                        bool pushForced = AppSettings.CommitAndPushForcedWhenAmend && amend;
+                        UICommands.StartPushDialog(this, true, pushForced, out pushCompleted);
+                    }
+
+                    if (pushCompleted && Module.SuperprojectModule != null && AppSettings.StageInSuperprojectAfterCommit)
+                    {
+                        Module.SuperprojectModule.StageFile(Module.SubmodulePath);
+                    }
+
+                    if (AppSettings.CloseCommitDialogAfterCommit)
+                    {
+                        Close();
+                        return;
+                    }
+
+                    if (Unstaged.GitItemStatuses.Any())
+                    {
+                        InitializedStaged();
+                        return;
+                    }
+
+                    if (AppSettings.CloseCommitDialogAfterLastCommit)
+                    {
+                        Close();
+                    }
+                    else
+                    {
+                        InitializedStaged();
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(this, $"Exception: {e.Message}");
+                }
+
+                bool IsCommitMessageValid()
+                {
+                    if (AppSettings.CommitValidationMaxCntCharsFirstLine > 0)
+                    {
+                        var firstLine = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)[0];
+                        if (firstLine.Length > AppSettings.CommitValidationMaxCntCharsFirstLine &&
+                            MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                        {
+                            return false;
+                        }
+                    }
+
+                    if (AppSettings.CommitValidationMaxCntCharsPerLine > 0)
+                    {
+                        var lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (var line in lines)
+                        {
+                            if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine &&
+                                MessageBox.Show(this, string.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+
+                    if (AppSettings.CommitValidationSecondLineMustBeEmpty)
+                    {
+                        var lines = Message.Text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+                        if (lines.Length > 2 &&
+                            lines[1].Length != 0 &&
+                            MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                        {
+                            return false;
+                        }
+                    }
+
+                    if (!AppSettings.CommitValidationRegEx.IsNullOrEmpty())
+                    {
+                        try
+                        {
+                            if (!Regex.IsMatch(Message.Text, AppSettings.CommitValidationRegEx) &&
+                                MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                            {
+                                return false;
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+
+                    return true;
+                }
             }
         }
 
