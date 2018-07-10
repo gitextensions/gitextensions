@@ -941,7 +941,7 @@ namespace GitUI
                         ThreadHelper.JoinableTaskFactory.RunAsync(
                             async () =>
                             {
-                                await item.GetSubmoduleStatusAsync();
+                                await capturedItem.GetSubmoduleStatusAsync();
 
                                 await this.SwitchToMainThreadAsync();
 
