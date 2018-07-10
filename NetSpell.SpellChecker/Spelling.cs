@@ -1021,7 +1021,7 @@ namespace NetSpell.SpellChecker
                     }
                 }
 
-                TraceWriter.TraceVerbose("Suggestiongs Found with Phonetic Stratagy: {0}", tempSuggestion.Count);
+                TraceWriter.TraceVerbose("Suggestions Found with Phonetic Strategy: {0}", tempSuggestion.Count);
             }
 
             if (SuggestionMode == SuggestionEnum.PhoneticNearMiss
@@ -1049,7 +1049,7 @@ namespace NetSpell.SpellChecker
                 SwapChar(tempSuggestion);
             }
 
-            TraceWriter.TraceVerbose("Total Suggestiongs Found: {0}", tempSuggestion.Count);
+            TraceWriter.TraceVerbose("Total Suggestions Found: {0}", tempSuggestion.Count);
 
             tempSuggestion.Sort();  // sorts by edit score
             Suggestions.Clear();

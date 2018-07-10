@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly TranslationString _warningOpenFailed = new TranslationString("Directory does not exist.");
         private readonly TranslationString _warningOpenFailedCaption = new TranslationString("Error");
 
-        [CanBeNull] private GitModule _choosenModule;
+        [CanBeNull] private GitModule _chosenModule;
 
         public FormOpenDirectory(GitModule currentModule)
         {
@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             using (var open = new FormOpenDirectory(currentModule))
             {
                 open.ShowDialog(owner);
-                return open._choosenModule;
+                return open._chosenModule;
             }
         }
 
@@ -97,8 +97,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _NO_TRANSLATE_Directory.Text = _NO_TRANSLATE_Directory.Text.Trim();
             if (Directory.Exists(_NO_TRANSLATE_Directory.Text))
             {
-                _choosenModule = new GitModule(_NO_TRANSLATE_Directory.Text);
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(_choosenModule.WorkingDir));
+                _chosenModule = new GitModule(_NO_TRANSLATE_Directory.Text);
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(_chosenModule.WorkingDir));
                 Close();
             }
             else
@@ -115,7 +115,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
-        private void folderGoUpbutton_Click(object sender, EventArgs e)
+        private void folderGoUpButton_Click(object sender, EventArgs e)
         {
             try
             {
@@ -142,11 +142,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             try
             {
                 DirectoryInfo currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
-                folderGoUpbutton.Enabled = currentDirectory.Exists && currentDirectory.Parent != null;
+                folderGoUpButton.Enabled = currentDirectory.Exists && currentDirectory.Parent != null;
             }
             catch (Exception)
             {
-                folderGoUpbutton.Enabled = false;
+                folderGoUpButton.Enabled = false;
             }
         }
     }

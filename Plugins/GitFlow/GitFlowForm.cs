@@ -43,7 +43,7 @@ namespace GitFlow
             get { return Enum.GetValues(typeof(Branch)).Cast<object>().Select(e => e.ToString()).ToList(); }
         }
 
-        private bool IsGitFlowInited => !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.RunGitCmd("config --get gitflow.branch.master"));
+        private bool IsGitFlowInitialised => !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.RunGitCmd("config --get gitflow.branch.master"));
 
         public GitFlowForm(GitUIEventArgs gitUiCommands)
         {
@@ -63,15 +63,15 @@ namespace GitFlow
 
         private void Init()
         {
-            var isGitFlowInited = IsGitFlowInited;
+            var isInitialised = IsGitFlowInitialised;
 
-            btnInit.Visible = !isGitFlowInited;
-            gbStart.Enabled = isGitFlowInited;
-            gbManage.Enabled = isGitFlowInited;
-            lblCaptionHead.Visible = isGitFlowInited;
-            lblHead.Visible = isGitFlowInited;
+            btnInit.Visible = !isInitialised;
+            gbStart.Enabled = isInitialised;
+            gbManage.Enabled = isInitialised;
+            lblCaptionHead.Visible = isInitialised;
+            lblHead.Visible = isInitialised;
 
-            if (isGitFlowInited)
+            if (isInitialised)
             {
                 var remotes = _gitUiCommands.GitModule.GetRemotes().Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
                 cbRemote.DataSource = remotes;
@@ -118,12 +118,12 @@ namespace GitFlow
                 _task.LoadAsync(() => GetBranches(branchType), branches =>
                 {
                     Branches.Add(branchType, branches);
-                    DisplayBranchDatas();
+                    DisplayBranchData();
                 });
             }
             else
             {
-                DisplayBranchDatas();
+                DisplayBranchData();
             }
         }
 
@@ -141,15 +141,7 @@ namespace GitFlow
             return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
         }
 
-        private List<string> GetLocalBranches()
-        {
-            string[] references = _gitUiCommands.GitModule.RunGitCmd("branch")
-                                                 .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-            return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
-        }
-
-        private void DisplayBranchDatas()
+        private void DisplayBranchData()
         {
             var branchType = cbManageType.SelectedValue.ToString();
             var branches = Branches[branchType];
@@ -180,7 +172,16 @@ namespace GitFlow
             {
                 cbBaseBranch.DataSource = GetLocalBranches();
             }
+
+            List<string> GetLocalBranches()
+            {
+                return _gitUiCommands.GitModule
+                    .RunGitCmd("branch")
+                    .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(e => e.Trim('*', ' ', '\n', '\r'))
+                    .ToList();
+            }
         }
+
         #endregion
 
         #region Run GitFlow commands

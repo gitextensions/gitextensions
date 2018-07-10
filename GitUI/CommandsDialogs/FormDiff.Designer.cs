@@ -413,7 +413,7 @@
             this.fileHistoryDiffToolstripMenuItem.Name = "fileHistoryDiffToolstripMenuItem";
             this.fileHistoryDiffToolstripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.fileHistoryDiffToolstripMenuItem.Text = "File history";
-            this.fileHistoryDiffToolstripMenuItem.Click += new System.EventHandler(this.fileHistoryDiffToolstripMenuItem_Click);
+            this.fileHistoryDiffToolstripMenuItem.Click += new System.EventHandler(this.fileHistoryDiffToolStripMenuItem_Click);
             // 
             // blameToolStripMenuItem
             // 

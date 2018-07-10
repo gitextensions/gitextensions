@@ -27,7 +27,7 @@ namespace JiraCommitHintPlugin
         private static readonly string QueryHelperLinkText = new TranslationString("Open the query helper inside Jira").Text;
         private static readonly string InvalidUrlMessage = new TranslationString("A valid url is required to launch the Jira query helper").Text;
         private static readonly string InvalidUrlCaption = new TranslationString("Invalid Jira url").Text;
-        private static readonly string PreviewButtionText = new TranslationString("Preview").Text;
+        private static readonly string PreviewButtonText = new TranslationString("Preview").Text;
         private static readonly string QueryHelperOpenErrorText = new TranslationString("Unable to open Jira query helper").Text;
         private static readonly string EmptyQueryResultMessage = new TranslationString("[Empty Jira Query Result]").Text;
         private static readonly string EmptyQueryResultCaption = new TranslationString("First Task Preview").Text;
@@ -106,7 +106,7 @@ namespace JiraCommitHintPlugin
             yield return _jiraFields;
 
             var txtTemplate = new TextBox { Height = 75, Multiline = true, ScrollBars = ScrollBars.Horizontal };
-            _btnPreview = new Button { Text = PreviewButtionText, Top = 45, Anchor = AnchorStyles.Right };
+            _btnPreview = new Button { Text = PreviewButtonText, Top = 45, Anchor = AnchorStyles.Right };
             _btnPreview.Click += btnPreviewClick;
             txtTemplate.Controls.Add(_btnPreview);
             _stringTemplateSetting.CustomControl = txtTemplate;

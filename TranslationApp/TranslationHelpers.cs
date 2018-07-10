@@ -135,14 +135,14 @@ namespace TranslationApp
                 }
 
                 // update untranslated items
-                var untranlatedItems =
+                var untranslatedItems =
                     from transItem in transItems
                     where string.IsNullOrEmpty(transItem.TranslatedValue) && dict.ContainsKey(transItem.NeutralValue)
                     select transItem;
 
-                foreach (var untranlatedItem in untranlatedItems)
+                foreach (var untranslatedItem in untranslatedItems)
                 {
-                    untranlatedItem.TranslatedValue = dict[untranlatedItem.NeutralValue];
+                    untranslatedItem.TranslatedValue = dict[untranslatedItem.NeutralValue];
                 }
             }
 
@@ -167,8 +167,8 @@ namespace TranslationApp
                         .Body.AddTranslationItem(ti);
                 }
 
-                var newfilename = Path.ChangeExtension(filename, key + ext);
-                TranslationSerializer.Serialize(foreignTranslation, newfilename);
+                var newFileName = Path.ChangeExtension(filename, key + ext);
+                TranslationSerializer.Serialize(foreignTranslation, newFileName);
             }
         }
     }

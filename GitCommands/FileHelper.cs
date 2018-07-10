@@ -67,7 +67,7 @@ namespace GitCommands
         /// <returns>null if no info in .gitattributes (or ambiguous). True if marked as binary, false if marked as text</returns>
         private static bool? IsBinaryAccordingToGitAttributes(GitModule module, string fileName)
         {
-            string[] diffvals = { "set", "astextplain", "ada", "bibtext", "cpp", "csharp", "fortran", "html", "java", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "tex" };
+            string[] diffValues = { "set", "astextplain", "ada", "bibtext", "cpp", "csharp", "fortran", "html", "java", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "tex" };
             string cmd = "check-attr -z diff text crlf eol -- " + fileName.Quote();
             string result = module.RunGitCmd(cmd);
             var lines = result.Split('\n', '\0');
@@ -84,7 +84,7 @@ namespace GitCommands
                     return true;
                 }
 
-                if (diffvals.Contains(diff))
+                if (diffValues.Contains(diff))
                 {
                     return false;
                 }

@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TranslationString _noRevisionSelected = new TranslationString("Select 1 revision to create the branch on.");
         private readonly TranslationString _branchNameIsEmpty = new TranslationString("Enter branch name.");
-        private readonly TranslationString _branchNameIsNotValud = new TranslationString("“{0}” is not valid branch name.");
+        private readonly TranslationString _branchNameIsNotValid = new TranslationString("“{0}” is not valid branch name.");
         private readonly IGitBranchNameNormaliser _branchNameNormaliser;
         private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
 
@@ -93,7 +93,7 @@ namespace GitUI.CommandsDialogs
 
             if (!Module.CheckBranchFormat(branchName))
             {
-                MessageBox.Show(string.Format(_branchNameIsNotValud.Text, branchName), Text);
+                MessageBox.Show(string.Format(_branchNameIsNotValid.Text, branchName), Text);
                 DialogResult = DialogResult.None;
                 return;
             }

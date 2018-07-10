@@ -72,7 +72,7 @@ namespace GitCommandsTests
         }
 
         [Test]
-        public void Find_on_gitBinDir_having_ssh_exe_in_parent_directory_childrens_should_return_first_ssh_exe_found()
+        public void Find_on_gitBinDir_having_ssh_exe_in_parent_directory_children_should_return_first_ssh_exe_found()
         {
             var path = SetUpFileSystemWithSshExePathsAs("first", "second");
             var sshPathLocator = new SshPathLocator(_fileSystem, _environment);
@@ -80,7 +80,7 @@ namespace GitCommandsTests
         }
 
         [Test]
-        public void Find_on_gitBinDir_having_no_ssh_exe_in_parent_directory_childrens_should_return_empty_string()
+        public void Find_on_gitBinDir_having_no_ssh_exe_in_parent_directory_children_should_return_empty_string()
         {
             var path = SetUpFileSystemWithSshExePathsAs();
             var sshPathLocator = new SshPathLocator(_fileSystem, _environment);

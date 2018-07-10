@@ -87,10 +87,10 @@ namespace GitCommands
                     int p = serializedString.IndexOf(':');
                     int length = Convert.ToInt32(serializedString.Substring(0, p));
 
-                    byte[] memorydata = Convert.FromBase64String(serializedString.Substring(p + 1));
-                    using (MemoryStream rs = new MemoryStream(memorydata, 0, length))
+                    byte[] memoryData = Convert.FromBase64String(serializedString.Substring(p + 1));
+                    using (var rs = new MemoryStream(memoryData, 0, length))
                     {
-                        BinaryFormatter sf = new BinaryFormatter { Binder = new MoveNamespaceDeserializationBinder() };
+                        var sf = new BinaryFormatter { Binder = new MoveNamespaceDeserializationBinder() };
                         commitTemplateItem = (CommitTemplateItem[])sf.Deserialize(rs);
                     }
 

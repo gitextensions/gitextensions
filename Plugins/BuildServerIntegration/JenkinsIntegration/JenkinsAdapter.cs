@@ -75,14 +75,14 @@ namespace JenkinsIntegration
 
             if (!string.IsNullOrEmpty(hostName) && !string.IsNullOrEmpty(projectName))
             {
-                var baseAdress = hostName.Contains("://")
-                                     ? new Uri(hostName, UriKind.Absolute)
-                                     : new Uri(string.Format("{0}://{1}:8080", Uri.UriSchemeHttp, hostName), UriKind.Absolute);
+                var baseAddress = hostName.Contains("://")
+                    ? new Uri(hostName, UriKind.Absolute)
+                    : new Uri($"{Uri.UriSchemeHttp}://{hostName}:8080", UriKind.Absolute);
 
                 _httpClient = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true })
                 {
                     Timeout = TimeSpan.FromMinutes(2),
-                    BaseAddress = baseAdress
+                    BaseAddress = baseAddress
                 };
 
                 var buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
@@ -91,7 +91,7 @@ namespace JenkinsIntegration
 
                 string[] projectUrls = _buildServerWatcher.ReplaceVariables(projectName)
                     .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var projectUrl in projectUrls.Select(s => baseAdress + "job/" + s.Trim() + "/"))
+                foreach (var projectUrl in projectUrls.Select(s => baseAddress + "job/" + s.Trim() + "/"))
                 {
                     AddGetBuildUrl(projectUrl);
                 }
@@ -154,7 +154,7 @@ namespace JenkinsIntegration
                 }
                 else if (jobDescription["jobs"] != null)
                 {
-                    // Multibranch pipeline
+                    // Multi-branch pipeline
                     s = jobDescription["jobs"]
                         .SelectMany(j => j["builds"]);
                     foreach (var j in jobDescription["jobs"])
@@ -167,7 +167,7 @@ namespace JenkinsIntegration
                     }
                 }
 
-                // else: The server had no response (overloaded?) or a multibranch pipeline is not configured
+                // else: The server had no response (overloaded?) or a multi-branch pipeline is not configured
                 if (timestamp == 0 && jobDescription["lastBuild"] != null && jobDescription["lastBuild"]["timestamp"] != null)
                 {
                     timestamp = jobDescription["lastBuild"]["timestamp"].ToObject<long>();
@@ -268,7 +268,7 @@ namespace JenkinsIntegration
                     _lastBuildCache[build.Join().Url].Timestamp = build.Join().Timestamp;
 
                     // Present information in reverse, so the latest job is displayed (i.e. new inprogress on one commit)
-                    // (for multibranch pipeline, ignore the cornercase with multiple branches with inprogress builds on one commit)
+                    // (for multi-branch pipeline, ignore the corner case with multiple branches with inprogress builds on one commit)
                     foreach (var buildDetails in build.Join().JobDescription.Reverse())
                     {
                         if (cancellationToken.IsCancellationRequested)
@@ -286,7 +286,7 @@ namespace JenkinsIntegration
 
                                 if (buildInfo.Status == BuildInfo.BuildStatus.InProgress)
                                 {
-                                    // Need to make a full requery next time
+                                    // Need to make a full request next time
                                     _lastBuildCache[build.Join().Url].Timestamp = 0;
                                 }
                             }
@@ -307,7 +307,7 @@ namespace JenkinsIntegration
             }
             catch (Exception ex)
             {
-                // Cancelling a subtask is similar to cancelling this task
+                // Cancelling a sub-task is similar to cancelling this task
                 if (!(ex.InnerException is OperationCanceledException))
                 {
                     observer.OnError(ex);

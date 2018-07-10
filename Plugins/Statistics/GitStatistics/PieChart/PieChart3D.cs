@@ -470,7 +470,7 @@ namespace GitStatistics.PieChart
 
             var indexFound = -1;
 
-            // if not found yet, then check for periferies
+            // if not found yet, then check for peripheries
             var incrementIndex = 0;
             var decrementIndex = pieSlices.Count - 1;
             while (incrementIndex <= decrementIndex)
@@ -642,7 +642,7 @@ namespace GitStatistics.PieChart
             double sum = Values.Sum(itemValue => (double)itemValue);
 
             // some values and indices that will be used in the loop
-            var topEllipeSize = TopEllipseSize;
+            var topEllipseSize = TopEllipseSize;
             var largestDisplacementEllipseSize = LargestDisplacementEllipseSize;
             var maxDisplacementIndex = SliceRelativeDisplacements.Length - 1;
             var largestDisplacement = LargestDisplacement;
@@ -677,7 +677,7 @@ namespace GitStatistics.PieChart
                         CreatePieSliceHighlighted(
                             X + (largestDisplacementEllipseSize.Width / 2) + xDisplacement,
                             Y + (largestDisplacementEllipseSize.Height / 2) + yDisplacement,
-                            topEllipeSize.Width, topEllipeSize.Height, PieHeight, (float)(startAngle % 360),
+                            topEllipseSize.Width, topEllipseSize.Height, PieHeight, (float)(startAngle % 360),
                             (float)sweepAngle, SliceColors[colorIndex], ShadowStyle, EdgeColorType,
                             EdgeLineWidth);
                 }
@@ -685,7 +685,7 @@ namespace GitStatistics.PieChart
                 {
                     slice = CreatePieSlice(X + (largestDisplacementEllipseSize.Width / 2) + xDisplacement,
                                            Y + (largestDisplacementEllipseSize.Height / 2) + yDisplacement,
-                                           topEllipeSize.Width, topEllipeSize.Height, PieHeight,
+                                           topEllipseSize.Width, topEllipseSize.Height, PieHeight,
                                            (float)(startAngle % 360), (float)sweepAngle, SliceColors[colorIndex],
                                            ShadowStyle, EdgeColorType, EdgeLineWidth);
                 }

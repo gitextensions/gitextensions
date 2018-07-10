@@ -23,9 +23,9 @@ namespace GitUI.CommandsDialogs
             new TranslationString("“{0}” is not valid branch name.\nEnter valid branch name or select predefined value.");
         private readonly TranslationString _createBranch =
             new TranslationString("Create local branch with the name:");
-        private readonly TranslationString _applyShashedItemsAgainCaption =
+        private readonly TranslationString _applyStashedItemsAgainCaption =
             new TranslationString("Auto stash");
-        private readonly TranslationString _applyShashedItemsAgain =
+        private readonly TranslationString _applyStashedItemsAgain =
             new TranslationString("Apply stashed items to working directory again?");
 
         private readonly TranslationString _dontShowAgain =
@@ -382,9 +382,9 @@ namespace GitUI.CommandsDialogs
                     {
                         DialogResult res = cTaskDialog.MessageBox(
                             this,
-                            _applyShashedItemsAgainCaption.Text,
+                            _applyStashedItemsAgainCaption.Text,
                             "",
-                            _applyShashedItemsAgain.Text,
+                            _applyStashedItemsAgain.Text,
                             "",
                             "",
                             _dontShowAgain.Text,

@@ -19,12 +19,12 @@ namespace GitUI.CommandsDialogs
 
         private string _currentRemote = "";
 
-        private static readonly TranslationString _trsLigthweight = new TranslationString("Lightweight tag");
+        private static readonly TranslationString _trsLightweight = new TranslationString("Lightweight tag");
         private static readonly TranslationString _trsAnnotated = new TranslationString("Annotated tag");
         private static readonly TranslationString _trsSignDefault = new TranslationString("Sign with default GPG");
         private static readonly TranslationString _trsSignSpecificKey = new TranslationString("Sign with specific GPG");
 
-        private static readonly string[] DropwdownTagOperation = { _trsLigthweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text };
+        private static readonly string[] DropdownTagOperation = { _trsLightweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text };
         private readonly IGitTagController _gitTagController;
 
         public FormCreateTag(GitUICommands commands, GitRevision revision)
@@ -33,7 +33,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             InitializeComplete();
 
-            annotate.Items.AddRange(DropwdownTagOperation);
+            annotate.Items.AddRange(DropdownTagOperation);
             annotate.SelectedIndex = 0;
 
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);

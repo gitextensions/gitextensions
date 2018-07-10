@@ -374,8 +374,7 @@ namespace NetSpell.SpellChecker.Dictionary
             TryCharacters = "";
 
             // the following is used to split a line by white space
-            Regex spaceRegx = new Regex(@"[^\s]+", RegexOptions.Compiled);
-            MatchCollection partMatches;
+            var spaceRegex = new Regex(@"[^\s]+", RegexOptions.Compiled);
 
             string currentSection = "";
             AffixRule currentRule = null;
@@ -410,6 +409,7 @@ namespace NetSpell.SpellChecker.Dictionary
                         }
 
                         // parse line and place in correct object
+                        MatchCollection partMatches;
                         switch (currentSection)
                         {
                             case "[Copyright]":
@@ -425,7 +425,7 @@ namespace NetSpell.SpellChecker.Dictionary
                             case "[Suffix]": // MySpell suffix rules
 
                                 // split line by white space
-                                partMatches = spaceRegx.Matches(tempLine);
+                                partMatches = spaceRegex.Matches(tempLine);
 
                                 // if 3 parts, then new rule
                                 if (partMatches.Count == 3)
@@ -481,7 +481,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                 break;
                             case "[Phonetic]": // ASpell phonetic rules
                                 // split line by white space
-                                partMatches = spaceRegx.Matches(tempLine);
+                                partMatches = spaceRegex.Matches(tempLine);
                                 if (partMatches.Count >= 2)
                                 {
                                     PhoneticRule rule = new PhoneticRule();
@@ -554,10 +554,10 @@ namespace NetSpell.SpellChecker.Dictionary
                 var prevWord = tempWord;
                 foreach (PhoneticRule rule in PhoneticRules)
                 {
-                    bool begining = tempWord.Length == word.Length;
+                    bool beginning = tempWord.Length == word.Length;
                     bool ending = rule.ConditionCount == tempWord.Length;
 
-                    if ((rule.BeginningOnly == begining || !rule.BeginningOnly)
+                    if ((rule.BeginningOnly == beginning || !rule.BeginningOnly)
                         && (rule.EndOnly == ending || !rule.EndOnly)
                         && rule.ConditionCount <= tempWord.Length)
                     {
@@ -734,7 +734,7 @@ namespace NetSpell.SpellChecker.Dictionary
         public AffixRuleCollection SuffixRules { get; } = new AffixRuleCollection();
 
         /// <summary>
-        ///     List of characters to try when generating suggestions using the near miss stratigy
+        ///     List of characters to try when generating suggestions using the near miss strategy
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

@@ -64,7 +64,7 @@ namespace AutoCompileSubmodules
                 return false;
             }
 
-            var msbuildpath = _msBuildPath.ValueOrDefault(Settings);
+            var msbuildPath = _msBuildPath.ValueOrDefault(Settings);
 
             var workingDir = new DirectoryInfo(args.GitModule.WorkingDir);
             var solutionFiles = workingDir.GetFiles("*.sln", SearchOption.AllDirectories);
@@ -91,13 +91,13 @@ namespace AutoCompileSubmodules
                     continue;
                 }
 
-                if (string.IsNullOrEmpty(msbuildpath) || !File.Exists(msbuildpath))
+                if (string.IsNullOrEmpty(msbuildPath) || !File.Exists(msbuildPath))
                 {
                     MessageBox.Show(args.OwnerForm, _enterCorrectMsBuildPath.Text);
                 }
                 else
                 {
-                    args.GitUICommands.StartCommandLineProcessDialog(args.OwnerForm, msbuildpath, solutionFile.FullName + " " + _msBuildArguments.ValueOrDefault(Settings));
+                    args.GitUICommands.StartCommandLineProcessDialog(args.OwnerForm, msbuildPath, solutionFile.FullName + " " + _msBuildArguments.ValueOrDefault(Settings));
                 }
             }
 

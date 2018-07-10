@@ -95,7 +95,7 @@ namespace GitUITests.CommandsDialogs
         }
 
         [Test]
-        public void LoadItemsInTreeView_should_add_IsCommit_as_submodue()
+        public void LoadItemsInTreeView_should_add_IsCommit_as_submodule()
         {
             var items = new[] { new GitItem(0, GitObjectType.Commit, ObjectId.Random(), "file1"), new GitItem(0, GitObjectType.Commit, ObjectId.Random(), "file2") };
             var item = new GitItem(0, GitObjectType.Tree, ObjectId.Random(), "folder");

@@ -2223,7 +2223,7 @@ namespace GitUI
             }
 
             string rebaseCmd = GitCommandHelpers.RebaseCmd(LatestSelectedRevision.FirstParentGuid,
-                interactive: true, preserveMerges: false, autosquash: false, autostash: true);
+                interactive: true, preserveMerges: false, autosquash: false, autoStash: true);
 
             using (var formProcess = new FormProcess(null, rebaseCmd, Module.WorkingDir, null, true))
             {

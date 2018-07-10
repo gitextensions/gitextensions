@@ -78,7 +78,7 @@ namespace GitCommands
 
             Debug.Assert(commitData.Guid.ToString() == guid, "Guid in response doesn't match that of request");
 
-            // Commit message is not reencoded by git when format is given
+            // Commit message is not re-encoded by git when format is given
             commitData.Body = GetModule().ReEncodeCommitMessage(message, commitEncoding);
         }
 
@@ -147,7 +147,7 @@ namespace GitCommands
             var commitEncoding = lines[7];
             var message = ProcessDiffNotes(startIndex: 8, lines);
 
-            // commit message is not reencoded by git when format is given
+            // commit message is not re-encoded by git when format is given
             var body = module.ReEncodeCommitMessage(message, commitEncoding);
 
             return new CommitData(guid, treeGuid, parentGuids, author, authorDate, committer, commitDate, body);

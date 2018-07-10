@@ -51,7 +51,7 @@ namespace GitExtensionsVSIX
                 .FirstOrDefault();
         }
 
-        public static OutputWindowPane AquireOutputPane(_DTE app, string name)
+        public static OutputWindowPane AcquireOutputPane(_DTE app, string name)
         {
             try
             {

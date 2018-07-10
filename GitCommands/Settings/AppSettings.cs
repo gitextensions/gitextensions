@@ -1703,7 +1703,7 @@ namespace GitCommands
                 }
                 catch
                 {
-                    // there are CultureInfos without a code page
+                    // there are CultureInfo values without a code page
                 }
             }
             else

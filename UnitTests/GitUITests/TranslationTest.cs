@@ -25,15 +25,15 @@ namespace GitUITests
 
             foreach (var (key, types) in translatableTypes)
             {
-                var tranlation = new TranslationFile();
+                var translation = new TranslationFile();
                 foreach (Type type in types)
                 {
                     try
                     {
                         var obj = (ITranslate)TranslationUtl.CreateInstanceOfClass(type);
 
-                        obj.AddTranslationItems(tranlation);
-                        obj.TranslateItems(tranlation);
+                        obj.AddTranslationItems(translation);
+                        obj.TranslateItems(translation);
                     }
                     catch (Exception)
                     {
@@ -42,7 +42,7 @@ namespace GitUITests
                     }
                 }
 
-                testTranslation[key] = tranlation;
+                testTranslation[key] = translation;
             }
         }
     }

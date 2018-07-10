@@ -394,7 +394,7 @@ namespace GitUI.CommandsDialogs
             this.SolveMergeconflicts.Text = "There are unresolved merge conflicts\r\n";
             this.SolveMergeconflicts.UseVisualStyleBackColor = false;
             this.SolveMergeconflicts.Visible = false;
-            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflictsClick);
+            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeConflictsClick);
             // 
             // ContinuePanel
             // 

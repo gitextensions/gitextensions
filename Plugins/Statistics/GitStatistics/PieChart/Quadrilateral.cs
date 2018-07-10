@@ -36,7 +36,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Initilizes <c>Quadrilateral</c> object with given corner points.
+        ///   Initializes <c>Quadrilateral</c> object with given corner points.
         /// </summary>
         /// <param name = "point1">
         ///   First <c>PointF</c>.

@@ -70,7 +70,7 @@ namespace GitExtensionsVSIX.Commands
         {
             if (solutionItem.ProjectItem != null && IsTargetSupported(GetProjectItemTarget(solutionItem.ProjectItem)))
             {
-                // Unfortunaly FileNames[1] is not supported by .net 3.5
+                // Unfortunately FileNames[1] is not supported by .net 3.5
                 OnExecute(solutionItem, solutionItem.ProjectItem.get_FileNames(1), pane);
                 return;
             }

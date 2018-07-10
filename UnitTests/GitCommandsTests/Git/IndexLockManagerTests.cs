@@ -130,7 +130,7 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void Resolve_submodule_real_filsystem()
+        public void Resolve_submodule_real_filesystem()
         {
             using (var helper = new GitModuleTestHelper())
             {

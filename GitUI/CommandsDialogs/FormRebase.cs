@@ -265,7 +265,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void SolveMergeconflictsClick(object sender, EventArgs e)
+        private void SolveMergeConflictsClick(object sender, EventArgs e)
         {
             MergetoolClick(sender, e);
         }

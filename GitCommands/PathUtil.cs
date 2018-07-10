@@ -54,7 +54,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// A naive way to check whethere the given path is a URL by checking
+        /// A naive way to check whether the given path is a URL by checking
         /// whether it starts with either 'http', 'ssh' or 'git'.
         /// </summary>
         /// <param name="path">A path to check.</param>

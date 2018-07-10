@@ -36,10 +36,10 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _allMergeConflictSolvedQuestionCaption =
             new TranslationString("Conflicts solved");
 
-        private readonly TranslationString _applyShashedItemsAgain =
+        private readonly TranslationString _applyStashedItemsAgain =
             new TranslationString("Apply stashed items to working directory again?");
 
-        private readonly TranslationString _applyShashedItemsAgainCaption =
+        private readonly TranslationString _applyStashedItemsAgainCaption =
             new TranslationString("Auto stash");
 
         private readonly TranslationString _fetchAllBranchesCanOnlyWithFetch =
@@ -334,9 +334,9 @@ namespace GitUI.CommandsDialogs
             {
                 DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
                     owner,
-                    _applyShashedItemsAgainCaption.Text,
+                    _applyStashedItemsAgainCaption.Text,
                     "",
-                    _applyShashedItemsAgain.Text,
+                    _applyStashedItemsAgain.Text,
                     "",
                     "",
                     _dontShowAgain.Text,

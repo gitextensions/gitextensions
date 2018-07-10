@@ -58,7 +58,7 @@ namespace ResourceManagerTests
         }
 
         [Test]
-        public void ParseCustomeSchemeLinkWithHash()
+        public void ParseCustomSchemeLinkWithHash()
         {
             TestCreateLink("PR#3471 and Issue#64", "ftp://github.com/gitextensions/gitextensions/pull/3471#end");
         }

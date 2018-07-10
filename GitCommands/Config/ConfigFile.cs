@@ -337,8 +337,7 @@ namespace GitCommands.Config
 
                 if (_section == null)
                 {
-                    throw new Exception(
-                        string.Format("Key {0} in configfile {1} is not in a section.", _key, FileName));
+                    throw new Exception($"Key {_key} in config file {FileName} is not in a section.");
                 }
             }
 
@@ -351,8 +350,7 @@ namespace GitCommands.Config
 
                 if (_key.IsNullOrEmpty())
                 {
-                    throw new Exception(
-                        string.Format("Value {0} for empty key in configfile {1}.", value, FileName));
+                    throw new Exception($"Value {value} for empty key in config file {FileName}.");
                 }
 
                 _section.AddValue(_key, value);

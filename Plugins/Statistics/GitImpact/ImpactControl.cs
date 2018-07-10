@@ -141,7 +141,7 @@ namespace GitImpact
                 // Add authors to intermediate weeks where they didn't create commits
                 ImpactLoader.AddIntermediateEmptyWeeks(ref _impact, _authors);
 
-                // UPDATE AUTHORSTACK
+                // UPDATE AUTHOR STACK
 
                 // If author does not exist yet in the author_stack
                 if (!_authorStack.Contains(commit.author))

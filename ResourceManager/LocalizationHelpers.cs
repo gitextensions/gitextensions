@@ -131,7 +131,7 @@ namespace ResourceManager
             }
 
             GitModule gitModule = module.GetSubmodule(status.Name);
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine("Submodule " + status.Name + " Change");
 
             // TEMP, will be moved in the follow up refactor
@@ -150,11 +150,11 @@ namespace ResourceManager
                 if (oldCommitData != null)
                 {
                     sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(oldCommitData.CommitDate) + ")");
-                    var delim = new[] { '\n', '\r' };
-                    var lines = oldCommitData.Body.Trim(delim).Split(new[] { "\r\n" }, 0);
-                    foreach (var curline in lines)
+                    var delimiter = new[] { '\n', '\r' };
+                    var lines = oldCommitData.Body.Trim(delimiter).Split(new[] { "\r\n" }, 0);
+                    foreach (var line in lines)
                     {
-                        sb.AppendLine("\t\t" + curline);
+                        sb.AppendLine("\t\t" + line);
                     }
                 }
             }
@@ -177,11 +177,11 @@ namespace ResourceManager
                 if (commitData != null)
                 {
                     sb.AppendLine("\t\t\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" + GetFullDateString(commitData.CommitDate) + ")");
-                    var delim = new[] { '\n', '\r' };
-                    var lines = commitData.Body.Trim(delim).Split(new[] { "\r\n" }, 0);
-                    foreach (var curline in lines)
+                    var delimiter = new[] { '\n', '\r' };
+                    var lines = commitData.Body.Trim(delimiter).Split(new[] { "\r\n" }, 0);
+                    foreach (var line in lines)
                     {
-                        sb.AppendLine("\t\t" + curline);
+                        sb.AppendLine("\t\t" + line);
                     }
                 }
             }

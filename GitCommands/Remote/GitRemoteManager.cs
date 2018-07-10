@@ -15,7 +15,7 @@ namespace GitCommands.Remote
         /// <summary>
         /// Returns the default remote for push operation.
         /// </summary>
-        /// <returns>The <see cref="GitRef.Name"/> if found, otheriwse <see langword="null"/>.</returns>
+        /// <returns>The <see cref="GitRef.Name"/> if found, otherwise <see langword="null"/>.</returns>
         string GetDefaultPushRemote(GitRemote remote, string branch);
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace GitCommands.Remote
         /// <summary>
         /// Returns the default remote for push operation.
         /// </summary>
-        /// <returns>The <see cref="GitRef.Name"/> if found, otheriwse <see langword="null"/>.</returns>
+        /// <returns>The <see cref="GitRef.Name"/> if found, otherwise <see langword="null"/>.</returns>
         // TODO: moved verbatim from FormPush.cs, perhaps needs refactoring
         [CanBeNull]
         public string GetDefaultPushRemote(GitRemote remote, string branch)
@@ -341,8 +341,8 @@ namespace GitCommands.Remote
 
         private static void UpdateSettings(IGitModule module, string remoteName, bool remoteDisabled, string settingName, string value)
         {
-            var preffix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
-            var fullSettingName = preffix + string.Format(settingName, remoteName);
+            var prefix = remoteDisabled ? DisabledSectionPrefix : string.Empty;
+            var fullSettingName = prefix + string.Format(settingName, remoteName);
 
             if (!string.IsNullOrWhiteSpace(value))
             {

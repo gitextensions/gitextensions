@@ -487,7 +487,7 @@ namespace GitUI.CommandsDialogs
         {
             var selectedRevisions = FileChanges.GetSelectedRevisions();
 
-            diffToolremotelocalStripMenuItem.Enabled =
+            diffToolRemoteLocalStripMenuItem.Enabled =
                 selectedRevisions.Count == 1 && selectedRevisions[0].Guid != GitRevision.UnstagedGuid &&
                 File.Exists(_fullPathResolver.Resolve(FileName));
             openWithDifftoolToolStripMenuItem.Enabled =
@@ -499,7 +499,7 @@ namespace GitUI.CommandsDialogs
                 selectedRevisions.Count >= 1 && !selectedRevisions[0].IsArtificial;
         }
 
-        private void diffToolremotelocalStripMenuItem_Click(object sender, EventArgs e)
+        private void diffToolRemoteLocalStripMenuItem_Click(object sender, EventArgs e)
         {
             UICommands.OpenWithDifftool(this, FileChanges.GetSelectedRevisions(), FileName, string.Empty, RevisionDiffKind.DiffBLocal, true);
         }

@@ -435,9 +435,9 @@ namespace GitUI.CommandsDialogs
             else
             {
                 string text = _NO_TRANSLATE_Branches.Text;
-                List<string> branchlist = _defaultBranchItems.Concat(branchList.Result.Select(o => o.LocalName)).ToList();
-                _NO_TRANSLATE_Branches.DataSource = branchlist;
-                if (branchlist.Any(a => a == text))
+                List<string> names = _defaultBranchItems.Concat(branchList.Result.Select(o => o.LocalName)).ToList();
+                _NO_TRANSLATE_Branches.DataSource = names;
+                if (names.Any(a => a == text))
                 {
                     _NO_TRANSLATE_Branches.Text = text;
                 }

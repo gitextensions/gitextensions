@@ -58,8 +58,8 @@ namespace GitExtensionsVSIX
 
         private void RegisterCommands()
         {
-            ////RegisterCommand(new ToolbarCommand<OpenWithDiftool>(runForSelection: true));
-            RegisterCommand(new ToolbarCommand<OpenWithDiftool>(), gitExtDiffCommand);
+            ////RegisterCommand(new ToolbarCommand<OpenWithDifftool>(runForSelection: true));
+            RegisterCommand(new ToolbarCommand<OpenWithDifftool>(), gitExtDiffCommand);
             ////RegisterCommand(new ToolbarCommand<FileHistory>(runForSelection: true));
             RegisterCommand(new ToolbarCommand<FileHistory>(), gitExtHistoryCommand);
             ////RegisterCommand(new ToolbarCommand<Revert>(runForSelection: true));
@@ -117,7 +117,7 @@ namespace GitExtensionsVSIX
         /// </summary>
         private IServiceProvider ServiceProvider => _package;
 
-        public OutputWindowPane OutputPane => _outputPane ?? (_outputPane = PluginHelpers.AquireOutputPane(_application, Vsix.Name));
+        public OutputWindowPane OutputPane => _outputPane ?? (_outputPane = PluginHelpers.AcquireOutputPane(_application, Vsix.Name));
 
         /// <summary>
         /// Initializes the singleton instance of the command.

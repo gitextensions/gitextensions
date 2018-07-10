@@ -26,9 +26,9 @@ namespace GitCommandsTests
         }
 
         [Test]
-        public void CreateFromFormatedData()
+        public void CreateFromFormattedData()
         {
-            var body = "\tI made a really neato change.\n\n" +
+            var body = "\tI made a really neat change.\n\n" +
                        "Notes (p4notes):\n" +
                        "\tP4@547123";
 

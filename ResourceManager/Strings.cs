@@ -17,7 +17,7 @@ namespace ResourceManager
 
         private static Lazy<Strings> _instance = new Lazy<Strings>();
 
-        public static void Reinit()
+        public static void Reinitialize()
         {
             if (_instance.IsValueCreated)
             {

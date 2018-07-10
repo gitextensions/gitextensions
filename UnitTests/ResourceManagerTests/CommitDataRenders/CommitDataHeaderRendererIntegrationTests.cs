@@ -33,7 +33,7 @@ namespace ResourceManagerTests.CommitDataRenders
                 new ReadOnlyCollection<string>(new List<string> { parentGuid1, parentGuid2 }),
                 "John Doe (Acme Inc) <John.Doe@test.com>", authorTime,
                 "Jane Doe <Jane.Doe@test.com>", commitTime,
-                "\tI made a really neato change.\n\nNotes (p4notes):\n\tP4@547123");
+                "\tI made a really neat change.\n\nNotes (p4notes):\n\tP4@547123");
             _data.ChildrenGuids = new List<string> { "3b6ce324e30ed7fda24483fd56a180c34a262202", "2a8788ff15071a202505a96f80796dbff5750ddf", "8e66fa8095a86138a7c7fb22318d2f819669831e" };
 
             _rendererTabs = new CommitDataHeaderRenderer(new TabbedHeaderLabelFormatter(), new DateFormatter(), new TabbedHeaderRenderStyleProvider(), new LinkFactory());

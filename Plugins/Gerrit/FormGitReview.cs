@@ -42,9 +42,9 @@ namespace Gerrit
             get => _uiCommands;
             set
             {
-                var oldcommands = _uiCommands;
+                var oldCommands = _uiCommands;
                 _uiCommands = value;
-                OnGitUICommandsChanged(oldcommands);
+                OnGitUICommandsChanged(oldCommands);
             }
         }
 

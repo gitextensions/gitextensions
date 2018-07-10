@@ -88,16 +88,13 @@ namespace GitCommands
             return string.Format(SettingKeyString.BranchRemote, branch);
         }
 
-        /// <summary>
-        /// This method is a faster than the property above. The property reads the config file
-        /// every time it is accessed. This method accepts a config file what makes it faster when loading
-        /// the revision graph.
-        /// </summary>
+        /// <inheritdoc />
         public string GetTrackingRemote(ISettingsValueGetter configFile)
         {
             return configFile.GetValue(_remoteSettingName);
         }
 
+        /// <inheritdoc />
         public string MergeWith
         {
             get => GetMergeWith(Module.LocalConfigFile);
@@ -114,11 +111,7 @@ namespace GitCommands
             }
         }
 
-        /// <summary>
-        /// This method is a faster than the property above. The property reads the config file
-        /// every time it is accessed. This method accepts a configfile what makes it faster when loading
-        /// the revisiongraph.
-        /// </summary>
+        /// <inheritdoc />
         public string GetMergeWith(ISettingsValueGetter configFile)
         {
             string merge = configFile.GetValue(_mergeSettingName);

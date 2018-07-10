@@ -107,9 +107,9 @@ namespace FindLargeFiles
                             await pbRevisions.SwitchToMainThreadAsync();
                             pbRevisions.Value = pbRevisions.Value + (int)((_revList.Length * 0.1f) / packFiles.Length);
                         });
-                        foreach (var gitobj in objects.Where(x => x.Contains(" blob ")))
+                        foreach (var gitObject in objects.Where(x => x.Contains(" blob ")))
                         {
-                            string[] dataFields = gitobj.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] dataFields = gitObject.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             if (_list.TryGetValue(dataFields[0], out var curGitObject))
                             {
                                 if (int.TryParse(dataFields[3], out var compressedSize))

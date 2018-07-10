@@ -47,9 +47,9 @@ namespace GitUI.BranchTreePanel
                         yield return node1;
                     }
 
-                    foreach (var subnode in node.Nodes.DepthEnumerator<TNode>())
+                    foreach (var subNode in node.Nodes.DepthEnumerator<TNode>())
                     {
-                        yield return subnode;
+                        yield return subNode;
                     }
                 }
             }

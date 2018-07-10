@@ -67,7 +67,7 @@ namespace ResourceManager.CommitDataRenders
             }
 
             bool isArtificial = commitData.Guid.IsArtificial;
-            bool authorIsCommiter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
+            bool authorIsCommitter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
             var padding = _headerRendererStyleProvider.GetMaxWidth();
             string authorEmail = GetEmail(commitData.Author);
@@ -80,7 +80,7 @@ namespace ResourceManager.CommitDataRenders
                 header.AppendLine(_labelFormatter.FormatLabel(datesEqual ? Strings.Date : Strings.AuthorDate, padding) + WebUtility.HtmlEncode(_dateFormatter.FormatDateAsRelativeLocal(commitData.AuthorDate)));
             }
 
-            if (!authorIsCommiter)
+            if (!authorIsCommitter)
             {
                 string committerEmail = GetEmail(commitData.Committer);
                 header.AppendLine(_labelFormatter.FormatLabel(Strings.Committer, padding) + _linkFactory.CreateLink(commitData.Committer, "mailto:" + committerEmail));
@@ -123,14 +123,14 @@ namespace ResourceManager.CommitDataRenders
                 throw new ArgumentNullException(nameof(commitData));
             }
 
-            bool authorIsCommiter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
+            bool authorIsCommitter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
             var padding = _headerRendererStyleProvider.GetMaxWidth();
 
             StringBuilder header = new StringBuilder();
             header.AppendLine(_labelFormatter.FormatLabel(Strings.Author, padding) + commitData.Author);
             header.AppendLine(_labelFormatter.FormatLabel(datesEqual ? Strings.Date : Strings.AuthorDate, padding) + _dateFormatter.FormatDateAsRelativeLocal(commitData.AuthorDate));
-            if (!authorIsCommiter)
+            if (!authorIsCommitter)
             {
                 header.AppendLine(_labelFormatter.FormatLabel(Strings.Committer, padding) + commitData.Committer);
             }

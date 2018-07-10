@@ -126,7 +126,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _templateNotFoundCaption = new TranslationString("Template Error");
         private readonly TranslationString _templateNotFound = new TranslationString($"Template not found: {{0}}.{Environment.NewLine}{Environment.NewLine}You can set your template:{Environment.NewLine}\t$ git config commit.template ./.git_commit_msg.txt{Environment.NewLine}You can unset the template:{Environment.NewLine}\t$ git config --unset commit.template");
-        private readonly TranslationString _templateLoadErrorCapion = new TranslationString("Template could not be loaded");
+        private readonly TranslationString _templateLoadErrorCaption = new TranslationString("Template could not be loaded");
 
         private readonly TranslationString _skipWorktreeToolTip = new TranslationString("Hide already tracked files that will change but that you don\'t want to commit."
             + Environment.NewLine + "Suitable for some config files modified locally.");
@@ -453,7 +453,7 @@ namespace GitUI.CommandsDialogs
                 catch (Exception ex)
                 {
                     MessageBox.Show(this, ex.Message,
-                        _templateLoadErrorCapion.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        _templateLoadErrorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 Message.Text = text;
@@ -548,7 +548,7 @@ namespace GitUI.CommandsDialogs
         {
             if (Unstaged.Focused)
             {
-                AddFileTogitignoreToolStripMenuItemClick(this, null);
+                AddFileToGitIgnoreToolStripMenuItemClick(this, null);
                 return true;
             }
 
@@ -818,7 +818,7 @@ namespace GitUI.CommandsDialogs
 
             void ScheduleGoToLine()
             {
-                int selectedDifflineToSelect = SelectedDiff.GetText().Substring(0, SelectedDiff.GetSelectionPosition()).Count(c => c == '\n');
+                int selectedDiffLineToSelect = SelectedDiff.GetText().Substring(0, SelectedDiff.GetSelectionPosition()).Count(c => c == '\n');
                 int scrollPosition = SelectedDiff.ScrollPos;
                 string selectedFileName = _currentItem.Name;
 
@@ -830,7 +830,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (_currentItem != null && _currentItem.Name == selectedFileName)
                         {
-                            SelectedDiff.GoToLine(selectedDifflineToSelect);
+                            SelectedDiff.GoToLine(selectedDiffLineToSelect);
                             SelectedDiff.ScrollPos = scrollPosition;
                         }
 
@@ -2083,7 +2083,7 @@ namespace GitUI.CommandsDialogs
             Initialize();
         }
 
-        private void ResetAlltrackedChangesToolStripMenuItemClick(object sender, EventArgs e)
+        private void ResetAllTrackedChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
             ResetClick(null, null);
         }
@@ -2186,26 +2186,26 @@ namespace GitUI.CommandsDialogs
             var msg = AppSettings.LastCommitMessage;
             var maxCount = AppSettings.CommitDialogNumberOfPreviousMessages;
 
-            var prevMsgs = Module.GetPreviousCommitMessages(maxCount)
+            var prevMessages = Module.GetPreviousCommitMessages(maxCount)
                 .Select(message => message.TrimEnd('\n'))
                 .ToList();
 
-            if (!string.IsNullOrWhiteSpace(msg) && !prevMsgs.Contains(msg))
+            if (!string.IsNullOrWhiteSpace(msg) && !prevMessages.Contains(msg))
             {
                 // If the list is already full
-                if (prevMsgs.Count == maxCount)
+                if (prevMessages.Count == maxCount)
                 {
                     // Remove the last item
-                    prevMsgs.RemoveAt(maxCount - 1);
+                    prevMessages.RemoveAt(maxCount - 1);
                 }
 
                 // Insert the last commit message as the first entry
-                prevMsgs.Insert(0, msg);
+                prevMessages.Insert(0, msg);
             }
 
             commitMessageToolStripMenuItem.DropDownItems.Clear();
 
-            foreach (var prevMsg in prevMsgs)
+            foreach (var prevMsg in prevMessages)
             {
                 AddCommitMessageToMenu(prevMsg);
             }
@@ -2286,9 +2286,9 @@ namespace GitUI.CommandsDialogs
                 string diff = Module.RunGitCmd(
                      string.Format("diff --cached -z -- {0}", name));
                 var lines = diff.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                const string subprojCommit = "Subproject commit ";
-                var from = lines.Single(s => s.StartsWith("-" + subprojCommit)).Substring(subprojCommit.Length + 1);
-                var to = lines.Single(s => s.StartsWith("+" + subprojCommit)).Substring(subprojCommit.Length + 1);
+                const string subprojectCommit = "Subproject commit ";
+                var from = lines.Single(s => s.StartsWith("-" + subprojectCommit)).Substring(subprojectCommit.Length + 1);
+                var to = lines.Single(s => s.StartsWith("+" + subprojectCommit)).Substring(subprojectCommit.Length + 1);
                 if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                 {
                     sb.AppendLine("Submodule " + path + ":");
@@ -2311,7 +2311,7 @@ namespace GitUI.CommandsDialogs
             Message.Text = sb.ToString().TrimEnd();
         }
 
-        private void AddFileTogitignoreToolStripMenuItemClick(object sender, EventArgs e)
+        private void AddFileToGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
         {
             HandleExcludeFileClick(false);
         }
@@ -2943,8 +2943,8 @@ namespace GitUI.CommandsDialogs
 
             foreach (var item in unstagedFiles.Where(it => it.IsSubmodule))
             {
-                GitUICommands uiCmds = new GitUICommands(Module.GetSubmodule(item.Name));
-                uiCmds.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
+                var commands = new GitUICommands(Module.GetSubmodule(item.Name));
+                commands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
             }
 
             Initialize();

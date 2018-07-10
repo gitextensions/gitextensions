@@ -619,31 +619,31 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "rebase \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autostash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false));
             Assert.AreEqual(
                 "rebase -i --no-autosquash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: false, autostash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: false, autoStash: false));
             Assert.AreEqual(
                 "rebase --preserve-merges \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: true, autosquash: false, autostash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: true, autosquash: false, autoStash: false));
             Assert.AreEqual(
                 "rebase \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: true, autostash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: true, autoStash: false));
             Assert.AreEqual(
                 "rebase --autostash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autostash: true));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: true));
             Assert.AreEqual(
                 "rebase -i --autosquash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: true, autostash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: true, autoStash: false));
             Assert.AreEqual(
                 "rebase -i --autosquash --preserve-merges --autostash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autostash: true));
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true));
 
             // TODO quote 'onto'?
 
             Assert.AreEqual(
                 "rebase \"from\" \"branch\" --onto onto",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autostash: false, "from", "onto"));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, "from", "onto"));
 
             Assert.Throws<ArgumentException>(
                 () => GitCommandHelpers.RebaseCmd("branch", false, false, false, false, from: null, onto: "onto"));
@@ -657,25 +657,25 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "clean -f",
-                GitCommandHelpers.CleanUpCmd(dryrun: false, directories: false, nonignored: true, ignored: false));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: false));
             Assert.AreEqual(
                 "clean --dry-run",
-                GitCommandHelpers.CleanUpCmd(dryrun: true, directories: false, nonignored: true, ignored: false));
+                GitCommandHelpers.CleanUpCmd(dryRun: true, directories: false, nonIgnored: true, ignored: false));
             Assert.AreEqual(
                 "clean -d -f",
-                GitCommandHelpers.CleanUpCmd(dryrun: false, directories: true, nonignored: true, ignored: false));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: true, nonIgnored: true, ignored: false));
             Assert.AreEqual(
                 "clean -x -f",
-                GitCommandHelpers.CleanUpCmd(dryrun: false, directories: false, nonignored: false, ignored: false));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: false, ignored: false));
             Assert.AreEqual(
                 "clean -X -f",
-                GitCommandHelpers.CleanUpCmd(dryrun: false, directories: false, nonignored: true, ignored: true));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: true));
             Assert.AreEqual(
                 "clean -X -f",
-                GitCommandHelpers.CleanUpCmd(dryrun: false, directories: false, nonignored: false, ignored: true));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: false, ignored: true));
             Assert.AreEqual(
                 "clean -f paths",
-                GitCommandHelpers.CleanUpCmd(dryrun: false, directories: false, nonignored: true, ignored: false, "paths"));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: false, "paths"));
         }
 
         [Test]

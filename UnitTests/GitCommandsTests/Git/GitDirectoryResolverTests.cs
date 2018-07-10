@@ -94,7 +94,7 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void Resolve_non_bare_repository_real_filsystem()
+        public void Resolve_non_bare_repository_real_filesystem()
         {
             _resolver = new GitDirectoryResolver();
             using (var helper = new GitModuleTestHelper())
@@ -104,7 +104,7 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void Resolve_submodule_real_filsystem()
+        public void Resolve_submodule_real_filesystem()
         {
             using (var helper = new GitModuleTestHelper())
             {

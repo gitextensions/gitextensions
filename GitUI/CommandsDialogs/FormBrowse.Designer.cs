@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs
             this.toggleCommitInfoOnRight = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonLevelUp = new System.Windows.Forms.ToolStripSplitButton();
-            this._NO_TRANSLATE_Workingdir = new System.Windows.Forms.ToolStripSplitButton();
+            this._NO_TRANSLATE_WorkingDir = new System.Windows.Forms.ToolStripSplitButton();
             this.branchSelect = new System.Windows.Forms.ToolStripSplitButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSplitStash = new System.Windows.Forms.ToolStripSplitButton();
@@ -106,14 +106,14 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator44 = new System.Windows.Forms.ToolStripSeparator();
             this.editgitignoreToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.editgitinfoexcludeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editgitattributesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editGitAttributesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editmailmapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuitemSparse = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.gitMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGitDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verifyGitDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.deleteIndexlockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteIndexLockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editLocalGitConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.repoSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
@@ -237,7 +237,7 @@ namespace GitUI.CommandsDialogs
             this.toggleCommitInfoOnRight,
             this.toolStripSeparator17,
             this.toolStripButtonLevelUp,
-            this._NO_TRANSLATE_Workingdir,
+            this._NO_TRANSLATE_WorkingDir,
             this.branchSelect,
             this.toolStripSeparator1,
             this.toolStripSplitStash,
@@ -326,16 +326,16 @@ namespace GitUI.CommandsDialogs
             // 
             // _NO_TRANSLATE_Workingdir
             // 
-            this._NO_TRANSLATE_Workingdir.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this._NO_TRANSLATE_Workingdir.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this._NO_TRANSLATE_Workingdir.Name = "_NO_TRANSLATE_Workingdir";
-            this._NO_TRANSLATE_Workingdir.Size = new System.Drawing.Size(83, 22);
-            this._NO_TRANSLATE_Workingdir.Text = "WorkingDir";
-            this._NO_TRANSLATE_Workingdir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this._NO_TRANSLATE_Workingdir.ToolTipText = "Change working directory";
-            this._NO_TRANSLATE_Workingdir.ButtonClick += new System.EventHandler(this.WorkingdirClick);
-            this._NO_TRANSLATE_Workingdir.DropDownOpening += new System.EventHandler(this.WorkingdirDropDownOpening);
-            this._NO_TRANSLATE_Workingdir.MouseUp += new System.Windows.Forms.MouseEventHandler(this._NO_TRANSLATE_Workingdir_MouseUp);
+            this._NO_TRANSLATE_WorkingDir.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._NO_TRANSLATE_WorkingDir.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this._NO_TRANSLATE_WorkingDir.Name = "_NO_TRANSLATE_WorkingDir";
+            this._NO_TRANSLATE_WorkingDir.Size = new System.Drawing.Size(83, 22);
+            this._NO_TRANSLATE_WorkingDir.Text = "WorkingDir";
+            this._NO_TRANSLATE_WorkingDir.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this._NO_TRANSLATE_WorkingDir.ToolTipText = "Change working directory";
+            this._NO_TRANSLATE_WorkingDir.ButtonClick += new System.EventHandler(this.WorkingDirClick);
+            this._NO_TRANSLATE_WorkingDir.DropDownOpening += new System.EventHandler(this.WorkingDirDropDownOpening);
+            this._NO_TRANSLATE_WorkingDir.MouseUp += new System.Windows.Forms.MouseEventHandler(this._NO_TRANSLATE_WorkingDir_MouseUp);
             // 
             // branchSelect
             // 
@@ -942,7 +942,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator44,
             this.editgitignoreToolStripMenuItem1,
             this.editgitinfoexcludeToolStripMenuItem,
-            this.editgitattributesToolStripMenuItem,
+            this.editGitAttributesToolStripMenuItem,
             this.editmailmapToolStripMenuItem,
             this.menuitemSparse,
             this.toolStripSeparator4,
@@ -1044,10 +1044,10 @@ namespace GitUI.CommandsDialogs
             // 
             // editgitattributesToolStripMenuItem
             // 
-            this.editgitattributesToolStripMenuItem.Name = "editgitattributesToolStripMenuItem";
-            this.editgitattributesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.editgitattributesToolStripMenuItem.Text = "Edit .gitattributes";
-            this.editgitattributesToolStripMenuItem.Click += new System.EventHandler(this.editgitattributesToolStripMenuItem_Click);
+            this.editGitAttributesToolStripMenuItem.Name = "editGitAttributesToolStripMenuItem";
+            this.editGitAttributesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
+            this.editGitAttributesToolStripMenuItem.Text = "Edit .gitattributes";
+            this.editGitAttributesToolStripMenuItem.Click += new System.EventHandler(this.editGitAttributesToolStripMenuItem_Click);
             // 
             // editmailmapToolStripMenuItem
             // 
@@ -1073,7 +1073,7 @@ namespace GitUI.CommandsDialogs
             this.gitMaintenanceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.compressGitDatabaseToolStripMenuItem,
             this.verifyGitDatabaseToolStripMenuItem,
-            this.deleteIndexlockToolStripMenuItem,
+            this.deleteIndexLockToolStripMenuItem,
             this.editLocalGitConfigToolStripMenuItem});
             this.gitMaintenanceToolStripMenuItem.Image = global::GitUI.Properties.Images.Maintenance;
             this.gitMaintenanceToolStripMenuItem.Name = "gitMaintenanceToolStripMenuItem";
@@ -1097,10 +1097,10 @@ namespace GitUI.CommandsDialogs
             // 
             // deleteIndexlockToolStripMenuItem
             // 
-            this.deleteIndexlockToolStripMenuItem.Name = "deleteIndexlockToolStripMenuItem";
-            this.deleteIndexlockToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.deleteIndexlockToolStripMenuItem.Text = "Delete index.lock";
-            this.deleteIndexlockToolStripMenuItem.Click += new System.EventHandler(this.deleteIndexlockToolStripMenuItem_Click);
+            this.deleteIndexLockToolStripMenuItem.Name = "deleteIndexLockToolStripMenuItem";
+            this.deleteIndexLockToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.deleteIndexLockToolStripMenuItem.Text = "Delete index.lock";
+            this.deleteIndexLockToolStripMenuItem.Click += new System.EventHandler(this.deleteIndexLockToolStripMenuItem_Click);
             // 
             // editLocalGitConfigToolStripMenuItem
             // 
@@ -1722,7 +1722,7 @@ namespace GitUI.CommandsDialogs
         private GitUI.RevisionGridControl RevisionGrid;
         private ToolStripEx ToolStrip;
         private System.Windows.Forms.ToolStripButton toolStripButtonCommit;
-        private System.Windows.Forms.ToolStripSplitButton _NO_TRANSLATE_Workingdir;
+        private System.Windows.Forms.ToolStripSplitButton _NO_TRANSLATE_WorkingDir;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator0;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton GitBash;
@@ -1812,10 +1812,10 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem editLocalGitConfigToolStripMenuItem;
         private ToolStripMenuItem compressGitDatabaseToolStripMenuItem;
         private ToolStripMenuItem verifyGitDatabaseToolStripMenuItem;
-        private ToolStripMenuItem deleteIndexlockToolStripMenuItem;
+        private ToolStripMenuItem deleteIndexLockToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripMenuItem editgitignoreToolStripMenuItem1;
-        private ToolStripMenuItem editgitattributesToolStripMenuItem;
+        private ToolStripMenuItem editGitAttributesToolStripMenuItem;
         private ToolStripMenuItem editmailmapToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator13;
         private ToolStripMenuItem settingsToolStripMenuItem;

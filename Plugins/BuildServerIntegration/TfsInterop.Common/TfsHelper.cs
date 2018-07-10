@@ -68,13 +68,13 @@ namespace TfsInterop
 
                 _buildServer = _tfsCollection.GetService<IBuildServer>();
 
-                var buildDefs = _buildServer.QueryBuildDefinitions(projectName);
+                var buildDefinitions = _buildServer.QueryBuildDefinitions(projectName);
 
-                if (buildDefs.Length != 0)
+                if (buildDefinitions.Length != 0)
                 {
                     _buildDefinitions = string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString())
-                        ? buildDefs
-                        : buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).ToArray();
+                        ? buildDefinitions
+                        : buildDefinitions.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).ToArray();
                 }
             }
             catch (Exception ex)

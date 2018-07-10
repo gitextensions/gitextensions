@@ -461,12 +461,12 @@ namespace GitCommands
                 {
                     var submodule = GetSubmodule(submodules[i]);
 
-                    var subsubmodules = GetSubmodulePaths(submodule)
+                    var subSubmodules = GetSubmodulePaths(submodule)
                         .Select(p => Path.Combine(submodules[i], p))
                         .ToList();
 
-                    submodules.InsertRange(i + 1, subsubmodules);
-                    i += subsubmodules.Count;
+                    submodules.InsertRange(i + 1, subSubmodules);
+                    i += subSubmodules.Count;
                 }
             }
 
@@ -620,15 +620,15 @@ namespace GitCommands
                 encoding = SystemEncoding;
             }
 
-            byte[] cmdout, cmderr;
-            if (!GitCommandCache.TryGet(arguments, out cmdout, out cmderr))
+            byte[] cmdOut, cmdErr;
+            if (!GitCommandCache.TryGet(arguments, out cmdOut, out cmdErr))
             {
-                GitCommandHelpers.RunCmdByte(cmd, arguments, WorkingDir, null, out cmdout, out cmderr);
+                GitCommandHelpers.RunCmdByte(cmd, arguments, WorkingDir, null, out cmdOut, out cmdErr);
 
-                GitCommandCache.Add(arguments, cmdout, cmderr);
+                GitCommandCache.Add(arguments, cmdOut, cmdErr);
             }
 
-            return StripAnsiCodes(EncodingHelper.DecodeString(cmdout, cmderr, ref encoding));
+            return StripAnsiCodes(EncodingHelper.DecodeString(cmdOut, cmdErr, ref encoding));
         }
 
         /// <summary>
@@ -1083,7 +1083,7 @@ namespace GitCommands
         {
             if (EnvUtils.RunningOnUnix())
             {
-                string[] termEmuCmds =
+                string[] termEmuCommands =
                 {
                     "gnome-terminal",
                     "konsole",
@@ -1092,7 +1092,7 @@ namespace GitCommands
                 };
 
                 string args = "";
-                string cmd = termEmuCmds.FirstOrDefault(termEmuCmd => !string.IsNullOrEmpty(ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync("which", termEmuCmd))));
+                string cmd = termEmuCommands.FirstOrDefault(termEmuCmd => !string.IsNullOrEmpty(ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync("which", termEmuCmd))));
 
                 if (string.IsNullOrEmpty(cmd))
                 {
@@ -1190,7 +1190,7 @@ namespace GitCommands
             {
                 string message = ProcessDiffNotes(10);
 
-                // commit message is not reencoded by git when format is given
+                // commit message is not re-encoded by git when format is given
                 revision.Body = ReEncodeCommitMessage(message, revision.MessageEncoding);
                 revision.Subject = revision.Body.Substring(0, revision.Body.IndexOfAny(new[] { '\r', '\n' }));
             }
@@ -1476,15 +1476,15 @@ namespace GitCommands
                 {
                     if (line.StartsWith("gitdir:"))
                     {
-                        string gitpath = line.Substring(7).Trim();
-                        int pos = gitpath.IndexOf("/.git/modules/");
+                        string gitPath = line.Substring(7).Trim();
+                        int pos = gitPath.IndexOf("/.git/modules/");
                         if (pos != -1)
                         {
-                            gitpath = gitpath.Substring(0, pos + 1).Replace('/', '\\');
-                            gitpath = Path.GetFullPath(Path.Combine(WorkingDir, gitpath));
-                            if (File.Exists(gitpath + ".gitmodules") && IsValidGitWorkingDir(gitpath))
+                            gitPath = gitPath.Substring(0, pos + 1).Replace('/', '\\');
+                            gitPath = Path.GetFullPath(Path.Combine(WorkingDir, gitPath));
+                            if (File.Exists(gitPath + ".gitmodules") && IsValidGitWorkingDir(gitPath))
                             {
-                                superprojectPath = gitpath;
+                                superprojectPath = gitPath;
                             }
                         }
                     }
@@ -1670,7 +1670,7 @@ namespace GitCommands
                 return "";
             }
 
-            return GetSetting(string.Format("remote.{0}.puttykeyfile", remote));
+            return GetSetting($"remote.{remote}.puttykeyfile");
         }
 
         public string FetchCmd([CanBeNull] string remote, [CanBeNull] string remoteBranch, [CanBeNull] string localBranch, bool? fetchTags = false, bool isUnshallow = false, bool prune = false)
@@ -1986,9 +1986,9 @@ namespace GitCommands
         private static void UpdateIndex(Lazy<SynchronizedProcessReader> processReader, string filename)
         {
             ////process.StandardInput.WriteLine("\"" + ToPosixPath(file.Name) + "\"");
-            byte[] bytearr = EncodingHelper.ConvertTo(SystemEncoding,
+            byte[] bytes = EncodingHelper.ConvertTo(SystemEncoding,
                                                       "\"" + filename.ToPosixPath() + "\"" + processReader.Value.Process.StandardInput.NewLine);
-            processReader.Value.Process.StandardInput.BaseStream.Write(bytearr, 0, bytearr.Length);
+            processReader.Value.Process.StandardInput.BaseStream.Write(bytes, 0, bytes.Length);
         }
 
         public bool InTheMiddleOfBisect()
@@ -2833,7 +2833,7 @@ namespace GitCommands
             }
         }
 
-        /// <param name="option">Ordery by date is slower.</param>
+        /// <param name="option">Order by date is slower.</param>
         public IReadOnlyList<IGitRef> GetTagRefs(GetTagRefsSortOrder option)
         {
             var list = GetRefs(true, false);
@@ -3053,7 +3053,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// Returns list of filenames which would be ignored
+        /// Returns list of file names which would be ignored
         /// </summary>
         /// <param name="ignorePatterns">Patterns to ignore (.gitignore syntax)</param>
         public IReadOnlyList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns)
@@ -3453,7 +3453,7 @@ namespace GitCommands
                 : null;
         }
 
-        public SubmoduleStatus CheckSubmoduleStatus(string commit, [CanBeNull] string oldCommit, CommitData data, CommitData olddata, bool loaddata = false)
+        public SubmoduleStatus CheckSubmoduleStatus(string commit, [CanBeNull] string oldCommit, CommitData data, CommitData oldData, bool loadData = false)
         {
             if (!IsValidGitWorkingDir() || oldCommit == null)
             {
@@ -3481,17 +3481,17 @@ namespace GitCommands
                 return SubmoduleStatus.Rewind;
             }
 
-            if (loaddata)
+            if (loadData)
             {
-                olddata = _commitDataManager.GetCommitData(oldCommit, out _);
+                oldData = _commitDataManager.GetCommitData(oldCommit, out _);
             }
 
-            if (olddata == null)
+            if (oldData == null)
             {
                 return SubmoduleStatus.NewSubmodule;
             }
 
-            if (loaddata)
+            if (loadData)
             {
                 data = _commitDataManager.GetCommitData(commit, out _);
             }
@@ -3501,15 +3501,15 @@ namespace GitCommands
                 return SubmoduleStatus.Unknown;
             }
 
-            if (data.CommitDate > olddata.CommitDate)
+            if (data.CommitDate > oldData.CommitDate)
             {
                 return SubmoduleStatus.NewerTime;
             }
-            else if (data.CommitDate < olddata.CommitDate)
+            else if (data.CommitDate < oldData.CommitDate)
             {
                 return SubmoduleStatus.OlderTime;
             }
-            else if (data.CommitDate == olddata.CommitDate)
+            else if (data.CommitDate == oldData.CommitDate)
             {
                 return SubmoduleStatus.SameTime;
             }
@@ -3611,7 +3611,7 @@ namespace GitCommands
         private static readonly Regex _escapedOctalCodePointRegex = new Regex(@"(\\([0-7]{3}))+", RegexOptions.Compiled);
 
         /// <summary>
-        /// Unescapes any octal code points embedded within <paramref name="s"/>.
+        /// Un-escapes any octal code points embedded within <paramref name="s"/>.
         /// </summary>
         /// <remarks>
         /// If no portions of <paramref name="s"/> contain escaped data, then <paramref name="s"/> is returned.
@@ -3674,7 +3674,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// reencodes string from GitCommandHelpers.LosslessEncoding to toEncoding
+        /// Re-encodes string from GitCommandHelpers.LosslessEncoding to toEncoding
         /// </summary>
         [ContractAnnotation("s:null=>null")]
         [ContractAnnotation("s:notnull=>notnull")]
@@ -3697,7 +3697,7 @@ namespace GitCommands
 
         // there was a bug: Git before v1.8.4 did not recode commit message when format is given
         // Lossless encoding is used, because LogOutputEncoding might not be lossless and not recoded
-        // characters could be replaced by replacement character while reencoding to LogOutputEncoding
+        // characters could be replaced by replacement character while re-encoding to LogOutputEncoding
         [CanBeNull]
         public string ReEncodeCommitMessage(string s, [CanBeNull] string toEncodingName)
         {
@@ -3747,7 +3747,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// header part of show result is encoded in logoutputencoding (including reencoded commit message)
+        /// header part of show result is encoded in logoutputencoding (including re-encoded commit message)
         /// diff part is raw data in file's original encoding
         /// s should be encoded in LosslessEncoding
         /// </summary>

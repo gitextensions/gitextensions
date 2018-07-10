@@ -280,12 +280,12 @@ namespace GitCommands
         /// <summary>
         /// Run command, console window is hidden, wait for exit, redirect output
         /// </summary>
-        public static int RunCmdByte(string cmd, string arguments, string workingdir, byte[] stdInput, out byte[] output, out byte[] error)
+        public static int RunCmdByte(string cmd, string arguments, string workingDir, byte[] stdInput, out byte[] output, out byte[] error)
         {
             try
             {
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
-                using (var process = StartProcessAndReadAllBytes(arguments, cmd, workingdir, out output, out error, stdInput))
+                using (var process = StartProcessAndReadAllBytes(arguments, cmd, workingDir, out output, out error, stdInput))
                 {
                     process.WaitForExit();
                     return process.ExitCode;
@@ -409,7 +409,7 @@ namespace GitCommands
         /// <param name="branch">
         /// <para><c>NULL</c>: do not checkout working copy (--no-checkout).</para>
         /// <para><c>""</c> (empty string): checkout remote HEAD (branch param omitted, default behavior for clone).</para>
-        /// <para>(a non-empty string): checkout the given branch (--branch smth).</para>
+        /// <para>(a non-empty string): checkout the given branch (--branch some_branch).</para>
         /// </param>
         /// <param name="depth">An int value for --depth param, or <c>NULL</c> to omit the param.</param>
         /// <param name="isSingleBranch">
@@ -464,7 +464,7 @@ namespace GitCommands
         /// <summary>Remove files from the working tree and from the index. <remarks>git rm</remarks></summary>
         /// <param name="force">Override the up-to-date check.</param>
         /// <param name="isRecursive">Allow recursive removal when a leading directory name is given.</param>
-        /// <param name="files">Files to remove. Fileglobs can be given to remove matching files.</param>
+        /// <param name="files">Files to remove. File globs can be given to remove matching files.</param>
         public static string RemoveCmd(bool force = true, bool isRecursive = true, params string[] files)
         {
             var args = new ArgumentBuilder
@@ -601,7 +601,7 @@ namespace GitCommands
             return "bisect reset";
         }
 
-        public static string RebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash, bool autostash, string from = null, string onto = null)
+        public static string RebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, string from = null, string onto = null)
         {
             if (from == null ^ onto == null)
             {
@@ -615,7 +615,7 @@ namespace GitCommands
                 { interactive && autosquash, "--autosquash" },
                 { interactive && !autosquash, "--no-autosquash" },
                 { preserveMerges, "--preserve-merges" },
-                { autostash, "--autostash" },
+                { autoStash, "--autostash" },
                 from.QuoteNE(),
                 branch.Quote(),
                 { onto != null, $"--onto {onto}" }
@@ -672,16 +672,16 @@ namespace GitCommands
             return args.ToString();
         }
 
-        public static string CleanUpCmd(bool dryrun, bool directories, bool nonignored, bool ignored, string paths = null)
+        public static string CleanUpCmd(bool dryRun, bool directories, bool nonIgnored, bool ignored, string paths = null)
         {
             var args = new ArgumentBuilder
             {
                 "clean",
                 { directories, "-d" },
-                { !nonignored && !ignored, "-x" },
+                { !nonIgnored && !ignored, "-x" },
                 { ignored, "-X" },
-                { dryrun, "--dry-run" },
-                { !dryrun, "-f" },
+                { dryRun, "--dry-run" },
+                { !dryRun, "-f" },
                 paths
             };
 
@@ -764,7 +764,7 @@ namespace GitCommands
                         hash = line.Substring(pos + commit.Length);
                     }
 
-                    bool bdirty = hash.EndsWith("-dirty");
+                    bool isDirty = hash.EndsWith("-dirty");
                     hash = hash.Replace("-dirty", "");
                     if (c == '-')
                     {
@@ -773,7 +773,7 @@ namespace GitCommands
                     else if (c == '+')
                     {
                         status.Commit = hash;
-                        status.IsDirty = bdirty;
+                        status.IsDirty = isDirty;
                     }
 
                     // TODO: Support combined merge
@@ -1035,8 +1035,8 @@ namespace GitCommands
                     if (x == 'R' || x == 'C')
                     {
                         // Find renamed files...
-                        string nextfile = n + 1 < files.Length ? files[n + 1] : "";
-                        gitItemStatusX = GitItemStatusFromCopyRename(stagedX, fromDiff, nextfile, fileName, x, status);
+                        string nextFile = n + 1 < files.Length ? files[n + 1] : "";
+                        gitItemStatusX = GitItemStatusFromCopyRename(stagedX, fromDiff, nextFile, fileName, x, status);
                         n++;
                     }
                     else
@@ -1062,8 +1062,8 @@ namespace GitCommands
                 if (y == 'R' || y == 'C')
                 {
                     // Find renamed files...
-                    string nextfile = n + 1 < files.Length ? files[n + 1] : "";
-                    gitItemStatusY = GitItemStatusFromCopyRename(stagedY, false, nextfile, fileName, y, status);
+                    string nextFile = n + 1 < files.Length ? files[n + 1] : "";
+                    gitItemStatusY = GitItemStatusFromCopyRename(stagedY, false, nextFile, fileName, y, status);
                     n++;
                 }
                 else
@@ -1122,7 +1122,7 @@ namespace GitCommands
             return result;
         }
 
-        private static GitItemStatus GitItemStatusFromCopyRename(StagedStatus staged, bool fromDiff, string nextfile, string fileName, char x, string status)
+        private static GitItemStatus GitItemStatusFromCopyRename(StagedStatus staged, bool fromDiff, string nextFile, string fileName, char x, string status)
         {
             var gitItemStatus = new GitItemStatus();
 
@@ -1130,12 +1130,12 @@ namespace GitCommands
             if (fromDiff)
             {
                 gitItemStatus.OldName = fileName.Trim();
-                gitItemStatus.Name = nextfile.Trim();
+                gitItemStatus.Name = nextFile.Trim();
             }
             else
             {
                 gitItemStatus.Name = fileName.Trim();
-                gitItemStatus.OldName = nextfile.Trim();
+                gitItemStatus.OldName = nextFile.Trim();
             }
 
             gitItemStatus.IsNew = false;

@@ -86,10 +86,10 @@ namespace TranslationApp
         {
             int translatedCount = _translationItems.Sum(p => p.Value.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue)));
             int totalCount = _translationItems.Count;
-            var progresMsg = string.Format(_translateProgressText.Text, translatedCount, totalCount);
-            if (translateProgress.Text != progresMsg)
+            var message = string.Format(_translateProgressText.Text, translatedCount, totalCount);
+            if (translateProgress.Text != message)
             {
-                translateProgress.Text = progresMsg;
+                translateProgress.Text = message;
                 toolStrip1.Refresh();
             }
         }

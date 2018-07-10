@@ -19,7 +19,7 @@ namespace ResourceManager.Xliff
         }
 
         [XmlAttribute("datatype")]
-        public string Datatype { get; set; } = "plaintext";
+        public string DataType { get; set; } = "plaintext";
 
         [XmlAttribute("original")]
         public string Name { get; set; }

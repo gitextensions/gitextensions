@@ -109,7 +109,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
 
             AppSettings.Translation = Language.Text;
-            Strings.Reinit();
+            Strings.Reinitialize();
 
             AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 

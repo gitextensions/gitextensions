@@ -184,7 +184,7 @@ namespace Gerrit
                 repositoryMenu.DropDownItems.IndexOf(mailMapMenuItem) + 1,
                 _gitReviewMenuItem);
 
-            // Create the toolstrip items.
+            // Create the tool strip items.
 
             var pushMenuItem = toolStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "toolStripButtonPush");
             if (pushMenuItem == null)

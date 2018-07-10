@@ -105,13 +105,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             string command = (string)CommandCacheItems.SelectedItem;
 
-            if (GitCommandCache.TryGet(command, out var cmdout, out var cmderr))
+            if (GitCommandCache.TryGet(command, out var cmdOut, out var cmdErr))
             {
                 Encoding encoding = GitModule.SystemEncoding;
                 commandCacheOutput.Text =
                     command +
                     "\n-------------------------------------\n\n" +
-                    EncodingHelper.DecodeString(cmdout, cmderr, ref encoding).Replace("\0", "\\0");
+                    EncodingHelper.DecodeString(cmdOut, cmdErr, ref encoding).Replace("\0", "\\0");
             }
             else
             {

@@ -106,7 +106,7 @@ namespace GitCommands.Git
             else
             {
                 // Untracked files can only be compared to /dev/null
-                // The UI should normall only allow this for unstaged to staged, but it can be included in multi selections
+                // The UI should normally only allow this for unstaged to staged, but it can be included in multi selections
                 if (!isTracked)
                 {
                     extra += " --no-index";

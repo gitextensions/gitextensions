@@ -3,7 +3,7 @@
   <RepositoryCategory>
     <Repositories>
       <Repository>
-        <Title>Git Extenions</Title>
+        <Title>Git Extensions</Title>
         <Path>C:\Development\gitextensions\</Path>
         <Description>Mega project!</Description>
         <Anchor>MostRecent</Anchor>

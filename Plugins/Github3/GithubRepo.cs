@@ -97,14 +97,14 @@ namespace Github3
 
         public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body)
         {
-            var pullrequest = _repo.CreatePullRequest(GithubLoginInfo.Username + ":" + myBranch, remoteBranch, title, body);
+            var pullRequest = _repo.CreatePullRequest(GithubLoginInfo.Username + ":" + myBranch, remoteBranch, title, body);
 
-            if (pullrequest == null || pullrequest.Number == 0)
+            if (pullRequest == null || pullRequest.Number == 0)
             {
                 throw new Exception("Failed to create pull request.");
             }
 
-            return pullrequest.Number;
+            return pullRequest.Number;
         }
 
         public override string ToString() => $"{Owner}/{Name}";

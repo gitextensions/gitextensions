@@ -104,7 +104,7 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void Matches_should_not_throw_if_revsion_null()
+        public void Matches_should_not_throw_if_revision_null()
         {
             _tester.Matches(null, null).Should().BeFalse();
         }

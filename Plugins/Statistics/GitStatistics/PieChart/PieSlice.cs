@@ -377,7 +377,7 @@ namespace GitStatistics.PieChart
         /// </param>
         public void Draw(Graphics graphics)
         {
-            // first draw wegde sides
+            // first draw wedge sides
             DrawVisibleStartSide(graphics);
             DrawVisibleEndSide(graphics);
             DrawVisiblePeriphery(graphics);
@@ -433,7 +433,7 @@ namespace GitStatistics.PieChart
         }
 
         /// <summary>
-        ///   Reajusts the pie slice to fit new bounding rectangle provided.
+        ///   Readjusts the pie slice to fit new bounding rectangle provided.
         /// </summary>
         /// <param name = "xBoundingRect">
         ///   x-coordinate of the upper-left corner of the rectangle that is

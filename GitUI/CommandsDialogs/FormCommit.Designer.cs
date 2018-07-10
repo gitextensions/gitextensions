@@ -36,8 +36,8 @@ namespace GitUI.CommandsDialogs
             this.editFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.addFileTogitignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addFileToGitIgnoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addFileToGitInfoExcludeLocallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skipWorktreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.doNotSkipWorktreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.assumeUnchangedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,7 +91,7 @@ namespace GitUI.CommandsDialogs
             this.deleteSelectedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetSelectedFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetUnstagedChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetAlltrackedChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resetAllTrackedChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.editGitIgnoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editLocallyIgnoredFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -201,8 +201,8 @@ namespace GitUI.CommandsDialogs
             this.editFileToolStripMenuItem,
             this.deleteFileToolStripMenuItem,
             this.toolStripSeparator5,
-            this.addFileTogitignoreToolStripMenuItem,
-            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem,
+            this.addFileToGitIgnoreToolStripMenuItem,
+            this.addFileToGitInfoExcludeLocallyToolStripMenuItem,
             this.skipWorktreeToolStripMenuItem,
             this.doNotSkipWorktreeToolStripMenuItem,
             this.assumeUnchangedToolStripMenuItem,
@@ -317,19 +317,19 @@ namespace GitUI.CommandsDialogs
             //
             // addFileTogitignoreToolStripMenuItem
             //
-            this.addFileTogitignoreToolStripMenuItem.Image = global::GitUI.Properties.Images.AddToGitIgnore;
-            this.addFileTogitignoreToolStripMenuItem.Name = "addFileTogitignoreToolStripMenuItem";
-            this.addFileTogitignoreToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.addFileTogitignoreToolStripMenuItem.Text = "Add file to .gitignore";
-            this.addFileTogitignoreToolStripMenuItem.Click += new System.EventHandler(this.AddFileTogitignoreToolStripMenuItemClick);
+            this.addFileToGitIgnoreToolStripMenuItem.Image = global::GitUI.Properties.Images.AddToGitIgnore;
+            this.addFileToGitIgnoreToolStripMenuItem.Name = "addFileToGitIgnoreToolStripMenuItem";
+            this.addFileToGitIgnoreToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.addFileToGitIgnoreToolStripMenuItem.Text = "Add file to .gitignore";
+            this.addFileToGitIgnoreToolStripMenuItem.Click += new System.EventHandler(this.AddFileToGitIgnoreToolStripMenuItemClick);
             //
             // addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem
             //
-            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Image = global::GitUI.Properties.Images.AddToGitIgnore;
-            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Name = "addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem";
-            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Text = "Add file to .git/info/exclude";
-            this.addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem.Click += new System.EventHandler(this.AddFileToGitInfoExcludeToolStripMenuItemClick);
+            this.addFileToGitInfoExcludeLocallyToolStripMenuItem.Image = global::GitUI.Properties.Images.AddToGitIgnore;
+            this.addFileToGitInfoExcludeLocallyToolStripMenuItem.Name = "addFileToGitInfoExcludeLocallyToolStripMenuItem";
+            this.addFileToGitInfoExcludeLocallyToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
+            this.addFileToGitInfoExcludeLocallyToolStripMenuItem.Text = "Add file to .git/info/exclude";
+            this.addFileToGitInfoExcludeLocallyToolStripMenuItem.Click += new System.EventHandler(this.AddFileToGitInfoExcludeToolStripMenuItemClick);
             //
             // skipWorktreeToolStripMenuItem
             //
@@ -750,7 +750,7 @@ namespace GitUI.CommandsDialogs
             this.deleteSelectedFilesToolStripMenuItem,
             this.resetSelectedFilesToolStripMenuItem,
             this.resetUnstagedChangesToolStripMenuItem,
-            this.resetAlltrackedChangesToolStripMenuItem,
+            this.resetAllTrackedChangesToolStripMenuItem,
             this.toolStripSeparator1,
             this.editGitIgnoreToolStripMenuItem,
             this.editLocallyIgnoredFilesToolStripMenuItem,
@@ -821,11 +821,11 @@ namespace GitUI.CommandsDialogs
             //
             // resetAlltrackedChangesToolStripMenuItem
             //
-            this.resetAlltrackedChangesToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
-            this.resetAlltrackedChangesToolStripMenuItem.Name = "resetAlltrackedChangesToolStripMenuItem";
-            this.resetAlltrackedChangesToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-            this.resetAlltrackedChangesToolStripMenuItem.Text = "Reset all (tracked) changes";
-            this.resetAlltrackedChangesToolStripMenuItem.Click += new System.EventHandler(this.ResetAlltrackedChangesToolStripMenuItemClick);
+            this.resetAllTrackedChangesToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
+            this.resetAllTrackedChangesToolStripMenuItem.Name = "resetAllTrackedChangesToolStripMenuItem";
+            this.resetAllTrackedChangesToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
+            this.resetAllTrackedChangesToolStripMenuItem.Text = "Reset all (tracked) changes";
+            this.resetAllTrackedChangesToolStripMenuItem.Click += new System.EventHandler(this.ResetAllTrackedChangesToolStripMenuItemClick);
             //
             // toolStripSeparator1
             //
@@ -1528,8 +1528,8 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem deleteFileToolStripMenuItem;
         private System.Windows.Forms.Button SolveMergeconflicts;
         private FileViewer SelectedDiff;
-        private System.Windows.Forms.ToolStripMenuItem addFileTogitignoreToolStripMenuItem;
-        private ToolStripMenuItem addFileTogitinfoexcludeExcludeLocallyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addFileToGitIgnoreToolStripMenuItem;
+        private ToolStripMenuItem addFileToGitInfoExcludeLocallyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem assumeUnchangedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem doNotAssumeUnchangedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem skipWorktreeToolStripMenuItem;
@@ -1562,7 +1562,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem deleteSelectedFilesToolStripMenuItem;
         private ToolStripMenuItem resetSelectedFilesToolStripMenuItem;
-        private ToolStripMenuItem resetAlltrackedChangesToolStripMenuItem;
+        private ToolStripMenuItem resetAllTrackedChangesToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem editGitIgnoreToolStripMenuItem;
         private ToolStripMenuItem editLocallyIgnoredFilesToolStripMenuItem;

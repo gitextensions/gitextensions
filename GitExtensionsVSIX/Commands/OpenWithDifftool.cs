@@ -2,7 +2,7 @@
 
 namespace GitExtensionsVSIX.Commands
 {
-    public sealed class OpenWithDiftool : ItemCommandBase
+    public sealed class OpenWithDifftool : ItemCommandBase
     {
         protected override void OnExecute(SelectedItem item, string fileName, OutputWindowPane pane)
         {

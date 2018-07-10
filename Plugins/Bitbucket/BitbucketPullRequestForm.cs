@@ -85,10 +85,10 @@ namespace Bitbucket
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default;
-                var pullReqs = await GetPullRequestsAsync();
+                var pullRequests = await GetPullRequestsAsync();
 
                 await this.SwitchToMainThreadAsync();
-                lbxPullRequests.DataSource = pullReqs;
+                lbxPullRequests.DataSource = pullRequests;
                 lbxPullRequests.DisplayMember = nameof(PullRequest.DisplayName);
             }).FileAndForget();
         }
@@ -109,8 +109,8 @@ namespace Bitbucket
         private async Task<List<PullRequest>> GetPullRequestsAsync()
         {
             var list = new List<PullRequest>();
-            var getPullReqs = new GetPullRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
-            var result = await getPullReqs.SendAsync().ConfigureAwait(false);
+            var getPullRequests = new GetPullRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
+            var result = await getPullRequests.SendAsync().ConfigureAwait(false);
             if (result.Success)
             {
                 list.AddRange(result.Result);

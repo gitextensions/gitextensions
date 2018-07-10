@@ -32,8 +32,8 @@
 
         /// <summary>
         /// This method is a faster than the property above. The property reads the config file
-        /// every time it is accessed. This method accepts a configfile what makes it faster when loading
-        /// the revisiongraph.
+        /// every time it is accessed. This method accepts a config file which makes it faster when loading
+        /// the revision graph.
         /// </summary>
         string GetMergeWith(ISettingsValueGetter configFile);
     }

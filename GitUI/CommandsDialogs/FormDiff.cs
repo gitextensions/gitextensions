@@ -175,7 +175,7 @@ namespace GitUI.CommandsDialogs
             FormBrowse.OpenContainingFolder(DiffFiles, Module);
         }
 
-        private void fileHistoryDiffToolstripMenuItem_Click(object sender, EventArgs e)
+        private void fileHistoryDiffToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GitItemStatus item = DiffFiles.SelectedItem;
 
