@@ -3062,7 +3062,7 @@ namespace GitCommands
                 .Where(pattern => !pattern.IsNullOrWhiteSpace())
                 .ToList();
 
-            if (notEmptyPatterns.Count() != 0)
+            if (notEmptyPatterns.Count != 0)
             {
                 var excludeParams =
                     notEmptyPatterns
