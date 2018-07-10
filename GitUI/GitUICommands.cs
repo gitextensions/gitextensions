@@ -336,7 +336,7 @@ namespace GitUI
             return StartCheckoutBranch(owner, branch, true);
         }
 
-        #endregion Checkout
+        #endregion
 
         public bool StartCompareRevisionsDialog(IWin32Window owner = null)
         {

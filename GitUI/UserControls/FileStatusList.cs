@@ -1301,7 +1301,7 @@ namespace GitUI
             FilterComboBox.Focus();
         }
 
-        #endregion Filtering
+        #endregion
     }
 
     public sealed class GitItemStatusWithParent

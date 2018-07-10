@@ -284,9 +284,9 @@ namespace NetSpell.SpellChecker.Dictionary
                             // saving possible base words for use in generating suggestions
                             PossibleBaseWords.Add(tempWord);
                         }
-                    } // suffix word
-                } // prefix rule entry
-            } // prefix rule
+                    }
+                }
+            }
 
             // word not found
             TraceWriter.TraceVerbose("Possible Base Words: {0}", PossibleBaseWords.Count);
@@ -513,8 +513,8 @@ namespace NetSpell.SpellChecker.Dictionary
 
                                 BaseWords.Add(tempWord.Text, tempWord);
                                 break;
-                        } // currentSection switch
-                    } // read line
+                        }
+                    }
 
                     // close files
                 }
@@ -597,14 +597,14 @@ namespace NetSpell.SpellChecker.Dictionary
                             break;
                         }
                     }
-                } // for each
+                }
 
                 // if no match consume one char
                 if (prevWord.Length == tempWord.Length)
                 {
                     tempWord = tempWord.Substring(1);
                 }
-            }// while
+            }
 
             return code.ToString();
         }

@@ -129,7 +129,7 @@ namespace GitUI.Script
             }
         }
 
-        #endregion Properties
+        #endregion
 
         protected override bool IsInputKey(Keys keyData)
         {
@@ -787,7 +787,7 @@ namespace GitUI.Script
             return new Rectangle(x, y, Math.Min(inner.Width, outer.Width), Math.Min(inner.Height, outer.Height));
         }
 
-        #endregion Button Layout Calculations
+        #endregion
 
         private void ShowContextMenuStrip()
         {

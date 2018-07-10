@@ -103,7 +103,7 @@ namespace GitUI.UserControls
             public const int LVM_SETGROUPINFO = LVM_FIRST + 147;
             public const int LVM_SUBITEMHITTEST = LVM_FIRST + 57;
 
-            #endregion Windows constants
+            #endregion
 
             [StructLayout(LayoutKind.Sequential)]
             public readonly struct POINT

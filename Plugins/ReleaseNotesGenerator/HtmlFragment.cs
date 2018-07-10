@@ -117,7 +117,7 @@ namespace ReleaseNotesGenerator
                         SourceUrl = new Uri(val);
                         break;
                 }
-            } // end for
+            }
 
             if (Context == null && Fragment == null)
             {
@@ -148,7 +148,7 @@ namespace ReleaseNotesGenerator
         /// </summary>
         public Uri SourceUrl { get; }
 
-        #endregion // Read and decode from clipboard
+        #endregion
 
         #region Write to Clipboard
 
@@ -230,6 +230,6 @@ namespace ReleaseNotesGenerator
             return dataObject;
         }
 
-        #endregion // Write to Clipboard
-    } // end of class
+        #endregion
+    }
 }

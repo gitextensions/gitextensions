@@ -122,7 +122,7 @@ namespace Gource
             return true;
         }
 
-        #endregion IGitPlugin Members
+        #endregion
 
         private static void UnZipFiles(string zipPathAndFile, string outputFolder, bool deleteZipFile)
         {

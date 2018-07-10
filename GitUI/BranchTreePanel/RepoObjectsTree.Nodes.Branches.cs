@@ -228,7 +228,7 @@ namespace GitUI.BranchTreePanel
                 // 1     iss111
                 // 0 master
 
-                #endregion ex
+                #endregion
 
                 var currentBranch = Module.GetSelectedBranch();
                 var nodes = new Dictionary<string, BaseBranchNode>();
@@ -259,6 +259,6 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        #endregion private classes
+        #endregion
     }
 }

@@ -199,7 +199,7 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                         group = false;
                         neg = false;
                         numMember = 0;
-                    } // if group
+                    }
                     else
                     {
                         if (cond == '.')
@@ -216,12 +216,12 @@ namespace NetSpell.SpellChecker.Dictionary.Affix
                             int charCode = cond;
                             entry.Condition[charCode] = entry.Condition[charCode] | (1 << num);
                         }
-                    } // not group
+                    }
 
                     end = false;
                     num++;
-                } // if end
-            } // foreach char
+                }
+            }
 
             entry.ConditionCount = num;
         }

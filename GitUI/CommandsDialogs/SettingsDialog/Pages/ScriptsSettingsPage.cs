@@ -14,6 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     public partial class ScriptsSettingsPage : SettingsPageWithHeader
     {
         #region translation
+
         private readonly TranslationString _scriptSettingsPageHelpDisplayArgumentsHelp = new TranslationString("Arguments help");
         private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new TranslationString(@"User Input:
 {UserInput}
@@ -53,7 +54,8 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}");
-        #endregion translation
+
+        #endregion
 
         private string _iconName = "bug";
 

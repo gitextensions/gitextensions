@@ -838,7 +838,7 @@ namespace NetSpell.SpellChecker
             if (startWordIndex > endWordIndex || _words == null || _words.Count == 0)
             {
                 // make sure end index is not greater then word count
-                OnEndOfText(EventArgs.Empty);    // raise event
+                OnEndOfText(EventArgs.Empty);
                 return false;
             }
 
@@ -848,7 +848,8 @@ namespace NetSpell.SpellChecker
 
             for (int i = startWordIndex; i <= endWordIndex; i++)
             {
-                WordIndex = i; // saving the current word index
+                // save the current word index
+                WordIndex = i;
                 var currentWord = CurrentWord;
 
                 if (CheckString(currentWord))
@@ -864,8 +865,6 @@ namespace NetSpell.SpellChecker
                         {
                             misspelledWord = true;
                             OnMisspelledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));       // raise event
-
-                            // break;
                         }
                     }
                     else if (i > 0 && _words[i - 1].Value == currentWord
@@ -873,19 +872,17 @@ namespace NetSpell.SpellChecker
                     {
                         misspelledWord = true;
                         OnDoubledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));      // raise event
-
-                        // break;
                     }
                 }
-            } // for
+            }
 
             if (_wordIndex >= _words.Count - 1 && !misspelledWord)
             {
-                OnEndOfText(EventArgs.Empty);    // raise event
+                OnEndOfText(EventArgs.Empty);
             }
 
             return misspelledWord;
-        } // SpellCheck
+        }
 
         /// <summary>
         ///     Spell checks the words in the <see cref="Text"/> property starting
@@ -1070,7 +1067,7 @@ namespace NetSpell.SpellChecker
                     break;
                 }
             }
-        } // suggest
+        }
 
         /// <summary>
         ///     Checks to see if the word is in the dictionary
