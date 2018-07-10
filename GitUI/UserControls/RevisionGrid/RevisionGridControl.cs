@@ -1561,36 +1561,41 @@ namespace GitUI
 
             bool bareRepositoryOrArtificial = Module.IsBareRepository() || revision.IsArtificial;
             deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
-            deleteTagToolStripMenuItem.Enabled = deleteTagDropDown.Items.Count > 0;
+            deleteTagToolStripMenuItem.Visible = deleteTagDropDown.Items.Count > 0;
 
             deleteBranchToolStripMenuItem.DropDown = deleteBranchDropDown;
-            deleteBranchToolStripMenuItem.Enabled = deleteBranchDropDown.Items.Count > 0 && !Module.IsBareRepository();
+            deleteBranchToolStripMenuItem.Visible = deleteBranchDropDown.Items.Count > 0 && !Module.IsBareRepository();
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
-            checkoutBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && checkoutBranchDropDown.Items.Count > 0 && !Module.IsBareRepository();
+            checkoutBranchToolStripMenuItem.Visible = !bareRepositoryOrArtificial && HasVisibleEnabledItem(checkoutBranchDropDown) && !Module.IsBareRepository();
 
             mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
-            mergeBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && mergeBranchDropDown.Items.Count > 0 && !Module.IsBareRepository();
+            mergeBranchToolStripMenuItem.Visible = !bareRepositoryOrArtificial && HasVisibleEnabledItem(mergeBranchDropDown) && !Module.IsBareRepository();
 
-            rebaseOnToolStripMenuItem.Enabled = !bareRepositoryOrArtificial && !Module.IsBareRepository();
+            rebaseOnToolStripMenuItem.Visible = !bareRepositoryOrArtificial && !Module.IsBareRepository();
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
-            renameBranchToolStripMenuItem.Enabled = renameDropDown.Items.Count > 0;
+            renameBranchToolStripMenuItem.Visible = renameDropDown.Items.Count > 0;
 
-            checkoutRevisionToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
-            revertCommitToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
-            cherryPickCommitToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
-            manipulateCommitToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
+            checkoutRevisionToolStripMenuItem.Visible = !bareRepositoryOrArtificial;
+            revertCommitToolStripMenuItem.Visible = !bareRepositoryOrArtificial;
+            cherryPickCommitToolStripMenuItem.Visible = !bareRepositoryOrArtificial;
+            manipulateCommitToolStripMenuItem.Visible = !bareRepositoryOrArtificial;
 
-            copyToClipboardToolStripMenuItem.Enabled = !revision.IsArtificial;
-            createNewBranchToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
-            resetCurrentBranchToHereToolStripMenuItem.Enabled = !bareRepositoryOrArtificial;
-            archiveRevisionToolStripMenuItem.Enabled = !revision.IsArtificial;
-            createTagToolStripMenuItem.Enabled = !revision.IsArtificial;
+            copyToClipboardToolStripMenuItem.Visible = !revision.IsArtificial;
+            createNewBranchToolStripMenuItem.Visible = !bareRepositoryOrArtificial;
+            resetCurrentBranchToHereToolStripMenuItem.Visible = !bareRepositoryOrArtificial;
+            archiveRevisionToolStripMenuItem.Visible = !revision.IsArtificial;
+            createTagToolStripMenuItem.Visible = !revision.IsArtificial;
 
             openBuildReportToolStripMenuItem.Visible = !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url);
 
             RefreshOwnScripts();
+
+            bool HasVisibleEnabledItem(ToolStrip item)
+            {
+                return item.Items.Count != 0 && item.Items.Cast<ToolStripItem>().Any(i => i.Visible && i.Enabled);
+            }
         }
 
         private string GetRefUnambiguousName(IGitRef gitRef)
