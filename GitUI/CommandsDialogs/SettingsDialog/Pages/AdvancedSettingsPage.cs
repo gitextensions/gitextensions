@@ -8,7 +8,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Advanced";
-            Translate();
+            InitializeComplete();
 
             var autoNormaliseSymbols = new[]
             {

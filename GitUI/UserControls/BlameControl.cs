@@ -34,7 +34,7 @@ namespace GitUI.Blame
         public BlameControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             BlameCommitter.IsReadOnly = true;
             BlameCommitter.EnableScrollBars(false);

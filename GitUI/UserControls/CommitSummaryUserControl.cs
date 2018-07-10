@@ -22,7 +22,7 @@ namespace GitUI.UserControls
         public CommitSummaryUserControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             _tagsCaption = labelTagsCaption.Text;
             _branchesCaption = labelBranchesCaption.Text;
 

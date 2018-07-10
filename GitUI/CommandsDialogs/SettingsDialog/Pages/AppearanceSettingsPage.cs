@@ -17,7 +17,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public AppearanceSettingsPage()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             NoImageService.Items.AddRange(Enum.GetNames(typeof(DefaultImageType)));
         }

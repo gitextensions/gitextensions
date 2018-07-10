@@ -39,7 +39,7 @@ namespace GitUI.BranchTreePanel
 
             btnSearch.PreviewKeyDown += OnPreviewKeyDown;
             PreviewKeyDown += OnPreviewKeyDown;
-            Translate();
+            InitializeComplete();
 
             RegisterContextActions();
 

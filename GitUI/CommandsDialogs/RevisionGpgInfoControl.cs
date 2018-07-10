@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs
         public RevisionGpgInfoControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             DisplayGpgInfo(null);
             this.AdjustForDpiScaling();

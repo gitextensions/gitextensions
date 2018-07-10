@@ -9,7 +9,7 @@ namespace GitUI.UserControls
         public RemotesComboboxControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             AllowMultiselect = false;
         }
 

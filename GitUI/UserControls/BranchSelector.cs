@@ -21,7 +21,7 @@ namespace GitUI.UserControls
             {
                 InitializeComponent();
                 Branches.SelectedIndexChanged += Branches_SelectedIndexChanged;
-                Translate();
+                InitializeComplete();
             }
             finally
             {

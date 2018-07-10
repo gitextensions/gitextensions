@@ -17,7 +17,7 @@ namespace AppVeyorIntegration.Settings
         public AppVeyorSettingsUserControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
         }

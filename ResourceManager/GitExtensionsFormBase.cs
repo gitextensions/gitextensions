@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -20,26 +19,17 @@ namespace ResourceManager
     /// </remarks>
     public class GitExtensionsFormBase : Form, ITranslate
     {
-        /// <summary>indicates whether the <see cref="Form"/> has been translated</summary>
-        private bool _initialiseCompleteCalled;
+        private readonly GitExtensionsControlInitialiser _initialiser;
 
         /// <summary>Creates a new <see cref="GitExtensionsFormBase"/> indicating position restore.</summary>
         public GitExtensionsFormBase()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            Font = AppSettings.Font;
+            _initialiser = new GitExtensionsControlInitialiser(this);
 
             ShowInTaskbar = Application.OpenForms.Count <= 0;
-
-            Load += delegate
-            {
-                if (!_initialiseCompleteCalled && !IsDesignModeComponent())
-                {
-                    throw new Exception($"{GetType().Name} must call {nameof(InitializeComplete)} in its constructor, ideally as the final statement.");
-                }
-            };
         }
+
+        protected bool IsDesignModeActive => _initialiser.IsDesignModeActive;
 
         #region Hotkeys
 
@@ -86,12 +76,6 @@ namespace ResourceManager
 
         #endregion
 
-        /// <summary>Indicates whether this is a valid <see cref="IComponent"/> running in design mode.</summary>
-        protected static bool IsDesignModeComponent()
-        {
-            return LicenseManager.UsageMode == LicenseUsageMode.Designtime;
-        }
-
         /// <summary>Performs post-initialisation tasks such as translation and DPI scaling.</summary>
         /// <remarks>
         /// <para>Subclasses must ensure this method is called in their constructor, ideally as the final statement.</para>
@@ -101,14 +85,7 @@ namespace ResourceManager
         /// </remarks>
         protected void InitializeComplete()
         {
-            if (_initialiseCompleteCalled)
-            {
-                throw new InvalidOperationException($"{nameof(InitializeComplete)} already called.");
-            }
-
-            _initialiseCompleteCalled = true;
-
-            Translator.Translate(this, AppSettings.CurrentTranslation);
+            _initialiser.InitializeComplete();
 
             AutoScaleMode = AppSettings.EnableAutoScale
                 ? AutoScaleMode.Dpi

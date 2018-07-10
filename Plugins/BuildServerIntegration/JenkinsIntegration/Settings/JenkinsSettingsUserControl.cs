@@ -17,7 +17,7 @@ namespace JenkinsIntegration.Settings
         public JenkinsSettingsUserControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
         }

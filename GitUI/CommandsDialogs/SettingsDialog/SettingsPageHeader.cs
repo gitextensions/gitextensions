@@ -27,7 +27,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public SettingsPageHeader(SettingsPageWithHeader page)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             if (page != null)
             {

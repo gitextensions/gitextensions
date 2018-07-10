@@ -29,7 +29,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         public Dashboard()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             Visible = false;

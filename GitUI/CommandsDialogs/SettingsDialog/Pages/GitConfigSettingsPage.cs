@@ -20,7 +20,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Config";
-            Translate();
+            InitializeComplete();
         }
 
         protected override void Init(ISettingsPageHost pageHost)

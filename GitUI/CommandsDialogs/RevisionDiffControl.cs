@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             DiffFiles.AlwaysRevisionGroups = true;
-            Translate();
+            InitializeComplete();
             HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();

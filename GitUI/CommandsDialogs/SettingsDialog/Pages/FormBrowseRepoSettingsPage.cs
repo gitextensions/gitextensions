@@ -8,7 +8,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Browse repository window";
-            Translate();
+            InitializeComplete();
         }
 
         protected override void Init(ISettingsPageHost pageHost)

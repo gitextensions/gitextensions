@@ -26,7 +26,7 @@ namespace TeamCityIntegration.Settings
         public TeamCitySettingsUserControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
         }

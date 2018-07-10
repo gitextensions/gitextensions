@@ -172,7 +172,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Checklist";
-            Translate();
+            InitializeComplete();
         }
 
         public static SettingsPageReference GetPageReference()
@@ -214,7 +214,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             PageHost.LoadAll();
-            Translate();
+
+            Translator.Translate(this, AppSettings.CurrentTranslation);
             SaveAndRescan_Click(null, null);
         }
 

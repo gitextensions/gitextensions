@@ -10,7 +10,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public ColorsSettingsPage()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         protected override void OnRuntimeLoad()

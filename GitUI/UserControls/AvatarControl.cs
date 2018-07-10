@@ -21,7 +21,7 @@ namespace GitUI
         public AvatarControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             clearImagecacheToolStripMenuItem.Click += delegate { ClearCache(); };
 

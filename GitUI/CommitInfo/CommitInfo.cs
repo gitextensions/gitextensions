@@ -68,7 +68,7 @@ namespace GitUI.CommitInfo
         public CommitInfo()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             GitUICommandsSourceSet += (s, e) => _sortedRefs = null;
 

@@ -1298,7 +1298,7 @@ namespace GitUI.CommandsDialogs
 
             if (translation != AppSettings.Translation)
             {
-                InitializeComplete();
+                Translator.Translate(this, AppSettings.CurrentTranslation);
             }
 
             if (showRevisionInfoNextToRevisionGrid != AppSettings.ShowRevisionInfoNextToRevisionGrid)

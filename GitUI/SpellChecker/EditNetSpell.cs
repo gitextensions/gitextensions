@@ -63,7 +63,7 @@ namespace GitUI.SpellChecker
         public EditNetSpell()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             MistakeFont = new Font(TextBox.Font, FontStyle.Underline);
             TextBoxFont = TextBox.Font;

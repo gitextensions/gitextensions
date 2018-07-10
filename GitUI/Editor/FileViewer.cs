@@ -61,7 +61,7 @@ namespace GitUI.Editor
             ShowEntireFile = false;
             NumberOfVisibleLines = AppSettings.NumberOfContextLines;
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             GitUICommandsSourceSet += FileViewer_GitUICommandsSourceSet;
 

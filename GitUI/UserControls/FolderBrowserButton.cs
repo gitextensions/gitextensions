@@ -10,7 +10,7 @@ namespace GitUI.UserControls
         public FolderBrowserButton()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         /// <summary>

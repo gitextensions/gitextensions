@@ -13,7 +13,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
         public PluginSettingsPage()
         {
             InitializeComponent();
-            Translate();
         }
 
         private void CreateSettingsControls()
@@ -31,7 +30,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Plugins
             _gitPlugin = gitPlugin;
             _settingsCointainer = new GitPluginSettingsContainer(gitPlugin.Name);
             CreateSettingsControls();
-            Translate();
+            InitializeComplete();
         }
 
         public static PluginSettingsPage CreateSettingsPageFromPlugin(ISettingsPageHost pageHost, IGitPlugin gitPlugin)

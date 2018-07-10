@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "SSH";
-            Translate();
+            InitializeComplete();
 
             label18.ForeColor = ColorHelper.GetForeColorForBackColor(label18.BackColor);
         }

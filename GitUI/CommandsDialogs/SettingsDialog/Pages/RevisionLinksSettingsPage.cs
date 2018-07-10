@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             CaptionCol.Width = DpiUtil.Scale(150);
             Text = "Revision links";
-            Translate();
+            InitializeComplete();
             LinksGrid.AutoGenerateColumns = false;
             CaptionCol.DataPropertyName = nameof(ExternalLinkFormat.Caption);
             URICol.DataPropertyName = nameof(ExternalLinkFormat.Format);

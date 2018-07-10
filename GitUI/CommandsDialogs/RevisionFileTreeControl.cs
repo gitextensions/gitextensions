@@ -55,7 +55,7 @@ See the changes in the commit form.");
         public RevisionFileTreeControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();

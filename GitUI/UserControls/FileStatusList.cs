@@ -51,7 +51,7 @@ namespace GitUI
             InitializeComponent();
             InitialiseFiltering();
             CreateOpenSubmoduleMenuItem();
-            Translate();
+            InitializeComplete();
             FilterVisible = false;
 
             SelectFirstItemOnSetItems = true;

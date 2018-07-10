@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         public UserRepositoriesList()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             mnuTop.DropDownItems.Clear();
 

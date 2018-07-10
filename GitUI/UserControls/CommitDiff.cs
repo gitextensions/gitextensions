@@ -12,7 +12,7 @@ namespace GitUI.UserControls
         public CommitDiff()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             DiffText.ExtraDiffArgumentsChanged += DiffText_ExtraDiffArgumentsChanged;
             DiffFiles.Focus();

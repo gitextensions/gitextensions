@@ -13,7 +13,7 @@ namespace GitUI.UserControls
         public CommitPickerSmallControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         ////public event EventHandler<EventArgs> OnCommitSelected;

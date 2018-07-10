@@ -10,7 +10,7 @@ namespace GitUI.UserControls.RevisionGrid
         public BareRepoControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             label.Text = _bareRepositoriesAreNotSupported.Text;
             Dock = DockStyle.Fill;

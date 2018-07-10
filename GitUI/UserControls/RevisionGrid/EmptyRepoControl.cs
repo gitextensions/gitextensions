@@ -10,7 +10,7 @@ namespace GitUI.UserControls.RevisionGrid
         public EmptyRepoControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             lblEmptyRepository.Text = _repoHasNoCommits.Text;
 

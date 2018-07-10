@@ -52,6 +52,7 @@
     <Compile Include="CommitDataRenders\CommitDataHeaderRenderer.cs" />
     <Compile Include="CommitDataRenders\DateFormatter.cs" />
     <Compile Include="CommitDataRenders\TabbedHeaderRenderStyleProvider.cs" />
+    <Compile Include="GitExtensionsControlInitialiser.cs" />
     <Compile Include="GitExtensionsFormBase.cs">
       <SubType>Form</SubType>
     </Compile>

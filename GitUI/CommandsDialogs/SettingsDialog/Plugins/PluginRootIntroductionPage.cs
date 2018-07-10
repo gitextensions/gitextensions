@@ -9,7 +9,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Plugins Settings";
-            Translate();
+            InitializeComplete();
         }
 
         protected override void SettingsToPage()

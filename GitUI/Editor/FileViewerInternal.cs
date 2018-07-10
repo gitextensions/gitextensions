@@ -33,7 +33,7 @@ namespace GitUI.Editor
             _moduleProvider = moduleProvider;
 
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             TextEditor.TextChanged += (s, e) => TextChanged?.Invoke(s, e);
             TextEditor.ActiveTextAreaControl.VScrollBar.ValueChanged += (s, e) => ScrollPosChanged?.Invoke(s, e);

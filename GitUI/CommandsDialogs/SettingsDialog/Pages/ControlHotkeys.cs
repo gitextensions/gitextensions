@@ -60,7 +60,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public ControlHotkeys()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             cmbSettings.DisplayMember = nameof(HotkeySettings.Name);
         }

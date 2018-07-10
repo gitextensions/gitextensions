@@ -134,7 +134,7 @@ namespace GitUI
         {
             InitLayout();
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             _loadingImage = new LoadingControl();
 
@@ -640,7 +640,7 @@ namespace GitUI
 
         public void ReloadTranslation()
         {
-            Translate();
+            Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
         internal static bool ShowRemoteRef(IGitRef r)

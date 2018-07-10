@@ -62,7 +62,7 @@ Current Branch:
             InitializeComponent();
             HotkeyCommandIdentifier.Width = DpiUtil.Scale(39);
             Text = "Scripts";
-            Translate();
+            InitializeComplete();
 
             HotkeyCommandIdentifier.DataPropertyName = nameof(ScriptInfo.HotkeyCommandIdentifier);
             EnabledColumn.DataPropertyName = nameof(ScriptInfo.Enabled);
