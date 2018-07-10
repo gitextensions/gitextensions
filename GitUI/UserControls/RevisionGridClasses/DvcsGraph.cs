@@ -297,9 +297,13 @@ namespace GitUI.RevisionGridClasses
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         public void Clear()
         {
-            _backgroundThread.Abort();
-
             _backgroundScrollTo = 0;
+            _shouldRun = false;
+
+            while (_backgroundThread.IsAlive)
+            {
+                Thread.Sleep(2);
+            }
 
             lock (_graphData)
             {
@@ -316,7 +320,7 @@ namespace GitUI.RevisionGridClasses
                 IsBackground = true,
                 Name = "DvcsGraph.backgroundThread"
             };
-
+            _shouldRun = true;
             _backgroundThread.Start();
         }
 
