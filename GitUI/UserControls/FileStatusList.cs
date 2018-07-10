@@ -1152,7 +1152,7 @@ namespace GitUI
                     parentRevs = revisions.Skip(1).ToArray();
                 }
 
-                if (parentRevs.Length == 0)
+                if (parentRevs == null || parentRevs.Length == 0)
                 {
                     // No parent, will set "" as parent
                     var rev = new GitRevision("");
@@ -1167,7 +1167,7 @@ namespace GitUI
 
                     foreach (var rev in parentRevs)
                     {
-                        dictionary.Add(rev, Module.GetDiffFilesWithSubmodulesStatus(rev.Guid, Revision.Guid, Revision.ParentGuids.FirstOrDefault()));
+                        dictionary.Add(rev, Module.GetDiffFilesWithSubmodulesStatus(rev.Guid, Revision.Guid, Revision.ParentGuids?.FirstOrDefault()));
                     }
 
                     // Show combined (merge conflicts) only when all first (A) are parents to selected (B)
