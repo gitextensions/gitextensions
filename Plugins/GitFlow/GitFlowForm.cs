@@ -165,6 +165,7 @@ namespace GitFlow
             }
 
             btnFinish.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
+            cbPushAfterFinish.Enabled = isThereABranch && (branchType == Branch.hotfix.ToString("G") || branchType == Branch.release.ToString("G"));
             btnPublish.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
             btnPull.Enabled = isThereABranch && (branchType != Branch.support.ToString("G"));
             pnlPull.Enabled = branchType != Branch.support.ToString("G");
@@ -245,7 +246,9 @@ namespace GitFlow
 
         private void btnFinish_Click(object sender, EventArgs e)
         {
-            RunCommand(string.Format("flow {0} finish {1}", cbManageType.SelectedValue, cbBranches.SelectedValue));
+            var command = string.Format("flow {0} finish {1} {2}", cbManageType.SelectedValue, cbPushAfterFinish.Checked ? " -p" : string.Empty, cbBranches.SelectedValue);
+
+            RunCommand(command);
         }
 
         private bool RunCommand(string commandText)
