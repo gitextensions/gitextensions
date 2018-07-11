@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using GitCommands.Git;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands
@@ -199,6 +200,16 @@ namespace GitCommands
                         throw new InvalidEnumArgumentException(nameof(option), (int)option, typeof(GitBisectOption));
                 }
             }
+        }
+
+        /// <summary>
+        /// Adds <paramref name="objectId"/> as a SHA-1 argument.
+        /// </summary>
+        /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
+        /// <param name="objectId">The SHA-1 object ID to add to the builder.</param>
+        public static void Add(this ArgumentBuilder builder, ObjectId objectId)
+        {
+            builder.Add(objectId.ToString());
         }
     }
 }
