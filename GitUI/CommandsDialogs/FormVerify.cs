@@ -287,13 +287,13 @@ namespace GitUI.CommandsDialogs
 
         private void ViewCurrentItem()
         {
-            var currenItem = CurrentItem;
-            if (currenItem == null)
+            var currentItem = CurrentItem;
+            if (currentItem == null)
             {
                 return;
             }
 
-            using (var frm = new FormEdit(UICommands, Module.ShowObject(currenItem.ObjectId)))
+            using (var frm = new FormEdit(UICommands, Module.ShowObject(currentItem.ObjectId)))
             {
                 frm.IsReadOnly = true;
                 frm.ShowDialog(this);
