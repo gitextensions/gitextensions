@@ -16,6 +16,7 @@ namespace GitUITests.CommandsDialogs
             _revisionDiffContextMenuController = new FileStatusListContextMenuController();
         }
 
+        [Test]
         public void BrowseDiff_SuppressDiffToLocalWhenNoSelectedRevision()
         {
             var selectionInfo = new ContextMenuDiffToolInfo();
