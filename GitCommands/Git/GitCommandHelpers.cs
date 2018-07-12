@@ -750,6 +750,11 @@ namespace GitCommands
 
                 while ((line = reader.ReadLine()) != null)
                 {
+                    // We are looking for lines resembling:
+                    //
+                    // -Subproject commit bfef4454fc51e345051ee5bf66686dc28deed627
+                    // +Subproject commit 8b20498b954609770205c2cc794b868b4ac3ee69
+
                     if (!line.Contains("Subproject"))
                     {
                         continue;
@@ -801,9 +806,9 @@ namespace GitCommands
         /// <returns>list with the parsed GitItemStatus</returns>
         /// <seealso href="https://git-scm.com/docs/git-diff"/>
         /// <remarks>Git revisions are required to determine if the <see cref="GitItemStatus"/> are WorkTree or Index.</remarks>
-        public static IReadOnlyList<GitItemStatus> GetDiffChangedFilesFromString(IGitModule module, string statusString, [CanBeNull]string firstRevision, [CanBeNull]string secondRevision, [CanBeNull]string parentToSecond)
+        public static IReadOnlyList<GitItemStatus> GetDiffChangedFilesFromString(IGitModule module, string statusString, [CanBeNull] string firstRevision, [CanBeNull] string secondRevision, [CanBeNull] string parentToSecond)
         {
-            StagedStatus staged = StagedStatus.Unknown;
+            StagedStatus staged;
             if (firstRevision == GitRevision.IndexGuid && secondRevision == GitRevision.UnstagedGuid)
             {
                 staged = StagedStatus.WorkTree;
@@ -818,6 +823,10 @@ namespace GitCommands
             {
                 // This cannot be a worktree/index file
                 staged = StagedStatus.None;
+            }
+            else
+            {
+                staged = StagedStatus.Unknown;
             }
 
             return GetAllChangedFilesFromString_v1(module, statusString, true, staged);
@@ -1082,7 +1091,7 @@ namespace GitCommands
             return diffFiles;
         }
 
-        public static List<GitItemStatus> GetAssumeUnchangedFilesFromString(string lsString)
+        public static IReadOnlyList<GitItemStatus> GetAssumeUnchangedFilesFromString(string lsString)
         {
             var result = new List<GitItemStatus>();
             string[] lines = lsString.SplitLines();
@@ -1103,7 +1112,7 @@ namespace GitCommands
             return result;
         }
 
-        public static List<GitItemStatus> GetSkipWorktreeFilesFromString(string lsString)
+        public static IReadOnlyList<GitItemStatus> GetSkipWorktreeFilesFromString(string lsString)
         {
             var result = new List<GitItemStatus>();
             string[] lines = lsString.SplitLines();
@@ -1239,16 +1248,14 @@ namespace GitCommands
         private static class NativeMethods
         {
             [DllImport("kernel32.dll")]
-            public static extern bool SetConsoleCtrlHandler(IntPtr HandlerRoutine,
-               bool Add);
+            public static extern bool SetConsoleCtrlHandler(IntPtr HandlerRoutine, bool Add);
 
             [DllImport("kernel32.dll", SetLastError = true)]
             public static extern bool AttachConsole(int dwProcessId);
 
             [DllImport("kernel32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent,
-               int dwProcessGroupId);
+            public static extern bool GenerateConsoleCtrlEvent(uint dwCtrlEvent, int dwProcessGroupId);
         }
 
         public static void TerminateTree(this Process process)

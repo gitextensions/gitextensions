@@ -91,7 +91,7 @@ namespace GitUI
                     sb.Replace(c, '_');
                 }
 
-                string path = Path.Combine(baseFolder, $"{sb}.{@"gitext"}");
+                string path = Path.Combine(baseFolder, $"{sb}.gitext");
                 File.WriteAllText(path, workingDir);
                 JumpList.AddToRecent(path);
             }

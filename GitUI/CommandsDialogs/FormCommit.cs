@@ -736,12 +736,12 @@ namespace GitUI.CommandsDialogs
 
         public void ShowDialogWhenChanges(IWin32Window owner = null)
         {
-            ComputeUnstagedFiles((allChangedFiles) =>
+            ComputeUnstagedFiles(allChangedFiles =>
                 {
                     if (allChangedFiles.Count > 0)
                     {
                         LoadUnstagedOutput(allChangedFiles);
-                        Initialize(false);
+                        Initialize(loadUnstaged: false);
                         ShowDialog(owner);
                     }
                     else

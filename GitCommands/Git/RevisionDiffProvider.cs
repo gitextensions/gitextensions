@@ -56,7 +56,7 @@ namespace GitCommands.Git
             return GetInternal(firstRevision, secondRevision, fileName, oldFileName, isTracked);
         }
 
-        private string GetInternal(string firstRevision, string secondRevision, string fileName = null, string oldFileName = null, bool isTracked = true)
+        private string GetInternal([CanBeNull] string firstRevision, [CanBeNull] string secondRevision, string fileName = null, string oldFileName = null, bool isTracked = true)
         {
             // Combined Diff artificial commit should not be included in diffs
             if (firstRevision == GitRevision.CombinedDiffGuid || secondRevision == GitRevision.CombinedDiffGuid)
@@ -130,32 +130,29 @@ namespace GitCommands.Git
         /// (order and handling of empty arguments is not handled here)
         /// </summary>
         [CanBeNull]
-        private static string ArtificialToDiffOptions(string rev)
+        private static string ArtificialToDiffOptions([CanBeNull] string rev)
         {
-            if (rev.IsNullOrEmpty() || rev == GitRevision.UnstagedGuid)
+            switch (rev)
             {
-                rev = string.Empty;
+                case GitRevision.UnstagedGuid:
+                case "":
+                case null:
+                    return "";
+                case "^":
+                case GitRevision.UnstagedGuid + "^":
+                case GitRevision.IndexGuid:
+                    return StagedOpt;
+                case "^^":
+                case GitRevision.UnstagedGuid + "^^":
+                case GitRevision.IndexGuid + "^":
+                    return "\"HEAD\"";
+                case "^^^":
+                case GitRevision.UnstagedGuid + "^^^":
+                case GitRevision.IndexGuid + "^^":
+                    return "HEAD^";
+                default:
+                    return rev.QuoteNE();
             }
-            else if (rev == "^" || rev == GitRevision.UnstagedGuid + "^" || rev == GitRevision.IndexGuid)
-            {
-                rev = StagedOpt;
-            }
-            else
-            {
-                // Normal commit
-                if (rev == "^^" || rev == GitRevision.UnstagedGuid + "^^" || rev == GitRevision.IndexGuid + "^")
-                {
-                    rev = "HEAD";
-                }
-                else if (rev == "^^^" || rev == GitRevision.UnstagedGuid + "^^^" || rev == GitRevision.IndexGuid + "^^")
-                {
-                    rev = "HEAD^";
-                }
-
-                rev = rev.QuoteNE();
-            }
-
-            return rev;
         }
     }
 }

@@ -85,7 +85,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 // Try to be more helpful to the user.
-                // Use the cliboard text as a potential source URL.
+                // Use the clipboard text as a potential source URL.
                 try
                 {
                     if (Clipboard.ContainsText(TextDataFormat.Text))
@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs
                     }
                     catch (Exception)
                     {
-                        // Exceptions on setting the destination directory can be ingnored
+                        // Exceptions on setting the destination directory can be ignored
                     }
                 }
             }

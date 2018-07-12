@@ -6,9 +6,8 @@ using RestSharp;
 
 namespace Bitbucket
 {
-    internal class PullRequest
+    internal sealed class PullRequest
     {
-        ////public string Ref { get; set; }
         public static PullRequest Parse(JObject json)
         {
             var request = new PullRequest

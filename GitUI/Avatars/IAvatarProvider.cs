@@ -16,6 +16,7 @@ namespace GitUI.Avatars
         /// Provides the avatar image for the associated email at the requested size.
         /// </summary>
         [NotNull]
+        [ItemCanBeNull]
         Task<Image> GetAvatarAsync([NotNull] string email, int imageSize);
 
         /// <summary>

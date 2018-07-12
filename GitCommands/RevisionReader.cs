@@ -221,7 +221,9 @@ namespace GitCommands
             }
         }
 
-        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, [CanBeNull] out GitRevision revision)
+        [ContractAnnotation("=>false,revision:null")]
+        [ContractAnnotation("=>true,revision:notnull")]
+        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, out GitRevision revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.

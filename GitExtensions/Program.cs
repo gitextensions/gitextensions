@@ -84,12 +84,15 @@ namespace GitExtensions
 
             try
             {
+                // Ensure we can find the git command to execute,
+                // unless we are being instructed to uninstall,
+                // or AppSettings.CheckSettings is set to false.
                 if (!(args.Length >= 2 && args[1] == "uninstall")
                     && (AppSettings.CheckSettings
                     || string.IsNullOrEmpty(AppSettings.GitCommandValue)
                     || !File.Exists(AppSettings.GitCommandValue)))
                 {
-                    var uiCommands = new GitUICommands(string.Empty);
+                    var uiCommands = new GitUICommands("");
                     var commonLogic = new CommonLogic(uiCommands.Module);
                     var checkSettingsLogic = new CheckSettingsLogic(commonLogic);
                     var fakePageHost = new SettingsPageHostMock(checkSettingsLogic);

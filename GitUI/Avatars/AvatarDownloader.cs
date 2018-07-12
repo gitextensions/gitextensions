@@ -46,7 +46,7 @@ namespace GitUI.Avatars
                         var builder = new UriBuilder(user.AvatarUrl);
                         var query = new StringBuilder(builder.Query.TrimStart('?'));
                         query.Append(query.Length == 0 ? "?" : "&");
-                        query.AppendFormat("s={0}", imageSize);
+                        query.Append("s=").Append(imageSize);
                         builder.Query = query.ToString();
                         var imageUrl = builder.Uri;
 

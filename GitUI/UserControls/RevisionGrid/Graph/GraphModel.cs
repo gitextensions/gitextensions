@@ -645,9 +645,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 NodeByObjectId.Remove(node.ObjectId);
 
                 // This guy should have been at the end of some junctions
-                foreach (Junction j in node.Descendants)
+                foreach (var descendant in node.Descendants)
                 {
-                    j.Remove(node);
+                    descendant.Remove(node);
                 }
             }
         }

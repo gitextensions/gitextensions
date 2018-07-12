@@ -37,7 +37,7 @@ namespace GitCommands
             Name = name.IsNullOrWhiteSpace() ? CompleteName : name;
 
             _remoteSettingName = RemoteSettingName(Name);
-            _mergeSettingName = string.Format("branch.{0}.merge", Name);
+            _mergeSettingName = $"branch.{Name}.merge";
         }
 
         public string CompleteName { get; }

@@ -3,12 +3,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI
 {
-    /// <summary>Base class for a <see cref="UserControl"/> requiring
-    /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
+    /// <summary>
+    /// Base class for a <see cref="UserControl"/> requiring <see cref="GitModule"/> and <see cref="GitUICommands"/>.
+    /// </summary>
     public class GitModuleControl : GitExtensionsControl
     {
         private readonly object _lock = new object();
@@ -23,15 +25,25 @@ namespace GitUI
         private IGitUICommandsSource _uiCommandsSource;
 
         /// <summary>Gets the <see cref="IGitUICommandsSource"/>.</summary>
+        [CanBeNull]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public IGitUICommandsSource UICommandsSource
         {
             get
             {
-                if (_uiCommandsSource == null)
+                if (_uiCommandsSource == null && UICommandsSourceParentSearch)
                 {
-                    SearchForUICommandsSource();
+                    lock (_lock)
+                    {
+                        // Double check locking
+                        if (_uiCommandsSource == null)
+                        {
+                            // Search ancestors for an implementation of IGitUICommandsSource
+                            UICommandsSource = this.FindAncestors().OfType<IGitUICommandsSource>().FirstOrDefault()
+                                               ?? throw new InvalidOperationException("The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?");
+                        }
+                    }
                 }
 
                 return _uiCommandsSource;
@@ -40,10 +52,10 @@ namespace GitUI
             {
                 if (_uiCommandsSource != null)
                 {
-                    throw new ArgumentException("UICommandsSource is already set");
+                    throw new ArgumentException($"{nameof(UICommandsSource)} is already set.");
                 }
 
-                _uiCommandsSource = value ?? throw new ArgumentException("Can not assign null value to UICommandsSource");
+                _uiCommandsSource = value ?? throw new ArgumentException($"Can not assign null value to {nameof(UICommandsSource)}.");
                 OnUICommandsSourceChanged(_uiCommandsSource);
             }
         }
@@ -99,37 +111,15 @@ namespace GitUI
             _uiCommandsSource = null;
         }
 
-        /// <summary>Searches up the <see cref="UserControl"/>'s parent tree until it finds a <see cref="IGitUICommandsSource"/>.</summary>
-        private void SearchForUICommandsSource()
-        {
-            if (!UICommandsSourceParentSearch)
-            {
-                return;
-            }
-
-            lock (_lock)
-            {
-                if (_uiCommandsSource != null)
-                {
-                    return;
-                }
-
-                UICommandsSource = this.FindAncestors().OfType<IGitUICommandsSource>().FirstOrDefault()
-                    ?? throw new InvalidOperationException("The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?");
-            }
-        }
-
         protected override bool ExecuteCommand(int command)
         {
-            return ExecuteScriptCommand(command)
+            return ExecuteScriptCommand()
                 || base.ExecuteCommand(command);
-        }
 
-        /// <summary>Tries to run scripts identified by a <paramref name="command"/>
-        /// and returns true if any executed.</summary>
-        private bool ExecuteScriptCommand(int command)
-        {
-            return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGridControl);
+            bool ExecuteScriptCommand()
+            {
+                return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGridControl);
+            }
         }
 
         /// <summary>Raises the <see cref="GitUICommandsSourceSet"/> event.</summary>
