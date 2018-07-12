@@ -1261,9 +1261,6 @@
     <EmbeddedResource Include="UserControls\CommitSummaryUserControl.resx">
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editor\FormGoToLine.resx">
-      <DependentUpon>FormGoToLine.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="HelperDialogs\FormChooseCommit.resx">
       <DependentUpon>FormChooseCommit.cs</DependentUpon>
     </EmbeddedResource>
@@ -1363,19 +1360,12 @@
       <DependentUpon>FormCherryPick.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="HelperDialogs\FormRunScriptSpecify.resx">
-      <DependentUpon>FormRunScriptSpecify.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\HelpImageDisplayUserControl.resx">
       <DependentUpon>HelpImageDisplayUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ControlHotkeys.resx">
       <DependentUpon>ControlHotkeys.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Script\SimplePrompt.resx">
-      <DependentUpon>SimplePrompt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\AdvancedSettingsPage.resx">
       <DependentUpon>AdvancedSettingsPage.cs</DependentUpon>

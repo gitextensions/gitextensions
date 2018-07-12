@@ -423,7 +423,6 @@
             this.ClientSize = new System.Drawing.Size(760, 421);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(statusStrip1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "DeleteUnusedBranchesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

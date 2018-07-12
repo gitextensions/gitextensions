@@ -72,7 +72,6 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.branchesListView);
             this.Controls.Add(this.specifyLabel);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormRunScriptSpecify";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Specify branch";

@@ -431,7 +431,6 @@ namespace GitStatistics
             this.ClientSize = new System.Drawing.Size(751, 465);
             this.Controls.Add(this.LoadingLabel);
             this.Controls.Add(this.Tabs);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(350, 250);
             this.Name = "FormGitStatistics";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

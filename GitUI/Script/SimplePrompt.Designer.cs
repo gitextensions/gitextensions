@@ -69,7 +69,6 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txt_UserInput);
             this.Controls.Add(this.btn_OK);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SimplePrompt";
             this.Text = "SimplePrompt";
             this.Shown += new System.EventHandler(this.SimplePrompt_Shown);

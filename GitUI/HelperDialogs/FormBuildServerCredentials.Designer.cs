@@ -156,7 +156,6 @@
             this.Controls.Add(this.labelHeader);
             this.Controls.Add(buttonCancel);
             this.Controls.Add(buttonOK);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(378, 226);
