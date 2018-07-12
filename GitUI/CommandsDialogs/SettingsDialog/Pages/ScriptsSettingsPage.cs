@@ -325,7 +325,7 @@ Current Branch:
                 return null;
             }
 
-            Bitmap result = new Bitmap(width, height);
+            var result = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage(result))
             {
                 g.DrawImage(b, 0, 0, width, height);

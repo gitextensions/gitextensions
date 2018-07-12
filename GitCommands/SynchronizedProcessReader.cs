@@ -48,7 +48,7 @@ namespace GitCommands
         {
             string stdOutputLoader = null;
 
-            Thread stdOutputLoaderThread = new Thread(_ => stdOutputLoader = process.StandardOutput.ReadToEnd());
+            var stdOutputLoaderThread = new Thread(_ => stdOutputLoader = process.StandardOutput.ReadToEnd());
             stdOutputLoaderThread.Start();
 
             stdError = process.StandardError.ReadToEnd();
@@ -68,7 +68,7 @@ namespace GitCommands
 
             // We cannot use the async functions because these functions will read the output to a string, this
             // can cause problems because the correct encoding is not used.
-            Thread stdOutputLoaderThread = new Thread(_ => stdOutputLoader = ReadByte(process.StandardOutput.BaseStream));
+            var stdOutputLoaderThread = new Thread(_ => stdOutputLoader = ReadByte(process.StandardOutput.BaseStream));
             stdOutputLoaderThread.Start();
 
             stdError = ReadByte(process.StandardError.BaseStream);
@@ -85,7 +85,7 @@ namespace GitCommands
                 return null;
             }
 
-            using (MemoryStream memStream = new MemoryStream())
+            using (var memStream = new MemoryStream())
             {
                 stream.CopyTo(memStream);
                 return memStream.ToArray();

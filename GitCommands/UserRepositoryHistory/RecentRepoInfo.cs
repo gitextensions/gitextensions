@@ -82,7 +82,7 @@ namespace GitCommands.UserRepositoryHistory
             {
                 bool mostRecent = (mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
                     repository.Anchor == Repository.RepositoryAnchor.MostRecent;
-                RecentRepoInfo ri = new RecentRepoInfo(repository, mostRecent);
+                var ri = new RecentRepoInfo(repository, mostRecent);
                 if (ri.MostRecent)
                 {
                     mostRecentRepos.Add(ri);
@@ -189,7 +189,7 @@ namespace GitCommands.UserRepositoryHistory
                 orderedRepos.Add(repoInfo.Caption, list);
             }
 
-            List<RecentRepoInfo> tmpList = new List<RecentRepoInfo>();
+            var tmpList = new List<RecentRepoInfo>();
             if (existsShortName)
             {
                 for (int i = list.Count - 1; i >= 0; i--)

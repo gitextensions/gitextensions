@@ -414,7 +414,7 @@ namespace GitUI
             {
                 if (SelectedItems.Any())
                 {
-                    StringCollection fileList = new StringCollection();
+                    var fileList = new StringCollection();
 
                     foreach (GitItemStatus item in SelectedItems)
                     {
@@ -423,7 +423,7 @@ namespace GitUI
                         fileList.Add(fileName.ToNativePath());
                     }
 
-                    DataObject obj = new DataObject();
+                    var obj = new DataObject();
                     obj.SetFileDropList(fileList);
 
                     // Proceed with the drag and drop, passing in the list item.
@@ -675,7 +675,7 @@ namespace GitUI
 
             var status = await SelectedItem.GetSubmoduleStatusAsync().ConfigureAwait(false);
 
-            Process process = new Process
+            var process = new Process
             {
                 StartInfo =
                 {

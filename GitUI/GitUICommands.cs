@@ -501,7 +501,7 @@ namespace GitUI
 
             bool Action()
             {
-                using (FormPull formPull = new FormPull(this, remoteBranch, remote))
+                using (var formPull = new FormPull(this, remoteBranch, remote))
                 {
                     if (fetchAll)
                     {

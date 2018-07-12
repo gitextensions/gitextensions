@@ -382,7 +382,7 @@ namespace GitUI.CommitInfo
                 {
                     var (precedingTag, commitCount) = _gitDescribeProvider.Get(commitId);
 
-                    StringBuilder gitDescribeInfo = new StringBuilder();
+                    var gitDescribeInfo = new StringBuilder();
                     if (!string.IsNullOrEmpty(precedingTag))
                     {
                         string tagString = ShowBranchesAsLinks ? _linkFactory.CreateTagLink(precedingTag) : WebUtility.HtmlEncode(precedingTag);

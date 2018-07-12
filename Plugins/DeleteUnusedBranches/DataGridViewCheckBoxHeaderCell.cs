@@ -46,7 +46,7 @@ namespace DeleteUnusedBranches
                 formattedValue, errorText, cellStyle,
                 advancedBorderStyle, paintParts);
 
-            Point p = new Point();
+            var p = new Point();
             Size s = CheckBoxRenderer.GetGlyphSize(graphics, CheckBoxState.UncheckedNormal);
             p.X = cellBounds.Location.X + (cellBounds.Width / 2) - (s.Width / 2);
             p.Y = cellBounds.Location.Y + (cellBounds.Height / 2) - (s.Height / 2);
@@ -69,7 +69,7 @@ namespace DeleteUnusedBranches
 
         protected override void OnMouseClick(DataGridViewCellMouseEventArgs e)
         {
-            Point p = new Point(e.X + _cellLocation.X, e.Y + _cellLocation.Y);
+            var p = new Point(e.X + _cellLocation.X, e.Y + _cellLocation.Y);
             if (p.X >= _checkBoxLocation.X &&
                 p.X <= _checkBoxLocation.X + _checkBoxSize.Width &&
                 p.Y >= _checkBoxLocation.Y &&

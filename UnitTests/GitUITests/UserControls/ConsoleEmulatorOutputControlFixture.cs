@@ -71,7 +71,7 @@ namespace GitUITests.UserControls
                 "Receiving: 100%\nReceived data\n"
             };
 
-            List<string> received = new List<string>();
+            var received = new List<string>();
 
             void FireDataReceived(TextEventArgs e)
             {

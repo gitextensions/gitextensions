@@ -73,7 +73,7 @@ namespace ResourceManager.CommitDataRenders
             var padding = _headerRendererStyleProvider.GetMaxWidth();
             string authorEmail = GetEmail(commitData.Author);
 
-            StringBuilder header = new StringBuilder();
+            var header = new StringBuilder();
             header.AppendLine(_labelFormatter.FormatLabel(Strings.Author, padding) + _linkFactory.CreateLink(commitData.Author, "mailto:" + authorEmail));
 
             if (!isArtificial)
@@ -128,7 +128,7 @@ namespace ResourceManager.CommitDataRenders
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
             var padding = _headerRendererStyleProvider.GetMaxWidth();
 
-            StringBuilder header = new StringBuilder();
+            var header = new StringBuilder();
             header.AppendLine(_labelFormatter.FormatLabel(Strings.Author, padding) + commitData.Author);
             header.AppendLine(_labelFormatter.FormatLabel(datesEqual ? Strings.Date : Strings.AuthorDate, padding) + _dateFormatter.FormatDateAsRelativeLocal(commitData.AuthorDate));
             if (!authorIsCommitter)

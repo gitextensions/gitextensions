@@ -271,7 +271,7 @@ namespace NetSpell.SpellChecker
 
         private void SuggestWord(string word, List<Word> tempSuggestion)
         {
-            Word ws = new Word();
+            var ws = new Word();
             ws.Text = word;
             ws.EditDistance = EditDistance(CurrentWord, word);
             tempSuggestion.Add(ws);
@@ -317,7 +317,7 @@ namespace NetSpell.SpellChecker
 
             for (int i = 0; i < CurrentWord.Length; i++)
             {
-                StringBuilder tempWord = new StringBuilder(CurrentWord);
+                var tempWord = new StringBuilder(CurrentWord);
                 for (int x = 0; x < tryme.Length; x++)
                 {
                     tempWord[i] = tryme[x];
@@ -339,7 +339,7 @@ namespace NetSpell.SpellChecker
             {
                 for (int i = 0; i < CurrentWord.Length; i++)
                 {
-                    StringBuilder tempWord = new StringBuilder(CurrentWord);
+                    var tempWord = new StringBuilder(CurrentWord);
                     tempWord.Remove(i, 1);
 
                     string word = tempWord.ToString();
@@ -362,7 +362,7 @@ namespace NetSpell.SpellChecker
             {
                 for (int x = 0; x < tryme.Length; x++)
                 {
-                    StringBuilder tempWord = new StringBuilder(CurrentWord);
+                    var tempWord = new StringBuilder(CurrentWord);
                     tempWord.Insert(i, tryme[x]);
 
                     string word = tempWord.ToString();
@@ -381,7 +381,7 @@ namespace NetSpell.SpellChecker
         {
             for (int i = 0; i < CurrentWord.Length - 1; i++)
             {
-                StringBuilder tempWord = new StringBuilder(CurrentWord);
+                var tempWord = new StringBuilder(CurrentWord);
 
                 char swap = tempWord[i];
                 tempWord[i] = tempWord[i + 1];
@@ -983,7 +983,7 @@ namespace NetSpell.SpellChecker
 
             Initialize();
 
-            List<Word> tempSuggestion = new List<Word>();
+            var tempSuggestion = new List<Word>();
 
             if ((SuggestionMode == SuggestionEnum.PhoneticNearMiss
                 || SuggestionMode == SuggestionEnum.Phonetic)

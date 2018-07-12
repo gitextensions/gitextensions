@@ -137,7 +137,7 @@ namespace GitUI.BuildServerIntegration
                                 DataProtectionScope.CurrentUser);
                             using (var memoryStream = new MemoryStream(unprotectedData))
                             {
-                                ConfigFile credentialsConfig = new ConfigFile("", false);
+                                var credentialsConfig = new ConfigFile("", false);
 
                                 using (var textReader = new StreamReader(memoryStream, Encoding.UTF8))
                                 {
@@ -179,7 +179,7 @@ namespace GitUI.BuildServerIntegration
 
                     if (buildServerCredentials != null)
                     {
-                        ConfigFile credentialsConfig = new ConfigFile("", true);
+                        var credentialsConfig = new ConfigFile("", true);
 
                         var section = credentialsConfig.FindOrCreateConfigSection(CredentialsConfigName);
 

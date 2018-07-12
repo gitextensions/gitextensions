@@ -148,7 +148,7 @@ namespace FindLargeFiles
             _revList = _gitCommands.RunGitCmd("rev-list HEAD").Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             pbRevisions.Maximum = (int)(_revList.Length * 1.1f);
             BranchesGrid.DataSource = _gitObjects;
-            Thread thread = new Thread(FindLargeFilesFunction);
+            var thread = new Thread(FindLargeFilesFunction);
             thread.Start();
         }
 
@@ -185,7 +185,7 @@ namespace FindLargeFiles
         {
             if (MessageBox.Show(this, _areYouSureToDelete.Text, _deleteCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 foreach (GitObject gitObject in _gitObjects.Where(gitObject => gitObject.Delete))
                 {
                     sb.AppendLine(string.Format("\"{0}\" filter-branch --index-filter \"git rm -r -f --cached --ignore-unmatch {1}\" --prune-empty -- --all",

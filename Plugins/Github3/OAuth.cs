@@ -59,7 +59,7 @@ namespace Github3
 
             if (url.Contains("?code="))
             {
-                Uri uri = new Uri(url);
+                var uri = new Uri(url);
                 var queryParams = GetParams(uri.Query);
                 if (queryParams.TryGetValue("code", out var code))
                 {

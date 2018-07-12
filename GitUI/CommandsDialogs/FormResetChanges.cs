@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs
         /// <param name="hasNewFiles">Are there new (untracked) files selected?</param>
         public static ActionEnum ShowResetDialog(IWin32Window owner, bool hasExistingFiles, bool hasNewFiles)
         {
-            using (FormResetChanges form = new FormResetChanges(hasExistingFiles, hasNewFiles))
+            using (var form = new FormResetChanges(hasExistingFiles, hasNewFiles))
             {
                 form.ShowDialog(owner);
                 return form.SelectedAction;

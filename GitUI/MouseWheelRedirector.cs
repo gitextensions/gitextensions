@@ -45,7 +45,7 @@ namespace GitUI
             if (m.Msg == WM_MOUSEWHEEL || m.Msg == WM_MOUSEHWHEEL)
             {
                 // WM_MOUSEWHEEL, find the control at screen position m.LParam
-                Point pos = new Point(m.LParam.ToInt32());
+                var pos = new Point(m.LParam.ToInt32());
                 IntPtr hwnd = NativeMethods.WindowFromPoint(pos);
                 if (hwnd != IntPtr.Zero && hwnd != m.HWnd && Control.FromHandle(hwnd) != null)
                 {

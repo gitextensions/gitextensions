@@ -65,7 +65,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void TestFetchArguments()
         {
-            GitModule module = new GitModule(null);
+            var module = new GitModule(null);
             {
                 // Specifying a remote and a local branch creates a local branch
                 var fetchCmd = module.FetchCmd("origin", "some-branch", "local");
@@ -117,7 +117,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void TestGetDiffChangedFilesFromString()
         {
-            GitModule module = new GitModule(null);
+            var module = new GitModule(null);
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
@@ -209,7 +209,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void TestGetStatusChangedFilesFromString()
         {
-            GitModule module = new GitModule(null);
+            var module = new GitModule(null);
             {
                 // git status --porcelain=2 --untracked-files=no -z
                 // porcelain v1: string statusString = "M  adfs.h\0M  dir.c\0";
@@ -347,7 +347,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void GetSubmoduleNamesFromDiffTest()
         {
-            GitModule testModule = new GitModule("C:\\Test\\SuperProject");
+            var testModule = new GitModule("C:\\Test\\SuperProject");
 
             // Submodule name without spaces in the name
 

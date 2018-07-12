@@ -388,7 +388,7 @@ namespace GitUI.SpellChecker
 
         private ToolStripMenuItem AddContextMenuItem(string text, EventHandler eventHandler)
         {
-            ToolStripMenuItem menuItem = new ToolStripMenuItem(text, null, eventHandler);
+            var menuItem = new ToolStripMenuItem(text, null, eventHandler);
             SpellCheckContextMenu.Items.Add(menuItem);
             return menuItem;
         }

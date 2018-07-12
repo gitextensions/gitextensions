@@ -504,7 +504,7 @@ namespace GitUI.CommandsDialogs
             }
 
             // auto pull only if current branch was rejected
-            Regex isRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranchName) + ".*", RegexOptions.Compiled);
+            var isRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranchName) + ".*", RegexOptions.Compiled);
             if (isRejected.IsMatch(form.GetOutputString()) && !Module.IsBareRepository())
             {
                 bool forcePush = false;

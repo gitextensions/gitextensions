@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             try
             {
-                Client github = new Client();
+                var github = new Client();
                 Repository gitExtRepo = github.getRepository("gitextensions", "gitextensions");
 
                 var configData = gitExtRepo?.GetRef("heads/configdata");
@@ -198,7 +198,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public static IEnumerable<ReleaseVersion> Parse(string versionsStr)
         {
-            ConfigFile cfg = new ConfigFile("", true);
+            var cfg = new ConfigFile("", true);
             cfg.LoadFromString(versionsStr);
             var sections = cfg.GetConfigSections("Version");
             sections = sections.Concat(cfg.GetConfigSections("RCVersion"));

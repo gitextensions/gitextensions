@@ -127,7 +127,7 @@ namespace GitCommands.Statistics
 
         private JoinableTask[] GetTasks(CancellationToken token)
         {
-            List<JoinableTask> tasks = new List<JoinableTask>();
+            var tasks = new List<JoinableTask>();
             string authorName = RespectMailmap ? "%aN" : "%an";
 
             string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
@@ -170,7 +170,7 @@ namespace GitCommands.Statistics
             // Analyze commit listing
             while (!token.IsCancellationRequested)
             {
-                Commit commit = new Commit();
+                var commit = new Commit();
 
                 // Reached the end ?
                 if (line == null)
@@ -246,8 +246,9 @@ namespace GitCommands.Statistics
             foreach (var (author, _) in authors)
             {
                 // Determine first and last commit week of each author
-                DateTime start = new DateTime(), end = new DateTime();
-                bool startFound = false;
+                var start = new DateTime();
+                var end = new DateTime();
+                var startFound = false;
 
                 foreach (var (weekDate, weekDataByAuthor) in impact)
                 {

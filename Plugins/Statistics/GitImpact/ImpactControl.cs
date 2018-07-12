@@ -283,14 +283,14 @@ namespace GitImpact
                     return;
                 }
 
-                using (Font font = new Font("Arial", LinesFontSize))
+                using (var font = new Font("Arial", LinesFontSize))
                 {
                     Brush brush = Brushes.White;
 
                     foreach (var (point, size) in _lineLabels[author])
                     {
                         SizeF sz = g.MeasureString(size.ToString(), font);
-                        PointF pt = new PointF(point.X - (sz.Width / 2), point.Y - (sz.Height / 2));
+                        var pt = new PointF(point.X - (sz.Width / 2), point.Y - (sz.Height / 2));
                         g.DrawString(size.ToString(), font, brush, pt);
                     }
                 }
@@ -301,14 +301,14 @@ namespace GitImpact
         {
             lock (_dataLock)
             {
-                using (Font font = new Font("Arial", WeekFontSize))
+                using (var font = new Font("Arial", WeekFontSize))
                 {
                     Brush brush = Brushes.Gray;
 
                     foreach (var (point, date) in _weekLabels)
                     {
                         SizeF sz = g.MeasureString(date.ToString("dd. MMM yy"), font);
-                        PointF pt = new PointF(point.X - (sz.Width / 2), point.Y + (sz.Height / 2));
+                        var pt = new PointF(point.X - (sz.Width / 2), point.Y + (sz.Height / 2));
                         g.DrawString(date.ToString("dd. MMM yy"), font, brush, pt);
                     }
                 }
@@ -343,7 +343,7 @@ namespace GitImpact
                     {
                         // Calculate week-author-rectangle
                         int height = Math.Max(1, (int)Math.Round(Math.Pow(Math.Log(data.ChangedLines), 1.5) * 4));
-                        Rectangle rc = new Rectangle(x, y, BlockWidth, height);
+                        var rc = new Rectangle(x, y, BlockWidth, height);
 
                         // Add rectangle to temporary list
                         if (!author_points_dict.ContainsKey(author))

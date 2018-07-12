@@ -896,7 +896,7 @@ namespace GitUI.CommandsDialogs
                 if (EnvUtils.RunningOnWindows())
                 {
                     // remove file mode warnings on windows
-                    Regex regEx = new Regex("warning: .*has type .* expected .*", RegexOptions.Compiled);
+                    var regEx = new Regex("warning: .*has type .* expected .*", RegexOptions.Compiled);
                     output = output.RemoveLines(regEx.IsMatch);
                 }
 
@@ -2275,7 +2275,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine("Submodule" + (modules.Count == 1 ? " " : "s ") +
                 string.Join(", ", modules.Keys) + " updated");
             sb.AppendLine();
@@ -2291,7 +2291,7 @@ namespace GitUI.CommandsDialogs
                 if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
                 {
                     sb.AppendLine("Submodule " + path + ":");
-                    GitModule module = new GitModule(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
+                    var module = new GitModule(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
                     string log = module.RunGitCmd(
                          string.Format("log --pretty=format:\"    %m %h - %s\" --no-merges {0}...{1}", from, to));
                     if (log.Length != 0)

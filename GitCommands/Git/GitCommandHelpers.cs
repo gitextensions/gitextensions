@@ -133,7 +133,7 @@ namespace GitCommands
             }
 
             // Turn ssh://user@host/path into user@host:path, which works better
-            Uri uri = new Uri(inputUrl, UriKind.Absolute);
+            var uri = new Uri(inputUrl, UriKind.Absolute);
             string fixedUrl = "";
             if (!uri.IsDefaultPort)
             {
@@ -725,7 +725,7 @@ namespace GitCommands
             }
 
             var status = new GitSubmoduleStatus();
-            using (StringReader reader = new StringReader(text))
+            using (var reader = new StringReader(text))
             {
                 string line = reader.ReadLine();
 
@@ -1084,7 +1084,7 @@ namespace GitCommands
 
         public static List<GitItemStatus> GetAssumeUnchangedFilesFromString(string lsString)
         {
-            List<GitItemStatus> result = new List<GitItemStatus>();
+            var result = new List<GitItemStatus>();
             string[] lines = lsString.SplitLines();
             foreach (string line in lines)
             {
@@ -1105,7 +1105,7 @@ namespace GitCommands
 
         public static List<GitItemStatus> GetSkipWorktreeFilesFromString(string lsString)
         {
-            List<GitItemStatus> result = new List<GitItemStatus>();
+            var result = new List<GitItemStatus>();
             string[] lines = lsString.SplitLines();
             foreach (string line in lines)
             {

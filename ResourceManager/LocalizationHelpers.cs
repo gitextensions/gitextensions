@@ -77,7 +77,7 @@ namespace ResourceManager
 
         public static string GetSubmoduleText(GitModule superproject, string name, string hash)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine("Submodule " + name);
             sb.AppendLine();
             GitModule module = superproject.GetSubmodule(name);

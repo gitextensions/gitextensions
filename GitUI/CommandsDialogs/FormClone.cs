@@ -269,7 +269,7 @@ namespace GitUI.CommandsDialogs
                 if (_openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
                     Hide();
-                    GitUICommands uiCommands = new GitUICommands(dirTo);
+                    var uiCommands = new GitUICommands(dirTo);
                     uiCommands.StartBrowseDialog();
                 }
                 else if (ShowInTaskbar == false && _gitModuleChanged != null &&

@@ -227,7 +227,7 @@ namespace GitUI.Blame
             if (rect.Contains(MousePosition))
             {
                 Point p = BlameCommitter.PointToClient(MousePosition);
-                MouseEventArgs me = new MouseEventArgs(0, 0, p.X, p.Y, 0);
+                var me = new MouseEventArgs(0, 0, p.X, p.Y, 0);
                 BlameCommitter_MouseMove(null, me);
             }
         }

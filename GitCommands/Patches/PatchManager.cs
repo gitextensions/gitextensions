@@ -79,7 +79,7 @@ namespace GitCommands.Patches
                 }
             }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (string line in headerLines)
             {
@@ -99,7 +99,7 @@ namespace GitCommands.Patches
         [CanBeNull]
         public static byte[] GetSelectedLinesAsNewPatch([NotNull] GitModule module, [NotNull] string newFileName, [NotNull] string text, int selectionPosition, int selectionLength, [NotNull] Encoding fileContentEncoding, bool reset, byte[] filePreamble)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             const string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
             sb.Append(string.Format("diff --git a/{0} b/{0}", newFileName));
             sb.Append("\n");
@@ -562,7 +562,7 @@ namespace GitCommands.Patches
             bool inPreContext = true;
             int i = 1;
 
-            Chunk result = new Chunk();
+            var result = new Chunk();
             result.ParseHeader(lines[0]);
             currentPos += lines[0].Length + 1;
 
@@ -620,7 +620,7 @@ namespace GitCommands.Patches
         [NotNull]
         public static Chunk FromNewFile([NotNull] GitModule module, [NotNull] string fileText, int selectionPosition, int selectionLength, bool reset, [NotNull] byte[] filePreamble, [NotNull] Encoding fileContentEncoding)
         {
-            Chunk result = new Chunk { _startLine = 0 };
+            var result = new Chunk { _startLine = 0 };
 
             int currentPos = 0;
             string gitEol = module.GetEffectiveSetting("core.eol");

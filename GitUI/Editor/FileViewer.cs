@@ -270,14 +270,14 @@ namespace GitUI.Editor
 
         public ToolStripSeparator AddContextMenuSeparator()
         {
-            ToolStripSeparator separator = new ToolStripSeparator();
+            var separator = new ToolStripSeparator();
             contextMenu.Items.Add(separator);
             return separator;
         }
 
         public ToolStripMenuItem AddContextMenuEntry(string text, EventHandler toolStripItem_Click)
         {
-            ToolStripMenuItem toolStripItem = new ToolStripMenuItem(text);
+            var toolStripItem = new ToolStripMenuItem(text);
             contextMenu.Items.Add(toolStripItem);
             toolStripItem.Click += toolStripItem_Click;
             return toolStripItem;
@@ -1040,7 +1040,7 @@ namespace GitUI.Editor
                 return;
             }
 
-            using (FormGoToLine formGoToLine = new FormGoToLine())
+            using (var formGoToLine = new FormGoToLine())
             {
                 formGoToLine.SetMaxLineNumber(_internalFileViewer.TotalNumberOfLines);
                 if (formGoToLine.ShowDialog(this) == DialogResult.OK)

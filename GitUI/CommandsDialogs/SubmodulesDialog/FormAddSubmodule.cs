@@ -65,7 +65,7 @@ namespace GitUI.CommandsDialogs.SubmodulesDialog
 
         private void BranchDropDown(object sender, EventArgs e)
         {
-            GitModule module = new GitModule(Directory.Text);
+            var module = new GitModule(Directory.Text);
 
             var heads = new List<IGitRef>
             {

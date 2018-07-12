@@ -47,7 +47,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private static IReadOnlyList<string> GetDirectories(GitModule currentModule, IEnumerable<Repository> repositoryHistory)
         {
-            List<string> directories = new List<string>();
+            var directories = new List<string>();
 
             if (AppSettings.DefaultCloneDestinationPath.IsNotNullOrWhitespace())
             {
@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             if (!string.IsNullOrWhiteSpace(currentModule?.WorkingDir))
             {
-                DirectoryInfo di = new DirectoryInfo(currentModule.WorkingDir);
+                var di = new DirectoryInfo(currentModule.WorkingDir);
                 if (di.Parent != null)
                 {
                     directories.Add(di.Parent.FullName.EnsureTrailingPathSeparator());
@@ -119,7 +119,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             try
             {
-                DirectoryInfo currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
+                var currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
                 if (currentDirectory.Parent == null)
                 {
                     return;
@@ -141,7 +141,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             try
             {
-                DirectoryInfo currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
+                var currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
                 folderGoUpButton.Enabled = currentDirectory.Exists && currentDirectory.Parent != null;
             }
             catch (Exception)

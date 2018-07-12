@@ -2461,8 +2461,8 @@ namespace GitUI.CommandsDialogs
                 // First task: Gather list of submodules on a background thread.
 
                 // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
-                GitModule threadModule = new GitModule(thisModuleDir);
-                SubmoduleInfoResult result = new SubmoduleInfoResult();
+                var threadModule = new GitModule(thisModuleDir);
+                var result = new SubmoduleInfoResult();
 
                 // Add all submodules inside the current repository:
                 foreach (var submodule in threadModule.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName))

@@ -12,7 +12,7 @@ namespace ResourceManager.Xliff
         {
             using (TextWriter tw = new StreamWriter(path, false))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(TranslationFile));
+                var serializer = new XmlSerializer(typeof(TranslationFile));
                 serializer.Serialize(tw, translation);
             }
         }
@@ -25,12 +25,12 @@ namespace ResourceManager.Xliff
                 return null;
             }
 
-            XmlSerializer serializer = new XmlSerializer(typeof(TranslationFile));
+            var serializer = new XmlSerializer(typeof(TranslationFile));
             TextReader stringReader = null;
             try
             {
                 stringReader = new StreamReader(path);
-                using (XmlTextReader xmlReader = new XmlTextReader(stringReader))
+                using (var xmlReader = new XmlTextReader(stringReader))
                 {
                     stringReader = null;
                     return (TranslationFile)serializer.Deserialize(xmlReader);

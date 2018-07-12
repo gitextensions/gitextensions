@@ -543,7 +543,7 @@ namespace GitUI.CommandsDialogs
             }
 
             // auto pull only if current branch was rejected
-            Regex isRefRemoved = new Regex(@"Your configuration specifies to .* the ref '.*'[\r]?\nfrom the remote, but no such ref was fetched.");
+            var isRefRemoved = new Regex(@"Your configuration specifies to .* the ref '.*'[\r]?\nfrom the remote, but no such ref was fetched.");
 
             if (isRefRemoved.IsMatch(form.GetOutputString()))
             {
@@ -761,7 +761,7 @@ namespace GitUI.CommandsDialogs
 
             if (File.Exists(AppSettings.Pageant))
             {
-                HashSet<string> files = new HashSet<string>(new PathEqualityComparer());
+                var files = new HashSet<string>(new PathEqualityComparer());
                 foreach (var remote in GetSelectedRemotes())
                 {
                     var sshKeyFile = Module.GetPuttyKeyFileForRemote(remote);

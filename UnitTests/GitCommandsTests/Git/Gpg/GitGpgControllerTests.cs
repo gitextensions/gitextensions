@@ -35,7 +35,7 @@ namespace GitCommandsTests.Git.Gpg
         {
             var objectId = ObjectId.Random();
 
-            GitRevision revision = new GitRevision(objectId);
+            var revision = new GitRevision(objectId);
 
             _module().RunGitCmd($"log --pretty=\"format:%G?\" -1 {revision.Guid}").Returns(gitCmdReturn);
 

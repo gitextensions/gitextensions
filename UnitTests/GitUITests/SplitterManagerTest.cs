@@ -27,7 +27,7 @@ namespace GitUITests
             const int splitterWidth = 100;
             const int splitterDistance = 30;
             {
-                SplitterManager splitManager = new SplitterManager(_settings);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitter.Width = splitterWidth;
                 splitter.SplitterDistance = splitterDistance;
@@ -37,7 +37,7 @@ namespace GitUITests
 
             {
                 // act
-                SplitterManager splitManager = new SplitterManager(_settings);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitManager.AddSplitter(splitter, splitterName);
                 splitter.Width = 2 * splitterWidth;
@@ -57,7 +57,7 @@ namespace GitUITests
             const int splitterWidth = 200;
             const int splitterDistance = 70;
             {
-                SplitterManager splitManager = new SplitterManager(_settings);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitter.Width = splitterWidth;
                 splitter.SplitterDistance = splitterDistance;
@@ -67,7 +67,7 @@ namespace GitUITests
 
             {
                 // act
-                SplitterManager splitManager = new SplitterManager(_settings);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitManager.AddSplitter(splitter, splitterName);
                 splitter.Width = splitterWidth + deltaWidth;
@@ -88,7 +88,7 @@ namespace GitUITests
             const int splitterWidth = 200;
             const int splitterDistance = 130;
             {
-                SplitterManager splitManager = new SplitterManager(_settings);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitter.Width = splitterWidth;
                 splitter.SplitterDistance = splitterDistance;
@@ -98,7 +98,7 @@ namespace GitUITests
 
             {
                 // act
-                SplitterManager splitManager = new SplitterManager(_settings);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitManager.AddSplitter(splitter, splitterName);
                 int splitterNewWidth = splitterWidth + deltaWidth;
@@ -120,7 +120,7 @@ namespace GitUITests
             const int splitterWidth = 200;
             const int splitterDistance = 120;
             {
-                SplitterManager splitManager = new SplitterManager(_settings);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitter.Width = splitterWidth;
                 splitter.SplitterDistance = splitterDistance;
@@ -130,7 +130,7 @@ namespace GitUITests
 
             {
                 // act
-                SplitterManager splitManager = new SplitterManager(_settings);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitManager.AddSplitter(splitter, splitterName);
                 const int splitterNewWidth = 180;
@@ -165,7 +165,7 @@ namespace GitUITests
             const int splitterWidth = 200;
             const int splitterDistance = 120;
             {
-                SplitterManager splitManager = new SplitterManager(_settings);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitter.Width = splitterWidth;
                 splitter.SplitterDistance = splitterDistance;
@@ -175,7 +175,7 @@ namespace GitUITests
 
             {
                 // act
-                SplitterManager splitManager = new SplitterManager(_settings);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitManager.AddSplitter(splitter, splitterName);
                 const int splitterNewWidth = 180;

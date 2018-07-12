@@ -40,7 +40,7 @@ namespace GitCommands.Settings
 
         protected override void WriteSettings(string fileName)
         {
-            using (XmlTextWriter xtw = new XmlTextWriter(fileName, Encoding.UTF8))
+            using (var xtw = new XmlTextWriter(fileName, Encoding.UTF8))
             {
                 xtw.Formatting = Formatting.Indented;
                 xtw.WriteStartDocument();
@@ -53,7 +53,7 @@ namespace GitCommands.Settings
 
         protected override void ReadSettings(string fileName)
         {
-            XmlReaderSettings readerSettings = new XmlReaderSettings
+            var readerSettings = new XmlReaderSettings
             {
                 IgnoreWhitespace = true,
                 CheckCharacters = false

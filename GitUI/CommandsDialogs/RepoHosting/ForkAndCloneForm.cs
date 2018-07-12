@@ -328,7 +328,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             }
 
-            GitModule module = new GitModule(targetDir);
+            var module = new GitModule(targetDir);
 
             if (_addRemoteAsTB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentReadOnlyUrl))
             {

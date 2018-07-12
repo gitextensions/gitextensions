@@ -89,10 +89,10 @@ namespace GitExtensions
                     || string.IsNullOrEmpty(AppSettings.GitCommandValue)
                     || !File.Exists(AppSettings.GitCommandValue)))
                 {
-                    GitUICommands uiCommands = new GitUICommands(string.Empty);
+                    var uiCommands = new GitUICommands(string.Empty);
                     var commonLogic = new CommonLogic(uiCommands.Module);
                     var checkSettingsLogic = new CheckSettingsLogic(commonLogic);
-                    ISettingsPageHost fakePageHost = new SettingsPageHostMock(checkSettingsLogic);
+                    var fakePageHost = new SettingsPageHostMock(checkSettingsLogic);
                     using (var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost))
                     {
                         if (!checklistSettingsPage.CheckSettings())
