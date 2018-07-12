@@ -26,7 +26,13 @@ namespace GitUI
 
     public sealed partial class FileStatusList : GitModuleControl
     {
-        private static readonly StringFormat FilePathStringFormat = new StringFormat { LineAlignment = StringAlignment.Center, Trimming = StringTrimming.None, FormatFlags = StringFormatFlags.NoWrap };
+        private static readonly StringFormat FilePathStringFormat = new StringFormat
+        {
+            LineAlignment = StringAlignment.Center,
+            Trimming = StringTrimming.None,
+            FormatFlags = StringFormatFlags.NoWrap
+        };
+
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
 
         [CanBeNull] private static ImageList _images;
@@ -317,14 +323,54 @@ namespace GitUI
                     e.Graphics.DrawImageUnscaled(image, e.Item.Position.X, e.Item.Position.Y);
                 }
 
-                var pathFormatter = new PathFormatter(e.Graphics, FileStatusListView.Font);
+                var font = FileStatusListView.Font;
                 var textStartX = e.Item.Position.X + imageWidth;
                 var textSpace = e.Item.Bounds.Width - textStartX;
-                var text = pathFormatter.FormatTextForDrawing(textSpace, gitItemStatus.Name, gitItemStatus.OldName);
+                var text = new PathFormatter(e.Graphics, font)
+                    .FormatTextForDrawing(textSpace, gitItemStatus.Name, gitItemStatus.OldName);
+
                 text = AppendItemSubmoduleStatus(text, gitItemStatus);
 
-                var textRect = new RectangleF(textStartX, e.Item.Bounds.Top, textSpace, e.Item.Bounds.Height);
-                e.Graphics.DrawString(text, FileStatusListView.Font, SystemBrushes.ControlText, textRect, FilePathStringFormat);
+                var slashIndex = text.LastIndexOf('/');
+
+                if (slashIndex != -1 && slashIndex < text.Length - 1)
+                {
+                    var prefix = text.Substring(0, slashIndex + 1);
+                    var tail = text.Substring(slashIndex + 1);
+
+                    CharacterRange[] ranges =
+                    {
+                        new CharacterRange(0, prefix.Length),
+                        new CharacterRange(prefix.Length, tail.Length)
+                    };
+
+                    FilePathStringFormat.SetMeasurableCharacterRanges(ranges);
+
+                    var regions = e.Graphics.MeasureCharacterRanges(
+                        text,
+                        font,
+                        new RectangleF(textStartX, e.Item.Bounds.Top, textSpace, e.Item.Bounds.Height),
+                        FilePathStringFormat);
+
+                    DrawString(regions[0], prefix, SystemBrushes.GrayText);
+                    DrawString(regions[1], tail, SystemBrushes.ControlText);
+
+                    void DrawString(Region region, string s, Brush brush)
+                    {
+                        var bounds = region.GetBounds(e.Graphics);
+                        if (bounds.Width != 0 && bounds.Height != 0)
+                        {
+                            e.Graphics.DrawString(s, font, brush, ExpandRight(bounds), FilePathStringFormat);
+                        }
+
+                        RectangleF ExpandRight(RectangleF r) => new RectangleF(r.X, r.Y, r.Width + r.Height, r.Height);
+                    }
+                }
+                else
+                {
+                    var textRect = new RectangleF(textStartX, e.Item.Bounds.Top, textSpace, e.Item.Bounds.Height);
+                    e.Graphics.DrawString(text, font, SystemBrushes.ControlText, textRect, FilePathStringFormat);
+                }
             }
         }
 
