@@ -2464,7 +2464,7 @@ namespace GitCommands
                     IsChanged = false,
                     IsDeleted = false,
                     Name = file.Name,
-                    TreeGuid = file.Guid,
+                    TreeGuid = file.ObjectId,
                     Staged = StagedStatus.None
                 }).ToList();
 
@@ -2550,7 +2550,7 @@ namespace GitCommands
 
                         Patch patch = GetSingleDiff(firstRevision, secondRevision, item.Name, item.OldName, "", SystemEncoding, true);
                         string text = patch != null ? patch.Text : "";
-                        var submoduleStatus = GitCommandHelpers.GetSubmoduleStatus(text, this, item.Name);
+                        var submoduleStatus = GitCommandHelpers.ParseSubmoduleStatus(text, this, item.Name);
                         if (submoduleStatus.Commit != submoduleStatus.OldCommit)
                         {
                             var submodule = submoduleStatus.GetSubmodule(this);
@@ -2941,7 +2941,7 @@ namespace GitCommands
             foreach (Match match in matches)
             {
                 var refName = match.Groups["refname"].Value;
-                var objectId = match.Groups["objectid"].Value;
+                var objectId = ObjectId.Parse(match.Groups["objectid"].Value);
                 var remoteName = GitRefName.GetRemoteName(refName);
                 var head = new GitRef(this, objectId, refName, remoteName);
 
@@ -3362,7 +3362,8 @@ namespace GitCommands
             return RunCacheableGitCmd($"cat-file blob \"{id}\"", encoding);
         }
 
-        public string GetFileBlobHash(string fileName, ObjectId objectId)
+        [CanBeNull]
+        public ObjectId GetFileBlobHash(string fileName, ObjectId objectId)
         {
             if (objectId == ObjectId.UnstagedId)
             {
@@ -3377,7 +3378,7 @@ namespace GitCommands
                 var lines = RunGitCmd($"ls-files -s \"{fileName}\"").Split(' ', '\t');
                 if (lines.Length >= 2)
                 {
-                    return lines[1];
+                    return ObjectId.Parse(lines[1]);
                 }
             }
             else
@@ -3385,11 +3386,11 @@ namespace GitCommands
                 var lines = RunGitCmd($"ls-tree -r {objectId} \"{fileName}\"").Split(' ', '\t');
                 if (lines.Length >= 3)
                 {
-                    return lines[2];
+                    return ObjectId.Parse(lines[2]);
                 }
             }
 
-            return "";
+            return null;
         }
 
         [CanBeNull]

@@ -365,7 +365,7 @@ See the changes in the commit form.");
                 {
                     case GitObjectType.Blob:
                     {
-                        FileText.ViewGitItemAsync(gitItem.FileName, gitItem.Guid);
+                        FileText.ViewGitItemAsync(gitItem.FileName, gitItem.ObjectId);
                         break;
                     }
 

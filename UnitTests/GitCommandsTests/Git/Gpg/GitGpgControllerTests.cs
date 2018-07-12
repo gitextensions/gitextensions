@@ -67,7 +67,7 @@ namespace GitCommandsTests.Git.Gpg
             var revision = new GitRevision(objectId)
             {
                 Refs = Enumerable.Range(0, numberOfTags)
-                    .Select(_ => new GitRef(_module(), objectId.ToString(), gitRefCompleteName))
+                    .Select(_ => new GitRef(_module(), objectId, gitRefCompleteName))
                     .ToList()
             };
 
@@ -83,7 +83,7 @@ namespace GitCommandsTests.Git.Gpg
         {
             var objectId = ObjectId.Random();
 
-            var gitRef = new GitRef(_module(), objectId.ToString(), "refs/tags/FirstTag^{}");
+            var gitRef = new GitRef(_module(), objectId, "refs/tags/FirstTag^{}");
 
             var revision = new GitRevision(objectId) { Refs = new[] { gitRef } };
 
@@ -132,7 +132,7 @@ namespace GitCommandsTests.Git.Gpg
                 case 0:
                 {
                     // Tag but not dereference
-                    var gitRef = new GitRef(_module(), objectId.ToString(), "refs/tags/TagName");
+                    var gitRef = new GitRef(_module(), objectId, "refs/tags/TagName");
                     revision.Refs = new[] { gitRef };
 
                     _module().RunGitCmd($"verify-tag  {gitRef.LocalName}").Returns("");
@@ -143,7 +143,7 @@ namespace GitCommandsTests.Git.Gpg
                 case 1:
                 {
                     // One tag that's also IsDereference == true
-                    var gitRef = new GitRef(_module(), objectId.ToString(), "refs/tags/TagName^{}");
+                    var gitRef = new GitRef(_module(), objectId, "refs/tags/TagName^{}");
                     revision.Refs = new[] { gitRef };
 
                     _module().RunGitCmd($"verify-tag  {gitRef.LocalName}").Returns(gitRef.LocalName);
@@ -154,12 +154,12 @@ namespace GitCommandsTests.Git.Gpg
                 case 2:
                 {
                     // Two tag that's also IsDereference == true
-                    var gitRef1 = new GitRef(_module(), objectId.ToString(), "refs/tags/FirstTag^{}");
+                    var gitRef1 = new GitRef(_module(), objectId, "refs/tags/FirstTag^{}");
                     revision.Refs = new[] { gitRef1 };
 
                     _module().RunGitCmd($"verify-tag  {gitRef1.LocalName}").Returns(gitRef1.LocalName);
 
-                    var gitRef2 = new GitRef(_module(), objectId.ToString(), "refs/tags/SecondTag^{}");
+                    var gitRef2 = new GitRef(_module(), objectId, "refs/tags/SecondTag^{}");
                     revision.Refs = new[] { gitRef1, gitRef2 };
 
                     _module().RunGitCmd($"verify-tag  {gitRef2.LocalName}").Returns(gitRef2.LocalName);

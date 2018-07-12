@@ -512,27 +512,29 @@ namespace GitUI.Editor
             else
             {
                 // Retrieve blob, same as GitItemStatus.TreeGuid
-                string blob = Module.GetFileBlobHash(fileName, objectId);
+                var blob = Module.GetFileBlobHash(fileName, objectId);
                 return ViewGitItemAsync(fileName, blob);
             }
         }
 
-        public Task ViewGitItemAsync(string fileName, string guid)
+        public Task ViewGitItemAsync(string fileName, [CanBeNull] ObjectId objectId)
         {
+            var sha = objectId?.ToString();
+
             return ViewItemAsync(
                 fileName,
                 getImage: GetImage,
                 getFileText: GetFileTextIfBlobExists,
-                getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), guid),
-                openWithDifftool: () => Module.OpenWithDifftool(fileName, firstRevision: guid));
+                getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), sha),
+                openWithDifftool: () => Module.OpenWithDifftool(fileName, firstRevision: sha));
 
-            string GetFileTextIfBlobExists() => guid != "" ? Module.GetFileText(guid, Encoding) : "";
+            string GetFileTextIfBlobExists() => sha != null ? Module.GetFileText(sha, Encoding) : "";
 
             Image GetImage()
             {
                 try
                 {
-                    using (var stream = Module.GetFileStream(guid))
+                    using (var stream = Module.GetFileStream(sha))
                     {
                         return CreateImage(fileName, stream);
                     }
@@ -596,7 +598,8 @@ namespace GitUI.Editor
             }
         }
 
-        private static Image CreateImage(string fileName, Stream stream)
+        [NotNull]
+        private static Image CreateImage([NotNull] string fileName, [NotNull] Stream stream)
         {
             if (IsIcon())
             {

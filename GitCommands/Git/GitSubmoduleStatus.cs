@@ -1,15 +1,29 @@
-﻿namespace GitCommands
+﻿using GitUIPluginInterfaces;
+
+namespace GitCommands
 {
     public sealed class GitSubmoduleStatus
     {
-        public string Name { get; set; }
-        public string OldName { get; set; }
-        public bool IsDirty { get; set; }
-        public string Commit { get; set; }
-        public string OldCommit { get; set; }
+        public string Name { get; }
+        public string OldName { get; }
+        public bool IsDirty { get; }
+        public ObjectId Commit { get; }
+        public ObjectId OldCommit { get; }
+        public int? AddedCommits { get; }
+        public int? RemovedCommits { get; }
+
         public SubmoduleStatus Status { get; set; } = SubmoduleStatus.Unknown;
-        public int? AddedCommits { get; set; }
-        public int? RemovedCommits { get; set; }
+
+        public GitSubmoduleStatus(string name, string oldName, bool isDirty, ObjectId commit, ObjectId oldCommit, int? addedCommits, int? removedCommits)
+        {
+            Name = name;
+            OldName = oldName;
+            IsDirty = isDirty;
+            Commit = commit;
+            OldCommit = oldCommit;
+            AddedCommits = addedCommits;
+            RemovedCommits = removedCommits;
+        }
 
         public GitModule GetSubmodule(GitModule module)
         {
@@ -24,7 +38,7 @@
                 return;
             }
 
-            Status = submodule.CheckSubmoduleStatus(Commit, OldCommit);
+            Status = submodule.CheckSubmoduleStatus(Commit.ToString(), OldCommit.ToString());
         }
 
         public string AddedAndRemovedString()

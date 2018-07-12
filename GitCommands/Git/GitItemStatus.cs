@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
@@ -39,7 +40,8 @@ namespace GitCommands
 
         public string Name { get; set; }
         public string OldName { get; set; }
-        public string TreeGuid { get; set; }
+        [CanBeNull]
+        public ObjectId TreeGuid { get; set; }
         public string RenameCopyPercentage { get; set; }
 
         // Staged is three state and has no default status

@@ -29,7 +29,7 @@ namespace GitUI
             [NotNull] Encoding encoding)
         {
             // Files with tree guid should be presented with normal diff
-            var isTracked = file.IsTracked || (file.TreeGuid.IsNotNullOrWhitespace() && secondRevision != null);
+            var isTracked = file.IsTracked || (file.TreeGuid != null && secondRevision != null);
 
             return module.GetSingleDiff(firstRevision?.ToString(), secondRevision?.ToString(), file.Name, file.OldName, diffArgs, encoding, true, isTracked);
         }
@@ -101,7 +101,7 @@ namespace GitUI
             if (firstRevision == null)
             {
                 // The previous commit does not exist, nothing to compare with
-                if (file.TreeGuid.IsNullOrEmpty())
+                if (file.TreeGuid != null)
                 {
                     if (secondRevision == null)
                     {

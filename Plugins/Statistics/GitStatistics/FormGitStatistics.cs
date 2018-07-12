@@ -181,16 +181,17 @@ namespace GitStatistics
 
         private void LoadLinesOfCodeForModule(IGitModule module)
         {
-            var result = module.GetTree("HEAD", full: true);
-            var filesToCheck = new List<string>();
-            filesToCheck.AddRange(result.Select(file => Path.Combine(module.WorkingDir, file.Name)));
+            var filesToCheck = module
+                .GetTree("HEAD", full: true)
+                .Select(file => Path.Combine(module.WorkingDir, file.Name))
+                .ToList();
 
             _lineCounter.FindAndAnalyzeCodeFiles(_codeFilePattern, DirectoriesToIgnore, filesToCheck);
         }
 
         private void lineCounter_LinesOfCodeUpdated(object sender, EventArgs e)
         {
-            LineCounter lineCounter = (LineCounter)sender;
+            var lineCounter = (LineCounter)sender;
 
             // Must do this synchronously because lineCounter.LinesOfCodePerExtension might change while we are iterating over it otherwise.
             var extensionValues = new decimal[lineCounter.LinesOfCodePerExtension.Count];

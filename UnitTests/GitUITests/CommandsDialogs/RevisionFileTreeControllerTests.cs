@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands;
@@ -206,14 +205,13 @@ namespace GitUITests.CommandsDialogs
             public MockGitItem(string name)
             {
                 Name = name;
+                ObjectId = ObjectId.Random();
+                Guid = ObjectId.ToString();
             }
 
-            public string Guid { get; } = ObjectId.Random().ToString();
-            public bool IsBlob { get; }
-            public bool IsCommit { get; }
-            public bool IsTree { get; }
+            public string Guid { get; }
+            public ObjectId ObjectId { get; }
             public string Name { get; }
-            public IEnumerable<IGitItem> SubItems { get; }
         }
     }
 }

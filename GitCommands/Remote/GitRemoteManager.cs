@@ -112,7 +112,7 @@ namespace GitCommands.Remote
             var module = GetModule();
             bool IsSettingForBranch(string setting, string branchName)
             {
-                var head = new GitRef(module, string.Empty, setting);
+                var head = new GitRef(module, null, setting);
                 return head.IsHead && head.Name.Equals(branchName, StringComparison.OrdinalIgnoreCase);
             }
 
@@ -120,7 +120,7 @@ namespace GitCommands.Remote
                                    .Select(s => s.Split(':'))
                                    .Where(t => t.Length == 2)
                                    .Where(t => IsSettingForBranch(t[0], branch))
-                                   .Select(t => new GitRef(module, string.Empty, t[1]))
+                                   .Select(t => new GitRef(module, null, t[1]))
                                    .FirstOrDefault(h => h.IsHead);
 
             return remoteHead?.Name;

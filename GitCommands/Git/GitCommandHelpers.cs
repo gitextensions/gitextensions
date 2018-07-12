@@ -707,7 +707,7 @@ namespace GitCommands
         {
             Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
             string text = patch != null ? patch.Text : "";
-            return GetSubmoduleStatus(text, module, fileName);
+            return ParseSubmoduleStatus(text, module, fileName);
         }
 
         [CanBeNull]
@@ -717,14 +717,21 @@ namespace GitCommands
         }
 
         [CanBeNull]
-        public static GitSubmoduleStatus GetSubmoduleStatus(string text, GitModule module, string fileName)
+        public static GitSubmoduleStatus ParseSubmoduleStatus(string text, GitModule module, string fileName)
         {
             if (string.IsNullOrEmpty(text))
             {
                 return null;
             }
 
-            var status = new GitSubmoduleStatus();
+            string name = null;
+            string oldName = null;
+            bool isDirty = false;
+            ObjectId commitId = null;
+            ObjectId oldCommitId = null;
+            int? addedCommits = null;
+            int? removedCommits = null;
+
             using (var reader = new StringReader(text))
             {
                 string line = reader.ReadLine();
@@ -734,16 +741,16 @@ namespace GitCommands
                     var match = Regex.Match(line, @"diff --git [abic]/(.+)\s[abwi]/(.+)");
                     if (match.Groups.Count > 1)
                     {
-                        status.Name = match.Groups[1].Value;
-                        status.OldName = match.Groups[2].Value;
+                        name = match.Groups[1].Value;
+                        oldName = match.Groups[2].Value;
                     }
                     else
                     {
                         match = Regex.Match(line, @"diff --cc (.+)");
                         if (match.Groups.Count > 1)
                         {
-                            status.Name = match.Groups[1].Value;
-                            status.OldName = match.Groups[1].Value;
+                            name = match.Groups[1].Value;
+                            oldName = match.Groups[1].Value;
                         }
                     }
                 }
@@ -761,38 +768,38 @@ namespace GitCommands
                     }
 
                     char c = line[0];
-                    const string commit = "commit ";
+                    const string commitStr = "commit ";
                     string hash = "";
-                    int pos = line.IndexOf(commit);
+                    int pos = line.IndexOf(commitStr);
                     if (pos >= 0)
                     {
-                        hash = line.Substring(pos + commit.Length);
+                        hash = line.Substring(pos + commitStr.Length);
                     }
 
-                    bool isDirty = hash.EndsWith("-dirty");
+                    bool endsWithDirty = hash.EndsWith("-dirty");
                     hash = hash.Replace("-dirty", "");
                     if (c == '-')
                     {
-                        status.OldCommit = hash;
+                        oldCommitId = ObjectId.Parse(hash);
                     }
                     else if (c == '+')
                     {
-                        status.Commit = hash;
-                        status.IsDirty = isDirty;
+                        commitId = ObjectId.Parse(hash);
+                        isDirty = endsWithDirty;
                     }
 
                     // TODO: Support combined merge
                 }
             }
 
-            if (status.OldCommit != null && status.Commit != null)
+            if (oldCommitId != null && commitId != null)
             {
                 var submodule = module.GetSubmodule(fileName);
-                status.AddedCommits = submodule.GetCommitCount(status.Commit, status.OldCommit);
-                status.RemovedCommits = submodule.GetCommitCount(status.OldCommit, status.Commit);
+                addedCommits = submodule.GetCommitCount(commitId.ToString(), oldCommitId.ToString());
+                removedCommits = submodule.GetCommitCount(oldCommitId.ToString(), commitId.ToString());
             }
 
-            return status;
+            return new GitSubmoduleStatus(name, oldName, isDirty, commitId, oldCommitId, addedCommits, removedCommits);
         }
 
         /// <summary>

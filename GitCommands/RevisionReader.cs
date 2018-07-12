@@ -83,7 +83,7 @@ namespace GitCommands
 
             LatestRefs = module.GetRefs();
             UpdateSelectedRef(module, LatestRefs, branchName);
-            var refsByObjectId = LatestRefs.ToLookup(head => head.Guid);
+            var refsByObjectId = LatestRefs.ToLookup(head => head.ObjectId);
 
             token.ThrowIfCancellationRequested();
 
@@ -144,8 +144,8 @@ namespace GitCommands
                                 revision.Body = null;
                             }
 
-                            // Look up any refs associate with this revision
-                            revision.Refs = refsByObjectId[revision.Guid].AsReadOnlyList();
+                            // Look up any refs associated with this revision
+                            revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
 
                             RevisionCount++;
 

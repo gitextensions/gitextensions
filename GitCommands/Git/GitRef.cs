@@ -7,23 +7,23 @@ using JetBrains.Annotations;
 
 namespace GitCommands
 {
-    public class GitRef : IGitRef
+    public sealed class GitRef : IGitRef
     {
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
 
         public IGitModule Module { get; }
 
-        public GitRef(IGitModule module, string guid, string completeName)
-            : this(module, guid, completeName, string.Empty)
+        public GitRef(IGitModule module, [CanBeNull] ObjectId objectId, string completeName)
+            : this(module, objectId, completeName, string.Empty)
         {
         }
 
-        public GitRef(IGitModule module, string guid, string completeName, string remote)
+        public GitRef(IGitModule module, [CanBeNull] ObjectId objectId, string completeName, string remote)
         {
             Module = module;
-            Guid = guid;
-            IsSelected = false;
+            ObjectId = objectId;
+            Guid = objectId?.ToString();
             CompleteName = completeName;
             Remote = remote;
 
@@ -41,7 +41,7 @@ namespace GitCommands
         }
 
         public string CompleteName { get; }
-        public bool IsSelected { get; set; }
+        public bool IsSelected { get; set; } = false;
         public bool IsSelectedHeadMergeSource { get; set; }
         public bool IsTag { get; }
         public bool IsHead { get; }
@@ -125,15 +125,15 @@ namespace GitCommands
 
         #region IGitItem Members
 
+        [CanBeNull]
+        public ObjectId ObjectId { get; }
+        [CanBeNull]
         public string Guid { get; }
         public string Name { get; }
 
         #endregion
 
-        public override string ToString()
-        {
-            return CompleteName;
-        }
+        public override string ToString() => CompleteName;
 
         [CanBeNull]
         private string ParseName()

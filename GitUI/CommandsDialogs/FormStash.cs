@@ -153,7 +153,7 @@ namespace GitUI.CommandsDialogs
                         {
                             View.ViewTextAsync(
                                 stashedItem.Name,
-                                LocalizationHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid));
+                                LocalizationHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid?.ToString()));
                         }
                     }
                     else
