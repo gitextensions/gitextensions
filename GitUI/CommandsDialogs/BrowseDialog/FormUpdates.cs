@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using Git.hub;
 using GitCommands;
 using GitCommands.Config;
-using GitUI.Properties;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;

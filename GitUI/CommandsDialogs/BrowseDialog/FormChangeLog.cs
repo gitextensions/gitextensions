@@ -1,5 +1,4 @@
-﻿using System;
-using GitUI.Properties;
+﻿using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {

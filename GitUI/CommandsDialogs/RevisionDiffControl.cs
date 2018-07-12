@@ -200,6 +200,7 @@ namespace GitUI.CommandsDialogs
                     !(i.Guid.IsNullOrWhiteSpace() || i.Guid == GitRevision.UnstagedGuid || i.Guid == GitRevision.CombinedDiffGuid))
                 .Distinct()
                 .Count();
+
             if (parents == 0)
             {
                 return null;
@@ -708,7 +709,7 @@ namespace GitUI.CommandsDialogs
 
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    Module.SaveBlobAs(fileDialog.FileName, string.Format("{0}:\"{1}\"", DiffFiles.Revision?.Guid, item.Name));
+                    Module.SaveBlobAs(fileDialog.FileName, $"{DiffFiles.Revision?.Guid}:\"{item.Name}\"");
                 }
             }
         }

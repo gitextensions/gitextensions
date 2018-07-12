@@ -38,10 +38,8 @@ namespace GitUI.CommandsDialogs
         {
             void ProcessStart(FormStatus form)
             {
-                form.AddMessageLine(
-                    string.Format(
-                        _stageFilename.Text, _filename));
-                string output = Module.RunGitCmd("add -- \"" + _filename + "\"");
+                form.AddMessageLine(string.Format(_stageFilename.Text, _filename));
+                string output = Module.RunGitCmd($"add -- \"{_filename}\"");
                 form.AddMessageLine(output);
                 form.Done(string.IsNullOrEmpty(output));
             }

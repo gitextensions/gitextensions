@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager;
@@ -113,21 +114,8 @@ namespace GitUI
                     return;
                 }
 
-                IGitUICommandsSource cmdsSrc = null;
-                Control parent = Parent;
-                while (parent != null && cmdsSrc == null)
-                {
-                    if (parent is IGitUICommandsSource source)
-                    {
-                        cmdsSrc = source;
-                    }
-                    else
-                    {
-                        parent = parent.Parent;
-                    }
-                }
-
-                UICommandsSource = cmdsSrc ?? throw new InvalidOperationException("The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?");
+                UICommandsSource = this.FindAncestors().OfType<IGitUICommandsSource>().FirstOrDefault()
+                    ?? throw new InvalidOperationException("The UI Command Source is not available for this control. Are you calling methods before adding it to the parent control?");
             }
         }
 

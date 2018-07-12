@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitUI.HelperDialogs
 {
@@ -20,7 +21,7 @@ namespace GitUI.HelperDialogs
             InitializeComplete();
         }
 
-        public FormChooseCommit(GitUICommands commands, string preselectCommit, bool showArtificial = false)
+        public FormChooseCommit(GitUICommands commands, [CanBeNull] string preselectCommit, bool showArtificial = false)
             : this(commands)
         {
             revisionGrid.MultiSelect = false;

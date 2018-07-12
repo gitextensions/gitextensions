@@ -414,11 +414,7 @@ namespace GitUI.Blame
         {
             if (disposing)
             {
-                if (components != null)
-                {
-                    components.Dispose();
-                }
-
+                components?.Dispose();
                 _blameLoader.Dispose();
             }
 

@@ -25,12 +25,9 @@ namespace GitUI.CommandsDialogs
 
         private readonly ToolTip _toolTipControl = new ToolTip();
 
-        private readonly TranslationString _anotherBranchTooltip =
-            new TranslationString("Select another branch");
-        private readonly TranslationString _anotherCommitTooltip =
-            new TranslationString("Select another commit");
-        private readonly TranslationString _btnSwapTooltip =
-            new TranslationString("Swap BASE and Compare commits");
+        private readonly TranslationString _anotherBranchTooltip = new TranslationString("Select another branch");
+        private readonly TranslationString _anotherCommitTooltip = new TranslationString("Select another commit");
+        private readonly TranslationString _btnSwapTooltip = new TranslationString("Swap BASE and Compare commits");
 
         public FormDiff(GitUICommands commands, bool firstParentIsValid, string baseCommitSha,
             string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(commands)
@@ -66,17 +63,10 @@ namespace GitUI.CommandsDialogs
             lblBaseCommit.BackColor = AppSettings.DiffRemovedColor;
             lblHeadCommit.BackColor = AppSettings.DiffAddedColor;
 
-            DiffFiles.SelectedIndexChanged += DiffFiles_SelectedIndexChanged;
-
             DiffFiles.ContextMenuStrip = DiffContextMenu;
-
-            Load += (sender, args) => PopulateDiffFiles();
-            DiffText.ExtraDiffArgumentsChanged += DiffTextOnExtraDiffArgumentsChanged;
-        }
-
-        private void DiffTextOnExtraDiffArgumentsChanged(object sender, EventArgs eventArgs)
-        {
-            ShowSelectedFileDiff();
+            DiffFiles.SelectedIndexChanged += delegate { ShowSelectedFileDiff(); };
+            DiffText.ExtraDiffArgumentsChanged += delegate { ShowSelectedFileDiff(); };
+            Load += delegate { PopulateDiffFiles(); };
         }
 
         private void PopulateDiffFiles()
@@ -87,11 +77,6 @@ namespace GitUI.CommandsDialogs
             DiffFiles.SetDiffs(ckCompareToMergeBase.Checked
                 ? new[] { _headRevision, _mergeBase }
                 : new[] { _headRevision, _baseRevision });
-        }
-
-        private void DiffFiles_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ShowSelectedFileDiff();
         }
 
         private void ShowSelectedFileDiff()
@@ -134,34 +119,37 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            RevisionDiffKind diffKind;
-
-            if (sender == firstToLocalToolStripMenuItem)
-            {
-                diffKind = RevisionDiffKind.DiffALocal;
-            }
-            else if (sender == selectedToLocalToolStripMenuItem)
-            {
-                diffKind = RevisionDiffKind.DiffBLocal;
-            }
-            else if (sender == firstParentToLocalToolStripMenuItem)
-            {
-                diffKind = RevisionDiffKind.DiffAParentLocal;
-            }
-            else if (sender == selectedParentToLocalToolStripMenuItem)
-            {
-                diffKind = RevisionDiffKind.DiffBParentLocal;
-            }
-            else
-            {
-                Debug.Assert(sender == firstToSelectedToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);
-                diffKind = RevisionDiffKind.DiffAB;
-            }
+            var diffKind = GetDiffKind();
 
             foreach (var itemWithParent in DiffFiles.SelectedItemsWithParent)
             {
                 var revs = new[] { DiffFiles.Revision, itemWithParent.ParentRevision };
                 UICommands.OpenWithDifftool(this, revs, itemWithParent.Item.Name, itemWithParent.Item.OldName, diffKind, itemWithParent.Item.IsTracked);
+            }
+
+            RevisionDiffKind GetDiffKind()
+            {
+                if (Equals(sender, firstToLocalToolStripMenuItem))
+                {
+                    return RevisionDiffKind.DiffALocal;
+                }
+                else if (sender == selectedToLocalToolStripMenuItem)
+                {
+                    return RevisionDiffKind.DiffBLocal;
+                }
+                else if (sender == firstParentToLocalToolStripMenuItem)
+                {
+                    return RevisionDiffKind.DiffAParentLocal;
+                }
+                else if (sender == selectedParentToLocalToolStripMenuItem)
+                {
+                    return RevisionDiffKind.DiffBParentLocal;
+                }
+                else
+                {
+                    Debug.Assert(sender == firstToSelectedToolStripMenuItem, "Not implemented DiffWithRevisionKind: " + sender);
+                    return RevisionDiffKind.DiffAB;
+                }
             }
         }
 

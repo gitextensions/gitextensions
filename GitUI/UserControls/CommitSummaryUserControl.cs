@@ -54,13 +54,13 @@ namespace GitUI.UserControls
                 if (Revision != null)
                 {
                     groupBox1.Text = GitRevision.ToShortSha(Revision.Guid);
-                    labelAuthor.Text = string.Format("{0}", Revision.Author);
+                    labelAuthor.Text = Revision.Author;
                     labelDate.Text = string.Format(Strings.CommitDate + ": {0}", Revision.CommitDate);
-                    labelMessage.Text = string.Format("{0}", Revision.Subject);
+                    labelMessage.Text = Revision.Subject;
 
                     var tagList = Revision.Refs.Where(r => r.IsTag).ToList();
                     string tagListStr = string.Join(", ", tagList.Select(h => h.LocalName).ToArray());
-                    labelTags.Text = string.Format("{0}", tagListStr.IsNullOrEmpty() ? _notAvailable.Text : tagListStr);
+                    labelTags.Text = tagListStr.IsNullOrEmpty() ? _notAvailable.Text : tagListStr;
                     if (tagList.Any())
                     {
                         labelTags.BackColor = _tagsBackColor;
@@ -73,7 +73,7 @@ namespace GitUI.UserControls
 
                     var branchesList = Revision.Refs.Where(r => r.IsHead).ToList();
                     string branchesListStr = string.Join(", ", branchesList.Select(h => h.LocalName).ToArray());
-                    labelBranches.Text = string.Format("{0}", branchesListStr.IsNullOrEmpty() ? _notAvailable.Text : branchesListStr);
+                    labelBranches.Text = branchesListStr.IsNullOrEmpty() ? _notAvailable.Text : branchesListStr;
                     if (branchesList.Any())
                     {
                         labelBranches.BackColor = _branchesBackColor;

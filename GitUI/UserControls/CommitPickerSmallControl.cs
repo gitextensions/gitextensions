@@ -16,8 +16,6 @@ namespace GitUI.UserControls
             InitializeComplete();
         }
 
-        ////public event EventHandler<EventArgs> OnCommitSelected;
-
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string SelectedCommitHash { get; private set; }

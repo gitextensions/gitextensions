@@ -488,10 +488,7 @@ namespace GitUI
         public int AllItemsCount => FileStatusListView.Items.Count;
 
         [Browsable(false)]
-        public IEnumerable<GitItemStatus> AllItems
-        {
-            get => FileStatusListView.Items.Cast<ListViewItem>().Select(selectedItem => (GitItemStatus)selectedItem.Tag);
-        }
+        public IEnumerable<GitItemStatus> AllItems => FileStatusListView.Items.Cast<ListViewItem>().Select(selectedItem => (GitItemStatus)selectedItem.Tag);
 
         [Browsable(false)]
         public IEnumerable<GitItemStatus> SelectedItems

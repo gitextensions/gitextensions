@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -55,13 +56,8 @@ namespace GitCommands
 
         public static bool IsBinaryFile(GitModule module, string fileName)
         {
-            var t = IsBinaryAccordingToGitAttributes(module, fileName);
-            if (t.HasValue)
-            {
-                return t.Value;
-            }
-
-            return HasMatchingExtension(BinaryExtensions, fileName);
+            return IsBinaryAccordingToGitAttributes(module, fileName)
+                ?? HasMatchingExtension(BinaryExtensions, fileName);
         }
 
         /// <returns>null if no info in .gitattributes (or ambiguous). True if marked as binary, false if marked as text</returns>
@@ -128,7 +124,8 @@ namespace GitCommands
         }
 
         #region binary file check
-        public static bool IsBinaryFileAccordingToContent(byte[] content)
+
+        public static bool IsBinaryFileAccordingToContent([CanBeNull] byte[] content)
         {
             // Check for binary file.
             if (content != null && content.Length > 0)

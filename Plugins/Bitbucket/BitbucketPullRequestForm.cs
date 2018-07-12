@@ -41,8 +41,11 @@ namespace Bitbucket
                 return;
             }
 
-            Load += BitbucketViewPullRequestFormLoad;
-            Load += BitbucketPullRequestFormLoad;
+            Load += delegate
+            {
+                ReloadPullRequests();
+                ReloadRepositories();
+            };
 
             lblLinkCreatePull.Text = string.Format("{0}/projects/{1}/repos/{2}/pull-requests?create",
                                       _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
@@ -55,7 +58,7 @@ namespace Bitbucket
             InitializeComplete();
         }
 
-        private void BitbucketPullRequestFormLoad(object sender, EventArgs e)
+        private void ReloadRepositories()
         {
             if (_settings == null)
             {
@@ -73,9 +76,22 @@ namespace Bitbucket
                 ddlRepositorySource.Enabled = true;
                 ddlRepositoryTarget.Enabled = true;
             }).FileAndForget();
+
+            async Task<List<Repository>> GetRepositoriesAsync()
+            {
+                var list = new List<Repository>();
+                var getDefaultRepo = new GetRepoRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
+                var defaultRepo = await getDefaultRepo.SendAsync().ConfigureAwait(false);
+                if (defaultRepo.Success)
+                {
+                    list.Add(defaultRepo.Result);
+                }
+
+                return list;
+            }
         }
 
-        private void BitbucketViewPullRequestFormLoad(object sender, EventArgs e)
+        private void ReloadPullRequests()
         {
             if (_settings == null)
             {
@@ -91,32 +107,19 @@ namespace Bitbucket
                 lbxPullRequests.DataSource = pullRequests;
                 lbxPullRequests.DisplayMember = nameof(PullRequest.DisplayName);
             }).FileAndForget();
-        }
 
-        private async Task<List<Repository>> GetRepositoriesAsync()
-        {
-            var list = new List<Repository>();
-            var getDefaultRepo = new GetRepoRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
-            var defaultRepo = await getDefaultRepo.SendAsync().ConfigureAwait(false);
-            if (defaultRepo.Success)
+            async Task<List<PullRequest>> GetPullRequestsAsync()
             {
-                list.Add(defaultRepo.Result);
+                var list = new List<PullRequest>();
+                var getPullRequests = new GetPullRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
+                var result = await getPullRequests.SendAsync().ConfigureAwait(false);
+                if (result.Success)
+                {
+                    list.AddRange(result.Result);
+                }
+
+                return list;
             }
-
-            return list;
-        }
-
-        private async Task<List<PullRequest>> GetPullRequestsAsync()
-        {
-            var list = new List<PullRequest>();
-            var getPullRequests = new GetPullRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
-            var result = await getPullRequests.SendAsync().ConfigureAwait(false);
-            if (result.Success)
-            {
-                list.AddRange(result.Result);
-            }
-
-            return list;
         }
 
         private void BtnCreateClick(object sender, EventArgs e)
@@ -149,7 +152,7 @@ namespace Bitbucket
                 if (response.Success)
                 {
                     MessageBox.Show(_success.Text);
-                    BitbucketViewPullRequestFormLoad(null, null);
+                    ReloadPullRequests();
                 }
                 else
                 {
@@ -273,8 +276,7 @@ namespace Bitbucket
             }
             else
             {
-                label.Text = string.Format(_committed.Text,
-                    commit.AuthorName, commit.Message);
+                label.Text = string.Format(_committed.Text, commit.AuthorName, commit.Message);
             }
         }
 
@@ -352,7 +354,7 @@ namespace Bitbucket
                 if (response.Success)
                 {
                     MessageBox.Show(_success.Text);
-                    BitbucketViewPullRequestFormLoad(null, null);
+                    ReloadPullRequests();
                 }
                 else
                 {
@@ -381,7 +383,7 @@ namespace Bitbucket
                 if (response.Success)
                 {
                     MessageBox.Show(_success.Text);
-                    BitbucketViewPullRequestFormLoad(null, null);
+                    ReloadPullRequests();
                 }
                 else
                 {

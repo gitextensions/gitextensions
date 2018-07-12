@@ -221,10 +221,7 @@ namespace System
         /// <summary>Split a string, delimited by line-breaks, excluding empty entries.</summary>
         [Pure]
         [NotNull]
-        public static string[] SplitLines([NotNull] this string value)
-        {
-            return value.Split(NewLineSeparator, StringSplitOptions.RemoveEmptyEntries);
-        }
+        public static string[] SplitLines([NotNull] this string value) => value.Split(NewLineSeparator, StringSplitOptions.RemoveEmptyEntries);
 
         /// <summary>
         /// Shortens <paramref name="str"/> if necessary, so that the resulting string has fewer than <paramref name="maxLength"/> characters.

@@ -16,14 +16,8 @@ namespace GitUI.CommandsDialogs
         private const string RestoredObjectsTagPrefix = "LOST_FOUND_";
 
         private readonly TranslationString _removeDanglingObjectsCaption = new TranslationString("Remove");
-
-        private readonly TranslationString _removeDanglingObjectsQuestion =
-            new TranslationString("Are you sure you want to delete all dangling objects?");
-
-        private readonly TranslationString _xTagsCreated =
-            new TranslationString("{0} Tags created." + Environment.NewLine + Environment.NewLine +
-                                  "Do not forget to delete these tags when finished.");
-
+        private readonly TranslationString _removeDanglingObjectsQuestion = new TranslationString("Are you sure you want to delete all dangling objects?");
+        private readonly TranslationString _xTagsCreated = new TranslationString("{0} Tags created." + Environment.NewLine + Environment.NewLine + "Do not forget to delete these tags when finished.");
         private readonly TranslationString _selectLostObjectsToRestoreMessage = new TranslationString("Select objects to restore.");
         private readonly TranslationString _selectLostObjectsToRestoreCaption = new TranslationString("Restore lost objects");
 
@@ -37,7 +31,7 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormVerify(GitUICommands commands)
+        public FormVerify([CanBeNull] GitUICommands commands)
             : base(commands)
         {
             InitializeComponent();
@@ -423,6 +417,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+
             if (lostObject.ObjectType == LostObjectType.Blob)
             {
                 using (var fileDialog =
@@ -430,11 +425,11 @@ namespace GitUI.CommandsDialogs
                     {
                         InitialDirectory = Module.WorkingDir,
                         FileName = "LOST_FOUND.txt",
+                        Filter = "(*.*)|*.*",
                         DefaultExt = "txt",
                         AddExtension = true
                     })
                 {
-                    fileDialog.Filter = "(*.*)|*.*";
                     if (fileDialog.ShowDialog(this) == DialogResult.OK)
                     {
                         Module.SaveBlobAs(fileDialog.FileName, lostObject.Hash);

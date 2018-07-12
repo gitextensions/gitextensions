@@ -51,7 +51,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             if (AppSettings.DefaultCloneDestinationPath.IsNotNullOrWhitespace())
             {
-                directories.Add(PathUtil.EnsureTrailingPathSeparator(AppSettings.DefaultCloneDestinationPath));
+                directories.Add(AppSettings.DefaultCloneDestinationPath.EnsureTrailingPathSeparator());
             }
 
             if (!string.IsNullOrWhiteSpace(currentModule?.WorkingDir))
@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 DirectoryInfo di = new DirectoryInfo(currentModule.WorkingDir);
                 if (di.Parent != null)
                 {
-                    directories.Add(PathUtil.EnsureTrailingPathSeparator(di.Parent.FullName));
+                    directories.Add(di.Parent.FullName.EnsureTrailingPathSeparator());
                 }
             }
 
@@ -69,13 +69,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 if (AppSettings.RecentWorkingDir.IsNotNullOrWhitespace())
                 {
-                    directories.Add(PathUtil.EnsureTrailingPathSeparator(AppSettings.RecentWorkingDir));
+                    directories.Add(AppSettings.RecentWorkingDir.EnsureTrailingPathSeparator());
                 }
 
                 string homeDir = EnvironmentConfiguration.GetHomeDir();
                 if (homeDir.IsNotNullOrWhitespace())
                 {
-                    directories.Add(PathUtil.EnsureTrailingPathSeparator(homeDir));
+                    directories.Add(homeDir.EnsureTrailingPathSeparator());
                 }
             }
 

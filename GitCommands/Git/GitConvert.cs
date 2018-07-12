@@ -5,8 +5,11 @@ namespace GitCommands
 {
     public static class GitConvert
     {
+        private const byte lf = 0x0A;
+        private const byte cr = 0x0D;
+
         [CanBeNull]
-        public static byte[] ConvertCrLfToWorktree(byte[] buf)
+        public static byte[] ConvertCrLfToWorktree([CanBeNull] byte[] buf)
         {
             if (buf == null)
             {
@@ -35,42 +38,42 @@ namespace GitCommands
                 return buf;
             }
 
-            List<byte> byteList = new List<byte>();
+            var bytes = new List<byte>((int)(buf.Length * 1.01));
 
-            if (buf.LongLength >= 1)
+            if (buf.Length >= 1)
             {
-                if (buf[0] == 0x0A)
+                if (buf[0] == lf)
                 {
-                    byteList.Add(0x0D);
-                    byteList.Add(0x0A);
+                    bytes.Add(cr);
+                    bytes.Add(lf);
                 }
                 else
                 {
-                    byteList.Add(buf[0]);
+                    bytes.Add(buf[0]);
                 }
             }
 
-            for (long index = 1; index < buf.LongLength; index++)
+            for (var index = 1; index < buf.Length; index++)
             {
-                if (buf[index] == 0x0A)
+                if (buf[index] == lf)
                 {
-                    if (buf[index - 1] == 0x0D)
+                    if (buf[index - 1] == cr)
                     {
-                        byteList.Add(0x0A);
+                        bytes.Add(lf);
                     }
                     else
                     {
-                        byteList.Add(0x0D);
-                        byteList.Add(0x0A);
+                        bytes.Add(cr);
+                        bytes.Add(lf);
                     }
                 }
                 else
                 {
-                    byteList.Add(buf[index]);
+                    bytes.Add(buf[index]);
                 }
             }
 
-            return byteList.ToArray();
+            return bytes.ToArray();
 
             bool IsBinary()
             {
@@ -108,12 +111,12 @@ namespace GitCommands
 
                 for (long i = 0; i < buf.Length; i++)
                 {
-                    if (buf[i] == 0x0D)
+                    if (buf[i] == cr)
                     {
                         cntCr++;
                         if (i + 1 < buf.Length)
                         {
-                            if (buf[i + 1] == 0x0A)
+                            if (buf[i + 1] == lf)
                             {
                                 cntCrlf++;
                             }
@@ -122,7 +125,7 @@ namespace GitCommands
                         continue;
                     }
 
-                    if (buf[i] == 0x0A)
+                    if (buf[i] == lf)
                     {
                         cntLf++;
                         continue;

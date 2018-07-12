@@ -378,7 +378,7 @@ namespace GitUI.CommandsDialogs
                                                         _notOnBranchMainInstruction.Text,
                                                         _notOnBranch.Text,
                                                         _notOnBranchButtons.Text,
-                                                        true);
+                                                        ShowCancelButton: true);
                 switch (idx)
                 {
                     case 0:
@@ -410,13 +410,19 @@ namespace GitUI.CommandsDialogs
 
             var stashed = CalculateStashedValue(owner);
 
-            using (FormProcess process = CreateFormProcess(source, curLocalBranch, curRemoteBranch))
+            using (var form = CreateFormProcess(source, curLocalBranch, curRemoteBranch))
             {
-                ShowProcessDialogBox(owner, source, process);
+                if (!IsPullAll())
+                {
+                    form.Remote = source;
+                }
+
+                form.ShowDialog(owner);
+                ErrorOccurred = form.ErrorOccurred();
 
                 try
                 {
-                    bool aborted = process != null && process.DialogResult == DialogResult.Abort;
+                    bool aborted = form.DialogResult == DialogResult.Abort;
                     if (!aborted && !Fetch.Checked)
                     {
                         if (!ErrorOccurred)
@@ -460,7 +466,7 @@ namespace GitUI.CommandsDialogs
                 return false;
             }
 
-            if (!Fetch.Checked && Branches.Text == @"*")
+            if (!Fetch.Checked && Branches.Text == "*")
             {
                 MessageBox.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text);
                 return false;
@@ -488,22 +494,6 @@ namespace GitUI.CommandsDialogs
             return dialogResult;
         }
 
-        private void ShowProcessDialogBox(IWin32Window owner, string source, FormProcess process)
-        {
-            if (process == null)
-            {
-                return;
-            }
-
-            if (!IsPullAll())
-            {
-                process.Remote = source;
-            }
-
-            process.ShowDialog(owner);
-            ErrorOccurred = process.ErrorOccurred();
-        }
-
         private bool CalculateStashedValue(IWin32Window owner)
         {
             if (!Fetch.Checked && AutoStash.Checked && !Module.IsBareRepository() &&
@@ -524,6 +514,7 @@ namespace GitUI.CommandsDialogs
                 .All(submodule => submodule.IsValidGitWorkingDir());
         }
 
+        [NotNull]
         private FormProcess CreateFormProcess(string source, string curLocalBranch, string curRemoteBranch)
         {
             if (Fetch.Checked)

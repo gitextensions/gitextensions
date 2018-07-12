@@ -84,8 +84,6 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         [Test]
         public void SelectMessageFromHistory()
         {
-            var generatedCommitMessage = Guid.NewGuid().ToString();
-
             RunFormTest(form =>
             {
                 var commitMessageToolStripMenuItem = form.GetTestAccessor().CommitMessageToolStripMenuItem;

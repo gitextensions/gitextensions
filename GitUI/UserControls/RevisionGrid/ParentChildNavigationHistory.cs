@@ -22,7 +22,6 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         public bool HasPreviousChild => _childHistory.Count > 0;
-
         public bool HasPreviousParent => _parentHistory.Count > 0;
 
         public void NavigateToPreviousParent(string current)

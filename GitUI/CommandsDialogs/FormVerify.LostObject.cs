@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs
             /// </summary>
             private const string LogCommandArgumentsFormat = "log -n1 --pretty=format:\"%aN, %e, %s, %ct, %P\" {0}";
             private const string LogPattern = @"^([^,]+), (.*), (.+), (\d+), (.+)?$";
-            private const string RawDataPattern = "^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) (" + GitRevision.Sha1HashPattern + ")(.)*$";
+            private const string RawDataPattern = @"^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) ([a-f\d]{40})(.)*$";
 
             private const string TagCommandArguments = "cat-file -p {0}";
             private const string TagPattern = @"^object (.+)\ntype commit\ntag (.+)\ntagger (.+) <.*> (.+) .*\n\n(.*)\n";

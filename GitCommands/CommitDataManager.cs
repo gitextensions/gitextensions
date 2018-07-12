@@ -189,7 +189,7 @@ namespace GitCommands
         [ContractAnnotation("=>true,error:null,data:notnull")]
         private bool TryGetCommitLog([NotNull] string commitId, [NotNull] string format, out string error, out string data)
         {
-            if (GitRevisionExtensions.IsArtificial(commitId))
+            if (commitId.IsArtificial())
             {
                 data = null;
                 error = "No log information for artificial commits";

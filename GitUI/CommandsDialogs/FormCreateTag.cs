@@ -11,21 +11,15 @@ namespace GitUI.CommandsDialogs
     public sealed partial class FormCreateTag : GitModuleForm
     {
         private readonly TranslationString _messageCaption = new TranslationString("Tag");
-
-        private readonly TranslationString _noRevisionSelected =
-            new TranslationString("Select 1 revision to create the tag on.");
-
+        private readonly TranslationString _noRevisionSelected = new TranslationString("Select 1 revision to create the tag on.");
         private readonly TranslationString _pushToCaption = new TranslationString("Push tag to '{0}'");
-
-        private string _currentRemote = "";
-
         private static readonly TranslationString _trsLightweight = new TranslationString("Lightweight tag");
         private static readonly TranslationString _trsAnnotated = new TranslationString("Annotated tag");
         private static readonly TranslationString _trsSignDefault = new TranslationString("Sign with default GPG");
         private static readonly TranslationString _trsSignSpecificKey = new TranslationString("Sign with specific GPG");
 
-        private static readonly string[] DropdownTagOperation = { _trsLightweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text };
         private readonly IGitTagController _gitTagController;
+        private string _currentRemote = "";
 
         public FormCreateTag(GitUICommands commands, GitRevision revision)
             : base(commands)
@@ -33,7 +27,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
             InitializeComplete();
 
-            annotate.Items.AddRange(DropdownTagOperation);
+            annotate.Items.AddRange(new object[] { _trsLightweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text });
             annotate.SelectedIndex = 0;
 
             tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
@@ -85,7 +79,7 @@ namespace GitUI.CommandsDialogs
             if (string.IsNullOrWhiteSpace(objectId))
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
-                return string.Empty;
+                return "";
             }
 
             var createTagArgs = new GitCreateTagArgs(textBoxTagName.Text,
@@ -97,7 +91,7 @@ namespace GitUI.CommandsDialogs
             var success = _gitTagController.CreateTag(createTagArgs, this);
             if (!success)
             {
-                return string.Empty;
+                return "";
             }
 
             DialogResult = DialogResult.OK;

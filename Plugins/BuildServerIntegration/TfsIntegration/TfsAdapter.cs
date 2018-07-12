@@ -160,7 +160,7 @@ namespace TfsIntegration
         {
             string sha = buildDetail.Revision.Substring(buildDetail.Revision.LastIndexOf(":") + 1);
 
-            var buildInfo = new BuildInfo
+            return new BuildInfo
             {
                 Id = buildDetail.Label,
                 StartDate = buildDetail.StartDate,
@@ -170,8 +170,6 @@ namespace TfsIntegration
                 Url = buildDetail.Url,
                 ShowInBuildReportTab = false
             };
-
-            return buildInfo;
         }
 
         public void Dispose()

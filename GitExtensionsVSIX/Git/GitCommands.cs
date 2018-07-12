@@ -13,19 +13,15 @@ namespace GitExtensionsVSIX.Git
         {
             try
             {
-                RegistryKey rk;
-                rk = root.OpenSubKey(subkey, false);
-
-                string value = "";
-
-                if (rk != null && rk.GetValue(key) is string str)
+                using (var rk = root.OpenSubKey(subkey, false))
                 {
-                    value = str;
-                    rk.Flush();
-                    rk.Close();
-                }
+                    if (rk?.GetValue(key) is string str)
+                    {
+                        return str;
+                    }
 
-                return value;
+                    return "";
+                }
             }
             catch (UnauthorizedAccessException)
             {

@@ -60,7 +60,7 @@ namespace GitExtensions
         {
             string[] args = Environment.GetCommandLineArgs();
 
-            // This form created for obtain UI synchronization context only
+            // This form created to obtain UI synchronization context only
             using (new Form())
             {
                 // Store the shared JoinableTaskContext
@@ -115,7 +115,7 @@ namespace GitExtensions
                 MouseWheelRedirector.Active = true;
             }
 
-            GitUICommands commands = new GitUICommands(GetWorkingDir(args));
+            var commands = new GitUICommands(GetWorkingDir(args));
 
             if (args.Length <= 1)
             {

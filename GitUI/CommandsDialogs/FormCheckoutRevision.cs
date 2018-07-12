@@ -9,10 +9,8 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormCheckoutRevision : GitModuleForm
     {
-        private readonly TranslationString _noRevisionSelectedMsgBox =
-            new TranslationString("Select 1 revision to checkout.");
-        private readonly TranslationString _noRevisionSelectedMsgBoxCaption =
-            new TranslationString("Checkout");
+        private readonly TranslationString _noRevisionSelectedMsgBox = new TranslationString("Select 1 revision to checkout.");
+        private readonly TranslationString _noRevisionSelectedMsgBoxCaption = new TranslationString("Checkout");
 
         /// <summary>
         /// For VS designer

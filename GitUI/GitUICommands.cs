@@ -972,8 +972,7 @@ namespace GitUI
             return StartRebaseDialog(owner, from: "", to: null, onto, interactive: false, startRebaseImmediately: false);
         }
 
-        public bool StartRebaseDialog(IWin32Window owner, string from, string to, string onto,
-            bool interactive = false, bool startRebaseImmediately = true)
+        public bool StartRebaseDialog(IWin32Window owner, string from, string to, string onto, bool interactive = false, bool startRebaseImmediately = true)
         {
             bool Action()
             {
@@ -1236,8 +1235,7 @@ namespace GitUI
             return true;
         }
 
-        private void WrapRepoHostingCall(string name, IRepositoryHostPlugin gitHoster,
-                                                Action<IRepositoryHostPlugin> call)
+        private void WrapRepoHostingCall(string name, IRepositoryHostPlugin gitHoster, Action<IRepositoryHostPlugin> call)
         {
             if (!gitHoster.ConfigurationOk)
             {
@@ -1316,42 +1314,42 @@ namespace GitUI
                 });
         }
 
-        public void RunCommand(string[] args)
+        public void RunCommand(IReadOnlyList<string> args)
         {
             var arguments = InitializeArguments(args);
 
-            if (args.Length <= 1)
+            if (args.Count <= 1)
             {
                 return;
             }
 
             var command = args[1];
 
-            if (command == "blame" && args.Length <= 2)
+            if (command == "blame" && args.Count <= 2)
             {
                 MessageBox.Show("Cannot open blame, there is no file selected.", "Blame");
                 return;
             }
 
-            if (command == "difftool" && args.Length <= 2)
+            if (command == "difftool" && args.Count <= 2)
             {
                 MessageBox.Show("Cannot open difftool, there is no file selected.", "Difftool");
                 return;
             }
 
-            if (command == "filehistory" && args.Length <= 2)
+            if (command == "filehistory" && args.Count <= 2)
             {
                 MessageBox.Show("Cannot open file history, there is no file selected.", "File history");
                 return;
             }
 
-            if (command == "fileeditor" && args.Length <= 2)
+            if (command == "fileeditor" && args.Count <= 2)
             {
                 MessageBox.Show("Cannot open file editor, there is no file selected.", "File editor");
                 return;
             }
 
-            if (command == "revert" && args.Length <= 2)
+            if (command == "revert" && args.Count <= 2)
             {
                 MessageBox.Show("Cannot open revert, there is no file selected.", "Revert");
                 return;
@@ -1361,7 +1359,7 @@ namespace GitUI
         }
 
         // Please update FormCommandlineHelp if you add or change commands
-        private void RunCommandBasedOnArgument(string[] args, Dictionary<string, string> arguments)
+        private void RunCommandBasedOnArgument(IReadOnlyList<string> args, IReadOnlyDictionary<string, string> arguments)
         {
             // TODO most of these calls should check return values and set the exit code accordingly
 #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
@@ -1375,11 +1373,11 @@ namespace GitUI
                     return;
                 case "add":
                 case "addfiles":
-                    StartAddFilesDialog(null, args.Length == 3 ? args[2] : ".");
+                    StartAddFilesDialog(null, args.Count == 3 ? args[2] : ".");
                     return;
                 case "apply":       // [filename]
                 case "applypatch":
-                    StartApplyPatchDialog(null, args.Length == 3 ? args[2] : "");
+                    StartApplyPatchDialog(null, args.Count == 3 ? args[2] : "");
                     return;
                 case "blame":       // filename
                     RunBlameCommand(args);
@@ -1463,7 +1461,7 @@ namespace GitUI
                     return;
                 case "revert":
                 case "reset":
-                    StartResetChangesDialog(args.Length == 3 ? args[2] : "");
+                    StartResetChangesDialog(args.Count == 3 ? args[2] : "");
                     return;
                 case "searchfile":
                     RunSearchFileCommand();
@@ -1484,7 +1482,7 @@ namespace GitUI
                     StartCompareRevisionsDialog();
                     return;
                 case "viewpatch":   // [filename]
-                    StartViewPatchDialog(args.Length == 3 ? args[2] : "");
+                    StartViewPatchDialog(args.Count == 3 ? args[2] : "");
                     return;
                 case "uninstall":
                     Uninstall();
@@ -1528,7 +1526,7 @@ namespace GitUI
             configFileGlobalSettings.Save();
         }
 
-        private void RunMergeCommand(Dictionary<string, string> arguments)
+        private void RunMergeCommand(IReadOnlyDictionary<string, string> arguments)
         {
             string branch = null;
             if (arguments.ContainsKey("branch"))
@@ -1551,29 +1549,31 @@ namespace GitUI
             }
         }
 
-        private void RunBrowseCommand(string[] args)
+        private void RunBrowseCommand(IReadOnlyList<string> args)
         {
             StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"), GetParameterOrEmptyStringAsDefault(args, "-commit"));
         }
 
-        private static string GetParameterOrEmptyStringAsDefault(string[] args, string paramName)
+        private static string GetParameterOrEmptyStringAsDefault(IReadOnlyList<string> args, string paramName)
         {
-            for (int i = 2; i < args.Length; i++)
+            var withEquals = paramName + "=";
+
+            for (var i = 2; i < args.Count; i++)
             {
-                string arg = args[i];
-                if (arg.StartsWith(paramName + "="))
+                var arg = args[i];
+                if (arg.StartsWith(withEquals))
                 {
-                    return arg.Replace(paramName + "=", "");
+                    return arg.Replace(withEquals, "");
                 }
             }
 
-            return string.Empty;
+            return "";
         }
 
-        private void RunOpenRepoCommand(string[] args)
+        private void RunOpenRepoCommand(IReadOnlyList<string> args)
         {
             GitUICommands c = this;
-            if (args.Length > 2)
+            if (args.Count > 2)
             {
                 if (File.Exists(args[2]))
                 {
@@ -1588,14 +1588,14 @@ namespace GitUI
             c.StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"));
         }
 
-        private void RunSynchronizeCommand(Dictionary<string, string> arguments)
+        private void RunSynchronizeCommand(IReadOnlyDictionary<string, string> arguments)
         {
             Commit(arguments);
             Pull(arguments);
             Push(arguments);
         }
 
-        private void RunRebaseCommand(Dictionary<string, string> arguments)
+        private void RunRebaseCommand(IReadOnlyDictionary<string, string> arguments)
         {
             string branch = null;
             if (arguments.ContainsKey("branch"))
@@ -1614,7 +1614,7 @@ namespace GitUI
             }
         }
 
-        private void RunFileHistoryCommand(string[] args)
+        private void RunFileHistoryCommand(IReadOnlyList<string> args)
         {
             // Remove working directory from filename. This is to prevent filenames that are too
             // long while there is room left when the workingdir was not in the path.
@@ -1624,24 +1624,24 @@ namespace GitUI
             StartFileHistoryDialog(null, fileHistoryFileName);
         }
 
-        private void RunCloneCommand(string[] args)
+        private void RunCloneCommand(IReadOnlyList<string> args)
         {
-            StartCloneDialog(null, args.Length > 2 ? args[2] : null);
+            StartCloneDialog(null, args.Count > 2 ? args[2] : null);
         }
 
-        private void RunInitCommand(string[] args)
+        private void RunInitCommand(IReadOnlyList<string> args)
         {
-            StartInitializeDialog(null, args.Length > 2 ? args[2] : null);
+            StartInitializeDialog(null, args.Count > 2 ? args[2] : null);
         }
 
-        private void RunBlameCommand(string[] args)
+        private void RunBlameCommand(IReadOnlyList<string> args)
         {
             // Remove working directory from filename. This is to prevent filenames that are too
             // long while there is room left when the workingdir was not in the path.
             string filenameFromBlame = args[2].Replace(Module.WorkingDir, "").ToPosixPath();
 
             int? initialLine = null;
-            if (args.Length >= 4)
+            if (args.Count >= 4)
             {
                 if (int.TryParse(args[3], out var temp))
                 {
@@ -1660,7 +1660,7 @@ namespace GitUI
             });
         }
 
-        private void RunMergeToolOrConflictCommand(Dictionary<string, string> arguments)
+        private void RunMergeToolOrConflictCommand(IReadOnlyDictionary<string, string> arguments)
         {
             if (!arguments.ContainsKey("quiet") || Module.InTheMiddleOfConflictedMerge())
             {
@@ -1668,13 +1668,13 @@ namespace GitUI
             }
         }
 
-        private static Dictionary<string, string> InitializeArguments(string[] args)
+        private static IReadOnlyDictionary<string, string> InitializeArguments(IReadOnlyList<string> args)
         {
             var arguments = new Dictionary<string, string>();
 
-            for (int i = 2; i < args.Length; i++)
+            for (int i = 2; i < args.Count; i++)
             {
-                if (args[i].StartsWith("--") && i + 1 < args.Length && !args[i + 1].StartsWith("--"))
+                if (args[i].StartsWith("--") && i + 1 < args.Count && !args[i + 1].StartsWith("--"))
                 {
                     arguments.Add(args[i].TrimStart('-'), args[++i]);
                 }
@@ -1696,17 +1696,17 @@ namespace GitUI
             return candidates.Where(predicate);
         }
 
-        private void Commit(Dictionary<string, string> arguments)
+        private void Commit(IReadOnlyDictionary<string, string> arguments)
         {
             StartCommitDialog(null, arguments.ContainsKey("quiet"));
         }
 
-        private void Push(Dictionary<string, string> arguments)
+        private void Push(IReadOnlyDictionary<string, string> arguments)
         {
             StartPushDialog(null, arguments.ContainsKey("quiet"));
         }
 
-        private void Pull(Dictionary<string, string> arguments)
+        private void Pull(IReadOnlyDictionary<string, string> arguments)
         {
             UpdateSettingsBasedOnArguments(arguments);
 
@@ -1728,7 +1728,7 @@ namespace GitUI
             }
         }
 
-        private static void UpdateSettingsBasedOnArguments(Dictionary<string, string> arguments)
+        private static void UpdateSettingsBasedOnArguments(IReadOnlyDictionary<string, string> arguments)
         {
             if (arguments.ContainsKey("merge"))
             {
