@@ -608,6 +608,11 @@ namespace GitCommands
                 AppSettings.GitCommand, arguments, WorkingDir, encoding ?? SystemEncoding);
         }
 
+        public string RunCacheableGitCmd(string arguments, Encoding encoding = null)
+        {
+            return RunCacheableCmd(AppSettings.GitCommand, arguments, encoding);
+        }
+
         /// <summary>
         /// Run command, cache results, console window is hidden, wait for exit, redirect output
         /// </summary>
@@ -807,20 +812,20 @@ namespace GitCommands
 
         public void SaveBlobAs(string saveAs, string blob)
         {
-            using (var ms = (MemoryStream)GetFileStream(blob)) // Ugly, has implementation info.
+            using (var blobStream = GetFileStream(blob))
             {
-                byte[] buf = ms.ToArray();
+                var blobData = blobStream.ToArray();
                 if (EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
                 {
-                    if (!FileHelper.IsBinaryFile(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(buf))
+                    if (!FileHelper.IsBinaryFileName(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(blobData))
                     {
-                        buf = GitConvert.ConvertCrLfToWorktree(buf);
+                        blobData = GitConvert.ConvertCrLfToWorktree(blobData);
                     }
                 }
 
-                using (FileStream fileOut = File.Create(saveAs))
+                using (var stream = File.Create(saveAs))
                 {
-                    fileOut.Write(buf, 0, buf.Length);
+                    stream.Write(blobData, 0, blobData.Length);
                 }
             }
         }
@@ -1144,9 +1149,14 @@ namespace GitCommands
             return result;
         }
 
-        public bool IsMerge(string commit)
+        public bool IsMerge(ObjectId objectId)
         {
-            return GetParents(commit).Count > 1;
+            return GetParents(objectId).Count > 1;
+        }
+
+        public GitRevision GetRevision(ObjectId objectId, bool shortFormat = false, bool loadRefs = false)
+        {
+            return GetRevision(objectId.ToString(), shortFormat, loadRefs);
         }
 
         public GitRevision GetRevision(string commit, bool shortFormat = false, bool loadRefs = false)
@@ -1165,15 +1175,15 @@ namespace GitCommands
 
             var format = formatString + (shortFormat ? "%s" : "%B%nNotes:%n%-N");
 
-            var revInfo = RunCacheableCmd(AppSettings.GitCommand, $"log -n1 --format=format:{format} {commit}", LosslessEncoding);
+            var revInfo = RunCacheableGitCmd($"log -n1 --format=format:{format} {commit}", LosslessEncoding);
 
             // TODO improve parsing to reduce temporary string (see similar code in RevisionGraph)
             string[] lines = revInfo.Split('\n');
 
-            var revision = new GitRevision(lines[0])
+            var revision = new GitRevision(ObjectId.Parse(lines[0]))
             {
                 TreeGuid = ObjectId.Parse(lines[1]),
-                ParentGuids = lines[2].Split(' '),
+                ParentIds = lines[2].SplitBySpace().Select(line => ObjectId.Parse(line)).ToList(),
                 Author = ReEncodeStringFromLossless(lines[3]),
                 AuthorEmail = ReEncodeStringFromLossless(lines[4]),
                 Committer = ReEncodeStringFromLossless(lines[6]),
@@ -1236,21 +1246,25 @@ namespace GitCommands
             }
         }
 
-        public IReadOnlyList<string> GetParents(string commit)
+        public IReadOnlyList<ObjectId> GetParents(ObjectId objectId)
         {
-            return RunGitCmd($"log -n 1 --format=format:%P \"{commit}\"").Split(' ');
+            return RunGitCmd($"log -n 1 --format=format:%P \"{objectId}\"")
+                .SplitBySpace()
+                .Select(line => ObjectId.Parse(line))
+                .ToList();
         }
 
-        public IReadOnlyList<GitRevision> GetParentsRevisions(string commit)
+        public IReadOnlyList<GitRevision> GetParentRevisions(ObjectId objectId)
         {
-            return GetParents(commit)
+            return GetParents(objectId)
                 .Select(parent => GetRevision(parent, shortFormat: true))
                 .ToList();
         }
 
-        public string ShowSha1(string sha1)
+        [CanBeNull]
+        public string ShowObject(ObjectId objectId)
         {
-            return ReEncodeShowString(RunCacheableCmd(AppSettings.GitCommand, "show " + sha1, LosslessEncoding));
+            return ReEncodeShowString(RunCacheableGitCmd($"show {objectId}", LosslessEncoding));
         }
 
         public string DeleteTag(string tagName)
@@ -1258,23 +1272,30 @@ namespace GitCommands
             return RunGitCmd(GitCommandHelpers.DeleteTagCmd(tagName));
         }
 
-        public string GetCurrentCheckout()
+        [NotNull]
+        public ObjectId GetCurrentCheckout()
         {
-            return RunGitCmd("rev-parse HEAD").TrimEnd();
+            return ObjectId.Parse(RunGitCmd("rev-parse HEAD").TrimEnd());
         }
 
-        public bool IsExistingCommitHash(string sha1Fragment, out string fullSha1)
+        public bool TryResolvePartialCommitId(string objectIdPrefix, out ObjectId objectId)
         {
-            string revParseResult = RunGitCmd(string.Format("rev-parse --verify --quiet {0}^{{commit}}", sha1Fragment));
-            revParseResult = revParseResult.Trim();
-            if (revParseResult.IsNotNullOrWhitespace() && revParseResult.StartsWith(sha1Fragment))
+            // If the prefix is already a full SHA1 then return immediately without invoking a git process.
+            if (ObjectId.TryParse(objectIdPrefix, out objectId))
             {
-                fullSha1 = revParseResult;
+                return true;
+            }
+
+            var args = $"rev-parse --verify --quiet {objectIdPrefix}^{{commit}}";
+            var output = RunGitCmd(args).Trim();
+
+            if (output.StartsWith(objectIdPrefix) && ObjectId.TryParse(output, out objectId))
+            {
                 return true;
             }
             else
             {
-                fullSha1 = null;
+                objectId = default;
                 return false;
             }
         }
@@ -1594,15 +1615,16 @@ namespace GitCommands
             return RunGitCmd(args.ToString());
         }
 
-        public string CheckoutFiles(IEnumerable<string> fileList, string revision, bool force)
+        public string CheckoutFiles(IEnumerable<string> fileList, ObjectId revision, bool force)
         {
-            string files = fileList.Select(s => s.Quote()).Join(" ");
+            var files = fileList.Select(s => s.Quote()).Join(" ");
+
             if (files.IsNullOrWhiteSpace())
             {
-                return string.Empty;
+                return "";
             }
 
-            if (revision == GitRevision.UnstagedGuid)
+            if (revision == ObjectId.UnstagedId)
             {
                 Debug.Assert(false, "Unexpectedly reset to unstaged - should be blocked in GUI");
 
@@ -1610,16 +1632,21 @@ namespace GitCommands
                 return "";
             }
 
-            if (revision == GitRevision.IndexGuid)
+            if (revision == ObjectId.IndexId)
             {
-                revision = "";
-            }
-            else
-            {
-                revision = revision.QuoteNE();
+                revision = null;
             }
 
-            return RunGitCmd("checkout " + force.AsForce() + revision + " -- " + files);
+            var args = new ArgumentBuilder
+            {
+                "checkout",
+                { force, "--force" },
+                revision,
+                "--",
+                files
+            };
+
+            return RunGitCmd(args.ToString());
         }
 
         public string RemoveFiles(IEnumerable<string> fileList, bool force)
@@ -2331,7 +2358,7 @@ namespace GitCommands
                 !firstRevision.IsNullOrEmpty();
 
             var patch = cacheResult
-                ? RunCacheableCmd(AppSettings.GitCommand, args.ToString(), LosslessEncoding)
+                ? RunCacheableGitCmd(args.ToString(), LosslessEncoding)
                 : ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(AppSettings.GitCommand, args.ToString(), LosslessEncoding));
 
             var patches = PatchProcessor.CreatePatchesFromString(patch, encoding).ToList();
@@ -2369,7 +2396,7 @@ namespace GitCommands
         public string GetDiffFilesText(string firstRevision, string secondRevision, bool noCache = false)
         {
             string cmd = DiffCommandWithStandardArgs + "-M -C --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
-            return noCache ? RunGitCmd(cmd) : RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
+            return noCache ? RunGitCmd(cmd) : RunCacheableGitCmd(cmd, SystemEncoding);
         }
 
         public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string firstRevision, string secondRevision, string parentToSecond)
@@ -2383,7 +2410,7 @@ namespace GitCommands
         {
             noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
             string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
-            string result = noCache ? RunGitCmd(cmd) : RunCacheableCmd(AppSettings.GitCommand, cmd, SystemEncoding);
+            string result = noCache ? RunGitCmd(cmd) : RunCacheableGitCmd(cmd, SystemEncoding);
             var resultCollection = GitCommandHelpers.GetDiffChangedFilesFromString(this, result, firstRevision, secondRevision, parentToSecond).ToList();
             if (firstRevision == GitRevision.UnstagedGuid || secondRevision == GitRevision.UnstagedGuid)
             {
@@ -2839,29 +2866,18 @@ namespace GitCommands
         {
             var list = GetRefs(true, false);
 
-            List<IGitRef> sortedList;
-            if (option == GetTagRefsSortOrder.ByCommitDateAscending)
+            switch (option)
             {
-                sortedList = list.OrderBy(head =>
-                {
-                    var r = new GitRevision(head.Guid);
-                    return r.CommitDate;
-                }).ToList();
-            }
-            else if (option == GetTagRefsSortOrder.ByCommitDateDescending)
-            {
-                sortedList = list.OrderByDescending(head =>
-                {
-                    var r = new GitRevision(head.Guid);
-                    return r.CommitDate;
-                }).ToList();
-            }
-            else
-            {
-                sortedList = new List<IGitRef>(list);
+                case GetTagRefsSortOrder.ByCommitDateAscending:
+                    return list.OrderBy(GetDate).ToList();
+                case GetTagRefsSortOrder.ByCommitDateDescending:
+                    return list.OrderByDescending(GetDate).ToList();
+                default:
+                    return list;
             }
 
-            return sortedList;
+            // BUG this sorting logic has no effect as CommitDate is not set by the GitRevision constructor
+            DateTime GetDate(IGitRef head) => new GitRevision(ObjectId.Parse(head.Guid)).CommitDate;
         }
 
         public enum GetTagRefsSortOrder
@@ -2959,10 +2975,10 @@ namespace GitCommands
         /// If both local and remote branches are requested, remote branches are prefixed with "remotes/"
         /// (as returned by git branch -a)
         /// </summary>
-        /// <param name="sha1">The sha1.</param>
+        /// <param name="objectId">The sha1.</param>
         /// <param name="getLocal">Pass true to include local branches</param>
         /// <param name="getRemote">Pass true to include remote branches</param>
-        public IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(string sha1, bool getLocal, bool getRemote)
+        public IReadOnlyList<string> GetAllBranchesWhichContainGivenCommit(ObjectId objectId, bool getLocal, bool getRemote)
         {
             if (!getLocal && !getRemote)
             {
@@ -2974,7 +2990,8 @@ namespace GitCommands
                 "branch",
                 { getRemote && getLocal, "-a" },
                 { getRemote && !getLocal, "-r" },
-                $"--contains {sha1}"
+                "--contains",
+                objectId
             };
 
             string info = RunGitCmd(args.ToString());
@@ -2990,10 +3007,14 @@ namespace GitCommands
             for (int i = 0; i < result.Length; i++)
             {
                 string item = result[i].Trim();
-                int idx;
-                if (getRemote && ((idx = item.IndexOf(" ->")) >= 0))
+
+                if (getRemote)
                 {
-                    item = item.Substring(0, idx);
+                    int idx = item.IndexOf(" ->", StringComparison.Ordinal);
+                    if (idx >= 0)
+                    {
+                        item = item.Substring(0, idx);
+                    }
                 }
 
                 result[i] = item;
@@ -3005,10 +3026,10 @@ namespace GitCommands
         /// <summary>
         /// Gets all tags which contain the given commit.
         /// </summary>
-        /// <param name="sha1">The sha1.</param>
-        public IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(string sha1)
+        /// <param name="objectId">The sha1.</param>
+        public IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(ObjectId objectId)
         {
-            string info = RunGitCmd("tag --contains " + sha1, SystemEncoding);
+            string info = RunGitCmd("tag --contains " + objectId, SystemEncoding);
 
             if (IsGitErrorMessage(info))
             {
@@ -3085,8 +3106,8 @@ namespace GitCommands
 
         public IReadOnlyList<string> GetFullTree(string id)
         {
-            string tree = RunCacheableCmd(AppSettings.GitCommand, string.Format("ls-tree -z -r --name-only {0}", id), SystemEncoding);
-            return tree.Split('\0', '\n');
+            return RunCacheableGitCmd($"ls-tree -z -r --name-only {id}", SystemEncoding)
+                .Split('\0', '\n');
         }
 
         public IEnumerable<IGitItem> GetTree(string id, bool full)
@@ -3100,7 +3121,7 @@ namespace GitCommands
             };
 
             var tree = GitRevision.IsFullSha1Hash(id)
-                ? RunCacheableCmd(AppSettings.GitCommand, args.ToString(), SystemEncoding)
+                ? RunCacheableGitCmd(args.ToString(), SystemEncoding)
                 : ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(AppSettings.GitCommand, args.ToString(), SystemEncoding));
 
             return _gitTreeParser.Parse(tree);
@@ -3122,7 +3143,7 @@ namespace GitCommands
                 fileName.ToPosixPath().Quote()
             };
 
-            var output = RunCacheableCmd(AppSettings.GitCommand, args.ToString(), LosslessEncoding);
+            var output = RunCacheableGitCmd(args.ToString(), LosslessEncoding);
 
             try
             {
@@ -3199,13 +3220,13 @@ namespace GitCommands
             // We see the content of the chunks, where the first is a markdown header, the second
             // is a blank line, and third is an introductory paragraph about the project.
 
-            var commitByObjectId = new Dictionary<string, GitBlameCommit>();
+            var commitByObjectId = new Dictionary<ObjectId, GitBlameCommit>();
             var lines = new List<GitBlameLine>(capacity: 256);
 
             var headerRegex = new Regex(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)", RegexOptions.Compiled);
 
             bool hasCommitHeader;
-            string objectId;
+            ObjectId objectId;
             int finalLineNumber;
             int originLineNumber;
             string author;
@@ -3227,7 +3248,7 @@ namespace GitCommands
 
                 if (match.Success)
                 {
-                    objectId = match.Groups["objectid"].Value;
+                    objectId = ObjectId.Parse(match.Groups["objectid"].Value);
                     finalLineNumber = int.Parse(match.Groups["finallinenum"].Value);
                     originLineNumber = int.Parse(match.Groups["origlinenum"].Value);
                 }
@@ -3338,63 +3359,58 @@ namespace GitCommands
 
         public string GetFileText(string id, Encoding encoding)
         {
-            return RunCacheableCmd(AppSettings.GitCommand, "cat-file blob \"" + id + "\"", encoding);
+            return RunCacheableGitCmd($"cat-file blob \"{id}\"", encoding);
         }
 
-        public string GetFileBlobHash(string fileName, string revision)
+        public string GetFileBlobHash(string fileName, ObjectId objectId)
         {
-            if (revision == GitRevision.UnstagedGuid)
+            if (objectId == ObjectId.UnstagedId)
             {
                 // working directory changes
                 Debug.Assert(false, "Tried to get blob for unstaged file");
                 return null;
             }
 
-            if (revision == GitRevision.IndexGuid)
+            if (objectId == ObjectId.IndexId)
             {
                 // index
-                string blob = RunGitCmd(string.Format("ls-files -s \"{0}\"", fileName));
-                string[] s = blob.Split(' ', '\t');
-                if (s.Length >= 2)
+                var lines = RunGitCmd($"ls-files -s \"{fileName}\"").Split(' ', '\t');
+                if (lines.Length >= 2)
                 {
-                    return s[1];
+                    return lines[1];
                 }
             }
             else
             {
-                string blob = RunGitCmd(string.Format("ls-tree -r {0} \"{1}\"", revision, fileName));
-                string[] s = blob.Split(' ', '\t');
-                if (s.Length >= 3)
+                var lines = RunGitCmd($"ls-tree -r {objectId} \"{fileName}\"").Split(' ', '\t');
+                if (lines.Length >= 3)
                 {
-                    return s[2];
+                    return lines[2];
                 }
             }
 
-            return string.Empty;
+            return "";
         }
 
         [CanBeNull]
-        public Stream GetFileStream(string blob)
+        public MemoryStream GetFileStream(string blob)
         {
             try
             {
-                var newStream = new MemoryStream();
-
                 using (var process = RunGitCmdDetached("cat-file blob " + blob))
                 {
-                    process.StandardOutput.BaseStream.CopyTo(newStream);
-                    newStream.Position = 0;
-
+                    var stream = new MemoryStream();
+                    process.StandardOutput.BaseStream.CopyTo(stream);
                     process.WaitForExit();
-                    return newStream;
+                    stream.Position = 0;
+                    return stream;
                 }
             }
             catch (Win32Exception ex)
             {
                 Trace.WriteLine(ex);
+                return null;
             }
-
-            return null;
         }
 
         public IEnumerable<string> GetPreviousCommitMessages(int count, string revision = "HEAD")
@@ -3437,9 +3453,14 @@ namespace GitCommands
         [CanBeNull]
         public ObjectId RevParse(string revisionExpression)
         {
+            if (ObjectId.TryParse(revisionExpression, out var objectId))
+            {
+                return objectId;
+            }
+
             var result = RunGitCmdResult($"rev-parse \"{revisionExpression}~0\"");
 
-            return result.ExitCode == 0 && ObjectId.TryParse(result.StdOutput, offset: 0, out var objectId)
+            return result.ExitCode == 0 && ObjectId.TryParse(result.StdOutput, offset: 0, out objectId)
                 ? objectId
                 : null;
         }
@@ -3857,7 +3878,7 @@ namespace GitCommands
                 filePath
             };
 
-            var patch = RunCacheableCmd(AppSettings.GitCommand, args.ToString(), LosslessEncoding);
+            var patch = RunCacheableGitCmd(args.ToString(), LosslessEncoding);
 
             if (string.IsNullOrWhiteSpace(patch))
             {
@@ -3880,9 +3901,9 @@ namespace GitCommands
         }
 
         [CanBeNull]
-        public string GetDescribe(string commit)
+        public string GetDescribe(ObjectId commitId)
         {
-            string info = RunGitCmd("describe --tags --first-parent " + commit).TrimEnd();
+            string info = RunGitCmd("describe --tags --first-parent --abbrev=40 " + commitId).TrimEnd();
 
             if (IsGitErrorMessage(info))
             {

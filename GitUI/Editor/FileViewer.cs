@@ -16,6 +16,7 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Editor.Diff;
 using GitUI.Hotkey;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -417,6 +418,8 @@ namespace GitUI.Editor
         public void ViewCurrentChanges(string fileName, string oldFileName, bool staged,
             bool isSubmodule, Func<Task<GitSubmoduleStatus>> getStatusAsync, [CanBeNull] Action openWithDifftool)
         {
+            // BUG why do we call getStatusAsync() twice
+
             if (!isSubmodule)
             {
                 _async.LoadAsync(
@@ -499,9 +502,9 @@ namespace GitUI.Editor
             return Task.CompletedTask;
         }
 
-        public Task ViewGitItemRevisionAsync(string fileName, string guid)
+        public Task ViewGitItemRevisionAsync(string fileName, ObjectId objectId)
         {
-            if (guid == GitRevision.UnstagedGuid)
+            if (objectId == ObjectId.UnstagedId)
             {
                 // No blob exists for unstaged, present contents from file system
                 return ViewFileAsync(fileName);
@@ -509,7 +512,7 @@ namespace GitUI.Editor
             else
             {
                 // Retrieve blob, same as GitItemStatus.TreeGuid
-                string blob = Module.GetFileBlobHash(fileName, guid);
+                string blob = Module.GetFileBlobHash(fileName, objectId);
                 return ViewGitItemAsync(fileName, blob);
             }
         }
@@ -583,7 +586,7 @@ namespace GitUI.Editor
             }
 
             // Check binary from extension/attributes (a secondary check for file contents before display)
-            else if (FileHelper.IsBinaryFile(Module, fileName))
+            else if (FileHelper.IsBinaryFileName(Module, fileName))
             {
                 return ViewTextAsync(fileName, $"Binary file: {fileName}", openWithDifftool);
             }

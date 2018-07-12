@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Tag;
 using GitUI.Script;
+using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -21,7 +23,7 @@ namespace GitUI.CommandsDialogs
         private readonly IGitTagController _gitTagController;
         private string _currentRemote = "";
 
-        public FormCreateTag(GitUICommands commands, GitRevision revision)
+        public FormCreateTag([CanBeNull] GitUICommands commands, [CanBeNull] ObjectId objectId)
             : base(commands)
         {
             InitializeComponent();
@@ -34,7 +36,8 @@ namespace GitUI.CommandsDialogs
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
             {
-                commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
+                objectId = objectId ?? Module.GetCurrentCheckout();
+                commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
             }
 
             if (commands != null)
@@ -74,9 +77,9 @@ namespace GitUI.CommandsDialogs
 
         private string CreateTag()
         {
-            var objectId = commitPickerSmallControl1.SelectedCommitHash;
+            var objectId = commitPickerSmallControl1.SelectedObjectId;
 
-            if (string.IsNullOrWhiteSpace(objectId))
+            if (objectId == null)
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text);
                 return "";

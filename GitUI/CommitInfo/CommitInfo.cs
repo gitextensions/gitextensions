@@ -50,7 +50,7 @@ namespace GitUI.CommitInfo
         private readonly GitDescribeProvider _gitDescribeProvider;
 
         private GitRevision _revision;
-        private IReadOnlyList<string> _children;
+        private IReadOnlyList<ObjectId> _children;
         private string _revisionInfo;
         private string _linksInfo;
         private IDictionary<string, string> _annotatedTagsMessages;
@@ -134,7 +134,7 @@ namespace GitUI.CommitInfo
             }
         }
 
-        public void SetRevisionWithChildren(GitRevision revision, IReadOnlyList<string> children)
+        public void SetRevisionWithChildren(GitRevision revision, IReadOnlyList<ObjectId> children)
         {
             _revision = revision;
             _children = children;
@@ -169,12 +169,6 @@ namespace GitUI.CommitInfo
             RevisionInfo.Clear();
             _RevisionHeader.Clear();
 
-            if (string.IsNullOrEmpty(_revision.Guid))
-            {
-                Debug.Assert(false, "Unexpectedly called ReloadCommitInfo() with empty revision");
-                return;
-            }
-
             var data = _commitDataManager.CreateFromRevision(_revision, _children);
 
             if (_revision.Body == null)
@@ -206,7 +200,7 @@ namespace GitUI.CommitInfo
 
             if (AppSettings.CommitInfoShowContainedInBranches)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadBranchInfoAsync(_revision.Guid)).FileAndForget();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadBranchInfoAsync(_revision.ObjectId)).FileAndForget();
             }
 
             if (AppSettings.ShowAnnotatedTagsMessages)
@@ -216,12 +210,12 @@ namespace GitUI.CommitInfo
 
             if (AppSettings.CommitInfoShowContainedInTags)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadTagInfoAsync(_revision.Guid)).FileAndForget();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadTagInfoAsync(_revision.ObjectId)).FileAndForget();
             }
 
             if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadDescribeInfoAsync(_revision.Guid)).FileAndForget();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadDescribeInfoAsync(_revision.ObjectId)).FileAndForget();
             }
 
             return;
@@ -348,16 +342,16 @@ namespace GitUI.CommitInfo
                 }
             }
 
-            async Task LoadTagInfoAsync(string revision)
+            async Task LoadTagInfoAsync(ObjectId objectId)
             {
                 await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                _tags = Module.GetAllTagsWhichContainGivenCommit(revision).ToList();
+                _tags = Module.GetAllTagsWhichContainGivenCommit(objectId).ToList();
 
                 await this.SwitchToMainThreadAsync();
                 UpdateRevisionInfo();
             }
 
-            async Task LoadBranchInfoAsync(string revision)
+            async Task LoadBranchInfoAsync(ObjectId revision)
             {
                 await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
@@ -374,7 +368,7 @@ namespace GitUI.CommitInfo
                 UpdateRevisionInfo();
             }
 
-            async Task LoadDescribeInfoAsync(string revision)
+            async Task LoadDescribeInfoAsync(ObjectId commitId)
             {
                 await TaskScheduler.Default;
                 _gitDescribeInfo = GetDescribeInfoForRevision();
@@ -386,7 +380,7 @@ namespace GitUI.CommitInfo
 
                 string GetDescribeInfoForRevision()
                 {
-                    var (precedingTag, commitCount) = _gitDescribeProvider.Get(revision);
+                    var (precedingTag, commitCount) = _gitDescribeProvider.Get(commitId);
 
                     StringBuilder gitDescribeInfo = new StringBuilder();
                     if (!string.IsNullOrEmpty(precedingTag))

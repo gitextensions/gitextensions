@@ -8,6 +8,7 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.ExternalLinks;
 using GitCommands.Remote;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using NSubstitute;
 using NUnit.Framework;
@@ -27,7 +28,7 @@ namespace GitCommandsTests.ExternalLinks
         {
             _linkDef = Parse(GetGithubIssuesXmlDef()).First();
 
-            _revision = new GitRevision("");
+            _revision = new GitRevision(ObjectId.Random());
 
             _remoteManager = Substitute.For<IGitRemoteManager>();
             _remoteManager.LoadRemotes(false).Returns(GetDefaultRemotes());

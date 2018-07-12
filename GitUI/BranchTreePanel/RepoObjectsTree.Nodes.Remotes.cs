@@ -121,7 +121,16 @@ namespace GitUI.BranchTreePanel
 
             public void CreateBranch()
             {
-                UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, new GitRevision(FullPath));
+                var objectId = Module.RevParse(FullPath);
+
+                if (objectId == null)
+                {
+                    MessageBox.Show($"Branch \"{FullPath}\" could not be resolved.");
+                }
+                else
+                {
+                    UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, objectId);
+                }
             }
 
             public void Delete()
@@ -166,9 +175,18 @@ namespace GitUI.BranchTreePanel
 
             public void Reset()
             {
-                using (var form = new FormResetCurrentBranch(UICommands, new GitRevision(FullPath)))
+                var objectId = Module.RevParse(FullPath);
+
+                if (objectId == null)
                 {
-                    form.ShowDialog(TreeViewNode.TreeView);
+                    MessageBox.Show($"Branch \"{FullPath}\" could not be resolved.");
+                }
+                else
+                {
+                    using (var form = new FormResetCurrentBranch(UICommands, new GitRevision(objectId)))
+                    {
+                        form.ShowDialog(TreeViewNode.TreeView);
+                    }
                 }
             }
 

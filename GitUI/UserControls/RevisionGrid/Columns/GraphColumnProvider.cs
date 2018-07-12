@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.UserControls.RevisionGrid.Graph;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Columns
@@ -594,7 +595,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             ClearDrawCache();
         }
 
-        public void HighlightBranch(string id)
+        public void HighlightBranch(ObjectId id)
         {
             _graphModel.HighlightBranch(id);
         }

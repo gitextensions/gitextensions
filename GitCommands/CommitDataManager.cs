@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using GitCommands.Git.Extensions;
 using GitUIPluginInterfaces;
@@ -20,7 +21,7 @@ namespace GitCommands
         /// <param name="revision">The <see cref="GitRevision"/> to convert from.</param>
         /// <param name="children">The list of children to add to the returned object.</param>
         [NotNull]
-        CommitData CreateFromRevision([NotNull] GitRevision revision, IReadOnlyList<string> children);
+        CommitData CreateFromRevision([NotNull] GitRevision revision, IReadOnlyList<ObjectId> children);
 
         /// <summary>
         /// Gets <see cref="CommitData"/> for the specified <paramref name="sha1"/>.
@@ -50,7 +51,7 @@ namespace GitCommands
         /// <inheritdoc />
         public void UpdateBody(CommitData commitData, out string error)
         {
-            if (!TryGetCommitLog(commitData.Guid.ToString(), BodyAndNotesFormat, out error, out var data))
+            if (!TryGetCommitLog(commitData.ObjectId.ToString(), BodyAndNotesFormat, out error, out var data))
             {
                 return;
             }
@@ -76,7 +77,7 @@ namespace GitCommands
             var commitEncoding = lines[1];
             var message = ProcessDiffNotes(startIndex: 2, lines);
 
-            Debug.Assert(commitData.Guid.ToString() == guid, "Guid in response doesn't match that of request");
+            Debug.Assert(commitData.ObjectId.ToString() == guid, "Guid in response doesn't match that of request");
 
             // Commit message is not re-encoded by git when format is given
             commitData.Body = GetModule().ReEncodeCommitMessage(message, commitEncoding);
@@ -139,7 +140,7 @@ namespace GitCommands
             var treeGuid = ObjectId.Parse(lines[1]);
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
-            var parentGuids = lines[2].Split(' ');
+            var parentGuids = lines[2].Split(' ').Select(id => ObjectId.Parse(id)).ToList();
             var author = module.ReEncodeStringFromLossless(lines[3]);
             var authorDate = DateTimeUtils.ParseUnixTime(lines[4]);
             var committer = module.ReEncodeStringFromLossless(lines[5]);
@@ -154,7 +155,7 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<string> children)
+        public CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<ObjectId> children)
         {
             if (revision == null)
             {
@@ -166,10 +167,10 @@ namespace GitCommands
                 throw new ArgumentException($"Cannot have a null {nameof(GitRevision.ObjectId)}.", nameof(revision));
             }
 
-            return new CommitData(revision.ObjectId, revision.TreeGuid, revision.ParentGuids,
+            return new CommitData(revision.ObjectId, revision.TreeGuid, revision.ParentIds,
                 string.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
                 string.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
-                revision.Body ?? revision.Subject) { ChildrenGuids = children };
+                revision.Body ?? revision.Subject) { ChildIds = children };
         }
 
         [NotNull]

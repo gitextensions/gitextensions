@@ -51,7 +51,7 @@ namespace TfsIntegration
         private string _projectName;
         private Regex _tfsBuildDefinitionNameFilter;
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher != null)
             {
@@ -158,15 +158,15 @@ namespace TfsIntegration
 
         private static BuildInfo CreateBuildInfo(IBuild buildDetail)
         {
-            string sha = buildDetail.Revision.Substring(buildDetail.Revision.LastIndexOf(":") + 1);
+            var objectId = ObjectId.Parse(buildDetail.Revision.Substring(buildDetail.Revision.LastIndexOf(":") + 1));
 
             return new BuildInfo
             {
                 Id = buildDetail.Label,
                 StartDate = buildDetail.StartDate,
                 Status = (BuildInfo.BuildStatus)buildDetail.Status,
-                Description = buildDetail.Label + " (" + buildDetail.Description + ")",
-                CommitHashList = new[] { sha },
+                Description = $"{buildDetail.Label} ({buildDetail.Description})",
+                CommitHashList = new[] { objectId },
                 Url = buildDetail.Url,
                 ShowInBuildReportTab = false
             };

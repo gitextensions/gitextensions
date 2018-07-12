@@ -160,7 +160,7 @@ namespace GitUITests.UserControls
 
         private static GitRevision NewRevisionWithAuthorEmail(string authorEmail)
         {
-            return new GitRevision(ObjectId.Random().ToString())
+            return new GitRevision(ObjectId.Random())
             {
                 AuthorEmail = authorEmail
             };

@@ -54,7 +54,7 @@ namespace GitCommands
             ".tiff",
         };
 
-        public static bool IsBinaryFile(GitModule module, string fileName)
+        public static bool IsBinaryFileName(GitModule module, string fileName)
         {
             return IsBinaryAccordingToGitAttributes(module, fileName)
                 ?? HasMatchingExtension(BinaryExtensions, fileName);

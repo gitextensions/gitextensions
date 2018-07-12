@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using GitCommands;
+using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitCommandsTests.Git
@@ -25,7 +26,7 @@ namespace GitCommandsTests.Git
             str.Append("FileName: fileName.txt");
 
             var commit = new GitBlameCommit(
-                "ObjectId",
+                ObjectId.Random(),
                 "Author",
                 "author@authormail.com",
                 authorTime,

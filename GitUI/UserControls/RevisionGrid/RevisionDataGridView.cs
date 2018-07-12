@@ -11,6 +11,7 @@ using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid
@@ -193,7 +194,7 @@ namespace GitUI.UserControls.RevisionGrid
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity")]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IReadOnlyList<string> SelectedObjectIds
+        public IReadOnlyList<ObjectId> SelectedObjectIds
         {
             get
             {
@@ -202,7 +203,7 @@ namespace GitUI.UserControls.RevisionGrid
                     return null;
                 }
 
-                var data = new string[SelectedRows.Count];
+                var data = new ObjectId[SelectedRows.Count];
 
                 for (var i = 0; i < SelectedRows.Count; i++)
                 {
@@ -645,35 +646,35 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
-        public bool IsRevisionRelative(string guid)
+        public bool IsRevisionRelative(ObjectId objectId)
         {
-            return _graphModel.IsRevisionRelative(guid);
+            return _graphModel.IsRevisionRelative(objectId);
         }
 
         [CanBeNull]
-        public GitRevision GetRevision(string guid)
+        public GitRevision GetRevision(ObjectId objectId)
         {
-            return _graphModel.NodeByObjectId.TryGetValue(guid, out var node) ? node.Revision : null;
+            return _graphModel.NodeByObjectId.TryGetValue(objectId, out var node) ? node.Revision : null;
         }
 
-        public int? TryGetRevisionIndex(string guid)
+        public int? TryGetRevisionIndex(ObjectId objectId)
         {
             if (Rows.Count == 0)
             {
                 return null;
             }
 
-            return guid != null && _graphModel.NodeByObjectId.TryGetValue(guid, out var node) ? (int?)node.Index : null;
+            return objectId != null && _graphModel.NodeByObjectId.TryGetValue(objectId, out var node) ? (int?)node.Index : null;
         }
 
-        public IReadOnlyList<string> GetRevisionChildren(string guid)
+        public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)
         {
-            var childrenIds = new List<string>();
+            var childrenIds = new List<ObjectId>();
 
             // We do not need a lock here since we load the data from the first commit and walk through all
             // parents. Children are always loaded, since we start at the newest commit.
             // With lock, loading the commit info slows down terribly.
-            if (_graphModel.NodeByObjectId.TryGetValue(guid, out var node))
+            if (_graphModel.NodeByObjectId.TryGetValue(objectId, out var node))
             {
                 foreach (var descendant in node.Descendants)
                 {

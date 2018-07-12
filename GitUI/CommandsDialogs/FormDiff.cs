@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.HelperDialogs;
+using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -29,8 +31,11 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _anotherCommitTooltip = new TranslationString("Select another commit");
         private readonly TranslationString _btnSwapTooltip = new TranslationString("Swap BASE and Compare commits");
 
-        public FormDiff(GitUICommands commands, bool firstParentIsValid, string baseCommitSha,
-            string headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr) : base(commands)
+        public FormDiff(
+            GitUICommands commands, bool firstParentIsValid,
+            ObjectId baseId, ObjectId headId,
+            string baseCommitDisplayStr, string headCommitDisplayStr)
+            : base(commands)
         {
             _baseCommitDisplayStr = baseCommitDisplayStr;
             _headCommitDisplayStr = headCommitDisplayStr;
@@ -51,10 +56,10 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            _baseRevision = new GitRevision(baseCommitSha);
-            _headRevision = new GitRevision(headCommitSha);
-            _mergeBase = new GitRevision(Module.GetMergeBase(_baseRevision.Guid, _headRevision.Guid)?.ToString());
-            ckCompareToMergeBase.Text += $" ({GitRevision.ToShortSha(_mergeBase?.Guid)})";
+            _baseRevision = new GitRevision(baseId);
+            _headRevision = new GitRevision(headId);
+            _mergeBase = new GitRevision(Module.GetMergeBase(_baseRevision.Guid, _headRevision.Guid));
+            ckCompareToMergeBase.Text += $" ({_mergeBase?.ObjectId.ToShortString()})";
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _findFilePredicateProvider = new FindFilePredicateProvider();
             _revisionTester = new GitRevisionTester(_fullPathResolver);
@@ -249,7 +254,7 @@ namespace GitUI.CommandsDialogs
             bool firstIsParent = _revisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
             bool localExists = _revisionTester.AnyLocalFileExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
 
-            IEnumerable<string> selectedItemParentRevs = DiffFiles.Revision.ParentGuids;
+            var selectedItemParentRevs = DiffFiles.Revision.ParentIds;
             bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);
             bool allAreDeleted = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsDeleted);
 
@@ -276,14 +281,15 @@ namespace GitUI.CommandsDialogs
             selectedParentToLocalToolStripMenuItem.Visible = _revisionDiffContextMenuController.ShouldDisplayMenuSelectedParentToLocal(selectionInfo);
         }
 
-        private void PickAnotherBranch(GitRevision preSelectCommit, ref string displayStr, ref GitRevision revision)
+        private void PickAnotherBranch(GitRevision preSelectCommit, ref string displayStr, [CanBeNull] ref GitRevision revision)
         {
-            using (var form = new FormCompareToBranch(UICommands, preSelectCommit.Guid))
+            using (var form = new FormCompareToBranch(UICommands, preSelectCommit.ObjectId))
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     displayStr = form.BranchName;
-                    revision = new GitRevision(Module.RevParse(form.BranchName)?.ToString());
+                    var objectId = Module.RevParse(form.BranchName);
+                    revision = objectId == null ? null : new GitRevision(objectId);
                     PopulateDiffFiles();
                 }
             }

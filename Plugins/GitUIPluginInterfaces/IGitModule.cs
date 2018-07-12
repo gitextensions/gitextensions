@@ -95,9 +95,9 @@ namespace GitUIPluginInterfaces
         /// <summary>Indicates whether the repository is in a 'detached HEAD' state.</summary>
         bool IsDetachedHead();
 
-        [ContractAnnotation("=>false,fullSha1:null")]
-        [ContractAnnotation("=>true,fullSha1:notnull")]
-        bool IsExistingCommitHash(string sha1Fragment, out string fullSha1);
+        [ContractAnnotation("=>false,objectId:null")]
+        [ContractAnnotation("=>true,objectId:notnull")]
+        bool TryResolvePartialCommitId(string objectIdPrefix, out ObjectId objectId);
 
         /// <summary>Gets the path to the git application executable.</summary>
         string GitCommand { get; }
@@ -140,6 +140,6 @@ namespace GitUIPluginInterfaces
 
         string ReEncodeCommitMessage(string s, string toEncodingName);
 
-        string GetDescribe(string commit);
+        string GetDescribe(ObjectId commitId);
     }
 }

@@ -163,8 +163,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 offset = baseOffset + max + DpiUtil.Scale(6);
 
                 // Summary of changes
-                var changes = _grid.GetChangeCount(revision.Guid);
-                if (changes != null && _grid.IsCountUpdated)
+                var changes = _grid.GetChangeCount(revision.ObjectId);
+                if (changes != null)
                 {
                     DrawArtificialCount(changes.Changed, Images.FileStatusModified);
                     DrawArtificialCount(changes.New, Images.FileStatusAdded);
@@ -278,7 +278,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (revision.IsArtificial)
             {
-                var stats = _grid.GetChangeCount(revision.Guid);
+                var stats = _grid.GetChangeCount(revision.ObjectId);
 
                 if (stats != null)
                 {

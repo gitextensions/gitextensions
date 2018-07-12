@@ -105,7 +105,7 @@ namespace TeamCityIntegration
 
         public string LogAsGuestUrlParameter { get; set; }
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher != null)
             {
@@ -316,7 +316,7 @@ namespace TeamCityIntegration
             var statusText = buildXElement.Element("statusText").Value;
             var webUrl = buildXElement.Attribute("webUrl").Value + LogAsGuestUrlParameter;
             var revisionsElements = buildXElement.XPathSelectElements("revisions/revision");
-            var commitHashList = revisionsElements.Select(x => x.Attribute("version").Value).ToArray();
+            var commitHashList = revisionsElements.Select(x => ObjectId.Parse(x.Attribute("version").Value)).ToList();
             var runningAttribute = buildXElement.Attribute("running");
 
             if (runningAttribute != null && Convert.ToBoolean(runningAttribute.Value))

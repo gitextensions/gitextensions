@@ -658,7 +658,7 @@ See the changes in the commit form.");
                 if (MessageBox.Show(_resetFileText.Text, _resetFileCaption.Text, MessageBoxButtons.OKCancel) == DialogResult.OK)
                 {
                     var files = new List<string> { gitItem.FileName };
-                    Module.CheckoutFiles(files, _revision.Guid, false);
+                    Module.CheckoutFiles(files, _revision.ObjectId, false);
                 }
             }
         }

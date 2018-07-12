@@ -310,7 +310,7 @@ namespace GitUI
 
         #region Checkout
 
-        public bool StartCheckoutBranch(IWin32Window owner, string branch = "", bool remote = false, string[] containRevisions = null)
+        public bool StartCheckoutBranch([CanBeNull] IWin32Window owner, string branch = "", bool remote = false, IReadOnlyList<ObjectId> containRevisions = null)
         {
             return DoActionOnRepo(owner, true, true, PreCheckoutBranch, PostCheckoutBranch, () =>
             {
@@ -321,7 +321,7 @@ namespace GitUI
             });
         }
 
-        public bool StartCheckoutBranch(IWin32Window owner, string[] containRevisions)
+        public bool StartCheckoutBranch([CanBeNull] IWin32Window owner, [CanBeNull] IReadOnlyList<ObjectId> containRevisions)
         {
             return StartCheckoutBranch(owner, "", false, containRevisions);
         }
@@ -364,11 +364,11 @@ namespace GitUI
             });
         }
 
-        public bool StartCreateBranchDialog(IWin32Window owner = null, GitRevision revision = null)
+        public bool StartCreateBranchDialog(IWin32Window owner = null, ObjectId objectId = null)
         {
             bool Action()
             {
-                using (var form = new FormCreateBranch(this, revision))
+                using (var form = new FormCreateBranch(this, objectId))
                 {
                     return form.ShowDialog(owner) == DialogResult.OK;
                 }
@@ -923,7 +923,7 @@ namespace GitUI
             return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
-        /// <param name="preselectRemote">makes the FormRemotes initialially select the given remote</param>
+        /// <param name="preselectRemote">makes the FormRemotes initially select the given remote</param>
         public bool StartRemotesDialog(IWin32Window owner, string preselectRemote = null)
         {
             bool Action()
@@ -1060,7 +1060,7 @@ namespace GitUI
             return StartSettingsDialog(owner, CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
         }
 
-        public bool StartBrowseDialog(IWin32Window owner = null, string filter = "", string selectedCommit = null, bool startWithDashboard = false)
+        public bool StartBrowseDialog(IWin32Window owner = null, string filter = "", ObjectId selectedCommit = null, bool startWithDashboard = false)
         {
             var form = new FormBrowse(this, filter, selectedCommit, startWithDashboard);
 
@@ -1101,10 +1101,7 @@ namespace GitUI
         {
             // Note: Order in revisions is that first clicked is last in array
 
-            string error = RevisionDiffInfoProvider.Get(revisions, diffKind,
-                out var extraDiffArgs, out var firstRevision, out var secondRevision);
-
-            if (!string.IsNullOrEmpty(error))
+            if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out var extraDiffArgs, out var firstRevision, out var secondRevision, out var error))
             {
                 MessageBox.Show(owner, error);
             }
@@ -1118,13 +1115,14 @@ namespace GitUI
             }
         }
 
-        public FormDiff ShowFormDiff(bool firstParentIsValid, ObjectId baseCommitSha,
-            ObjectId headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
+        public FormDiff ShowFormDiff(bool firstParentIsValid, ObjectId baseCommitSha, ObjectId headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
         {
-            var diffForm = new FormDiff(this, firstParentIsValid, baseCommitSha.ToString(),
-                headCommitSha.ToString(), baseCommitDisplayStr, headCommitDisplayStr);
+            var diffForm = new FormDiff(this, firstParentIsValid, baseCommitSha, headCommitSha, baseCommitDisplayStr, headCommitDisplayStr)
+            {
+                ShowInTaskbar = true
+            };
+
             diffForm.Show();
-            diffForm.ShowInTaskbar = true;
 
             return diffForm;
         }
@@ -1551,7 +1549,20 @@ namespace GitUI
 
         private void RunBrowseCommand(IReadOnlyList<string> args)
         {
-            StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"), GetParameterOrEmptyStringAsDefault(args, "-commit"));
+            var arg = GetParameterOrEmptyStringAsDefault(args, "-commit");
+            if (arg == "")
+            {
+                StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"));
+            }
+            else if (Module.TryResolvePartialCommitId(arg, out var objectId))
+            {
+                StartBrowseDialog(null, GetParameterOrEmptyStringAsDefault(args, "-filter"), objectId);
+            }
+            else
+            {
+                // TODO log error here
+                Console.Error.WriteLine($"No commit found matching: {arg}");
+            }
         }
 
         private static string GetParameterOrEmptyStringAsDefault(IReadOnlyList<string> args, string paramName)

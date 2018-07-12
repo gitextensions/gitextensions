@@ -146,8 +146,8 @@ namespace Gerrit
 
             // Find the controls we're going to extend.
 
-            var menuStrip = form.FindDescendantsOfType<MenuStrip>(p => p.Name == "menuStrip1");
-            var toolStrip = form.FindDescendantsOfType<ToolStrip>(p => p.Name == "ToolStrip");
+            var menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "menuStrip1");
+            var toolStrip = form.FindDescendantOfType<ToolStrip>(p => p.Name == "ToolStrip");
 
             if (menuStrip == null)
             {

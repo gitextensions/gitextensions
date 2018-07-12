@@ -509,7 +509,7 @@ namespace GitUI.Script
 
                 if (revisionGrid == null)
                 {
-                    string currentRevisionGuid = module.GetCurrentCheckout();
+                    var currentRevisionGuid = module.GetCurrentCheckout().ToString();
                     refs = module.GetRefs(true, true).Where(gitRef => gitRef.Guid == currentRevisionGuid).ToList();
                 }
                 else

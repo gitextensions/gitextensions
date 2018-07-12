@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
@@ -30,7 +32,7 @@ namespace GitUI.CommandsDialogs
             private const string LogPattern = @"^([^,]+), (.*), (.+), (\d+), (.+)?$";
             private const string RawDataPattern = @"^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) ([a-f\d]{40})(.)*$";
 
-            private const string TagCommandArguments = "cat-file -p {0}";
+            private const string TagCommandArgumentsFormat = "cat-file -p {0}";
             private const string TagPattern = @"^object (.+)\ntype commit\ntag (.+)\ntagger (.+) <.*> (.+) .*\n\n(.*)\n";
 
             private static readonly Regex RawDataRegex = new Regex(RawDataPattern, RegexOptions.Compiled);
@@ -40,14 +42,16 @@ namespace GitUI.CommandsDialogs
             public LostObjectType ObjectType { get; }
 
             /// <summary>
-            /// Sha1 hash of lost object.
+            /// Id (SHA-1 hash) of the lost object.
             /// </summary>
-            public string Hash { get; }
+            [NotNull]
+            public ObjectId ObjectId { get; }
 
             /// <summary>
-            /// Sha1 hash of parent commit of commit lost object.
+            /// Id (SHA-1 hash) of parent commit to the lost object.
             /// </summary>
-            public string Parent { get; private set; }
+            [CanBeNull]
+            public ObjectId Parent { get; private set; }
 
             /// <summary>
             /// Diagnostics and object type.
@@ -63,11 +67,12 @@ namespace GitUI.CommandsDialogs
             /// </summary>
             public string TagName { get; set; }
 
-            private LostObject(LostObjectType objectType, string rawType, string hash)
+            private LostObject(LostObjectType objectType, string rawType, [NotNull] ObjectId objectId)
             {
+                // TODO use enum for RawType
                 ObjectType = objectType;
                 RawType = rawType;
-                Hash = hash;
+                ObjectId = objectId ?? throw new ArgumentNullException(nameof(objectId));
             }
 
             [CanBeNull]
@@ -94,13 +99,13 @@ namespace GitUI.CommandsDialogs
 
                 var matchedGroups = patternMatch.Groups;
                 Debug.Assert(matchedGroups[4].Success, "matchedGroups[4].Success");
-                var hash = matchedGroups[4].Value;
+                var objectId = ObjectId.Parse(matchedGroups[4].Value);
 
-                var result = new LostObject(GetObjectType(matchedGroups), matchedGroups[1].Value, hash);
+                var result = new LostObject(GetObjectType(matchedGroups), matchedGroups[1].Value, objectId);
 
                 if (result.ObjectType == LostObjectType.Commit)
                 {
-                    var commitLog = GetLostCommitLog(module, hash);
+                    var commitLog = GetLostCommitLog();
                     var logPatternMatch = LogRegex.Match(commitLog);
                     if (logPatternMatch.Success)
                     {
@@ -110,52 +115,43 @@ namespace GitUI.CommandsDialogs
                         result.Date = DateTimeUtils.ParseUnixTime(logPatternMatch.Groups[4].Value);
                         if (logPatternMatch.Groups.Count >= 5)
                         {
-                            result.Parent = logPatternMatch.Groups[5].Value;
+                            var parentId = logPatternMatch.Groups[5].Value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                            if (parentId != null)
+                            {
+                                result.Parent = ObjectId.Parse(parentId);
+                            }
                         }
                     }
                 }
-
-                if (result.ObjectType == LostObjectType.Tag)
+                else if (result.ObjectType == LostObjectType.Tag)
                 {
-                    var tagData = GetLostTagData(module, hash);
+                    var tagData = GetLostTagData();
                     var tagPatternMatch = TagRegex.Match(tagData);
                     if (tagPatternMatch.Success)
                     {
-                        result.Parent = tagPatternMatch.Groups[1].Value;
+                        result.Parent = ObjectId.Parse(tagPatternMatch.Groups[1].Value);
                         result.Author = module.ReEncodeStringFromLossless(tagPatternMatch.Groups[3].Value);
                         result.TagName = tagPatternMatch.Groups[2].Value;
                         result.Subject = result.TagName + ":" + tagPatternMatch.Groups[5].Value;
                         result.Date = DateTimeUtils.ParseUnixTime(tagPatternMatch.Groups[4].Value);
                     }
                 }
-
-                if (result.ObjectType == LostObjectType.Blob)
+                else if (result.ObjectType == LostObjectType.Blob)
                 {
-                    var blobPath = Path.Combine(module.WorkingDirGitDir, "objects", hash.Substring(0, 2), hash.Substring(2, hash.Length - 2));
+                    var hash = objectId.ToString();
+                    var blobPath = Path.Combine(module.WorkingDirGitDir, "objects", hash.Substring(0, 2), hash.Substring(2, ObjectId.Sha1CharCount - 2));
                     result.Date = new FileInfo(blobPath).CreationTime;
                 }
 
                 return result;
-            }
 
-            private static string GetLostCommitLog(GitModule module, string hash)
-            {
-                return VerifyHashAndRunCommand(module, hash, LogCommandArgumentsFormat);
-            }
+                string GetLostCommitLog() => VerifyHashAndRunCommand(LogCommandArgumentsFormat);
+                string GetLostTagData() => VerifyHashAndRunCommand(TagCommandArgumentsFormat);
 
-            private static string VerifyHashAndRunCommand(GitModule module, string hash, string command)
-            {
-                if (string.IsNullOrEmpty(hash) || !GitRevision.Sha1HashRegex.IsMatch(hash))
+                string VerifyHashAndRunCommand(string commandFormat)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(hash), hash, "Hash must be a valid SHA-1 hash.");
+                    return module.RunGitCmd(string.Format(commandFormat, objectId), GitModule.LosslessEncoding);
                 }
-
-                return module.RunGitCmd(string.Format(command, hash), GitModule.LosslessEncoding);
-            }
-
-            private static string GetLostTagData(GitModule module, string hash)
-            {
-                return VerifyHashAndRunCommand(module, hash, TagCommandArguments);
             }
 
             private static LostObjectType GetObjectType(GroupCollection matchedGroup)

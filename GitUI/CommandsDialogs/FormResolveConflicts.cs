@@ -458,7 +458,7 @@ namespace GitUI.CommandsDialogs
                         return;
                     }
 
-                    if (FileHelper.IsBinaryFile(Module, item.Local.Filename))
+                    if (FileHelper.IsBinaryFileName(Module, item.Local.Filename))
                     {
                         if (MessageBox.Show(this, string.Format(_fileIsBinary.Text, _mergetool),
                             _binaryFileWarningCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning,

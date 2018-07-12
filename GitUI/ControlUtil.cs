@@ -36,7 +36,7 @@ namespace GitUI
         /// <summary>
         /// Enumerates all descendant controls of type <typeparamref name="T"/> in breadth-first order.
         /// </summary>
-        public static IEnumerable<T> FindDescendantsOfType<T>([NotNull] this Control control) where T : Control
+        public static IEnumerable<T> FindDescendantsOfType<T>([NotNull] this Control control)
         {
             return FindDescendants(control).OfType<T>();
         }
@@ -46,9 +46,26 @@ namespace GitUI
         /// <typeparamref name="T"/> and satisfies <paramref name="predicate"/>.
         /// </summary>
         [CanBeNull]
-        public static T FindDescendantsOfType<T>(this Control control, Func<T, bool> predicate) where T : Control
+        public static T FindDescendantOfType<T>(this Control control, Func<T, bool> predicate)
         {
             return FindDescendants(control).OfType<T>().Where(predicate).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Enumerates all ancestor controls.
+        /// </summary>
+        /// <remarks>
+        /// The returned sequence does not include <paramref name="control"/>.
+        /// </remarks>
+        public static IEnumerable<Control> FindAncestors([NotNull] this Control control)
+        {
+            var parent = control.Parent;
+
+            while (parent != null)
+            {
+                yield return parent;
+                parent = parent.Parent;
+            }
         }
     }
 }

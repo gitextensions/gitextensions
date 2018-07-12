@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using GitCommands;
+using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitCommandsTests
@@ -52,7 +53,7 @@ namespace GitCommandsTests
 
             Assert.AreEqual(80, result.Lines.Count);
 
-            Assert.AreEqual("957ff3ce9193fec3bd2578378e71676841804935", result.Lines[0].Commit.ObjectId);
+            Assert.AreEqual(ObjectId.Parse("957ff3ce9193fec3bd2578378e71676841804935"), result.Lines[0].Commit.ObjectId);
             Assert.AreEqual("# Git Extensions", result.Lines[0].Text);
 
             Assert.AreEqual(1, result.Lines[0].OriginLineNumber);
@@ -61,7 +62,7 @@ namespace GitCommandsTests
             Assert.AreSame(result.Lines[0].Commit, result.Lines[1].Commit);
             Assert.AreSame(result.Lines[0].Commit, result.Lines[6].Commit);
 
-            Assert.AreEqual("e3268019c66da7534414e9562ececdee5d455b1b", result.Lines.Last().Commit.ObjectId);
+            Assert.AreEqual(ObjectId.Parse("e3268019c66da7534414e9562ececdee5d455b1b"), result.Lines.Last().Commit.ObjectId);
             Assert.AreEqual("", result.Lines.Last().Text);
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -7,16 +8,16 @@ namespace GitUI.UserControls.RevisionGrid
     {
         // history of selected items (browse history)
         // head == currently selected item
-        private readonly Stack<string> _prevItems = new Stack<string>();
+        private readonly Stack<ObjectId> _prevItems = new Stack<ObjectId>();
 
         // backtracked items
         // head == item to show when navigating forward
-        private readonly Stack<string> _nextItems = new Stack<string>();
+        private readonly Stack<ObjectId> _nextItems = new Stack<ObjectId>();
 
         /// <summary>
-        /// Sets curr as current visible item and resets forward history
+        /// Sets <paramref name="curr"/> as current visible item and resets forward history
         /// </summary>
-        public void Push(string curr)
+        public void Push(ObjectId curr)
         {
             if (_prevItems.Count == 0 || _prevItems.Peek() != curr)
             {
@@ -31,18 +32,18 @@ namespace GitUI.UserControls.RevisionGrid
         public bool CanNavigateBackward => _prevItems.Count > 1;
 
         /// <summary>
-        /// Navigatees backward in history, returns item which should be selected, null if no previous item is available
+        /// Navigates backward in history, returns item which should be selected, null if no previous item is available
         /// </summary>
         /// <exception cref="InvalidOperationException">When no previous history is available.</exception>
-        public string NavigateBackward()
+        public ObjectId NavigateBackward()
         {
             if (!CanNavigateBackward)
             {
                 throw new InvalidOperationException();
             }
 
-            string curr = _prevItems.Pop();
-            string prev = _prevItems.Peek();
+            var curr = _prevItems.Pop();
+            var prev = _prevItems.Peek();
             _nextItems.Push(curr);
             return prev;
         }
@@ -53,17 +54,17 @@ namespace GitUI.UserControls.RevisionGrid
         public bool CanNavigateForward => _nextItems.Count != 0;
 
         /// <summary>
-        /// Navigatees forward in history, returns item which should be selected, null if no next item is available
+        /// Navigates forward in history, returns item which should be selected, null if no next item is available
         /// </summary>
         /// <exception cref="InvalidOperationException">When no forward history is available.</exception>
-        public string NavigateForward()
+        public ObjectId NavigateForward()
         {
             if (!CanNavigateForward)
             {
                 throw new InvalidOperationException();
             }
 
-            string next = _nextItems.Pop();
+            var next = _nextItems.Pop();
             _prevItems.Push(next);
             return next;
         }

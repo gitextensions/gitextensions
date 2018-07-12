@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -16,7 +17,7 @@ namespace GitUI.CommandsDialogs
         private readonly IGitBranchNameNormaliser _branchNameNormaliser;
         private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
 
-        public FormCreateBranch(GitUICommands commands, GitRevision revision)
+        public FormCreateBranch(GitUICommands commands, ObjectId objectId)
             : base(commands)
         {
             _branchNameNormaliser = new GitBranchNameNormaliser();
@@ -32,7 +33,8 @@ namespace GitUI.CommandsDialogs
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
             {
-                commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
+                objectId = objectId ?? Module.GetCurrentCheckout();
+                commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
             }
         }
 
@@ -75,8 +77,8 @@ namespace GitUI.CommandsDialogs
             // if the user hits [Enter] at any point, we need to trigger BranchNameTextBox Leave event
             Ok.Focus();
 
-            string commitGuid = commitPickerSmallControl1.SelectedCommitHash;
-            if (commitGuid == null)
+            var objectId = commitPickerSmallControl1.SelectedObjectId;
+            if (objectId == null)
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, Text);
                 DialogResult = DialogResult.None;
@@ -103,8 +105,8 @@ namespace GitUI.CommandsDialogs
                 var originalHash = Module.GetCurrentCheckout();
 
                 var cmd = Orphan.Checked
-                    ? GitCommandHelpers.CreateOrphanCmd(branchName, commitGuid)
-                    : GitCommandHelpers.BranchCmd(branchName, commitGuid, chkbxCheckoutAfterCreate.Checked);
+                    ? GitCommandHelpers.CreateOrphanCmd(branchName, objectId)
+                    : GitCommandHelpers.BranchCmd(branchName, objectId.ToString(), chkbxCheckoutAfterCreate.Checked);
 
                 bool wasSuccessFul = FormProcess.ShowDialog(this, cmd);
                 if (Orphan.Checked && wasSuccessFul && ClearOrphan.Checked)
@@ -114,7 +116,7 @@ namespace GitUI.CommandsDialogs
                     FormProcess.ShowDialog(this, cmd);
                 }
 
-                if (wasSuccessFul && chkbxCheckoutAfterCreate.Checked && !string.Equals(commitGuid, originalHash, StringComparison.OrdinalIgnoreCase))
+                if (wasSuccessFul && chkbxCheckoutAfterCreate.Checked && objectId != originalHash)
                 {
                     UICommands.UpdateSubmodules(this);
                 }

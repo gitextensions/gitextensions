@@ -223,6 +223,13 @@ namespace System
         [NotNull]
         public static string[] SplitLines([NotNull] this string value) => value.Split(NewLineSeparator, StringSplitOptions.RemoveEmptyEntries);
 
+        private static readonly char[] _space = new[] { ' ' };
+
+        /// <summary>Split a string, delimited by the space character, excluding empty entries.</summary>
+        [Pure]
+        [NotNull]
+        public static string[] SplitBySpace([NotNull] this string value) => value.Split(_space, StringSplitOptions.RemoveEmptyEntries);
+
         /// <summary>
         /// Shortens <paramref name="str"/> if necessary, so that the resulting string has fewer than <paramref name="maxLength"/> characters.
         /// If shortened, ellipsis are appended to the truncated string.

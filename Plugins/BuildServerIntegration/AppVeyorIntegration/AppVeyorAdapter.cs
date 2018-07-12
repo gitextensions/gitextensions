@@ -61,13 +61,14 @@ namespace AppVeyorIntegration
         private HashSet<string> _fetchBuilds;
         private string _accountToken;
         private static readonly Dictionary<string, Project> Projects = new Dictionary<string, Project>();
-        private Func<string, bool> _isCommitInRevisionGrid;
+        private Func<ObjectId, bool> _isCommitInRevisionGrid;
         private bool _shouldLoadTestResults;
         private bool _shouldDisplayGitHubPullRequestBuilds;
         private string _gitHubToken;
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config,
-            Func<string, bool> isCommitInRevisionGrid)
+        public void Initialize(
+            IBuildServerWatcher buildServerWatcher, ISettingsSource config,
+            Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher != null)
             {
@@ -254,7 +255,7 @@ namespace AppVeyorIntegration
                                 commitSha1 = b["commitId"].ToObject<string>();
                             }
 
-                            if (commitSha1 == null || !_isCommitInRevisionGrid(commitSha1))
+                            if (ObjectId.TryParse(commitSha1, out var objectId) && !_isCommitInRevisionGrid(objectId))
                             {
                                 continue;
                             }
@@ -273,9 +274,9 @@ namespace AppVeyorIntegration
                                 BuildId = b["buildId"].ToObject<string>(),
                                 Branch = b["branch"].ToObject<string>(),
                                 CommitId = commitSha1,
-                                CommitHashList = new[] { commitSha1 },
+                                CommitHashList = new[] { ObjectId.Parse(commitSha1) },
                                 Status = status,
-                                StartDate = b["started"] == null ? DateTime.MinValue : b["started"].ToObject<DateTime>(),
+                                StartDate = b["started"]?.ToObject<DateTime>() ?? DateTime.MinValue,
                                 BaseWebUrl = baseWebUrl,
                                 Url = WebSiteUrl + "/project/" + project.Id + "/build/" + version,
                                 BaseApiUrl = baseApiUrl,

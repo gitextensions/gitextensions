@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace ResourceManager.CommitDataRenders
 {
@@ -66,7 +67,7 @@ namespace ResourceManager.CommitDataRenders
                 throw new ArgumentNullException(nameof(commitData));
             }
 
-            bool isArtificial = commitData.Guid.IsArtificial;
+            bool isArtificial = commitData.ObjectId.IsArtificial;
             bool authorIsCommitter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
             var padding = _headerRendererStyleProvider.GetMaxWidth();
@@ -93,18 +94,18 @@ namespace ResourceManager.CommitDataRenders
                     header.AppendLine(_labelFormatter.FormatLabel(Strings.CommitDate, padding) + WebUtility.HtmlEncode(_dateFormatter.FormatDateAsRelativeLocal(commitData.CommitDate)));
                 }
 
-                header.AppendLine(_labelFormatter.FormatLabel(Strings.CommitHash, padding) + WebUtility.HtmlEncode(commitData.Guid.ToString()));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.CommitHash, padding) + WebUtility.HtmlEncode(commitData.ObjectId.ToString()));
             }
 
-            if (commitData.ChildrenGuids != null && commitData.ChildrenGuids.Count != 0)
+            if (commitData.ChildIds != null && commitData.ChildIds.Count != 0)
             {
-                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetChildren(commitData.ChildrenGuids.Count), padding) + RenderHashCollection(commitData.ChildrenGuids, showRevisionsAsLinks));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetChildren(commitData.ChildIds.Count), padding) + RenderObjectIds(commitData.ChildIds, showRevisionsAsLinks));
             }
 
-            var parentGuids = commitData.ParentGuids.Where(s => !string.IsNullOrEmpty(s)).ToList();
-            if (parentGuids.Any())
+            var parentGuids = commitData.ParentGuids;
+            if (parentGuids.Count != 0)
             {
-                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetParents(parentGuids.Count), padding) + RenderHashCollection(parentGuids, showRevisionsAsLinks));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetParents(parentGuids.Count), padding) + RenderObjectIds(parentGuids, showRevisionsAsLinks));
             }
 
             // remove the trailing newline character
@@ -140,7 +141,7 @@ namespace ResourceManager.CommitDataRenders
                 header.AppendLine(_labelFormatter.FormatLabel(Strings.CommitDate, padding) + _dateFormatter.FormatDateAsRelativeLocal(commitData.CommitDate));
             }
 
-            header.Append(_labelFormatter.FormatLabel(Strings.CommitHash, padding) + commitData.Guid);
+            header.Append(_labelFormatter.FormatLabel(Strings.CommitHash, padding) + commitData.ObjectId);
 
             return header.ToString();
         }
@@ -162,11 +163,11 @@ namespace ResourceManager.CommitDataRenders
             return author.Substring(ind, author.LastIndexOf(">", StringComparison.Ordinal) - ind);
         }
 
-        private string RenderHashCollection(IEnumerable<string> hashes, bool showRevisionsAsLinks)
+        private string RenderObjectIds(IEnumerable<ObjectId> objectIds, bool showRevisionsAsLinks)
         {
             return showRevisionsAsLinks
-                ? hashes.Select(g => _linkFactory.CreateCommitLink(g)).Join(" ")
-                : hashes.Select(g => GitRevision.ToShortSha(g)).Join(" ");
+                ? objectIds.Select(id => _linkFactory.CreateCommitLink(id)).Join(" ")
+                : objectIds.Select(id => id.ToShortString()).Join(" ");
         }
     }
 }

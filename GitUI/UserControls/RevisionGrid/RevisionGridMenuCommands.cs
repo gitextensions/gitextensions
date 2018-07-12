@@ -415,10 +415,11 @@ namespace GitUI.UserControls.RevisionGrid
                     return;
                 }
 
-                var revisionGuid = formGoToCommit.ValidateAndGetSelectedRevision();
-                if (revisionGuid != null)
+                var objectId = formGoToCommit.ValidateAndGetSelectedRevision();
+
+                if (objectId != null)
                 {
-                    _revisionGrid.SetSelectedRevision(new GitRevision(revisionGuid.ToString()));
+                    _revisionGrid.SetSelectedRevision(new GitRevision(objectId));
                 }
                 else
                 {

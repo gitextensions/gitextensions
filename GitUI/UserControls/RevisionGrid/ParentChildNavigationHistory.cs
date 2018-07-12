@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid
 {
-    internal class ParentChildNavigationHistory
+    internal sealed class ParentChildNavigationHistory
     {
         private enum NavigationDirection
         {
@@ -11,12 +12,12 @@ namespace GitUI.UserControls.RevisionGrid
             Child
         }
 
-        private readonly Action<string> _setSelectedRevision;
+        private readonly Action<ObjectId> _setSelectedRevision;
         private NavigationDirection? _direction;
-        private readonly Stack<string> _childHistory = new Stack<string>();
-        private readonly Stack<string> _parentHistory = new Stack<string>();
+        private readonly Stack<ObjectId> _childHistory = new Stack<ObjectId>();
+        private readonly Stack<ObjectId> _parentHistory = new Stack<ObjectId>();
 
-        public ParentChildNavigationHistory(Action<string> setSelectedRevision)
+        public ParentChildNavigationHistory(Action<ObjectId> setSelectedRevision)
         {
             _setSelectedRevision = setSelectedRevision;
         }
@@ -24,29 +25,29 @@ namespace GitUI.UserControls.RevisionGrid
         public bool HasPreviousChild => _childHistory.Count > 0;
         public bool HasPreviousParent => _parentHistory.Count > 0;
 
-        public void NavigateToPreviousParent(string current)
+        public void NavigateToPreviousParent(ObjectId current)
         {
             var parent = _parentHistory.Pop();
             Navigate(current, parent, NavigationDirection.Parent);
         }
 
-        public void NavigateToPreviousChild(string current)
+        public void NavigateToPreviousChild(ObjectId current)
         {
             var child = _childHistory.Pop();
             Navigate(current, child, NavigationDirection.Child);
         }
 
-        public void NavigateToChild(string current, string child)
+        public void NavigateToChild(ObjectId current, ObjectId child)
         {
             Navigate(current, child, NavigationDirection.Child);
         }
 
-        public void NavigateToParent(string current, string parent)
+        public void NavigateToParent(ObjectId current, ObjectId parent)
         {
             Navigate(current, parent, NavigationDirection.Parent);
         }
 
-        private void Navigate(string current, string to, NavigationDirection direction)
+        private void Navigate(ObjectId current, ObjectId to, NavigationDirection direction)
         {
             _direction = direction;
             if (direction == NavigationDirection.Child)

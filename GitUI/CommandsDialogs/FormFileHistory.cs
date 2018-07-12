@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
@@ -27,7 +26,6 @@ namespace GitUI.CommandsDialogs
         private readonly FilterBranchHelper _filterBranchHelper;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
-        private readonly ILongShaProvider _longShaProvider;
 
         private BuildReportTabPageExtension _buildReportTabPageExtension;
 
@@ -55,7 +53,6 @@ namespace GitUI.CommandsDialogs
 
             _commitDataManager = new CommitDataManager(() => Module);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _longShaProvider = new LongShaProvider(() => Module);
 
             copyToClipboardToolStripMenuItem.SetRevisionFunc(() => FileChanges.GetSelectedRevisions().FirstOrDefault());
 
@@ -87,7 +84,7 @@ namespace GitUI.CommandsDialogs
         public FormFileHistory(GitUICommands commands, string fileName, GitRevision revision = null, bool filterByRevision = false)
             : this(commands)
         {
-            FileChanges.InitialObjectId = revision?.Guid;
+            FileChanges.InitialObjectId = revision?.ObjectId;
             FileChanges.ShowBuildServerInfo = true;
 
             FileName = fileName;
@@ -329,7 +326,7 @@ namespace GitUI.CommandsDialogs
             }
 
             GitRevision revision = selectedRevisions[0];
-            var children = FileChanges.GetRevisionChildren(revision.Guid);
+            var children = FileChanges.GetRevisionChildren(revision.ObjectId);
 
             var fileName = revision.Name;
 
@@ -349,7 +346,7 @@ namespace GitUI.CommandsDialogs
                 var scrollPos = View.ScrollPos;
 
                 View.Encoding = Diff.Encoding;
-                View.ViewGitItemRevisionAsync(fileName, revision.Guid);
+                View.ViewGitItemRevisionAsync(fileName, revision.ObjectId);
                 View.ScrollPos = scrollPos;
             }
             else if (tabControl1.SelectedTab == DiffTab)
@@ -364,7 +361,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)
             {
-                CommitDiff.SetRevision(revision.Guid, fileName);
+                CommitDiff.SetRevision(revision.ObjectId, fileName);
             }
 
             if (_buildReportTabPageExtension == null)
@@ -525,14 +522,17 @@ namespace GitUI.CommandsDialogs
         {
             if (e.Command == "gotocommit")
             {
-                FileChanges.SetSelectedRevision(_longShaProvider.Get(e.Data));
+                if (Module.TryResolvePartialCommitId(e.Data, out var objectId))
+                {
+                    FileChanges.SetSelectedRevision(objectId);
+                }
             }
             else if (e.Command == "gotobranch" || e.Command == "gototag")
             {
                 CommitData commit = _commitDataManager.GetCommitData(e.Data, out _);
                 if (commit != null)
                 {
-                    FileChanges.SetSelectedRevision(new GitRevision(commit.Guid.ToString()));
+                    FileChanges.SetSelectedRevision(new GitRevision(commit.ObjectId));
                 }
             }
             else if (e.Command == "navigatebackward")

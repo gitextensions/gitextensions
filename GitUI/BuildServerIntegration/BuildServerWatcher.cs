@@ -319,7 +319,7 @@ namespace GitUI.BuildServerIntegration
 
                     var buildServerAdapter = export.Value;
 
-                    buildServerAdapter.Initialize(this, buildServerSettings.TypeSettings, sha1 => _revisionGrid.GetRevision(sha1) != null);
+                    buildServerAdapter.Initialize(this, buildServerSettings.TypeSettings, objectId => _revisionGrid.GetRevision(objectId) != null);
                     return buildServerAdapter;
                 }
                 catch (InvalidOperationException ex)

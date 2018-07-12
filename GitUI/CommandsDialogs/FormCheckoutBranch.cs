@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _resetCaption = new TranslationString("Reset branch");
         #endregion
 
-        private readonly string[] _containRevisions;
+        private readonly IReadOnlyList<ObjectId> _containRevisions;
         private readonly bool _isLoading;
         private readonly string _rbResetBranchDefaultText;
         private bool? _isDirtyDir;
@@ -76,7 +76,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, string[] containRevisions = null)
+        public FormCheckoutBranch(GitUICommands commands, string branch, bool remote, IReadOnlyList<ObjectId> containRevisions = null)
             : this(commands)
         {
             _isLoading = true;
@@ -228,7 +228,7 @@ namespace GitUI.CommandsDialogs
                     branchNames = GetContainsRevisionBranches();
                 }
 
-                Branches.Items.AddRange(branchNames.Where(name => name.IsNotNullOrWhitespace()).ToArray());
+                Branches.Items.AddRange(branchNames.Where(name => name.IsNotNullOrWhitespace()).ToArray<object>());
 
                 if (_containRevisions != null && Branches.Items.Count == 1)
                 {
@@ -243,7 +243,7 @@ namespace GitUI.CommandsDialogs
             IReadOnlyList<string> GetContainsRevisionBranches()
             {
                 var result = new HashSet<string>();
-                if (_containRevisions.Length > 0)
+                if (_containRevisions.Count > 0)
                 {
                     var branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisions[0], LocalBranch.Checked,
                             !LocalBranch.Checked)
@@ -252,7 +252,7 @@ namespace GitUI.CommandsDialogs
                     result.UnionWith(branches);
                 }
 
-                for (int index = 1; index < _containRevisions.Length; index++)
+                for (int index = 1; index < _containRevisions.Count; index++)
                 {
                     var containRevision = _containRevisions[index];
                     var branches =
@@ -405,7 +405,8 @@ namespace GitUI.CommandsDialogs
                 }
 
                 var currentHash = Module.GetCurrentCheckout();
-                if (!string.Equals(originalHash, currentHash, StringComparison.OrdinalIgnoreCase))
+
+                if (originalHash != currentHash)
                 {
                     UICommands.UpdateSubmodules(this);
                 }
@@ -497,7 +498,7 @@ namespace GitUI.CommandsDialogs
                     {
                         await TaskScheduler.Default;
 
-                        var text = Module.GetCommitCountString(Module.GetCurrentCheckout(), branch);
+                        var text = Module.GetCommitCountString(Module.GetCurrentCheckout().ToString(), branch);
 
                         await this.SwitchToMainThreadAsync();
 

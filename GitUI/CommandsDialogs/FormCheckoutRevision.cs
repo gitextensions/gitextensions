@@ -36,20 +36,21 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                var commitHash = commitPickerSmallControl1.SelectedCommitHash;
-                if (commitHash.IsNullOrEmpty())
+                var selectedObjectId = commitPickerSmallControl1.SelectedObjectId;
+
+                if (selectedObjectId == null)
                 {
                     MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text);
                     return;
                 }
 
-                var originalHash = Module.GetCurrentCheckout();
+                var checkedOutObjectId = Module.GetCurrentCheckout();
                 ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 
-                string command = GitCommandHelpers.CheckoutCmd(commitHash, Force.Checked ? LocalChangesAction.Reset : 0);
+                string command = GitCommandHelpers.CheckoutCmd(selectedObjectId.ToString(), Force.Checked ? LocalChangesAction.Reset : 0);
                 if (FormProcess.ShowDialog(this, command))
                 {
-                    if (!string.Equals(commitHash, originalHash, StringComparison.OrdinalIgnoreCase))
+                    if (selectedObjectId != checkedOutObjectId)
                     {
                         UICommands.UpdateSubmodules(this);
                     }

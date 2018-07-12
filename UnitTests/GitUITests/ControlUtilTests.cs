@@ -31,9 +31,9 @@ namespace GitUITests
         {
             var root = new Control { Controls = { new Control(), new TextBox { Tag = "A" }, new TextBox { Tag = "B" } } };
 
-            Assert.NotNull(root.FindDescendantsOfType<TextBox>(t => t.Tag as string == "A"));
-            Assert.NotNull(root.FindDescendantsOfType<TextBox>(t => t.Tag as string == "B"));
-            Assert.Null(root.FindDescendantsOfType<TextBox>(t => t.Tag as string == "C"));
+            Assert.NotNull(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "A"));
+            Assert.NotNull(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "B"));
+            Assert.Null(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "C"));
         }
     }
 }

@@ -92,7 +92,6 @@ namespace GitUI.CommandsDialogs
         private readonly IFormBrowseController _controller;
         private readonly ICommitDataManager _commitDataManager;
         private readonly IAppTitleGenerator _appTitleGenerator;
-        private readonly ILongShaProvider _longShaProvider;
         private readonly WindowsJumpListManager _windowsJumpListManager;
 
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
@@ -123,7 +122,7 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
         }
 
-        public FormBrowse([CanBeNull] GitUICommands commands, string filter, string selectCommit = null, bool startWithDashboard = false)
+        public FormBrowse([CanBeNull] GitUICommands commands, string filter, ObjectId selectCommit = null, bool startWithDashboard = false)
             : base(true, commands)
         {
             _startWithDashboard = startWithDashboard;
@@ -284,7 +283,6 @@ namespace GitUI.CommandsDialogs
                 UICommands.BrowseRepo = this;
                 _controller = new FormBrowseController(new GitGpgController(() => Module));
                 _commitDataManager = new CommitDataManager(() => Module);
-                _longShaProvider = new LongShaProvider(() => Module);
             }
 
             var repositoryDescriptionProvider = new RepositoryDescriptionProvider(new GitDirectoryResolver());
@@ -317,9 +315,9 @@ namespace GitUI.CommandsDialogs
             toolStripBranchFilterComboBox.Size = DpiUtil.Scale(toolStripBranchFilterComboBox.Size);
             toolStripRevisionFilterTextBox.Size = DpiUtil.Scale(toolStripRevisionFilterTextBox.Size);
 
-            if (!string.IsNullOrEmpty(selectCommit))
+            if (selectCommit != null)
             {
-                RevisionGrid.InitialObjectId = _longShaProvider.Get(selectCommit);
+                RevisionGrid.InitialObjectId = selectCommit;
             }
 
             InitializeComplete();
@@ -1081,7 +1079,7 @@ namespace GitUI.CommandsDialogs
 
             var revision = selectedRevisions[0];
 
-            var children = RevisionGrid.GetRevisionChildren(revision.Guid);
+            var children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
             RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
@@ -1408,14 +1406,14 @@ namespace GitUI.CommandsDialogs
                 string from = null;
 
                 string currentBranch = Module.GetSelectedBranch();
-                string currentCheckout = RevisionGrid.CurrentCheckout;
+                var currentCheckout = RevisionGrid.CurrentCheckout;
 
-                if (revisions[0].Guid == currentCheckout)
+                if (revisions[0].ObjectId == currentCheckout)
                 {
-                    from = revisions[1].Guid.Substring(0, 8);
+                    from = revisions[1].ObjectId.ToShortString(8);
                     to = currentBranch;
                 }
-                else if (revisions[1].Guid == currentCheckout)
+                else if (revisions[1].ObjectId == currentCheckout)
                 {
                     from = revisions[0].Guid.Substring(0, 8);
                     to = currentBranch;
@@ -1786,7 +1784,7 @@ namespace GitUI.CommandsDialogs
 
         private void CreateBranchToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartCreateBranchDialog(this, RevisionGrid.GetSelectedRevisions().FirstOrDefault());
+            UICommands.StartCreateBranchDialog(this, RevisionGrid.GetSelectedRevisions().FirstOrDefault()?.ObjectId);
         }
 
         private void GitBashClick(object sender, EventArgs e)
@@ -2257,15 +2255,19 @@ namespace GitUI.CommandsDialogs
             switch (e.Command)
             {
                 case "gotocommit":
-                    var revision = _longShaProvider.Get(e.Data);
-                    var found = RevisionGrid.SetSelectedRevision(revision);
+                    var found = Module.TryResolvePartialCommitId(e.Data, out var revision);
+
+                    if (found)
+                    {
+                        found = RevisionGrid.SetSelectedRevision(revision);
+                    }
 
                     // When 'git log --first-parent' filtration is used, user can click on child commit
                     // that is not present in the shown git log. User still wants to see the child commit
                     // and to make it possible we add explicit branch filter and refresh.
                     if (AppSettings.ShowFirstParent && !found)
                     {
-                        _filterBranchHelper.SetBranchFilter(revision, refresh: true);
+                        _filterBranchHelper.SetBranchFilter(revision?.ToString(), refresh: true);
                         RevisionGrid.SetSelectedRevision(revision);
                     }
 
@@ -2275,7 +2277,7 @@ namespace GitUI.CommandsDialogs
                     CommitData commit = _commitDataManager.GetCommitData(e.Data, out _);
                     if (commit != null)
                     {
-                        RevisionGrid.SetSelectedRevision(new GitRevision(commit.Guid.ToString()));
+                        RevisionGrid.SetSelectedRevision(new GitRevision(commit.ObjectId));
                     }
 
                     break;

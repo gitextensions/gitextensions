@@ -35,7 +35,7 @@ namespace GitUI.BranchTreePanel
 
             public void CreateBranch()
             {
-                UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, new GitRevision(_tagInfo.Guid));
+                UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, ObjectId.Parse(_tagInfo.Guid));
             }
 
             public void Delete()

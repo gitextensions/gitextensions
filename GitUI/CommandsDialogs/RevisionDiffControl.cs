@@ -12,6 +12,8 @@ using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.UserControls.RevisionGrid;
+using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -162,7 +164,7 @@ namespace GitUI.CommandsDialogs
             _revisionDiffController = new RevisionDiffController(_gitRevisionTester);
 
             DiffFiles.FilterVisible = true;
-            DiffFiles.DescribeRevision = sha1 => DescribeRevision(sha1);
+            DiffFiles.DescribeRevision = objectId => DescribeRevision(objectId);
             DiffText.SetFileLoader(GetNextPatchFile);
             DiffText.Font = AppSettings.DiffFont;
             ReloadHotkeys();
@@ -172,18 +174,19 @@ namespace GitUI.CommandsDialogs
             base.OnRuntimeLoad();
         }
 
-        private string DescribeRevision(string sha1, int maxLength = 0)
+        private string DescribeRevision([CanBeNull] ObjectId objectId, int maxLength = 0)
         {
-            if (sha1.IsNullOrEmpty())
+            if (objectId == null)
             {
                 // No parent at all, present as working directory
                 return Strings.Workspace;
             }
 
-            var revision = _revisionGrid.GetRevision(sha1);
+            var revision = _revisionGrid.GetRevision(objectId);
+
             if (revision == null)
             {
-                return sha1.ShortenTo(8);
+                return objectId.ToShortString(length: 8);
             }
 
             return _revisionGrid.DescribeRevision(revision, maxLength);
@@ -207,7 +210,7 @@ namespace GitUI.CommandsDialogs
             }
             else if (parents == 1)
             {
-                return DescribeRevision(DiffFiles.SelectedItemParent?.Guid, 50);
+                return DescribeRevision(DiffFiles.SelectedItemParent?.ObjectId, 50);
             }
             else
             {
@@ -290,12 +293,11 @@ namespace GitUI.CommandsDialogs
             if (actsAsChild)
             {
                 // selected, all are the same
-                string revision = DiffFiles.Revision.Guid;
                 var deletedItems = selectedItems.Where(item => item.IsDeleted);
                 Module.RemoveFiles(deletedItems.Select(item => item.Name), false);
 
                 var itemsToCheckout = selectedItems.Where(item => !item.IsDeleted);
-                Module.CheckoutFiles(itemsToCheckout.Select(item => item.Name), revision, false);
+                Module.CheckoutFiles(itemsToCheckout.Select(item => item.Name), DiffFiles.Revision.ObjectId, force: false);
             }
             else
             {
@@ -306,8 +308,8 @@ namespace GitUI.CommandsDialogs
 
                 foreach (var parent in DiffFiles.SelectedItemParents)
                 {
-                    var itemsToCheckout = DiffFiles.SelectedItemsWithParent.Where(item => !item.Item.IsNew && item.ParentRevision.Guid == parent.Guid);
-                    Module.CheckoutFiles(itemsToCheckout.Select(item => item.Item.Name), parent.Guid, false);
+                    var itemsToCheckout = DiffFiles.SelectedItemsWithParent.Where(item => !item.Item.IsNew && item.ParentRevision.ObjectId == parent.ObjectId);
+                    Module.CheckoutFiles(itemsToCheckout.Select(item => item.Item.Name), parent.ObjectId, force: false);
                 }
             }
 
@@ -336,7 +338,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.Guid, DiffFiles.Revision?.Guid, DiffFiles.SelectedItem, string.Empty,
+            await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, DiffFiles.Revision?.ObjectId, DiffFiles.SelectedItem, string.Empty,
                 openWithDifftool: () => firstToSelectedToolStripMenuItem.PerformClick());
         }
 
@@ -597,7 +599,7 @@ namespace GitUI.CommandsDialogs
             bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(DiffFiles.SelectedItemParents, DiffFiles.Revision);
             bool localExists = _gitRevisionTester.AnyLocalFileExists(DiffFiles.SelectedItemsWithParent.Select(i => i.Item));
 
-            IEnumerable<string> selectedItemParentRevs = DiffFiles.SelectedItemParents.Select(i => i.Guid);
+            var selectedItemParentRevs = DiffFiles.SelectedItemParents.Select(i => i.ObjectId).ToList();
             bool allAreNew = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsNew);
             bool allAreDeleted = DiffFiles.SelectedItemsWithParent.All(i => i.Item.IsDeleted);
 
@@ -726,7 +728,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 var selectedItems = DiffFiles.SelectedItems;
-                if (DiffFiles.Revision?.Guid == GitRevision.IndexGuid)
+                if (DiffFiles.Revision?.ObjectId == ObjectId.IndexId)
                 {
                     var files = new List<GitItemStatus>();
                     var stagedItems = selectedItems.Where(item => item.Staged == StagedStatus.Index);

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
+using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -10,7 +12,7 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormCompareToBranch(GitUICommands commands, string selectedCommit) : base(commands)
+        public FormCompareToBranch([CanBeNull] GitUICommands commands, [CanBeNull] ObjectId selectedCommit) : base(commands)
         {
             MinimizeBox = false;
             MaximizeBox = false;
@@ -23,7 +25,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            branchSelector.Initialize(remote: true, containRevisons: null);
+            branchSelector.Initialize(remote: true, containRevisions: null);
             branchSelector.CommitToCompare = selectedCommit;
             Activated += OnActivated;
         }

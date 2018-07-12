@@ -456,9 +456,9 @@ namespace GitCommands
         }
 
         /// <summary>Create a new orphan branch from <paramref name="startPoint"/> and switch to it.</summary>
-        public static string CreateOrphanCmd(string newBranchName, string startPoint = null)
+        public static string CreateOrphanCmd(string newBranchName, ObjectId startPoint = null)
         {
-            return string.Format("checkout --orphan {0} {1}", newBranchName, startPoint);
+            return $"checkout --orphan {newBranchName} {startPoint}";
         }
 
         /// <summary>Remove files from the working tree and from the index. <remarks>git rm</remarks></summary>

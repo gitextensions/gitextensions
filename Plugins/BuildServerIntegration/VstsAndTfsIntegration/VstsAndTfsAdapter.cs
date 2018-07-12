@@ -47,7 +47,7 @@ namespace VstsAndTfsIntegration
             _httpClient = new HttpClient();
         }
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher != null)
             {
@@ -145,7 +145,7 @@ namespace VstsAndTfsIntegration
                 StartDate = buildDetail.StartTime ?? DateTime.Now.AddHours(1),
                 Status = buildDetail.IsInProgress ? BuildInfo.BuildStatus.InProgress : MapResult(buildDetail.Result),
                 Description = buildDetail.BuildNumber + " (" + (buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result) + " " + duration + ")",
-                CommitHashList = new[] { buildDetail.SourceVersion },
+                CommitHashList = new[] { ObjectId.Parse(buildDetail.SourceVersion) },
                 Url = buildDetail._links.Web.Href,
                 ShowInBuildReportTab = false
             };

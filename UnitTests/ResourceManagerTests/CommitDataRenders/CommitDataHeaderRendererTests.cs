@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands;
@@ -22,18 +21,19 @@ namespace ResourceManagerTests.CommitDataRenders
         private ILinkFactory _linkFactory;
         private IDateFormatter _dateFormatter;
         private CommitDataHeaderRenderer _renderer;
-        private readonly List<string> _childrenHashes = new List<string>
+
+        private readonly IReadOnlyList<ObjectId> _childrenHashes = new[]
         {
-            "3b6ce324e30ed7fda24483fd56a180c34a262202",
-            "2a8788ff15071a202505a96f80796dbff5750ddf",
-            "8e66fa8095a86138a7c7fb22318d2f819669831e"
+            ObjectId.Parse("3b6ce324e30ed7fda24483fd56a180c34a262202"),
+            ObjectId.Parse("2a8788ff15071a202505a96f80796dbff5750ddf"),
+            ObjectId.Parse("8e66fa8095a86138a7c7fb22318d2f819669831e")
         };
 
-        private readonly List<string> _parentHashes = new List<string>
+        private readonly IReadOnlyList<ObjectId> _parentHashes = new[]
         {
-            "5542334ab518b329426783d74c8f4204c2d75a43",
-            "92bc4ad5e509f7dbe87dc4e679fcb879c3235788",
-            "bc911920838c15bcf86808904ecb897595b9ef5f"
+            ObjectId.Parse("5542334ab518b329426783d74c8f4204c2d75a43"),
+            ObjectId.Parse("92bc4ad5e509f7dbe87dc4e679fcb879c3235788"),
+            ObjectId.Parse("bc911920838c15bcf86808904ecb897595b9ef5f")
         };
 
         [SetUp]
@@ -96,7 +96,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var data = new CommitData(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
-                new ReadOnlyCollection<string>(new List<string>()),
+                Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");
 
@@ -124,7 +124,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var data = new CommitData(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
-                new ReadOnlyCollection<string>(new List<string>()),
+                Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");
 
@@ -153,7 +153,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var data = new CommitData(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
-                new ReadOnlyCollection<string>(new List<string>()),
+                Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");
 
@@ -182,10 +182,10 @@ namespace ResourceManagerTests.CommitDataRenders
             var data = new CommitData(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
-                new ReadOnlyCollection<string>(new List<string>()),
+                Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");
-            data.ChildrenGuids = _childrenHashes;
+            data.ChildIds = _childrenHashes;
 
             _linkFactory.CreateLink(author, Arg.Any<string>()).Returns(x => author);
             _dateFormatter.FormatDateAsRelativeLocal(authorDate).Returns("6 months ago (06/17/2017 23:38:40)");
@@ -193,9 +193,9 @@ namespace ResourceManagerTests.CommitDataRenders
             var result = _renderer.Render(data, false);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c{Environment.NewLine}" +
-                $"Children:      {GitRevision.ToShortSha(_childrenHashes[0])} " +
-                $"{GitRevision.ToShortSha(_childrenHashes[1])} " +
-                $"{GitRevision.ToShortSha(_childrenHashes[2])}");
+                $"Children:      {_childrenHashes[0].ToShortString()} " +
+                $"{_childrenHashes[1].ToShortString()} " +
+                $"{_childrenHashes[2].ToShortString()}");
             _labelFormatter.Received(1).FormatLabel(Strings.Author, Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.Date, Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.CommitHash, Arg.Any<int>());
@@ -214,7 +214,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var data = new CommitData(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
-                _parentHashes.AsReadOnly(),
+                _parentHashes,
                 author, authorDate,
                 committer, commitDate, "");
 
@@ -224,7 +224,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var result = _renderer.Render(data, false);
 
             result.Should().Be($"Author:        John Doe (Acme Inc) <John.Doe@test.com>{Environment.NewLine}Date:          6 months ago (06/17/2017 23:38:40){Environment.NewLine}Commit hash:   7fa3109989e0523aeacb178995a2a3aa6c302a2c{Environment.NewLine}" +
-                $"Parents:       {GitRevision.ToShortSha(_parentHashes[0])} {GitRevision.ToShortSha(_parentHashes[1])} {GitRevision.ToShortSha(_parentHashes[2])}");
+                $"Parents:       {_parentHashes[0].ToShortString()} {_parentHashes[1].ToShortString()} {_parentHashes[2].ToShortString()}");
             _labelFormatter.Received(1).FormatLabel(Strings.Author, Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.Date, Arg.Any<int>());
             _labelFormatter.Received(1).FormatLabel(Strings.CommitHash, Arg.Any<int>());
@@ -244,7 +244,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var data = new CommitData(
                 ObjectId.Parse(artificialGuid),
                 ObjectId.Random(),
-                _childrenHashes.AsReadOnly(),
+                _childrenHashes,
                 author, authorDate,
                 committer, commitDate, "");
 
@@ -277,7 +277,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var data = new CommitData(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
-                new ReadOnlyCollection<string>(new List<string>()),
+                Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");
 
@@ -305,7 +305,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var data = new CommitData(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
-                new ReadOnlyCollection<string>(new List<string>()),
+                Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");
 
@@ -334,7 +334,7 @@ namespace ResourceManagerTests.CommitDataRenders
             var data = new CommitData(
                 ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
                 ObjectId.Random(),
-                new ReadOnlyCollection<string>(new List<string>()),
+                Array.Empty<ObjectId>(),
                 author, authorDate,
                 committer, commitDate, "");
 

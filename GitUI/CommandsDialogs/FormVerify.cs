@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Git.Tag;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -55,7 +55,7 @@ namespace GitUI.CommandsDialogs
             columnType.DataPropertyName = nameof(LostObject.RawType);
             columnSubject.DataPropertyName = nameof(LostObject.Subject);
             columnAuthor.DataPropertyName = nameof(LostObject.Author);
-            columnHash.DataPropertyName = nameof(LostObject.Hash);
+            columnHash.DataPropertyName = nameof(LostObject.ObjectId);
             columnParent.DataPropertyName = nameof(LostObject.Parent);
 
             if (commands != null)
@@ -293,7 +293,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using (var frm = new FormEdit(UICommands, Module.ShowSha1(currenItem.Hash)))
+            using (var frm = new FormEdit(UICommands, Module.ShowObject(currenItem.ObjectId)))
             {
                 frm.IsReadOnly = true;
                 frm.ShowDialog(this);
@@ -320,7 +320,7 @@ namespace GitUI.CommandsDialogs
             {
                 currentTag++;
                 var tagName = lostObject.ObjectType == LostObjectType.Tag ? lostObject.TagName : currentTag.ToString();
-                var createTagArgs = new GitCreateTagArgs($"{RestoredObjectsTagPrefix}{tagName}", lostObject.Hash);
+                var createTagArgs = new GitCreateTagArgs($"{RestoredObjectsTagPrefix}{tagName}", lostObject.ObjectId);
                 _gitTagController.CreateTag(createTagArgs, this);
             }
 
@@ -338,15 +338,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private GitRevision GetCurrentGitRevision()
+        private ObjectId GetCurrentGitRevision()
         {
-            var currentItem = CurrentItem;
-            if (currentItem == null)
-            {
-                throw new InvalidOperationException("There are no current selected item.");
-            }
-
-            return new GitRevision(currentItem.Hash);
+            return CurrentItem?.ObjectId ?? throw new InvalidOperationException("There are no current selected item.");
         }
 
         /// <summary>
@@ -396,7 +390,7 @@ namespace GitUI.CommandsDialogs
             if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
-                Clipboard.SetText(lostObject.Hash);
+                Clipboard.SetText(lostObject.ObjectId.ToString());
             }
         }
 
@@ -405,7 +399,7 @@ namespace GitUI.CommandsDialogs
             if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
-                Clipboard.SetText(lostObject.Parent);
+                Clipboard.SetText(lostObject.Parent?.ToString());
             }
         }
 
@@ -432,7 +426,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (fileDialog.ShowDialog(this) == DialogResult.OK)
                     {
-                        Module.SaveBlobAs(fileDialog.FileName, lostObject.Hash);
+                        Module.SaveBlobAs(fileDialog.FileName, lostObject.ObjectId.ToString());
                     }
                 }
             }

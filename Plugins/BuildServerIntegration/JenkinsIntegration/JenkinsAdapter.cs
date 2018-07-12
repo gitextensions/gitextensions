@@ -61,7 +61,7 @@ namespace JenkinsIntegration
         private readonly List<string> _projectsUrls = new List<string>();
         private Regex _ignoreBuilds;
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher != null)
             {
@@ -326,13 +326,13 @@ namespace JenkinsIntegration
             var webUrl = buildDescription["url"].ToObject<string>();
 
             var action = buildDescription["actions"];
-            var commitHashList = new List<string>();
+            var commitHashList = new List<ObjectId>();
             string testResults = string.Empty;
             foreach (var element in action)
             {
                 if (element["lastBuiltRevision"] != null)
                 {
-                    commitHashList.Add(element["lastBuiltRevision"]["SHA1"].ToObject<string>());
+                    commitHashList.Add(ObjectId.Parse(element["lastBuiltRevision"]["SHA1"].ToObject<string>()));
                     var branches = element["lastBuiltRevision"]["branch"];
                     if (_ignoreBuilds != null && branches != null)
                     {

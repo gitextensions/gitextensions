@@ -55,14 +55,14 @@ namespace GitUI.CommandsDialogs
 
             if (Revision != null)
             {
-                _isMerge = Module.IsMerge(Revision.Guid);
+                _isMerge = Module.IsMerge(Revision.ObjectId);
             }
 
             panelParentsList.Visible = _isMerge;
 
             if (_isMerge)
             {
-                var parents = Module.GetParentsRevisions(Revision.Guid);
+                var parents = Module.GetParentRevisions(Revision.ObjectId);
 
                 for (int i = 0; i < parents.Count; i++)
                 {

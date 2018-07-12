@@ -28,7 +28,7 @@ namespace GitCommands.Git.Tag
                 { CreateTagArguments.Operation.CanProvideMessage(), $"-F {TagMessageFileName.Quote()}" },
                 CreateTagArguments.TagName.Trim().Quote(),
                 "--",
-                CreateTagArguments.Revision.Quote()
+                CreateTagArguments.ObjectId
             };
 
             string GetArgumentForOperation()
@@ -60,7 +60,7 @@ namespace GitCommands.Git.Tag
 
         public override void Validate()
         {
-            if (string.IsNullOrWhiteSpace(CreateTagArguments.Revision))
+            if (CreateTagArguments.ObjectId == null)
             {
                 throw new ArgumentException("Revision is required.");
             }

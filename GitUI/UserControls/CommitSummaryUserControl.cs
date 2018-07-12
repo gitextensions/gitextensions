@@ -53,7 +53,7 @@ namespace GitUI.UserControls
 
                 if (Revision != null)
                 {
-                    groupBox1.Text = GitRevision.ToShortSha(Revision.Guid);
+                    groupBox1.Text = Revision.ObjectId.ToShortString();
                     labelAuthor.Text = Revision.Author;
                     labelDate.Text = string.Format(Strings.CommitDate + ": {0}", Revision.CommitDate);
                     labelMessage.Text = Revision.Subject;

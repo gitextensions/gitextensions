@@ -11,6 +11,7 @@ using GitCommands.Patches;
 using GitExtUtils.GitUI;
 using GitUI.Editor;
 using GitUI.Properties;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -22,22 +23,22 @@ namespace GitUI
         private static Patch GetItemPatch(
             [NotNull] GitModule module,
             [NotNull] GitItemStatus file,
-            [CanBeNull] string firstRevision,
-            [CanBeNull] string secondRevision,
+            [CanBeNull] ObjectId firstRevision,
+            [CanBeNull] ObjectId secondRevision,
             [NotNull] string diffArgs,
             [NotNull] Encoding encoding)
         {
             // Files with tree guid should be presented with normal diff
-            var isTracked = file.IsTracked || (file.TreeGuid.IsNotNullOrWhitespace() && secondRevision.IsNotNullOrWhitespace());
+            var isTracked = file.IsTracked || (file.TreeGuid.IsNotNullOrWhitespace() && secondRevision != null);
 
-            return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName, diffArgs, encoding, true, isTracked);
+            return module.GetSingleDiff(firstRevision?.ToString(), secondRevision?.ToString(), file.Name, file.OldName, diffArgs, encoding, true, isTracked);
         }
 
         [CanBeNull]
         private static string GetSelectedPatch(
             [NotNull] this FileViewer diffViewer,
-            [CanBeNull] string firstRevision,
-            [CanBeNull] string secondRevision,
+            [CanBeNull] ObjectId firstRevision,
+            [CanBeNull] ObjectId secondRevision,
             [NotNull] GitItemStatus file)
         {
             if (!file.IsTracked)
@@ -79,8 +80,8 @@ namespace GitUI
             }
 
             var selectedRevision = revisions[0];
-            string secondRevision = selectedRevision?.Guid;
-            string firstRevision = revisions.Count >= 2 ? revisions[1].Guid : null;
+            var secondRevision = selectedRevision?.ObjectId;
+            var firstRevision = revisions.Count >= 2 ? revisions[1].ObjectId : null;
             if (firstRevision == null && selectedRevision != null)
             {
                 firstRevision = selectedRevision.FirstParentGuid;
@@ -91,8 +92,8 @@ namespace GitUI
 
         public static Task ViewChangesAsync(
             this FileViewer diffViewer,
-            [CanBeNull] string firstRevision,
-            string secondRevision,
+            [CanBeNull] ObjectId firstRevision,
+            ObjectId secondRevision,
             [NotNull] GitItemStatus file,
             [NotNull] string defaultText,
             [CanBeNull] Action openWithDifftool)
@@ -102,9 +103,9 @@ namespace GitUI
                 // The previous commit does not exist, nothing to compare with
                 if (file.TreeGuid.IsNullOrEmpty())
                 {
-                    if (secondRevision.IsNullOrWhiteSpace())
+                    if (secondRevision == null)
                     {
-                        throw new ArgumentException(nameof(secondRevision));
+                        throw new ArgumentNullException(nameof(secondRevision));
                     }
 
                     return diffViewer.ViewGitItemRevisionAsync(file.Name, secondRevision);
@@ -125,7 +126,18 @@ namespace GitUI
                     }
 
                     return (text: selectedPatch,
-                            openWithDifftool: openWithDifftool ?? (() => { diffViewer.Module.OpenWithDifftool(file.Name, null, firstRevision, secondRevision, "", file.IsTracked); }));
+                            openWithDifftool: openWithDifftool ?? OpenWithDifftool);
+
+                    void OpenWithDifftool()
+                    {
+                        diffViewer.Module.OpenWithDifftool(
+                            file.Name,
+                            null,
+                            firstRevision.ToString(),
+                            firstRevision.ToString(),
+                            "",
+                            file.IsTracked);
+                    }
                 });
             }
         }

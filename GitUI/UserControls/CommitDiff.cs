@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls
@@ -22,12 +23,12 @@ namespace GitUI.UserControls
             splitContainer2.SplitterDistance = DpiUtil.Scale(260);
         }
 
-        public void SetRevision(string revisionGuid, [CanBeNull] string fileToSelect)
+        public void SetRevision(ObjectId objectId, [CanBeNull] string fileToSelect)
         {
             // We cannot use the GitRevision from revision grid. When a filtered commit list
             // is shown (file history/normal filter) the parent guids are not the 'real' parents,
             // but the parents in the filtered list.
-            GitRevision revision = Module.GetRevision(revisionGuid);
+            GitRevision revision = Module.GetRevision(objectId);
 
             if (revision != null)
             {
@@ -43,7 +44,7 @@ namespace GitUI.UserControls
 
                 commitInfo.Revision = revision;
 
-                Text = "Diff - " + GitRevision.ToShortSha(revision.Guid) + " - " + revision.AuthorDate + " - " + revision.Author + " - " + Module.WorkingDir;
+                Text = "Diff - " + revision.ObjectId.ToShortString() + " - " + revision.AuthorDate + " - " + revision.Author + " - " + Module.WorkingDir;
             }
         }
 
@@ -74,7 +75,7 @@ namespace GitUI.UserControls
             GitRevision revision = DiffFiles.Revision;
             if (DiffFiles.SelectedItem != null && revision != null)
             {
-                await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.Guid, revision.Guid, DiffFiles.SelectedItem, string.Empty,
+                await DiffText.ViewChangesAsync(DiffFiles.SelectedItemParent?.ObjectId, revision.ObjectId, DiffFiles.SelectedItem, string.Empty,
                     openWithDifftool: null /* use default */);
             }
         }

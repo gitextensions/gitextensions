@@ -215,7 +215,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             var form = Application.OpenForms.Cast<Form>().FirstOrDefault(x => x.Name == nameof(FormBrowse));
             if (form != null)
             {
-                var menuStrip = form.FindDescendantsOfType<MenuStrip>(p => p.Name == "menuStrip1");
+                var menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "menuStrip1");
                 var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
                 dashboardMenu?.DropDownItems.Add(showCurrentBranchMenuItem);
             }

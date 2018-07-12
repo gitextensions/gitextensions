@@ -240,8 +240,6 @@ namespace GitCommands
                 return false;
             }
 
-            var objectIdStr = objectId.ToString();
-
             var array = chunk.Array;
             var offset = chunk.Offset + (ObjectId.Sha1CharCount * 2);
             var lastOffset = chunk.Offset + chunk.Count;
@@ -399,14 +397,9 @@ namespace GitCommands
 
             #endregion
 
-            revision = new GitRevision(null)
+            revision = new GitRevision(objectId)
             {
-                // TODO are we really sure we can't make Revision.Guid an ObjectId?
-                Guid = objectIdStr,
-
-                // TODO take IReadOnlyList<ObjectId> instead
-                ParentGuids = parentIds.ToArray(p => p.ToString()),
-
+                ParentIds = parentIds,
                 TreeGuid = treeId,
                 Author = author,
                 AuthorEmail = authorEmail,

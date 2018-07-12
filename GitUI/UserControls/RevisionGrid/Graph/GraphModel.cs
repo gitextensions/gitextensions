@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using GitCommands;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
@@ -19,7 +20,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private int _processedNodes;
 
         public List<Node> AddedNodes { get; } = new List<Node>();
-        public Dictionary<string, Node> NodeByObjectId { get; } = new Dictionary<string, Node>();
+        public Dictionary<ObjectId, Node> NodeByObjectId { get; } = new Dictionary<ObjectId, Node>();
         public int Count { get; private set; }
 
         [CanBeNull]
@@ -48,7 +49,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public int CachedCount => _laneRows.Count;
 
-        public void HighlightBranch(string startId)
+        public void HighlightBranch(ObjectId startId)
         {
             ClearHighlights();
             WalkBranchAndHighlightReachableNodes();
@@ -64,7 +65,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             void WalkBranchAndHighlightReachableNodes()
             {
-                var stack = new Stack<string>();
+                var stack = new Stack<ObjectId>();
                 stack.Push(startId);
 
                 while (stack.Count != 0)
@@ -89,18 +90,18 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
-        public bool IsRevisionRelative(string guid)
+        public bool IsRevisionRelative(ObjectId objectId)
         {
-            return NodeByObjectId.TryGetValue(guid, out var startNode)
+            return NodeByObjectId.TryGetValue(objectId, out var startNode)
                    && startNode.Ancestors.Any(a => a.IsRelative);
         }
 
         public void Add(GitRevision revision, RevisionNodeFlags flags)
         {
-            var parentIds = revision.ParentGuids;
+            var parentIds = revision.ParentIds;
 
             // If we haven't seen this node yet, create a new junction.
-            if (!GetOrCreateNode(revision.Guid, out var node) && (parentIds == null || parentIds.Count == 0))
+            if (!GetOrCreateNode(revision.ObjectId, out var node) && (parentIds == null || parentIds.Count == 0))
             {
                 _junctions.Add(new Junction(node));
             }
@@ -113,7 +114,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             var isCheckedOut = flags.HasFlag(RevisionNodeFlags.CheckedOut);
 
-            foreach (var parentId in parentIds ?? Array.Empty<string>())
+            foreach (var parentId in parentIds ?? Array.Empty<ObjectId>())
             {
                 GetOrCreateNode(parentId, out var parent);
 
@@ -651,7 +652,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
-        private bool GetOrCreateNode(string objectId, [NotNull] out Node node)
+        private bool GetOrCreateNode(ObjectId objectId, [NotNull] out Node node)
         {
             if (!NodeByObjectId.TryGetValue(objectId, out node))
             {

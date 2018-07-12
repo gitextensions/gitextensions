@@ -29,10 +29,10 @@ namespace GitUI.HelperDialogs
 
             if (!string.IsNullOrEmpty(preselectCommit))
             {
-                var guid = Module.RevParse(preselectCommit);
-                if (guid != null)
+                var objectId = Module.RevParse(preselectCommit);
+                if (objectId != null)
                 {
-                    revisionGrid.InitialObjectId = guid.ToString();
+                    revisionGrid.InitialObjectId = objectId;
                 }
             }
         }
@@ -76,7 +76,7 @@ namespace GitUI.HelperDialogs
         private void linkLabelParent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var linkLabel = (LinkLabel)sender;
-            var parentId = (string)linkLabel.Tag;
+            var parentId = (ObjectId)linkLabel.Tag;
 
             revisionGrid.SetSelectedRevision(parentId);
         }
@@ -99,7 +99,7 @@ namespace GitUI.HelperDialogs
                 return;
             }
 
-            var parents = SelectedRevision.ParentGuids;
+            var parents = SelectedRevision.ParentIds;
 
             if (parents == null || parents.Count == 0)
             {
@@ -107,13 +107,13 @@ namespace GitUI.HelperDialogs
             }
 
             linkLabelParent.Tag = parents[0];
-            linkLabelParent.Text = GitRevision.ToShortSha(parents[0]);
+            linkLabelParent.Text = parents[0].ToShortString();
 
             if (parents.Count > 1)
             {
                 linkLabelParent2.Visible = true;
                 linkLabelParent2.Tag = parents[1];
-                linkLabelParent2.Text = GitRevision.ToShortSha(parents[1]);
+                linkLabelParent2.Text = parents[1].ToShortString();
             }
             else
             {
