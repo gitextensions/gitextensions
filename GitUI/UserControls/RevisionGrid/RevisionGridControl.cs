@@ -225,6 +225,7 @@ namespace GitUI
 
         private void SetPage(Control content)
         {
+            _loadingImage.IsAnimating = ReferenceEquals(content, _loadingImage);
             Controls.Clear();
             Controls.Add(content);
         }

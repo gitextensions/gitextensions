@@ -38,7 +38,6 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Loading.Image = Images.LoadingAnimation;
             View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(null, null); };
             splitContainer1.SplitterDistance = DpiUtil.Scale(280);
             InitializeComplete();
@@ -95,6 +94,7 @@ namespace GitUI.CommandsDialogs
             Stashed.SetDiffs();
 
             Loading.Visible = true;
+            Loading.IsAnimating = true;
             Stashes.Enabled = false;
             refreshToolStripButton.Enabled = false;
             toolStripButton_customMessage.Enabled = false;
@@ -117,6 +117,7 @@ namespace GitUI.CommandsDialogs
         {
             Stashed.SetDiffs(items: gitItemStatuses);
             Loading.Visible = false;
+            Loading.IsAnimating = false;
             Stashes.Enabled = true;
             refreshToolStripButton.Enabled = true;
         }

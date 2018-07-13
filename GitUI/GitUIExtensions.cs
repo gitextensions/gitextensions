@@ -11,6 +11,7 @@ using GitCommands.Patches;
 using GitExtUtils.GitUI;
 using GitUI.Editor;
 using GitUI.Properties;
+using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -162,7 +163,12 @@ namespace GitUI
         {
             if (FindMaskPanel(control) == null)
             {
-                var panel = new MaskPanel { Dock = DockStyle.Fill };
+                var panel = new LoadingControl
+                {
+                    Dock = DockStyle.Fill,
+                    IsAnimating = true,
+                    BackColor = SystemColors.AppWorkspace
+                };
                 control.Controls.Add(panel);
                 panel.BringToFront();
             }
@@ -170,7 +176,7 @@ namespace GitUI
 
         public static void UnMask(this Control control)
         {
-            MaskPanel panel = FindMaskPanel(control);
+            var panel = FindMaskPanel(control);
             if (panel != null)
             {
                 control.Controls.Remove(panel);
@@ -179,19 +185,9 @@ namespace GitUI
         }
 
         [CanBeNull]
-        private static MaskPanel FindMaskPanel(Control control)
+        private static LoadingControl FindMaskPanel(Control control)
         {
-            return control.Controls.Cast<Control>().OfType<MaskPanel>().FirstOrDefault();
-        }
-
-        private class MaskPanel : PictureBox
-        {
-            public MaskPanel()
-            {
-                Image = DpiUtil.Scale(Images.LoadingAnimation);
-                SizeMode = PictureBoxSizeMode.CenterImage;
-                BackColor = SystemColors.AppWorkspace;
-            }
+            return control.Controls.Cast<Control>().OfType<LoadingControl>().FirstOrDefault();
         }
 
         public static IEnumerable<TreeNode> AllNodes(this TreeView tree)

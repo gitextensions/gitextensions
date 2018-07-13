@@ -195,8 +195,6 @@ namespace GitUI.CommandsDialogs
                 _commitTemplateManager = new CommitTemplateManager(Module);
             }
 
-            Loading.Image = Images.LoadingAnimation;
-
             SolveMergeconflicts.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
 
             SelectedDiff.ExtraDiffArgumentsChanged += SelectedDiffExtraDiffArgumentsChanged;
@@ -749,8 +747,7 @@ namespace GitUI.CommandsDialogs
                         Close();
                     }
 
-                    // trying to properly dispose loading image issue #1037
-                    Loading.Image.Dispose();
+                    Loading.IsAnimating = false;
                 }, false);
         }
 
@@ -937,6 +934,7 @@ namespace GitUI.CommandsDialogs
                 if (loadUnstaged)
                 {
                     Loading.Visible = true;
+                    Loading.IsAnimating = true;
                     LoadingStaged.Visible = true;
 
                     Commit.Enabled = false;
@@ -1006,6 +1004,7 @@ namespace GitUI.CommandsDialogs
             var doChangesExist = Unstaged.AllItems.Any() || Staged.AllItems.Any();
 
             Loading.Visible = false;
+            Loading.IsAnimating = false;
             LoadingStaged.Visible = false;
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;

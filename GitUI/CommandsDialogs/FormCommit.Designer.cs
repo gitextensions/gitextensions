@@ -1,6 +1,7 @@
 using System.Windows.Forms;
 using GitUI.Editor;
 using GitUI.SpellChecker;
+using GitUI.UserControls.RevisionGrid;
 
 namespace GitUI.CommandsDialogs
 {
@@ -77,7 +78,7 @@ namespace GitUI.CommandsDialogs
             this.splitMain = new System.Windows.Forms.SplitContainer();
             this.splitLeft = new System.Windows.Forms.SplitContainer();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
-            this.Loading = new System.Windows.Forms.PictureBox();
+            this.Loading = new LoadingControl();
             this.Unstaged = new GitUI.FileStatusList();
             this.toolbarUnstaged = new GitUI.ToolStripEx();
             this.toolRefreshItem = new System.Windows.Forms.ToolStripButton();
@@ -168,7 +169,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Loading)).BeginInit();
             this.toolbarUnstaged.SuspendLayout();
             this.toolbarSelectionFilter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.LoadingStaged)).BeginInit();
@@ -678,13 +678,12 @@ namespace GitUI.CommandsDialogs
             //
             // Loading
             //
-            this.Loading.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.Loading.BackColor = System.Drawing.SystemColors.Control;
             this.Loading.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Loading.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Loading.Location = new System.Drawing.Point(0, 0);
             this.Loading.Name = "Loading";
             this.Loading.Size = new System.Drawing.Size(397, 249);
-            this.Loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.Loading.TabIndex = 11;
             this.Loading.TabStop = false;
             //
@@ -1491,7 +1490,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripContainer1.TopToolStripPanel.PerformLayout();
             this.toolStripContainer1.ResumeLayout(false);
             this.toolStripContainer1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.Loading)).EndInit();
             this.toolbarUnstaged.ResumeLayout(false);
             this.toolbarUnstaged.PerformLayout();
             this.toolbarSelectionFilter.ResumeLayout(false);
@@ -1550,7 +1548,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem closeDialogAfterEachCommitToolStripMenuItem;
         private ToolStripMenuItem closeDialogAfterAllFilesCommittedToolStripMenuItem;
         private ToolStripMenuItem refreshDialogOnFormFocusToolStripMenuItem;
-        private PictureBox Loading;
+        private GitUI.UserControls.RevisionGrid.LoadingControl Loading;
         private FileStatusList Unstaged;
         private ToolStripEx toolbarUnstaged;
         private ToolStripProgressBar toolStripProgressBar1;
