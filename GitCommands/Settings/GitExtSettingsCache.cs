@@ -59,7 +59,14 @@ namespace GitCommands.Settings
 
             using (var xr = XmlReader.Create(fileName, readerSettings))
             {
-                _encodedNameMap.ReadXml(xr);
+                try
+                {
+                    _encodedNameMap.ReadXml(xr);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Exception reading XML file \"{fileName}\": {e.Message}", e);
+                }
             }
         }
 
