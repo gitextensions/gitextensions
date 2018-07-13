@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitCommands;
 
@@ -12,7 +13,17 @@ namespace GitUI.Avatars
 {
     public sealed class AvatarDownloader : IAvatarProvider
     {
-        private const string GitHubPrivateEmailSuffix = "@users.noreply.github.com";
+        /* A brief skim through the GitExtensions repo history shows GitHub emails with the following user names:
+         *
+         * 25421792+mserfli
+         * 33052757+freza-tm
+         * gpongelli
+         * odie2
+         * palver123
+         * RaMMicHaeL
+         * SamuelLongchamps
+         */
+        private static readonly Regex _gitHubEmailRegex = new Regex(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private static readonly ConcurrentDictionary<Uri, (DateTime, Task<Image>)> _downloads = new ConcurrentDictionary<Uri, (DateTime, Task<Image>)>();
 
@@ -27,9 +38,9 @@ namespace GitUI.Avatars
                 throw new ArgumentException(nameof(email));
             }
 
-            var isGitHubUserEmail = email.EndsWith(GitHubPrivateEmailSuffix, StringComparison.OrdinalIgnoreCase);
+            var match = _gitHubEmailRegex.Match(email);
 
-            return isGitHubUserEmail
+            return match.Success
                 ? await LoadFromGitHubAsync()
                 : await LoadFromGravatarAsync();
 
@@ -37,8 +48,7 @@ namespace GitUI.Avatars
             {
                 try
                 {
-                    int suffixPosition = email.IndexOf(GitHubPrivateEmailSuffix, StringComparison.OrdinalIgnoreCase);
-                    string username = email.Substring(0, suffixPosition);
+                    var username = match.Groups["username"].Value;
                     var client = new Git.hub.Client();
                     var user = client.GetUser(username);
                     if (!string.IsNullOrEmpty(user?.AvatarUrl))
