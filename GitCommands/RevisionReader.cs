@@ -71,8 +71,6 @@ namespace GitCommands
 
             await TaskScheduler.Default;
 
-            subject.OnNext(null);
-
             token.ThrowIfCancellationRequested();
 
             var branchName = module.IsValidGitWorkingDir()

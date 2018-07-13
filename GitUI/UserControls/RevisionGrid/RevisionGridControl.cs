@@ -819,12 +819,6 @@ namespace GitUI
 
             void OnRevisionRead(GitRevision revision)
             {
-                if (revision == null)
-                {
-                    _gridView.Prune();
-                    return;
-                }
-
                 if (_filteredCurrentCheckout == null)
                 {
                     if (revision.ObjectId == CurrentCheckout)

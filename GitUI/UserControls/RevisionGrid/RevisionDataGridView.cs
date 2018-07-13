@@ -356,6 +356,8 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 SetRowCount(0);
                 _graphDataCount = 0;
+                _revisionByRowIndex.Clear();
+                _isRelativeByIndex.Clear();
 
                 ////// Redraw
                 UpdateVisibleRowRange();
