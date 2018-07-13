@@ -74,12 +74,14 @@ namespace GitUITests.Avatars
             _fileInfo.Exists.Returns(true);
             _fileInfo.LastWriteTime.Returns(new DateTime(2010, 1, 1));
             _fileSystem.File.OpenWrite(Arg.Any<string>()).Returns(_ => new MemoryStream());
+            _fileSystem.File.Delete(Arg.Any<string>());
 
             await MissAsync(_email1);
 
+            _fileSystem.File.Received(1).Delete(Path.Combine(AppSettings.AvatarImageCachePath, $"{_email1}.{_size}px.png"));
+
             _file.OpenRead(Arg.Any<string>()).Returns(c => GetPngStream());
             _fileInfo.LastWriteTime.Returns(DateTime.Now);
-
             _fileSystem.ClearReceivedCalls();
             _fileInfo.ClearReceivedCalls();
             _file.ClearReceivedCalls();
@@ -88,7 +90,7 @@ namespace GitUITests.Avatars
 
             image.Should().NotBeNull();
             _ = _fileInfo.Received(1).LastWriteTime;
-            _fileSystem.Received(1).File.OpenRead(Path.Combine(AppSettings.AvatarImageCachePath, $"{_email1}.{_size}px.png"));
+            _fileSystem.File.Received(1).OpenRead(Path.Combine(AppSettings.AvatarImageCachePath, $"{_email1}.{_size}px.png"));
         }
 
         [Test]

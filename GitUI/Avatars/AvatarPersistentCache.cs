@@ -69,26 +69,27 @@ namespace GitUI.Avatars
 
             Image ReadImage()
             {
-                if (HasExpired(path))
+                if (!HasExpired())
                 {
-                    return null;
-                }
-
-                try
-                {
-                    using (var stream = _fileSystem.File.OpenRead(path))
+                    try
                     {
-                        return Image.FromStream(stream);
+                        using (var stream = _fileSystem.File.OpenRead(path))
+                        {
+                            return Image.FromStream(stream);
+                        }
+                    }
+                    catch
+                    {
+                        // ignore
                     }
                 }
-                catch
-                {
-                    return null;
-                }
 
-                bool HasExpired(string fileName)
+                TryDelete();
+                return null;
+
+                bool HasExpired()
                 {
-                    var info = _fileSystem.FileInfo.FromFileName(fileName);
+                    var info = _fileSystem.FileInfo.FromFileName(path);
 
                     var cacheDays = AppSettings.AvatarImageCacheDays;
                     if (cacheDays < 1)
@@ -98,6 +99,18 @@ namespace GitUI.Avatars
 
                     return !info.Exists ||
                            info.LastWriteTime < DateTime.Now.AddDays(-cacheDays);
+                }
+
+                void TryDelete()
+                {
+                    try
+                    {
+                        _fileSystem.File.Delete(path);
+                    }
+                    catch
+                    {
+                        // ignore
+                    }
                 }
             }
         }

@@ -85,6 +85,7 @@ namespace GitUITests.Avatars
         }
 
 #pragma warning restore 4014
+
         protected Stream GetPngStream()
         {
             var stream = new MemoryStream();
