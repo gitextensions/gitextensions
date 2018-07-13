@@ -157,8 +157,6 @@ namespace GitCommands
                 Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {RevisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} poolCount={stringPool.Count}");
             }
 
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
-
             if (!token.IsCancellationRequested)
             {
                 subject.OnCompleted();
