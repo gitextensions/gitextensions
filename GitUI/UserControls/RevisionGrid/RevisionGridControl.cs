@@ -667,6 +667,8 @@ namespace GitUI
         {
             ThreadHelper.AssertOnUIThread();
 
+            SetPage(_loadingImage);
+
             try
             {
                 _graphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
@@ -720,7 +722,6 @@ namespace GitUI
                 _currentCheckoutParents = null;
                 _superprojectCurrentCheckout = newSuperProjectInfo;
                 _gridView.Clear();
-                SetPage(_loadingImage);
                 _isLoading = true;
                 _isRefreshingRevisions = true;
                 base.Refresh();
