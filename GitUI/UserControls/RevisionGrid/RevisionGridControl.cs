@@ -133,7 +133,6 @@ namespace GitUI
 
         public RevisionGridControl()
         {
-            InitLayout();
             InitializeComponent();
             InitializeComplete();
 
