@@ -5,16 +5,19 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     internal sealed class LaneJunctionDetail
     {
         private int _index;
+
+        [CanBeNull]
         private Node _node;
 
+        [CanBeNull]
         public Junction Junction { get; private set; }
 
-        public LaneJunctionDetail(Node n)
+        public LaneJunctionDetail([NotNull] Node n)
         {
             _node = n;
         }
 
-        public LaneJunctionDetail(Junction j)
+        public LaneJunctionDetail([NotNull] Junction j)
         {
             Junction = j;
             Junction.State = JunctionState.Processing;

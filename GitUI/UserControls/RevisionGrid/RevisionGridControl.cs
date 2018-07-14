@@ -497,7 +497,7 @@ namespace GitUI
 
         // Selects row containing revision given its revisionId
         // Returns whether the required revision was found and selected
-        private bool InternalSetSelectedRevision(ObjectId objectId)
+        private bool InternalSetSelectedRevision([CanBeNull] ObjectId objectId)
         {
             var index = FindRevisionIndex(objectId);
 
@@ -519,12 +519,12 @@ namespace GitUI
         /// </summary>
         /// <param name="objectId">Revision to lookup</param>
         /// <returns>Index of the found revision or -1 if nothing was found</returns>
-        private int FindRevisionIndex(ObjectId objectId)
+        private int FindRevisionIndex([CanBeNull] ObjectId objectId)
         {
             return _gridView.TryGetRevisionIndex(objectId) ?? -1;
         }
 
-        public bool SetSelectedRevision(ObjectId objectId)
+        public bool SetSelectedRevision([CanBeNull] ObjectId objectId)
         {
             var found = InternalSetSelectedRevision(objectId);
             if (found)

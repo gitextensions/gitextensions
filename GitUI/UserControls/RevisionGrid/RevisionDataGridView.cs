@@ -659,7 +659,7 @@ namespace GitUI.UserControls.RevisionGrid
             return _graphModel.NodeByObjectId.TryGetValue(objectId, out var node) ? node.Revision : null;
         }
 
-        public int? TryGetRevisionIndex(ObjectId objectId)
+        public int? TryGetRevisionIndex([CanBeNull] ObjectId objectId)
         {
             if (Rows.Count == 0)
             {
