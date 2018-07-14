@@ -20,8 +20,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public LaneJunctionDetail([NotNull] Junction j)
         {
             Junction = j;
-            Junction.State = JunctionState.Processing;
-            _index = 0;
+            Junction.ProcessingState = JunctionProcessingState.Processing;
         }
 
         public int Count
@@ -55,7 +54,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             if (Junction != null && _index >= Junction.NodeCount)
             {
-                Junction.State = JunctionState.Processed;
+                Junction.ProcessingState = JunctionProcessingState.Processed;
             }
         }
 

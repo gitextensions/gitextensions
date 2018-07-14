@@ -511,7 +511,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 Node node = lane.Junction.Oldest;
                 foreach (Junction parent in node.Ancestors)
                 {
-                    if (parent.State != JunctionState.Unprocessed)
+                    if (parent.ProcessingState != JunctionProcessingState.Unprocessed)
                     {
                         // This item is already in the lane list, no action needed
                         continue;

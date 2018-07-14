@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
-    internal enum JunctionState
+    internal enum JunctionProcessingState
     {
         Unprocessed = 0x0000_0000,
         Processing = 0x1000_0000,
@@ -23,7 +23,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private readonly Dictionary<Node, int> _nodeIndices = new Dictionary<Node, int>();
 
         /// <summary>
-        /// We pack <see cref="ColorIndex"/>, <see cref="State"/>, <see cref="IsRelative"/> and <see cref="IsHighlighted"/> into a single field.
+        /// We pack <see cref="ColorIndex"/>, <see cref="ProcessingState"/>, <see cref="IsRelative"/> and <see cref="IsHighlighted"/> into a single field.
         /// </summary>
         private uint _flags = 0x0000_FFFF;
 
@@ -59,9 +59,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             set => _flags = (_flags & 0xFFFF_0000) | (uint)value;
         }
 
-        public JunctionState State
+        public JunctionProcessingState ProcessingState
         {
-            get => (JunctionState)(_flags & 0xF000_0000);
+            get => (JunctionProcessingState)(_flags & 0xF000_0000);
             set => _flags = (_flags & 0x0FFF_FFFF) | (uint)value;
         }
 
