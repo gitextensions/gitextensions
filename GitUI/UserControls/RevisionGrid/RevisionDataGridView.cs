@@ -643,20 +643,15 @@ namespace GitUI.UserControls.RevisionGrid
 
         public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)
         {
-            var childrenIds = new List<ObjectId>();
-
             // We do not need a lock here since we load the data from the first commit and walk through all
             // parents. Children are always loaded, since we start at the newest commit.
             // With lock, loading the commit info slows down terribly.
             if (_graphModel.TryGetNode(objectId, out var node))
             {
-                foreach (var descendant in node.Descendants)
-                {
-                    childrenIds.Add(descendant.GetChildOf(node).ObjectId);
-                }
+                return node.Descendants.Select(d => d.GetChildOf(node).ObjectId).ToList();
             }
 
-            return childrenIds;
+            return Array.Empty<ObjectId>();
         }
 
         protected override void OnKeyDown(KeyEventArgs e)

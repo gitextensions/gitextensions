@@ -65,6 +65,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             set => _flags = (_flags & 0x0FFF_FFFF) | (uint)value;
         }
 
+        /// <summary>
+        /// Gets and sets whether this junction is a direct ancestor or descendant of HEAD.
+        /// </summary>
         public bool IsRelative
         {
             get => (_flags & 0x0100_0000) != 0;
@@ -81,6 +84,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
+        /// <summary>
+        /// Gets and sets whether this junction is highlighted, according to external highlighting rules.
+        /// Highlighted junctions are rendered distinctly.
+        /// </summary>
         public bool IsHighlighted
         {
             get => (_flags & 0x0200_0000) != 0;
@@ -160,7 +167,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         private void AddNode(Node node)
         {
-            _nodeIndices.Add(node, NodeCount);
+            _nodeIndices.Add(node, _nodes.Count);
             _nodes.Add(node);
         }
 

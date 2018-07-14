@@ -179,7 +179,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             foreach (var ancestor in node.Ancestors)
             {
-                ancestor.IsRelative = isRelative || ancestor.IsRelative;
+                ancestor.IsRelative |= isRelative;
 
                 // Uh, oh, we've already processed this lane. We'll have to update some rows.
                 var parent = ancestor.TryGetParent(node);

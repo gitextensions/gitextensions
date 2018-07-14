@@ -120,7 +120,7 @@ namespace GitUI.Editor
                 }
             }
 
-            encodingToolStripComboBox.Items.AddRange(encodingList.ToArray());
+            encodingToolStripComboBox.Items.AddRange(encodingList.ToArray<object>());
 
             _internalFileViewer.MouseMove += (_, e) =>
             {
