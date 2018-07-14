@@ -497,25 +497,6 @@ namespace GitUI
             _gridView.Select();
         }
 
-        // Selects row containing revision given its revisionId
-        // Returns whether the required revision was found and selected
-        private bool InternalSetSelectedRevision([CanBeNull] ObjectId objectId)
-        {
-            var index = FindRevisionIndex(objectId);
-
-            if (index >= 0 && index < _gridView.RowCount)
-            {
-                SetSelectedIndex(index);
-                return true;
-            }
-            else
-            {
-                _gridView.ClearSelection();
-                _gridView.Select();
-                return false;
-            }
-        }
-
         /// <summary>
         /// Gets the index of the revision identified by <paramref name="objectId"/>.
         /// </summary>
@@ -535,13 +516,18 @@ namespace GitUI
         /// <returns><c>true</c> if the required revision was found and selected, otherwise <c>false</c>.</returns>
         public bool SetSelectedRevision([CanBeNull] ObjectId objectId)
         {
-            var found = InternalSetSelectedRevision(objectId);
-            if (found)
+            var index = FindRevisionIndex(objectId);
+
+            if (index >= 0 && index < _gridView.RowCount)
             {
+                SetSelectedIndex(index);
                 _navigationHistory.Push(objectId);
+                return true;
             }
 
-            return found;
+            _gridView.ClearSelection();
+            _gridView.Select();
+            return false;
         }
 
         [CanBeNull]
