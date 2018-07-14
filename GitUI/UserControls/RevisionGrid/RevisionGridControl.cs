@@ -779,8 +779,12 @@ namespace GitUI
                     _revisionReader = new RevisionReader();
                 }
 
+                var refs = Module.GetRefs();
+                _ambiguousRefs = GitRef.GetAmbiguousRefNames(refs);
+
                 _revisionReader.Execute(
                     Module,
+                    refs,
                     revisions,
                     _refFilterOptions,
                     _branchFilter,
@@ -957,8 +961,6 @@ namespace GitUI
             {
                 if (_revisionReader != null)
                 {
-                    _ambiguousRefs = GitRef.GetAmbiguousRefNames(_revisionReader.LatestRefs);
-
                     _revisionReader.Dispose();
                     _revisionReader = null;
                 }

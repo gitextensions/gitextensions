@@ -30,11 +30,9 @@ namespace GitCommands
     {
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
 
-        /// <value>Refs loaded during the last call to <see cref="Execute"/>.</value>
-        public IReadOnlyList<IGitRef> LatestRefs { get; private set; } = Array.Empty<IGitRef>();
-
         public void Execute(
             GitModule module,
+            IReadOnlyList<IGitRef> refs,
             IObserver<GitRevision> subject,
             RefFilterOptions refFilterOptions,
             string branchFilter,
@@ -43,7 +41,7 @@ namespace GitCommands
             [CanBeNull] Func<GitRevision, bool> revisionPredicate)
         {
             ThreadHelper.JoinableTaskFactory
-                .RunAsync(() => ExecuteAsync(module, subject, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
+                .RunAsync(() => ExecuteAsync(module, refs, subject, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
                 .FileAndForget(
                     ex =>
                     {
@@ -54,6 +52,7 @@ namespace GitCommands
 
         private async Task ExecuteAsync(
             GitModule module,
+            IReadOnlyList<IGitRef> refs,
             IObserver<GitRevision> subject,
             RefFilterOptions refFilterOptions,
             string branchFilter,
@@ -77,9 +76,8 @@ namespace GitCommands
 
             token.ThrowIfCancellationRequested();
 
-            LatestRefs = module.GetRefs();
-            UpdateSelectedRef(module, LatestRefs, branchName);
-            var refsByObjectId = LatestRefs.ToLookup(head => head.ObjectId);
+            UpdateSelectedRef(module, refs, branchName);
+            var refsByObjectId = refs.ToLookup(head => head.ObjectId);
 
             token.ThrowIfCancellationRequested();
 
