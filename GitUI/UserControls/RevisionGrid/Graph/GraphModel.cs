@@ -220,20 +220,20 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _laneNodes.Clear();
             _currentRow.Clear();
 
-            foreach (Node node in GetRefs())
+            foreach (var node in GetLeafNodes())
             {
                 Update(node);
             }
 
             return;
 
-            IReadOnlyList<Node> GetRefs()
+            IEnumerable<Node> GetLeafNodes()
             {
-                var nodes = new List<Node>();
+                var nodes = new HashSet<Node>();
 
                 foreach (var junction in _junctions)
                 {
-                    if (junction.Youngest.Descendants.Count == 0 && !nodes.Contains(junction.Youngest))
+                    if (junction.Youngest.Descendants.Count == 0)
                     {
                         nodes.Add(junction.Youngest);
                     }
