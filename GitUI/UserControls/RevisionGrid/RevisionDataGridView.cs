@@ -26,21 +26,7 @@ namespace GitUI.UserControls.RevisionGrid
 
     public sealed class RevisionDataGridView : DataGridView
     {
-        #region EventArgs
-
-        public sealed class LoadingEventArgs : EventArgs
-        {
-            public LoadingEventArgs(bool isLoading) => IsLoading = isLoading;
-            public bool IsLoading { get; }
-        }
-
-        #endregion
-
         private static readonly SolidBrush _alternatingRowBackgroundBrush = new SolidBrush(Color.FromArgb(250, 250, 250));
-
-        [Description("Loading Handler. NOTE: This will often happen on a background thread so UI operations may not be safe!")]
-        [Category("Behavior")]
-        public event EventHandler<LoadingEventArgs> Loading;
 
         private readonly ConcurrentDictionary<int, bool> _isRelativeByIndex = new ConcurrentDictionary<int, bool>();
         private readonly ConcurrentDictionary<int, GitRevision> _revisionByRowIndex = new ConcurrentDictionary<int, GitRevision>();
@@ -587,23 +573,6 @@ namespace GitUI.UserControls.RevisionGrid
                         provider.OnVisibleRowsChanged(_visibleRowRange);
                     }
                 }).FileAndForget();
-
-            // Add 5 for safe merge (1 for rounding and 1 for whitespace)....
-            if (toIndex + 2 > _graphModel.Count)
-            {
-                // Currently we are doing some important work; we are receiving
-                // rows that the user is viewing
-                if (_graphModel.Count > RowCount)
-                {
-                    Loading?.Invoke(this, new LoadingEventArgs(isLoading: true));
-                }
-            }
-            else
-            {
-                // All rows that the user is viewing are loaded. We now can hide the loading
-                // animation that is shown. (the event Loading(bool) triggers this!)
-                Loading?.Invoke(this, new LoadingEventArgs(isLoading: false));
-            }
 
             var targetBottom = Math.Min(
                 toIndex + 250,

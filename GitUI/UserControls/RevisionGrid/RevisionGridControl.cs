@@ -67,6 +67,7 @@ namespace GitUI
         private RefFilterOptions _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
         private IEnumerable<IGitRef> _latestRefs = Enumerable.Empty<IGitRef>();
         private bool _initialLoad = true;
+        private bool _isReadingRevisions = true;
 
         /// <summary>Tracks status for the artificial commits while the revision graph is reloading</summary>
         private IReadOnlyList<GitItemStatus> _artificialStatus;
@@ -75,7 +76,6 @@ namespace GitUI
         private GitRevision _baseCommitToCompare;
         private string _rebaseOnTopOf;
         private bool _isRefreshingRevisions;
-        private bool _isLoading;
         private IReadOnlyList<ObjectId> _selectedObjectIds;
         private string _fixedRevisionFilter = "";
         private string _fixedPathFilter = "";
@@ -184,13 +184,6 @@ namespace GitUI
             _gridView.MouseClick += OnGridViewMouseClick;
             _gridView.MouseEnter += (_, e) => _toolTipProvider.OnCellMouseEnter();
             _gridView.CellMouseMove += (_, e) => _toolTipProvider.OnCellMouseMove(e);
-            _gridView.Loading += (_, e) =>
-            {
-                // Since this can happen on a background thread, we'll just set a
-                // flag and deal with it next time we paint (a bit of a hack, but
-                // it works)
-                _isLoading = e.IsLoading;
-            };
 
             // Allow to drop patch file on revision grid
             _gridView.AllowDrop = true;
@@ -476,7 +469,6 @@ namespace GitUI
         protected override void OnCreateControl()
         {
             base.OnCreateControl();
-            _isLoading = true;
             SetPage(_loadingImage);
         }
 
@@ -740,7 +732,6 @@ namespace GitUI
                 _currentCheckoutParents = null;
                 _superprojectCurrentCheckout = newSuperProjectInfo;
                 _gridView.Clear();
-                _isLoading = true;
                 _isRefreshingRevisions = true;
                 base.Refresh();
 
@@ -807,6 +798,7 @@ namespace GitUI
                 _revisionSubscription = revisions
                     .ObserveOn(ThreadPoolScheduler.Instance)
                     .Subscribe(OnRevisionRead, OnRevisionReaderError, OnRevisionReadCompleted);
+                _isReadingRevisions = true;
 
                 if (_revisionReader == null)
                 {
@@ -950,7 +942,7 @@ namespace GitUI
 
             void OnRevisionReadCompleted()
             {
-                _isLoading = false;
+                _isReadingRevisions = false;
 
                 if (_revisionReader.RevisionCount == 0 && !FilterIsApplied(true))
                 {
@@ -2132,7 +2124,7 @@ namespace GitUI
             var revisionGuid = Module.RevParse(refName);
             if (revisionGuid != null)
             {
-                if (_isLoading || !SetSelectedRevision(revisionGuid))
+                if (_isReadingRevisions || !SetSelectedRevision(revisionGuid))
                 {
                     InitialObjectId = revisionGuid;
                     _gridView.SelectedObjectIds = null;
