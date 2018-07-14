@@ -16,11 +16,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private readonly ActiveLaneRow _currentRow = new ActiveLaneRow();
         private readonly List<LaneJunctionDetail> _laneNodes = new List<LaneJunctionDetail>();
         private readonly List<ILaneRow> _laneRows = new List<ILaneRow>();
+        private readonly Dictionary<ObjectId, Node> _nodeByObjectId = new Dictionary<ObjectId, Node>();
 
         private int _processedNodes;
 
         public List<Node> AddedNodes { get; } = new List<Node>();
-        public Dictionary<ObjectId, Node> NodeByObjectId { get; } = new Dictionary<ObjectId, Node>();
         public int Count { get; private set; }
 
         [CanBeNull]
@@ -47,6 +47,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
         }
 
+        [ContractAnnotation("=>true,node:notnull")]
+        [ContractAnnotation("=>false,node:null")]
+        public bool TryGetNode(ObjectId objectId, out Node node) => _nodeByObjectId.TryGetValue(objectId, out node);
+
         public int CachedCount => _laneRows.Count;
 
         public void HighlightBranch(ObjectId startId)
@@ -72,7 +76,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 {
                     var id = stack.Pop();
 
-                    if (!NodeByObjectId.TryGetValue(id, out var node))
+                    if (!_nodeByObjectId.TryGetValue(id, out var node))
                     {
                         continue;
                     }
@@ -92,7 +96,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public bool IsRevisionRelative(ObjectId objectId)
         {
-            return NodeByObjectId.TryGetValue(objectId, out var startNode)
+            return _nodeByObjectId.TryGetValue(objectId, out var startNode)
                    && startNode.Ancestors.Any(a => a.IsRelative);
         }
 
@@ -211,10 +215,10 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             bool GetOrCreateNode(ObjectId objectId, out Node n)
             {
-                if (!NodeByObjectId.TryGetValue(objectId, out n))
+                if (!_nodeByObjectId.TryGetValue(objectId, out n))
                 {
                     n = new Node(objectId);
-                    NodeByObjectId.Add(objectId, n);
+                    _nodeByObjectId.Add(objectId, n);
                     return false;
                 }
 
@@ -226,7 +230,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             AddedNodes.Clear();
             _junctions.Clear();
-            NodeByObjectId.Clear();
+            _nodeByObjectId.Clear();
             ClearLanes();
 
             Count = 0;
@@ -655,12 +659,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public void Prune()
         {
-            var nodesToRemove = NodeByObjectId.Values.Where(n => n.Revision == null).ToList();
+            var nodesToRemove = _nodeByObjectId.Values.Where(n => n.Revision == null).ToList();
 
             // Remove all nodes that don't have a value associated with them.
             foreach (var node in nodesToRemove)
             {
-                NodeByObjectId.Remove(node.ObjectId);
+                _nodeByObjectId.Remove(node.ObjectId);
 
                 // This guy should have been at the end of some junctions
                 foreach (var descendant in node.Descendants)

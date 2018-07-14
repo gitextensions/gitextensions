@@ -628,7 +628,7 @@ namespace GitUI.UserControls.RevisionGrid
         [CanBeNull]
         public GitRevision GetRevision(ObjectId objectId)
         {
-            return _graphModel.NodeByObjectId.TryGetValue(objectId, out var node) ? node.Revision : null;
+            return _graphModel.TryGetNode(objectId, out var node) ? node.Revision : null;
         }
 
         public int? TryGetRevisionIndex([CanBeNull] ObjectId objectId)
@@ -638,7 +638,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return null;
             }
 
-            return objectId != null && _graphModel.NodeByObjectId.TryGetValue(objectId, out var node) ? (int?)node.Index : null;
+            return objectId != null && _graphModel.TryGetNode(objectId, out var node) ? (int?)node.Index : null;
         }
 
         public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)
@@ -648,7 +648,7 @@ namespace GitUI.UserControls.RevisionGrid
             // We do not need a lock here since we load the data from the first commit and walk through all
             // parents. Children are always loaded, since we start at the newest commit.
             // With lock, loading the commit info slows down terribly.
-            if (_graphModel.NodeByObjectId.TryGetValue(objectId, out var node))
+            if (_graphModel.TryGetNode(objectId, out var node))
             {
                 foreach (var descendant in node.Descendants)
                 {
