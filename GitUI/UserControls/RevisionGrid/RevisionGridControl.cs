@@ -79,7 +79,7 @@ namespace GitUI
         private IReadOnlyList<ObjectId> _selectedObjectIds;
         private string _fixedRevisionFilter = "";
         private string _fixedPathFilter = "";
-        private string _branchFilter = string.Empty;
+        private string _branchFilter = "";
         private JoinableTask<SuperProjectInfo> _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
 
@@ -92,7 +92,7 @@ namespace GitUI
         private ISet<string> _ambiguousRefs;
         private readonly GraphColumnProvider _graphColumnProvider;
 
-        // NOTE internal properties aren't serialised
+        // NOTE internal properties aren't serialised by the WinForms designer
 
         internal string QuickRevisionFilter { get; set; } = "";
         internal bool InMemFilterIgnoreCase { get; set; } = true;
@@ -525,15 +525,22 @@ namespace GitUI
         }
 
         /// <summary>
-        /// Find specified revision in known to the grid revisions
+        /// Gets the index of the revision identified by <paramref name="objectId"/>.
         /// </summary>
-        /// <param name="objectId">Revision to lookup</param>
-        /// <returns>Index of the found revision or -1 if nothing was found</returns>
+        /// <param name="objectId">Id of the revision to find.</param>
+        /// <returns>Index of the found revision, or <c>-1</c> if not found.</returns>
         private int FindRevisionIndex([CanBeNull] ObjectId objectId)
         {
             return _gridView.TryGetRevisionIndex(objectId) ?? -1;
         }
 
+        /// <summary>
+        /// Selects row containing revision matching <paramref name="objectId"/>.
+        /// If the revision is not found, the grid's selection is cleared.
+        /// Returns whether the required revision was found and selected
+        /// </summary>
+        /// <param name="objectId">Id of the revision to select.</param>
+        /// <returns><c>true</c> if the required revision was found and selected, otherwise <c>false</c>.</returns>
         public bool SetSelectedRevision([CanBeNull] ObjectId objectId)
         {
             var found = InternalSetSelectedRevision(objectId);
@@ -577,7 +584,7 @@ namespace GitUI
 
             if (!revision.IsArtificial)
             {
-                description += " @" + revision.Guid.Substring(0, 4);
+                description += " @" + revision.ObjectId.ToShortString(4);
             }
 
             if (maxLength > 0)
@@ -885,6 +892,8 @@ namespace GitUI
                 }
 
                 _gridView.Add(revision, flags);
+
+                return;
 
                 void CheckUncommittedChanged(ObjectId filteredCurrentCheckout)
                 {

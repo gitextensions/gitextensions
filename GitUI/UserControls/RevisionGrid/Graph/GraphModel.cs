@@ -101,8 +101,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             var parentIds = revision.ParentIds;
 
             // If we haven't seen this node yet, create a new junction.
+            // We process revisions in reverse order.
+            // For each revision we create a node for the revision and its parents.
+            // Most of the time we will have a node for this revision, created for
+            // a parent of revision processed beforehand.
             if (!GetOrCreateNode(revision.ObjectId, out var node) && (parentIds == null || parentIds.Count == 0))
             {
+                // The revision has not been seen yet -- it must be a leaf node.
+                // Create a junction for it.
                 _junctions.Add(new Junction(node));
             }
 
@@ -201,6 +207,18 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             else
             {
                 Update(node);
+            }
+
+            bool GetOrCreateNode(ObjectId objectId, out Node n)
+            {
+                if (!NodeByObjectId.TryGetValue(objectId, out n))
+                {
+                    n = new Node(objectId);
+                    NodeByObjectId.Add(objectId, n);
+                    return false;
+                }
+
+                return true;
             }
         }
 
@@ -650,18 +668,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     descendant.Remove(node);
                 }
             }
-        }
-
-        private bool GetOrCreateNode(ObjectId objectId, [NotNull] out Node node)
-        {
-            if (!NodeByObjectId.TryGetValue(objectId, out node))
-            {
-                node = new Node(objectId);
-                NodeByObjectId.Add(objectId, node);
-                return false;
-            }
-
-            return true;
         }
 
 #if false
