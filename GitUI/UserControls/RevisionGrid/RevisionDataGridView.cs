@@ -565,14 +565,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
-            this.InvokeAsync(
-                () =>
-                {
-                    foreach (var provider in _columnProviders)
-                    {
-                        provider.OnVisibleRowsChanged(_visibleRowRange);
-                    }
-                }).FileAndForget();
+            this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
 
             var targetBottom = Math.Min(
                 toIndex + 250,
@@ -582,6 +575,16 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 _backgroundScrollTo = targetBottom;
                 _backgroundEvent.Set();
+            }
+
+            return;
+
+            void NotifyProvidersVisibleRowRangeChanged()
+            {
+                foreach (var provider in _columnProviders)
+                {
+                    provider.OnVisibleRowsChanged(_visibleRowRange);
+                }
             }
         }
 
