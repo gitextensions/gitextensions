@@ -62,6 +62,7 @@ namespace GitUI
         private readonly AuthorRevisionHighlighting _authorHighlighting;
         private readonly Lazy<IndexWatcher> _indexWatcher;
         private readonly BuildServerWatcher _buildServerWatcher;
+        private readonly Timer _selectionTimer;
 
         private RefFilterOptions _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
         private IEnumerable<IGitRef> _latestRefs = Enumerable.Empty<IGitRef>();
@@ -137,6 +138,16 @@ namespace GitUI
             InitializeComplete();
 
             _loadingImage = new LoadingControl();
+
+            // Delay raising the SelectionChanged event for a barely noticeable period to throttle
+            // rapid changes, for example by holding the down arrow key in the revision grid.
+            _selectionTimer = new Timer(components) { Interval = 200 };
+            _selectionTimer.Tick += (_, e) =>
+            {
+                _selectionTimer.Enabled = false;
+                _selectionTimer.Stop();
+                SelectionChanged?.Invoke(this, e);
+            };
 
             _toolTipProvider = new RevisionGridToolTipProvider(_gridView);
 
@@ -805,7 +816,23 @@ namespace GitUI
                     _revisionFilter.GetPathFilter() + _fixedPathFilter,
                     predicate);
 
-                LoadRevisions();
+                _gridView.SuspendLayout();
+                _gridView.SelectionChanged -= OnGridViewSelectionChanged;
+                _gridView.Enabled = true;
+                _gridView.Focus();
+                _gridView.SelectionChanged += OnGridViewSelectionChanged;
+                _gridView.ResumeLayout();
+
+                if (_initialLoad)
+                {
+                    _initialLoad = false;
+
+                    _selectionTimer.Enabled = false;
+                    _selectionTimer.Stop();
+                    _selectionTimer.Enabled = true;
+                    _selectionTimer.Start();
+                }
+
                 _gridView.Refresh();
                 ResetNavigationHistory();
             }
@@ -1085,35 +1112,6 @@ namespace GitUI
                 .ToList();
         }
 
-        private void LoadRevisions()
-        {
-            if (_revisionReader == null)
-            {
-                return;
-            }
-
-            _gridView.SuspendLayout();
-
-            _gridView.SelectionChanged -= OnGridViewSelectionChanged;
-            _gridView.Enabled = true;
-            _gridView.Focus();
-            _gridView.SelectionChanged += OnGridViewSelectionChanged;
-
-            _gridView.ResumeLayout();
-
-            if (!_initialLoad)
-            {
-                return;
-            }
-
-            _initialLoad = false;
-
-            SelectionTimer.Enabled = false;
-            SelectionTimer.Stop();
-            SelectionTimer.Enabled = true;
-            SelectionTimer.Start();
-        }
-
         #region Graph event handlers
 
         private void OnGridViewSelectionChanged(object sender, EventArgs e)
@@ -1132,10 +1130,10 @@ namespace GitUI
                 }
             }
 
-            SelectionTimer.Enabled = false;
-            SelectionTimer.Stop();
-            SelectionTimer.Enabled = true;
-            SelectionTimer.Start();
+            _selectionTimer.Enabled = false;
+            _selectionTimer.Stop();
+            _selectionTimer.Enabled = true;
+            _selectionTimer.Start();
 
             var selectedRevisions = GetSelectedRevisions();
             var firstSelectedRevision = selectedRevisions.FirstOrDefault();
@@ -1303,13 +1301,6 @@ namespace GitUI
             {
                 UICommands.StartCompareRevisionsDialog(this);
             }
-        }
-
-        private void SelectionTimerTick(object sender, EventArgs e)
-        {
-            SelectionTimer.Enabled = false;
-            SelectionTimer.Stop();
-            SelectionChanged?.Invoke(this, e);
         }
 
         private void CreateTagToolStripMenuItemClick(object sender, EventArgs e)

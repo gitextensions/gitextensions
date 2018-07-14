@@ -60,7 +60,6 @@ namespace GitUI
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBuildReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SelectionTimer = new System.Windows.Forms.Timer(this.components);
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -414,11 +413,6 @@ namespace GitUI
             this.openBuildReportToolStripMenuItem.Text = "Open build report in the browser";
             this.openBuildReportToolStripMenuItem.Click += new System.EventHandler(this.openBuildReportToolStripMenuItem_Click);
             // 
-            // SelectionTimer
-            // 
-            this.SelectionTimer.Interval = 200;
-            this.SelectionTimer.Tick += new System.EventHandler(this.SelectionTimerTick);
-            // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
@@ -479,7 +473,6 @@ namespace GitUI
         #endregion
 
         private RevisionDataGridView _gridView;
-        private System.Windows.Forms.Timer SelectionTimer;
 
         private System.Windows.Forms.ContextMenuStrip mainContextMenu;
         private System.Windows.Forms.ToolStripMenuItem navigateToolStripMenuItem;
