@@ -651,6 +651,8 @@ namespace GitUI
 
             SetPage(_loadingImage);
 
+            var revisionCount = 0;
+
             try
             {
                 _graphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
@@ -816,6 +818,8 @@ namespace GitUI
 
             void OnRevisionRead(GitRevision revision)
             {
+                revisionCount++;
+
                 if (_filteredCurrentCheckout == null)
                 {
                     if (revision.ObjectId == CurrentCheckout)
@@ -916,7 +920,7 @@ namespace GitUI
             {
                 _isReadingRevisions = false;
 
-                if (_revisionReader.RevisionCount == 0 && !FilterIsApplied(true))
+                if (revisionCount == 0 && !FilterIsApplied(inclBranchFilter: true))
                 {
                     var isBare = Module.IsBareRepository();
 

@@ -30,8 +30,6 @@ namespace GitCommands
     {
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
 
-        public int RevisionCount { get; private set; }
-
         /// <value>Refs loaded during the last call to <see cref="Execute"/>.</value>
         public IReadOnlyList<IGitRef> LatestRefs { get; private set; } = Array.Empty<IGitRef>();
 
@@ -67,7 +65,7 @@ namespace GitCommands
 
             var token = _cancellationTokenSequence.Next();
 
-            RevisionCount = 0;
+            var revisionCount = 0;
 
             await TaskScheduler.Default;
 
@@ -145,14 +143,14 @@ namespace GitCommands
                             // Look up any refs associated with this revision
                             revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
 
-                            RevisionCount++;
+                            revisionCount++;
 
                             subject.OnNext(revision);
                         }
                     }
                 }
 
-                Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {RevisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} poolCount={stringPool.Count}");
+                Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} poolCount={stringPool.Count}");
             }
 
             if (!token.IsCancellationRequested)
