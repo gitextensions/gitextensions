@@ -17,10 +17,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private readonly List<LaneJunctionDetail> _laneNodes = new List<LaneJunctionDetail>();
         private readonly List<ILaneRow> _laneRows = new List<ILaneRow>();
         private readonly Dictionary<ObjectId, Node> _nodeByObjectId = new Dictionary<ObjectId, Node>();
+        private readonly List<Node> _nodes = new List<Node>();
 
         private int _processedNodes;
-
-        public List<Node> AddedNodes { get; } = new List<Node>();
         public int Count { get; private set; }
 
         [CanBeNull]
@@ -38,9 +37,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     return _laneRows[row];
                 }
 
-                if (row < AddedNodes.Count)
+                if (row < _nodes.Count)
                 {
-                    return new SavedLaneRow(AddedNodes[row]);
+                    return new SavedLaneRow(_nodes[row]);
                 }
 
                 return null;
@@ -119,8 +118,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             Count++;
             node.Revision = revision;
             node.Flags = flags;
-            node.Index = AddedNodes.Count;
-            AddedNodes.Add(node);
+            node.Index = _nodes.Count;
+            _nodes.Add(node);
 
             var isCheckedOut = flags.HasFlag(RevisionNodeFlags.CheckedOut);
 
@@ -228,7 +227,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public void Clear()
         {
-            AddedNodes.Clear();
+            _nodes.Clear();
             _junctions.Clear();
             _nodeByObjectId.Clear();
             ClearLanes();
@@ -624,9 +623,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         private void ProcessNode(Node node)
         {
-            for (int i = _processedNodes; i < AddedNodes.Count; i++)
+            for (int i = _processedNodes; i < _nodes.Count; i++)
             {
-                if (AddedNodes[i] != node)
+                if (_nodes[i] != node)
                 {
                     continue;
                 }
@@ -641,7 +640,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         Debugger.Break();
                     }
 
-                    AddedNodes.Swap(i - 1, i);
+                    _nodes.Swap(i - 1, i);
                     i--;
                     isChanged = true;
                 }
