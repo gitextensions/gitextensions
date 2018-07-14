@@ -193,7 +193,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                 for (var i = 0; i < SelectedRows.Count; i++)
                 {
-                    var row = _graphModel[SelectedRows[i].Index];
+                    var row = _graphModel.GetLaneRow(SelectedRows[i].Index);
 
                     if (row != null)
                     {
@@ -359,7 +359,7 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 lock (_graphModel)
                 {
-                    var laneRow = _graphModel[index];
+                    var laneRow = _graphModel.GetLaneRow(index);
 
                     if (laneRow == null)
                     {
@@ -385,7 +385,7 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 lock (_graphModel)
                 {
-                    return _graphModel[row]?.Node.Revision;
+                    return _graphModel.GetLaneRow(row)?.Node.Revision;
                 }
             }
         }

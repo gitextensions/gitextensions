@@ -23,27 +23,24 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public int Count { get; private set; }
 
         [CanBeNull]
-        public ILaneRow this[int row]
+        public ILaneRow GetLaneRow(int row)
         {
-            get
+            if (row < 0)
             {
-                if (row < 0)
-                {
-                    return null;
-                }
-
-                if (row < _laneRows.Count)
-                {
-                    return _laneRows[row];
-                }
-
-                if (row < _nodes.Count)
-                {
-                    return new SavedLaneRow(_nodes[row]);
-                }
-
                 return null;
             }
+
+            if (row < _laneRows.Count)
+            {
+                return _laneRows[row];
+            }
+
+            if (row < _nodes.Count)
+            {
+                return new SavedLaneRow(_nodes[row]);
+            }
+
+            return null;
         }
 
         [ContractAnnotation("=>true,node:notnull")]

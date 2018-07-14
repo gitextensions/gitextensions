@@ -191,7 +191,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 {
                     for (var index = start; index < end; index++)
                     {
-                        var row = _graphModel[index];
+                        var row = _graphModel.GetLaneRow(index);
 
                         if (row == null)
                         {
@@ -217,7 +217,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             _graphBitmapGraphics.RenderingOrigin = new Point(x, y - rowHeight);
                             _graphBitmapGraphics.Clip = new Region(laneRect);
                             _graphBitmapGraphics.Clear(Color.Transparent);
-                            DrawItem(_graphBitmapGraphics, _graphModel[index - 1]);
+                            DrawItem(_graphBitmapGraphics, _graphModel.GetLaneRow(index - 1));
                             _graphBitmapGraphics.Clip = oldClip;
                         }
 
@@ -621,7 +621,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 foreach (var index in range)
                 {
-                    var laneRow = _graphModel[index];
+                    var laneRow = _graphModel.GetLaneRow(index);
                     if (laneRow != null)
                     {
                         width = Math.Max(laneRow.Count, width);
@@ -670,7 +670,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 var laneInfoText = new StringBuilder();
                 lock (_graphModel)
                 {
-                    ILaneRow laneRow = _graphModel[rowIndex];
+                    ILaneRow laneRow = _graphModel.GetLaneRow(rowIndex);
                     if (laneRow != null)
                     {
                         Node node = null;
