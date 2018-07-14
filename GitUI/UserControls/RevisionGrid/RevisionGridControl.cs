@@ -65,7 +65,13 @@ namespace GitUI
         private readonly Timer _selectionTimer;
 
         private RefFilterOptions _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
-        private IEnumerable<IGitRef> _latestRefs = Enumerable.Empty<IGitRef>();
+
+        /// <summary>
+        /// The set of ref names that are ambiguous.
+        /// Any refs present in this collection should be displayed using their full name.
+        /// </summary>
+        private IReadOnlyCollection<string> _ambiguousRefs;
+
         private bool _initialLoad = true;
         private bool _isReadingRevisions = true;
 
@@ -89,7 +95,6 @@ namespace GitUI
         private ObjectId _filteredCurrentCheckout;
         private IReadOnlyList<ObjectId> _currentCheckoutParents;
         private bool _settingsLoaded;
-        private ISet<string> _ambiguousRefs;
         private readonly GraphColumnProvider _graphColumnProvider;
 
         // NOTE internal properties aren't serialised by the WinForms designer
@@ -111,25 +116,6 @@ namespace GitUI
         internal bool IsShowCurrentBranchOnlyChecked { get; private set; }
         internal bool IsShowAllBranchesChecked { get; private set; }
         internal bool IsShowFilteredBranchesChecked { get; private set; }
-
-        /// <summary>
-        /// Refs loaded while the latest processing of git log
-        /// </summary>
-        private IEnumerable<IGitRef> LatestRefs
-        {
-            get { return _latestRefs; }
-            set
-            {
-                _latestRefs = value;
-                AmbiguousRefs = null;
-            }
-        }
-
-        private ISet<string> AmbiguousRefs
-        {
-            get => _ambiguousRefs ?? (_ambiguousRefs = GitRef.GetAmbiguousRefNames(LatestRefs));
-            set => _ambiguousRefs = value;
-        }
 
         public RevisionGridControl()
         {
@@ -967,7 +953,7 @@ namespace GitUI
             {
                 if (_revisionReader != null)
                 {
-                    LatestRefs = _revisionReader.LatestRefs;
+                    _ambiguousRefs = GitRef.GetAmbiguousRefNames(_revisionReader.LatestRefs);
 
                     _revisionReader.Dispose();
                     _revisionReader = null;
@@ -1583,12 +1569,9 @@ namespace GitUI
 
         private string GetRefUnambiguousName(IGitRef gitRef)
         {
-            if (AmbiguousRefs.Contains(gitRef.Name))
-            {
-                return gitRef.CompleteName;
-            }
-
-            return gitRef.Name;
+            return _ambiguousRefs.Contains(gitRef.Name)
+                ? gitRef.CompleteName
+                : gitRef.Name;
         }
 
         private void ToolStripItemClickRebaseBranch(object sender, EventArgs e)

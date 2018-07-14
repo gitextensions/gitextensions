@@ -163,7 +163,7 @@ namespace GitCommands
             return CompleteName.SkipStr("refs/");
         }
 
-        public static ISet<string> GetAmbiguousRefNames(IEnumerable<IGitRef> refs)
+        public static IReadOnlyCollection<string> GetAmbiguousRefNames(IEnumerable<IGitRef> refs)
         {
             return refs
                 .GroupBy(r => r.Name)
