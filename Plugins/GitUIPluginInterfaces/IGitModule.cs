@@ -92,7 +92,7 @@ namespace GitUIPluginInterfaces
         /// <summary>Indicates whether the specified directory contains a git repository.</summary>
         bool IsValidGitWorkingDir();
 
-        /// <summary>Indicates whether the repository is in a 'detached HEAD' state.</summary>
+        /// <summary>Indicates HEAD is not pointing to a branch (i.e. it is detached).</summary>
         bool IsDetachedHead();
 
         [ContractAnnotation("=>false,objectId:null")]

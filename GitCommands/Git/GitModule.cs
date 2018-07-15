@@ -2739,19 +2739,16 @@ namespace GitCommands
             return head;
         }
 
-        /// <summary>Gets the current branch; or "(no branch)" if HEAD is detached.</summary>
         public string GetSelectedBranch()
         {
             return GetSelectedBranch(WorkingDir);
         }
 
-        /// <summary>Indicates whether HEAD is not pointing to a branch.</summary>
         public bool IsDetachedHead()
         {
             return DetachedHeadParser.IsDetachedHead(GetSelectedBranch());
         }
 
-        /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
         public string GetCurrentRemote()
         {
             string remote = GetSetting(string.Format(SettingKeyString.BranchRemote, GetSelectedBranch()));
@@ -2833,6 +2830,7 @@ namespace GitCommands
             var refList = GetRefList();
 
             var refs = ParseRefs(refList);
+
             if (order == GitRefsOrder.Alphabetically)
             {
                 refs = refs.OrderBy(b => b.Name).ToList();
