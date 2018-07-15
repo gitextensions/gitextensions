@@ -1,16 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GitCommands.Config;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands
 {
+    internal enum GitRefType
+    {
+        Other,
+        Head,
+        Remote,
+        Tag,
+        Bisect,
+        BisectGood,
+        BisectBad,
+        Stash
+    }
+
     public sealed class GitRef : IGitRef
     {
         private readonly string _mergeSettingName;
         private readonly string _remoteSettingName;
+        private readonly GitRefType _type;
 
         public IGitModule Module { get; }
 
@@ -22,39 +34,100 @@ namespace GitCommands
             CompleteName = completeName;
             Remote = remote;
 
-            IsTag = CompleteName.StartsWith(GitRefName.RefsTagsPrefix);
             IsDereference = CompleteName.EndsWith(GitRefName.TagDereferenceSuffix);
-            IsHead = CompleteName.StartsWith(GitRefName.RefsHeadsPrefix);
-            IsRemote = CompleteName.StartsWith(GitRefName.RefsRemotesPrefix);
-            IsBisect = CompleteName.StartsWith(GitRefName.RefsBisectPrefix);
-            IsBisectGood = CompleteName.StartsWith(GitRefName.RefsBisectGoodPrefix);
-            IsBisectBad = CompleteName.StartsWith(GitRefName.RefsBisectBadPrefix);
+
+            _type = GetType();
 
             var name = ParseName();
+
             Name = name.IsNullOrWhiteSpace() ? CompleteName : name;
 
-            _remoteSettingName = RemoteSettingName(Name);
+            _remoteSettingName = $"branch.{Name}.remote";
             _mergeSettingName = $"branch.{Name}.merge";
+
+            return;
+
+            GitRefType GetType()
+            {
+                if (CompleteName.StartsWith(GitRefName.RefsTagsPrefix))
+                {
+                    return GitRefType.Tag;
+                }
+
+                if (CompleteName.StartsWith(GitRefName.RefsHeadsPrefix))
+                {
+                    return GitRefType.Head;
+                }
+
+                if (CompleteName.StartsWith(GitRefName.RefsRemotesPrefix))
+                {
+                    return GitRefType.Remote;
+                }
+
+                if (CompleteName.StartsWith(GitRefName.RefsBisectPrefix))
+                {
+                    if (CompleteName.StartsWith(GitRefName.RefsBisectGoodPrefix))
+                    {
+                        return GitRefType.BisectGood;
+                    }
+
+                    if (CompleteName.StartsWith(GitRefName.RefsBisectBadPrefix))
+                    {
+                        return GitRefType.BisectBad;
+                    }
+
+                    return GitRefType.Bisect;
+                }
+
+                if (CompleteName.StartsWith(GitRefName.RefsStashPrefix))
+                {
+                    return GitRefType.Stash;
+                }
+
+                return GitRefType.Other;
+            }
+
+            string ParseName()
+            {
+                if (IsRemote)
+                {
+                    return CompleteName.Substring(CompleteName.LastIndexOf("remotes/") + 8);
+                }
+
+                if (IsTag)
+                {
+                    // we need the one containing ^{}, because it contains the reference
+                    var temp =
+                        CompleteName.Contains(GitRefName.TagDereferenceSuffix)
+                            ? CompleteName.Substring(0, CompleteName.Length - GitRefName.TagDereferenceSuffix.Length)
+                            : CompleteName;
+
+                    return temp.Substring(CompleteName.LastIndexOf("tags/") + 5);
+                }
+
+                if (IsHead)
+                {
+                    return CompleteName.Substring(CompleteName.LastIndexOf("heads/") + 6);
+                }
+
+                // if we don't know ref type then we don't know if '/' is a valid ref character
+                return CompleteName.SkipStr("refs/");
+            }
         }
 
         public string CompleteName { get; }
         public bool IsSelected { get; set; } = false;
         public bool IsSelectedHeadMergeSource { get; set; }
-        public bool IsTag { get; }
-        public bool IsHead { get; }
-        public bool IsRemote { get; }
-        public bool IsBisect { get; }
-        public bool IsBisectGood { get; }
-        public bool IsBisectBad { get; }
 
-        /// <summary>
-        /// True when Guid is a checksum of an object (e.g. commit) to which another object
-        /// with Name (e.g. annotated tag) is applied.
-        /// <para>False when Name and Guid are denoting the same object.</para>
-        /// </summary>
+        public bool IsTag => _type == GitRefType.Tag;
+        public bool IsHead => _type == GitRefType.Head;
+        public bool IsRemote => _type == GitRefType.Remote;
+        public bool IsBisect => _type == GitRefType.Bisect;
+        public bool IsBisectGood => _type == GitRefType.BisectGood;
+        public bool IsBisectBad => _type == GitRefType.BisectBad;
+        public bool IsStash => _type == GitRefType.Stash;
+
         public bool IsDereference { get; }
-
-        public bool IsOther => !IsHead && !IsRemote && !IsTag;
 
         public string LocalName => IsRemote ? Name.Substring(Remote.Length + 1) : Name;
 
@@ -79,12 +152,6 @@ namespace GitCommands
                     }
                 }
             }
-        }
-
-        /// <summary>Gets the setting name for a branch's remote.</summary>
-        public static string RemoteSettingName(string branch)
-        {
-            return string.Format(SettingKeyString.BranchRemote, branch);
         }
 
         /// <inheritdoc />
@@ -113,8 +180,11 @@ namespace GitCommands
         /// <inheritdoc />
         public string GetMergeWith(ISettingsValueGetter configFile)
         {
-            string merge = configFile.GetValue(_mergeSettingName);
-            return merge.StartsWith(GitRefName.RefsHeadsPrefix) ? merge.Substring(11) : merge;
+            var merge = configFile.GetValue(_mergeSettingName);
+
+            return merge.StartsWith(GitRefName.RefsHeadsPrefix)
+                ? merge.Substring(GitRefName.RefsHeadsPrefix.Length)
+                : merge;
         }
 
         public static GitRef NoHead(GitModule module)
@@ -133,34 +203,6 @@ namespace GitCommands
         #endregion
 
         public override string ToString() => CompleteName;
-
-        [CanBeNull]
-        private string ParseName()
-        {
-            if (IsRemote)
-            {
-                return CompleteName.Substring(CompleteName.LastIndexOf("remotes/") + 8);
-            }
-
-            if (IsTag)
-            {
-                // we need the one containing ^{}, because it contains the reference
-                var temp =
-                    CompleteName.Contains(GitRefName.TagDereferenceSuffix)
-                        ? CompleteName.Substring(0, CompleteName.Length - GitRefName.TagDereferenceSuffix.Length)
-                        : CompleteName;
-
-                return temp.Substring(CompleteName.LastIndexOf("tags/") + 5);
-            }
-
-            if (IsHead)
-            {
-                return CompleteName.Substring(CompleteName.LastIndexOf("heads/") + 6);
-            }
-
-            // if we don't know ref type then we don't know if '/' is a valid ref character
-            return CompleteName.SkipStr("refs/");
-        }
 
         public static IReadOnlyCollection<string> GetAmbiguousRefNames(IEnumerable<IGitRef> refs)
         {

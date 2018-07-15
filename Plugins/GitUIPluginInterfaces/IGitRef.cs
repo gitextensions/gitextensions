@@ -6,6 +6,7 @@
         bool IsBisect { get; }
         bool IsBisectGood { get; }
         bool IsBisectBad { get; }
+        bool IsStash { get; }
 
         /// <summary>
         /// True when Guid is a checksum of an object (e.g. commit) to which another object
@@ -13,8 +14,8 @@
         /// <para>False when Name and Guid are denoting the same object.</para>
         /// </summary>
         bool IsDereference { get; }
+
         bool IsHead { get; }
-        bool IsOther { get; }
         bool IsRemote { get; }
         bool IsTag { get; }
         string LocalName { get; }
