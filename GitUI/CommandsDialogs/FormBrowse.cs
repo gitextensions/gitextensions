@@ -141,16 +141,16 @@ namespace GitUI.CommandsDialogs
                 ImageSize = DpiUtil.Scale(new Size(16, 16)),
                 Images =
                 {
-                    Images.CommitSummary,
-                    Images.FileTree,
-                    Images.Diff,
-                    Images.Key
+                    { nameof(Images.CommitSummary), Images.CommitSummary },
+                    { nameof(Images.FileTree), Images.FileTree },
+                    { nameof(Images.Diff), Images.Diff },
+                    { nameof(Images.Key), Images.Key }
                 }
             };
-            CommitInfoTabControl.TabPages[0].ImageIndex = 0;
-            CommitInfoTabControl.TabPages[1].ImageIndex = 1;
-            CommitInfoTabControl.TabPages[2].ImageIndex = 2;
-            CommitInfoTabControl.TabPages[3].ImageIndex = 3;
+            CommitInfoTabPage.ImageKey = nameof(Images.CommitSummary);
+            DiffTabPage.ImageKey = nameof(Images.Diff);
+            TreeTabPage.ImageKey = nameof(Images.FileTree);
+            GpgInfoTabPage.ImageKey = nameof(Images.Key);
 
             if (!AppSettings.ShowGpgInformation.ValueOrDefault)
             {
@@ -2891,31 +2891,32 @@ namespace GitUI.CommandsDialogs
             // Handle must be created prior to insertion
             _ = CommitInfoTabControl.Handle;
 
-            if (AppSettings.ShowRevisionInfoNextToRevisionGrid)
+            RevisionInfo.SuspendLayout();
+            CommitInfoTabControl.SuspendLayout();
+            RevisionsSplitContainer.SuspendLayout();
+
+            var isRight = AppSettings.ShowRevisionInfoNextToRevisionGrid;
+
+            RevisionInfo.SetAvatarPosition(isRight);
+
+            if (isRight)
             {
                 RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
                 RevisionsSplitContainer.SplitterDistance = RevisionsSplitContainer.Width - DpiUtil.Scale(420);
-                RevisionInfo.SetAvatarPosition(right: true);
-                CommitInfoTabControl.SuspendLayout();
                 CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
-
-                // Move difftab to left
-                CommitInfoTabControl.RemoveIfExists(DiffTabPage);
-                CommitInfoTabControl.TabPages.Insert(0, DiffTabPage);
-                CommitInfoTabControl.SelectedTab = DiffTabPage;
-                CommitInfoTabControl.ResumeLayout(true);
-                RevisionsSplitContainer.Panel2Collapsed = false;
             }
             else
             {
-                RevisionInfo.SetAvatarPosition(right: false);
-                CommitInfoTabControl.SuspendLayout();
+                RevisionInfo.Parent = CommitInfoTabPage;
                 CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
-                CommitInfoTabControl.ResumeLayout(true);
-                RevisionInfo.Parent = CommitInfoTabControl.Controls[0];
-                RevisionsSplitContainer.Panel2Collapsed = true;
                 CommitInfoTabControl.SelectedTab = CommitInfoTabPage;
             }
+
+            RevisionsSplitContainer.Panel2Collapsed = !isRight;
+
+            RevisionInfo.ResumeLayout(performLayout: true);
+            CommitInfoTabControl.ResumeLayout(performLayout: true);
+            RevisionsSplitContainer.ResumeLayout(performLayout: true);
         }
 
         #endregion
