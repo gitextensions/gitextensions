@@ -38,7 +38,7 @@ xcopy /y ..\GitExtensions\bin\%Configuration%\GitUIPluginInterfaces.dll GitExten
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\ICSharpCode.SharpZipLib.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\bin\ICSharpCode.TextEditor.dll GitExtensions\
+xcopy /y ..\GitExtensions\bin\%Configuration%\ICSharpCode.TextEditor.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\bin\Microsoft.WindowsAPICodePack.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
