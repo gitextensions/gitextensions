@@ -301,9 +301,39 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
         {
-            if (!revision.IsArtificial && revision.HasMultiLineMessage)
+            if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
             {
-                toolTip = revision.Body ?? revision.Subject + "\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.";
+                var s = new StringBuilder();
+
+                s.Append(revision.Body?.TrimEnd()
+                    ?? revision.Subject + "\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.");
+
+                if (revision.Refs.Count != 0)
+                {
+                    if (s.Length != 0)
+                    {
+                        s.AppendLine();
+                        s.AppendLine();
+                    }
+
+                    foreach (var gitRef in revision.Refs)
+                    {
+                        if (gitRef.IsBisectGood)
+                        {
+                            s.AppendLine("Marked as good in bisect");
+                        }
+                        else if (gitRef.IsBisectBad)
+                        {
+                            s.AppendLine("Marked as bad in bisect");
+                        }
+                        else
+                        {
+                            s.Append('[').Append(gitRef.Name).Append(']').AppendLine();
+                        }
+                    }
+                }
+
+                toolTip = s.ToString();
                 return true;
             }
 
