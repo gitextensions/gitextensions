@@ -14,12 +14,7 @@ namespace GitCommands
 
         public IGitModule Module { get; }
 
-        public GitRef(IGitModule module, [CanBeNull] ObjectId objectId, string completeName)
-            : this(module, objectId, completeName, string.Empty)
-        {
-        }
-
-        public GitRef(IGitModule module, [CanBeNull] ObjectId objectId, string completeName, string remote)
+        public GitRef(IGitModule module, [CanBeNull] ObjectId objectId, string completeName, string remote = "")
         {
             Module = module;
             ObjectId = objectId;
