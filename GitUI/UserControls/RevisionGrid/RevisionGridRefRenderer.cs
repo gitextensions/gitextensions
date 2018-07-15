@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -32,7 +33,7 @@ namespace GitUI
             var rect = new Rectangle(
                 bounds.X + offset,
                 bounds.Y + outerMarginTopBottom,
-                textSize.Width + arrowWidth + paddingLeftRight + paddingLeftRight - 1,
+                Math.Min(bounds.Width - offset, textSize.Width + arrowWidth + paddingLeftRight + paddingLeftRight - 1),
                 backgroundHeight);
 
             DrawRefBackground(
@@ -45,7 +46,7 @@ namespace GitUI
             var textBounds = new Rectangle(
                 rect.X + arrowWidth + paddingLeftRight,
                 rect.Y + paddingTopBottom - 1,
-                textSize.Width,
+                Math.Min(bounds.Width - offset - paddingLeftRight - paddingLeftRight, textSize.Width),
                 textSize.Height);
 
             TextRenderer.DrawText(graphics, name, font, textBounds, textColor, TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
