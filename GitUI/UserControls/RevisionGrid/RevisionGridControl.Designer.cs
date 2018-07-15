@@ -148,6 +148,7 @@ namespace GitUI
             // 
             // markRevisionAsBadToolStripMenuItem
             // 
+            this.markRevisionAsBadToolStripMenuItem.Image = GitUI.Properties.Images.BisectBad;
             this.markRevisionAsBadToolStripMenuItem.Name = "markRevisionAsBadToolStripMenuItem";
             this.markRevisionAsBadToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.markRevisionAsBadToolStripMenuItem.Text = "Mark revision as bad";
@@ -155,6 +156,7 @@ namespace GitUI
             // 
             // markRevisionAsGoodToolStripMenuItem
             // 
+            this.markRevisionAsGoodToolStripMenuItem.Image = GitUI.Properties.Images.BisectGood;
             this.markRevisionAsGoodToolStripMenuItem.Name = "markRevisionAsGoodToolStripMenuItem";
             this.markRevisionAsGoodToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.markRevisionAsGoodToolStripMenuItem.Text = "Mark revision as good";
@@ -162,6 +164,7 @@ namespace GitUI
             // 
             // bisectSkipRevisionToolStripMenuItem
             // 
+            this.bisectSkipRevisionToolStripMenuItem.Image = GitUI.Properties.Images.BisectSkip;
             this.bisectSkipRevisionToolStripMenuItem.Name = "bisectSkipRevisionToolStripMenuItem";
             this.bisectSkipRevisionToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.bisectSkipRevisionToolStripMenuItem.Text = "Skip revision";
@@ -169,6 +172,7 @@ namespace GitUI
             // 
             // stopBisectToolStripMenuItem
             // 
+            this.stopBisectToolStripMenuItem.Image = GitUI.Properties.Images.BisectStop;
             this.stopBisectToolStripMenuItem.Name = "stopBisectToolStripMenuItem";
             this.stopBisectToolStripMenuItem.Size = new System.Drawing.Size(264, 24);
             this.stopBisectToolStripMenuItem.Text = "Stop bisect";
