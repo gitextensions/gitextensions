@@ -33,6 +33,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             };
         }
 
+        private readonly Image _bisectGoodImage = DpiUtil.Scale(Images.BisectGood);
+        private readonly Image _bisectBadImage = DpiUtil.Scale(Images.BisectBad);
+
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
         {
             var isRowSelected = e.State.HasFlag(DataGridViewElementStates.Selected);
@@ -97,6 +100,28 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 foreach (var gitRef in gitRefs.Where(FilterRef))
                 {
+                    if (gitRef.IsBisect)
+                    {
+                        if (gitRef.IsBisectGood)
+                        {
+                            ShowBisectImage(_bisectGoodImage);
+                            continue;
+                        }
+
+                        if (gitRef.IsBisectBad)
+                        {
+                            ShowBisectImage(_bisectBadImage);
+                            continue;
+                        }
+
+                        void ShowBisectImage(Image image)
+                        {
+                            var y = e.CellBounds.Y + ((e.CellBounds.Height - image.Height) / 2);
+                            e.Graphics.DrawImage(image, e.CellBounds.X + offset, y);
+                            offset += image.Width + DpiUtil.Scale(4);
+                        }
+                    }
+
                     if (gitRef.IsSelected)
                     {
                         hasSelectedRef = true;
@@ -188,6 +213,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             int CompareRefs(IGitRef left, IGitRef right)
             {
+                if (left.IsBisect != right.IsBisect)
+                {
+                    // Bisect markers towards start
+                    return right.IsBisect.CompareTo(left.IsBisect);
+                }
+
                 if (left.IsTag != right.IsTag)
                 {
                     // Tags towards start

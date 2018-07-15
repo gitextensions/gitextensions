@@ -4,6 +4,8 @@
     {
         string CompleteName { get; }
         bool IsBisect { get; }
+        bool IsBisectGood { get; }
+        bool IsBisectBad { get; }
 
         /// <summary>
         /// True when Guid is a checksum of an object (e.g. commit) to which another object

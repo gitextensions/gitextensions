@@ -32,6 +32,8 @@ namespace GitCommands
             IsHead = CompleteName.StartsWith(GitRefName.RefsHeadsPrefix);
             IsRemote = CompleteName.StartsWith(GitRefName.RefsRemotesPrefix);
             IsBisect = CompleteName.StartsWith(GitRefName.RefsBisectPrefix);
+            IsBisectGood = CompleteName.StartsWith(GitRefName.RefsBisectGoodPrefix);
+            IsBisectBad = CompleteName.StartsWith(GitRefName.RefsBisectBadPrefix);
 
             var name = ParseName();
             Name = name.IsNullOrWhiteSpace() ? CompleteName : name;
@@ -47,6 +49,8 @@ namespace GitCommands
         public bool IsHead { get; }
         public bool IsRemote { get; }
         public bool IsBisect { get; }
+        public bool IsBisectGood { get; }
+        public bool IsBisectBad { get; }
 
         /// <summary>
         /// True when Guid is a checksum of an object (e.g. commit) to which another object
