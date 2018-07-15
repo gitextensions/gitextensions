@@ -1,3 +1,4 @@
+using System.Drawing;
 using System.Windows.Forms;
 using GitUI.Editor;
 using GitUI.SpellChecker;
@@ -1112,7 +1113,6 @@ namespace GitUI.CommandsDialogs
             this.Message.Name = "Message";
             this.Message.Size = new System.Drawing.Size(336, 158);
             this.Message.TabIndex = 0;
-            this.Message.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F);
             this.Message.SelectionChanged += new System.EventHandler(this.Message_SelectionChanged);
             this.Message.Enter += new System.EventHandler(this.Message_Enter);
             this.Message.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Message_KeyDown);

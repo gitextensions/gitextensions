@@ -105,14 +105,6 @@ namespace GitUI.RevisionGridClasses
 
             InitializeComponent();
 
-            ColumnHeadersDefaultCellStyle.Font = SystemFonts.DefaultFont;
-            Font = SystemFonts.DefaultFont;
-            DefaultCellStyle.Font = SystemFonts.DefaultFont;
-            AlternatingRowsDefaultCellStyle.Font = SystemFonts.DefaultFont;
-            RowsDefaultCellStyle.Font = SystemFonts.DefaultFont;
-            RowHeadersDefaultCellStyle.Font = SystemFonts.DefaultFont;
-            RowTemplate.DefaultCellStyle.Font = SystemFonts.DefaultFont;
-
             _whiteBorderPen = new Pen(Brushes.White, _laneLineWidth);
             _blackBorderPen = new Pen(Brushes.Black, _laneLineWidth + 1);
 

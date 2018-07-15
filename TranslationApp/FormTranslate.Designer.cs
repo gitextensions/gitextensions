@@ -385,7 +385,6 @@ namespace TranslationApp
             this.translatedText.Name = "translatedText";
             this.translatedText.Size = new System.Drawing.Size(556, 117);
             this.translatedText.TabIndex = 14;
-            this.translatedText.TextBoxFont = new System.Drawing.Font("Segoe UI", 10.2F);
             this.translatedText.TextChanged += new System.EventHandler(this.translatedText_TextChanged);
             this.translatedText.Enter += new System.EventHandler(this.translatedText_Enter);
             this.translatedText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.translatedText_KeyDown);

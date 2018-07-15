@@ -1132,21 +1132,21 @@ namespace GitCommands
             set => SetColor("authoredrevisionscolor", value);
         }
 
-        public static Font DiffFont
+        public static Font FixedWidthFont
         {
-            get => GetFont("difffont", new Font("Courier New", 10));
+            get => GetFont("difffont", new Font("Consolas", 10));
             set => SetFont("difffont", value);
         }
 
         public static Font CommitFont
         {
-            get => GetFont("commitfont", new Font(SystemFonts.DialogFont.Name, SystemFonts.MessageBoxFont.Size));
+            get => GetFont("commitfont", SystemFonts.MessageBoxFont);
             set => SetFont("commitfont", value);
         }
 
         public static Font Font
         {
-            get => GetFont("font", new Font(SystemFonts.DialogFont.Name, SystemFonts.DefaultFont.Size));
+            get => GetFont("font", SystemFonts.MessageBoxFont);
             set => SetFont("font", value);
         }
 
