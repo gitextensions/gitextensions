@@ -2,6 +2,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -15,9 +16,9 @@ namespace GitUI
 
         public static void DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false, bool fill = false)
         {
-            const int paddingLeftRight = 4;
-            const int paddingTopBottom = 2;
-            const int marginRight = 7;
+            var paddingLeftRight = DpiUtil.Scale(4);
+            var paddingTopBottom = DpiUtil.Scale(2);
+            var marginRight = DpiUtil.Scale(7);
 
             var textColor = fill ? headColor : Lerp(headColor, Color.White, 0.5f);
 
