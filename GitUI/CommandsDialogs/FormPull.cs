@@ -798,7 +798,7 @@ namespace GitUI.CommandsDialogs
                 ? _formTitleFetch.Text
                 : _formTitlePull.Text;
 
-            Text = string.Format(format, Module.WorkingDir);
+            Text = string.Format(format, PathUtil.GetDisplayPath(Module.WorkingDir));
         }
 
         private void StashClick(object sender, EventArgs e)
