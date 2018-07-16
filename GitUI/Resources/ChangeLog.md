@@ -1,6 +1,30 @@
 Changelog
 =========
 
+### [Version 2.51.04] (8 July 2018)
+
+#### Fixes:
+* A number of changed files on Commit button is always '2' - Issue [5127]
+* Error on push deleting a remote branch when a tag with the same name exists - Issue [5119]
+
+
+### [Version 2.51.03] (26 June 2018)
+
+#### Features:
+* Set recommended version Git version to 2.17.1 - PR [5095]
+* RTF round-trip bug causes System.ArgumentException: File format is not valid - Issue [5005]
+* Recheck filter against displayed file name when working in the fileNameOnlyMode mode. - Issue [4991]
+* Crash on opening repository in Recent list. - Issue [4549]
+* Add Atom Editor to Git Config section - Issue [2507]
+
+#### Fixes:
+* Repository init dialog shows incorrect location - Issue [5107]
+* Git-status in the background should use --no-optional-locks - Issue [5066]
+* Typing 'b' or 'h' into the Diff Filter Files text box doesn't insert the character - Issue [5065]
+* Customized window size is not kept - Issue [5021]
+* Commit index count dissapears on refresh - Issue [4483]
+
+
 ### [Version 2.51.02] (24 May 2018)
 
 #### Highlights:
@@ -66,6 +90,7 @@ Changelog
 * Not able to issue "git flow release publish" in git-flow plugin  - Issue [2838]
 * Fields order in "create tag" window - Issue [2515]
 * Submodule dialog: "Name" textbox too small for long names - Issue [1858]
+
 
 
 
@@ -2213,6 +2238,8 @@ Changelog
 * Added standalone UI
 
 
+
+
 [Version 2.50]:https://github.com/gitextensions/gitextensions/releases/tag/v2.50
 [3777]:https://github.com/gitextensions/gitextensions/issues/3777
 [3767]:https://github.com/gitextensions/gitextensions/issues/3767
@@ -2528,3 +2555,21 @@ Changelog
 [4174]:https://github.com/gitextensions/gitextensions/issues/4174
 [4099]:https://github.com/gitextensions/gitextensions/issues/4099
 [3828]:https://github.com/gitextensions/gitextensions/issues/3828
+
+
+[Version 2.51.03]:https://github.com/gitextensions/gitextensions/releases/tag/v2.51.03
+[5107]:https://github.com/gitextensions/gitextensions/issues/5107
+[5095]:https://github.com/gitextensions/gitextensions/pull/5095
+[5066]:https://github.com/gitextensions/gitextensions/issues/5066
+[5065]:https://github.com/gitextensions/gitextensions/issues/5065
+[5021]:https://github.com/gitextensions/gitextensions/issues/5021
+[5005]:https://github.com/gitextensions/gitextensions/issues/5005
+[4991]:https://github.com/gitextensions/gitextensions/issues/4991
+[4549]:https://github.com/gitextensions/gitextensions/issues/4549
+[4483]:https://github.com/gitextensions/gitextensions/issues/4483
+[2507]:https://github.com/gitextensions/gitextensions/issues/2507
+
+
+[Version 2.51.04]:https://github.com/gitextensions/gitextensions/releases/tag/v2.51.04
+[5127]:https://github.com/gitextensions/gitextensions/issues/5127
+[5119]:https://github.com/gitextensions/gitextensions/issues/5119
