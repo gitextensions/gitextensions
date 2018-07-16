@@ -25,7 +25,7 @@ namespace GitCommands
         /// Invoked once per exception, so may be called multiple times.
         /// Handlers must set <see cref="AsyncErrorEventArgs.Handled"/> to <c>true</c> to prevent any exceptions being re-thrown and faulting the async operation.
         /// </param>
-        public static async Task<T> DoAsync<T>(Func<T> loadContent, Action<T> continueWith, Action<AsyncErrorEventArgs> onError)
+        public static async Task<T> DoAsync<T>(Func<T> loadContent, Action<T> continueWith, [CanBeNull] Action<AsyncErrorEventArgs> onError)
         {
             using (var loader = new AsyncLoader())
             {

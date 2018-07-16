@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using GitCommands;
 using GitCommands.Utils;
+using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -62,6 +63,7 @@ namespace GitUI
             return result;
         }
 
+        [CanBeNull]
         public static string FormatTextForFileNameOnly(string name, string oldName)
         {
             name = name.TrimEnd(AppSettings.PosixPathSeparator);
