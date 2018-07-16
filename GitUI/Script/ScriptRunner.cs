@@ -18,14 +18,13 @@ namespace GitUI.Script
         /// and returns true if any executed.</summary>
         public static bool ExecuteScriptCommand(IWin32Window owner, GitModule module, int command, RevisionGridControl revisionGrid = null)
         {
-            var curScripts = ScriptManager.GetScripts();
-            bool anyScriptExecuted = false;
+            var anyScriptExecuted = false;
 
-            foreach (ScriptInfo s in curScripts)
+            foreach (var script in ScriptManager.GetScripts())
             {
-                if (s.HotkeyCommandIdentifier == command)
+                if (script.HotkeyCommandIdentifier == command)
                 {
-                    RunScript(owner, module, s.Name, revisionGrid);
+                    RunScript(owner, module, script.Name, revisionGrid);
                     anyScriptExecuted = true;
                 }
             }
@@ -33,28 +32,28 @@ namespace GitUI.Script
             return anyScriptExecuted;
         }
 
-        public static bool RunScript(IWin32Window owner, GitModule module, string script, RevisionGridControl revisionGrid)
+        public static bool RunScript(IWin32Window owner, GitModule module, string scriptKey, RevisionGridControl revisionGrid)
         {
-            if (string.IsNullOrEmpty(script))
+            if (string.IsNullOrEmpty(scriptKey))
             {
                 return false;
             }
 
-            ScriptInfo scriptInfo = ScriptManager.GetScript(script);
+            var script = ScriptManager.GetScript(scriptKey);
 
-            if (scriptInfo == null)
+            if (script == null)
             {
-                MessageBox.Show(owner, "Cannot find script: " + script, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(owner, "Cannot find script: " + scriptKey, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
-            if (string.IsNullOrEmpty(scriptInfo.Command))
+            if (string.IsNullOrEmpty(script.Command))
             {
                 return false;
             }
 
-            string argument = scriptInfo.Arguments;
-            foreach (string option in Options)
+            string argument = script.Arguments;
+            foreach (string option in _options)
             {
                 if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
                 {
@@ -72,12 +71,12 @@ namespace GitUI.Script
                 }
 
                 MessageBox.Show(owner,
-                    string.Format("Option {0} is only supported when started from revision grid.", option),
+                    $"Option {option} is only supported when started from revision grid.",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
-            return RunScript(owner, module, scriptInfo, revisionGrid);
+            return RunScript(owner, module, script, revisionGrid);
         }
 
         private static string GetRemotePath(string url)
@@ -104,7 +103,7 @@ namespace GitUI.Script
 
         private static bool RunScript(IWin32Window owner, GitModule module, ScriptInfo scriptInfo, RevisionGridControl revisionGrid)
         {
-            if (scriptInfo.AskConfirmation && MessageBox.Show(owner, string.Format("Do you want to execute '{0}'?", scriptInfo.Name), "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (scriptInfo.AskConfirmation && MessageBox.Show(owner, $"Do you want to execute '{scriptInfo.Name}'?", "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 return false;
             }
@@ -129,7 +128,7 @@ namespace GitUI.Script
             var currentBranches = new List<IGitRef>();
             var currentTags = new List<IGitRef>();
 
-            foreach (string option in Options)
+            foreach (string option in _options)
             {
                 if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
                 {
@@ -518,7 +517,7 @@ namespace GitUI.Script
                     refs = currentRevision.Refs;
                 }
 
-                foreach (IGitRef gitRef in refs)
+                foreach (var gitRef in refs)
                 {
                     if (gitRef.IsTag)
                     {
@@ -542,45 +541,38 @@ namespace GitUI.Script
             return currentRevision;
         }
 
-        private static string[] Options
+        private static readonly IReadOnlyList<string> _options = new[]
         {
-            get
-            {
-                string[] options =
-                    {
-                        "{sHashes}",
-                        "{sTag}",
-                        "{sBranch}",
-                        "{sLocalBranch}",
-                        "{sRemoteBranch}",
-                        "{sRemote}",
-                        "{sRemoteUrl}",
-                        "{sRemotePathFromUrl}",
-                        "{sHash}",
-                        "{sMessage}",
-                        "{sAuthor}",
-                        "{sCommitter}",
-                        "{sAuthorDate}",
-                        "{sCommitDate}",
-                        "{cTag}",
-                        "{cBranch}",
-                        "{cLocalBranch}",
-                        "{cRemoteBranch}",
-                        "{cHash}",
-                        "{cMessage}",
-                        "{cAuthor}",
-                        "{cCommitter}",
-                        "{cAuthorDate}",
-                        "{cCommitDate}",
-                        "{cDefaultRemote}",
-                        "{cDefaultRemoteUrl}",
-                        "{cDefaultRemotePathFromUrl}",
-                        "{UserInput}",
-                        "{WorkingDir}"
-                    };
-                return options;
-            }
-        }
+            "{sHashes}",
+            "{sTag}",
+            "{sBranch}",
+            "{sLocalBranch}",
+            "{sRemoteBranch}",
+            "{sRemote}",
+            "{sRemoteUrl}",
+            "{sRemotePathFromUrl}",
+            "{sHash}",
+            "{sMessage}",
+            "{sAuthor}",
+            "{sCommitter}",
+            "{sAuthorDate}",
+            "{sCommitDate}",
+            "{cTag}",
+            "{cBranch}",
+            "{cLocalBranch}",
+            "{cRemoteBranch}",
+            "{cHash}",
+            "{cMessage}",
+            "{cAuthor}",
+            "{cCommitter}",
+            "{cAuthorDate}",
+            "{cCommitDate}",
+            "{cDefaultRemote}",
+            "{cDefaultRemoteUrl}",
+            "{cDefaultRemotePathFromUrl}",
+            "{UserInput}",
+            "{WorkingDir}"
+        };
 
         private const string PluginPrefix = "plugin:";
 
@@ -610,7 +602,7 @@ namespace GitUI.Script
             var match = System.Text.RegularExpressions.Regex.Match(originalCommand, @"\{plugin.(.+)\}", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             if (match.Success && match.Groups.Count > 1)
             {
-                originalCommand = string.Format("{0}{1}", PluginPrefix, match.Groups[1].Value.ToLower());
+                originalCommand = $"{PluginPrefix}{match.Groups[1].Value.ToLower()}";
             }
 
             return originalCommand;
