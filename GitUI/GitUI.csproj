@@ -354,11 +354,11 @@
     <Compile Include="Script\PowerShellHelper.cs" />
     <Compile Include="Script\ScriptRunner.cs" />
     <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
-    <Compile Include="Script\FilePrompt.cs">
+    <Compile Include="Script\FormFilePrompt.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Script\FilePrompt.Designer.cs">
-      <DependentUpon>FilePrompt.cs</DependentUpon>
+    <Compile Include="Script\FormFilePrompt.Designer.cs">
+      <DependentUpon>FormFilePrompt.cs</DependentUpon>
     </Compile>
     <Compile Include="SplitterManager.cs" />
     <Compile Include="SpellChecker\SpellCheckerHelper.cs" />
@@ -1247,8 +1247,8 @@
       <LastGenOutput>MsVsImages.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Script\FilePrompt.resx">
-      <DependentUpon>FilePrompt.cs</DependentUpon>
+    <EmbeddedResource Include="Script\FormFilePrompt.resx">
+      <DependentUpon>FormFilePrompt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\BranchSelector.resx">
       <DependentUpon>BranchSelector.cs</DependentUpon>

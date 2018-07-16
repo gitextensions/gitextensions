@@ -413,7 +413,7 @@ namespace GitUI.Script
 
                         break;
                     case "{UserFiles}":
-                        using (FilePrompt prompt = new FilePrompt())
+                        using (FormFilePrompt prompt = new FormFilePrompt())
                         {
                             if (prompt.ShowDialog(owner) != DialogResult.OK)
                             {
