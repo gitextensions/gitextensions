@@ -32,6 +32,8 @@ xcopy /y ..\GitExtensions\bin\%Configuration%\GitUI.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\System.IO.Abstractions.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitExtensions\bin\%Configuration%\System.ValueTuple.dll GitExtensions\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\GitUIPluginInterfaces.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\Gravatar.dll GitExtensions\
