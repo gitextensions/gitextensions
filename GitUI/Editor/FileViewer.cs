@@ -170,13 +170,13 @@ namespace GitUI.Editor
 
         private void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
         {
-            UICommandsSource.GitUICommandsChanged += UICommandsSourceChanged;
+            UICommandsSource.UICommandsChanged += UICommandsSourceChanged;
             UICommandsSourceChanged(UICommandsSource, null);
         }
 
         protected override void DisposeUICommandsSource()
         {
-            UICommandsSource.GitUICommandsChanged -= UICommandsSourceChanged;
+            UICommandsSource.UICommandsChanged -= UICommandsSourceChanged;
             base.DisposeUICommandsSource();
         }
 

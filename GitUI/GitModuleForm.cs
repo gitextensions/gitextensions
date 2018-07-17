@@ -30,7 +30,7 @@ namespace GitUI
             {
                 GitUICommands oldCommands = _uiCommands;
                 _uiCommands = value;
-                GitUICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldCommands));
+                UICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldCommands));
             }
         }
 
@@ -43,7 +43,7 @@ namespace GitUI
         public GitModule Module => _uiCommands?.Module;
 
         /// <inheritdoc />
-        public event EventHandler<GitUICommandsChangedEventArgs> GitUICommandsChanged;
+        public event EventHandler<GitUICommandsChangedEventArgs> UICommandsChanged;
 
         protected GitModuleForm()
         {

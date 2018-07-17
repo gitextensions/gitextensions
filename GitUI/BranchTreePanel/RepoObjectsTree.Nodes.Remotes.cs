@@ -20,7 +20,7 @@ namespace GitUI.BranchTreePanel
                 : base(treeNode, uiCommands)
             {
                 // TODO unsubscribe this event as needed
-                uiCommands.GitUICommandsChanged += (sender, e) =>
+                uiCommands.UICommandsChanged += (sender, e) =>
                 {
                     TreeViewNode.TreeView.SelectedNode = null;
                 };

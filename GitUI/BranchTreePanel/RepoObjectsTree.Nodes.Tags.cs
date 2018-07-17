@@ -64,10 +64,10 @@ namespace GitUI.BranchTreePanel
             public TagTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
             {
-                uiCommands.GitUICommandsChanged += UiCommands_GitUICommandsChanged;
+                uiCommands.UICommandsChanged += OnUICommandsChanged;
             }
 
-            private void UiCommands_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
+            private void OnUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
             {
                 if (TreeViewNode?.TreeView == null)
                 {

@@ -186,7 +186,7 @@ namespace GitUI.BranchTreePanel
             public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
             {
-                uiCommands.GitUICommandsChanged += delegate { TreeViewNode.TreeView.SelectedNode = null; };
+                uiCommands.UICommandsChanged += delegate { TreeViewNode.TreeView.SelectedNode = null; };
             }
 
             protected override async Task LoadNodesAsync(CancellationToken token)

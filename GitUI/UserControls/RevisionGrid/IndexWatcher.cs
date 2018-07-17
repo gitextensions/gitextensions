@@ -27,7 +27,7 @@ namespace GitUI.UserControls.RevisionGrid
         public IndexWatcher(IGitUICommandsSource uiCommandsSource)
         {
             _uICommandsSource = uiCommandsSource;
-            _uICommandsSource.GitUICommandsChanged += UICommandsSource_GitUICommandsChanged;
+            _uICommandsSource.UICommandsChanged += OnUICommandsChanged;
             GitIndexWatcher = new FileSystemWatcher();
             RefsWatcher = new FileSystemWatcher();
             SetFileSystemWatcher();
@@ -37,7 +37,7 @@ namespace GitUI.UserControls.RevisionGrid
             RefsWatcher.Changed += fileSystemWatcher_Changed;
         }
 
-        private void UICommandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
+        private void OnUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
         {
             Clear();
         }

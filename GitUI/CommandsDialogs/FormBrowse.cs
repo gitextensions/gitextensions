@@ -267,7 +267,7 @@ namespace GitUI.CommandsDialogs
 
             HotkeysEnabled = true;
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
-            GitUICommandsChanged += (a, e) =>
+            UICommandsChanged += (a, e) =>
             {
                 var oldCommands = e.OldCommands;
                 RefreshPullIcon();

@@ -244,7 +244,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         public void Init(IGitUICommandsSource commandsSource)
         {
             UICommandsSource = commandsSource ?? throw new ArgumentNullException(nameof(commandsSource));
-            UICommandsSource.GitUICommandsChanged += commandsSource_GitUICommandsChanged;
+            UICommandsSource.UICommandsChanged += commandsSource_GitUICommandsChanged;
 
             commandsSource_activate(commandsSource);
 
