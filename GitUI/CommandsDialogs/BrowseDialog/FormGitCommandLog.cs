@@ -148,8 +148,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    var contents = string.Join(Environment.NewLine, CommandLog.Commands.Select(cle => cle.ToString()));
-                    File.WriteAllText(fileDialog.FileName, contents);
+                    File.WriteAllLines(
+                        fileDialog.FileName,
+                        CommandLog.Commands.Select(cle => cle.ToString()));
                 }
             }
         }
