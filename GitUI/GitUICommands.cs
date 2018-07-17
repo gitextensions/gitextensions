@@ -95,16 +95,23 @@ namespace GitUI
 
         public bool StartBatchFileProcessDialog(string batchFile)
         {
-            string tempFileName = Path.ChangeExtension(Path.GetTempFileName(), ".cmd");
-            using (var writer = new StreamWriter(tempFileName))
-            {
-                writer.WriteLine("@prompt $G");
-                writer.Write(batchFile);
-            }
+            var tempFile = Path.Combine(Path.GetTempPath(), $"GitExtensions-{Guid.NewGuid():N}.cmd");
 
-            FormProcess.ShowDialog(null, Module, "cmd.exe", "/C \"" + tempFileName + "\"");
-            File.Delete(tempFileName);
-            return true;
+            try
+            {
+                using (var writer = new StreamWriter(tempFile))
+                {
+                    writer.WriteLine("@prompt $G");
+                    writer.Write(batchFile);
+                }
+
+                FormProcess.ShowDialog(null, Module, "cmd.exe", $"/C \"{tempFile}\"");
+                return true;
+            }
+            finally
+            {
+                File.Delete(tempFile);
+            }
         }
 
         public bool StartCommandLineProcessDialog(IWin32Window owner, IGitCommand command)
