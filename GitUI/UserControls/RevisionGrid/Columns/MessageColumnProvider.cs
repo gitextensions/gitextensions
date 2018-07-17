@@ -95,8 +95,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (revision.Refs.Count != 0)
             {
-                var gitRefs = revision.Refs.ToList();
-                gitRefs.Sort(CompareRefs);
+                var gitRefs = SortRefs(revision.Refs);
 
                 foreach (var gitRef in gitRefs.Where(FilterRef))
                 {
@@ -211,36 +210,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             return;
 
-            int CompareRefs(IGitRef left, IGitRef right)
-            {
-                if (left.IsBisect != right.IsBisect)
-                {
-                    // Bisect markers towards start
-                    return right.IsBisect.CompareTo(left.IsBisect);
-                }
-
-                if (left.IsTag != right.IsTag)
-                {
-                    // Tags towards start
-                    return right.IsTag.CompareTo(left.IsTag);
-                }
-
-                if (left.IsRemote != right.IsRemote)
-                {
-                    // Remote refs towards end
-                    return left.IsRemote.CompareTo(right.IsRemote);
-                }
-
-                if (left.IsSelected != right.IsSelected)
-                {
-                    // Selected ref towards start
-                    return right.IsSelected.CompareTo(left.IsSelected);
-                }
-
-                // Otherwise sort by name
-                return left.Name.CompareTo(right.Name);
-            }
-
             bool FilterRef(IGitRef gitRef)
             {
                 if (gitRef.IsTag)
@@ -316,7 +285,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         s.AppendLine();
                     }
 
-                    foreach (var gitRef in revision.Refs)
+                    foreach (var gitRef in SortRefs(revision.Refs))
                     {
                         if (gitRef.IsBisectGood)
                         {
@@ -401,6 +370,55 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
 
             return base.TryGetToolTip(e, revision, out toolTip);
+        }
+
+        private static IReadOnlyList<IGitRef> SortRefs(IEnumerable<IGitRef> refs)
+        {
+            var sortedRefs = refs.ToList();
+            sortedRefs.Sort(CompareRefs);
+            return sortedRefs;
+
+            int CompareRefs(IGitRef left, IGitRef right)
+            {
+                var leftTypeRank = RefTypeRank(left);
+                var rightTypeRank = RefTypeRank(right);
+
+                var c = leftTypeRank.CompareTo(rightTypeRank);
+
+                return c == 0
+                    ? string.Compare(left.Name, right.Name, StringComparison.Ordinal)
+                    : c;
+
+                int RefTypeRank(IGitRef gitRef)
+                {
+                    if (gitRef.IsBisect)
+                    {
+                        return 0;
+                    }
+
+                    if (gitRef.IsSelected)
+                    {
+                        return 1;
+                    }
+
+                    if (gitRef.IsSelectedHeadMergeSource)
+                    {
+                        return 2;
+                    }
+
+                    if (gitRef.IsHead)
+                    {
+                        return 3;
+                    }
+
+                    if (gitRef.IsRemote)
+                    {
+                        return 4;
+                    }
+
+                    return 5;
+                }
+            }
         }
     }
 }
