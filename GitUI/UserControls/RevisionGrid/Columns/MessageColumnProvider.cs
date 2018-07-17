@@ -99,6 +99,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 foreach (var gitRef in gitRefs.Where(FilterRef))
                 {
+                    if (offset > indicator.RemainingCellBounds.Width)
+                    {
+                        // Stop drawing refs if we run out of room
+                        break;
+                    }
+
                     if (gitRef.IsBisect)
                     {
                         if (gitRef.IsBisectGood)
