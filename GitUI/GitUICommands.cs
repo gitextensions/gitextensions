@@ -93,7 +93,7 @@ namespace GitUI
             return true;
         }
 
-        public bool StartBatchFileProcessDialog(string batchFile)
+        public void StartBatchFileProcessDialog(string batchFile)
         {
             var tempFile = Path.Combine(Path.GetTempPath(), $"GitExtensions-{Guid.NewGuid():N}.cmd");
 
@@ -106,7 +106,6 @@ namespace GitUI
                 }
 
                 FormProcess.ShowDialog(null, Module, "cmd.exe", $"/C \"{tempFile}\"");
-                return true;
             }
             finally
             {
@@ -128,16 +127,14 @@ namespace GitUI
             return executed;
         }
 
-        public bool StartCommandLineProcessDialog(IWin32Window owner, string command, string arguments)
+        public void StartCommandLineProcessDialog(IWin32Window owner, string command, string arguments)
         {
             FormProcess.ShowDialog(owner, Module, command, arguments);
-            return true;
         }
 
-        public bool StartGitCommandProcessDialog(IWin32Window owner, string arguments)
+        public void StartGitCommandProcessDialog(IWin32Window owner, string arguments)
         {
             FormProcess.ShowDialog(owner, Module, arguments);
-            return true;
         }
 
         public bool StartDeleteBranchDialog(IWin32Window owner, string branch)
