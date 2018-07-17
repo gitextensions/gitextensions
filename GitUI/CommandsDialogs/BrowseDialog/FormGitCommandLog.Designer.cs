@@ -35,8 +35,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.tabPageCommandLog = new System.Windows.Forms.TabPage();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.LogItems = new System.Windows.Forms.ListBox();
-            this.logContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.saveToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnuSaveToFile = new System.Windows.Forms.ToolStripMenuItem();
             this.LogOutput = new System.Windows.Forms.RichTextBox();
             this.tabPageCommandCache = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -44,13 +44,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.commandCacheOutput = new System.Windows.Forms.RichTextBox();
             this.chkAlwaysOnTop = new System.Windows.Forms.CheckBox();
             this.chkWordWrap = new System.Windows.Forms.CheckBox();
+            this.mnuClear = new System.Windows.Forms.ToolStripMenuItem();
             this.TabControl.SuspendLayout();
             this.tabPageCommandLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.logContextMenuStrip.SuspendLayout();
+            this.contextMenu.SuspendLayout();
             this.tabPageCommandCache.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -106,7 +107,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // LogItems
             // 
             this.LogItems.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LogItems.ContextMenuStrip = this.logContextMenuStrip;
+            this.LogItems.ContextMenuStrip = this.contextMenu;
             this.LogItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LogItems.FormattingEnabled = true;
             this.LogItems.Location = new System.Drawing.Point(0, 0);
@@ -116,19 +117,29 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.LogItems.TabIndex = 0;
             this.LogItems.SelectedIndexChanged += new System.EventHandler(this.LogItems_SelectedIndexChanged);
             // 
-            // logContextMenuStrip
+            // contextMenu
             // 
-            this.logContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveToFileToolStripMenuItem});
-            this.logContextMenuStrip.Name = "logContextMenuStrip";
-            this.logContextMenuStrip.Size = new System.Drawing.Size(132, 26);
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuSaveToFile,
+            this.mnuClear});
+            this.contextMenu.Name = "logContextMenuStrip";
+            this.contextMenu.Size = new System.Drawing.Size(132, 60);
             // 
-            // saveToFileToolStripMenuItem
+            // mnuSaveToFile
             // 
-            this.saveToFileToolStripMenuItem.Name = "saveToFileToolStripMenuItem";
-            this.saveToFileToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
-            this.saveToFileToolStripMenuItem.Text = "Save to file";
-            this.saveToFileToolStripMenuItem.Click += SaveToFileToolStripMenuItem_Click;
+            this.mnuSaveToFile.Image = GitUI.Properties.Images.SaveAs;
+            this.mnuSaveToFile.Name = "mnuSaveToFile";
+            this.mnuSaveToFile.Size = new System.Drawing.Size(131, 22);
+            this.mnuSaveToFile.Text = "Save to file";
+            this.mnuSaveToFile.Click += mnuSaveToFile_Click;
+            // 
+            // mnuClear
+            // 
+            this.mnuClear.Image = GitUI.Properties.Images.ClearLog;
+            this.mnuClear.Name = "mnuClear";
+            this.mnuClear.Size = new System.Drawing.Size(131, 22);
+            this.mnuClear.Text = "Clear";
+            this.mnuClear.Click += mnuClear_Click;
             // 
             // LogOutput
             // 
@@ -230,15 +241,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.Controls.Add(this.TabControl);
             this.Name = "FormGitCommandLog";
             this.Text = "Git Command Log";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.GitLogForm_FormClosed);
-            this.Load += new System.EventHandler(this.GitLogFormLoad);
             this.TabControl.ResumeLayout(false);
             this.tabPageCommandLog.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.logContextMenuStrip.ResumeLayout(false);
+            this.contextMenu.ResumeLayout(false);
             this.tabPageCommandCache.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -261,8 +270,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private System.Windows.Forms.ListBox LogItems;
         private System.Windows.Forms.RichTextBox LogOutput;
         private CheckBox chkAlwaysOnTop;
-        private ContextMenuStrip logContextMenuStrip;
-        private ToolStripMenuItem saveToFileToolStripMenuItem;
+        private ContextMenuStrip contextMenu;
+        private ToolStripMenuItem mnuSaveToFile;
         private CheckBox chkWordWrap;
+        private ToolStripMenuItem mnuClear;
     }
 }

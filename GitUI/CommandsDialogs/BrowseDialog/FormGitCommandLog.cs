@@ -31,22 +31,42 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 LogOutput.WordWrap = chkWordWrap.Checked;
                 commandCacheOutput.WordWrap = chkWordWrap.Checked;
             };
-        }
 
-        private void GitLogFormLoad(object sender, EventArgs e)
-        {
-            CommandLog.CommandsChanged += OnGitCommandLogChanged;
-            GitCommandCache.CachedCommandsChanged += OnCachedCommandsLogChanged;
+            Load += delegate
+            {
+                CommandLog.CommandsChanged += OnGitCommandLogChanged;
+                GitCommandCache.CachedCommandsChanged += OnCachedCommandsLogChanged;
 
-            RefreshLogItems();
-            RefreshCommandCacheItems();
-        }
+                RefreshLogItems();
+                RefreshCommandCacheItems();
+            };
 
-        private void GitLogForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            CommandLog.CommandsChanged -= OnGitCommandLogChanged;
-            GitCommandCache.CachedCommandsChanged -= OnCachedCommandsLogChanged;
-            instance = null;
+            FormClosed += delegate
+            {
+                CommandLog.CommandsChanged -= OnGitCommandLogChanged;
+                GitCommandCache.CachedCommandsChanged -= OnCachedCommandsLogChanged;
+                instance = null;
+            };
+
+            void OnGitCommandLogChanged()
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    async () =>
+                    {
+                        await this.SwitchToMainThreadAsync();
+                        RefreshLogItems();
+                    });
+            }
+
+            void OnCachedCommandsLogChanged(object sender, EventArgs e)
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    async () =>
+                    {
+                        await this.SwitchToMainThreadAsync();
+                        RefreshCommandCacheItems();
+                    });
+            }
         }
 
         private void RefreshLogItems()
@@ -136,7 +156,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             chkAlwaysOnTop.Checked = TopMost;
         }
 
-        private void SaveToFileToolStripMenuItem_Click(object sender, System.EventArgs e)
+        private void mnuSaveToFile_Click(object sender, EventArgs e)
         {
             using (var fileDialog = new SaveFileDialog
             {
@@ -155,24 +175,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
-        private void OnGitCommandLogChanged()
+        private void mnuClear_Click(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
-                {
-                    await this.SwitchToMainThreadAsync();
-                    RefreshLogItems();
-                });
-        }
-
-        private void OnCachedCommandsLogChanged(object sender, EventArgs e)
-        {
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
-                {
-                    await this.SwitchToMainThreadAsync();
-                    RefreshCommandCacheItems();
-                });
+            CommandLog.Clear();
         }
 
         #region Single instance static members

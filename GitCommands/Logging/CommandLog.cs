@@ -69,7 +69,7 @@ namespace GitCommands.Logging
     {
         public static event Action CommandsChanged;
 
-        private static readonly ConcurrentQueue<CommandLogEntry> _queue = new ConcurrentQueue<CommandLogEntry>();
+        private static ConcurrentQueue<CommandLogEntry> _queue = new ConcurrentQueue<CommandLogEntry>();
 
         public static IEnumerable<CommandLogEntry> Commands => _queue;
 
@@ -90,6 +90,12 @@ namespace GitCommands.Logging
             CommandsChanged?.Invoke();
 
             return new ProcessOperation(entry, Stopwatch.StartNew(), () => CommandsChanged?.Invoke());
+        }
+
+        public static void Clear()
+        {
+            _queue = new ConcurrentQueue<CommandLogEntry>();
+            CommandsChanged?.Invoke();
         }
     }
 }
