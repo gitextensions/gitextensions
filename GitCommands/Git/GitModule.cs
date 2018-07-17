@@ -2551,7 +2551,7 @@ namespace GitCommands
                         Patch patch = GetSingleDiff(firstRevision, secondRevision, item.Name, item.OldName, "", SystemEncoding, true);
                         string text = patch != null ? patch.Text : "";
                         var submoduleStatus = GitCommandHelpers.ParseSubmoduleStatus(text, this, item.Name);
-                        if (submoduleStatus.Commit != submoduleStatus.OldCommit)
+                        if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                         {
                             var submodule = submoduleStatus.GetSubmodule(this);
                             submoduleStatus.CheckSubmoduleStatus(submodule);
