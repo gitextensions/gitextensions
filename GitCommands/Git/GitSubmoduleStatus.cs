@@ -1,4 +1,5 @@
-﻿using GitUIPluginInterfaces;
+﻿using System;
+using GitUIPluginInterfaces;
 
 namespace GitCommands
 {
@@ -16,11 +17,11 @@ namespace GitCommands
 
         public GitSubmoduleStatus(string name, string oldName, bool isDirty, ObjectId commit, ObjectId oldCommit, int? addedCommits, int? removedCommits)
         {
-            Name = name;
-            OldName = oldName;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            OldName = oldName ?? throw new ArgumentNullException(nameof(oldName));
             IsDirty = isDirty;
-            Commit = commit;
-            OldCommit = oldCommit;
+            Commit = commit ?? throw new ArgumentNullException(nameof(commit));
+            OldCommit = oldCommit ?? throw new ArgumentNullException(nameof(oldCommit));
             AddedCommits = addedCommits;
             RemovedCommits = removedCommits;
         }
