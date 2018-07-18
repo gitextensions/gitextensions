@@ -18,7 +18,7 @@ namespace GitUI.UserControls
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    await Task.Delay(normalizedTime, token);
+                    await Task.Delay(normalizedTime, token).ConfigureAwaitRunInline();
                     if (ThreadHelper.JoinableTaskContext.IsOnMainThread)
                     {
                         await Task.Yield();
