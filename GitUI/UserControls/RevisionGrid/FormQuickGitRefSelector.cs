@@ -22,14 +22,14 @@ namespace GitUI.UserControls.RevisionGrid
             InitializeComponent();
             InitializeComplete();
 
-            lbxRefs.DisplayMember = nameof(DisplyGitRef.Label);
+            lbxRefs.DisplayMember = nameof(DisplayGitRef.Label);
         }
 
         /// <summary>
         /// Gets the ref selected by the user.
         /// </summary>
         [CanBeNull]
-        public IGitRef SelectedRef => (lbxRefs.SelectedItem as DisplyGitRef)?.Item;
+        public IGitRef SelectedRef => (lbxRefs.SelectedItem as DisplayGitRef)?.Item;
 
         public void Init(Action action, IReadOnlyList<IGitRef> refs)
         {
@@ -68,7 +68,7 @@ namespace GitUI.UserControls.RevisionGrid
                     foreach (var gitRef in refs.OrderBy(r => r.IsTag).ThenBy(r => r.Name))
                     {
                         var suffix = gitRef.IsTag ? $" ({_tag.Text})" : string.Empty;
-                        var item = new DisplyGitRef
+                        var item = new DisplayGitRef
                         {
                             Label = $"{gitRef.Name}{suffix}",
                             Item = gitRef
@@ -127,7 +127,7 @@ namespace GitUI.UserControls.RevisionGrid
             Delete
         }
 
-        private class DisplyGitRef
+        private class DisplayGitRef
         {
             public string Label { get; set; }
             public IGitRef Item { get; set; }
