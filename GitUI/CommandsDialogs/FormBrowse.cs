@@ -1640,7 +1640,7 @@ namespace GitUI.CommandsDialogs
                     menuItemCategory = (ToolStripMenuItem)container.DropDownItems[category];
                 }
 
-                repos.ForEach(r =>
+                foreach (var r in repos)
                 {
                     var item = new ToolStripMenuItem(r.Caption ?? "")
                     {
@@ -1654,7 +1654,7 @@ namespace GitUI.CommandsDialogs
                     {
                         item.ToolTipText = r.Repo.Path;
                     }
-                });
+                }
             }
         }
 
@@ -2560,9 +2560,11 @@ namespace GitUI.CommandsDialogs
                 }
 
                 RemoveSubmoduleButtons();
-                var newItems = new List<ToolStripItem>();
 
-                result.OurSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
+                var newItems = result.OurSubmodules
+                    .Select(submodule => CreateSubmoduleMenuItem(submodule))
+                    .ToList<ToolStripItem>();
+
                 if (result.OurSubmodules.Count == 0)
                 {
                     newItems.Add(new ToolStripMenuItem(_noSubmodulesPresent.Text));
@@ -2577,7 +2579,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     newItems.Add(CreateSubmoduleMenuItem(result.Superproject, _superprojectModuleFormat.Text));
-                    result.SuperSubmodules.ForEach(submodule => newItems.Add(CreateSubmoduleMenuItem(submodule)));
+                    newItems.AddRange(result.SuperSubmodules.Select(submodule => CreateSubmoduleMenuItem(submodule)));
                 }
 
                 newItems.Add(new ToolStripSeparator());

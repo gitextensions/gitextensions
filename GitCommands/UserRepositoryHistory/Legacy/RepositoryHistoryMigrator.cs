@@ -80,24 +80,24 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         private static bool MigrateSettings(IList<Current.Repository> history, IEnumerable<RepositoryCategory> categorised)
         {
             var changed = false;
-            categorised.Where(c => c.CategoryType == "Repositories")
-                       .ForEach(c =>
-                       {
-                           c.Repositories.ForEach(r =>
-                           {
-                               var repo = history.FirstOrDefault(hr => hr.Path == r.Path);
-                               if (repo == null)
-                               {
-                                   repo = new Current.Repository(r.Path);
-                                   history.Add(repo);
-                               }
 
-                               repo.Anchor = GetAnchor(r.Anchor);
-                               repo.Category = c.Description;
+            foreach (var category in categorised.Where(c => c.CategoryType == "Repositories"))
+            {
+                foreach (var repository in category.Repositories)
+                {
+                    var repo = history.FirstOrDefault(hr => hr.Path == repository.Path);
+                    if (repo == null)
+                    {
+                        repo = new Current.Repository(repository.Path);
+                        history.Add(repo);
+                    }
 
-                               changed = true;
-                           });
-                       });
+                    repo.Anchor = GetAnchor(repository.Anchor);
+                    repo.Category = category.Description;
+
+                    changed = true;
+                }
+            }
 
             return changed;
 

@@ -2540,27 +2540,26 @@ namespace GitCommands
 
         private void GetSubmoduleStatus(IReadOnlyList<GitItemStatus> status, string firstRevision, string secondRevision)
         {
-            status.ForEach(item =>
+            foreach (var item in status.Where(i => i.IsSubmodule))
             {
-                if (item.IsSubmodule)
-                {
-                    item.SetSubmoduleStatus(ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-
-                        Patch patch = GetSingleDiff(firstRevision, secondRevision, item.Name, item.OldName, "", SystemEncoding, true);
-                        string text = patch != null ? patch.Text : "";
-                        var submoduleStatus = GitCommandHelpers.ParseSubmoduleStatus(text, this, item.Name);
-                        if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+                item.SetSubmoduleStatus(
+                    ThreadHelper.JoinableTaskFactory.RunAsync(
+                        async () =>
                         {
-                            var submodule = submoduleStatus.GetSubmodule(this);
-                            submoduleStatus.CheckSubmoduleStatus(submodule);
-                        }
+                            await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
-                        return submoduleStatus;
-                    }));
-                }
-            });
+                            Patch patch = GetSingleDiff(firstRevision, secondRevision, item.Name, item.OldName, "", SystemEncoding, true);
+                            string text = patch != null ? patch.Text : "";
+                            var submoduleStatus = GitCommandHelpers.ParseSubmoduleStatus(text, this, item.Name);
+                            if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+                            {
+                                var submodule = submoduleStatus.GetSubmodule(this);
+                                submoduleStatus.CheckSubmoduleStatus(submodule);
+                            }
+
+                            return submoduleStatus;
+                        }));
+            }
         }
 
         public IReadOnlyList<GitItemStatus> GetStagedFiles()

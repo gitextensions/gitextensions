@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using GitCommands;
 
 namespace CommonTestUtils
@@ -98,7 +97,11 @@ namespace CommonTestUtils
                 Module.EffectiveSettings?.SettingsCache?.Dispose();
 
                 // Directory.Delete seems to intermittently fail, so delete the files first before deleting folders
-                Directory.GetFiles(TemporaryPath, "*", SearchOption.AllDirectories).ForEach(File.Delete);
+                foreach (var file in Directory.GetFiles(TemporaryPath, "*", SearchOption.AllDirectories))
+                {
+                    File.Delete(file);
+                }
+
                 Directory.Delete(TemporaryPath, true);
             }
             catch

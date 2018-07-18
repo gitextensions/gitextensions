@@ -51,7 +51,10 @@ namespace GitCommands.ExternalLinks
                 }
                 else
                 {
-                    definitions.ForEach(linkDef => linkDef.RemoveEmptyFormats());
+                    foreach (var definition in definitions)
+                    {
+                        definition.RemoveEmptyFormats();
+                    }
 
                     var sw = new StringWriter();
                     var serializer = new XmlSerializer(typeof(List<ExternalLinkDefinition>));

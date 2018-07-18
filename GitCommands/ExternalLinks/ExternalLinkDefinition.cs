@@ -174,7 +174,11 @@ namespace GitCommands.ExternalLinks
         public void RemoveEmptyFormats()
         {
             var toRemove = LinkFormats.Where(f => f.Caption.IsNullOrWhiteSpace() && f.Format.IsNullOrWhiteSpace()).ToArray();
-            toRemove.ForEach(f => LinkFormats.Remove(f));
+
+            foreach (var format in toRemove)
+            {
+                LinkFormats.Remove(format);
+            }
         }
 
         protected internal override IEnumerable<object> InlinedStructure()

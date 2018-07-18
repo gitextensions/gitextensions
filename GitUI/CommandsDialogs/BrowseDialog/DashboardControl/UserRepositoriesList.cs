@@ -262,10 +262,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 {
                     listView1.Groups.Clear();
                     listView1.Groups.Add(_lvgRecentRepositories);
-                    categories.ToList().ForEach(c =>
+                    foreach (var category in categories)
                     {
-                        listView1.Groups.Add(c, c);
-                    });
+                        listView1.Groups.Add(category, category);
+                    }
                 }
             }
         }

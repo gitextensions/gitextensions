@@ -29,12 +29,18 @@ namespace GitUI
 
         public void RestoreSplitters()
         {
-            _splitters.ForEach(s => s.RestoreFromSettings(_settings));
+            foreach (var splitter in _splitters)
+            {
+                splitter.RestoreFromSettings(_settings);
+            }
         }
 
         public void SaveSplitters()
         {
-            _splitters.ForEach(s => s.SaveToSettings(_settings));
+            foreach (var splitter in _splitters)
+            {
+                splitter.SaveToSettings(_settings);
+            }
         }
 
         private sealed class SplitterData

@@ -110,14 +110,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (IsCheckedFunc != null)
             {
-                bool isChecked = IsCheckedFunc();
-                _registeredMenuItems.ForEach(mi => mi.Checked = isChecked);
+                var isChecked = IsCheckedFunc();
+
+                foreach (var item in _registeredMenuItems)
+                {
+                    item.Checked = isChecked;
+                }
             }
         }
 
         public void UpdateMenuItemsShortcutKeyDisplayString()
         {
-            _registeredMenuItems.ForEach(mi => mi.ShortcutKeyDisplayString = ShortcutKeyDisplayString);
+            foreach (var item in _registeredMenuItems)
+            {
+                item.ShortcutKeyDisplayString = ShortcutKeyDisplayString;
+            }
         }
     }
 }
