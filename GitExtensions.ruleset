@@ -6,7 +6,6 @@
     <Rule Id="CA2101" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.VisualStudio.Threading.Analyzers" RuleNamespace="Microsoft.VisualStudio.Threading.Analyzers">
-    <Rule Id="VSTHRD004" Action="None" />
     <Rule Id="VSTHRD010" Action="None" />
     <Rule Id="VSTHRD109" Action="None" />
     <Rule Id="VSTHRD110" Action="None" />
