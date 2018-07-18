@@ -123,7 +123,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void CommandCacheItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string command = (string)CommandCacheItems.SelectedItem;
+            var command = (string)CommandCacheItems.SelectedItem;
 
             if (GitCommandCache.TryGet(command, out var cmdOut, out var cmdErr))
             {

@@ -83,10 +83,10 @@ namespace Gerrit
                 topic = topicNode == null ? change : (string)topicNode.Value;
             }
 
-            string authorValue = (string)((JValue)reviewInfo["owner"]["name"]).Value;
+            var authorValue = (string)((JValue)reviewInfo["owner"]["name"]).Value;
             string author = Regex.Replace(authorValue.ToLowerInvariant(), "\\W+", "_");
             string branchName = "review/" + author + "/" + topic;
-            string refspec = (string)((JValue)reviewInfo["currentPatchSet"]["ref"]).Value;
+            var refspec = (string)((JValue)reviewInfo["currentPatchSet"]["ref"]).Value;
 
             var fetchCommand = UICommands.CreateRemoteCommand();
 

@@ -164,7 +164,7 @@ namespace GitUI
 
                     int midPointX = rect.X + (rect.Width / 2);
                     int midPointY = rect.Y + (rect.Height / 2);
-                    float d = (float)Math.Sqrt(((location.X - midPointX) * (location.X - midPointX)) +
+                    var d = (float)Math.Sqrt(((location.X - midPointX) * (location.X - midPointX)) +
                                                ((location.Y - midPointY) * (location.Y - midPointY)));
                     distance.Add(d, rect);
                 }

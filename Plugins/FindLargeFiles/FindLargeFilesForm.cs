@@ -154,7 +154,7 @@ namespace FindLargeFiles
 
         private IEnumerable<GitObject> GetLargeFiles(float threshold)
         {
-            int thresholdSize = (int)(threshold * 1024 * 1024);
+            var thresholdSize = (int)(threshold * 1024 * 1024);
             for (int i = 0; i < _revList.Length; i++)
             {
                 ThreadHelper.JoinableTaskFactory.Run(async () =>

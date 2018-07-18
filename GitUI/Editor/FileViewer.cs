@@ -1092,7 +1092,7 @@ namespace GitUI.Editor
 
         protected override bool ExecuteCommand(int cmd)
         {
-            Commands command = (Commands)cmd;
+            var command = (Commands)cmd;
 
             switch (command)
             {

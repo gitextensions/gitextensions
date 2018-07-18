@@ -657,9 +657,9 @@ namespace GitUI.Editor.RichTextBoxExtension
         // convert COLORREF to Color
         private static Color GetColor(int crColor)
         {
-            byte r = (byte)crColor;
-            byte g = (byte)(crColor >> 8);
-            byte b = (byte)(crColor >> 16);
+            var r = (byte)crColor;
+            var g = (byte)(crColor >> 8);
+            var b = (byte)(crColor >> 16);
 
             return Color.FromArgb(r, g, b);
         }

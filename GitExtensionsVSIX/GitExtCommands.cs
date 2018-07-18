@@ -100,7 +100,7 @@ namespace GitExtensionsVSIX
 
         private void MenuCommand_BeforeQueryStatus(object sender, EventArgs e)
         {
-            OleMenuCommand guiCommand = (OleMenuCommand)sender;
+            var guiCommand = (OleMenuCommand)sender;
             if (_commands.TryGetValue(guiCommand.CommandID.ID, out var command))
             {
                 command.BeforeQueryStatus(_application, guiCommand);
