@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -204,14 +203,9 @@ namespace Bitbucket
 
         private async Task RefreshDDLBranchAsync(ComboBox branchComboBox, object selectedValue)
         {
-            List<string> branchNames = (await GetBitbucketBranchesAsync((Repository)selectedValue)).ToList();
-            if (AppSettings.BranchOrderingCriteria == GitRefsOrder.Alphabetically)
-            {
-                branchNames.Sort();
-            }
-
+            var branchNames = (await GetBitbucketBranchesAsync((Repository)selectedValue)).ToList();
+            branchNames.Sort();
             branchNames.Insert(0, "");
-
             await this.SwitchToMainThreadAsync();
             branchComboBox.DataSource = branchNames;
         }

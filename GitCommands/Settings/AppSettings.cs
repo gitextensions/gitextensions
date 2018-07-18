@@ -1507,12 +1507,6 @@ namespace GitCommands
             set => SetBool("UseConsoleEmulatorForCommands", value);
         }
 
-        public static GitRefsOrder BranchOrderingCriteria
-        {
-            get => GetEnum("BranchOrderingCriteria", GitRefsOrder.ByLastAccessDate);
-            set => SetEnum("BranchOrderingCriteria", value);
-        }
-
         public static string GetGitExtensionsFullPath()
         {
             return Application.ExecutablePath;

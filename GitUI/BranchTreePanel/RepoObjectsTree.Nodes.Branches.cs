@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -194,7 +193,7 @@ namespace GitUI.BranchTreePanel
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
 
-                var branchNames = Module.GetRefs(false, order: AppSettings.BranchOrderingCriteria).Select(b => b.Name);
+                var branchNames = Module.GetRefs(false).Select(b => b.Name);
                 FillBranchTree(branchNames, token);
             }
 

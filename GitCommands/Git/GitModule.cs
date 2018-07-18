@@ -2821,18 +2821,11 @@ namespace GitCommands
             }
         }
 
-        public IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true, GitRefsOrder order = GitRefsOrder.ByLastAccessDate)
+        public IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true)
         {
             var refList = GetRefList();
 
-            var refs = ParseRefs(refList);
-
-            if (order == GitRefsOrder.Alphabetically)
-            {
-                refs = refs.OrderBy(b => b.Name).ToList();
-            }
-
-            return refs;
+            return ParseRefs(refList);
 
             string GetRefList()
             {
