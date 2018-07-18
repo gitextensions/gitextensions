@@ -72,7 +72,6 @@
     <Compile Include="CommitTemplateItem.cs" />
     <Compile Include="CommitTemplateManager.cs" />
     <Compile Include="Config\SettingKeyString.cs" />
-    <Compile Include="Core\SimpleStructured.cs" />
     <Compile Include="DateTimeUtils.cs" />
     <Compile Include="DeconstructionExtensions.cs" />
     <Compile Include="EnvironmentAbstraction.cs" />
