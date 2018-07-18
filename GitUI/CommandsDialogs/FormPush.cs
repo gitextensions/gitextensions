@@ -345,7 +345,7 @@ namespace GitUI.CommandsDialogs
 
                     if (track && !AppSettings.DontConfirmAddTrackingRef)
                     {
-                        var result = MessageBox.Show(this,
+                        var result = MessageBox.Show(owner,
                                                      string.Format(_updateTrackingReference.Text, selectedLocalBranch.Name, RemoteBranch.Text),
                                                      _pushCaption.Text,
                                                      MessageBoxButtons.YesNoCancel);
@@ -362,7 +362,7 @@ namespace GitUI.CommandsDialogs
                 {
                     if (GitCommandHelpers.VersionInUse.SupportPushForceWithLease)
                     {
-                        var choice = MessageBox.Show(this,
+                        var choice = MessageBox.Show(owner,
                                                      _useForceWithLeaseInstead.Text,
                                                      "", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
                                                      MessageBoxDefaultButton.Button1);
