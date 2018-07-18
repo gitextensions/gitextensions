@@ -65,7 +65,7 @@
             this.Name = "copyToClipboardToolStripMenuItem";
             this.Size = new System.Drawing.Size(264, 24);
             this.Text = "Copy to clipboard";
-            this.DropDownOpened += new System.EventHandler(this.copyToClipboardToolStripMenuItem_DropDownOpened);
+            this.DropDownOpening += new System.EventHandler(this.copyToClipboardToolStripMenuItem_DropDownOpening);
         }
 
         #endregion

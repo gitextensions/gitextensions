@@ -24,21 +24,23 @@ namespace GitUI.UserControls.RevisionGridClasses
         public IReadOnlyList<string> BranchNames { get; }
         public IReadOnlyList<string> TagNames { get; }
         public bool SeparatorVisible => BranchNames.Any() || TagNames.Any();
+        public string CommitHash { get; }
         public IReadOnlyList<DetailItem> DetailItems { get; }
 
         public CopyContextMenuViewModel(GitRevision gitRevision)
         {
             if (gitRevision == null)
             {
+                CommitHash = null;
                 DetailItems = new DetailItem[0];
                 BranchNames = new string[0];
                 TagNames = new string[0];
                 return;
             }
 
+            CommitHash = gitRevision.Guid;
             DetailItems = new[]
             {
-                new DetailItem(Strings.GetCommitHashText(), gitRevision.Guid, 15),
                 new DetailItem(Strings.GetMessageText(), gitRevision.Subject, 30),
                 new DetailItem(Strings.GetAuthorText(), gitRevision.Author),
                 new DetailItem(Strings.GetDateText(), gitRevision.CommitDate.ToString()),
