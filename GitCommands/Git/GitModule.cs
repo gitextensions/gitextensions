@@ -3410,9 +3410,8 @@ namespace GitCommands
 
         public IEnumerable<string> GetPreviousCommitMessages(int count, string revision = "HEAD")
         {
-            const string sep = "d3fb081b9000598e658da93657bf822cc87b2bf6";
-            string output = RunGitCmd("log -n " + count + " " + revision + " --pretty=format:" + sep + "%e%n%s%n%n%b", LosslessEncoding);
-            string[] messages = output.Split(new[] { sep }, StringSplitOptions.RemoveEmptyEntries);
+            string output = RunGitCmd($"log -z -n {count} {revision} --pretty=format:%e%n%s%n%n%b", LosslessEncoding);
+            string[] messages = output.Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (messages.Length == 0)
             {
@@ -3421,7 +3420,7 @@ namespace GitCommands
 
             return messages.Select(cm =>
                 {
-                    int idx = cm.IndexOf("\n");
+                    int idx = cm.IndexOf('\n');
                     string encodingName = cm.Substring(0, idx);
                     cm = cm.Substring(idx + 1, cm.Length - idx - 1);
                     cm = ReEncodeCommitMessage(cm, encodingName);
