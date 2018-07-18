@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
@@ -41,15 +40,6 @@ namespace GitUI.CommandsDialogs
         public bool UserAbleToChangeRevision { get; set; }
         public bool CouldBeOrphan { get; set; }
 
-        private static IEnumerable<T> FindControls<T>(Control control) where T : Control
-        {
-            var controls = control.Controls.Cast<Control>().ToList();
-            return controls.SelectMany(FindControls<T>)
-                           .Concat(controls)
-                           .Where(c => c.GetType() == typeof(T))
-                           .Cast<T>();
-        }
-
         private void BranchNameTextBox_Leave(object sender, EventArgs e)
         {
             if (!AppSettings.AutoNormaliseBranchName || !BranchNameTextBox.Text.Any(GitBranchNameNormaliser.IsValidChar))
@@ -67,7 +57,7 @@ namespace GitUI.CommandsDialogs
         {
             // ensure all labels are wrapped if required
             // this must happen only after the label texts have been set
-            foreach (var label in FindControls<Label>(this))
+            foreach (var label in this.FindDescendantsOfType<Label>())
             {
                 label.AutoSize = true;
             }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -276,25 +275,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             handler?.Invoke(this, args);
         }
 
-        private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate) where T : Control
-        {
-            foreach (Control control in controls)
-            {
-                if (control is T result && predicate(result))
-                {
-                    return result;
-                }
-
-                result = FindControl(control.Controls, predicate);
-                if (result != null)
-                {
-                    return result;
-                }
-            }
-
-            return null;
-        }
-
         private string[] GetCategories()
         {
             var categories = listView1.Items.Cast<ListViewItem>()
@@ -550,7 +530,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
 
             var menus = new ToolStripItem[] { mnuConfigure };
-            var menuStrip = FindControl<MenuStrip>(form.Controls, p => p.Name == "menuStrip1");
+            var menuStrip = form.FindDescendantsOfType<MenuStrip>(p => p.Name == "menuStrip1");
             var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
             dashboardMenu?.DropDownItems.AddRange(menus);
         }
