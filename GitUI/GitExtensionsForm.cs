@@ -188,7 +188,7 @@ namespace GitUI
                         return pos;
                     }
                 }
-                catch (Exception)
+                catch
                 {
                     // TODO: how to restore a corrupted config?
                 }
@@ -247,7 +247,7 @@ namespace GitUI
                 _windowPositionList.AddOrUpdate(position);
                 _windowPositionList.Save();
             }
-            catch (Exception)
+            catch
             {
                 // TODO: how to restore a corrupted config?
             }

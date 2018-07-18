@@ -35,7 +35,7 @@ namespace GitExtensionsVSIX
 
                 return false;
             }
-            catch (Exception)
+            catch
             {
                 // ignore!
                 return false;
@@ -70,7 +70,7 @@ namespace GitExtensionsVSIX
                 OutputWindowPanes panes = outputWindow.OutputWindowPanes;
                 return panes.Add(name);
             }
-            catch (Exception)
+            catch
             {
                 // ignore!!
                 return null;
@@ -99,7 +99,7 @@ namespace GitExtensionsVSIX
                     return pane;
                 }
             }
-            catch (Exception)
+            catch
             {
                 // ignore!!
             }

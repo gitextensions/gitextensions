@@ -242,7 +242,7 @@ namespace GitCommands.UserRepositoryHistory
                     dirInfo = null;
                 }
             }
-            catch (Exception)
+            catch
             {
                 dirInfo = null;
             }

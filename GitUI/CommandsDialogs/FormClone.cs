@@ -99,7 +99,7 @@ namespace GitUI.CommandsDialogs
                         }
                     }
                 }
-                catch (Exception)
+                catch
                 {
                     // We tried.
                 }
@@ -139,7 +139,7 @@ namespace GitUI.CommandsDialogs
                             _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
                         }
                     }
-                    catch (Exception)
+                    catch
                     {
                         // Exceptions on setting the destination directory can be ignored
                     }

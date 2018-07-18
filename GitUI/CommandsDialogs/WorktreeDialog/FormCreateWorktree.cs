@@ -144,7 +144,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                     var directoryInfo = new DirectoryInfo(newWorktreeDirectory.Text);
                     return !directoryInfo.Exists || (!directoryInfo.EnumerateFiles().Any() && !directoryInfo.EnumerateDirectories().Any());
                 }
-                catch (Exception)
+                catch
                 {
                     return false;
                 }

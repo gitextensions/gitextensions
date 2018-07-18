@@ -66,8 +66,9 @@ namespace GitCommands
                 {
                     File.Delete(amendSaveStateFilePath);
                 }
-                catch (Exception)
+                catch
                 {
+                    // ignore
                 }
             }
 

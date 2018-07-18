@@ -46,7 +46,7 @@ namespace TfsInterop
                 Trace.WriteLine("Test if Microsoft.TeamFoundation.Build assemblies dependencies are present : " + Microsoft.TeamFoundation.Build.Client.BuildStatus.Succeeded.ToString("G"));
                 return IsDependencyOk2015();
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
@@ -240,7 +240,7 @@ namespace TfsInterop
                 Trace.WriteLine("Test if Microsoft.TeamFoundation.Build.WebApi assemblies dependencies are present : " + Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed.ToString("G"));
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }

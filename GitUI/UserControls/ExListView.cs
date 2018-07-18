@@ -311,7 +311,7 @@ namespace GitUI.UserControls
                 {
                     return (int)ListViewGroupIdProperty.GetValue(listViewGroup);
                 }
-                catch (Exception)
+                catch
                 {
                     // no-op
                 }

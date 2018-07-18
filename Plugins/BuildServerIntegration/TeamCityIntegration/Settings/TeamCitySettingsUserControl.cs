@@ -77,7 +77,7 @@ namespace TeamCityIntegration.Settings
                     TeamCityBuildIdFilter.Text = teamCityBuildChooser.TeamCityBuildIdFilter;
                 }
             }
-            catch (Exception)
+            catch
             {
                 MessageBox.Show(this, _failToLoadProjectMessage.Text, _failToLoadProjectCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }

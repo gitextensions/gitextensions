@@ -131,7 +131,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 _NO_TRANSLATE_Directory.Select(_NO_TRANSLATE_Directory.Text.Length, 0);
                 SendKeys.Send(@"\");
             }
-            catch (Exception)
+            catch
             {
                 // no-op
             }
@@ -144,7 +144,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 var currentDirectory = new DirectoryInfo(_NO_TRANSLATE_Directory.Text);
                 folderGoUpButton.Enabled = currentDirectory.Exists && currentDirectory.Parent != null;
             }
-            catch (Exception)
+            catch
             {
                 folderGoUpButton.Enabled = false;
             }

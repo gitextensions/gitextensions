@@ -198,7 +198,7 @@ namespace GitUI.CommandsDialogs
                     return line != null && (line.StartsWith("diff ") || line.StartsWith("Index: "));
                 }
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }

@@ -75,7 +75,7 @@ namespace GitCommands
             {
                 commitTemplateItem = JsonSerializer.Deserialize<CommitTemplateItem[]>(serializedString);
             }
-            catch (Exception)
+            catch
             {
                 // do nothing
             }
@@ -96,7 +96,7 @@ namespace GitCommands
 
                     shouldBeUpdated = true;
                 }
-                catch (Exception)
+                catch
                 {
                     return null;
                 }

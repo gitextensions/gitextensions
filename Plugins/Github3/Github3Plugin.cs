@@ -52,7 +52,7 @@ namespace Github3
 
                     return null;
                 }
-                catch (Exception)
+                catch
                 {
                     return null;
                 }

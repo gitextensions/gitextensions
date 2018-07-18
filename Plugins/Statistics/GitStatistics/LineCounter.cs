@@ -35,7 +35,7 @@ namespace GitStatistics
                     {
                         fileInfo = new FileInfo(file);
                     }
-                    catch (Exception)
+                    catch
                     {
                         continue;
                     }

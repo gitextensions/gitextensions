@@ -812,7 +812,7 @@ namespace GitUI
                 _gridView.Refresh();
                 ResetNavigationHistory();
             }
-            catch (Exception)
+            catch
             {
                 SetPage(new ErrorControl());
                 throw;

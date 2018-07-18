@@ -30,7 +30,7 @@ namespace GitUI.UserControls
             {
                 directoryInfoPath = new DirectoryInfo(getter()).FullName;
             }
-            catch (Exception)
+            catch
             {
                 // since the DirectoryInfo stuff is for convenience we swallow exceptions
             }

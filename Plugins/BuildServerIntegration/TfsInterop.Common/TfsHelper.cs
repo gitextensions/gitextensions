@@ -38,7 +38,7 @@ namespace TfsInterop
                 Trace.WriteLine("Test if Microsoft.TeamFoundation.Build assemblies dependencies are present : " + Microsoft.TeamFoundation.Build.Client.BuildStatus.Succeeded.ToString("G"));
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }

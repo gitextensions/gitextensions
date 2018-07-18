@@ -3726,7 +3726,7 @@ namespace GitCommands
             {
                 encoding = GetEncodingByGitName(toEncodingName);
             }
-            catch (Exception)
+            catch
             {
                 return s + "\n\n! Unsupported commit message encoding: " + toEncodingName + " !";
             }
