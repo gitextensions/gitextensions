@@ -108,6 +108,15 @@ namespace GitUIPluginInterfaces
 
         IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo();
 
+        /// <summary>
+        /// Gets the local paths of any submodules of this git module.
+        /// </summary>
+        /// <remarks>
+        /// <para>This method obtains its results by parsing the <c>.gitmodules</c> file.</para>
+        ///
+        /// <para>This approach is a faster than <see cref="GetSubmodulesInfo"/> which
+        /// invokes the <c>git submodule</c> command.</para>
+        /// </remarks>
         IReadOnlyList<string> GetSubmodulesLocalPaths(bool recursive = true);
 
         IGitModule GetSubmodule(string submoduleName);
