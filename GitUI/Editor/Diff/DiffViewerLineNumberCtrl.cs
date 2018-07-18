@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
@@ -11,36 +12,32 @@ namespace GitUI.Editor.Diff
     {
         private const int TextHorizontalMargin = 4;
 
+        private Dictionary<int, DiffLineNum> DiffLines { get; set; }
+
         private int _maxValueOfLineNum;
         private bool _visible = true;
-        private Size _lastSize = new Size(0, 0);
 
         public DiffViewerLineNumberCtrl(TextArea textArea) : base(textArea)
         {
             DiffLines = new Dictionary<int, DiffLineNum>();
         }
 
-        public override Size Size
+        public override int Width
         {
             get
             {
-                if (!_visible)
+                if (_visible && DiffLines.Any())
                 {
-                    _lastSize = new Size(0, 0);
-                }
-                else if (DiffLines.Any())
-                {
-                    var size = Graphics.FromHwnd(textArea.Handle).MeasureString(_maxValueOfLineNum.ToString(), textArea.Font);
-                    _lastSize = new Size(((int)size.Width * 2) + TextHorizontalMargin, 0);
+                    return textArea.TextView.WideSpaceWidth * ((int)Math.Log10(_maxValueOfLineNum) + TextHorizontalMargin + 3);
                 }
 
-                return _lastSize;
+                return 0;
             }
         }
 
         public override void Paint(Graphics g, Rectangle rect)
         {
-            var totalWidth = Size.Width;
+            var totalWidth = Width;
             var leftWidth = (int)(totalWidth / 2.0);
             var rightWidth = rect.Width - leftWidth;
 
@@ -112,8 +109,6 @@ namespace GitUI.Editor.Diff
             }
         }
 
-        private Dictionary<int, DiffLineNum> DiffLines { get; set; }
-
         public void DisplayLineNumFor(string diff)
         {
             var result = new DiffLineNumAnalyzer().Analyze(diff);
@@ -123,11 +118,6 @@ namespace GitUI.Editor.Diff
 
         public void Clear(bool forDiff)
         {
-            if (!forDiff)
-            {
-                _lastSize = new Size(0, 0);
-            }
-
             DiffLines.Clear();
         }
 

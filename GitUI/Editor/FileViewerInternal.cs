@@ -50,6 +50,9 @@ namespace GitUI.Editor
                         TextEditor.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y)));
             };
 
+            HighlightingManager.Manager.DefaultHighlighting.SetColorFor("LineNumbers", new HighlightColor(Color.FromArgb(80, 0, 0, 0), Color.White, false, false));
+            TextEditor.ActiveTextAreaControl.TextEditorProperties.EnableFolding = false;
+
             _lineNumbersControl = new DiffViewerLineNumberCtrl(TextEditor.ActiveTextAreaControl.TextArea);
 
             VRulerPosition = AppSettings.DiffVerticalRulerPosition;
