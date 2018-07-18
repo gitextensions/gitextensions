@@ -474,7 +474,7 @@ namespace GitUI.Editor
             return _async.LoadAsync(loadPatchText, patchText => ViewPatch(patchText.text, patchText.openWithDifftool));
         }
 
-        public Task ViewTextAsync([NotNull] string fileName, [NotNull] string text, [CanBeNull] Action openWithDifftool = null)
+        public async Task ViewTextAsync([NotNull] string fileName, [NotNull] string text, [CanBeNull] Action openWithDifftool = null)
         {
             ResetForText(fileName);
 
@@ -483,8 +483,9 @@ namespace GitUI.Editor
             {
                 try
                 {
-                    var fileInfo = new FileInfo(Path.GetFullPath(_fullPathResolver.Resolve(fileName)));
-                    _internalFileViewer.SetText($"Binary file detected: {fileName} ({fileInfo.Length:#,##0} bytes)", openWithDifftool);
+                    var summary = await SummariseBinaryFileAsync();
+
+                    _internalFileViewer.SetText(summary, openWithDifftool);
                 }
                 catch
                 {
@@ -492,14 +493,136 @@ namespace GitUI.Editor
                 }
 
                 TextLoaded?.Invoke(this, null);
-                return Task.CompletedTask;
+            }
+            else
+            {
+                _internalFileViewer.SetText(text, openWithDifftool);
+                TextLoaded?.Invoke(this, null);
+
+                RestoreCurrentScrollPos();
             }
 
-            _internalFileViewer.SetText(text, openWithDifftool);
-            TextLoaded?.Invoke(this, null);
+            async Task<string> SummariseBinaryFileAsync()
+            {
+                var fullPath = Path.GetFullPath(_fullPathResolver.Resolve(fileName));
+                var fileInfo = new FileInfo(fullPath);
 
-            RestoreCurrentScrollPos();
-            return Task.CompletedTask;
+                var str = new StringBuilder()
+                    .AppendLine("Binary file:")
+                    .AppendLine()
+                    .AppendLine(fileName)
+                    .AppendLine()
+                    .AppendLine($"{fileInfo.Length:N0} bytes:")
+                    .AppendLine();
+
+                try
+                {
+                    const int maxLength = 1024 * 4;
+
+                    var displayByteCount = (int)Math.Min(fileInfo.Length, maxLength);
+                    var bytes = new byte[displayByteCount];
+
+                    using (var stream = File.OpenRead(fullPath))
+                    {
+                        var offset = 0;
+                        while (offset < displayByteCount)
+                        {
+                            offset += await stream.ReadAsync(bytes, offset, displayByteCount - offset);
+                        }
+                    }
+
+                    ToHexDump(bytes, str);
+
+                    if (fileInfo.Length > maxLength)
+                    {
+                        str.AppendLine()
+                           .AppendLine()
+                           .Append($"TRUNCATED: Shown first {maxLength:N0} of {fileInfo.Length:N0} bytes");
+                    }
+                }
+                catch
+                {
+                    // oops
+                }
+
+                return str.ToString();
+            }
+        }
+
+        public static string ToHexDump(byte[] bytes, StringBuilder str, int columnWidth = 8, int columnCount = 2)
+        {
+            if (bytes.Length == 0)
+            {
+                return "";
+            }
+
+            var i = 0;
+
+            while (i < bytes.Length)
+            {
+                var baseIndex = i;
+
+                if (i != 0)
+                {
+                    str.AppendLine();
+                }
+
+                // OFFSET
+                str.Append($"{baseIndex:X4}    ");
+
+                // BYTES
+                for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
+                {
+                    // space between columns
+                    if (columnIndex != 0)
+                    {
+                        str.Append("  ");
+                    }
+
+                    for (var j = 0; j < columnWidth; j++)
+                    {
+                        if (j != 0)
+                        {
+                            str.Append(' ');
+                        }
+
+                        str.Append(i < bytes.Length
+                            ? bytes[i].ToString("X2")
+                            : "  ");
+                        i++;
+                    }
+                }
+
+                str.Append("    ");
+
+                // ASCII
+                i = baseIndex;
+                for (var columnIndex = 0; columnIndex < columnCount; columnIndex++)
+                {
+                    // space between columns
+                    if (columnIndex != 0)
+                    {
+                        str.Append(' ');
+                    }
+
+                    for (var j = 0; j < columnWidth; j++)
+                    {
+                        if (i < bytes.Length)
+                        {
+                            var c = (char)bytes[i];
+                            str.Append(char.IsControl(c) ? '.' : c);
+                        }
+                        else
+                        {
+                            str.Append(' ');
+                        }
+
+                        i++;
+                    }
+                }
+            }
+
+            return str.ToString();
         }
 
         public Task ViewGitItemRevisionAsync(string fileName, ObjectId objectId)
@@ -556,7 +679,10 @@ namespace GitUI.Editor
             {
                 if (GitModule.IsValidGitWorkingDir(fullPath))
                 {
-                    return _async.LoadAsync(getSubmoduleText, text => ViewTextAsync(fileName, text, openWithDifftool));
+                    return _async.LoadAsync(
+                        getSubmoduleText,
+                        text => ThreadHelper.JoinableTaskFactory.Run(
+                            () => ViewTextAsync(fileName, text, openWithDifftool)));
                 }
                 else
                 {
@@ -594,7 +720,10 @@ namespace GitUI.Editor
             }
             else
             {
-                return _async.LoadAsync(getFileText, text => ViewTextAsync(fileName, text, openWithDifftool));
+                return _async.LoadAsync(
+                    getFileText,
+                    text => ThreadHelper.JoinableTaskFactory.Run(
+                        () => ViewTextAsync(fileName, text, openWithDifftool)));
             }
         }
 
@@ -987,7 +1116,7 @@ namespace GitUI.Editor
 
         public void Clear()
         {
-            ViewTextAsync("", "");
+            ThreadHelper.JoinableTaskFactory.Run(() => ViewTextAsync("", ""));
         }
 
         public bool HasAnyPatches()

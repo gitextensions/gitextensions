@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
@@ -208,7 +209,7 @@ See the changes in the commit form.");
 
                 if (tvGitTree.SelectedNode == null)
                 {
-                    FileText.ViewTextAsync("", "");
+                    ThreadHelper.JoinableTaskFactory.Run(() => FileText.ViewTextAsync("", ""));
                 }
             }
             finally
@@ -359,26 +360,32 @@ See the changes in the commit form.");
 
         private void tvGitTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (e.Node?.Tag is GitItem gitItem)
+            ThreadHelper.JoinableTaskFactory.RunAsync(ViewItem);
+
+            Task ViewItem()
+            {
+                return e.Node?.Tag is GitItem gitItem
+                    ? ViewGitItemAsync(gitItem)
+                    : Task.CompletedTask;
+            }
+
+            Task ViewGitItemAsync(GitItem gitItem)
             {
                 switch (gitItem.ObjectType)
                 {
                     case GitObjectType.Blob:
                     {
-                        FileText.ViewGitItemAsync(gitItem.FileName, gitItem.ObjectId);
-                        break;
+                        return FileText.ViewGitItemAsync(gitItem.FileName, gitItem.ObjectId);
                     }
 
                     case GitObjectType.Commit:
                     {
-                        FileText.ViewTextAsync(gitItem.FileName, LocalizationHelpers.GetSubmoduleText(Module, gitItem.FileName, gitItem.Guid));
-                        break;
+                        return FileText.ViewTextAsync(gitItem.FileName, LocalizationHelpers.GetSubmoduleText(Module, gitItem.FileName, gitItem.Guid));
                     }
 
                     default:
                     {
-                        FileText.ViewTextAsync("", "");
-                        break;
+                        return FileText.ViewTextAsync("", "");
                     }
                 }
             }

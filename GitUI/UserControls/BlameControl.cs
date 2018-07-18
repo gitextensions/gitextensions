@@ -277,8 +277,10 @@ namespace GitUI.Blame
                 lastCommit = line.Commit;
             }
 
-            BlameCommitter.ViewTextAsync("committer.txt", gutter.ToString());
-            BlameFile.ViewTextAsync(_fileName, body.ToString());
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                () => BlameCommitter.ViewTextAsync("committer.txt", gutter.ToString()));
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                () => BlameFile.ViewTextAsync(_fileName, body.ToString()));
 
             if (lineNumber > 0)
             {

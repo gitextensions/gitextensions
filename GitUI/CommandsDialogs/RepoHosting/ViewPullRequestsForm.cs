@@ -215,7 +215,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 _currentPullRequestInfo = null;
                 _discussionWB.DocumentText = "";
-                _diffViewer.ViewTextAsync("", "");
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    () => _diffViewer.ViewTextAsync("", ""));
                 return;
             }
 

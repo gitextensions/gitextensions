@@ -152,9 +152,10 @@ namespace GitUI.CommandsDialogs
                         }
                         else
                         {
-                            View.ViewTextAsync(
-                                stashedItem.Name,
-                                LocalizationHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid?.ToString()));
+                            ThreadHelper.JoinableTaskFactory.RunAsync(
+                                () => View.ViewTextAsync(
+                                    stashedItem.Name,
+                                    LocalizationHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid?.ToString())));
                         }
                     }
                     else
@@ -182,7 +183,8 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    View.ViewTextAsync(string.Empty, string.Empty);
+                    ThreadHelper.JoinableTaskFactory.RunAsync(
+                        () => View.ViewTextAsync("", ""));
                 }
             }
         }

@@ -7,7 +7,8 @@
         {
             InitializeComponent();
             InitializeComplete();
-            Viewer.ViewTextAsync("", text);
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                () => Viewer.ViewTextAsync("", text));
             Viewer.IsReadOnly = false;
         }
 
