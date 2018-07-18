@@ -84,25 +84,25 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        protected override void OnUICommandsSourceChanged(IGitUICommandsSource newSource)
+        protected override void OnUICommandsSourceChanged(IGitUICommandsSource source)
         {
-            base.OnUICommandsSourceChanged(newSource);
+            base.OnUICommandsSourceChanged(source);
 
             CancelBackgroundTasks();
 
             var localBranchesRootNode = new TreeNode(Strings.Branches)
             {
                 ImageKey = nameof(Images.BranchLocalRoot),
+                SelectedImageKey = nameof(Images.BranchLocalRoot),
             };
-            localBranchesRootNode.SelectedImageKey = localBranchesRootNode.ImageKey;
-            AddTree(new BranchTree(localBranchesRootNode, newSource));
+            AddTree(new BranchTree(localBranchesRootNode, source));
 
             var remoteBranchesRootNode = new TreeNode(Strings.Remotes)
             {
                 ImageKey = nameof(Images.BranchRemoteRoot),
+                SelectedImageKey = nameof(Images.BranchRemoteRoot),
             };
-            remoteBranchesRootNode.SelectedImageKey = remoteBranchesRootNode.ImageKey;
-            _remoteTree = new RemoteBranchTree(remoteBranchesRootNode, newSource)
+            _remoteTree = new RemoteBranchTree(remoteBranchesRootNode, source)
             {
                 TreeViewNode =
                 {

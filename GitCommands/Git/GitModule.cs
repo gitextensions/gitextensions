@@ -1424,7 +1424,7 @@ namespace GitCommands
 
                 if (!match.Success)
                 {
-                    info = null;
+                    info = default;
                     return false;
                 }
 
@@ -2239,7 +2239,7 @@ namespace GitCommands
         /// <param name="remoteName">The remote name.</param>
         public string RemoveRemote(string remoteName)
         {
-            return RunGitCmd("remote rm \"" + remoteName + "\"");
+            return RunGitCmd($"remote rm \"{remoteName}\"");
         }
 
         /// <summary>
@@ -2249,12 +2249,12 @@ namespace GitCommands
         /// <param name="newName">The new remote name.</param>
         public string RenameRemote(string remoteName, string newName)
         {
-            return RunGitCmd("remote rename \"" + remoteName + "\" \"" + newName + "\"");
+            return RunGitCmd($"remote rename \"{remoteName}\" \"{newName}\"");
         }
 
         public string RenameBranch(string name, string newName)
         {
-            return RunGitCmd("branch -m \"" + name + "\" \"" + newName + "\"");
+            return RunGitCmd($"branch -m \"{name}\" \"{newName}\"");
         }
 
         public string AddRemote([CanBeNull] string name, string path)
@@ -2268,13 +2268,13 @@ namespace GitCommands
 
             return
                 string.IsNullOrEmpty(location)
-                    ? RunGitCmd(string.Format("remote add \"{0}\" \"\"", name))
-                    : RunGitCmd(string.Format("remote add \"{0}\" \"{1}\"", name, location));
+                    ? RunGitCmd($"remote add \"{name}\" \"\"")
+                    : RunGitCmd($"remote add \"{name}\" \"{location}\"");
         }
 
         public IReadOnlyList<string> GetRemotes()
         {
-            return ReadGitOutputLines("remote show").ToList();
+            return ReadGitOutputLines("remote").ToList();
         }
 
         public IEnumerable<string> GetSettings(string setting)

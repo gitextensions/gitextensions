@@ -20,10 +20,7 @@ namespace GitUI.BranchTreePanel
                 : base(treeNode, uiCommands)
             {
                 // TODO unsubscribe this event as needed
-                uiCommands.UICommandsChanged += (sender, e) =>
-                {
-                    TreeViewNode.TreeView.SelectedNode = null;
-                };
+                uiCommands.UICommandsChanged += delegate { TreeViewNode.TreeView.SelectedNode = null; };
             }
 
             protected override async Task LoadNodesAsync(CancellationToken token)
@@ -34,7 +31,7 @@ namespace GitUI.BranchTreePanel
 
                 var branches = Module.GetRefs()
                     .Where(branch => branch.IsRemote && !branch.IsTag)
-                    .OrderBy(r => r.Name)
+                    .OrderBy(branch => branch.Name)
                     .Select(branch => branch.Name);
 
                 token.ThrowIfCancellationRequested();
@@ -56,17 +53,18 @@ namespace GitUI.BranchTreePanel
                         Nodes.AddNode(parent);
                     }
                 }
-            }
 
-            private static BaseBranchNode CreateRemoteBranchPathNode(Tree tree,
-                string parentPath, string remoteName)
-            {
-                if (parentPath == remoteName)
+                return;
+
+                BaseBranchNode CreateRemoteBranchPathNode(Tree tree, string parentPath, string remoteName)
                 {
-                    return new RemoteRepoNode(tree, parentPath);
-                }
+                    if (parentPath == remoteName)
+                    {
+                        return new RemoteRepoNode(tree, parentPath);
+                    }
 
-                return new BasePathNode(tree, parentPath);
+                    return new BasePathNode(tree, parentPath);
+                }
             }
 
             protected override void FillTreeViewNode()
@@ -206,8 +204,8 @@ namespace GitUI.BranchTreePanel
             public void Fetch()
             {
                 var cmd = Module.FetchCmd(FullPath, null, null, null);
-                var ret = FormRemoteProcess.ShowDialog(TreeViewNode.TreeView, Module, cmd);
-                if (ret)
+
+                if (FormRemoteProcess.ShowDialog(TreeViewNode.TreeView, Module, cmd))
                 {
                     UICommands.RepoChangedNotifier.Notify();
                 }

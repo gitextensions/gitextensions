@@ -29,15 +29,12 @@ namespace GitUI.CommandsDialogs
             /// %ct - committer date, UNIX timestamp (easy to parse format).
             /// </summary>
             private const string LogCommandArgumentsFormat = "log -n1 --pretty=format:\"%aN, %e, %s, %ct, %P\" {0}";
-            private const string LogPattern = @"^([^,]+), (.*), (.+), (\d+), (.+)?$";
-            private const string RawDataPattern = @"^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) ([a-f\d]{40})(.)*$";
 
             private const string TagCommandArgumentsFormat = "cat-file -p {0}";
-            private const string TagPattern = @"^object (.+)\ntype commit\ntag (.+)\ntagger (.+) <.*> (.+) .*\n\n(.*)\n";
 
-            private static readonly Regex RawDataRegex = new Regex(RawDataPattern, RegexOptions.Compiled);
-            private static readonly Regex LogRegex = new Regex(LogPattern, RegexOptions.Compiled | RegexOptions.Singleline);
-            private static readonly Regex TagRegex = new Regex(TagPattern, RegexOptions.Compiled | RegexOptions.Multiline);
+            private static readonly Regex RawDataRegex = new Regex(@"^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) ([a-f\d]{40})(.)*$", RegexOptions.Compiled);
+            private static readonly Regex LogRegex = new Regex(@"^([^,]+), (.*), (.+), (\d+), (.+)?$", RegexOptions.Compiled | RegexOptions.Singleline);
+            private static readonly Regex TagRegex = new Regex(@"^object (.+)\ntype commit\ntag (.+)\ntagger (.+) <.*> (.+) .*\n\n(.*)\n", RegexOptions.Compiled | RegexOptions.Multiline);
 
             public LostObjectType ObjectType { get; }
 
@@ -98,12 +95,12 @@ namespace GitUI.CommandsDialogs
                 }
 
                 var matchedGroups = patternMatch.Groups;
-                Debug.Assert(matchedGroups[4].Success, "matchedGroups[4].Success");
+                var rawType = matchedGroups[1].Value;
+                var objectType = GetObjectType(matchedGroups[3]);
                 var objectId = ObjectId.Parse(matchedGroups[4].Value);
+                var result = new LostObject(objectType, rawType, objectId);
 
-                var result = new LostObject(GetObjectType(matchedGroups), matchedGroups[1].Value, objectId);
-
-                if (result.ObjectType == LostObjectType.Commit)
+                if (objectType == LostObjectType.Commit)
                 {
                     var commitLog = GetLostCommitLog();
                     var logPatternMatch = LogRegex.Match(commitLog);
@@ -123,7 +120,7 @@ namespace GitUI.CommandsDialogs
                         }
                     }
                 }
-                else if (result.ObjectType == LostObjectType.Tag)
+                else if (objectType == LostObjectType.Tag)
                 {
                     var tagData = GetLostTagData();
                     var tagPatternMatch = TagRegex.Match(tagData);
@@ -136,7 +133,7 @@ namespace GitUI.CommandsDialogs
                         result.Date = DateTimeUtils.ParseUnixTime(tagPatternMatch.Groups[4].Value);
                     }
                 }
-                else if (result.ObjectType == LostObjectType.Blob)
+                else if (objectType == LostObjectType.Blob)
                 {
                     var hash = objectId.ToString();
                     var blobPath = Path.Combine(module.WorkingDirGitDir, "objects", hash.Substring(0, 2), hash.Substring(2, ObjectId.Sha1CharCount - 2));
@@ -152,22 +149,22 @@ namespace GitUI.CommandsDialogs
                 {
                     return module.RunGitCmd(string.Format(commandFormat, objectId), GitModule.LosslessEncoding);
                 }
-            }
 
-            private static LostObjectType GetObjectType(GroupCollection matchedGroup)
-            {
-                if (!matchedGroup[3].Success)
+                LostObjectType GetObjectType(Group matchedGroup)
                 {
-                    return LostObjectType.Other;
-                }
+                    if (!matchedGroup.Success)
+                    {
+                        return LostObjectType.Other;
+                    }
 
-                switch (matchedGroup[3].Value)
-                {
-                    case "commit": return LostObjectType.Commit;
-                    case "blob": return LostObjectType.Blob;
-                    case "tree": return LostObjectType.Tree;
-                    case "tag": return LostObjectType.Tag;
-                    default: return LostObjectType.Other;
+                    switch (matchedGroup.Value)
+                    {
+                        case "commit": return LostObjectType.Commit;
+                        case "blob": return LostObjectType.Blob;
+                        case "tree": return LostObjectType.Tree;
+                        case "tag": return LostObjectType.Tag;
+                        default: return LostObjectType.Other;
+                    }
                 }
             }
         }

@@ -252,7 +252,7 @@ namespace GitUI.Editor
             Encoding = null;
         }
 
-        private void UICommands_PostSettings(object sender, GitUIPluginInterfaces.GitUIPostActionEventArgs e)
+        private void UICommands_PostSettings(object sender, GitUIPostActionEventArgs e)
         {
             _internalFileViewer.VRulerPosition = AppSettings.DiffVerticalRulerPosition;
         }

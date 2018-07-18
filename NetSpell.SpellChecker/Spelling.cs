@@ -1051,9 +1051,9 @@ namespace NetSpell.SpellChecker
             tempSuggestion.Sort();  // sorts by edit score
             Suggestions.Clear();
 
-            for (int i = 0; i < tempSuggestion.Count; i++)
+            foreach (var suggestion in tempSuggestion)
             {
-                string word = tempSuggestion[i].Text;
+                string word = suggestion.Text;
 
                 // looking for duplicates
                 if (!Suggestions.Contains(word))

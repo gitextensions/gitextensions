@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Threading;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -62,7 +63,7 @@ namespace GitCommands
         /// This function reads the output to a byte[]. This function is used because it doesn't need to know the
         /// correct encoding.
         /// </summary>
-        public static void ReadBytes(Process process, out byte[] stdOutput, out byte[] stdError)
+        public static void ReadBytes(Process process, out byte[] stdOutput, [CanBeNull] out byte[] stdError)
         {
             byte[] stdOutputLoader = null;
 
@@ -78,6 +79,7 @@ namespace GitCommands
             stdOutput = stdOutputLoader;
         }
 
+        [CanBeNull]
         private static byte[] ReadByte(Stream stream)
         {
             if (!stream.CanRead)

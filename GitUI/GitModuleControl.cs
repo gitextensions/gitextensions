@@ -123,9 +123,9 @@ namespace GitUI
         }
 
         /// <summary>Raises the <see cref="GitUICommandsSourceSet"/> event.</summary>
-        protected virtual void OnUICommandsSourceChanged(IGitUICommandsSource newSource)
+        protected virtual void OnUICommandsSourceChanged(IGitUICommandsSource source)
         {
-            GitUICommandsSourceSet?.Invoke(this, new GitUICommandsSourceEventArgs(newSource));
+            GitUICommandsSourceSet?.Invoke(this, new GitUICommandsSourceEventArgs(source));
         }
     }
 }

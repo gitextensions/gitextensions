@@ -10,6 +10,13 @@ namespace ResourceManager.Xliff
 {
     public static class TranslationUtl
     {
+        private const BindingFlags _propertyFlags
+            = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
+              BindingFlags.NonPublic | BindingFlags.SetProperty;
+        private const BindingFlags _fieldFlags
+            = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
+              BindingFlags.NonPublic | BindingFlags.SetField;
+
         private static bool AllowTranslateProperty(string text)
         {
             if (text == null)
@@ -27,28 +34,24 @@ namespace ResourceManager.Xliff
                 yield return (objName, obj);
             }
 
-            foreach (FieldInfo fieldInfo in obj.GetType().GetFields(
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.SetField))
+            foreach (var field in obj.GetType().GetFields(_fieldFlags))
             {
-                if (fieldInfo.IsPublic && !fieldInfo.IsInitOnly)
+                if (field.IsPublic && !field.IsInitOnly)
                 {
                     // if public AND modifiable (NOT readonly)
-                    Trace.WriteLine(string.Format("Skip field {0}.{1} [{2}]", obj.GetType().Name, fieldInfo.Name, fieldInfo.GetValue(obj)), "Translation");
+                    Trace.WriteLine(string.Format("Skip field {0}.{1} [{2}]", obj.GetType().Name, field.Name, field.GetValue(obj)), "Translation");
                     continue;
                 }
 
-                yield return (fieldInfo.Name, fieldInfo.GetValue(obj));
+                yield return (field.Name, field.GetValue(obj));
             }
         }
 
         public static void AddTranslationItem(string category, object obj, string propName, ITranslation translation)
         {
-            var propertyInfo = obj?.GetType().GetProperty(
-                propName,
-                BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
-                BindingFlags.NonPublic | BindingFlags.SetProperty);
+            var property = obj?.GetType().GetProperty(propName, _propertyFlags);
 
-            if (propertyInfo?.GetValue(obj, null) is string value && AllowTranslateProperty(value))
+            if (property?.GetValue(obj, null) is string value && AllowTranslateProperty(value))
             {
                 translation.AddTranslationItem(category, propName, "Text", value);
             }
@@ -78,26 +81,23 @@ namespace ResourceManager.Xliff
                 yield break;
             }
 
-            Func<PropertyInfo, bool> isTranslatableItem;
+            Func<PropertyInfo, bool> isTranslatable;
             if (item is DataGridViewColumn c)
             {
-                isTranslatableItem = propertyInfo => IsTranslatableItemInDataGridViewColumn(propertyInfo, c);
+                isTranslatable = property => IsTranslatableItemInDataGridViewColumn(property, c);
             }
             else if (item is ComboBox || item is ListBox)
             {
-                isTranslatableItem = propertyInfo => IsTranslatableItemInBox(propertyInfo, item);
+                isTranslatable = property => IsTranslatableItemInBox(property, item);
             }
             else
             {
-                isTranslatableItem = IsTranslatableItemInComponent;
+                isTranslatable = IsTranslatableItemInComponent;
             }
 
-            foreach (var propertyInfo in item.GetType()
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
-                               BindingFlags.NonPublic | BindingFlags.SetProperty)
-                .Where(isTranslatableItem))
+            foreach (var property in item.GetType().GetProperties(_fieldFlags).Where(isTranslatable))
             {
-                yield return propertyInfo;
+                yield return property;
             }
         }
 
@@ -147,18 +147,16 @@ namespace ResourceManager.Xliff
                 foreach (var propertyInfo in GetItemPropertiesEnumerator(itemName, itemObj))
                 {
                     var property = propertyInfo; // copy for lambda
-                    string propertyName = property.Name;
-                    if (propertyName == "Items" && typeof(IList).IsAssignableFrom(property.PropertyType))
+
+                    if (property.Name == "Items" && typeof(IList).IsAssignableFrom(property.PropertyType))
                     {
                         var list = (IList)property.GetValue(itemObj, null);
                         for (int index = 0; index < list.Count; index++)
                         {
-                            propertyName = "Item" + index;
-
                             if (list[index] is string listValue)
                             {
                                 string ProvideDefaultValue() => listValue;
-                                string value = translation.TranslateItem(category, itemName, propertyName,
+                                string value = translation.TranslateItem(category, itemName, "Item" + index,
                                     ProvideDefaultValue);
 
                                 if (!string.IsNullOrEmpty(value))
@@ -171,7 +169,7 @@ namespace ResourceManager.Xliff
                     else if (property.PropertyType.IsEquivalentTo(typeof(string)))
                     {
                         string ProvideDefaultValue() => (string)property.GetValue(itemObj, null);
-                        string value = translation.TranslateItem(category, itemName, propertyName, ProvideDefaultValue);
+                        string value = translation.TranslateItem(category, itemName, property.Name, ProvideDefaultValue);
 
                         if (!string.IsNullOrEmpty(value))
                         {
@@ -204,23 +202,21 @@ namespace ResourceManager.Xliff
                 return;
             }
 
-            var propertyInfo = obj.GetType().GetProperty(propName,
-                BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |
-                BindingFlags.NonPublic | BindingFlags.SetProperty);
-            if (propertyInfo == null)
+            var property = obj.GetType().GetProperty(propName, _propertyFlags);
+
+            if (property == null)
             {
                 return;
             }
 
-            string ProvideDefaultValue() => "";
             string value = translation.TranslateItem(category, propName, "Text", ProvideDefaultValue);
-            if (!string.IsNullOrEmpty(value))
+
+            if (!string.IsNullOrEmpty(value) && property.CanWrite)
             {
-                if (propertyInfo.CanWrite)
-                {
-                    propertyInfo.SetValue(obj, value, null);
-                }
+                property.SetValue(obj, value, null);
             }
+
+            string ProvideDefaultValue() => "";
         }
 
         public static void TranslateItemsFromFields(string category, object obj, ITranslation translation)
@@ -238,52 +234,30 @@ namespace ResourceManager.Xliff
             return propertyInfo.Name.Equals("HeaderText", StringComparison.CurrentCulture) && viewCol.Visible;
         }
 
-        private static bool IsTranslatableItemInBox(PropertyInfo propertyInfo, object itemObj)
+        private static bool IsTranslatableItemInBox(PropertyInfo property, object itemObj)
         {
-            if (IsTranslatableItemInComponent(propertyInfo))
+            if (IsTranslatableItemInComponent(property))
             {
                 return true;
             }
 
-            if (propertyInfo.Name.Equals("Items", StringComparison.CurrentCulture))
-            {
-                if (propertyInfo.GetValue(itemObj, null) is IList items && items.Count != 0)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return property.Name.Equals("Items", StringComparison.Ordinal) &&
+                   property.GetValue(itemObj, null) is IList items &&
+                   items.Count != 0;
         }
 
-        private static bool IsTranslatableItemInComponent(PropertyInfo propertyInfo)
+        private static readonly HashSet<string> _translatableItemInComponentNames = new HashSet<string>(StringComparer.Ordinal)
         {
-            if (propertyInfo.PropertyType != typeof(string))
-            {
-                return false;
-            }
+            "Caption",
+            "Text",
+            "ToolTipText",
+            "Title"
+        };
 
-            if (propertyInfo.Name.Equals("Caption", StringComparison.CurrentCulture))
-            {
-                return true;
-            }
-
-            if (propertyInfo.Name.Equals("Text", StringComparison.CurrentCulture))
-            {
-                return true;
-            }
-
-            if (propertyInfo.Name.Equals("ToolTipText", StringComparison.CurrentCulture))
-            {
-                return true;
-            }
-
-            if (propertyInfo.Name.Equals("Title", StringComparison.CurrentCulture))
-            {
-                return true;
-            }
-
-            return false;
+        private static bool IsTranslatableItemInComponent(PropertyInfo property)
+        {
+            return property.PropertyType == typeof(string) &&
+                   _translatableItemInComponentNames.Contains(property.Name);
         }
 
         private static readonly string[] UnTranslatableDLLs =
@@ -345,12 +319,14 @@ namespace ResourceManager.Xliff
 
         public static object CreateInstanceOfClass(Type type)
         {
-            const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            const BindingFlags constructorFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
             object obj = null;
 
-            // try to find parameter less constructor first
-            foreach (ConstructorInfo constructor in type.GetConstructors(flags))
+            var constructors = type.GetConstructors(constructorFlags);
+
+            // try to find parameterless constructor first
+            foreach (var constructor in constructors)
             {
                 if (constructor.GetParameters().Length == 0)
                 {
@@ -358,16 +334,11 @@ namespace ResourceManager.Xliff
                 }
             }
 
-            if (obj == null && type.GetConstructors().Length > 0)
+            if (obj == null && constructors.Length != 0)
             {
-                ConstructorInfo parameterConstructor = type.GetConstructors(flags)[0];
-                var parameters = new List<object>(parameterConstructor.GetParameters().Length);
-                for (int i = 0; i < parameterConstructor.GetParameters().Length; i++)
-                {
-                    parameters.Add(null);
-                }
-
-                obj = parameterConstructor.Invoke(parameters.ToArray());
+                var parameterConstructor = constructors[0];
+                var parameters = parameterConstructor.GetParameters();
+                obj = parameterConstructor.Invoke(new object[parameters.Length]);
             }
 
             Debug.Assert(obj != null, "obj != null");

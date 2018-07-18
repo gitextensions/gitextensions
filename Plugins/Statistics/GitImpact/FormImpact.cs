@@ -7,7 +7,7 @@ using ResourceManager;
 
 namespace GitImpact
 {
-    public partial class FormImpact : GitExtensionsFormBase
+    public sealed partial class FormImpact : GitExtensionsFormBase
     {
         private readonly TranslationString _authorCommits = new TranslationString("{0} ({1} Commits, {2} Changed Lines)");
 
