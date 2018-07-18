@@ -1437,9 +1437,14 @@ namespace GitCommands
                 }
 
                 var code = match.Groups[1].Value[0];
-                var currentCommitGuid = match.Groups[2].Value;
                 var localPath = match.Groups[3].Value;
                 var branch = match.Groups[4].Value;
+
+                if (!ObjectId.TryParse(match.Groups[2].Value, out var currentCommitId))
+                {
+                    info = default;
+                    return false;
+                }
 
                 var configSection = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
 
@@ -1449,7 +1454,7 @@ namespace GitCommands
                 var remotePath = configFile.GetPathValue($"submodule.{name}.url").Trim();
 
                 info = new GitSubmoduleInfo(
-                    name, localPath, remotePath, currentCommitGuid, branch,
+                    name, localPath, remotePath, currentCommitId, branch,
                     isInitialized: code != '-',
                     isUpToDate: code != '+');
                 return true;
