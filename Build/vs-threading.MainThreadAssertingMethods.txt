@@ -1,1 +1,1 @@
-GitUI.ThreadHelper.ThrowIfNotOnUIThread
+[GitUI.ThreadHelper]::ThrowIfNotOnUIThread

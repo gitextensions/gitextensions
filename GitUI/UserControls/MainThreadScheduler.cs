@@ -2,6 +2,7 @@
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls
 {
