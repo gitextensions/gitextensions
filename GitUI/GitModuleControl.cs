@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
 using JetBrains.Annotations;
@@ -14,6 +15,8 @@ namespace GitUI
     public class GitModuleControl : GitExtensionsControl
     {
         private readonly object _lock = new object();
+
+        private int _isDisposed;
 
         /// <summary>Occurs after the <see cref="UICommandsSource"/> is changed.</summary>
         [Browsable(false)]
@@ -99,6 +102,11 @@ namespace GitUI
 
         protected override void Dispose(bool disposing)
         {
+            if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) != 0)
+            {
+                return;
+            }
+
             if (_uiCommandsSource != null)
             {
                 DisposeUICommandsSource();
