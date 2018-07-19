@@ -64,7 +64,7 @@ namespace GitUI.Editor
             InitializeComponent();
             InitializeComplete();
 
-            GitUICommandsSourceSet += FileViewer_GitUICommandsSourceSet;
+            UICommandsSourceSet += FileViewer_UICommandsSourceSet;
 
             _internalFileViewer = new FileViewerInternal(() => Module);
             _internalFileViewer.MouseEnter += (_, e) => OnMouseEnter(e);
@@ -168,7 +168,7 @@ namespace GitUI.Editor
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
-        private void FileViewer_GitUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
+        private void FileViewer_UICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
         {
             UICommandsSource.UICommandsChanged += UICommandsSourceChanged;
             UICommandsSourceChanged(UICommandsSource, null);
@@ -1300,7 +1300,7 @@ namespace GitUI.Editor
         {
             if (disposing)
             {
-                GitUICommandsSourceSet -= FileViewer_GitUICommandsSourceSet;
+                UICommandsSourceSet -= FileViewer_UICommandsSourceSet;
                 _async.Dispose();
                 components?.Dispose();
 

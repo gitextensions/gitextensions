@@ -70,7 +70,7 @@ namespace GitUI.CommitInfo
             InitializeComponent();
             InitializeComplete();
 
-            GitUICommandsSourceSet += delegate { ReloadCommitInfo(); };
+            UICommandsSourceSet += delegate { ReloadCommitInfo(); };
 
             _commitDataManager = new CommitDataManager(() => Module);
 

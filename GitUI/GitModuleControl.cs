@@ -17,7 +17,7 @@ namespace GitUI
 
         /// <summary>Occurs after the <see cref="UICommandsSource"/> is changed.</summary>
         [Browsable(false)]
-        public event EventHandler<GitUICommandsSourceEventArgs> GitUICommandsSourceSet;
+        public event EventHandler<GitUICommandsSourceEventArgs> UICommandsSourceSet;
 
         [CanBeNull] private IGitUICommandsSource _uiCommandsSource;
 
@@ -129,10 +129,10 @@ namespace GitUI
             }
         }
 
-        /// <summary>Raises the <see cref="GitUICommandsSourceSet"/> event.</summary>
+        /// <summary>Raises the <see cref="UICommandsSourceSet"/> event.</summary>
         protected virtual void OnUICommandsSourceChanged(IGitUICommandsSource source)
         {
-            GitUICommandsSourceSet?.Invoke(this, new GitUICommandsSourceEventArgs(source));
+            UICommandsSourceSet?.Invoke(this, new GitUICommandsSourceEventArgs(source));
         }
     }
 }
