@@ -47,8 +47,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             // apply scaling
             pnlLogo.Padding = DpiUtil.Scale(pnlLogo.Padding);
             userRepositoriesList.HeaderHeight = pnlLogo.Height;
-
-            this.AdjustForDpiScaling();
         }
 
         // need this to stop flickering of the background images, nothing else works

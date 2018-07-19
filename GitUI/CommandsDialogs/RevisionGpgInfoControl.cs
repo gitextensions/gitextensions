@@ -18,7 +18,6 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             DisplayGpgInfo(null);
-            this.AdjustForDpiScaling();
         }
 
         public void DisplayGpgInfo([CanBeNull] GpgInfo info)

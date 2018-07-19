@@ -18,8 +18,6 @@ namespace GitUI.UserControls.RevisionGrid
             btnOpenCommitForm.Click += (_, e) => UICommands.StartCommitDialog(this);
 
             Dock = DockStyle.Fill;
-
-            this.AdjustForDpiScaling();
         }
     }
 }

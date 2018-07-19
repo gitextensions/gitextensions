@@ -61,8 +61,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             imageList1.ImageSize = DpiUtil.Scale(imageList1.ImageSize);
             imageList1.Images.Add(Images.DashboardFolderGit);
             imageList1.Images.Add(Images.DashboardFolderError);
-
-            this.AdjustForDpiScaling();
         }
 
         [Category("Appearance")]
