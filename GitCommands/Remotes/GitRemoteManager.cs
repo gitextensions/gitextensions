@@ -6,7 +6,7 @@ using GitCommands.Config;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
-namespace GitCommands.Remote
+namespace GitCommands.Remotes
 {
     public interface IGitRemoteManager
     {
@@ -300,7 +300,7 @@ namespace GitCommands.Remote
             Func<IReadOnlyList<string>> func;
             if (enabled)
             {
-                func = () => module.GetRemotes();
+                func = () => module.GetRemoteNames();
             }
             else
             {

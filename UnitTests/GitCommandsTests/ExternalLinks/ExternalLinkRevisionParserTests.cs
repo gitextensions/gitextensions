@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.ExternalLinks;
-using GitCommands.Remote;
+using GitCommands.Remotes;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using NSubstitute;

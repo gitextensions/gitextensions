@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,32 +36,31 @@ namespace GitUI.BranchTreePanel
                     .Select(branch => branch.Name);
 
                 token.ThrowIfCancellationRequested();
-                var remotes = Module.GetRemotes();
+                var remoteByName = Module.GetRemotes().ToDictionary(r => r.Name);
                 foreach (var branchPath in branches)
                 {
                     token.ThrowIfCancellationRequested();
-                    var remote = branchPath.Split('/').First();
-                    if (!remotes.Contains(remote))
+                    var remoteName = branchPath.SubstringUntil('/');
+                    if (remoteByName.TryGetValue(remoteName, out var remote))
                     {
-                        continue;
-                    }
-
-                    var remoteBranchNode = new RemoteBranchNode(this, branchPath);
-                    var parent = remoteBranchNode.CreateRootNode(nodes,
-                        (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
-                    if (parent != null)
-                    {
-                        Nodes.AddNode(parent);
+                        var remoteBranchNode = new RemoteBranchNode(this, branchPath);
+                        var parent = remoteBranchNode.CreateRootNode(
+                            nodes,
+                            (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
+                        if (parent != null)
+                        {
+                            Nodes.AddNode(parent);
+                        }
                     }
                 }
 
                 return;
 
-                BaseBranchNode CreateRemoteBranchPathNode(Tree tree, string parentPath, string remoteName)
+                BaseBranchNode CreateRemoteBranchPathNode(Tree tree, string parentPath, Remote remote)
                 {
-                    if (parentPath == remoteName)
+                    if (parentPath == remote.Name)
                     {
-                        return new RemoteRepoNode(tree, parentPath);
+                        return new RemoteRepoNode(tree, parentPath, remote);
                     }
 
                     return new BasePathNode(tree, parentPath);
@@ -197,8 +197,11 @@ namespace GitUI.BranchTreePanel
 
         private sealed class RemoteRepoNode : BaseBranchNode
         {
-            public RemoteRepoNode(Tree tree, string fullPath) : base(tree, fullPath)
+            private readonly Remote _remote;
+
+            public RemoteRepoNode(Tree tree, string fullPath, Remote remote) : base(tree, fullPath)
             {
+                _remote = remote;
             }
 
             public void Fetch()
@@ -214,6 +217,11 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
+
+                TreeViewNode.ToolTipText = _remote.FetchUrl != _remote.PushUrl
+                    ? $"Push: {_remote.PushUrl}\nFetch: {_remote.FetchUrl}"
+                    : _remote.FetchUrl;
+
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.Remote);
             }
         }

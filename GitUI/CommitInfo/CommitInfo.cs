@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.ExternalLinks;
 using GitCommands.Git;
-using GitCommands.Remote;
+using GitCommands.Remotes;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;

@@ -37,8 +37,7 @@ namespace System
                 return null;
             }
 
-            int idx;
-            idx = str.IndexOf(toSkip);
+            var idx = str.IndexOf(toSkip);
             if (idx != -1)
             {
                 return str.Substring(idx + toSkip.Length);
@@ -50,16 +49,37 @@ namespace System
         }
 
         [Pure]
-        [CanBeNull]
-        public static string TakeUntilStr([CanBeNull] this string str, [NotNull] string untilStr)
+        [ContractAnnotation("str:null=>null")]
+        [ContractAnnotation("str:notnull=>notnull")]
+        public static string SubstringUntil([CanBeNull] this string str, [NotNull] string untilStr)
         {
             if (str == null)
             {
                 return null;
             }
 
-            int idx;
-            idx = str.IndexOf(untilStr);
+            var idx = str.IndexOf(untilStr);
+            if (idx != -1)
+            {
+                return str.Substring(0, idx);
+            }
+            else
+            {
+                return str;
+            }
+        }
+
+        [Pure]
+        [ContractAnnotation("str:null=>null")]
+        [ContractAnnotation("str:notnull=>notnull")]
+        public static string SubstringUntil(this string str, char untilChar)
+        {
+            if (str == null)
+            {
+                return null;
+            }
+
+            var idx = str.IndexOf(untilChar);
             if (idx != -1)
             {
                 return str.Substring(0, idx);

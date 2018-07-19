@@ -469,7 +469,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                _remoteName = GitRefName.GetRemoteName(branch, Module.GetRemotes());
+                _remoteName = GitRefName.GetRemoteName(branch, Module.GetRemoteNames());
                 _localBranchName = Module.GetLocalTrackingBranchName(_remoteName, branch);
                 var remoteBranchName = _remoteName.Length > 0 ? branch.Substring(_remoteName.Length + 1) : branch;
                 _newLocalBranchName = string.Concat(_remoteName, "_", remoteBranchName);

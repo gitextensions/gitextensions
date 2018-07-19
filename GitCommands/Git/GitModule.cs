@@ -2272,9 +2272,63 @@ namespace GitCommands
                     : RunGitCmd($"remote add \"{name}\" \"{location}\"");
         }
 
-        public IReadOnlyList<string> GetRemotes()
+        public IReadOnlyList<string> GetRemoteNames()
         {
-            return ReadGitOutputLines("remote").ToList();
+            return ReadGitOutputLines("remote").Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
+        }
+
+        private static readonly Regex _remoteVerboseLineRegex = new Regex(@"^(?<name>[^	]+)\t(?<url>[^ ]+) \((?<direction>fetch|push)\)$", RegexOptions.Compiled);
+
+        public IReadOnlyList<Remote> GetRemotes()
+        {
+            var remotes = new List<Remote>();
+            var lines = ReadGitOutputLines("remote -v");
+
+            /*
+             * $ git remote -v
+             * origin  git@github.com:drewnoakes/gitextensions.git (fetch)
+             * origin  git@github.com:drewnoakes/gitextensions.git (push)
+             * upstream        git@github.com:gitextensions/gitextensions.git (fetch)
+             * upstream        git@github.com:gitextensions/gitextensions.git (push)
+             *
+             * That's a tab character between the first two records. There's a space before (fetch/push).
+             */
+
+            using (var enumerator = lines.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    var fetchLine = enumerator.Current;
+
+                    if (!enumerator.MoveNext())
+                    {
+                        throw new Exception("Remote URLs should appear in pairs.");
+                    }
+
+                    var pushLine = enumerator.Current;
+
+                    var fetchMatch = _remoteVerboseLineRegex.Match(fetchLine);
+                    var pushMatch = _remoteVerboseLineRegex.Match(pushLine);
+
+                    if (!fetchMatch.Success || !pushMatch.Success || fetchMatch.Groups["direction"].Value != "fetch" || pushMatch.Groups["direction"].Value != "push")
+                    {
+                        throw new Exception("Unable to parse git command output.");
+                    }
+
+                    var name = fetchMatch.Groups["name"].Value;
+                    var fetchUrl = fetchMatch.Groups["url"].Value;
+                    var pushUrl = pushMatch.Groups["url"].Value;
+
+                    if (name != pushMatch.Groups["name"].Value)
+                    {
+                        throw new Exception("Fetch and push remote names must match.");
+                    }
+
+                    remotes.Add(new Remote(name, pushUrl, fetchUrl));
+                }
+            }
+
+            return remotes;
         }
 
         public IEnumerable<string> GetSettings(string setting)
@@ -2896,7 +2950,7 @@ namespace GitCommands
             const string remoteBranchPrefixForMergedBranches = "remotes/";
             const string refsPrefix = "refs/";
 
-            var remotes = GetRemotes();
+            var remotes = GetRemoteNames();
 
             var args = GitCommandHelpers.MergedBranches(includeRemote: true);
 
@@ -3909,6 +3963,20 @@ namespace GitCommands
         public static bool IsGitErrorMessage(string gitOutput)
         {
             return Regex.IsMatch(gitOutput, @"^\s*(error:|fatal)");
+        }
+    }
+
+    public readonly struct Remote
+    {
+        public string Name { get; }
+        public string PushUrl { get; }
+        public string FetchUrl { get; }
+
+        public Remote(string name, string pushUrl, string fetchUrl)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            PushUrl = pushUrl ?? throw new ArgumentNullException(nameof(pushUrl));
+            FetchUrl = fetchUrl ?? throw new ArgumentNullException(nameof(fetchUrl));
         }
     }
 }

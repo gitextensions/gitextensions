@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Remote;
+using GitCommands.Remotes;
 using GitUI.HelperDialogs;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;

@@ -1,4 +1,4 @@
-namespace GitCommands.Remote
+namespace GitCommands.Remotes
 {
     /// <summary>
     /// Represents a result of <see cref="GitRemoteManager.SaveRemote"/> operation.

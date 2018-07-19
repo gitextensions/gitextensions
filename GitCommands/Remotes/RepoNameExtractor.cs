@@ -3,7 +3,7 @@ using System.IO;
 using GitCommands.Config;
 using GitUIPluginInterfaces;
 
-namespace GitCommands.Remote
+namespace GitCommands.Remotes
 {
     public interface IRepoNameExtractor
     {
@@ -40,7 +40,7 @@ namespace GitCommands.Remote
             if (remoteName.IsNullOrWhiteSpace())
             {
                 // No remote for the branch, for instance a submodule. Use first remote.
-                var remotes = module.GetRemotes();
+                var remotes = module.GetRemoteNames();
                 if (remotes.Count > 0)
                 {
                     remoteName = remotes[0];

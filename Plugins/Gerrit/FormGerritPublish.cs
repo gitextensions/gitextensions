@@ -187,7 +187,7 @@ namespace Gerrit
 
         private void FormGerritPublishLoad(object sender, EventArgs e)
         {
-            _NO_TRANSLATE_Remotes.DataSource = Module.GetRemotes();
+            _NO_TRANSLATE_Remotes.DataSource = Module.GetRemoteNames();
 
             _currentBranchRemote = Settings.DefaultRemote;
 
@@ -215,7 +215,7 @@ namespace Gerrit
         private void AddRemoteClick(object sender, EventArgs e)
         {
             UICommands.StartRemotesDialog();
-            _NO_TRANSLATE_Remotes.DataSource = Module.GetRemotes();
+            _NO_TRANSLATE_Remotes.DataSource = Module.GetRemoteNames();
         }
     }
 }

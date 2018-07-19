@@ -105,8 +105,8 @@
     <Compile Include="Git\Tag\GitTagController.cs" />
     <Compile Include="Git\Tag\TagOperation.cs" />
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
-    <Compile Include="Remote\GitRemoteManager.cs" />
-    <Compile Include="Remote\RepoNameExtractor.cs" />
+    <Compile Include="Remotes\GitRemoteManager.cs" />
+    <Compile Include="Remotes\RepoNameExtractor.cs" />
     <Compile Include="Settings\DefaultImageType.cs" />
     <Compile Include="UserRepositoryHistory\IRepositoryManager.cs" />
     <Compile Include="UserRepositoryHistory\IRepositorySerialiser.cs" />
@@ -128,8 +128,8 @@
     <Compile Include="Git\GitTreeParser.cs" />
     <Compile Include="PathEqualityComparer.cs" />
     <Compile Include="RemoteActionResult.cs" />
-    <Compile Include="Remote\GitRemote.cs" />
-    <Compile Include="Remote\GitRemoteSaveResult.cs" />
+    <Compile Include="Remotes\GitRemote.cs" />
+    <Compile Include="Remotes\GitRemoteSaveResult.cs" />
     <Compile Include="Settings\BasicSettingTypes.cs" />
     <Compile Include="Settings\CommonSettingsTypes.cs" />
     <Compile Include="Settings\ConfigFileSettings.cs" />

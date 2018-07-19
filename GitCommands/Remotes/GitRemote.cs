@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using GitCommands.Config;
 
-namespace GitCommands.Remote
+namespace GitCommands.Remotes
 {
     public class GitRemote
     {

@@ -164,7 +164,7 @@ namespace Github3
             {
                 var set = new HashSet<IHostedRemote>();
 
-                foreach (string remote in module.GetRemotes())
+                foreach (string remote in module.GetRemoteNames())
                 {
                     var url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
 
