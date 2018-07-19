@@ -35,6 +35,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private readonly Image _bisectGoodImage = DpiUtil.Scale(Images.BisectGood);
         private readonly Image _bisectBadImage = DpiUtil.Scale(Images.BisectBad);
+        private readonly Image _fixupAndSquashImage = DpiUtil.Scale(Images.FixupAndSquashMessageMarker);
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
         {
@@ -109,21 +110,14 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     {
                         if (gitRef.IsBisectGood)
                         {
-                            ShowBisectImage(_bisectGoodImage);
+                            DrawImage(_bisectGoodImage);
                             continue;
                         }
 
                         if (gitRef.IsBisectBad)
                         {
-                            ShowBisectImage(_bisectBadImage);
+                            DrawImage(_bisectBadImage);
                             continue;
-                        }
-
-                        void ShowBisectImage(Image image)
-                        {
-                            var y = e.CellBounds.Y + ((e.CellBounds.Height - image.Height) / 2);
-                            e.Graphics.DrawImage(image, e.CellBounds.X + offset, y);
-                            offset += image.Width + DpiUtil.Scale(4);
                         }
                     }
 
@@ -205,8 +199,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
             else
             {
-                // Draw the summary text
                 var text = (string)e.FormattedValue;
+
+                // Draw markers for fixup! and squash! commits
+                if (text.StartsWith("fixup!") || text.StartsWith("squash!"))
+                {
+                    DrawImage(_fixupAndSquashImage);
+                }
+
+                // Draw the summary text
                 var bounds = messageBounds.ReduceLeft(offset);
                 _grid.DrawColumnText(e, text, hasSelectedRef ? style.boldFont : normalFont, style.foreColor, bounds);
 
@@ -215,6 +216,17 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
 
             return;
+
+            void DrawImage(Image image)
+            {
+                var x = e.CellBounds.X + offset;
+                if (x + image.Width < indicator.RemainingCellBounds.Right)
+                {
+                    var y = e.CellBounds.Y + ((e.CellBounds.Height - image.Height) / 2);
+                    e.Graphics.DrawImage(image, x, y);
+                    offset += image.Width + DpiUtil.Scale(4);
+                }
+            }
 
             bool FilterRef(IGitRef gitRef)
             {
