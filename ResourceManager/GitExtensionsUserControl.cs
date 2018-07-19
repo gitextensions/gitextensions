@@ -28,6 +28,8 @@ namespace ResourceManager
             set => base.Font = value;
         }
 
+        public bool IsDesignModeActive => _initialiser.IsDesignModeActive;
+
         protected virtual void OnRuntimeLoad()
         {
         }

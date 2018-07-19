@@ -154,7 +154,7 @@ namespace GitUI.Editor
 
             HotkeysEnabled = true;
 
-            if (RunTime() && ContextMenuStrip == null)
+            if (IsDesignModeActive && ContextMenuStrip == null)
             {
                 ContextMenuStrip = contextMenu;
             }
@@ -178,11 +178,6 @@ namespace GitUI.Editor
         {
             UICommandsSource.UICommandsChanged -= UICommandsSourceChanged;
             base.DisposeUICommandsSource();
-        }
-
-        private static bool RunTime()
-        {
-            return System.Diagnostics.Process.GetCurrentProcess().ProcessName != "devenv";
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
