@@ -19,9 +19,17 @@ namespace GitUI
         [Browsable(false)]
         public event EventHandler<GitUICommandsSourceEventArgs> GitUICommandsSourceSet;
 
-        private IGitUICommandsSource _uiCommandsSource;
+        [CanBeNull] private IGitUICommandsSource _uiCommandsSource;
 
-        /// <summary>Gets the <see cref="IGitUICommandsSource"/>.</summary>
+        /// <summary>
+        /// Gets a <see cref="IGitUICommandsSource"/> for this control.
+        /// </summary>
+        /// <remarks>
+        /// If the commands source has not yet been initialised, this property's getter attempts
+        /// to find a control-tree ancestor of type <see cref="IGitUICommandsSource"/>.
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">Unable to initialise the source as
+        /// no ancestor of type <see cref="IGitUICommandsSource"/> was found.</exception>
         [CanBeNull]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -58,28 +66,32 @@ namespace GitUI
         }
 
         /// <summary>Gets the <see cref="UICommandsSource"/>'s <see cref="GitUICommands"/> reference.</summary>
+        [CanBeNull]
         [Browsable(false)]
-        public GitUICommands UICommands => UICommandsSource.UICommands;
+        public GitUICommands UICommands => UICommandsSource?.UICommands;
 
-        /// <summary>true if <see cref="UICommands"/> has been initialized.</summary>
-        public bool IsUICommandsInitialized
+        /// <summary>
+        /// Gets the UI commands, if they've initialised.
+        /// </summary>
+        /// <remarks>
+        /// <para>This method will not attempt to initialise the commands if they have not
+        /// yet been initialised.</para>
+        /// <para>By contrast, the <see cref="UICommands"/> property attempts to initialise
+        /// the value if not previously initialised.</para>
+        /// </remarks>
+        [ContractAnnotation("=>false,commands:null")]
+        [ContractAnnotation("=>true,commands:notnull")]
+        public bool TryGetUICommands(out GitUICommands commands)
         {
-            get
-            {
-                try
-                {
-                    return UICommandsSource != null;
-                }
-                catch (InvalidOperationException)
-                {
-                    return false;
-                }
-            }
+            commands = _uiCommandsSource?.UICommands;
+            return commands != null;
         }
 
         /// <summary>Gets the <see cref="UICommands"/>' <see cref="GitModule"/> reference.</summary>
+        [CanBeNull]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public GitModule Module => UICommands.Module;
+        public GitModule Module => UICommands?.Module;
 
         protected GitModuleControl()
         {
@@ -104,7 +116,6 @@ namespace GitUI
         /// <summary>Occurs when the <see cref="UICommandsSource"/> is disposed.</summary>
         protected virtual void DisposeUICommandsSource()
         {
-            _uiCommandsSource = null;
         }
 
         protected override bool ExecuteCommand(int command)

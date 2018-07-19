@@ -1303,9 +1303,10 @@ namespace GitUI.Editor
                 GitUICommandsSourceSet -= FileViewer_GitUICommandsSourceSet;
                 _async.Dispose();
                 components?.Dispose();
-                if (IsUICommandsInitialized)
+
+                if (TryGetUICommands(out var uiCommands))
                 {
-                    UICommands.PostSettings -= UICommands_PostSettings;
+                    uiCommands.PostSettings -= UICommands_PostSettings;
                 }
             }
 

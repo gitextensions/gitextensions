@@ -70,7 +70,7 @@ namespace GitUI.CommitInfo
             InitializeComponent();
             InitializeComplete();
 
-            GitUICommandsSourceSet += (s, e) => _sortedRefs = null;
+            GitUICommandsSourceSet += delegate { ReloadCommitInfo(); };
 
             _commitDataManager = new CommitDataManager(() => Module);
 
@@ -177,13 +177,6 @@ namespace GitUI.CommitInfo
                 _revision.Body = data.Body;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadLinksForRevisionAsync(_revision)).FileAndForget();
-
-            if (_sortedRefs == null)
-            {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadSortedRefsAsync()).FileAndForget();
-            }
-
             var header = _commitDataHeaderRenderer.Render(data, showRevisionsAsLinks: CommandClick != null);
             var body = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClick != null);
 
@@ -192,30 +185,9 @@ namespace GitUI.CommitInfo
 
             UpdateRevisionInfo();
 
-            // No branch/tag data for artificial commands
-            if (_revision.IsArtificial)
+            if (Module != null)
             {
-                return;
-            }
-
-            if (AppSettings.CommitInfoShowContainedInBranches)
-            {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadBranchInfoAsync(_revision.ObjectId)).FileAndForget();
-            }
-
-            if (AppSettings.ShowAnnotatedTagsMessages)
-            {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadAnnotatedTagInfoAsync(_revision.Refs)).FileAndForget();
-            }
-
-            if (AppSettings.CommitInfoShowContainedInTags)
-            {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadTagInfoAsync(_revision.ObjectId)).FileAndForget();
-            }
-
-            if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom)
-            {
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadDescribeInfoAsync(_revision.ObjectId)).FileAndForget();
+                StartAsyncDataLoad();
             }
 
             return;
@@ -232,172 +204,209 @@ namespace GitUI.CommitInfo
                 }
             }
 
-            async Task LoadLinksForRevisionAsync(GitRevision revision)
+            void StartAsyncDataLoad()
             {
-                if (revision == null)
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadLinksForRevisionAsync(_revision)).FileAndForget();
+
+                if (_sortedRefs == null)
                 {
-                    return;
+                    ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadSortedRefsAsync()).FileAndForget();
                 }
 
-                await TaskScheduler.Default;
-                _linksInfo = GetLinksForRevision();
+                if (!_revision.IsArtificial)
+                {
+                    // No branch/tag data for artificial commands
 
-                await this.SwitchToMainThreadAsync();
-                UpdateRevisionInfo();
+                    if (AppSettings.CommitInfoShowContainedInBranches)
+                    {
+                        ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadBranchInfoAsync(_revision.ObjectId)).FileAndForget();
+                    }
+
+                    if (AppSettings.ShowAnnotatedTagsMessages)
+                    {
+                        ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadAnnotatedTagInfoAsync(_revision.Refs)).FileAndForget();
+                    }
+
+                    if (AppSettings.CommitInfoShowContainedInTags)
+                    {
+                        ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadTagInfoAsync(_revision.ObjectId)).FileAndForget();
+                    }
+
+                    if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom)
+                    {
+                        ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadDescribeInfoAsync(_revision.ObjectId)).FileAndForget();
+                    }
+                }
 
                 return;
 
-                string GetLinksForRevision()
+                async Task LoadLinksForRevisionAsync(GitRevision revision)
                 {
-                    var links = _gitRevisionExternalLinksParser.Parse(revision, Module.EffectiveSettings).Distinct();
-                    var linksString = new StringBuilder();
-
-                    linksString.AppendLine();
-                    linksString.Append(WebUtility.HtmlEncode(_trsLinksRelatedToRevision.Text));
-                    linksString.Append(' ');
-
-                    var any = false;
-                    foreach (var link in links)
+                    if (revision == null)
                     {
-                        if (any)
+                        return;
+                    }
+
+                    await TaskScheduler.Default;
+                    _linksInfo = GetLinksForRevision();
+
+                    await this.SwitchToMainThreadAsync();
+                    UpdateRevisionInfo();
+
+                    return;
+
+                    string GetLinksForRevision()
+                    {
+                        var links = _gitRevisionExternalLinksParser.Parse(revision, Module.EffectiveSettings).Distinct();
+                        var linksString = new StringBuilder();
+
+                        linksString.AppendLine();
+                        linksString.Append(WebUtility.HtmlEncode(_trsLinksRelatedToRevision.Text));
+                        linksString.Append(' ');
+
+                        var any = false;
+                        foreach (var link in links)
                         {
-                            linksString.Append(", ");
+                            if (any)
+                            {
+                                linksString.Append(", ");
+                            }
+
+                            linksString.Append(_linkFactory.CreateLink(link.Caption, link.Uri));
+                            any = true;
                         }
 
-                        linksString.Append(_linkFactory.CreateLink(link.Caption, link.Uri));
-                        any = true;
+                        return any ? linksString.ToString() : "";
                     }
-
-                    return any ? linksString.ToString() : "";
                 }
-            }
 
-            async Task LoadSortedRefsAsync()
-            {
-                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                _sortedRefs = Module.GetSortedRefs().ToList();
-
-                await this.SwitchToMainThreadAsync();
-                UpdateRevisionInfo();
-            }
-
-            async Task LoadAnnotatedTagInfoAsync(IReadOnlyList<IGitRef> refs)
-            {
-                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                _annotatedTagsMessages = GetAnnotatedTagsMessages();
-
-                await this.SwitchToMainThreadAsync();
-                UpdateRevisionInfo();
-
-                return;
-
-                IDictionary<string, string> GetAnnotatedTagsMessages()
+                async Task LoadSortedRefsAsync()
                 {
-                    if (refs == null)
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    _sortedRefs = Module.GetSortedRefs().ToList();
+
+                    await this.SwitchToMainThreadAsync();
+                    UpdateRevisionInfo();
+                }
+
+                async Task LoadAnnotatedTagInfoAsync(IReadOnlyList<IGitRef> refs)
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    _annotatedTagsMessages = GetAnnotatedTagsMessages();
+
+                    await this.SwitchToMainThreadAsync();
+                    UpdateRevisionInfo();
+
+                    return;
+
+                    IDictionary<string, string> GetAnnotatedTagsMessages()
                     {
-                        return null;
-                    }
-
-                    var result = new Dictionary<string, string>();
-
-                    foreach (var gitRef in refs)
-                    {
-                        #region Note on annotated tags
-                        // Notice that for the annotated tags, gitRef's come in pairs because they're produced
-                        // by the "show-ref --dereference" command. GitRef's in such pair have the same Name,
-                        // a bit different CompleteName's, and completely different checksums:
-                        //      GitRef_1:
-                        //      {
-                        //          Name: "some_tag"
-                        //          CompleteName: "refs/tags/some_tag"
-                        //          Guid: <some_tag_checksum>
-                        //      },
-                        //
-                        //      GitRef_2:
-                        //      {
-                        //          Name: "some_tag"
-                        //          CompleteName: "refs/tags/some_tag^{}"   <- by "^{}", IsDereference is true.
-                        //          Guid: <target_object_checksum>
-                        //      }
-                        //
-                        // The 2nd one is a dereference: a link between the tag and the object which it references.
-                        // GitRevision.Refs by design contains GitRefs where Guids are equal to the GitRevision.Guid,
-                        // so this collection contains only dereferencing GitRef's - just because GitRef_2 has the same
-                        // Guid as the GitRevision, while GitRef_1 doesn't. So annotated tag's GitRef would always be
-                        // of 2nd type in GitRevision.Refs collection, i.e. the one that has IsDereference==true.
-                        #endregion
-
-                        if (gitRef.IsTag && gitRef.IsDereference)
+                        if (refs == null)
                         {
-                            string content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
+                            return null;
+                        }
 
-                            if (content != null)
+                        var result = new Dictionary<string, string>();
+
+                        foreach (var gitRef in refs)
+                        {
+                            #region Note on annotated tags
+                            // Notice that for the annotated tags, gitRef's come in pairs because they're produced
+                            // by the "show-ref --dereference" command. GitRef's in such pair have the same Name,
+                            // a bit different CompleteName's, and completely different checksums:
+                            //      GitRef_1:
+                            //      {
+                            //          Name: "some_tag"
+                            //          CompleteName: "refs/tags/some_tag"
+                            //          Guid: <some_tag_checksum>
+                            //      },
+                            //
+                            //      GitRef_2:
+                            //      {
+                            //          Name: "some_tag"
+                            //          CompleteName: "refs/tags/some_tag^{}"   <- by "^{}", IsDereference is true.
+                            //          Guid: <target_object_checksum>
+                            //      }
+                            //
+                            // The 2nd one is a dereference: a link between the tag and the object which it references.
+                            // GitRevision.Refs by design contains GitRefs where Guids are equal to the GitRevision.Guid,
+                            // so this collection contains only dereferencing GitRef's - just because GitRef_2 has the same
+                            // Guid as the GitRevision, while GitRef_1 doesn't. So annotated tag's GitRef would always be
+                            // of 2nd type in GitRevision.Refs collection, i.e. the one that has IsDereference==true.
+                            #endregion
+
+                            if (gitRef.IsTag && gitRef.IsDereference)
                             {
-                                result.Add(gitRef.LocalName, content);
+                                string content = WebUtility.HtmlEncode(Module.GetTagMessage(gitRef.LocalName));
+
+                                if (content != null)
+                                {
+                                    result.Add(gitRef.LocalName, content);
+                                }
                             }
                         }
-                    }
 
-                    return result;
+                        return result;
+                    }
                 }
-            }
 
-            async Task LoadTagInfoAsync(ObjectId objectId)
-            {
-                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                _tags = Module.GetAllTagsWhichContainGivenCommit(objectId).ToList();
-
-                await this.SwitchToMainThreadAsync();
-                UpdateRevisionInfo();
-            }
-
-            async Task LoadBranchInfoAsync(ObjectId revision)
-            {
-                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-
-                // Include local branches if explicitly requested or when needed to decide whether to show remotes
-                bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
-                                AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-
-                // Include remote branches if requested
-                bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
-                                 AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-                _branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote).ToList();
-
-                await this.SwitchToMainThreadAsync();
-                UpdateRevisionInfo();
-            }
-
-            async Task LoadDescribeInfoAsync(ObjectId commitId)
-            {
-                await TaskScheduler.Default;
-                _gitDescribeInfo = GetDescribeInfoForRevision();
-
-                await this.SwitchToMainThreadAsync();
-                UpdateRevisionInfo();
-
-                return;
-
-                string GetDescribeInfoForRevision()
+                async Task LoadTagInfoAsync(ObjectId objectId)
                 {
-                    var (precedingTag, commitCount) = _gitDescribeProvider.Get(commitId);
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    _tags = Module.GetAllTagsWhichContainGivenCommit(objectId).ToList();
 
-                    var gitDescribeInfo = new StringBuilder();
-                    if (!string.IsNullOrEmpty(precedingTag))
+                    await this.SwitchToMainThreadAsync();
+                    UpdateRevisionInfo();
+                }
+
+                async Task LoadBranchInfoAsync(ObjectId revision)
+                {
+                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+
+                    // Include local branches if explicitly requested or when needed to decide whether to show remotes
+                    bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
+                                    AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+
+                    // Include remote branches if requested
+                    bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
+                                     AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+                    _branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote).ToList();
+
+                    await this.SwitchToMainThreadAsync();
+                    UpdateRevisionInfo();
+                }
+
+                async Task LoadDescribeInfoAsync(ObjectId commitId)
+                {
+                    await TaskScheduler.Default;
+                    _gitDescribeInfo = GetDescribeInfoForRevision();
+
+                    await this.SwitchToMainThreadAsync();
+                    UpdateRevisionInfo();
+
+                    return;
+
+                    string GetDescribeInfoForRevision()
                     {
-                        string tagString = ShowBranchesAsLinks ? _linkFactory.CreateTagLink(precedingTag) : WebUtility.HtmlEncode(precedingTag);
-                        gitDescribeInfo.Append(Environment.NewLine + WebUtility.HtmlEncode(_derivesFromTag.Text) + " " + tagString);
-                        if (!string.IsNullOrEmpty(commitCount))
+                        var (precedingTag, commitCount) = _gitDescribeProvider.Get(commitId);
+
+                        var gitDescribeInfo = new StringBuilder();
+                        if (!string.IsNullOrEmpty(precedingTag))
                         {
-                            gitDescribeInfo.Append(" + " + commitCount + " " + WebUtility.HtmlEncode(_plusCommits.Text));
+                            string tagString = ShowBranchesAsLinks ? _linkFactory.CreateTagLink(precedingTag) : WebUtility.HtmlEncode(precedingTag);
+                            gitDescribeInfo.Append(Environment.NewLine + WebUtility.HtmlEncode(_derivesFromTag.Text) + " " + tagString);
+                            if (!string.IsNullOrEmpty(commitCount))
+                            {
+                                gitDescribeInfo.Append(" + " + commitCount + " " + WebUtility.HtmlEncode(_plusCommits.Text));
+                            }
                         }
-                    }
-                    else
-                    {
-                        gitDescribeInfo.Append(Environment.NewLine + WebUtility.HtmlEncode(_derivesFromNoTag.Text));
-                    }
+                        else
+                        {
+                            gitDescribeInfo.Append(Environment.NewLine + WebUtility.HtmlEncode(_derivesFromNoTag.Text));
+                        }
 
-                    return gitDescribeInfo.ToString();
+                        return gitDescribeInfo.ToString();
+                    }
                 }
             }
         }
