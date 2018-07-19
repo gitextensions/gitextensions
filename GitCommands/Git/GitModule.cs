@@ -2381,13 +2381,14 @@ namespace GitCommands
 
         public string GetStatusText(bool untracked)
         {
-            string cmd = "status -s";
-            if (untracked)
+            var args = new ArgumentBuilder
             {
-                cmd = cmd + " -u";
-            }
+                "status",
+                "-s",
+                { untracked, "-u" }
+            };
 
-            return RunGitCmd(cmd);
+            return RunGitCmd(args);
         }
 
         public string GetDiffFilesText(string firstRevision, string secondRevision, bool noCache = false)

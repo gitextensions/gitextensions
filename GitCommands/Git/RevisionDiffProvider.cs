@@ -66,7 +66,7 @@ namespace GitCommands.Git
                     firstRevision + ", " + secondRevision);
             }
 
-            string extra = string.Empty;
+            var extra = new ArgumentBuilder();
             firstRevision = ArtificialToDiffOptions(firstRevision);
             secondRevision = ArtificialToDiffOptions(secondRevision);
 
@@ -82,26 +82,27 @@ namespace GitCommands.Git
             if (firstRevision != secondRevision && (firstRevision.IsNullOrEmpty() ||
                                (firstRevision == StagedOpt && !secondRevision.IsNullOrEmpty())))
             {
-                extra = "-R";
+                extra.Add("-R");
             }
 
             // Special case: Remove options comparing unstaged-staged
             if ((firstRevision.IsNullOrEmpty() && secondRevision == StagedOpt) ||
                 (firstRevision == StagedOpt && secondRevision.IsNullOrEmpty()))
             {
-                firstRevision = secondRevision = string.Empty;
+                firstRevision = secondRevision = "";
             }
 
             // Reorder options - not strictly required
             if (secondRevision == StagedOpt)
             {
-                extra += " " + StagedOpt;
-                secondRevision = string.Empty;
+                extra.Add(StagedOpt);
+                secondRevision = "";
             }
 
             if (fileName.IsNullOrWhiteSpace())
             {
-                extra = string.Join(" ", extra, firstRevision, secondRevision);
+                extra.Add(firstRevision);
+                extra.Add(secondRevision);
             }
             else
             {
@@ -109,19 +110,22 @@ namespace GitCommands.Git
                 // The UI should normally only allow this for unstaged to staged, but it can be included in multi selections
                 if (!isTracked)
                 {
-                    extra += " --no-index";
+                    extra.Add("--no-index");
                     oldFileName = fileName;
                     fileName = "/dev/null";
                 }
                 else
                 {
-                    extra += " " + firstRevision + " " + secondRevision;
+                    extra.Add(firstRevision);
+                    extra.Add(secondRevision);
                 }
 
-                extra += " -- " + fileName.QuoteNE() + " " + oldFileName.QuoteNE();
+                extra.Add("--");
+                extra.Add(fileName.QuoteNE());
+                extra.Add(oldFileName.QuoteNE());
             }
 
-            return extra.Trim();
+            return extra.ToString();
         }
 
         /// <summary>

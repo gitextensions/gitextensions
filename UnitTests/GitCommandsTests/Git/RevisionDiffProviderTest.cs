@@ -102,7 +102,7 @@ namespace GitCommandsTests.Git
         [TestCase("123456789", GitRevision.UnstagedGuid, "a.txt", null, true)]
         public void RevisionDiffProvider_fileName_tracked(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
-            _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().Be("\"123456789\"  -- \"a.txt\"");
+            _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().Be("\"123456789\" -- \"a.txt\"");
         }
 
         // If fileName is null, ignore oldFileName and tracked
