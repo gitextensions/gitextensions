@@ -1,20 +1,20 @@
 ﻿using System;
 using GitCommands;
-using GitUI.UserControls.ToolStripClasses;
+using GitUI.UserControls;
 using NUnit.Framework;
 
-namespace GitUITests.UserControls.ToolStripClasses
+namespace GitUITests.UserControls
 {
     [TestFixture]
-    public class CommitIconProviderTests
+    public sealed class RepoStateVisualiserTests
     {
         [SetUp]
         public void SetUp()
         {
-            _commitIconProvider = new CommitIconProvider();
+            _repoStateVisualiser = new RepoStateVisualiser();
         }
 
-        private CommitIconProvider _commitIconProvider;
+        private RepoStateVisualiser _repoStateVisualiser;
 
         private static GitItemStatus CreateGitItemStatus(
             bool isStaged = false,
@@ -32,69 +32,69 @@ namespace GitUITests.UserControls.ToolStripClasses
         [Test]
         public void ReturnsIconCleanWhenThereIsNoChangedFiles()
         {
-            var commitIcon = _commitIconProvider.GetCommitIcon(Array.Empty<GitItemStatus>());
+            var commitIcon = _repoStateVisualiser.Invoke(Array.Empty<GitItemStatus>());
 
-            Assert.AreEqual(CommitIconProvider.IconClean, commitIcon);
+            Assert.AreEqual((RepoStateVisualiser.IconClean, RepoStateVisualiser.BrushClean), commitIcon);
         }
 
         [Test]
         public void ReturnsIconDirtySubmodulesWhenThereAreOnlyUnstagedSubmodules()
         {
-            var commitIcon = _commitIconProvider.GetCommitIcon(new[]
+            var commitIcon = _repoStateVisualiser.Invoke(new[]
             {
                 CreateGitItemStatus(isSubmodule: true),
                 CreateGitItemStatus(isSubmodule: true)
             });
 
-            Assert.AreEqual(CommitIconProvider.IconDirtySubmodules, commitIcon);
+            Assert.AreEqual((RepoStateVisualiser.IconDirtySubmodules, RepoStateVisualiser.BrushDirtySubmodules), commitIcon);
         }
 
         [Test]
         public void ReturnsIconDirtyWhenThereAreUnstagedChanges()
         {
-            var commitIcon = _commitIconProvider.GetCommitIcon(new[]
+            var commitIcon = _repoStateVisualiser.Invoke(new[]
             {
                 CreateGitItemStatus(isSubmodule: true),
                 CreateGitItemStatus()
             });
 
-            Assert.AreEqual(CommitIconProvider.IconDirty, commitIcon);
+            Assert.AreEqual((RepoStateVisualiser.IconDirty, RepoStateVisualiser.BrushDirty), commitIcon);
         }
 
         [Test]
         public void ReturnsIconMixedWhenThereAreStagedAndUnstagedFiles()
         {
-            var commitIcon = _commitIconProvider.GetCommitIcon(new[]
+            var commitIcon = _repoStateVisualiser.Invoke(new[]
             {
                 CreateGitItemStatus(isStaged: true),
                 CreateGitItemStatus()
             });
 
-            Assert.AreEqual(CommitIconProvider.IconMixed, commitIcon);
+            Assert.AreEqual((RepoStateVisualiser.IconMixed, RepoStateVisualiser.BrushMixed), commitIcon);
         }
 
         [Test]
         public void ReturnsIconStagedWhenThereAreOnlyStagedFiles()
         {
-            var commitIcon = _commitIconProvider.GetCommitIcon(new[]
+            var commitIcon = _repoStateVisualiser.Invoke(new[]
             {
                 CreateGitItemStatus(isStaged: true),
                 CreateGitItemStatus(isStaged: true)
             });
 
-            Assert.AreEqual(CommitIconProvider.IconStaged, commitIcon);
+            Assert.AreEqual((RepoStateVisualiser.IconStaged, RepoStateVisualiser.BrushStaged), commitIcon);
         }
 
         [Test]
         public void ReturnsIconUntrackedOnlyWhenThereAreUntrackedFilesOnly()
         {
-            var commitIcon = _commitIconProvider.GetCommitIcon(new[]
+            var commitIcon = _repoStateVisualiser.Invoke(new[]
             {
                 CreateGitItemStatus(isTracked: false),
                 CreateGitItemStatus(isTracked: false)
             });
 
-            Assert.AreEqual(CommitIconProvider.IconUntrackedOnly, commitIcon);
+            Assert.AreEqual((RepoStateVisualiser.IconUntrackedOnly, RepoStateVisualiser.BrushUntrackedOnly), commitIcon);
         }
     }
 }

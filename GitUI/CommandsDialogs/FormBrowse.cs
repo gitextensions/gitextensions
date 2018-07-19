@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,11 +23,12 @@ using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUI.Script;
-using GitUI.UserControls.ToolStripClasses;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -196,7 +198,8 @@ namespace GitUI.CommandsDialogs
                     ImageScaling = ToolStripItemImageScaling.SizeToFit,
                     Margin = new Padding(0, 1, 0, 2)
                 };
-                ICommitIconProvider commitIconProvider = new CommitIconProvider();
+
+                var repoStateVisualiser = new RepoStateVisualiser();
 
                 _gitStatusMonitor = new GitStatusMonitor();
                 _gitStatusMonitor.Init(this);
@@ -207,7 +210,8 @@ namespace GitUI.CommandsDialogs
                     if (status == GitStatusMonitorState.Stopped)
                     {
                         _toolStripGitStatus.Visible = false;
-                        _toolStripGitStatus.Text = string.Empty;
+                        _toolStripGitStatus.Text = "";
+                        TaskbarManager.Instance.SetOverlayIcon(null, "");
                     }
                     else if (status == GitStatusMonitorState.Running)
                     {
@@ -215,11 +219,15 @@ namespace GitUI.CommandsDialogs
                     }
                 };
 
+                Brush lastBrush = null;
+
                 _gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) =>
                 {
                     var status = e.ItemStatuses.ToList();
 
-                    _toolStripGitStatus.Image = commitIconProvider.GetCommitIcon(status);
+                    var (image, brush) = repoStateVisualiser.Invoke(status);
+
+                    _toolStripGitStatus.Image = image;
 
                     _toolStripGitStatus.Text = countToolbar && status.Count != 0
                         ? string.Format(_commitButtonText + " ({0})", status.Count.ToString())
@@ -232,6 +240,29 @@ namespace GitUI.CommandsDialogs
 
                     // The diff filelist is not updated, as the selected diff is unset
                     ////_revisionDiff.RefreshArtificial();
+
+                    if (!ReferenceEquals(brush, lastBrush))
+                    {
+                        lastBrush = brush;
+
+                        const int imgDim = 32;
+                        const int dotDim = 9;
+                        const int pad = 2;
+                        using (var bmp = new Bitmap(imgDim, imgDim))
+                        {
+                            using (var g = Graphics.FromImage(bmp))
+                            {
+                                g.SmoothingMode = SmoothingMode.AntiAlias;
+                                g.Clear(Color.Transparent);
+                                g.FillEllipse(brush, new Rectangle(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
+                            }
+
+                            using (var overlay = Icon.FromHandle(bmp.GetHicon()))
+                            {
+                                TaskbarManager.Instance.SetOverlayIcon(overlay, "");
+                            }
+                        }
+                    }
                 };
 
                 // TODO: Replace with a status page?

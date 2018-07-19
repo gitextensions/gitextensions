@@ -479,7 +479,7 @@
     <Compile Include="UserControls\RevisionGrid\SuperProjectInfo.cs" />
     <Compile Include="UserControls\RevisionGrid\VisibleRowRange.cs" />
     <Compile Include="UserControls\TextEventArgs.cs" />
-    <Compile Include="UserControls\ToolStripClasses\CommitIconProvider.cs" />
+    <Compile Include="UserControls\RepoStateVisualiser.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.cs" />
     <Compile Include="UserControls\WaitSpinner.cs">
       <SubType>Component</SubType>
