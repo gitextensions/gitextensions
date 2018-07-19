@@ -83,8 +83,7 @@ namespace GitExtensionsVSIX.Commands
                 {
                     if (sel.ProjectItem.FileCount > 0)
                     {
-                        // Unfortunately FileNames[1] is not supported by .net 3.5
-                        return sel.ProjectItem.get_FileNames(1);
+                        return sel.ProjectItem.FileNames[1];
                     }
                 }
                 else if (sel.Project != null)
