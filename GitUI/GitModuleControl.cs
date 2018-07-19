@@ -15,9 +15,6 @@ namespace GitUI
     {
         private readonly object _lock = new object();
 
-        [Browsable(false)]
-        private bool UICommandsSourceParentSearch { get; }
-
         /// <summary>Occurs after the <see cref="UICommandsSource"/> is changed.</summary>
         [Browsable(false)]
         public event EventHandler<GitUICommandsSourceEventArgs> GitUICommandsSourceSet;
@@ -32,7 +29,7 @@ namespace GitUI
         {
             get
             {
-                if (_uiCommandsSource == null && UICommandsSourceParentSearch)
+                if (_uiCommandsSource == null)
                 {
                     lock (_lock)
                     {
@@ -86,7 +83,6 @@ namespace GitUI
 
         protected GitModuleControl()
         {
-            UICommandsSourceParentSearch = true;
         }
 
         protected override void Dispose(bool disposing)
