@@ -503,6 +503,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap CompressGitDatabase {
+            get {
+                object obj = ResourceManager.GetObject("CompressGitDatabase", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Conflict {
             get {
                 object obj = ResourceManager.GetObject("Conflict", resourceCulture);
@@ -593,6 +603,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap DeleteIndexLock {
+            get {
+                object obj = ResourceManager.GetObject("DeleteIndexLock", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap Develop {
             get {
                 object obj = ResourceManager.GetObject("Develop", resourceCulture);
@@ -656,6 +676,16 @@ namespace GitUI.Properties {
         public static System.Drawing.Bitmap EditFilter {
             get {
                 object obj = ResourceManager.GetObject("EditFilter", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap EditGitConfig {
+            get {
+                object obj = ResourceManager.GetObject("EditGitConfig", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

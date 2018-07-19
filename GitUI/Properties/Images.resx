@@ -582,9 +582,6 @@
   <data name="Preview" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Preview.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="RecoverLostObjects" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\RecoverLostObjects.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="ReloadRevisions" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\ReloadRevisions.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -666,6 +663,18 @@
   </data>
   <data name="Maintenance" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Maintenance.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CompressGitDatabase" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\CompressGitDatabase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RecoverLostObjects" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\RecoverLostObjects.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeleteIndexLock" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\DeleteIndexLock.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EditGitConfig" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\EditGitConfig.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Remote" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Remote.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

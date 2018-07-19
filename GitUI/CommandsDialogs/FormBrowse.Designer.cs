@@ -112,7 +112,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.gitMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compressGitDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.verifyGitDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recoverLostObjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteIndexLockToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editLocalGitConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.repoSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1072,7 +1072,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.gitMaintenanceToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.compressGitDatabaseToolStripMenuItem,
-            this.verifyGitDatabaseToolStripMenuItem,
+            this.recoverLostObjectsToolStripMenuItem,
             this.deleteIndexLockToolStripMenuItem,
             this.editLocalGitConfigToolStripMenuItem});
             this.gitMaintenanceToolStripMenuItem.Image = global::GitUI.Properties.Images.Maintenance;
@@ -1082,6 +1082,7 @@ namespace GitUI.CommandsDialogs
             // 
             // compressGitDatabaseToolStripMenuItem
             // 
+            this.compressGitDatabaseToolStripMenuItem.Image = global::GitUI.Properties.Images.CompressGitDatabase;
             this.compressGitDatabaseToolStripMenuItem.Name = "compressGitDatabaseToolStripMenuItem";
             this.compressGitDatabaseToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.compressGitDatabaseToolStripMenuItem.Text = "Compress git database";
@@ -1089,14 +1090,15 @@ namespace GitUI.CommandsDialogs
             // 
             // verifyGitDatabaseToolStripMenuItem
             // 
-            this.verifyGitDatabaseToolStripMenuItem.Image = global::GitUI.Properties.Images.RecoverLostObjects;
-            this.verifyGitDatabaseToolStripMenuItem.Name = "verifyGitDatabaseToolStripMenuItem";
-            this.verifyGitDatabaseToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.verifyGitDatabaseToolStripMenuItem.Text = "Recover lost objects...";
-            this.verifyGitDatabaseToolStripMenuItem.Click += new System.EventHandler(this.VerifyGitDatabaseToolStripMenuItemClick);
+            this.recoverLostObjectsToolStripMenuItem.Image = global::GitUI.Properties.Images.RecoverLostObjects;
+            this.recoverLostObjectsToolStripMenuItem.Name = "recoverLostObjectsToolStripMenuItem";
+            this.recoverLostObjectsToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.recoverLostObjectsToolStripMenuItem.Text = "Recover lost objects...";
+            this.recoverLostObjectsToolStripMenuItem.Click += new System.EventHandler(this.recoverLostObjectsToolStripMenuItemClick);
             // 
             // deleteIndexlockToolStripMenuItem
             // 
+            this.deleteIndexLockToolStripMenuItem.Image = global::GitUI.Properties.Images.DeleteIndexLock;
             this.deleteIndexLockToolStripMenuItem.Name = "deleteIndexLockToolStripMenuItem";
             this.deleteIndexLockToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.deleteIndexLockToolStripMenuItem.Text = "Delete index.lock";
@@ -1104,6 +1106,7 @@ namespace GitUI.CommandsDialogs
             // 
             // editLocalGitConfigToolStripMenuItem
             // 
+            this.editLocalGitConfigToolStripMenuItem.Image = global::GitUI.Properties.Images.EditGitConfig;
             this.editLocalGitConfigToolStripMenuItem.Name = "editLocalGitConfigToolStripMenuItem";
             this.editLocalGitConfigToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
             this.editLocalGitConfigToolStripMenuItem.Text = "Edit .git/config";
@@ -1811,7 +1814,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem gitMaintenanceToolStripMenuItem;
         private ToolStripMenuItem editLocalGitConfigToolStripMenuItem;
         private ToolStripMenuItem compressGitDatabaseToolStripMenuItem;
-        private ToolStripMenuItem verifyGitDatabaseToolStripMenuItem;
+        private ToolStripMenuItem recoverLostObjectsToolStripMenuItem;
         private ToolStripMenuItem deleteIndexLockToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripMenuItem editgitignoreToolStripMenuItem1;

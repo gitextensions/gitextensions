@@ -1386,7 +1386,7 @@ namespace GitUI.CommandsDialogs
             FormProcess.ShowModeless(this, "gc");
         }
 
-        private void VerifyGitDatabaseToolStripMenuItemClick(object sender, EventArgs e)
+        private void recoverLostObjectsToolStripMenuItemClick(object sender, EventArgs e)
         {
             UICommands.StartVerifyDatabaseDialog(this);
         }
