@@ -387,25 +387,23 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.Load();
             _filterBranchHelper.InitToolStripBranchFilter();
 
-            using (WaitCursorScope.Enter())
-            {
-                LayoutRevisionInfo();
-                InternalInitialize(false);
-                RevisionGrid.Focus();
-                RevisionGrid.IndexWatcher.Reset();
+            LayoutRevisionInfo();
+            InternalInitialize(false);
+            RevisionGrid.Focus();
+            RevisionGrid.IndexWatcher.Reset();
 
-                RevisionGrid.IndexWatcher.Changed += (_, indexChangedEventArgs) =>
-                {
-                    bool indexChanged = indexChangedEventArgs.IsIndexChanged;
-                    this.InvokeAsync(() =>
+            RevisionGrid.IndexWatcher.Changed += (_, args) =>
+            {
+                bool indexChanged = args.IsIndexChanged;
+                this.InvokeAsync(
+                        () =>
                         {
                             RefreshButton.Image = indexChanged && AppSettings.UseFastChecks && Module.IsValidGitWorkingDir()
                                 ? Images.ReloadRevisionsDirty
                                 : Images.ReloadRevisions;
                         })
-                        .FileAndForget();
-                };
-            }
+                    .FileAndForget();
+            };
 
             base.OnLoad(e);
         }
