@@ -786,7 +786,7 @@ namespace GitUI.CommandsDialogs
                     { _currentItemStaged,  "--reverse" }
                 };
 
-                string output = Module.RunGitCmd(args.ToString(), null, patch);
+                string output = Module.RunGitCmd(args, null, patch);
 
                 ProcessApplyOutput(output, patch);
             }
@@ -888,7 +888,7 @@ namespace GitUI.CommandsDialogs
                     { _currentItemStaged,  "--reverse --index" }
                 };
 
-                string output = Module.RunGitCmd(args.ToString(), null, patch);
+                string output = Module.RunGitCmd(args, stdInput: patch);
 
                 if (EnvUtils.RunningOnWindows())
                 {

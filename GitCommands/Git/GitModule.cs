@@ -660,6 +660,14 @@ namespace GitCommands
         /// <summary>
         /// Run git command, console window is hidden, wait for exit, redirect output
         /// </summary>
+        public string RunGitCmd(ArgumentBuilder arguments, Encoding encoding = null, byte[] stdInput = null)
+        {
+            return RunGitCmd(arguments.ToString(), encoding, stdInput);
+        }
+
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         public string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
             return ThreadHelper.JoinableTaskFactory.Run(() =>
@@ -1534,47 +1542,50 @@ namespace GitCommands
 
         public string ResetSoft(string commit, string file = null)
         {
-            var args = new ArgumentBuilder
+            return RunGitCmd(new ArgumentBuilder
             {
-                "reset --soft",
+                "reset",
+                "--soft",
                 commit.QuoteNE(),
                 "--",
                 file.QuoteNE()
-            };
-
-            return RunGitCmd(args.ToString());
+            });
         }
 
         public string ResetMixed(string commit, string file = null)
         {
-            var args = new ArgumentBuilder
+            return RunGitCmd(new ArgumentBuilder
             {
-                "reset --mixed",
+                "reset",
+                "--mixed",
                 commit.QuoteNE(),
                 "--",
                 file.QuoteNE()
-            };
-
-            return RunGitCmd(args.ToString());
+            });
         }
 
         public string ResetHard(string commit, string file = null)
         {
-            var args = new ArgumentBuilder
+            return RunGitCmd(new ArgumentBuilder
             {
-                "reset --hard",
+                "reset",
+                "--hard",
                 commit.QuoteNE(),
                 "--",
                 file.QuoteNE()
-            };
-
-            return RunGitCmd(args.ToString());
+            });
         }
 
         public string ResetFile(string file)
         {
-            file = file.ToPosixPath();
-            return RunGitCmd("checkout-index --index --force -- \"" + file + "\"");
+            return RunGitCmd(new ArgumentBuilder
+            {
+                "checkout-index",
+                "--index",
+                "--force",
+                "--",
+                file.ToPosixPath().Quote()
+            });
         }
 
         /// <summary>
@@ -1600,16 +1611,14 @@ namespace GitCommands
 
         public string FormatPatch(string from, string to, string output, int? start = null)
         {
-            var args = new ArgumentBuilder
+            return RunGitCmd(new ArgumentBuilder
             {
                 "format-patch",
                 "-M -C -B",
                 { start != null, $"-- start-number {start}" },
                 $"{from.Quote()}..{to.Quote()}",
                 $"-o {output.ToPosixPath().Quote()}"
-            };
-
-            return RunGitCmd(args.ToString());
+            });
         }
 
         public string CheckoutFiles(IEnumerable<string> fileList, ObjectId revision, bool force)
@@ -1634,16 +1643,14 @@ namespace GitCommands
                 revision = null;
             }
 
-            var args = new ArgumentBuilder
+            return RunGitCmd(new ArgumentBuilder
             {
                 "checkout",
                 { force, "--force" },
                 revision,
                 "--",
                 files
-            };
-
-            return RunGitCmd(args.ToString());
+            });
         }
 
         public string RemoveFiles(IEnumerable<string> fileList, bool force)
@@ -2259,17 +2266,18 @@ namespace GitCommands
 
         public string AddRemote([CanBeNull] string name, string path)
         {
-            var location = path.ToPosixPath();
-
             if (string.IsNullOrEmpty(name))
             {
                 return "Please enter a name.";
             }
 
-            return
-                string.IsNullOrEmpty(location)
-                    ? RunGitCmd($"remote add \"{name}\" \"\"")
-                    : RunGitCmd($"remote add \"{name}\" \"{location}\"");
+            return RunGitCmd(new ArgumentBuilder
+            {
+                "remote",
+                "add",
+                name.Quote(),
+                path?.ToPosixPath().QuoteNE()
+            });
         }
 
         public IReadOnlyList<string> GetRemoteNames()
@@ -2664,26 +2672,28 @@ namespace GitCommands
         [CanBeNull]
         public Patch GetCurrentChanges(string fileName, [CanBeNull] string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
-            var args = new ArgumentBuilder
-            {
-                DiffCommandWithStandardArgs,
-                { staged, "-M -C --cached" },
-                extraDiffArguments,
-                { AppSettings.UsePatienceDiffAlgorithm, "--patience" },
-                "--",
-                fileName.ToPosixPath().Quote(),
-                { staged, oldFileName?.ToPosixPath().Quote() }
-            };
+            var output = RunGitCmd(
+                new ArgumentBuilder
+                {
+                    DiffCommandWithStandardArgs,
+                    { staged, "-M -C --cached" },
+                    extraDiffArguments,
+                    { AppSettings.UsePatienceDiffAlgorithm, "--patience" },
+                    "--",
+                    fileName.ToPosixPath().Quote(),
+                    { staged, oldFileName?.ToPosixPath().Quote() }
+                },
+                LosslessEncoding);
 
-            string result = RunGitCmd(args.ToString(), LosslessEncoding);
-            var patches = PatchProcessor.CreatePatchesFromString(result, encoding).ToList();
+            var patches = PatchProcessor.CreatePatchesFromString(output, encoding).ToList();
 
             return GetPatch(patches, fileName, oldFileName);
         }
 
         private string GetFileContents(string path)
         {
-            var contents = RunGitCmdResult(string.Format("show HEAD:\"{0}\"", path.ToPosixPath()));
+            var contents = RunGitCmdResult($"show HEAD:{path.ToPosixPath().Quote()}");
+
             if (contents.ExitCode == 0)
             {
                 return contents.StdOutput;
@@ -3027,23 +3037,21 @@ namespace GitCommands
                 return Array.Empty<string>();
             }
 
-            var args = new ArgumentBuilder
+            var output = RunGitCmd(new ArgumentBuilder
             {
                 "branch",
                 { getRemote && getLocal, "-a" },
                 { getRemote && !getLocal, "-r" },
                 "--contains",
                 objectId
-            };
+            });
 
-            string info = RunGitCmd(args.ToString());
-
-            if (IsGitErrorMessage(info))
+            if (IsGitErrorMessage(output))
             {
                 return Array.Empty<string>();
             }
 
-            string[] result = info.Split(new[] { '\r', '\n', '*' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] result = output.Split(new[] { '\r', '\n', '*' }, StringSplitOptions.RemoveEmptyEntries);
 
             // Remove symlink targets as in "origin/HEAD -> origin/master"
             for (int i = 0; i < result.Length; i++)
