@@ -335,19 +335,10 @@ namespace GitUI.BuildServerIntegration
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+            CancelBuildStatusFetchOperation();
 
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                CancelBuildStatusFetchOperation();
-
-                _buildServerAdapter?.Dispose();
-                _launchCancellation.Dispose();
-            }
+            _buildServerAdapter?.Dispose();
+            _launchCancellation.Dispose();
         }
 
         private static IsolatedStorageFileStream GetBuildServerOptionsIsolatedStorageStream(IBuildServerAdapter buildServerAdapter, FileAccess fileAccess, FileShare fileShare)

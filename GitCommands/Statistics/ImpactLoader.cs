@@ -73,17 +73,8 @@ namespace GitCommands.Statistics
 
         public void Dispose()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Stop();
-                _cancellationTokenSequence.Dispose();
-            }
+            Stop();
+            _cancellationTokenSequence.Dispose();
         }
 
         public void Stop()
