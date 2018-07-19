@@ -153,80 +153,80 @@ namespace GitCommands.Statistics
 
         private void LoadModuleInfo(string command, IGitModule module, CancellationToken token)
         {
-            Process p = module.RunGitCmdDetached(command);
-
-            // Read line
-            string line = p.StandardOutput.ReadLine();
-
-            // Analyze commit listing
-            while (!token.IsCancellationRequested)
+            using (var process = module.RunGitCmdDetached(command))
             {
-                var commit = new Commit();
+                var line = process.StandardOutput.ReadLine();
 
-                // Reached the end ?
-                if (line == null)
+                // Analyze commit listing
+                while (!token.IsCancellationRequested)
                 {
-                    break;
-                }
+                    var commit = new Commit();
 
-                // Look for commit delimiters
-                if (!line.StartsWith("--- "))
-                {
-                    line = p.StandardOutput.ReadLine();
-                    continue;
-                }
+                    // Reached the end ?
+                    if (line == null)
+                    {
+                        break;
+                    }
 
-                // Strip "--- "
-                line = line.Substring(4);
+                    // Look for commit delimiters
+                    if (!line.StartsWith("--- "))
+                    {
+                        line = process.StandardOutput.ReadLine();
+                        continue;
+                    }
 
-                // Split date and author
-                string[] header = line.Split(new[] { " --- " }, 2, StringSplitOptions.RemoveEmptyEntries);
-                if (header.Length != 2)
-                {
-                    continue;
-                }
+                    // Strip "--- "
+                    line = line.Substring(4);
 
-                // Save author in variable
-                commit.author = header[1];
-
-                // Parse commit date
-                DateTime date = DateTime.Parse(header[0]).Date;
-
-                // Calculate first day of the commit week
-                commit.week = date.AddDays(-(int)date.DayOfWeek);
-
-                // Reset commit data
-                commit.data.Commits = 1;
-                commit.data.AddedLines = 0;
-                commit.data.DeletedLines = 0;
-
-                // Parse commit lines
-                while ((line = p.StandardOutput.ReadLine()) != null && !line.StartsWith("--- ") && !token.IsCancellationRequested)
-                {
-                    // Skip empty line
-                    if (string.IsNullOrEmpty(line))
+                    // Split date and author
+                    string[] header = line.Split(new[] { " --- " }, 2, StringSplitOptions.RemoveEmptyEntries);
+                    if (header.Length != 2)
                     {
                         continue;
                     }
 
-                    string[] fileLine = line.Split('\t');
-                    if (fileLine.Length >= 2)
+                    // Save author in variable
+                    commit.author = header[1];
+
+                    // Parse commit date
+                    DateTime date = DateTime.Parse(header[0]).Date;
+
+                    // Calculate first day of the commit week
+                    commit.week = date.AddDays(-(int)date.DayOfWeek);
+
+                    // Reset commit data
+                    commit.data.Commits = 1;
+                    commit.data.AddedLines = 0;
+                    commit.data.DeletedLines = 0;
+
+                    // Parse commit lines
+                    while ((line = process.StandardOutput.ReadLine()) != null && !line.StartsWith("--- ") && !token.IsCancellationRequested)
                     {
-                        if (fileLine[0] != "-")
+                        // Skip empty line
+                        if (string.IsNullOrEmpty(line))
                         {
-                            commit.data.AddedLines += int.Parse(fileLine[0]);
+                            continue;
                         }
 
-                        if (fileLine[1] != "-")
+                        string[] fileLine = line.Split('\t');
+                        if (fileLine.Length >= 2)
                         {
-                            commit.data.DeletedLines += int.Parse(fileLine[1]);
+                            if (fileLine[0] != "-")
+                            {
+                                commit.data.AddedLines += int.Parse(fileLine[0]);
+                            }
+
+                            if (fileLine[1] != "-")
+                            {
+                                commit.data.DeletedLines += int.Parse(fileLine[1]);
+                            }
                         }
                     }
-                }
 
-                if (Updated != null && !token.IsCancellationRequested)
-                {
-                    Updated(this, new CommitEventArgs(commit));
+                    if (Updated != null && !token.IsCancellationRequested)
+                    {
+                        Updated(this, new CommitEventArgs(commit));
+                    }
                 }
             }
         }
