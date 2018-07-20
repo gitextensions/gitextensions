@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,29 +11,25 @@ namespace GitCommands.Statistics
 {
     public sealed class ImpactLoader : IDisposable
     {
-        public class CommitEventArgs : EventArgs
+        public readonly struct Commit
         {
-            public CommitEventArgs(Commit commit)
-            {
-                Commit = commit;
-            }
+            public DateTime Week { get; }
+            public string Author { get; }
+            public DataPoint Data { get; }
 
-            public Commit Commit { get; }
+            public Commit(DateTime week, string author, DataPoint data)
+            {
+                Week = week;
+                Author = author;
+                Data = data;
+            }
         }
 
-        /// <summary>
-        /// property to enable mailmap respectfulness
-        /// </summary>
-        public bool RespectMailmap { get; set; }
-
-        public event EventHandler Exited;
-        public event EventHandler<CommitEventArgs> Updated;
-
-        public struct DataPoint
+        public readonly struct DataPoint
         {
-            public int Commits;
-            public int AddedLines;
-            public int DeletedLines;
+            public int Commits { get; }
+            public int AddedLines { get; }
+            public int DeletedLines { get; }
 
             public int ChangedLines => AddedLines + DeletedLines;
 
@@ -45,23 +40,22 @@ namespace GitCommands.Statistics
                 DeletedLines = deleted;
             }
 
-            public static DataPoint operator +(DataPoint d1, DataPoint d2)
+            public static DataPoint operator +(DataPoint left, DataPoint right)
             {
-                return new DataPoint
-                {
-                    Commits = d1.Commits + d2.Commits,
-                    AddedLines = d1.AddedLines + d2.AddedLines,
-                    DeletedLines = d1.DeletedLines + d2.DeletedLines
-                };
+                return new DataPoint(
+                    left.Commits + right.Commits,
+                    left.AddedLines + right.AddedLines,
+                    left.DeletedLines + right.DeletedLines);
             }
         }
 
-        public struct Commit
-        {
-            public DateTime week;
-            public string author;
-            public DataPoint data;
-        }
+        /// <summary>
+        /// property to enable mailmap respectfulness
+        /// </summary>
+        public bool RespectMailmap { get; set; }
+
+        public event EventHandler Exited;
+        public event Action<Commit> CommitLoaded;
 
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
         private readonly IGitModule _module;
@@ -86,7 +80,7 @@ namespace GitCommands.Statistics
         {
             var token = _cancellationTokenSequence.Next();
 
-            JoinableTask[] tasks = GetTasks(token);
+            var tasks = GetTasks(token);
 
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
@@ -116,39 +110,37 @@ namespace GitCommands.Statistics
             }
         }
 
-        private JoinableTask[] GetTasks(CancellationToken token)
+        private IReadOnlyList<JoinableTask> GetTasks(CancellationToken token)
         {
-            var tasks = new List<JoinableTask>();
-            string authorName = RespectMailmap ? "%aN" : "%an";
+            var authorName = RespectMailmap ? "%aN" : "%an";
+            var command = $"log --pretty=tformat:\"--- %ad --- {authorName}\" --numstat --date=iso -C --all --no-merges";
 
-            string command = "log --pretty=tformat:\"--- %ad --- " + authorName + "\" --numstat --date=iso -C --all --no-merges";
-
-            tasks.Add(ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
-                {
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                    LoadModuleInfo(command, _module, token);
-                }));
+            var tasks = new List<JoinableTask>
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    async () =>
+                    {
+                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                        LoadModuleInfo(command, _module, token);
+                    })
+            };
 
             if (ShowSubmodules)
             {
-                var submodules = _module.GetSubmodulesLocalPaths();
-                foreach (var submoduleName in submodules)
-                {
-                    IGitModule submodule = _module.GetSubmodule(submoduleName);
-                    if (submodule.IsValidGitWorkingDir())
-                    {
-                        tasks.Add(ThreadHelper.JoinableTaskFactory.RunAsync(
-                            async () =>
-                            {
-                                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                                LoadModuleInfo(command, submodule, token);
-                            }));
-                    }
-                }
+                tasks.AddRange(
+                    from submoduleName in _module.GetSubmodulesLocalPaths()
+                    select _module.GetSubmodule(submoduleName)
+                    into submodule
+                    where submodule.IsValidGitWorkingDir()
+                    select ThreadHelper.JoinableTaskFactory.RunAsync(
+                        async () =>
+                        {
+                            await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                            LoadModuleInfo(command, submodule, token);
+                        }));
             }
 
-            return tasks.ToArray();
+            return tasks;
         }
 
         private void LoadModuleInfo(string command, IGitModule module, CancellationToken token)
@@ -160,8 +152,6 @@ namespace GitCommands.Statistics
                 // Analyze commit listing
                 while (!token.IsCancellationRequested)
                 {
-                    var commit = new Commit();
-
                     // Reached the end ?
                     if (line == null)
                     {
@@ -186,18 +176,18 @@ namespace GitCommands.Statistics
                     }
 
                     // Save author in variable
-                    commit.author = header[1];
+                    var author = header[1];
 
                     // Parse commit date
-                    DateTime date = DateTime.Parse(header[0]).Date;
+                    var date = DateTime.Parse(header[0]).Date;
 
                     // Calculate first day of the commit week
-                    commit.week = date.AddDays(-(int)date.DayOfWeek);
+                    var week = date.AddDays(-(int)date.DayOfWeek);
 
                     // Reset commit data
-                    commit.data.Commits = 1;
-                    commit.data.AddedLines = 0;
-                    commit.data.DeletedLines = 0;
+                    var commits = 1;
+                    var added = 0;
+                    var deleted = 0;
 
                     // Parse commit lines
                     while ((line = process.StandardOutput.ReadLine()) != null && !line.StartsWith("--- ") && !token.IsCancellationRequested)
@@ -213,19 +203,19 @@ namespace GitCommands.Statistics
                         {
                             if (fileLine[0] != "-")
                             {
-                                commit.data.AddedLines += int.Parse(fileLine[0]);
+                                added += int.Parse(fileLine[0]);
                             }
 
                             if (fileLine[1] != "-")
                             {
-                                commit.data.DeletedLines += int.Parse(fileLine[1]);
+                                deleted += int.Parse(fileLine[1]);
                             }
                         }
                     }
 
-                    if (Updated != null && !token.IsCancellationRequested)
+                    if (!token.IsCancellationRequested)
                     {
-                        Updated(this, new CommitEventArgs(commit));
+                        CommitLoaded?.Invoke(new Commit(week, author, new DataPoint(commits, added, deleted)));
                     }
                 }
             }
