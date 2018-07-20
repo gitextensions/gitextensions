@@ -6,14 +6,15 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Statistics;
+using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitImpact
 {
     public class ImpactControl : UserControl
     {
-        private const int BlockWidth = 60;
-        private const int TransitionWidth = 50;
+        private static readonly int BlockWidth = DpiUtil.Scale(60);
+        private static readonly int TransitionWidth = DpiUtil.Scale(50);
 
         private const int LinesFontSize = 10;
         private const int WeekFontSize = 8;
@@ -180,25 +181,20 @@ namespace GitImpact
 
         private void InitializeComponent()
         {
-            _scrollBar = new HScrollBar();
             SuspendLayout();
 
-            //
-            // scrollBar
-            //
-            _scrollBar.Dock = DockStyle.Bottom;
-            _scrollBar.LargeChange = 0;
-            _scrollBar.Location = new Point(0, 133);
-            _scrollBar.Maximum = 0;
-            _scrollBar.Name = "_scrollBar";
-            _scrollBar.Size = new Size(150, 17);
-            _scrollBar.SmallChange = 0;
-            _scrollBar.TabIndex = 0;
+            _scrollBar = new HScrollBar
+            {
+                Dock = DockStyle.Bottom,
+                LargeChange = 0,
+                Location = new Point(0, 133),
+                Maximum = 0,
+                Name = "_scrollBar",
+                SmallChange = 0,
+                TabIndex = 0
+            };
             _scrollBar.Scroll += OnScroll;
 
-            //
-            // ImpactControl
-            //
             Controls.Add(_scrollBar);
             Name = "ImpactControl";
             Paint += OnPaint;
