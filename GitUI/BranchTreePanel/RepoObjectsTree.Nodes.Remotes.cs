@@ -222,7 +222,21 @@ namespace GitUI.BranchTreePanel
                     ? $"Push: {_remote.PushUrl}\nFetch: {_remote.FetchUrl}"
                     : _remote.FetchUrl;
 
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.Remote);
+                string imageKey;
+                if (_remote.PushUrl.Contains("github.com") || _remote.FetchUrl.Contains("github.com"))
+                {
+                    imageKey = nameof(Images.GitHub);
+                }
+                else if (_remote.PushUrl.Contains("bitbucket.") || _remote.FetchUrl.Contains("bitbucket."))
+                {
+                    imageKey = nameof(Images.BitBucket);
+                }
+                else
+                {
+                    imageKey = nameof(Images.Remote);
+                }
+
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = imageKey;
             }
         }
     }
