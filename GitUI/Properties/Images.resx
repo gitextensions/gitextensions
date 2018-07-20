@@ -628,6 +628,15 @@
   <data name="RemoteRepo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\RemoteRepo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="PatchApply" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\PatchApply.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PatchView" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\PatchView.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="PatchFormat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\PatchFormat.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="ShowThisBranchOnly" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\ShowThisBranchOnly.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

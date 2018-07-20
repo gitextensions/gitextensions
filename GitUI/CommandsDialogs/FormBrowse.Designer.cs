@@ -1377,7 +1377,7 @@ namespace GitUI.CommandsDialogs
             // 
             // formatPatchToolStripMenuItem
             // 
-            this.formatPatchToolStripMenuItem.Image = global::GitUI.Properties.Images.Diff;
+            this.formatPatchToolStripMenuItem.Image = global::GitUI.Properties.Images.PatchFormat;
             this.formatPatchToolStripMenuItem.Name = "formatPatchToolStripMenuItem";
             this.formatPatchToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.formatPatchToolStripMenuItem.Text = "Format patch...";
@@ -1385,6 +1385,7 @@ namespace GitUI.CommandsDialogs
             // 
             // applyPatchToolStripMenuItem
             // 
+            this.applyPatchToolStripMenuItem.Image = global::GitUI.Properties.Images.PatchApply;
             this.applyPatchToolStripMenuItem.Name = "applyPatchToolStripMenuItem";
             this.applyPatchToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.applyPatchToolStripMenuItem.Text = "Apply patch...";
@@ -1392,6 +1393,7 @@ namespace GitUI.CommandsDialogs
             // 
             // patchToolStripMenuItem
             // 
+            this.patchToolStripMenuItem.Image = global::GitUI.Properties.Images.PatchView;
             this.patchToolStripMenuItem.Name = "patchToolStripMenuItem";
             this.patchToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.patchToolStripMenuItem.Text = "View patch file...";
