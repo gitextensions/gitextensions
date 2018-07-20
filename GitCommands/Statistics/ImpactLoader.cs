@@ -232,9 +232,10 @@ namespace GitCommands.Statistics
         }
 
         public static void AddIntermediateEmptyWeeks(
-            ref SortedDictionary<DateTime, Dictionary<string, DataPoint>> impact, Dictionary<string, DataPoint> authors)
+            ref SortedDictionary<DateTime, Dictionary<string, DataPoint>> impact,
+            IEnumerable<string> authors)
         {
-            foreach (var (author, _) in authors)
+            foreach (var author in authors)
             {
                 // Determine first and last commit week of each author
                 var start = new DateTime();
