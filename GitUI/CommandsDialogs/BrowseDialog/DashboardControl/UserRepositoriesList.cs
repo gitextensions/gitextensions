@@ -657,10 +657,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             RepositoryContextAction(sender as ToolStripMenuItem, repository =>
             {
-                foreach (Repository repo in _missingRepositories)
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
                 {
-                    ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(repo.Path));
-                }
+                    foreach (Repository repo in _missingRepositories)
+                    {
+                        await RepositoryHistoryManager.Locals.RemoveRecentAsync(repo.Path);
+                    }
+                });
 
                 ShowRecentRepositories();
             });
