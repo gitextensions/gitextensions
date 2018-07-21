@@ -1084,6 +1084,11 @@ namespace GitUI
                 objectId
             };
 
+            // NOTE this will throw a FormatException if the objectId does not exist.
+            //
+            // An error message resembles (excluding quotes):
+            // "fatal: bad object b897cd39543bd933da30af872a633760e79472c9"
+
             return Module
                 .ReadGitOutputLines(args.ToString())
                 .Select(line => ObjectId.Parse(line))
