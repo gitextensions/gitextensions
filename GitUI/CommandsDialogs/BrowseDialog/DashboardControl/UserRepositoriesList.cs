@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -36,6 +37,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private Brush _hoverColorBrush = new SolidBrush(SystemColors.InactiveCaption);
         private ListViewItem _prevHoveredItem;
         private readonly ListViewGroup _lvgRecentRepositories;
+        private IReadOnlyList<Repository> _missingRepositories;
         private readonly IUserRepositoriesListController _controller = new UserRepositoriesListController(RepositoryHistoryManager.Locals);
 
         public event EventHandler<GitModuleEventArgs> GitModuleChanged;
@@ -56,6 +58,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             listView1.Items.Clear();
             listView1.ContextMenuStrip = contextMenuStrip;
+
+            _missingRepositories = new Collection<Repository>();
 
             imageList1.Images.Clear();
             imageList1.ImageSize = DpiUtil.Scale(imageList1.ImageSize);
@@ -210,6 +214,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             using (var graphics = CreateGraphics())
             {
                 (recentRepositories, favouriteRepositories) = _controller.PreRenderRepositories(graphics);
+                _missingRepositories = recentRepositories.Union(favouriteRepositories)
+                                                         .Select(repository => repository.Repo)
+                                                         .Where(repo => !_controller.IsValidGitWorkingDir(repo.Path))
+                                                         .ToList();
             }
 
             try
@@ -641,6 +649,19 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             RepositoryContextAction(sender as ToolStripMenuItem, repository =>
             {
                 ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(repository.Path));
+                ShowRecentRepositories();
+            });
+        }
+
+        private void tsmiRemoveMissingReposFromList_Click(object sender, EventArgs e)
+        {
+            RepositoryContextAction(sender as ToolStripMenuItem, repository =>
+            {
+                foreach (Repository repo in _missingRepositories)
+                {
+                    ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(repo.Path));
+                }
+
                 ShowRecentRepositories();
             });
         }
