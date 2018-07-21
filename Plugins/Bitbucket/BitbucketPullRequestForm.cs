@@ -15,7 +15,6 @@ namespace Bitbucket
 {
     public partial class BitbucketPullRequestForm : GitExtensionsFormBase
     {
-        private readonly TranslationString _yourRepositoryIsNotInBitbucket = new TranslationString("Your repository is not hosted in Bitbucket.");
         private readonly TranslationString _committed = new TranslationString("{0} committed\n{1}");
         private readonly TranslationString _success = new TranslationString("Success");
         private readonly TranslationString _error = new TranslationString("Error");
@@ -24,7 +23,7 @@ namespace Bitbucket
         [CanBeNull] private readonly Settings _settings;
         private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
 
-        public BitbucketPullRequestForm(BitbucketPlugin plugin, ISettingsSource settings, GitUIEventArgs gitUiCommands)
+        public BitbucketPullRequestForm(Settings settings)
         {
             InitializeComponent();
 
@@ -32,13 +31,7 @@ namespace Bitbucket
             ddlRepositorySource.DisplayMember = nameof(Repository.DisplayName);
             ddlRepositoryTarget.DisplayMember = nameof(Repository.DisplayName);
 
-            _settings = Settings.Parse(gitUiCommands.GitModule, settings, plugin);
-            if (_settings == null)
-            {
-                MessageBox.Show(_yourRepositoryIsNotInBitbucket.Text);
-                Close();
-                return;
-            }
+            _settings = settings;
 
             Load += delegate
             {
