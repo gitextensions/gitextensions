@@ -19,7 +19,7 @@ namespace GitUITests
             // just reference to GitUI
             MouseWheelRedirector.Active = true;
 
-            var translatableTypes = TranslationUtl.GetTranslatableTypes();
+            var translatableTypes = TranslationUtil.GetTranslatableTypes();
 
             var testTranslation = new Dictionary<string, TranslationFile>();
 
@@ -30,7 +30,7 @@ namespace GitUITests
                 {
                     try
                     {
-                        var obj = (ITranslate)TranslationUtl.CreateInstanceOfClass(type);
+                        var obj = (ITranslate)TranslationUtil.CreateInstanceOfClass(type);
 
                         obj.AddTranslationItems(translation);
                         obj.TranslateItems(translation);

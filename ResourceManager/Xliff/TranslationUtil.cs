@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace ResourceManager.Xliff
 {
-    public static class TranslationUtl
+    public static class TranslationUtil
     {
         private const BindingFlags _propertyFlags
             = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static |

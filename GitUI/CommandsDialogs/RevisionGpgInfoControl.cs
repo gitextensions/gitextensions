@@ -47,94 +47,96 @@ namespace GitUI.CommandsDialogs
             }
 
             ApplyLayout();
-        }
 
-        private void ApplyLayout()
-        {
-            float heightRowCommit;
-            float heightRowTag;
+            return;
 
-            if (txtTagGpgInfo.Visible)
+            void DisplayCommitSignatureStatus(CommitStatus commitStatus)
             {
-                heightRowCommit = 50f;
-                heightRowTag = 50f;
+                /* COMMIT section */
+                switch (commitStatus)
+                {
+                    case CommitStatus.GoodSignature:
+                        commitSignPicture.Image = Images.CommitSignatureOk;
+                        commitSignPicture.Visible = true;
+                        break;
+                    case CommitStatus.MissingPublicKey:
+                        commitSignPicture.Image = Images.CommitSignatureWarning;
+                        commitSignPicture.Visible = true;
+                        break;
+                    case CommitStatus.SignatureError:
+                        commitSignPicture.Image = Images.CommitSignatureError;
+                        commitSignPicture.Visible = true;
+                        break;
+                    case CommitStatus.NoSignature:
+                    default:
+                        commitSignPicture.Visible = false;
+                        break;
+                }
             }
-            else
+
+            void DisplayTagSignatureStatus(TagStatus tagStatus)
             {
-                heightRowCommit = 100f;
-                heightRowTag = 0f;
+                /* TAG section */
+                switch (tagStatus)
+                {
+                    case TagStatus.OneGood:
+                        tagSignPicture.Image = Images.TagOk;
+                        tagSignPicture.Visible = true;
+                        /* This shows the Tag row in ApplyLayout */
+                        txtTagGpgInfo.Visible = true;
+                        break;
+                    case TagStatus.OneBad:
+                        tagSignPicture.Image = Images.TagError;
+                        tagSignPicture.Visible = true;
+                        /* This shows the Tag row in ApplyLayout */
+                        txtTagGpgInfo.Visible = true;
+                        break;
+                    case TagStatus.Many:
+                        tagSignPicture.Image = Images.TagMany;
+                        tagSignPicture.Visible = true;
+                        /* This shows the Tag row in ApplyLayout */
+                        txtTagGpgInfo.Visible = true;
+                        break;
+                    case TagStatus.NoPubKey:
+                        tagSignPicture.Image = Images.TagWarning;
+                        tagSignPicture.Visible = true;
+                        /* This shows the Tag row in ApplyLayout */
+                        txtTagGpgInfo.Visible = true;
+                        break;
+                    case TagStatus.TagNotSigned:
+                        tagSignPicture.Visible = false;
+                        /* This shows the Tag row in ApplyLayout */
+                        txtTagGpgInfo.Visible = true;
+                        break;
+                    case TagStatus.NoTag:
+                    default:
+                        tagSignPicture.Visible = false;
+                        txtTagGpgInfo.Visible = false;
+                        break;
+                }
             }
 
-            tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Percent;
-            tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Percent;
-
-            tableLayoutPanel1.RowStyles[0].Height = heightRowCommit;
-            tableLayoutPanel1.RowStyles[1].Height = heightRowTag;
-        }
-
-        private void DisplayCommitSignatureStatus(CommitStatus commitStatus)
-        {
-            /* COMMIT section */
-            switch (commitStatus)
+            void ApplyLayout()
             {
-                case CommitStatus.GoodSignature:
-                    commitSignPicture.Image = Images.CommitSignatureOk;
-                    commitSignPicture.Visible = true;
-                    break;
-                case CommitStatus.MissingPublicKey:
-                    commitSignPicture.Image = Images.CommitSignatureWarning;
-                    commitSignPicture.Visible = true;
-                    break;
-                case CommitStatus.SignatureError:
-                    commitSignPicture.Image = Images.CommitSignatureError;
-                    commitSignPicture.Visible = true;
-                    break;
-                case CommitStatus.NoSignature:
-                default:
-                    commitSignPicture.Visible = false;
-                    break;
-            }
-        }
+                float heightRowCommit;
+                float heightRowTag;
 
-        private void DisplayTagSignatureStatus(TagStatus tagStatus)
-        {
-            /* TAG section */
-            switch (tagStatus)
-            {
-                case TagStatus.OneGood:
-                    tagSignPicture.Image = Images.TagOk;
-                    tagSignPicture.Visible = true;
-                    /* This shows the Tag row in ApplyLayout */
-                    txtTagGpgInfo.Visible = true;
-                    break;
-                case TagStatus.OneBad:
-                    tagSignPicture.Image = Images.TagError;
-                    tagSignPicture.Visible = true;
-                    /* This shows the Tag row in ApplyLayout */
-                    txtTagGpgInfo.Visible = true;
-                    break;
-                case TagStatus.Many:
-                    tagSignPicture.Image = Images.TagMany;
-                    tagSignPicture.Visible = true;
-                    /* This shows the Tag row in ApplyLayout */
-                    txtTagGpgInfo.Visible = true;
-                    break;
-                case TagStatus.NoPubKey:
-                    tagSignPicture.Image = Images.TagWarning;
-                    tagSignPicture.Visible = true;
-                    /* This shows the Tag row in ApplyLayout */
-                    txtTagGpgInfo.Visible = true;
-                    break;
-                case TagStatus.TagNotSigned:
-                    tagSignPicture.Visible = false;
-                    /* This shows the Tag row in ApplyLayout */
-                    txtTagGpgInfo.Visible = true;
-                    break;
-                case TagStatus.NoTag:
-                default:
-                    tagSignPicture.Visible = false;
-                    txtTagGpgInfo.Visible = false;
-                    break;
+                if (txtTagGpgInfo.Visible)
+                {
+                    heightRowCommit = 50f;
+                    heightRowTag = 50f;
+                }
+                else
+                {
+                    heightRowCommit = 100f;
+                    heightRowTag = 0f;
+                }
+
+                tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Percent;
+                tableLayoutPanel1.RowStyles[1].SizeType = SizeType.Percent;
+
+                tableLayoutPanel1.RowStyles[0].Height = heightRowCommit;
+                tableLayoutPanel1.RowStyles[1].Height = heightRowTag;
             }
         }
     }

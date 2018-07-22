@@ -7,7 +7,6 @@ using GitUI;
 using JetBrains.Annotations;
 using ResourceManager;
 using ResourceManager.Xliff;
-using TranslationUtl = ResourceManager.Xliff.TranslationUtl;
 
 namespace TranslationApp
 {
@@ -182,7 +181,7 @@ namespace TranslationApp
                 // Set language to neutral to get neutral translations
                 GitCommands.AppSettings.CurrentTranslation = "";
 
-                var translatableTypes = TranslationUtl.GetTranslatableTypes();
+                var translatableTypes = TranslationUtil.GetTranslatableTypes();
                 progressBar.Maximum = translatableTypes.Sum(types => types.Value.Count);
                 progressBar.Visible = true;
 
@@ -194,7 +193,7 @@ namespace TranslationApp
                     {
                         foreach (Type type in types)
                         {
-                            if (TranslationUtl.CreateInstanceOfClass(type) is ITranslate obj)
+                            if (TranslationUtil.CreateInstanceOfClass(type) is ITranslate obj)
                             {
                                 obj.AddTranslationItems(translation);
                             }

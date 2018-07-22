@@ -79,7 +79,7 @@
     <Compile Include="CommitDataRenders\MonospacedHeaderLabelFormatter.cs" />
     <Compile Include="CommitDataRenders\TabbedHeaderLabelFormatter.cs" />
     <Compile Include="CommitDataRenders\IHeaderLabelFormatter.cs" />
-    <Compile Include="Xliff\TranslationUtl.cs" />
+    <Compile Include="Xliff\TranslationUtil.cs" />
     <Compile Include="TranslationString.cs" />
     <Compile Include="Translator.cs" />
     <Compile Include="Xliff\TranslationFile.cs" />
