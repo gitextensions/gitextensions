@@ -17,9 +17,9 @@ namespace TfsIntegration
 {
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class)]
-    public class TfsIntegrationMetadata : BuildServerAdapterMetadataAttribute
+    public sealed class TfsIntegrationMetadataAttribute : BuildServerAdapterMetadataAttribute
     {
-        public TfsIntegrationMetadata(string buildServerType)
+        public TfsIntegrationMetadataAttribute(string buildServerType)
             : base(buildServerType)
         {
         }
