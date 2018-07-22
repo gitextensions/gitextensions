@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI;
 using JetBrains.Annotations;
+using ResourceManager.Properties;
 
 namespace ResourceManager
 {
@@ -26,6 +27,7 @@ namespace ResourceManager
             _initialiser = new GitExtensionsControlInitialiser(this);
 
             ShowInTaskbar = Application.OpenForms.Count <= 0;
+            Icon = Resources.GitExtensionsLogoIcon;
         }
 
         protected bool IsDesignModeActive => _initialiser.IsDesignModeActive;

@@ -64,17 +64,19 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///### [Version 2.51.02] (24 May 2018)
+        ///### [Version 2.51.04] (8 July 2018)
         ///
-        ///#### Highlights:
-        ///* Simplified installer - Git and KDiff3 installers are no longer installed as part of GitExtensions&apos;s installation. The user will have to install external apps and tools separately.
-        ///* Fixes to address a number of layout issues for high DPI monitors.
+        ///#### Fixes:
+        ///* A number of changed files on Commit button is always &apos;2&apos; - Issue [5127]
+        ///* Error on push deleting a remote branch when a tag with the same name exists - Issue [5119]
+        ///
+        ///
+        ///### [Version 2.51.03] (26 June 2018)
         ///
         ///#### Features:
-        ///* Remove Git and KDiff3 from installer 2.51 - PR [4933]
-        ///* Check for recommended Git version 2.51 - PR [4932]
-        ///* Check for recommended Git version - PR [4929]
-        ///* [rest of string was truncated]&quot;;.
+        ///* Set recommended version Git version to 2.17.1 - PR [5095]
+        ///* RTF round-trip bug causes System.ArgumentException: File format is not valid - Issue [5005]
+        ///* Recheck filter against displayed file name when w [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -101,16 +103,6 @@ namespace GitUI.Properties {
         internal static string Designers {
             get {
                 return ResourceManager.GetString("Designers", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon git_extensions_logo_icon {
-            get {
-                object obj = ResourceManager.GetObject("git_extensions_logo_icon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
             }
         }
         

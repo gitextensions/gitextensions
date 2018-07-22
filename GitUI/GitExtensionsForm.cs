@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
-using GitUI.Properties;
 using ResourceManager;
 
 namespace GitUI
@@ -35,7 +34,6 @@ namespace GitUI
             _needsPositionSave = enablePositionRestore;
             _needsPositionRestore = enablePositionRestore;
 
-            Icon = Resources.git_extensions_logo_icon;
             FormClosing += GitExtensionsForm_FormClosing;
 
             var cancelButton = new Button();
