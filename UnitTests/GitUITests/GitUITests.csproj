@@ -73,6 +73,7 @@
     <Compile Include="CommandsDialogs\BrowseDialog\FormUpdateFixture.cs" />
     <Compile Include="Hotkey\HotkeySettingsManagerFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserControls\RevisionGridClasses\GitRefListsForRevisionTests.cs" />
     <Compile Include="UserControls\ToolStripClasses\CommitIconProviderTests.cs" />
     <Compile Include="UserManual\SingleHtmlUserManualFixture.cs" />
     <Compile Include="UserManual\StandardHtmlUserManualFixture.cs" />
