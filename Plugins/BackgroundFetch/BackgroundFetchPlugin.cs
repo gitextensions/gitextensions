@@ -83,11 +83,11 @@ namespace BackgroundFetch
                                   {
                                       if (_fetchAllSubmodules.ValueOrDefault(Settings))
                                       {
-                                          _currentGitUiCommands.GitCommand("submodule foreach --recursive git fetch --all");
+                                          _currentGitUiCommands.GitModule.RunGitCmd("submodule foreach --recursive git fetch --all");
                                       }
 
                                       var gitCmd = _gitCommand.ValueOrDefault(Settings).Trim();
-                                      var msg = _currentGitUiCommands.GitCommand(gitCmd);
+                                      var msg = _currentGitUiCommands.GitModule.RunGitCmd(gitCmd);
                                       if (_autoRefresh.ValueOrDefault(Settings))
                                       {
                                           if (gitCmd.StartsWith("fetch", StringComparison.InvariantCultureIgnoreCase))

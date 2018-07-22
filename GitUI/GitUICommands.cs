@@ -72,11 +72,6 @@ namespace GitUI
 
         #endregion
 
-        public string GitCommand(string arguments)
-        {
-            return Module.RunGitCmd(arguments);
-        }
-
         public async Task<string> CommandLineCommandAsync(string cmd, string arguments)
         {
             return await Module.RunCmdAsync(cmd, arguments).ConfigureAwait(false);
