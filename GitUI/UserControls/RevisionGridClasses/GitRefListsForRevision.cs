@@ -48,7 +48,7 @@ namespace GitUI.UserControls.RevisionGridClasses
 
         public string[] GetAllTagNames()
         {
-            return AllTags.Select(t => t.Name).ToArray();
+            return _tags.Select(t => t.Name).ToArray();
         }
 
         /// <summary>
