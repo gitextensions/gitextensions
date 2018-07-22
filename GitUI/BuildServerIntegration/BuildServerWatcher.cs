@@ -216,7 +216,8 @@ namespace GitUI.BuildServerIntegration
         /// <returns>projectNames with variables replaced</returns>
         public string ReplaceVariables(string projectNames)
         {
-            _repoNameExtractor.Get(out string repoProject, out string repoName);
+            var (repoProject, repoName) = _repoNameExtractor.Get();
+
             if (repoProject.IsNotNullOrWhitespace())
             {
                 projectNames = projectNames.Replace("{cRepoProject}", repoProject);

@@ -13,7 +13,7 @@ namespace GitCommands.Remotes
         ///  The filename without extension for the remote URL
         /// This function could have been included in GitModule
         /// </summary>
-        void Get(out string repoProject, out string repoName);
+        (string repoProject, string repoName) Get();
     }
 
     public sealed class RepoNameExtractor : IRepoNameExtractor
@@ -31,12 +31,13 @@ namespace GitCommands.Remotes
         ///  The filename without extension for the remote URL
         /// This function could have been included in GitModule
         /// </summary>
-        public void Get(out string repoProject, out string repoName)
+        public (string repoProject, string repoName) Get()
         {
             var module = _getModule();
 
             // Extract "name of repo" from remote url
-            string remoteName = module.GetCurrentRemote();
+            var remoteName = module.GetCurrentRemote();
+
             if (remoteName.IsNullOrWhiteSpace())
             {
                 // No remote for the branch, for instance a submodule. Use first remote.
@@ -48,14 +49,20 @@ namespace GitCommands.Remotes
             }
 
             var remoteUrl = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
-            repoName = Path.GetFileNameWithoutExtension(remoteUrl);
-            try
+            var repoName = Path.GetFileNameWithoutExtension(remoteUrl);
+
+            return (GetRepoProject(), repoName);
+
+            string GetRepoProject()
             {
-                repoProject = Path.GetFileNameWithoutExtension(Path.GetDirectoryName(remoteUrl));
-            }
-            catch
-            {
-                repoProject = "";
+                try
+                {
+                    return Path.GetFileNameWithoutExtension(Path.GetDirectoryName(remoteUrl));
+                }
+                catch
+                {
+                    return "";
+                }
             }
         }
     }
