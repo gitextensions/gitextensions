@@ -48,8 +48,6 @@ namespace GitUI
             FilterVisible = false;
 
             SelectFirstItemOnSetItems = true;
-            FileStatusListView.MouseMove += FileStatusListView_MouseMove;
-            FileStatusListView.MouseDown += FileStatusListView_MouseDown;
 
             FileStatusListView.SmallImageList = CreateImageList();
             FileStatusListView.LargeImageList = CreateImageList();
