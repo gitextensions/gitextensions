@@ -168,7 +168,7 @@ namespace JenkinsIntegration
                 }
 
                 // else: The server had no response (overloaded?) or a multi-branch pipeline is not configured
-                if (timestamp == 0 && jobDescription["lastBuild"] != null && jobDescription["lastBuild"]["timestamp"] != null)
+                if (timestamp == 0 && jobDescription["lastBuild"]?["timestamp"] != null)
                 {
                     timestamp = jobDescription["lastBuild"]["timestamp"].ToObject<long>();
                 }

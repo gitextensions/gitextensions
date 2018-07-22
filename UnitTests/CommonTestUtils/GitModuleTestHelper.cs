@@ -22,8 +22,23 @@ namespace CommonTestUtils
             Directory.CreateDirectory(path);
 
             var module = new GitModule(path);
-            module.Init(false, false);
+            module.Init(bare: false, shared: false);
             Module = module;
+
+            return;
+
+            string GetTemporaryPath()
+            {
+                var tempPath = Path.GetTempPath();
+
+                // workaround macOS symlinking its temp folder
+                if (tempPath.StartsWith("/var"))
+                {
+                    tempPath = "/private" + tempPath;
+                }
+
+                return Path.Combine(tempPath, Path.GetRandomFileName());
+            }
         }
 
         /// <summary>
@@ -116,19 +131,6 @@ namespace CommonTestUtils
             {
                 throw new ArgumentException("The given module does not belong to this helper.");
             }
-        }
-
-        private static string GetTemporaryPath()
-        {
-            var tempPath = Path.GetTempPath();
-
-            // workaround macOS symlinking its temp folder
-            if (tempPath.StartsWith("/var"))
-            {
-                tempPath = "/private" + tempPath;
-            }
-
-            return Path.Combine(tempPath, Path.GetRandomFileName());
         }
     }
 }

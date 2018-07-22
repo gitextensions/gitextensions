@@ -20,7 +20,7 @@ namespace GitUI.Editor
         public new event EventHandler DoubleClick;
 
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
-        private readonly DiffViewerLineNumberCtrl _lineNumbersControl;
+        private readonly DiffViewerLineNumberControl _lineNumbersControl;
         private readonly Func<GitModule> _moduleProvider;
 
         private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
@@ -53,7 +53,7 @@ namespace GitUI.Editor
             HighlightingManager.Manager.DefaultHighlighting.SetColorFor("LineNumbers", new HighlightColor(Color.FromArgb(80, 0, 0, 0), Color.White, false, false));
             TextEditor.ActiveTextAreaControl.TextEditorProperties.EnableFolding = false;
 
-            _lineNumbersControl = new DiffViewerLineNumberCtrl(TextEditor.ActiveTextAreaControl.TextArea);
+            _lineNumbersControl = new DiffViewerLineNumberControl(TextEditor.ActiveTextAreaControl.TextArea);
 
             VRulerPosition = AppSettings.DiffVerticalRulerPosition;
         }

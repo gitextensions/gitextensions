@@ -111,7 +111,6 @@ namespace GitUI.BuildServerIntegration
             cancellationToken?.Dispose();
         }
 
-        [CanBeNull]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "http://stackoverflow.com/questions/1065168/does-disposing-streamreader-close-the-stream")]
         public IBuildServerCredentials GetBuildServerCredentials(IBuildServerAdapter buildServerAdapter, bool useStoredCredentialsIfExisting)
         {
@@ -209,11 +208,6 @@ namespace GitUI.BuildServerIntegration
             }
         }
 
-        /// <summary>
-        /// Replace variables for the project string with the current "repo shortname"
-        /// </summary>
-        /// <param name="projectNames">build server specific format, compatible with the variable format</param>
-        /// <returns>projectNames with variables replaced</returns>
         public string ReplaceVariables(string projectNames)
         {
             var (repoProject, repoName) = _repoNameExtractor.Get();

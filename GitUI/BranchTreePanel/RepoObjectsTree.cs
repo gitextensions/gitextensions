@@ -19,7 +19,7 @@ namespace GitUI.BranchTreePanel
             new TranslationString("Filter the revision grid to show this branch only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
 
         private readonly List<Tree> _rootNodes = new List<Tree>();
-        private SearchControl<string> _txtBranchCriterion;
+        private readonly SearchControl<string> _txtBranchCriterion;
         private readonly CancellationTokenSequence _reloadCancellation = new CancellationTokenSequence();
         private CancellationToken _currentToken;
         private TreeNode _tagTreeRootNode;
@@ -34,9 +34,10 @@ namespace GitUI.BranchTreePanel
             _currentToken = _reloadCancellation.Next();
             InitializeComponent();
             InitImageList();
-            InitializeSearchBox();
-            treeMain.PreviewKeyDown += OnPreviewKeyDown;
+            _txtBranchCriterion = CreateSearchBox();
+            branchSearchPanel.Controls.Add(_txtBranchCriterion, 1, 0);
 
+            treeMain.PreviewKeyDown += OnPreviewKeyDown;
             btnSearch.PreviewKeyDown += OnPreviewKeyDown;
             PreviewKeyDown += OnPreviewKeyDown;
             InitializeComplete();
@@ -49,6 +50,97 @@ namespace GitUI.BranchTreePanel
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
             mnubtnFilterRemoteBranchInRevisionGrid.ToolTipText = _showBranchOnly.Text;
             mnubtnFilterLocalBranchInRevisionGrid.ToolTipText = _showBranchOnly.Text;
+
+            void InitImageList()
+            {
+                const int rowPadding = 1; // added to top and bottom, so doubled -- this value is scaled *after*, so consider 96dpi here
+
+                treeMain.ImageList = new ImageList
+                {
+                    ImageSize = DpiUtil.Scale(new Size(16, 16 + rowPadding + rowPadding)), // Scale ImageSize and images scale automatically
+                    Images =
+                    {
+                        { nameof(Images.BranchDocument), Pad(Images.BranchDocument) },
+                        { nameof(Images.Branch), Pad(Images.Branch) },
+                        { nameof(Images.Remote), Pad(Images.RemoteRepo) },
+                        { nameof(Images.BitBucket), Pad(Images.BitBucket) },
+                        { nameof(Images.GitHub), Pad(Images.GitHub) },
+                        { nameof(Images.BranchLocalRoot), Pad(Images.BranchLocalRoot) },
+                        { nameof(Images.BranchRemoteRoot), Pad(Images.BranchRemoteRoot) },
+                        { nameof(Images.BranchRemote), Pad(Images.BranchRemote) },
+                        { nameof(Images.BranchFolder), Pad(Images.BranchFolder) },
+                        { nameof(Images.TagHorizontal), Pad(Images.TagHorizontal) },
+                    }
+                };
+                treeMain.SelectedImageKey = treeMain.ImageKey;
+
+                Image Pad(Image image)
+                {
+                    var padded = new Bitmap(image.Width, image.Height + rowPadding + rowPadding, PixelFormat.Format32bppArgb);
+                    using (var g = Graphics.FromImage(padded))
+                    {
+                        g.DrawImageUnscaled(image, 0, rowPadding);
+                        return padded;
+                    }
+                }
+            }
+
+            SearchControl<string> CreateSearchBox()
+            {
+                var search = new SearchControl<string>(SearchForBranch, i => { })
+                {
+                    Anchor = AnchorStyles.Left | AnchorStyles.Right,
+                    Name = "txtBranchCritierion",
+                    TabIndex = 1
+                };
+                search.OnTextEntered += () =>
+                {
+                    OnBranchCriterionChanged(null, null);
+                    OnBtnSearchClicked(null, null);
+                };
+                search.TextChanged += OnBranchCriterionChanged;
+                search.KeyDown += TxtBranchCriterion_KeyDown;
+                search.PreviewKeyDown += OnPreviewKeyDown;
+                return search;
+
+                IEnumerable<string> SearchForBranch(string arg)
+                {
+                    return CollectFilterCandidates()
+                        .Where(r => r.IndexOf(arg, StringComparison.OrdinalIgnoreCase) != -1);
+                }
+
+                IEnumerable<string> CollectFilterCandidates()
+                {
+                    var list = new List<string>();
+
+                    foreach (TreeNode rootNode in treeMain.Nodes)
+                    {
+                        CollectFromNodes(rootNode.Nodes);
+                    }
+
+                    return list;
+
+                    void CollectFromNodes(TreeNodeCollection nodes)
+                    {
+                        foreach (TreeNode node in nodes)
+                        {
+                            if (node.Tag is BaseBranchNode branch)
+                            {
+                                if (branch.Nodes.Count == 0)
+                                {
+                                    list.Add(branch.FullPath);
+                                }
+                            }
+                            else
+                            {
+                                list.Add(node.Text);
+                            }
+
+                            CollectFromNodes(node.Nodes);
+                        }
+                    }
+                }
+            }
         }
 
         public void SetBranchFilterer(FilterBranchHelper filterBranchHelper)
@@ -149,133 +241,92 @@ namespace GitUI.BranchTreePanel
             return _currentToken;
         }
 
-        private IEnumerable<string> CollectFilterCandidates()
+        private void DoSearch()
         {
-            var list = new List<string>();
+            _txtBranchCriterion.CloseDropdown();
 
-            foreach (TreeNode rootNode in treeMain.Nodes)
+            if (_searchCriteriaChanged && _searchResult != null && _searchResult.Any())
             {
-                CollectFromNodes(rootNode.Nodes);
+                _searchCriteriaChanged = false;
+                foreach (var coloredNode in _searchResult)
+                {
+                    coloredNode.BackColor = SystemColors.Window;
+                }
+
+                _searchResult = null;
+                if (_txtBranchCriterion.Text.IsNullOrWhiteSpace())
+                {
+                    _txtBranchCriterion.Focus();
+                    return;
+                }
             }
 
-            return list;
-
-            void CollectFromNodes(TreeNodeCollection nodes)
+            if (_searchResult == null || !_searchResult.Any())
             {
-                foreach (TreeNode node in nodes)
+                if (_txtBranchCriterion.Text.IsNotNullOrWhitespace())
                 {
-                    if (node.Tag is BaseBranchNode branch)
+                    _searchResult = SearchTree(_txtBranchCriterion.Text, treeMain.Nodes.Cast<TreeNode>());
+                }
+            }
+
+            var node = GetNextSearchResult();
+
+            if (node == null)
+            {
+                return;
+            }
+
+            node.EnsureVisible();
+            treeMain.SelectedNode = node;
+
+            return;
+
+            TreeNode GetNextSearchResult()
+            {
+                var first = _searchResult?.FirstOrDefault();
+
+                if (first == null)
+                {
+                    return null;
+                }
+
+                _searchResult.RemoveAt(0);
+                _searchResult.Add(first);
+                return first;
+            }
+
+            List<TreeNode> SearchTree(string text, IEnumerable<TreeNode> nodes)
+            {
+                var queue = new Queue<TreeNode>(nodes);
+                var ret = new List<TreeNode>();
+
+                while (queue.Count != 0)
+                {
+                    var n = queue.Dequeue();
+
+                    if (n.Tag is BaseBranchNode branch)
                     {
-                        if (branch.Nodes.Count == 0)
+                        if (branch.FullPath.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
                         {
-                            list.Add(branch.FullPath);
+                            AddTreeNodeToSearchResult(ret, n);
                         }
                     }
                     else
                     {
-                        list.Add(node.Text);
+                        if (n.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                        {
+                            AddTreeNodeToSearchResult(ret, n);
+                        }
                     }
 
-                    CollectFromNodes(node.Nodes);
-                }
-            }
-        }
-
-        private TreeNode GetNextSearchResult()
-        {
-            if (_searchResult == null || !_searchResult.Any())
-            {
-                return null;
-            }
-
-            var node = _searchResult.First();
-            _searchResult.RemoveAt(0);
-            _searchResult.Add(node);
-            return node;
-        }
-
-        private void InitImageList()
-        {
-            const int rowPadding = 1; // added to top and bottom, so doubled -- this value is scaled *after*, so consider 96dpi here
-
-            treeMain.ImageList = new ImageList
-            {
-                ImageSize = DpiUtil.Scale(new Size(16, 16 + rowPadding + rowPadding)), // Scale ImageSize and images scale automatically
-                Images =
-                {
-                    { nameof(Images.BranchDocument), Pad(Images.BranchDocument) },
-                    { nameof(Images.Branch), Pad(Images.Branch) },
-                    { nameof(Images.Remote), Pad(Images.RemoteRepo) },
-                    { nameof(Images.BitBucket), Pad(Images.BitBucket) },
-                    { nameof(Images.GitHub), Pad(Images.GitHub) },
-                    { nameof(Images.BranchLocalRoot), Pad(Images.BranchLocalRoot) },
-                    { nameof(Images.BranchRemoteRoot), Pad(Images.BranchRemoteRoot) },
-                    { nameof(Images.BranchRemote), Pad(Images.BranchRemote) },
-                    { nameof(Images.BranchFolder), Pad(Images.BranchFolder) },
-                    { nameof(Images.TagHorizontal), Pad(Images.TagHorizontal) },
-                }
-            };
-            treeMain.SelectedImageKey = treeMain.ImageKey;
-
-            Image Pad(Image image)
-            {
-                var padded = new Bitmap(image.Width, image.Height + rowPadding + rowPadding, PixelFormat.Format32bppArgb);
-                using (var g = Graphics.FromImage(padded))
-                {
-                    g.DrawImageUnscaled(image, 0, rowPadding);
-                    return padded;
-                }
-            }
-        }
-
-        private void InitializeSearchBox()
-        {
-            _txtBranchCriterion = new SearchControl<string>(SearchForBranch, i => { });
-            _txtBranchCriterion.OnTextEntered += () =>
-            {
-                OnBranchCriterionChanged(null, null);
-                OnBtnSearchClicked(null, null);
-            };
-            _txtBranchCriterion.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            _txtBranchCriterion.Name = "txtBranchCritierion";
-            _txtBranchCriterion.TabIndex = 1;
-            _txtBranchCriterion.TextChanged += OnBranchCriterionChanged;
-            _txtBranchCriterion.KeyDown += TxtBranchCriterion_KeyDown;
-            branchSearchPanel.Controls.Add(_txtBranchCriterion, 1, 0);
-
-            _txtBranchCriterion.PreviewKeyDown += OnPreviewKeyDown;
-        }
-
-        private IEnumerable<string> SearchForBranch(string arg)
-        {
-            return CollectFilterCandidates()
-                .Where(r => r.IndexOf(arg, StringComparison.OrdinalIgnoreCase) != -1);
-        }
-
-        private static List<TreeNode> SearchTree(string text, TreeNodeCollection nodes)
-        {
-            var ret = new List<TreeNode>();
-            foreach (TreeNode node in nodes)
-            {
-                if (node.Tag is BaseBranchNode branch)
-                {
-                    if (branch.FullPath.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                    foreach (TreeNode subNode in n.Nodes)
                     {
-                        AddTreeNodeToSearchResult(ret, node);
-                    }
-                }
-                else
-                {
-                    if (node.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
-                    {
-                        AddTreeNodeToSearchResult(ret, node);
+                        queue.Enqueue(subNode);
                     }
                 }
 
-                ret.AddRange(SearchTree(text, node.Nodes));
+                return ret;
             }
-
-            return ret;
         }
 
         private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -308,39 +359,7 @@ namespace GitUI.BranchTreePanel
 
         private void OnBtnSearchClicked(object sender, EventArgs e)
         {
-            _txtBranchCriterion.CloseDropdown();
-            if (_searchCriteriaChanged && _searchResult != null && _searchResult.Any())
-            {
-                _searchCriteriaChanged = false;
-                foreach (var coloredNode in _searchResult)
-                {
-                    coloredNode.BackColor = SystemColors.Window;
-                }
-
-                _searchResult = null;
-                if (_txtBranchCriterion.Text.IsNullOrWhiteSpace())
-                {
-                    _txtBranchCriterion.Focus();
-                    return;
-                }
-            }
-
-            if (_searchResult == null || !_searchResult.Any())
-            {
-                if (_txtBranchCriterion.Text.IsNotNullOrWhitespace())
-                {
-                    _searchResult = SearchTree(_txtBranchCriterion.Text, treeMain.Nodes);
-                }
-            }
-
-            var node = GetNextSearchResult();
-            if (node == null)
-            {
-                return;
-            }
-
-            node.EnsureVisible();
-            treeMain.SelectedNode = node;
+            DoSearch();
         }
 
         private void OnBranchCriterionChanged(object sender, EventArgs e)

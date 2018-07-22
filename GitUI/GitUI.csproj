@@ -309,7 +309,7 @@
     <Compile Include="Editor\Diff\CombinedDiffHighlightService.cs" />
     <Compile Include="Editor\Diff\DiffHighlightService.cs" />
     <Compile Include="Editor\Diff\DiffLineNumAnalyzer.cs" />
-    <Compile Include="Editor\Diff\DiffViewerLineNumberCtrl.cs" />
+    <Compile Include="Editor\Diff\DiffViewerLineNumberControl.cs" />
     <Compile Include="Editor\Diff\LinePrefixHelper.cs" />
     <Compile Include="Editor\Diff\LineSegmentGetter.cs" />
     <Compile Include="Editor\CommitMessageHighlightingStrategy.cs" />
@@ -484,7 +484,7 @@
     <Compile Include="UserControls\WaitSpinner.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UserControls\WebBrowserCtrl.cs">
+    <Compile Include="UserControls\WebBrowserControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UserManual\UserManual.cs" />
