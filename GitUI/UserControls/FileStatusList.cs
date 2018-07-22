@@ -51,34 +51,8 @@ namespace GitUI
             FileStatusListView.MouseMove += FileStatusListView_MouseMove;
             FileStatusListView.MouseDown += FileStatusListView_MouseDown;
 
-            if (_images == null)
-            {
-                _images = new ImageList
-                {
-                    ImageSize = DpiUtil.Scale(new Size(16, 16)), // Scale ImageSize and images scale automatically
-                    Images =
-                    {
-                        Resources.Removed, // 0
-                        Resources.Added, // 1
-                        Resources.Modified, // 2
-                        Resources.Renamed, // 3
-                        Resources.Copied, // 4
-                        Resources.IconSubmoduleDirty, // 5
-                        Resources.IconSubmoduleRevisionUp, // 6
-                        Resources.IconSubmoduleRevisionUpDirty, // 7
-                        Resources.IconSubmoduleRevisionDown, // 8
-                        Resources.IconSubmoduleRevisionDownDirty, // 9
-                        Resources.IconSubmoduleRevisionSemiUp, // 10
-                        Resources.IconSubmoduleRevisionSemiUpDirty, // 11
-                        Resources.IconSubmoduleRevisionSemiDown, // 12
-                        Resources.IconSubmoduleRevisionSemiDownDirty, // 13
-                        Resources.IconFileStatusUnknown // 14
-                    }
-                };
-            }
-
-            FileStatusListView.SmallImageList = _images;
-            FileStatusListView.LargeImageList = _images;
+            FileStatusListView.SmallImageList = CreateImageList();
+            FileStatusListView.LargeImageList = CreateImageList();
 
             HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
             Controls.SetChildIndex(NoFiles, 0);
@@ -137,7 +111,31 @@ namespace GitUI
             }
         }
 
-        private static ImageList _images;
+        private static ImageList CreateImageList()
+        {
+            return new ImageList
+            {
+                ImageSize = DpiUtil.Scale(new Size(16, 16)), // Scale ImageSize and images scale automatically
+                Images =
+                {
+                    Resources.Removed, // 0
+                    Resources.Added, // 1
+                    Resources.Modified, // 2
+                    Resources.Renamed, // 3
+                    Resources.Copied, // 4
+                    Resources.IconSubmoduleDirty, // 5
+                    Resources.IconSubmoduleRevisionUp, // 6
+                    Resources.IconSubmoduleRevisionUpDirty, // 7
+                    Resources.IconSubmoduleRevisionDown, // 8
+                    Resources.IconSubmoduleRevisionDownDirty, // 9
+                    Resources.IconSubmoduleRevisionSemiUp, // 10
+                    Resources.IconSubmoduleRevisionSemiUpDirty, // 11
+                    Resources.IconSubmoduleRevisionSemiDown, // 12
+                    Resources.IconSubmoduleRevisionSemiDownDirty, // 13
+                    Resources.IconFileStatusUnknown // 14
+                }
+            };
+        }
 
         public void SetNoFilesText(string text)
         {
