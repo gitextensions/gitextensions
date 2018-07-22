@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using FluentAssertions;
 using GitCommands;
 using GitUI.UserControls.RevisionGridClasses;
@@ -50,14 +49,14 @@ namespace GitUITests.UserControls.RevisionGridClasses
         public void AllBranches_must_return_all_revision_branches()
         {
             var grl = new GitRefListsForRevision(_revision);
-            grl.AllBranches.Count().Should().Be(2);
+            grl.AllBranches.Count.Should().Be(2);
         }
 
         [Test]
         public void AllTags_must_return_all_revision_tags()
         {
             var grl = new GitRefListsForRevision(_revision);
-            grl.AllTags.Count().Should().Be(1);
+            grl.AllTags.Count.Should().Be(1);
         }
 
         [Test]

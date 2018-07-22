@@ -35,13 +35,13 @@ namespace GitUI.UserControls.RevisionGridClasses
             _tags = revision.Refs.Where(h => h.IsTag).ToArray();
         }
 
-        public IEnumerable<IGitRef> AllBranches => _allBranches.AsEnumerable();
+        public IReadOnlyList<IGitRef> AllBranches => _allBranches;
 
-        public IEnumerable<IGitRef> AllTags => _tags.AsEnumerable();
+        public IReadOnlyList<IGitRef> AllTags => _tags;
 
-        public IEnumerable<IGitRef> BranchesWithNoIdenticalRemotes => _branchesWithNoIdenticalRemotes.AsEnumerable();
+        public IReadOnlyList<IGitRef> BranchesWithNoIdenticalRemotes => _branchesWithNoIdenticalRemotes;
 
-        public string[] GetAllBranchNames()
+        public IReadOnlyList<string> GetAllBranchNames()
         {
             return _allBranches.Select(b => b.Name).ToArray();
         }

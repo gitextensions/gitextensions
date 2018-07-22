@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using GitCommands;
 using ResourceManager;
@@ -45,8 +44,8 @@ namespace GitUI.UserControls.RevisionGridClasses
             };
 
             var gitRefListsForRevision = new GitRefListsForRevision(gitRevision);
-            BranchNames = new ReadOnlyCollection<string>(gitRefListsForRevision.GetAllBranchNames());
-            TagNames = new ReadOnlyCollection<string>(gitRefListsForRevision.GetAllTagNames());
+            BranchNames = gitRefListsForRevision.GetAllBranchNames();
+            TagNames = gitRefListsForRevision.GetAllTagNames();
         }
     }
 }
