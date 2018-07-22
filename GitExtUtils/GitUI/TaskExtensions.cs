@@ -91,7 +91,7 @@ namespace GitUI
             }
 
             /// <summary>
-            /// Gets a value indicating whether the antedent <see cref="Task"/> has already completed.
+            /// Gets a value indicating whether the antecedent <see cref="Task"/> has already completed.
             /// </summary>
             public bool IsCompleted => _antecedent.IsCompleted;
 
@@ -169,7 +169,7 @@ namespace GitUI
             }
 
             /// <summary>
-            /// Gets a value indicating whether the antedent <see cref="Task"/> has already completed.
+            /// Gets a value indicating whether the antecedent <see cref="Task"/> has already completed.
             /// </summary>
             public bool IsCompleted => _antecedent.IsCompleted;
 
