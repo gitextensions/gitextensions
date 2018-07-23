@@ -57,7 +57,7 @@ namespace GitUI.BranchTreePanel
 
         public async Task ReloadAsync()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            await this.SwitchToMainThreadAsync();
 
             var token = CancelBackgroundTasks();
             Enabled = false;
