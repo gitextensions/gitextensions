@@ -60,7 +60,7 @@ namespace GitCommands
             string pathFilter,
             [CanBeNull] Func<GitRevision, bool> revisionPredicate)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             var token = _cancellationTokenSequence.Next();
 

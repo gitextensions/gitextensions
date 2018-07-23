@@ -1176,12 +1176,16 @@ namespace GitUI
                 case Keys.Delete:
                 {
                     InitiateRefAction(
-                        new GitRefListsForRevision(selectedRevision).GetDeletableLocalRefs(Module.GetSelectedBranch()),
+                        new GitRefListsForRevision(selectedRevision).GetDeletableRefs(Module.GetSelectedBranch()),
                         gitRef =>
                         {
                             if (gitRef.IsTag)
                             {
                                 UICommands.StartDeleteTagDialog(this, gitRef.Name);
+                            }
+                            else if (gitRef.IsRemote)
+                            {
+                                UICommands.StartDeleteRemoteBranchDialog(this, gitRef.Name);
                             }
                             else
                             {

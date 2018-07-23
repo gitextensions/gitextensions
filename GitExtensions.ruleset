@@ -5,6 +5,10 @@
     <Rule Id="CA1301" Action="None" />
     <Rule Id="CA2101" Action="None" />
   </Rules>
+  <Rules AnalyzerId="Microsoft.VisualStudio.Threading.Analyzers" RuleNamespace="Microsoft.VisualStudio.Threading.Analyzers">
+    <Rule Id="VSTHRD010" Action="None" />
+    <Rule Id="VSTHRD110" Action="None" />
+  </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1101" Action="None" />
     <Rule Id="SA1116" Action="None" />

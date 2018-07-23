@@ -35,8 +35,6 @@ namespace GitUI
 
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
 
-        [CanBeNull] private static ImageList _images;
-
         private readonly TranslationString _diffWithParent = new TranslationString("Diff with:");
         public readonly TranslationString CombinedDiff = new TranslationString("Combined Diff");
 
@@ -58,14 +56,22 @@ namespace GitUI
             FilterVisible = false;
 
             SelectFirstItemOnSetItems = true;
-            FileStatusListView.MouseMove += FileStatusListView_MouseMove;
-            FileStatusListView.MouseDown += FileStatusListView_MouseDown;
 
-            const int rowHeight = 18;
+            FileStatusListView.SmallImageList = CreateImageList();
+            FileStatusListView.LargeImageList = CreateImageList();
 
-            if (_images == null)
+            HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
+            Controls.SetChildIndex(NoFiles, 0);
+            NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
+
+            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
+            _revisionTester = new GitRevisionTester(_fullPathResolver);
+
+            ImageList CreateImageList()
             {
-                _images = new ImageList
+                const int rowHeight = 18;
+
+                return new ImageList
                 {
                     ImageSize = DpiUtil.Scale(new Size(16, rowHeight)), // Scale ImageSize and images scale automatically
                     Images =
@@ -87,28 +93,18 @@ namespace GitUI
                         ScaleHeight(Images.FileStatusUnknown) // 14
                     }
                 };
-            }
 
-            FileStatusListView.SmallImageList = _images;
-            FileStatusListView.LargeImageList = _images;
-
-            HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
-            Controls.SetChildIndex(NoFiles, 0);
-            NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
-
-            _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-            _revisionTester = new GitRevisionTester(_fullPathResolver);
-
-            Bitmap ScaleHeight(Bitmap input)
-            {
-                Debug.Assert(input.Height < rowHeight, "Can only increase row height");
-                var scaled = new Bitmap(input.Width, rowHeight, input.PixelFormat);
-                using (var g = Graphics.FromImage(scaled))
+                Bitmap ScaleHeight(Bitmap input)
                 {
-                    g.DrawImageUnscaled(input, 0, (rowHeight - input.Height) / 2);
-                }
+                    Debug.Assert(input.Height < rowHeight, "Can only increase row height");
+                    var scaled = new Bitmap(input.Width, rowHeight, input.PixelFormat);
+                    using (var g = Graphics.FromImage(scaled))
+                    {
+                        g.DrawImageUnscaled(input, 0, (rowHeight - input.Height) / 2);
+                    }
 
-                return scaled;
+                    return scaled;
+                }
             }
         }
 

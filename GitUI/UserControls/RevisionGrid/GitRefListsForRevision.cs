@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -12,8 +14,18 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly IGitRef[] _branchesWithNoIdenticalRemotes;
         private readonly IGitRef[] _tags;
 
-        public GitRefListsForRevision(GitRevision revision)
+        public GitRefListsForRevision([NotNull] GitRevision revision)
         {
+            if (revision == null)
+            {
+                throw new ArgumentNullException(nameof(revision));
+            }
+
+            if (revision.Refs == null)
+            {
+                throw new ArgumentNullException(nameof(revision.Refs));
+            }
+
             _allBranches = revision.Refs.Where(h => !h.IsTag && (h.IsHead || h.IsRemote)).ToArray();
             _localBranches = _allBranches.Where(b => !b.IsRemote).ToArray();
             _branchesWithNoIdenticalRemotes = _allBranches.Where(b => !b.IsRemote ||
@@ -40,11 +52,11 @@ namespace GitUI.UserControls.RevisionGrid
         }
 
         /// <summary>
-        /// Returns the collection of local branches and tags which can be deleted.
+        /// Returns the collection of branches and tags which can be deleted.
         /// </summary>
-        public IReadOnlyList<IGitRef> GetDeletableLocalRefs(string currentBranch)
+        public IReadOnlyList<IGitRef> GetDeletableRefs(string currentBranch)
         {
-            return _localBranches.Where(b => b.Name != currentBranch).Union(_tags).ToList();
+            return _allBranches.Where(b => b.IsRemote || b.Name != currentBranch).Union(_tags).ToArray();
         }
 
         /// <summary>
