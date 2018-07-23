@@ -42,6 +42,8 @@ namespace GitCommands.UserRepositoryHistory
         /// <returns>An awaitable task.</returns>
         [ContractAnnotation("repositoryHistory:null=>halt")]
         Task SaveFavouriteHistoryAsync(IEnumerable<Repository> repositoryHistory);
+
+        Task RemoveInvalidRepositoriesAsync(Func<string, bool> predicate);
     }
 
     /// <summary>
@@ -313,6 +315,30 @@ namespace GitCommands.UserRepositoryHistory
         private static IEnumerable<Repository> AdjustHistorySize(IEnumerable<Repository> repositories, int recentRepositoriesHistorySize)
         {
             return repositories.Take(recentRepositoriesHistorySize);
+        }
+
+        public async Task RemoveInvalidRepositoriesAsync(Func<string, bool> predicate)
+        {
+            await TaskScheduler.Default;
+            var recentRepositoryHistory = await LoadRecentHistoryAsync();
+            var invalidRecentRepositories = recentRepositoryHistory
+                                            .Select(repo => repo.Path)
+                                            .Where(path => !predicate(path));
+
+            foreach (var path in invalidRecentRepositories)
+            {
+                await RemoveRecentAsync(path);
+            }
+
+            var favouriteRepositoryHistory = await LoadFavouriteHistoryAsync();
+            var invalidFavouriteRepositories = favouriteRepositoryHistory
+                                                .Select(repo => repo.Path)
+                                                .Where(path => !predicate(path));
+
+            foreach (var path in invalidFavouriteRepositories)
+            {
+                await RemoveFavouriteAsync(path);
+            }
         }
     }
 }
