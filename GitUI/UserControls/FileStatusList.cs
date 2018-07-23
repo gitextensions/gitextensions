@@ -817,13 +817,13 @@ namespace GitUI
 
             FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
 
-            var previouslySelectedItems = new List<GitItemStatus>();
+            HashSet<GitItemStatus> previouslySelectedItems = null;
+
             if (updateCausedByFilter)
             {
-                foreach (ListViewItem item in FileStatusListView.SelectedItems)
-                {
-                    previouslySelectedItems.Add(item.Tag as GitItemStatus);
-                }
+                previouslySelectedItems = FileStatusListView.SelectedItems
+                    .Cast<ListViewItem>()
+                    .ToHashSet(i => (GitItemStatus)i.Tag);
 
                 DataSourceChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -911,7 +911,7 @@ namespace GitUI
                             });
                     }
 
-                    if (previouslySelectedItems.Contains(item))
+                    if (previouslySelectedItems?.Contains(item) == true)
                     {
                         listItem.Selected = true;
                     }
