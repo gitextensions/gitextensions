@@ -8,7 +8,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using GitCommands.Logging;
 using GitCommands.Settings;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -19,10 +18,28 @@ namespace GitCommands
 {
     public enum LocalChangesAction
     {
+        // DO NOT RENAME THESE -- doing so will break user preferences
         DontChange,
         Merge,
         Reset,
         Stash
+    }
+
+    public enum TruncatePathMethod
+    {
+        // DO NOT RENAME THESE -- doing so will break user preferences
+        None,
+        Compact,
+        TrimStart,
+        FileNameOnly
+    }
+
+    public enum ShorteningRecentRepoPathStrategy
+    {
+        // DO NOT RENAME THESE -- doing so will break user preferences
+        None,
+        MostSignDir,
+        MiddleDots
     }
 
     public static class AppSettings
@@ -61,8 +78,6 @@ namespace GitCommands
 
             SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath));
 
-            GitLog = new CommandLogger();
-
             if (!File.Exists(SettingsFilePath))
             {
                 ImportFromRegistry();
@@ -81,7 +96,7 @@ namespace GitCommands
             get
             {
                 var value = GetString("AutoNormaliseSymbol", "_");
-                return (value == "+") ? "" : value;
+                return value == "+" ? "" : value;
             }
             set
             {
@@ -120,6 +135,7 @@ namespace GitCommands
                 });
         }
 
+        [CanBeNull]
         public static string GetInstallDir()
         {
             if (IsPortable())
@@ -136,6 +152,7 @@ namespace GitCommands
             return dir;
         }
 
+        [CanBeNull]
         public static string GetResourceDir()
         {
 #if DEBUG
@@ -161,6 +178,8 @@ namespace GitCommands
         {
             WriteStringRegValue("InstallDir", dir);
         }
+
+        #region Registry helpers
 
         private static bool ReadBoolRegKey(string key, bool defaultValue)
         {
@@ -193,18 +212,22 @@ namespace GitCommands
             VersionIndependentRegKey.SetValue(key, value);
         }
 
+        #endregion
+
         public static bool CheckSettings
         {
             get => ReadBoolRegKey("CheckSettings", true);
             set => WriteBoolRegKey("CheckSettings", value);
         }
 
+        [NotNull]
         public static string CascadeShellMenuItems
         {
             get => ReadStringRegValue("CascadeShellMenuItems", "110111000111111111");
             set => WriteStringRegValue("CascadeShellMenuItems", value);
         }
 
+        [CanBeNull]
         public static string SshPath
         {
             get => ReadStringRegValue("gitssh", null);
@@ -225,6 +248,7 @@ namespace GitCommands
             set => WriteBoolRegKey("ShowCurrentBranchInVS", value);
         }
 
+        [NotNull]
         public static string GitCommandValue
         {
             get
@@ -251,6 +275,7 @@ namespace GitCommands
             }
         }
 
+        [NotNull]
         public static string GitCommand
         {
             get
@@ -308,7 +333,7 @@ namespace GitCommands
 
         public static int CommitDialogNumberOfPreviousMessages
         {
-            get => GetInt("commitDialogNumberOfPreviousMessages", 4);
+            get => GetInt("commitDialogNumberOfPreviousMessages", 6);
             set => SetInt("commitDialogNumberOfPreviousMessages", value);
         }
 
@@ -342,16 +367,22 @@ namespace GitCommands
             set => DetailedSettingsPath.SetBool("ShowRevisionInfoNextToRevisionGrid", value);
         }
 
+        public static bool ShowSplitViewLayout
+        {
+            get => DetailedSettingsPath.GetBool("ShowSplitViewLayout", true);
+            set => DetailedSettingsPath.SetBool("ShowSplitViewLayout", value);
+        }
+
         public static bool ProvideAutocompletion
         {
             get => GetBool("provideautocompletion", true);
             set => SetBool("provideautocompletion", value);
         }
 
-        public static string TruncatePathMethod
+        public static TruncatePathMethod TruncatePathMethod
         {
-            get => GetString("truncatepathmethod", "none");
-            set => SetString("truncatepathmethod", value);
+            get => GetEnum("truncatepathmethod", TruncatePathMethod.None);
+            set => SetEnum("truncatepathmethod", value);
         }
 
         public static bool ShowGitStatusInBrowseToolbar
@@ -418,8 +449,40 @@ namespace GitCommands
             set => SetBool("commitinfoshowtagthiscommitderivesfrom", value);
         }
 
-        public static string GravatarCachePath => Path.Combine(ApplicationDataPath.Value, "Images\\");
+        #region Avatars
 
+        [NotNull]
+        public static string AvatarImageCachePath => Path.Combine(ApplicationDataPath.Value, "Images\\");
+
+        public static DefaultImageType GravatarDefaultImageType
+        {
+            get => Enum.TryParse(GetString("GravatarDefaultImageType", "Identicon"), out DefaultImageType type)
+                ? type
+                : DefaultImageType.Identicon;
+            set => SetString("GravatarDefaultImageType", value.ToString());
+        }
+
+        /// <summary>
+        /// Gets the size of the commit author avatar. Set to 80px.
+        /// </summary>
+        /// <remarks>The value should be scaled with DPI.</remarks>
+        public static int AuthorImageSizeInCommitInfo => 80;
+
+        public static int AvatarImageCacheDays
+        {
+            get => GetInt("authorimagecachedays", 5);
+            set => SetInt("authorimagecachedays", value);
+        }
+
+        public static bool ShowAuthorAvatarInCommitInfo
+        {
+            get => GetBool("showauthorgravatar", true);
+            set => SetBool("showauthorgravatar", value);
+        }
+
+        #endregion
+
+        [NotNull]
         public static string Translation
         {
             get => GetString("translation", "");
@@ -427,6 +490,8 @@ namespace GitCommands
         }
 
         private static string _currentTranslation;
+
+        [NotNull]
         public static string CurrentTranslation
         {
             get => _currentTranslation ?? Translation;
@@ -478,7 +543,7 @@ namespace GitCommands
                 }
                 catch (CultureNotFoundException)
                 {
-                    Debug.WriteLine("Culture {0} not found", CurrentLanguageCode);
+                    Debug.WriteLine("Culture {0} not found", new object[] { CurrentLanguageCode });
                     return CultureInfo.GetCultureInfo("en");
                 }
             }
@@ -500,24 +565,6 @@ namespace GitCommands
         {
             get => GetBool("enableautoscale", true);
             set => SetBool("enableautoscale", value);
-        }
-
-        /// <summary>
-        /// Gets the size of the commit author avatar. Set to 80px.
-        /// </summary>
-        /// <remarks>The value should be scaled with DPI.</remarks>
-        public static int AuthorImageSize => 80;
-
-        public static int AuthorImageCacheDays
-        {
-            get => GetInt("authorimagecachedays", 5);
-            set => SetInt("authorimagecachedays", value);
-        }
-
-        public static bool ShowAuthorGravatar
-        {
-            get => GetBool("showauthorgravatar", true);
-            set => SetBool("showauthorgravatar", value);
         }
 
         public static bool CloseCommitDialogAfterCommit
@@ -542,12 +589,6 @@ namespace GitCommands
         {
             get => GetBool("stageinsuperprojectaftercommit", true);
             set => SetBool("stageinsuperprojectaftercommit", value);
-        }
-
-        public static bool PlaySpecialStartupSound
-        {
-            get => GetBool("PlaySpecialStartupSound", false);
-            set => SetBool("PlaySpecialStartupSound", value);
         }
 
         public static bool FollowRenamesInFileHistory
@@ -868,12 +909,6 @@ namespace GitCommands
             set => SetBool("showgitnotes", value);
         }
 
-        public static bool ShowIndicatorForMultilineMessage
-        {
-            get => GetBool("showindicatorformultilinemessage", true);
-            set => SetBool("showindicatorformultilinemessage", value);
-        }
-
         public static bool ShowAnnotatedTagsMessages
         {
             get => GetBool("showannotatedtagsmessages", true);
@@ -892,17 +927,51 @@ namespace GitCommands
             set => SetBool("showtags", value);
         }
 
-        public static bool ShowIds
+        #region Revision grid column visibilities
+
+        public static bool ShowRevisionGridGraphColumn
+        {
+            get => GetBool("showrevisiongridgraphcolumn", true);
+            set => SetBool("showrevisiongridgraphcolumn", value);
+        }
+
+        public static bool ShowAuthorAvatarColumn
+        {
+            get => GetBool("showrevisiongridauthoravatarcolumn", true);
+            set => SetBool("showrevisiongridauthoravatarcolumn", value);
+        }
+
+        public static bool ShowAuthorNameColumn
+        {
+            get => GetBool("showrevisiongridauthornamecolumn", true);
+            set => SetBool("showrevisiongridauthornamecolumn", value);
+        }
+
+        public static bool ShowDateColumn
+        {
+            get => GetBool("showrevisiongriddatecolumn", true);
+            set => SetBool("showrevisiongriddatecolumn", value);
+        }
+
+        public static bool ShowObjectIdColumn
         {
             get => GetBool("showids", true);
             set => SetBool("showids", value);
         }
 
-        public static int RevisionGraphLayout
+        public static bool ShowBuildStatusIconColumn
         {
-            get => GetInt("revisiongraphlayout", 2);
-            set => SetInt("revisiongraphlayout", value);
+            get => GetBool("showbuildstatusiconcolumn", true);
+            set => SetBool("showbuildstatusiconcolumn", value);
         }
+
+        public static bool ShowBuildStatusTextColumn
+        {
+            get => GetBool("showbuildstatustextcolumn", false);
+            set => SetBool("showbuildstatustextcolumn", value);
+        }
+
+        #endregion
 
         public static bool ShowAuthorDate
         {
@@ -954,14 +1023,8 @@ namespace GitCommands
 
         public static int RevisionGridQuickSearchTimeout
         {
-            get => GetInt("revisiongridquicksearchtimeout", 750);
+            get => GetInt("revisiongridquicksearchtimeout", 4000);
             set => SetInt("revisiongridquicksearchtimeout", value);
-        }
-
-        public static string GravatarDefaultImageType
-        {
-            get => GetString("gravatarfallbackservice", "Identicon");
-            set => SetString("gravatarfallbackservice", value);
         }
 
         /// <summary>Gets or sets the path to the git application executable.</summary>
@@ -1012,8 +1075,6 @@ namespace GitCommands
             get => GetBool("StartWithRecentWorkingDir", false);
             set => SetBool("StartWithRecentWorkingDir", value);
         }
-
-        public static CommandLogger GitLog { get; }
 
         public static string Plink
         {
@@ -1126,11 +1187,9 @@ namespace GitCommands
             set => SetColor("diffaddedextracolor", value);
         }
 
-        public static Color AuthoredRevisionsColor
-        {
-            get => GetColor("authoredrevisionscolor", Color.LightYellow);
-            set => SetColor("authoredrevisionscolor", value);
-        }
+        #endregion
+
+        #region Fonts
 
         public static Font DiffFont
         {
@@ -1162,18 +1221,6 @@ namespace GitCommands
         {
             get => GetBool("stripedbranchchange", true);
             set => SetBool("stripedbranchchange", value);
-        }
-
-        public static bool BranchBorders
-        {
-            get => GetBool("branchborders", true);
-            set => SetBool("branchborders", value);
-        }
-
-        public static bool HighlightAuthoredRevisions
-        {
-            get => GetBool("highlightauthoredrevisions", true);
-            set => SetBool("highlightauthoredrevisions", value);
         }
 
         public static string LastFormatPatchDir
@@ -1322,10 +1369,10 @@ namespace GitCommands
             set => SetInt("RecursiveSubmodules", value);
         }
 
-        public static string ShorteningRecentRepoPathStrategy
+        public static ShorteningRecentRepoPathStrategy ShorteningRecentRepoPathStrategy
         {
-            get => GetString("ShorteningRecentRepoPathStrategy", "");
-            set => SetString("ShorteningRecentRepoPathStrategy", value);
+            get => GetEnum("ShorteningRecentRepoPathStrategy", ShorteningRecentRepoPathStrategy.None);
+            set => SetEnum("ShorteningRecentRepoPathStrategy", value);
         }
 
         public static int MaxMostRecentRepositories
@@ -1460,17 +1507,12 @@ namespace GitCommands
             set => SetBool("UseConsoleEmulatorForCommands", value);
         }
 
-        public static GitRefsOrder BranchOrderingCriteria
-        {
-            get => GetEnum("BranchOrderingCriteria", GitRefsOrder.ByLastAccessDate);
-            set => SetEnum("BranchOrderingCriteria", value);
-        }
-
         public static string GetGitExtensionsFullPath()
         {
             return Application.ExecutablePath;
         }
 
+        [CanBeNull]
         public static string GetGitExtensionsDirectory()
         {
             return Path.GetDirectoryName(GetGitExtensionsFullPath());
@@ -1478,6 +1520,7 @@ namespace GitCommands
 
         private static RegistryKey _versionIndependentRegKey;
 
+        [CanBeNull]
         private static RegistryKey VersionIndependentRegKey
         {
             get
@@ -1654,7 +1697,7 @@ namespace GitCommands
                 }
                 catch
                 {
-                    // there are CultureInfos without a code page
+                    // there are CultureInfo values without a code page
                 }
             }
             else

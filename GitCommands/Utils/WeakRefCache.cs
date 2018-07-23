@@ -26,9 +26,9 @@ namespace GitCommands.Utils
 
             lock (_weakMap)
             {
-                if (_weakMap.TryGetValue(objectUniqueKey, out var wref))
+                if (_weakMap.TryGetValue(objectUniqueKey, out var weakReference))
                 {
-                    cached = wref.Target;
+                    cached = weakReference.Target;
                 }
 
                 if (cached == null)

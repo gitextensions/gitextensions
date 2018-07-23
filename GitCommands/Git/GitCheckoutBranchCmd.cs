@@ -1,84 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace GitCommands.Git
 {
-    public class GitCheckoutBranchCmd : GitCommand
+    public enum CheckoutNewBranchMode
     {
-        public enum NewBranch
-        {
-            DontCreate,
-            Create,
-            Reset
-        }
+        DontCreate,
+        Create,
+        Reset
+    }
 
-        public string BranchName { get; set; }
-        public string NewBranchName { get; set; }
-        public bool Remote { get; set; }
-        private LocalChangesAction _localChanges;
-        public LocalChangesAction LocalChanges
-        {
-            get => _localChanges;
-            set
-            {
-                if (value == LocalChangesAction.Stash)
-                {
-                    _localChanges = LocalChangesAction.DontChange;
-                }
-                else
-                {
-                    _localChanges = value;
-                }
-            }
-        }
+    public sealed class GitCheckoutBranchCmd : GitCommand
+    {
+        public string BranchName { get; }
+        public bool Remote { get; }
+        public LocalChangesAction LocalChanges { get; }
+        public string NewBranchName { get; }
+        public CheckoutNewBranchMode NewBranchMode { get; }
 
-        public NewBranch NewBranchAction { get; set; }
-
-        public GitCheckoutBranchCmd(string branchName, bool remote)
+        public GitCheckoutBranchCmd(
+            string branchName,
+            bool remote,
+            LocalChangesAction localChanges = LocalChangesAction.DontChange,
+            CheckoutNewBranchMode newBranchMode = CheckoutNewBranchMode.DontCreate,
+            string newBranchName = null)
         {
             BranchName = branchName;
             Remote = remote;
+            LocalChanges = localChanges == LocalChangesAction.Stash ? LocalChangesAction.DontChange : localChanges;
+            NewBranchMode = newBranchMode;
+            NewBranchName = newBranchName;
         }
 
-        public override string GitComandName()
-        {
-            return "checkout";
-        }
+        public override bool AccessesRemote => false;
+        public override bool ChangesRepoState => true;
 
-        protected override IEnumerable<string> CollectArguments()
+        protected override ArgumentBuilder BuildArguments()
         {
-            if (LocalChanges == LocalChangesAction.Merge)
+            return new ArgumentBuilder
             {
-                yield return "--merge";
-            }
-            else if (LocalChanges == LocalChangesAction.Reset)
-            {
-                yield return "--force";
-            }
-
-            if (Remote)
-            {
-                if (NewBranchAction == NewBranch.Create)
-                {
-                    yield return "-b " + NewBranchName.Quote();
-                }
-                else if (NewBranchAction == NewBranch.Reset)
-                {
-                    yield return "-B " + NewBranchName.Quote();
-                }
-            }
-
-            yield return BranchName.QuoteNE();
-        }
-
-        public override bool AccessesRemote()
-        {
-            return false;
-        }
-
-        public override bool ChangesRepoState()
-        {
-            return true;
+                "checkout",
+                { LocalChanges == LocalChangesAction.Merge, "--merge" },
+                { LocalChanges == LocalChangesAction.Reset, "--force" },
+                { Remote && NewBranchMode == CheckoutNewBranchMode.Create, $"-b {NewBranchName.Quote()}" },
+                { Remote && NewBranchMode == CheckoutNewBranchMode.Reset, $"-B {NewBranchName.Quote()}" },
+                BranchName.QuoteNE()
+            };
         }
     }
 }

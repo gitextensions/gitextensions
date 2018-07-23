@@ -322,7 +322,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.btnChooseFromRevision.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnChooseFromRevision.Enabled = false;
-            this.btnChooseFromRevision.Image = global::GitUI.Properties.Resources.IconSelectRevision;
+            this.btnChooseFromRevision.Image = global::GitUI.Properties.Images.SelectRevision;
             this.btnChooseFromRevision.Location = new System.Drawing.Point(287, 4);
             this.btnChooseFromRevision.Name = "btnChooseFromRevision";
             this.btnChooseFromRevision.Size = new System.Drawing.Size(25, 24);
@@ -394,7 +394,7 @@ namespace GitUI.CommandsDialogs
             this.SolveMergeconflicts.Text = "There are unresolved merge conflicts\r\n";
             this.SolveMergeconflicts.UseVisualStyleBackColor = false;
             this.SolveMergeconflicts.Visible = false;
-            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflictsClick);
+            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeConflictsClick);
             // 
             // ContinuePanel
             // 
@@ -439,7 +439,7 @@ namespace GitUI.CommandsDialogs
             | System.Windows.Forms.AnchorStyles.Right)));
             this.helpImageDisplayUserControl1.AutoSize = true;
             this.helpImageDisplayUserControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.helpImageDisplayUserControl1.Image1 = global::GitUI.Properties.Resources.HelpCommandRebase;
+            this.helpImageDisplayUserControl1.Image1 = global::GitUI.Properties.Images.HelpCommandRebase;
             this.helpImageDisplayUserControl1.Image2 = null;
             this.helpImageDisplayUserControl1.IsExpanded = true;
             this.helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;

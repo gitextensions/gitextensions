@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using GitCommands.Config;
-using GitCommands.Remote;
+using GitCommands.Remotes;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
@@ -41,12 +41,12 @@ namespace GitCommandsTests.Remote
         [Test]
         public void LoadRemotes_should_not_populate_remotes_if_none()
         {
-            _module.GetRemotes().Returns(x => Enumerable.Empty<string>());
+            _module.GetRemoteNames().Returns(x => Enumerable.Empty<string>());
 
             var remotes = _controller.LoadRemotes(true);
 
             remotes.Count().Should().Be(0);
-            _module.Received(1).GetRemotes();
+            _module.Received(1).GetRemoteNames();
             _module.DidNotReceive().GetSetting(Arg.Any<string>());
             _module.DidNotReceive().GetSettings(Arg.Any<string>());
         }
@@ -54,12 +54,12 @@ namespace GitCommandsTests.Remote
         [Test]
         public void LoadRemotes_should_not_populate_remotes_if_those_are_null_or_whitespace()
         {
-            _module.GetRemotes().Returns(x => new[] { null, "", " ", "    ", "\t" });
+            _module.GetRemoteNames().Returns(x => new[] { null, "", " ", "    ", "\t" });
 
             var remotes = _controller.LoadRemotes(true);
 
             remotes.Count().Should().Be(0);
-            _module.Received(1).GetRemotes();
+            _module.Received(1).GetRemoteNames();
             _module.DidNotReceive().GetSetting(Arg.Any<string>());
             _module.DidNotReceive().GetSettings(Arg.Any<string>());
         }
@@ -70,7 +70,7 @@ namespace GitCommandsTests.Remote
         {
             const string remoteName1 = "name1";
             const string remoteName2 = "name2";
-            _module.GetRemotes().Returns(x => new[] { null, "", " ", "    ", remoteName1, "\t" });
+            _module.GetRemoteNames().Returns(x => new[] { null, "", " ", "    ", remoteName1, "\t" });
             var sections = new List<IConfigSection> { new ConfigSection($"{GitRemoteManager.DisabledSectionPrefix}{GitRemoteManager.SectionRemote}.{remoteName2}", true) };
             _configFile.GetConfigSections().Returns(x => sections);
 
@@ -78,7 +78,7 @@ namespace GitCommandsTests.Remote
 
             remotes.Count().Should().Be(loadDisabled ? 2 : 1);
 
-            _module.Received(1).GetRemotes();
+            _module.Received(1).GetRemoteNames();
             _module.Received(1).GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName1));
             _module.Received(1).GetSetting(string.Format(SettingKeyString.RemotePushUrl, remoteName1));
             _module.Received(1).GetSetting(string.Format(SettingKeyString.RemotePuttySshKey, remoteName1));

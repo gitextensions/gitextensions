@@ -31,13 +31,11 @@
             System.Windows.Forms.TableLayoutPanel tlpnlMain;
             this.gbGeneral = new System.Windows.Forms.GroupBox();
             this.tlpnlGeneral = new System.Windows.Forms.TableLayoutPanel();
-            this.cbBranchOrderingCriteria = new System.Windows.Forms.ComboBox();
             this.chkShowRelativeDate = new System.Windows.Forms.CheckBox();
             this.truncatePathMethod = new System.Windows.Forms.ComboBox();
             this.truncateLongFilenames = new System.Windows.Forms.Label();
             this.chkEnableAutoScale = new System.Windows.Forms.CheckBox();
             this.chkShowCurrentBranchInVisualStudio = new System.Windows.Forms.CheckBox();
-            this.lblBranchOrder = new System.Windows.Forms.Label();
             this.gbLanguages = new System.Windows.Forms.GroupBox();
             this.tlpnlLanguage = new System.Windows.Forms.TableLayoutPanel();
             this.Dictionary = new System.Windows.Forms.ComboBox();
@@ -48,7 +46,7 @@
             this.helpTranslate = new System.Windows.Forms.LinkLabel();
             this.gbAuthorImages = new System.Windows.Forms.GroupBox();
             this.tlpnlAuthor = new System.Windows.Forms.TableLayoutPanel();
-            this.ShowAuthorGravatar = new System.Windows.Forms.CheckBox();
+            this.ShowAuthorAvatar = new System.Windows.Forms.CheckBox();
             this.ClearImageCache = new System.Windows.Forms.Button();
             this.NoImageService = new System.Windows.Forms.ComboBox();
             this.lblCacheDays = new System.Windows.Forms.Label();
@@ -109,37 +107,21 @@
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlGeneral.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlGeneral.Controls.Add(this.cbBranchOrderingCriteria, 1, 3);
             this.tlpnlGeneral.Controls.Add(this.chkShowRelativeDate, 0, 0);
-            this.tlpnlGeneral.Controls.Add(this.truncatePathMethod, 1, 4);
-            this.tlpnlGeneral.Controls.Add(this.truncateLongFilenames, 0, 4);
+            this.tlpnlGeneral.Controls.Add(this.truncatePathMethod, 1, 3);
+            this.tlpnlGeneral.Controls.Add(this.truncateLongFilenames, 0, 3);
             this.tlpnlGeneral.Controls.Add(this.chkEnableAutoScale, 0, 2);
             this.tlpnlGeneral.Controls.Add(this.chkShowCurrentBranchInVisualStudio, 0, 1);
-            this.tlpnlGeneral.Controls.Add(this.lblBranchOrder, 0, 3);
             this.tlpnlGeneral.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlGeneral.Location = new System.Drawing.Point(8, 22);
             this.tlpnlGeneral.Name = "tlpnlGeneral";
-            this.tlpnlGeneral.RowCount = 5;
-            this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlGeneral.RowCount = 4;
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.Size = new System.Drawing.Size(735, 123);
             this.tlpnlGeneral.TabIndex = 0;
-            // 
-            // cbBranchOrderingCriteria
-            // 
-            this.cbBranchOrderingCriteria.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbBranchOrderingCriteria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbBranchOrderingCriteria.FormattingEnabled = true;
-            this.cbBranchOrderingCriteria.Items.AddRange(new object[] {
-            "Last access date",
-            "Alphabetically"});
-            this.cbBranchOrderingCriteria.Location = new System.Drawing.Point(130, 72);
-            this.cbBranchOrderingCriteria.Name = "cbBranchOrderingCriteria";
-            this.cbBranchOrderingCriteria.Size = new System.Drawing.Size(154, 21);
-            this.cbBranchOrderingCriteria.TabIndex = 4;
             // 
             // chkShowRelativeDate
             // 
@@ -202,17 +184,6 @@
             this.chkShowCurrentBranchInVisualStudio.TabIndex = 1;
             this.chkShowCurrentBranchInVisualStudio.Text = "Show current branch in Visual Studio";
             this.chkShowCurrentBranchInVisualStudio.UseVisualStyleBackColor = true;
-            // 
-            // lblBranchOrder
-            // 
-            this.lblBranchOrder.AutoSize = true;
-            this.lblBranchOrder.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblBranchOrder.Location = new System.Drawing.Point(3, 69);
-            this.lblBranchOrder.Name = "lblBranchOrder";
-            this.lblBranchOrder.Size = new System.Drawing.Size(121, 27);
-            this.lblBranchOrder.TabIndex = 5;
-            this.lblBranchOrder.Text = "Branch order";
-            this.lblBranchOrder.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // gbLanguages
             // 
@@ -345,7 +316,7 @@
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlAuthor.Controls.Add(this.ShowAuthorGravatar, 0, 0);
+            this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatar, 0, 0);
             this.tlpnlAuthor.Controls.Add(this.ClearImageCache, 1, 3);
             this.tlpnlAuthor.Controls.Add(this.NoImageService, 1, 2);
             this.tlpnlAuthor.Controls.Add(this.lblCacheDays, 0, 1);
@@ -362,17 +333,17 @@
             this.tlpnlAuthor.Size = new System.Drawing.Size(735, 106);
             this.tlpnlAuthor.TabIndex = 0;
             // 
-            // ShowAuthorGravatar
+            // ShowAuthorAvatar
             // 
-            this.ShowAuthorGravatar.AutoSize = true;
-            this.tlpnlAuthor.SetColumnSpan(this.ShowAuthorGravatar, 2);
-            this.ShowAuthorGravatar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ShowAuthorGravatar.Location = new System.Drawing.Point(3, 3);
-            this.ShowAuthorGravatar.Name = "ShowAuthorGravatar";
-            this.ShowAuthorGravatar.Size = new System.Drawing.Size(217, 17);
-            this.ShowAuthorGravatar.TabIndex = 0;
-            this.ShowAuthorGravatar.Text = "Get author image from gravatar.com";
-            this.ShowAuthorGravatar.UseVisualStyleBackColor = true;
+            this.ShowAuthorAvatar.AutoSize = true;
+            this.tlpnlAuthor.SetColumnSpan(this.ShowAuthorAvatar, 2);
+            this.ShowAuthorAvatar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ShowAuthorAvatar.Location = new System.Drawing.Point(3, 3);
+            this.ShowAuthorAvatar.Name = "ShowAuthorAvatar";
+            this.ShowAuthorAvatar.Size = new System.Drawing.Size(217, 17);
+            this.ShowAuthorAvatar.TabIndex = 0;
+            this.ShowAuthorAvatar.Text = "Show author's avatar in the commit info view";
+            this.ShowAuthorAvatar.UseVisualStyleBackColor = true;
             // 
             // ClearImageCache
             // 
@@ -457,6 +428,7 @@
             this.Name = "AppearanceSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(773, 531);
+            this.Text = "Appearance";
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             this.gbGeneral.ResumeLayout(false);
@@ -497,14 +469,12 @@
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_DaysToCacheImages;
         private System.Windows.Forms.Label lblCacheDays;
         private System.Windows.Forms.Button ClearImageCache;
-        private System.Windows.Forms.CheckBox ShowAuthorGravatar;
+        private System.Windows.Forms.CheckBox ShowAuthorAvatar;
         private System.Windows.Forms.FontDialog diffFontDialog;
         private System.Windows.Forms.FontDialog applicationDialog;
         private System.Windows.Forms.FontDialog commitFontDialog;
         private System.Windows.Forms.TableLayoutPanel tlpnlLanguage;
         private System.Windows.Forms.TableLayoutPanel tlpnlGeneral;
         private System.Windows.Forms.TableLayoutPanel tlpnlAuthor;
-        private System.Windows.Forms.Label lblBranchOrder;
-        private System.Windows.Forms.ComboBox cbBranchOrderingCriteria;
     }
 }

@@ -69,7 +69,7 @@ This action will be performed without warning while checking out branch.</source
 
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
 
       </trans-unit>
       <trans-unit id="_noDictFilesFound.Text">
@@ -881,7 +881,7 @@ Please make sure git (msysgit or cygwin) is installed or set the correct command
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
 
       </trans-unit>
       <trans-unit id="directoryIsNotAValidRepositoryCaption.Text">
@@ -2062,7 +2062,7 @@ compare with first:</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
 
       </trans-unit>
       <trans-unit id="directoryIsNotAValidRepositoryCaption.Text">
@@ -2170,7 +2170,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
 
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
 
       </trans-unit>
       <trans-unit id="hashToolStripMenuItem.Text">
@@ -2250,7 +2250,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
 
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
 
       </trans-unit>
       <trans-unit id="pluginsToolStripMenuItem.Text">
@@ -7494,7 +7494,7 @@ When OpenSSH is used, command line dialogs are shown!
 
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
 
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
@@ -7546,7 +7546,7 @@ When OpenSSH is used, command line dialogs are shown!
 
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
 
       </trans-unit>
       <trans-unit id="_secondsAgo.Text">

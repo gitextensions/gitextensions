@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             if (commands != null)
             {
                 MailFrom.Text = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
@@ -132,15 +132,15 @@ namespace GitUI.CommandsDialogs
             {
                 if (revisions.Count == 1)
                 {
-                    var parents = revisions[0].ParentGuids;
-                    rev1 = parents?.Count > 0 ? parents[0] : "";
+                    var parents = revisions[0].ParentIds;
+                    rev1 = parents?.Count > 0 ? parents[0].ToString() : "";
                     rev2 = revisions[0].Guid;
                     result = Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
                 else if (revisions.Count == 2)
                 {
-                    var parents = revisions[0].ParentGuids;
-                    rev1 = parents?.Count > 0 ? parents[0] : "";
+                    var parents = revisions[0].ParentIds;
+                    rev1 = parents?.Count > 0 ? parents[0].ToString() : "";
                     rev2 = revisions[1].Guid;
                     result = Module.FormatPatch(rev1, rev2, savePatchesToDir);
                 }
@@ -150,8 +150,8 @@ namespace GitUI.CommandsDialogs
                     foreach (GitRevision revision in revisions)
                     {
                         n++;
-                        var parents = revision.ParentGuids;
-                        rev1 = parents?.Count > 0 ? parents[0] : "";
+                        var parents = revision.ParentIds;
+                        rev1 = parents?.Count > 0 ? parents[0].ToString() : "";
                         rev2 = revision.Guid;
                         result += Module.FormatPatch(rev1, rev2, savePatchesToDir, n);
                     }
@@ -206,8 +206,8 @@ namespace GitUI.CommandsDialogs
                 {
                     foreach (string file in Directory.GetFiles(dir, "*.patch"))
                     {
-                        var attacheMent = new Attachment(file);
-                        mail.Attachments.Add(attacheMent);
+                        var attachment = new Attachment(file);
+                        mail.Attachments.Add(attachment);
                     }
 
                     var smtpClient = new SmtpClient(AppSettings.SmtpServer)

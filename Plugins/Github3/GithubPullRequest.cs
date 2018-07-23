@@ -9,20 +9,20 @@ namespace Github3
 {
     internal class GithubPullRequest : IPullRequestInformation
     {
-        private readonly PullRequest _pullrequest;
+        private readonly PullRequest _pullRequest;
 
-        public GithubPullRequest(PullRequest pullrequest)
+        public GithubPullRequest(PullRequest pullRequest)
         {
-            _pullrequest = pullrequest;
+            _pullRequest = pullRequest;
         }
 
-        public string Title => _pullrequest.Title;
+        public string Title => _pullRequest.Title;
 
-        public string Body => _pullrequest.Body;
+        public string Body => _pullRequest.Body;
 
-        public string Owner => _pullrequest.User.Login;
+        public string Owner => _pullRequest.User.Login;
 
-        public DateTime Created => _pullrequest.CreatedAt;
+        public DateTime Created => _pullRequest.CreatedAt;
 
         private string _diffData;
         public string DiffData
@@ -31,7 +31,7 @@ namespace Github3
             {
                 if (_diffData == null)
                 {
-                    HttpWebRequest wr = (HttpWebRequest)WebRequest.Create(_pullrequest.DiffUrl);
+                    var wr = (HttpWebRequest)WebRequest.Create(_pullRequest.DiffUrl);
                     using (var response = wr.GetResponse())
                     {
                         using (var respStream = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
@@ -52,7 +52,7 @@ namespace Github3
             {
                 if (_baseRepo == null)
                 {
-                    _baseRepo = new GithubRepo(_pullrequest.Base.Repo);
+                    _baseRepo = new GithubRepo(_pullRequest.Base.Repo);
                 }
 
                 return _baseRepo;
@@ -66,28 +66,28 @@ namespace Github3
             {
                 if (_headRepo == null)
                 {
-                    _headRepo = new GithubRepo(_pullrequest.Head.Repo);
+                    _headRepo = new GithubRepo(_pullRequest.Head.Repo);
                 }
 
                 return _headRepo;
             }
         }
 
-        public string BaseSha => _pullrequest.Base.Sha;
+        public string BaseSha => _pullRequest.Base.Sha;
 
-        public string HeadSha => _pullrequest.Head.Sha;
+        public string HeadSha => _pullRequest.Head.Sha;
 
-        public string BaseRef => _pullrequest.Base.Ref;
+        public string BaseRef => _pullRequest.Base.Ref;
 
-        public string HeadRef => _pullrequest.Head.Ref;
+        public string HeadRef => _pullRequest.Head.Ref;
 
-        public string Id => _pullrequest.Number.ToString();
+        public string Id => _pullRequest.Number.ToString();
 
         public string DetailedInfo => string.Format("Base repo owner: {0}\nHead repo owner: {1}", BaseRepo.Owner, HeadRepo.Owner);
 
         public void Close()
         {
-            _pullrequest.Close();
+            _pullRequest.Close();
         }
 
         private IPullRequestDiscussion _discussion;
@@ -97,7 +97,7 @@ namespace Github3
             {
                 if (_discussion == null)
                 {
-                    _discussion = new GithubPullRequestDiscussion(_pullrequest);
+                    _discussion = new GithubPullRequestDiscussion(_pullRequest);
                 }
 
                 return _discussion;

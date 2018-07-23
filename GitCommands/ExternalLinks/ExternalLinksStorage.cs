@@ -6,6 +6,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands.Settings;
+using JetBrains.Annotations;
 
 namespace GitCommands.ExternalLinks
 {
@@ -50,7 +51,10 @@ namespace GitCommands.ExternalLinks
                 }
                 else
                 {
-                    definitions.ForEach(linkDef => linkDef.RemoveEmptyFormats());
+                    foreach (var definition in definitions)
+                    {
+                        definition.RemoveEmptyFormats();
+                    }
 
                     var sw = new StringWriter();
                     var serializer = new XmlSerializer(typeof(List<ExternalLinkDefinition>));
@@ -70,6 +74,7 @@ namespace GitCommands.ExternalLinks
         }
 
         // TODO: refactor and outsource to the centralised SettingsSerialiser implementations.
+        [CanBeNull]
         private static IReadOnlyList<ExternalLinkDefinition> LoadFromXmlString(string xmlString)
         {
             if (string.IsNullOrWhiteSpace(xmlString))

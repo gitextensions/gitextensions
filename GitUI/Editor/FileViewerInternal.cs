@@ -12,10 +12,18 @@ namespace GitUI.Editor
 {
     public partial class FileViewerInternal : GitExtensionsControl, IFileViewer
     {
+        public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
+        public new event MouseEventHandler MouseMove;
+        public new event EventHandler MouseEnter;
+        public new event EventHandler MouseLeave;
+        public new event System.Windows.Forms.KeyEventHandler KeyUp;
+        public new event EventHandler DoubleClick;
+
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
-        private readonly DiffViewerLineNumberCtrl _lineNumbersControl;
-        private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
+        private readonly DiffViewerLineNumberControl _lineNumbersControl;
         private readonly Func<GitModule> _moduleProvider;
+
+        private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
         private bool _isGotoLineUIApplicable = true;
 
         public Action OpenWithDifftool { get; private set; }
@@ -25,26 +33,29 @@ namespace GitUI.Editor
             _moduleProvider = moduleProvider;
 
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
-            TextEditor.TextChanged += TextEditor_TextChanged;
-            TextEditor.ActiveTextAreaControl.VScrollBar.ValueChanged += VScrollBar_ValueChanged;
+            TextEditor.TextChanged += (s, e) => TextChanged?.Invoke(s, e);
+            TextEditor.ActiveTextAreaControl.VScrollBar.ValueChanged += (s, e) => ScrollPosChanged?.Invoke(s, e);
+            TextEditor.ActiveTextAreaControl.TextArea.KeyUp += (s, e) => KeyUp?.Invoke(s, e);
+            TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += (s, e) => DoubleClick?.Invoke(s, e);
+            TextEditor.ActiveTextAreaControl.TextArea.MouseMove += (s, e) => MouseMove?.Invoke(s, e);
+            TextEditor.ActiveTextAreaControl.TextArea.MouseEnter += (s, e) => MouseEnter?.Invoke(s, e);
+            TextEditor.ActiveTextAreaControl.TextArea.MouseLeave += (s, e) => MouseLeave?.Invoke(s, e);
+            TextEditor.ActiveTextAreaControl.TextArea.MouseDown += (s, e) =>
+            {
+                SelectedLineChanged?.Invoke(
+                    this,
+                    new SelectedLineEventArgs(
+                        TextEditor.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y)));
+            };
 
-            TextEditor.ActiveTextAreaControl.TextArea.MouseMove += TextArea_MouseMove;
-            TextEditor.ActiveTextAreaControl.TextArea.MouseEnter += TextArea_MouseEnter;
-            TextEditor.ActiveTextAreaControl.TextArea.MouseLeave += TextArea_MouseLeave;
-            TextEditor.ActiveTextAreaControl.TextArea.MouseDown += TextAreaMouseDown;
-            TextEditor.ActiveTextAreaControl.TextArea.KeyUp += TextArea_KeyUp;
-            TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += ActiveTextAreaControlDoubleClick;
+            HighlightingManager.Manager.DefaultHighlighting.SetColorFor("LineNumbers", new HighlightColor(Color.FromArgb(80, 0, 0, 0), Color.White, false, false));
+            TextEditor.ActiveTextAreaControl.TextEditorProperties.EnableFolding = false;
 
-            _lineNumbersControl = new DiffViewerLineNumberCtrl(TextEditor.ActiveTextAreaControl.TextArea);
+            _lineNumbersControl = new DiffViewerLineNumberControl(TextEditor.ActiveTextAreaControl.TextArea);
 
             VRulerPosition = AppSettings.DiffVerticalRulerPosition;
-        }
-
-        private void TextArea_KeyUp(object sender, KeyEventArgs e)
-        {
-            KeyUp?.Invoke(sender, e);
         }
 
         public new Font Font
@@ -53,37 +64,10 @@ namespace GitUI.Editor
             set => TextEditor.Font = value;
         }
 
-        public new event MouseEventHandler MouseMove;
-        public new event EventHandler MouseEnter;
-        public new event EventHandler MouseLeave;
-        public new event System.Windows.Forms.KeyEventHandler KeyUp;
-
-        private void TextArea_MouseEnter(object sender, EventArgs e)
-        {
-            MouseEnter?.Invoke(sender, e);
-        }
-
-        private void TextArea_MouseLeave(object sender, EventArgs e)
-        {
-            MouseLeave?.Invoke(sender, e);
-        }
-
-        private void TextArea_MouseMove(object sender, MouseEventArgs e)
-        {
-            MouseMove?.Invoke(sender, e);
-        }
-
-        public new event EventHandler DoubleClick;
-
-        private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
-        {
-            DoubleClick?.Invoke(sender, e);
-        }
-
         public void Find()
         {
             _findAndReplaceForm.ShowFor(TextEditor, false);
-            VScrollBar_ValueChanged(this, null);
+            ScrollPosChanged?.Invoke(this, null);
         }
 
         public async Task FindNextAsync(bool searchForwardOrOpenWithDifftool)
@@ -95,29 +79,7 @@ namespace GitUI.Editor
             }
 
             await _findAndReplaceForm.FindNextAsync(viaF3: true, !searchForwardOrOpenWithDifftool, "Text not found");
-            VScrollBar_ValueChanged(this, null);
-        }
-
-        private void TextAreaMouseDown(object sender, MouseEventArgs e)
-        {
-            OnSelectedLineChanged(TextEditor.ActiveTextAreaControl.TextArea.TextView.GetLogicalLine(e.Y));
-        }
-
-        public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
-
-        private void OnSelectedLineChanged(int selectedLine)
-        {
-            SelectedLineChanged?.Invoke(this, new SelectedLineEventArgs(selectedLine));
-        }
-
-        private void VScrollBar_ValueChanged(object sender, EventArgs e)
-        {
-            ScrollPosChanged?.Invoke(sender, e);
-        }
-
-        private void TextEditor_TextChanged(object sender, EventArgs e)
-        {
-            TextChanged?.Invoke(sender, e);
+            ScrollPosChanged?.Invoke(this, null);
         }
 
         #region IFileViewer Members

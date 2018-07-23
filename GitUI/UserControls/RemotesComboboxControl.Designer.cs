@@ -64,7 +64,7 @@
             // 
             this.buttonSelectMultipleRemotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSelectMultipleRemotes.Image = global::GitUI.Properties.Resources.Select;
+            this.buttonSelectMultipleRemotes.Image = global::GitUI.Properties.Images.Select;
             this.buttonSelectMultipleRemotes.Location = new System.Drawing.Point(158, 0);
             this.buttonSelectMultipleRemotes.Margin = new System.Windows.Forms.Padding(0);
             this.buttonSelectMultipleRemotes.Name = "buttonSelectMultipleRemotes";

@@ -11,6 +11,24 @@ namespace ResourceManager.CommitDataRenders
     /// </summary>
     public sealed class MonospacedHeaderRenderStyleProvider : IHeaderRenderStyleProvider
     {
+        private readonly int _maxLength;
+
+        public MonospacedHeaderRenderStyleProvider()
+        {
+            var strings = new[]
+            {
+                Strings.Author,
+                Strings.AuthorDate,
+                Strings.Committer,
+                Strings.CommitDate,
+                Strings.CommitHash,
+                Strings.GetChildren(10), // assume text for plural case is longer
+                Strings.GetParents(10)
+            };
+
+            _maxLength = strings.Select(s => s.Length).Max() + 2;
+        }
+
         public Font GetFont(Graphics g)
         {
             if (!AppSettings.Font.IsFixedWidth(g))
@@ -21,26 +39,8 @@ namespace ResourceManager.CommitDataRenders
             return AppSettings.Font;
         }
 
-        public int GetMaxWidth()
-        {
-            var strings = new[]
-            {
-                Strings.GetAuthorText(),
-                Strings.GetAuthorDateText(),
-                Strings.GetCommitterText(),
-                Strings.GetCommitDateText(),
-                Strings.GetCommitHashText(),
-                Strings.GetChildrenText(),
-                Strings.GetParentsText()
-            };
+        public int GetMaxWidth() => _maxLength;
 
-            var maxLegnth = strings.Select(s => s.Length).Max();
-            return maxLegnth + 2;
-        }
-
-        public IEnumerable<int> GetTabStops()
-        {
-            return Enumerable.Empty<int>();
-        }
+        public IEnumerable<int> GetTabStops() => Enumerable.Empty<int>();
     }
 }

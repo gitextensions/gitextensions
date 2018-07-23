@@ -21,7 +21,7 @@ namespace GitUIPluginInterfaces
     {
         /// <summary>
         /// Creates a control to be placed on FormSettings to edit this setting value
-        /// Control should take care of scalability and resizability of its subcontrols
+        /// Control should take care of scalability and resizability of its sub-controls
         /// </summary>
         Control GetControl();
 
@@ -36,7 +36,7 @@ namespace GitUIPluginInterfaces
         void SaveSetting(ISettingsSource settings, bool areSettingsEffective);
 
         /// <summary>
-        /// returns caption assotiated with this control or null if the control layouts
+        /// returns caption associated with this control or null if the control layouts
         /// the caption by itself
         /// </summary>
         string Caption();
@@ -98,7 +98,7 @@ namespace GitUIPluginInterfaces
 
         /// <summary>
         /// Creates a control to be placed on FormSettings to edit this setting value
-        /// Control should take care of scalability and resizability of its subcontrols
+        /// Control should take care of scalability and resizability of its sub-controls
         /// </summary>
         public abstract TControl CreateControl();
 

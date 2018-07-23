@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.UserControls;
+using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -26,7 +27,7 @@ namespace GitUI
         {
         }
 
-        public FormProcess(ConsoleOutputControl outputControl, string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
+        public FormProcess(ConsoleOutputControl outputControl, [CanBeNull] string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
             : base(outputControl, useDialogSettings)
         {
             ProcessCallback = ProcessStart;
@@ -47,12 +48,12 @@ namespace GitUI
         {
         }
 
-        public static bool ShowDialog(IWin32Window owner, GitModule module, string arguments)
+        public static bool ShowDialog([CanBeNull] IWin32Window owner, GitModule module, string arguments)
         {
             return ShowDialog(owner, null, arguments, module.WorkingDir, null, true);
         }
 
-        public static bool ShowDialog(IWin32Window owner, GitModule module, string process, string arguments)
+        public static bool ShowDialog([CanBeNull] IWin32Window owner, GitModule module, string process, string arguments)
         {
             return ShowDialog(owner, process, arguments, module.WorkingDir, null, true);
         }
@@ -72,12 +73,12 @@ namespace GitUI
             return ShowDialog(owner, owner.Module, arguments, useDialogSettings);
         }
 
-        public static bool ShowDialog(IWin32Window owner, GitModule module, string arguments, bool useDialogSettings)
+        public static bool ShowDialog([CanBeNull] IWin32Window owner, GitModule module, string arguments, bool useDialogSettings)
         {
             return ShowDialog(owner, null, arguments, module.WorkingDir, null, useDialogSettings);
         }
 
-        public static bool ShowDialog(IWin32Window owner, string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
+        public static bool ShowDialog([CanBeNull] IWin32Window owner, string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
         {
             using (var formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings))
             {
@@ -86,7 +87,7 @@ namespace GitUI
             }
         }
 
-        public static bool ShowStandardProcessDialog(IWin32Window owner, string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
+        public static bool ShowStandardProcessDialog([CanBeNull] IWin32Window owner, string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
         {
             var outputCtrl = new EditboxBasedConsoleOutputControl();
             using (var formProcess = new FormProcess(outputCtrl, process, arguments, workingDirectory, input, useDialogSettings))
@@ -96,7 +97,7 @@ namespace GitUI
             }
         }
 
-        public static FormProcess ShowModeless(IWin32Window owner, string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
+        public static FormProcess ShowModeless([CanBeNull] IWin32Window owner, string process, string arguments, string workingDirectory, string input, bool useDialogSettings)
         {
             var formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings)
             {
@@ -118,7 +119,7 @@ namespace GitUI
             return ReadDialog(owner, null, arguments, owner.Module, null, true);
         }
 
-        public static string ReadDialog(IWin32Window owner, string process, string arguments, GitModule module, string input, bool useDialogSettings)
+        public static string ReadDialog([CanBeNull] IWin32Window owner, string process, string arguments, GitModule module, string input, bool useDialogSettings)
         {
             using (var formProcess = new FormProcess(process, arguments, module.WorkingDir, input, useDialogSettings))
             {

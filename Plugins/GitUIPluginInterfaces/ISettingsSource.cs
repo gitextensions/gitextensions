@@ -223,7 +223,7 @@ namespace GitUIPluginInterfaces
 
                 return new Font(parts[0], float.Parse(fontSize, CultureInfo.InvariantCulture));
             }
-            catch (Exception)
+            catch
             {
                 return defaultValue;
             }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using GitCommands.Remote;
+using GitCommands.Remotes;
 
 namespace GitUI.UserControls
 {
@@ -9,7 +9,7 @@ namespace GitUI.UserControls
         public RemotesComboboxControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             AllowMultiselect = false;
         }
 

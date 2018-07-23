@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Net;
-using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace ResourceManager
 {
@@ -11,7 +11,7 @@ namespace ResourceManager
         string CreateLink(string caption, string uri);
         string CreateTagLink(string tag);
         string CreateBranchLink(string noPrefixBranch);
-        string CreateCommitLink(string guid, string linkText = null, bool preserveGuidInLinkText = false);
+        string CreateCommitLink(ObjectId objectId, string linkText = null, bool preserveGuidInLinkText = false);
         string ParseLink(string linkText);
     }
 
@@ -59,29 +59,29 @@ namespace ResourceManager
             return WebUtility.HtmlEncode(noPrefixBranch);
         }
 
-        public string CreateCommitLink(string guid, string linkText = null, bool preserveGuidInLinkText = false)
+        public string CreateCommitLink(ObjectId objectId, string linkText = null, bool preserveGuidInLinkText = false)
         {
             if (linkText == null)
             {
-                if (guid == GitRevision.UnstagedGuid)
+                if (objectId == ObjectId.UnstagedId)
                 {
-                    linkText = Strings.GetCurrentUnstagedChanges();
+                    linkText = Strings.Workspace;
                 }
-                else if (guid == GitRevision.IndexGuid)
+                else if (objectId == ObjectId.IndexId)
                 {
-                    linkText = Strings.GetCurrentIndex();
+                    linkText = Strings.Index;
                 }
                 else if (preserveGuidInLinkText)
                 {
-                    linkText = guid;
+                    linkText = objectId.ToString();
                 }
                 else
                 {
-                    linkText = GitRevision.ToShortSha(guid);
+                    linkText = objectId.ToShortString();
                 }
             }
 
-            return AddLink(linkText, "gitext://gotocommit/" + guid);
+            return AddLink(linkText, "gitext://gotocommit/" + objectId);
         }
 
         public string ParseLink(string linkText)

@@ -60,7 +60,7 @@ namespace GitExtensions
         {
             string[] args = Environment.GetCommandLineArgs();
 
-            // This form created for obtain UI synchronization context only
+            // This form created to obtain UI synchronization context only
             using (new Form())
             {
                 // Store the shared JoinableTaskContext
@@ -84,15 +84,18 @@ namespace GitExtensions
 
             try
             {
+                // Ensure we can find the git command to execute,
+                // unless we are being instructed to uninstall,
+                // or AppSettings.CheckSettings is set to false.
                 if (!(args.Length >= 2 && args[1] == "uninstall")
                     && (AppSettings.CheckSettings
                     || string.IsNullOrEmpty(AppSettings.GitCommandValue)
                     || !File.Exists(AppSettings.GitCommandValue)))
                 {
-                    GitUICommands uiCommands = new GitUICommands(string.Empty);
+                    var uiCommands = new GitUICommands("");
                     var commonLogic = new CommonLogic(uiCommands.Module);
                     var checkSettingsLogic = new CheckSettingsLogic(commonLogic);
-                    ISettingsPageHost fakePageHost = new SettingsPageHostMock(checkSettingsLogic);
+                    var fakePageHost = new SettingsPageHostMock(checkSettingsLogic);
                     using (var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost))
                     {
                         if (!checklistSettingsPage.CheckSettings())
@@ -115,7 +118,7 @@ namespace GitExtensions
                 MouseWheelRedirector.Active = true;
             }
 
-            GitUICommands commands = new GitUICommands(GetWorkingDir(args));
+            var commands = new GitUICommands(GetWorkingDir(args));
 
             if (args.Length <= 1)
             {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands.Settings;
 using GitUI;
@@ -12,7 +10,6 @@ namespace GitUITests
     public class SplitterManagerTest
     {
         private MemorySettings _settings;
-        private const float _designTimeFontSize = 10;
         private const int _designTimeSplitterWidth = 100;
         private const int _designTimeSplitterDistance = 40;
 
@@ -30,7 +27,7 @@ namespace GitUITests
             const int splitterWidth = 100;
             const int splitterDistance = 30;
             {
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitter.Width = splitterWidth;
                 splitter.SplitterDistance = splitterDistance;
@@ -40,7 +37,7 @@ namespace GitUITests
 
             {
                 // act
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitManager.AddSplitter(splitter, splitterName);
                 splitter.Width = 2 * splitterWidth;
@@ -60,7 +57,7 @@ namespace GitUITests
             const int splitterWidth = 200;
             const int splitterDistance = 70;
             {
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitter.Width = splitterWidth;
                 splitter.SplitterDistance = splitterDistance;
@@ -70,7 +67,7 @@ namespace GitUITests
 
             {
                 // act
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitManager.AddSplitter(splitter, splitterName);
                 splitter.Width = splitterWidth + deltaWidth;
@@ -91,7 +88,7 @@ namespace GitUITests
             const int splitterWidth = 200;
             const int splitterDistance = 130;
             {
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitter.Width = splitterWidth;
                 splitter.SplitterDistance = splitterDistance;
@@ -101,7 +98,7 @@ namespace GitUITests
 
             {
                 // act
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitManager.AddSplitter(splitter, splitterName);
                 int splitterNewWidth = splitterWidth + deltaWidth;
@@ -123,7 +120,7 @@ namespace GitUITests
             const int splitterWidth = 200;
             const int splitterDistance = 120;
             {
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitter.Width = splitterWidth;
                 splitter.SplitterDistance = splitterDistance;
@@ -133,7 +130,7 @@ namespace GitUITests
 
             {
                 // act
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitManager.AddSplitter(splitter, splitterName);
                 const int splitterNewWidth = 180;
@@ -168,7 +165,7 @@ namespace GitUITests
             const int splitterWidth = 200;
             const int splitterDistance = 120;
             {
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitter.Width = splitterWidth;
                 splitter.SplitterDistance = splitterDistance;
@@ -178,7 +175,7 @@ namespace GitUITests
 
             {
                 // act
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
+                var splitManager = new SplitterManager(_settings);
                 SplitContainer splitter = CreateVerticalSplitContainer();
                 splitManager.AddSplitter(splitter, splitterName);
                 const int splitterNewWidth = 180;
@@ -204,118 +201,15 @@ namespace GitUITests
             }
         }
 
-        [TestCase(2)]
-        [TestCase(-2)]
-        public void ForFixedPanel1_WhenFontChanges_Panel1WidthChangesAlong(int deltaFontSize)
+        private static SplitContainer CreateVerticalSplitContainer()
         {
-            // arrange
-            const string splitterName = "splitterName";
-            const int splitterWidth = 200;
-            const int splitterDistance = 70;
+            return new SplitContainer
             {
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
-                SplitContainer splitter = CreateVerticalSplitContainer();
-                splitter.Width = splitterWidth;
-                splitter.SplitterDistance = splitterDistance;
-                splitManager.AddSplitter(splitter, splitterName);
-                splitManager.SaveSplitters();
-            }
-
-            {
-                // act
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
-                SplitContainer splitter = CreateVerticalSplitContainer();
-                splitManager.AddSplitter(splitter, splitterName);
-                splitter.Width = splitterWidth;
-                splitter.Font = new Font(splitter.Font.FontFamily, _designTimeFontSize + deltaFontSize);
-                splitter.FixedPanel = FixedPanel.Panel1;
-                splitManager.RestoreSplitters();
-
-                // assert
-                float scaleFactor = 1F * (_designTimeFontSize + deltaFontSize) / _designTimeFontSize;
-                int expectedPanel1Width = Convert.ToInt32(splitterDistance * scaleFactor);
-                splitter.SplitterDistance.Should().Be(expectedPanel1Width);
-            }
-        }
-
-        [TestCase(2)]
-        [TestCase(-2)]
-        public void ForFixedPanel2_WhenFontChanges_Panel2WidthChangesAlong(int deltaFontSize)
-        {
-            // arrange
-            const string splitterName = "splitterName";
-            const int splitterWidth = 200;
-            const int splitterDistance = 70;
-            int panel2Width = splitterWidth - splitterDistance;
-            {
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
-                SplitContainer splitter = CreateVerticalSplitContainer();
-                splitter.Width = splitterWidth;
-                splitter.SplitterDistance = splitterDistance;
-                splitManager.AddSplitter(splitter, splitterName);
-                splitManager.SaveSplitters();
-            }
-
-            {
-                // act
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
-                SplitContainer splitter = CreateVerticalSplitContainer();
-                splitManager.AddSplitter(splitter, splitterName);
-                splitter.Width = splitterWidth;
-                splitter.Font = new Font(splitter.Font.FontFamily, _designTimeFontSize + deltaFontSize);
-                splitter.FixedPanel = FixedPanel.Panel2;
-                splitManager.RestoreSplitters();
-
-                // assert
-                float scaleFactor = 1F * (_designTimeFontSize + deltaFontSize) / _designTimeFontSize;
-                int expectedPanel2Width = Convert.ToInt32(panel2Width * scaleFactor);
-                int newPanel2Width = splitter.Width - splitter.SplitterDistance;
-                newPanel2Width.Should().Be(expectedPanel2Width);
-            }
-        }
-
-        [TestCase(2)]
-        [TestCase(-2)]
-        public void ForNoFixedPanel_WhenFontChanges_DistanceDoesNotChange(int deltaFontSize)
-        {
-            // arrange
-            const string splitterName = "splitterName";
-            const int splitterWidth = 200;
-            const int splitterDistance = 70;
-            {
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
-                SplitContainer splitter = CreateVerticalSplitContainer();
-                splitter.Width = splitterWidth;
-                splitter.SplitterDistance = splitterDistance;
-                splitManager.AddSplitter(splitter, splitterName);
-                splitManager.SaveSplitters();
-            }
-
-            {
-                // act
-                SplitterManager splitManager = new SplitterManager(_settings, _designTimeFontSize);
-                SplitContainer splitter = CreateVerticalSplitContainer();
-                splitManager.AddSplitter(splitter, splitterName);
-                splitter.Width = splitterWidth;
-                splitter.Font = new Font(splitter.Font.FontFamily, _designTimeFontSize + deltaFontSize);
-                splitter.FixedPanel = FixedPanel.None;
-                splitManager.RestoreSplitters();
-
-                // assert
-                splitter.SplitterDistance.Should().Be(splitterDistance);
-            }
-        }
-
-        private SplitContainer CreateVerticalSplitContainer()
-        {
-            SplitContainer splitter = new SplitContainer();
-            splitter.FixedPanel = FixedPanel.None;
-            splitter.Font = new Font(splitter.Font.FontFamily, _designTimeFontSize);
-            splitter.Orientation = Orientation.Vertical;
-            splitter.Width = _designTimeSplitterWidth;
-            splitter.SplitterDistance = _designTimeSplitterDistance;
-
-            return splitter;
+                FixedPanel = FixedPanel.None,
+                Orientation = Orientation.Vertical,
+                Width = _designTimeSplitterWidth,
+                SplitterDistance = _designTimeSplitterDistance
+            };
         }
     }
 }

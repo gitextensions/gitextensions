@@ -35,7 +35,7 @@ namespace GitExtensionsVSIX
 
                 return false;
             }
-            catch (Exception)
+            catch
             {
                 // ignore!
                 return false;
@@ -51,7 +51,7 @@ namespace GitExtensionsVSIX
                 .FirstOrDefault();
         }
 
-        public static OutputWindowPane AquireOutputPane(_DTE app, string name)
+        public static OutputWindowPane AcquireOutputPane(_DTE app, string name)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace GitExtensionsVSIX
                 OutputWindowPanes panes = outputWindow.OutputWindowPanes;
                 return panes.Add(name);
             }
-            catch (Exception)
+            catch
             {
                 // ignore!!
                 return null;
@@ -99,7 +99,7 @@ namespace GitExtensionsVSIX
                     return pane;
                 }
             }
-            catch (Exception)
+            catch
             {
                 // ignore!!
             }

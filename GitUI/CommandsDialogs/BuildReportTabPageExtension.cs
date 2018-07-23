@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.UserControls;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
 {
@@ -17,7 +18,7 @@ namespace GitUI.CommandsDialogs
         private readonly string _caption;
 
         private TabPage _buildReportTabPage;
-        private WebBrowserCtrl _buildReportWebBrowser;
+        private WebBrowserControl _buildReportWebBrowser;
         private GitRevision _selectedGitRevision;
         private string _url;
 
@@ -27,7 +28,7 @@ namespace GitUI.CommandsDialogs
             _caption = caption;
         }
 
-        public void FillBuildReport(GitRevision revision)
+        public void FillBuildReport([CanBeNull] GitRevision revision)
         {
             if (_selectedGitRevision != null)
             {
@@ -121,7 +122,7 @@ namespace GitUI.CommandsDialogs
                 Text = _caption,
                 UseVisualStyleBackColor = true
             };
-            _buildReportWebBrowser = new WebBrowserCtrl
+            _buildReportWebBrowser = new WebBrowserControl
             {
                 Dock = DockStyle.Fill
             };
@@ -173,6 +174,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        [CanBeNull]
         private static string DetermineFavIconUrl(HtmlDocument htmlDocument)
         {
             var links = htmlDocument.GetElementsByTagName("link");
@@ -199,6 +201,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        [ItemCanBeNull]
         private static async Task<Stream> DownloadRemoteImageFileAsync(string uri)
         {
             var request = (HttpWebRequest)WebRequest.Create(uri);

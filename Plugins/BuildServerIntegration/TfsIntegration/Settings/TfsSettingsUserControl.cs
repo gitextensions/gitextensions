@@ -18,7 +18,7 @@ namespace TfsIntegration.Settings
         public TfsSettingsUserControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
         }

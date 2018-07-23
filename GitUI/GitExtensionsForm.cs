@@ -4,41 +4,47 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
-using GitUI.Properties;
-using Microsoft.WindowsAPICodePack.Taskbar;
 using ResourceManager;
 
 namespace GitUI
 {
-    /// <summary>Base class for a Git Extensions <see cref="Form"/>.
-    /// <remarks>
-    /// Includes support for font, hotkey, icon, translation, and position restore.
-    /// </remarks></summary>
+    // NOTE do not make this class abstract as it breaks the WinForms designer in VS
+
+    /// <summary>Base class for a Git Extensions <see cref="Form"/>.</summary>
+    /// <remarks>Includes support for font, hotkey, icon, translation, and position restore.</remarks>
     public class GitExtensionsForm : GitExtensionsFormBase
     {
-        /// <summary>indicates whether the <see cref="Form"/>'s position will be restored</summary>
-        private readonly bool _enablePositionRestore;
+        private static WindowPositionList _windowPositionList;
+
+        private bool _needsPositionRestore;
+        private bool _needsPositionSave;
+        private bool _windowCentred;
 
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
         public GitExtensionsForm()
-            : this(false)
+            : this(enablePositionRestore: false)
         {
         }
 
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> indicating position restore.</summary>
         /// <param name="enablePositionRestore">Indicates whether the <see cref="Form"/>'s position
         /// will be restored upon being re-opened.</param>
-        public GitExtensionsForm(bool enablePositionRestore)
+        protected GitExtensionsForm(bool enablePositionRestore)
         {
-            _enablePositionRestore = enablePositionRestore;
+            _needsPositionSave = enablePositionRestore;
+            _needsPositionRestore = enablePositionRestore;
 
-            Icon = Resources.git_extensions_logo_final;
             FormClosing += GitExtensionsForm_FormClosing;
 
             var cancelButton = new Button();
             cancelButton.Click += CancelButtonClick;
-
             CancelButton = cancelButton;
+
+            void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
+            {
+                SavePosition(GetType().Name);
+                TaskbarProgress.Clear();
+            }
         }
 
         public virtual void CancelButtonClick(object sender, EventArgs e)
@@ -46,138 +52,82 @@ namespace GitUI
             Close();
         }
 
-        private void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (_enablePositionRestore)
-            {
-                SavePosition(GetType().Name);
-            }
-
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-            {
-                try
-                {
-                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
-                }
-                catch (InvalidOperationException)
-                {
-                }
-            }
-        }
-
-        #region icon
-
-        /// <summary>Specifies a Git Extensions' color index.</summary>
-        protected enum ColorIndex
-        {
-            Default,
-            Blue,
-            Green,
-            LightBlue,
-            Purple,
-            Red,
-            Yellow,
-            Unknown = -1
-        }
-
-        protected static ColorIndex GetColorIndexByName(string color)
-        {
-            switch (color)
-            {
-                case "default":
-                    return ColorIndex.Default;
-                case "blue":
-                    return ColorIndex.Blue;
-                case "green":
-                    return ColorIndex.Green;
-                case "lightblue":
-                    return ColorIndex.LightBlue;
-                case "purple":
-                    return ColorIndex.Purple;
-                case "red":
-                    return ColorIndex.Red;
-                case "yellow":
-                    return ColorIndex.Yellow;
-                case "random":
-                    return (ColorIndex)new Random(DateTime.Now.Millisecond).Next(7);
-            }
-
-            return ColorIndex.Unknown;
-        }
-
-        #endregion icon
-
-        /// <summary>Sets <see cref="AutoScaleMode"/>,
-        /// restores position, raises the <see cref="Form.Load"/> event,
-        /// and .
-        /// </summary>
         protected override void OnLoad(EventArgs e)
         {
-            if (_enablePositionRestore)
-            {
-                RestorePosition(GetType().Name);
-            }
+            RestorePosition();
 
             // Should be called after restoring position
             base.OnLoad(e);
 
-            if (!CheckComponent(this))
+            if (!IsDesignModeActive)
             {
                 OnRuntimeLoad(e);
             }
         }
 
         /// <summary>Invoked at runtime during the <see cref="OnLoad"/> method.</summary>
+        /// <remarks>In particular, this method is not invoked when running in a designer.</remarks>
         protected virtual void OnRuntimeLoad(EventArgs e)
         {
         }
 
-        private bool _windowCentred;
+        #region Save & restore position
 
         /// <summary>
         ///   Restores the position of a form from the user settings. Does
         ///   nothing if there is no entry for the form in the settings, or the
         ///   setting would be invisible on the current display configuration.
         /// </summary>
-        /// <param name = "name">The name to use when looking up the position in
-        ///   the settings</param>
-        private void RestorePosition(string name)
+        protected virtual void RestorePosition()
         {
-            if (!Visible ||
-                WindowState == FormWindowState.Minimized)
+            if (!_needsPositionRestore)
+            {
+                return;
+            }
+
+            if (WindowState == FormWindowState.Minimized)
             {
                 return;
             }
 
             _windowCentred = StartPosition == FormStartPosition.CenterParent;
 
-            var position = LookupWindowPosition(name);
+            var position = LookupWindowPosition(GetType().Name);
+
             if (position == null)
             {
                 return;
             }
 
-            float scale = (float)DpiUtil.DpiX / position.DeviceDpi;
+            _needsPositionRestore = false;
+
+            if (!Screen.AllScreens.Any(screen => screen.WorkingArea.IntersectsWith(position.Rect)))
+            {
+                if (position.State == FormWindowState.Maximized)
+                {
+                    WindowState = FormWindowState.Maximized;
+                }
+
+                return;
+            }
+
+            SuspendLayout();
 
             StartPosition = FormStartPosition.Manual;
+
             if (FormBorderStyle == FormBorderStyle.Sizable ||
                 FormBorderStyle == FormBorderStyle.SizableToolWindow)
             {
-                Size formSize = position.Rect.Size;
-                formSize.Width = (int)(formSize.Width * scale);
-                formSize.Height = (int)(formSize.Height * scale);
-                Size = formSize;
+                Size = DpiUtil.Scale(position.Rect.Size, originalDpi: position.DeviceDpi);
             }
 
             if (Owner == null || !_windowCentred)
             {
-                Point location = position.Rect.Location;
-                location.X = (int)(location.X * scale);
-                location.Y = (int)(location.Y * scale);
-                Rectangle? rect = FindWindowScreen(location);
-                if (rect != null)
+                var location = DpiUtil.Scale(position.Rect.Location, originalDpi: position.DeviceDpi);
+
+                if (FindWindowScreen(location) is Rectangle rect)
                 {
-                    location.Y = rect.Value.Y;
+                    location.Y = rect.Y;
                 }
 
                 DesktopLocation = location;
@@ -185,7 +135,8 @@ namespace GitUI
             else
             {
                 // Calculate location for modal form with parent
-                Location = new Point(Owner.Left + (Owner.Width / 2) - (Width / 2),
+                Location = new Point(
+                    Owner.Left + (Owner.Width / 2) - (Width / 2),
                     Math.Max(0, Owner.Top + (Owner.Height / 2) - (Height / 2)));
             }
 
@@ -193,37 +144,56 @@ namespace GitUI
             {
                 WindowState = position.State;
             }
-        }
 
-        private static Rectangle? FindWindowScreen(Point location)
-        {
-            SortedDictionary<float, Rectangle> distance = new SortedDictionary<float, Rectangle>();
-            foreach (var rect in from screen in Screen.AllScreens
-                                 select screen.WorkingArea)
+            ResumeLayout();
+
+            return;
+
+            Rectangle? FindWindowScreen(Point location)
             {
-                if (rect.Contains(location) && !distance.ContainsKey(0.0f))
+                var distance = new SortedDictionary<float, Rectangle>();
+
+                foreach (var rect in Screen.AllScreens.Select(screen => screen.WorkingArea))
                 {
-                    return null; // title in screen
+                    if (rect.Contains(location) && !distance.ContainsKey(0.0f))
+                    {
+                        return null; // title in screen
+                    }
+
+                    int midPointX = rect.X + (rect.Width / 2);
+                    int midPointY = rect.Y + (rect.Height / 2);
+                    var d = (float)Math.Sqrt(((location.X - midPointX) * (location.X - midPointX)) +
+                                               ((location.Y - midPointY) * (location.Y - midPointY)));
+                    distance.Add(d, rect);
                 }
 
-                int midPointX = rect.X + (rect.Width / 2);
-                int midPointY = rect.Y + (rect.Height / 2);
-                float d = (float)Math.Sqrt(((location.X - midPointX) * (location.X - midPointX)) +
-                    ((location.Y - midPointY) * (location.Y - midPointY)));
-                distance.Add(d, rect);
+                return distance.FirstOrDefault().Value;
             }
 
-            if (distance.Count > 0)
+            WindowPosition LookupWindowPosition(string name)
             {
-                return distance.First().Value;
-            }
-            else
-            {
+                try
+                {
+                    if (_windowPositionList == null)
+                    {
+                        _windowPositionList = WindowPositionList.Load();
+                    }
+
+                    var pos = _windowPositionList?.Get(name);
+
+                    if (pos != null && !pos.Rect.IsEmpty)
+                    {
+                        return pos;
+                    }
+                }
+                catch
+                {
+                    // TODO: how to restore a corrupted config?
+                }
+
                 return null;
             }
         }
-
-        private static WindowPositionList _windowPositionList;
 
         /// <summary>
         ///   Save the position of a form to the user settings. Hides the window
@@ -233,22 +203,31 @@ namespace GitUI
         ///   settings</param>
         private void SavePosition(string name)
         {
+            if (!_needsPositionSave)
+            {
+                return;
+            }
+
+            _needsPositionSave = false;
+
             try
             {
-                var rectangle =
-                    WindowState == FormWindowState.Normal
-                        ? DesktopBounds
-                        : RestoreBounds;
+                var rectangle = WindowState == FormWindowState.Normal
+                    ? DesktopBounds
+                    : RestoreBounds;
 
-                var formWindowState =
-                    WindowState == FormWindowState.Maximized
-                        ? FormWindowState.Maximized
-                        : FormWindowState.Normal;
+                var formWindowState = WindowState == FormWindowState.Maximized
+                    ? FormWindowState.Maximized
+                    : FormWindowState.Normal;
 
-                // Write to the user settings:
                 if (_windowPositionList == null)
                 {
                     _windowPositionList = WindowPositionList.Load();
+
+                    if (_windowPositionList == null)
+                    {
+                        return;
+                    }
                 }
 
                 WindowPosition windowPosition = _windowPositionList.Get(name);
@@ -266,47 +245,12 @@ namespace GitUI
                 _windowPositionList.AddOrUpdate(position);
                 _windowPositionList.Save();
             }
-            catch (Exception)
+            catch
             {
-                // TODO: howto restore a corrupted config?
+                // TODO: how to restore a corrupted config?
             }
         }
 
-        /// <summary>
-        ///   Looks up a window in the user settings and returns its saved position.
-        /// </summary>
-        /// <param name = "name">The name.</param>
-        /// <returns>
-        ///   The saved window position if it exists. Null if the entry
-        ///   doesn't exist, or would not be visible on any screen in the user's
-        ///   current display setup.
-        /// </returns>
-        private static WindowPosition LookupWindowPosition(string name)
-        {
-            try
-            {
-                if (_windowPositionList == null)
-                {
-                    _windowPositionList = WindowPositionList.Load();
-                }
-
-                var position = _windowPositionList?.Get(name);
-                if (position == null || position.Rect.IsEmpty)
-                {
-                    return null;
-                }
-
-                if (Screen.AllScreens.Any(screen => screen.WorkingArea.IntersectsWith(position.Rect)))
-                {
-                    return position;
-                }
-            }
-            catch (Exception)
-            {
-                // TODO: howto restore a corrupted config?
-            }
-
-            return null;
-        }
+        #endregion
     }
 }

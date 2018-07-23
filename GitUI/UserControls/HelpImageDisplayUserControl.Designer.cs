@@ -89,7 +89,7 @@
             // 
             this.buttonShowHelp.AutoSize = true;
             this.buttonShowHelp.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonShowHelp.Image = global::GitUI.Properties.Resources.Info;
+            this.buttonShowHelp.Image = global::GitUI.Properties.Images.Information;
             this.buttonShowHelp.Location = new System.Drawing.Point(42, 0);
             this.buttonShowHelp.Margin = new System.Windows.Forms.Padding(0);
             this.buttonShowHelp.Name = "buttonShowHelp";

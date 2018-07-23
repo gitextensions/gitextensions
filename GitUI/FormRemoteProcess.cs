@@ -61,7 +61,7 @@ namespace GitUI
         /// <summary>
         /// When cloning a remote using putty, sometimes an error occurs that the fingerprint is not known.
         /// This is fixed by trying to connect from the command line, and choose yes when asked for storing
-        /// the fingerpring. Just a dirty fix...
+        /// the fingerprint. Just a dirty fix...
         /// </summary>
         public void SetUrlTryingToConnect(string url)
         {
@@ -86,7 +86,7 @@ namespace GitUI
             // An error occurred!
             if (isError && Plink)
             {
-                // there might be an other error, this condition is too weak
+                // there might be another error, this condition is too weak
                 /*
                 if (GetOutputString().Contains("successfully authenticated"))
                 {

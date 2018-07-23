@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs
             : base(true, commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             if (commands != null)
             {
                 EnableButtons();
@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs
 
             patchGrid1.Initialize();
 
-            SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
+            SolveMergeConflicts.Visible = Module.InTheMiddleOfConflictedMerge();
 
             Resolved.Text = _conflictResolvedText.Text;
             Mergetool.Text = _conflictMergetoolText.Text;
@@ -198,7 +198,7 @@ namespace GitUI.CommandsDialogs
                     return line != null && (line.StartsWith("diff ") || line.StartsWith("Index: "));
                 }
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
@@ -265,7 +265,7 @@ namespace GitUI.CommandsDialogs
             EnableButtons();
         }
 
-        private void SolveMergeconflicts_Click(object sender, EventArgs e)
+        private void SolveMergeConflicts_Click(object sender, EventArgs e)
         {
             Mergetool_Click(sender, e);
         }

@@ -32,14 +32,14 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noBaseRevision = new TranslationString("There is no base revision for {0}.\nFall back to 2-way merge?");
         private readonly TranslationString _ours = new TranslationString("ours");
         private readonly TranslationString _theirs = new TranslationString("theirs");
-        private readonly TranslationString _fileBinairyChooseLocalBaseRemote = new TranslationString("File ({0}) appears to be a binary file.\nChoose to keep the local({1}), remote({2}) or base file.");
+        private readonly TranslationString _fileBinaryChooseLocalBaseRemote = new TranslationString("File ({0}) appears to be a binary file.\nChoose to keep the local({1}), remote({2}) or base file.");
         private readonly TranslationString _fileChangeLocallyAndRemotely = new TranslationString("The file has been changed both locally({0}) and remotely({1}). Merge the changes.");
         private readonly TranslationString _fileCreatedLocallyAndRemotely = new TranslationString("A file with the same name has been created locally({0}) and remotely({1}). Choose the file you want to keep or merge the files.");
         private readonly TranslationString _fileCreatedLocallyAndRemotelyLong = new TranslationString("File {0} does not have a base revision.\nA file with the same name has been created locally({1}) and remotely({2}) causing this conflict.\n\nChoose the file you want to keep, merge the files or delete the file?");
         private readonly TranslationString _fileDeletedLocallyAndModifiedRemotely = new TranslationString("The file has been deleted locally({0}) and modified remotely({1}). Choose to delete the file or keep the modified version.");
         private readonly TranslationString _fileDeletedLocallyAndModifiedRemotelyLong = new TranslationString("File {0} does not have a local revision.\nThe file has been deleted locally({1}) but modified remotely({2}).\n\nChoose to delete the file or keep the modified version.");
-        private readonly TranslationString _fileModifiedLocallyAndDelededRemotely = new TranslationString("The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.");
-        private readonly TranslationString _fileModifiedLocallyAndDelededRemotelyLong = new TranslationString("File {0} does not have a remote revision.\nThe file has been modified locally({1}) but deleted remotely({2}).\n\nChoose to delete the file or keep the modified version.");
+        private readonly TranslationString _fileModifiedLocallyAndDeletedRemotely = new TranslationString("The file has been modified locally({0}) and deleted remotely({1}). Choose to delete the file or keep the modified version.");
+        private readonly TranslationString _fileModifiedLocallyAndDeletedRemotelyLong = new TranslationString("File {0} does not have a remote revision.\nThe file has been modified locally({1}) but deleted remotely({2}).\n\nChoose to delete the file or keep the modified version.");
         private readonly TranslationString _noBase = new TranslationString("no base");
         private readonly TranslationString _deleted = new TranslationString("deleted");
         private readonly TranslationString _chooseLocalButtonText = new TranslationString("Choose local");
@@ -75,12 +75,12 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _allFilesFilter =
             new TranslationString("All files (*.*)");
 
-        private readonly TranslationString _abortCurrentOpperation =
+        private readonly TranslationString _abortCurrentOperation =
             new TranslationString("You can abort the current operation by resetting changes." + Environment.NewLine +
                 "All changes since the last commit will be deleted." + Environment.NewLine +
                 Environment.NewLine + "Do you want to reset changes?");
 
-        private readonly TranslationString _abortCurrentOpperationCaption = new TranslationString("Abort");
+        private readonly TranslationString _abortCurrentOperationCaption = new TranslationString("Abort");
 
         private readonly TranslationString _areYouSureYouWantDeleteFiles =
             new TranslationString("Are you sure you want to DELETE all changes?" + Environment.NewLine +
@@ -98,7 +98,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             _offerCommit = offerCommit;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
 
@@ -446,25 +446,25 @@ namespace GitUI.CommandsDialogs
 
         private void ResolveFilesConflict(ConflictData item)
         {
-            string[] filenames = Module.CheckoutConflictedFiles(item);
+            string[] fileNames = Module.CheckoutConflictedFiles(item);
             try
             {
                 if (CheckForLocalRevision(item) &&
                     CheckForRemoteRevision(item))
                 {
-                    if (TryMergeWithScript(item.Filename, filenames[0], filenames[1], filenames[2]))
+                    if (TryMergeWithScript(item.Filename, fileNames[0], fileNames[1], fileNames[2]))
                     {
                         Cursor.Current = Cursors.Default;
                         return;
                     }
 
-                    if (FileHelper.IsBinaryFile(Module, item.Local.Filename))
+                    if (FileHelper.IsBinaryFileName(Module, item.Local.Filename))
                     {
                         if (MessageBox.Show(this, string.Format(_fileIsBinary.Text, _mergetool),
                             _binaryFileWarningCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
                             MessageBoxDefaultButton.Button2) == DialogResult.No)
                         {
-                            BinairyFilesChooseLocalBaseRemote(item);
+                            BinaryFilesChooseLocalBaseRemote(item);
                             return;
                         }
                     }
@@ -492,9 +492,9 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
-                    arguments = arguments.Replace("$BASE", filenames[0]);
-                    arguments = arguments.Replace("$LOCAL", filenames[1]);
-                    arguments = arguments.Replace("$REMOTE", filenames[2]);
+                    arguments = arguments.Replace("$BASE", fileNames[0]);
+                    arguments = arguments.Replace("$LOCAL", fileNames[1]);
+                    arguments = arguments.Replace("$REMOTE", fileNames[2]);
                     arguments = arguments.Replace("$MERGED", item.Filename);
 
                     // get timestamp of file before merge. This is an extra check to verify if merge was successful
@@ -534,25 +534,25 @@ namespace GitUI.CommandsDialogs
             }
             finally
             {
-                DeleteTemporaryFiles(filenames);
+                DeleteTemporaryFiles(fileNames);
             }
         }
 
-        private static void DeleteTemporaryFiles(string[] filenames)
+        private static void DeleteTemporaryFiles(string[] fileNames)
         {
-            if (filenames[0] != null && File.Exists(filenames[0]))
+            if (fileNames[0] != null && File.Exists(fileNames[0]))
             {
-                File.Delete(filenames[0]);
+                File.Delete(fileNames[0]);
             }
 
-            if (filenames[1] != null && File.Exists(filenames[1]))
+            if (fileNames[1] != null && File.Exists(fileNames[1]))
             {
-                File.Delete(filenames[1]);
+                File.Delete(fileNames[1]);
             }
 
-            if (filenames[2] != null && File.Exists(filenames[2]))
+            if (fileNames[2] != null && File.Exists(fileNames[2]))
             {
-                File.Delete(filenames[2]);
+                File.Delete(fileNames[2]);
             }
         }
 
@@ -606,7 +606,7 @@ namespace GitUI.CommandsDialogs
 
         private bool ShowAbortMessage()
         {
-            if (MessageBox.Show(_abortCurrentOpperation.Text, _abortCurrentOpperationCaption.Text,
+            if (MessageBox.Show(_abortCurrentOperation.Text, _abortCurrentOperationCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 if (AppSettings.DontConfirmSecondAbortConfirmation ||
@@ -729,7 +729,7 @@ namespace GitUI.CommandsDialogs
 
             if (baseFileExists && localFileExists && !remoteFileExists)
             {
-                conflictDescription.Text = string.Format(_fileModifiedLocallyAndDelededRemotely.Text, localSide, remoteSide);
+                conflictDescription.Text = string.Format(_fileModifiedLocallyAndDeletedRemotely.Text, localSide, remoteSide);
             }
 
             baseFileName.Text = baseFileExists ? item.Base.Filename : _noBase.Text;
@@ -832,9 +832,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void BinairyFilesChooseLocalBaseRemote(ConflictData item)
+        private void BinaryFilesChooseLocalBaseRemote(ConflictData item)
         {
-            string caption = string.Format(_fileBinairyChooseLocalBaseRemote.Text,
+            string caption = string.Format(_fileBinaryChooseLocalBaseRemote.Text,
                                             item.Local.Filename,
                                             GetLocalSideString(),
                                             GetRemoteSideString());
@@ -955,7 +955,7 @@ namespace GitUI.CommandsDialogs
                 return true;
             }
 
-            string caption = string.Format(_fileModifiedLocallyAndDelededRemotelyLong.Text,
+            string caption = string.Format(_fileModifiedLocallyAndDeletedRemotelyLong.Text,
                 item.Filename,
                 GetLocalSideString(),
                 GetRemoteSideString());
@@ -1128,12 +1128,12 @@ namespace GitUI.CommandsDialogs
                 else
                 {
                     SetAvailableCommands(true);
-                    DisableInvalidEntriesInCoflictedFilesContextMenu(fileName);
+                    DisableInvalidEntriesInConflictedFilesContextMenu(fileName);
                 }
             }
         }
 
-        private void DisableInvalidEntriesInCoflictedFilesContextMenu(string fileName)
+        private void DisableInvalidEntriesInConflictedFilesContextMenu(string fileName)
         {
             var conflictedFileNames = Module.GetConflict(fileName);
             if (conflictedFileNames.Local.Filename.IsNullOrEmpty())
@@ -1217,7 +1217,7 @@ namespace GitUI.CommandsDialogs
 
         protected override bool ExecuteCommand(int cmd)
         {
-            Commands command = (Commands)cmd;
+            var command = (Commands)cmd;
 
             switch (command)
             {

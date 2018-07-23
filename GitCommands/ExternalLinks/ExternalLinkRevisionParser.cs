@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using GitCommands.Remote;
+using GitCommands.Remotes;
 
 namespace GitCommands.ExternalLinks
 {

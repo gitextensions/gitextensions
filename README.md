@@ -1,4 +1,4 @@
-![Git Extensions logo](https://cdn.rawgit.com/gitextensions/gitextensions/master/Bin/Logo/git-extensions-logo-final.svg) 
+![Git Extensions logo](https://cdn.rawgit.com/gitextensions/gitextensions/master/Logo/git-extensions-logo.svg) 
 
 # Git Extensions
 
@@ -107,8 +107,8 @@ title="See more information on Transifex.com"><img src="https://ds0k0en9abmn1.cl
 
 
 ## Shoutouts
- * Special thanks to JetBRAINS for [ReSharper](https://www.jetbrains.com/resharper/) licenses.
-
+* Special thanks to JetBRAINS for [ReSharper](https://www.jetbrains.com/resharper/) licenses.
+* Some icons by [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/) ([Creative Commons Attribution 3.0](http://creativecommons.org/licenses/by/3.0/)).
 
 ## Links
 

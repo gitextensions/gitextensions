@@ -8,7 +8,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Commit dialog";
-            Translate();
+            InitializeComplete();
         }
 
         protected override void SettingsToPage()

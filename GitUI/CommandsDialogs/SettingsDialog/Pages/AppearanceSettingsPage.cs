@@ -3,27 +3,20 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
-using GitUIPluginInterfaces;
-using Gravatar;
+using GitUI.Avatars;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class AppearanceSettingsPage : SettingsPageWithHeader
     {
-        private readonly TranslationString _noDictFile =
-            new TranslationString("None");
-        private readonly TranslationString _noDictFilesFound =
-            new TranslationString("No dictionary files found in: {0}");
-        private readonly IImageCache _avatarCache;
+        private readonly TranslationString _noDictFile = new TranslationString("None");
+        private readonly TranslationString _noDictFilesFound = new TranslationString("No dictionary files found in: {0}");
 
         public AppearanceSettingsPage()
         {
             InitializeComponent();
-            Text = "Appearance";
-            Translate();
-
-            _avatarCache = new DirectoryImageCache(AppSettings.GravatarCachePath, AppSettings.AuthorImageCacheDays);
+            InitializeComplete();
 
             NoImageService.Items.AddRange(Enum.GetNames(typeof(DefaultImageType)));
         }
@@ -38,7 +31,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             tlpnlLanguage.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
 
             // align 2nd columns across all tables
-            cbBranchOrderingCriteria.AdjustWidthToFitContent();
             truncatePathMethod.AdjustWidthToFitContent();
             Language.AdjustWidthToFitContent();
             tlpnlGeneral.AdjustWidthToSize(1, truncatePathMethod, NoImageService, Language);
@@ -51,44 +43,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return new SettingsPageReferenceByType(typeof(AppearanceSettingsPage));
         }
 
-        private static int GetTruncatePathMethodIndex(string text)
-        {
-            switch (text.ToLowerInvariant())
-            {
-                case "compact":
-                    return 1;
-                case "trimstart":
-                    return 2;
-                case "filenameonly":
-                    return 3;
-                default:
-                    return 0;
-            }
-        }
-
-        private static string GetTruncatePathMethodString(int index)
-        {
-            switch (index)
-            {
-                case 1:
-                    return "compact";
-                case 2:
-                    return "trimstart";
-                case 3:
-                    return "fileNameOnly";
-                default:
-                    return "none";
-            }
-        }
-
         protected override void SettingsToPage()
         {
             chkEnableAutoScale.Checked = AppSettings.EnableAutoScale;
 
             chkShowCurrentBranchInVisualStudio.Checked = AppSettings.ShowCurrentBranchInVisualStudio;
-            _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AuthorImageCacheDays;
-            ShowAuthorGravatar.Checked = AppSettings.ShowAuthorGravatar;
-            NoImageService.Text = AppSettings.GravatarDefaultImageType;
+            _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
+            ShowAuthorAvatar.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
+            NoImageService.Text = AppSettings.GravatarDefaultImageType.ToString();
 
             Language.Items.Clear();
             Language.Items.Add("English");
@@ -96,7 +58,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Language.Text = AppSettings.Translation;
 
             truncatePathMethod.SelectedIndex = GetTruncatePathMethodIndex(AppSettings.TruncatePathMethod);
-            cbBranchOrderingCriteria.SelectedIndex = (int)AppSettings.BranchOrderingCriteria;
 
             Dictionary.Items.Clear();
             Dictionary.Items.Add(_noDictFile.Text);
@@ -119,6 +80,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             chkShowRelativeDate.Checked = AppSettings.RelativeDate;
+
+            return;
+
+            int GetTruncatePathMethodIndex(TruncatePathMethod method)
+            {
+                switch (method)
+                {
+                    case TruncatePathMethod.Compact:
+                        return 1;
+                    case TruncatePathMethod.TrimStart:
+                        return 2;
+                    case TruncatePathMethod.FileNameOnly:
+                        return 3;
+                    default:
+                        return 0;
+                }
+            }
         }
 
         protected override void PageToSettings()
@@ -128,17 +106,37 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
 
             AppSettings.Translation = Language.Text;
-            Strings.Reinit();
+            Strings.Reinitialize();
 
-            AppSettings.AuthorImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
+            AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 
-            AppSettings.ShowAuthorGravatar = ShowAuthorGravatar.Checked;
-            AppSettings.GravatarDefaultImageType = NoImageService.Text;
+            AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatar.Checked;
+
+            if (Enum.TryParse<DefaultImageType>(NoImageService.Text, ignoreCase: true, out var type))
+            {
+                AppSettings.GravatarDefaultImageType = type;
+            }
 
             AppSettings.RelativeDate = chkShowRelativeDate.Checked;
 
             AppSettings.Dictionary = Dictionary.SelectedIndex == 0 ? "none" : Dictionary.Text;
-            AppSettings.BranchOrderingCriteria = (GitRefsOrder)cbBranchOrderingCriteria.SelectedIndex;
+
+            return;
+
+            TruncatePathMethod GetTruncatePathMethodString(int index)
+            {
+                switch (index)
+                {
+                    case 1:
+                        return TruncatePathMethod.Compact;
+                    case 2:
+                        return TruncatePathMethod.TrimStart;
+                    case 3:
+                        return TruncatePathMethod.FileNameOnly;
+                    default:
+                        return TruncatePathMethod.None;
+                }
+            }
         }
 
         private void Dictionary_DropDown(object sender, EventArgs e)
@@ -167,7 +165,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ClearImageCache_Click(object sender, EventArgs e)
         {
-            _avatarCache.ClearAsync();
+            ThreadHelper.JoinableTaskFactory.Run(AvatarService.Default.ClearCacheAsync);
         }
 
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

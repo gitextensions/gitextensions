@@ -142,7 +142,7 @@ namespace GitUI.CommandsDialogs
             // Save
             // 
             this.Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Save.Image = global::GitUI.Properties.Resources.IconSave;
+            this.Save.Image = global::GitUI.Properties.Images.Save;
             this.Save.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Save.Location = new System.Drawing.Point(355, 3);
             this.Save.Name = "Save";
@@ -201,7 +201,7 @@ namespace GitUI.CommandsDialogs
             // SshBrowse
             // 
             this.SshBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SshBrowse.Image = global::GitUI.Properties.Resources.New;
+            this.SshBrowse.Image = global::GitUI.Properties.Images.FileNew;
             this.SshBrowse.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SshBrowse.Location = new System.Drawing.Point(363, 3);
             this.SshBrowse.MinimumSize = new System.Drawing.Size(104, 0);
@@ -243,7 +243,7 @@ namespace GitUI.CommandsDialogs
             // TestConnection
             // 
             this.TestConnection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.TestConnection.Image = global::GitUI.Properties.Resources.putty;
+            this.TestConnection.Image = global::GitUI.Properties.Images.Putty;
             this.TestConnection.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.TestConnection.Location = new System.Drawing.Point(201, 3);
             this.TestConnection.Name = "TestConnection";
@@ -256,7 +256,7 @@ namespace GitUI.CommandsDialogs
             // LoadSSHKey
             // 
             this.LoadSSHKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
+            this.LoadSSHKey.Image = global::GitUI.Properties.Images.Putty;
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoadSSHKey.Location = new System.Drawing.Point(35, 3);
             this.LoadSSHKey.Name = "LoadSSHKey";
@@ -467,7 +467,7 @@ namespace GitUI.CommandsDialogs
             // 
             // New
             // 
-            this.New.Image = global::GitUI.Properties.Resources.IconMaintenance;
+            this.New.Image = global::GitUI.Properties.Images.RemoteAdd;
             this.New.Location = new System.Drawing.Point(7, 3);
             this.New.Name = "New";
             this.New.Size = new System.Drawing.Size(26, 26);
@@ -478,7 +478,7 @@ namespace GitUI.CommandsDialogs
             // 
             // Delete
             // 
-            this.Delete.Image = global::GitUI.Properties.Resources.IconDeleteRemote;
+            this.Delete.Image = global::GitUI.Properties.Images.RemoteDelete;
             this.Delete.Location = new System.Drawing.Point(7, 35);
             this.Delete.Name = "Delete";
             this.Delete.Size = new System.Drawing.Size(26, 26);
@@ -489,7 +489,7 @@ namespace GitUI.CommandsDialogs
             // 
             // btnToggleState
             // 
-            this.btnToggleState.Image = global::GitUI.Properties.Resources.eye_opened;
+            this.btnToggleState.Image = global::GitUI.Properties.Images.EyeOpened;
             this.btnToggleState.Location = new System.Drawing.Point(7, 67);
             this.btnToggleState.Name = "btnToggleState";
             this.btnToggleState.Size = new System.Drawing.Size(26, 26);
@@ -617,7 +617,7 @@ namespace GitUI.CommandsDialogs
             this.RemoteBranches.AllowUserToResizeRows = false;
             this.RemoteBranches.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.RemoteBranches.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.RemoteBranches.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.RemoteBranches.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RemoteBranches.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.RemoteBranches.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.BranchName,
@@ -656,7 +656,7 @@ namespace GitUI.CommandsDialogs
             // SaveDefaultPushPull
             // 
             this.SaveDefaultPushPull.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.SaveDefaultPushPull.Image = global::GitUI.Properties.Resources.IconSave;
+            this.SaveDefaultPushPull.Image = global::GitUI.Properties.Images.Save;
             this.SaveDefaultPushPull.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.SaveDefaultPushPull.Location = new System.Drawing.Point(215, 88);
             this.SaveDefaultPushPull.Name = "SaveDefaultPushPull";

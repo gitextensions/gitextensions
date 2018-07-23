@@ -452,7 +452,6 @@
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnInit);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "GitFlowForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "GitFlow";

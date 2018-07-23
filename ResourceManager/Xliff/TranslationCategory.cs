@@ -19,7 +19,7 @@ namespace ResourceManager.Xliff
         }
 
         [XmlAttribute("datatype")]
-        public string Datatype { get; set; } = "plaintext";
+        public string DataType { get; set; } = "plaintext";
 
         [XmlAttribute("original")]
         public string Name { get; set; }
@@ -33,9 +33,6 @@ namespace ResourceManager.Xliff
         [XmlElement(ElementName = "body")]
         public TranslationBody Body { get; set; } = new TranslationBody();
 
-        public int CompareTo(TranslationCategory other)
-        {
-            return Name.CompareTo(other.Name);
-        }
+        public int CompareTo(TranslationCategory other) => StringComparer.InvariantCulture.Compare(Name, other.Name);
     }
 }

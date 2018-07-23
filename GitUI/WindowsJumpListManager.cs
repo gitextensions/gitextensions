@@ -52,7 +52,7 @@ namespace GitUI
             }
         }
 
-        private bool IsSupported => EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported;
+        private static bool IsSupported => EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported;
 
         /// <summary>
         /// Adds the given working directory to the list of Recent for future quick access.
@@ -85,13 +85,13 @@ namespace GitUI
                 }
 
                 // sanitise
-                StringBuilder sb = new StringBuilder(repositoryDescription);
+                var sb = new StringBuilder(repositoryDescription);
                 foreach (char c in Path.GetInvalidFileNameChars())
                 {
                     sb.Replace(c, '_');
                 }
 
-                string path = Path.Combine(baseFolder, $"{sb}.{@"gitext"}");
+                string path = Path.Combine(baseFolder, $"{sb}.gitext");
                 File.WriteAllText(path, workingDir);
                 JumpList.AddToRecent(path);
             }
@@ -121,12 +121,51 @@ namespace GitUI
                 return;
             }
 
-            var jumpList = JumpList.CreateJumpListForIndividualWindow(TaskbarManager.Instance.ApplicationId, windowHandle);
-            jumpList.ClearAllUserTasks();
-            jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
-            jumpList.Refresh();
+            CreateJumpList();
 
             CreateTaskbarButtons(windowHandle, buttons);
+
+            return;
+
+            void CreateJumpList()
+            {
+                try
+                {
+                    var jumpList = JumpList.CreateJumpListForIndividualWindow(TaskbarManager.Instance.ApplicationId, windowHandle);
+                    jumpList.ClearAllUserTasks();
+                    jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
+                    jumpList.Refresh();
+                }
+                catch
+                {
+                    // have seen a COM exception here that caused the UI to stop loading
+                }
+            }
+
+            void CreateTaskbarButtons(IntPtr handle, WindowsThumbnailToolbarButtons thumbButtons)
+            {
+                if (!_toolbarButtonsCreated)
+                {
+                    _commitButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Commit.Image, 48, true), thumbButtons.Commit.Text);
+                    _commitButton.Click += thumbButtons.Commit.Click;
+
+                    _pushButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Push.Image, 48, true), thumbButtons.Push.Text);
+                    _pushButton.Click += thumbButtons.Push.Click;
+
+                    _pullButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Pull.Image, 48, true), thumbButtons.Pull.Text);
+                    _pullButton.Click += thumbButtons.Pull.Click;
+
+                    _toolbarButtonsCreated = true;
+
+                    // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
+                    TaskbarManager.Instance.ThumbnailToolBars.AddButtons(handle, _commitButton, _pullButton, _pushButton);
+                    TaskbarManager.Instance.ApplicationId = "GitExtensions";
+                }
+
+                _commitButton.Enabled = true;
+                _pushButton.Enabled = true;
+                _pullButton.Enabled = true;
+            }
         }
 
         /// <summary>
@@ -144,31 +183,6 @@ namespace GitUI
             _pullButton.Enabled = false;
         }
 
-        private void CreateTaskbarButtons(IntPtr handle, WindowsThumbnailToolbarButtons thumbButtons)
-        {
-            if (!_toolbarButtonsCreated)
-            {
-                _commitButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Commit.Image, 48, true), thumbButtons.Commit.Text);
-                _commitButton.Click += thumbButtons.Commit.Click;
-
-                _pushButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Push.Image, 48, true), thumbButtons.Push.Text);
-                _pushButton.Click += thumbButtons.Push.Click;
-
-                _pullButton = new ThumbnailToolBarButton(MakeIcon(thumbButtons.Pull.Image, 48, true), thumbButtons.Pull.Text);
-                _pullButton.Click += thumbButtons.Pull.Click;
-
-                _toolbarButtonsCreated = true;
-
-                // Call this method using reflection.  This is a workaround to *not* reference WPF libraries, becuase of how the WindowsAPICodePack was implimented.
-                TaskbarManager.Instance.ThumbnailToolBars.AddButtons(handle, _commitButton, _pullButton, _pushButton);
-                TaskbarManager.Instance.ApplicationId = "GitExtensions";
-            }
-
-            _commitButton.Enabled = true;
-            _pushButton.Enabled = true;
-            _pullButton.Enabled = true;
-        }
-
         /// <summary>
         /// Converts an image into an icon.  This was taken off of the interwebs.
         /// It's on a billion different sites and forum posts, so I would say its creative commons by now. -tekmaven
@@ -181,7 +195,7 @@ namespace GitUI
         /// <returns>An icon!!</returns>
         private static Icon MakeIcon(Image img, int size, bool keepAspectRatio)
         {
-            Bitmap square = new Bitmap(size, size); // create new bitmap
+            var square = new Bitmap(size, size); // create new bitmap
             Graphics g = Graphics.FromImage(square); // allow drawing to it
 
             int x, y, w, h; // dimensions for new image

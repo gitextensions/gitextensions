@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands
@@ -36,7 +37,7 @@ namespace GitCommands
 
     public sealed class GitBlameCommit
     {
-        public string ObjectId { get; }
+        public ObjectId ObjectId { get; }
         public string Author { get; }
         public string AuthorMail { get; }
         public DateTime AuthorTime { get; }
@@ -48,7 +49,7 @@ namespace GitCommands
         public string Summary { get; }
         public string FileName { get; }
 
-        public GitBlameCommit(string objectId, string author, string authorMail, DateTime authorTime, string authorTimeZone, string committer, string committerMail, DateTime committerTime, string committerTimeZone, string summary, string fileName)
+        public GitBlameCommit(ObjectId objectId, string author, string authorMail, DateTime authorTime, string authorTimeZone, string committer, string committerMail, DateTime committerTime, string committerTimeZone, string summary, string fileName)
         {
             ObjectId = objectId;
             Author = author;

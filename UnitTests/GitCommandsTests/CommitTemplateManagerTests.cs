@@ -71,7 +71,7 @@ namespace GitCommandsTests
         }
 
         [Test]
-        public void LoadGitCommitTemplate_real_filsystem()
+        public void LoadGitCommitTemplate_real_filesystem()
         {
             using (var helper = new GitModuleTestHelper())
             {

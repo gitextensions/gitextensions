@@ -63,7 +63,7 @@
             // pictureBoxHelpIcon
             // 
             this.pictureBoxHelpIcon.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.pictureBoxHelpIcon.Image = global::GitUI.Properties.Resources.IconGotoManual;
+            this.pictureBoxHelpIcon.Image = global::GitUI.Properties.Images.GotoManual;
             this.pictureBoxHelpIcon.Location = new System.Drawing.Point(3, 3);
             this.pictureBoxHelpIcon.Name = "pictureBoxHelpIcon";
             this.pictureBoxHelpIcon.Size = new System.Drawing.Size(16, 16);

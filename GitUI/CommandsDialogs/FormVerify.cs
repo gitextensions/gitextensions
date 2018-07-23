@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Git.Tag;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
+using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -15,14 +16,8 @@ namespace GitUI.CommandsDialogs
         private const string RestoredObjectsTagPrefix = "LOST_FOUND_";
 
         private readonly TranslationString _removeDanglingObjectsCaption = new TranslationString("Remove");
-
-        private readonly TranslationString _removeDanglingObjectsQuestion =
-            new TranslationString("Are you sure you want to delete all dangling objects?");
-
-        private readonly TranslationString _xTagsCreated =
-            new TranslationString("{0} Tags created." + Environment.NewLine + Environment.NewLine +
-                                  "Do not forget to delete these tags when finished.");
-
+        private readonly TranslationString _removeDanglingObjectsQuestion = new TranslationString("Are you sure you want to delete all dangling objects?");
+        private readonly TranslationString _xTagsCreated = new TranslationString("{0} Tags created." + Environment.NewLine + Environment.NewLine + "Do not forget to delete these tags when finished.");
         private readonly TranslationString _selectLostObjectsToRestoreMessage = new TranslationString("Select objects to restore.");
         private readonly TranslationString _selectLostObjectsToRestoreCaption = new TranslationString("Restore lost objects");
 
@@ -36,7 +31,7 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormVerify(GitUICommands commands)
+        public FormVerify([CanBeNull] GitUICommands commands)
             : base(commands)
         {
             InitializeComponent();
@@ -52,7 +47,7 @@ namespace GitUI.CommandsDialogs
 
             _selectedItemsHeader.AttachTo(columnIsLostObjectSelected);
 
-            Translate();
+            InitializeComplete();
             Warnings.AutoGenerateColumns = false;
 
             columnIsLostObjectSelected.DataPropertyName = "IsSelected"; // TODO this property is not on the bound type
@@ -60,7 +55,7 @@ namespace GitUI.CommandsDialogs
             columnType.DataPropertyName = nameof(LostObject.RawType);
             columnSubject.DataPropertyName = nameof(LostObject.Subject);
             columnAuthor.DataPropertyName = nameof(LostObject.Author);
-            columnHash.DataPropertyName = nameof(LostObject.Hash);
+            columnHash.DataPropertyName = nameof(LostObject.ObjectId);
             columnParent.DataPropertyName = nameof(LostObject.Parent);
 
             if (commands != null)
@@ -69,6 +64,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        [CanBeNull]
         private LostObject CurrentItem => Warnings.SelectedRows.Count == 0 ? null : _filteredLostObjects[Warnings.SelectedRows[0].Index];
 
         #region Event Handlers
@@ -291,13 +287,13 @@ namespace GitUI.CommandsDialogs
 
         private void ViewCurrentItem()
         {
-            var currenItem = CurrentItem;
-            if (currenItem == null)
+            var currentItem = CurrentItem;
+            if (currentItem == null)
             {
                 return;
             }
 
-            using (var frm = new FormEdit(UICommands, Module.ShowSha1(currenItem.Hash)))
+            using (var frm = new FormEdit(UICommands, Module.ShowObject(currentItem.ObjectId)))
             {
                 frm.IsReadOnly = true;
                 frm.ShowDialog(this);
@@ -324,7 +320,7 @@ namespace GitUI.CommandsDialogs
             {
                 currentTag++;
                 var tagName = lostObject.ObjectType == LostObjectType.Tag ? lostObject.TagName : currentTag.ToString();
-                var createTagArgs = new GitCreateTagArgs($"{RestoredObjectsTagPrefix}{tagName}", lostObject.Hash);
+                var createTagArgs = new GitCreateTagArgs($"{RestoredObjectsTagPrefix}{tagName}", lostObject.ObjectId);
                 _gitTagController.CreateTag(createTagArgs, this);
             }
 
@@ -342,15 +338,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private GitRevision GetCurrentGitRevision()
+        private ObjectId GetCurrentGitRevision()
         {
-            var currentItem = CurrentItem;
-            if (currentItem == null)
-            {
-                throw new InvalidOperationException("There are no current selected item.");
-            }
-
-            return new GitRevision(currentItem.Hash);
+            return CurrentItem?.ObjectId ?? throw new InvalidOperationException("There are no current selected item.");
         }
 
         /// <summary>
@@ -400,7 +390,7 @@ namespace GitUI.CommandsDialogs
             if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
-                Clipboard.SetText(lostObject.Hash);
+                Clipboard.SetText(lostObject.ObjectId.ToString());
             }
         }
 
@@ -409,7 +399,7 @@ namespace GitUI.CommandsDialogs
             if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
-                Clipboard.SetText(lostObject.Parent);
+                Clipboard.SetText(lostObject.Parent?.ToString());
             }
         }
 
@@ -421,6 +411,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+
             if (lostObject.ObjectType == LostObjectType.Blob)
             {
                 using (var fileDialog =
@@ -428,14 +419,14 @@ namespace GitUI.CommandsDialogs
                     {
                         InitialDirectory = Module.WorkingDir,
                         FileName = "LOST_FOUND.txt",
+                        Filter = "(*.*)|*.*",
                         DefaultExt = "txt",
                         AddExtension = true
                     })
                 {
-                    fileDialog.Filter = "(*.*)|*.*";
                     if (fileDialog.ShowDialog(this) == DialogResult.OK)
                     {
-                        Module.SaveBlobAs(fileDialog.FileName, lostObject.Hash);
+                        Module.SaveBlobAs(fileDialog.FileName, lostObject.ObjectId.ToString());
                     }
                 }
             }

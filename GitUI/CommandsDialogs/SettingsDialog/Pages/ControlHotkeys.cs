@@ -10,10 +10,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     /// </summary>
     public partial class ControlHotkeys : GitExtensionsControl
     {
-        private readonly TranslationString _hotkeyNotSet =
-            new TranslationString("None");
-
-        #region Properties
+        private readonly TranslationString _hotkeyNotSet = new TranslationString("None");
 
         #region Settings
         private HotkeySettings[] _settings;
@@ -55,17 +52,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         }
         #endregion
 
-        #endregion
-
         public ControlHotkeys()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             cmbSettings.DisplayMember = nameof(HotkeySettings.Name);
         }
-
-        #region Methods
 
         public void SaveSettings()
         {
@@ -173,7 +166,5 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             Settings = HotkeySettingsManager.CreateDefaultSettings();
         }
-
-        #endregion
     }
 }

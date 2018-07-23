@@ -59,7 +59,7 @@ namespace ResourceManager.CommitDataRenders
                 return hash;
             }
 
-            if (!module.IsExistingCommitHash(hash, out var fullHash))
+            if (!module.TryResolvePartialCommitId(hash, out var fullHash))
             {
                 return hash;
             }

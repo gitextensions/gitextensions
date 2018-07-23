@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             Open.Width = DpiUtil.Scale(39);
             Delete.Width = DpiUtil.Scale(44);
             Worktrees.AutoGenerateColumns = false;
-            Translate();
+            InitializeComplete();
 
             Path.DataPropertyName = nameof(WorkTree.Path);
             Type.DataPropertyName = nameof(WorkTree.Type);
@@ -92,16 +92,16 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             {
                 if (i == 0)
                 {
-                    Worktrees.Rows[i].Cells["Delete"].Value = Resources.IconBlank;
+                    Worktrees.Rows[i].Cells["Delete"].Value = Images.Blank;
                     if (IsCurrentlyOpenedWorktree(_worktrees[0]))
                     {
-                        Worktrees.Rows[i].Cells["Open"].Value = Resources.IconBlank;
+                        Worktrees.Rows[i].Cells["Open"].Value = Images.Blank;
                     }
                 }
                 else if (!CanDeleteWorkspace(_worktrees[i]))
                 {
-                    Worktrees.Rows[i].Cells["Open"].Value = Resources.IconBlank;
-                    Worktrees.Rows[i].Cells["Delete"].Value = Resources.IconBlank;
+                    Worktrees.Rows[i].Cells["Open"].Value = Images.Blank;
+                    Worktrees.Rows[i].Cells["Delete"].Value = Images.Blank;
                 }
             }
 

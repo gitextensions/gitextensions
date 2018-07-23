@@ -18,12 +18,6 @@ namespace GitStatistics
 
         public Dictionary<string, int> LinesOfCodePerExtension { get; } = new Dictionary<string, int>();
 
-        private static bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters)
-        {
-            return directoryFilters.Any(
-                filter => dir.FullName.EndsWith(filter, StringComparison.InvariantCultureIgnoreCase));
-        }
-
         private static IEnumerable<FileInfo> GetFiles(List<string> filesToCheck, string[] codeFilePatterns)
         {
             foreach (var file in filesToCheck)
@@ -35,7 +29,7 @@ namespace GitStatistics
                     {
                         fileInfo = new FileInfo(file);
                     }
-                    catch (Exception)
+                    catch
                     {
                         continue;
                     }
@@ -45,8 +39,7 @@ namespace GitStatistics
             }
         }
 
-        public void FindAndAnalyzeCodeFiles(string filePattern, string directoriesToIgnore,
-            List<string> filesToCheck)
+        public void FindAndAnalyzeCodeFiles(string filePattern, string directoriesToIgnore, List<string> filesToCheck)
         {
             var filters = filePattern.Replace("*", "").Split(';');
             var directoryFilter = directoriesToIgnore.Split(';');
@@ -70,6 +63,16 @@ namespace GitStatistics
                     lastUpdate = DateTime.Now;
                     LinesOfCodeUpdated(this, EventArgs.Empty);
                 }
+            }
+
+            LinesOfCodeUpdated?.Invoke(this, EventArgs.Empty);
+
+            return;
+
+            bool DirectoryIsFiltered(FileSystemInfo dir, IEnumerable<string> directoryFilters)
+            {
+                return directoryFilters.Any(
+                    filter => dir.FullName.EndsWith(filter, StringComparison.InvariantCultureIgnoreCase));
             }
         }
 
@@ -96,7 +99,7 @@ namespace GitStatistics
             LinesOfCodePerExtension[extension] += codeLines;
             NumberCodeLines += codeLines;
 
-            if (codeFile.IsTestFile || codeFile.File.Directory.FullName.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (codeFile.IsTestFile || codeFile.File.Directory?.FullName.IndexOf("test", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 NumberTestCodeLines += codeLines;
             }

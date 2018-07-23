@@ -19,7 +19,7 @@ namespace ResourceManager.Xliff
         {
             if (string.IsNullOrEmpty(translationItem.Name))
             {
-                throw new InvalidOperationException("Cannot add translationitem without name");
+                throw new InvalidOperationException($"Cannot add {nameof(TranslationItem)} without name");
             }
 
             TranslationItems.Add(translationItem);
@@ -29,7 +29,7 @@ namespace ResourceManager.Xliff
         {
             if (string.IsNullOrEmpty(translationItem.Name))
             {
-                throw new InvalidOperationException("Cannot add translationitem without name");
+                throw new InvalidOperationException($"Cannot add {nameof(TranslationItem)} without name");
             }
 
             TranslationItem ti = GetTranslationItem(translationItem.Name, translationItem.Property);

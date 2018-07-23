@@ -33,7 +33,7 @@ namespace FindLargeFiles
             commitCountDataGridViewTextBoxColumn.Width = DpiUtil.Scale(88);
             lastCommitDateDataGridViewTextBoxColumn.Width = DpiUtil.Scale(103);
 
-            Translate();
+            InitializeComplete();
 
             sHADataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.SHA);
             pathDataGridViewTextBoxColumn.DataPropertyName = nameof(GitObject.Path);
@@ -107,9 +107,9 @@ namespace FindLargeFiles
                             await pbRevisions.SwitchToMainThreadAsync();
                             pbRevisions.Value = pbRevisions.Value + (int)((_revList.Length * 0.1f) / packFiles.Length);
                         });
-                        foreach (var gitobj in objects.Where(x => x.Contains(" blob ")))
+                        foreach (var gitObject in objects.Where(x => x.Contains(" blob ")))
                         {
-                            string[] dataFields = gitobj.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] dataFields = gitObject.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             if (_list.TryGetValue(dataFields[0], out var curGitObject))
                             {
                                 if (int.TryParse(dataFields[3], out var compressedSize))
@@ -148,13 +148,13 @@ namespace FindLargeFiles
             _revList = _gitCommands.RunGitCmd("rev-list HEAD").Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             pbRevisions.Maximum = (int)(_revList.Length * 1.1f);
             BranchesGrid.DataSource = _gitObjects;
-            Thread thread = new Thread(FindLargeFilesFunction);
+            var thread = new Thread(FindLargeFilesFunction);
             thread.Start();
         }
 
         private IEnumerable<GitObject> GetLargeFiles(float threshold)
         {
-            int thresholdSize = (int)(threshold * 1024 * 1024);
+            var thresholdSize = (int)(threshold * 1024 * 1024);
             for (int i = 0; i < _revList.Length; i++)
             {
                 ThreadHelper.JoinableTaskFactory.Run(async () =>
@@ -185,7 +185,7 @@ namespace FindLargeFiles
         {
             if (MessageBox.Show(this, _areYouSureToDelete.Text, _deleteCaption.Text, MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 foreach (GitObject gitObject in _gitObjects.Where(gitObject => gitObject.Delete))
                 {
                     sb.AppendLine(string.Format("\"{0}\" filter-branch --index-filter \"git rm -r -f --cached --ignore-unmatch {1}\" --prune-empty -- --all",

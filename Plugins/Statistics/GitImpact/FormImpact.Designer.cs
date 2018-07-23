@@ -94,7 +94,6 @@
             this.Controls.Add(this.cbIncludingSubmodules);
             this.Controls.Add(this.Impact);
             this.Controls.Add(this.pnlTop);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormImpact";
             this.Text = "Impact";
             this.pnlTop.ResumeLayout(false);

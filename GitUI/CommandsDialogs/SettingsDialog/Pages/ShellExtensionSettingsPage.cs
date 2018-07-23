@@ -9,7 +9,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Shell extension";
-            Translate();
+            InitializeComplete();
         }
 
         protected override void SettingsToPage()

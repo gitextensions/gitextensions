@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
@@ -7,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Gerrit.Properties;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -46,6 +46,7 @@ namespace Gerrit
         {
             SetNameAndDescription("Gerrit Code Review");
             Translate();
+            Icon = Resources.IconGerrit;
         }
 
         public override void Register(IGitUICommands gitUiCommands)
@@ -145,8 +146,8 @@ namespace Gerrit
 
             // Find the controls we're going to extend.
 
-            var menuStrip = FindControl<MenuStrip>(form, p => p.Name == "menuStrip1");
-            var toolStrip = FindControl<ToolStrip>(form, p => p.Name == "ToolStrip");
+            var menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "menuStrip1");
+            var toolStrip = form.FindDescendantOfType<ToolStrip>(p => p.Name == "ToolStrip");
 
             if (menuStrip == null)
             {
@@ -183,7 +184,7 @@ namespace Gerrit
                 repositoryMenu.DropDownItems.IndexOf(mailMapMenuItem) + 1,
                 _gitReviewMenuItem);
 
-            // Create the toolstrip items.
+            // Create the tool strip items.
 
             var pushMenuItem = toolStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "toolStripButtonPush");
             if (pushMenuItem == null)
@@ -346,6 +347,7 @@ namespace Gerrit
             }
         }
 
+        [ItemCanBeNull]
         private async Task<string> DownloadFromScpAsync(GerritSettings settings)
         {
             // This is a very quick and dirty "implementation" of the scp
@@ -408,33 +410,6 @@ namespace Gerrit
             }
 
             _gitUiCommands.RepoChangedNotifier.Notify();
-        }
-
-        private T FindControl<T>(Control form, Func<T, bool> predicate)
-            where T : Control
-        {
-            return FindControl(form.Controls, predicate);
-        }
-
-        private static T FindControl<T>(IEnumerable controls, Func<T, bool> predicate)
-            where T : Control
-        {
-            foreach (Control control in controls)
-            {
-                if (control is T result && predicate(result))
-                {
-                    return result;
-                }
-
-                result = FindControl(control.Controls, predicate);
-
-                if (result != null)
-                {
-                    return result;
-                }
-            }
-
-            return null;
         }
 
         public override bool Execute(GitUIEventArgs args)

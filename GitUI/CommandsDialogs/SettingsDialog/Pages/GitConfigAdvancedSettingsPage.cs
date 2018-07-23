@@ -6,7 +6,7 @@
         {
             InitializeComponent();
             Text = "Advanced";
-            Translate();
+            InitializeComplete();
         }
 
         protected override void SettingsToPage()

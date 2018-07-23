@@ -21,6 +21,8 @@ namespace GitUI.SpellChecker
     [DefaultEvent("TextChanged")]
     public partial class EditNetSpell : GitModuleControl
     {
+        public event EventHandler TextAssigned;
+
         private readonly TranslationString _cutMenuItemText = new TranslationString("Cut");
         private readonly TranslationString _copyMenuItemText = new TranslationString("Copy");
         private readonly TranslationString _pasteMenuItemText = new TranslationString("Paste");
@@ -56,13 +58,12 @@ namespace GitUI.SpellChecker
 
         public Font TextBoxFont { get; set; }
 
-        public EventHandler TextAssigned;
         public bool IsUndoInProgress;
 
         public EditNetSpell()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             MistakeFont = new Font(TextBox.Font, FontStyle.Underline);
             TextBoxFont = TextBox.Font;
@@ -194,9 +195,7 @@ namespace GitUI.SpellChecker
             set => TextBox.SelectedText = value;
         }
 
-        protected RepoDistSettings Settings => IsUICommandsInitialized ?
-            Module.EffectiveSettings :
-            AppSettings.SettingsContainer;
+        protected RepoDistSettings Settings => Module?.EffectiveSettings ?? AppSettings.SettingsContainer;
 
         public void SelectAll()
         {
@@ -387,7 +386,7 @@ namespace GitUI.SpellChecker
 
         private ToolStripMenuItem AddContextMenuItem(string text, EventHandler eventHandler)
         {
-            ToolStripMenuItem menuItem = new ToolStripMenuItem(text, null, eventHandler);
+            var menuItem = new ToolStripMenuItem(text, null, eventHandler);
             SpellCheckContextMenu.Items.Add(menuItem);
             return menuItem;
         }
@@ -559,9 +558,7 @@ namespace GitUI.SpellChecker
             // if a Module is available, then always change the "repository local" setting
             // it will set a dictionary only for this Module (repository) localy
 
-            var settings = IsUICommandsInitialized
-                ? Module.LocalSettings
-                : Settings;
+            var settings = Module?.LocalSettings ?? Settings;
 
             settings.Dictionary = ((ToolStripItem)sender).Text;
             LoadDictionary();

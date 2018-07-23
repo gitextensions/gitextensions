@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 
 namespace Bitbucket
 {
-    internal class PullRequest
+    internal sealed class PullRequest
     {
-        ////public string Ref { get; set; }
         public static PullRequest Parse(JObject json)
         {
             var request = new PullRequest
@@ -37,7 +35,11 @@ namespace Bitbucket
             }
             else
             {
-                reviewers.ForEach(r => request.Reviewers += r["user"]["displayName"] + " (" + r["approved"] + ")" + Environment.NewLine);
+                foreach (var reviewer in reviewers)
+                {
+                    request.Reviewers += reviewer["user"]["displayName"] + " (" + reviewer["approved"] + ")" + Environment.NewLine;
+                }
+
                 if (request.Reviewers.EndsWith(", "))
                 {
                     request.Reviewers = request.Reviewers.Substring(0, request.Reviewers.Length - 2);
@@ -50,10 +52,14 @@ namespace Bitbucket
             }
             else
             {
-                participants.ForEach(r => request.Reviewers += r["user"]["displayName"] + " (" + r["approved"] + ")" + Environment.NewLine);
-                if (request.Reviewers.EndsWith(", "))
+                foreach (var participant in participants)
                 {
-                    request.Reviewers = request.Reviewers.Substring(0, request.Reviewers.Length - 2);
+                    request.Participants += participant["user"]["displayName"] + " (" + participant["approved"] + ")" + Environment.NewLine;
+                }
+
+                if (request.Participants.EndsWith(", "))
+                {
+                    request.Participants = request.Participants.Substring(0, request.Participants.Length - 2);
                 }
             }
 
@@ -76,16 +82,16 @@ namespace Bitbucket
         public string DestRepo { get; set; }
         public string DestBranch { get; set; }
         public double CreatedDate { get; set; }
-        public string SrcDisplayName => string.Format("{0}/{1}", SrcProjectName, SrcRepo);
 
-        public string DestDisplayName => string.Format("{0}/{1}", DestProjectName, DestRepo);
+        public string SrcDisplayName => $"{SrcProjectName}/{SrcRepo}";
+        public string DestDisplayName => $"{DestProjectName}/{DestRepo}";
+        public string DisplayName => $"#{Id}: {Title}, {ConvertFromUnixTimestamp(CreatedDate):yyyy-MM-dd}";
 
-        public string DisplayName => string.Format("#{0}: {1}, {2}", Id, Title, ConvertFromUnixTimestamp(CreatedDate).ToString("yyyy-MM-dd"));
+        private static readonly DateTime _epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
 
         public static DateTime ConvertFromUnixTimestamp(double timestamp)
         {
-            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            return origin.AddSeconds(timestamp);
+            return _epoch.AddSeconds(timestamp);
         }
     }
 

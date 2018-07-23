@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
+using Github3.Properties;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager;
@@ -51,7 +52,7 @@ namespace Github3
 
                     return null;
                 }
-                catch (Exception)
+                catch
                 {
                     return null;
                 }
@@ -89,6 +90,8 @@ namespace Github3
             }
 
             github = new Client();
+
+            Icon = Resources.IconGitHub;
         }
 
         public override IEnumerable<ISetting> GetSettings()
@@ -155,34 +158,38 @@ namespace Github3
         /// </summary>
         public IReadOnlyList<IHostedRemote> GetHostedRemotesForModule(IGitModule module)
         {
-            var repoInfos = new List<IHostedRemote>();
+            return Remotes().ToList();
 
-            string[] remotes = module.GetRemotes(false);
-            foreach (string remote in remotes)
+            IEnumerable<IHostedRemote> Remotes()
             {
-                var url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
-                if (string.IsNullOrEmpty(url))
-                {
-                    continue;
-                }
+                var set = new HashSet<IHostedRemote>();
 
-                var m = Regex.Match(url, @"git(?:@|://)github.com[:/]([^/]+)/([\w_\.\-]+)\.git");
-                if (!m.Success)
+                foreach (string remote in module.GetRemoteNames())
                 {
-                    m = Regex.Match(url, @"https?://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/([^/]+)/([\w_\.\-]+)(?:.git)?");
-                }
+                    var url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
 
-                if (m.Success)
-                {
-                    var hostedRemote = new GithubHostedRemote(remote, m.Groups[1].Value, m.Groups[2].Value.Replace(".git", ""));
-                    if (!repoInfos.Contains(hostedRemote))
+                    if (string.IsNullOrEmpty(url))
                     {
-                        repoInfos.Add(hostedRemote);
+                        continue;
+                    }
+
+                    var m = Regex.Match(url, @"git(?:@|://)github.com[:/]([^/]+)/([\w_\.\-]+)\.git");
+                    if (!m.Success)
+                    {
+                        m = Regex.Match(url, @"https?://(?:[^@:]+)?(?::[^/@:]+)?@?github.com/([^/]+)/([\w_\.\-]+)(?:.git)?");
+                    }
+
+                    if (m.Success)
+                    {
+                        var hostedRemote = new GithubHostedRemote(remote, m.Groups[1].Value, m.Groups[2].Value.Replace(".git", ""));
+
+                        if (set.Add(hostedRemote))
+                        {
+                            yield return hostedRemote;
+                        }
                     }
                 }
             }
-
-            return repoInfos;
         }
     }
 }

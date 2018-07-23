@@ -41,9 +41,6 @@
     <DocumentationFile>bin\Release\GitUI.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.TextEditor">
-      <HintPath>..\Bin\ICSharpCode.TextEditor.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.WindowsAPICodePack">
       <HintPath>..\Bin\Microsoft.WindowsAPICodePack.dll</HintPath>
@@ -64,6 +61,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="System.IO.Abstractions">
+      <Version>2.0.0.144</Version>
+    </PackageReference>
     <PackageReference Include="System.Reactive" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
@@ -72,6 +72,13 @@
     </Compile>
     <Compile Include="AutoCompletion\CommitAutoCompleteProvider.cs" />
     <Compile Include="AutoCompletion\IAutoCompleteProvider.cs" />
+    <Compile Include="Avatars\AvatarDownloader.cs" />
+    <Compile Include="Avatars\AvatarMemoryCache.cs" />
+    <Compile Include="Avatars\AvatarPersistentCache.cs" />
+    <Compile Include="Avatars\AvatarService.cs" />
+    <Compile Include="Avatars\BackupAvatarProvider.cs" />
+    <Compile Include="Avatars\IAvatarProvider.cs" />
+    <Compile Include="Avatars\MruCache.cs" />
     <Compile Include="BranchTreePanel\RepoObjectsTree.ContextActions.cs">
       <SubType>UserControl</SubType>
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>
@@ -91,13 +98,12 @@
       <SubType>UserControl</SubType>
       <DependentUpon>RepoObjectsTree.Nodes.cs</DependentUpon>
     </Compile>
-    <Compile Include="BuildServerIntegration\BuildInfoDrawingLogic.cs" />
     <Compile Include="BuildServerIntegration\BuildServerWatcher.cs" />
-    <Compile Include="CommandsDialogs\AboutBox.cs">
+    <Compile Include="CommandsDialogs\FormAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\AboutBox.Designer.cs">
-      <DependentUpon>AboutBox.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\FormAbout.Designer.cs">
+      <DependentUpon>FormAbout.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\DashboardTheme.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\UserRepositoriesList.cs">
@@ -129,22 +135,25 @@
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
     <Compile Include="CommandsDialogs\FormBrowseController.cs" />
+    <Compile Include="CommandsDialogs\FullBleedTabControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitIgnoreModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\GitLocalExcludeModel.cs" />
     <Compile Include="CommandsDialogs\GitIgnoreDialog\IGitIgnoreDialogModel.cs" />
-    <Compile Include="CommandsDialogs\RevisionDiff.cs">
+    <Compile Include="CommandsDialogs\RevisionDiffControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\RevisionDiff.Designer.cs">
-      <DependentUpon>RevisionDiff.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\RevisionDiffControl.Designer.cs">
+      <DependentUpon>RevisionDiffControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\FileStatusListContextMenuController.cs" />
     <Compile Include="CommandsDialogs\RevisionDiffController.cs" />
-    <Compile Include="CommandsDialogs\RevisionFileTree.cs">
+    <Compile Include="CommandsDialogs\RevisionFileTreeControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\RevisionFileTree.Designer.cs">
-      <DependentUpon>RevisionFileTree.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\RevisionFileTreeControl.Designer.cs">
+      <DependentUpon>RevisionFileTreeControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\FormCompareToBranch.cs">
       <SubType>Form</SubType>
@@ -207,11 +216,11 @@
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\MergeToolsHelper.cs" />
     <Compile Include="CommandsDialogs\RevisionFileTreeController.cs" />
-    <Compile Include="CommandsDialogs\RevisionGpgInfo.cs">
+    <Compile Include="CommandsDialogs\RevisionGpgInfoControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\RevisionGpgInfo.Designer.cs">
-      <DependentUpon>RevisionGpgInfo.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\RevisionGpgInfoControl.Designer.cs">
+      <DependentUpon>RevisionGpgInfoControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.cs">
       <SubType>Form</SubType>
@@ -268,13 +277,19 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.Designer.cs">
       <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="ControlUtil.cs" />
     <Compile Include="Editor\GitHighlightingStrategyBase.cs" />
     <Compile Include="Editor\RebaseTodoHighlightingStrategy.cs" />
     <Compile Include="FindFilePredicateProvider.cs" />
-    <Compile Include="Properties\MsVsImages.Designer.cs">
+    <Compile Include="Properties\Images.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MsVsImages.resx</DependentUpon>
+      <DependentUpon>Images.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RevisionDiffInfoProvider.cs" />
     <Compile Include="RevisionDiffKind.cs" />
@@ -294,7 +309,7 @@
     <Compile Include="Editor\Diff\CombinedDiffHighlightService.cs" />
     <Compile Include="Editor\Diff\DiffHighlightService.cs" />
     <Compile Include="Editor\Diff\DiffLineNumAnalyzer.cs" />
-    <Compile Include="Editor\Diff\DiffViewerLineNumberCtrl.cs" />
+    <Compile Include="Editor\Diff\DiffViewerLineNumberControl.cs" />
     <Compile Include="Editor\Diff\LinePrefixHelper.cs" />
     <Compile Include="Editor\Diff\LineSegmentGetter.cs" />
     <Compile Include="Editor\CommitMessageHighlightingStrategy.cs" />
@@ -340,17 +355,53 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Script\PowerShellHelper.cs" />
     <Compile Include="Script\ScriptRunner.cs" />
     <Compile Include="AutoCompletion\AutoCompleteWord.cs" />
     <Compile Include="SplitterManager.cs" />
     <Compile Include="SpellChecker\SpellCheckerHelper.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractor.cs" />
+    <Compile Include="TaskbarProgress.cs" />
+    <Compile Include="UserControls\RevisionGrid\Columns\MultilineIndicator.cs" />
+    <Compile Include="UserControls\HslColor.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\ActiveLaneRow.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\Edge.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\Edges.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\GraphModel.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\ILaneRow.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\Junction.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\LaneInfo.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\LaneJunctionDetail.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\Node.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\SavedLaneRow.cs" />
+    <Compile Include="UserControls\RevisionGrid\RefArrowType.cs" />
+    <Compile Include="UserControls\RevisionGrid\BareRepoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\RevisionGrid\BareRepoControl.Designer.cs">
+      <DependentUpon>BareRepoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\RevisionGrid\Columns\AuthorNameColumnProvider.cs" />
+    <Compile Include="UserControls\RevisionGrid\Columns\BuildStatusColumnProvider.cs" />
+    <Compile Include="UserControls\RevisionGrid\Columns\ColumnProvider.cs" />
+    <Compile Include="UserControls\RevisionGrid\Columns\CommitIdColumnProvider.cs" />
+    <Compile Include="UserControls\RevisionGrid\Columns\DateColumnProvider.cs" />
+    <Compile Include="UserControls\RevisionGrid\Columns\GraphColumnProvider.cs" />
+    <Compile Include="UserControls\RevisionGrid\Columns\MessageColumnProvider.cs" />
+    <Compile Include="UserControls\RevisionGrid\EmptyRepoControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\RevisionGrid\EmptyRepoControl.Designer.cs">
+      <DependentUpon>EmptyRepoControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\RevisionGrid\ErrorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\RevisionGrid\LoadingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\RevisionGrid\QuickSearchProvider.cs" />
+    <Compile Include="UserControls\RevisionGrid\Columns\AvatarColumnProvider.cs" />
     <Compile Include="UserControls\BranchComboBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -409,36 +460,31 @@
     <Compile Include="UserControls\NativeTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\CopyContextMenuItem.cs">
+    <Compile Include="UserControls\RevisionGrid\CopyContextMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\CopyContextMenuItem.Designer.cs">
-      <DependentUpon>CopyContextMenuItem.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\CaptionCustomMenuRenderer.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\CopyContextMenuViewModel.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\CopyToClipboardToolStripMenuItem.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\GitRefListsForRevision.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\MenuUtil.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\NavigationHistory.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\ParentChildNavigationHistory.cs" />
-    <Compile Include="UserControls\AuthorEmailBasedRevisionHighlighting.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.cs">
+    <Compile Include="UserControls\RevisionGrid\GitRefListsForRevision.cs" />
+    <Compile Include="UserControls\RevisionGrid\MenuUtil.cs" />
+    <Compile Include="UserControls\RevisionGrid\NavigationHistory.cs" />
+    <Compile Include="UserControls\RevisionGrid\ParentChildNavigationHistory.cs" />
+    <Compile Include="UserControls\RevisionGrid\AuthorRevisionHighlighting.cs" />
+    <Compile Include="UserControls\RevisionGrid\FormQuickGitRefSelector.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.Designer.cs">
+    <Compile Include="UserControls\RevisionGrid\FormQuickGitRefSelector.Designer.cs">
       <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RevisionGridUtils.cs" />
+    <Compile Include="UserControls\RevisionGrid\RevisionGridToolTipProvider.cs" />
+    <Compile Include="UserControls\RevisionGrid\RevisionGridRefRenderer.cs" />
+    <Compile Include="UserControls\RevisionGrid\SuperProjectInfo.cs" />
+    <Compile Include="UserControls\RevisionGrid\VisibleRowRange.cs" />
     <Compile Include="UserControls\TextEventArgs.cs" />
-    <Compile Include="UserControls\ToolStripClasses\CommitIconProvider.cs" />
+    <Compile Include="UserControls\RepoStateVisualiser.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.cs" />
-    <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.Designer.cs">
-      <DependentUpon>GitStatusMonitor.cs</DependentUpon>
+    <Compile Include="UserControls\WaitSpinner.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UserControls\WebBrowserCtrl.cs">
+    <Compile Include="UserControls\WebBrowserControl.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UserManual\UserManual.cs" />
@@ -451,19 +497,7 @@
     <Compile Include="UserControls\RemotesComboboxControl.Designer.cs">
       <DependentUpon>RemotesComboboxControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\DoubleClickRevisionEventArgs.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Graph.cs">
-      <DependentUpon>DvcsGraph.cs</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Junction.cs">
-      <DependentUpon>DvcsGraph.cs</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Lanes.cs">
-      <DependentUpon>DvcsGraph.cs</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="UserControls\RevisionGrid\DoubleClickRevisionEventArgs.cs" />
     <Compile Include="Editor\FormGoToLine.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -555,7 +589,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="IGitUICommandsSource.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\IndexWatcher.cs" />
+    <Compile Include="UserControls\RevisionGrid\IndexWatcher.cs" />
     <Compile Include="UserControls\MenuStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -640,7 +674,7 @@
     <Compile Include="CommandsDialogs\FormBrowse.Designer.cs">
       <DependentUpon>FormBrowse.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editor\ColorHelper.cs" />
+    <Compile Include="ColorHelper.cs" />
     <Compile Include="CommandsDialogs\FormCommit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -659,11 +693,8 @@
     <Compile Include="CommandsDialogs\BrowseDialog\DashboardControl\Dashboard.Designer.cs">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.cs">
+    <Compile Include="UserControls\RevisionGrid\RevisionDataGridView.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\DvcsGraph.Designer.cs">
-      <DependentUpon>DvcsGraph.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\FileStatusList.cs">
       <SubType>UserControl</SubType>
@@ -682,9 +713,6 @@
     <Compile Include="Plugin\PluginRegistry.cs" />
     <Compile Include="ProcessOutputTimer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Custom.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Script\ScriptInfo.cs" />
     <Compile Include="Script\ScriptManager.cs" />
     <Compile Include="CommandsDialogs\SettingsDialog\CheckSettingsLogic.cs" />
@@ -995,10 +1023,10 @@
     <Compile Include="CommandsDialogs\FormRevertCommit.Designer.cs">
       <DependentUpon>FormRevertCommit.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\FormRevisionFilter.cs">
+    <Compile Include="UserControls\RevisionGrid\FormRevisionFilter.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserControls\RevisionGridClasses\FormRevisionFilter.Designer.cs">
+    <Compile Include="UserControls\RevisionGrid\FormRevisionFilter.Designer.cs">
       <DependentUpon>FormRevisionFilter.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\FormSettings.cs">
@@ -1034,18 +1062,18 @@
     <Compile Include="GitExtensionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\FormGitLog.cs">
+    <Compile Include="CommandsDialogs\BrowseDialog\FormGitCommandLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CommandsDialogs\BrowseDialog\FormGitLog.Designer.cs">
-      <DependentUpon>FormGitLog.cs</DependentUpon>
+    <Compile Include="CommandsDialogs\BrowseDialog\FormGitCommandLog.Designer.cs">
+      <DependentUpon>FormGitCommandLog.cs</DependentUpon>
     </Compile>
     <Compile Include="GitUICommands.cs" />
-    <Compile Include="UserControls\GravatarControl.cs">
+    <Compile Include="UserControls\AvatarControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\GravatarControl.Designer.cs">
-      <DependentUpon>GravatarControl.cs</DependentUpon>
+    <Compile Include="UserControls\AvatarControl.Designer.cs">
+      <DependentUpon>AvatarControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\MergeConflictHandler.cs" />
     <Compile Include="CommandsDialogs\FormApplyPatch.cs">
@@ -1067,11 +1095,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\RevisionGrid.cs">
+    <Compile Include="UserControls\RevisionGrid\RevisionGridControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="UserControls\RevisionGrid.Designer.cs">
-      <DependentUpon>RevisionGrid.cs</DependentUpon>
+    <Compile Include="UserControls\RevisionGrid\RevisionGridControl.Designer.cs">
+      <DependentUpon>RevisionGridControl.cs</DependentUpon>
     </Compile>
     <Compile Include="CommandsDialogs\SearchControl.cs">
       <SubType>UserControl</SubType>
@@ -1081,7 +1109,7 @@
     </Compile>
     <Compile Include="SpellChecker\SpellCheckEditControl.cs" />
     <Compile Include="SpellChecker\TextBoxHelper.cs" />
-    <Compile Include="UserControls\RevisionGridClasses\RevisionGridMenuCommands.cs" />
+    <Compile Include="UserControls\RevisionGrid\RevisionGridMenuCommands.cs" />
     <Compile Include="UserControls\ToolStripEx.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -1110,8 +1138,8 @@
     <Compile Include="WindowsThumbnailToolbarButtons.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CommandsDialogs\AboutBox.resx">
-      <DependentUpon>AboutBox.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\FormAbout.resx">
+      <DependentUpon>FormAbout.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\UserRepositoriesList.resx">
@@ -1124,11 +1152,11 @@
       <DependentUpon>FormUpdates.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\RevisionDiff.resx">
-      <DependentUpon>RevisionDiff.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\RevisionDiffControl.resx">
+      <DependentUpon>RevisionDiffControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\RevisionFileTree.resx">
-      <DependentUpon>RevisionFileTree.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\RevisionFileTreeControl.resx">
+      <DependentUpon>RevisionFileTreeControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormCompareToBranch.resx">
       <DependentUpon>FormCompareToBranch.cs</DependentUpon>
@@ -1163,8 +1191,8 @@
     <EmbeddedResource Include="CommandsDialogs\SearchWindow.resx">
       <DependentUpon>SearchWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\RevisionGpgInfo.resx">
-      <DependentUpon>RevisionGpgInfo.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\RevisionGpgInfoControl.resx">
+      <DependentUpon>RevisionGpgInfoControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\FormAvailableEncodings.resx">
       <DependentUpon>FormAvailableEncodings.cs</DependentUpon>
@@ -1220,9 +1248,9 @@
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Plugins\PluginRootIntroductionPage.resx">
       <DependentUpon>PluginRootIntroductionPage.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\MsVsImages.resx">
+    <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>MsVsImages.Designer.cs</LastGenOutput>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\BranchSelector.resx">
@@ -1236,9 +1264,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\CommitSummaryUserControl.resx">
       <DependentUpon>CommitSummaryUserControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editor\FormGoToLine.resx">
-      <DependentUpon>FormGoToLine.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HelperDialogs\FormChooseCommit.resx">
       <DependentUpon>FormChooseCommit.cs</DependentUpon>
@@ -1328,9 +1353,8 @@
     <EmbeddedResource Include="UserControls\RemotesComboboxControl.resx">
       <DependentUpon>RemotesComboboxControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\RevisionGridClasses\DvcsGraph.resx">
-      <DependentUpon>DvcsGraph.cs</DependentUpon>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="UserControls\RevisionGrid\BareRepoControl.resx">
+      <DependentUpon>BareRepoControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\FileStatusList.resx">
       <DependentUpon>FileStatusList.cs</DependentUpon>
@@ -1340,19 +1364,12 @@
       <DependentUpon>FormCherryPick.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="HelperDialogs\FormRunScriptSpecify.resx">
-      <DependentUpon>FormRunScriptSpecify.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\HelpImageDisplayUserControl.resx">
       <DependentUpon>HelpImageDisplayUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\ControlHotkeys.resx">
       <DependentUpon>ControlHotkeys.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Script\SimplePrompt.resx">
-      <DependentUpon>SimplePrompt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SettingsDialog\Pages\AdvancedSettingsPage.resx">
       <DependentUpon>AdvancedSettingsPage.cs</DependentUpon>
@@ -1539,7 +1556,10 @@
       <DependentUpon>FormRevertCommit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\RevisionGridClasses\FormRevisionFilter.resx">
+    <EmbeddedResource Include="UserControls\RevisionGrid\EmptyRepoControl.resx">
+      <DependentUpon>EmptyRepoControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\RevisionGrid\FormRevisionFilter.resx">
       <DependentUpon>FormRevisionFilter.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -1567,12 +1587,12 @@
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormGitLog.resx">
-      <DependentUpon>FormGitLog.cs</DependentUpon>
+    <EmbeddedResource Include="CommandsDialogs\BrowseDialog\FormGitCommandLog.resx">
+      <DependentUpon>FormGitCommandLog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\GravatarControl.resx">
-      <DependentUpon>GravatarControl.cs</DependentUpon>
+    <EmbeddedResource Include="UserControls\AvatarControl.resx">
+      <DependentUpon>AvatarControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\FormApplyPatch.resx">
@@ -1583,17 +1603,17 @@
       <DependentUpon>PatchGrid.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+    <EmbeddedResource Include="Properties\Images.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <CustomToolNamespace>GitUI.Properties</CustomToolNamespace>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <LastGenOutput>Images.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\RevisionGrid.resx">
-      <DependentUpon>RevisionGrid.cs</DependentUpon>
+    <EmbeddedResource Include="UserControls\RevisionGrid\RevisionGridControl.resx">
+      <DependentUpon>RevisionGridControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\RevisionGridClasses\FormQuickGitRefSelector.resx">
+    <EmbeddedResource Include="UserControls\RevisionGrid\FormQuickGitRefSelector.resx">
       <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SearchControl.resx">
@@ -1616,6 +1636,10 @@
       <Project>{f50b1dbf-1c9f-4437-87ec-7aba805cc446}</Project>
       <Name>Git.hub</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj">
+      <Project>{2d18be89-d210-49eb-a9dd-2246fbb3df6d}</Project>
+      <Name>ICSharpCode.TextEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
@@ -1624,10 +1648,6 @@
     <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj">
       <Project>{0f1f1168-a4b2-4fa2-b17b-735140d17f39}</Project>
       <Name>GitExtUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Gravatar\Gravatar.csproj">
-      <Project>{4041B976-50D0-4C6E-ABAF-7E67458A1264}</Project>
-      <Name>Gravatar</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetSpell.SpellChecker\SpellChecker.csproj">
       <Project>{A426EE0B-E52E-4D74-AF24-06797142D7B2}</Project>
@@ -1644,9 +1664,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Bin\Logo\git-extensions-logo-final-128.png">
-      <Link>Resources\Icons\git-extensions-logo-final-128.png</Link>
-    </None>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -1673,120 +1690,6 @@
     <None Include="Properties\DataSources\GitCommands.GitItem.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitItemStatus.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitRevision.datasource" />
-    <None Include="Resources\Icons\3.png" />
-    <None Include="Resources\Icons\33.png" />
-    <None Include="Resources\Icons\35.png" />
-    <None Include="Resources\Icons\4.png" />
-    <None Include="Resources\Icons\40.png" />
-    <None Include="Resources\Icons\50.png" />
-    <None Include="Resources\Icons\7.png" />
-    <None Include="Resources\Icons\71.png" />
-    <None Include="Resources\Icons\77.png" />
-    <None Include="Resources\Icons\82.png" />
-    <None Include="Resources\Icons\Added.png" />
-    <None Include="Resources\Icons\arrow_refresh.png" />
-    <None Include="Resources\Icons\arrow_refresh_dirty.png" />
-    <None Include="Resources\Icons\bash.png" />
-    <None Include="Resources\Icons\BranchCheckout.png" />
-    <None Include="Resources\Icons\BranchCreate.png" />
-    <None Include="Resources\Icons\BranchDelete.png" />
-    <None Include="Resources\Icons\bug.png" />
-    <None Include="Resources\Icons\Copied.png" />
-    <None Include="Resources\Icons\Cow.png" />
-    <None Include="Resources\Icons\Cow_sunglass.png" />
-    <None Include="Resources\Icons\Cow_xmass.png" />
-    <None Include="Resources\Icons\Delete.png" />
-    <None Include="Resources\Icons\develop.ico" />
-    <None Include="Resources\Icons\dollar.ico" />
-    <None Include="Resources\Icons\Donate.jpg" />
-    <None Include="Resources\Icons\double_arrow_down.png" />
-    <None Include="Resources\Icons\double_arrow_up.png" />
-    <None Include="Resources\Icons\edit_clear_2_16.png" />
-    <None Include="Resources\Icons\error.png" />
-    <None Include="Resources\Icons\folder_remote_2_16.png" />
-    <None Include="Resources\Icons\HelpCommandMergeFastForward.png" />
-    <None Include="Resources\Icons\HelpPullMergeFastForward.png" />
-    <None Include="Resources\Icons\history.png" />
-    <None Include="Resources\Icons\IconAddToGitIgnore.png" />
-    <None Include="Resources\Icons\IconBlame.png" />
-    <None Include="Resources\Icons\IconBlank.png" />
-    <None Include="Resources\Icons\IconCherryPick.png" />
-    <None Include="Resources\Icons\IconClean.png" />
-    <None Include="Resources\Icons\IconCloneRepoGit.png" />
-    <None Include="Resources\Icons\IconCloneRepoGithub.png" />
-    <None Include="Resources\Icons\IconCommit.png" />
-    <None Include="Resources\Icons\IconCopyToClipboard.png" />
-    <None Include="Resources\Icons\IconDiff.png" />
-    <None Include="Resources\Icons\IconDiffTool.png" />
-    <None Include="Resources\Icons\IconDirty.png" />
-    <None Include="Resources\Icons\IconDirtySubmodules.png" />
-    <None Include="Resources\Icons\IconEditFile.png" />
-    <None Include="Resources\Icons\IconEditGitIgnore.png" />
-    <None Include="Resources\Icons\IconFileHistory.png" />
-    <None Include="Resources\Icons\IconFileStatusUnknown.png" />
-    <None Include="Resources\Icons\IconFileTree.png" />
-    <None Include="Resources\Icons\IconFilter.png" />
-    <None Include="Resources\Icons\IconFind.png" />
-    <None Include="Resources\Icons\IconGotoCommit.png" />
-    <None Include="Resources\Icons\IconGotoCurrentRevision.png" />
-    <None Include="Resources\Icons\IconGotoManual.png" />
-    <None Include="Resources\Icons\IconMixed.png" />
-    <None Include="Resources\Icons\IconPreview.png" />
-    <None Include="Resources\Icons\IconRecoverLostObjects.png" />
-    <None Include="Resources\Icons\IconRepoCreate.png" />
-    <None Include="Resources\Icons\IconRepoOpen.png" />
-    <None Include="Resources\Icons\IconResetCurrentBranchToHere.png" />
-    <None Include="Resources\Icons\IconResetFileTo.png" />
-    <None Include="Resources\Icons\IconResetWorkingDirChanges.png" />
-    <None Include="Resources\Icons\IconRevertCommit.png" />
-    <None Include="Resources\Icons\IconSave.png" />
-    <None Include="Resources\Icons\IconSelectBranch.png" />
-    <None Include="Resources\Icons\IconSelectRevision.png" />
-    <None Include="Resources\Icons\IconShowFirstParent.png" />
-    <None Include="Resources\Icons\IconStage.png" />
-    <None Include="Resources\Icons\IconStageAll.png" />
-    <None Include="Resources\Icons\IconStaged.png" />
-    <None Include="Resources\Icons\IconSubmoduleDirty.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionDown.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionDownDirty.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionSemiDown.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionSemiDownDirty.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionSemiUp.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionSemiUpDirty.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionUp.png" />
-    <None Include="Resources\Icons\IconSubmoduleRevisionUpDirty.png" />
-    <None Include="Resources\Icons\IconSubmodulesManage.png" />
-    <None Include="Resources\Icons\IconSubmodulesSync.png" />
-    <None Include="Resources\Icons\IconSubmodulesUpdate.png" />
-    <None Include="Resources\Icons\IconUnstage.png" />
-    <None Include="Resources\Icons\IconUnstageAll.png" />
-    <None Include="Resources\Icons\IconViewFile.png" />
-    <None Include="Resources\Icons\IconWarning.png" />
-    <None Include="Resources\Icons\loadingpanel.gif" />
-    <None Include="Resources\Icons\loadingpanel_static.png" />
-    <None Include="Resources\Icons\Modified.png" />
-    <None Include="Resources\Icons\nonprintchar.png" />
-    <None Include="Resources\Icons\pageant.png" />
-    <None Include="Resources\Icons\pageant_16.png" />
-    <None Include="Resources\Icons\PullFetch.png" />
-    <None Include="Resources\Icons\PullFetchAll.png" />
-    <None Include="Resources\Icons\PullMerge.png" />
-    <None Include="Resources\Icons\PullRebase.png" />
-    <None Include="Resources\Icons\putty.png" />
-    <None Include="Resources\Icons\puttygen.png" />
-    <None Include="Resources\Icons\RecentRepositories.png" />
-    <None Include="Resources\Icons\Removed.png" />
-    <None Include="Resources\Icons\Renamed.png" />
-    <None Include="Resources\Icons\RevisionCheckout.png" />
-    <None Include="Resources\Icons\rss.png" />
-    <None Include="Resources\Icons\showEntireFile.png" />
-    <None Include="Resources\Icons\SplitViewLayout.png" />
-    <None Include="Resources\Icons\stash.png" />
-    <None Include="Resources\Icons\StatusHourglass.png" />
-    <None Include="Resources\Icons\success.png" />
-    <None Include="Resources\Icons\TagCreate.png" />
-    <None Include="Resources\Icons\TagDelete.png" />
-    <None Include="Resources\Icons\User.PNG" />
     <None Include="Translation\Czech.Plugins.xlf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1887,77 +1790,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Icons\commit_error.png" />
-    <Content Include="Resources\Icons\commit_ok.png" />
-    <Content Include="Resources\Icons\commit_warning.png" />
-    <Content Include="Resources\Icons\14.png" />
-    <Content Include="Resources\Icons\14_bw.png" />
-    <Content Include="Resources\Icons\2.png" />
-    <Content Include="Resources\Icons\21.png" />
-    <Content Include="Resources\Icons\24.png" />
-    <Content Include="Resources\Icons\26.png" />
-    <Content Include="Resources\Icons\27.png" />
-    <Content Include="Resources\Icons\49.png" />
-    <Content Include="Resources\Icons\5.png" />
-    <Content Include="Resources\Icons\52.png" />
-    <Content Include="Resources\Icons\53.png" />
-    <Content Include="Resources\Icons\6.png" />
-    <Content Include="Resources\Icons\8.png" />
-    <Content Include="Resources\Icons\86.png" />
-    <Content Include="Resources\Icons\90.png" />
-    <Content Include="Resources\Icons\bgblue.png" />
-    <Content Include="Resources\Icons\bggrey.png" />
-    <Content Include="Resources\Icons\BuildCancelled.png" />
-    <Content Include="Resources\Icons\BuildFailed.png" />
-    <Content Include="Resources\Icons\BuildSuccessful.png" />
-    <Content Include="Resources\Icons\bullet_add.png" />
-    <Content Include="Resources\Icons\bullet_delete.png" />
-    <Content Include="Resources\Icons\decrease.png" />
-    <Content Include="Resources\Icons\eye_closed.png" />
-    <Content Include="Resources\Icons\eye_opened.png" />
-    <Content Include="Resources\Icons\folder_error.png" />
-    <Content Include="Resources\Icons\folder_git.png" />
-    <Content Include="Resources\Icons\gitex.png" />
-    <Content Include="Resources\Icons\git_extensions_logo.png" />
-    <Content Include="Resources\Icons\HelpCommandMerge.png" />
-    <Content Include="Resources\Icons\HelpCommandRebase.png" />
-    <Content Include="Resources\Icons\HelpPullFetch.png" />
-    <Content Include="Resources\Icons\HelpPullMerge.png" />
-    <Content Include="Resources\Icons\HelpPullRebase.png" />
-    <Content Include="Resources\Icons\IconArchiveRevision.png" />
-    <Content Include="Resources\Icons\IconBook.png" />
-    <Content Include="Resources\Icons\IconBranch.png" />
-    <Content Include="Resources\Icons\IconBranchCheckout.png" />
-    <Content Include="Resources\Icons\IconBranchCreate.png" />
-    <Content Include="Resources\Icons\IconBrowseFileExplorer.png" />
-    <Content Include="Resources\Icons\IconConsole.png" />
-    <Content Include="Resources\Icons\IconFolderSubmodule.png" />
-    <Content Include="Resources\Icons\IconKey.png" />
-    <Content Include="Resources\Icons\IconManageRemotes.png" />
-    <Content Include="Resources\Icons\IconMerge.png" />
-    <Content Include="Resources\Icons\IconRebase.png" />
-    <Content Include="Resources\Icons\IconSaveAs.png" />
-    <Content Include="Resources\Icons\IconSubmoduleAdded.png" />
-    <Content Include="Resources\Icons\IconUntrackedOnly.png" />
-    <Content Include="Resources\Icons\ignore_all_whitespaces.png" />
-    <Content Include="Resources\Icons\ignore_whitespaces.png" />
-    <Content Include="Resources\Icons\increase.png" />
-    <None Include="Resources\Icons\VS2017Images\BranchRemote_16x.png" />
-    <None Include="Resources\Icons\VS2017Images\Branch_16x.png" />
-    <None Include="Resources\Icons\VS2017Images\CollapseAll_16x.png" />
-    <None Include="Resources\Icons\VS2017Images\ExpandAll_16x.png" />
-    <None Include="Resources\Icons\VS2017Images\Folder_grey_16x.png" />
-    <None Include="Resources\Icons\VS2017Images\Repository_16x.png" />
-    <None Include="Resources\Icons\VS2017Images\Tag_16x.png" />
-    <Content Include="Resources\Icons\whitespace.png" />
-    <Content Include="Resources\Icons\tag_error.png" />
-    <Content Include="Resources\Icons\tag_ok.png" />
-    <Content Include="Resources\Icons\tag_many.png" />
-    <Content Include="Resources\Icons\tag_error.png" />
-    <Content Include="Resources\Icons\tag_many.png" />
-    <Content Include="Resources\Icons\tag_ok.png" />
-    <Content Include="Resources\Icons\tag_warning.png" />
-    <Content Include="Resources\Icons\x_with_arrow_32.png" />
     <Content Include="Translation\Czech.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2006,88 +1838,6 @@
     <Content Include="Translation\Traditional Chinese.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="..\Bin\Logo\cow-head-blue.ico">
-      <Link>Resources\ApplicationIcons\cow-head-blue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\cow-head-green.ico">
-      <Link>Resources\ApplicationIcons\cow-head-green.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\cow-head-purple.ico">
-      <Link>Resources\ApplicationIcons\cow-head-purple.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\cow-head-red.ico">
-      <Link>Resources\ApplicationIcons\cow-head-red.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\cow-head-yellow.ico">
-      <Link>Resources\ApplicationIcons\cow-head-yellow.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\cow-head.ico">
-      <Link>Resources\ApplicationIcons\cow-head.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_blue.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_blue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_green.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_green.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_lightblue.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_lightblue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_blue.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_blue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_green.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_green.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_lightblue.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_lightblue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_purple.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_purple.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_red.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_red.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_mixed_yellow.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_mixed_yellow.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_purple.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_purple.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_red.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_red.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\git-extensions-logo-final_yellow.ico">
-      <Link>Resources\ApplicationIcons\git-extensions-logo-final_yellow.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow_blue.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow_blue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow_green.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow_green.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow_lightblue.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow_lightblue.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow_purple.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow_purple.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow_red.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow_red.ico</Link>
-    </None>
-    <None Include="..\Bin\Logo\x-with-arrow_yellow.ico">
-      <Link>Resources\ApplicationIcons\x-with-arrow_yellow.ico</Link>
-    </None>
-    <Content Include="Resources\Sounds\cow-moo.wav" />
     <None Include="Properties\DataSources\GitUI.Script.ScriptInfo.datasource" />
     <None Include="Properties\DataSources\GitCommands.Repository.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitSubmodule.datasource" />
@@ -2095,7 +1845,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Resources\ChangeLog.md" />
     <None Include="Properties\DataSources\GitCommands.GitBlame.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitHead.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitStash.datasource" />

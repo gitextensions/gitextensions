@@ -132,7 +132,7 @@ This action will be performed without warning while checking out branch.</source
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target>gravatar.comから著者の画像を取得</target>
         
       </trans-unit>
@@ -1249,7 +1249,7 @@ Git (Git for Windows あるいは cygwin)がインストールされているか
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>選択されたものは、正しい Git リポジトリではありません。
 中断し、“最近開いたリポジトリ”のリストから消去しますか？</target>
         
@@ -2737,7 +2737,7 @@ compare with first:</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>選択されたものは、正しい Git リポジトリではありません。
 中断して、“最近のリポジトリ”から消去しますか？</target>
         
@@ -2828,7 +2828,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target>コマンド履歴</target>
         
       </trans-unit>
@@ -2903,7 +2903,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target>設定</target>
         
       </trans-unit>
@@ -9578,7 +9578,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionDiff" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="RevisionDiffControl" source-language="en" target-language="ja">
     <body>
       <trans-unit id="_deleteFailed.Text">
         <source>Delete file failed</source>
@@ -9758,7 +9758,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionFileTree" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="RevisionFileTreeControl" source-language="en" target-language="ja">
     <body>
       <trans-unit id="_assumeUnchangedCaption.Text">
         <source>Assume this file won't change</source>
@@ -9930,7 +9930,7 @@ See the changes in the commit form.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionGpgInfo" source-language="en" target-language="ja">
+  <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en" target-language="ja">
     <body>
       <trans-unit id="_commitNotSigned.Text">
         <source>Commit is not signed</source>
@@ -10958,7 +10958,7 @@ OpenSSHを使う場合、コマンドラインダイアログが表示されま�
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>子コミット</target>
         
       </trans-unit>
@@ -11023,7 +11023,7 @@ OpenSSHを使う場合、コマンドラインダイアログが表示されま�
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
         <target>親コミット</target>
         
       </trans-unit>

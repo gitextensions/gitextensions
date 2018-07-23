@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
@@ -20,7 +21,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                                        accentedText: Color.DarkGoldenrod,
                                        primaryHeadingText: Color.FromArgb(24, 29, 35),
                                        secondaryHeadingText: Color.DimGray,
-                                       backgroundImage: Properties.Resources.bgblue);
+                                       backgroundImage: Images.DashboardBackgroundBlue);
 
             // Palette URL: http://paletton.com/#uid=13I0u0k3V4WaYgf7Lb1ac80gJaQ
             Dark = new DashboardTheme(primary: Color.FromArgb(23, 24, 26),
@@ -33,7 +34,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                                       accentedText: Color.Goldenrod,
                                       primaryHeadingText: Color.White,
                                       secondaryHeadingText: Color.Gray,
-                                      backgroundImage: Properties.Resources.bggrey);
+                                      backgroundImage: Images.DashboardBackgroundGrey);
         }
 
         private DashboardTheme(Color primary, Color primaryLight, Color primaryVeryLight,

@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs.CommitDialog
         public FormCommitTemplateSettings()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             _NO_TRANSLATE_textBoxCommitTemplateName.MaxLength = _maxUsedCharsForName;
 

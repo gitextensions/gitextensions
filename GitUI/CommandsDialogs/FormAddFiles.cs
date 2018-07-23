@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             Filter.Text = addFile ?? ".";
         }
 

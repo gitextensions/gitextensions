@@ -83,7 +83,7 @@ namespace GitUI
             return new ControlMainThreadAwaitable(mainThreadAwaiter, cancellationTokenSource, disposedCancellationToken);
         }
 
-        public struct ControlMainThreadAwaitable
+        public readonly struct ControlMainThreadAwaitable
         {
             private readonly JoinableTaskFactory.MainThreadAwaitable _awaitable;
             private readonly IDisposable _disposable;
@@ -102,7 +102,7 @@ namespace GitUI
             }
         }
 
-        public struct ControlMainThreadAwaiter : INotifyCompletion
+        public readonly struct ControlMainThreadAwaiter : INotifyCompletion
         {
             private readonly JoinableTaskFactory.MainThreadAwaiter _awaiter;
             private readonly IDisposable _disposable;

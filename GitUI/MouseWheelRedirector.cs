@@ -45,7 +45,7 @@ namespace GitUI
             if (m.Msg == WM_MOUSEWHEEL || m.Msg == WM_MOUSEHWHEEL)
             {
                 // WM_MOUSEWHEEL, find the control at screen position m.LParam
-                Point pos = new Point(m.LParam.ToInt32());
+                var pos = new Point(m.LParam.ToInt32());
                 IntPtr hwnd = NativeMethods.WindowFromPoint(pos);
                 if (hwnd != IntPtr.Zero && hwnd != m.HWnd && Control.FromHandle(hwnd) != null)
                 {
@@ -83,7 +83,7 @@ namespace GitUI
             public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct POINT
+            public readonly struct POINT
             {
                 public readonly int X;
                 public readonly int Y;
@@ -94,15 +94,8 @@ namespace GitUI
                     Y = y;
                 }
 
-                public static implicit operator Point(POINT p)
-                {
-                    return new Point(p.X, p.Y);
-                }
-
-                public static implicit operator POINT(Point p)
-                {
-                    return new POINT(p.X, p.Y);
-                }
+                public static implicit operator Point(POINT p) => new Point(p.X, p.Y);
+                public static implicit operator POINT(Point p) => new POINT(p.X, p.Y);
             }
         }
     }

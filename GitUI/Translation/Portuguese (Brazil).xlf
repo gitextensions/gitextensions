@@ -130,7 +130,7 @@ Esta ação será executada sem aviso enquanto estiver indo para um branch.</tar
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target>Obter a imagem do autor a partir do gravatar.com</target>
         
       </trans-unit>
@@ -1235,7 +1235,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>O item selecionado não é um repositório git válido.
 
 Quer interromper e removê-lo da lista de repositórios recentes?</target>
@@ -2719,7 +2719,7 @@ revisão com que comparar:</target>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>O item selecionado não é um repositório git válido.
 
 Quer interromper e removê-lo da lista de repositórios recentes?</target>
@@ -2811,7 +2811,7 @@ Quer interromper e removê-lo da lista de repositórios recentes?</target>
         
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target>Log Gitcommand</target>
         
       </trans-unit>
@@ -2885,7 +2885,7 @@ Quer interromper e removê-lo da lista de repositórios recentes?</target>
         
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target>Configurações</target>
         
       </trans-unit>
@@ -9279,7 +9279,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionDiff" source-language="en" target-language="pt-BR">
+  <file datatype="plaintext" original="RevisionDiffControl" source-language="en" target-language="pt-BR">
     <body>
       <trans-unit id="_deleteFailed.Text">
         <source>Delete file failed</source>
@@ -9435,7 +9435,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionFileTree" source-language="en" target-language="pt-BR">
+  <file datatype="plaintext" original="RevisionFileTreeControl" source-language="en" target-language="pt-BR">
     <body>
       <trans-unit id="_assumeUnchangedCaption.Text">
         <source>Assume this file won't change</source>
@@ -9585,7 +9585,7 @@ See the changes in the commit form.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionGpgInfo" source-language="en" target-language="pt-BR">
+  <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en" target-language="pt-BR">
     <body>
       <trans-unit id="_commitNotSigned.Text">
         <source>Commit is not signed</source>
@@ -10538,7 +10538,7 @@ When OpenSSH is used, command line dialogs are shown!
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>Filhos</target>
         
       </trans-unit>
@@ -10602,7 +10602,7 @@ When OpenSSH is used, command line dialogs are shown!
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
         
       </trans-unit>
       <trans-unit id="_secondsAgo.Text">

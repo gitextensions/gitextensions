@@ -43,14 +43,14 @@ namespace GitCommands.Git
         /// <inheritdoc />
         public bool AllFirstAreParentsToSelected(IEnumerable<GitRevision> firstSelected, GitRevision selectedRevision)
         {
-            if (selectedRevision?.ParentGuids == null || firstSelected == null)
+            if (selectedRevision?.ParentIds == null || firstSelected == null)
             {
                 return false;
             }
 
-            foreach (var item in firstSelected.Select(r => r.Guid))
+            foreach (var item in firstSelected.Select(r => r.ObjectId))
             {
-                if (!selectedRevision.ParentGuids.Contains(item, StringComparer.Ordinal))
+                if (!selectedRevision.ParentIds.Contains(item))
                 {
                     return false;
                 }

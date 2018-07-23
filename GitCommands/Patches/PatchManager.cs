@@ -79,7 +79,7 @@ namespace GitCommands.Patches
                 }
             }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (string line in headerLines)
             {
@@ -97,9 +97,9 @@ namespace GitCommands.Patches
         }
 
         [CanBeNull]
-        public static byte[] GetSelectedLinesAsNewPatch([NotNull] GitModule module, [NotNull] string newFileName, [NotNull] string text, int selectionPosition, int selectionLength, [NotNull] Encoding fileContentEncoding, bool reset, byte[] filePreabmle)
+        public static byte[] GetSelectedLinesAsNewPatch([NotNull] GitModule module, [NotNull] string newFileName, [NotNull] string text, int selectionPosition, int selectionLength, [NotNull] Encoding fileContentEncoding, bool reset, byte[] filePreamble)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             const string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
             sb.Append(string.Format("diff --git a/{0} b/{0}", newFileName));
             sb.Append("\n");
@@ -126,7 +126,7 @@ namespace GitCommands.Patches
 
             string header = sb.ToString();
 
-            var selectedChunks = FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreabmle, fileContentEncoding);
+            var selectedChunks = FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreamble, fileContentEncoding);
 
             string body = ToStagePatch(selectedChunks, staged: false, isWholeFile: true);
 
@@ -190,7 +190,7 @@ namespace GitCommands.Patches
                 string chunkStr = chunks[i];
                 currentPos += 3;
 
-                // if selection intersects with chunsk
+                // if selection intersects with chunks
                 if (currentPos + chunkStr.Length >= selectionPosition)
                 {
                     Chunk chunk = Chunk.ParseChunk(chunkStr, currentPos, selectionPosition, selectionLength);
@@ -208,11 +208,11 @@ namespace GitCommands.Patches
         }
 
         [NotNull]
-        private static IReadOnlyList<Chunk> FromNewFile([NotNull] GitModule module, [NotNull] string text, int selectionPosition, int selectionLength, bool reset, [NotNull] byte[] filePreabmle, [NotNull] Encoding fileContentEncoding)
+        private static IReadOnlyList<Chunk> FromNewFile([NotNull] GitModule module, [NotNull] string text, int selectionPosition, int selectionLength, bool reset, [NotNull] byte[] filePreamble, [NotNull] Encoding fileContentEncoding)
         {
             return new List<Chunk>
             {
-                Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreabmle, fileContentEncoding)
+                Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreamble, fileContentEncoding)
             };
         }
 
@@ -562,7 +562,7 @@ namespace GitCommands.Patches
             bool inPreContext = true;
             int i = 1;
 
-            Chunk result = new Chunk();
+            var result = new Chunk();
             result.ParseHeader(lines[0]);
             currentPos += lines[0].Length + 1;
 
@@ -573,7 +573,7 @@ namespace GitCommands.Patches
                 {
                     var patchLine = new PatchLine(line);
 
-                    // do not refactor, there are no break points condition in VS Experss
+                    // do not refactor, there are no break points condition in VS Express
                     if (currentPos <= selectionPosition + selectionLength && currentPos + line.Length >= selectionPosition)
                     {
                         patchLine.Selected = true;
@@ -618,9 +618,9 @@ namespace GitCommands.Patches
         }
 
         [NotNull]
-        public static Chunk FromNewFile([NotNull] GitModule module, [NotNull] string fileText, int selectionPosition, int selectionLength, bool reset, [NotNull] byte[] filePreabmle, [NotNull] Encoding fileContentEncoding)
+        public static Chunk FromNewFile([NotNull] GitModule module, [NotNull] string fileText, int selectionPosition, int selectionLength, bool reset, [NotNull] byte[] filePreamble, [NotNull] Encoding fileContentEncoding)
         {
-            Chunk result = new Chunk { _startLine = 0 };
+            var result = new Chunk { _startLine = 0 };
 
             int currentPos = 0;
             string gitEol = module.GetEffectiveSetting("core.eol");
@@ -646,7 +646,7 @@ namespace GitCommands.Patches
             while (i < lines.Length)
             {
                 string line = lines[i];
-                string preamble = i == 0 ? new string(fileContentEncoding.GetChars(filePreabmle)) : string.Empty;
+                string preamble = i == 0 ? new string(fileContentEncoding.GetChars(filePreamble)) : string.Empty;
                 var patchLine = new PatchLine((reset ? "-" : "+") + preamble + line);
 
                 // do not refactor, there are no breakpoints condition in VS Express

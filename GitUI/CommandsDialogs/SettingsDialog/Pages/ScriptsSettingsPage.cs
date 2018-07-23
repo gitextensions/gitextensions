@@ -6,6 +6,7 @@ using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Script;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -13,6 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     public partial class ScriptsSettingsPage : SettingsPageWithHeader
     {
         #region translation
+
         private readonly TranslationString _scriptSettingsPageHelpDisplayArgumentsHelp = new TranslationString("Arguments help");
         private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new TranslationString(@"User Input:
 {UserInput}
@@ -52,7 +54,8 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}");
-        #endregion translation
+
+        #endregion
 
         private string _iconName = "bug";
 
@@ -61,7 +64,7 @@ Current Branch:
             InitializeComponent();
             HotkeyCommandIdentifier.Width = DpiUtil.Scale(39);
             Text = "Scripts";
-            Translate();
+            InitializeComplete();
 
             HotkeyCommandIdentifier.DataPropertyName = nameof(ScriptInfo.HotkeyCommandIdentifier);
             EnabledColumn.DataPropertyName = nameof(ScriptInfo.Enabled);
@@ -314,6 +317,7 @@ Current Branch:
             return ResizeBitmap(b, 12, 12);
         }
 
+        [CanBeNull]
         public Bitmap ResizeBitmap(Bitmap b, int width, int height)
         {
             if (b == null)
@@ -321,7 +325,7 @@ Current Branch:
                 return null;
             }
 
-            Bitmap result = new Bitmap(width, height);
+            var result = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage(result))
             {
                 g.DrawImage(b, 0, 0, width, height);

@@ -1,8 +1,6 @@
 using System;
 using System.IO;
-using System.Linq;
 using GitCommands;
-using GitUIPluginInterfaces;
 
 namespace CommonTestUtils
 {
@@ -24,8 +22,23 @@ namespace CommonTestUtils
             Directory.CreateDirectory(path);
 
             var module = new GitModule(path);
-            module.Init(false, false);
+            module.Init(bare: false, shared: false);
             Module = module;
+
+            return;
+
+            string GetTemporaryPath()
+            {
+                var tempPath = Path.GetTempPath();
+
+                // workaround macOS symlinking its temp folder
+                if (tempPath.StartsWith("/var"))
+                {
+                    tempPath = "/private" + tempPath;
+                }
+
+                return Path.Combine(tempPath, Path.GetRandomFileName());
+            }
         }
 
         /// <summary>
@@ -95,11 +108,15 @@ namespace CommonTestUtils
                 // we want to delete, so we need to make sure the timers that will try to auto-save there
                 // are stopped before actually deleting, else the timers will throw on a background thread.
                 // Note that the intermittent failures mentioned below are likely related too.
-                ((GitModule)Module).EffectiveConfigFile?.SettingsCache?.Dispose();
-                ((GitModule)Module).EffectiveSettings?.SettingsCache?.Dispose();
+                Module.EffectiveConfigFile?.SettingsCache?.Dispose();
+                Module.EffectiveSettings?.SettingsCache?.Dispose();
 
                 // Directory.Delete seems to intermittently fail, so delete the files first before deleting folders
-                Directory.GetFiles(TemporaryPath, "*", SearchOption.AllDirectories).ForEach(File.Delete);
+                foreach (var file in Directory.GetFiles(TemporaryPath, "*", SearchOption.AllDirectories))
+                {
+                    File.Delete(file);
+                }
+
                 Directory.Delete(TemporaryPath, true);
             }
             catch
@@ -114,20 +131,6 @@ namespace CommonTestUtils
             {
                 throw new ArgumentException("The given module does not belong to this helper.");
             }
-        }
-
-        private static string GetTemporaryPath()
-        {
-            var tempPath = Path.GetTempPath();
-
-            // workaround macOS symlinking its temp folder
-            if (tempPath.StartsWith("/var"))
-            {
-                tempPath = "/private" + tempPath;
-            }
-
-            string tempDirectory = Path.Combine(tempPath, Path.GetRandomFileName());
-            return tempDirectory;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using GitCommands;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI
@@ -36,22 +37,11 @@ namespace GitUI
             Translator.Translate(this, AppSettings.CurrentTranslation);
         }
 
-        private static MessageBoxes instance;
+        [CanBeNull] private static MessageBoxes instance;
 
-        private static MessageBoxes Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new MessageBoxes();
-                }
+        private static MessageBoxes Instance => instance ?? (instance = new MessageBoxes());
 
-                return instance;
-            }
-        }
-
-        public static void NotValidGitDirectory(IWin32Window owner)
+        public static void NotValidGitDirectory([CanBeNull] IWin32Window owner)
         {
             MessageBox.Show(owner, Instance._notValidGitDirectory.Text, Instance._error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }

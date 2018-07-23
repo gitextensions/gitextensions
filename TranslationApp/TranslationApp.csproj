@@ -12,7 +12,7 @@
     <AssemblyName>TranslationApp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ApplicationIcon>..\Bin\Logo\git-extensions-logo-final_mixed-256.ico</ApplicationIcon>
+    <ApplicationIcon>..\Logo\git-extensions-logo.ico</ApplicationIcon>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
   </PropertyGroup>
@@ -100,12 +100,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final-256.ico">
-      <Link>Resources\git-extensions-logo-final-256.ico</Link>
-    </Content>
     <None Include="Resources\26.png" />
     <None Include="Resources\IconClean.png" />
-    <None Include="Resources\success.png" />
     <None Include="Resources\53.png" />
     <None Include="Resources\21.png" />
     <None Include="Resources\IconSaveAs.png" />

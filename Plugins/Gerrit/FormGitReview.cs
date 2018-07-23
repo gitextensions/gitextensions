@@ -29,11 +29,11 @@ namespace Gerrit
         private string _originalGitReviewFileContent = string.Empty;
         private IGitModule Module => UICommands.GitModule;
 
-        public event EventHandler<GitUICommandsChangedEventArgs> GitUICommandsChanged;
+        public event EventHandler<GitUICommandsChangedEventArgs> UICommandsChanged;
 
         private void OnGitUICommandsChanged(GitUICommands oldcommands)
         {
-            GitUICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldcommands));
+            UICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldcommands));
         }
 
         private GitUICommands _uiCommands;
@@ -42,9 +42,9 @@ namespace Gerrit
             get => _uiCommands;
             set
             {
-                var oldcommands = _uiCommands;
+                var oldCommands = _uiCommands;
                 _uiCommands = value;
-                OnGitUICommandsChanged(oldcommands);
+                OnGitUICommandsChanged(oldCommands);
             }
         }
 
@@ -52,7 +52,7 @@ namespace Gerrit
             : base(true)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             UICommands = (GitUICommands)uiCommands;
             if (UICommands != null)

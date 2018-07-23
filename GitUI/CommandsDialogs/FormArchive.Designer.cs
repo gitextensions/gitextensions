@@ -110,7 +110,7 @@
             // 
             this.buttonArchiveRevision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonArchiveRevision.AutoSize = true;
-            this.buttonArchiveRevision.Image = global::GitUI.Properties.Resources.IconSaveAs;
+            this.buttonArchiveRevision.Image = global::GitUI.Properties.Images.SaveAs;
             this.buttonArchiveRevision.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonArchiveRevision.Location = new System.Drawing.Point(480, 545);
             this.buttonArchiveRevision.Name = "buttonArchiveRevision";
@@ -195,7 +195,7 @@
             // btnChooseRevision
             // 
             this.btnChooseRevision.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btnChooseRevision.Image = global::GitUI.Properties.Resources.IconSelectRevision;
+            this.btnChooseRevision.Image = global::GitUI.Properties.Images.SelectRevision;
             this.btnChooseRevision.Location = new System.Drawing.Point(3, 33);
             this.btnChooseRevision.Name = "btnChooseRevision";
             this.btnChooseRevision.Size = new System.Drawing.Size(25, 24);
@@ -291,7 +291,7 @@
             // btnDiffChooseRevision
             // 
             this.btnDiffChooseRevision.Enabled = false;
-            this.btnDiffChooseRevision.Image = global::GitUI.Properties.Resources.IconSelectRevision;
+            this.btnDiffChooseRevision.Image = global::GitUI.Properties.Images.SelectRevision;
             this.btnDiffChooseRevision.Location = new System.Drawing.Point(479, 234);
             this.btnDiffChooseRevision.Name = "btnDiffChooseRevision";
             this.btnDiffChooseRevision.Size = new System.Drawing.Size(25, 24);

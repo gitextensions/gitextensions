@@ -260,5 +260,21 @@ namespace GitCommandsTests.Git
             Assert.Throws<ArgumentOutOfRangeException>(() => id.ToShortString(-1));
             Assert.Throws<ArgumentOutOfRangeException>(() => id.ToShortString(ObjectId.Sha1CharCount + 1));
         }
+
+        [Test]
+        public void Equals_with_string()
+        {
+            for (var i = 0; i < 100; i++)
+            {
+                var objectId = ObjectId.Random();
+                Assert.True(objectId.Equals(objectId.ToString()));
+            }
+
+            Assert.False(ObjectId.Random().Equals((string)null));
+            Assert.False(ObjectId.Random().Equals(""));
+            Assert.False(ObjectId.Random().Equals("gibberish"));
+            Assert.False(ObjectId.Parse("0123456789012345678901234567890123456789").Equals(" 0123456789012345678901234567890123456789 "));
+            Assert.False(ObjectId.Parse("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").Equals("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+        }
     }
 }

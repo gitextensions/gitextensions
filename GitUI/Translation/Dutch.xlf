@@ -134,7 +134,7 @@ This action will be performed without warning while checking out branch.</source
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target>Haal foto van auteur op bij gravatar.com</target>
         
       </trans-unit>
@@ -1253,7 +1253,7 @@ Zorg dat git (Git voor Windows of cygwin) is geïnstalleerd of stel het pad hand
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>Het geselecteerde item is geen geldige git directory.
 
 Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geopend' lijst?</target>
@@ -2751,7 +2751,7 @@ compare with first:</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>Het geselecteerde item is geen geldige git directory.
 
 Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geopend' lijst?</target>
@@ -2843,7 +2843,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target>Git commando logboek</target>
         
       </trans-unit>
@@ -2918,7 +2918,7 @@ Wilt u teruggaan naar het dashboard en het item verwijderen uit de 'recent geope
         
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target>Instellingen</target>
         
       </trans-unit>
@@ -9677,7 +9677,7 @@ Dit zal enkel de commit in de submodule uitchecken waar het superproject naar ve
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionDiff" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="RevisionDiffControl" source-language="en" target-language="nl">
     <body>
       <trans-unit id="_deleteFailed.Text">
         <source>Delete file failed</source>
@@ -9871,7 +9871,7 @@ Dit zal enkel de commit in de submodule uitchecken waar het superproject naar ve
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionFileTree" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="RevisionFileTreeControl" source-language="en" target-language="nl">
     <body>
       <trans-unit id="_assumeUnchangedCaption.Text">
         <source>Assume this file won't change</source>
@@ -10062,7 +10062,7 @@ Zie de wijzigingen in het commit form.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionGpgInfo" source-language="en" target-language="nl">
+  <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en" target-language="nl">
     <body>
       <trans-unit id="_commitNotSigned.Text">
         <source>Commit is not signed</source>
@@ -11088,7 +11088,7 @@ Als OpenSSH wordt gebruikt worden command line schermen getoond!
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>Kinderen</target>
         
       </trans-unit>
@@ -11153,7 +11153,7 @@ Als OpenSSH wordt gebruikt worden command line schermen getoond!
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
         <target>Ouder{s}</target>
         
       </trans-unit>

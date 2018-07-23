@@ -8,11 +8,12 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Remote;
+using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
 using GitUI.Script;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -27,6 +28,7 @@ namespace GitUI.CommandsDialogs
         private const string PushColumnName = "Push";
         private const string ForceColumnName = "Force";
         private const string DeleteColumnName = "Delete";
+
         private string _currentBranchName;
         private GitRemote _currentBranchRemote;
         private bool _candidateForRebasingMergeCommit;
@@ -85,7 +87,7 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormPush(GitUICommands commands)
+        public FormPush([CanBeNull] GitUICommands commands)
             : base(commands)
         {
             InitializeComponent();
@@ -95,7 +97,7 @@ namespace GitUI.CommandsDialogs
             ForceColumn.Width = DpiUtil.Scale(101);
             DeleteColumn.Width = DpiUtil.Scale(108);
 
-            Translate();
+            InitializeComplete();
 
             if (!GitCommandHelpers.VersionInUse.SupportPushForceWithLease)
             {
@@ -118,48 +120,46 @@ namespace GitUI.CommandsDialogs
                 Init();
             }
 
-            this.AdjustForDpiScaling();
+            void Init()
+            {
+                _gitRefs = Module.GetRefs();
+                if (GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesCheck)
+                {
+                    RecursiveSubmodules.Enabled = true;
+                    RecursiveSubmodules.SelectedIndex = AppSettings.RecursiveSubmodules;
+                    if (!GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesOnDemand)
+                    {
+                        RecursiveSubmodules.Items.RemoveAt(2);
+                    }
+                }
+                else
+                {
+                    RecursiveSubmodules.Enabled = false;
+                    RecursiveSubmodules.SelectedIndex = 0;
+                }
+
+                _currentBranchName = Module.GetSelectedBranch();
+
+                // refresh registered git remotes
+                UserGitRemotes = _remoteManager.LoadRemotes(false).ToList();
+                BindRemotesDropDown(null);
+
+                UpdateBranchDropDown();
+                UpdateRemoteBranchDropDown();
+
+                Push.Focus();
+
+                if (AppSettings.AlwaysShowAdvOpt)
+                {
+                    ShowOptions_LinkClicked(null, null);
+                }
+            }
         }
 
         /// <summary>
         /// Gets the list of remotes configured in .git/config file.
         /// </summary>
         private List<GitRemote> UserGitRemotes { get; set; }
-
-        private void Init()
-        {
-            _gitRefs = Module.GetRefs();
-            if (GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesCheck)
-            {
-                RecursiveSubmodules.Enabled = true;
-                RecursiveSubmodules.SelectedIndex = AppSettings.RecursiveSubmodules;
-                if (!GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesOnDemand)
-                {
-                    RecursiveSubmodules.Items.RemoveAt(2);
-                }
-            }
-            else
-            {
-                RecursiveSubmodules.Enabled = false;
-                RecursiveSubmodules.SelectedIndex = 0;
-            }
-
-            _currentBranchName = Module.GetSelectedBranch();
-
-            // refresh registered git remotes
-            UserGitRemotes = _remoteManager.LoadRemotes(false).ToList();
-            BindRemotesDropDown(null);
-
-            UpdateBranchDropDown();
-            UpdateRemoteBranchDropDown();
-
-            Push.Focus();
-
-            if (AppSettings.AlwaysShowAdvOpt)
-            {
-                ShowOptions_LinkClicked(null, null);
-            }
-        }
 
         public DialogResult PushAndShowDialogWhenFailed(IWin32Window owner = null)
         {
@@ -504,7 +504,7 @@ namespace GitUI.CommandsDialogs
             }
 
             // auto pull only if current branch was rejected
-            Regex isRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranchName) + ".*", RegexOptions.Compiled);
+            var isRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranchName) + ".*", RegexOptions.Compiled);
             if (isRejected.IsMatch(form.GetOutputString()) && !Module.IsBareRepository())
             {
                 bool forcePush = false;

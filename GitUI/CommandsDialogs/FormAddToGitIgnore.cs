@@ -15,17 +15,17 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _matchingFilesString = new TranslationString("{0} file(s) matched");
         private readonly TranslationString _updateStatusString = new TranslationString("Updating ...");
 
-        private readonly bool _localExclude;
-        private readonly AsyncLoader _ignoredFilesLoader;
+        private readonly AsyncLoader _ignoredFilesLoader = new AsyncLoader();
         private readonly IFullPathResolver _fullPathResolver;
+        private readonly bool _localExclude;
 
         public FormAddToGitIgnore(GitUICommands commands, bool localExclude, params string[] filePatterns)
             : base(commands)
         {
-            InitializeComponent();
             _localExclude = localExclude;
-            _ignoredFilesLoader = new AsyncLoader();
-            Translate();
+
+            InitializeComponent();
+            InitializeComplete();
 
             if (localExclude)
             {
@@ -38,8 +38,6 @@ namespace GitUI.CommandsDialogs
             }
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
-
-            this.AdjustForDpiScaling();
         }
 
         private string ExcludeFile

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using ResourceManager;
 using ResourceManager.Xliff;
-using TranslationUtl = ResourceManager.Xliff.TranslationUtl;
 
 namespace TranslationApp
 {
@@ -18,7 +17,7 @@ namespace TranslationApp
                 // Set language to neutral to get neutral translations
                 GitCommands.AppSettings.CurrentTranslation = "";
 
-                var translatableTypes = TranslationUtl.GetTranslatableTypes();
+                var translatableTypes = TranslationUtil.GetTranslatableTypes();
                 foreach (var (key, types) in translatableTypes)
                 {
                     var translation = new TranslationFile();
@@ -26,7 +25,7 @@ namespace TranslationApp
                     {
                         foreach (Type type in types)
                         {
-                            if (TranslationUtl.CreateInstanceOfClass(type) is ITranslate obj)
+                            if (TranslationUtil.CreateInstanceOfClass(type) is ITranslate obj)
                             {
                                 obj.AddTranslationItems(translation);
                                 if (obj is IDisposable disposable)
@@ -135,14 +134,14 @@ namespace TranslationApp
                 }
 
                 // update untranslated items
-                var untranlatedItems =
+                var untranslatedItems =
                     from transItem in transItems
                     where string.IsNullOrEmpty(transItem.TranslatedValue) && dict.ContainsKey(transItem.NeutralValue)
                     select transItem;
 
-                foreach (var untranlatedItem in untranlatedItems)
+                foreach (var untranslatedItem in untranslatedItems)
                 {
-                    untranlatedItem.TranslatedValue = dict[untranlatedItem.NeutralValue];
+                    untranslatedItem.TranslatedValue = dict[untranslatedItem.NeutralValue];
                 }
             }
 
@@ -167,8 +166,8 @@ namespace TranslationApp
                         .Body.AddTranslationItem(ti);
                 }
 
-                var newfilename = Path.ChangeExtension(filename, key + ext);
-                TranslationSerializer.Serialize(foreignTranslation, newfilename);
+                var newFileName = Path.ChangeExtension(filename, key + ext);
+                TranslationSerializer.Serialize(foreignTranslation, newFileName);
             }
         }
     }

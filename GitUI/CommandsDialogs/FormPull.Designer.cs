@@ -136,7 +136,7 @@
             // Pull
             // 
             this.Pull.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.Pull.Image = global::GitUI.Properties.Resources.ArrowDown;
+            this.Pull.Image = global::GitUI.Properties.Images.ArrowDown;
             this.Pull.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Pull.Location = new System.Drawing.Point(489, 8);
             this.Pull.MinimumSize = new System.Drawing.Size(120, 25);
@@ -251,7 +251,7 @@
             // AddRemote
             // 
             this.AddRemote.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddRemote.Image = global::GitUI.Properties.Resources.IconRemotes;
+            this.AddRemote.Image = global::GitUI.Properties.Images.Remotes;
             this.AddRemote.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.AddRemote.Location = new System.Drawing.Point(460, 14);
             this.AddRemote.Name = "AddRemote";
@@ -314,7 +314,7 @@
             // Merge
             // 
             this.Merge.AutoSize = true;
-            this.Merge.Image = global::GitUI.Properties.Resources.IconMerge;
+            this.Merge.Image = global::GitUI.Properties.Images.Merge;
             this.Merge.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Merge.Location = new System.Drawing.Point(3, 3);
             this.Merge.Name = "Merge";
@@ -330,7 +330,7 @@
             // Rebase
             // 
             this.Rebase.AutoSize = true;
-            this.Rebase.Image = global::GitUI.Properties.Resources.IconRebase;
+            this.Rebase.Image = global::GitUI.Properties.Images.Rebase;
             this.Rebase.Location = new System.Drawing.Point(3, 28);
             this.Rebase.Name = "Rebase";
             this.Rebase.Padding = new System.Windows.Forms.Padding(0, 1, 0, 1);

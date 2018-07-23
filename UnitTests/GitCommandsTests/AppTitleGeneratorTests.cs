@@ -47,7 +47,7 @@ namespace GitCommandsTests
         }
 
         [Test]
-        public void Generate_should_include_suplied_branch_without_braces()
+        public void Generate_should_include_supplied_branch_without_braces()
         {
             string branchName = "feature/my_(test)_branch";
             var title = _appTitleGenerator.Generate("a", true, "(" + branchName + ")");
@@ -60,7 +60,7 @@ namespace GitCommandsTests
         {
             var title = _appTitleGenerator.Generate("a", true, null);
 
-            title.Should().Be($"{ShortName} (no branch) - Git Extensions -> DEBUG <-");
+            title.Should().Be($"{ShortName} (no branch) - Git Extensions [DEBUG]");
         }
 #endif
     }

@@ -172,7 +172,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Checklist";
-            Translate();
+            InitializeComplete();
         }
 
         public static SettingsPageReference GetPageReference()
@@ -214,7 +214,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             PageHost.LoadAll();
-            Translate();
+
+            Translator.Translate(this, AppSettings.CurrentTranslation);
             SaveAndRescan_Click(null, null);
         }
 
@@ -257,6 +258,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
         {
             string path = Path.Combine(AppSettings.GetInstallDir(), CommonLogic.GitExtensionsShellEx32Name);
+
             if (!File.Exists(path))
             {
                 path = Assembly.GetAssembly(GetType()).Location;
@@ -271,7 +273,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     var pi = new ProcessStartInfo
                     {
                         FileName = "regsvr32",
-                        Arguments = string.Format("\"{0}\"", path),
+                        Arguments = path.Quote(),
                         Verb = "RunAs",
                         UseShellExecute = true
                     };
@@ -284,7 +286,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                         path = path.Replace(CommonLogic.GitExtensionsShellEx32Name, CommonLogic.GitExtensionsShellEx64Name);
                         if (File.Exists(path))
                         {
-                            pi.Arguments = string.Format("\"{0}\"", path);
+                            pi.Arguments = path.Quote();
 
                             var process64 = Process.Start(pi);
                             process64.WaitForExit();
@@ -341,7 +343,20 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SaveAndRescan_Click(null, null);
         }
 
-        private readonly string[] _autoConfigMergeTools = { "p4merge", "TortoiseMerge", "meld", "beyondcompare3", "beyondcompare4", "diffmerge", "semanticmerge", "vscode", "vsdiffmerge", "winmerge" };
+        private readonly string[] _autoConfigMergeTools =
+        {
+            "p4merge",
+            "TortoiseMerge",
+            "meld",
+            "beyondcompare3",
+            "beyondcompare4",
+            "diffmerge",
+            "semanticmerge",
+            "vscode",
+            "vsdiffmerge",
+            "winmerge"
+        };
+
         private void MergeToolFix_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(CommonLogic.GetGlobalMergeTool()))
@@ -625,7 +640,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                 if (mergetool == "p4merge" || mergetool == "tmerge" || mergetool == "meld")
                 {
-                    string p = GetGlobalSetting(string.Format("mergetool.{0}.cmd", mergetool));
+                    string p = GetGlobalSetting($"mergetool.{mergetool}.cmd");
                     if (string.IsNullOrEmpty(p))
                     {
                         RenderSettingUnset(MergeTool, MergeTool_Fix, string.Format(_mergeToolXConfiguredNeedsCmd.Text, mergetool));
@@ -664,14 +679,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             ShellExtensionsRegistered.Visible = true;
 
-            if (string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.LocalMachine, "Software\\Microsoft\\Windows\\CurrentVersion\\Shell Extensions\\Approved",
+            if (string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.LocalMachine, @"Software\Microsoft\Windows\CurrentVersion\Shell Extensions\Approved",
                                                       "{3C16B20A-BA16-4156-916F-0A375ECFFE24}")) ||
                 string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
-                                                      "*\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||
+                                                      @"*\shellex\ContextMenuHandlers\GitExtensions2", null)) ||
                 string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
-                                                      "Directory\\shellex\\ContextMenuHandlers\\GitExtensions2", null)) ||
+                                                      @"Directory\shellex\ContextMenuHandlers\GitExtensions2", null)) ||
                 string.IsNullOrEmpty(CommonLogic.GetRegistryValue(Registry.ClassesRoot,
-                                                      "Directory\\Background\\shellex\\ContextMenuHandlers\\GitExtensions2",
+                                                      @"Directory\Background\shellex\ContextMenuHandlers\GitExtensions2",
                                                       null)))
             {
                 // Check if shell extensions are installed
@@ -699,13 +714,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             GitExtensionsInstall.Visible = true;
-            if (string.IsNullOrEmpty(AppSettings.GetInstallDir()))
+
+            var installDir = AppSettings.GetInstallDir();
+
+            if (string.IsNullOrEmpty(installDir))
             {
                 RenderSettingUnset(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsMissing.Text);
                 return false;
             }
 
-            if (AppSettings.GetInstallDir() != null && AppSettings.GetInstallDir().EndsWith(".exe"))
+            if (installDir.EndsWith(".exe"))
             {
                 RenderSettingUnset(GitExtensionsInstall, GitExtensionsInstall_Fix, _registryKeyGitExtensionsFaulty.Text);
                 return false;
@@ -718,7 +736,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         /// <summary>
         /// Renders settings as configured or not depending on the supplied condition.
         /// </summary>
-        private bool RenderSettingSetUnset(Func<bool> condition, Button settingButton, Button settingFixButton,
+        private static bool RenderSettingSetUnset(Func<bool> condition, Button settingButton, Button settingFixButton,
             string textSettingUnset, string textSettingGood)
         {
             settingButton.Visible = true;

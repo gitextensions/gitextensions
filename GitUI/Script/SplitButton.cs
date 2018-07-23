@@ -129,7 +129,7 @@ namespace GitUI.Script
             }
         }
 
-        #endregion Properties
+        #endregion
 
         protected override bool IsInputKey(Keys keyData)
         {
@@ -403,7 +403,7 @@ namespace GitUI.Script
 
         private void PaintArrow(Graphics g, Rectangle dropDownRect)
         {
-            Point middle = new Point(Convert.ToInt32(dropDownRect.Left + (dropDownRect.Width / 2)), Convert.ToInt32(dropDownRect.Top + (dropDownRect.Height / 2)));
+            var middle = new Point(Convert.ToInt32(dropDownRect.Left + (dropDownRect.Width / 2)), Convert.ToInt32(dropDownRect.Top + (dropDownRect.Height / 2)));
 
             // if the width is odd - favor pushing it over one pixel right.
             middle.X += dropDownRect.Width % 2;
@@ -787,7 +787,7 @@ namespace GitUI.Script
             return new Rectangle(x, y, Math.Min(inner.Width, outer.Width), Math.Min(inner.Height, outer.Height));
         }
 
-        #endregion Button Layout Calculations
+        #endregion
 
         private void ShowContextMenuStrip()
         {

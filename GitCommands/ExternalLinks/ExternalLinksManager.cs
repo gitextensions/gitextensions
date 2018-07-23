@@ -27,7 +27,7 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Adds the provided definition at the lowest available level.
         /// </summary>
-        /// <param name="definition">External link defintion.</param>
+        /// <param name="definition">External link definition.</param>
         public void Add(ExternalLinkDefinition definition)
         {
             if (definition == null)
@@ -53,7 +53,7 @@ namespace GitCommands.ExternalLinks
         /// <summary>
         /// Checks if a definition with the supplied name exists in any level of available settings.
         /// </summary>
-        /// <param name="definitionName">The name of the defintion to find.</param>
+        /// <param name="definitionName">The name of the definition to find.</param>
         /// <returns><see langword="true"/> if a definition already exists; otherwise <see langword="false"/>.</returns>
         public bool Contains(string definitionName)
         {
@@ -72,9 +72,9 @@ namespace GitCommands.ExternalLinks
         }
 
         /// <summary>
-        /// Removes the supplied deifintion.
+        /// Removes the supplied definition.
         /// </summary>
-        /// <param name="definition">External link defintion.</param>
+        /// <param name="definition">External link definition.</param>
         public void Remove(ExternalLinkDefinition definition)
         {
             if (!_definitions.Remove(definition))

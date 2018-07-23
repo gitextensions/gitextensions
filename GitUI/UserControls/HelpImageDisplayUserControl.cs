@@ -19,7 +19,7 @@ namespace GitUI.Help
         public HelpImageDisplayUserControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         /// <summary>

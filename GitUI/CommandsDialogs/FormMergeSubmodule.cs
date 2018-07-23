@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -15,7 +16,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             lbSubmodule.Text = filename;
             _filename = filename;
         }
@@ -26,22 +27,20 @@ namespace GitUI.CommandsDialogs
             tbBase.Text = item.Base.Hash ?? _deleted.Text;
             tbLocal.Text = item.Local.Hash ?? _deleted.Text;
             tbRemote.Text = item.Remote.Hash ?? _deleted.Text;
-            tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout();
+            tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout().ToString();
         }
 
         private void btRefresh_Click(object sender, EventArgs e)
         {
-            tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout();
+            tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout().ToString();
         }
 
         private void StageSubmodule()
         {
             void ProcessStart(FormStatus form)
             {
-                form.AddMessageLine(
-                    string.Format(
-                        _stageFilename.Text, _filename));
-                string output = Module.RunGitCmd("add -- \"" + _filename + "\"");
+                form.AddMessageLine(string.Format(_stageFilename.Text, _filename));
+                string output = Module.RunGitCmd($"add -- \"{_filename}\"");
                 form.AddMessageLine(output);
                 form.Done(string.IsNullOrEmpty(output));
             }
@@ -76,7 +75,7 @@ namespace GitUI.CommandsDialogs
 
         private void btCheckoutBranch_Click(object sender, EventArgs e)
         {
-            string[] revisions = { tbLocal.Text, tbRemote.Text };
+            var revisions = new[] { ObjectId.Parse(tbLocal.Text), ObjectId.Parse(tbRemote.Text) };
             var submoduleCommands = new GitUICommands(Module.GetSubmoduleFullPath(_filename));
             if (!submoduleCommands.StartCheckoutBranch(this, revisions))
             {

@@ -271,7 +271,7 @@ namespace NetSpell.SpellChecker
 
         private void SuggestWord(string word, List<Word> tempSuggestion)
         {
-            Word ws = new Word();
+            var ws = new Word();
             ws.Text = word;
             ws.EditDistance = EditDistance(CurrentWord, word);
             tempSuggestion.Add(ws);
@@ -317,7 +317,7 @@ namespace NetSpell.SpellChecker
 
             for (int i = 0; i < CurrentWord.Length; i++)
             {
-                StringBuilder tempWord = new StringBuilder(CurrentWord);
+                var tempWord = new StringBuilder(CurrentWord);
                 for (int x = 0; x < tryme.Length; x++)
                 {
                     tempWord[i] = tryme[x];
@@ -339,7 +339,7 @@ namespace NetSpell.SpellChecker
             {
                 for (int i = 0; i < CurrentWord.Length; i++)
                 {
-                    StringBuilder tempWord = new StringBuilder(CurrentWord);
+                    var tempWord = new StringBuilder(CurrentWord);
                     tempWord.Remove(i, 1);
 
                     string word = tempWord.ToString();
@@ -362,7 +362,7 @@ namespace NetSpell.SpellChecker
             {
                 for (int x = 0; x < tryme.Length; x++)
                 {
-                    StringBuilder tempWord = new StringBuilder(CurrentWord);
+                    var tempWord = new StringBuilder(CurrentWord);
                     tempWord.Insert(i, tryme[x]);
 
                     string word = tempWord.ToString();
@@ -381,7 +381,7 @@ namespace NetSpell.SpellChecker
         {
             for (int i = 0; i < CurrentWord.Length - 1; i++)
             {
-                StringBuilder tempWord = new StringBuilder(CurrentWord);
+                var tempWord = new StringBuilder(CurrentWord);
 
                 char swap = tempWord[i];
                 tempWord[i] = tempWord[i + 1];
@@ -838,7 +838,7 @@ namespace NetSpell.SpellChecker
             if (startWordIndex > endWordIndex || _words == null || _words.Count == 0)
             {
                 // make sure end index is not greater then word count
-                OnEndOfText(EventArgs.Empty);    // raise event
+                OnEndOfText(EventArgs.Empty);
                 return false;
             }
 
@@ -848,7 +848,8 @@ namespace NetSpell.SpellChecker
 
             for (int i = startWordIndex; i <= endWordIndex; i++)
             {
-                WordIndex = i; // saving the current word index
+                // save the current word index
+                WordIndex = i;
                 var currentWord = CurrentWord;
 
                 if (CheckString(currentWord))
@@ -864,8 +865,6 @@ namespace NetSpell.SpellChecker
                         {
                             misspelledWord = true;
                             OnMisspelledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));       // raise event
-
-                            // break;
                         }
                     }
                     else if (i > 0 && _words[i - 1].Value == currentWord
@@ -873,19 +872,17 @@ namespace NetSpell.SpellChecker
                     {
                         misspelledWord = true;
                         OnDoubledWord(new SpellingEventArgs(currentWord, i, _words[i].Index));      // raise event
-
-                        // break;
                     }
                 }
-            } // for
+            }
 
             if (_wordIndex >= _words.Count - 1 && !misspelledWord)
             {
-                OnEndOfText(EventArgs.Empty);    // raise event
+                OnEndOfText(EventArgs.Empty);
             }
 
             return misspelledWord;
-        } // SpellCheck
+        }
 
         /// <summary>
         ///     Spell checks the words in the <see cref="Text"/> property starting
@@ -986,7 +983,7 @@ namespace NetSpell.SpellChecker
 
             Initialize();
 
-            List<Word> tempSuggestion = new List<Word>();
+            var tempSuggestion = new List<Word>();
 
             if ((SuggestionMode == SuggestionEnum.PhoneticNearMiss
                 || SuggestionMode == SuggestionEnum.Phonetic)
@@ -1021,7 +1018,7 @@ namespace NetSpell.SpellChecker
                     }
                 }
 
-                TraceWriter.TraceVerbose("Suggestiongs Found with Phonetic Stratagy: {0}", tempSuggestion.Count);
+                TraceWriter.TraceVerbose("Suggestions Found with Phonetic Strategy: {0}", tempSuggestion.Count);
             }
 
             if (SuggestionMode == SuggestionEnum.PhoneticNearMiss
@@ -1049,14 +1046,14 @@ namespace NetSpell.SpellChecker
                 SwapChar(tempSuggestion);
             }
 
-            TraceWriter.TraceVerbose("Total Suggestiongs Found: {0}", tempSuggestion.Count);
+            TraceWriter.TraceVerbose("Total Suggestions Found: {0}", tempSuggestion.Count);
 
             tempSuggestion.Sort();  // sorts by edit score
             Suggestions.Clear();
 
-            for (int i = 0; i < tempSuggestion.Count; i++)
+            foreach (var suggestion in tempSuggestion)
             {
-                string word = tempSuggestion[i].Text;
+                string word = suggestion.Text;
 
                 // looking for duplicates
                 if (!Suggestions.Contains(word))
@@ -1070,7 +1067,7 @@ namespace NetSpell.SpellChecker
                     break;
                 }
             }
-        } // suggest
+        }
 
         /// <summary>
         ///     Checks to see if the word is in the dictionary

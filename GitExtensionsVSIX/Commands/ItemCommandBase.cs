@@ -33,11 +33,11 @@ namespace GitExtensionsVSIX.Commands
                     return;
                 }
 
-                var fileName = activeDocument.ProjectItem.get_FileNames(1);
+                var fileName = activeDocument.ProjectItem.FileNames[1];
 
                 SelectedItem selectedItem = application.SelectedItems
                     .Cast<SelectedItem>()
-                    .FirstOrDefault(solutionItem => solutionItem.ProjectItem != null && solutionItem.ProjectItem.get_FileNames(1) == fileName);
+                    .FirstOrDefault(solutionItem => solutionItem.ProjectItem != null && solutionItem.ProjectItem.FileNames[1] == fileName);
 
                 OnExecute(selectedItem, fileName, pane);
                 return;
@@ -70,8 +70,7 @@ namespace GitExtensionsVSIX.Commands
         {
             if (solutionItem.ProjectItem != null && IsTargetSupported(GetProjectItemTarget(solutionItem.ProjectItem)))
             {
-                // Unfortunaly FileNames[1] is not supported by .net 3.5
-                OnExecute(solutionItem, solutionItem.ProjectItem.get_FileNames(1), pane);
+                OnExecute(solutionItem, solutionItem.ProjectItem.FileNames[1], pane);
                 return;
             }
 

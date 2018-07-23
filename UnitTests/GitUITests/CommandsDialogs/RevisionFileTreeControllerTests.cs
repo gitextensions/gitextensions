@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands;
@@ -95,7 +95,7 @@ namespace GitUITests.CommandsDialogs
         }
 
         [Test]
-        public void LoadItemsInTreeView_should_add_IsCommit_as_submodue()
+        public void LoadItemsInTreeView_should_add_IsCommit_as_submodule()
         {
             var items = new[] { new GitItem(0, GitObjectType.Commit, ObjectId.Random(), "file1"), new GitItem(0, GitObjectType.Commit, ObjectId.Random(), "file2") };
             var item = new GitItem(0, GitObjectType.Tree, ObjectId.Random(), "folder");
@@ -182,22 +182,25 @@ namespace GitUITests.CommandsDialogs
             var items = new[] { new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file1.txt"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2.txt") };
             var item = new GitItem(0, GitObjectType.Tree, ObjectId.Random(), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(items);
-            var image = Resources.git_extensions_logo_final_mixed;
-            _iconProvider.Get(Arg.Any<string>(), Arg.Is<string>(x => x.EndsWith(".txt"))).Returns(image);
-
-            _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
-
-            _rootNode.Nodes.Count.Should().Be(items.Length);
-            for (int i = 0; i < items.Length - 1; i++)
+            using (var bitmap = new Bitmap(1, 1))
+            using (var icon = Icon.FromHandle(bitmap.GetHicon()))
             {
-                _rootNode.Nodes[i].Text.Should().Be(items[i].Name);
-                _rootNode.Nodes[i].ImageKey.Should().Be(".txt");
-                _rootNode.Nodes[i].SelectedImageKey.Should().Be(".txt");
-                _rootNode.Nodes[i].Nodes.Count.Should().Be(0);
-                _iconProvider.Received(1).Get(Arg.Any<string>(), items[i].Name);
-            }
+                _iconProvider.Get(Arg.Any<string>(), Arg.Is<string>(x => x.EndsWith(".txt"))).Returns(icon);
 
-            _imageList.Images.Count.Should().Be(1);
+                _controller.LoadChildren(item, _rootNode.Nodes, _imageList.Images);
+
+                _rootNode.Nodes.Count.Should().Be(items.Length);
+                for (int i = 0; i < items.Length - 1; i++)
+                {
+                    _rootNode.Nodes[i].Text.Should().Be(items[i].Name);
+                    _rootNode.Nodes[i].ImageKey.Should().Be(".txt");
+                    _rootNode.Nodes[i].SelectedImageKey.Should().Be(".txt");
+                    _rootNode.Nodes[i].Nodes.Count.Should().Be(0);
+                    _iconProvider.Received(1).Get(Arg.Any<string>(), items[i].Name);
+                }
+
+                _imageList.Images.Count.Should().Be(1);
+            }
         }
 
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
@@ -207,14 +210,13 @@ namespace GitUITests.CommandsDialogs
             public MockGitItem(string name)
             {
                 Name = name;
+                ObjectId = ObjectId.Random();
+                Guid = ObjectId.ToString();
             }
 
-            public string Guid { get; } = ObjectId.Random().ToString();
-            public bool IsBlob { get; }
-            public bool IsCommit { get; }
-            public bool IsTree { get; }
+            public string Guid { get; }
+            public ObjectId ObjectId { get; }
             public string Name { get; }
-            public IEnumerable<IGitItem> SubItems { get; }
         }
     }
 }

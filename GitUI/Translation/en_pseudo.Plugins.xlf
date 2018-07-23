@@ -126,7 +126,7 @@ This action will be performed without warning while checking out branch.</source
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target>[Ɠḗŧ ȧŭŧħǿř īḿȧɠḗ ƒřǿḿ ɠřȧṽȧŧȧř.ƈǿḿ ϰǈϑ ẛı靐ǈẛϱ]</target>
         
       </trans-unit>
@@ -1246,7 +1246,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>[Ŧħḗ şḗŀḗƈŧḗḓ īŧḗḿ īş ƞǿŧ ȧ ṽȧŀīḓ ɠīŧ řḗƥǿşīŧǿřẏ.
 
 Ḓǿ ẏǿŭ ẇȧƞŧ ŧǿ ȧƀǿřŧ ȧƞḓ řḗḿǿṽḗ īŧ ƒřǿḿ ŧħḗ řḗƈḗƞŧ řḗƥǿşīŧǿřīḗş ŀīşŧ? ΐϑǲ ϑϵϖǋǈϵΐſ ϰϖϱς ςǲ]</target>
@@ -2739,7 +2739,7 @@ compare with first:</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>[Ŧħḗ şḗŀḗƈŧḗḓ īŧḗḿ īş ƞǿŧ ȧ ṽȧŀīḓ ɠīŧ řḗƥǿşīŧǿřẏ.
 
 Ḓǿ ẏǿŭ ẇȧƞŧ ŧǿ ȧƀǿřŧ ȧƞḓ řḗḿǿṽḗ īŧ ƒřǿḿ ŧħḗ řḗƈḗƞŧ řḗƥǿşīŧǿřīḗş ŀīşŧ? ǋẛΰ ıǋϕǋſ衋鶱ϰ ΐǲϑΐ ϕǅ]</target>
@@ -2831,7 +2831,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target>[Ɠīŧƈǿḿḿȧƞḓ ŀǿɠ ϖϕ衋ϵ靐ϕǈϑ靐ǲ ſ]</target>
         
       </trans-unit>
@@ -2906,7 +2906,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target>[Şḗŧŧīƞɠş ϖıǅΐıΰΰ鶱]</target>
         
       </trans-unit>
@@ -9658,7 +9658,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionDiff" source-language="en">
+  <file datatype="plaintext" original="RevisionDiffControl" source-language="en">
     <body>
       <trans-unit id="_deleteFailed.Text">
         <source>Delete file failed</source>
@@ -9852,7 +9852,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionFileTree" source-language="en">
+  <file datatype="plaintext" original="RevisionFileTreeControl" source-language="en">
     <body>
       <trans-unit id="_assumeUnchangedCaption.Text">
         <source>Assume this file won't change</source>
@@ -10043,7 +10043,7 @@ See the changes in the commit form.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionGpgInfo" source-language="en">
+  <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en">
     <body>
       <trans-unit id="_commitNotSigned.Text">
         <source>Commit is not signed</source>
@@ -11066,7 +11066,7 @@ When OpenSSH is used, command line dialogs are shown!
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>[Ƈħīŀḓřḗƞ ǅ靐ǲϐǋΐς衋]</target>
         
       </trans-unit>
@@ -11131,7 +11131,7 @@ When OpenSSH is used, command line dialogs are shown!
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
         <target>[Ƥȧřḗƞŧ(ş) ϱς衋衋ΰϑ靐ǅſ]</target>
         
       </trans-unit>

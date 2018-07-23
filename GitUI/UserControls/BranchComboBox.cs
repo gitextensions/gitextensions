@@ -16,7 +16,7 @@ namespace GitUI
         public BranchComboBox()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             branches.DisplayMember = nameof(IGitRef.Name);
         }

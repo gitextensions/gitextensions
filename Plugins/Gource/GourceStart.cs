@@ -1,8 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitUI;
+using GitUI.Avatars;
 using GitUIPluginInterfaces;
 
 namespace Gource
@@ -12,11 +16,10 @@ namespace Gource
         public GourceStart(string pathToGource, GitUIEventArgs gitUIArgs, string gourceArguments)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             PathToGource = pathToGource;
             GitUIArgs = gitUIArgs;
             GitWorkingDir = gitUIArgs?.GitModule.WorkingDir;
-            AvatarsDir = gitUIArgs?.GitModule.GravatarCacheDir;
             GourceArguments = gourceArguments;
 
             WorkingDir.Text = GitWorkingDir;
@@ -29,8 +32,6 @@ namespace Gource
         public string PathToGource { get; set; }
 
         public string GitWorkingDir { get; set; }
-
-        public string AvatarsDir { get; set; }
 
         public string GourceArguments { get; set; }
 
@@ -59,56 +60,62 @@ namespace Gource
                 return;
             }
 
-            GourceArguments = Arguments.Text;
-            string gourceAvatarsDir = "";
-            if (GourceArguments.Contains("$(AVATARS)"))
-            {
-                gourceAvatarsDir = LoadAvatars();
-            }
+            ThreadHelper.JoinableTaskFactory.Run(
+                async () =>
+                {
+                    GourceArguments = Arguments.Text;
+                    var gourceAvatarsDir = GourceArguments.Contains("$(AVATARS)")
+                        ? await LoadAvatarsAsync()
+                        : "";
+                    var arguments = GourceArguments.Replace("$(AVATARS)", gourceAvatarsDir);
+                    PathToGource = GourcePath.Text;
+                    GitWorkingDir = WorkingDir.Text;
 
-            string arguments = GourceArguments.Replace("$(AVATARS)", gourceAvatarsDir);
-            PathToGource = GourcePath.Text;
-            GitWorkingDir = WorkingDir.Text;
-
-            RunRealCmdDetached(GourcePath.Text, arguments);
-            Close();
+                    RunRealCmdDetached(GourcePath.Text, arguments);
+                    Close();
+                });
         }
 
-        private string LoadAvatars()
+        private async Task<string> LoadAvatarsAsync()
         {
             var gourceAvatarsDir = Path.Combine(Path.GetTempPath(), "GitAvatars");
+
             Directory.CreateDirectory(gourceAvatarsDir);
+
             foreach (var file in Directory.GetFiles(gourceAvatarsDir))
             {
                 File.Delete(file);
             }
 
             var lines = GitUIArgs.GitModule.RunGitCmd("log --pretty=format:\"%aE|%aN\"").Split('\n');
-            HashSet<string> authors = new HashSet<string>();
-            foreach (var line in lines)
-            {
-                var data = line.Split('|');
-                var email = data[0];
-                var author = data[1];
-                if (!authors.Contains(author))
+
+            var authors = lines.Select(
+                line =>
                 {
-                    authors.Add(author);
-                    string source = Path.Combine(AvatarsDir, email + ".png");
-                    GitUIArgs.GitUICommands.CacheAvatar(email);
-                    if (File.Exists(source))
-                    {
-                        try
-                        {
-                            File.Copy(source, Path.Combine(gourceAvatarsDir, author + ".png"), true);
-                        }
-                        catch (IOException)
-                        {
-                        }
-                    }
-                }
-            }
+                    var bits = line.Split('|');
+                    return (email: bits[0], name: bits[1]);
+                })
+                .Where(t => !string.IsNullOrWhiteSpace(t.email) && !string.IsNullOrWhiteSpace(t.name))
+                .GroupBy(t => t.name)
+                .Select(g => (g.First().email, name: g.Key));
+
+            await Task.WhenAll(authors.Select(DownloadImage));
 
             return gourceAvatarsDir;
+
+            async Task DownloadImage((string email, string name) author)
+            {
+                try
+                {
+                    var image = await AvatarService.Default.GetAvatarAsync(author.email, imageSize: 90);
+                    var filePath = Path.Combine(gourceAvatarsDir, author + ".png");
+                    image.Save(filePath, ImageFormat.Png);
+                }
+                catch
+                {
+                    // Do nothing
+                }
+            }
         }
 
         private void GourceBrowseClick(object sender, EventArgs e)

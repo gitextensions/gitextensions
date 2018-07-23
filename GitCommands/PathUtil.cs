@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
+using GitCommands.Utils;
 using JetBrains.Annotations;
 
 namespace GitCommands
@@ -50,7 +53,7 @@ namespace GitCommands
         }
 
         /// <summary>
-        /// A naive way to check whethere the given path is a URL by checking
+        /// A naive way to check whether the given path is a URL by checking
         /// whether it starts with either 'http', 'ssh' or 'git'.
         /// </summary>
         /// <param name="path">A path to check.</param>
@@ -200,6 +203,82 @@ namespace GitCommands
             }
 
             shellPath = null;
+            return false;
+        }
+
+        [NotNull]
+        public static string GetDisplayPath([NotNull] string path)
+        {
+            // TODO verify whether the user profile contains forwards/backwards slashes on other platforms
+            var userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+            var comparison = EnvUtils.RunningOnWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
+            if (TryGetExactPath(path, out var exactPath))
+            {
+                path = exactPath;
+            }
+
+            if (path.StartsWith(userProfile, comparison))
+            {
+                var length = path.Length - userProfile.Length;
+                if (path.EndsWith("/") || path.EndsWith("\\"))
+                {
+                    length--;
+                }
+
+                return $"~{path.Substring(userProfile.Length, length)}";
+            }
+
+            return path;
+        }
+
+        /// <summary>
+        /// Gets the exact case used on the file system for an existing file or directory.
+        /// </summary>
+        /// <param name="path">A relative or absolute path.</param>
+        /// <param name="exactPath">The full path using the correct case if the path exists.  Otherwise, null.</param>
+        /// <returns>True if the exact path was found.  False otherwise.</returns>
+        /// <remarks>
+        /// This supports drive-lettered paths and UNC paths, but a UNC root
+        /// will be returned in lowercase (e.g., \\server\share).
+        /// </remarks>
+        [ContractAnnotation("=>false,exactPath:null")]
+        [ContractAnnotation("=>true,exactPath:notnull")]
+        [ContractAnnotation("path:null=>false,exactPath:null")]
+        public static bool TryGetExactPath(string path, out string exactPath)
+        {
+            // From https://stackoverflow.com/a/29578292/24874
+
+            // DirectoryInfo accepts either a file path or a directory path, and most of its properties work for either.
+            // However, its Exists property only works for a directory path.
+            var directory = new DirectoryInfo(path);
+
+            if (File.Exists(path) || directory.Exists)
+            {
+                var parts = new List<string>();
+
+                var parentDirectory = directory.Parent;
+                while (parentDirectory != null)
+                {
+                    var entry = parentDirectory.EnumerateFileSystemInfos(directory.Name).First();
+                    parts.Add(entry.Name);
+
+                    directory = parentDirectory;
+                    parentDirectory = directory.Parent;
+                }
+
+                // Handle the root part (i.e., drive letter or UNC \\server\share).
+                var root = directory.FullName;
+
+                parts.Add(root.Contains(':') ? root.ToUpper() : root.ToLower());
+                parts.Reverse();
+
+                exactPath = Path.Combine(parts.ToArray());
+                return true;
+            }
+
+            exactPath = null;
             return false;
         }
     }

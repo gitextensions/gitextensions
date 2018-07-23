@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GitCommands.Git;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls
 {
     public partial class BranchSelector : GitModuleControl
     {
-        private string[] _containRevisons;
+        public event EventHandler SelectedIndexChanged;
+
         private readonly bool _isLoading;
+        private IReadOnlyList<ObjectId> _containRevisions;
         private string[] _localBranches;
         private string[] _remoteBranches;
-        public event EventHandler SelectedIndexChanged;
+        public ObjectId CommitToCompare;
+
         public BranchSelector()
         {
             _isLoading = true;
@@ -21,7 +25,7 @@ namespace GitUI.UserControls
             {
                 InitializeComponent();
                 Branches.SelectedIndexChanged += Branches_SelectedIndexChanged;
-                Translate();
+                InitializeComplete();
             }
             finally
             {
@@ -29,30 +33,26 @@ namespace GitUI.UserControls
             }
         }
 
-        public string CommitToCompare;
-
         public bool IsRemoteBranchChecked => Remotebranch.Checked;
-
         public string SelectedBranchName => Branches.Text;
-
         public override string Text => Branches.Text;
 
-        public void Initialize(bool remote, string[] containRevisons)
+        public void Initialize(bool remote, IReadOnlyList<ObjectId> containRevisions)
         {
             lbChanges.Text = "";
             LocalBranch.Checked = !remote;
             Remotebranch.Checked = remote;
 
-            _containRevisons = containRevisons;
+            _containRevisions = containRevisions;
 
             Branches.Items.Clear();
-            Branches.Items.AddRange(_containRevisons != null
+            Branches.Items.AddRange(_containRevisions != null
                 ? GetContainsRevisionBranches()
                 : LocalBranch.Checked
                     ? GetLocalBranches()
                     : GetRemoteBranches());
 
-            if (_containRevisons != null && Branches.Items.Count == 1)
+            if (_containRevisions != null && Branches.Items.Count == 1)
             {
                 Branches.SelectedIndex = 0;
             }
@@ -85,20 +85,20 @@ namespace GitUI.UserControls
             {
                 var result = new HashSet<string>();
 
-                if (_containRevisons.Length > 0)
+                if (_containRevisions.Count > 0)
                 {
-                    var branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisons[0], LocalBranch.Checked,
+                    var branches = Module.GetAllBranchesWhichContainGivenCommit(_containRevisions[0], LocalBranch.Checked,
                             !LocalBranch.Checked)
                         .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
                                     !a.EndsWith("/HEAD"));
                     result.UnionWith(branches);
                 }
 
-                for (int index = 1; index < _containRevisons.Length; index++)
+                for (int index = 1; index < _containRevisions.Count; index++)
                 {
-                    var containRevison = _containRevisons[index];
+                    var containRevision = _containRevisions[index];
                     var branches =
-                        Module.GetAllBranchesWhichContainGivenCommit(containRevison, LocalBranch.Checked,
+                        Module.GetAllBranchesWhichContainGivenCommit(containRevision, LocalBranch.Checked,
                                 !LocalBranch.Checked)
                             .Where(a => !DetachedHeadParser.IsDetachedHead(a) &&
                                         !a.EndsWith("/HEAD"));
@@ -127,7 +127,7 @@ namespace GitUI.UserControls
                     async () =>
                     {
                         await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                        var text = Module.GetCommitCountString(currentCheckout, branchName);
+                        var text = Module.GetCommitCountString(currentCheckout.ToString(), branchName);
                         await this.SwitchToMainThreadAsync();
                         lbChanges.Text = text;
                     });
@@ -143,11 +143,11 @@ namespace GitUI.UserControls
                 Branches.SelectedItem = branch;
             }
 
-            if (_containRevisons != null)
+            if (_containRevisions != null)
             {
                 if (Branches.Items.Count == 0)
                 {
-                    Initialize(remote, _containRevisons);
+                    Initialize(remote, _containRevisions);
                 }
             }
         }

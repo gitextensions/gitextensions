@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs
         {
             _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            GitModule module = new GitModule(Directory.Text);
+            var module = new GitModule(Directory.Text);
 
             if (!System.IO.Directory.Exists(module.WorkingDir))
             {

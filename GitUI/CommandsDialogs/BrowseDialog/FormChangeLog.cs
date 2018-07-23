@@ -1,5 +1,4 @@
-﻿using System;
-using GitUI.Properties;
+﻿using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -9,12 +8,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             : base(true)
         {
             InitializeComponent();
-            Translate();
-        }
+            InitializeComplete();
 
-        private void FormChangeLog1Load(object sender, EventArgs e)
-        {
-            ChangeLog.Text = Resources.ChangeLog;
+            Load += (s, e) => ChangeLog.Text = Resources.ChangeLog;
         }
     }
 }

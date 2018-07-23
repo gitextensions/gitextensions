@@ -143,23 +143,24 @@ namespace System.Linq
         [NotNull]
         public static IReadOnlyList<T> AsReadOnlyList<T>([NotNull] this IEnumerable<T> source)
         {
-            if (source is IReadOnlyList<T> readOnlyList)
+            switch (source)
             {
-                return readOnlyList;
-            }
-
-            if (source is ICollection<T> collection)
-            {
-                var count = collection.Count;
-
-                if (count == 0)
+                case IReadOnlyList<T> readOnlyList:
                 {
-                    return Array.Empty<T>();
+                    return readOnlyList;
                 }
 
-                var items = new T[count];
-                collection.CopyTo(items, 0);
-                return items;
+                case ICollection<T> collection:
+                {
+                    if (collection.Count == 0)
+                    {
+                        return Array.Empty<T>();
+                    }
+
+                    var items = new T[collection.Count];
+                    collection.CopyTo(items, 0);
+                    return items;
+                }
             }
 
             using (var e = source.GetEnumerator())

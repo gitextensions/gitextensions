@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             : base(true)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
@@ -37,6 +37,29 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             comboMinWidthEdit.Value = AppSettings.RecentReposComboMinWidth;
             SetNumericUpDownValue(_NO_TRANSLATE_maxRecentRepositories, AppSettings.MaxMostRecentRepositories);
             SetNumericUpDownValue(_NO_TRANSLATE_RecentRepositoriesHistorySize, AppSettings.RecentRepositoriesHistorySize);
+
+            void SetNumericUpDownValue(NumericUpDown control, int value)
+            {
+                control.Value = Math.Min(Math.Max(control.Minimum, value), control.Maximum);
+            }
+
+            void SetShorteningStrategy(ShorteningRecentRepoPathStrategy strategy)
+            {
+                switch (strategy)
+                {
+                    case ShorteningRecentRepoPathStrategy.None:
+                        dontShortenRB.Checked = true;
+                        break;
+                    case ShorteningRecentRepoPathStrategy.MostSignDir:
+                        mostSigDirRB.Checked = true;
+                        break;
+                    case ShorteningRecentRepoPathStrategy.MiddleDots:
+                        middleDotRB.Checked = true;
+                        break;
+                    default:
+                        throw new Exception("Unhandled shortening strategy: " + strategy);
+                }
+            }
         }
 
         private void SaveSettings()
@@ -51,43 +74,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.SaveRecentHistoryAsync(_repositoryHistory));
         }
 
-        private string GetShorteningStrategy()
+        private ShorteningRecentRepoPathStrategy GetShorteningStrategy()
         {
             if (dontShortenRB.Checked)
             {
-                return RecentRepoSplitter.ShorteningStrategy_None;
+                return ShorteningRecentRepoPathStrategy.None;
             }
             else if (mostSigDirRB.Checked)
             {
-                return RecentRepoSplitter.ShorteningStrategy_MostSignDir;
+                return ShorteningRecentRepoPathStrategy.MostSignDir;
             }
             else if (middleDotRB.Checked)
             {
-                return RecentRepoSplitter.ShorteningStrategy_MiddleDots;
+                return ShorteningRecentRepoPathStrategy.MiddleDots;
             }
             else
             {
                 throw new Exception("Can not figure shortening strategy");
-            }
-        }
-
-        private void SetShorteningStrategy(string strategy)
-        {
-            if (strategy == RecentRepoSplitter.ShorteningStrategy_None)
-            {
-                dontShortenRB.Checked = true;
-            }
-            else if (strategy == RecentRepoSplitter.ShorteningStrategy_MostSignDir)
-            {
-                mostSigDirRB.Checked = true;
-            }
-            else if (strategy == RecentRepoSplitter.ShorteningStrategy_MiddleDots)
-            {
-                middleDotRB.Checked = true;
-            }
-            else
-            {
-                throw new Exception("Unhandled shortening strategy: " + strategy);
             }
         }
 
@@ -96,8 +99,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             MostRecentLB.Items.Clear();
             LessRecentLB.Items.Clear();
 
-            List<RecentRepoInfo> mostRecentRepos = new List<RecentRepoInfo>();
-            List<RecentRepoInfo> lessRecentRepos = new List<RecentRepoInfo>();
+            var mostRecentRepos = new List<RecentRepoInfo>();
+            var lessRecentRepos = new List<RecentRepoInfo>();
 
             var splitter = new RecentRepoSplitter
             {
@@ -119,12 +122,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 splitter.Graphics.Dispose();
             }
 
-            foreach (RecentRepoInfo repo in mostRecentRepos)
+            foreach (var repo in mostRecentRepos)
             {
                 MostRecentLB.Items.Add(new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption });
             }
 
-            foreach (RecentRepoInfo repo in lessRecentRepos)
+            foreach (var repo in lessRecentRepos)
             {
                 LessRecentLB.Items.Add(new ListViewItem(repo.Caption) { Tag = repo, ToolTipText = repo.Caption });
             }
@@ -143,11 +146,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 MostRecentLB.Columns[0].Width = width;
                 LessRecentLB.Columns[0].Width = width;
             }
-        }
-
-        private static void SetNumericUpDownValue(NumericUpDown control, int value)
-        {
-            control.Value = Math.Min(Math.Max(control.Minimum, value), control.Maximum);
         }
 
         private void sortMostRecentRepos_CheckedChanged(object sender, EventArgs e)

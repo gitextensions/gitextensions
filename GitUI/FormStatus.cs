@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using GitCommands;
+using GitUI.Properties;
 using GitUI.UserControls;
 using JetBrains.Annotations;
 using Microsoft.WindowsAPICodePack.Taskbar;
@@ -13,7 +14,7 @@ namespace GitUI
     {
         private readonly bool _useDialogSettings;
 
-        private DispatcherFrameModalControler _modalControler;
+        private DispatcherFrameModalController _modalController;
 
         public FormStatus() : this(true)
         {
@@ -24,16 +25,17 @@ namespace GitUI
         {
         }
 
-        public FormStatus(ConsoleOutputControl consoleOutput, bool useDialogSettings)
+        public FormStatus([CanBeNull] ConsoleOutputControl consoleOutput, bool useDialogSettings)
             : base(true)
         {
             _useDialogSettings = useDialogSettings;
+
             ConsoleOutput = consoleOutput ?? ConsoleOutputControl.CreateInstance();
             ConsoleOutput.Dock = DockStyle.Fill;
             ConsoleOutput.Terminated += delegate { Close(); }; // This means the control is not visible anymore, no use in keeping. Expected scenario: user hits ESC in the prompt after the git process exits
 
             InitializeComponent();
-            Translate();
+
             if (_useDialogSettings)
             {
                 KeepDialogOpen.Checked = !AppSettings.CloseProcessDialog;
@@ -43,7 +45,7 @@ namespace GitUI
                 KeepDialogOpen.Hide();
             }
 
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
         public FormStatus(Action<FormStatus> process, Action<FormStatus> abort)
@@ -53,7 +55,7 @@ namespace GitUI
             AbortCallback = abort;
         }
 
-        protected readonly ConsoleOutputControl ConsoleOutput; // Naming: protected stuff must be CLS-compliant here
+        protected readonly ConsoleOutputControl ConsoleOutput;
         public Action<FormStatus> ProcessCallback;
         public Action<FormStatus> AbortCallback;
         private bool _errorOccurred;
@@ -95,18 +97,7 @@ namespace GitUI
                 }
 
                 ProgressBar.Value = Math.Min(100, progressValue);
-
-                if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-                {
-                    try
-                    {
-                        TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
-                        TaskbarManager.Instance.SetProgressValue(progressValue, 100);
-                    }
-                    catch (InvalidOperationException)
-                    {
-                    }
-                }
+                TaskbarProgress.SetProgress(TaskbarProgressBarState.Normal, progressValue, 100);
             }
 
             // Show last progress message in the title, unless it's showin in the control body already
@@ -142,25 +133,16 @@ namespace GitUI
                 Ok.Focus();
                 AcceptButton = Ok;
                 Abort.Enabled = false;
-                if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-                {
-                    try
-                    {
-                        TaskbarManager.Instance.SetProgressState(
-                            isSuccess
-                                ? TaskbarProgressBarState.Normal
-                                : TaskbarProgressBarState.Error);
-
-                        TaskbarManager.Instance.SetProgressValue(100, 100);
-                    }
-                    catch (InvalidOperationException)
-                    {
-                    }
-                }
+                TaskbarProgress.SetProgress(
+                    isSuccess
+                        ? TaskbarProgressBarState.Normal
+                        : TaskbarProgressBarState.Error,
+                    100,
+                    100);
 
                 picBoxSuccessFail.Image = isSuccess
-                    ? Properties.Resources.success
-                    : Properties.Resources.error;
+                    ? Images.StatusBadgeSuccess
+                    : Images.StatusBadgeError;
 
                 _errorOccurred = !isSuccess;
 
@@ -171,7 +153,7 @@ namespace GitUI
             }
             finally
             {
-                _modalControler?.EndModal(isSuccess);
+                _modalController?.EndModal(isSuccess);
             }
         }
 
@@ -200,8 +182,8 @@ namespace GitUI
             KeepDialogOpen.Visible = false;
             Abort.Visible = false;
             _showOnError = true;
-            _modalControler = new DispatcherFrameModalControler(this, owner);
-            _modalControler.BeginModal();
+            _modalController = new DispatcherFrameModalController(this, owner);
+            _modalController.BeginModal();
         }
 
         private void Ok_Click(object sender, EventArgs e)
@@ -217,7 +199,7 @@ namespace GitUI
                 return;
             }
 
-            if (_modalControler != null)
+            if (_modalController != null)
             {
                 return;
             }
@@ -244,16 +226,7 @@ namespace GitUI
 
             StartPosition = FormStartPosition.CenterParent;
 
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-            {
-                try
-                {
-                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Indeterminate);
-                }
-                catch (InvalidOperationException)
-                {
-                }
-            }
+            TaskbarProgress.SetIndeterminate();
 
             Reset();
             ProcessCallback(this);
@@ -292,26 +265,17 @@ namespace GitUI
 
         internal void AfterClosed()
         {
-            if (GitCommands.Utils.EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported)
-            {
-                try
-                {
-                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
-                }
-                catch (InvalidOperationException)
-                {
-                }
-            }
+            TaskbarProgress.Clear();
         }
     }
 
-    internal class DispatcherFrameModalControler
+    internal class DispatcherFrameModalController
     {
         private readonly DispatcherFrame _dispatcherFrame = new DispatcherFrame();
         private readonly FormStatus _formStatus;
         private readonly IWin32Window _owner;
 
-        public DispatcherFrameModalControler(FormStatus formStatus, IWin32Window owner)
+        public DispatcherFrameModalController(FormStatus formStatus, IWin32Window owner)
         {
             _formStatus = formStatus;
             _owner = owner;

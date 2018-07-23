@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using GitCommands;
 using GitCommands.Utils;
+using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -22,61 +23,21 @@ namespace GitUI
 
         public PathFormatter(Graphics graphics, Font font)
         {
-            if (graphics == null)
-            {
-                throw new ArgumentNullException(nameof(graphics));
-            }
-
-            if (font == null)
-            {
-                throw new ArgumentNullException(nameof(font));
-            }
-
-            _graphics = graphics;
-            _font = font;
-        }
-
-        private static string TruncatePath(string path, int length)
-        {
-            if (path.Length == length)
-            {
-                return path;
-            }
-
-            if (length <= 0)
-            {
-                return string.Empty;
-            }
-
-            // The win32 method PathCompactPathEx is only supported on Windows
-            string truncatePathMethod = AppSettings.TruncatePathMethod;
-            if (truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) &&
-                EnvUtils.RunningOnWindows())
-            {
-                var result = new StringBuilder(length);
-                NativeMethods.PathCompactPathEx(result, path, length, 0);
-                return result.ToString();
-            }
-
-            if (truncatePathMethod.Equals("trimStart", StringComparison.OrdinalIgnoreCase))
-            {
-                return "..." + path.Substring(path.Length - length);
-            }
-
-            return path; ////.Substring(0, length+1);
+            _graphics = graphics ?? throw new ArgumentNullException(nameof(graphics));
+            _font = font ?? throw new ArgumentNullException(nameof(font));
         }
 
         public string FormatTextForDrawing(int width, string name, string oldName)
         {
-            string truncatePathMethod = AppSettings.TruncatePathMethod;
+            var truncatePathMethod = AppSettings.TruncatePathMethod;
 
-            if (truncatePathMethod == "fileNameOnly")
+            if (truncatePathMethod == TruncatePathMethod.FileNameOnly)
             {
                 return FormatTextForFileNameOnly(name, oldName);
             }
 
-            if ((!truncatePathMethod.Equals("compact", StringComparison.OrdinalIgnoreCase) || !EnvUtils.RunningOnWindows()) &&
-                !truncatePathMethod.Equals("trimStart", StringComparison.OrdinalIgnoreCase))
+            if ((truncatePathMethod != TruncatePathMethod.Compact || !EnvUtils.RunningOnWindows()) &&
+                truncatePathMethod != TruncatePathMethod.TrimStart)
             {
                 return FormatString(name, oldName, 0, false);
             }
@@ -102,6 +63,7 @@ namespace GitUI
             return result;
         }
 
+        [CanBeNull]
         public static string FormatTextForFileNameOnly(string name, string oldName)
         {
             name = name.TrimEnd(AppSettings.PosixPathSeparator);
@@ -129,6 +91,36 @@ namespace GitUI
             }
 
             return TruncatePath(name, name.Length - step);
+
+            string TruncatePath(string path, int length)
+            {
+                if (path.Length == length)
+                {
+                    return path;
+                }
+
+                if (length <= 0)
+                {
+                    return string.Empty;
+                }
+
+                // The win32 method PathCompactPathEx is only supported on Windows
+                var truncatePathMethod = AppSettings.TruncatePathMethod;
+
+                if (truncatePathMethod == TruncatePathMethod.Compact && EnvUtils.RunningOnWindows())
+                {
+                    var result = new StringBuilder(length);
+                    NativeMethods.PathCompactPathEx(result, path, length, 0);
+                    return result.ToString();
+                }
+
+                if (truncatePathMethod == TruncatePathMethod.TrimStart)
+                {
+                    return "..." + path.Substring(path.Length - length);
+                }
+
+                return path;
+            }
         }
     }
 }

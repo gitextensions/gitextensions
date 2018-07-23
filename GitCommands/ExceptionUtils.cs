@@ -33,7 +33,7 @@ namespace GitCommands
 
         public static string ToStringWithData(this Exception e)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(e.ToString());
             sb.AppendLine();
             foreach (DictionaryEntry entry in e.Data)

@@ -9,7 +9,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
 {
     /// <summary>
     /// Provides the ability to deserialise collections of categorised user's git repositories.
-    /// This functionality is provided for backwards compatilbity ONLY and is purposed for
+    /// This functionality is provided for backwards compatibility ONLY and is purposed for
     /// migration of categorised user's git repositories from version prior to v3.
     /// </summary>
     internal sealed class RepositoryCategoryXmlSerialiser : IRepositorySerialiser<RepositoryCategory>
@@ -20,7 +20,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         /// <param name="serialised">A serialised list of categorised user's git repositories.</param>
         /// <returns>A list of categorised user's git repositories.</returns>
         /// <exception cref="ArgumentException"><paramref name="serialised"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        [ContractAnnotation("serialised:null=>halt")]
+        [CanBeNull]
         public IReadOnlyList<RepositoryCategory> Deserialize([NotNull] string serialised)
         {
             if (string.IsNullOrEmpty(serialised))

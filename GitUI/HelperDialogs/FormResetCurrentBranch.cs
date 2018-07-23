@@ -24,7 +24,7 @@ namespace GitUI.HelperDialogs
             Revision = revision;
 
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             switch (resetType)
             {
@@ -70,7 +70,7 @@ namespace GitUI.HelperDialogs
                     var originalHash = Module.GetCurrentCheckout();
                     if (FormProcess.ShowDialog(this, GitCommandHelpers.ResetHardCmd(Revision.Guid)))
                     {
-                        if (!string.Equals(originalHash, Revision.Guid, StringComparison.OrdinalIgnoreCase))
+                        if (originalHash != Revision.ObjectId)
                         {
                             UICommands.UpdateSubmodules(this);
                         }

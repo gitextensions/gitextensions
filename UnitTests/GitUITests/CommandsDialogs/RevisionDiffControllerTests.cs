@@ -2,6 +2,7 @@
 using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs;
+using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -34,7 +35,7 @@ namespace GitUITests.CommandsDialogs
         [TestCase(false)]
         public void BrowseDiff_DifftoolMenu_Selected(bool t)
         {
-            var rev = new GitRevision(null);
+            var rev = new GitRevision(ObjectId.Random());
             var selectionInfo = new ContextMenuSelectionInfo(rev, isAnyItemSelected: t);
             _controller.ShouldShowDifftoolMenus(selectionInfo).Should().Be(t);
         }
@@ -43,7 +44,7 @@ namespace GitUITests.CommandsDialogs
         [TestCase(false)]
         public void BrowseDiff_DifftoolMenu_Tracked(bool t)
         {
-            var rev = new GitRevision(null);
+            var rev = new GitRevision(ObjectId.Random());
             var selectionInfo = new ContextMenuSelectionInfo(rev, isAnyTracked: t);
             _controller.ShouldShowDifftoolMenus(selectionInfo).Should().Be(t);
         }
@@ -52,7 +53,7 @@ namespace GitUITests.CommandsDialogs
         [TestCase(false)]
         public void BrowseDiff_DifftoolMenu_BareRepo(bool t)
         {
-            var rev = new GitRevision(null);
+            var rev = new GitRevision(ObjectId.Random());
             var selectionInfo = new ContextMenuSelectionInfo(rev, isBareRepository: t);
             _controller.ShouldShowDifftoolMenus(selectionInfo).Should().BeTrue();
         }
@@ -72,7 +73,7 @@ namespace GitUITests.CommandsDialogs
         [TestCase(false)]
         public void BrowseDiff_ResetMenu_Selected(bool t)
         {
-            var rev = new GitRevision(null);
+            var rev = new GitRevision(ObjectId.Random());
             var selectionInfo = new ContextMenuSelectionInfo(rev, isAnyItemSelected: t);
             _controller.ShouldShowResetFileMenus(selectionInfo).Should().Be(t);
         }
@@ -81,7 +82,7 @@ namespace GitUITests.CommandsDialogs
         [TestCase(false)]
         public void BrowseDiff_ResetMenu_Tracked(bool t)
         {
-            var rev = new GitRevision(null);
+            var rev = new GitRevision(ObjectId.Random());
             var selectionInfo = new ContextMenuSelectionInfo(rev, isAnyTracked: t);
             _controller.ShouldShowResetFileMenus(selectionInfo).Should().Be(t);
         }
@@ -90,7 +91,7 @@ namespace GitUITests.CommandsDialogs
         [TestCase(false)]
         public void BrowseDiff_ResetMenu_BareRepo(bool t)
         {
-            var rev = new GitRevision(null);
+            var rev = new GitRevision(ObjectId.Random());
             var selectionInfo = new ContextMenuSelectionInfo(rev, isBareRepository: t);
             _controller.ShouldShowResetFileMenus(selectionInfo).Should().Be(!t);
         }
@@ -102,7 +103,7 @@ namespace GitUITests.CommandsDialogs
         [Test]
         public void BrowseDiff_MainMenus_Default()
         {
-            var rev = new GitRevision("1234567890");
+            var rev = new GitRevision(ObjectId.Random());
             var selectionInfo = new ContextMenuSelectionInfo(selectedRevision: rev);
             _controller.ShouldShowMenuSaveAs(selectionInfo).Should().BeTrue();
             _controller.ShouldShowMenuCherryPick(selectionInfo).Should().BeTrue();
@@ -120,7 +121,7 @@ namespace GitUITests.CommandsDialogs
         [TestCase(false)]
         public void BrowseDiff_MainMenus_SingleSelected(bool t)
         {
-            var rev = new GitRevision("1234567890");
+            var rev = new GitRevision(ObjectId.Random());
             var selectionInfo = new ContextMenuSelectionInfo(selectedRevision: rev, isSingleGitItemSelected: t);
             _controller.ShouldShowMenuSaveAs(selectionInfo).Should().Be(t);
             _controller.ShouldShowMenuCherryPick(selectionInfo).Should().Be(t);
@@ -138,7 +139,7 @@ namespace GitUITests.CommandsDialogs
         [TestCase(false)]
         public void BrowseDiff_StageMenus_Unstaged(bool t)
         {
-            var rev = new GitRevision(GitRevision.UnstagedGuid);
+            var rev = new GitRevision(ObjectId.UnstagedId);
             var selectionInfo = new ContextMenuSelectionInfo(rev, isAnyItemStaged: t);
             _controller.ShouldShowMenuUnstage(selectionInfo).Should().Be(t);
         }
@@ -147,7 +148,7 @@ namespace GitUITests.CommandsDialogs
         [TestCase(false)]
         public void BrowseDiff_StageMenus_Index(bool t)
         {
-            var rev = new GitRevision(GitRevision.UnstagedGuid);
+            var rev = new GitRevision(ObjectId.UnstagedId);
             var selectionInfo = new ContextMenuSelectionInfo(rev, isAnyItemUnstaged: t);
             _controller.ShouldShowMenuStage(selectionInfo).Should().Be(t);
         }

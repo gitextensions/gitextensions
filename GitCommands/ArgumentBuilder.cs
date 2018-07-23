@@ -27,7 +27,7 @@ namespace GitCommands
     /// <code>
     /// var args = new ArgumentBuilder
     /// {
-    ///     "commit",                   // adds the string unnconditionally
+    ///     "commit",                   // adds the string unconditionally
     ///     { isAmend, "--amend" },     // adds the option only if isAmend == true
     ///     { isUp, "--up", "--down" }, // selects the option based on the value of isUp
     /// };

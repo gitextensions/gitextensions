@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public static T Create<[MeansImplicitUse] T>(ISettingsPageHost pageHost) where T : SettingsPageBase, new()
         {
-            T result = new T();
+            var result = new T();
 
             result.AdjustForDpiScaling();
 

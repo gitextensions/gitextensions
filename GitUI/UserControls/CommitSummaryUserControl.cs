@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using GitCommands;
-using GitUI.Editor;
 using ResourceManager;
 
 namespace GitUI.UserControls
@@ -23,7 +22,7 @@ namespace GitUI.UserControls
         public CommitSummaryUserControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             _tagsCaption = labelTagsCaption.Text;
             _branchesCaption = labelBranchesCaption.Text;
 
@@ -48,20 +47,20 @@ namespace GitUI.UserControls
             {
                 _revision = value;
 
-                labelAuthorCaption.Text = Strings.GetAuthorText() + ":";
+                labelAuthorCaption.Text = Strings.Author + ":";
                 labelTagsCaption.Text = _tagsCaption;
                 labelBranchesCaption.Text = _branchesCaption;
 
                 if (Revision != null)
                 {
-                    groupBox1.Text = GitRevision.ToShortSha(Revision.Guid);
-                    labelAuthor.Text = string.Format("{0}", Revision.Author);
-                    labelDate.Text = string.Format(Strings.GetCommitDateText() + ": {0}", Revision.CommitDate);
-                    labelMessage.Text = string.Format("{0}", Revision.Subject);
+                    groupBox1.Text = Revision.ObjectId.ToShortString();
+                    labelAuthor.Text = Revision.Author;
+                    labelDate.Text = string.Format(Strings.CommitDate + ": {0}", Revision.CommitDate);
+                    labelMessage.Text = Revision.Subject;
 
                     var tagList = Revision.Refs.Where(r => r.IsTag).ToList();
                     string tagListStr = string.Join(", ", tagList.Select(h => h.LocalName).ToArray());
-                    labelTags.Text = string.Format("{0}", tagListStr.IsNullOrEmpty() ? _notAvailable.Text : tagListStr);
+                    labelTags.Text = tagListStr.IsNullOrEmpty() ? _notAvailable.Text : tagListStr;
                     if (tagList.Any())
                     {
                         labelTags.BackColor = _tagsBackColor;
@@ -74,7 +73,7 @@ namespace GitUI.UserControls
 
                     var branchesList = Revision.Refs.Where(r => r.IsHead).ToList();
                     string branchesListStr = string.Join(", ", branchesList.Select(h => h.LocalName).ToArray());
-                    labelBranches.Text = string.Format("{0}", branchesListStr.IsNullOrEmpty() ? _notAvailable.Text : branchesListStr);
+                    labelBranches.Text = branchesListStr.IsNullOrEmpty() ? _notAvailable.Text : branchesListStr;
                     if (branchesList.Any())
                     {
                         labelBranches.BackColor = _branchesBackColor;

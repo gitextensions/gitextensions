@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
@@ -73,6 +74,7 @@ namespace GitUIPluginInterfaces
             return value.ToString();
         }
 
+        [CanBeNull]
         private static object ConvertFromString(string value)
         {
             if (string.IsNullOrEmpty(value))

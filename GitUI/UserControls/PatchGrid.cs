@@ -14,7 +14,7 @@ namespace GitUI
         public PatchGrid()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             FileName.DataPropertyName = nameof(PatchFile.Name);
             subjectDataGridViewTextBoxColumn.DataPropertyName = nameof(PatchFile.Subject);
             authorDataGridViewTextBoxColumn.DataPropertyName = nameof(PatchFile.Author);

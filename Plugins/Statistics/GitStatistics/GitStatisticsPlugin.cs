@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using GitStatistics.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -11,6 +12,7 @@ namespace GitStatistics
         {
             SetNameAndDescription("Statistics");
             Translate();
+            Icon = Resources.IconGitStatistics;
         }
 
         private readonly StringSetting _codeFiles = new StringSetting("Code files",
@@ -35,16 +37,16 @@ namespace GitStatistics
                 return false;
             }
 
-            bool countSubmodule = !_ignoreSubmodules.ValueOrDefault(Settings);
-            using (var formGitStatistics =
-                new FormGitStatistics(args.GitModule, _codeFiles.ValueOrDefault(Settings), countSubmodule)
-                {
-                    DirectoriesToIgnore = _ignoreDirectories.ValueOrDefault(Settings)
-                })
-            {
-                formGitStatistics.DirectoriesToIgnore = formGitStatistics.DirectoriesToIgnore.Replace("/", "\\");
+            var countSubmodule = !_ignoreSubmodules.ValueOrDefault(Settings);
 
-                formGitStatistics.ShowDialog(args.OwnerForm);
+            var formStatistics = new FormGitStatistics(args.GitModule, _codeFiles.ValueOrDefault(Settings), countSubmodule)
+            {
+                DirectoriesToIgnore = _ignoreDirectories.ValueOrDefault(Settings).Replace("/", "\\")
+            };
+
+            using (formStatistics)
+            {
+                formStatistics.ShowDialog(args.OwnerForm);
             }
 
             return false;

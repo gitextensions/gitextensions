@@ -9,7 +9,7 @@ namespace ResourceManagerTests
         [Test]
         public void ParseGoToBranchLink()
         {
-            LinkFactory linkFactory = new LinkFactory();
+            var linkFactory = new LinkFactory();
             linkFactory.CreateBranchLink("master");
             string expected = "gitext://gotobranch/master";
             string actual = linkFactory.ParseLink("master#gitext://gotobranch/master");
@@ -19,16 +19,16 @@ namespace ResourceManagerTests
         [Test]
         public void ParseGoToBranchLinkWithHash()
         {
-            LinkFactory linkFactory = new LinkFactory();
+            var linkFactory = new LinkFactory();
             linkFactory.CreateBranchLink("PR#23");
             string expected = "gitext://gotobranch/PR#23";
             string actual = linkFactory.ParseLink("PR#23#gitext://gotobranch/PR#23");
             Assert.That(actual, Is.EqualTo(expected));
         }
 
-        private void TestCreateLink(string caption, string uri)
+        private static void TestCreateLink(string caption, string uri)
         {
-            LinkFactory linkFactory = new LinkFactory();
+            var linkFactory = new LinkFactory();
             linkFactory.CreateLink(caption, uri);
             string actual = linkFactory.ParseLink(caption + "#" + uri);
             string expected = uri;
@@ -50,7 +50,7 @@ namespace ResourceManagerTests
         [Test]
         public void ParseRawHttpLinkWithHash()
         {
-            LinkFactory linkFactory = new LinkFactory();
+            var linkFactory = new LinkFactory();
 
             string expected = "https://github.com/gitextensions/gitextensions/pull/3471#end";
             string actual = linkFactory.ParseLink("https://github.com/gitextensions/gitextensions/pull/3471#end");
@@ -58,7 +58,7 @@ namespace ResourceManagerTests
         }
 
         [Test]
-        public void ParseCustomeSchemeLinkWithHash()
+        public void ParseCustomSchemeLinkWithHash()
         {
             TestCreateLink("PR#3471 and Issue#64", "ftp://github.com/gitextensions/gitextensions/pull/3471#end");
         }

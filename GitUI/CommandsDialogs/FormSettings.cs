@@ -6,12 +6,17 @@ using GitCommands.Utils;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
     {
+        public static readonly string HotkeySettingsName = "Scripts";
+
+        [CanBeNull] private static Type _lastSelectedSettingsPageType;
+
         #region Translation
 
         private readonly TranslationString _cantFindGitMessage =
@@ -36,11 +41,10 @@ namespace GitUI.CommandsDialogs
         {
         }
 
-        public FormSettings(GitUICommands commands, SettingsPageReference initalPage = null)
+        public FormSettings([CanBeNull] GitUICommands commands, SettingsPageReference initialPage = null)
             : base(commands)
         {
             InitializeComponent();
-            Translate();
             _translatedTitle = Text;
 
             settingsTreeView.SuspendLayout();
@@ -122,17 +126,22 @@ namespace GitUI.CommandsDialogs
                 settingsTreeView.AddSettingsPage(settingsPage, pluginsPageRef);
             }
 
-            settingsTreeView.GotoPage(initalPage);
+            if (initialPage == null && _lastSelectedSettingsPageType != null)
+            {
+                initialPage = new SettingsPageReferenceByType(_lastSelectedSettingsPageType);
+            }
+
+            settingsTreeView.GotoPage(initialPage);
             settingsTreeView.ResumeLayout();
 
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
-        public static DialogResult ShowSettingsDialog(GitUICommands uiCommands, IWin32Window owner, SettingsPageReference initalPage = null)
+        public static DialogResult ShowSettingsDialog(GitUICommands uiCommands, IWin32Window owner, SettingsPageReference initialPage = null)
         {
             DialogResult result = DialogResult.None;
 
-            using (var form = new FormSettings(uiCommands, initalPage))
+            using (var form = new FormSettings(uiCommands, initialPage))
             {
                 AppSettings.UsingContainer(form._commonLogic.RepoDistSettingsSet.GlobalSettings, () =>
                 {
@@ -161,11 +170,16 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void settingsTreeViewUserControl1_SettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)
+        private void OnSettingsPageSelected(object sender, SettingsPageSelectedEventArgs e)
         {
             panelCurrentSettingsPage.Controls.Clear();
 
             var settingsPage = e.SettingsPage;
+
+            if (settingsPage != null)
+            {
+                _lastSelectedSettingsPageType = settingsPage.GetType();
+            }
 
             if (settingsPage?.GuiControl != null)
             {
@@ -263,19 +277,6 @@ namespace GitUI.CommandsDialogs
 
             return true;
         }
-
-        // TODO: needed?
-        private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            ////Cursor.Current = Cursors.WaitCursor;
-            ////if (DialogResult != DialogResult.Abort)
-            ////{
-            ////    e.Cancel = true;
-            ////}
-            ////Cursor.Current = Cursors.Default;
-        }
-
-        public static readonly string HotkeySettingsName = "Scripts";
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {

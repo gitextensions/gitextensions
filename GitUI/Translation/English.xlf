@@ -110,7 +110,7 @@ This action will be performed without warning while checking out branch.</source
         <target />
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target />
       </trans-unit>
       <trans-unit id="_noDictFile.Text">
@@ -558,10 +558,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Green</source>
         <target />
       </trans-unit>
-      <trans-unit id="HighlightAuthoredRevisions.Text">
-        <source>Highlight authored revisions</source>
-        <target />
-      </trans-unit>
       <trans-unit id="IconStyle.Item0">
         <source>Default</source>
         <target />
@@ -620,10 +616,6 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>Revision graph</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Color authored revisions</source>
         <target />
       </trans-unit>
       <trans-unit id="label25.Text">
@@ -2127,7 +2119,7 @@ compare with first:</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target />
       </trans-unit>
       <trans-unit id="directoryIsNotAValidRepositoryCaption.Text">
@@ -2199,7 +2191,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <target />
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target />
       </trans-unit>
       <trans-unit id="hashToolStripMenuItem.Text">
@@ -2259,7 +2251,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         <target />
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target />
       </trans-unit>
       <trans-unit id="pluginsToolStripMenuItem.Text">
@@ -7616,7 +7608,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionDiff" source-language="en">
+  <file datatype="plaintext" original="RevisionDiffControl" source-language="en">
     <body>
       <trans-unit id="_deleteFailed.Text">
         <source>Delete file failed</source>
@@ -7772,7 +7764,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionFileTree" source-language="en">
+  <file datatype="plaintext" original="RevisionFileTreeControl" source-language="en">
     <body>
       <trans-unit id="_assumeUnchangedCaption.Text">
         <source>Assume this file won't change</source>
@@ -7922,7 +7914,7 @@ See the changes in the commit form.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionGpgInfo" source-language="en">
+  <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en">
     <body>
       <trans-unit id="_commitNotSigned.Text">
         <source>Commit is not signed</source>
@@ -7943,7 +7935,7 @@ See the changes in the commit form.</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target />
       </trans-unit>
       <trans-unit id="directoryIsNotAValidRepositoryCaption.Text">
@@ -8310,7 +8302,7 @@ If this is a central repository (bare repository without a working directory):
         <target />
       </trans-unit>
       <trans-unit id="showIdsToolStripMenuItem.Text">
-        <source>Show SHA-1</source>
+        <source>Show SHA-1 column</source>
         <target />
       </trans-unit>
       <trans-unit id="showIsMessageMultilineToolStripMenuItem.Text">
@@ -8326,7 +8318,7 @@ If this is a central repository (bare repository without a working directory):
         <target />
       </trans-unit>
       <trans-unit id="showRevisionGraphToolStripMenuItem.Text">
-        <source>Show revision graph</source>
+        <source>Show revision graph column</source>
         <target />
       </trans-unit>
       <trans-unit id="showTagsToolStripMenuItem.Text">
@@ -8780,7 +8772,7 @@ When OpenSSH is used, command line dialogs are shown!
         <target />
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target />
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
@@ -8832,7 +8824,7 @@ When OpenSSH is used, command line dialogs are shown!
         <target />
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
         <target />
       </trans-unit>
       <trans-unit id="_secondsAgo.Text">

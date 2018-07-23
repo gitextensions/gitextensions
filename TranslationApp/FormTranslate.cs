@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using GitUI;
+using JetBrains.Annotations;
 using ResourceManager;
 using ResourceManager.Xliff;
-using TranslationUtl = ResourceManager.Xliff.TranslationUtl;
 
 namespace TranslationApp
 {
@@ -36,7 +36,7 @@ namespace TranslationApp
             : base(true)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             translateCategories.DisplayMember = nameof(TranslationCategory.Name);
 
@@ -85,10 +85,10 @@ namespace TranslationApp
         {
             int translatedCount = _translationItems.Sum(p => p.Value.Count(translateItem => !string.IsNullOrEmpty(translateItem.TranslatedValue)));
             int totalCount = _translationItems.Count;
-            var progresMsg = string.Format(_translateProgressText.Text, translatedCount, totalCount);
-            if (translateProgress.Text != progresMsg)
+            var message = string.Format(_translateProgressText.Text, translatedCount, totalCount);
+            if (translateProgress.Text != message)
             {
-                translateProgress.Text = progresMsg;
+                translateProgress.Text = message;
                 toolStrip1.Refresh();
             }
         }
@@ -181,7 +181,7 @@ namespace TranslationApp
                 // Set language to neutral to get neutral translations
                 GitCommands.AppSettings.CurrentTranslation = "";
 
-                var translatableTypes = TranslationUtl.GetTranslatableTypes();
+                var translatableTypes = TranslationUtil.GetTranslatableTypes();
                 progressBar.Maximum = translatableTypes.Sum(types => types.Value.Count);
                 progressBar.Visible = true;
 
@@ -193,7 +193,7 @@ namespace TranslationApp
                     {
                         foreach (Type type in types)
                         {
-                            if (TranslationUtl.CreateInstanceOfClass(type) is ITranslate obj)
+                            if (TranslationUtil.CreateInstanceOfClass(type) is ITranslate obj)
                             {
                                 obj.AddTranslationItems(translation);
                             }
@@ -337,6 +337,7 @@ namespace TranslationApp
         */
         #endregion
 
+        [CanBeNull]
         private string GetSelectedLanguageCode()
         {
             if (string.IsNullOrEmpty(_NO_TRANSLATE_languageCode.Text) || _NO_TRANSLATE_languageCode.Text.Length < 2)

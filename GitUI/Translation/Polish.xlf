@@ -134,7 +134,7 @@ Ta akcja będzie wykonywana bez ostrzeżenia podczas przełączania gałęzi.</t
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target>Pobierz obrazek autora z gravatar.com</target>
         
       </trans-unit>
@@ -1245,7 +1245,7 @@ Upewnij się, czy jest zainstalowany git (Git dla Windows lub cygwin) lub ustal 
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>Wybrany element nie jest prawidłowym repozytorium git.
 
 Chcesz przerwać, i usunąć go z listy ostatnich repozytoriów?</target>
@@ -2719,7 +2719,7 @@ do porównania:</target>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>Wybrany element nie jest prawidłowym repozytorium git.
 
 Chcesz przerwać, i usunąć go z listy ostatnich repozytoriów?</target>
@@ -2811,7 +2811,7 @@ Chcesz przerwać, i usunąć go z listy ostatnich repozytoriów?</target>
         
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target>Dziennik komend Git</target>
         
       </trans-unit>
@@ -2885,7 +2885,7 @@ Chcesz przerwać, i usunąć go z listy ostatnich repozytoriów?</target>
         
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target>Ustawienia</target>
         
       </trans-unit>
@@ -9534,7 +9534,7 @@ To po prostu przełączy zatwierdzenie ustalone przez superprojekt na moduł zal
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionDiff" source-language="en" target-language="pl">
+  <file datatype="plaintext" original="RevisionDiffControl" source-language="en" target-language="pl">
     <body>
       <trans-unit id="_deleteFailed.Text">
         <source>Delete file failed</source>
@@ -9728,7 +9728,7 @@ To po prostu przełączy zatwierdzenie ustalone przez superprojekt na moduł zal
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionFileTree" source-language="en" target-language="pl">
+  <file datatype="plaintext" original="RevisionFileTreeControl" source-language="en" target-language="pl">
     <body>
       <trans-unit id="_assumeUnchangedCaption.Text">
         <source>Assume this file won't change</source>
@@ -9900,7 +9900,7 @@ See the changes in the commit form.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionGpgInfo" source-language="en" target-language="pl">
+  <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en" target-language="pl">
     <body>
       <trans-unit id="_commitNotSigned.Text">
         <source>Commit is not signed</source>
@@ -10913,7 +10913,7 @@ Gdy jest używane OpenSSH, będą wyświetlane okna wiersza poleceń!
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>Dziecko</target>
         
       </trans-unit>
@@ -10978,7 +10978,7 @@ Gdy jest używane OpenSSH, będą wyświetlane okna wiersza poleceń!
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
         <target>Rodzic(e)</target>
         
       </trans-unit>

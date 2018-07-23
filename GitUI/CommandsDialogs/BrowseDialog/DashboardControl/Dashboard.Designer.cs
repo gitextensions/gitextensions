@@ -111,7 +111,7 @@
             // 
             // pbLogo
             // 
-            this.pbLogo.Image = global::GitUI.Properties.Resources.git_extensions_logo;
+            this.pbLogo.Image = global::GitUI.Properties.Images.GitExtensionsLogoWide;
             this.pbLogo.Location = new System.Drawing.Point(23, 19);
             this.pbLogo.Name = "pbLogo";
             this.pbLogo.Size = new System.Drawing.Size(167, 32);

@@ -59,16 +59,19 @@ namespace GitUITests.UserControls
         public void PercentageOutput()
         {
             string cmd = "\"C:\\Program Files\\Git\\bin\\git.exe\" rebase  -i --autosquash --autostash \"branch_foo\"";
-            List<string> outputData = new List<string>();
-            outputData.Add(cmd);
-            outputData.Add(Environment.NewLine);
-            outputData.Add("Receiving: 10%\r");
-            outputData.Add("Receiving: 20%\r");
-            outputData.Add("Receiving: 30%\rR");
-            outputData.Add("eceiving: 40%\r");
-            outputData.Add("Receiving: 100%\nReceived data\n");
 
-            List<string> received = new List<string>();
+            var outputData = new[]
+            {
+                cmd,
+                Environment.NewLine,
+                "Receiving: 10%\r",
+                "Receiving: 20%\r",
+                "Receiving: 30%\rR",
+                "eceiving: 40%\r",
+                "Receiving: 100%\nReceived data\n"
+            };
+
+            var received = new List<string>();
 
             void FireDataReceived(TextEventArgs e)
             {
@@ -84,13 +87,15 @@ namespace GitUITests.UserControls
 
             filter.Flush();
 
-            List<string> expectedData = new List<string>();
-            expectedData.Add("Receiving: 10%\r");
-            expectedData.Add("Receiving: 20%\r");
-            expectedData.Add("Receiving: 30%\r");
-            expectedData.Add("Receiving: 40%\r");
-            expectedData.Add("Receiving: 100%\n");
-            expectedData.Add("Received data\n");
+            var expectedData = new[]
+            {
+                "Receiving: 10%\r",
+                "Receiving: 20%\r",
+                "Receiving: 30%\r",
+                "Receiving: 40%\r",
+                "Receiving: 100%\n",
+                "Received data\n"
+            };
 
             CollectionAssert.AreEqual(expectedData, received);
         }
@@ -99,16 +104,19 @@ namespace GitUITests.UserControls
         public void CRLFInOutput()
         {
             string cmd = "\"C:\\Program Files\\Git\\bin\\git.exe\" rebase  -i --autosquash --autostash \"branch_foo\"";
-            List<string> outputData = new List<string>();
-            outputData.Add(cmd);
-            outputData.Add(Environment.NewLine);
-            outputData.Add("Receiving: 10%\r");
-            outputData.Add("Receiving: 20%\r");
-            outputData.Add("Receiving: 30%\rR");
-            outputData.Add("eceiving: 40%\r");
-            outputData.Add("Receiving: 100%\nReceived\r\ndata\n");
 
-            List<string> received = new List<string>();
+            var outputData = new[]
+            {
+                cmd,
+                Environment.NewLine,
+                "Receiving: 10%\r",
+                "Receiving: 20%\r",
+                "Receiving: 30%\rR",
+                "eceiving: 40%\r",
+                "Receiving: 100%\nReceived\r\ndata\n"
+            };
+
+            var received = new List<string>();
 
             void FireDataReceived(TextEventArgs e)
             {
@@ -124,15 +132,17 @@ namespace GitUITests.UserControls
 
             filter.Flush();
 
-            List<string> expectedData = new List<string>();
-            expectedData.Add("Receiving: 10%\r");
-            expectedData.Add("Receiving: 20%\r");
-            expectedData.Add("Receiving: 30%\r");
-            expectedData.Add("Receiving: 40%\r");
-            expectedData.Add("Receiving: 100%\n");
-            expectedData.Add("Received\r");
-            expectedData.Add("\n");
-            expectedData.Add("data\n");
+            var expectedData = new[]
+            {
+                "Receiving: 10%\r",
+                "Receiving: 20%\r",
+                "Receiving: 30%\r",
+                "Receiving: 40%\r",
+                "Receiving: 100%\n",
+                "Received\r",
+                "\n",
+                "data\n"
+            };
 
             CollectionAssert.AreEqual(expectedData, received);
         }

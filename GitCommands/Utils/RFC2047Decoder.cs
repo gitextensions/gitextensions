@@ -168,7 +168,7 @@ namespace GitCommands
                                 ++outputPos;
                                 i += 3;
                             }
-                            catch (Exception)
+                            catch
                             {
                                 // could not parse the peek-ahead chars as a hex number... so gobble the un-encoded '='
                                 i += 1;

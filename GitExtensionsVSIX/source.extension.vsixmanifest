@@ -4,11 +4,11 @@
         <Identity Publisher="GitExt Team" Version="2.51.00" Language="en-US" Id="GitExtensions..550013F4-337C-4750-8967-DDEEEC2EB497" />
         <DisplayName>GitExtensions</DisplayName>
         <Description xml:space="preserve" >Git Extensions is a graphical user interface for Git that allows you to control Git without using the command-line</Description>
-        <MoreInfo>http://gitextensions.github.io/</MoreInfo>
+        <MoreInfo>https://gitextensions.github.io/</MoreInfo>
         <License>Resources\LICENSE.md</License>
         <GettingStartedGuide>https://git-extensions-documentation.readthedocs.io/en/latest/</GettingStartedGuide>
-        <Icon>Resources\git-extensions-logo-final-32.png</Icon>
-        <PreviewImage>Resources\git-extensions-logo-final-256.png</PreviewImage>
+        <Icon>Resources\git-extensions-logo-32px.png</Icon>
+        <PreviewImage>Resources\git-extensions-logo-256px.png</PreviewImage>
         <Tags>Git, Git Extensions</Tags>
     </Metadata>
 

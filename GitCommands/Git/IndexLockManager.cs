@@ -25,7 +25,7 @@ namespace GitCommands.Git
     }
 
     /// <summary>
-    /// Facilitates detection and deltion of index.lock files.
+    /// Facilitates detection and deletion of index.lock files.
     /// </summary>
     public sealed class IndexLockManager : IIndexLockManager
     {

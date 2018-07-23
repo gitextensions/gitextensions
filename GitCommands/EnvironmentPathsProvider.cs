@@ -43,9 +43,9 @@ namespace GitCommands
                 yield break;
             }
 
-            foreach (string rawdir in pathVariable.Split(EnvUtils.EnvVariableSeparator))
+            foreach (string rawDir in pathVariable.Split(EnvUtils.EnvVariableSeparator))
             {
-                string dir = rawdir;
+                string dir = rawDir;
 
                 // Usually, paths with spaces are not quoted on %PATH%, but it's well possible, and .NET won't consume a quoted path
                 // This does not handle the full grammar of the %PATH%, but at least prevents Illegal Characters in Path exceptions (see #2924)

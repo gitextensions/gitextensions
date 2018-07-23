@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -34,26 +33,16 @@ namespace GitUI.BranchTreePanel
                 return FullPath.GetHashCode();
             }
 
-            private bool Equals(BaseBranchNode other)
-            {
-                if (other == null)
-                {
-                    return false;
-                }
-
-                return ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath);
-            }
-
             public override bool Equals(object obj)
             {
-                return Equals(obj as BaseBranchNode);
+                return obj is BaseBranchNode other && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath));
             }
 
             protected BaseBranchNode(Tree tree, string fullPath)
                 : base(tree)
             {
                 fullPath = fullPath.Trim();
-                if (fullPath.IsNullOrEmpty())
+                if (string.IsNullOrEmpty(fullPath))
                 {
                     throw new ArgumentNullException(nameof(fullPath));
                 }
@@ -63,10 +52,11 @@ namespace GitUI.BranchTreePanel
                 ParentPath = dirs.Take(dirs.Length - 1).Join(PathSeparator.ToString());
             }
 
+            [CanBeNull]
             internal BaseBranchNode CreateRootNode(IDictionary<string, BaseBranchNode> nodes,
                 Func<Tree, string, BaseBranchNode> createPathNode)
             {
-                if (ParentPath.IsNullOrEmpty())
+                if (string.IsNullOrEmpty(ParentPath))
                 {
                     return this;
                 }
@@ -117,7 +107,7 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(MsVsImages.Branch_16x);
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.BranchDocument);
                 if (IsActive)
                 {
                     TreeViewNode.NodeFont = new Font(TreeViewNode.NodeFont, FontStyle.Bold);
@@ -126,12 +116,7 @@ namespace GitUI.BranchTreePanel
 
             public override bool Equals(object obj)
             {
-                if (!base.Equals(obj))
-                {
-                    return false;
-                }
-
-                return obj is LocalBranchNode localBranchNode && IsActive == localBranchNode.IsActive;
+                return base.Equals(obj) && obj is LocalBranchNode localBranchNode && IsActive == localBranchNode.IsActive;
             }
 
             public override int GetHashCode()
@@ -141,14 +126,11 @@ namespace GitUI.BranchTreePanel
 
             internal override void OnDoubleClick()
             {
-                base.OnDoubleClick();
                 Checkout();
             }
 
             internal override void OnSelected()
             {
-                base.OnSelected();
-
                 SelectRevision();
             }
 
@@ -175,7 +157,7 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(MsVsImages.Folder_grey_16x);
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.BranchFolder);
             }
         }
 
@@ -203,12 +185,7 @@ namespace GitUI.BranchTreePanel
             public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
             {
-                uiCommands.GitUICommandsChanged += UiCommands_GitUICommandsChanged;
-            }
-
-            private void UiCommands_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
-            {
-                TreeViewNode.TreeView.SelectedNode = null;
+                uiCommands.UICommandsChanged += delegate { TreeViewNode.TreeView.SelectedNode = null; };
             }
 
             protected override async Task LoadNodesAsync(CancellationToken token)
@@ -216,7 +193,7 @@ namespace GitUI.BranchTreePanel
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
 
-                var branchNames = Module.GetRefs(false, order: AppSettings.BranchOrderingCriteria).Select(b => b.Name);
+                var branchNames = Module.GetRefs(false).Select(b => b.Name);
                 FillBranchTree(branchNames, token);
             }
 
@@ -250,7 +227,7 @@ namespace GitUI.BranchTreePanel
                 // 1     iss111
                 // 0 master
 
-                #endregion ex
+                #endregion
 
                 var currentBranch = Module.GetSelectedBranch();
                 var nodes = new Dictionary<string, BaseBranchNode>();
@@ -271,7 +248,7 @@ namespace GitUI.BranchTreePanel
             {
                 base.FillTreeViewNode();
 
-                TreeViewNode.Text = $@"{Strings.BranchesText} ({Nodes.Count})";
+                TreeViewNode.Text = $@"{Strings.Branches} ({Nodes.Count})";
 
                 var activeBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsActive);
                 if (activeBranch == null)
@@ -280,12 +257,7 @@ namespace GitUI.BranchTreePanel
                 }
             }
         }
-        #endregion private classes
 
-        [Pure]
-        public static GitRef CreateBranchRef(GitModule module, string name)
-        {
-            return new GitRef(module, guid: null, completeName: GitRefName.RefsHeadsPrefix + name);
-        }
+        #endregion
     }
 }

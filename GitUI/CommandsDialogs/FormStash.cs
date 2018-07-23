@@ -7,7 +7,8 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Patches;
-using GitUI.UserControls;
+using GitExtUtils.GitUI;
+using GitUI.Properties;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -22,9 +23,11 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _cannotBeUndone = new TranslationString("This action cannot be undone.");
         private readonly TranslationString _areYouSure = new TranslationString("Are you sure you want to drop the stash? This action cannot be undone.");
         private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
-        public bool ManageStashes { get; set; }
 
         private readonly AsyncLoader _asyncLoader = new AsyncLoader();
+
+        public bool ManageStashes { get; set; }
+        private GitStash _currentWorkingDirStashItem;
 
         private FormStash()
             : this(null)
@@ -35,15 +38,9 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Loading.Image = Properties.Resources.loadingpanel;
-            Translate();
-            View.ExtraDiffArgumentsChanged += ViewExtraDiffArgumentsChanged;
-            this.AdjustForDpiScaling();
-        }
-
-        private void ViewExtraDiffArgumentsChanged(object sender, EventArgs e)
-        {
-            StashedSelectedIndexChanged(null, null);
+            View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(null, null); };
+            splitContainer1.SplitterDistance = DpiUtil.Scale(280);
+            InitializeComplete();
         }
 
         private void FormStashFormClosing(object sender, FormClosingEventArgs e)
@@ -59,8 +56,6 @@ namespace GitUI.CommandsDialogs
 
             ResizeStashesWidth();
         }
-
-        private GitStash _currentWorkingDirStashItem;
 
         private void Initialize()
         {
@@ -99,6 +94,7 @@ namespace GitUI.CommandsDialogs
             Stashed.SetDiffs();
 
             Loading.Visible = true;
+            Loading.IsAnimating = true;
             Stashes.Enabled = false;
             refreshToolStripButton.Enabled = false;
             toolStripButton_customMessage.Enabled = false;
@@ -121,6 +117,7 @@ namespace GitUI.CommandsDialogs
         {
             Stashed.SetDiffs(items: gitItemStatuses);
             Loading.Visible = false;
+            Loading.IsAnimating = false;
             Stashes.Enabled = true;
             refreshToolStripButton.Enabled = true;
         }
@@ -155,9 +152,10 @@ namespace GitUI.CommandsDialogs
                         }
                         else
                         {
-                            View.ViewTextAsync(
-                                stashedItem.Name,
-                                LocalizationHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid));
+                            ThreadHelper.JoinableTaskFactory.RunAsync(
+                                () => View.ViewTextAsync(
+                                    stashedItem.Name,
+                                    LocalizationHelpers.GetSubmoduleText(Module, stashedItem.Name, stashedItem.TreeGuid?.ToString())));
                         }
                     }
                     else
@@ -185,7 +183,8 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    View.ViewTextAsync(string.Empty, string.Empty);
+                    ThreadHelper.JoinableTaskFactory.RunAsync(
+                        () => View.ViewTextAsync("", ""));
                 }
             }
         }

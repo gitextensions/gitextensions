@@ -401,7 +401,7 @@ namespace GitUI.CommandsDialogs
             // merge
             // 
             this.merge.ContextMenuStrip = this.ConflictedFilesContextMenu;
-            this.merge.Image = global::GitUI.Properties.Resources.Select;
+            this.merge.Image = global::GitUI.Properties.Images.Select;
             this.merge.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.merge.Location = new System.Drawing.Point(331, 0);
             this.merge.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
@@ -427,7 +427,7 @@ namespace GitUI.CommandsDialogs
             // pictureBox1
             // 
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.pictureBox1.BackgroundImage = global::GitUI.Properties.Resources.Info;
+            this.pictureBox1.BackgroundImage = global::GitUI.Properties.Images.Information;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pictureBox1.Location = new System.Drawing.Point(0, 5);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);

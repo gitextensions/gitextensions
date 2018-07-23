@@ -58,7 +58,7 @@ namespace GitUITests
         }
 
         [TestCase(@"\test2\t", "D:/test1/test2/test3/")]
-        public void Get_should_not_throw_then_workingDir_lenght_greater_that_pattern_length(string pattern, string workingDir)
+        public void Get_should_not_throw_then_workingDir_length_greater_that_pattern_length(string pattern, string workingDir)
         {
             Action predicate = () => { _provider.Get(pattern, workingDir); };
             predicate.Should().NotThrow<ArgumentNullException>();
@@ -78,7 +78,7 @@ namespace GitUITests
 
         [TestCase(@"tEsT2", @"D:/", "Test1/teST2/test3/")]
         [TestCase(@"D:\Test\test1", @"D:/TEST", "teSt1/test2/test3/")]
-        public void Get_should_work_with_diferent_cases(string pattern, string workingDir, string filePath)
+        public void Get_should_work_with_different_cases(string pattern, string workingDir, string filePath)
         {
             var predicate = _provider.Get(pattern, workingDir);
             Assert.True(predicate(filePath));

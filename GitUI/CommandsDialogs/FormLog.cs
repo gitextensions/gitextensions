@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs
             : base(enablePositionRestore: true, commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             diffViewer.ExtraDiffArgumentsChanged += DiffViewerExtraDiffArgumentsChanged;
         }

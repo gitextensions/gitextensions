@@ -14,6 +14,7 @@ namespace ResourceManager
 
         /// <summary>Gets the translated text.</summary>
         /// <remarks>Setter is required because this property is set via reflection by the translation engine.</remarks>
+        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local
         public string Text { get; private set; }
 
         /// <summary>Returns <see cref="Text"/> value.</summary>

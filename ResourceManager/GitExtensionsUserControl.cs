@@ -4,18 +4,20 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using GitCommands;
+using JetBrains.Annotations;
 
 namespace ResourceManager
 {
+    // NOTE do not make this class abstract as it breaks the WinForms designer in VS
+
     /// <summary>Provides translation and hotkey plumbing for GitEx <see cref="UserControl"/>s.</summary>
     public class GitExtensionsControl : UserControl, ITranslate
     {
+        private readonly GitExtensionsControlInitialiser _initialiser;
+
         protected GitExtensionsControl()
         {
-            Font = AppSettings.Font;
-
-            Load += GitExtensionsControl_Load;
+            _initialiser = new GitExtensionsControlInitialiser(this);
         }
 
         [Browsable(false)] // because we always read from settings
@@ -26,18 +28,7 @@ namespace ResourceManager
             set => base.Font = value;
         }
 
-        private static bool CheckComponent(object value)
-        {
-            bool isComponentInDesignMode = false;
-            var component = value as IComponent;
-            ISite site = component?.Site;
-            if (site != null && site.DesignMode)
-            {
-                isComponentInDesignMode = true;
-            }
-
-            return isComponentInDesignMode;
-        }
+        public bool IsDesignModeActive => _initialiser.IsDesignModeActive;
 
         protected virtual void OnRuntimeLoad()
         {
@@ -47,30 +38,21 @@ namespace ResourceManager
         {
             base.OnLoad(e);
 
-            if (!CheckComponent(this))
+            if (!_initialiser.IsDesignModeActive)
             {
                 OnRuntimeLoad();
             }
         }
 
-        private bool _translated;
-
-        private void GitExtensionsControl_Load(object sender, EventArgs e)
+        /// <summary>Performs post-initialisation tasks such as translation.</summary>
+        /// <remarks>
+        /// <para>Subclasses must ensure this method is called in their constructor, ideally as the final statement.</para>
+        /// <para>Requiring this extra life-cycle event allows preparing the UI after any call to <c>InitializeComponent</c>,
+        /// but before it is show. The <see cref="UserControl.Load"/> event occurs too late for operations that effect layout.</para>
+        /// </remarks>
+        protected void InitializeComplete()
         {
-            // find out if the value is a component and is currently in design mode
-            bool isComponentInDesignMode = CheckComponent(this);
-
-            if (!_translated && !isComponentInDesignMode)
-            {
-                throw new Exception("The control " + GetType().Name + " is not translated in the constructor. You need to call Translate() right after InitializeComponent().");
-            }
-        }
-
-        /// <summary>Translates the <see cref="UserControl"/>'s elements.</summary>
-        protected void Translate()
-        {
-            Translator.Translate(this, AppSettings.CurrentTranslation);
-            _translated = true;
+            _initialiser.InitializeComplete();
         }
 
         public virtual void AddTranslationItems(ITranslation translation)
@@ -113,6 +95,7 @@ namespace ResourceManager
             return GetHotkeyCommand(commandCode)?.KeyData ?? Keys.None;
         }
 
+        [CanBeNull]
         private HotkeyCommand GetHotkeyCommand(int commandCode)
         {
             return Hotkeys?.FirstOrDefault(h => h.CommandCode == commandCode);

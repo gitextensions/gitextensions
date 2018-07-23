@@ -135,7 +135,7 @@ Cette action sera effectuée sans avertissement durant le chargement d'une branc
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target>Obtenir l'image de l'auteur depuis gravatar.com</target>
         
       </trans-unit>
@@ -1256,7 +1256,7 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>L'item selectionné n'est pas un dépôt git valide.
 
 Voulez vous abandonner et le retirer de la liste des dépôts récents?</target>
@@ -2752,7 +2752,7 @@ compare with first:</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>L'item sélectionné n'est pas un dépôt git valide.
 
 Voulez vous abandonner et le retirer de la liste des dépôts récents?</target>
@@ -2844,7 +2844,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</target>
         
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target>Journal des commandes Git</target>
         
       </trans-unit>
@@ -2919,7 +2919,7 @@ Voulez vous abandonner et le retirer de la liste des dépôts récents?</target>
         
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target>Paramètres...</target>
         
       </trans-unit>
@@ -9678,7 +9678,7 @@ Cela va juste charger dans le sous module le commit déterminé par le projet su
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionDiff" source-language="en" target-language="fr">
+  <file datatype="plaintext" original="RevisionDiffControl" source-language="en" target-language="fr">
     <body>
       <trans-unit id="_deleteFailed.Text">
         <source>Delete file failed</source>
@@ -9872,7 +9872,7 @@ Cela va juste charger dans le sous module le commit déterminé par le projet su
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionFileTree" source-language="en" target-language="fr">
+  <file datatype="plaintext" original="RevisionFileTreeControl" source-language="en" target-language="fr">
     <body>
       <trans-unit id="_assumeUnchangedCaption.Text">
         <source>Assume this file won't change</source>
@@ -10063,7 +10063,7 @@ Vous pouvez voir les changements dans le formulaire de commit.</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionGpgInfo" source-language="en" target-language="fr">
+  <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en" target-language="fr">
     <body>
       <trans-unit id="_commitNotSigned.Text">
         <source>Commit is not signed</source>
@@ -11089,7 +11089,7 @@ Quand OpenSSH est utilisé, des fenêtres de console sont affichés!
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>Enfant</target>
         
       </trans-unit>
@@ -11154,8 +11154,8 @@ Quand OpenSSH est utilisé, des fenêtres de console sont affichés!
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
-        <target>Parent(s)</target>
+        <source>{0:Parent|Parents}</source>
+        <target>{0:Parent|Parents}</target>
         
       </trans-unit>
       <trans-unit id="_secondsAgo.Text">

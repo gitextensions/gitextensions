@@ -136,6 +136,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormGitReview.resx">
       <DependentUpon>FormGitReview.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -151,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\GerritInstallHook.png" />
+    <None Include="Resources\IconGerrit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 
 namespace GitUI.Hotkey
 {
@@ -28,7 +29,7 @@ namespace GitUI.Hotkey
             // Retrieve the modifiers, mask away the rest
             Keys modifier = key & Keys.Modifiers;
 
-            List<Keys> modifierList = new List<Keys>();
+            var modifierList = new List<Keys>();
 
             void AddIfContains(Keys m)
             {
@@ -47,15 +48,27 @@ namespace GitUI.Hotkey
 
         public static string ToText(this Keys key)
         {
-            return string.Join("+",
-              key.GetModifiers()
-              .Union(new[] { key.GetKeyCode() })
-              .Select(k => k.ToFormattedString())
-              .ToArray());
+            return string.Join(
+                "+",
+                key.GetModifiers()
+                    .Union(new[] { key.GetKeyCode() })
+                    .Select(k => k.ToFormattedString())
+                    .ToArray());
         }
 
+        [CanBeNull]
         public static string ToFormattedString(this Keys key)
         {
+            if (key == Keys.Oemcomma)
+            {
+                return ",";
+            }
+
+            if (key == Keys.Decimal)
+            {
+                return ".";
+            }
+
             // Get the string representation
             var str = key.ToCultureSpecificString();
 
@@ -73,6 +86,7 @@ namespace GitUI.Hotkey
             return key.ToText() ?? "";
         }
 
+        [CanBeNull]
         private static string ToCultureSpecificString(this Keys key)
         {
             if (key == Keys.None)
@@ -84,8 +98,7 @@ namespace GitUI.Hotkey
             var culture = CultureInfo.CurrentCulture; // TODO: replace this with the GitExtensions language setting
 
             // for modifier keys this yields for example "Ctrl+None" thus we have to strip the rest after the +
-            var str = new KeysConverter().ConvertToString(null, culture, key).TakeUntilStr("+");
-            return str;
+            return new KeysConverter().ConvertToString(null, culture, key).SubstringUntil("+");
         }
     }
 }

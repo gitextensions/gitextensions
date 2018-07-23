@@ -66,7 +66,7 @@
             // 
             this.commitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.commitInfo.Location = new System.Drawing.Point(0, 0);
-            this.commitInfo.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.commitInfo.Margin = new System.Windows.Forms.Padding(0);
             this.commitInfo.Name = "commitInfo";
             this.commitInfo.Size = new System.Drawing.Size(717, 160);
             this.commitInfo.TabIndex = 0;
@@ -75,6 +75,7 @@
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(0);
             this.splitContainer2.Name = "splitContainer2";
             // 
             // splitContainer2.Panel1
@@ -93,7 +94,7 @@
             this.DiffFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffFiles.FilterVisible = false;
             this.DiffFiles.Location = new System.Drawing.Point(0, 0);
-            this.DiffFiles.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.DiffFiles.Margin = new System.Windows.Forms.Padding(0);
             this.DiffFiles.Name = "DiffFiles";
             this.DiffFiles.Size = new System.Drawing.Size(238, 365);
             this.DiffFiles.TabIndex = 0;
@@ -105,7 +106,7 @@
             this.DiffText.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.DiffText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DiffText.Location = new System.Drawing.Point(0, 0);
-            this.DiffText.Margin = new System.Windows.Forms.Padding(4);
+            this.DiffText.Margin = new System.Windows.Forms.Padding(0);
             this.DiffText.Name = "DiffText";
             this.DiffText.Size = new System.Drawing.Size(475, 365);
             this.DiffText.TabIndex = 0;

@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Paths";
-            Translate();
+            InitializeComplete();
         }
 
         public static SettingsPageReference GetPageReference()

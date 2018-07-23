@@ -12,7 +12,7 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
                 new Regex(regexText);
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
@@ -25,7 +25,7 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
                 var uri = new Uri(url);
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }

@@ -154,7 +154,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             // 
             // tsmiCategoryAdd
             // 
-            this.tsmiCategoryAdd.Image = global::GitUI.Properties.Resources.bullet_add;
+            this.tsmiCategoryAdd.Image = global::GitUI.Properties.Images.BulletAdd;
             this.tsmiCategoryAdd.Name = "tsmiCategoryAdd";
             this.tsmiCategoryAdd.Size = new System.Drawing.Size(130, 22);
             this.tsmiCategoryAdd.Text = "Add new...";
@@ -182,7 +182,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             // 
             // tsmiOpenFolder
             // 
-            this.tsmiOpenFolder.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
+            this.tsmiOpenFolder.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
             this.tsmiOpenFolder.Name = "tsmiOpenFolder";
             this.tsmiOpenFolder.Size = new System.Drawing.Size(224, 22);
             this.tsmiOpenFolder.Text = "Open containing folder";
@@ -268,7 +268,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             // 
             // mnuConfigure
             // 
-            this.mnuConfigure.Image = global::GitUI.Properties.Resources.Settings;
+            this.mnuConfigure.Image = global::GitUI.Properties.Images.Settings;
             this.mnuConfigure.Name = "mnuConfigure";
             this.mnuConfigure.Size = new System.Drawing.Size(218, 22);
             this.mnuConfigure.Text = "&Recent repositories settings";

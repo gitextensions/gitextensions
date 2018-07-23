@@ -6,14 +6,15 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Statistics;
+using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitImpact
 {
     public class ImpactControl : UserControl
     {
-        private const int BlockWidth = 60;
-        private const int TransitionWidth = 50;
+        private static readonly int BlockWidth = DpiUtil.Scale(60);
+        private static readonly int TransitionWidth = DpiUtil.Scale(50);
 
         private const int LinesFontSize = 10;
         private const int WeekFontSize = 8;
@@ -66,7 +67,7 @@ namespace GitImpact
                 RespectMailmap = true
             };
 
-            _impactLoader.Updated += OnImpactUpdate;
+            _impactLoader.CommitLoaded += OnImpactUpdate;
         }
 
         private void Clear()
@@ -97,57 +98,55 @@ namespace GitImpact
             Invalidate();
         }
 
-        private void OnImpactUpdate(object sender, ImpactLoader.CommitEventArgs e)
+        private void OnImpactUpdate(ImpactLoader.Commit commit)
         {
-            var commit = e.Commit;
-
             lock (_dataLock)
             {
                 // UPDATE IMPACT
 
                 // If week does not exist yet in the impact dictionary
-                if (!_impact.ContainsKey(commit.week))
+                if (!_impact.ContainsKey(commit.Week))
                 {
                     // Create it
-                    _impact.Add(commit.week, new Dictionary<string, ImpactLoader.DataPoint>());
+                    _impact.Add(commit.Week, new Dictionary<string, ImpactLoader.DataPoint>());
                 }
 
                 // If author does not exist yet for this week in the impact dictionary
-                if (!_impact[commit.week].ContainsKey(commit.author))
+                if (!_impact[commit.Week].ContainsKey(commit.Author))
                 {
                     // Create it
-                    _impact[commit.week].Add(commit.author, commit.data);
+                    _impact[commit.Week].Add(commit.Author, commit.Data);
                 }
                 else
                 {
                     // Otherwise just add the changes
-                    _impact[commit.week][commit.author] += commit.data;
+                    _impact[commit.Week][commit.Author] += commit.Data;
                 }
 
                 // UPDATE AUTHORS
 
                 // If author does not exist yet in the authors dictionary
-                if (!_authors.ContainsKey(commit.author))
+                if (!_authors.ContainsKey(commit.Author))
                 {
                     // Create it
-                    _authors.Add(commit.author, commit.data);
+                    _authors.Add(commit.Author, commit.Data);
                 }
                 else
                 {
                     // Otherwise just add the changes
-                    _authors[commit.author] += commit.data;
+                    _authors[commit.Author] += commit.Data;
                 }
 
                 // Add authors to intermediate weeks where they didn't create commits
-                ImpactLoader.AddIntermediateEmptyWeeks(ref _impact, _authors);
+                ImpactLoader.AddIntermediateEmptyWeeks(ref _impact, _authors.Keys);
 
-                // UPDATE AUTHORSTACK
+                // UPDATE AUTHOR STACK
 
                 // If author does not exist yet in the author_stack
-                if (!_authorStack.Contains(commit.author))
+                if (!_authorStack.Contains(commit.Author))
                 {
                     // Add it to the front (drawn first)
-                    _authorStack.Insert(0, commit.author);
+                    _authorStack.Insert(0, commit.Author);
                 }
             }
 
@@ -180,25 +179,20 @@ namespace GitImpact
 
         private void InitializeComponent()
         {
-            _scrollBar = new HScrollBar();
             SuspendLayout();
 
-            //
-            // scrollBar
-            //
-            _scrollBar.Dock = DockStyle.Bottom;
-            _scrollBar.LargeChange = 0;
-            _scrollBar.Location = new Point(0, 133);
-            _scrollBar.Maximum = 0;
-            _scrollBar.Name = "_scrollBar";
-            _scrollBar.Size = new Size(150, 17);
-            _scrollBar.SmallChange = 0;
-            _scrollBar.TabIndex = 0;
+            _scrollBar = new HScrollBar
+            {
+                Dock = DockStyle.Bottom,
+                LargeChange = 0,
+                Location = new Point(0, 133),
+                Maximum = 0,
+                Name = "_scrollBar",
+                SmallChange = 0,
+                TabIndex = 0
+            };
             _scrollBar.Scroll += OnScroll;
 
-            //
-            // ImpactControl
-            //
             Controls.Add(_scrollBar);
             Name = "ImpactControl";
             Paint += OnPaint;
@@ -283,14 +277,14 @@ namespace GitImpact
                     return;
                 }
 
-                using (Font font = new Font("Arial", LinesFontSize))
+                using (var font = new Font("Arial", LinesFontSize))
                 {
                     Brush brush = Brushes.White;
 
                     foreach (var (point, size) in _lineLabels[author])
                     {
                         SizeF sz = g.MeasureString(size.ToString(), font);
-                        PointF pt = new PointF(point.X - (sz.Width / 2), point.Y - (sz.Height / 2));
+                        var pt = new PointF(point.X - (sz.Width / 2), point.Y - (sz.Height / 2));
                         g.DrawString(size.ToString(), font, brush, pt);
                     }
                 }
@@ -301,14 +295,14 @@ namespace GitImpact
         {
             lock (_dataLock)
             {
-                using (Font font = new Font("Arial", WeekFontSize))
+                using (var font = new Font("Arial", WeekFontSize))
                 {
                     Brush brush = Brushes.Gray;
 
                     foreach (var (point, date) in _weekLabels)
                     {
                         SizeF sz = g.MeasureString(date.ToString("dd. MMM yy"), font);
-                        PointF pt = new PointF(point.X - (sz.Width / 2), point.Y + (sz.Height / 2));
+                        var pt = new PointF(point.X - (sz.Width / 2), point.Y + (sz.Height / 2));
                         g.DrawString(date.ToString("dd. MMM yy"), font, brush, pt);
                     }
                 }
@@ -343,7 +337,7 @@ namespace GitImpact
                     {
                         // Calculate week-author-rectangle
                         int height = Math.Max(1, (int)Math.Round(Math.Pow(Math.Log(data.ChangedLines), 1.5) * 4));
-                        Rectangle rc = new Rectangle(x, y, BlockWidth, height);
+                        var rc = new Rectangle(x, y, BlockWidth, height);
 
                         // Add rectangle to temporary list
                         if (!author_points_dict.ContainsKey(author))

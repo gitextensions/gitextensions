@@ -22,6 +22,15 @@ namespace GitCommands
         /// <summary>"refs/bisect/"</summary>
         public static string RefsBisectPrefix { get; } = "refs/bisect/";
 
+        /// <summary>"refs/bisect/good"</summary>
+        public static string RefsBisectGoodPrefix { get; } = "refs/bisect/good";
+
+        /// <summary>"refs/bisect/bad"</summary>
+        public static string RefsBisectBadPrefix { get; } = "refs/bisect/bad";
+
+        /// <summary>"refs/stash"</summary>
+        public static string RefsStashPrefix { get; } = "refs/stash";
+
         /// <summary>"^{}"</summary>
         public static string TagDereferenceSuffix { get; } = "^{}";
 

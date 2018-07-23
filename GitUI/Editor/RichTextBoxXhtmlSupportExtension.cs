@@ -478,7 +478,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         private static PARAFORMAT GetParaFormat(HandleRef handleRef)
         {
-            PARAFORMAT pf = new PARAFORMAT();
+            var pf = new PARAFORMAT();
             pf.cbSize = Marshal.SizeOf(pf);
 
             // Get the alignment.
@@ -513,7 +513,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         private static PARAFORMAT GetDefaultParaFormat(HandleRef handleRef)
         {
-            PARAFORMAT pf = new PARAFORMAT();
+            var pf = new PARAFORMAT();
             pf.cbSize = Marshal.SizeOf(pf);
 
             // Get the alignment.
@@ -548,7 +548,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         private static CHARFORMAT GetCharFormat(HandleRef handleRef)
         {
-            CHARFORMAT cf = new CHARFORMAT();
+            var cf = new CHARFORMAT();
             cf.cbSize = Marshal.SizeOf(cf);
 
             // Get the alignment.
@@ -583,13 +583,13 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static void SetCharFormat(this RichTextBox rtb, CFM mask, CFE effects)
         {
-            CHARFORMAT cf = new CHARFORMAT(mask, effects);
+            var cf = new CHARFORMAT(mask, effects);
             rtb.SetCharFormat(cf);
         }
 
         private static CHARFORMAT GetDefaultCharFormat(HandleRef handleRef)
         {
-            CHARFORMAT cf = new CHARFORMAT();
+            var cf = new CHARFORMAT();
             cf.cbSize = Marshal.SizeOf(cf);
 
             // Get the alignment.
@@ -624,13 +624,13 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static void SetDefaultCharFormat(this RichTextBox rtb, CFM mask, CFE effects)
         {
-            CHARFORMAT cf = new CHARFORMAT(mask, effects);
+            var cf = new CHARFORMAT(mask, effects);
             rtb.SetDefaultCharFormat(cf);
         }
 
         private static Point GetScrollPoint(HandleRef handleRef)
         {
-            Point scrollPoint = new Point();
+            var scrollPoint = new Point();
             NativeMethods.SendMessage(handleRef, NativeMethods.EM_GETSCROLLPOS, IntPtr.Zero, ref scrollPoint);
             return scrollPoint;
         }
@@ -657,9 +657,9 @@ namespace GitUI.Editor.RichTextBoxExtension
         // convert COLORREF to Color
         private static Color GetColor(int crColor)
         {
-            byte r = (byte)crColor;
-            byte g = (byte)(crColor >> 8);
-            byte b = (byte)(crColor >> 16);
+            var r = (byte)crColor;
+            var g = (byte)(crColor >> 8);
+            var b = (byte)(crColor >> 16);
 
             return Color.FromArgb(r, g, b);
         }
@@ -729,7 +729,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         public static string GetXHTMLText(this RichTextBox rtb, bool bParaFormat)
         {
-            StringBuilder strHTML = new StringBuilder();
+            var strHTML = new StringBuilder();
 
             rtb.HideSelection = true;
             IntPtr oldMask = rtb.BeginUpdate();
@@ -777,7 +777,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
         private static string ProcessTags(RichTextBox rtb, List<KeyValuePair<int, string>> colFormat, bool bParaFormat)
         {
-            StringBuilder sbT = new StringBuilder();
+            var sbT = new StringBuilder();
 
             ctformatStates bold = ctformatStates.nctNone;
             ctformatStates bitalic = ctformatStates.nctNone;
@@ -1104,7 +1104,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
             int nStart = rtb.SelectionStart;
             int nEnd = rtb.SelectionLength;
-            StringBuilder text = new StringBuilder();
+            var text = new StringBuilder();
 
             try
             {
@@ -1148,7 +1148,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         /// </summary>
         private static string EscapeNonXMLChars(string input)
         {
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
             foreach (char ch in input)
             {
                 if (XmlConvert.IsXmlChar(ch))
@@ -1198,7 +1198,7 @@ namespace GitUI.Editor.RichTextBoxExtension
         public static void SetXHTMLText(this RichTextBox rtb, string xhtmlText)
         {
             rtb.Clear();
-            RTFCurrentState cs = new RTFCurrentState();
+            var cs = new RTFCurrentState();
 
             var handleRef = new HandleRef(rtb, rtb.Handle);
             cs.cf = GetDefaultCharFormat(handleRef); // to apply character formatting
@@ -1215,7 +1215,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
             try
             {
-                using (StringReader stringreader = new StringReader(EscapeNonXMLChars(xhtmlText)))
+                using (var stringreader = new StringReader(EscapeNonXMLChars(xhtmlText)))
                 {
                     XmlReader reader = XmlReader.Create(stringreader, settings);
                     while (reader.Read())
@@ -1230,7 +1230,7 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
 
             // apply links style
-            CHARFORMAT ncf = new CHARFORMAT(CFM.LINK, CFE.LINK);
+            var ncf = new CHARFORMAT(CFM.LINK, CFE.LINK);
             ncf.cbSize = Marshal.SizeOf(ncf);
             foreach (var (start, length) in cs.links)
             {
@@ -1527,7 +1527,7 @@ namespace GitUI.Editor.RichTextBoxExtension
 
             try
             {
-                using (StringReader strReader = new StringReader(xhtmlText))
+                using (var strReader = new StringReader(xhtmlText))
                 {
                     XmlReader reader = XmlReader.Create(strReader, settings);
                     while (reader.Read())

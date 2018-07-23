@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 
 namespace ReleaseNotesGenerator
 {
@@ -13,6 +14,7 @@ namespace ReleaseNotesGenerator
     {
         private static readonly Regex LogLineRegex = new Regex("^([a-zA-Z0-9]{1,})@(.*)", RegexOptions.Compiled);
 
+        [CanBeNull]
         public LogLine Parse(string line)
         {
             if (string.IsNullOrWhiteSpace(line))
@@ -38,28 +40,28 @@ namespace ReleaseNotesGenerator
                 return resultList;
             }
 
-            LogLine loglineCurrent = null;
+            LogLine logLineCurrent = null;
             foreach (string line in lines)
             {
                 var logLine1 = Parse(line);
                 if (logLine1 != null)
                 {
-                    if (loglineCurrent != null)
+                    if (logLineCurrent != null)
                     {
-                        resultList.Add(loglineCurrent);
+                        resultList.Add(logLineCurrent);
                     }
 
-                    loglineCurrent = logLine1;
+                    logLineCurrent = logLine1;
                 }
                 else
                 {
-                    loglineCurrent?.MessageLines.Add(line);
+                    logLineCurrent?.MessageLines.Add(line);
                 }
             }
 
-            if (loglineCurrent != null)
+            if (logLineCurrent != null)
             {
-                resultList.Add(loglineCurrent);
+                resultList.Add(logLineCurrent);
             }
 
             return resultList;

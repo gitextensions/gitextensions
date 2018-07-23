@@ -4,6 +4,9 @@
     {
         string CompleteName { get; }
         bool IsBisect { get; }
+        bool IsBisectGood { get; }
+        bool IsBisectBad { get; }
+        bool IsStash { get; }
 
         /// <summary>
         /// True when Guid is a checksum of an object (e.g. commit) to which another object
@@ -11,8 +14,8 @@
         /// <para>False when Name and Guid are denoting the same object.</para>
         /// </summary>
         bool IsDereference { get; }
+
         bool IsHead { get; }
-        bool IsOther { get; }
         bool IsRemote { get; }
         bool IsTag { get; }
         string LocalName { get; }
@@ -20,8 +23,8 @@
         IGitModule Module { get; }
         string Remote { get; }
         string TrackingRemote { get; set; }
-        bool Selected { get; set; }
-        bool SelectedHeadMergeSource { get; set; }
+        bool IsSelected { get; set; }
+        bool IsSelectedHeadMergeSource { get; set; }
 
         /// <summary>
         /// This method is a faster than the property above. The property reads the config file
@@ -32,8 +35,8 @@
 
         /// <summary>
         /// This method is a faster than the property above. The property reads the config file
-        /// every time it is accessed. This method accepts a configfile what makes it faster when loading
-        /// the revisiongraph.
+        /// every time it is accessed. This method accepts a config file which makes it faster when loading
+        /// the revision graph.
         /// </summary>
         string GetMergeWith(ISettingsValueGetter configFile);
     }

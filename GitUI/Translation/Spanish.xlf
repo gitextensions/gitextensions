@@ -135,7 +135,7 @@ Esta acción se realizará sin preguntar al hacer checkout de una rama.</target>
         
       </trans-unit>
       <trans-unit id="ShowAuthorGravatar.Text">
-        <source>Get author image from gravatar.com</source>
+        <source>Show author's avatar in the commit info view</source>
         <target>Obtener la imagen del autor de gravatar.com</target>
         
       </trans-unit>
@@ -1250,7 +1250,7 @@ Por favor asegúrese que git (Git for Windows o cygwin) está instalado o config
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>El elemento seleccionado no es un repositorio Git válido.
 
 ¿Quiere abortar y eliminarlo de la lista de repositorios recientes?</target>
@@ -2736,7 +2736,7 @@ compare with first:</source>
       <trans-unit id="directoryIsNotAValidRepository.Text">
         <source>The selected item is not a valid git repository.
 
-Do you want to abort and remove it from the recent repositories list?</source>
+Do you want to remove it from the recent repositories list?</source>
         <target>El elemento seleccionado no es un repositorio git válido.
 ¿Desea abortar y eliminarlo de la lista de repositorios recientes?</target>
         
@@ -2827,7 +2827,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="gitcommandLogToolStripMenuItem.Text">
-        <source>Gitcommand log</source>
+        <source>Git command log</source>
         <target>Registro de Gitcommand</target>
         
       </trans-unit>
@@ -2901,7 +2901,7 @@ Do you want to abort and remove it from the recent repositories list?</source>
         
       </trans-unit>
       <trans-unit id="pluginSettingsToolStripMenuItem.Text">
-        <source>Settings</source>
+        <source>Plugin Settings</source>
         <target>Configuración</target>
         
       </trans-unit>
@@ -9518,7 +9518,7 @@ Esto sólo hará checkout del submódulo del commit determinado por el superproy
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionDiff" source-language="en" target-language="es">
+  <file datatype="plaintext" original="RevisionDiffControl" source-language="en" target-language="es">
     <body>
       <trans-unit id="_deleteFailed.Text">
         <source>Delete file failed</source>
@@ -9690,7 +9690,7 @@ Esto sólo hará checkout del submódulo del commit determinado por el superproy
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionFileTree" source-language="en" target-language="es">
+  <file datatype="plaintext" original="RevisionFileTreeControl" source-language="en" target-language="es">
     <body>
       <trans-unit id="_assumeUnchangedCaption.Text">
         <source>Assume this file won't change</source>
@@ -9848,7 +9848,7 @@ See the changes in the commit form.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionGpgInfo" source-language="en" target-language="es">
+  <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en" target-language="es">
     <body>
       <trans-unit id="_commitNotSigned.Text">
         <source>Commit is not signed</source>
@@ -10822,7 +10822,7 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
         
       </trans-unit>
       <trans-unit id="_childrenText.Text">
-        <source>Children</source>
+        <source>{0:Child|Children}</source>
         <target>Hijos</target>
         
       </trans-unit>
@@ -10887,7 +10887,7 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
         
       </trans-unit>
       <trans-unit id="_parentsText.Text">
-        <source>Parent(s)</source>
+        <source>{0:Parent|Parents}</source>
         <target>Padre(s)</target>
         
       </trans-unit>

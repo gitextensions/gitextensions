@@ -15,7 +15,7 @@ namespace GitUIPluginInterfaces
 
         private static readonly object compositionContainerSyncObj = new object();
 
-        private static readonly HashSet<string> _loggedExecptionMessages = new HashSet<string>();
+        private static readonly HashSet<string> _loggedExceptionMessages = new HashSet<string>();
 
         /// <summary>
         /// The MEF container.
@@ -48,8 +48,7 @@ namespace GitUIPluginInterfaces
             {
                 try
                 {
-                    var exps = container.GetExports<T>();
-                    ret.AddRange(exps);
+                    ret.AddRange(container.GetExports<T>());
                 }
                 catch (ReflectionTypeLoadException ex)
                 {
@@ -71,8 +70,7 @@ namespace GitUIPluginInterfaces
             {
                 try
                 {
-                    var exps = container.GetExports<T, TMetadataView>();
-                    ret.AddRange(exps);
+                    ret.AddRange(container.GetExports<T, TMetadataView>());
                 }
                 catch (ReflectionTypeLoadException ex)
                 {
@@ -93,7 +91,7 @@ namespace GitUIPluginInterfaces
 
             return ret;
 
-            bool ShouldLogException(Exception e) => _loggedExecptionMessages.Add(e.Message);
+            bool ShouldLogException(Exception e) => _loggedExceptionMessages.Add(e.Message);
         }
     }
 }

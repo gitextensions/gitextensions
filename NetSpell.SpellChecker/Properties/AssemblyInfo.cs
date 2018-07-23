@@ -65,7 +65,7 @@ namespace NetSpell.SpellChecker
             get
             {
                 object[] r = _myType.Assembly.GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
-                AssemblyCompanyAttribute ct = (AssemblyCompanyAttribute)r[0];
+                var ct = (AssemblyCompanyAttribute)r[0];
                 return ct.Company;
             }
         }
@@ -78,7 +78,7 @@ namespace NetSpell.SpellChecker
             get
             {
                 object[] r = _myType.Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
-                AssemblyCopyrightAttribute ct = (AssemblyCopyrightAttribute)r[0];
+                var ct = (AssemblyCopyrightAttribute)r[0];
                 return ct.Copyright;
             }
         }
@@ -91,7 +91,7 @@ namespace NetSpell.SpellChecker
             get
             {
                 object[] r = _myType.Assembly.GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
-                AssemblyDescriptionAttribute ct = (AssemblyDescriptionAttribute)r[0];
+                var ct = (AssemblyDescriptionAttribute)r[0];
                 return ct.Description;
             }
         }
@@ -114,7 +114,7 @@ namespace NetSpell.SpellChecker
             get
             {
                 object[] r = _myType.Assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false);
-                AssemblyProductAttribute ct = (AssemblyProductAttribute)r[0];
+                var ct = (AssemblyProductAttribute)r[0];
                 return ct.Product;
             }
         }
@@ -127,7 +127,7 @@ namespace NetSpell.SpellChecker
             get
             {
                 object[] r = _myType.Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-                AssemblyTitleAttribute ct = (AssemblyTitleAttribute)r[0];
+                var ct = (AssemblyTitleAttribute)r[0];
                 return ct.Title;
             }
         }

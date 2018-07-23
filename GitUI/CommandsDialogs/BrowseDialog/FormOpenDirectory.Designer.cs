@@ -33,7 +33,7 @@
             this._NO_TRANSLATE_Directory = new System.Windows.Forms.ComboBox();
             this.Load = new System.Windows.Forms.Button();
             this.folderBrowserButton1 = new GitUI.UserControls.FolderBrowserButton();
-            this.folderGoUpbutton = new System.Windows.Forms.Button();
+            this.folderGoUpButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
@@ -63,7 +63,7 @@
             // Load
             // 
             this.Load.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Load.Image = global::GitUI.Properties.Resources.IconRepoOpen;
+            this.Load.Image = global::GitUI.Properties.Images.RepoOpen;
             this.Load.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Load.Location = new System.Drawing.Point(448, 45);
             this.Load.Name = "Load";
@@ -85,15 +85,15 @@
             // 
             // folderGoUpbutton
             // 
-            this.folderGoUpbutton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.folderGoUpbutton.Image = global::GitUI.Properties.Resources.levelUp;
-            this.folderGoUpbutton.Location = new System.Drawing.Point(448, 10);
-            this.folderGoUpbutton.Name = "folderGoUpbutton";
-            this.folderGoUpbutton.Size = new System.Drawing.Size(26, 25);
-            this.folderGoUpbutton.TabIndex = 5;
-            this.toolTip1.SetToolTip(this.folderGoUpbutton, "Go to parent directory...");
-            this.folderGoUpbutton.UseVisualStyleBackColor = true;
-            this.folderGoUpbutton.Click += new System.EventHandler(this.folderGoUpbutton_Click);
+            this.folderGoUpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.folderGoUpButton.Image = global::GitUI.Properties.Images.NavigateUp;
+            this.folderGoUpButton.Location = new System.Drawing.Point(448, 10);
+            this.folderGoUpButton.Name = "folderGoUpButton";
+            this.folderGoUpButton.Size = new System.Drawing.Size(26, 25);
+            this.folderGoUpButton.TabIndex = 5;
+            this.toolTip1.SetToolTip(this.folderGoUpButton, "Go to parent directory...");
+            this.folderGoUpButton.UseVisualStyleBackColor = true;
+            this.folderGoUpButton.Click += new System.EventHandler(this.folderGoUpButton_Click);
             // 
             // toolTip1
             // 
@@ -108,7 +108,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(595, 81);
-            this.Controls.Add(this.folderGoUpbutton);
+            this.Controls.Add(this.folderGoUpButton);
             this.Controls.Add(this.folderBrowserButton1);
             this.Controls.Add(this.Load);
             this.Controls.Add(this._NO_TRANSLATE_Directory);
@@ -130,7 +130,7 @@
         private System.Windows.Forms.ComboBox _NO_TRANSLATE_Directory;
         private new System.Windows.Forms.Button Load;
         private UserControls.FolderBrowserButton folderBrowserButton1;
-        private System.Windows.Forms.Button folderGoUpbutton;
+        private System.Windows.Forms.Button folderGoUpButton;
         private System.Windows.Forms.ToolTip toolTip1;
     }
 }

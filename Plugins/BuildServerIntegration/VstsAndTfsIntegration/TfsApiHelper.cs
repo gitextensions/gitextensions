@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GitUI;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace VstsAndTfsIntegration
@@ -51,6 +52,7 @@ namespace VstsAndTfsIntegration
             }
         }
 
+        [ItemCanBeNull]
         private async Task<string> GetBuildDefinitionsAsync(string buildDefinitionNameFilter)
         {
             var isNotFiltered = string.IsNullOrWhiteSpace(buildDefinitionNameFilter);
@@ -72,7 +74,8 @@ namespace VstsAndTfsIntegration
             return GetBuildDefinitionsIds(buildDefinitions.Value.Where(b => tfsBuildDefinitionNameFilter.IsMatch(b.Name)));
         }
 
-        private string GetBuildDefinitionsIds(IEnumerable<BuildDefinition> buildDefinitions)
+        [CanBeNull]
+        private static string GetBuildDefinitionsIds(IEnumerable<BuildDefinition> buildDefinitions)
         {
             if (buildDefinitions != null && buildDefinitions.Any())
             {
