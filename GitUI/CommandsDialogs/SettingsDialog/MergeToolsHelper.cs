@@ -34,14 +34,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     continue;
                 }
                 string fullName;
-                string programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles");
+                string programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles") ?? "";
+
 
                 if (CheckFileExists(programFilesPath, location, fileName, out fullName))
                 {
                     return fullName;
                 }
 
-                programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+                programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)") ?? "";
 
                 if ((IntPtr.Size == 8 ||
                     !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))) &&
