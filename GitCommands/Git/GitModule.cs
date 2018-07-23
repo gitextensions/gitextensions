@@ -696,6 +696,14 @@ namespace GitCommands
         /// <summary>
         /// Run git command, console window is hidden, wait for exit, redirect output
         /// </summary>
+        public IEnumerable<string> ReadGitOutputLines(ArgumentBuilder arguments)
+        {
+            return ReadGitOutputLines(arguments.ToString());
+        }
+
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         public IEnumerable<string> ReadGitOutputLines(string arguments)
         {
             return ReadCmdOutputLines(AppSettings.GitCommand, arguments, null);

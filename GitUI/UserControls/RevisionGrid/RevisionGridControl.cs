@@ -834,10 +834,10 @@ namespace GitUI
                     {
                         if (_currentCheckoutParents == null)
                         {
-                            _currentCheckoutParents = GetAllParents(CurrentCheckout);
+                            TryGetParents(CurrentCheckout, out _currentCheckoutParents);
                         }
 
-                        _filteredCurrentCheckout = _currentCheckoutParents.FirstOrDefault(parent => parent == revision.ObjectId);
+                        _filteredCurrentCheckout = _currentCheckoutParents?.FirstOrDefault(parent => parent == revision.ObjectId);
                     }
                 }
 
@@ -1061,11 +1061,14 @@ namespace GitUI
                 }
 
                 // Not found, so search for its parents
-                foreach (var parentId in GetAllParents(objectId))
+                if (TryGetParents(objectId, out var parentIds))
                 {
-                    if (_gridView.TryGetRevisionIndex(parentId) is int parentIndex)
+                    foreach (var parentId in parentIds)
                     {
-                        return parentIndex;
+                        if (_gridView.TryGetRevisionIndex(parentId) is int parentIndex)
+                        {
+                            return parentIndex;
+                        }
                     }
                 }
 
@@ -1074,7 +1077,9 @@ namespace GitUI
             }
         }
 
-        private IReadOnlyList<ObjectId> GetAllParents(ObjectId objectId)
+        [ContractAnnotation("=>false,parentIds:null")]
+        [ContractAnnotation("=>true,parentIds:notnull")]
+        private bool TryGetParents(ObjectId objectId, out IReadOnlyList<ObjectId> parentIds)
         {
             var args = new ArgumentBuilder
             {
@@ -1084,15 +1089,25 @@ namespace GitUI
                 objectId
             };
 
-            // NOTE this will throw a FormatException if the objectId does not exist.
+            // NOTE if the object ID does not exist we receive a message resembling (excluding quotes):
             //
-            // An error message resembles (excluding quotes):
             // "fatal: bad object b897cd39543bd933da30af872a633760e79472c9"
 
-            return Module
-                .ReadGitOutputLines(args.ToString())
-                .Select(line => ObjectId.Parse(line))
-                .ToList();
+            var list = new List<ObjectId>();
+
+            foreach (var line in Module.ReadGitOutputLines(args))
+            {
+                if (!ObjectId.TryParse(line, out var parentId))
+                {
+                    parentIds = default;
+                    return false;
+                }
+
+                list.Add(parentId);
+            }
+
+            parentIds = list;
+            return true;
         }
 
         #region Graph event handlers
