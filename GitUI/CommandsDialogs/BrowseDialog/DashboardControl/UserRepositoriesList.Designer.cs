@@ -164,11 +164,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             // contextMenuStrip
             // 
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiRemoveFromList,
+            this.tsmiOpenFolder,
             this.toolStripMenuItem1,
             this.tsmiCategories,
             this.toolStripMenuItem2,
-            this.tsmiOpenFolder,
+            this.tsmiRemoveFromList,
             this.tsmiRemoveMissingReposFromList});
             this.contextMenuStrip.Name = "contextMenuStrip";
             this.contextMenuStrip.Size = new System.Drawing.Size(225, 126);
@@ -186,7 +186,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             // 
             this.tsmiRemoveMissingReposFromList.Name = "tsmiRemoveMissingReposFromList";
             this.tsmiRemoveMissingReposFromList.Size = new System.Drawing.Size(224, 22);
-            this.tsmiRemoveMissingReposFromList.Text = "Remove Missing Projects from the list";
+            this.tsmiRemoveMissingReposFromList.Text = "Remove missing projects from the list";
             this.tsmiRemoveMissingReposFromList.Click += new System.EventHandler(this.tsmiRemoveMissingReposFromList_Click);
             // 
             // tsmiOpenFolder
