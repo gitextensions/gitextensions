@@ -13,19 +13,21 @@ namespace GitUI.UserControls.RevisionGrid
 {
     internal class RevisionGridMenuCommands : MenuCommandsBase
     {
+        public event EventHandler MenuChanged;
+
         private readonly TranslationString _quickSearchQuickHelp = new TranslationString("Start typing in revision grid to start quick search.");
         private readonly TranslationString _noRevisionFoundError = new TranslationString("No revision found.");
 
         private readonly RevisionGridControl _revisionGrid;
 
-        // must both be created only once
-        private IReadOnlyList<MenuCommand> _navigateMenuCommands;
-        private IReadOnlyList<MenuCommand> _viewMenuCommands;
+        public IReadOnlyList<MenuCommand> NavigateMenuCommands { get; }
+        public IReadOnlyList<MenuCommand> ViewMenuCommands { get; }
 
         public RevisionGridMenuCommands(RevisionGridControl revisionGrid)
         {
             _revisionGrid = revisionGrid;
-            CreateOrUpdateMenuCommands(); // for translation
+            NavigateMenuCommands = CreateNavigateMenuCommands();
+            ViewMenuCommands = CreateViewMenuCommands();
             TranslationCategoryName = "RevisionGrid";
             Translate();
         }
@@ -35,24 +37,13 @@ namespace GitUI.UserControls.RevisionGrid
         /// </summary>
         public void CreateOrUpdateMenuCommands()
         {
-            if (_navigateMenuCommands == null && _viewMenuCommands == null)
-            {
-                _navigateMenuCommands = CreateNavigateMenuCommands();
-                _viewMenuCommands = CreateViewMenuCommands();
-            }
-            else if (_navigateMenuCommands != null && _viewMenuCommands != null)
-            {
-                var navigateMenuCommands2 = CreateNavigateMenuCommands();
-                var viewMenuCommands2 = CreateViewMenuCommands();
+            UpdateMenuCommandShortcutKeyDisplayString(NavigateMenuCommands, CreateNavigateMenuCommands());
+            UpdateMenuCommandShortcutKeyDisplayString(ViewMenuCommands, CreateViewMenuCommands());
 
-                UpdateMenuCommandShortcutKeyDisplayString(_navigateMenuCommands, navigateMenuCommands2);
-                UpdateMenuCommandShortcutKeyDisplayString(_viewMenuCommands, viewMenuCommands2);
-
-                if (_revisionGrid != null)
-                {
-                    // null when TranslationApp is started
-                    TriggerMenuChanged(); // trigger refresh
-                }
+            if (_revisionGrid != null)
+            {
+                // null when TranslationApp is started
+                TriggerMenuChanged(); // trigger refresh
             }
 
             return;
@@ -76,11 +67,6 @@ namespace GitUI.UserControls.RevisionGrid
                 menuCommand.SetCheckForRegisteredMenuItems();
                 menuCommand.UpdateMenuItemsShortcutKeyDisplayString();
             }
-        }
-
-        public IReadOnlyList<MenuCommand> GetNavigateMenuCommands()
-        {
-            return _navigateMenuCommands;
         }
 
         private IReadOnlyList<MenuCommand> CreateNavigateMenuCommands()
@@ -159,15 +145,6 @@ namespace GitUI.UserControls.RevisionGrid
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Commands.NextQuickSearch)
                 }
             };
-        }
-
-        /// <summary>
-        /// this is needed because _revisionGrid is null when TranslationApp is called
-        /// </summary>
-        [CanBeNull]
-        private string GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands revGridCommands)
-        {
-            return _revisionGrid?.GetShortcutKeys(revGridCommands).ToShortcutKeyDisplayString();
         }
 
         private IReadOnlyList<MenuCommand> CreateViewMenuCommands()
@@ -384,12 +361,12 @@ namespace GitUI.UserControls.RevisionGrid
             };
         }
 
-        public IReadOnlyList<MenuCommand> GetViewMenuCommands()
+        [CanBeNull]
+        private string GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands revGridCommands)
         {
-            return _viewMenuCommands;
+            // _revisionGrid is null when TranslationApp is called
+            return _revisionGrid?.GetShortcutKeys(revGridCommands).ToShortcutKeyDisplayString();
         }
-
-        public event EventHandler MenuChanged;
 
         protected override IEnumerable<MenuCommand> GetMenuCommandsForTranslation()
         {
@@ -398,7 +375,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         private IEnumerable<MenuCommand> GetMenuCommandsWithoutSeparators()
         {
-            return _navigateMenuCommands.Concat(_viewMenuCommands).Where(mc => !mc.IsSeparator);
+            return NavigateMenuCommands.Concat(ViewMenuCommands).Where(mc => !mc.IsSeparator);
         }
 
         private void SelectCurrentRevisionExecute()

@@ -149,10 +149,10 @@ namespace GitUI
             MenuCommands.CreateOrUpdateMenuCommands();
 
             // fill View context menu from MenuCommands
-            FillMenuFromMenuCommands(MenuCommands.GetViewMenuCommands(), viewToolStripMenuItem);
+            FillMenuFromMenuCommands(MenuCommands.ViewMenuCommands, viewToolStripMenuItem);
 
             // fill Navigate context menu from MenuCommands
-            FillMenuFromMenuCommands(MenuCommands.GetNavigateMenuCommands(), navigateToolStripMenuItem);
+            FillMenuFromMenuCommands(MenuCommands.NavigateMenuCommands, navigateToolStripMenuItem);
 
             SetShowBranches();
 
@@ -1433,12 +1433,12 @@ namespace GitUI
             }
 
             var inTheMiddleOfBisect = Module.InTheMiddleOfBisect();
-            markRevisionAsBadToolStripMenuItem.Visible = inTheMiddleOfBisect;
-            markRevisionAsGoodToolStripMenuItem.Visible = inTheMiddleOfBisect;
-            bisectSkipRevisionToolStripMenuItem.Visible = inTheMiddleOfBisect;
-            stopBisectToolStripMenuItem.Visible = inTheMiddleOfBisect;
-            bisectSeparator.Visible = inTheMiddleOfBisect;
-            compareWithCurrentBranchToolStripMenuItem.Visible = Module.GetSelectedBranch().IsNotNullOrWhitespace();
+            SetEnabled(markRevisionAsBadToolStripMenuItem, inTheMiddleOfBisect);
+            SetEnabled(markRevisionAsGoodToolStripMenuItem, inTheMiddleOfBisect);
+            SetEnabled(bisectSkipRevisionToolStripMenuItem, inTheMiddleOfBisect);
+            SetEnabled(stopBisectToolStripMenuItem, inTheMiddleOfBisect);
+            SetEnabled(bisectSeparator, inTheMiddleOfBisect);
+            SetEnabled(compareWithCurrentBranchToolStripMenuItem, Module.GetSelectedBranch().IsNotNullOrWhitespace());
 
             var deleteTagDropDown = new ContextMenuStrip();
             var deleteBranchDropDown = new ContextMenuStrip();
@@ -1560,40 +1560,70 @@ namespace GitUI
 
             bool bareRepositoryOrArtificial = Module.IsBareRepository() || revision.IsArtificial;
             deleteTagToolStripMenuItem.DropDown = deleteTagDropDown;
-            deleteTagToolStripMenuItem.Visible = deleteTagDropDown.Items.Count > 0;
+            SetEnabled(deleteTagToolStripMenuItem, deleteTagDropDown.Items.Count > 0);
 
             deleteBranchToolStripMenuItem.DropDown = deleteBranchDropDown;
-            deleteBranchToolStripMenuItem.Visible = deleteBranchDropDown.Items.Count > 0 && !Module.IsBareRepository();
+            SetEnabled(deleteBranchToolStripMenuItem, deleteBranchDropDown.Items.Count > 0 && !Module.IsBareRepository());
 
             checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
-            checkoutBranchToolStripMenuItem.Visible = !bareRepositoryOrArtificial && HasVisibleEnabledItem(checkoutBranchDropDown) && !Module.IsBareRepository();
+            SetEnabled(checkoutBranchToolStripMenuItem, !bareRepositoryOrArtificial && HasEnabledItem(checkoutBranchDropDown) && !Module.IsBareRepository());
 
             mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
-            mergeBranchToolStripMenuItem.Visible = !bareRepositoryOrArtificial && HasVisibleEnabledItem(mergeBranchDropDown) && !Module.IsBareRepository();
+            SetEnabled(mergeBranchToolStripMenuItem, !bareRepositoryOrArtificial && HasEnabledItem(mergeBranchDropDown) && !Module.IsBareRepository());
 
-            rebaseOnToolStripMenuItem.Visible = !bareRepositoryOrArtificial && !Module.IsBareRepository();
+            SetEnabled(rebaseOnToolStripMenuItem, !bareRepositoryOrArtificial && !Module.IsBareRepository());
 
             renameBranchToolStripMenuItem.DropDown = renameDropDown;
-            renameBranchToolStripMenuItem.Visible = renameDropDown.Items.Count > 0;
+            SetEnabled(renameBranchToolStripMenuItem, renameDropDown.Items.Count > 0);
 
-            checkoutRevisionToolStripMenuItem.Visible = !bareRepositoryOrArtificial;
-            revertCommitToolStripMenuItem.Visible = !bareRepositoryOrArtificial;
-            cherryPickCommitToolStripMenuItem.Visible = !bareRepositoryOrArtificial;
-            manipulateCommitToolStripMenuItem.Visible = !bareRepositoryOrArtificial;
+            SetEnabled(checkoutRevisionToolStripMenuItem, !bareRepositoryOrArtificial);
+            SetEnabled(revertCommitToolStripMenuItem, !bareRepositoryOrArtificial);
+            SetEnabled(cherryPickCommitToolStripMenuItem, !bareRepositoryOrArtificial);
+            SetEnabled(manipulateCommitToolStripMenuItem, !bareRepositoryOrArtificial);
 
-            copyToClipboardToolStripMenuItem.Visible = !revision.IsArtificial;
-            createNewBranchToolStripMenuItem.Visible = !bareRepositoryOrArtificial;
-            resetCurrentBranchToHereToolStripMenuItem.Visible = !bareRepositoryOrArtificial;
-            archiveRevisionToolStripMenuItem.Visible = !revision.IsArtificial;
-            createTagToolStripMenuItem.Visible = !revision.IsArtificial;
+            SetEnabled(copyToClipboardToolStripMenuItem, !revision.IsArtificial);
+            SetEnabled(createNewBranchToolStripMenuItem, !bareRepositoryOrArtificial);
+            SetEnabled(resetCurrentBranchToHereToolStripMenuItem, !bareRepositoryOrArtificial);
+            SetEnabled(archiveRevisionToolStripMenuItem, !revision.IsArtificial);
+            SetEnabled(createTagToolStripMenuItem, !revision.IsArtificial);
 
-            openBuildReportToolStripMenuItem.Visible = !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url);
+            SetEnabled(openBuildReportToolStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url));
 
             RefreshOwnScripts();
 
-            bool HasVisibleEnabledItem(ToolStrip item)
+            UpdateSeparators();
+
+            return;
+
+            void SetEnabled(ToolStripItem item, bool isEnabled)
             {
-                return item.Items.Count != 0 && item.Items.Cast<ToolStripItem>().Any(i => i.Visible && i.Enabled);
+                // NOTE we have to set 'enabled' in order to filter separators because
+                // setting 'visible' to true sets some internal flag, yet the property still returns
+                // false, presumably because the menu item is not actually yet visible on screen.
+                item.Visible = isEnabled;
+                item.Enabled = isEnabled;
+            }
+
+            bool HasEnabledItem(ToolStrip item)
+            {
+                return item.Items.Count != 0 && item.Items.Cast<ToolStripItem>().Any(i => i.Enabled);
+            }
+
+            void UpdateSeparators()
+            {
+                var seenItem = false;
+                foreach (var item in mainContextMenu.Items.Cast<ToolStripItem>())
+                {
+                    if (item is ToolStripSeparator separator)
+                    {
+                        separator.Visible = seenItem;
+                        seenItem = false;
+                    }
+                    else if (item.Enabled)
+                    {
+                        seenItem = true;
+                    }
+                }
             }
         }
 
