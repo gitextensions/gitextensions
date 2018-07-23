@@ -847,57 +847,57 @@ defaultrebase=0</target>
         
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
-        <source>{0} Blank lines ({1})</source>
+        <source>{0:N0} Blank lines ({1:P1})</source>
         <target>{0} Leerzeilen ({1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
-        <source>{0} Comment lines ({1})</source>
+        <source>{0:N0} Comment lines ({1:P1})</source>
         <target>{0} Kommentarzeilen ({1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
-        <source>{0} Commits</source>
-        <target>{0} Commits</target>
+        <source>{0:N0} Commits</source>
+        <target>{0:N0} Commits</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
-        <source>{0} Commits by {1}</source>
-        <target>{0} Commits von {1}</target>
+        <source>{0:N0} Commits by {1}</source>
+        <target>{0:N0} Commits von {1}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
-        <source>{0} Lines of code</source>
+        <source>{0:N0} Lines of code</source>
         <target>{0} Codezeilen</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
-        <source>{0} Lines of code in {1} files ({2})</source>
+        <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
         <target>{0} Codezeilen in {1} Dateien ({2})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
-        <source>{0} Lines of code ({1})</source>
+        <source>{0:N0} Lines of code ({1:P1})</source>
         <target>{0} Codezeilen ({1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
-        <source>{0} Lines in designer files ({1})</source>
+        <source>{0:N0} Lines in designer files ({1:P1})</source>
         <target>{0} Zeilen in Designerdateien ({1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
-        <source>{0} Lines of production code ({1})</source>
+        <source>{0:N0} Lines of production code ({1:P1})</source>
         <target>{0} produktiver Code ({1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
-        <source>{0} Lines of test code</source>
+        <source>{0:N0} Lines of test code</source>
         <target>{0} Zeilen Testcode</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
-        <source>{0} Lines of test code ({1})</source>
+        <source>{0:N0} Lines of test code ({1:P1})</source>
         <target>{0} Zeilen Testcode ({1})</target>
         
       </trans-unit>

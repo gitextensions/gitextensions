@@ -85,6 +85,10 @@
       <Project>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</Project>
       <Name>GitExtUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\GitUI\GitUI.csproj">
+      <Project>{cf5b22e7-230f-4e50-be88-c4f7023ced2c}</Project>
+      <Name>GitUI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\ResourceManager\ResourceManager.csproj">
       <Project>{d3440fd7-afc5-4351-8741-6cdbf15ce944}</Project>
       <Name>ResourceManager</Name>

@@ -6,7 +6,7 @@ namespace GitUI.CommandsDialogs
     /// <summary>
     /// Subclass of <see cref="TabControl"/> whose tab items have no gaps with the border..
     /// </summary>
-    internal sealed class FullBleedTabControl : TabControl
+    public sealed class FullBleedTabControl : TabControl
     {
         protected override void WndProc(ref Message m)
         {
