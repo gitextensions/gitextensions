@@ -385,6 +385,16 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(fileName, status.Name);
             Assert.AreEqual(ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"), status.OldCommit);
             Assert.AreEqual("Externals/conemu-inside-a", status.OldName);
+
+            text = "diff --git a/Externals/ICSharpCode.TextEditor b/Externals/ICSharpCode.TextEditor\r\nnew file mode 160000\r\nindex 000000000..05321769f\r\n--- /dev/null\r\n+++ b/Externals/ICSharpCode.TextEditor\r\n@@ -0,0 +1 @@\r\n+Subproject commit 05321769f039f39fa7f6748e8f30d5c8f157c7dc\r\n";
+            fileName = "Externals/ICSharpCode.TextEditor";
+
+            status = GitCommandHelpers.ParseSubmoduleStatus(text, testModule, fileName);
+
+            Assert.AreEqual(ObjectId.Parse("05321769f039f39fa7f6748e8f30d5c8f157c7dc"), status.Commit);
+            Assert.AreEqual(fileName, status.Name);
+            Assert.IsNull(status.OldCommit);
+            Assert.AreEqual("Externals/ICSharpCode.TextEditor", status.OldName);
         }
 
         [Test]
