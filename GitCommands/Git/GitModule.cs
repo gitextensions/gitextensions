@@ -99,7 +99,12 @@ namespace GitCommands
         private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
 
         public static readonly string NoNewLineAtTheEnd = "\\ No newline at end of file";
-        private const string DiffCommandWithStandardArgs = "-c diff.submodule=short -c diff.noprefix=false diff --no-color ";
+        private const string DiffCommandWithStandardArgs = "diff --no-color ";
+        private static KeyValuePair<string, string>[] diffConfigs = new KeyValuePair<string, string>[]
+             {
+             new KeyValuePair<string, string>("diff.submodule", "short"),
+             new KeyValuePair<string, string>("diff.noprefix", "false")
+             };
 
         // Config options to add to the beginning of the git cmd
         // git -c log.ShowSignature=false log --pretty='%h %G?'
@@ -107,6 +112,8 @@ namespace GitCommands
          {
             new KeyValuePair<string, string>("log.ShowSignature", "false") // Prevent git config log.ShowSignature true from including gpg lines in log output for our log calls
          };
+
+
 
         public GitModule([CanBeNull] string workingDir)
         {
@@ -2519,8 +2526,8 @@ namespace GitCommands
                 !firstRevision.IsNullOrEmpty();
 
             var patch = cacheResult
-                ? RunCacheableGitCmd(args.ToString(), LosslessEncoding)
-                : ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(AppSettings.GitCommand, args.ToString(), LosslessEncoding));
+                ? RunCacheableGitCmd(args.ToString(), diffConfigs, LosslessEncoding)
+                : ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(AppSettings.GitCommand, GetConfigArguments(diffConfigs) + args.ToString(), LosslessEncoding));
 
             var patches = PatchProcessor.CreatePatchesFromString(patch, encoding).ToList();
 
@@ -2558,7 +2565,8 @@ namespace GitCommands
         public string GetDiffFilesText(string firstRevision, string secondRevision, bool noCache = false)
         {
             string cmd = DiffCommandWithStandardArgs + "-M -C --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
-            return noCache ? RunGitCmd(cmd) : RunCacheableGitCmd(cmd, SystemEncoding);
+
+            return noCache ? RunGitCmd(cmd, diffConfigs) : RunCacheableGitCmd(cmd, diffConfigs, SystemEncoding);
         }
 
         public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string firstRevision, string secondRevision, string parentToSecond)
@@ -2572,7 +2580,8 @@ namespace GitCommands
         {
             noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
             string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
-            string result = noCache ? RunGitCmd(cmd) : RunCacheableGitCmd(cmd, SystemEncoding);
+
+            string result = noCache ? RunGitCmd(cmd, diffConfigs) : RunCacheableGitCmd(cmd, diffConfigs, SystemEncoding);
             var resultCollection = GitCommandHelpers.GetDiffChangedFilesFromString(this, result, firstRevision, secondRevision, parentToSecond).ToList();
             if (firstRevision == GitRevision.WorkTreeGuid || secondRevision == GitRevision.WorkTreeGuid)
             {
@@ -2726,7 +2735,7 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetIndexFiles()
         {
-            string status = RunGitCmd(DiffCommandWithStandardArgs + "-M -C -z --cached --name-status", SystemEncoding);
+            string status = RunGitCmd(DiffCommandWithStandardArgs + "-M -C -z --cached --name-status", diffConfigs, SystemEncoding);
 
             if (status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
@@ -2785,6 +2794,7 @@ namespace GitCommands
                     fileName.ToPosixPath().Quote(),
                     { staged, oldFileName?.ToPosixPath().Quote() }
                 },
+                diffConfigs,
                 LosslessEncoding);
 
             var patches = PatchProcessor.CreatePatchesFromString(output, encoding).ToList();
