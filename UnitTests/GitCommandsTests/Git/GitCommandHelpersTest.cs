@@ -355,12 +355,12 @@ namespace GitCommandsTests.Git
             string text = "diff --git a/Externals/conemu-inside b/Externals/conemu-inside\nindex a17ea0c..b5a3d51 160000\n--- a/Externals/conemu-inside\n+++ b/Externals/conemu-inside\n@@ -1 +1 @@\n-Subproject commit a17ea0c8ebe9d8cd7e634ba44559adffe633c11d\n+Subproject commit b5a3d51777c85a9aeee534c382b5ccbb86b485d3\n";
             string fileName = "Externals/conemu-inside";
 
-            GitSubmoduleStatus status = GitCommandHelpers.ParseSubmoduleStatus(text, testModule, fileName);
+            var status = GitCommandHelpers.ParseSubmoduleStatus(text, testModule, fileName);
 
-            Assert.AreEqual(status.Commit, ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"));
-            Assert.AreEqual(status.Name, fileName);
-            Assert.AreEqual(status.OldCommit, ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"));
-            Assert.AreEqual(status.OldName, fileName);
+            Assert.AreEqual(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"), status.Commit);
+            Assert.AreEqual(fileName, status.Name);
+            Assert.AreEqual(ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"), status.OldCommit);
+            Assert.AreEqual(fileName, status.OldName);
 
             // Submodule name with spaces in the name
 
@@ -369,10 +369,10 @@ namespace GitCommandsTests.Git
 
             status = GitCommandHelpers.ParseSubmoduleStatus(text, testModule, fileName);
 
-            Assert.AreEqual(status.Commit, ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"));
-            Assert.AreEqual(status.Name, fileName);
-            Assert.AreEqual(status.OldCommit, ObjectId.Parse("2fb88514cfdc37a2708c24f71eca71c424b8d402"));
-            Assert.AreEqual(status.OldName, fileName);
+            Assert.AreEqual(ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"), status.Commit);
+            Assert.AreEqual(fileName, status.Name);
+            Assert.AreEqual(ObjectId.Parse("2fb88514cfdc37a2708c24f71eca71c424b8d402"), status.OldCommit);
+            Assert.AreEqual(fileName, status.OldName);
 
             // Submodule name in reverse diff, rename
 
@@ -381,11 +381,10 @@ namespace GitCommandsTests.Git
 
             status = GitCommandHelpers.ParseSubmoduleStatus(text, testModule, fileName);
 
-            Assert.AreEqual(status.Commit, ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"));
-            Assert.AreEqual(status.Name, fileName);
-            Assert.AreEqual(status.OldCommit, ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"));
-            fileName = "Externals/conemu-inside-a";
-            Assert.AreEqual(status.OldName, fileName);
+            Assert.AreEqual(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"), status.Commit);
+            Assert.AreEqual(fileName, status.Name);
+            Assert.AreEqual(ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"), status.OldCommit);
+            Assert.AreEqual("Externals/conemu-inside-a", status.OldName);
         }
 
         [Test]
