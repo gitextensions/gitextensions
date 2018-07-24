@@ -41,7 +41,7 @@ namespace GitCommands
                 return;
             }
 
-            Status = submodule.CheckSubmoduleStatus(Commit.ToString(), OldCommit.ToString());
+            Status = submodule.CheckSubmoduleStatus(Commit, OldCommit);
         }
 
         public string AddedAndRemovedString()

@@ -313,7 +313,7 @@ namespace GitUI.CommandsDialogs
                     IGitRef remoteBranchRef = GetRemoteBranchRef(branchName);
                     if (localBranchRef != null && remoteBranchRef != null)
                     {
-                        var mergeBaseGuid = Module.GetMergeBase(localBranchRef.Guid, remoteBranchRef.Guid);
+                        var mergeBaseGuid = Module.GetMergeBase(localBranchRef.ObjectId, remoteBranchRef.ObjectId);
                         var isResetFastForward = localBranchRef.Guid == mergeBaseGuid?.ToString();
 
                         if (!isResetFastForward)

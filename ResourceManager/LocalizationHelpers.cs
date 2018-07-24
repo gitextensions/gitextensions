@@ -191,7 +191,7 @@ namespace ResourceManager
             }
 
             sb.AppendLine();
-            var submoduleStatus = gitModule.CheckSubmoduleStatus(status.Commit?.ToString(), status.OldCommit?.ToString(), commitData, oldCommitData);
+            var submoduleStatus = gitModule.CheckSubmoduleStatus(status.Commit, status.OldCommit, commitData, oldCommitData);
             sb.Append("Type: ");
             switch (submoduleStatus)
             {
