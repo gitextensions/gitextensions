@@ -279,21 +279,15 @@ namespace GitUI.CommandsDialogs
 
             RevisionGrid.SelectionChanged += (sender, e) =>
             {
-                try
-                {
-                    _selectedRevisionUpdatedTargets = UpdateTargets.None;
+                _selectedRevisionUpdatedTargets = UpdateTargets.None;
 
-                    FillFileTree();
-                    FillDiff();
-                    FillCommitInfo();
-                    ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
-                    FillBuildReport();
-                }
-                catch (Exception ex)
-                {
-                    Trace.WriteLine(ex.Message);
-                }
+                FillFileTree();
+                FillDiff();
+                FillCommitInfo();
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
+                FillBuildReport();
             };
+
             _filterRevisionsHelper.SetFilter(filter);
 
             HotkeysEnabled = true;
