@@ -1,5 +1,6 @@
 ﻿using System;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -9,19 +10,20 @@ namespace GitCommands
         public string OldName { get; }
         public bool IsDirty { get; }
         public ObjectId Commit { get; }
+        [CanBeNull]
         public ObjectId OldCommit { get; }
         public int? AddedCommits { get; }
         public int? RemovedCommits { get; }
 
         public SubmoduleStatus Status { get; set; } = SubmoduleStatus.Unknown;
 
-        public GitSubmoduleStatus(string name, string oldName, bool isDirty, ObjectId commit, ObjectId oldCommit, int? addedCommits, int? removedCommits)
+        public GitSubmoduleStatus(string name, string oldName, bool isDirty, ObjectId commit, [CanBeNull] ObjectId oldCommit, int? addedCommits, int? removedCommits)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             OldName = oldName ?? throw new ArgumentNullException(nameof(oldName));
             IsDirty = isDirty;
             Commit = commit ?? throw new ArgumentNullException(nameof(commit));
-            OldCommit = oldCommit ?? throw new ArgumentNullException(nameof(oldCommit));
+            OldCommit = oldCommit;
             AddedCommits = addedCommits;
             RemovedCommits = removedCommits;
         }
@@ -39,7 +41,7 @@ namespace GitCommands
                 return;
             }
 
-            Status = submodule.CheckSubmoduleStatus(Commit.ToString(), OldCommit.ToString());
+            Status = submodule.CheckSubmoduleStatus(Commit, OldCommit);
         }
 
         public string AddedAndRemovedString()

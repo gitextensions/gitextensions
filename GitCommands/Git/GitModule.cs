@@ -3524,7 +3524,7 @@ namespace GitCommands
         }
 
         [CanBeNull]
-        public ObjectId GetMergeBase(string a, string b)
+        public ObjectId GetMergeBase(ObjectId a, ObjectId b)
         {
             var output = RunGitCmd($"merge-base {a} {b}");
 
@@ -3533,7 +3533,7 @@ namespace GitCommands
                 : null;
         }
 
-        public SubmoduleStatus CheckSubmoduleStatus(string commit, [CanBeNull] string oldCommit, CommitData data, CommitData oldData, bool loadData = false)
+        public SubmoduleStatus CheckSubmoduleStatus(ObjectId commit, [CanBeNull] ObjectId oldCommit, CommitData data, CommitData oldData, bool loadData = false)
         {
             if (!IsValidGitWorkingDir() || oldCommit == null)
             {
@@ -3551,7 +3551,7 @@ namespace GitCommands
                 return SubmoduleStatus.Unknown;
             }
 
-            string baseCommit = baseOid.ToString();
+            var baseCommit = baseOid;
             if (baseCommit == oldCommit)
             {
                 return SubmoduleStatus.FastForward;
@@ -3563,7 +3563,7 @@ namespace GitCommands
 
             if (loadData)
             {
-                oldData = _commitDataManager.GetCommitData(oldCommit, out _);
+                oldData = _commitDataManager.GetCommitData(oldCommit.ToString(), out _);
             }
 
             if (oldData == null)
@@ -3573,7 +3573,7 @@ namespace GitCommands
 
             if (loadData)
             {
-                data = _commitDataManager.GetCommitData(commit, out _);
+                data = _commitDataManager.GetCommitData(commit.ToString(), out _);
             }
 
             if (data == null)
@@ -3597,7 +3597,7 @@ namespace GitCommands
             return SubmoduleStatus.Unknown;
         }
 
-        public SubmoduleStatus CheckSubmoduleStatus(string commit, string oldCommit)
+        public SubmoduleStatus CheckSubmoduleStatus(ObjectId commit, [CanBeNull] ObjectId oldCommit)
         {
             return CheckSubmoduleStatus(commit, oldCommit, null, null, true);
         }
