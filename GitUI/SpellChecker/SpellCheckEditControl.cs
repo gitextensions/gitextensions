@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtUtils.GitUI;
 
 namespace GitUI.SpellChecker
 {
@@ -155,22 +156,26 @@ namespace GitUI.SpellChecker
 
         private void DrawWave(Point start, Point end)
         {
-            var pen = Pens.Red;
-            if ((end.X - start.X) > 4)
+            using (var pen = new Pen(Color.Red, DpiUtil.ScaleX))
             {
-                var pl = new List<Point>();
-                for (var i = start.X; i <= (end.X - 2); i += 4)
+                var waveWidth = DpiUtil.Scale(4);
+                var waveHalfWidth = waveWidth >> 1;
+                if ((end.X - start.X) > waveWidth)
                 {
-                    pl.Add(new Point(i, start.Y));
-                    pl.Add(new Point(i + 2, start.Y + 2));
-                }
+                    var pl = new List<Point>();
+                    for (var i = start.X; i <= (end.X - waveHalfWidth); i += waveWidth)
+                    {
+                        pl.Add(new Point(i, start.Y));
+                        pl.Add(new Point(i + waveHalfWidth, start.Y + waveHalfWidth));
+                    }
 
-                var p = pl.ToArray();
-                _bufferGraphics.DrawLines(pen, p);
-            }
-            else
-            {
-                _bufferGraphics.DrawLine(pen, start, end);
+                    var p = pl.ToArray();
+                    _bufferGraphics.DrawLines(pen, p);
+                }
+                else
+                {
+                    _bufferGraphics.DrawLine(pen, start, end);
+                }
             }
         }
 
