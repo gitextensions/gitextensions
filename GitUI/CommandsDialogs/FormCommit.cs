@@ -163,7 +163,7 @@ namespace GitUI.CommandsDialogs
         private bool _loadUnstagedOutputFirstTime = true;
         private bool _initialized;
         private bool _selectedDiffReloaded = true;
-        private IReadOnlyList<GitItemStatus> _currentSelection;
+        [CanBeNull] private IReadOnlyList<GitItemStatus> _currentSelection;
         private int _alreadyLoadedTemplatesCount = -1;
 
         /// <summary>
@@ -979,7 +979,7 @@ namespace GitUI.CommandsDialogs
         private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus> allChangedFiles)
         {
             var lastSelection = _currentFilesList != null
-                ? _currentSelection
+                ? _currentSelection ?? Array.Empty<GitItemStatus>()
                 : Array.Empty<GitItemStatus>();
 
             var unstagedFiles = new List<GitItemStatus>();
