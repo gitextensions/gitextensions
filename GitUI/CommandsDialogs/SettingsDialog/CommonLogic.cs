@@ -127,7 +127,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public string SelectFile(string initialDirectory, string filter, string prev)
         {
-            using (var dialog = new OpenFileDialog
+            using (var dialog = new System.Windows.Forms.OpenFileDialog
             {
                 Filter = filter,
                 InitialDirectory = initialDirectory,

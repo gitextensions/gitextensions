@@ -107,10 +107,10 @@
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.VisualStudio.Validation.dll" />
       </Component>
       <Component Id="Microsoft.WindowsAPICodePack.dll" Guid="*">
-        <File Source="..\bin\Microsoft.WindowsAPICodePack.dll" />
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.WindowsAPICodePack.dll" />
       </Component>
       <Component Id="Microsoft.WindowsAPICodePack.Shell.dll" Guid="*">
-        <File Source="..\bin\Microsoft.WindowsAPICodePack.Shell.dll" />
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.WindowsAPICodePack.Shell.dll" />
       </Component>
       <Component Id="NBug.dll" Guid="*">
         <File Source="..\Externals\NBug\NBug\bin\$(var.Configuration)\NBug.dll" />

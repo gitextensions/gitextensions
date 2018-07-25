@@ -40,9 +40,9 @@ xcopy /y ..\bin\ICSharpCode.SharpZipLib.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\ICSharpCode.TextEditor.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\bin\Microsoft.WindowsAPICodePack.dll GitExtensions\
+xcopy /y ..\GitExtensions\bin\%Configuration%\Microsoft.WindowsAPICodePack.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y ..\bin\Microsoft.WindowsAPICodePack.Shell.dll GitExtensions\
+xcopy /y ..\GitExtensions\bin\%Configuration%\Microsoft.WindowsAPICodePack.Shell.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\NBug.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
