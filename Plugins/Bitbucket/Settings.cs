@@ -7,7 +7,7 @@ using JetBrains.Annotations;
 
 namespace Bitbucket
 {
-    internal class Settings
+    public class Settings
     {
         private const string BitbucketHttpRegex =
             @"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-\/]+?)):?(\d+)?\/scm\/(?<project>~?([\w\-]+?))\/(?<repo>([\w\-]+)).git";
