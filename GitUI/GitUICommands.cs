@@ -437,6 +437,11 @@ namespace GitUI
 
         public bool StartCommitDialog(IWin32Window owner, bool showOnlyWhenChanges = false)
         {
+            if (Module.IsBareRepository())
+            {
+                return false;
+            }
+
             bool Action()
             {
                 using (var form = new FormCommit(this))
