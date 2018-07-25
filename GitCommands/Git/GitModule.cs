@@ -545,10 +545,11 @@ namespace GitCommands
         private static string GetConfigArguments(IEnumerable<KeyValuePair<string, string>> configValues)
         {
             KeyValuePair<string, string>[] configs = DefaultConfigValues.Concat(configValues) // DO NOT sort.  The overrides are controlled by the order of the elements.
+                  .Where(kv => !string.IsNullOrWhiteSpace(kv.Key))
                   .GroupBy(kv => kv.Key)
                   .Select(gkv => gkv.Last()).ToArray(); // Allow overrides of defaults with passed in config values.
 
-            string config = configs.Any() ? " -c " + string.Join(" -c ", configs.Select(kv => $"{kv.Key}={kv.Value}")) + " " : string.Empty;
+            string config = configs.Any() ? " -c " + string.Join(" -c ", configs.Select(kv => $"{kv.Key}={(string.IsNullOrWhiteSpace(kv.Value) ? string.Empty : kv.Value)}")) + " " : string.Empty;
 
             return config;
         }
