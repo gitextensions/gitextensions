@@ -4,13 +4,13 @@ using System.Linq;
 using Git.hub;
 using GitUIPluginInterfaces.RepositoryHosts;
 
-namespace Github3
+namespace GitHub3
 {
-    public class GithubRepo : IHostedRepository
+    public class GitHubRepo : IHostedRepository
     {
         private Repository _repo;
 
-        public GithubRepo(Repository repo)
+        public GitHubRepo(Repository repo)
         {
             _repo = repo;
         }
@@ -19,7 +19,7 @@ namespace Github3
         public string Name => _repo.Name;
         public string Description => _repo.Description;
         public bool IsAFork => _repo.Fork;
-        public bool IsMine => Owner == GithubLoginInfo.Username;
+        public bool IsMine => Owner == GitHubLoginInfo.Username;
         public bool IsPrivate => _repo.Private;
         public int Forks => _repo.Forks;
         public string Homepage => _repo.Homepage;
@@ -40,7 +40,7 @@ namespace Github3
                         return null;
                     }
 
-                    _repo = Github3Plugin.github.getRepository(Owner, Name);
+                    _repo = GitHub3Plugin.GitHub.getRepository(Owner, Name);
                 }
 
                 return _repo.Parent?.GitUrl;
@@ -63,7 +63,7 @@ namespace Github3
                         return null;
                     }
 
-                    _repo = Github3Plugin.github.getRepository(Owner, Name);
+                    _repo = GitHub3Plugin.GitHub.getRepository(Owner, Name);
                 }
 
                 return _repo.Parent?.Owner.Login;
@@ -74,11 +74,11 @@ namespace Github3
         public string CloneReadOnlyUrl => _repo.GitUrl;
 
         public List<IHostedBranch> Branches
-            => _repo.GetBranches().Select(branch => new GithubBranch(branch)).ToList<IHostedBranch>();
+            => _repo.GetBranches().Select(branch => new GitHubBranch(branch)).ToList<IHostedBranch>();
 
         public IHostedRepository Fork()
         {
-            return new GithubRepo(_repo.CreateFork());
+            return new GitHubRepo(_repo.CreateFork());
         }
 
         public IReadOnlyList<IPullRequestInformation> GetPullRequests()
@@ -88,7 +88,7 @@ namespace Github3
             if (pullRequests != null)
             {
                 return pullRequests
-                    .Select(pr => new GithubPullRequest(pr))
+                    .Select(pr => new GitHubPullRequest(pr))
                     .ToList();
             }
 
@@ -97,7 +97,7 @@ namespace Github3
 
         public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body)
         {
-            var pullRequest = _repo.CreatePullRequest(GithubLoginInfo.Username + ":" + myBranch, remoteBranch, title, body);
+            var pullRequest = _repo.CreatePullRequest(GitHubLoginInfo.Username + ":" + myBranch, remoteBranch, title, body);
 
             if (pullRequest == null || pullRequest.Number == 0)
             {

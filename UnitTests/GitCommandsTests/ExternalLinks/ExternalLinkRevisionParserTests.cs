@@ -26,7 +26,7 @@ namespace GitCommandsTests.ExternalLinks
         [SetUp]
         public void Setup()
         {
-            _linkDef = Parse(GetGithubIssuesXmlDef()).First();
+            _linkDef = Parse(GetGitHubIssuesXmlDef()).First();
 
             _revision = new GitRevision(ObjectId.Random());
 
@@ -37,7 +37,7 @@ namespace GitCommandsTests.ExternalLinks
         }
 
         [Test]
-        public void ParseGithubIssueForUpstreamLink()
+        public void ParseGitHubIssueForUpstreamLink()
         {
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
             var expectedLinks = new[]
@@ -50,7 +50,7 @@ namespace GitCommandsTests.ExternalLinks
         }
 
         [Test]
-        public void ParseGithubIssueForOriginLink()
+        public void ParseGitHubIssueForOriginLink()
         {
             _linkDef.UseRemotesPattern = "origin|upstream";
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
@@ -64,7 +64,7 @@ namespace GitCommandsTests.ExternalLinks
         }
 
         [Test]
-        public void ParseGithubIssueForUpstreamAndOriginLink()
+        public void ParseGitHubIssueForUpstreamAndOriginLink()
         {
             _linkDef.UseOnlyFirstRemote = false;
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
@@ -79,7 +79,7 @@ namespace GitCommandsTests.ExternalLinks
         }
 
         [Test]
-        public void ParseGithubIssueForAllRemotesLink()
+        public void ParseGitHubIssueForAllRemotesLink()
         {
             _linkDef.UseRemotesPattern = string.Empty;
             _linkDef.UseOnlyFirstRemote = false;
@@ -146,7 +146,7 @@ namespace GitCommandsTests.ExternalLinks
             }
         }
 
-        private static string GetGithubIssuesXmlDef()
+        private static string GetGitHubIssuesXmlDef()
         {
             return @"<?xml version=""1.0"" ?>
 <ArrayOfGitExtLinkDef>

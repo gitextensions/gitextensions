@@ -350,8 +350,8 @@
   <data name="CloneRepoGit" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\CloneRepoGit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="CloneRepoGithub" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\CloneRepoGithub.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="CloneRepoGitHub" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\CloneRepoGitHub.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Save" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

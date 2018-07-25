@@ -124,7 +124,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                             foreach (var gitHoster in PluginRegistry.GitHosters)
                             {
-                                lastControl = CreateLink(panel, string.Format(_cloneFork.Text, gitHoster.Description), Images.CloneRepoGithub,
+                                lastControl = CreateLink(panel, string.Format(_cloneFork.Text, gitHoster.Description), Images.CloneRepoGitHub,
                                     (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged));
                             }
 

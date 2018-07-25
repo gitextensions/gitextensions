@@ -4,13 +4,13 @@ using System.Linq;
 using Git.hub;
 using GitUIPluginInterfaces.RepositoryHosts;
 
-namespace Github3
+namespace GitHub3
 {
-    internal class GithubPullRequestDiscussion : IPullRequestDiscussion
+    internal class GitHubPullRequestDiscussion : IPullRequestDiscussion
     {
         private readonly PullRequest _pullRequest;
 
-        public GithubPullRequestDiscussion(PullRequest pullRequest)
+        public GitHubPullRequestDiscussion(PullRequest pullRequest)
         {
             _pullRequest = pullRequest;
             Entries = new List<IDiscussionEntry>();
@@ -30,26 +30,26 @@ namespace Github3
 
             foreach (var commit in _pullRequest.GetCommits())
             {
-                Entries.Add(new GithubDiscussionCommit { Sha = commit.Sha, Author = commit.AuthorName.Replace("<", "&lt;").Replace(">", "&gt;"), Created = commit.Commit.Author.Date, Body = commit.Commit.Message });
+                Entries.Add(new GitHubDiscussionCommit { Sha = commit.Sha, Author = commit.AuthorName.Replace("<", "&lt;").Replace(">", "&gt;"), Created = commit.Commit.Author.Date, Body = commit.Commit.Message });
             }
 
             foreach (var comment in _pullRequest.GetIssueComments())
             {
-                Entries.Add(new GithubDiscussionComment { Author = comment.User.Login, Created = comment.CreatedAt, Body = comment.Body });
+                Entries.Add(new GitHubDiscussionComment { Author = comment.User.Login, Created = comment.CreatedAt, Body = comment.Body });
             }
 
             Entries = Entries.OrderBy(entry => entry.Created).ToList();
         }
     }
 
-    internal class GithubDiscussionComment : IDiscussionEntry
+    internal class GitHubDiscussionComment : IDiscussionEntry
     {
         public string Author { get; internal set; }
         public DateTime Created { get; internal set; }
         public string Body { get; internal set; }
     }
 
-    internal class GithubDiscussionCommit : GithubDiscussionComment, ICommitDiscussionEntry
+    internal class GitHubDiscussionCommit : GitHubDiscussionComment, ICommitDiscussionEntry
     {
         public string Sha { get; internal set; }
     }

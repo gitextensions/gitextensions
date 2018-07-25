@@ -63,7 +63,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateLocalBranches", "Plug
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindLargeFiles", "Plugins\FindLargeFiles\FindLargeFiles.csproj", "{F261BCD1-F5F7-4664-A229-E52032E6E9FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Github3", "Plugins\Github3\Github3.csproj", "{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitHub3", "Plugins\GitHub3\GitHub3.csproj", "{B1B0C273-AB3F-48BF-92C7-DE0BE90D5870}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gerrit", "Plugins\Gerrit\Gerrit.csproj", "{EC6988F6-0E8E-42D2-8E41-E562C5FB65BC}"
 EndProject

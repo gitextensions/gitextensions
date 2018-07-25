@@ -1,25 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Git.hub;
 using GitCommands.Config;
-using Github3.Properties;
+using GitHub3.Properties;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using ResourceManager;
 
-namespace Github3
+namespace GitHub3
 {
-    internal static class GithubAPIInfo
+    internal static class GitHubApiInfo
     {
         internal static string client_id = "ebc0e8947c206610d737";
         internal static string client_secret = "c993907df3f45145bf638842692b69c56d1ace4d";
     }
 
-    internal static class GithubLoginInfo
+    internal static class GitHubLoginInfo
     {
         private static string _username;
         public static string Username
@@ -38,11 +37,11 @@ namespace Github3
 
                 try
                 {
-                    var user = Github3Plugin.github.getCurrentUser();
+                    var user = GitHub3Plugin.GitHub.getCurrentUser();
                     if (user != null)
                     {
                         _username = user.Login;
-                        ////MessageBox.Show("Github username: " + _username);
+                        ////MessageBox.Show("GitHub username: " + _username);
                         return _username;
                     }
                     else
@@ -61,35 +60,35 @@ namespace Github3
 
         public static string OAuthToken
         {
-            get => Github3Plugin.instance.OAuthToken.ValueOrDefault(Github3Plugin.instance.Settings);
+            get => GitHub3Plugin.Instance.OAuthToken.ValueOrDefault(GitHub3Plugin.Instance.Settings);
             set
             {
                 _username = null;
-                Github3Plugin.instance.OAuthToken[Github3Plugin.instance.Settings] = value;
-                Github3Plugin.github.setOAuth2Token(value);
+                GitHub3Plugin.Instance.OAuthToken[GitHub3Plugin.Instance.Settings] = value;
+                GitHub3Plugin.GitHub.setOAuth2Token(value);
             }
         }
     }
 
     [Export(typeof(IGitPlugin))]
-    public class Github3Plugin : GitPluginBase, IRepositoryHostPlugin
+    public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin
     {
         public readonly StringSetting OAuthToken = new StringSetting("OAuth Token", "");
 
-        internal static Github3Plugin instance;
-        internal static Client github;
+        internal static GitHub3Plugin Instance;
+        internal static Client GitHub;
 
-        public Github3Plugin()
+        public GitHub3Plugin()
         {
-            SetNameAndDescription("Github");
+            SetNameAndDescription("GitHub");
             Translate();
 
-            if (instance == null)
+            if (Instance == null)
             {
-                instance = this;
+                Instance = this;
             }
 
-            github = new Client();
+            GitHub = new Client();
 
             Icon = Resources.IconGitHub;
         }
@@ -101,15 +100,15 @@ namespace Github3
 
         public override void Register(IGitUICommands gitUiCommands)
         {
-            if (!string.IsNullOrEmpty(GithubLoginInfo.OAuthToken))
+            if (!string.IsNullOrEmpty(GitHubLoginInfo.OAuthToken))
             {
-                github.setOAuth2Token(GithubLoginInfo.OAuthToken);
+                GitHub.setOAuth2Token(GitHubLoginInfo.OAuthToken);
             }
         }
 
         public override bool Execute(GitUIEventArgs args)
         {
-            if (string.IsNullOrEmpty(GithubLoginInfo.OAuthToken))
+            if (string.IsNullOrEmpty(GitHubLoginInfo.OAuthToken))
             {
                 using (var frm = new OAuth())
                 {
@@ -128,22 +127,22 @@ namespace Github3
 
         public IReadOnlyList<IHostedRepository> SearchForRepository(string search)
         {
-            return github.searchRepositories(search).Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
+            return GitHub.searchRepositories(search).Select(repo => (IHostedRepository)new GitHubRepo(repo)).ToList();
         }
 
         public IReadOnlyList<IHostedRepository> GetRepositoriesOfUser(string user)
         {
-            return github.getRepositories(user).Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
+            return GitHub.getRepositories(user).Select(repo => (IHostedRepository)new GitHubRepo(repo)).ToList();
         }
 
         public IHostedRepository GetRepository(string user, string repositoryName)
         {
-            return new GithubRepo(github.getRepository(user, repositoryName));
+            return new GitHubRepo(GitHub.getRepository(user, repositoryName));
         }
 
         public IReadOnlyList<IHostedRepository> GetMyRepos()
         {
-            return github.getRepositories().Select(repo => (IHostedRepository)new GithubRepo(repo)).ToList();
+            return GitHub.getRepositories().Select(repo => (IHostedRepository)new GitHubRepo(repo)).ToList();
         }
 
         public bool ConfigurationOk => true;
@@ -181,7 +180,7 @@ namespace Github3
 
                     if (m.Success)
                     {
-                        var hostedRemote = new GithubHostedRemote(remote, m.Groups[1].Value, m.Groups[2].Value.Replace(".git", ""));
+                        var hostedRemote = new GitHubHostedRemote(remote, m.Groups[1].Value, m.Groups[2].Value.Replace(".git", ""));
 
                         if (set.Add(hostedRemote))
                         {

@@ -1,11 +1,12 @@
 ﻿using GitUIPluginInterfaces.RepositoryHosts;
 
-namespace Github3
+namespace GitHub3
 {
-    internal class GithubHostedRemote : IHostedRemote
+    internal class GitHubHostedRemote : IHostedRemote
     {
-        private GithubRepo _repo;
-        public GithubHostedRemote(string name, string owner, string remoteRepositoryName)
+        private GitHubRepo _repo;
+
+        public GitHubHostedRemote(string name, string owner, string remoteRepositoryName)
         {
             Name = name;
             Owner = owner;
@@ -16,7 +17,7 @@ namespace Github3
         {
             if (_repo == null)
             {
-                _repo = new GithubRepo(Github3Plugin.github.getRepository(Owner, RemoteRepositoryName));
+                _repo = new GitHubRepo(GitHub3Plugin.GitHub.getRepository(Owner, RemoteRepositoryName));
             }
 
             return _repo;
@@ -41,6 +42,6 @@ namespace Github3
 
         public string Data => Owner + "/" + RemoteRepositoryName;
         public string DisplayData => Data;
-        public bool IsOwnedByMe => GithubLoginInfo.Username == Owner;
+        public bool IsOwnedByMe => GitHubLoginInfo.Username == Owner;
     }
 }

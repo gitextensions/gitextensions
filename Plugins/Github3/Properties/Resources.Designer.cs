@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Github3.Properties {
+namespace GitHub3.Properties {
     using System;
     
     
