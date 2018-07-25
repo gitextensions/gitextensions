@@ -375,12 +375,6 @@
     <Compile Include="UserControls\RevisionGrid\Graph\Node.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\SavedLaneRow.cs" />
     <Compile Include="UserControls\RevisionGrid\RefArrowType.cs" />
-    <Compile Include="UserControls\RevisionGrid\BareRepoControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\RevisionGrid\BareRepoControl.Designer.cs">
-      <DependentUpon>BareRepoControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\RevisionGrid\Columns\AuthorNameColumnProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\BuildStatusColumnProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\ColumnProvider.cs" />
@@ -1352,9 +1346,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RemotesComboboxControl.resx">
       <DependentUpon>RemotesComboboxControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\RevisionGrid\BareRepoControl.resx">
-      <DependentUpon>BareRepoControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\FileStatusList.resx">
       <DependentUpon>FileStatusList.cs</DependentUpon>

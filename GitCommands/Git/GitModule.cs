@@ -1283,7 +1283,15 @@ namespace GitCommands
         [NotNull]
         public ObjectId GetCurrentCheckout()
         {
-            return ObjectId.Parse(RunGitCmd("rev-parse HEAD").TrimEnd());
+            var output = RunGitCmd("rev-parse HEAD").TrimEnd();
+
+            if (output == "HEAD" && IsBareRepository())
+            {
+                // Caller should consider bare repositories before calling this method
+                throw new InvalidOperationException("Bare repositories do not have a current checkout.");
+            }
+
+            return ObjectId.Parse(output);
         }
 
         public bool TryResolvePartialCommitId(string objectIdPrefix, out ObjectId objectId)

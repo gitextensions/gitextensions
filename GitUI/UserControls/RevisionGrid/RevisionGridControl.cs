@@ -63,6 +63,7 @@ namespace GitUI
         private readonly Lazy<IndexWatcher> _indexWatcher;
         private readonly BuildServerWatcher _buildServerWatcher;
         private readonly Timer _selectionTimer;
+        private readonly GraphColumnProvider _graphColumnProvider;
 
         private RefFilterOptions _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
 
@@ -82,7 +83,7 @@ namespace GitUI
         private GitRevision _baseCommitToCompare;
         private string _rebaseOnTopOf;
         private bool _isRefreshingRevisions;
-        private IReadOnlyList<ObjectId> _selectedObjectIds;
+        [CanBeNull] private IReadOnlyList<ObjectId> _selectedObjectIds;
         private string _fixedRevisionFilter = "";
         private string _fixedPathFilter = "";
         private string _branchFilter = "";
@@ -92,10 +93,9 @@ namespace GitUI
         /// <summary>
         /// Same as <see cref="CurrentCheckout"/> except <c>null</c> until the associated revision is loaded.
         /// </summary>
-        private ObjectId _filteredCurrentCheckout;
-        private IReadOnlyList<ObjectId> _currentCheckoutParents;
+        [CanBeNull] private ObjectId _filteredCurrentCheckout;
+        [CanBeNull] private IReadOnlyList<ObjectId> _currentCheckoutParents;
         private bool _settingsLoaded;
-        private readonly GraphColumnProvider _graphColumnProvider;
 
         // NOTE internal properties aren't serialised by the WinForms designer
 
@@ -104,6 +104,7 @@ namespace GitUI
         internal string InMemAuthorFilter { get; set; } = "";
         internal string InMemCommitterFilter { get; set; } = "";
         internal string InMemMessageFilter { get; set; } = "";
+        [CanBeNull]
         internal ObjectId CurrentCheckout { get; private set; }
         internal bool ShowUncommittedChangesIfPossible { get; set; } = true;
         internal bool ShowBuildServerInfo { get; set; }
@@ -667,7 +668,7 @@ namespace GitUI
 
                 DisposeRevisionReader();
 
-                var newCurrentCheckout = Module.GetCurrentCheckout();
+                var newCurrentCheckout = Module.IsBareRepository() ? null : Module.GetCurrentCheckout();
                 GitModule capturedModule = Module;
                 JoinableTask<SuperProjectInfo> newSuperProjectInfo =
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
@@ -926,13 +927,11 @@ namespace GitUI
 
                 if (revisionCount == 0 && !FilterIsApplied(inclBranchFilter: true))
                 {
-                    var isBare = Module.IsBareRepository();
-
                     // This has to happen on the UI thread
                     this.InvokeAsync(
                             () =>
                             {
-                                SetPage(isBare ? (Control)new BareRepoControl() : new EmptyRepoControl());
+                                SetPage(new EmptyRepoControl());
                                 _isRefreshingRevisions = false;
                             })
                         .FileAndForget();
