@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands.Utils;
+using GitExtUtils.GitUI;
 
 namespace GitUI.SpellChecker
 {
@@ -11,7 +12,7 @@ namespace GitUI.SpellChecker
     /// </summary>
     internal static class TextBoxHelper
     {
-        private const double AnInch = 14.4;
+        private static readonly double AnInch = 14.4 / DpiUtil.ScaleX;
 
         internal static int GetBaselineOffsetAtCharIndex(TextBoxBase tb, int index)
         {
