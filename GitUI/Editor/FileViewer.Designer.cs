@@ -144,6 +144,7 @@ namespace GitUI.Editor
             // 
             // increaseNumberOfLinesToolStripMenuItem
             // 
+            this.increaseNumberOfLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.NumberOfLinesIncrease;
             this.increaseNumberOfLinesToolStripMenuItem.Name = "increaseNumberOfLinesToolStripMenuItem";
             this.increaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.increaseNumberOfLinesToolStripMenuItem.Text = "Increase number of lines visible";
@@ -151,6 +152,7 @@ namespace GitUI.Editor
             // 
             // descreaseNumberOfLinesToolStripMenuItem
             // 
+            this.decreaseNumberOfLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.NumberOfLinesDecrease;
             this.decreaseNumberOfLinesToolStripMenuItem.Name = "decreaseNumberOfLinesToolStripMenuItem";
             this.decreaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.decreaseNumberOfLinesToolStripMenuItem.Text = "Decrease number of lines visible";
@@ -158,6 +160,7 @@ namespace GitUI.Editor
             // 
             // showEntireFileToolStripMenuItem
             // 
+            this.showEntireFileToolStripMenuItem.Image = global::GitUI.Properties.Images.ShowEntireFile;
             this.showEntireFileToolStripMenuItem.Name = "showEntireFileToolStripMenuItem";
             this.showEntireFileToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.showEntireFileToolStripMenuItem.Text = "Show entire file";
@@ -177,6 +180,7 @@ namespace GitUI.Editor
             // 
             // showNonprintableCharactersToolStripMenuItem
             // 
+            this.showNonprintableCharactersToolStripMenuItem.Image = global::GitUI.Properties.Images.ShowWhitespace;
             this.showNonprintableCharactersToolStripMenuItem.Name = "showNonprintableCharactersToolStripMenuItem";
             this.showNonprintableCharactersToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.showNonprintableCharactersToolStripMenuItem.Text = "Show nonprinting characters";
