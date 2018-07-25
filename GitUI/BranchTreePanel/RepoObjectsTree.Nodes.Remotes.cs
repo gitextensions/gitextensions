@@ -231,6 +231,10 @@ namespace GitUI.BranchTreePanel
                 {
                     imageKey = nameof(Images.BitBucket);
                 }
+                else if (_remote.PushUrl.Contains("visualstudio.com") || _remote.FetchUrl.Contains("visualstudio.com"))
+                {
+                    imageKey = nameof(Images.VisualStudioTeamServices);
+                }
                 else
                 {
                     imageKey = nameof(Images.Remote);
