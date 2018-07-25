@@ -9,21 +9,21 @@ namespace GitUI.Script
         internal static void RunPowerShell(string command, string argument, string workingDir, bool runInBackground)
         {
             const string filename = "powershell.exe";
-            var psarguments = (runInBackground ? "" : "-NoExit") + " -ExecutionPolicy Unrestricted -Command \"" + command + " " + argument + "\"";
+            var arguments = (runInBackground ? "" : "-NoExit") + " -ExecutionPolicy Unrestricted -Command \"" + command + " " + argument + "\"";
             EnvironmentConfiguration.SetEnvironmentVariables();
 
             var startInfo = new ProcessStartInfo
             {
                 FileName = filename,
-                Arguments = psarguments,
+                Arguments = arguments,
                 WorkingDirectory = workingDir,
                 UseShellExecute = false
             };
 
-            var operation = CommandLog.LogProcessStart(filename, psarguments);
-            var startProcess = Process.Start(startInfo);
-
-            startProcess.Exited += (s, e) => operation.LogProcessEnd();
+            var operation = CommandLog.LogProcessStart(filename, arguments);
+            var process = Process.Start(startInfo);
+            operation.SetProcessId(process.Id);
+            process.Exited += (s, e) => operation.LogProcessEnd();
         }
     }
 }

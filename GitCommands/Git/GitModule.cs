@@ -515,9 +515,10 @@ namespace GitCommands
             }
 
             var operation = CommandLog.LogProcessStart(fileName, arguments);
-            var startProcess = Process.Start(startInfo);
-            startProcess.Exited += (s, e) => operation.LogProcessEnd();
-            return startProcess;
+            var process = Process.Start(startInfo);
+            operation.SetProcessId(process.Id);
+            process.Exited += (s, e) => operation.LogProcessEnd();
+            return process;
         }
 
         [NotNull]

@@ -30,6 +30,12 @@ namespace GitCommands.Logging
             _entry.Duration = _stopwatch.Elapsed;
             _raiseCommandsChanged();
         }
+
+        public void SetProcessId(int processId)
+        {
+            _entry.ProcessId = processId;
+            _raiseCommandsChanged();
+        }
     }
 
     public sealed class CommandLogEntry
@@ -39,6 +45,7 @@ namespace GitCommands.Logging
         private DateTime StartedAt { get; }
         public bool IsOnMainThread { get; }
         public TimeSpan? Duration { get; internal set; }
+        public int? ProcessId { get; set; }
 
         internal CommandLogEntry(string fileName, string arguments, DateTime startedAt, bool isOnMainThread)
         {
@@ -61,7 +68,9 @@ namespace GitCommands.Logging
                 fileName = "git";
             }
 
-            return $"{StartedAt:HH:mm:ss.fff} {duration,7} {(IsOnMainThread ? "UI" : "  ")} {fileName} {Arguments}";
+            var pid = ProcessId == null ? "     " : $"{ProcessId,5}";
+
+            return $"{StartedAt:HH:mm:ss.fff} {duration,7} {pid} {(IsOnMainThread ? "UI" : "  ")} {fileName} {Arguments}";
         }
     }
 

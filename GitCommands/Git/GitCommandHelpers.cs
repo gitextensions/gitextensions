@@ -89,6 +89,7 @@ namespace GitCommands
             var startInfo = CreateProcessStartInfo(fileName, arguments, workingDirectory, outputEncoding);
             var process = Process.Start(startInfo);
             process.EnableRaisingEvents = true;
+            operation.SetProcessId(process.Id);
 
             void ProcessExited(object sender, EventArgs args)
             {
