@@ -1638,16 +1638,10 @@ namespace GitCommands
                 return "";
             }
 
-            if (revision == ObjectId.UnstagedId)
-            {
-                Debug.Assert(false, "Unexpectedly reset to unstaged - should be blocked in GUI");
-
-                // Not an error to user, just nothing happens
-                return "";
-            }
-
             if (revision == ObjectId.IndexId)
             {
+                // Reset to index has no revision
+                // All other artificial commits are errors
                 revision = null;
             }
 
