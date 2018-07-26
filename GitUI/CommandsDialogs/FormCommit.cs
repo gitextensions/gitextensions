@@ -2663,7 +2663,7 @@ namespace GitUI.CommandsDialogs
 
                 if (limit1 > 0 && line == 0)
                 {
-                    ColorTextAsNecessary(limit1, false);
+                    ColorTextAsNecessary(limit1, fullRefresh: false);
                 }
 
                 if (empty2 && line == 1)
