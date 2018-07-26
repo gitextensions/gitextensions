@@ -931,7 +931,7 @@ namespace GitUI
                     this.InvokeAsync(
                             () =>
                             {
-                                SetPage(new EmptyRepoControl());
+                                SetPage(new EmptyRepoControl(Module.IsBareRepository()));
                                 _isRefreshingRevisions = false;
                             })
                         .FileAndForget();
