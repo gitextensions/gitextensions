@@ -624,7 +624,7 @@ namespace GitUI.Editor
         {
             if (objectId == ObjectId.WorkTreeId)
             {
-                // No blob exists for unstaged, present contents from file system
+                // No blob exists for worktree, present contents from file system
                 return ViewFileAsync(fileName);
             }
             else
@@ -1248,7 +1248,7 @@ namespace GitUI.Editor
 
             if (reverse)
             {
-                patch = PatchManager.GetResetUnstagedLinesAsPatch(
+                patch = PatchManager.GetResetWorkTreeLinesAsPatch(
                     Module, GetText(),
                     selectionStart, selectionLength, Encoding);
             }

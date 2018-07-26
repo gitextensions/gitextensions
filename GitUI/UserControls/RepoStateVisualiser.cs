@@ -29,20 +29,20 @@ namespace GitUI.UserControls
 
         public (Image, Brush) Invoke(IReadOnlyList<GitItemStatus> allChangedFiles)
         {
-            var stagedCount = 0;
-            var unstagedSubmodulesCount = 0;
+            var indexCount = 0;
+            var workTreeSubmodulesCount = 0;
             var notTrackedCount = 0;
 
             foreach (var status in allChangedFiles)
             {
                 if (status.Staged == StagedStatus.Index)
                 {
-                    stagedCount++;
+                    indexCount++;
                 }
 
                 if (status.Staged == StagedStatus.WorkTree && status.IsSubmodule)
                 {
-                    unstagedSubmodulesCount++;
+                    workTreeSubmodulesCount++;
                 }
 
                 if (!status.IsTracked)
@@ -51,26 +51,26 @@ namespace GitUI.UserControls
                 }
             }
 
-            var unstagedCount = allChangedFiles.Count - stagedCount;
+            var workTreeCount = allChangedFiles.Count - indexCount;
 
-            if (stagedCount == 0 && unstagedCount == 0)
+            if (indexCount == 0 && workTreeCount == 0)
             {
                 return (IconClean, BrushClean);
             }
 
-            if (stagedCount == 0)
+            if (indexCount == 0)
             {
-                if (notTrackedCount == unstagedCount)
+                if (notTrackedCount == workTreeCount)
                 {
                     return (IconUntrackedOnly, BrushUntrackedOnly);
                 }
 
-                return unstagedCount != unstagedSubmodulesCount
+                return workTreeCount != workTreeSubmodulesCount
                     ? (IconDirty, BrushDirty)
                     : (IconDirtySubmodules, BrushDirtySubmodules);
             }
 
-            return unstagedCount == 0
+            return workTreeCount == 0
                 ? (IconStaged, BrushStaged)
                 : (IconMixed, BrushMixed);
         }

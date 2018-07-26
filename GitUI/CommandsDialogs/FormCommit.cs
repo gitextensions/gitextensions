@@ -261,7 +261,7 @@ namespace GitUI.CommandsDialogs
 
             SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
             Reset.Visible = AppSettings.ShowResetAllChanges;
-            ResetUnStaged.Visible = AppSettings.ShowResetUnstagedChanges;
+            ResetUnStaged.Visible = AppSettings.ShowResetWorkTreeChanges;
             CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
             splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
             splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
@@ -875,7 +875,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, SelectedDiff.GetText(),
+                patch = PatchManager.GetResetWorkTreeLinesAsPatch(Module, SelectedDiff.GetText(),
                     SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding);
             }
 
@@ -967,7 +967,7 @@ namespace GitUI.CommandsDialogs
                 Staged.SetDiffs(
                     new GitRevision(ObjectId.IndexId),
                     new GitRevision(headId),
-                    Module.GetStagedFilesWithSubmodulesStatus());
+                    Module.GetIndexFilesWithSubmodulesStatus());
             }
         }
 
@@ -2492,7 +2492,7 @@ namespace GitUI.CommandsDialogs
 
         private void HandleResetButton(bool onlyUnstaged)
         {
-            BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.ToList(), onlyUnstaged: onlyUnstaged));
+            BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.ToList(), onlyWorkTree: onlyUnstaged));
             Initialize();
         }
 
@@ -2887,7 +2887,7 @@ namespace GitUI.CommandsDialogs
                 // Also delete new files, if requested.
                 if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
                 {
-                    var submoduleUnstagedFiles = module.GetUnstagedFiles();
+                    var submoduleUnstagedFiles = module.GetWorkTreeFiles();
                     foreach (var file in submoduleUnstagedFiles.Where(file => file.IsNew))
                     {
                         try

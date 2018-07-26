@@ -85,7 +85,7 @@ namespace GitCommands.Git
                 extra.Add("-R");
             }
 
-            // Special case: Remove options comparing unstaged-staged
+            // Special case: Remove options comparing worktree-index
             if ((firstRevision.IsNullOrEmpty() && secondRevision == StagedOpt) ||
                 (firstRevision == StagedOpt && secondRevision.IsNullOrEmpty()))
             {
@@ -107,7 +107,7 @@ namespace GitCommands.Git
             else
             {
                 // Untracked files can only be compared to /dev/null
-                // The UI should normally only allow this for unstaged to staged, but it can be included in multi selections
+                // The UI should normally only allow this for worktree to index, but it can be included in multi selections
                 if (!isTracked)
                 {
                     extra.Add("--no-index");

@@ -12,7 +12,7 @@ namespace GitCommands.Patches
     public static class PatchManager
     {
         [CanBeNull]
-        public static byte[] GetResetUnstagedLinesAsPatch([NotNull] GitModule module, [NotNull] string text, int selectionPosition, int selectionLength, [NotNull] Encoding fileContentEncoding)
+        public static byte[] GetResetWorkTreeLinesAsPatch([NotNull] GitModule module, [NotNull] string text, int selectionPosition, int selectionLength, [NotNull] Encoding fileContentEncoding)
         {
             var selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
 
@@ -21,7 +21,7 @@ namespace GitCommands.Patches
                 return null;
             }
 
-            string body = ToResetUnstagedLinesPatch(selectedChunks);
+            string body = ToResetWorkTreeLinesPatch(selectedChunks);
 
             // git apply has problem with dealing with autocrlf
             // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
@@ -41,7 +41,7 @@ namespace GitCommands.Patches
         }
 
         [CanBeNull]
-        public static byte[] GetSelectedLinesAsPatch([NotNull] string text, int selectionPosition, int selectionLength, bool staged, [NotNull] Encoding fileContentEncoding, bool isNewFile)
+        public static byte[] GetSelectedLinesAsPatch([NotNull] string text, int selectionPosition, int selectionLength, bool isIndex, [NotNull] Encoding fileContentEncoding, bool isNewFile)
         {
             var selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out var header);
 
@@ -56,7 +56,7 @@ namespace GitCommands.Patches
                 header = CorrectHeaderForNewFile(header);
             }
 
-            string body = ToStagePatch(selectedChunks, staged, isWholeFile: false);
+            string body = ToIndexPatch(selectedChunks, isIndex, isWholeFile: false);
 
             if (header == null || body == null)
             {
@@ -128,7 +128,7 @@ namespace GitCommands.Patches
 
             var selectedChunks = FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreamble, fileContentEncoding);
 
-            string body = ToStagePatch(selectedChunks, staged: false, isWholeFile: true);
+            string body = ToIndexPatch(selectedChunks, isIndex: false, isWholeFile: true);
 
             // git apply has problem with dealing with autocrlf
             // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
@@ -217,22 +217,22 @@ namespace GitCommands.Patches
         }
 
         [CanBeNull]
-        private static string ToResetUnstagedLinesPatch([NotNull, ItemNotNull] IEnumerable<Chunk> chunks)
+        private static string ToResetWorkTreeLinesPatch([NotNull, ItemNotNull] IEnumerable<Chunk> chunks)
         {
             string SubChunkToPatch(SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
             {
-                return subChunk.ToResetUnstagedLinesPatch(ref addedCount, ref removedCount, ref wereSelectedLines);
+                return subChunk.ToResetWorkTreeLinesPatch(ref addedCount, ref removedCount, ref wereSelectedLines);
             }
 
             return ToPatch(chunks, SubChunkToPatch);
         }
 
         [CanBeNull]
-        private static string ToStagePatch([NotNull, ItemNotNull] IEnumerable<Chunk> chunks, bool staged, bool isWholeFile)
+        private static string ToIndexPatch([NotNull, ItemNotNull] IEnumerable<Chunk> chunks, bool isIndex, bool isWholeFile)
         {
             string SubChunkToPatch(SubChunk subChunk, ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
             {
-                return subChunk.ToStagePatch(ref addedCount, ref removedCount, ref wereSelectedLines, staged, isWholeFile);
+                return subChunk.ToIndexPatch(ref addedCount, ref removedCount, ref wereSelectedLines, isIndex, isWholeFile);
             }
 
             return ToPatch(chunks, SubChunkToPatch);
@@ -295,7 +295,7 @@ namespace GitCommands.Patches
         public string WasNoNewLineAtTheEnd { get; set; }
         public string IsNoNewLineAtTheEnd { get; set; }
 
-        public string ToStagePatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool staged, bool isWholeFile)
+        public string ToIndexPatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines, bool isIndex, bool isWholeFile)
         {
             string diff = null;
             string removePart = null;
@@ -323,7 +323,7 @@ namespace GitCommands.Patches
                     removePart = removePart.Combine("\n", removedLine.Text);
                     removedCount++;
                 }
-                else if (!staged)
+                else if (!isIndex)
                 {
                     if (inPostPart)
                     {
@@ -352,7 +352,7 @@ namespace GitCommands.Patches
                     addPart = addPart.Combine("\n", addedLine.Text);
                     addedCount++;
                 }
-                else if (staged)
+                else if (isIndex)
                 {
                     if (inPostPart)
                     {
@@ -370,7 +370,7 @@ namespace GitCommands.Patches
 
             diff = diff.Combine("\n", prePart);
             diff = diff.Combine("\n", removePart);
-            if (PostContext.Count == 0 && (!staged || selectedLastRemovedLine))
+            if (PostContext.Count == 0 && (!isIndex || selectedLastRemovedLine))
             {
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
             }
@@ -383,7 +383,7 @@ namespace GitCommands.Patches
             }
 
             // stage no new line at the end only if last +- line is selected
-            if (PostContext.Count == 0 && (selectedLastLine || staged || isWholeFile))
+            if (PostContext.Count == 0 && (selectedLastLine || isIndex || isWholeFile))
             {
                 diff = diff.Combine("\n", IsNoNewLineAtTheEnd);
             }
@@ -397,7 +397,7 @@ namespace GitCommands.Patches
         }
 
         // patch base is changed file
-        public string ToResetUnstagedLinesPatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
+        public string ToResetWorkTreeLinesPatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
         {
             string diff = null;
             string removePart = null;

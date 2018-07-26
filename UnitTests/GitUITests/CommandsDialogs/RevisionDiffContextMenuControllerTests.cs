@@ -41,7 +41,7 @@ namespace GitUITests.CommandsDialogs
         }
 
         [Test]
-        public void BrowseDiff_ShowContextDiffToolForUnstaged()
+        public void BrowseDiff_ShowContextDiffToolForWorkTree()
         {
             var rev = new GitRevision(ObjectId.WorkTreeId);
             var selectionInfo = new ContextMenuDiffToolInfo(selectedRevision: rev);
@@ -53,7 +53,7 @@ namespace GitUITests.CommandsDialogs
         }
 
         [Test]
-        public void BrowseDiff_ShowContextDiffToolForUnstagedParent()
+        public void BrowseDiff_ShowContextDiffToolForWorkTreeParent()
         {
             var rev = new GitRevision(ObjectId.Random());
             var selectionInfo = new ContextMenuDiffToolInfo(selectedRevision: rev, selectedItemParentRevs: new[] { ObjectId.WorkTreeId });

@@ -614,14 +614,14 @@ namespace GitUI
 
         public bool StartResetChangesDialog(IWin32Window owner = null)
         {
-            var unstagedFiles = Module.GetUnstagedFiles();
-            return StartResetChangesDialog(owner, unstagedFiles, false);
+            var workTreeFiles = Module.GetWorkTreeFiles();
+            return StartResetChangesDialog(owner, workTreeFiles, false);
         }
 
-        public bool StartResetChangesDialog(IWin32Window owner, IReadOnlyCollection<GitItemStatus> unstagedFiles, bool onlyUnstaged)
+        public bool StartResetChangesDialog(IWin32Window owner, IReadOnlyCollection<GitItemStatus> workTreeFiles, bool onlyWorkTree)
         {
             // Show a form asking the user if they want to reset the changes.
-            FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(owner, unstagedFiles.Any(item => !item.IsNew), unstagedFiles.Any(item => item.IsNew));
+            FormResetChanges.ActionEnum resetAction = FormResetChanges.ShowResetDialog(owner, workTreeFiles.Any(item => !item.IsNew), workTreeFiles.Any(item => item.IsNew));
 
             if (resetAction == FormResetChanges.ActionEnum.Cancel)
             {
@@ -630,7 +630,7 @@ namespace GitUI
 
             bool Action()
             {
-                if (onlyUnstaged)
+                if (onlyWorkTree)
                 {
                     Module.RunGitCmd("checkout -- .");
                 }

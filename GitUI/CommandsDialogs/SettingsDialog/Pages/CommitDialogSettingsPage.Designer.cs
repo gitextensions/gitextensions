@@ -39,7 +39,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.grpAdditionalButtons = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.chkShowCommitAndPush = new System.Windows.Forms.CheckBox();
-            this.chkShowResetUnstagedChanges = new System.Windows.Forms.CheckBox();
+            this.chkShowResetWorkTreeChanges = new System.Windows.Forms.CheckBox();
             this.chkShowResetAllChanges = new System.Windows.Forms.CheckBox();
             this.chkAddNewlineToCommitMessageWhenMissing = new System.Windows.Forms.CheckBox();
             this.groupBoxBehaviour.SuspendLayout();
@@ -182,7 +182,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             this.flowLayoutPanel1.AutoSize = true;
             this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel1.Controls.Add(this.chkShowCommitAndPush);
-            this.flowLayoutPanel1.Controls.Add(this.chkShowResetUnstagedChanges);
+            this.flowLayoutPanel1.Controls.Add(this.chkShowResetWorkTreeChanges);
             this.flowLayoutPanel1.Controls.Add(this.chkShowResetAllChanges);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
@@ -203,13 +203,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // 
             // chkShowResetUnstagedChanges
             // 
-            this.chkShowResetUnstagedChanges.AutoSize = true;
-            this.chkShowResetUnstagedChanges.Location = new System.Drawing.Point(3, 26);
-            this.chkShowResetUnstagedChanges.Name = "chkShowResetUnstagedChanges";
-            this.chkShowResetUnstagedChanges.Size = new System.Drawing.Size(148, 17);
-            this.chkShowResetUnstagedChanges.TabIndex = 1;
-            this.chkShowResetUnstagedChanges.Text = "Reset Unstaged Changes";
-            this.chkShowResetUnstagedChanges.UseVisualStyleBackColor = true;
+            this.chkShowResetWorkTreeChanges.AutoSize = true;
+            this.chkShowResetWorkTreeChanges.Location = new System.Drawing.Point(3, 26);
+            this.chkShowResetWorkTreeChanges.Name = "chkShowResetUnstagedChanges";
+            this.chkShowResetWorkTreeChanges.Size = new System.Drawing.Size(148, 17);
+            this.chkShowResetWorkTreeChanges.TabIndex = 1;
+            this.chkShowResetWorkTreeChanges.Text = "Reset Unstaged Changes";
+            this.chkShowResetWorkTreeChanges.UseVisualStyleBackColor = true;
             // 
             // chkShowResetAllChanges
             // 
@@ -264,7 +264,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private System.Windows.Forms.GroupBox grpAdditionalButtons;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.CheckBox chkShowCommitAndPush;
-        private System.Windows.Forms.CheckBox chkShowResetUnstagedChanges;
+        private System.Windows.Forms.CheckBox chkShowResetWorkTreeChanges;
         private System.Windows.Forms.CheckBox chkShowResetAllChanges;
         private System.Windows.Forms.CheckBox chkAddNewlineToCommitMessageWhenMissing;
         private System.Windows.Forms.CheckBox chkAutocomplete;

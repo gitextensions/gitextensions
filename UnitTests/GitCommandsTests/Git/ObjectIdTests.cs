@@ -101,7 +101,7 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void UnstagedId_has_expected_value()
+        public void WorkTreeId_has_expected_value()
         {
             Assert.AreEqual(
                 "1111111111111111111111111111111111111111",
@@ -125,7 +125,7 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void UnstagedId_is_artificial()
+        public void WorkTreeId_is_artificial()
         {
             Assert.IsTrue(ObjectId.WorkTreeId.IsArtificial);
         }

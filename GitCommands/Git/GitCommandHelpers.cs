@@ -892,7 +892,7 @@ namespace GitCommands
                     // 1 XY subm <mH> <mI> <mW> <hH> <hI> <path>
                     // renamed:
                     // 2 XY subm <mH> <mI> <mW> <hH> <hI> <X><score> <path><sep><origPath>
-                    // unstaged (merge conflicts)
+                    // worktree (merge conflicts)
                     // u XY subm <m1> <m2> <m3> <mW> <h1> <h2> <h3> <path>
 
                     char x = line[2];
