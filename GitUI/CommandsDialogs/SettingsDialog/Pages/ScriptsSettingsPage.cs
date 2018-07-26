@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -79,7 +80,7 @@ Current Branch:
             if (EnvUtils.RunningOnWindows())
             {
                 System.Resources.ResourceManager rm =
-                    new System.Resources.ResourceManager("GitUI.Properties.Resources",
+                    new System.Resources.ResourceManager("GitUI.Properties.Images",
                                 System.Reflection.Assembly.GetExecutingAssembly());
 
                 // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
@@ -89,6 +90,7 @@ Current Branch:
 
                 contextMenuStrip_SplitButton.Items.Clear();
 
+                var iconItems = new List<ToolStripItem>();
                 foreach (System.Collections.DictionaryEntry icon in resourceSet)
                 {
                     // add entry to toolstrip
@@ -98,10 +100,11 @@ Current Branch:
                     }
                     else if (icon.Value is Bitmap bitmap)
                     {
-                        contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), bitmap, SplitButtonMenuItem_Click);
+                        iconItems.Add(new ToolStripMenuItem(icon.Key.ToString(), bitmap, SplitButtonMenuItem_Click));
                     }
-                    ////var aa = icon.Value.GetType();
                 }
+
+                contextMenuStrip_SplitButton.Items.AddRange(iconItems.OrderBy(i => i.Text).ToArray());
 
                 resourceSet.Close();
                 rm.ReleaseAllResources();
