@@ -668,7 +668,7 @@ namespace GitUI
 
                 DisposeRevisionReader();
 
-                var newCurrentCheckout = Module.IsBareRepository() ? null : Module.GetCurrentCheckout();
+                var newCurrentCheckout = Module.GetCurrentCheckout();
                 GitModule capturedModule = Module;
                 JoinableTask<SuperProjectInfo> newSuperProjectInfo =
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>

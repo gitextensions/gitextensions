@@ -27,12 +27,12 @@ namespace GitUI.CommandsDialogs
             tbBase.Text = item.Base.Hash ?? _deleted.Text;
             tbLocal.Text = item.Local.Hash ?? _deleted.Text;
             tbRemote.Text = item.Remote.Hash ?? _deleted.Text;
-            tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout().ToString();
+            tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout()?.ToString() ?? "";
         }
 
         private void btRefresh_Click(object sender, EventArgs e)
         {
-            tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout().ToString();
+            tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout()?.ToString() ?? "";
         }
 
         private void StageSubmodule()

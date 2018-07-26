@@ -498,9 +498,9 @@ namespace GitUI.Script
         }
 
         [CanBeNull]
-        private static GitRevision GetCurrentRevision(GitModule module, RevisionGridControl revisionGrid, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
-                                                      List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches,
-                                                      GitRevision currentRevision)
+        private static GitRevision GetCurrentRevision(
+            GitModule module, [CanBeNull] RevisionGridControl revisionGrid, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
+            List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches, [CanBeNull] GitRevision currentRevision)
         {
             if (currentRevision == null)
             {
@@ -508,8 +508,8 @@ namespace GitUI.Script
 
                 if (revisionGrid == null)
                 {
-                    var currentRevisionGuid = module.GetCurrentCheckout().ToString();
-                    refs = module.GetRefs(true, true).Where(gitRef => gitRef.Guid == currentRevisionGuid).ToList();
+                    var currentRevisionGuid = module.GetCurrentCheckout();
+                    refs = module.GetRefs(true, true).Where(gitRef => gitRef.ObjectId == currentRevisionGuid).ToList();
                 }
                 else
                 {
