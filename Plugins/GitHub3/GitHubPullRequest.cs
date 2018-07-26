@@ -5,13 +5,13 @@ using System.Text;
 using Git.hub;
 using GitUIPluginInterfaces.RepositoryHosts;
 
-namespace Github3
+namespace GitHub3
 {
-    internal class GithubPullRequest : IPullRequestInformation
+    internal class GitHubPullRequest : IPullRequestInformation
     {
         private readonly PullRequest _pullRequest;
 
-        public GithubPullRequest(PullRequest pullRequest)
+        public GitHubPullRequest(PullRequest pullRequest)
         {
             _pullRequest = pullRequest;
         }
@@ -52,7 +52,7 @@ namespace Github3
             {
                 if (_baseRepo == null)
                 {
-                    _baseRepo = new GithubRepo(_pullRequest.Base.Repo);
+                    _baseRepo = new GitHubRepo(_pullRequest.Base.Repo);
                 }
 
                 return _baseRepo;
@@ -66,7 +66,7 @@ namespace Github3
             {
                 if (_headRepo == null)
                 {
-                    _headRepo = new GithubRepo(_pullRequest.Head.Repo);
+                    _headRepo = new GitHubRepo(_pullRequest.Head.Repo);
                 }
 
                 return _headRepo;
@@ -97,7 +97,7 @@ namespace Github3
             {
                 if (_discussion == null)
                 {
-                    _discussion = new GithubPullRequestDiscussion(_pullRequest);
+                    _discussion = new GitHubPullRequestDiscussion(_pullRequest);
                 }
 
                 return _discussion;

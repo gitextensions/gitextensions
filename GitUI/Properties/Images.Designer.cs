@@ -423,9 +423,9 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap CloneRepoGithub {
+        public static System.Drawing.Bitmap CloneRepoGitHub {
             get {
-                object obj = ResourceManager.GetObject("CloneRepoGithub", resourceCulture);
+                object obj = ResourceManager.GetObject("CloneRepoGitHub", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

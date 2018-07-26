@@ -1,13 +1,13 @@
 ﻿using Git.hub;
 using GitUIPluginInterfaces.RepositoryHosts;
 
-namespace Github3
+namespace GitHub3
 {
-    internal class GithubBranch : IHostedBranch
+    internal class GitHubBranch : IHostedBranch
     {
         private readonly Branch _branch;
 
-        public GithubBranch(Branch branch)
+        public GitHubBranch(Branch branch)
         {
             _branch = branch;
         }

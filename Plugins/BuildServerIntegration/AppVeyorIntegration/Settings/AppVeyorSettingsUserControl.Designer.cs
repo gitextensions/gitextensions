@@ -205,7 +205,7 @@ namespace AppVeyorIntegration.Settings
             this.cbGitHubPullRequest.Name = "cbGitHubPullRequest";
             this.cbGitHubPullRequest.Size = new System.Drawing.Size(257, 21);
             this.cbGitHubPullRequest.TabIndex = 6;
-            this.cbGitHubPullRequest.Text = "display github pull requests builds. GithubToken:";
+            this.cbGitHubPullRequest.Text = "display GitHub pull requests builds. GitHubToken:";
             this.cbGitHubPullRequest.UseVisualStyleBackColor = true;
             this.cbGitHubPullRequest.CheckedChanged += new System.EventHandler(this.cbGitHubPullRequest_CheckedChanged);
             // 
