@@ -65,6 +65,7 @@ namespace GitUI.BranchTreePanel
                         { nameof(Images.Remote), Pad(Images.RemoteRepo) },
                         { nameof(Images.BitBucket), Pad(Images.BitBucket) },
                         { nameof(Images.GitHub), Pad(Images.GitHub) },
+                        { nameof(Images.VisualStudioTeamServices), Pad(Images.VisualStudioTeamServices) },
                         { nameof(Images.BranchLocalRoot), Pad(Images.BranchLocalRoot) },
                         { nameof(Images.BranchRemoteRoot), Pad(Images.BranchRemoteRoot) },
                         { nameof(Images.BranchRemote), Pad(Images.BranchRemote) },
