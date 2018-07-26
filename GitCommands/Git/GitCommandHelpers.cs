@@ -816,7 +816,7 @@ namespace GitCommands
         public static IReadOnlyList<GitItemStatus> GetDiffChangedFilesFromString(IGitModule module, string statusString, [CanBeNull] string firstRevision, [CanBeNull] string secondRevision, [CanBeNull] string parentToSecond)
         {
             StagedStatus staged;
-            if (firstRevision == GitRevision.IndexGuid && secondRevision == GitRevision.UnstagedGuid)
+            if (firstRevision == GitRevision.IndexGuid && secondRevision == GitRevision.WorkTreeGuid)
             {
                 staged = StagedStatus.WorkTree;
             }

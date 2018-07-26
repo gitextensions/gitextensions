@@ -18,10 +18,10 @@ namespace GitUIPluginInterfaces
         private static readonly Random _random = new Random();
 
         /// <summary>
-        /// Gets the artificial ObjectId used to represent unstaged changes.
+        /// Gets the artificial ObjectId used to represent working directory tree (unstaged) changes.
         /// </summary>
         [NotNull]
-        public static ObjectId UnstagedId { get; } = new ObjectId(0x11111111, 0x11111111, 0x11111111, 0x11111111, 0x11111111);
+        public static ObjectId WorkTreeId { get; } = new ObjectId(0x11111111, 0x11111111, 0x11111111, 0x11111111, 0x11111111);
 
         /// <summary>
         /// Gets the artificial ObjectId used to represent changes staged to the index.
@@ -50,7 +50,7 @@ namespace GitUIPluginInterfaces
                 unchecked((uint)_random.Next()));
         }
 
-        public bool IsArtificial => this == UnstagedId || this == IndexId || this == CombinedDiffId;
+        public bool IsArtificial => this == WorkTreeId || this == IndexId || this == CombinedDiffId;
 
         private const int Sha1ByteCount = 20;
         public const int Sha1CharCount = 40;

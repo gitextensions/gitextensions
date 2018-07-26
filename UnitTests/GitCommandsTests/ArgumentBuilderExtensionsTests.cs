@@ -232,7 +232,7 @@ namespace GitCommandsTests
         {
             Assert.Throws<ArgumentException>(() => new ArgumentBuilder
             {
-                ObjectId.UnstagedId
+                ObjectId.WorkTreeId
             });
             Assert.Throws<ArgumentException>(() => new ArgumentBuilder
             {

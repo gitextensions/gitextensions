@@ -13,7 +13,7 @@ namespace GitCommands
     public sealed class GitRevision : IGitItem, INotifyPropertyChanged
     {
         /// <summary>40 characters of 1's</summary>
-        public const string UnstagedGuid = "1111111111111111111111111111111111111111";
+        public const string WorkTreeGuid = "1111111111111111111111111111111111111111";
 
         /// <summary>40 characters of 2's</summary>
         public const string IndexGuid = "2222222222222222222222222222222222222222";

@@ -485,7 +485,7 @@ namespace GitUI.CommandsDialogs
             var selectedRevisions = FileChanges.GetSelectedRevisions();
 
             diffToolRemoteLocalStripMenuItem.Enabled =
-                selectedRevisions.Count == 1 && selectedRevisions[0].Guid != GitRevision.UnstagedGuid &&
+                selectedRevisions.Count == 1 && selectedRevisions[0].Guid != GitRevision.WorkTreeGuid &&
                 File.Exists(_fullPathResolver.Resolve(FileName));
             openWithDifftoolToolStripMenuItem.Enabled =
                 selectedRevisions.Count >= 1 && selectedRevisions.Count <= 2;

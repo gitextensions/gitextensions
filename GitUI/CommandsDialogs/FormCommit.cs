@@ -998,7 +998,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var headId = Module.RevParse("HEAD");
-            Unstaged.SetDiffs(new GitRevision(ObjectId.UnstagedId), new GitRevision(ObjectId.IndexId), unstagedFiles);
+            Unstaged.SetDiffs(new GitRevision(ObjectId.WorkTreeId), new GitRevision(ObjectId.IndexId), unstagedFiles);
             Staged.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(headId), stagedFiles);
 
             var doChangesExist = Unstaged.AllItems.Any() || Staged.AllItems.Any();
@@ -1671,7 +1671,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     var headId = Module.RevParse("HEAD");
-                    Unstaged.SetDiffs(new GitRevision(ObjectId.UnstagedId), new GitRevision(ObjectId.IndexId), unstagedFiles);
+                    Unstaged.SetDiffs(new GitRevision(ObjectId.WorkTreeId), new GitRevision(ObjectId.IndexId), unstagedFiles);
                     Staged.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(headId), stagedFiles);
                     _skipUpdate = false;
                     Staged.SelectStoredNextIndex();
@@ -1871,7 +1871,7 @@ namespace GitUI.CommandsDialogs
                             item.GetSubmoduleStatusAsync().CompletedResult().Status = SubmoduleStatus.Unknown;
                         }
 
-                        Unstaged.SetDiffs(new GitRevision(ObjectId.UnstagedId), new GitRevision(ObjectId.IndexId), unstagedFiles);
+                        Unstaged.SetDiffs(new GitRevision(ObjectId.WorkTreeId), new GitRevision(ObjectId.IndexId), unstagedFiles);
                         Unstaged.ClearSelected();
                         _skipUpdate = false;
                         Unstaged.SelectStoredNextIndex();
@@ -2462,7 +2462,7 @@ namespace GitUI.CommandsDialogs
 
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
         {
-            OpenFilesWithDiffTool(Unstaged.SelectedItems, GitRevision.IndexGuid, GitRevision.UnstagedGuid);
+            OpenFilesWithDiffTool(Unstaged.SelectedItems, GitRevision.IndexGuid, GitRevision.WorkTreeGuid);
         }
 
         private void ResetPartOfFileToolStripMenuItemClick(object sender, EventArgs e)

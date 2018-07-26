@@ -39,7 +39,7 @@ namespace GitCommandsTests.Git
         {
             var firstSelected = new[] { new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.Random()) };
 
-            var selectedRevision = new GitRevision(ObjectId.UnstagedId)
+            var selectedRevision = new GitRevision(ObjectId.WorkTreeId)
             {
                 ParentIds = new[] { ObjectId.IndexId }
             };

@@ -63,7 +63,7 @@ namespace ResourceManager
         {
             if (linkText == null)
             {
-                if (objectId == ObjectId.UnstagedId)
+                if (objectId == ObjectId.WorkTreeId)
                 {
                     linkText = Strings.Workspace;
                 }

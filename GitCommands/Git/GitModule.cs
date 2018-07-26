@@ -2482,11 +2482,11 @@ namespace GitCommands
             string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
             string result = noCache ? RunGitCmd(cmd) : RunCacheableGitCmd(cmd, SystemEncoding);
             var resultCollection = GitCommandHelpers.GetDiffChangedFilesFromString(this, result, firstRevision, secondRevision, parentToSecond).ToList();
-            if (firstRevision == GitRevision.UnstagedGuid || secondRevision == GitRevision.UnstagedGuid)
+            if (firstRevision == GitRevision.WorkTreeGuid || secondRevision == GitRevision.WorkTreeGuid)
             {
                 // For unstaged the untracked must be added too
                 var files = GetUnstagedFilesWithSubmodulesStatus().Where(item => item.IsNew);
-                if (firstRevision == GitRevision.UnstagedGuid)
+                if (firstRevision == GitRevision.WorkTreeGuid)
                 {
                     // The file is seen as "deleted" in 'to' revision
                     foreach (var item in files)
@@ -3425,7 +3425,7 @@ namespace GitCommands
         [CanBeNull]
         public ObjectId GetFileBlobHash(string fileName, ObjectId objectId)
         {
-            if (objectId == ObjectId.UnstagedId)
+            if (objectId == ObjectId.WorkTreeId)
             {
                 // working directory changes
                 Debug.Assert(false, "Tried to get blob for unstaged file");
@@ -3494,7 +3494,7 @@ namespace GitCommands
                 });
         }
 
-        public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.UnstagedGuid, string extraDiffArguments = null, bool isTracked = true)
+        public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.WorkTreeGuid, string extraDiffArguments = null, bool isTracked = true)
         {
             var args = new ArgumentBuilder
             {

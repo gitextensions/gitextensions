@@ -109,7 +109,7 @@ namespace GitUI.CommandsDialogs
 
         public bool ShouldShowSubmoduleMenus(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsAnySubmodule && selectionInfo.SelectedRevision.Guid == GitRevision.UnstagedGuid;
+            return selectionInfo.IsAnySubmodule && selectionInfo.SelectedRevision.Guid == GitRevision.WorkTreeGuid;
         }
 
         public bool ShouldShowMenuEditFile(ContextMenuSelectionInfo selectionInfo)

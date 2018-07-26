@@ -877,7 +877,7 @@ namespace GitUI
                     var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
                     // Add working directory as virtual commit
-                    var unstagedRev = new GitRevision(ObjectId.UnstagedId)
+                    var unstagedRev = new GitRevision(ObjectId.WorkTreeId)
                     {
                         Author = userName,
                         AuthorDate = DateTime.MaxValue,
@@ -1787,7 +1787,7 @@ namespace GitUI
         [CanBeNull]
         public ChangeCount GetChangeCount(ObjectId objectId)
         {
-            return objectId == ObjectId.UnstagedId
+            return objectId == ObjectId.WorkTreeId
                 ? _unstagedChangeCount
                 : objectId == ObjectId.IndexId
                     ? _indexChangeCount
@@ -1807,13 +1807,13 @@ namespace GitUI
                 return;
             }
 
-            unstagedRev = unstagedRev ?? GetRevision(ObjectId.UnstagedId);
+            unstagedRev = unstagedRev ?? GetRevision(ObjectId.WorkTreeId);
             stagedRev = stagedRev ?? GetRevision(ObjectId.IndexId);
 
             if (unstagedRev != null)
             {
                 var items = status.Where(item => item.Staged == StagedStatus.WorkTree);
-                UpdateChangeCount(ObjectId.UnstagedId, items.ToList());
+                UpdateChangeCount(ObjectId.WorkTreeId, items.ToList());
             }
 
             if (stagedRev != null)

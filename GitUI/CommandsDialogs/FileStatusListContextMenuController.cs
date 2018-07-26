@@ -63,7 +63,7 @@ namespace GitUI.CommandsDialogs
                 && (!selectionInfo.FirstIsParent || !selectionInfo.AllAreNew)
 
                 // First (A) is not local
-                && (selectionInfo.SelectedItemParentRevs == null || !selectionInfo.SelectedItemParentRevs.Contains(ObjectId.UnstagedId));
+                && (selectionInfo.SelectedItemParentRevs == null || !selectionInfo.SelectedItemParentRevs.Contains(ObjectId.WorkTreeId));
         }
 
         public bool ShouldShowMenuSelectedToLocal(ContextMenuDiffToolInfo selectionInfo)
@@ -74,7 +74,7 @@ namespace GitUI.CommandsDialogs
                 && !selectionInfo.AllAreDeleted
 
                 // Selected (B) is not local
-                && selectionInfo.SelectedRevision.Guid != GitRevision.UnstagedGuid;
+                && selectionInfo.SelectedRevision.Guid != GitRevision.WorkTreeGuid;
         }
 
         public bool ShouldShowMenuFirstParentToLocal(ContextMenuDiffToolInfo selectionInfo)

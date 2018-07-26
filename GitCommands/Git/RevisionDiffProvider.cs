@@ -138,20 +138,20 @@ namespace GitCommands.Git
         {
             switch (rev)
             {
-                case GitRevision.UnstagedGuid:
+                case GitRevision.WorkTreeGuid:
                 case "":
                 case null:
                     return "";
                 case "^":
-                case GitRevision.UnstagedGuid + "^":
+                case GitRevision.WorkTreeGuid + "^":
                 case GitRevision.IndexGuid:
                     return StagedOpt;
                 case "^^":
-                case GitRevision.UnstagedGuid + "^^":
+                case GitRevision.WorkTreeGuid + "^^":
                 case GitRevision.IndexGuid + "^":
                     return "\"HEAD\"";
                 case "^^^":
-                case GitRevision.UnstagedGuid + "^^^":
+                case GitRevision.WorkTreeGuid + "^^^":
                 case GitRevision.IndexGuid + "^^":
                     return "HEAD^";
                 default:

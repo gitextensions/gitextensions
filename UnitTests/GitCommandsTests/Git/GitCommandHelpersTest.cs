@@ -155,7 +155,7 @@ namespace GitCommandsTests.Git
                 // git diff -M -C -z --cached --name-status
                 // Ignore unmerged (in conflict) if revision is work tree
                 string statusString = "M  testfile.txt\0U  testfile.txt\0";
-                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, GitRevision.IndexGuid, GitRevision.UnstagedGuid, GitRevision.IndexGuid);
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, GitRevision.IndexGuid, GitRevision.WorkTreeGuid, GitRevision.IndexGuid);
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
                 Assert.IsTrue(status[0].Staged == StagedStatus.WorkTree);

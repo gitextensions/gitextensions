@@ -622,7 +622,7 @@ namespace GitUI.Editor
 
         public Task ViewGitItemRevisionAsync(string fileName, ObjectId objectId)
         {
-            if (objectId == ObjectId.UnstagedId)
+            if (objectId == ObjectId.WorkTreeId)
             {
                 // No blob exists for unstaged, present contents from file system
                 return ViewFileAsync(fileName);

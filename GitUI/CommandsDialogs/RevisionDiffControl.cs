@@ -200,7 +200,7 @@ namespace GitUI.CommandsDialogs
         {
             var parents = DiffFiles.SelectedItemParents
                 .Where(i => showUnstagedAndCombined ||
-                    !(i.Guid.IsNullOrWhiteSpace() || i.Guid == GitRevision.UnstagedGuid || i.Guid == GitRevision.CombinedDiffGuid))
+                    !(i.Guid.IsNullOrWhiteSpace() || i.Guid == GitRevision.WorkTreeGuid || i.Guid == GitRevision.CombinedDiffGuid))
                 .Distinct()
                 .Count();
 
@@ -662,7 +662,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (DiffFiles.Revision.Guid == GitRevision.UnstagedGuid)
+            if (DiffFiles.Revision.Guid == GitRevision.WorkTreeGuid)
             {
                 resetFileToSelectedToolStripMenuItem.Visible = false;
             }
