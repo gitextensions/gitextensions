@@ -18,5 +18,5 @@ What did I do to test the code and ensure quality:
 - 
 
 Has been tested on (remove any that don't apply):
-- GIT 2.10 and above
+- GIT 2.11 and above
 - Windows 7 and above
