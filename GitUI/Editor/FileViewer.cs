@@ -154,7 +154,7 @@ namespace GitUI.Editor
 
             HotkeysEnabled = true;
 
-            if (IsDesignModeActive && ContextMenuStrip == null)
+            if (!IsDesignModeActive && ContextMenuStrip == null)
             {
                 ContextMenuStrip = contextMenu;
             }
