@@ -74,54 +74,54 @@ namespace GitUI.UserControls.RevisionGrid
 
         public string GetRevisionFilter()
         {
-            var filter = "";
+            var filter = new ArgumentBuilder();
+
             if (AuthorCheck.Checked && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Author.Text))
             {
-                filter += string.Format(" --author=\"{0}\"", Author.Text);
+                filter.Add($"--author=\"{Author.Text}\"");
             }
 
             if (CommitterCheck.Checked && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Committer.Text))
             {
-                filter += string.Format(" --committer=\"{0}\"", Committer.Text);
+                filter.Add($"--committer=\"{Committer.Text}\"");
             }
 
             if (MessageCheck.Checked && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Message.Text))
             {
-                filter += string.Format(" --grep=\"{0}\"", Message.Text);
+                filter.Add($"--grep=\"{Message.Text}\"");
             }
 
-            if (!string.IsNullOrEmpty(filter) && IgnoreCase.Checked)
+            if (!filter.IsEmpty && IgnoreCase.Checked)
             {
-                filter += " --regexp-ignore-case";
+                filter.Add("--regexp-ignore-case");
             }
 
             if (SinceCheck.Checked)
             {
-                filter += string.Format(" --since=\"{0}\"", Since.Value.ToString("yyyy-MM-dd hh:mm:ss"));
+                filter.Add($"--since=\"{Since.Value:yyyy-MM-dd hh:mm:ss}\"");
             }
 
             if (CheckUntil.Checked)
             {
-                filter += string.Format(" --until=\"{0}\"", Until.Value.ToString("yyyy-MM-dd hh:mm:ss"));
+                filter.Add($"--until=\"{Until.Value:yyyy-MM-dd hh:mm:ss}\"");
             }
 
             if (LimitCheck.Checked && _NO_TRANSLATE_Limit.Value > 0)
             {
-                filter += string.Format(" --max-count=\"{0}\"", (int)_NO_TRANSLATE_Limit.Value);
+                filter.Add($"--max-count=\"{(int)_NO_TRANSLATE_Limit.Value}\"");
             }
 
-            return filter;
+            return filter.ToString();
         }
 
         public string GetPathFilter()
         {
-            var filter = "";
             if (FileFilterCheck.Checked)
             {
-                filter += string.Format(" \"{0}\"", FileFilter.Text.ToPosixPath());
+                return FileFilter.Text.ToPosixPath().Quote();
             }
 
-            return filter;
+            return "";
         }
 
         public bool ShouldHideGraph()

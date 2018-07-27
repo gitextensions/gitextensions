@@ -37,6 +37,8 @@ namespace GitCommands
     {
         private readonly StringBuilder _command = new StringBuilder(capacity: 16);
 
+        public bool IsEmpty => _command.Length == 0;
+
         /// <summary>
         /// Adds <paramref name="s"/> to the argument list.
         /// </summary>
