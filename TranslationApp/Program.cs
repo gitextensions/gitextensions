@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Utils;
 using GitUI;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace TranslationApp
@@ -30,10 +31,17 @@ namespace TranslationApp
                 NBug.Settings.MaxQueuedReports = 10;
                 NBug.Settings.StopReportingAfter = 90;
                 NBug.Settings.SleepBeforeSend = 30;
-                NBug.Settings.StoragePath = "WindowsTemp";
+                NBug.Settings.StoragePath = NBug.Enums.StoragePath.WindowsTemp;
 
                 AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
                 Application.ThreadException += NBug.Handler.ThreadException;
+            }
+
+            // This form created for obtain UI synchronization context only
+            using (new Form())
+            {
+                // Store the shared JoinableTaskContext
+                ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
             }
 
             // required for translation
