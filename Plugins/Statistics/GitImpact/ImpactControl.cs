@@ -350,8 +350,8 @@ namespace GitImpact
                         // Create a new random brush for the author if none exists yet
                         if (!_brushes.ContainsKey(author))
                         {
-                            int partLength = author.Length / 3;
-                            _brushes.Add(author, new SolidBrush(Color.FromArgb(GenerateIntFromString(author.Substring(0, partLength)) % 255, GenerateIntFromString(author.Substring(partLength, partLength)) % 255, GenerateIntFromString(author.Substring(partLength)) % 255)));
+                            var color = Color.FromArgb((int)(author.GetHashCode() | 0xFF000000));
+                            _brushes.Add(author, new SolidBrush(color));
                         }
 
                         // Increase y for next block
@@ -469,11 +469,6 @@ namespace GitImpact
                     }
                 }
             }
-        }
-
-        private static int GenerateIntFromString(string text)
-        {
-            return text.Sum(c => (int)c);
         }
 
         /// <summary>
