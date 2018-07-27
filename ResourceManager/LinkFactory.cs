@@ -91,15 +91,23 @@ namespace ResourceManager
                 return linkUri;
             }
 
-            string uriCandidate = linkText;
-            while (uriCandidate != null)
+            var uriCandidate = linkText;
+
+            while (true)
             {
                 if (Uri.TryCreate(uriCandidate, UriKind.Absolute, out var uri))
                 {
                     return uri.AbsoluteUri;
                 }
 
-                uriCandidate = uriCandidate.SkipStr("#");
+                var idx = uriCandidate.IndexOf('#');
+
+                if (idx == -1)
+                {
+                    break;
+                }
+
+                uriCandidate = uriCandidate.Substring(idx + 1);
             }
 
             return linkText;

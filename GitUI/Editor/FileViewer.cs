@@ -1194,17 +1194,14 @@ namespace GitUI.Editor
                 int pos = noSelection ? 0 : _internalFileViewer.GetSelectionPosition();
                 string fileText = _internalFileViewer.GetText();
 
-                if (pos > 0)
+                if (pos > 0 && fileText[pos - 1] != '\n')
                 {
-                    if (fileText[pos - 1] != '\n')
-                    {
-                        code = " " + code;
-                    }
+                    code = " " + code;
                 }
 
-                IEnumerable<string> lines = code.Split('\n');
-                lines = lines.Where(s => s.Length == 0 || s[0] != startChar || (s.Length > 2 && s[1] == s[0] && s[2] == s[0]));
-                int hpos = fileText.IndexOf("\n@@");
+                var lines = code.Split('\n')
+                    .Where(s => s.Length == 0 || s[0] != startChar || (s.Length > 2 && s[1] == s[0] && s[2] == s[0]));
+                var hpos = fileText.IndexOf("\n@@");
 
                 // if header is selected then don't remove diff extra chars
                 if (hpos <= pos)
