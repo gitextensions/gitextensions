@@ -320,16 +320,7 @@ See the changes in the commit form.");
                 gitItem.ObjectType == GitObjectType.Blob &&
                 !string.IsNullOrWhiteSpace(gitItem.FileName))
             {
-                var fileName = gitItem.FileName;
-                if (fileName.Contains("\\") && fileName.LastIndexOf("\\", StringComparison.Ordinal) < fileName.Length)
-                {
-                    fileName = fileName.Substring(fileName.LastIndexOf('\\') + 1);
-                }
-
-                if (fileName.Contains("/") && fileName.LastIndexOf("/", StringComparison.Ordinal) < fileName.Length)
-                {
-                    fileName = fileName.Substring(fileName.LastIndexOf('/') + 1);
-                }
+                var fileName = gitItem.FileName.SubstringAfterLast('/').SubstringAfterLast('\\');
 
                 fileName = (Path.GetTempPath() + fileName).ToNativePath();
                 Module.SaveBlobAs(fileName, gitItem.Guid);

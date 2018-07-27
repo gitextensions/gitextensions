@@ -91,27 +91,22 @@ namespace GitCommands
             {
                 if (IsRemote)
                 {
-                    return CompleteName.Substring(CompleteName.LastIndexOf("remotes/") + 8);
+                    return CompleteName.SubstringAfterLast("remotes/");
                 }
 
                 if (IsTag)
                 {
                     // we need the one containing ^{}, because it contains the reference
-                    var temp =
-                        CompleteName.Contains(GitRefName.TagDereferenceSuffix)
-                            ? CompleteName.Substring(0, CompleteName.Length - GitRefName.TagDereferenceSuffix.Length)
-                            : CompleteName;
-
-                    return temp.Substring(CompleteName.LastIndexOf("tags/") + 5);
+                    return CompleteName.RemoveSuffix(GitRefName.TagDereferenceSuffix).SubstringAfterLast("tags/");
                 }
 
                 if (IsHead)
                 {
-                    return CompleteName.Substring(CompleteName.LastIndexOf("heads/") + 6);
+                    return CompleteName.SubstringAfterLast("heads/");
                 }
 
                 // if we don't know ref type then we don't know if '/' is a valid ref character
-                return CompleteName.SkipStr("refs/");
+                return CompleteName.SubstringAfter("refs/");
             }
         }
 
@@ -180,11 +175,7 @@ namespace GitCommands
         /// <inheritdoc />
         public string GetMergeWith(ISettingsValueGetter configFile)
         {
-            var merge = configFile.GetValue(_mergeSettingName);
-
-            return merge.StartsWith(GitRefName.RefsHeadsPrefix)
-                ? merge.Substring(GitRefName.RefsHeadsPrefix.Length)
-                : merge;
+            return configFile.GetValue(_mergeSettingName).RemovePrefix(GitRefName.RefsHeadsPrefix);
         }
 
         public static GitRef NoHead(GitModule module)

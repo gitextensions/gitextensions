@@ -1538,9 +1538,11 @@ namespace GitCommands
                 var lines = File.ReadLines(WorkingDir + ".git");
                 foreach (string line in lines)
                 {
-                    if (line.StartsWith("gitdir:"))
+                    const string gitdir = "gitdir:";
+
+                    if (line.StartsWith(gitdir))
                     {
-                        string gitPath = line.Substring(7).Trim();
+                        string gitPath = line.Substring(gitdir.Length).Trim();
                         int pos = gitPath.IndexOf("/.git/modules/");
                         if (pos != -1)
                         {
@@ -2862,7 +2864,7 @@ namespace GitCommands
                 return "";
             }
 
-            return remote + "/" + (merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge);
+            return $"{remote}/{merge.RemovePrefix(GitRefName.RefsHeadsPrefix)}";
         }
 
         public IEnumerable<IGitRef> GetRemoteBranches()

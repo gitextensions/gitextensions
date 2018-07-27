@@ -25,7 +25,6 @@ namespace GitFlow
         private readonly AsyncLoader _task = new AsyncLoader();
 
         public bool IsRefreshNeeded { get; set; }
-        private const string RefHeads = "refs/heads/";
 
         private string CurrentBranch { get; set; }
 
@@ -344,7 +343,8 @@ namespace GitFlow
         {
             var head = _gitUiCommands.GitModule.RunGitCmd("symbolic-ref HEAD").Trim('*', ' ', '\n', '\r');
             lblHead.Text = head;
-            var currentRef = head.StartsWith(RefHeads) ? head.Substring(RefHeads.Length) : head;
+
+            var currentRef = head.RemovePrefix(GitRefName.RefsHeadsPrefix);
 
             if (TryExtractBranchFromHead(currentRef, out var branchTypes, out var branchName))
             {
