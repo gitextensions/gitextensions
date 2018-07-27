@@ -761,7 +761,7 @@ namespace GitCommands
                     // We are looking for lines resembling:
                     //
                     // -Subproject commit bfef4454fc51e345051ee5bf66686dc28deed627
-                    // +Subproject commit 8b20498b954609770205c2cc794b868b4ac3ee69
+                    // +Subproject commit 8b20498b954609770205c2cc794b868b4ac3ee69-dirty
 
                     if (!line.Contains("Subproject"))
                     {

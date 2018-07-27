@@ -954,7 +954,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    // use remote branches from the git's local database if there were problems with receiving branches from the remote server
+                    // use remote branches from git's local database if there were problems with receiving branches from the remote server
                     remoteHeads = Module.GetRemoteBranches().Where(r => r.Remote == remote).ToList();
                 }
 

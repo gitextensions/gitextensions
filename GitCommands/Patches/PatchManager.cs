@@ -137,7 +137,7 @@ namespace GitCommands.Patches
                 body = body.Replace("\r", "");
             }
 
-            if (header == null || body == null)
+            if (body == null)
             {
                 return null;
             }
@@ -312,9 +312,8 @@ namespace GitCommands.Patches
                 diff = diff.Combine("\n", line.Text);
             }
 
-            for (int i = 0; i < RemovedLines.Count; i++)
+            foreach (var removedLine in RemovedLines)
             {
-                PatchLine removedLine = RemovedLines[i];
                 selectedLastLine = removedLine.Selected;
                 if (removedLine.Selected)
                 {
@@ -397,6 +396,7 @@ namespace GitCommands.Patches
         }
 
         // patch base is changed file
+        [CanBeNull]
         public string ToResetWorkTreeLinesPatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
         {
             string diff = null;

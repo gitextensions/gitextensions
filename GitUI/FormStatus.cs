@@ -91,16 +91,12 @@ namespace GitUI
             int index = text.LastIndexOf('%');
             if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out var progressValue) && progressValue >= 0)
             {
-                if (ProgressBar.Style != ProgressBarStyle.Blocks)
-                {
-                    ProgressBar.Style = ProgressBarStyle.Blocks;
-                }
-
+                ProgressBar.Style = ProgressBarStyle.Blocks;
                 ProgressBar.Value = Math.Min(100, progressValue);
                 TaskbarProgress.SetProgress(TaskbarProgressBarState.Normal, progressValue, 100);
             }
 
-            // Show last progress message in the title, unless it's showin in the control body already
+            // Show last progress message in the title, unless it's showing in the control body already
             if (!ConsoleOutput.IsDisplayingFullProcessOutput)
             {
                 Text = text;
