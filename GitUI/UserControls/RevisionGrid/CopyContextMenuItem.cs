@@ -71,7 +71,7 @@ namespace GitUI.UserControls.RevisionGrid
                 }
 
                 // Add other items
-                AddItem($"{Strings.CommitHash}     ({revision.Guid.ShortenTo(15)})", r => r.Guid, Images.CommitId, Keys.Control | Keys.C);
+                AddItem($"{Strings.CommitHash}     ({revision.ObjectId.ToShortString()}...)", r => r.Guid, Images.CommitId, Keys.Control | Keys.C);
                 AddItem($"{Strings.Message}     ({revision.Subject.ShortenTo(30)})", r => r.Body ?? r.Subject, Images.Message);
                 AddItem($"{Strings.Author}     ({revision.Author})", r => r.Author, Images.Author);
 
