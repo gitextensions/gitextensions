@@ -45,6 +45,9 @@ namespace GitUI.CommandsDialogs
                 }
 
                 var checkedOutObjectId = Module.GetCurrentCheckout();
+
+                Debug.Assert(checkedOutObjectId != null, "checkedOutObjectId != null");
+
                 ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 
                 string command = GitCommandHelpers.CheckoutCmd(selectedObjectId.ToString(), Force.Checked ? LocalChangesAction.Reset : 0);

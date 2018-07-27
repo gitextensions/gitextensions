@@ -34,7 +34,10 @@ namespace GitUI.CommandsDialogs
             if (IsUICommandsInitialized)
             {
                 objectId = objectId ?? Module.GetCurrentCheckout();
-                commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
+                if (objectId != null)
+                {
+                    commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
+                }
             }
         }
 
@@ -108,20 +111,20 @@ namespace GitUI.CommandsDialogs
                     ? GitCommandHelpers.CreateOrphanCmd(branchName, objectId)
                     : GitCommandHelpers.BranchCmd(branchName, objectId.ToString(), chkbxCheckoutAfterCreate.Checked);
 
-                bool wasSuccessFul = FormProcess.ShowDialog(this, cmd);
-                if (Orphan.Checked && wasSuccessFul && ClearOrphan.Checked)
+                bool wasSuccessful = FormProcess.ShowDialog(this, cmd);
+                if (Orphan.Checked && wasSuccessful && ClearOrphan.Checked)
                 {
                     // orphan AND orphan creation success AND clear
                     cmd = GitCommandHelpers.RemoveCmd();
                     FormProcess.ShowDialog(this, cmd);
                 }
 
-                if (wasSuccessFul && chkbxCheckoutAfterCreate.Checked && objectId != originalHash)
+                if (wasSuccessful && chkbxCheckoutAfterCreate.Checked && objectId != originalHash)
                 {
                     UICommands.UpdateSubmodules(this);
                 }
 
-                DialogResult = wasSuccessFul ? DialogResult.OK : DialogResult.None;
+                DialogResult = wasSuccessful ? DialogResult.OK : DialogResult.None;
             }
             catch (Exception ex)
             {

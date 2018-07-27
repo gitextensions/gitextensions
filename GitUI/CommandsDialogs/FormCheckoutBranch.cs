@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -369,7 +370,9 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            var originalHash = Module.GetCurrentCheckout();
+            var originalId = Module.GetCurrentCheckout();
+
+            Debug.Assert(originalId != null, "originalId != null");
 
             ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 
@@ -404,9 +407,9 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                var currentHash = Module.GetCurrentCheckout();
+                var currentId = Module.GetCurrentCheckout();
 
-                if (originalHash != currentHash)
+                if (originalId != currentId)
                 {
                     UICommands.UpdateSubmodules(this);
                 }
@@ -498,7 +501,11 @@ namespace GitUI.CommandsDialogs
                     {
                         await TaskScheduler.Default;
 
-                        var text = Module.GetCommitCountString(Module.GetCurrentCheckout().ToString(), branch);
+                        var currentCheckout = Module.GetCurrentCheckout();
+
+                        Debug.Assert(currentCheckout != null, "currentCheckout != null");
+
+                        var text = Module.GetCommitCountString(currentCheckout.ToString(), branch);
 
                         await this.SwitchToMainThreadAsync();
 

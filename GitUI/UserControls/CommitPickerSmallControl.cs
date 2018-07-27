@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitUI.HelperDialogs;
@@ -52,7 +53,11 @@ namespace GitUI.UserControls
                     {
                         await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
-                        var text = Module.GetCommitCountString(Module.GetCurrentCheckout().ToString(), SelectedObjectId.ToString());
+                        var currentCheckout = Module.GetCurrentCheckout();
+
+                        Debug.Assert(currentCheckout != null, "currentCheckout != null");
+
+                        var text = Module.GetCommitCountString(currentCheckout.ToString(), SelectedObjectId.ToString());
 
                         await this.SwitchToMainThreadAsync();
 

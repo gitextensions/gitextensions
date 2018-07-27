@@ -67,10 +67,10 @@ namespace GitUI.HelperDialogs
             {
                 if (MessageBox.Show(this, _resetHardWarning.Text, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
-                    var originalHash = Module.GetCurrentCheckout();
+                    var currentCheckout = Module.GetCurrentCheckout();
                     if (FormProcess.ShowDialog(this, GitCommandHelpers.ResetHardCmd(Revision.Guid)))
                     {
-                        if (originalHash != Revision.ObjectId)
+                        if (currentCheckout != Revision.ObjectId)
                         {
                             UICommands.UpdateSubmodules(this);
                         }

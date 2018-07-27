@@ -1280,15 +1280,30 @@ namespace GitCommands
             return RunGitCmd(GitCommandHelpers.DeleteTagCmd(tagName));
         }
 
-        [NotNull]
+        /// <summary>
+        /// Gets the commit ID of the currently checked out commit.
+        /// If the repo is bare or has no commits, <c>null</c> is returned.
+        /// </summary>
+        [CanBeNull]
         public ObjectId GetCurrentCheckout()
         {
             var output = RunGitCmd("rev-parse HEAD").TrimEnd();
 
-            if (output == "HEAD" && IsBareRepository())
+            if (output.StartsWith("HEAD"))
             {
-                // Caller should consider bare repositories before calling this method
-                throw new InvalidOperationException("Bare repositories do not have a current checkout.");
+                // A bare repo returns:
+                //
+                // HEAD
+                //
+                // A repository with no commits returns:
+                //
+                // HEAD
+                //
+                // fatal: ambiguous argument 'HEAD': unknown revision or path not in the working tree.
+                // Use '--' to separate paths from revisions, like this:
+                // 'git <command> [<revision>...] -- [<file>...]'
+
+                return null;
             }
 
             return ObjectId.Parse(output);

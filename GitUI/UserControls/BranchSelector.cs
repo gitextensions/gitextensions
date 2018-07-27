@@ -121,7 +121,13 @@ namespace GitUI.UserControls
             else
             {
                 var branchName = SelectedBranchName;
-                var currentCheckout = CommitToCompare ?? Module.GetCurrentCheckout();
+                var currentCheckout = CommitToCompare ?? Module?.GetCurrentCheckout();
+
+                if (currentCheckout == null)
+                {
+                    lbChanges.Text = "";
+                    return;
+                }
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(
                     async () =>
