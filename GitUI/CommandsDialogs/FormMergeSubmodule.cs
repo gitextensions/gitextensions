@@ -39,17 +39,17 @@ namespace GitUI.CommandsDialogs
 
         private void StageSubmodule()
         {
+            using (var form = new FormStatus(ProcessStart, string.Format(_stageFilename.Text, _filename)))
+            {
+                form.ShowDialogOnError(this);
+            }
+
             void ProcessStart(FormStatus form)
             {
                 form.AddMessageLine(string.Format(_stageFilename.Text, _filename));
                 string output = Module.RunGitCmd($"add -- \"{_filename}\"");
                 form.AddMessageLine(output);
                 form.Done(string.IsNullOrEmpty(output));
-            }
-
-            using (var process = new FormStatus(ProcessStart, null) { Text = string.Format(_stageFilename.Text, _filename) })
-            {
-                process.ShowDialogOnError(this);
             }
         }
 

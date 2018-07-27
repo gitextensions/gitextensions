@@ -1807,6 +1807,11 @@ namespace GitUI.CommandsDialogs
                     bool wereErrors = false;
                     if (AppSettings.ShowErrorsWhenStagingFiles)
                     {
+                        using (var form = new FormStatus(ProcessStart, _stageDetails.Text))
+                        {
+                            form.ShowDialogOnError(this);
+                        }
+
                         void ProcessStart(FormStatus form)
                         {
                             form.AppendMessageCrossThread(
@@ -1815,11 +1820,6 @@ namespace GitUI.CommandsDialogs
                             var output = Module.StageFiles(files, out wereErrors);
                             form.AppendMessageCrossThread(output);
                             form.Done(string.IsNullOrEmpty(output));
-                        }
-
-                        using (var process = new FormStatus(ProcessStart, null) { Text = _stageDetails.Text })
-                        {
-                            process.ShowDialogOnError(this);
                         }
                     }
                     else
