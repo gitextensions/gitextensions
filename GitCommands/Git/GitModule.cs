@@ -54,13 +54,13 @@ namespace GitCommands
 
     public readonly struct ConflictedFileData
     {
-        public ConflictedFileData(string hash, string filename)
+        public ConflictedFileData(ObjectId objectId, string filename)
         {
-            Hash = hash;
+            ObjectId = objectId;
             Filename = filename;
         }
 
-        public string Hash { get; }
+        public ObjectId ObjectId { get; }
         public string Filename { get; }
     }
 
@@ -961,7 +961,7 @@ namespace GitCommands
                         item = new ConflictedFileData[3];
                     }
 
-                    item[stage - 1] = new ConflictedFileData(hash, itemName);
+                    item[stage - 1] = new ConflictedFileData(ObjectId.Parse(hash), itemName);
                     prevItemName = itemName;
                 }
             }
