@@ -482,6 +482,18 @@ namespace GitUIPluginInterfaces
             char ParseHexDigit(uint j) => j < 10 ? (char)('0' + j) : (char)(j + 0x57);
         }
 
+        /// <summary>
+        /// Gets the path to the git object file within the <c>.git</c> folder specified by <paramref name="gitDir"/>.
+        /// </summary>
+        /// <remarks>
+        /// The return value resembles <c>path\to\.git\objects\01\23456789012345678901234567890123456789</c>.
+        /// </remarks>
+        public string ToObjectFilePath(string gitDir)
+        {
+            var str = ToString();
+            return Path.Combine(gitDir, "objects", str.Substring(0, 2), str.Substring(2));
+        }
+
         #region Equality and hashing
 
         /// <inheritdoc />
