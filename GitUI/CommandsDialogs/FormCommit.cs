@@ -1060,8 +1060,6 @@ namespace GitUI.CommandsDialogs
 
                 _loadUnstagedOutputFirstTime = false;
             }
-
-            return;
         }
 
         private void RestoreSelectedFiles(IReadOnlyList<GitItemStatus> unstagedFiles, IReadOnlyList<GitItemStatus> stagedFiles, IReadOnlyList<GitItemStatus> lastSelection)
