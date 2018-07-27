@@ -78,10 +78,11 @@ namespace GitCommands.Git
             var gitPath = Path.Combine(repositoryPath, ".git");
             if (_fileSystem.File.Exists(gitPath))
             {
-                var line = _fileSystem.File.ReadLines(gitPath).FirstOrDefault(l => l.StartsWith("gitdir:"));
+                const string gitdir = "gitdir:";
+                var line = _fileSystem.File.ReadLines(gitPath).FirstOrDefault(l => l.StartsWith(gitdir));
                 if (line != null)
                 {
-                    string path = line.Substring(7).Trim().ToNativePath();
+                    string path = line.Substring(gitdir.Length).Trim().ToNativePath();
                     if (Path.IsPathRooted(path))
                     {
                         return path.EnsureTrailingPathSeparator();

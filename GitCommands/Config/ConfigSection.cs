@@ -25,11 +25,13 @@ namespace GitCommands.Config
         {
             _configKeys = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
-            if (name.Contains("\""))
+            var slashIndex = name.IndexOf('\"');
+
+            if (slashIndex != -1)
             {
                 // [section "subsection"] case sensitive
-                SectionName = name.Substring(0, name.IndexOf('\"')).Trim();
-                SubSection = name.Substring(name.IndexOf('\"') + 1, name.LastIndexOf('\"') - name.IndexOf('\"') - 1);
+                SectionName = name.Substring(0, slashIndex).Trim();
+                SubSection = name.Substring(slashIndex + 1, name.LastIndexOf('\"') - slashIndex - 1);
                 SubSectionCaseSensitive = true;
             }
             else if (!name.Contains("."))

@@ -1111,7 +1111,7 @@ namespace GitCommands
                     continue;
                 }
 
-                string fileName = line.Substring(line.IndexOf(' ') + 1);
+                string fileName = line.SubstringAfter(' ');
                 GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.Unknown, fileName, statusCharacter);
                 gitItemStatus.IsAssumeUnchanged = true;
                 result.Add(gitItemStatus);
@@ -1128,7 +1128,7 @@ namespace GitCommands
             {
                 char statusCharacter = line[0];
 
-                string fileName = line.Substring(line.IndexOf(' ') + 1);
+                string fileName = line.SubstringAfter(' ');
                 GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.Unknown, fileName, statusCharacter);
                 if (gitItemStatus.IsSkipWorktree)
                 {
@@ -1221,9 +1221,11 @@ namespace GitCommands
         [CanBeNull]
         public static string GetFileExtension(string fileName)
         {
-            if (fileName.Contains(".") && fileName.LastIndexOf(".") < fileName.Length)
+            var index = fileName.LastIndexOf('.');
+
+            if (index != -1)
             {
-                return fileName.Substring(fileName.LastIndexOf('.') + 1);
+                return fileName.Substring(index + 1);
             }
 
             return null;
