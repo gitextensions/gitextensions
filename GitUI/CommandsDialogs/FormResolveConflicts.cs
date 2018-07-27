@@ -1069,9 +1069,9 @@ namespace GitUI.CommandsDialogs
                     AddExtension = true
                 })
                 {
-                    fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
-                    fileDialog.Filter = string.Format(_currentFormatFilter.Text, GitCommandHelpers.GetFileExtension(fileDialog.FileName)) + "|*." +
-                                        GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|" + _allFilesFilter.Text + "|*.*";
+                    var ext = PathUtil.GetFileExtension(fileDialog.FileName);
+                    fileDialog.DefaultExt = ext;
+                    fileDialog.Filter = string.Format(_currentFormatFilter.Text, ext) + "|*." + ext + "|" + _allFilesFilter.Text + "|*.*";
 
                     if (fileDialog.ShowDialog(this) == DialogResult.OK)
                     {
