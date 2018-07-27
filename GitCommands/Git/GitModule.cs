@@ -727,16 +727,18 @@ namespace GitCommands
             return result;
         }
 
-        public void EditNotes(string revision)
+        public void EditNotes(ObjectId commitId)
         {
-            string editor = GetEffectiveSetting("core.editor").ToLower();
+            var arguments = new ArgumentBuilder { "notes", "edit", commitId };
+            var editor = GetEffectiveSetting("core.editor").ToLower();
+
             if (editor.Contains("gitextensions") || editor.Contains("notepad"))
             {
-                RunGitCmd("notes edit " + revision);
+                RunGitCmd(arguments);
             }
             else
             {
-                RunExternalCmdShowConsole(AppSettings.GitCommand, "notes edit " + revision);
+                RunExternalCmdShowConsole(AppSettings.GitCommand, arguments.ToString());
             }
         }
 

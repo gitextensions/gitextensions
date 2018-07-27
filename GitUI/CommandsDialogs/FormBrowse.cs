@@ -2009,7 +2009,7 @@ namespace GitUI.CommandsDialogs
 
         private void AddNotes()
         {
-            Module.EditNotes(RevisionGrid.GetSelectedRevisions().Count > 0 ? RevisionGrid.GetSelectedRevisions()[0].Guid : string.Empty);
+            Module.EditNotes(RevisionGrid.GetSelectedRevisions().FirstOrDefault()?.ObjectId);
             FillCommitInfo();
         }
 
