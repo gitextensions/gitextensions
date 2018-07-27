@@ -9,6 +9,10 @@ namespace System.Linq
     {
         [NotNull]
         [MustUseReturnValue]
+        public static HashSet<T> ToHashSet<T>([NotNull] this IEnumerable<T> source, IEqualityComparer<T> comparer = null) => new HashSet<T>(source, comparer ?? EqualityComparer<T>.Default);
+
+        [NotNull]
+        [MustUseReturnValue]
         public static HashSet<TKey> ToHashSet<TSource, TKey>(
             [NotNull] this IEnumerable<TSource> source,
             [NotNull] Func<TSource, TKey> keySelector)
