@@ -127,7 +127,7 @@ namespace GitUI.UserControls
 
                 var operation = CommandLog.LogProcessStart(command, arguments);
                 process.Exited += (s, e) => operation.LogProcessEnd();
-
+                operation.SetProcessId(process.Id);
                 process.Start();
                 _process = process;
                 process.BeginOutputReadLine();
