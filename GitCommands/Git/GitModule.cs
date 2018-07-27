@@ -2311,12 +2311,17 @@ namespace GitCommands
             return ReadGitOutputLines("remote").Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
         }
 
-        private static readonly Regex _remoteVerboseLineRegex = new Regex(@"^(?<name>[^	]+)\t(?<url>[^ ]+) \((?<direction>fetch|push)\)$", RegexOptions.Compiled);
+        private static readonly Regex _remoteVerboseLineRegex = new Regex(@"^(?<name>[^	]+)\t(?<url>.+?) \((?<direction>fetch|push)\)$", RegexOptions.Compiled);
 
         public IReadOnlyList<Remote> GetRemotes()
         {
+            return ParseRemotesInternal(ReadGitOutputLines("remote -v"));
+        }
+
+        [NotNull]
+        internal static IReadOnlyList<Remote> ParseRemotesInternal([NotNull, InstantHandle] IEnumerable<string> lines)
+        {
             var remotes = new List<Remote>();
-            var lines = ReadGitOutputLines("remote -v");
 
             /*
              * $ git remote -v
