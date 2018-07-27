@@ -224,6 +224,15 @@ namespace GitCommands
             // at the beginning of the chunk. The latter part of the chunk will require
             // decoding as a string.
 
+            if (chunk.Count == 0)
+            {
+                // "git log -z --name-only" returns multiple consecutive null bytes when logging
+                // the history of a single file. Haven't worked out why, but it's safe to skip
+                // such chunks.
+                revision = default;
+                return false;
+            }
+
             #region Object ID, Tree ID, Parent IDs
 
             // The first 40 bytes are the revision ID and the tree ID back to back
