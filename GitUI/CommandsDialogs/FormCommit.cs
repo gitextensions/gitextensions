@@ -1959,7 +1959,7 @@ namespace GitUI.CommandsDialogs
                                 {
                                     File.Delete(path);
                                 }
-                                else
+                                else if (Directory.Exists(path))
                                 {
                                     Directory.Delete(path, recursive: true);
                                 }
