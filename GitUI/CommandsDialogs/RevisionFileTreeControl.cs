@@ -671,11 +671,11 @@ See the changes in the commit form.");
                     {
                         InitialDirectory = Path.GetDirectoryName(fullName),
                         FileName = Path.GetFileName(fullName),
-                        DefaultExt = GitCommandHelpers.GetFileExtension(fullName),
+                        DefaultExt = PathUtil.GetFileExtension(fullName),
                         AddExtension = true
                     })
                 {
-                    var extension = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
+                    var extension = PathUtil.GetFileExtension(fileDialog.FileName);
 
                     fileDialog.Filter = $@"{_saveFileFilterCurrentFormat.Text}(*.{extension})|*.{extension}| {_saveFileFilterAllFiles.Text} (*.*)|*.*";
                     if (fileDialog.ShowDialog(this) == DialogResult.OK)
