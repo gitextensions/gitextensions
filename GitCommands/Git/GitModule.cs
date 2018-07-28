@@ -113,8 +113,6 @@ namespace GitCommands
             new KeyValuePair<string, string>("log.ShowSignature", "false") // Prevent git config log.ShowSignature true from including gpg lines in log output for our log calls
          };
 
-
-
         public GitModule([CanBeNull] string workingDir)
         {
             _superprojectInit = false;
