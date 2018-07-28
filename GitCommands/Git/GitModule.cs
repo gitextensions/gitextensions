@@ -544,7 +544,7 @@ namespace GitCommands
         {
             KeyValuePair<string, string>[] configs = DefaultConfigValues.Concat(configValues) // DO NOT sort.  The overrides are controlled by the order of the elements.
                   .Where(kv => !string.IsNullOrWhiteSpace(kv.Key))
-                  .GroupBy(kv => kv.Key)
+                  .GroupBy(kv => kv.Key.ToLower())
                   .Select(gkv => gkv.Last()).ToArray(); // Allow overrides of defaults with passed in config values.
 
             string config = configs.Any() ? " -c " + string.Join(" -c ", configs.Select(kv => $"{kv.Key}={(string.IsNullOrWhiteSpace(kv.Value) ? string.Empty : kv.Value)}")) + " " : string.Empty;
