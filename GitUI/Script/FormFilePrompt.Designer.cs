@@ -118,7 +118,7 @@
             this.Name = "FormFilePrompt";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-            this.Text = "FilePrompt";
+            this.Text = "Select script files";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
