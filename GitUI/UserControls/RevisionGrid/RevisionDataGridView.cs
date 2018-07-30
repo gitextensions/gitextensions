@@ -113,7 +113,9 @@ namespace GitUI.UserControls.RevisionGrid
 
             void OnRowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
             {
-                if (e.PaintParts.HasFlag(DataGridViewPaintParts.Background))
+                if (e.PaintParts.HasFlag(DataGridViewPaintParts.Background) &&
+                    e.RowBounds.Width > 0 &&
+                    e.RowBounds.Height > 0)
                 {
                     // Draw row background
                     var backBrush = GetBackground(e.State, e.RowIndex);
