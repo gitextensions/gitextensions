@@ -234,7 +234,7 @@ namespace ResourceManagerTests.CommitDataRenders
         }
 
         [TestCase(GitRevision.IndexGuid)]
-        [TestCase(GitRevision.UnstagedGuid)]
+        [TestCase(GitRevision.WorkTreeGuid)]
         public void Render_should_render_minimal_info_for_artificial_commits(string artificialGuid)
         {
             var author = "John Doe (Acme Inc) <John.Doe@test.com>";

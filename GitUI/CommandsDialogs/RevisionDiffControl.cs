@@ -196,11 +196,11 @@ namespace GitUI.CommandsDialogs
         /// Provide a description for the first selected or parent to the "primary" selected last
         /// </summary>
         /// <returns>A description of the selected parent</returns>
-        private string DescribeSelectedParentRevision(bool showUnstagedAndCombined)
+        private string DescribeSelectedParentRevision(bool showWorkTreeAndCombined)
         {
             var parents = DiffFiles.SelectedItemParents
-                .Where(i => showUnstagedAndCombined ||
-                    !(i.Guid.IsNullOrWhiteSpace() || i.Guid == GitRevision.UnstagedGuid || i.Guid == GitRevision.CombinedDiffGuid))
+                .Where(i => showWorkTreeAndCombined ||
+                    !(i.Guid.IsNullOrWhiteSpace() || i.Guid == GitRevision.WorkTreeGuid || i.Guid == GitRevision.CombinedDiffGuid))
                 .Distinct()
                 .Count();
 
@@ -263,8 +263,8 @@ namespace GitUI.CommandsDialogs
             // No changes to files in bare repos
             bool isBareRepository = Module.IsBareRepository();
             bool isAnyTracked = DiffFiles.SelectedItems.Any(item => item.IsTracked);
-            bool isAnyStaged = DiffFiles.SelectedItems.Any(item => item.Staged == StagedStatus.Index);
-            bool isAnyUnstaged = DiffFiles.SelectedItems.Any(item => item.Staged == StagedStatus.WorkTree);
+            bool isAnyIndex = DiffFiles.SelectedItems.Any(item => item.Staged == StagedStatus.Index);
+            bool isAnyWorkTree = DiffFiles.SelectedItems.Any(item => item.Staged == StagedStatus.WorkTree);
             bool isAnySubmodule = DiffFiles.SelectedItems.Any(item => item.IsSubmodule);
             bool singleFileExists = isExactlyOneItemSelected && File.Exists(_fullPathResolver.Resolve(DiffFiles.SelectedItem.Name));
 
@@ -273,8 +273,8 @@ namespace GitUI.CommandsDialogs
                 isAnyCombinedDiff: isAnyCombinedDiff,
                 isSingleGitItemSelected: isExactlyOneItemSelected,
                 isAnyItemSelected: isAnyItemSelected,
-                isAnyItemStaged: isAnyStaged,
-                isAnyItemUnstaged: isAnyUnstaged,
+                isAnyItemIndex: isAnyIndex,
+                isAnyItemWorkTree: isAnyWorkTree,
                 isBareRepository: isBareRepository,
                 singleFileExists: singleFileExists,
                 isAnyTracked: isAnyTracked,
@@ -662,7 +662,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (DiffFiles.Revision.Guid == GitRevision.UnstagedGuid)
+            if (DiffFiles.Revision.Guid == GitRevision.WorkTreeGuid)
             {
                 resetFileToSelectedToolStripMenuItem.Visible = false;
             }
@@ -818,8 +818,8 @@ namespace GitUI.CommandsDialogs
                 // Also delete new files, if requested.
                 if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
                 {
-                    var unstagedFiles = module.GetUnstagedFiles();
-                    foreach (var file in unstagedFiles.Where(file => file.IsNew))
+                    var workTreeFiles = module.GetWorkTreeFiles();
+                    foreach (var file in workTreeFiles.Where(file => file.IsNew))
                     {
                         try
                         {

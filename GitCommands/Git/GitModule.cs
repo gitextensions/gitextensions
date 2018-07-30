@@ -2503,11 +2503,11 @@ namespace GitCommands
             string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
             string result = noCache ? RunGitCmd(cmd) : RunCacheableGitCmd(cmd, SystemEncoding);
             var resultCollection = GitCommandHelpers.GetDiffChangedFilesFromString(this, result, firstRevision, secondRevision, parentToSecond).ToList();
-            if (firstRevision == GitRevision.UnstagedGuid || secondRevision == GitRevision.UnstagedGuid)
+            if (firstRevision == GitRevision.WorkTreeGuid || secondRevision == GitRevision.WorkTreeGuid)
             {
-                // For unstaged the untracked must be added too
-                var files = GetUnstagedFilesWithSubmodulesStatus().Where(item => item.IsNew);
-                if (firstRevision == GitRevision.UnstagedGuid)
+                // For worktree the untracked must be added too
+                var files = GetWorkTreeFilesWithSubmodulesStatus().Where(item => item.IsNew);
+                if (firstRevision == GitRevision.WorkTreeGuid)
                 {
                     // The file is seen as "deleted" in 'to' revision
                     foreach (var item in files)
@@ -2653,13 +2653,13 @@ namespace GitCommands
             }
         }
 
-        public IReadOnlyList<GitItemStatus> GetStagedFiles()
+        public IReadOnlyList<GitItemStatus> GetIndexFiles()
         {
             string status = RunGitCmd(DiffCommandWithStandardArgs + "-M -C -z --cached --name-status", SystemEncoding);
 
             if (status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
-                // This command is a little more expensive because it will return both staged and unstaged files
+                // This command is a little more expensive because it will return both index and worktree files
                 string command = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.No);
                 status = RunGitCmd(command, SystemEncoding);
                 IReadOnlyList<GitItemStatus> stagedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(this, status);
@@ -2669,19 +2669,19 @@ namespace GitCommands
             return GitCommandHelpers.GetDiffChangedFilesFromString(this, status, "HEAD", GitRevision.IndexGuid, "HEAD");
         }
 
-        public IReadOnlyList<GitItemStatus> GetStagedFilesWithSubmodulesStatus()
+        public IReadOnlyList<GitItemStatus> GetIndexFilesWithSubmodulesStatus()
         {
-            var status = GetStagedFiles();
+            var status = GetIndexFiles();
             GetCurrentSubmoduleStatus(status);
             return status;
         }
 
-        public IReadOnlyList<GitItemStatus> GetUnstagedFiles()
+        public IReadOnlyList<GitItemStatus> GetWorkTreeFiles()
         {
             return GetAllChangedFiles().Where(x => x.Staged == StagedStatus.WorkTree).ToArray();
         }
 
-        public IReadOnlyList<GitItemStatus> GetUnstagedFilesWithSubmodulesStatus()
+        public IReadOnlyList<GitItemStatus> GetWorkTreeFilesWithSubmodulesStatus()
         {
             return GetAllChangedFilesWithSubmodulesStatus().Where(x => x.Staged == StagedStatus.WorkTree).ToArray();
         }
@@ -3446,10 +3446,10 @@ namespace GitCommands
         [CanBeNull]
         public ObjectId GetFileBlobHash(string fileName, ObjectId objectId)
         {
-            if (objectId == ObjectId.UnstagedId)
+            if (objectId == ObjectId.WorkTreeId)
             {
                 // working directory changes
-                Debug.Assert(false, "Tried to get blob for unstaged file");
+                Debug.Assert(false, "Tried to get blob for worktree file");
                 return null;
             }
 
@@ -3515,7 +3515,7 @@ namespace GitCommands
                 });
         }
 
-        public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.UnstagedGuid, string extraDiffArguments = null, bool isTracked = true)
+        public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.WorkTreeGuid, string extraDiffArguments = null, bool isTracked = true)
         {
             var args = new ArgumentBuilder
             {

@@ -38,7 +38,7 @@ namespace GitUITests.UserControls
         }
 
         [Test]
-        public void ReturnsIconDirtySubmodulesWhenThereAreOnlyUnstagedSubmodules()
+        public void ReturnsIconDirtySubmodulesWhenThereAreOnlyWorkTreeSubmodules()
         {
             var commitIcon = _repoStateVisualiser.Invoke(new[]
             {
@@ -50,7 +50,7 @@ namespace GitUITests.UserControls
         }
 
         [Test]
-        public void ReturnsIconDirtyWhenThereAreUnstagedChanges()
+        public void ReturnsIconDirtyWhenThereAreWorkTreeChanges()
         {
             var commitIcon = _repoStateVisualiser.Invoke(new[]
             {
@@ -62,7 +62,7 @@ namespace GitUITests.UserControls
         }
 
         [Test]
-        public void ReturnsIconMixedWhenThereAreStagedAndUnstagedFiles()
+        public void ReturnsIconMixedWhenThereAreIndexAndWorkTreeFiles()
         {
             var commitIcon = _repoStateVisualiser.Invoke(new[]
             {
@@ -74,7 +74,7 @@ namespace GitUITests.UserControls
         }
 
         [Test]
-        public void ReturnsIconStagedWhenThereAreOnlyStagedFiles()
+        public void ReturnsIconStagedWhenThereAreOnlyIndexFiles()
         {
             var commitIcon = _repoStateVisualiser.Invoke(new[]
             {

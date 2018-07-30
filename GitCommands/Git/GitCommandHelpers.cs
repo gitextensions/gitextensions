@@ -817,7 +817,7 @@ namespace GitCommands
         public static IReadOnlyList<GitItemStatus> GetDiffChangedFilesFromString(IGitModule module, string statusString, [CanBeNull] string firstRevision, [CanBeNull] string secondRevision, [CanBeNull] string parentToSecond)
         {
             StagedStatus staged;
-            if (firstRevision == GitRevision.IndexGuid && secondRevision == GitRevision.UnstagedGuid)
+            if (firstRevision == GitRevision.IndexGuid && secondRevision == GitRevision.WorkTreeGuid)
             {
                 staged = StagedStatus.WorkTree;
             }
@@ -893,7 +893,7 @@ namespace GitCommands
                     // 1 XY subm <mH> <mI> <mW> <hH> <hI> <path>
                     // renamed:
                     // 2 XY subm <mH> <mI> <mW> <hH> <hI> <X><score> <path><sep><origPath>
-                    // unstaged (merge conflicts)
+                    // worktree (merge conflicts)
                     // u XY subm <m1> <m2> <m3> <mW> <h1> <h2> <h3> <path>
 
                     char x = line[2];

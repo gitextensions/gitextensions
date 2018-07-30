@@ -343,7 +343,7 @@ namespace GitCommands
             set => SetBool("showcommitandpush", value);
         }
 
-        public static bool ShowResetUnstagedChanges
+        public static bool ShowResetWorkTreeChanges
         {
             get => GetBool("showresetunstagedchanges", true);
             set => SetBool("showresetunstagedchanges", value);

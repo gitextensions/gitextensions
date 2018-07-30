@@ -261,7 +261,7 @@ namespace GitUI.CommandsDialogs
 
             SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
             Reset.Visible = AppSettings.ShowResetAllChanges;
-            ResetUnStaged.Visible = AppSettings.ShowResetUnstagedChanges;
+            ResetUnStaged.Visible = AppSettings.ShowResetWorkTreeChanges;
             CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
             splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
             splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
@@ -875,7 +875,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                patch = PatchManager.GetResetUnstagedLinesAsPatch(Module, SelectedDiff.GetText(),
+                patch = PatchManager.GetResetWorkTreeLinesAsPatch(Module, SelectedDiff.GetText(),
                     SelectedDiff.GetSelectionPosition(), SelectedDiff.GetSelectionLength(), SelectedDiff.Encoding);
             }
 
@@ -967,7 +967,7 @@ namespace GitUI.CommandsDialogs
                 Staged.SetDiffs(
                     new GitRevision(ObjectId.IndexId),
                     new GitRevision(headId),
-                    Module.GetStagedFilesWithSubmodulesStatus());
+                    Module.GetIndexFilesWithSubmodulesStatus());
             }
         }
 
@@ -998,7 +998,7 @@ namespace GitUI.CommandsDialogs
             }
 
             var headId = Module.RevParse("HEAD");
-            Unstaged.SetDiffs(new GitRevision(ObjectId.UnstagedId), new GitRevision(ObjectId.IndexId), unstagedFiles);
+            Unstaged.SetDiffs(new GitRevision(ObjectId.WorkTreeId), new GitRevision(ObjectId.IndexId), unstagedFiles);
             Staged.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(headId), stagedFiles);
 
             var doChangesExist = Unstaged.AllItems.Any() || Staged.AllItems.Any();
@@ -1671,7 +1671,7 @@ namespace GitUI.CommandsDialogs
                     }
 
                     var headId = Module.RevParse("HEAD");
-                    Unstaged.SetDiffs(new GitRevision(ObjectId.UnstagedId), new GitRevision(ObjectId.IndexId), unstagedFiles);
+                    Unstaged.SetDiffs(new GitRevision(ObjectId.WorkTreeId), new GitRevision(ObjectId.IndexId), unstagedFiles);
                     Staged.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(headId), stagedFiles);
                     _skipUpdate = false;
                     Staged.SelectStoredNextIndex();
@@ -1871,7 +1871,7 @@ namespace GitUI.CommandsDialogs
                             item.GetSubmoduleStatusAsync().CompletedResult().Status = SubmoduleStatus.Unknown;
                         }
 
-                        Unstaged.SetDiffs(new GitRevision(ObjectId.UnstagedId), new GitRevision(ObjectId.IndexId), unstagedFiles);
+                        Unstaged.SetDiffs(new GitRevision(ObjectId.WorkTreeId), new GitRevision(ObjectId.IndexId), unstagedFiles);
                         Unstaged.ClearSelected();
                         _skipUpdate = false;
                         Unstaged.SelectStoredNextIndex();
@@ -2462,7 +2462,7 @@ namespace GitUI.CommandsDialogs
 
         private void OpenWithDifftoolToolStripMenuItemClick(object sender, EventArgs e)
         {
-            OpenFilesWithDiffTool(Unstaged.SelectedItems, GitRevision.IndexGuid, GitRevision.UnstagedGuid);
+            OpenFilesWithDiffTool(Unstaged.SelectedItems, GitRevision.IndexGuid, GitRevision.WorkTreeGuid);
         }
 
         private void ResetPartOfFileToolStripMenuItemClick(object sender, EventArgs e)
@@ -2492,7 +2492,7 @@ namespace GitUI.CommandsDialogs
 
         private void HandleResetButton(bool onlyUnstaged)
         {
-            BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.ToList(), onlyUnstaged: onlyUnstaged));
+            BypassFormActivatedEventHandler(() => UICommands.StartResetChangesDialog(this, Unstaged.AllItems.ToList(), onlyWorkTree: onlyUnstaged));
             Initialize();
         }
 
@@ -2887,7 +2887,7 @@ namespace GitUI.CommandsDialogs
                 // Also delete new files, if requested.
                 if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
                 {
-                    var submoduleUnstagedFiles = module.GetUnstagedFiles();
+                    var submoduleUnstagedFiles = module.GetWorkTreeFiles();
                     foreach (var file in submoduleUnstagedFiles.Where(file => file.IsNew))
                     {
                         try

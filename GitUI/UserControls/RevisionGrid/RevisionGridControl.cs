@@ -871,13 +871,13 @@ namespace GitUI
                 void CheckUncommittedChanged(ObjectId filteredCurrentCheckout)
                 {
                     _indexChangeCount = new ChangeCount();
-                    _unstagedChangeCount = new ChangeCount();
+                    _workTreeChangeCount = new ChangeCount();
 
                     var userName = Module.GetEffectiveSetting(SettingKeyString.UserName);
                     var userEmail = Module.GetEffectiveSetting(SettingKeyString.UserEmail);
 
                     // Add working directory as virtual commit
-                    var unstagedRev = new GitRevision(ObjectId.UnstagedId)
+                    var workTreeRev = new GitRevision(ObjectId.WorkTreeId)
                     {
                         Author = userName,
                         AuthorDate = DateTime.MaxValue,
@@ -888,10 +888,10 @@ namespace GitUI
                         Subject = Strings.Workspace,
                         ParentIds = new[] { ObjectId.IndexId }
                     };
-                    _gridView.Add(unstagedRev);
+                    _gridView.Add(workTreeRev);
 
                     // Add index as virtual commit
-                    var stagedRev = new GitRevision(ObjectId.IndexId)
+                    var indexRev = new GitRevision(ObjectId.IndexId)
                     {
                         Author = userName,
                         AuthorDate = DateTime.MaxValue,
@@ -902,9 +902,9 @@ namespace GitUI
                         Subject = Strings.Index,
                         ParentIds = new[] { filteredCurrentCheckout }
                     };
-                    _gridView.Add(stagedRev);
+                    _gridView.Add(indexRev);
 
-                    UpdateArtificialCommitCount(_artificialStatus, unstagedRev, stagedRev);
+                    UpdateArtificialCommitCount(_artificialStatus, workTreeRev, indexRev);
                 }
             }
 
@@ -1787,36 +1787,36 @@ namespace GitUI
         [CanBeNull]
         public ChangeCount GetChangeCount(ObjectId objectId)
         {
-            return objectId == ObjectId.UnstagedId
-                ? _unstagedChangeCount
+            return objectId == ObjectId.WorkTreeId
+                ? _workTreeChangeCount
                 : objectId == ObjectId.IndexId
                     ? _indexChangeCount
                     : null;
         }
 
-        private ChangeCount _unstagedChangeCount = new ChangeCount();
+        private ChangeCount _workTreeChangeCount = new ChangeCount();
         private ChangeCount _indexChangeCount = new ChangeCount();
 
         public void UpdateArtificialCommitCount(
             [CanBeNull] IReadOnlyList<GitItemStatus> status,
-            [CanBeNull] GitRevision unstagedRev = null,
-            [CanBeNull] GitRevision stagedRev = null)
+            [CanBeNull] GitRevision workTreeRev = null,
+            [CanBeNull] GitRevision indexRev = null)
         {
             if (status == null)
             {
                 return;
             }
 
-            unstagedRev = unstagedRev ?? GetRevision(ObjectId.UnstagedId);
-            stagedRev = stagedRev ?? GetRevision(ObjectId.IndexId);
+            workTreeRev = workTreeRev ?? GetRevision(ObjectId.WorkTreeId);
+            indexRev = indexRev ?? GetRevision(ObjectId.IndexId);
 
-            if (unstagedRev != null)
+            if (workTreeRev != null)
             {
                 var items = status.Where(item => item.Staged == StagedStatus.WorkTree);
-                UpdateChangeCount(ObjectId.UnstagedId, items.ToList());
+                UpdateChangeCount(ObjectId.WorkTreeId, items.ToList());
             }
 
-            if (stagedRev != null)
+            if (indexRev != null)
             {
                 var items = status.Where(item => item.Staged == StagedStatus.Index);
                 UpdateChangeCount(ObjectId.IndexId, items.ToList());
