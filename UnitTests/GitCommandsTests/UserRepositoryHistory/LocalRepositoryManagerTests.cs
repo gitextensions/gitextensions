@@ -334,5 +334,87 @@ namespace GitCommandsTests.UserRepositoryHistory
 
             _repositoryStorage.Received(1).Save(KeyRecentHistory, Arg.Is<IEnumerable<Repository>>(h => h.Count() == size));
         }
+
+        [Test]
+        public async Task RemoveInvalidRepositoriesAsync_should_apply_predicate()
+        {
+            var history = new List<Repository>
+            {
+                new Repository("Even"),
+                new Repository("Odd"),
+                new Repository("EvenEven"),
+                new Repository("AlsoOdd"),
+            };
+
+            _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
+
+            await _manager.RemoveInvalidRepositoriesAsync(repoPath => repoPath.Length % 2 == 0);
+
+            _repositoryStorage.Received(1).Load(KeyRecentHistory);
+            _repositoryStorage.Received(1).Save(KeyRecentHistory, Arg.Is<IEnumerable<Repository>>(h => h.All(r => r.Path.Length % 2 == 0)));
+            _repositoryStorage.Received(1).Save(KeyRecentHistory, Arg.Is<IEnumerable<Repository>>(h => h.Count() == 2));
+        }
+
+        [Test]
+        public async Task RemoveInvalidRepositoriesAsync_should_not_apply_predicate()
+        {
+            var history = new List<Repository>
+            {
+                new Repository("Even"),
+                new Repository("Odd"),
+                new Repository("EvenEven"),
+                new Repository("AlsoOdd"),
+            };
+
+            _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
+
+            await _manager.RemoveInvalidRepositoriesAsync(repoPath => repoPath.Length < 20);
+
+            _repositoryStorage.Received(1).Load(KeyRecentHistory);
+            _repositoryStorage.DidNotReceive().Save(KeyRecentHistory, Arg.Any<IEnumerable<Repository>>());
+        }
+
+        [Test]
+        public async Task RemoveInvalidRepositoriesAsync_should_remove_recent_by_predicate()
+        {
+            const string repoToDelete = "different path";
+
+            var history = new List<Repository>
+            {
+                new Repository("path1"),
+                new Repository("path2"),
+                new Repository(repoToDelete),
+            };
+
+            _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
+
+            await _manager.RemoveInvalidRepositoriesAsync(repoPath => repoPath.StartsWith("p"));
+
+            _repositoryStorage.Received(1).Load(KeyRecentHistory);
+            _repositoryStorage.Received(1).Save(KeyRecentHistory, Arg.Is<IEnumerable<Repository>>(h => h.Count() == 2));
+            _repositoryStorage.Received(1).Save(KeyRecentHistory, Arg.Is<IEnumerable<Repository>>(h => h.All(r => r.Path != repoToDelete)));
+        }
+
+        [Test]
+        public async Task RemoveInvalidRepositoriesAsync_should_remove_favourite_by_predicate()
+        {
+            const string repoToDelete = "different path";
+
+            var history = new List<Repository>
+            {
+                new Repository("path1"),
+                new Repository("path2"),
+                new Repository(repoToDelete),
+            };
+
+            _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => history);
+            _repositoryHistoryMigrator.MigrateAsync(Arg.Any<List<Repository>>()).Returns(x => (history, false));
+
+            await _manager.RemoveInvalidRepositoriesAsync(repoPath => repoPath.StartsWith("p"));
+
+            _repositoryStorage.Received(1).Load(KeyFavouriteHistory);
+            _repositoryStorage.Received(1).Save(KeyFavouriteHistory, Arg.Is<IEnumerable<Repository>>(h => h.All(r => r.Path != repoToDelete)));
+            _repositoryStorage.Received(1).Save(KeyFavouriteHistory, Arg.Is<IEnumerable<Repository>>(h => h.Count() == 2));
+        }
     }
 }

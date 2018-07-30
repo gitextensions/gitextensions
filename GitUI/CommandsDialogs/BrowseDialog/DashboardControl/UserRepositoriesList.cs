@@ -37,6 +37,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private ListViewItem _prevHoveredItem;
         private readonly ListViewGroup _lvgRecentRepositories;
         private readonly IUserRepositoriesListController _controller = new UserRepositoriesListController(RepositoryHistoryManager.Locals);
+        private bool _hasInvalidRepos;
 
         public event EventHandler<GitModuleEventArgs> GitModuleChanged;
 
@@ -222,6 +223,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 listView1.TileSize = GetTileSize(recentRepositories, favouriteRepositories);
                 Debug.WriteLine($"Tile size: {listView1.TileSize}");
 
+                _hasInvalidRepos = false;
                 BindRepositories(recentRepositories);
                 BindRepositories(favouriteRepositories);
             }
@@ -240,12 +242,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                 foreach (var repository in repos)
                 {
+                    var isInvalidRepo = !_controller.IsValidGitWorkingDir(repository.Repo.Path);
+                    _hasInvalidRepos |= isInvalidRepo;
+
                     var item = new ListViewItem(repository.Caption)
                     {
                         ForeColor = ForeColor,
                         Font = AppSettings.Font,
                         Group = GetTileGroup(repository.Repo),
-                        ImageIndex = _controller.IsValidGitWorkingDir(repository.Repo.Path) ? 0 : 1,
+                        ImageIndex = isInvalidRepo ? 1 : 0,
                         UseItemStyleForSubItems = false,
                         Tag = repository.Repo,
                         ToolTipText = repository.Repo.Path
@@ -401,6 +406,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     tsmiCategories.Visible =
                         toolStripMenuItem2.Visible =
                             tsmiOpenFolder.Visible = selected != null;
+
+            tsmiRemoveMissingReposFromList.Visible = _hasInvalidRepos;
 
             if (selected == null)
             {
@@ -620,6 +627,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             RepositoryContextAction(sender as ToolStripMenuItem, repository =>
             {
                 ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(repository.Path));
+                ShowRecentRepositories();
+            });
+        }
+
+        private void tsmiRemoveMissingReposFromList_Click(object sender, EventArgs e)
+        {
+            RepositoryContextAction(sender as ToolStripMenuItem, repository =>
+            {
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveInvalidRepositoriesAsync(_controller.IsValidGitWorkingDir));
                 ShowRecentRepositories();
             });
         }

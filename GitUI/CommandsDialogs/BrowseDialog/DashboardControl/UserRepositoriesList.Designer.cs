@@ -56,6 +56,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             this.tsmiCategoryAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsmiRemoveFromList = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiRemoveMissingReposFromList = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiOpenFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.listView1 = new ExListView();
             this.clmhdrPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -163,11 +164,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             // contextMenuStrip
             // 
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiRemoveFromList,
+            this.tsmiOpenFolder,
             this.toolStripMenuItem1,
             this.tsmiCategories,
             this.toolStripMenuItem2,
-            this.tsmiOpenFolder});
+            this.tsmiRemoveFromList,
+            this.tsmiRemoveMissingReposFromList});
             this.contextMenuStrip.Name = "contextMenuStrip";
             this.contextMenuStrip.Size = new System.Drawing.Size(225, 126);
             this.contextMenuStrip.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.contextMenuStrip_Closed);
@@ -179,6 +181,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             this.tsmiRemoveFromList.Size = new System.Drawing.Size(224, 22);
             this.tsmiRemoveFromList.Text = "Remove project from the list";
             this.tsmiRemoveFromList.Click += new System.EventHandler(this.tsmiRemoveFromList_Click);
+            // 
+            // tsmiRemoveMissingReposFromList
+            // 
+            this.tsmiRemoveMissingReposFromList.Name = "tsmiRemoveMissingReposFromList";
+            this.tsmiRemoveMissingReposFromList.Size = new System.Drawing.Size(224, 22);
+            this.tsmiRemoveMissingReposFromList.Text = "Remove missing projects from the list";
+            this.tsmiRemoveMissingReposFromList.Click += new System.EventHandler(this.tsmiRemoveMissingReposFromList_Click);
             // 
             // tsmiOpenFolder
             // 
@@ -310,6 +319,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private System.Windows.Forms.ToolStripMenuItem tsmiCategoryAdd;
         private System.Windows.Forms.ToolStripMenuItem tsmiCategories;
         private System.Windows.Forms.ToolStripMenuItem tsmiCategoryNone;
+        private System.Windows.Forms.ToolStripMenuItem tsmiRemoveMissingReposFromList;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;

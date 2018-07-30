@@ -42,6 +42,14 @@ namespace GitCommands.UserRepositoryHistory
         /// <returns>An awaitable task.</returns>
         [ContractAnnotation("repositoryHistory:null=>halt")]
         Task SaveFavouriteHistoryAsync(IEnumerable<Repository> repositoryHistory);
+
+        /// <summary>
+        /// Removes the invalid repositories from both recent and favourite local git repositories in a persistent storage.
+        /// </summary>
+        /// <param name="predicate">A predicate to check against for the validity of the repositories.</param>
+        /// <returns>An awaitable task.</returns>
+        [ContractAnnotation("predicate:null=>halt")]
+        Task RemoveInvalidRepositoriesAsync(Func<string, bool> predicate);
     }
 
     /// <summary>
@@ -313,6 +321,48 @@ namespace GitCommands.UserRepositoryHistory
         private static IEnumerable<Repository> AdjustHistorySize(IEnumerable<Repository> repositories, int recentRepositoriesHistorySize)
         {
             return repositories.Take(recentRepositoriesHistorySize);
+        }
+
+        public async Task RemoveInvalidRepositoriesAsync(Func<string, bool> predicate)
+        {
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            await TaskScheduler.Default;
+
+            var recentRepositoryHistory = await LoadRecentHistoryAsync();
+            var existingRecentCount = recentRepositoryHistory.Count;
+            var invalidRecentRepositories = recentRepositoryHistory
+                                            .Where(repo => !predicate(repo.Path))
+                                            .ToList();
+
+            foreach (var repo in invalidRecentRepositories)
+            {
+                recentRepositoryHistory.Remove(repo);
+            }
+
+            if (existingRecentCount != recentRepositoryHistory.Count)
+            {
+                await SaveRecentHistoryAsync(recentRepositoryHistory);
+            }
+
+            var favouriteRepositoryHistory = await LoadFavouriteHistoryAsync();
+            var existingFavouriteCount = favouriteRepositoryHistory.Count;
+            var invalidFavouriteRepositories = favouriteRepositoryHistory
+                                                .Where(repo => !predicate(repo.Path))
+                                                .ToList();
+
+            foreach (var repo in invalidFavouriteRepositories)
+            {
+                favouriteRepositoryHistory.Remove(repo);
+            }
+
+            if (existingFavouriteCount != favouriteRepositoryHistory.Count)
+            {
+                await SaveFavouriteHistoryAsync(favouriteRepositoryHistory);
+            }
         }
     }
 }
