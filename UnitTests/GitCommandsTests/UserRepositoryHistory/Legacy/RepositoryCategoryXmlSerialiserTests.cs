@@ -52,7 +52,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
             categorisedHistory[1].Description.Should().Be("Test");
             categorisedHistory[1].CategoryType.Should().Be("Repositories");
             categorisedHistory[1].Repositories.Count.Should().Be(1);
-            categorisedHistory[1].Repositories[0].Title.Should().Be("Git Extenions");
+            categorisedHistory[1].Repositories[0].Title.Should().Be("Git Extensions");
             categorisedHistory[1].Repositories[0].Description.Should().Be("Mega project!");
             categorisedHistory[1].Repositories[0].Path.Should().Be("C:\\Development\\gitextensions\\");
             categorisedHistory[1].Repositories[0].Anchor.Should().Be("MostRecent");
@@ -85,7 +85,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
                     Repositories = new List<Repository>(
                         new[]
                         {
-                            new Repository { Title = "Git Extenions", Path = "C:\\Development\\gitextensions\\", Description = "Mega project!", Anchor = "MostRecent" }
+                            new Repository { Title = "Git Extensions", Path = "C:\\Development\\gitextensions\\", Description = "Mega project!", Anchor = "MostRecent" }
                         }),
                     CategoryType = "Repositories",
                     Description = "Test"

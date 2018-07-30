@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.AutoCompletion
@@ -64,6 +65,7 @@ namespace GitUI.AutoCompletion
             return autoCompleteWords.Select(w => new AutoCompleteWord(w));
         }
 
+        [CanBeNull]
         private static Regex GetRegexForExtension(string extension)
         {
             return _regexes.Value.ContainsKey(extension) ? _regexes.Value[extension] : null;
@@ -114,9 +116,10 @@ namespace GitUI.AutoCompletion
             return regexes;
         }
 
+        [CanBeNull]
         private static string GetChangedFileText(GitModule module, GitItemStatus file)
         {
-            var changes = module.GetCurrentChanges(file.Name, file.OldName, file.IsStaged, "-U1000000", module.FilesEncoding);
+            var changes = module.GetCurrentChanges(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000", module.FilesEncoding);
 
             if (changes != null)
             {

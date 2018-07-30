@@ -15,7 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Fonts";
-            Translate();
+            InitializeComplete();
         }
 
         protected override void SettingsToPage()

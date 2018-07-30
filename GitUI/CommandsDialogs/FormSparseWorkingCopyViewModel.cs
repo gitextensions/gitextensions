@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs
         public static readonly string SettingCoreSparseCheckout = "core.sparseCheckout";
 
         [NotNull]
-        private readonly GitUICommands _gitcommands;
+        private readonly GitUICommands _gitCommands;
 
         private bool _isRefreshWorkingCopyOnSave = true /* on by default, otherwise index bitmap won't be updated */;
 
@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs
         private bool _isSparseCheckoutEnabledAsSaved;
 
         [CanBeNull]
-        private string _sRulesText;
+        private string _rulesText;
 
         /// <summary>
         /// Remembers what were loaded from disk, to check <see cref="RulesText" /> against to tell if modified.
@@ -39,14 +39,9 @@ namespace GitUI.CommandsDialogs
         [CanBeNull]
         private string _sRulesTextAsOnDisk;
 
-        public FormSparseWorkingCopyViewModel([NotNull] GitUICommands gitcommands)
+        public FormSparseWorkingCopyViewModel([NotNull] GitUICommands gitCommands)
         {
-            _gitcommands = gitcommands;
-            if (gitcommands == null)
-            {
-                throw new ArgumentNullException(nameof(gitcommands));
-            }
-
+            _gitCommands = gitCommands ?? throw new ArgumentNullException(nameof(gitCommands));
             _isSparseCheckoutEnabled = _isSparseCheckoutEnabledAsSaved = GetCurrentSparseEnabledState();
         }
 
@@ -69,7 +64,7 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Tells whether the rules have been edited in the UI against what's on disk.
         /// </summary>
-        public bool IsRulesTextChanged => (_sRulesText != null) && (_sRulesText != (_sRulesTextAsOnDisk ?? ""));
+        public bool IsRulesTextChanged => (_rulesText != null) && (_rulesText != (_sRulesTextAsOnDisk ?? ""));
 
         /// <summary>
         /// Current UI state of the Git sparse option.
@@ -100,16 +95,16 @@ namespace GitUI.CommandsDialogs
         {
             get
             {
-                return _sRulesText;
+                return _rulesText;
             }
             set
             {
-                if (_sRulesText == value)
+                if (_rulesText == value)
                 {
                     return;
                 }
 
-                _sRulesText = value;
+                _rulesText = value;
                 FirePropertyChanged();
             }
         }
@@ -124,7 +119,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         public bool GetCurrentSparseEnabledState()
         {
-            return StringComparer.OrdinalIgnoreCase.Equals(_gitcommands.Module.GetEffectiveSetting(SettingCoreSparseCheckout), bool.TrueString);
+            return StringComparer.OrdinalIgnoreCase.Equals(_gitCommands.Module.GetEffectiveSetting(SettingCoreSparseCheckout), bool.TrueString);
         }
 
         /// <summary>
@@ -133,7 +128,7 @@ namespace GitUI.CommandsDialogs
         [NotNull]
         public FileInfo GetPathToSparseCheckoutFile()
         {
-            return new FileInfo(Path.Combine(_gitcommands.GitModule.ResolveGitInternalPath("info"), "sparse-checkout"));
+            return new FileInfo(Path.Combine(_gitCommands.GitModule.ResolveGitInternalPath("info"), "sparse-checkout"));
         }
 
         /// <summary>
@@ -161,7 +156,7 @@ namespace GitUI.CommandsDialogs
         {
             // Re-apply tree to the index
             // TODO: check how it affects the uncommitted working copy changes
-            using (var fromProcess = new FormRemoteProcess(_gitcommands.Module, AppSettings.GitCommand, RefreshWorkingCopyCommandName))
+            using (var fromProcess = new FormRemoteProcess(_gitCommands.Module, AppSettings.GitCommand, RefreshWorkingCopyCommandName))
             {
                 fromProcess.ShowDialog(Form.ActiveForm);
             }
@@ -180,7 +175,7 @@ namespace GitUI.CommandsDialogs
             // Enabled state for the repo
             if (IsSparseCheckoutEnabled != _isSparseCheckoutEnabledAsSaved)
             {
-                _gitcommands.Module.SetSetting(SettingCoreSparseCheckout, IsSparseCheckoutEnabled.ToString().ToLowerInvariant());
+                _gitCommands.Module.SetSetting(SettingCoreSparseCheckout, IsSparseCheckoutEnabled.ToString().ToLowerInvariant());
                 _isSparseCheckoutEnabledAsSaved = IsSparseCheckoutEnabled;
             }
 
@@ -204,12 +199,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         public void SetRulesTextAsOnDisk([NotNull] string text)
         {
-            if (text == null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            _sRulesTextAsOnDisk = text;
+            _sRulesTextAsOnDisk = text ?? throw new ArgumentNullException(nameof(text));
         }
 
         /// <summary>

@@ -1,5 +1,5 @@
 ﻿
-namespace Github3
+namespace GitHub3
 {
     partial class OAuth
     {
@@ -52,7 +52,7 @@ namespace Github3
             this.Controls.Add(this.webBrowser1);
             this.Name = "OAuth";
             this.ShowIcon = false;
-            this.Text = "Github Authorization";
+            this.Text = "GitHub Authorization";
             this.ResumeLayout(false);
         }
 

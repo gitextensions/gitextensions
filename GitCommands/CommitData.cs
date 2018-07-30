@@ -8,16 +8,16 @@ namespace GitCommands
     public sealed class CommitData
     {
         public CommitData(
-            ObjectId guid,
+            ObjectId objectId,
             ObjectId treeGuid,
-            IReadOnlyList<string> parentGuids,
+            IReadOnlyList<ObjectId> parentGuids,
             string author,
             DateTime authorDate,
             string committer,
             DateTime commitDate,
             string body)
         {
-            Guid = guid;
+            ObjectId = objectId;
             TreeGuid = treeGuid;
             ParentGuids = parentGuids;
             Author = author;
@@ -27,9 +27,9 @@ namespace GitCommands
             Body = body;
         }
 
-        public ObjectId Guid { get; }
+        public ObjectId ObjectId { get; }
         public ObjectId TreeGuid { get; }
-        public IReadOnlyList<string> ParentGuids { get; }
+        public IReadOnlyList<ObjectId> ParentGuids { get; }
         public string Author { get; }
         public DateTimeOffset AuthorDate { get; }
         public string Committer { get; }
@@ -38,7 +38,7 @@ namespace GitCommands
         // TODO mutable properties need review
 
         [CanBeNull, ItemNotNull]
-        public IReadOnlyList<string> ChildrenGuids { get; set; }
+        public IReadOnlyList<ObjectId> ChildIds { get; set; }
 
         /// <summary>
         /// Gets and sets the commit message.

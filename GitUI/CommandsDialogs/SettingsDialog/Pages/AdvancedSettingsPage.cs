@@ -8,7 +8,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "Advanced";
-            Translate();
+            InitializeComplete();
 
             var autoNormaliseSymbols = new[]
             {
@@ -34,6 +34,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
             cboAutoNormaliseSymbol.SelectedValue = AppSettings.AutoNormaliseSymbol;
             chkCommitAndPushForcedWhenAmend.Checked = AppSettings.CommitAndPushForcedWhenAmend;
+            chkRebaseConfirmation.Checked = AppSettings.SkipRebaseDialog;
         }
 
         protected override void PageToSettings()
@@ -47,6 +48,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.AutoNormaliseBranchName = chkAutoNormaliseBranchName.Checked;
             AppSettings.AutoNormaliseSymbol = (string)cboAutoNormaliseSymbol.SelectedValue;
             AppSettings.CommitAndPushForcedWhenAmend = chkCommitAndPushForcedWhenAmend.Checked;
+            AppSettings.SkipRebaseDialog = chkRebaseConfirmation.Checked;
         }
 
         public static SettingsPageReference GetPageReference()

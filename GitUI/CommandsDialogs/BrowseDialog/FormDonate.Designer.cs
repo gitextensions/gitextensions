@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // pictureBox1
             // 
             this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox1.Image = global::GitUI.Properties.Resources.Donate;
+            this.pictureBox1.Image = global::GitUI.Properties.Images.DonateBadge;
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(12);
             this.pictureBox1.MinimumSize = new System.Drawing.Size(90, 35);

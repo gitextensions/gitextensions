@@ -12,7 +12,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "General";
-            Translate();
+            InitializeComplete();
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
@@ -32,15 +32,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             base.OnRuntimeLoad();
 
             // align 1st columns across all tables
-            tlpnlBehaviour.AdjustWidthToSize(0, lblCommitsLimit.Width, lblDefaultCloneDestination.Width);
-            tlpnlEmailSettings.AdjustWidthToSize(0, lblCommitsLimit.Width, lblDefaultCloneDestination.Width);
+            tlpnlBehaviour.AdjustWidthToSize(0, lblCommitsLimit, lblDefaultCloneDestination);
+            tlpnlEmailSettings.AdjustWidthToSize(0, lblCommitsLimit, lblDefaultCloneDestination);
         }
 
         protected override void SettingsToPage()
         {
             chkCheckForUncommittedChangesInCheckoutBranch.Checked = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
             chkStartWithRecentWorkingDir.Checked = AppSettings.StartWithRecentWorkingDir;
-            chkPlaySpecialStartupSound.Checked = AppSettings.PlaySpecialStartupSound;
             chkUsePatienceDiffAlgorithm.Checked = AppSettings.UsePatienceDiffAlgorithm;
             RevisionGridQuickSearchTimeout.Value = AppSettings.RevisionGridQuickSearchTimeout;
             chkFollowRenamesInFileHistory.Checked = AppSettings.FollowRenamesInFileHistory;
@@ -64,7 +63,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             AppSettings.CheckForUncommittedChangesInCheckoutBranch = chkCheckForUncommittedChangesInCheckoutBranch.Checked;
             AppSettings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
-            AppSettings.PlaySpecialStartupSound = chkPlaySpecialStartupSound.Checked;
             AppSettings.UsePatienceDiffAlgorithm = chkUsePatienceDiffAlgorithm.Checked;
             AppSettings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
             AppSettings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;

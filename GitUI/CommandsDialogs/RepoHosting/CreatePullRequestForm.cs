@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces.RepositoryHosts;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -35,7 +36,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _chooseRemote = chooseRemote;
             _currentBranch = chooseBranch;
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             _prevTitle = _titleTB.Text;
             _pullReqTargetsCB.DisplayMember = nameof(IHostedRemote.DisplayData);
         }
@@ -123,13 +124,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 ex => { ex.Handled = false; });
         }
 
-        private IHostedRemote MyRemote
-        {
-            get
-            {
-                return _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
-            }
-        }
+        [CanBeNull]
+        private IHostedRemote MyRemote => _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
 
         private void LoadMyBranches()
         {
@@ -170,7 +166,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             if (_prevTitle == _titleTB.Text && !_yourBranchesCB.Text.IsNullOrWhiteSpace() && MyRemote != null)
             {
                 var lastMsg = Module.GetPreviousCommitMessages(1, MyRemote.Name.Combine("/", _yourBranchesCB.Text)).FirstOrDefault();
-                _titleTB.Text = lastMsg.TakeUntilStr("\n");
+                _titleTB.Text = lastMsg.SubstringUntil("\n");
                 _prevTitle = _titleTB.Text;
             }
         }

@@ -75,7 +75,7 @@ namespace GitCommandsTests.Git.Tag
             _controller.CreateTag(args, window);
 
             _uiCommands.Received(1).StartCommandLineProcessDialog(
-                window, Arg.Is<GitCreateTagCmd>(c => c.Arguments == args));
+                window, Arg.Is<GitCreateTagCmd>(c => c.CreateTagArguments == args));
         }
 
         private static IWin32Window CreateTestingWindow()
@@ -85,7 +85,7 @@ namespace GitCommandsTests.Git.Tag
 
         private static GitCreateTagArgs CreateAnnotatedTagArgs()
         {
-            return new GitCreateTagArgs("tagname", "00000", TagOperation.Annotate, "hello world");
+            return new GitCreateTagArgs("tagname", ObjectId.Parse("0000000000000000000000000000000000000000"), TagOperation.Annotate, "hello world");
         }
     }
 }

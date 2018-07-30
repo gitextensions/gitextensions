@@ -15,10 +15,10 @@ namespace Gerrit
         {
         }
 
-        protected FormGerritBase(IGitUICommands agitUiCommands)
+        protected FormGerritBase(IGitUICommands uiCommands)
             : base(true)
         {
-            UICommands = agitUiCommands;
+            UICommands = uiCommands;
         }
 
         protected override void OnLoad(EventArgs e)

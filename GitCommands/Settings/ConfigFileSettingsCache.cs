@@ -78,7 +78,7 @@ namespace GitCommands.Settings
                 EnsureSettingsAreUpToDate();
                 _configFile.Value.AddConfigSection(configSection);
 
-                // mark as dirty so the updated configuartion is persisted
+                // mark as dirty so the updated configuration is persisted
                 SettingsChanged();
             });
         }

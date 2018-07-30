@@ -27,12 +27,16 @@ namespace GitUI
         {
             if (cancellationToken.IsCancellationRequested)
             {
+#pragma warning disable VSTHRD004 // Await SwitchToMainThreadAsync
                 return new ControlMainThreadAwaitable(ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken), disposable: null, cancellationToken);
+#pragma warning restore VSTHRD004 // Await SwitchToMainThreadAsync
             }
 
             if (control.IsDisposed)
             {
+#pragma warning disable VSTHRD004 // Await SwitchToMainThreadAsync
                 return new ControlMainThreadAwaitable(ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_preCancelledToken), disposable: null, _preCancelledToken);
+#pragma warning restore VSTHRD004 // Await SwitchToMainThreadAsync
             }
 
             var disposedCancellationToken = ToolStripItemDisposedCancellationFactory.Instance.GetOrCreateCancellationToken(control);
@@ -43,7 +47,9 @@ namespace GitUI
                 disposedCancellationToken = cancellationTokenSource.Token;
             }
 
+#pragma warning disable VSTHRD004 // Await SwitchToMainThreadAsync
             var mainThreadAwaiter = ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(disposedCancellationToken);
+#pragma warning restore VSTHRD004 // Await SwitchToMainThreadAsync
             return new ControlMainThreadAwaitable(mainThreadAwaiter, cancellationTokenSource, disposedCancellationToken);
         }
 
@@ -51,12 +57,16 @@ namespace GitUI
         {
             if (cancellationToken.IsCancellationRequested)
             {
+#pragma warning disable VSTHRD004 // Await SwitchToMainThreadAsync
                 return new ControlMainThreadAwaitable(ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken), disposable: null, cancellationToken);
+#pragma warning restore VSTHRD004 // Await SwitchToMainThreadAsync
             }
 
             if (control.IsDisposed)
             {
+#pragma warning disable VSTHRD004 // Await SwitchToMainThreadAsync
                 return new ControlMainThreadAwaitable(ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(_preCancelledToken), disposable: null, _preCancelledToken);
+#pragma warning restore VSTHRD004 // Await SwitchToMainThreadAsync
             }
 
             var disposedCancellationToken = ControlIsDisposedCancellationFactory.Instance.GetOrCreateCancellationToken(control);
@@ -67,11 +77,13 @@ namespace GitUI
                 disposedCancellationToken = cancellationTokenSource.Token;
             }
 
+#pragma warning disable VSTHRD004 // Await SwitchToMainThreadAsync
             var mainThreadAwaiter = ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(disposedCancellationToken);
+#pragma warning restore VSTHRD004 // Await SwitchToMainThreadAsync
             return new ControlMainThreadAwaitable(mainThreadAwaiter, cancellationTokenSource, disposedCancellationToken);
         }
 
-        public struct ControlMainThreadAwaitable
+        public readonly struct ControlMainThreadAwaitable
         {
             private readonly JoinableTaskFactory.MainThreadAwaitable _awaitable;
             private readonly IDisposable _disposable;
@@ -90,7 +102,7 @@ namespace GitUI
             }
         }
 
-        public struct ControlMainThreadAwaiter : INotifyCompletion
+        public readonly struct ControlMainThreadAwaiter : INotifyCompletion
         {
             private readonly JoinableTaskFactory.MainThreadAwaiter _awaiter;
             private readonly IDisposable _disposable;

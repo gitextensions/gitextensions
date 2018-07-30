@@ -113,14 +113,12 @@ namespace GitCommands.Settings
     {
         public readonly StringSetting Type;
         public readonly BoolNullableSetting EnableIntegration;
-        public readonly BoolNullableSetting ShowBuildSummaryInGrid;
 
         public BuildServer(RepoDistSettings container)
             : base(container, "BuildServer")
         {
             Type = new StringSetting("Type", this, null);
-            EnableIntegration = new BoolNullableSetting("EnableIntegration", this, false);
-            ShowBuildSummaryInGrid = new BoolNullableSetting("ShowBuildSummaryInGrid", this, true);
+            EnableIntegration = new BoolNullableSetting("EnableIntegration", this, defaultValue: false);
         }
 
         public SettingsPath TypeSettings => new SettingsPath(this, Type.ValueOrDefault);

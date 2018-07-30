@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -17,7 +18,7 @@ namespace GitUI.CommandsDialogs
             : base(true, commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             PreviewOutput.ReadOnly = true;
             checkBoxPathFilter_CheckedChanged(null, null);
         }
@@ -53,6 +54,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        [CanBeNull]
         private string GetPathArgumentFromGui()
         {
             if (!checkBoxPathFilter.Checked)

@@ -49,7 +49,7 @@
             // 
             this.selectMultipleBranchesButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.selectMultipleBranchesButton.Image = global::GitUI.Properties.Resources.Select;
+            this.selectMultipleBranchesButton.Image = global::GitUI.Properties.Images.Select;
             this.selectMultipleBranchesButton.Location = new System.Drawing.Point(308, 0);
             this.selectMultipleBranchesButton.Margin = new System.Windows.Forms.Padding(0);
             this.selectMultipleBranchesButton.Name = "selectMultipleBranchesButton";

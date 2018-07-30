@@ -1,6 +1,7 @@
 ﻿using System;
 using GitCommands.ExternalLinks;
 using GitExtUtils.GitUI;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
@@ -13,7 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             CaptionCol.Width = DpiUtil.Scale(150);
             Text = "Revision links";
-            Translate();
+            InitializeComplete();
             LinksGrid.AutoGenerateColumns = false;
             CaptionCol.DataPropertyName = nameof(ExternalLinkFormat.Caption);
             URICol.DataPropertyName = nameof(ExternalLinkFormat.Format);
@@ -56,6 +57,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_Categories.DataSource = effectiveLinkDefinitions;
         }
 
+        [CanBeNull]
         private ExternalLinkDefinition SelectedLinkDefinition => _NO_TRANSLATE_Categories.SelectedItem as ExternalLinkDefinition;
 
         private void CategoryChanged()

@@ -10,6 +10,9 @@ using GitCommands;
 using GitCommands.Patches;
 using GitExtUtils.GitUI;
 using GitUI.Editor;
+using GitUI.Properties;
+using GitUI.UserControls.RevisionGrid;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -21,22 +24,22 @@ namespace GitUI
         private static Patch GetItemPatch(
             [NotNull] GitModule module,
             [NotNull] GitItemStatus file,
-            [CanBeNull] string firstRevision,
-            [CanBeNull] string secondRevision,
+            [CanBeNull] ObjectId firstRevision,
+            [CanBeNull] ObjectId secondRevision,
             [NotNull] string diffArgs,
             [NotNull] Encoding encoding)
         {
             // Files with tree guid should be presented with normal diff
-            var isTracked = file.IsTracked || (file.TreeGuid.IsNotNullOrWhitespace() && secondRevision.IsNotNullOrWhitespace());
+            var isTracked = file.IsTracked || (file.TreeGuid != null && secondRevision != null);
 
-            return module.GetSingleDiff(firstRevision, secondRevision, file.Name, file.OldName, diffArgs, encoding, true, isTracked);
+            return module.GetSingleDiff(firstRevision?.ToString(), secondRevision?.ToString(), file.Name, file.OldName, diffArgs, encoding, true, isTracked);
         }
 
         [CanBeNull]
         private static string GetSelectedPatch(
             [NotNull] this FileViewer diffViewer,
-            [CanBeNull] string firstRevision,
-            [CanBeNull] string secondRevision,
+            [CanBeNull] ObjectId firstRevision,
+            [CanBeNull] ObjectId secondRevision,
             [NotNull] GitItemStatus file)
         {
             if (!file.IsTracked)
@@ -78,8 +81,8 @@ namespace GitUI
             }
 
             var selectedRevision = revisions[0];
-            string secondRevision = selectedRevision?.Guid;
-            string firstRevision = revisions.Count >= 2 ? revisions[1].Guid : null;
+            var secondRevision = selectedRevision?.ObjectId;
+            var firstRevision = revisions.Count >= 2 ? revisions[1].ObjectId : null;
             if (firstRevision == null && selectedRevision != null)
             {
                 firstRevision = selectedRevision.FirstParentGuid;
@@ -90,8 +93,8 @@ namespace GitUI
 
         public static Task ViewChangesAsync(
             this FileViewer diffViewer,
-            [CanBeNull] string firstRevision,
-            string secondRevision,
+            [CanBeNull] ObjectId firstRevision,
+            ObjectId secondRevision,
             [NotNull] GitItemStatus file,
             [NotNull] string defaultText,
             [CanBeNull] Action openWithDifftool)
@@ -99,11 +102,11 @@ namespace GitUI
             if (firstRevision == null)
             {
                 // The previous commit does not exist, nothing to compare with
-                if (file.TreeGuid.IsNullOrEmpty())
+                if (file.TreeGuid != null)
                 {
-                    if (secondRevision.IsNullOrWhiteSpace())
+                    if (secondRevision == null)
                     {
-                        throw new ArgumentException(nameof(secondRevision));
+                        throw new ArgumentNullException(nameof(secondRevision));
                     }
 
                     return diffViewer.ViewGitItemRevisionAsync(file.Name, secondRevision);
@@ -124,7 +127,18 @@ namespace GitUI
                     }
 
                     return (text: selectedPatch,
-                            openWithDifftool: openWithDifftool ?? (() => { diffViewer.Module.OpenWithDifftool(file.Name, null, firstRevision, secondRevision, "", file.IsTracked); }));
+                            openWithDifftool: openWithDifftool ?? OpenWithDifftool);
+
+                    void OpenWithDifftool()
+                    {
+                        diffViewer.Module.OpenWithDifftool(
+                            file.Name,
+                            null,
+                            firstRevision.ToString(),
+                            firstRevision.ToString(),
+                            "",
+                            file.IsTracked);
+                    }
                 });
             }
         }
@@ -149,7 +163,12 @@ namespace GitUI
         {
             if (FindMaskPanel(control) == null)
             {
-                var panel = new MaskPanel { Dock = DockStyle.Fill };
+                var panel = new LoadingControl
+                {
+                    Dock = DockStyle.Fill,
+                    IsAnimating = true,
+                    BackColor = SystemColors.AppWorkspace
+                };
                 control.Controls.Add(panel);
                 panel.BringToFront();
             }
@@ -157,7 +176,7 @@ namespace GitUI
 
         public static void UnMask(this Control control)
         {
-            MaskPanel panel = FindMaskPanel(control);
+            var panel = FindMaskPanel(control);
             if (panel != null)
             {
                 control.Controls.Remove(panel);
@@ -165,19 +184,10 @@ namespace GitUI
             }
         }
 
-        private static MaskPanel FindMaskPanel(Control control)
+        [CanBeNull]
+        private static LoadingControl FindMaskPanel(Control control)
         {
-            return control.Controls.Cast<Control>().OfType<MaskPanel>().FirstOrDefault();
-        }
-
-        private class MaskPanel : PictureBox
-        {
-            public MaskPanel()
-            {
-                Image = DpiUtil.Scale(Properties.Resources.loadingpanel);
-                SizeMode = PictureBoxSizeMode.CenterImage;
-                BackColor = SystemColors.AppWorkspace;
-            }
+            return control.Controls.Cast<Control>().OfType<LoadingControl>().FirstOrDefault();
         }
 
         public static IEnumerable<TreeNode> AllNodes(this TreeView tree)

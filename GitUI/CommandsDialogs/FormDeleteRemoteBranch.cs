@@ -18,16 +18,15 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _confirmDeleteUnmergedRemoteBranchMessage =
             new TranslationString("At least one remote branch is unmerged. Are you sure you want to delete it?" + Environment.NewLine + "Deleting a branch can cause commits to be deleted too!");
 
-        private readonly string _defaultRemoteBranch;
         private readonly HashSet<string> _mergedBranches = new HashSet<string>();
+        private readonly string _defaultRemoteBranch;
 
         public FormDeleteRemoteBranch(GitUICommands commands, string defaultRemoteBranch)
             : base(commands)
         {
-            InitializeComponent();
-            Translate();
             _defaultRemoteBranch = defaultRemoteBranch;
-            this.AdjustForDpiScaling();
+            InitializeComponent();
+            InitializeComplete();
         }
 
         private void FormDeleteRemoteBranchLoad(object sender, EventArgs e)
@@ -73,7 +72,7 @@ namespace GitUI.CommandsDialogs
 
                     ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
-                    using (var form = new FormRemoteProcess(Module, cmd.ToLine())
+                    using (var form = new FormRemoteProcess(Module, cmd.Arguments)
                     {
                         Remote = remote
                     })

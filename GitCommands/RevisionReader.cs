@@ -30,13 +30,9 @@ namespace GitCommands
     {
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
 
-        public int RevisionCount { get; private set; }
-
-        /// <value>Refs loaded during the last call to <see cref="Execute"/>.</value>
-        public IReadOnlyList<IGitRef> LatestRefs { get; private set; } = Array.Empty<IGitRef>();
-
         public void Execute(
             GitModule module,
+            IReadOnlyList<IGitRef> refs,
             IObserver<GitRevision> subject,
             RefFilterOptions refFilterOptions,
             string branchFilter,
@@ -45,7 +41,7 @@ namespace GitCommands
             [CanBeNull] Func<GitRevision, bool> revisionPredicate)
         {
             ThreadHelper.JoinableTaskFactory
-                .RunAsync(() => ExecuteAsync(module, subject, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
+                .RunAsync(() => ExecuteAsync(module, refs, subject, refFilterOptions, branchFilter, revisionFilter, pathFilter, revisionPredicate))
                 .FileAndForget(
                     ex =>
                     {
@@ -56,6 +52,7 @@ namespace GitCommands
 
         private async Task ExecuteAsync(
             GitModule module,
+            IReadOnlyList<IGitRef> refs,
             IObserver<GitRevision> subject,
             RefFilterOptions refFilterOptions,
             string branchFilter,
@@ -63,15 +60,13 @@ namespace GitCommands
             string pathFilter,
             [CanBeNull] Func<GitRevision, bool> revisionPredicate)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             var token = _cancellationTokenSequence.Next();
 
-            RevisionCount = 0;
+            var revisionCount = 0;
 
             await TaskScheduler.Default;
-
-            subject.OnNext(null);
 
             token.ThrowIfCancellationRequested();
 
@@ -81,16 +76,15 @@ namespace GitCommands
 
             token.ThrowIfCancellationRequested();
 
-            LatestRefs = module.GetRefs();
-            UpdateSelectedRef(module, LatestRefs, branchName);
-            var refsByObjectId = LatestRefs.ToLookup(head => head.Guid);
+            UpdateSelectedRef(module, refs, branchName);
+            var refsByObjectId = refs.ToLookup(head => head.ObjectId);
 
             token.ThrowIfCancellationRequested();
 
             const string fullFormat =
 
                 // These header entries can all be decoded from the bytes directly.
-                // Each hash is 20 bytes long. There is always a
+                // Each hash is 20 bytes long.
 
                 /* Object ID       */ "%H" +
                 /* Tree ID         */ "%T" +
@@ -99,7 +93,7 @@ namespace GitCommands
                 /* Commit date     */ "%ct%n" +
                 /* Encoding        */ "%e%n" +
 
-                // Items below here must be decoded as strings to support non-ASCII
+                // Items below here must be decoded as strings to support non-ASCII.
 
                 /* Author name     */ "%aN%n" +
                 /* Author email    */ "%aE%n" +
@@ -107,8 +101,6 @@ namespace GitCommands
                 /* Committer email */ "%cE%n" +
                 /* Commit subject  */ "%s%n%n" +
                 /* Commit body     */ "%b";
-
-            // TODO add AppBuilderExtensions support for flags enums, starting with RefFilterOptions, then use it in the below construction
 
             var arguments = BuildArguments();
 
@@ -135,24 +127,29 @@ namespace GitCommands
                     {
                         if (revisionPredicate == null || revisionPredicate(revision))
                         {
-                            // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
-                            // Full commit message is used in InMemFilter but later it's not needed
-                            revision.Body = null;
+                            // The full commit message body is used initially in InMemFilter, after which it isn't
+                            // strictly needed and can be re-populated asynchronously.
+                            //
+                            // We keep full multiline message bodies within the last six months.
+                            // Commits earlier than that have their properties set to null and the
+                            // memory will be GCd.
+                            if (DateTime.Now - revision.AuthorDate > TimeSpan.FromDays(30 * 6))
+                            {
+                                revision.Body = null;
+                            }
 
-                            // Look up any refs associate with this revision
-                            revision.Refs = refsByObjectId[revision.Guid].AsReadOnlyList();
+                            // Look up any refs associated with this revision
+                            revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
 
-                            RevisionCount++;
+                            revisionCount++;
 
                             subject.OnNext(revision);
                         }
                     }
                 }
 
-                Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {RevisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} poolCount={stringPool.Count}");
+                Trace.WriteLine($"**** [{nameof(RevisionReader)}] Emitted {revisionCount} revisions in {sw.Elapsed.TotalMilliseconds:#,##0.#} ms. bufferSize={buffer.Length} poolCount={stringPool.Count}");
             }
-
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
 
             if (!token.IsCancellationRequested)
             {
@@ -201,7 +198,7 @@ namespace GitCommands
 
             if (selectedRef != null)
             {
-                selectedRef.Selected = true;
+                selectedRef.IsSelected = true;
 
                 var localConfigFile = module.LocalConfigFile;
                 var selectedHeadMergeSource = refs.FirstOrDefault(
@@ -211,12 +208,14 @@ namespace GitCommands
 
                 if (selectedHeadMergeSource != null)
                 {
-                    selectedHeadMergeSource.SelectedHeadMergeSource = true;
+                    selectedHeadMergeSource.IsSelectedHeadMergeSource = true;
                 }
             }
         }
 
-        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, [CanBeNull] out GitRevision revision)
+        [ContractAnnotation("=>false,revision:null")]
+        [ContractAnnotation("=>true,revision:notnull")]
+        private static bool TryParseRevision(GitModule module, ArraySegment<byte> chunk, StringPool stringPool, Encoding logOutputEncoding, out GitRevision revision)
         {
             // The 'chunk' of data contains a complete git log item, encoded.
             // This method decodes that chunk and produces a revision object.
@@ -235,18 +234,43 @@ namespace GitCommands
                 return false;
             }
 
-            var objectIdStr = objectId.ToString();
-
             var array = chunk.Array;
             var offset = chunk.Offset + (ObjectId.Sha1CharCount * 2);
             var lastOffset = chunk.Offset + chunk.Count;
 
             // Next we have zero or more parent IDs separated by ' ' and terminated by '\n'
-            var parentIds = new List<ObjectId>(capacity: 1);
+            var parentIds = new ObjectId[CountParents(offset)];
+            var parentIndex = 0;
+
+            int CountParents(int baseOffset)
+            {
+                if (array[baseOffset] == '\n')
+                {
+                    return 0;
+                }
+
+                var count = 1;
+
+                while (true)
+                {
+                    baseOffset += ObjectId.Sha1CharCount;
+                    var c = array[baseOffset];
+
+                    if (c != ' ')
+                    {
+                        break;
+                    }
+
+                    count++;
+                    baseOffset++;
+                }
+
+                return count;
+            }
 
             while (true)
             {
-                if (offset >= lastOffset - 21)
+                if (offset >= lastOffset - ObjectId.Sha1CharCount - 1)
                 {
                     revision = default;
                     return false;
@@ -274,7 +298,7 @@ namespace GitCommands
                     return false;
                 }
 
-                parentIds.Add(parentId);
+                parentIds[parentIndex++] = parentId;
                 offset += ObjectId.Sha1CharCount;
             }
 
@@ -336,7 +360,7 @@ namespace GitCommands
 
             #endregion
 
-            #region Encoded string valies (names, emails, subject, body)
+            #region Encoded string values (names, emails, subject, body)
 
             // Finally, decode the names, email, subject and body strings using the required text encoding
             var s = encoding.GetString(array, offset, lastOffset - offset);
@@ -367,14 +391,9 @@ namespace GitCommands
 
             #endregion
 
-            revision = new GitRevision(null)
+            revision = new GitRevision(objectId)
             {
-                // TODO are we really sure we can't make Revision.Guid an ObjectId?
-                Guid = objectIdStr,
-
-                // TODO take IReadOnlyList<ObjectId> instead
-                ParentGuids = parentIds.ToArray(p => p.ToString()),
-
+                ParentIds = parentIds,
                 TreeGuid = treeId,
                 Author = author,
                 AuthorEmail = authorEmail,

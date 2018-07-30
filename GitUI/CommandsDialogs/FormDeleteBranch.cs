@@ -20,16 +20,16 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Cannot delete the branch “{0}” which you are currently on.");
 
         private readonly IEnumerable<string> _defaultBranches;
-        private string _currentBranch;
         private readonly HashSet<string> _mergedBranches = new HashSet<string>();
+        private string _currentBranch;
 
         public FormDeleteBranch(GitUICommands commands, IEnumerable<string> defaultBranches)
             : base(commands)
         {
-            InitializeComponent();
-            Translate();
             _defaultBranches = defaultBranches;
-            this.AdjustForDpiScaling();
+
+            InitializeComponent();
+            InitializeComplete();
         }
 
         private void FormDeleteBranchLoad(object sender, EventArgs e)

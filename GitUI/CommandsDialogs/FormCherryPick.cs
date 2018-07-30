@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs
             Revision = revision;
             InitializeComponent();
 
-            Translate();
+            InitializeComplete();
         }
 
         public GitRevision Revision { get; set; }
@@ -55,16 +55,16 @@ namespace GitUI.CommandsDialogs
 
             if (Revision != null)
             {
-                _isMerge = Module.IsMerge(Revision.Guid);
+                _isMerge = Module.IsMerge(Revision.ObjectId);
             }
 
             panelParentsList.Visible = _isMerge;
 
             if (_isMerge)
             {
-                var parents = Module.GetParentsRevisions(Revision.Guid);
+                var parents = Module.GetParentRevisions(Revision.ObjectId);
 
-                for (int i = 0; i < parents.Length; i++)
+                for (int i = 0; i < parents.Count; i++)
                 {
                     var item = new ListViewItem(i + 1 + "");
                     item.SubItems.Add(parents[i].Subject);
@@ -82,7 +82,7 @@ namespace GitUI.CommandsDialogs
 
         private void Revert_Click(object sender, EventArgs e)
         {
-            List<string> argumentsList = new List<string>();
+            var argumentsList = new List<string>();
             bool canExecute = true;
 
             if (_isMerge)

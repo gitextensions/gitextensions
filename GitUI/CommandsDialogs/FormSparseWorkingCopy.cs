@@ -31,7 +31,7 @@ namespace GitUI.CommandsDialogs
             var sparse = new FormSparseWorkingCopyViewModel(commands);
             BindToViewModelGlobal(sparse);
             CreateView(sparse);
-            Translate();
+            InitializeComplete();
         }
 
         private void BindSaveOnClose([NotNull] FormSparseWorkingCopyViewModel sparse)
@@ -101,9 +101,9 @@ namespace GitUI.CommandsDialogs
             MinimumSize = new Size(800, 600);
 
             // Tooltips support for the form
-            var componentcontainer = new Container();
-            _disposable1 = componentcontainer;
-            var tooltip = new ToolTip(componentcontainer) { AutomaticDelay = 100 };
+            var componentContainer = new Container();
+            _disposable1 = componentContainer;
+            var tooltip = new ToolTip(componentContainer) { AutomaticDelay = 100 };
 
             Panel panelHeader = CreateViewHeader();
 
@@ -196,7 +196,7 @@ namespace GitUI.CommandsDialogs
         }
 
         [NotNull]
-        private static Panel CreateViewRules([NotNull] FormSparseWorkingCopyViewModel sparse, [NotNull] ToolTip tooltip, [NotNull] IGitUICommandsSource cmdsource)
+        private static Panel CreateViewRules([NotNull] FormSparseWorkingCopyViewModel sparse, [NotNull] ToolTip tooltip, [NotNull] IGitUICommandsSource commandsSource)
         {
             // Label
             var label1 = new Label { AutoSize = true, Text = Globalized.Strings.SpecifyTheRulesForIncludingOrExcludingFilesAndDirectories.Text, Dock = DockStyle.Top, Padding = new Padding(10, 5, 10, 0) };
@@ -204,14 +204,14 @@ namespace GitUI.CommandsDialogs
             sparse.PropertyChanged += delegate { label1.Visible = label2.Visible = sparse.IsSparseCheckoutEnabled; };
 
             // Text editor
-            var editor = new FileViewer { Dock = DockStyle.Fill, UICommandsSource = cmdsource, IsReadOnly = false };
+            var editor = new FileViewer { Dock = DockStyle.Fill, UICommandsSource = commandsSource, IsReadOnly = false };
             editor.TextLoaded += (sender, args) => sparse.SetRulesTextAsOnDisk(editor.GetText());
             try
             {
-                FileInfo sparsefile = sparse.GetPathToSparseCheckoutFile();
-                if (sparsefile.Exists)
+                FileInfo sparseFile = sparse.GetPathToSparseCheckoutFile();
+                if (sparseFile.Exists)
                 {
-                    editor.ViewFileAsync(sparsefile.FullName);
+                    editor.ViewFileAsync(sparseFile.FullName);
                 }
             }
             catch (Exception ex)

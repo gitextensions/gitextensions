@@ -215,10 +215,10 @@
             "tkdiff",
             "tmerge",
             "vimdiff",
-            "winmerge",
-            "xxdiff",
             "vscode",
-            "vsdiffmerge"});
+            "vsdiffmerge",
+            "winmerge",
+            "xxdiff"});
             this._NO_TRANSLATE_GlobalDiffTool.Location = new System.Drawing.Point(192, 265);
             this._NO_TRANSLATE_GlobalDiffTool.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._NO_TRANSLATE_GlobalDiffTool.Name = "_NO_TRANSLATE_GlobalDiffTool";
@@ -282,7 +282,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pictureBox1.Image = global::GitUI.Properties.Resources.error;
+            this.pictureBox1.Image = global::GitUI.Properties.Images.StatusBadgeError;
             this.pictureBox1.Location = new System.Drawing.Point(4, 4);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.pictureBox1.Name = "pictureBox1";
@@ -351,7 +351,8 @@
             "semanticmerge",
             "TortoiseMerge",
             "vscode",
-            "vsdiffmerge"});
+            "vsdiffmerge",
+            "winmerge"});
             this._NO_TRANSLATE_GlobalMergeTool.Location = new System.Drawing.Point(192, 109);
             this._NO_TRANSLATE_GlobalMergeTool.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this._NO_TRANSLATE_GlobalMergeTool.Name = "_NO_TRANSLATE_GlobalMergeTool";

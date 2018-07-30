@@ -3,7 +3,7 @@
     public interface IGitSubmoduleInfo
     {
         string Branch { get; }
-        string CurrentCommitGuid { get; }
+        ObjectId CurrentCommitId { get; }
         bool IsInitialized { get; }
         string LocalPath { get; }
         string Name { get; }

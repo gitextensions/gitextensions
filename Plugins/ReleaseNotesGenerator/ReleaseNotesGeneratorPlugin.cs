@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using GitUIPluginInterfaces;
+using ReleaseNotesGenerator.Properties;
 using ResourceManager;
 
 namespace ReleaseNotesGenerator
@@ -12,6 +13,7 @@ namespace ReleaseNotesGenerator
         {
             SetNameAndDescription("Release Notes Generator");
             Translate();
+            Icon = Resources.IconReleaseNotesGenerator;
         }
 
         public override bool Execute(GitUIEventArgs args)

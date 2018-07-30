@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using CreateLocalBranches.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -11,6 +12,7 @@ namespace CreateLocalBranches
         {
             SetNameAndDescription("Create local tracking branches");
             Translate();
+            Icon = Resources.IconCreateLocalBranches;
         }
 
         public override bool Execute(GitUIEventArgs args)

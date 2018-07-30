@@ -6,7 +6,7 @@
         {
             InitializeComponent();
             Text = "Hotkeys";
-            Translate();
+            InitializeComplete();
         }
 
         protected override void SettingsToPage()

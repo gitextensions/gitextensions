@@ -2,6 +2,7 @@
 using System.IO;
 using GitCommands;
 using GitCommands.Utils;
+using JetBrains.Annotations;
 using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
@@ -13,6 +14,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return settings.GlobalSettings.GetValue(setting);
         }
 
+        [CanBeNull]
         public static string GetFullPath(string fileName)
         {
             PathUtil.TryFindFullPath(fileName, out var fullPath);
@@ -39,46 +41,41 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     continue;
                 }
 
-                string programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles");
+                string fullName = string.Empty;
+                string programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles") ?? "";
 
-                string path;
-
-                if (!string.IsNullOrEmpty(programFilesPath))
+                if (CheckFileExists(programFilesPath))
                 {
-                    path = Path.Combine(programFilesPath, location);
-                    if (Directory.Exists(path))
-                    {
-                        string fullName = Path.Combine(path, fileName);
-                        if (File.Exists(fullName))
-                        {
-                            return fullName;
-                        }
-                    }
+                    return fullName;
                 }
 
-                if (IntPtr.Size == 8
-                    || (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
-                {
-                    programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+                programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)") ?? "";
 
-                    if (!string.IsNullOrEmpty(programFilesPath))
-                    {
-                        path = Path.Combine(programFilesPath, location);
-                        if (Directory.Exists(path))
-                        {
-                            string fullName = Path.Combine(path, fileName);
-                            if (File.Exists(fullName))
-                            {
-                                return fullName;
-                            }
-                        }
-                    }
+                if ((IntPtr.Size == 8 ||
+                    !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))) &&
+                    CheckFileExists(programFilesPath))
+                {
+                    return fullName;
+                }
+
+                string localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+                if (CheckFileExists(localAppDataPath))
+                {
+                    return fullName;
+                }
+
+                bool CheckFileExists(string path)
+                {
+                    fullName = Path.Combine(path, location, fileName);
+                    return File.Exists(fullName);
                 }
             }
 
             return string.Empty;
         }
 
+        [CanBeNull]
         private static string UnquoteString(string str)
         {
             if (string.IsNullOrEmpty(str))
@@ -95,6 +92,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return str;
         }
 
+        [CanBeNull]
         public static string FindPathForKDiff(string pathFromConfig)
         {
             if (string.IsNullOrEmpty(pathFromConfig) || !File.Exists(pathFromConfig))
@@ -130,6 +128,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return null;
         }
 
+        [CanBeNull]
         public static string GetDiffToolExeFile(string difftoolText)
         {
             string diffTool = difftoolText.ToLowerInvariant();
@@ -255,6 +254,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return "";
         }
 
+        [CanBeNull]
         public static string GetMergeToolExeFile(string mergeToolText)
         {
             string mergeTool = mergeToolText.ToLowerInvariant();
@@ -340,8 +340,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             {
                 case "kdiff3":
                     return "";
-                case "winmerge":
-                    return "\"" + exeFile + "\" -e -u -dl \"Original\" -dr \"Modified\" \"$MERGED\" \"$REMOTE\"";
             }
 
             return AutoConfigMergeToolCmd(mergeToolText, exeFile);
@@ -376,6 +374,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return "\"" + exeFile + "\" --wait \"$MERGED\" ";
                 case "vsdiffmerge":
                     return "\"" + exeFile + "\" /m \"$REMOTE\" \"$LOCAL\" \"$BASE\" \"$MERGED\"";
+                case "winmerge":
+                    return "\"" + exeFile + "\" -e -u  -wl -wr -fm -dl \"Mine: $LOCAL\" -dm \"Merged: $BASE\" -dr \"Theirs: $REMOTE\" \"$LOCAL\" \"$BASE\" \"$REMOTE\" -o \"$MERGED\"";
             }
 
             // other commands supported natively by git for windows

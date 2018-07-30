@@ -41,7 +41,7 @@
             this.PatchDirMode = new System.Windows.Forms.RadioButton();
             this.PatchFileMode = new System.Windows.Forms.RadioButton();
             this.patchGrid1 = new GitUI.PatchGrid();
-            this.SolveMergeconflicts = new System.Windows.Forms.Button();
+            this.SolveMergeConflicts = new System.Windows.Forms.Button();
             this.IgnoreWhitespace = new System.Windows.Forms.CheckBox();
             this.ContinuePanel = new System.Windows.Forms.Panel();
             this.MergeToolPanel = new System.Windows.Forms.Panel();
@@ -204,17 +204,17 @@
             // 
             // SolveMergeconflicts
             // 
-            this.SolveMergeconflicts.BackColor = System.Drawing.Color.Salmon;
-            this.SolveMergeconflicts.Dock = System.Windows.Forms.DockStyle.Top;
-            this.SolveMergeconflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SolveMergeconflicts.Location = new System.Drawing.Point(3, 213);
-            this.SolveMergeconflicts.Name = "SolveMergeconflicts";
-            this.SolveMergeconflicts.Size = new System.Drawing.Size(125, 78);
-            this.SolveMergeconflicts.TabIndex = 12;
-            this.SolveMergeconflicts.Text = "There are unresolved merge conflicts\r\n";
-            this.SolveMergeconflicts.UseVisualStyleBackColor = false;
-            this.SolveMergeconflicts.Visible = false;
-            this.SolveMergeconflicts.Click += new System.EventHandler(this.SolveMergeconflicts_Click);
+            this.SolveMergeConflicts.BackColor = System.Drawing.Color.Salmon;
+            this.SolveMergeConflicts.Dock = System.Windows.Forms.DockStyle.Top;
+            this.SolveMergeConflicts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SolveMergeConflicts.Location = new System.Drawing.Point(3, 213);
+            this.SolveMergeConflicts.Name = "SolveMergeConflicts";
+            this.SolveMergeConflicts.Size = new System.Drawing.Size(125, 78);
+            this.SolveMergeConflicts.TabIndex = 12;
+            this.SolveMergeConflicts.Text = "There are unresolved merge conflicts\r\n";
+            this.SolveMergeConflicts.UseVisualStyleBackColor = false;
+            this.SolveMergeConflicts.Visible = false;
+            this.SolveMergeConflicts.Click += new System.EventHandler(this.SolveMergeConflicts_Click);
             // 
             // IgnoreWhitespace
             // 
@@ -258,7 +258,7 @@
             this.flowLayoutPanel1.Controls.Add(this.ContinuePanel);
             this.flowLayoutPanel1.Controls.Add(this.Skip);
             this.flowLayoutPanel1.Controls.Add(this.Abort);
-            this.flowLayoutPanel1.Controls.Add(this.SolveMergeconflicts);
+            this.flowLayoutPanel1.Controls.Add(this.SolveMergeConflicts);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(577, 74);
@@ -368,7 +368,7 @@
         private System.Windows.Forms.Button BrowseDir;
         private System.Windows.Forms.RadioButton PatchDirMode;
         private System.Windows.Forms.RadioButton PatchFileMode;
-        private System.Windows.Forms.Button SolveMergeconflicts;
+        private System.Windows.Forms.Button SolveMergeConflicts;
         private System.Windows.Forms.CheckBox IgnoreWhitespace;
         private System.Windows.Forms.Panel ContinuePanel;
         private System.Windows.Forms.Panel MergeToolPanel;

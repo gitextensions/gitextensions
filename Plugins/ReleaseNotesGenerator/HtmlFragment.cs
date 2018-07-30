@@ -2,6 +2,7 @@
 //
 // Mike Stall. http://blogs.msdn.com/jmstall
 //
+
 using System;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -45,15 +46,16 @@ namespace ReleaseNotesGenerator
 
             // Note the counters are byte counts in the original string, which may be Ansi. So byte counts
             // may be the same as character counts (since sizeof(char) == 1).
-            // But System.String is unicode, and so byte couns are no longer the same as character counts,
+            // But System.String is unicode, and so byte counts are no longer the same as character counts,
             // (since sizeof(wchar) == 2).
-            int startHmtl = 0;
+            int startHtml = 0;
             int startFragment = 0;
 
             Match m;
 
-            var r = new Regex("([a-zA-Z]+):(.+?)[\r\n]",
-                                RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            var r = new Regex(
+                "([a-zA-Z]+):(.+?)[\r\n]",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
             for (m = r.Match(rawClipboardText); m.Success; m = m.NextMatch())
             {
@@ -69,24 +71,24 @@ namespace ReleaseNotesGenerator
 
                     // Byte count from the beginning of the clipboard to the start of the context, or -1 if no context
                     case "starthtml":
-                        if (startHmtl != 0)
+                        if (startHtml != 0)
                         {
                             throw new FormatException("StartHtml is already declared");
                         }
 
-                        startHmtl = int.Parse(val);
+                        startHtml = int.Parse(val);
                         break;
 
                     // Byte count from the beginning of the clipboard to the end of the context, or -1 if no context.
                     case "endhtml":
-                        if (startHmtl == 0)
+                        if (startHtml == 0)
                         {
                             throw new FormatException("StartHTML must be declared before endHTML");
                         }
 
                         int endHtml = int.Parse(val);
 
-                        Context = rawClipboardText.Substring(startHmtl, endHtml - startHmtl);
+                        Context = rawClipboardText.Substring(startHtml, endHtml - startHtml);
                         break;
 
                     // Byte count from the beginning of the clipboard to the start of the fragment.
@@ -115,7 +117,7 @@ namespace ReleaseNotesGenerator
                         SourceUrl = new Uri(val);
                         break;
                 }
-            } // end for
+            }
 
             if (Context == null && Fragment == null)
             {
@@ -146,16 +148,13 @@ namespace ReleaseNotesGenerator
         /// </summary>
         public Uri SourceUrl { get; }
 
-        #endregion // Read and decode from clipboard
+        #endregion
 
         #region Write to Clipboard
 
         // Helper to convert an integer into an 8 digit string.
         // String must be 8 characters, because it will be used to replace an 8 character string within a larger string.
-        internal static string To8DigitString(int x)
-        {
-            return string.Format("{0:00000000}", x);
-        }
+        internal static string To8DigitString(int x) => $"{x:00000000}";
 
         /// <summary>
         /// Clears clipboard and copy a HTML fragment to the clipboard, providing additional meta-information.
@@ -182,7 +181,7 @@ namespace ReleaseNotesGenerator
             // http://msdn.microsoft.com/library/default.asp?url=/workshop/networking/clipboard/htmlclipboard.asp
 
             // The string contains index references to other spots in the string, so we need placeholders so we can compute the offsets.
-            // The <<<<<<<_ strings are just placeholders. We'll backpatch them actual values afterwards.
+            // The <<<<<<<_ strings are just placeholders. We'll back patch them actual values afterwards.
             // The string layout (<<<) also ensures that it can't appear in the body of the html because the <
             // character must be escaped.
             const string header = "Version:0.9\r\n" +
@@ -215,7 +214,7 @@ namespace ReleaseNotesGenerator
             sb.Append(post);
             int endHtml = sb.Length;
 
-            // Backpatch offsets
+            // Back patch offsets
             sb.Replace("<<<<<<<1", To8DigitString(startHtml));
             sb.Replace("<<<<<<<2", To8DigitString(endHtml));
             sb.Replace("<<<<<<<3", To8DigitString(fragmentStart));
@@ -231,6 +230,6 @@ namespace ReleaseNotesGenerator
             return dataObject;
         }
 
-        #endregion // Write to Clipboard
-    } // end of class
+        #endregion
+    }
 }

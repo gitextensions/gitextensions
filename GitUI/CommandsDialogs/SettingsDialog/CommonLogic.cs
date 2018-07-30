@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
+using JetBrains.Annotations;
 using Microsoft.Win32;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    public class CommonLogic : Translate
+    public sealed class CommonLogic : Translate
     {
         private readonly TranslationString _cantReadRegistry =
             new TranslationString("GitExtensions has insufficient permissions to check the registry.");
@@ -19,9 +21,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public readonly RepoDistSettingsSet RepoDistSettingsSet;
         public readonly ConfigFileSettingsSet ConfigFileSettingsSet;
-        public readonly GitModule Module;
+        [CanBeNull] public readonly GitModule Module;
 
-        public CommonLogic(GitModule module)
+        public CommonLogic([CanBeNull] GitModule module)
         {
             Module = module;
 
@@ -54,6 +56,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         public const string GitExtensionsShellEx32Name = "GitExtensionsShellEx32.dll";
         public const string GitExtensionsShellEx64Name = "GitExtensionsShellEx64.dll";
 
+        public string GetGlobalDiffTool()
+        {
+            return ConfigFileSettingsSet.GlobalSettings.GetValue("diff.guitool");
+        }
+
+        public void SetGlobalDiffTool(string value)
+        {
+            ConfigFileSettingsSet.GlobalSettings.SetValue("diff.guitool", value);
+        }
+
+        public bool IsDiffTool(string toolName)
+        {
+            return GetGlobalDiffTool().Equals(toolName,
+                StringComparison.CurrentCultureIgnoreCase);
+        }
+
         public string GetGlobalMergeTool()
         {
             return ConfigFileSettingsSet.GlobalSettings.GetValue("merge.tool");
@@ -75,7 +93,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             string value = null;
             try
             {
-                RegistryKey registryKey = root.OpenSubKey(subkey, false);
+                var registryKey = root.OpenSubKey(subkey, writable: false);
+
                 if (registryKey != null)
                 {
                     using (registryKey)
@@ -89,50 +108,37 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 MessageBox.Show(_cantReadRegistry.Text);
             }
 
-            return value ?? string.Empty;
+            return value ?? "";
         }
 
+        [CanBeNull]
         public string GetGlobalEditor()
         {
-            string editor = Environment.GetEnvironmentVariable("GIT_EDITOR");
-            if (!string.IsNullOrEmpty(editor))
-            {
-                return editor;
-            }
+            return GetEditorOptions().FirstOrDefault(o => !string.IsNullOrEmpty(o));
 
-            editor = ConfigFileSettingsSet.GlobalSettings.GetValue("core.editor");
-            if (!string.IsNullOrEmpty(editor))
+            IEnumerable<string> GetEditorOptions()
             {
-                return editor;
+                yield return Environment.GetEnvironmentVariable("GIT_EDITOR");
+                yield return ConfigFileSettingsSet.GlobalSettings.GetValue("core.editor");
+                yield return Environment.GetEnvironmentVariable("VISUAL");
+                yield return Environment.GetEnvironmentVariable("EDITOR");
             }
-
-            editor = Environment.GetEnvironmentVariable("VISUAL");
-            if (!string.IsNullOrEmpty(editor))
-            {
-                return editor;
-            }
-
-            return Environment.GetEnvironmentVariable("EDITOR");
         }
 
         public string SelectFile(string initialDirectory, string filter, string prev)
         {
-            using (var dialog = new OpenFileDialog
+            using (var dialog = new System.Windows.Forms.OpenFileDialog
             {
                 Filter = filter,
                 InitialDirectory = initialDirectory,
                 Title = _selectFile.Text
             })
             {
-                return (dialog.ShowDialog() == DialogResult.OK) ? dialog.FileName : prev;
+                return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : prev;
             }
         }
 
-        public void EncodingToCombo(Encoding encoding, ComboBox combo)
-        {
-            combo.Text = encoding?.EncodingName ?? "";
-        }
-
+        [CanBeNull]
         public Encoding ComboToEncoding(ComboBox combo)
         {
             return combo.SelectedItem as Encoding;
@@ -140,7 +146,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public void FillEncodings(ComboBox combo)
         {
-            combo.Items.AddRange(AppSettings.AvailableEncodings.Values.ToArray());
+            combo.Items.AddRange(AppSettings.AvailableEncodings.Values.ToArray<object>());
             combo.DisplayMember = nameof(Encoding.EncodingName);
         }
     }

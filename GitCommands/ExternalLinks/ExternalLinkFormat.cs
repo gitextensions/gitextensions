@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-using GitCommands.Core;
 
 namespace GitCommands.ExternalLinks
 {
     [XmlType("GitExtLinkFormat")]
-    public class ExternalLinkFormat : SimpleStructured
+    public class ExternalLinkFormat
     {
         public string Caption { get; set; }
         public string Format { get; set; }
@@ -16,44 +16,38 @@ namespace GitCommands.ExternalLinks
 
         public ExternalLink Apply(Match remoteMatch, Match revisionMatch, GitRevision revision)
         {
-            ExternalLink link = new ExternalLink();
-
             var groups = new List<string>();
-            AddGroupsFromMatches(remoteMatch, groups);
-            AddGroupsFromMatches(revisionMatch, groups);
-            string[] groupsArray = groups.ToArray();
+            AddGroupsFromMatches(remoteMatch);
+            AddGroupsFromMatches(revisionMatch);
+            var groupsArray = groups.ToArray<object>();
 
+            string caption = null;
+            string uri;
             try
             {
-                link.Caption = string.Format(Caption, groupsArray);
-                link.URI = Format.Replace("%COMMIT_HASH%", revision.Guid);
-                link.URI = string.Format(link.URI, groupsArray);
+                caption = string.Format(Caption, groupsArray);
+                uri = Format.Replace("%COMMIT_HASH%", revision.Guid);
+                uri = string.Format(uri, groupsArray);
                 IsValid = true;
             }
             catch (Exception e)
             {
-                link.URI = e.Message + ": " + Format + " " + groupsArray;
+                uri = e.Message + ": " + Format + " " + groupsArray;
                 IsValid = false;
             }
 
-            return link;
-        }
+            return new ExternalLink(caption, uri);
 
-        private static void AddGroupsFromMatches(Match match, List<string> groups)
-        {
-            if (match != null)
+            void AddGroupsFromMatches(Match match)
             {
-                for (int i = match.Groups.Count > 1 ? 1 : 0; i < match.Groups.Count; i++)
+                if (match != null)
                 {
-                    groups.Add(match.Groups[i].Value);
+                    for (int i = match.Groups.Count > 1 ? 1 : 0; i < match.Groups.Count; i++)
+                    {
+                        groups.Add(match.Groups[i].Value);
+                    }
                 }
             }
-        }
-
-        protected internal override IEnumerable<object> InlinedStructure()
-        {
-            yield return Caption;
-            yield return Format;
         }
     }
 }

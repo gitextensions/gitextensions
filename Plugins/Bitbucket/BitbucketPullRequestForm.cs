@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands;
 using GitUI;
-using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
@@ -15,34 +14,29 @@ namespace Bitbucket
 {
     public partial class BitbucketPullRequestForm : GitExtensionsFormBase
     {
-        private readonly TranslationString _yourRepositoryIsNotInBitbucket = new TranslationString("Your repository is not hosted in Bitbucket.");
-        private readonly TranslationString _commited = new TranslationString("{0} committed\n{1}");
+        private readonly TranslationString _committed = new TranslationString("{0} committed\n{1}");
         private readonly TranslationString _success = new TranslationString("Success");
         private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _linkLabelToolTip = new TranslationString("Right-click to copy link");
 
-        private readonly Settings _settings;
+        [CanBeNull] private readonly Settings _settings;
         private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
 
-        public BitbucketPullRequestForm(BitbucketPlugin plugin, ISettingsSource settings, GitUIEventArgs gitUiCommands)
+        public BitbucketPullRequestForm(Settings settings)
         {
             InitializeComponent();
-            Translate();
 
             // NOTE ddlBranchSource and ddlBranchTarget both have string items so do not need a display member
             ddlRepositorySource.DisplayMember = nameof(Repository.DisplayName);
             ddlRepositoryTarget.DisplayMember = nameof(Repository.DisplayName);
 
-            _settings = Settings.Parse(gitUiCommands.GitModule, settings, plugin);
-            if (_settings == null)
-            {
-                MessageBox.Show(_yourRepositoryIsNotInBitbucket.Text);
-                Close();
-                return;
-            }
+            _settings = settings;
 
-            Load += BitbucketViewPullRequestFormLoad;
-            Load += BitbucketPullRequestFormLoad;
+            Load += delegate
+            {
+                ReloadPullRequests();
+                ReloadRepositories();
+            };
 
             lblLinkCreatePull.Text = string.Format("{0}/projects/{1}/repos/{2}/pull-requests?create",
                                       _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
@@ -52,10 +46,10 @@ namespace Bitbucket
                 _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
             toolTipLink.SetToolTip(lblLinkViewPull, _linkLabelToolTip.Text);
 
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
-        private void BitbucketPullRequestFormLoad(object sender, EventArgs e)
+        private void ReloadRepositories()
         {
             if (_settings == null)
             {
@@ -73,9 +67,22 @@ namespace Bitbucket
                 ddlRepositorySource.Enabled = true;
                 ddlRepositoryTarget.Enabled = true;
             }).FileAndForget();
+
+            async Task<List<Repository>> GetRepositoriesAsync()
+            {
+                var list = new List<Repository>();
+                var getDefaultRepo = new GetRepoRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
+                var defaultRepo = await getDefaultRepo.SendAsync().ConfigureAwait(false);
+                if (defaultRepo.Success)
+                {
+                    list.Add(defaultRepo.Result);
+                }
+
+                return list;
+            }
         }
 
-        private void BitbucketViewPullRequestFormLoad(object sender, EventArgs e)
+        private void ReloadPullRequests()
         {
             if (_settings == null)
             {
@@ -85,38 +92,25 @@ namespace Bitbucket
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default;
-                var pullReqs = await GetPullRequestsAsync();
+                var pullRequests = await GetPullRequestsAsync();
 
                 await this.SwitchToMainThreadAsync();
-                lbxPullRequests.DataSource = pullReqs;
+                lbxPullRequests.DataSource = pullRequests;
                 lbxPullRequests.DisplayMember = nameof(PullRequest.DisplayName);
             }).FileAndForget();
-        }
 
-        private async Task<List<Repository>> GetRepositoriesAsync()
-        {
-            var list = new List<Repository>();
-            var getDefaultRepo = new GetRepoRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
-            var defaultRepo = await getDefaultRepo.SendAsync().ConfigureAwait(false);
-            if (defaultRepo.Success)
+            async Task<List<PullRequest>> GetPullRequestsAsync()
             {
-                list.Add(defaultRepo.Result);
+                var list = new List<PullRequest>();
+                var getPullRequests = new GetPullRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
+                var result = await getPullRequests.SendAsync().ConfigureAwait(false);
+                if (result.Success)
+                {
+                    list.AddRange(result.Result);
+                }
+
+                return list;
             }
-
-            return list;
-        }
-
-        private async Task<List<PullRequest>> GetPullRequestsAsync()
-        {
-            var list = new List<PullRequest>();
-            var getPullReqs = new GetPullRequest(_settings.ProjectKey, _settings.RepoSlug, _settings);
-            var result = await getPullReqs.SendAsync().ConfigureAwait(false);
-            if (result.Success)
-            {
-                list.AddRange(result.Result);
-            }
-
-            return list;
         }
 
         private void BtnCreateClick(object sender, EventArgs e)
@@ -149,7 +143,7 @@ namespace Bitbucket
                 if (response.Success)
                 {
                     MessageBox.Show(_success.Text);
-                    BitbucketViewPullRequestFormLoad(null, null);
+                    ReloadPullRequests();
                 }
                 else
                 {
@@ -201,14 +195,9 @@ namespace Bitbucket
 
         private async Task RefreshDDLBranchAsync(ComboBox branchComboBox, object selectedValue)
         {
-            List<string> branchNames = (await GetBitbucketBranchesAsync((Repository)selectedValue)).ToList();
-            if (AppSettings.BranchOrderingCriteria == GitRefsOrder.Alphabetically)
-            {
-                branchNames.Sort();
-            }
-
+            var branchNames = (await GetBitbucketBranchesAsync((Repository)selectedValue)).ToList();
+            branchNames.Sort();
             branchNames.Insert(0, "");
-
             await this.SwitchToMainThreadAsync();
             branchComboBox.DataSource = branchNames;
         }
@@ -252,6 +241,7 @@ namespace Bitbucket
             });
         }
 
+        [ItemCanBeNull]
         private async Task<Commit> GetCommitInfoAsync(Repository repo, string branch)
         {
             if (repo == null || string.IsNullOrWhiteSpace(branch))
@@ -272,8 +262,7 @@ namespace Bitbucket
             }
             else
             {
-                label.Text = string.Format(_commited.Text,
-                    commit.AuthorName, commit.Message);
+                label.Text = string.Format(_committed.Text, commit.AuthorName, commit.Message);
             }
         }
 
@@ -351,7 +340,7 @@ namespace Bitbucket
                 if (response.Success)
                 {
                     MessageBox.Show(_success.Text);
-                    BitbucketViewPullRequestFormLoad(null, null);
+                    ReloadPullRequests();
                 }
                 else
                 {
@@ -380,7 +369,7 @@ namespace Bitbucket
                 if (response.Success)
                 {
                     MessageBox.Show(_success.Text);
-                    BitbucketViewPullRequestFormLoad(null, null);
+                    ReloadPullRequests();
                 }
                 else
                 {

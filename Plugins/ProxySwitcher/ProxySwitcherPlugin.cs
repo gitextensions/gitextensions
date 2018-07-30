@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using GitUIPluginInterfaces;
+using ProxySwitcher.Properties;
 using ResourceManager;
 
 namespace ProxySwitcher
@@ -16,6 +17,7 @@ namespace ProxySwitcher
         {
             SetNameAndDescription("Proxy Switcher");
             Translate();
+            Icon = Resources.IconProxySwitcher;
         }
 
         public override System.Collections.Generic.IEnumerable<ISetting> GetSettings()

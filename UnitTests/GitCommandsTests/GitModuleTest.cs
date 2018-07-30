@@ -1,13 +1,15 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using GitCommands;
+using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitCommandsTests
 {
     [TestFixture]
-    public class GitModuleTest
+    public sealed class GitModuleTest
     {
         private GitModule _gitModule;
 
@@ -52,7 +54,7 @@ namespace GitCommandsTests
 
             Assert.AreEqual(80, result.Lines.Count);
 
-            Assert.AreEqual("957ff3ce9193fec3bd2578378e71676841804935", result.Lines[0].Commit.ObjectId);
+            Assert.AreEqual(ObjectId.Parse("957ff3ce9193fec3bd2578378e71676841804935"), result.Lines[0].Commit.ObjectId);
             Assert.AreEqual("# Git Extensions", result.Lines[0].Text);
 
             Assert.AreEqual(1, result.Lines[0].OriginLineNumber);
@@ -61,7 +63,7 @@ namespace GitCommandsTests
             Assert.AreSame(result.Lines[0].Commit, result.Lines[1].Commit);
             Assert.AreSame(result.Lines[0].Commit, result.Lines[6].Commit);
 
-            Assert.AreEqual("e3268019c66da7534414e9562ececdee5d455b1b", result.Lines.Last().Commit.ObjectId);
+            Assert.AreEqual(ObjectId.Parse("e3268019c66da7534414e9562ececdee5d455b1b"), result.Lines.Last().Commit.ObjectId);
             Assert.AreEqual("", result.Lines.Last().Text);
         }
 
@@ -242,6 +244,48 @@ namespace GitCommandsTests
             Assert.IsFalse(refs[3].IsRemote);
             Assert.IsTrue(refs[3].IsTag);
             Assert.AreSame(_gitModule, refs[3].Module);
+        }
+
+        [Test]
+        public void ParseRemotes()
+        {
+            var lines = new[]
+            {
+                "RussKie\tgit://github.com/RussKie/gitextensions.git (fetch)",
+                "RussKie\tgit://github.com/RussKie/gitextensions.git (push)",
+                "origin\tgit@github.com:drewnoakes/gitextensions.git (fetch)",
+                "origin\tgit@github.com:drewnoakes/gitextensions.git (push)",
+                "upstream\tgit@github.com:gitextensions/gitextensions.git (fetch)",
+                "upstream\tgit@github.com:gitextensions/gitextensions.git (push)",
+                "asymmetrical\thttps://github.com/gitextensions/fetch.git (fetch)",
+                "asymmetrical\thttps://github.com/gitextensions/push.git (push)",
+                "with-space\tc:\\Bare Repo (fetch)",
+                "with-space\tc:\\Bare Repo (push)"
+            };
+
+            var remotes = GitModule.ParseRemotesInternal(lines);
+
+            Assert.AreEqual(5, remotes.Count);
+
+            Assert.AreEqual("RussKie", remotes[0].Name);
+            Assert.AreEqual("git://github.com/RussKie/gitextensions.git", remotes[0].FetchUrl);
+            Assert.AreEqual("git://github.com/RussKie/gitextensions.git", remotes[0].PushUrl);
+
+            Assert.AreEqual("origin", remotes[1].Name);
+            Assert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[1].FetchUrl);
+            Assert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[1].PushUrl);
+
+            Assert.AreEqual("upstream", remotes[2].Name);
+            Assert.AreEqual("git@github.com:gitextensions/gitextensions.git", remotes[2].FetchUrl);
+            Assert.AreEqual("git@github.com:gitextensions/gitextensions.git", remotes[2].PushUrl);
+
+            Assert.AreEqual("asymmetrical", remotes[3].Name);
+            Assert.AreEqual("https://github.com/gitextensions/fetch.git", remotes[3].FetchUrl);
+            Assert.AreEqual("https://github.com/gitextensions/push.git", remotes[3].PushUrl);
+
+            Assert.AreEqual("with-space", remotes[4].Name);
+            Assert.AreEqual("c:\\Bare Repo", remotes[4].FetchUrl);
+            Assert.AreEqual("c:\\Bare Repo", remotes[4].PushUrl);
         }
     }
 }

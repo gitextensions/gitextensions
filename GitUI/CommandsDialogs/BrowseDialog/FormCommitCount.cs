@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Statistics;
+using GitUI.Properties;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -19,8 +20,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             : base(commands)
         {
             InitializeComponent();
-            Loading.Image = Properties.Resources.loadingpanel;
-            Translate();
+            Loading.Image = Images.LoadingAnimation;
+            InitializeComplete();
 
             Load += delegate { FetchData(); };
             cbIncludeSubmodules.CheckedChanged += delegate { FetchData(); };

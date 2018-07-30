@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces.RepositoryHosts;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -42,8 +43,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _gitModuleChanged = gitModuleChanged;
             _gitHoster = gitHoster;
             InitializeComponent();
-            Translate();
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
         private void ForkAndCloneForm_Load(object sender, EventArgs e)
@@ -328,7 +328,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             }
 
-            GitModule module = new GitModule(targetDir);
+            var module = new GitModule(targetDir);
 
             if (_addRemoteAsTB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentReadOnlyUrl))
             {
@@ -400,6 +400,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
         }
 
+        [CanBeNull]
         private string GetTargetDir()
         {
             string targetDir = _destinationTB.Text.Trim();

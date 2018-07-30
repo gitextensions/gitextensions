@@ -103,10 +103,10 @@ namespace GitUI.UserControls
             public const int LVM_SETGROUPINFO = LVM_FIRST + 147;
             public const int LVM_SUBITEMHITTEST = LVM_FIRST + 57;
 
-            #endregion Windows constants
+            #endregion
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct POINT
+            public readonly struct POINT
             {
                 public readonly int X;
                 public readonly int Y;
@@ -117,15 +117,8 @@ namespace GitUI.UserControls
                     Y = y;
                 }
 
-                public static implicit operator System.Drawing.Point(POINT p)
-                {
-                    return new System.Drawing.Point(p.X, p.Y);
-                }
-
-                public static implicit operator POINT(System.Drawing.Point p)
-                {
-                    return new POINT(p.X, p.Y);
-                }
+                public static implicit operator System.Drawing.Point(POINT p) => new System.Drawing.Point(p.X, p.Y);
+                public static implicit operator POINT(System.Drawing.Point p) => new POINT(p.X, p.Y);
             }
 
             public static POINT LParamToPOINT(uint lParam)
@@ -318,7 +311,7 @@ namespace GitUI.UserControls
                 {
                     return (int)ListViewGroupIdProperty.GetValue(listViewGroup);
                 }
-                catch (Exception)
+                catch
                 {
                     // no-op
                 }
@@ -355,7 +348,7 @@ namespace GitUI.UserControls
                 group.Mask = NativeMethods.ListViewGroupMask.State;
 
                 var handleRef = new HandleRef(this, Handle);
-                group.IGroupId = groupId < 0 ? groupId : groupIndex;
+                group.IGroupId = groupId > 0 ? groupId : groupIndex;
                 NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SETGROUPINFO, (IntPtr)group.IGroupId, ref group);
             }
         }

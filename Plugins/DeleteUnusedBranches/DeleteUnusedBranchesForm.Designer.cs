@@ -40,6 +40,7 @@
             this.deleteDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.checkBoxHeaderCell = new DataGridViewCheckBoxHeaderCell();
             this.Author = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Message = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.branchBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -136,8 +137,8 @@
             // 
             this.deleteDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.deleteDataGridViewCheckBoxColumn.FillWeight = 20F;
-            this.deleteDataGridViewCheckBoxColumn.HeaderText = "Delete";
             this.deleteDataGridViewCheckBoxColumn.Name = "deleteDataGridViewCheckBoxColumn";
+            this.deleteDataGridViewCheckBoxColumn.HeaderCell = checkBoxHeaderCell;
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -422,7 +423,6 @@
             this.ClientSize = new System.Drawing.Size(760, 421);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(statusStrip1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "DeleteUnusedBranchesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -469,6 +469,7 @@
         private System.Windows.Forms.Panel pnlBranchesArea;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
         private System.Windows.Forms.DataGridViewCheckBoxColumn deleteDataGridViewCheckBoxColumn;
+        private DeleteUnusedBranches.DataGridViewCheckBoxHeaderCell checkBoxHeaderCell;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn Author;

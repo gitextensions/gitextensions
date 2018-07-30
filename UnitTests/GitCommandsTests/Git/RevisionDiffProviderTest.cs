@@ -21,19 +21,19 @@ namespace GitCommandsTests.Git
         }
 
 #if !DEBUG
-        // Testcases that should assert in debug; should not occur but undefined behavior that should be blocked in GUI
-        // Cannot compare unstaged to unstaged or staged to staged but give predictive output in release builds
+        // Test cases that should assert in debug; should not occur but undefined behavior that should be blocked in GUI
+        // Cannot compare worktree to worktree or index to index but give predictive output in release builds
 
         // Two empty parameters will compare working dir to index
         [TestCase(null)]
         [TestCase("")]
-        [TestCase(GitRevision.UnstagedGuid)]
-        public void RevisionDiffProvider_should_return_empty_if_To_is_UnstagedGuid(string firstRevision)
+        [TestCase(GitRevision.WorkTreeGuid)]
+        public void RevisionDiffProvider_should_return_empty_if_To_is_WorkTreeGuid(string firstRevision)
         {
-            _revisionDiffProvider.Get(firstRevision, GitRevision.UnstagedGuid).Should().BeEmpty();
+            _revisionDiffProvider.Get(firstRevision, GitRevision.WorkTreeGuid).Should().BeEmpty();
         }
 
-        // Two staged revisions gives duplicated options, no reason to clean
+        // Two index revisions gives duplicated options, no reason to clean
         [TestCase("^")]
         [TestCase(GitRevision.IndexGuid)]
         public void RevisionDiffProvider_should_return_cached_if_both_IndexGuid(string firstRevision)
@@ -50,38 +50,38 @@ namespace GitCommandsTests.Git
             Assert.Throws<ArgumentOutOfRangeException>(() => _revisionDiffProvider.Get(firstRevision, secondRevision));
         }
 
-        [TestCase(GitRevision.IndexGuid, GitRevision.UnstagedGuid)]
+        [TestCase(GitRevision.IndexGuid, GitRevision.WorkTreeGuid)]
         [TestCase("^", "")]
         [TestCase(GitRevision.IndexGuid, null)]
-        public void RevisionDiffProvider_staged_to_unstaged(string firstRevision, string secondRevision)
+        public void RevisionDiffProvider_index_to_worktree(string firstRevision, string secondRevision)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision).Should().BeEmpty();
         }
 
-        [TestCase(GitRevision.UnstagedGuid, GitRevision.IndexGuid)]
+        [TestCase(GitRevision.WorkTreeGuid, GitRevision.IndexGuid)]
         [TestCase("", "^")]
-        public void RevisionDiffProvider_unstaged_to_staged(string firstRevision, string secondRevision)
+        public void RevisionDiffProvider_worktree_to_index(string firstRevision, string secondRevision)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision).Should().Be("-R");
         }
 
-        [TestCase(GitRevision.UnstagedGuid + "^^")]
+        [TestCase(GitRevision.WorkTreeGuid + "^^")]
         [TestCase(GitRevision.IndexGuid + "^")]
         [TestCase("HEAD")]
-        public void RevisionDiffProvider_head_to_unstaged(string firstRevision)
+        public void RevisionDiffProvider_head_to_worktree(string firstRevision)
         {
-            _revisionDiffProvider.Get(firstRevision, GitRevision.UnstagedGuid).Should().Be("\"HEAD\"");
+            _revisionDiffProvider.Get(firstRevision, GitRevision.WorkTreeGuid).Should().Be("\"HEAD\"");
         }
 
         [TestCase(GitRevision.IndexGuid + "^", "^")]
         [TestCase("HEAD", GitRevision.IndexGuid)]
-        public void RevisionDiffProvider_head_to_staged(string firstRevision, string secondRevision)
+        public void RevisionDiffProvider_head_to_index(string firstRevision, string secondRevision)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision).Should().Be("--cached \"HEAD\"");
         }
 
         [TestCase(GitRevision.IndexGuid, "HEAD")]
-        public void RevisionDiffProvider_staged_to_head(string firstRevision, string secondRevision)
+        public void RevisionDiffProvider_index_to_head(string firstRevision, string secondRevision)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision).Should().Be("-R --cached \"HEAD\"");
         }
@@ -99,35 +99,35 @@ namespace GitCommandsTests.Git
         }
 
         // Standard usage when filename is included
-        [TestCase("123456789", GitRevision.UnstagedGuid, "a.txt", null, true)]
+        [TestCase("123456789", GitRevision.WorkTreeGuid, "a.txt", null, true)]
         public void RevisionDiffProvider_fileName_tracked(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
-            _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().Be("\"123456789\"  -- \"a.txt\"");
+            _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().Be("\"123456789\" -- \"a.txt\"");
         }
 
         // If fileName is null, ignore oldFileName and tracked
         [TestCase("123456789", "HEAD", null, "b.txt", true)]
-        public void RevisionDiffProvider_fileName_null_with_oldname(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
+        public void RevisionDiffProvider_fileName_null_with_old_name(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().Be("\"123456789\" \"HEAD\"");
         }
 
         // Include old filename if is included
         [TestCase("123456789", "234567890", "a.txt", "b.txt", true)]
-        public void RevisionDiffProvider_fileName_oldfilename(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
+        public void RevisionDiffProvider_fileName_old_filename(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().Be("\"123456789\" \"234567890\" -- \"a.txt\" \"b.txt\"");
         }
 
-        // normal testcase when untracked is set
-        [TestCase(GitRevision.IndexGuid, GitRevision.UnstagedGuid, "a.txt", null, false)]
+        // normal test case when untracked is set
+        [TestCase(GitRevision.IndexGuid, GitRevision.WorkTreeGuid, "a.txt", null, false)]
         public void RevisionDiffProvider_fileName_untracked(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().Be("--no-index -- \"/dev/null\" \"a.txt\"");
         }
 
         // If fileName is null, ignore oldFileName and tracked
-        [TestCase(GitRevision.IndexGuid, GitRevision.UnstagedGuid, null, "b.txt", false)]
+        [TestCase(GitRevision.IndexGuid, GitRevision.WorkTreeGuid, null, "b.txt", false)]
         public void RevisionDiffProvider_fileName_null_Untracked(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().BeEmpty();
@@ -135,7 +135,7 @@ namespace GitCommandsTests.Git
 
         // Ignore revisions for untracked
         [TestCase("123456789", "234567890", "a.txt", "b.txt", false)]
-        public void RevisionDiffProvider_fileName_oldfilename_Untracked(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
+        public void RevisionDiffProvider_fileName_old_filename_Untracked(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
             _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked).Should().Be("--no-index -- \"/dev/null\" \"a.txt\"");
         }

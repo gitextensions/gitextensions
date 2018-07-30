@@ -26,7 +26,7 @@ namespace VstsAndTfsIntegration.Settings
         public VstsAndTfsSettingsUserControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
             EnableRestApiLink();

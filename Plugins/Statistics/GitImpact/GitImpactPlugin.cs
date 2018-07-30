@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using GitImpact.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -11,6 +12,7 @@ namespace GitImpact
         {
             SetNameAndDescription("Impact Graph");
             Translate();
+            Icon = Resources.IconGitImpact;
         }
 
         #region IGitPlugin Members

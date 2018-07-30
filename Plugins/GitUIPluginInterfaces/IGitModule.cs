@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
@@ -12,7 +13,7 @@ namespace GitUIPluginInterfaces
         IConfigFileSettings LocalConfigFile { get; }
 
         string AddRemote(string remoteName, string path);
-        IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true, GitRefsOrder order = GitRefsOrder.ByLastAccessDate);
+        IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true);
         IEnumerable<string> GetSettings(string setting);
         IEnumerable<IGitItem> GetTree(string id, bool full);
 
@@ -91,22 +92,31 @@ namespace GitUIPluginInterfaces
         /// <summary>Indicates whether the specified directory contains a git repository.</summary>
         bool IsValidGitWorkingDir();
 
-        /// <summary>Indicates whether the repository is in a 'detached HEAD' state.</summary>
+        /// <summary>Indicates HEAD is not pointing to a branch (i.e. it is detached).</summary>
         bool IsDetachedHead();
 
-        bool IsExistingCommitHash(string sha1Fragment, out string fullSha1);
+        [ContractAnnotation("=>false,objectId:null")]
+        [ContractAnnotation("=>true,objectId:notnull")]
+        bool TryResolvePartialCommitId(string objectIdPrefix, out ObjectId objectId);
 
         /// <summary>Gets the path to the git application executable.</summary>
         string GitCommand { get; }
 
         Version AppVersion { get; }
 
-        string GravatarCacheDir { get; }
-
         string GetSubmoduleFullPath(string localPath);
 
         IEnumerable<IGitSubmoduleInfo> GetSubmodulesInfo();
 
+        /// <summary>
+        /// Gets the local paths of any submodules of this git module.
+        /// </summary>
+        /// <remarks>
+        /// <para>This method obtains its results by parsing the <c>.gitmodules</c> file.</para>
+        ///
+        /// <para>This approach is a faster than <see cref="GetSubmodulesInfo"/> which
+        /// invokes the <c>git submodule</c> command.</para>
+        /// </remarks>
         IReadOnlyList<string> GetSubmodulesLocalPaths(bool recursive = true);
 
         IGitModule GetSubmodule(string submoduleName);
@@ -115,7 +125,7 @@ namespace GitUIPluginInterfaces
         /// Retrieves registered remotes by running <c>git remote show</c> command.
         /// </summary>
         /// <returns>Registered remotes.</returns>
-        string[] GetRemotes(bool allowEmpty = true);
+        IReadOnlyList<string> GetRemoteNames();
 
         /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
         string GetCurrentRemote();
@@ -139,6 +149,6 @@ namespace GitUIPluginInterfaces
 
         string ReEncodeCommitMessage(string s, string toEncodingName);
 
-        string GetDescribe(string commit);
+        string GetDescribe(ObjectId commitId);
     }
 }

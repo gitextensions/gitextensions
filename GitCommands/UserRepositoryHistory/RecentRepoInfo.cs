@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace GitCommands.UserRepositoryHistory
 {
     public class RecentRepoInfo
     {
         public Repository Repo { get; set; }
-        public string Caption { get; set; }
+        [CanBeNull] public string Caption { get; set; }
         public bool MostRecent { get; set; }
-        public DirectoryInfo DirInfo { get; set; }
-        public string ShortName { get; set; }
+        [CanBeNull] public DirectoryInfo DirInfo { get; set; }
+        [CanBeNull] public string ShortName { get; set; }
         public string DirName { get; set; }
 
         public RecentRepoInfo(Repository repo, bool mostRecent)
@@ -40,20 +41,13 @@ namespace GitCommands.UserRepositoryHistory
 
         public bool FullPath => DirInfo == null;
 
-        public override string ToString()
-        {
-            return Repo.ToString();
-        }
+        public override string ToString() => Repo.ToString();
     }
 
     public class RecentRepoSplitter
     {
-        public static readonly string ShorteningStrategy_None = "";
-        public static readonly string ShorteningStrategy_MostSignDir = "MostSignDir";
-        public static readonly string ShorteningStrategy_MiddleDots = "MiddleDots";
-
         public int MaxRecentRepositories { get; set; }
-        public string ShorteningStrategy { get; set; }
+        public ShorteningRecentRepoPathStrategy ShorteningStrategy { get; set; }
         public bool SortMostRecentRepos { get; set; }
         public bool SortLessRecentRepos { get; set; }
         public int RecentReposComboMinWidth { get; set; }
@@ -77,8 +71,8 @@ namespace GitCommands.UserRepositoryHistory
             var mostRecentRepos = new List<RecentRepoInfo>();
             var lessRecentRepos = new List<RecentRepoInfo>();
 
-            bool middleDot = ShorteningStrategy == ShorteningStrategy_MiddleDots;
-            bool signDir = ShorteningStrategy == ShorteningStrategy_MostSignDir;
+            var middleDot = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MiddleDots;
+            var signDir = ShorteningStrategy == ShorteningRecentRepoPathStrategy.MostSignDir;
 
             int n = Math.Min(MaxRecentRepositories, recentRepositories.Count);
 
@@ -88,7 +82,7 @@ namespace GitCommands.UserRepositoryHistory
             {
                 bool mostRecent = (mostRecentRepos.Count < n && repository.Anchor == Repository.RepositoryAnchor.None) ||
                     repository.Anchor == Repository.RepositoryAnchor.MostRecent;
-                RecentRepoInfo ri = new RecentRepoInfo(repository, mostRecent);
+                var ri = new RecentRepoInfo(repository, mostRecent);
                 if (ri.MostRecent)
                 {
                     mostRecentRepos.Add(ri);
@@ -105,6 +99,11 @@ namespace GitCommands.UserRepositoryHistory
                 else
                 {
                     AddToOrderedSignDir(orderedRepos, ri, signDir);
+                }
+
+                if (ri.Caption != null)
+                {
+                    ri.Caption = PathUtil.GetDisplayPath(ri.Caption);
                 }
             }
 
@@ -190,7 +189,7 @@ namespace GitCommands.UserRepositoryHistory
                 orderedRepos.Add(repoInfo.Caption, list);
             }
 
-            List<RecentRepoInfo> tmpList = new List<RecentRepoInfo>();
+            var tmpList = new List<RecentRepoInfo>();
             if (existsShortName)
             {
                 for (int i = list.Count - 1; i >= 0; i--)
@@ -243,7 +242,7 @@ namespace GitCommands.UserRepositoryHistory
                     dirInfo = null;
                 }
             }
-            catch (Exception)
+            catch
             {
                 dirInfo = null;
             }

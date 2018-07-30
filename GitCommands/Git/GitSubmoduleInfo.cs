@@ -9,17 +9,17 @@ namespace GitCommands
         [NotNull] public string Name { get; }
         [NotNull] public string LocalPath { get; }
         [NotNull] public string RemotePath { get; }
-        [NotNull] public string CurrentCommitGuid { get; }
+        [NotNull] public ObjectId CurrentCommitId { get; }
         [NotNull] public string Branch { get; }
         public bool IsInitialized { get; }
         public bool IsUpToDate { get; }
 
-        public GitSubmoduleInfo([NotNull] string name, [NotNull] string localPath, [NotNull] string remotePath, [NotNull] string currentCommitGuid, [NotNull] string branch, bool isInitialized, bool isUpToDate)
+        public GitSubmoduleInfo([NotNull] string name, [NotNull] string localPath, [NotNull] string remotePath, [NotNull] ObjectId currentCommitGuid, [NotNull] string branch, bool isInitialized, bool isUpToDate)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             LocalPath = localPath ?? throw new ArgumentNullException(nameof(localPath));
             RemotePath = remotePath ?? throw new ArgumentNullException(nameof(remotePath));
-            CurrentCommitGuid = currentCommitGuid ?? throw new ArgumentNullException(nameof(currentCommitGuid));
+            CurrentCommitId = currentCommitGuid ?? throw new ArgumentNullException(nameof(currentCommitGuid));
             Branch = branch ?? throw new ArgumentNullException(nameof(branch));
             IsInitialized = isInitialized;
             IsUpToDate = isUpToDate;

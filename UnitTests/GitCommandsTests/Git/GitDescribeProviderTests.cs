@@ -23,10 +23,9 @@ namespace GitCommandsTests.Git
         [Test]
         public void GitDescribeProvider_returns_nulls_for_invalid_revision()
         {
-            // xxxxxx is not a valid revision.
-            // RunGitCmd returns "fatal: Not a valid object name xxxxxx"
-            _module.GetDescribe("xxxxxx").Returns(x => null);
-            var (precedingTag, commitCount) = _provider.Get("xxxxxx");
+            var commitId = ObjectId.Random();
+            _module.GetDescribe(commitId).Returns(x => null);
+            var (precedingTag, commitCount) = _provider.Get(commitId);
 
             precedingTag.Should().BeNullOrEmpty();
             commitCount.Should().BeNullOrEmpty();
@@ -37,8 +36,9 @@ namespace GitCommandsTests.Git
         {
             // 33f0bc7f021210eb4bf49f770b5fc5952dfd41c2 predates tag 0.90 by 1 commit.
             // RunGitCmd returns "fatal: No tags can describe '33f0bc7f021210eb4bf49f770b5fc5952dfd41c2'.\r\nTry --always, or create some tags."
-            _module.GetDescribe("33f0bc7f021210eb4bf49f770b5fc5952dfd41c2").Returns(x => null);
-            var (precedingTag, commitCount) = _provider.Get("33f0bc7f021210eb4bf49f770b5fc5952dfd41c2");
+            var commitId = ObjectId.Parse("33f0bc7f021210eb4bf49f770b5fc5952dfd41c2");
+            _module.GetDescribe(commitId).Returns(x => null);
+            var (precedingTag, commitCount) = _provider.Get(commitId);
 
             precedingTag.Should().BeNullOrEmpty();
             commitCount.Should().BeNullOrEmpty();
@@ -48,8 +48,9 @@ namespace GitCommandsTests.Git
         public void GitDescribeProvider_returns_null_commitCount_at_tag()
         {
             // 943d230ba465d86c3ad2cd00f7e8c508d144d9a5 is the commit at tag 0.90.
-            _module.GetDescribe("943d230ba465d86c3ad2cd00f7e8c508d144d9a5").Returns("0.90");
-            var (precedingTag, commitCount) = _provider.Get("943d230ba465d86c3ad2cd00f7e8c508d144d9a5");
+            var commitId = ObjectId.Parse("943d230ba465d86c3ad2cd00f7e8c508d144d9a5");
+            _module.GetDescribe(commitId).Returns("0.90");
+            var (precedingTag, commitCount) = _provider.Get(commitId);
 
             precedingTag.Should().Be("0.90");
             commitCount.Should().BeNullOrEmpty();
@@ -59,8 +60,9 @@ namespace GitCommandsTests.Git
         public void GitDescribeProvider_returns_precedingTag_and_commitCount()
         {
             // 16dc9d22d986f9ca03f6ec24007d65e6c062840e comes after tag 0.90 by 2 commits.
-            _module.GetDescribe("16dc9d22d986f9ca03f6ec24007d65e6c062840e").Returns("0.90-2-g16dc9d22d");
-            var (precedingTag, commitCount) = _provider.Get("16dc9d22d986f9ca03f6ec24007d65e6c062840e");
+            var commitId = ObjectId.Parse("16dc9d22d986f9ca03f6ec24007d65e6c062840e");
+            _module.GetDescribe(commitId).Returns("0.90-2-g16dc9d22d986f9ca03f6ec24007d65e6c062840e");
+            var (precedingTag, commitCount) = _provider.Get(commitId);
 
             precedingTag.Should().Be("0.90");
             commitCount.Should().Be("2");
@@ -71,7 +73,7 @@ namespace GitCommandsTests.Git
         {
             _module = null;
 
-            ((Action)(() => _provider.Get("xx"))).Should().Throw<ArgumentException>();
+            ((Action)(() => _provider.Get(ObjectId.Random()))).Should().Throw<ArgumentException>();
         }
     }
 }

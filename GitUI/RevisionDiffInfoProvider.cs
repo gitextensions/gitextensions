@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using GitCommands;
+using JetBrains.Annotations;
 
 namespace GitUI
 {
@@ -14,11 +15,18 @@ namespace GitUI
         /// A - first selected row
         /// B - second selected row
         /// </summary>
-        public static string Get(IReadOnlyList<GitRevision> revisions, RevisionDiffKind diffKind,
-            out string extraDiffArgs, out string firstRevision, out string secondRevision)
+        [ContractAnnotation("revisions:null=>false,extraDiffArgs:null,firstRevision:null,secondRevision:null,error:notnull")]
+        [ContractAnnotation("=>false,extraDiffArgs:null,firstRevision:null,secondRevision:null,error:notnull")]
+        [ContractAnnotation("=>true,extraDiffArgs:notnull,firstRevision:notnull,secondRevision:notnull,error:null")]
+        public static bool TryGet(
+            IReadOnlyList<GitRevision> revisions,
+            RevisionDiffKind diffKind,
+            out string extraDiffArgs,
+            out string firstRevision,
+            out string secondRevision,
+            out string error)
         {
-            // Note: Order in revisions is that first clicked is last in array
-            string error = "";
+            // NOTE Order in revisions is that first clicked is last in array
 
             // Detect rename and copy
             extraDiffArgs = "-M -C";
@@ -28,30 +36,30 @@ namespace GitUI
                 error = "Unexpected null revision argument to difftool";
                 firstRevision = null;
                 secondRevision = null;
+                return false;
             }
-            else if (revisions.Count == 0 || revisions.Count > 2)
+
+            if (revisions.Count == 0 || revisions.Count > 2)
             {
                 error = "Unexpected number of arguments to difftool: " + revisions.Count;
                 firstRevision = null;
                 secondRevision = null;
+                return false;
             }
-            else if (revisions[0] == null || (revisions.Count > 1 && revisions[1] == null))
+
+            if (revisions[0] == null || (revisions.Count == 2 && revisions[1] == null))
             {
                 error = "Unexpected single null argument to difftool";
                 firstRevision = null;
                 secondRevision = null;
+                return false;
             }
-            else if (diffKind == RevisionDiffKind.DiffAB)
-            {
-                if (revisions.Count == 1)
-                {
-                    firstRevision = revisions[0].FirstParentGuid ?? revisions[0].Guid + '^';
-                }
-                else
-                {
-                    firstRevision = revisions[1].Guid;
-                }
 
+            if (diffKind == RevisionDiffKind.DiffAB)
+            {
+                firstRevision = revisions.Count == 1
+                    ? GetParentRef(revisions[0])
+                    : revisions[1].Guid;
                 secondRevision = revisions[0].Guid;
             }
             else
@@ -65,45 +73,48 @@ namespace GitUI
                 }
                 else if (diffKind == RevisionDiffKind.DiffBParentLocal)
                 {
-                    firstRevision = revisions[0].FirstParentGuid ?? revisions[0].Guid + '^';
+                    firstRevision = GetParentRef(revisions[0]);
                 }
-                else
+                else if (revisions.Count == 1)
                 {
-                    firstRevision = revisions[0].Guid;
-                    if (revisions.Count == 1)
+                    if (diffKind == RevisionDiffKind.DiffALocal)
                     {
-                        if (diffKind == RevisionDiffKind.DiffALocal)
-                        {
-                            firstRevision = revisions[0].FirstParentGuid ?? revisions[0].Guid + '^';
-                        }
-                        else if (diffKind == RevisionDiffKind.DiffAParentLocal)
-                        {
-                            firstRevision = (revisions[0].FirstParentGuid ?? revisions[0].Guid + '^') + "^";
-                        }
-                        else
-                        {
-                            error = "Unexpected arg to difftool with one revision: " + diffKind;
-                        }
+                        firstRevision = GetParentRef(revisions[0]);
+                    }
+                    else if (diffKind == RevisionDiffKind.DiffAParentLocal)
+                    {
+                        firstRevision = GetParentRef(revisions[0]) + "^";
                     }
                     else
                     {
-                        if (diffKind == RevisionDiffKind.DiffALocal)
-                        {
-                            firstRevision = revisions[1].Guid;
-                        }
-                        else if (diffKind == RevisionDiffKind.DiffAParentLocal)
-                        {
-                            firstRevision = revisions[1].FirstParentGuid ?? revisions[1].Guid + '^';
-                        }
-                        else
-                        {
-                            error = "Unexpected arg to difftool with two revisions: " + diffKind;
-                        }
+                        firstRevision = null;
+                        error = "Unexpected arg to difftool with one revision: " + diffKind;
+                        return false;
                     }
+                }
+                else if (diffKind == RevisionDiffKind.DiffALocal)
+                {
+                    firstRevision = revisions[1].Guid;
+                }
+                else if (diffKind == RevisionDiffKind.DiffAParentLocal)
+                {
+                    firstRevision = GetParentRef(revisions[1]);
+                }
+                else
+                {
+                    firstRevision = null;
+                    error = "Unexpected arg to difftool with two revisions: " + diffKind;
+                    return false;
                 }
             }
 
-            return error;
+            error = null;
+            return true;
+
+            string GetParentRef(GitRevision revision)
+            {
+                return revision.FirstParentGuid?.ToString() ?? revision.Guid + '^';
+            }
         }
     }
 }

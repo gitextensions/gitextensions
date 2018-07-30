@@ -15,8 +15,8 @@ namespace GitCommands
     /// </summary>
     public sealed class StringPool
     {
-        private object[] _buckets = new object[4];
-        private int _capacity = 3;
+        private object[] _buckets = new object[2048];
+        private int _capacity = 1536;
 
         /// <summary>
         /// Gets the number of items unique strings in the pool.
@@ -38,7 +38,7 @@ namespace GitCommands
 
             if (bucket is string s)
             {
-                if (EqualsAtIndex(source, index, s))
+                if (s.Length == length && EqualsAtIndex(source, index, s))
                 {
                     return s;
                 }
@@ -86,28 +86,29 @@ namespace GitCommands
             _capacity *= 2;
 
             var newBuckets = new object[_buckets.Length * 2];
+            var lists = new Stack<List<string>>();
 
             for (var i = 0; i < _buckets.Length; i++)
             {
-                var entry = _buckets[i];
-
-                if (entry == null)
-                {
-                    continue;
-                }
-
-                switch (entry)
+                switch (_buckets[i])
                 {
                     case string s:
+                    {
                         HashString(s);
                         break;
+                    }
+
                     case List<string> list:
+                    {
                         for (var j = 0; j < list.Count; j++)
                         {
                             HashString(list[j]);
                         }
 
+                        list.Clear();
+                        lists.Push(list);
                         break;
+                    }
                 }
             }
 
@@ -116,26 +117,56 @@ namespace GitCommands
             void HashString(string s)
             {
                 var hash = GetSubstringHashCode(s, 0, s.Length);
-                var newPos = Math.Abs(hash % newBuckets.Length);
-                var newBucket = newBuckets[newPos];
+                var index = Math.Abs(hash % newBuckets.Length);
 
-                switch (newBucket)
+                switch (newBuckets[index])
                 {
                     case null:
-                        newBuckets[newPos] = s;
+                    {
+                        newBuckets[index] = s;
                         break;
+                    }
+
+                    case string old when lists.Count != 0:
+                    {
+                        var list = lists.Pop();
+                        list.Add(old);
+                        list.Add(s);
+                        newBuckets[index] = list;
+                        break;
+                    }
+
                     case string old:
-                        newBuckets[newPos] = new List<string>(2) { old, s };
+                    {
+                        newBuckets[index] = new List<string>(2) { old, s };
                         break;
+                    }
+
                     case List<string> list:
+                    {
                         list.Add(s);
                         break;
+                    }
                 }
             }
         }
 
         #region Zero-allocation equality and hashing from substrings
 
+        /// <summary>
+        /// Determines whether <paramref name="comparand"/> exists at <paramref name="index"/> in <paramref name="source"/>.
+        /// </summary>
+        /// <remarks>
+        /// <para>Any content within <paramref name="source"/> outside of the range denoted by <paramref name="index"/>
+        /// and length of <paramref name="comparand"/> is ignored.</para>
+        /// <para>This method performs no allocation.</para>
+        /// </remarks>
+        /// <param name="source">The string to search in for <paramref name="comparand"/>.</param>
+        /// <param name="index">The offset within <paramref name="source"/> at which to start looking for <paramref name="comparand"/>.</param>
+        /// <param name="comparand">The string to search for in <paramref name="source"/>.</param>
+        /// <returns><c>true</c> if the string is found at the required position, otherwise <c>false</c>.</returns>
+        /// <exception cref="InvalidOperationException"><paramref name="comparand"/> at <paramref name="index"/> would extend beyond the
+        /// range of <paramref name="source"/>.</exception>
         [Pure]
         internal static unsafe bool EqualsAtIndex(string source, int index, string comparand)
         {

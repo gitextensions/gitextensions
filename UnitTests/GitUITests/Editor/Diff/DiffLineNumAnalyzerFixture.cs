@@ -11,7 +11,7 @@ namespace GitUITests.Editor.Diff
     {
         private static readonly string TestDataDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "Editor", "Diff");
         private readonly string _sampleDiff;
-        private readonly string _sampleCombindedDiff;
+        private readonly string _sampleCombinedDiff;
         private DiffLineNumAnalyzer _lineNumAnalyzer;
 
         public TestDiffLineNumAnalyzer()
@@ -19,7 +19,7 @@ namespace GitUITests.Editor.Diff
             // File copied from https://github.com/libgit2/libgit2sharp/pull/1034/files
             _sampleDiff = File.ReadAllText(Path.Combine(TestDataDir, "Sample.diff"));
 
-            _sampleCombindedDiff = File.ReadAllText(Path.Combine(TestDataDir, "SampleCombined.diff"));
+            _sampleCombinedDiff = File.ReadAllText(Path.Combine(TestDataDir, "SampleCombined.diff"));
         }
 
         [SetUp]
@@ -88,7 +88,7 @@ namespace GitUITests.Editor.Diff
         [Test]
         public void CanGetLineNumbersForCombinedDiff()
         {
-            var result = _lineNumAnalyzer.Analyze(_sampleCombindedDiff);
+            var result = _lineNumAnalyzer.Analyze(_sampleCombinedDiff);
 
             result.LineNumbers[6].LeftLineNum.Should().Be(DiffLineNum.NotApplicableLineNum);
             result.LineNumbers[6].RightLineNum.Should().Be(70);

@@ -62,7 +62,7 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy
                     Repositories = new List<Repository>(
                         new[]
                         {
-                            new Repository { Title = "Git Extenions", Path = "C:\\Development\\gitextensions\\", Description = "Mega project!", Anchor = "MostRecent" }
+                            new Repository { Title = "Git Extensions", Path = "C:\\Development\\gitextensions\\", Description = "Mega project!", Anchor = "MostRecent" }
                         }),
                     CategoryType = "Repositories",
                     Description = "Test"

@@ -37,8 +37,8 @@ namespace GitUI.CommandsDialogs
 
                 static LostObjectsComparer()
                 {
-                    AddSortableProperty(lostObject => lostObject.RawType, (x, y) => string.Compare(x.RawType, y.RawType, StringComparison.CurrentCulture));
-                    AddSortableProperty(lostObject => lostObject.Hash, (x, y) => string.Compare(x.Hash, y.Hash, StringComparison.InvariantCulture));
+                    AddSortableProperty(lostObject => lostObject.RawType, (x, y) => string.Compare(x.RawType, y.RawType, StringComparison.Ordinal));
+                    AddSortableProperty(lostObject => lostObject.ObjectId, (x, y) => x.ObjectId.CompareTo(y.ObjectId));
                     AddSortableProperty(lostObject => lostObject.Author, (x, y) => string.Compare(x.Author, y.Author, StringComparison.CurrentCulture));
                     AddSortableProperty(lostObject => lostObject.Date, (x, y) => x.Date.HasValue && y.Date.HasValue
                         ? DateTime.Compare(x.Date.Value, y.Date.Value)

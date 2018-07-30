@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI
@@ -46,7 +47,7 @@ namespace GitUI
         public FindAndReplaceForm()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             _search = new TextEditorSearcher();
 
             ShowInTaskbar = false;
@@ -141,6 +142,7 @@ namespace GitUI
             await FindNextAsync(false, false, _textNotFoundString.Text);
         }
 
+        [ItemCanBeNull]
         public async Task<TextRange> FindNextAsync(bool viaF3, bool searchBackward, string messageIfNotFound)
         {
             if (string.IsNullOrEmpty(txtLookFor.Text))
@@ -561,6 +563,7 @@ namespace GitUI
             return false;
         }
 
+        [CanBeNull]
         private TextRange FindNextIn(int offset1, int offset2, bool searchBackward)
         {
             Debug.Assert(offset2 >= offset1, "offset2 >= offset1");

@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         private void FormGoToCommit_Load(object sender, EventArgs e)
@@ -70,7 +70,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void LoadTagsAsync()
         {
-            comboBoxTags.Text = Strings.GetLoadingData();
+            comboBoxTags.Text = Strings.LoadingData;
             ThreadHelper.JoinableTaskFactory.RunAsync(() =>
             {
                 return _tagsLoader.LoadAsync(
@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void LoadBranchesAsync()
         {
-            comboBoxBranches.Text = Strings.GetLoadingData();
+            comboBoxBranches.Text = Strings.LoadingData;
             ThreadHelper.JoinableTaskFactory.RunAsync(() =>
             {
                 return _branchesLoader.LoadAsync(

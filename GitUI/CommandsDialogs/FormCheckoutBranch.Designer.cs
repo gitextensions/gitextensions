@@ -186,6 +186,7 @@ namespace GitUI.CommandsDialogs
             this.Branches.Location = new System.Drawing.Point(92, 24);
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(433, 21);
+            this.Branches.DropDownStyle = ComboBoxStyle.DropDownList;
             this.Branches.TabIndex = 3;
             this.Branches.SelectedIndexChanged += new System.EventHandler(this.Branches_SelectedIndexChanged);
             // 

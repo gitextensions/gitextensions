@@ -2,7 +2,9 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
 using GitExtUtils.GitUI;
+using ResourceManager;
 
 namespace GitUI.Script
 {
@@ -14,6 +16,7 @@ namespace GitUI.Script
         {
             InitializeComponent();
             Translate();
+            InitializeComplete();
         }
 
         protected override void OnRuntimeLoad(EventArgs e)
@@ -60,6 +63,11 @@ namespace GitUI.Script
             }
 
             Close();
+        }
+
+        private void Translate()
+        {
+            Translator.Translate(this, AppSettings.CurrentTranslation);
         }
     }
 }

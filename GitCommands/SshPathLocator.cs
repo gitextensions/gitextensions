@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -43,6 +44,7 @@ namespace GitCommands
             return ssh ?? "";
         }
 
+        [CanBeNull]
         private string GetSshFromGitDir(string gitBinDirectory)
         {
             if (string.IsNullOrEmpty(gitBinDirectory))
@@ -60,7 +62,7 @@ namespace GitCommands
 
                 return _fileSystem.Directory.EnumerateFiles(gitDirInfo.FullName, "ssh.exe", SearchOption.AllDirectories).FirstOrDefault();
             }
-            catch (Exception)
+            catch
             {
                 return null;
             }

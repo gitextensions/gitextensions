@@ -10,7 +10,7 @@ namespace GitCommands
     /// </summary>
     public static class GitCommandCache
     {
-        private struct CacheItem
+        private readonly struct CacheItem
         {
             public CacheItem(byte[] output, byte[] error)
             {

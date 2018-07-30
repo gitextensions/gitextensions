@@ -19,30 +19,30 @@ namespace GitUITests
             // just reference to GitUI
             MouseWheelRedirector.Active = true;
 
-            var translatableTypes = TranslationUtl.GetTranslatableTypes();
+            var translatableTypes = TranslationUtil.GetTranslatableTypes();
 
             var testTranslation = new Dictionary<string, TranslationFile>();
 
             foreach (var (key, types) in translatableTypes)
             {
-                var tranlation = new TranslationFile();
+                var translation = new TranslationFile();
                 foreach (Type type in types)
                 {
                     try
                     {
-                        var obj = (ITranslate)TranslationUtl.CreateInstanceOfClass(type);
+                        var obj = (ITranslate)TranslationUtil.CreateInstanceOfClass(type);
 
-                        obj.AddTranslationItems(tranlation);
-                        obj.TranslateItems(tranlation);
+                        obj.AddTranslationItems(translation);
+                        obj.TranslateItems(translation);
                     }
-                    catch (Exception)
+                    catch
                     {
                         Trace.WriteLine("Problem with class: " + type.FullName);
                         throw;
                     }
                 }
 
-                testTranslation[key] = tranlation;
+                testTranslation[key] = translation;
             }
         }
     }

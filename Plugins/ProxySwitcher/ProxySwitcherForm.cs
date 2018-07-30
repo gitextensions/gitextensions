@@ -32,7 +32,7 @@ namespace ProxySwitcher
         public ProxySwitcherForm(ProxySwitcherPlugin plugin, ISettingsSource settings, GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             Text = _pluginDescription.Text;
             _plugin = plugin;
@@ -97,11 +97,11 @@ namespace ProxySwitcher
 
         private void SetProxy_Button_Click(object sender, EventArgs e)
         {
-            var httpproxy = BuildHttpProxy();
+            var httpProxy = BuildHttpProxy();
 
             var arguments = ApplyGlobally_CheckBox.Checked
-                ? $"config --global http.proxy {httpproxy}"
-                : $"config http.proxy {httpproxy}";
+                ? $"config --global http.proxy {httpProxy}"
+                : $"config http.proxy {httpProxy}";
 
             _gitCommands.RunGitCmd(arguments);
 

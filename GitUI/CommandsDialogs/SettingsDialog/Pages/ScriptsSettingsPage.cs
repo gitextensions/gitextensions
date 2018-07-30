@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -6,6 +7,7 @@ using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Script;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -13,6 +15,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     public partial class ScriptsSettingsPage : SettingsPageWithHeader
     {
         #region translation
+
         private readonly TranslationString _scriptSettingsPageHelpDisplayArgumentsHelp = new TranslationString("Arguments help");
         private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new TranslationString(@"User Input:
 {UserInput}
@@ -53,7 +56,8 @@ Current Branch:
 {cDefaultRemote}
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}");
-        #endregion translation
+
+        #endregion
 
         private string _iconName = "bug";
 
@@ -62,7 +66,7 @@ Current Branch:
             InitializeComponent();
             HotkeyCommandIdentifier.Width = DpiUtil.Scale(39);
             Text = "Scripts";
-            Translate();
+            InitializeComplete();
 
             HotkeyCommandIdentifier.DataPropertyName = nameof(ScriptInfo.HotkeyCommandIdentifier);
             EnabledColumn.DataPropertyName = nameof(ScriptInfo.Enabled);
@@ -77,7 +81,7 @@ Current Branch:
             if (EnvUtils.RunningOnWindows())
             {
                 System.Resources.ResourceManager rm =
-                    new System.Resources.ResourceManager("GitUI.Properties.Resources",
+                    new System.Resources.ResourceManager("GitUI.Properties.Images",
                                 System.Reflection.Assembly.GetExecutingAssembly());
 
                 // dummy request; for some strange reason the ResourceSets are not loaded untill after the first object request... bug?
@@ -87,6 +91,7 @@ Current Branch:
 
                 contextMenuStrip_SplitButton.Items.Clear();
 
+                var iconItems = new List<ToolStripItem>();
                 foreach (System.Collections.DictionaryEntry icon in resourceSet)
                 {
                     // add entry to toolstrip
@@ -96,10 +101,11 @@ Current Branch:
                     }
                     else if (icon.Value is Bitmap bitmap)
                     {
-                        contextMenuStrip_SplitButton.Items.Add(icon.Key.ToString(), bitmap, SplitButtonMenuItem_Click);
+                        iconItems.Add(new ToolStripMenuItem(icon.Key.ToString(), bitmap, SplitButtonMenuItem_Click));
                     }
-                    ////var aa = icon.Value.GetType();
                 }
+
+                contextMenuStrip_SplitButton.Items.AddRange(iconItems.OrderBy(i => i.Text).ToArray());
 
                 resourceSet.Close();
                 rm.ReleaseAllResources();
@@ -315,6 +321,7 @@ Current Branch:
             return ResizeBitmap(b, 12, 12);
         }
 
+        [CanBeNull]
         public Bitmap ResizeBitmap(Bitmap b, int width, int height)
         {
             if (b == null)
@@ -322,7 +329,7 @@ Current Branch:
                 return null;
             }
 
-            Bitmap result = new Bitmap(width, height);
+            var result = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage(result))
             {
                 g.DrawImage(b, 0, 0, width, height);

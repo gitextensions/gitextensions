@@ -7,7 +7,9 @@ using System.Xml.Serialization;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.ExternalLinks;
-using GitCommands.Remote;
+using GitCommands.Remotes;
+using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -24,9 +26,9 @@ namespace GitCommandsTests.ExternalLinks
         [SetUp]
         public void Setup()
         {
-            _linkDef = Parse(GetGithubIssuesXmlDef()).First();
+            _linkDef = Parse(GetGitHubIssuesXmlDef()).First();
 
-            _revision = new GitRevision("");
+            _revision = new GitRevision(ObjectId.Random());
 
             _remoteManager = Substitute.For<IGitRemoteManager>();
             _remoteManager.LoadRemotes(false).Returns(GetDefaultRemotes());
@@ -35,16 +37,12 @@ namespace GitCommandsTests.ExternalLinks
         }
 
         [Test]
-        public void ParseGithubIssueForUpstreamLink()
+        public void ParseGitHubIssueForUpstreamLink()
         {
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IEnumerable<ExternalLink> expectedLinks = new[]
+            var expectedLinks = new[]
             {
-                new ExternalLink
-                {
-                    Caption = "Issue 3657",
-                    URI = "https://github.com/gitextensions/gitextensions/issues/3657"
-                }
+                new ExternalLink("Issue 3657", "https://github.com/gitextensions/gitextensions/issues/3657")
             };
 
             var actualLinks = _parser.Parse(_revision, _linkDef);
@@ -52,17 +50,13 @@ namespace GitCommandsTests.ExternalLinks
         }
 
         [Test]
-        public void ParseGithubIssueForOriginLink()
+        public void ParseGitHubIssueForOriginLink()
         {
             _linkDef.UseRemotesPattern = "origin|upstream";
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IEnumerable<ExternalLink> expectedLinks = new[]
+            var expectedLinks = new[]
             {
-                new ExternalLink
-                {
-                    Caption = "Issue 3657",
-                    URI = "https://github.com/jbialobr/gitextensions/issues/3657"
-                }
+                new ExternalLink("Issue 3657", "https://github.com/jbialobr/gitextensions/issues/3657")
             };
 
             var actualLinks = _parser.Parse(_revision, _linkDef);
@@ -70,22 +64,14 @@ namespace GitCommandsTests.ExternalLinks
         }
 
         [Test]
-        public void ParseGithubIssueForUpstreamAndOriginLink()
+        public void ParseGitHubIssueForUpstreamAndOriginLink()
         {
             _linkDef.UseOnlyFirstRemote = false;
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IEnumerable<ExternalLink> expectedLinks = new[]
+            var expectedLinks = new[]
             {
-                new ExternalLink
-                {
-                    Caption = "Issue 3657",
-                    URI = "https://github.com/gitextensions/gitextensions/issues/3657"
-                },
-                new ExternalLink
-                {
-                    Caption = "Issue 3657",
-                    URI = "https://github.com/jbialobr/gitextensions/issues/3657"
-                }
+                new ExternalLink("Issue 3657", "https://github.com/gitextensions/gitextensions/issues/3657"),
+                new ExternalLink("Issue 3657", "https://github.com/jbialobr/gitextensions/issues/3657")
             };
 
             var actualLinks = _parser.Parse(_revision, _linkDef);
@@ -93,28 +79,16 @@ namespace GitCommandsTests.ExternalLinks
         }
 
         [Test]
-        public void ParseGithubIssueForAllRemotesLink()
+        public void ParseGitHubIssueForAllRemotesLink()
         {
             _linkDef.UseRemotesPattern = string.Empty;
             _linkDef.UseOnlyFirstRemote = false;
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IEnumerable<ExternalLink> expectedLinks = new[]
+            var expectedLinks = new[]
             {
-                new ExternalLink
-                {
-                    Caption = "Issue 3657",
-                    URI = "https://github.com/jbialobr/gitextensions/issues/3657"
-                },
-                new ExternalLink
-                {
-                    Caption = "Issue 3657",
-                    URI = "https://github.com/gitextensions/gitextensions/issues/3657"
-                },
-                new ExternalLink
-                {
-                    Caption = "Issue 3657",
-                    URI = "https://github.com/russkie/gitextensions/issues/3657"
-                }
+                new ExternalLink("Issue 3657", "https://github.com/jbialobr/gitextensions/issues/3657"),
+                new ExternalLink("Issue 3657", "https://github.com/gitextensions/gitextensions/issues/3657"),
+                new ExternalLink("Issue 3657", "https://github.com/russkie/gitextensions/issues/3657")
             };
 
             var actualLinks = _parser.Parse(_revision, _linkDef);
@@ -126,13 +100,9 @@ namespace GitCommandsTests.ExternalLinks
         {
             _linkDef = Parse(GetEmptyRemotePartXmlDef()).First();
             _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-            IEnumerable<ExternalLink> expectedLinks = new[]
+            var expectedLinks = new[]
             {
-                new ExternalLink
-                {
-                    Caption = "Issue 3657",
-                    URI = "https://github.com/gitextensions/gitextensions/issues/3657"
-                }
+                new ExternalLink("Issue 3657", "https://github.com/gitextensions/gitextensions/issues/3657")
             };
 
             var actualLinks = _parser.Parse(_revision, _linkDef);
@@ -163,6 +133,7 @@ namespace GitCommandsTests.ExternalLinks
             return remotes;
         }
 
+        [CanBeNull]
         private static IReadOnlyList<ExternalLinkDefinition> Parse(string xml)
         {
             var serializer = new XmlSerializer(typeof(List<ExternalLinkDefinition>));
@@ -175,7 +146,7 @@ namespace GitCommandsTests.ExternalLinks
             }
         }
 
-        private static string GetGithubIssuesXmlDef()
+        private static string GetGitHubIssuesXmlDef()
         {
             return @"<?xml version=""1.0"" ?>
 <ArrayOfGitExtLinkDef>

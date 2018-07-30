@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs
         {
             _gitModuleChanged = gitModuleChanged;
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             _openedFromProtocolHandler = openedFromProtocolHandler;
             _url = url;
             _defaultBranchItems = new[] { _branchDefaultRemoteHead.Text, _branchNone.Text };
@@ -85,7 +85,7 @@ namespace GitUI.CommandsDialogs
             else
             {
                 // Try to be more helpful to the user.
-                // Use the cliboard text as a potential source URL.
+                // Use the clipboard text as a potential source URL.
                 try
                 {
                     if (Clipboard.ContainsText(TextDataFormat.Text))
@@ -99,7 +99,7 @@ namespace GitUI.CommandsDialogs
                         }
                     }
                 }
-                catch (Exception)
+                catch
                 {
                     // We tried.
                 }
@@ -111,7 +111,7 @@ namespace GitUI.CommandsDialogs
                     var currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
                     if (currentBranchRemote.IsNullOrEmpty())
                     {
-                        var remotes = Module.GetRemotes();
+                        var remotes = Module.GetRemoteNames();
 
                         if (remotes.Any(s => s.Equals("origin", StringComparison.InvariantCultureIgnoreCase)))
                         {
@@ -139,9 +139,9 @@ namespace GitUI.CommandsDialogs
                             _NO_TRANSLATE_To.Text = Path.GetDirectoryName(Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar));
                         }
                     }
-                    catch (Exception)
+                    catch
                     {
-                        // Exceptions on setting the destination directory can be ingnored
+                        // Exceptions on setting the destination directory can be ignored
                     }
                 }
             }
@@ -269,7 +269,7 @@ namespace GitUI.CommandsDialogs
                 if (_openedFromProtocolHandler && AskIfNewRepositoryShouldBeOpened(dirTo))
                 {
                     Hide();
-                    GitUICommands uiCommands = new GitUICommands(dirTo);
+                    var uiCommands = new GitUICommands(dirTo);
                     uiCommands.StartBrowseDialog();
                 }
                 else if (ShowInTaskbar == false && _gitModuleChanged != null &&
@@ -435,9 +435,9 @@ namespace GitUI.CommandsDialogs
             else
             {
                 string text = _NO_TRANSLATE_Branches.Text;
-                List<string> branchlist = _defaultBranchItems.Concat(branchList.Result.Select(o => o.LocalName)).ToList();
-                _NO_TRANSLATE_Branches.DataSource = branchlist;
-                if (branchlist.Any(a => a == text))
+                List<string> names = _defaultBranchItems.Concat(branchList.Result.Select(o => o.LocalName)).ToList();
+                _NO_TRANSLATE_Branches.DataSource = names;
+                if (names.Any(a => a == text))
                 {
                     _NO_TRANSLATE_Branches.Text = text;
                 }

@@ -66,6 +66,7 @@ namespace GitUI
         }
 
         [Conditional("DEBUG")]
+        [DebuggerStepThrough]
         public static void AssertOnUIThread()
         {
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
@@ -132,7 +133,7 @@ namespace GitUI
         {
             if (!task.IsCompleted)
             {
-                return default(T);
+                return default;
             }
 
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits

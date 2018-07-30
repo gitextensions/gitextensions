@@ -37,8 +37,7 @@ namespace System
                 return null;
             }
 
-            int idx;
-            idx = str.IndexOf(toSkip);
+            var idx = str.IndexOf(toSkip);
             if (idx != -1)
             {
                 return str.Substring(idx + toSkip.Length);
@@ -50,16 +49,37 @@ namespace System
         }
 
         [Pure]
-        [CanBeNull]
-        public static string TakeUntilStr([CanBeNull] this string str, [NotNull] string untilStr)
+        [ContractAnnotation("str:null=>null")]
+        [ContractAnnotation("str:notnull=>notnull")]
+        public static string SubstringUntil([CanBeNull] this string str, [NotNull] string untilStr)
         {
             if (str == null)
             {
                 return null;
             }
 
-            int idx;
-            idx = str.IndexOf(untilStr);
+            var idx = str.IndexOf(untilStr);
+            if (idx != -1)
+            {
+                return str.Substring(0, idx);
+            }
+            else
+            {
+                return str;
+            }
+        }
+
+        [Pure]
+        [ContractAnnotation("str:null=>null")]
+        [ContractAnnotation("str:notnull=>notnull")]
+        public static string SubstringUntil(this string str, char untilChar)
+        {
+            if (str == null)
+            {
+                return null;
+            }
+
+            var idx = str.IndexOf(untilChar);
             if (idx != -1)
             {
                 return str.Substring(0, idx);
@@ -102,6 +122,7 @@ namespace System
         }
 
         [Pure]
+        [CanBeNull]
         public static string Combine([CanBeNull] this string left, [NotNull] string sep, [CanBeNull] string right)
         {
             if (left.IsNullOrEmpty())
@@ -204,10 +225,9 @@ namespace System
                 value = value.Substring(0, value.Length - 1);
             }
 
-            StringBuilder sb = new StringBuilder();
-            string[] lines = value.Split('\n');
+            var sb = new StringBuilder(capacity: value.Length);
 
-            foreach (string line in lines)
+            foreach (var line in value.Split('\n'))
             {
                 if (!shouldRemoveLine(line))
                 {
@@ -221,10 +241,14 @@ namespace System
         /// <summary>Split a string, delimited by line-breaks, excluding empty entries.</summary>
         [Pure]
         [NotNull]
-        public static string[] SplitLines([NotNull] this string value)
-        {
-            return value.Split(NewLineSeparator, StringSplitOptions.RemoveEmptyEntries);
-        }
+        public static string[] SplitLines([NotNull] this string value) => value.Split(NewLineSeparator, StringSplitOptions.RemoveEmptyEntries);
+
+        private static readonly char[] _space = new[] { ' ' };
+
+        /// <summary>Split a string, delimited by the space character, excluding empty entries.</summary>
+        [Pure]
+        [NotNull]
+        public static string[] SplitBySpace([NotNull] this string value) => value.Split(_space, StringSplitOptions.RemoveEmptyEntries);
 
         /// <summary>
         /// Shortens <paramref name="str"/> if necessary, so that the resulting string has fewer than <paramref name="maxLength"/> characters.

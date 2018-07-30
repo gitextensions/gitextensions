@@ -1,3 +1,25 @@
+Fugue Icons
+===========
+
+Many icons taken from the "fugue" icon set by Yusuke Kamiyamane.
+Licensed under a Creative Commons Attribution 3.0 License.
+
+http://p.yusukekamiyamane.com/
+https://github.com/yusukekamiyamane/fugue-icons
+
+We are using the shadowless versions of the icons.
+
+It is possible to manually combine elements from within
+the set to create new icons.
+
+Gimp's "Colourise" feature can be used to rotate hues and
+obtain different coloured versions in many cases.
+
+See the full set of available icons here:
+
+https://raw.githubusercontent.com/yusukekamiyamane/fugue-icons/master/all-shadowless.png
+
+
 From Open Icon Library
 ======================
 char-scorpio.png
@@ -56,7 +78,7 @@ Misc
 Revert16.png
 RvisionHistory16.png
   both: recreated from bmp
-   
+
 branch-led-orig.png
 -------------------
 http://www.iconfinder.com/browse/iconset/ledicons/, License:

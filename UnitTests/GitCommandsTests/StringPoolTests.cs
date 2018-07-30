@@ -135,7 +135,7 @@ namespace GitCommandsTests
         Average clashing bucket length 1.036
         */
 
-        [Test]
+        [Test, Ignore("For hash analysis only, has no assertions")]
         public void AnalyzeHashFunctionDistribution()
         {
             var seenHashes = new HashSet<int>();

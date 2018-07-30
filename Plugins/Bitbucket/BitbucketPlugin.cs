@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.Composition;
+using System.Windows.Forms;
+using Bitbucket.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -12,15 +14,30 @@ namespace Bitbucket
         public readonly StringSetting BitbucketBaseUrl = new StringSetting("Specify the base URL to Bitbucket", "https://example.bitbucket.com");
         public readonly BoolSetting BitbucketDisableSsl = new BoolSetting("Disable SSL verification", false);
 
+        private readonly TranslationString _yourRepositoryIsNotInBitbucket = new TranslationString("Your repository is not hosted in BitBucket Server.");
+
         public BitbucketPlugin()
         {
             SetNameAndDescription("Bitbucket Server");
             Translate();
+
+            Icon = Resources.IconPluginBitbucket;
         }
 
         public override bool Execute(GitUIEventArgs args)
         {
-            using (var frm = new BitbucketPullRequestForm(this, Settings, args))
+            Settings settings = Bitbucket.Settings.Parse(args.GitModule, Settings, this);
+            if (settings == null)
+            {
+                MessageBox.Show(args.OwnerForm,
+                                _yourRepositoryIsNotInBitbucket.Text,
+                                string.Empty,
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Exclamation);
+                return false;
+            }
+
+            using (var frm = new BitbucketPullRequestForm(settings))
             {
                 frm.ShowDialog(args.OwnerForm);
             }

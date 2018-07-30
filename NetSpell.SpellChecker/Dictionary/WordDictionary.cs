@@ -224,7 +224,7 @@ namespace NetSpell.SpellChecker.Dictionary
             // Step 3 Remove suffix, Search BaseWords
 
             // save suffixed words for use when removing prefix
-            List<string> suffixWords = new List<string>();
+            var suffixWords = new List<string>();
 
             // Add word to suffix word list
             suffixWords.Add(word);
@@ -284,9 +284,9 @@ namespace NetSpell.SpellChecker.Dictionary
                             // saving possible base words for use in generating suggestions
                             PossibleBaseWords.Add(tempWord);
                         }
-                    } // suffix word
-                } // prefix rule entry
-            } // prefix rule
+                    }
+                }
+            }
 
             // word not found
             TraceWriter.TraceVerbose("Possible Base Words: {0}", PossibleBaseWords.Count);
@@ -306,8 +306,8 @@ namespace NetSpell.SpellChecker.Dictionary
         /// </returns>
         public List<string> ExpandWord(Word word)
         {
-            List<string> suffixWords = new List<string>();
-            List<string> words = new List<string>();
+            var suffixWords = new List<string>();
+            var words = new List<string>();
 
             suffixWords.Add(word.Text);
             string prefixKeys = "";
@@ -374,8 +374,7 @@ namespace NetSpell.SpellChecker.Dictionary
             TryCharacters = "";
 
             // the following is used to split a line by white space
-            Regex spaceRegx = new Regex(@"[^\s]+", RegexOptions.Compiled);
-            MatchCollection partMatches;
+            var spaceRegex = new Regex(@"[^\s]+", RegexOptions.Compiled);
 
             string currentSection = "";
             AffixRule currentRule = null;
@@ -410,6 +409,7 @@ namespace NetSpell.SpellChecker.Dictionary
                         }
 
                         // parse line and place in correct object
+                        MatchCollection partMatches;
                         switch (currentSection)
                         {
                             case "[Copyright]":
@@ -425,7 +425,7 @@ namespace NetSpell.SpellChecker.Dictionary
                             case "[Suffix]": // MySpell suffix rules
 
                                 // split line by white space
-                                partMatches = spaceRegx.Matches(tempLine);
+                                partMatches = spaceRegex.Matches(tempLine);
 
                                 // if 3 parts, then new rule
                                 if (partMatches.Count == 3)
@@ -460,7 +460,7 @@ namespace NetSpell.SpellChecker.Dictionary
                                     // part 1 = affix key
                                     if (currentRule.Name == partMatches[0].Value)
                                     {
-                                        AffixEntry entry = new AffixEntry();
+                                        var entry = new AffixEntry();
 
                                         // part 2 = strip char
                                         if (partMatches[1].Value != "0")
@@ -481,10 +481,10 @@ namespace NetSpell.SpellChecker.Dictionary
                                 break;
                             case "[Phonetic]": // ASpell phonetic rules
                                 // split line by white space
-                                partMatches = spaceRegx.Matches(tempLine);
+                                partMatches = spaceRegex.Matches(tempLine);
                                 if (partMatches.Count >= 2)
                                 {
-                                    PhoneticRule rule = new PhoneticRule();
+                                    var rule = new PhoneticRule();
                                     PhoneticUtility.EncodeRule(partMatches[0].Value, ref rule);
                                     rule.ReplaceString = partMatches[1].Value;
                                     PhoneticRules.Add(rule);
@@ -494,7 +494,7 @@ namespace NetSpell.SpellChecker.Dictionary
                             case "[Words]": // dictionary word list
                                 // splits word into its parts
                                 string[] parts = tempLine.Split('/');
-                                Word tempWord = new Word();
+                                var tempWord = new Word();
 
                                 // part 1 = base word
                                 tempWord.Text = parts[0];
@@ -513,8 +513,8 @@ namespace NetSpell.SpellChecker.Dictionary
 
                                 BaseWords.Add(tempWord.Text, tempWord);
                                 break;
-                        } // currentSection switch
-                    } // read line
+                        }
+                    }
 
                     // close files
                 }
@@ -546,7 +546,7 @@ namespace NetSpell.SpellChecker.Dictionary
         public string PhoneticCode(string word)
         {
             string tempWord = word.ToUpper();
-            StringBuilder code = new StringBuilder();
+            var code = new StringBuilder();
 
             while (tempWord.Length > 0)
             {
@@ -554,10 +554,10 @@ namespace NetSpell.SpellChecker.Dictionary
                 var prevWord = tempWord;
                 foreach (PhoneticRule rule in PhoneticRules)
                 {
-                    bool begining = tempWord.Length == word.Length;
+                    bool beginning = tempWord.Length == word.Length;
                     bool ending = rule.ConditionCount == tempWord.Length;
 
-                    if ((rule.BeginningOnly == begining || !rule.BeginningOnly)
+                    if ((rule.BeginningOnly == beginning || !rule.BeginningOnly)
                         && (rule.EndOnly == ending || !rule.EndOnly)
                         && rule.ConditionCount <= tempWord.Length)
                     {
@@ -597,14 +597,14 @@ namespace NetSpell.SpellChecker.Dictionary
                             break;
                         }
                     }
-                } // for each
+                }
 
                 // if no match consume one char
                 if (prevWord.Length == tempWord.Length)
                 {
                     tempWord = tempWord.Substring(1);
                 }
-            }// while
+            }
 
             return code.ToString();
         }
@@ -734,7 +734,7 @@ namespace NetSpell.SpellChecker.Dictionary
         public AffixRuleCollection SuffixRules { get; } = new AffixRuleCollection();
 
         /// <summary>
-        ///     List of characters to try when generating suggestions using the near miss stratigy
+        ///     List of characters to try when generating suggestions using the near miss strategy
         /// </summary>
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

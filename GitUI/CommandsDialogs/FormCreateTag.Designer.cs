@@ -60,7 +60,7 @@ namespace GitUI.CommandsDialogs
             // Ok
             // 
             this.Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Ok.Image = global::GitUI.Properties.Resources.IconTagCreate;
+            this.Ok.Image = global::GitUI.Properties.Images.TagCreate;
             this.Ok.Location = new System.Drawing.Point(317, 200);
             this.Ok.Name = "Ok";
             this.Ok.Size = new System.Drawing.Size(128, 26);

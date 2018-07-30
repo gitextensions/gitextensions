@@ -42,9 +42,9 @@ namespace GitCommandsTests
         [Test]
         public void LoadChildren_should_return_if_gitmodule_not_supplied()
         {
-            var guid = Guid.NewGuid().ToString("N");
+            var objectId = ObjectId.Random().ToString();
             var item = Substitute.For<IGitItem>();
-            item.Guid.Returns(guid);
+            item.Guid.Returns(objectId);
 
             _provider = new GitRevisionInfoProvider(() => null);
 
@@ -54,17 +54,17 @@ namespace GitCommandsTests
         [Test]
         public void LoadChildren_should_return_shallow_tree_for_non_GitItem()
         {
-            var guid = Guid.NewGuid().ToString("N");
+            var objectId = ObjectId.Random().ToString();
             var item = Substitute.For<IGitItem>();
-            item.Guid.Returns(guid);
+            item.Guid.Returns(objectId);
 
             var items = new[] { Substitute.For<IGitItem>(), Substitute.For<IGitItem>(), Substitute.For<IGitItem>() };
-            _module.GetTree(guid, false).Returns(items);
+            _module.GetTree(objectId, false).Returns(items);
 
             var children = _provider.LoadChildren(item);
 
             children.Should().BeEquivalentTo(items);
-            _module.Received(1).GetTree(guid, false);
+            _module.Received(1).GetTree(objectId, false);
         }
 
         [Test]

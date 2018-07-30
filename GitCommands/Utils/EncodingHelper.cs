@@ -19,7 +19,7 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(encoding));
             }
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             if (output != null && output.Length > 0)
             {
@@ -64,7 +64,7 @@ namespace GitCommands
                 try
                 {
                     ms = new MemoryStream(output);
-                    using (StreamReader reader = new StreamReader(ms, encoding))
+                    using (var reader = new StreamReader(ms, encoding))
                     {
                         ms = null;
                         reader.Peek();
@@ -91,7 +91,7 @@ namespace GitCommands
                 try
                 {
                     ms = new MemoryStream(error);
-                    using (StreamReader reader = new StreamReader(ms, encoding))
+                    using (var reader = new StreamReader(ms, encoding))
                     {
                         ms = null;
                         reader.Peek();

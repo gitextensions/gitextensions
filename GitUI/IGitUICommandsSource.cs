@@ -26,7 +26,7 @@ namespace GitUI
     public interface IGitUICommandsSource
     {
         /// <summary>Raised after <see cref="UICommands"/> changes.</summary>
-        event EventHandler<GitUICommandsChangedEventArgs> GitUICommandsChanged;
+        event EventHandler<GitUICommandsChangedEventArgs> UICommandsChanged;
 
         /// <summary>Gets the <see cref="GitUICommands"/> value.</summary>
         GitUICommands UICommands { get; }

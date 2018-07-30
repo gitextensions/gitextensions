@@ -5,10 +5,12 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Remote;
+using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
+using GitUI.Properties;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -86,7 +88,7 @@ Inactive remote is completely invisible to git.");
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             // remove text from 'new' and 'delete' buttons because now they are represented by icons
             New.Text = string.Empty;
@@ -104,7 +106,6 @@ Inactive remote is completely invisible to git.");
             RemoteCombo.DataPropertyName = nameof(IGitRef.TrackingRemote);
             MergeWith.DataPropertyName = nameof(IGitRef.MergeWith);
 
-            this.AdjustForDpiScaling();
             Remotes.Columns[0].Width = DpiUtil.Scale(120);
         }
 
@@ -164,16 +165,17 @@ Inactive remote is completely invisible to git.");
         {
             if (disabled)
             {
-                btnToggleState.Image = DpiUtil.Scale(Properties.Resources.eye_opened);
+                btnToggleState.Image = DpiUtil.Scale(Images.EyeOpened);
                 toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Activate.Text ?? "").Trim());
             }
             else
             {
-                btnToggleState.Image = DpiUtil.Scale(Properties.Resources.eye_closed);
+                btnToggleState.Image = DpiUtil.Scale(Images.EyeClosed);
                 toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Deactivate.Text ?? "").Trim());
             }
         }
 
+        [CanBeNull]
         private IGitRef GetHeadForSelectedRemoteBranch()
         {
             if (RemoteBranches.SelectedRows.Count != 1)

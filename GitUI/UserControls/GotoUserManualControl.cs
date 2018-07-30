@@ -12,7 +12,7 @@ namespace GitUI.UserControls
         public GotoUserManualControl()
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         private bool _isLoaded;

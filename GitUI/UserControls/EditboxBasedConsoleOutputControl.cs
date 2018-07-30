@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Logging;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls
@@ -124,13 +125,10 @@ namespace GitUI.UserControls
                     }).FileAndForget();
                 };
 
-                var startCmd = AppSettings.GitLog.Log(command, arguments);
-                process.Exited += (sender, args) =>
-                {
-                    startCmd.LogEnd();
-                };
-
+                var operation = CommandLog.LogProcessStart(command, arguments);
+                process.Exited += (s, e) => operation.LogProcessEnd();
                 process.Start();
+                operation.SetProcessId(process.Id);
                 _process = process;
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();

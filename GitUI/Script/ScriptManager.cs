@@ -7,44 +7,44 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
+using JetBrains.Annotations;
 
 namespace GitUI.Script
 {
     public static class ScriptManager
     {
-        private static BindingList<ScriptInfo> Scripts { get; set; }
+        private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(BindingList<ScriptInfo>));
+        private static BindingList<ScriptInfo> _scripts;
 
+        [NotNull]
         public static BindingList<ScriptInfo> GetScripts()
         {
-            if (Scripts == null)
+            if (_scripts == null)
             {
-                DeserializeFromXml(AppSettings.OwnScripts);
-                if (Scripts != null)
-                {
-                    FixAmbiguousHotkeyCommandIdentifiers(Scripts);
-                }
+                _scripts = DeserializeFromXml(AppSettings.OwnScripts);
+                FixAmbiguousHotkeyCommandIdentifiers();
             }
 
-            return Scripts;
-        }
+            return _scripts;
 
-        private static void FixAmbiguousHotkeyCommandIdentifiers(BindingList<ScriptInfo> scripts)
-        {
-            ISet<int> ids = new HashSet<int>();
-            foreach (ScriptInfo si in scripts)
+            void FixAmbiguousHotkeyCommandIdentifiers()
             {
-                if (ids.Contains(si.HotkeyCommandIdentifier))
-                {
-                    si.HotkeyCommandIdentifier = NextHotkeyCommandIdentifier();
-                }
+                var ids = new HashSet<int>();
 
-                ids.Add(si.HotkeyCommandIdentifier);
+                foreach (var script in _scripts)
+                {
+                    if (!ids.Add(script.HotkeyCommandIdentifier))
+                    {
+                        script.HotkeyCommandIdentifier = NextHotkeyCommandIdentifier();
+                    }
+                }
             }
         }
 
+        [CanBeNull]
         public static ScriptInfo GetScript(string key)
         {
-            foreach (ScriptInfo script in GetScripts())
+            foreach (var script in GetScripts())
             {
                 if (script.Name.Equals(key, StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -57,19 +57,19 @@ namespace GitUI.Script
 
         public static void RunEventScripts(GitModuleForm form, ScriptEvent scriptEvent)
         {
-            foreach (var scriptInfo in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
+            foreach (var script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
             {
-                ScriptRunner.RunScript(form, form.Module, scriptInfo.Name, null);
+                ScriptRunner.RunScript(form, form.Module, script.Name, revisionGrid: null);
             }
         }
 
+        [CanBeNull]
         public static string SerializeIntoXml()
         {
             try
             {
                 var sw = new StringWriter();
-                var serializer = new XmlSerializer(typeof(BindingList<ScriptInfo>));
-                serializer.Serialize(sw, Scripts);
+                _serializer.Serialize(sw, _scripts);
                 return sw.ToString();
             }
             catch
@@ -78,132 +78,125 @@ namespace GitUI.Script
             }
         }
 
-        public static void DeserializeFromXml(string xml)
+        [NotNull]
+        private static BindingList<ScriptInfo> DeserializeFromXml([CanBeNull] string xml)
         {
             // When there is nothing to deserialize, add default scripts
             if (string.IsNullOrEmpty(xml))
             {
-                Scripts = new BindingList<ScriptInfo>();
-                AddDefaultScripts();
-                return;
+                return GetDefaultScripts();
             }
 
             try
             {
-                var serializer = new XmlSerializer(typeof(BindingList<ScriptInfo>));
                 using (var stringReader = new StringReader(xml))
+                using (var xmlReader = new XmlTextReader(stringReader))
                 {
-                    var xmlReader = new XmlTextReader(stringReader);
-                    Scripts = serializer.Deserialize(xmlReader) as BindingList<ScriptInfo>;
+                    return (BindingList<ScriptInfo>)_serializer.Deserialize(xmlReader);
                 }
             }
             catch (Exception ex)
             {
-                Scripts = new BindingList<ScriptInfo>();
-                DeserializeFromOldFormat(xml);
-
                 Trace.WriteLine(ex.Message);
+                return DeserializeFromOldFormat(xml);
             }
-        }
 
-        private static void AddDefaultScripts()
-        {
-            Scripts.Add(new ScriptInfo
+            BindingList<ScriptInfo> GetDefaultScripts() => new BindingList<ScriptInfo>
             {
-                HotkeyCommandIdentifier = 9000,
-                Name = "Fetch changes after commit",
-                Command = "git",
-                Arguments = "fetch",
-                RunInBackground = false,
-                AskConfirmation = true,
-                OnEvent = ScriptEvent.AfterCommit,
-                AddToRevisionGridContextMenu = false,
-                Enabled = false
-            });
+                new ScriptInfo
+                {
+                    HotkeyCommandIdentifier = 9000,
+                    Name = "Fetch changes after commit",
+                    Command = "git",
+                    Arguments = "fetch",
+                    RunInBackground = false,
+                    AskConfirmation = true,
+                    OnEvent = ScriptEvent.AfterCommit,
+                    AddToRevisionGridContextMenu = false,
+                    Enabled = false
+                },
+                new ScriptInfo
+                {
+                    HotkeyCommandIdentifier = 9001,
+                    Name = "Update submodules after pull",
+                    Command = "git",
+                    Arguments = "submodule update --init --recursive",
+                    RunInBackground = false,
+                    AskConfirmation = true,
+                    OnEvent = ScriptEvent.AfterPull,
+                    AddToRevisionGridContextMenu = false,
+                    Enabled = false
+                },
+                new ScriptInfo
+                {
+                    HotkeyCommandIdentifier = 9002,
+                    Name = "Example",
+                    Command = @"c:\windows\system32\calc.exe",
+                    Arguments = "",
+                    RunInBackground = false,
+                    AskConfirmation = false,
+                    OnEvent = ScriptEvent.ShowInUserMenuBar,
+                    AddToRevisionGridContextMenu = false,
+                    Enabled = false
+                },
+                new ScriptInfo
+                {
+                    HotkeyCommandIdentifier = 9003,
+                    Name = "Open on GitHub",
+                    Command = "{openurl}",
+                    Arguments = "https://github.com{cDefaultRemotePathFromUrl}/commit/{sHash}",
+                    RunInBackground = false,
+                    AskConfirmation = false,
+                    OnEvent = 0,
+                    AddToRevisionGridContextMenu = true,
+                    Enabled = false
+                },
+                new ScriptInfo
+                {
+                    HotkeyCommandIdentifier = 9004,
+                    Name = "Fetch All Submodules",
+                    Command = "git",
+                    Arguments = "submodule foreach --recursive git fetch --all",
+                    RunInBackground = false,
+                    AskConfirmation = false,
+                    OnEvent = 0,
+                    AddToRevisionGridContextMenu = true,
+                    Enabled = false
+                }
+            };
 
-            Scripts.Add(new ScriptInfo
+            BindingList<ScriptInfo> DeserializeFromOldFormat(string inputString)
             {
-                HotkeyCommandIdentifier = 9001,
-                Name = "Update submodules after pull",
-                Command = "git",
-                Arguments = "submodule update --init --recursive",
-                RunInBackground = false,
-                AskConfirmation = true,
-                OnEvent = ScriptEvent.AfterPull,
-                AddToRevisionGridContextMenu = false,
-                Enabled = false
-            });
+                const string paramSeparator = "<_PARAM_SEPARATOR_>";
+                const string scriptSeparator = "<_SCRIPT_SEPARATOR_>";
 
-            Scripts.Add(new ScriptInfo
-            {
-                HotkeyCommandIdentifier = 9002,
-                Name = "Example",
-                Command = "c:\\windows\\system32\\calc.exe",
-                Arguments = "",
-                RunInBackground = false,
-                AskConfirmation = false,
-                OnEvent = ScriptEvent.ShowInUserMenuBar,
-                AddToRevisionGridContextMenu = false,
-                Enabled = false
-            });
+                var scripts = new BindingList<ScriptInfo>();
 
-            Scripts.Add(new ScriptInfo
-            {
-                HotkeyCommandIdentifier = 9003,
-                Name = "Open on GitHub",
-                Command = "{openurl}",
-                Arguments = "https://github.com{cDefaultRemotePathFromUrl}/commit/{sHash}",
-                RunInBackground = false,
-                AskConfirmation = false,
-                OnEvent = 0,
-                AddToRevisionGridContextMenu = true,
-                Enabled = false
-            });
+                if (inputString.Contains(paramSeparator) || inputString.Contains(scriptSeparator))
+                {
+                    foreach (var script in inputString.Split(new[] { scriptSeparator }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        var parameters = script.Split(new[] { paramSeparator }, StringSplitOptions.None);
 
-            Scripts.Add(new ScriptInfo
-            {
-                HotkeyCommandIdentifier = 9004,
-                Name = "Fetch All Submodules",
-                Command = "git",
-                Arguments = "submodule foreach --recursive git fetch --all",
-                RunInBackground = false,
-                AskConfirmation = false,
-                OnEvent = 0,
-                AddToRevisionGridContextMenu = true,
-                Enabled = false
-            });
+                        scripts.Add(new ScriptInfo
+                        {
+                            Name = parameters[0],
+                            Command = parameters[1],
+                            Arguments = parameters[2],
+                            AddToRevisionGridContextMenu = parameters[3] == "yes",
+                            Enabled = true,
+                            RunInBackground = false
+                        });
+                    }
+                }
+
+                return scripts;
+            }
         }
 
         internal static int NextHotkeyCommandIdentifier()
         {
             return GetScripts().Select(s => s.HotkeyCommandIdentifier).Max() + 1;
-        }
-
-        private static void DeserializeFromOldFormat(string inputString)
-        {
-            const string paramSeparator = "<_PARAM_SEPARATOR_>";
-            const string scriptSeparator = "<_SCRIPT_SEPARATOR_>";
-
-            if (inputString.Contains(paramSeparator) || inputString.Contains(scriptSeparator))
-            {
-                Scripts = new BindingList<ScriptInfo>();
-
-                string[] scripts = inputString.Split(new[] { scriptSeparator }, StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 0; i < scripts.Length; i++)
-                {
-                    string[] parameters = scripts[i].Split(new[] { paramSeparator }, StringSplitOptions.None);
-
-                    Scripts.Add(new ScriptInfo
-                    {
-                        Name = parameters[0],
-                        Command = parameters[1],
-                        Arguments = parameters[2],
-                        AddToRevisionGridContextMenu = parameters[3] == "yes",
-                        Enabled = true,
-                        RunInBackground = false
-                    });
-                }
-            }
         }
     }
 }

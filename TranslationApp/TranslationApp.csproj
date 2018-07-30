@@ -12,9 +12,10 @@
     <AssemblyName>TranslationApp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ApplicationIcon>..\Bin\Logo\git-extensions-logo-final_mixed-256.ico</ApplicationIcon>
+    <ApplicationIcon>..\Logo\git-extensions-logo.ico</ApplicationIcon>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -86,6 +87,10 @@
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
       <Name>GitCommands</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GitExtUtils\GitExtUtils.csproj">
+      <Project>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</Project>
+      <Name>GitExtUtils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GitUI\GitUI.csproj">
       <Project>{CF5B22E7-230F-4E50-BE88-C4F7023CED2C}</Project>
       <Name>GitUI</Name>
@@ -100,12 +105,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Bin\Logo\git-extensions-logo-final-256.ico">
-      <Link>Resources\git-extensions-logo-final-256.ico</Link>
-    </Content>
     <None Include="Resources\26.png" />
     <None Include="Resources\IconClean.png" />
-    <None Include="Resources\success.png" />
     <None Include="Resources\53.png" />
     <None Include="Resources\21.png" />
     <None Include="Resources\IconSaveAs.png" />

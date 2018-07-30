@@ -32,5 +32,5 @@ namespace NetSpell.SpellChecker
         ///     Word index of the WordEvent
         /// </summary>
         public int WordIndex { get; }
-    } // Class SpellingEventArgs
+    }
 }

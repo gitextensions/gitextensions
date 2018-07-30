@@ -51,7 +51,6 @@
             this.Name = "FormChangeLog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change log";
-            this.Load += new System.EventHandler(this.FormChangeLog1Load);
             this.ResumeLayout(false);
 
         }

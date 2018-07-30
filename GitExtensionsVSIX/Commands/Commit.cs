@@ -45,7 +45,7 @@ namespace GitExtensionsVSIX.Commands
                     lastFile = fileName;
                 }
 
-                // This guard required not only for perfromance, but also for prevent StackOverflowException.
+                // This guard required not only for performance, but also for prevent StackOverflowException.
                 // IDE.QueryStatus -> Commit.IsEnabled -> Plugin.UpdateCaption -> IDE.QueryStatus ...
                 if (_lastUpdatedCaption != newCaption)
                 {
@@ -83,8 +83,7 @@ namespace GitExtensionsVSIX.Commands
                 {
                     if (sel.ProjectItem.FileCount > 0)
                     {
-                        // Unfortunaly FileNames[1] is not supported by .net 3.5
-                        return sel.ProjectItem.get_FileNames(1);
+                        return sel.ProjectItem.FileNames[1];
                     }
                 }
                 else if (sel.Project != null)

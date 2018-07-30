@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -86,7 +87,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// called if the menu item want to know if the Checked property
         /// should be true or false. If null then false.
         /// </summary>
-        public Func<bool> IsCheckedFunc;
+        [CanBeNull] public Func<bool> IsCheckedFunc;
 
         /// <summary>
         /// To make the MenuCommand interact with all its associated menu items
@@ -109,14 +110,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (IsCheckedFunc != null)
             {
-                bool isChecked = IsCheckedFunc();
-                _registeredMenuItems.ForEach(mi => mi.Checked = isChecked);
+                var isChecked = IsCheckedFunc();
+
+                foreach (var item in _registeredMenuItems)
+                {
+                    item.Checked = isChecked;
+                }
             }
         }
 
         public void UpdateMenuItemsShortcutKeyDisplayString()
         {
-            _registeredMenuItems.ForEach(mi => mi.ShortcutKeyDisplayString = ShortcutKeyDisplayString);
+            foreach (var item in _registeredMenuItems)
+            {
+                item.ShortcutKeyDisplayString = ShortcutKeyDisplayString;
+            }
         }
     }
 }

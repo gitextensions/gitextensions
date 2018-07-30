@@ -1,4 +1,4 @@
-﻿using System;
+﻿using GitUIPluginInterfaces;
 
 namespace GitUI.HelperDialogs
 {
@@ -8,7 +8,7 @@ namespace GitUI.HelperDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         private FormCommitDiff()
@@ -16,16 +16,12 @@ namespace GitUI.HelperDialogs
         {
         }
 
-        public FormCommitDiff(GitUICommands commands, string revisionGuid)
+        public FormCommitDiff(GitUICommands commands, ObjectId objectId)
             : this(commands)
         {
-            CommitDiff.TextChanged += CommitDiff_TextChanged;
-            CommitDiff.SetRevision(revisionGuid, null);
-        }
+            CommitDiff.TextChanged += (s, e) => Text = CommitDiff.Text;
 
-        private void CommitDiff_TextChanged(object sender, EventArgs e)
-        {
-            Text = CommitDiff.Text;
+            CommitDiff.SetRevision(objectId, fileToSelect: null);
         }
     }
 }

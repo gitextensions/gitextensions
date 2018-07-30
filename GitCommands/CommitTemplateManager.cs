@@ -100,11 +100,6 @@ namespace GitCommands
         /// <param name="templateText">The body of the template.</param>
         public void Register(string templateName, Func<string> templateText)
         {
-            if (RegisteredTemplatesDic.ContainsKey(templateName))
-            {
-                return;
-            }
-
             RegisteredTemplatesDic.TryAdd(templateName, templateText);
         }
 

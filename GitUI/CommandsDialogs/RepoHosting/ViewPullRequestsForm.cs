@@ -38,14 +38,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
             : base(commands)
         {
             InitializeComponent();
-            Translate();
             _selectHostedRepoCB.DisplayMember = nameof(IHostedRemote.DisplayData);
             _loader.LoadingError += (sender, ex) =>
                 {
                     MessageBox.Show(this, ex.Exception.ToString(), _strError.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.UnMask();
                 };
-            this.AdjustForDpiScaling();
+            InitializeComplete();
         }
 
         public ViewPullRequestsForm(GitUICommands commands, IRepositoryHostPlugin gitHoster)
@@ -216,7 +215,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 _currentPullRequestInfo = null;
                 _discussionWB.DocumentText = "";
-                _diffViewer.ViewTextAsync("", "");
+                ThreadHelper.JoinableTaskFactory.RunAsync(
+                    () => _diffViewer.ViewTextAsync("", ""));
                 return;
             }
 
@@ -300,7 +300,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     IsNew = false,
                     IsDeleted = false,
                     IsTracked = true,
-                    Name = match.Groups[2].Value.Trim()
+                    Name = match.Groups[2].Value.Trim(),
+                    Staged = StagedStatus.None
                 };
 
                 giss.Add(gis);

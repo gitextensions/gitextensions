@@ -69,6 +69,11 @@
     <Compile Include="PieChart\Quadrilateral.cs" />
     <Compile Include="PieChart\SliceSelectedArgs.cs" />
     <Compile Include="PieChart\ShadowStyle.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj">
@@ -79,6 +84,10 @@
     <ProjectReference Include="..\..\..\GitExtUtils\GitExtUtils.csproj">
       <Project>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</Project>
       <Name>GitExtUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\GitUI\GitUI.csproj">
+      <Project>{cf5b22e7-230f-4e50-be88-c4f7023ced2c}</Project>
+      <Name>GitUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\ResourceManager\ResourceManager.csproj">
       <Project>{d3440fd7-afc5-4351-8741-6cdbf15ce944}</Project>
@@ -92,14 +101,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="FormGitStatistics.resx">
-      <DependentUpon>FormGitStatistics.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="PieChart\PieChartControl.resx">
       <DependentUpon>PieChartControl.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\IconGitStatistics.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

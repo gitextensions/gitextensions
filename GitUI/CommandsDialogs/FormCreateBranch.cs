@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -13,11 +13,11 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TranslationString _noRevisionSelected = new TranslationString("Select 1 revision to create the branch on.");
         private readonly TranslationString _branchNameIsEmpty = new TranslationString("Enter branch name.");
-        private readonly TranslationString _branchNameIsNotValud = new TranslationString("“{0}” is not valid branch name.");
+        private readonly TranslationString _branchNameIsNotValid = new TranslationString("“{0}” is not valid branch name.");
         private readonly IGitBranchNameNormaliser _branchNameNormaliser;
         private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
 
-        public FormCreateBranch(GitUICommands commands, GitRevision revision)
+        public FormCreateBranch(GitUICommands commands, ObjectId objectId)
             : base(commands)
         {
             _branchNameNormaliser = new GitBranchNameNormaliser();
@@ -26,29 +26,24 @@ namespace GitUI.CommandsDialogs
             CouldBeOrphan = true;
 
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             groupBox1.AutoSize = true;
 
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
             {
-                commitPickerSmallControl1.SetSelectedCommitHash(revision == null ? Module.GetCurrentCheckout() : revision.Guid);
+                objectId = objectId ?? Module.GetCurrentCheckout();
+                if (objectId != null)
+                {
+                    commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
+                }
             }
         }
 
         public bool CheckoutAfterCreation { get; set; }
         public bool UserAbleToChangeRevision { get; set; }
         public bool CouldBeOrphan { get; set; }
-
-        private static IEnumerable<T> FindControls<T>(Control control) where T : Control
-        {
-            var controls = control.Controls.Cast<Control>().ToList();
-            return controls.SelectMany(FindControls<T>)
-                           .Concat(controls)
-                           .Where(c => c.GetType() == typeof(T))
-                           .Cast<T>();
-        }
 
         private void BranchNameTextBox_Leave(object sender, EventArgs e)
         {
@@ -67,7 +62,7 @@ namespace GitUI.CommandsDialogs
         {
             // ensure all labels are wrapped if required
             // this must happen only after the label texts have been set
-            foreach (var label in FindControls<Label>(this))
+            foreach (var label in this.FindDescendantsOfType<Label>())
             {
                 label.AutoSize = true;
             }
@@ -85,8 +80,8 @@ namespace GitUI.CommandsDialogs
             // if the user hits [Enter] at any point, we need to trigger BranchNameTextBox Leave event
             Ok.Focus();
 
-            string commitGuid = commitPickerSmallControl1.SelectedCommitHash;
-            if (commitGuid == null)
+            var objectId = commitPickerSmallControl1.SelectedObjectId;
+            if (objectId == null)
             {
                 MessageBox.Show(this, _noRevisionSelected.Text, Text);
                 DialogResult = DialogResult.None;
@@ -103,7 +98,7 @@ namespace GitUI.CommandsDialogs
 
             if (!Module.CheckBranchFormat(branchName))
             {
-                MessageBox.Show(string.Format(_branchNameIsNotValud.Text, branchName), Text);
+                MessageBox.Show(string.Format(_branchNameIsNotValid.Text, branchName), Text);
                 DialogResult = DialogResult.None;
                 return;
             }
@@ -113,23 +108,23 @@ namespace GitUI.CommandsDialogs
                 var originalHash = Module.GetCurrentCheckout();
 
                 var cmd = Orphan.Checked
-                    ? GitCommandHelpers.CreateOrphanCmd(branchName, commitGuid)
-                    : GitCommandHelpers.BranchCmd(branchName, commitGuid, chkbxCheckoutAfterCreate.Checked);
+                    ? GitCommandHelpers.CreateOrphanCmd(branchName, objectId)
+                    : GitCommandHelpers.BranchCmd(branchName, objectId.ToString(), chkbxCheckoutAfterCreate.Checked);
 
-                bool wasSuccessFul = FormProcess.ShowDialog(this, cmd);
-                if (Orphan.Checked && wasSuccessFul && ClearOrphan.Checked)
+                bool wasSuccessful = FormProcess.ShowDialog(this, cmd);
+                if (Orphan.Checked && wasSuccessful && ClearOrphan.Checked)
                 {
                     // orphan AND orphan creation success AND clear
                     cmd = GitCommandHelpers.RemoveCmd();
                     FormProcess.ShowDialog(this, cmd);
                 }
 
-                if (wasSuccessFul && chkbxCheckoutAfterCreate.Checked && !string.Equals(commitGuid, originalHash, StringComparison.OrdinalIgnoreCase))
+                if (wasSuccessful && chkbxCheckoutAfterCreate.Checked && objectId != originalHash)
                 {
                     UICommands.UpdateSubmodules(this);
                 }
 
-                DialogResult = wasSuccessFul ? DialogResult.OK : DialogResult.None;
+                DialogResult = wasSuccessful ? DialogResult.OK : DialogResult.None;
             }
             catch (Exception ex)
             {

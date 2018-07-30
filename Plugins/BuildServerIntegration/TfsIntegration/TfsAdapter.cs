@@ -10,15 +10,16 @@ using System.Threading.Tasks;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
+using JetBrains.Annotations;
 using TfsInterop.Interface;
 
 namespace TfsIntegration
 {
     [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class TfsIntegrationMetadata : BuildServerAdapterMetadataAttribute
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class TfsIntegrationMetadataAttribute : BuildServerAdapterMetadataAttribute
     {
-        public TfsIntegrationMetadata(string buildServerType)
+        public TfsIntegrationMetadataAttribute(string buildServerType)
             : base(buildServerType)
         {
         }
@@ -50,7 +51,7 @@ namespace TfsIntegration
         private string _projectName;
         private Regex _tfsBuildDefinitionNameFilter;
 
-        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<string, bool> isCommitInRevisionGrid)
+        public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher != null)
             {
@@ -85,6 +86,7 @@ namespace TfsIntegration
             }
         }
 
+        [CanBeNull]
         private ITfsHelper LoadAssemblyAndConnectToServer(string assembly)
         {
             try
@@ -156,20 +158,18 @@ namespace TfsIntegration
 
         private static BuildInfo CreateBuildInfo(IBuild buildDetail)
         {
-            string sha = buildDetail.Revision.Substring(buildDetail.Revision.LastIndexOf(":") + 1);
+            var objectId = ObjectId.Parse(buildDetail.Revision.Substring(buildDetail.Revision.LastIndexOf(":") + 1));
 
-            var buildInfo = new BuildInfo
+            return new BuildInfo
             {
                 Id = buildDetail.Label,
                 StartDate = buildDetail.StartDate,
                 Status = (BuildInfo.BuildStatus)buildDetail.Status,
-                Description = buildDetail.Label + " (" + buildDetail.Description + ")",
-                CommitHashList = new[] { sha },
+                Description = $"{buildDetail.Label} ({buildDetail.Description})",
+                CommitHashList = new[] { objectId },
                 Url = buildDetail.Url,
                 ShowInBuildReportTab = false
             };
-
-            return buildInfo;
         }
 
         public void Dispose()

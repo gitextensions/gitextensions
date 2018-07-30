@@ -46,7 +46,7 @@ namespace TfsInterop
                 Trace.WriteLine("Test if Microsoft.TeamFoundation.Build assemblies dependencies are present : " + Microsoft.TeamFoundation.Build.Client.BuildStatus.Succeeded.ToString("G"));
                 return IsDependencyOk2015();
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
@@ -76,13 +76,13 @@ namespace TfsInterop
 
                 _buildServer = _tfsCollection.GetService<IBuildServer>();
 
-                var buildDefs = _buildServer.QueryBuildDefinitions(projectName);
+                var buildDefinitions = _buildServer.QueryBuildDefinitions(projectName);
 
-                if (buildDefs.Length != 0)
+                if (buildDefinitions.Length != 0)
                 {
                     _buildDefinitions = string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString())
-                        ? buildDefs
-                        : buildDefs.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).ToArray();
+                        ? buildDefinitions
+                        : buildDefinitions.Where(b => buildDefinitionNameFilter.IsMatch(b.Name)).ToArray();
                 }
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(() => ConnectToTfsServer2015Async(hostname, teamCollection, projectName, buildDefinitionNameFilter));
@@ -240,7 +240,7 @@ namespace TfsInterop
                 Trace.WriteLine("Test if Microsoft.TeamFoundation.Build.WebApi assemblies dependencies are present : " + Microsoft.TeamFoundation.Build.WebApi.BuildStatus.Completed.ToString("G"));
                 return true;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
@@ -266,22 +266,22 @@ namespace TfsInterop
                     _urlPrefix = "http://" + hostname + ":8080/tfs/" + (string.IsNullOrEmpty(teamCollection) ? "" : teamCollection + "/") + projectName + "/_build?_a=summary&buildId=";
                 }
 
-                VssConnection connection = new VssConnection(new Uri(url), new VssCredentials(true));
+                var connection = new VssConnection(new Uri(url), new VssCredentials(true));
 
                 connection.Settings.BypassProxyOnLocal = false;
                 BuildHttpClient buildClient = await connection.GetClientAsync<BuildHttpClient>().ConfigureAwait(false);
                 var definitions = await buildClient.GetDefinitionsAsync(project: projectName).ConfigureAwait(false);
-                var buildDefs = new List<DefinitionReference>();
+                var buildDefinitions = new List<DefinitionReference>();
 
                 foreach (var def in definitions)
                 {
                     if (string.IsNullOrWhiteSpace(buildDefinitionNameFilter.ToString()) || buildDefinitionNameFilter.IsMatch(def.Name))
                     {
-                        buildDefs.Add(def);
+                        buildDefinitions.Add(def);
                     }
                 }
 
-                _buildDefinitions2015 = buildDefs.ToArray();
+                _buildDefinitions2015 = buildDefinitions.ToArray();
                 _buildClient = buildClient;
                 _projectName = projectName;
             }
@@ -344,7 +344,7 @@ namespace TfsInterop
 
                 if (b.StartTime.HasValue)
                 {
-                    IBuild ibuild = new BuildInfo
+                    result.Add(new BuildInfo
                     {
                         Id = id,
                         Label = b.BuildNumber,
@@ -355,8 +355,7 @@ namespace TfsInterop
                         Revision = GetCommitFromSourceVersion(b.SourceVersion),
                         Url = _urlPrefix + id
                         ////Url = b.Url
-                    };
-                    result.Add(ibuild);
+                    });
                 }
             }
 

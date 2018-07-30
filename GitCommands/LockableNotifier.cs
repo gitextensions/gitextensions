@@ -71,12 +71,7 @@ namespace GitCommands
 
         public ActionNotifier(Action notifyAction)
         {
-            if (notifyAction == null)
-            {
-                throw new ArgumentNullException(nameof(notifyAction));
-            }
-
-            _notifyAction = notifyAction;
+            _notifyAction = notifyAction ?? throw new ArgumentNullException(nameof(notifyAction));
         }
 
         protected override void InternalNotify()

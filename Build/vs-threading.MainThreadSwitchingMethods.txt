@@ -1,1 +1,1 @@
-GitUI.ControlThreadingExtensions.SwitchToMainThreadAsync
+[GitUI.ControlThreadingExtensions]::SwitchToMainThreadAsync

@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs
             Revision = revision;
 
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         public GitRevision Revision { get; set; }
@@ -30,13 +30,13 @@ namespace GitUI.CommandsDialogs
 
             ParentsList.Items.Clear(); // TODO: search this line and the ones below to find code duplication
 
-            _isMerge = Module.IsMerge(Revision.Guid);
+            _isMerge = Module.IsMerge(Revision.ObjectId);
             parentListPanel.Visible = _isMerge;
             if (_isMerge)
             {
-                var parents = Module.GetParentsRevisions(Revision.Guid);
+                var parents = Module.GetParentRevisions(Revision.ObjectId);
 
-                for (int i = 0; i < parents.Length; i++)
+                for (int i = 0; i < parents.Count; i++)
                 {
                     var item = new ListViewItem(i + 1 + "");
                     item.SubItems.Add(parents[i].Subject);

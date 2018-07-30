@@ -1,22 +1,17 @@
-﻿using System.Collections.Generic;
-using GitCommands.Core;
-
-namespace GitCommands.ExternalLinks
+﻿namespace GitCommands.ExternalLinks
 {
-    public class ExternalLink : SimpleStructured
+    public sealed class ExternalLink
     {
-        public string Caption { get; set; }
-        public string URI { get; set; }
+        public string Caption { get; }
+        public string Uri { get; }
 
-        protected internal override IEnumerable<object> InlinedStructure()
+        public ExternalLink(string caption, string uri)
         {
-            yield return Caption;
-            yield return URI;
+            Caption = caption;
+            Uri = uri;
         }
 
-        public override int GetHashCode()
-        {
-            return URI.GetHashCode();
-        }
+        public override bool Equals(object obj) => obj is ExternalLink link && string.Equals(Uri, link.Uri);
+        public override int GetHashCode() => Uri.GetHashCode();
     }
 }

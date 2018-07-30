@@ -37,7 +37,7 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
             if (AppSettings.AlwaysShowAdvOpt)
@@ -265,7 +265,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void SolveMergeconflictsClick(object sender, EventArgs e)
+        private void SolveMergeConflictsClick(object sender, EventArgs e)
         {
             MergetoolClick(sender, e);
         }

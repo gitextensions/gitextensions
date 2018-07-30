@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using GitCommands;
 using GitCommands.Git;
+using GitUIPluginInterfaces;
 using NUnit.Framework;
 using ResourceManager;
 
@@ -65,7 +66,7 @@ namespace GitCommandsTests.Git
         [Test]
         public void TestFetchArguments()
         {
-            GitModule module = new GitModule(null);
+            var module = new GitModule(null);
             {
                 // Specifying a remote and a local branch creates a local branch
                 var fetchCmd = module.FetchCmd("origin", "some-branch", "local");
@@ -115,13 +116,13 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void TestGetAllChangedFilesFromString()
+        public void TestGetDiffChangedFilesFromString()
         {
-            GitModule module = new GitModule(null);
+            var module = new GitModule(null);
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
-                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, "HEAD", GitRevision.IndexGuid, "HEAD");
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
@@ -129,7 +130,7 @@ namespace GitCommandsTests.Git
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "\0\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
-                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, "HEAD", GitRevision.IndexGuid, "HEAD");
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
@@ -137,7 +138,7 @@ namespace GitCommandsTests.Git
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\nM\0testfile.txt\0";
-                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, "HEAD", GitRevision.IndexGuid, "HEAD");
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
@@ -145,18 +146,99 @@ namespace GitCommandsTests.Git
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "M  testfile.txt\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\n";
-                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, true);
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, "HEAD", GitRevision.IndexGuid, "HEAD");
                 Assert.IsTrue(status.Count == 1);
                 Assert.IsTrue(status[0].Name == "testfile.txt");
             }
 
             {
-                // git status --porcelain --untracked-files=no -z
-                string statusString = "M  adfs.h\0M  dir.c\0\r\nwarning: LF will be replaced by CRLF in adfs.h.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in dir.c.\nThe file will have its original line endings in your working directory.";
-                var status = GitCommandHelpers.GetAllChangedFilesFromString(module, statusString, false);
+                // git diff -M -C -z --cached --name-status
+                // Ignore unmerged (in conflict) if revision is work tree
+                string statusString = "M  testfile.txt\0U  testfile.txt\0";
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, GitRevision.IndexGuid, GitRevision.WorkTreeGuid, GitRevision.IndexGuid);
+                Assert.IsTrue(status.Count == 1);
+                Assert.IsTrue(status[0].Name == "testfile.txt");
+                Assert.IsTrue(status[0].Staged == StagedStatus.WorkTree);
+            }
+
+            {
+                // git diff -M -C -z --cached --name-status
+                // Include unmerged (in conflict) if revision is index
+                string statusString = "M  testfile.txt\0U  testfile2.txt\0";
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, "HEAD", GitRevision.IndexGuid, "HEAD");
+                Assert.IsTrue(status.Count == 2);
+                Assert.IsTrue(status[0].Name == "testfile.txt");
+                Assert.IsTrue(status[0].Staged == StagedStatus.Index);
+            }
+
+            {
+                // git diff -M -C -z --name-status 123 456
+                // Check that the staged status is None if not Index/WorkTree
+                string statusString = "M  testfile.txt\0U  testfile2.txt\0";
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, GitRevision.IndexGuid, "456", "678");
+                Assert.IsTrue(status.Count == 2);
+                Assert.IsTrue(status[0].Name == "testfile.txt");
+                Assert.IsTrue(status[0].Staged == StagedStatus.None);
+            }
+
+            {
+                // git diff -M -C -z --name-status 123 456
+                // Check that the staged status is None if not Index/WorkTree
+                string statusString = "M  testfile.txt\0U  testfile2.txt\0";
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, "123", "456", null);
+                Assert.IsTrue(status.Count == 2);
+                Assert.IsTrue(status[0].Name == "testfile.txt");
+                Assert.IsTrue(status[0].Staged == StagedStatus.None);
+            }
+
+#if !DEBUG && false
+            // This test is for documentation, but as the throw is in a called function, it will not test cleanly
+            {
+                // git diff -M -C -z --name-status 123 456
+                // Check that the staged status is None if not Index/WorkTree
+                // Assertion in Debug, throws in Release
+                string statusString = "M  testfile.txt\0U  testfile2.txt\0";
+
+                var status = GitCommandHelpers.GetDiffChangedFilesFromString(module, statusString, null, null, null);
+                Assert.IsTrue(status.Count == 2);
+                Assert.IsTrue(status[0].Name == "testfile.txt");
+                Assert.IsTrue(status[0].Staged == StagedStatus.Unknown);
+             }
+#endif
+        }
+
+        [Test]
+        public void TestGetStatusChangedFilesFromString()
+        {
+            var module = new GitModule(null);
+            {
+                // git status --porcelain=2 --untracked-files=no -z
+                // porcelain v1: string statusString = "M  adfs.h\0M  dir.c\0";
+                string statusString = "#Header\03 unknown info\01 .M S..U 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c adfs.h\01 .M SCM. 160000 160000 160000 6bd3b036fc5718a51a0d27cde134c7019798c3ce 6bd3b036fc5718a51a0d27cde134c7019798c3ce dir.c\0\r\nwarning: LF will be replaced by CRLF in adfs.h.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in dir.c.\nThe file will have its original line endings in your working directory.";
+                var status = GitCommandHelpers.GetStatusChangedFilesFromString(module, statusString);
                 Assert.IsTrue(status.Count == 2);
                 Assert.IsTrue(status[0].Name == "adfs.h");
                 Assert.IsTrue(status[1].Name == "dir.c");
+            }
+
+            {
+                // git status --porcelain=2 --untracked-files -z
+                // porcelain v1: string statusString = "M  adfs.h\0?? untracked_file\0";
+                string statusString = "1 .M S..U 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c adfs.h\0? untracked_file\0";
+                var status = GitCommandHelpers.GetStatusChangedFilesFromString(module, statusString);
+                Assert.IsTrue(status.Count == 2);
+                Assert.IsTrue(status[0].Name == "adfs.h");
+                Assert.IsTrue(status[1].Name == "untracked_file");
+            }
+
+            {
+                // git status --porcelain=2 --ignored-files -z
+                // porcelain v1: string statusString = ".M  adfs.h\0!! ignored_file\0";
+                string statusString = "1 .M S..U 160000 160000 160000 cbca134e29be13b35f21ca4553ba04f796324b1c cbca134e29be13b35f21ca4553ba04f796324b1c adfs.h\0! ignored_file\0";
+                var status = GitCommandHelpers.GetStatusChangedFilesFromString(module, statusString);
+                Assert.IsTrue(status.Count == 2);
+                Assert.IsTrue(status[0].Name == "adfs.h");
+                Assert.IsTrue(status[1].Name == "ignored_file");
             }
         }
 
@@ -266,44 +348,53 @@ namespace GitCommandsTests.Git
         [Test]
         public void GetSubmoduleNamesFromDiffTest()
         {
-            GitModule testModule = new GitModule("C:\\Test\\SuperProject");
+            var testModule = new GitModule("C:\\Test\\SuperProject");
 
             // Submodule name without spaces in the name
 
             string text = "diff --git a/Externals/conemu-inside b/Externals/conemu-inside\nindex a17ea0c..b5a3d51 160000\n--- a/Externals/conemu-inside\n+++ b/Externals/conemu-inside\n@@ -1 +1 @@\n-Subproject commit a17ea0c8ebe9d8cd7e634ba44559adffe633c11d\n+Subproject commit b5a3d51777c85a9aeee534c382b5ccbb86b485d3\n";
             string fileName = "Externals/conemu-inside";
 
-            GitSubmoduleStatus status = GitCommandHelpers.GetSubmoduleStatus(text, testModule, fileName);
+            var status = GitCommandHelpers.ParseSubmoduleStatus(text, testModule, fileName);
 
-            Assert.AreEqual(status.Commit, "b5a3d51777c85a9aeee534c382b5ccbb86b485d3");
-            Assert.AreEqual(status.Name, fileName);
-            Assert.AreEqual(status.OldCommit, "a17ea0c8ebe9d8cd7e634ba44559adffe633c11d");
-            Assert.AreEqual(status.OldName, fileName);
+            Assert.AreEqual(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"), status.Commit);
+            Assert.AreEqual(fileName, status.Name);
+            Assert.AreEqual(ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"), status.OldCommit);
+            Assert.AreEqual(fileName, status.OldName);
 
             // Submodule name with spaces in the name
 
             text = "diff --git a/Assets/Core/Vehicle Physics core assets b/Assets/Core/Vehicle Physics core assets\nindex 2fb8851..0cc457d 160000\n--- a/Assets/Core/Vehicle Physics core assets\t\n+++ b/Assets/Core/Vehicle Physics core assets\t\n@@ -1 +1 @@\n-Subproject commit 2fb88514cfdc37a2708c24f71eca71c424b8d402\n+Subproject commit 0cc457d030e92f804569407c7cd39893320f9740\n";
             fileName = "Assets/Core/Vehicle Physics core assets";
 
-            status = GitCommandHelpers.GetSubmoduleStatus(text, testModule, fileName);
+            status = GitCommandHelpers.ParseSubmoduleStatus(text, testModule, fileName);
 
-            Assert.AreEqual(status.Commit, "0cc457d030e92f804569407c7cd39893320f9740");
-            Assert.AreEqual(status.Name, fileName);
-            Assert.AreEqual(status.OldCommit, "2fb88514cfdc37a2708c24f71eca71c424b8d402");
-            Assert.AreEqual(status.OldName, fileName);
+            Assert.AreEqual(ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"), status.Commit);
+            Assert.AreEqual(fileName, status.Name);
+            Assert.AreEqual(ObjectId.Parse("2fb88514cfdc37a2708c24f71eca71c424b8d402"), status.OldCommit);
+            Assert.AreEqual(fileName, status.OldName);
 
             // Submodule name in reverse diff, rename
 
             text = "diff --git b/Externals/conemu-inside-b a/Externals/conemu-inside-a\nindex a17ea0c..b5a3d51 160000\n--- b/Externals/conemu-inside-b\n+++ a/Externals/conemu-inside-a\n@@ -1 +1 @@\n-Subproject commit a17ea0c8ebe9d8cd7e634ba44559adffe633c11d\n+Subproject commit b5a3d51777c85a9aeee534c382b5ccbb86b485d3\n";
             fileName = "Externals/conemu-inside-b";
 
-            status = GitCommandHelpers.GetSubmoduleStatus(text, testModule, fileName);
+            status = GitCommandHelpers.ParseSubmoduleStatus(text, testModule, fileName);
 
-            Assert.AreEqual(status.Commit, "b5a3d51777c85a9aeee534c382b5ccbb86b485d3");
-            Assert.AreEqual(status.Name, fileName);
-            Assert.AreEqual(status.OldCommit, "a17ea0c8ebe9d8cd7e634ba44559adffe633c11d");
-            fileName = "Externals/conemu-inside-a";
-            Assert.AreEqual(status.OldName, fileName);
+            Assert.AreEqual(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"), status.Commit);
+            Assert.AreEqual(fileName, status.Name);
+            Assert.AreEqual(ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"), status.OldCommit);
+            Assert.AreEqual("Externals/conemu-inside-a", status.OldName);
+
+            text = "diff --git a/Externals/ICSharpCode.TextEditor b/Externals/ICSharpCode.TextEditor\r\nnew file mode 160000\r\nindex 000000000..05321769f\r\n--- /dev/null\r\n+++ b/Externals/ICSharpCode.TextEditor\r\n@@ -0,0 +1 @@\r\n+Subproject commit 05321769f039f39fa7f6748e8f30d5c8f157c7dc\r\n";
+            fileName = "Externals/ICSharpCode.TextEditor";
+
+            status = GitCommandHelpers.ParseSubmoduleStatus(text, testModule, fileName);
+
+            Assert.AreEqual(ObjectId.Parse("05321769f039f39fa7f6748e8f30d5c8f157c7dc"), status.Commit);
+            Assert.AreEqual(fileName, status.Name);
+            Assert.IsNull(status.OldCommit);
+            Assert.AreEqual("Externals/ICSharpCode.TextEditor", status.OldName);
         }
 
         [Test]
@@ -538,31 +629,31 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "rebase \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autostash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false));
             Assert.AreEqual(
                 "rebase -i --no-autosquash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: false, autostash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: false, autoStash: false));
             Assert.AreEqual(
                 "rebase --preserve-merges \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: true, autosquash: false, autostash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: true, autosquash: false, autoStash: false));
             Assert.AreEqual(
                 "rebase \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: true, autostash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: true, autoStash: false));
             Assert.AreEqual(
                 "rebase --autostash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autostash: true));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: true));
             Assert.AreEqual(
                 "rebase -i --autosquash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: true, autostash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: true, autoStash: false));
             Assert.AreEqual(
                 "rebase -i --autosquash --preserve-merges --autostash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autostash: true));
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true));
 
             // TODO quote 'onto'?
 
             Assert.AreEqual(
                 "rebase \"from\" \"branch\" --onto onto",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autostash: false, "from", "onto"));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, "from", "onto"));
 
             Assert.Throws<ArgumentException>(
                 () => GitCommandHelpers.RebaseCmd("branch", false, false, false, false, from: null, onto: "onto"));
@@ -576,62 +667,62 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "clean -f",
-                GitCommandHelpers.CleanUpCmd(dryrun: false, directories: false, nonignored: true, ignored: false));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: false));
             Assert.AreEqual(
                 "clean --dry-run",
-                GitCommandHelpers.CleanUpCmd(dryrun: true, directories: false, nonignored: true, ignored: false));
+                GitCommandHelpers.CleanUpCmd(dryRun: true, directories: false, nonIgnored: true, ignored: false));
             Assert.AreEqual(
                 "clean -d -f",
-                GitCommandHelpers.CleanUpCmd(dryrun: false, directories: true, nonignored: true, ignored: false));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: true, nonIgnored: true, ignored: false));
             Assert.AreEqual(
                 "clean -x -f",
-                GitCommandHelpers.CleanUpCmd(dryrun: false, directories: false, nonignored: false, ignored: false));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: false, ignored: false));
             Assert.AreEqual(
                 "clean -X -f",
-                GitCommandHelpers.CleanUpCmd(dryrun: false, directories: false, nonignored: true, ignored: true));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: true));
             Assert.AreEqual(
                 "clean -X -f",
-                GitCommandHelpers.CleanUpCmd(dryrun: false, directories: false, nonignored: false, ignored: true));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: false, ignored: true));
             Assert.AreEqual(
                 "clean -f paths",
-                GitCommandHelpers.CleanUpCmd(dryrun: false, directories: false, nonignored: true, ignored: false, "paths"));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: false, "paths"));
         }
 
         [Test]
         public void GetAllChangedFilesCmd()
         {
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules --ignored",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules --ignored",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: false, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files=no --ignore-submodules",
+                "status --porcelain=2 -z --untracked-files=no --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.No, IgnoreSubmodulesMode.Default));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files=normal --ignore-submodules",
+                "status --porcelain=2 -z --untracked-files=normal --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Normal, IgnoreSubmodulesMode.Default));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files=all --ignore-submodules",
+                "status --porcelain=2 -z --untracked-files=all --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.All, IgnoreSubmodulesMode.Default));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules=none",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules=none",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.None));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules=none",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules=none",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules=untracked",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules=untracked",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Untracked));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules=dirty",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules=dirty",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Dirty));
             Assert.AreEqual(
-                "status --porcelain -z --untracked-files --ignore-submodules=all",
+                "status --porcelain=2 -z --untracked-files --ignore-submodules=all",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.All));
             Assert.AreEqual(
-                "--no-optional-locks status --porcelain -z --untracked-files --ignore-submodules",
+                "--no-optional-locks status --porcelain=2 -z --untracked-files --ignore-submodules",
                 GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default, noLocks: true));
         }
 

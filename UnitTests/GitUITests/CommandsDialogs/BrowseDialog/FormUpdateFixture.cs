@@ -10,9 +10,9 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
     [TestFixture]
     public class FormUpdateFixture
     {
-        private string GetReleasesConfigFileText()
+        private static string GetReleasesConfigFileText()
         {
-            ConfigFile configFile = new ConfigFile("", true);
+            var configFile = new ConfigFile("", true);
             configFile.SetValue("Version \"2.47\".ReleaseType", "Major");
             configFile.SetValue("Version \"2.48\".ReleaseType", "Major");
             configFile.SetValue("Version \"2.49\".ReleaseType", "ReleaseCandidate");
@@ -24,7 +24,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
         [Test]
         public void CheckForReleaseCandidatesTest()
         {
-            Version currentVersion = new Version(2, 47);
+            var currentVersion = new Version(2, 47);
             var availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
             var updates = ReleaseVersion.GetNewerVersions(currentVersion, true, availableVersions);
@@ -40,7 +40,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
         [Test]
         public void CheckForMajorReleasesTest()
         {
-            Version currentVersion = new Version(2, 47);
+            var currentVersion = new Version(2, 47);
             var availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
             var updates = ReleaseVersion.GetNewerVersions(currentVersion, false, availableVersions);
@@ -54,7 +54,7 @@ namespace GitUITests.CommandsDialogs.BrowseDialog
         [Test]
         public void CheckForNoMajorReleasesTest()
         {
-            Version currentVersion = new Version(2, 48);
+            var currentVersion = new Version(2, 48);
             var availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
             var updates = ReleaseVersion.GetNewerVersions(currentVersion, false, availableVersions);

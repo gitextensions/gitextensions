@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using GitCommands.Git;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands
@@ -199,6 +201,30 @@ namespace GitCommands
                         throw new InvalidEnumArgumentException(nameof(option), (int)option, typeof(GitBisectOption));
                 }
             }
+        }
+
+        /// <summary>
+        /// Adds <paramref name="objectId"/> as a SHA-1 argument.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="objectId"/> is <c>null</c> then no change is made to the arguments.
+        /// </remarks>
+        /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
+        /// <param name="objectId">The SHA-1 object ID to add to the builder, or <c>null</c>.</param>
+        /// <exception cref="ArgumentException"><paramref name="objectId"/> represents an artificial commit.</exception>
+        public static void Add(this ArgumentBuilder builder, [CanBeNull] ObjectId objectId)
+        {
+            if (objectId == null)
+            {
+                return;
+            }
+
+            if (objectId.IsArtificial)
+            {
+                throw new ArgumentException("Unexpected artificial commit in Git command: " + objectId);
+            }
+
+            builder.Add(objectId.ToString());
         }
     }
 }

@@ -1,35 +1,44 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI;
 using JetBrains.Annotations;
+using ResourceManager.Properties;
 
 namespace ResourceManager
 {
+    // NOTE do not make this class abstract as it breaks the WinForms designer in VS
+
+    /// <summary>
+    /// Base class for all Git Extensions forms.
+    /// </summary>
+    /// <remarks>
+    /// Deriving from this class requires a call to <see cref="InitializeComplete"/> at
+    /// the end of the constructor. Omitting this call with result in a runtime exception.
+    /// </remarks>
     public class GitExtensionsFormBase : Form, ITranslate
     {
-        /// <summary>indicates whether the <see cref="Form"/> has been translated</summary>
-        private bool _translated;
+        private readonly GitExtensionsControlInitialiser _initialiser;
 
         /// <summary>Creates a new <see cref="GitExtensionsFormBase"/> indicating position restore.</summary>
         public GitExtensionsFormBase()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            SetFont();
+            _initialiser = new GitExtensionsControlInitialiser(this);
 
             ShowInTaskbar = Application.OpenForms.Count <= 0;
-
-            Load += GitExtensionsFormLoad;
+            Icon = Resources.GitExtensionsLogoIcon;
         }
+
+        protected bool IsDesignModeActive => _initialiser.IsDesignModeActive;
+
+        #region Hotkeys
 
         /// <summary>Gets or sets a value that specifies if the hotkeys are used</summary>
         protected bool HotkeysEnabled { get; set; }
 
         /// <summary>Gets or sets the hotkeys</summary>
+        [CanBeNull]
         protected IEnumerable<HotkeyCommand> Hotkeys { get; set; }
 
         /// <summary>Overridden: Checks if a hotkey wants to handle the key before letting the message propagate</summary>
@@ -66,52 +75,27 @@ namespace ResourceManager
             return false;
         }
 
-        protected void SetFont()
-        {
-            Font = AppSettings.Font;
-        }
+        #endregion
 
-        /// <summary>Indicates whether this is a valid <see cref="IComponent"/> running in design mode.</summary>
-        protected static bool CheckComponent(object value)
+        /// <summary>Performs post-initialisation tasks such as translation and DPI scaling.</summary>
+        /// <remarks>
+        /// <para>Subclasses must ensure this method is called in their constructor, ideally as the final statement.</para>
+        /// <para>Requiring this extra life-cycle event allows preparing the UI after any call to <c>InitializeComponent</c>,
+        /// but before it is show. Both the <see cref="Form.Load"/> and <see cref="Form.Shown"/> events occur too late for
+        /// operations that effect layout.</para>
+        /// </remarks>
+        protected void InitializeComplete()
         {
-            if (value is IComponent component)
-            {
-                return component.Site != null && component.Site.DesignMode;
-            }
+            _initialiser.InitializeComplete();
 
-            return false;
-        }
-
-        /// <summary>Sets <see cref="AutoScaleMode"/>,
-        /// restores position, raises the <see cref="Form.Load"/> event,
-        /// and .
-        /// </summary>
-        protected override void OnLoad(EventArgs e)
-        {
             AutoScaleMode = AppSettings.EnableAutoScale
                 ? AutoScaleMode.Dpi
                 : AutoScaleMode.None;
-            base.OnLoad(e);
+
+            this.AdjustForDpiScaling();
         }
 
-        protected void GitExtensionsFormLoad(object sender, EventArgs e)
-        {
-            // find out if the value is a component and is currently in design mode
-            var isComponentInDesignMode = CheckComponent(this);
-
-            if (!_translated && !isComponentInDesignMode)
-            {
-                throw new Exception("The control " + GetType().Name +
-                                    " is not translated in the constructor. You need to call Translate() right after InitializeComponent().");
-            }
-        }
-
-        /// <summary>Translates the <see cref="Form"/>'s fields and properties, including child controls.</summary>
-        protected void Translate()
-        {
-            Translator.Translate(this, AppSettings.CurrentTranslation);
-            _translated = true;
-        }
+        #region Translation
 
         public virtual void AddTranslationItems(ITranslation translation)
         {
@@ -139,5 +123,7 @@ namespace ResourceManager
                 TranslationUtils.TranslateItemsFromList(Name, pair.Value, itemsToTranslate);
             }
         }
+
+        #endregion
     }
 }

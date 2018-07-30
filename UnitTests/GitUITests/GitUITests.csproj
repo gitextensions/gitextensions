@@ -36,9 +36,6 @@
     <DocumentationFile>bin\Release\GitUITests.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ICSharpCode.TextEditor">
-      <HintPath>..\..\Bin\ICSharpCode.TextEditor.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -48,9 +45,22 @@
     <PackageReference Include="LibGit2Sharp" Version="0.25.0" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="System.IO.Abstractions">
+      <Version>2.0.0.144</Version>
+    </PackageReference>
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers">
+      <Version>2.0.0.143</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Avatars\AvatarCacheTestBase.cs" />
+    <Compile Include="Avatars\AvatarMemoryCacheTests.cs" />
+    <Compile Include="Avatars\AvatarPersistentCacheTests.cs" />
+    <Compile Include="Avatars\AvatarTestBase.cs" />
+    <Compile Include="Avatars\BackupAvatarProviderTests.cs" />
+    <Compile Include="Avatars\MruCacheTests.cs" />
     <Compile Include="CancellationTokenSequenceTests.cs" />
+    <Compile Include="CommandsDialogs\CommitDialog\FormInitTests.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\FormCommitTests.cs" />
     <Compile Include="CommandsDialogs\ReferenceRepository.cs" />
     <Compile Include="CommandsDialogs\RevisionDiffContextMenuControllerTests.cs" />
@@ -59,20 +69,22 @@
     <Compile Include="ControlThreadingExtensionsTests.cs" />
     <Compile Include="FindFilePredicateProviderTest.cs" />
     <Compile Include="Helpers\DiffKindRevisionTests.cs" />
+    <Compile Include="ControlUtilTests.cs" />
     <Compile Include="LinqExtensionsTests.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractorTests.cs" />
     <Compile Include="SplitterManagerTest.cs" />
     <Compile Include="ThreadHelperTests.cs" />
     <Compile Include="TranslationTest.cs" />
     <Compile Include="UITest.cs" />
-    <Compile Include="UserControls\AuthorEmailBasedRevisionHighlightingFixture.cs" />
+    <Compile Include="UserControls\AuthorRevisionHighlightingFixture.cs" />
     <Compile Include="UserControls\ConsoleEmulatorOutputControlFixture.cs" />
     <Compile Include="Editor\Diff\DiffLineNumAnalyzerFixture.cs" />
     <Compile Include="Editor\Diff\LinePrefixHelperFixture.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormUpdateFixture.cs" />
     <Compile Include="Hotkey\HotkeySettingsManagerFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserControls\ToolStripClasses\CommitIconProviderTests.cs" />
+    <Compile Include="UserControls\RepoStateVisualiserTests.cs" />
+    <Compile Include="UserControls\RevisionGrid\GitRefListsForRevisionTests.cs" />
     <Compile Include="UserManual\SingleHtmlUserManualFixture.cs" />
     <Compile Include="UserManual\StandardHtmlUserManualFixture.cs" />
   </ItemGroup>
@@ -89,6 +101,10 @@
     <ProjectReference Include="..\..\Externals\conemu-inside\ConEmuWinForms\ConEmuWinForms.csproj">
       <Project>{1DC7D403-484B-43B4-B017-1356397A32CB}</Project>
       <Name>ConEmuWinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj">
+      <Project>{2d18be89-d210-49eb-a9dd-2246fbb3df6d}</Project>
+      <Name>ICSharpCode.TextEditor</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
       <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>

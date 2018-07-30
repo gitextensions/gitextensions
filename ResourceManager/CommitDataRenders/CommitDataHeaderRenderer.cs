@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using GitCommands;
-using GitCommands.Git.Extensions;
+using GitUIPluginInterfaces;
 
 namespace ResourceManager.CommitDataRenders
 {
@@ -67,45 +67,45 @@ namespace ResourceManager.CommitDataRenders
                 throw new ArgumentNullException(nameof(commitData));
             }
 
-            bool isArtificial = commitData.Guid.IsArtificial;
-            bool authorIsCommiter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
+            bool isArtificial = commitData.ObjectId.IsArtificial;
+            bool authorIsCommitter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
             var padding = _headerRendererStyleProvider.GetMaxWidth();
             string authorEmail = GetEmail(commitData.Author);
 
-            StringBuilder header = new StringBuilder();
-            header.AppendLine(_labelFormatter.FormatLabel(Strings.GetAuthorText(), padding) + _linkFactory.CreateLink(commitData.Author, "mailto:" + authorEmail));
+            var header = new StringBuilder();
+            header.AppendLine(_labelFormatter.FormatLabel(Strings.Author, padding) + _linkFactory.CreateLink(commitData.Author, "mailto:" + authorEmail));
 
             if (!isArtificial)
             {
-                header.AppendLine(_labelFormatter.FormatLabel(datesEqual ? Strings.GetDateText() : Strings.GetAuthorDateText(), padding) + WebUtility.HtmlEncode(_dateFormatter.FormatDateAsRelativeLocal(commitData.AuthorDate)));
+                header.AppendLine(_labelFormatter.FormatLabel(datesEqual ? Strings.Date : Strings.AuthorDate, padding) + WebUtility.HtmlEncode(_dateFormatter.FormatDateAsRelativeLocal(commitData.AuthorDate)));
             }
 
-            if (!authorIsCommiter)
+            if (!authorIsCommitter)
             {
                 string committerEmail = GetEmail(commitData.Committer);
-                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitterText(), padding) + _linkFactory.CreateLink(commitData.Committer, "mailto:" + committerEmail));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.Committer, padding) + _linkFactory.CreateLink(commitData.Committer, "mailto:" + committerEmail));
             }
 
             if (!isArtificial)
             {
                 if (!datesEqual)
                 {
-                    header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitDateText(), padding) + WebUtility.HtmlEncode(_dateFormatter.FormatDateAsRelativeLocal(commitData.CommitDate)));
+                    header.AppendLine(_labelFormatter.FormatLabel(Strings.CommitDate, padding) + WebUtility.HtmlEncode(_dateFormatter.FormatDateAsRelativeLocal(commitData.CommitDate)));
                 }
 
-                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitHashText(), padding) + WebUtility.HtmlEncode(commitData.Guid.ToString()));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.CommitHash, padding) + WebUtility.HtmlEncode(commitData.ObjectId.ToString()));
             }
 
-            if (commitData.ChildrenGuids != null && commitData.ChildrenGuids.Count != 0)
+            if (commitData.ChildIds != null && commitData.ChildIds.Count != 0)
             {
-                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetChildrenText(), padding) + RenderHashCollection(commitData.ChildrenGuids, showRevisionsAsLinks));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetChildren(commitData.ChildIds.Count), padding) + RenderObjectIds(commitData.ChildIds, showRevisionsAsLinks));
             }
 
-            var parentGuids = commitData.ParentGuids.Where(s => !string.IsNullOrEmpty(s)).ToList();
-            if (parentGuids.Any())
+            var parentGuids = commitData.ParentGuids;
+            if (parentGuids.Count != 0)
             {
-                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetParentsText(), padding) + RenderHashCollection(parentGuids, showRevisionsAsLinks));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetParents(parentGuids.Count), padding) + RenderObjectIds(parentGuids, showRevisionsAsLinks));
             }
 
             // remove the trailing newline character
@@ -124,24 +124,24 @@ namespace ResourceManager.CommitDataRenders
                 throw new ArgumentNullException(nameof(commitData));
             }
 
-            bool authorIsCommiter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
+            bool authorIsCommitter = string.Equals(commitData.Author, commitData.Committer, StringComparison.CurrentCulture);
             bool datesEqual = commitData.AuthorDate.EqualsExact(commitData.CommitDate);
             var padding = _headerRendererStyleProvider.GetMaxWidth();
 
-            StringBuilder header = new StringBuilder();
-            header.AppendLine(_labelFormatter.FormatLabel(Strings.GetAuthorText(), padding) + commitData.Author);
-            header.AppendLine(_labelFormatter.FormatLabel(datesEqual ? Strings.GetDateText() : Strings.GetAuthorDateText(), padding) + _dateFormatter.FormatDateAsRelativeLocal(commitData.AuthorDate));
-            if (!authorIsCommiter)
+            var header = new StringBuilder();
+            header.AppendLine(_labelFormatter.FormatLabel(Strings.Author, padding) + commitData.Author);
+            header.AppendLine(_labelFormatter.FormatLabel(datesEqual ? Strings.Date : Strings.AuthorDate, padding) + _dateFormatter.FormatDateAsRelativeLocal(commitData.AuthorDate));
+            if (!authorIsCommitter)
             {
-                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitterText(), padding) + commitData.Committer);
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.Committer, padding) + commitData.Committer);
             }
 
             if (!datesEqual)
             {
-                header.AppendLine(_labelFormatter.FormatLabel(Strings.GetCommitDateText(), padding) + _dateFormatter.FormatDateAsRelativeLocal(commitData.CommitDate));
+                header.AppendLine(_labelFormatter.FormatLabel(Strings.CommitDate, padding) + _dateFormatter.FormatDateAsRelativeLocal(commitData.CommitDate));
             }
 
-            header.Append(_labelFormatter.FormatLabel(Strings.GetCommitHashText(), padding) + commitData.Guid);
+            header.Append(_labelFormatter.FormatLabel(Strings.CommitHash, padding) + commitData.ObjectId);
 
             return header.ToString();
         }
@@ -163,11 +163,11 @@ namespace ResourceManager.CommitDataRenders
             return author.Substring(ind, author.LastIndexOf(">", StringComparison.Ordinal) - ind);
         }
 
-        private string RenderHashCollection(IEnumerable<string> hashes, bool showRevisionsAsLinks)
+        private string RenderObjectIds(IEnumerable<ObjectId> objectIds, bool showRevisionsAsLinks)
         {
             return showRevisionsAsLinks
-                ? hashes.Select(g => _linkFactory.CreateCommitLink(g)).Join(" ")
-                : hashes.Select(g => GitRevision.ToShortSha(g)).Join(" ");
+                ? objectIds.Select(id => _linkFactory.CreateCommitLink(id)).Join(" ")
+                : objectIds.Select(id => id.ToShortString()).Join(" ");
         }
     }
 }

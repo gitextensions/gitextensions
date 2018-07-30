@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using GitCommands.Config;
-using GitCommands.Remote;
+using GitCommands.Remotes;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
@@ -36,10 +36,11 @@ namespace GitCommandsTests
         public void RepoNameExtractorTest_ValidCurrentRemote(string remote, string url, string expProject, string expRepo)
         {
             _module.GetCurrentRemote().Returns(x => remote);
-            _module.GetRemotes().Returns(x => new[] { remote, "    ", "\t" });
+            _module.GetRemoteNames().Returns(x => new[] { remote, "    ", "\t" });
             _module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote)).Returns(x => url);
 
-            _repoNameExtractor.Get(out string project, out string repo);
+            var (project, repo) = _repoNameExtractor.Get();
+
             project.Should().Be(expProject);
             repo.Should().Be(expRepo);
         }
@@ -49,10 +50,11 @@ namespace GitCommandsTests
         public void RepoNameExtractorTest_NoValidCurrentRemote(string remote, string url, string expProject, string expRepo)
         {
             _module.GetCurrentRemote().Returns("");
-            _module.GetRemotes().Returns(x => new[] { remote, "    ", "\t" });
+            _module.GetRemoteNames().Returns(x => new[] { remote, "    ", "\t" });
             _module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote)).Returns(x => url);
 
-            _repoNameExtractor.Get(out string project, out string repo);
+            var (project, repo) = _repoNameExtractor.Get();
+
             project.Should().Be(expProject);
             repo.Should().Be(expRepo);
         }

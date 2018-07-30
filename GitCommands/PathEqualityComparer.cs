@@ -11,11 +11,11 @@ namespace GitCommands
         {
             path1 = Path.GetFullPath(path1).TrimEnd('\\');
             path2 = Path.GetFullPath(path2).TrimEnd('\\');
-            var comprasion = !EnvUtils.RunningOnWindows()
+            var comparison = !EnvUtils.RunningOnWindows()
                 ? StringComparison.InvariantCulture
                 : StringComparison.InvariantCultureIgnoreCase;
 
-            return string.Compare(path1, path2, comprasion) == 0;
+            return string.Compare(path1, path2, comparison) == 0;
         }
 
         public int GetHashCode(string path)

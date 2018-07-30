@@ -49,7 +49,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::GitUI.Properties.Resources.pageant;
+            this.pictureBox1.Image = global::GitUI.Properties.Images.Pageant;
             this.pictureBox1.Location = new System.Drawing.Point(23, 26);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(32, 32);
@@ -60,7 +60,7 @@
             // LoadSSHKey
             // 
             this.LoadSSHKey.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
+            this.LoadSSHKey.Image = global::GitUI.Properties.Images.Putty;
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoadSSHKey.Location = new System.Drawing.Point(23, 86);
             this.LoadSSHKey.Name = "LoadSSHKey";

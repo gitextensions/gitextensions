@@ -81,7 +81,7 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
                         }
 
                         break;
-                } // switch
+                }
 
                 if (end)
                 {
@@ -106,8 +106,8 @@ namespace NetSpell.SpellChecker.Dictionary.Phonetic
 
                     end = false;
                     rule.ConditionCount++;
-                } // if end
-            } // for each
+                }
+            }
         }
     }
 }

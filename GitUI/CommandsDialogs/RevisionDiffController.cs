@@ -28,6 +28,8 @@ namespace GitUI.CommandsDialogs
             bool isAnyCombinedDiff = false,
             bool isSingleGitItemSelected = true,
             bool isAnyItemSelected = true,
+            bool isAnyItemIndex = false,
+            bool isAnyItemWorkTree = false,
             bool isBareRepository = false,
             bool singleFileExists = true,
             bool isAnyTracked = true,
@@ -38,6 +40,8 @@ namespace GitUI.CommandsDialogs
             IsAnyCombinedDiff = isAnyCombinedDiff;
             IsSingleGitItemSelected = isSingleGitItemSelected;
             IsAnyItemSelected = isAnyItemSelected;
+            IsAnyItemIndex = isAnyItemIndex;
+            IsAnyItemWorkTree = isAnyItemWorkTree;
             IsBareRepository = isBareRepository;
             SingleFileExists = singleFileExists;
             IsAnyTracked = isAnyTracked;
@@ -49,6 +53,8 @@ namespace GitUI.CommandsDialogs
         public bool IsAnyCombinedDiff { get; }
         public bool IsSingleGitItemSelected { get; }
         public bool IsAnyItemSelected { get; }
+        public bool IsAnyItemIndex { get; }
+        public bool IsAnyItemWorkTree { get; }
         public bool IsBareRepository { get; }
         public bool SingleFileExists { get; }
         public bool IsAnyTracked { get; }
@@ -93,17 +99,17 @@ namespace GitUI.CommandsDialogs
         // Stage/unstage must limit the selected items, IsStaged is not reflecting Staged status
         public bool ShouldShowMenuStage(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.FirstIsParent && selectionInfo.SelectedRevision.Guid == GitRevision.UnstagedGuid;
+            return selectionInfo.IsAnyItemWorkTree;
         }
 
         public bool ShouldShowMenuUnstage(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.FirstIsParent && selectionInfo.SelectedRevision.Guid == GitRevision.IndexGuid;
+            return selectionInfo.IsAnyItemIndex;
         }
 
         public bool ShouldShowSubmoduleMenus(ContextMenuSelectionInfo selectionInfo)
         {
-            return selectionInfo.IsAnySubmodule && selectionInfo.SelectedRevision.Guid == GitRevision.UnstagedGuid;
+            return selectionInfo.IsAnySubmodule && selectionInfo.SelectedRevision.Guid == GitRevision.WorkTreeGuid;
         }
 
         public bool ShouldShowMenuEditFile(ContextMenuSelectionInfo selectionInfo)

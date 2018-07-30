@@ -12,16 +12,16 @@ namespace GitUIPluginInterfaces
     /// <para>Instances are immutable and are guaranteed to contain valid, 160-bit (20-byte) SHA1 hashes.</para>
     /// <para>String forms of this object must be in lower case.</para>
     /// </remarks>
-    public sealed class ObjectId : IEquatable<ObjectId>
+    public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
     {
         private static readonly ThreadLocal<byte[]> _buffer = new ThreadLocal<byte[]>(() => new byte[20], trackAllValues: false);
         private static readonly Random _random = new Random();
 
         /// <summary>
-        /// Gets the artificial ObjectId used to represent unstaged changes.
+        /// Gets the artificial ObjectId used to represent working directory tree (unstaged) changes.
         /// </summary>
         [NotNull]
-        public static ObjectId UnstagedId { get; } = new ObjectId(0x11111111, 0x11111111, 0x11111111, 0x11111111, 0x11111111);
+        public static ObjectId WorkTreeId { get; } = new ObjectId(0x11111111, 0x11111111, 0x11111111, 0x11111111, 0x11111111);
 
         /// <summary>
         /// Gets the artificial ObjectId used to represent changes staged to the index.
@@ -50,7 +50,7 @@ namespace GitUIPluginInterfaces
                 unchecked((uint)_random.Next()));
         }
 
-        public bool IsArtificial => this == UnstagedId || this == IndexId || this == CombinedDiffId;
+        public bool IsArtificial => this == WorkTreeId || this == IndexId || this == CombinedDiffId;
 
         private const int Sha1ByteCount = 20;
         public const int Sha1CharCount = 40;
@@ -358,13 +358,18 @@ namespace GitUIPluginInterfaces
         /// <param name="s">The string to validate.</param>
         /// <returns><c>true</c> if <paramref name="s"/> is a valid SHA-1 hash, otherwise <c>false</c>.</returns>
         [Pure]
-        public static bool IsValid([NotNull] string s)
-        {
-            if (s.Length != Sha1CharCount)
-            {
-                return false;
-            }
+        public static bool IsValid([NotNull] string s) => s.Length == Sha1CharCount && IsValidCharacters(s);
 
+        /// <summary>
+        /// Identifies whether <paramref name="s"/> contains between <paramref name="minLength"/> and 40 valid SHA-1 hash characters.
+        /// </summary>
+        /// <param name="s">The string to validate.</param>
+        /// <returns><c>true</c> if <paramref name="s"/> is a valid partial SHA-1 hash, otherwise <c>false</c>.</returns>
+        [Pure]
+        public static bool IsValidPartial([NotNull] string s, int minLength) => s.Length >= minLength && s.Length <= Sha1CharCount && IsValidCharacters(s);
+
+        private static bool IsValidCharacters(string s)
+        {
             // ReSharper disable once LoopCanBeConvertedToQuery
             // ReSharper disable once ForCanBeConvertedToForeach
             for (var i = 0; i < s.Length; i++)
@@ -393,6 +398,36 @@ namespace GitUIPluginInterfaces
             _i4 = i4;
             _i5 = i5;
         }
+
+        #region IComparable<ObjectId>
+
+        public int CompareTo(ObjectId other)
+        {
+            var result = 0;
+
+            _ = Compare(_i1, other._i1) ||
+                Compare(_i2, other._i2) ||
+                Compare(_i3, other._i3) ||
+                Compare(_i4, other._i4) ||
+                Compare(_i5, other._i5);
+
+            return result;
+
+            bool Compare(uint i, uint j)
+            {
+                var c = i.CompareTo(j);
+
+                if (c != 0)
+                {
+                    result = c;
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Returns the SHA-1 hash.
@@ -458,6 +493,49 @@ namespace GitUIPluginInterfaces
                    _i3 == other._i3 &&
                    _i4 == other._i4 &&
                    _i5 == other._i5;
+        }
+
+        /// <summary>
+        /// Gets whether <paramref name="other"/> is equivalent to this <see cref="ObjectId"/>.
+        /// </summary>
+        /// <remarks>
+        /// <para>This method does not allocate.</para>
+        /// <para><paramref name="other"/> must be lower case and not have any surrounding white space.</para>
+        /// </remarks>
+        public bool Equals([CanBeNull] string other)
+        {
+            if (other == null || other.Length != Sha1CharCount)
+            {
+                return false;
+            }
+
+            var i = 0;
+
+            return
+                TestInt(_i1) &&
+                TestInt(_i2) &&
+                TestInt(_i3) &&
+                TestInt(_i4) &&
+                TestInt(_i5);
+
+            bool TestInt(uint k)
+            {
+                return
+                    TestDigit(k >> 28) &&
+                    TestDigit((k >> 24) & 0xF) &&
+                    TestDigit((k >> 20) & 0xF) &&
+                    TestDigit((k >> 16) & 0xF) &&
+                    TestDigit((k >> 12) & 0xF) &&
+                    TestDigit((k >> 8) & 0xF) &&
+                    TestDigit((k >> 4) & 0xF) &&
+                    TestDigit(k & 0xF);
+
+                bool TestDigit(uint j)
+                {
+                    var c = j < 10 ? (char)('0' + j) : (char)(j + 0x57);
+                    return other[i++] == c;
+                }
+            }
         }
 
         /// <inheritdoc />

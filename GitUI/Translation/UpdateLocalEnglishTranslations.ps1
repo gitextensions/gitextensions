@@ -1,10 +1,15 @@
-Write-Host "Copying latest english translation before update..."
-robocopy .\ ..\..\GitExtensions\bin\Release\Translation English*.xlf
+Write-Host "Copying the latest English translation before the update..."
+$translationsFolder = Resolve-Path .\
+$releaseTranslationsFolder = Resolve-Path ..\..\GitExtensions\bin\Release\Translation
+Write-Debug " > $translationsFolder`r`n > $releaseTranslationsFolder"
+xcopy "$translationsFolder\English*.xlf" "$releaseTranslationsFolder" /Y
 
-pushd ..\..\GitExtensions\bin\Release
-Write-Host "Updating english translation..."
-Start-Process -FilePath "TranslationApp.exe" -ArgumentList "update" -Wait
+$src = Resolve-Path ..\..\GitExtensions\bin\Release
+pushd "$src"
+Write-Host "Updating the English translation..."
+Start-Process -FilePath "$src\TranslationApp.exe" -ArgumentList "update" -Wait
 popd
 
-Write-Host "Copying updated english translation for commit..."
-robocopy ..\..\GitExtensions\bin\Release\Translation .\ English*.xlf
+Write-Host "Copying the updated English translation to commit..."
+Write-Debug " > $releaseTranslationsFolder`r`n > $translationsFolder"
+xcopy "$releaseTranslationsFolder\English*.xlf" "$translationsFolder"  /Y

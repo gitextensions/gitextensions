@@ -63,6 +63,11 @@
     <Compile Include="GetRepoRequest.cs" />
     <Compile Include="GetUserRequest.cs" />
     <Compile Include="BitbucketPlugin.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="BitbucketPullRequestForm.cs">
       <SubType>Form</SubType>
@@ -97,6 +102,10 @@
   <ItemGroup>
     <EmbeddedResource Include="BitbucketPullRequestForm.resx">
       <DependentUpon>BitbucketPullRequestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

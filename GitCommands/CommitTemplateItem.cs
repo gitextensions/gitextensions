@@ -3,25 +3,15 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using GitCommands.Utils;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
     [Serializable]
     public sealed class CommitTemplateItem : ISerializable
     {
-        private string _name;
-        public string Name
-        {
-            get => _name;
-            set => _name = value;
-        }
-
-        private string _text;
-        public string Text
-        {
-            get => _text;
-            set => _text = value;
-        }
+        public string Name { get; set; }
+        public string Text { get; set; }
 
         public CommitTemplateItem(string name, string text)
         {
@@ -35,13 +25,13 @@ namespace GitCommands
             Text = string.Empty;
         }
 
-        private CommitTemplateItem(SerializationInfo info, StreamingContext ctxt)
+        private CommitTemplateItem(SerializationInfo info, StreamingContext context)
         {
             Name = (string)info.GetValue("Name", typeof(string));
             Text = (string)info.GetValue("Text", typeof(string));
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext ctxt)
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Name", Name);
             info.AddValue("Text", Text);
@@ -53,6 +43,7 @@ namespace GitCommands
             AppSettings.CommitTemplates = strVal ?? string.Empty;
         }
 
+        [CanBeNull]
         public static CommitTemplateItem[] LoadFromSettings()
         {
             string serializedString = AppSettings.CommitTemplates;
@@ -70,6 +61,7 @@ namespace GitCommands
             return JsonSerializer.Serialize(items);
         }
 
+        [CanBeNull]
         private static CommitTemplateItem[] DeserializeCommitTemplates(string serializedString, out bool shouldBeUpdated)
         {
             shouldBeUpdated = false;
@@ -83,7 +75,7 @@ namespace GitCommands
             {
                 commitTemplateItem = JsonSerializer.Deserialize<CommitTemplateItem[]>(serializedString);
             }
-            catch (Exception)
+            catch
             {
                 // do nothing
             }
@@ -95,16 +87,16 @@ namespace GitCommands
                     int p = serializedString.IndexOf(':');
                     int length = Convert.ToInt32(serializedString.Substring(0, p));
 
-                    byte[] memorydata = Convert.FromBase64String(serializedString.Substring(p + 1));
-                    using (MemoryStream rs = new MemoryStream(memorydata, 0, length))
+                    byte[] memoryData = Convert.FromBase64String(serializedString.Substring(p + 1));
+                    using (var rs = new MemoryStream(memoryData, 0, length))
                     {
-                        BinaryFormatter sf = new BinaryFormatter { Binder = new MoveNamespaceDeserializationBinder() };
+                        var sf = new BinaryFormatter { Binder = new MoveNamespaceDeserializationBinder() };
                         commitTemplateItem = (CommitTemplateItem[])sf.Deserialize(rs);
                     }
 
                     shouldBeUpdated = true;
                 }
-                catch (Exception /*e*/)
+                catch
                 {
                     return null;
                 }
@@ -122,9 +114,8 @@ namespace GitCommands
         public override Type BindToType(string assemblyName, string typeName)
         {
             typeName = typeName.Replace(OldNamespace, NewNamespace);
-            ////assemblyName = assemblyName.Replace(OldNamespace, NewNamespace);
-            var type = Type.GetType(string.Format("{0}, {1}", typeName, assemblyName));
-            return type;
+
+            return Type.GetType($"{typeName}, {assemblyName}");
         }
     }
 }

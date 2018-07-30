@@ -49,6 +49,8 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Branch.cs" />
+    <Compile Include="CheckBoxHeaderCellEventArgs.cs" />
+    <Compile Include="DataGridViewCheckBoxHeaderCell.cs" />
     <Compile Include="DeleteUnusedBranchesFormSettings.cs" />
     <Compile Include="DeleteUnusedBranchesPlugin.cs" />
     <Compile Include="DeleteUnusedBranchesForm.cs">
@@ -92,6 +94,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -101,7 +104,7 @@
     <None Include="Resources\loadingpanel.gif" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\loadingpanel_static.png" />
+    <None Include="Resources\IconDeleteUnusedBranches.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

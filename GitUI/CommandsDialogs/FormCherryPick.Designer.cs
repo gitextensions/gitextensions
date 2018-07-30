@@ -71,7 +71,7 @@ namespace GitUI.CommandsDialogs
             // btnChooseRevision
             // 
             this.btnChooseRevision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnChooseRevision.Image = global::GitUI.Properties.Resources.IconSelectRevision;
+            this.btnChooseRevision.Image = global::GitUI.Properties.Images.SelectRevision;
             this.btnChooseRevision.Location = new System.Drawing.Point(105, 50);
             this.btnChooseRevision.Margin = new System.Windows.Forms.Padding(4);
             this.btnChooseRevision.Name = "btnChooseRevision";

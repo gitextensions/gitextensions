@@ -73,7 +73,7 @@
             // btnBrowse
             // 
             this.btnBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnBrowse.Image = global::GitUI.Properties.Resources.IconBrowseFileExplorer;
+            this.btnBrowse.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
             this.btnBrowse.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnBrowse.Location = new System.Drawing.Point(415, 3);
             this.btnBrowse.MinimumSize = new System.Drawing.Size(100, 25);

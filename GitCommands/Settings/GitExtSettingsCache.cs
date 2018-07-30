@@ -16,7 +16,7 @@ namespace GitCommands.Settings
         public static GitExtSettingsCache FromCache(string settingsFilePath)
         {
             var createSettingsCache = new Lazy<GitExtSettingsCache>(
-                () => new GitExtSettingsCache(settingsFilePath, true));
+                () => new GitExtSettingsCache(settingsFilePath, autoSave: true));
 
             return FromCache(settingsFilePath, createSettingsCache);
         }
@@ -29,7 +29,7 @@ namespace GitCommands.Settings
             }
             else
             {
-                return new GitExtSettingsCache(settingsFilePath, false);
+                return new GitExtSettingsCache(settingsFilePath, autoSave: false);
             }
         }
 
@@ -40,12 +40,10 @@ namespace GitCommands.Settings
 
         protected override void WriteSettings(string fileName)
         {
-            using (XmlTextWriter xtw = new XmlTextWriter(fileName, Encoding.UTF8))
+            using (var xtw = new XmlTextWriter(fileName, Encoding.UTF8) { Formatting = Formatting.Indented })
             {
-                xtw.Formatting = Formatting.Indented;
                 xtw.WriteStartDocument();
                 xtw.WriteStartElement("dictionary");
-
                 _encodedNameMap.WriteXml(xtw);
                 xtw.WriteEndElement();
             }
@@ -53,15 +51,22 @@ namespace GitCommands.Settings
 
         protected override void ReadSettings(string fileName)
         {
-            XmlReaderSettings readerSettings = new XmlReaderSettings
+            var readerSettings = new XmlReaderSettings
             {
                 IgnoreWhitespace = true,
                 CheckCharacters = false
             };
 
-            using (XmlReader xr = XmlReader.Create(fileName, readerSettings))
+            using (var xr = XmlReader.Create(fileName, readerSettings))
             {
-                _encodedNameMap.ReadXml(xr);
+                try
+                {
+                    _encodedNameMap.ReadXml(xr);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Exception reading XML file \"{fileName}\": {e.Message}", e);
+                }
             }
         }
 

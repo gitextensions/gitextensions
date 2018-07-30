@@ -28,19 +28,5 @@ namespace ResourceManagerTests.CommitDataRenders
         {
             _formatter.FormatLabel(given, desiredLength).Should().Be(expected);
         }
-
-        [TestCase(null, 10, ":			")]
-        [TestCase("", 10, ":			")]
-        [TestCase("", 16, ":				")]
-        [TestCase(" ", 10, " :		")]
-        [TestCase("a", 10, "a:		")]
-        [TestCase("a", 8, "a:		")]
-        [TestCase("abc", 1, "abc:")]
-        [TestCase("John Doe <John.Doe@test.com>", 38, "John Doe <John.Doe@test.com>:			")]
-        [TestCase("John Doe <John.Doe@test.com>", 40, "John Doe <John.Doe@test.com>:			")]
-        public void FormatLabelPlain_should_render_correctly(string given, int desiredLength, string expected)
-        {
-            _formatter.FormatLabelPlain(given, desiredLength).Should().Be(expected);
-        }
     }
 }

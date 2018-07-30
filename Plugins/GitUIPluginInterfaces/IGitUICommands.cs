@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces
@@ -15,19 +14,16 @@ namespace GitUIPluginInterfaces
         event EventHandler<GitUIEventArgs> PreCommit;
 
         IGitModule GitModule { get; }
-        string GitCommand(string arguments);
         IGitRemoteCommand CreateRemoteCommand();
-        void CacheAvatar(string email);
-        Icon FormIcon { get; }
 
         /// <summary>
-        /// RepoChangedNotifier.Notify() should be called after each action that changess repo state
+        /// RepoChangedNotifier.Notify() should be called after each action that changes repo state
         /// </summary>
         ILockableNotifier RepoChangedNotifier { get; }
 
-        bool StartCommandLineProcessDialog(IWin32Window owner, string command, string arguments);
+        void StartCommandLineProcessDialog(IWin32Window owner, string command, string arguments);
         bool StartCommandLineProcessDialog(IWin32Window owner, IGitCommand command);
-        bool StartBatchFileProcessDialog(string batchFile);
+        void StartBatchFileProcessDialog(string batchFile);
 
         bool StartRemotesDialog();
         bool StartSettingsDialog(IGitPlugin gitPlugin);

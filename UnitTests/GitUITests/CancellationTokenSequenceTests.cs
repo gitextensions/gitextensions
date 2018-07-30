@@ -142,7 +142,7 @@ namespace GitUITests
 
                 await Console.Out.WriteLineAsync("Winner by index: " + string.Join(",", winnerByIndex));
 
-                // Assume hyperthreading, so halve logical processors (could use WMI or P/Invoke for more robust answer)
+                // Assume hyper threading, so halve logical processors (could use WMI or P/Invoke for more robust answer)
                 if (logicalProcessorCount <= 2)
                 {
                     Assert.Inconclusive("This test requires more than one physical processor to run.");

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using GitCommands;
 using GitCommands.Utils;
-using GitUI.Editor;
 using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -17,7 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             InitializeComponent();
             Text = "SSH";
-            Translate();
+            InitializeComplete();
 
             label18.ForeColor = ColorHelper.GetForeColorForBackColor(label18.BackColor);
         }

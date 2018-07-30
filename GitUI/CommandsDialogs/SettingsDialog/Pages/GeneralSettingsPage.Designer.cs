@@ -57,7 +57,6 @@
             this.chkShowGitCommandLine = new System.Windows.Forms.CheckBox();
             this.lblDefaultCloneDestination = new System.Windows.Forms.Label();
             this.chkUsePatienceDiffAlgorithm = new System.Windows.Forms.CheckBox();
-            this.chkPlaySpecialStartupSound = new System.Windows.Forms.CheckBox();
             this.chkStashUntrackedFiles = new System.Windows.Forms.CheckBox();
             this.chkStartWithRecentWorkingDir = new System.Windows.Forms.CheckBox();
             this.chkFollowRenamesInFileHistory = new System.Windows.Forms.CheckBox();
@@ -355,7 +354,6 @@
             this.tlpnlBehaviour.Controls.Add(this.chkShowGitCommandLine, 0, 1);
             this.tlpnlBehaviour.Controls.Add(this.lblDefaultCloneDestination, 0, 6);
             this.tlpnlBehaviour.Controls.Add(this.chkUsePatienceDiffAlgorithm, 0, 2);
-            this.tlpnlBehaviour.Controls.Add(this.chkPlaySpecialStartupSound, 1, 5);
             this.tlpnlBehaviour.Controls.Add(this.chkStashUntrackedFiles, 0, 3);
             this.tlpnlBehaviour.Controls.Add(this.chkStartWithRecentWorkingDir, 0, 5);
             this.tlpnlBehaviour.Controls.Add(this.chkFollowRenamesInFileHistory, 0, 4);
@@ -492,17 +490,6 @@
             this.chkUsePatienceDiffAlgorithm.Text = "Use patience diff algorithm";
             this.chkUsePatienceDiffAlgorithm.UseVisualStyleBackColor = true;
             // 
-            // chkPlaySpecialStartupSound
-            // 
-            this.chkPlaySpecialStartupSound.AutoSize = true;
-            this.chkPlaySpecialStartupSound.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkPlaySpecialStartupSound.Location = new System.Drawing.Point(273, 118);
-            this.chkPlaySpecialStartupSound.Name = "chkPlaySpecialStartupSound";
-            this.chkPlaySpecialStartupSound.Size = new System.Drawing.Size(1776, 17);
-            this.chkPlaySpecialStartupSound.TabIndex = 7;
-            this.chkPlaySpecialStartupSound.Text = "Play Special Startup Sound";
-            this.chkPlaySpecialStartupSound.UseVisualStyleBackColor = true;
-            // 
             // chkStashUntrackedFiles
             // 
             this.chkStashUntrackedFiles.AutoSize = true;
@@ -569,7 +556,6 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBoxBehaviour;
-        private System.Windows.Forms.CheckBox chkPlaySpecialStartupSound;
         private System.Windows.Forms.CheckBox chkCloseProcessDialog;
         private System.Windows.Forms.CheckBox chkShowGitCommandLine;
         private System.Windows.Forms.CheckBox chkStartWithRecentWorkingDir;

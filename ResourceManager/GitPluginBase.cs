@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
@@ -11,6 +12,7 @@ namespace ResourceManager
     {
         public string Description { get; protected set; }
         public string Name { get; protected set; }
+        public Image Icon { get; protected set; }
 
         protected void SetNameAndDescription(string name)
         {

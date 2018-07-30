@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using JetBrains.Annotations;
 
 namespace GitCommands.Git
 {
@@ -55,7 +56,7 @@ namespace GitCommands.Git
             return GetInternal(firstRevision, secondRevision, fileName, oldFileName, isTracked);
         }
 
-        private string GetInternal(string firstRevision, string secondRevision, string fileName = null, string oldFileName = null, bool isTracked = true)
+        private string GetInternal([CanBeNull] string firstRevision, [CanBeNull] string secondRevision, string fileName = null, string oldFileName = null, bool isTracked = true)
         {
             // Combined Diff artificial commit should not be included in diffs
             if (firstRevision == GitRevision.CombinedDiffGuid || secondRevision == GitRevision.CombinedDiffGuid)
@@ -65,7 +66,7 @@ namespace GitCommands.Git
                     firstRevision + ", " + secondRevision);
             }
 
-            string extra = string.Empty;
+            var extra = new ArgumentBuilder();
             firstRevision = ArtificialToDiffOptions(firstRevision);
             secondRevision = ArtificialToDiffOptions(secondRevision);
 
@@ -81,46 +82,50 @@ namespace GitCommands.Git
             if (firstRevision != secondRevision && (firstRevision.IsNullOrEmpty() ||
                                (firstRevision == StagedOpt && !secondRevision.IsNullOrEmpty())))
             {
-                extra = "-R";
+                extra.Add("-R");
             }
 
-            // Special case: Remove options comparing unstaged-staged
+            // Special case: Remove options comparing worktree-index
             if ((firstRevision.IsNullOrEmpty() && secondRevision == StagedOpt) ||
                 (firstRevision == StagedOpt && secondRevision.IsNullOrEmpty()))
             {
-                firstRevision = secondRevision = string.Empty;
+                firstRevision = secondRevision = "";
             }
 
             // Reorder options - not strictly required
             if (secondRevision == StagedOpt)
             {
-                extra += " " + StagedOpt;
-                secondRevision = string.Empty;
+                extra.Add(StagedOpt);
+                secondRevision = "";
             }
 
             if (fileName.IsNullOrWhiteSpace())
             {
-                extra = string.Join(" ", extra, firstRevision, secondRevision);
+                extra.Add(firstRevision);
+                extra.Add(secondRevision);
             }
             else
             {
                 // Untracked files can only be compared to /dev/null
-                // The UI should normall only allow this for unstaged to staged, but it can be included in multi selections
+                // The UI should normally only allow this for worktree to index, but it can be included in multi selections
                 if (!isTracked)
                 {
-                    extra += " --no-index";
+                    extra.Add("--no-index");
                     oldFileName = fileName;
                     fileName = "/dev/null";
                 }
                 else
                 {
-                    extra += " " + firstRevision + " " + secondRevision;
+                    extra.Add(firstRevision);
+                    extra.Add(secondRevision);
                 }
 
-                extra += " -- " + fileName.QuoteNE() + " " + oldFileName.QuoteNE();
+                extra.Add("--");
+                extra.Add(fileName.QuoteNE());
+                extra.Add(oldFileName.QuoteNE());
             }
 
-            return extra.Trim();
+            return extra.ToString();
         }
 
         /// <summary>
@@ -128,32 +133,30 @@ namespace GitCommands.Git
         /// Artificial "commits" are options, handle aliases too
         /// (order and handling of empty arguments is not handled here)
         /// </summary>
-        private static string ArtificialToDiffOptions(string rev)
+        [CanBeNull]
+        private static string ArtificialToDiffOptions([CanBeNull] string rev)
         {
-            if (rev.IsNullOrEmpty() || rev == GitRevision.UnstagedGuid)
+            switch (rev)
             {
-                rev = string.Empty;
+                case GitRevision.WorkTreeGuid:
+                case "":
+                case null:
+                    return "";
+                case "^":
+                case GitRevision.WorkTreeGuid + "^":
+                case GitRevision.IndexGuid:
+                    return StagedOpt;
+                case "^^":
+                case GitRevision.WorkTreeGuid + "^^":
+                case GitRevision.IndexGuid + "^":
+                    return "\"HEAD\"";
+                case "^^^":
+                case GitRevision.WorkTreeGuid + "^^^":
+                case GitRevision.IndexGuid + "^^":
+                    return "HEAD^";
+                default:
+                    return rev.QuoteNE();
             }
-            else if (rev == "^" || rev == GitRevision.UnstagedGuid + "^" || rev == GitRevision.IndexGuid)
-            {
-                rev = StagedOpt;
-            }
-            else
-            {
-                // Normal commit
-                if (rev == "^^" || rev == GitRevision.UnstagedGuid + "^^" || rev == GitRevision.IndexGuid + "^")
-                {
-                    rev = "HEAD";
-                }
-                else if (rev == "^^^" || rev == GitRevision.UnstagedGuid + "^^^" || rev == GitRevision.IndexGuid + "^^")
-                {
-                    rev = "HEAD^";
-                }
-
-                rev = rev.QuoteNE();
-            }
-
-            return rev;
         }
     }
 }

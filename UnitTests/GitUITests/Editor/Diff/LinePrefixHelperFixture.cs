@@ -19,7 +19,7 @@ namespace GitUITests.Editor.Diff
 -removed line
 -removed line";
 
-            var lineSegmentGetter = PrepareliLineSegmentGetter(diffText);
+            var lineSegmentGetter = PrepareLineSegmentGetter(diffText);
 
             var doc = PreDocumentForDiffText(diffText);
 
@@ -42,7 +42,7 @@ namespace GitUITests.Editor.Diff
 -removed line1
 -removed line2";
 
-            var lineSegmentGetter = PrepareliLineSegmentGetter(diffText);
+            var lineSegmentGetter = PrepareLineSegmentGetter(diffText);
 
             var doc = PreDocumentForDiffText(diffText);
 
@@ -69,7 +69,7 @@ namespace GitUITests.Editor.Diff
         [TestCase("- diffline", "-")]
         public void CanCheckIfTheLineStartsWithSpecificPrefix(string diffText, string prefix)
         {
-            var lineSegmentGetter = PrepareliLineSegmentGetter(diffText);
+            var lineSegmentGetter = PrepareLineSegmentGetter(diffText);
 
             var doc = PreDocumentForDiffText(diffText);
 
@@ -79,9 +79,9 @@ namespace GitUITests.Editor.Diff
 
         [TestCase("+")]
         [TestCase("-")]
-        public void GivenThatTheDocDoesnotHaveEnoughChars_ShouldReturnFalseWhenCheckPrefix(string diffText)
+        public void GivenThatTheDocDoesNotHaveEnoughChars_ShouldReturnFalseWhenCheckPrefix(string diffText)
         {
-            var lineSegmentGetter = PrepareliLineSegmentGetter(diffText);
+            var lineSegmentGetter = PrepareLineSegmentGetter(diffText);
 
             var doc = PreDocumentForDiffText(diffText);
 
@@ -98,7 +98,7 @@ namespace GitUITests.Editor.Diff
             return doc;
         }
 
-        private static LineSegmentGetter PrepareliLineSegmentGetter(string diffText)
+        private static LineSegmentGetter PrepareLineSegmentGetter(string diffText)
         {
             var lineSegments = GetSegmentsForDiffText(diffText);
             var lineSegmentGetter = Substitute.For<LineSegmentGetter>();

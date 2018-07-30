@@ -49,10 +49,11 @@
             // TextBox
             // 
             this.TextBox.AcceptsTab = true;
+            this.TextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TextBox.ContextMenuStrip = this.SpellCheckContextMenu;
             this.TextBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TextBox.Location = new System.Drawing.Point(0, 0);
-            this.TextBox.Margin = new System.Windows.Forms.Padding(2);
+            this.TextBox.Margin = new System.Windows.Forms.Padding(0);
             this.TextBox.Name = "TextBox";
             this.TextBox.Size = new System.Drawing.Size(386, 336);
             this.TextBox.TabIndex = 1;
@@ -92,7 +93,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.AutoComplete);
             this.Controls.Add(this.TextBox);
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "EditNetSpell";
             this.Size = new System.Drawing.Size(386, 336);
             this.SpellCheckContextMenu.ResumeLayout(false);

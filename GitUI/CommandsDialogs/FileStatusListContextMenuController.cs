@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
@@ -20,7 +21,7 @@ namespace GitUI.CommandsDialogs
     {
         public ContextMenuDiffToolInfo(
             GitRevision selectedRevision = null,
-            IEnumerable<string> selectedItemParentRevs = null,
+            IReadOnlyList<ObjectId> selectedItemParentRevs = null,
             bool allAreNew = false,
             bool allAreDeleted = false,
             bool firstIsParent = false,
@@ -39,7 +40,7 @@ namespace GitUI.CommandsDialogs
         [CanBeNull]
         public GitRevision SelectedRevision { get; }
         [CanBeNull]
-        public IEnumerable<string> SelectedItemParentRevs { get; }
+        public IEnumerable<ObjectId> SelectedItemParentRevs { get; }
         public bool AllAreNew { get; }
         public bool AllAreDeleted { get; }
         public bool FirstIsParent { get; }
@@ -62,7 +63,7 @@ namespace GitUI.CommandsDialogs
                 && (!selectionInfo.FirstIsParent || !selectionInfo.AllAreNew)
 
                 // First (A) is not local
-                && (selectionInfo.SelectedItemParentRevs == null || !selectionInfo.SelectedItemParentRevs.Contains(GitRevision.UnstagedGuid));
+                && (selectionInfo.SelectedItemParentRevs == null || !selectionInfo.SelectedItemParentRevs.Contains(ObjectId.WorkTreeId));
         }
 
         public bool ShouldShowMenuSelectedToLocal(ContextMenuDiffToolInfo selectionInfo)
@@ -73,7 +74,7 @@ namespace GitUI.CommandsDialogs
                 && !selectionInfo.AllAreDeleted
 
                 // Selected (B) is not local
-                && selectionInfo.SelectedRevision.Guid != GitRevision.UnstagedGuid;
+                && selectionInfo.SelectedRevision.Guid != GitRevision.WorkTreeGuid;
         }
 
         public bool ShouldShowMenuFirstParentToLocal(ContextMenuDiffToolInfo selectionInfo)

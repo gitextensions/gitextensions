@@ -150,7 +150,7 @@
             // btOpenSubmodule
             // 
             this.btOpenSubmodule.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btOpenSubmodule.Image = global::GitUI.Properties.Resources.IconFolderSubmodule;
+            this.btOpenSubmodule.Image = global::GitUI.Properties.Images.FolderSubmodule;
             this.btOpenSubmodule.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btOpenSubmodule.Location = new System.Drawing.Point(19, 212);
             this.btOpenSubmodule.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -164,7 +164,7 @@
             // btRefresh
             // 
             this.btRefresh.ForeColor = System.Drawing.Color.Black;
-            this.btRefresh.Image = global::GitUI.Properties.Resources.arrow_refresh;
+            this.btRefresh.Image = global::GitUI.Properties.Images.ReloadRevisions;
             this.btRefresh.Location = new System.Drawing.Point(552, 152);
             this.btRefresh.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btRefresh.Name = "btRefresh";

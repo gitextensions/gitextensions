@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using FluentAssertions;
 using GitCommands;
 using GitUIPluginInterfaces;
@@ -40,18 +38,19 @@ namespace ResourceManagerTests.CommitDataRenders
         [Test]
         public void Render_should_render_body_with_links()
         {
-            _module.IsExistingCommitHash("b3e7944792", out _).Returns(x =>
+            _module.TryResolvePartialCommitId("b3e7944792", out _).Returns(x =>
             {
-                x[1] = "b3e79447928051cfb3494c9c0ef1a1d0ecde56a8";
+                x[1] = ObjectId.Parse("b3e79447928051cfb3494c9c0ef1a1d0ecde56a8");
                 return true;
             });
-            _module.IsExistingCommitHash("11119447928051cfb3494c9c0ef1a1d0ecde56a8", out _).Returns(x =>
+            _module.TryResolvePartialCommitId("11119447928051cfb3494c9c0ef1a1d0ecde56a8", out _).Returns(x =>
             {
-                x[1] = "11119447928051cfb3494c9c0ef1a1d0ecde56a8";
+                x[1] = ObjectId.Parse("11119447928051cfb3494c9c0ef1a1d0ecde56a8");
                 return true;
             });
+
             var data = new CommitData(ObjectId.Random(), ObjectId.Random(),
-                new ReadOnlyCollection<string>(new List<string>()),
+                Array.Empty<ObjectId>(),
                 "John Doe (Acme Inc) <John.Doe@test.com>", DateTime.UtcNow,
                 "John Doe <John.Doe@test.com>", DateTime.UtcNow,
                 "fix\n\nAllow cherry-picking multiple commits from FormBrowse menu\r\n\r\nThe ability to do so from the RevisionGrid context menu has been added in commit\r\nb3e7944792 and 11119447928051cfb3494c9c0ef1a1d0ecde56a8\r\n");
@@ -65,13 +64,14 @@ namespace ResourceManagerTests.CommitDataRenders
         public void Render_should_render_body_without_links()
         {
             var data = new CommitData(ObjectId.Random(), ObjectId.Random(),
-                new ReadOnlyCollection<string>(new List<string>()),
+                Array.Empty<ObjectId>(),
                 "John Doe (Acme Inc) <John.Doe@test.com>", DateTime.UtcNow,
                 "John Doe <John.Doe@test.com>", DateTime.UtcNow,
                 "fix\n\nAllow cherry-picking multiple commits from FormBrowse menu\r\n\r\nThe ability to do so from the RevisionGrid context menu has been added in commit\r\nb3e79447928051cfb3494c9c0ef1a1d0ecde56a8\r\n");
 
             var result = _rendererReal.Render(data, false);
 
+            // TODO remove leading newline and achieve padding at the top via the control layout
             result.Should().Be("\nfix\n\nAllow cherry-picking multiple commits from FormBrowse menu\r\n\r\nThe ability to do so from the RevisionGrid context menu has been added in commit\r\nb3e79447928051cfb3494c9c0ef1a1d0ecde56a8");
         }
     }

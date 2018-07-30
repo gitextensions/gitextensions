@@ -6,8 +6,9 @@
             : base(true, commands)
         {
             InitializeComponent();
-            Translate();
-            Viewer.ViewTextAsync("", text);
+            InitializeComplete();
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                () => Viewer.ViewTextAsync("", text));
             Viewer.IsReadOnly = false;
         }
 

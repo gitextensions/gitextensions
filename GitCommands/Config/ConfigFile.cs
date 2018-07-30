@@ -5,11 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitCommands.Config
 {
     public class ConfigFile
     {
+        private static Encoding GetEncoding() => GitModule.SystemEncoding;
+        public static readonly char[] CommentChars = { ';', '#' };
+
         private readonly List<IConfigSection> _configSections = new List<IConfigSection>();
 
         public string FileName { get; }
@@ -22,7 +26,10 @@ namespace GitCommands.Config
 
             try
             {
-                Load();
+                if (!string.IsNullOrEmpty(Path.GetFileName(FileName)) && File.Exists(FileName))
+                {
+                    new ConfigFileParser(this).Parse();
+                }
             }
             catch (Exception ex)
             {
@@ -38,28 +45,9 @@ namespace GitCommands.Config
             return ConfigSections.Where(section => section.SectionName.Equals(sectionName, StringComparison.OrdinalIgnoreCase));
         }
 
-        private static Encoding GetEncoding()
-        {
-            return GitModule.SystemEncoding;
-        }
-
-        private void Load()
-        {
-            if (string.IsNullOrEmpty(Path.GetFileName(FileName)) || !File.Exists(FileName))
-            {
-                return;
-            }
-
-            ConfigFileParser parser = new ConfigFileParser(this);
-            parser.Parse();
-        }
-
-        public static readonly char[] CommentChars = { ';', '#' };
-
         public void LoadFromString(string str)
         {
-            ConfigFileParser parser = new ConfigFileParser(this);
-            parser.Parse(str);
+            new ConfigFileParser(this).Parse(str);
         }
 
         public static string EscapeValue(string value)
@@ -80,6 +68,18 @@ namespace GitCommands.Config
         public void Save()
         {
             Save(FileName);
+        }
+
+        public void Save(string fileName)
+        {
+            try
+            {
+                FileInfoExtensions.MakeFileTemporaryWritable(fileName, x => File.WriteAllText(fileName, GetAsString(), GetEncoding()));
+            }
+            catch (Exception ex)
+            {
+                ExceptionUtils.ShowException(ex, false);
+            }
         }
 
         public string GetAsString()
@@ -109,18 +109,6 @@ namespace GitCommands.Config
             }
 
             return configFileContent.ToString();
-        }
-
-        public void Save(string fileName)
-        {
-            try
-            {
-                FileInfoExtensions.MakeFileTemporaryWritable(fileName, x => File.WriteAllText(fileName, GetAsString(), GetEncoding()));
-            }
-            catch (Exception ex)
-            {
-                ExceptionUtils.ShowException(ex, false);
-            }
         }
 
         private void SetStringValue(string setting, string value)
@@ -154,7 +142,7 @@ namespace GitCommands.Config
             return configSection != null && configSection.GetValue(keyName) != string.Empty;
         }
 
-        private int FindAndCheckKeyIndex(string setting)
+        private static int FindAndCheckKeyIndex(string setting)
         {
             var keyIndex = FindKeyIndex(setting);
 
@@ -277,6 +265,7 @@ namespace GitCommands.Config
             _configSections.Remove(configSection);
         }
 
+        [CanBeNull]
         public IConfigSection FindConfigSection(string name)
         {
             var configSectionToFind = new ConfigSection(name, true);
@@ -284,6 +273,7 @@ namespace GitCommands.Config
             return FindConfigSection(configSectionToFind);
         }
 
+        [CanBeNull]
         private IConfigSection FindConfigSection(IConfigSection configSectionToFind)
         {
             return ConfigSections.FirstOrDefault(configSectionToFind.Equals);
@@ -347,8 +337,7 @@ namespace GitCommands.Config
 
                 if (_section == null)
                 {
-                    throw new Exception(
-                        string.Format("Key {0} in configfile {1} is not in a section.", _key, FileName));
+                    throw new Exception($"Key {_key} in config file {FileName} is not in a section.");
                 }
             }
 
@@ -361,8 +350,7 @@ namespace GitCommands.Config
 
                 if (_key.IsNullOrEmpty())
                 {
-                    throw new Exception(
-                        string.Format("Value {0} for empty key in configfile {1}.", value, FileName));
+                    throw new Exception($"Value {value} for empty key in config file {FileName}.");
                 }
 
                 _section.AddValue(_key, value);

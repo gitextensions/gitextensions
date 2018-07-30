@@ -28,16 +28,15 @@ namespace ReleaseNotesGenerator
         public ReleaseNotesGeneratorForm(GitUIEventArgs gitUiCommands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             _gitUiCommands = gitUiCommands;
             _gitLogLineParser = new GitLogLineParser();
-
-            Icon = _gitUiCommands?.GitUICommands.FormIcon;
         }
 
         private void ReleaseNotesGeneratorForm_Load(object sender, EventArgs e)
         {
+            Icon = Owner?.Icon;
             textBoxResult_TextChanged(null, null);
         }
 

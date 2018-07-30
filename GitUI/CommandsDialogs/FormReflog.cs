@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitCommands;
 using GitUI.HelperDialogs;
+using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -24,7 +28,7 @@ namespace GitUI.CommandsDialogs
             : base(uiCommands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
 
             Sha.DataPropertyName = nameof(RefLine.Sha);
             Ref.DataPropertyName = nameof(RefLine.Ref);
@@ -48,38 +52,35 @@ namespace GitUI.CommandsDialogs
             Branches.DataSource = branches;
         }
 
-        private void DisplayRefLog()
-        {
-            var reflogOutput = UICommands.GitModule.RunGitCmd("reflog " + (string)Branches.SelectedItem);
-            var reflog = ConvertReflogOutput(reflogOutput);
-            gridReflog.DataSource = reflog;
-        }
-
         public bool ShouldRefresh { get; set; }
 
         private void Branches_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DisplayRefLog();
-        }
+            ThreadHelper.JoinableTaskFactory.Run(DisplayRefLog);
 
-        private List<RefLine> ConvertReflogOutput(string reflogOutput)
-        {
-            var refLog = new List<RefLine>();
-            foreach (var line in reflogOutput.Split('\n').Where(l => l.Length > 0))
+            async Task DisplayRefLog()
             {
-                var match = _regexReflog.Match(line);
-                if (match.Success)
-                {
-                    refLog.Add(new RefLine
-                    {
-                        Sha = match.Groups[1].Value,
-                        Ref = match.Groups[2].Value,
-                        Action = match.Groups[3].Value,
-                    });
-                }
-            }
+                var item = (string)Branches.SelectedItem;
+                await TaskScheduler.Default;
+                var arguments = $"reflog --no-abbrev {item}";
+                var output = UICommands.GitModule.RunGitCmd(arguments);
+                var refLines = ConvertReflogOutput().ToList();
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                gridReflog.DataSource = refLines;
 
-            return refLog;
+                IEnumerable<RefLine> ConvertReflogOutput()
+                    => from line in output.Split('\n')
+                        where line.Length != 0
+                        select _regexReflog.Match(line)
+                        into match
+                        where match.Success
+                        select new RefLine
+                        {
+                            Sha = ObjectId.Parse(match.Groups[1].Value),
+                            Ref = match.Groups[2].Value,
+                            Action = match.Groups[3].Value,
+                        };
+            }
         }
 
         private void createABranchOnThisCommitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -89,7 +90,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using (var form = new FormCreateBranch(UICommands, new GitCommands.GitRevision(GetShaOfRefLine())))
+            using (var form = new FormCreateBranch(UICommands, GetShaOfRefLine()))
             {
                 form.CheckoutAfterCreation = false;
                 form.UserAbleToChangeRevision = false;
@@ -98,7 +99,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private string GetShaOfRefLine()
+        private ObjectId GetShaOfRefLine()
         {
             var row = GetSelectedRow();
             var refLine = (RefLine)row.DataBoundItem;
@@ -136,7 +137,7 @@ namespace GitUI.CommandsDialogs
 
         private void copySha1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(GetShaOfRefLine());
+            Clipboard.SetText(GetShaOfRefLine().ToString());
         }
 
         private void linkCurrentBranch_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -168,7 +169,7 @@ namespace GitUI.CommandsDialogs
 
     internal class RefLine
     {
-        public string Sha { get; set; }
+        public ObjectId Sha { get; set; }
         public string Ref { get; set; }
         public string Action { get; set; }
     }

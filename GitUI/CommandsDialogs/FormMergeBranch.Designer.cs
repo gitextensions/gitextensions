@@ -407,8 +407,8 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.helpImageDisplayUserControl1.AutoSize = true;
             this.helpImageDisplayUserControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.helpImageDisplayUserControl1.Image1 = global::GitUI.Properties.Resources.HelpCommandMerge;
-            this.helpImageDisplayUserControl1.Image2 = global::GitUI.Properties.Resources.HelpCommandMergeFastForward;
+            this.helpImageDisplayUserControl1.Image1 = global::GitUI.Properties.Images.HelpCommandMerge;
+            this.helpImageDisplayUserControl1.Image2 = global::GitUI.Properties.Images.HelpCommandMergeFastForward;
             this.helpImageDisplayUserControl1.IsExpanded = true;
             this.helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
             this.helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = "Hover to see scenario when fast forward is possible.";

@@ -2,6 +2,7 @@
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.UserControls
 {
@@ -18,8 +19,16 @@ namespace GitUI.UserControls
             ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
-                    await Task.Delay(normalizedTime, token);
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+                    await Task.Delay(normalizedTime, token).ConfigureAwaitRunInline();
+                    if (ThreadHelper.JoinableTaskContext.IsOnMainThread)
+                    {
+                        await Task.Yield();
+                    }
+                    else
+                    {
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
+                    }
+
                     disposable.Disposable = action(this, state);
                 });
             return new CompositeDisposable(cancellationDisposable, disposable);

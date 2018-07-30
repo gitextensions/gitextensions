@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
 using GitCommands.Git;
+using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitCommandsTests
@@ -224,6 +225,33 @@ namespace GitCommandsTests
                     Assert.DoesNotThrow(() => method.Invoke(null, new object[] { args, member }));
                 }
             }
+        }
+
+        [Test]
+        public void Handle_artificial_objectid()
+        {
+            Assert.Throws<ArgumentException>(() => new ArgumentBuilder
+            {
+                ObjectId.WorkTreeId
+            });
+            Assert.Throws<ArgumentException>(() => new ArgumentBuilder
+            {
+                ObjectId.IndexId
+            });
+            Assert.Throws<ArgumentException>(() => new ArgumentBuilder
+            {
+                ObjectId.CombinedDiffId
+            });
+        }
+
+        [TestCase(null)]
+        public void Handle_null_objectid(ObjectId id)
+        {
+            var args = new ArgumentBuilder
+            {
+                id
+            };
+            Assert.AreEqual(args.ToString(), "");
         }
     }
 }

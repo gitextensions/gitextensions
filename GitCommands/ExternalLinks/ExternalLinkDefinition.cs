@@ -4,12 +4,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
-using GitCommands.Core;
 
 namespace GitCommands.ExternalLinks
 {
     [XmlType("GitExtLinkDef")]
-    public class ExternalLinkDefinition : SimpleStructured
+    public class ExternalLinkDefinition
     {
         // revision's parts that can be searched for candidates for a link
         public enum RevisionPart
@@ -166,25 +165,14 @@ namespace GitCommands.ExternalLinks
         [XmlIgnore]
         public Lazy<Regex> UseRemotesRegex { get; private set; }
 
-        public override int GetHashCode()
-        {
-            return Name.GetHashCode();
-        }
-
         public void RemoveEmptyFormats()
         {
             var toRemove = LinkFormats.Where(f => f.Caption.IsNullOrWhiteSpace() && f.Format.IsNullOrWhiteSpace()).ToArray();
-            toRemove.ForEach(f => LinkFormats.Remove(f));
-        }
 
-        protected internal override IEnumerable<object> InlinedStructure()
-        {
-            yield return Name;
-            yield return SearchPattern;
-            yield return SearchInParts;
-            yield return NestedSearchPattern;
-            yield return Enabled;
-            yield return LinkFormats;
+            foreach (var format in toRemove)
+            {
+                LinkFormats.Remove(format);
+            }
         }
     }
 }

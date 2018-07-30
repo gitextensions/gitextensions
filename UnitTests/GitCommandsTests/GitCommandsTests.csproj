@@ -73,7 +73,6 @@
     <Compile Include="Git\EncodingHelperTest.cs" />
     <Compile Include="Git\GitBlameCommitTests.cs" />
     <Compile Include="Git\Extensions\GitRevisionExtensionsTests.cs" />
-    <Compile Include="Git\LongShaProviderTests.cs" />
     <Compile Include="Git\GitRevisionTesterTests.cs" />
     <Compile Include="Git\GitStashTests.cs" />
     <Compile Include="Git\Gpg\GitGpgControllerTests.cs" />

@@ -37,22 +37,33 @@ namespace GitCommandsTests.Git
         [Test]
         public void AllFirstAreParentsToSelected_should_return_false_if_no_parents_contains_any_of_selected_items()
         {
-            IEnumerable<GitRevision> firstSelected = new List<GitRevision> { new GitRevision(GitRevision.IndexGuid), new GitRevision("HEAD") };
-            GitRevision selectedRevision = new GitRevision(GitRevision.UnstagedGuid)
+            var firstSelected = new[] { new GitRevision(ObjectId.IndexId), new GitRevision(ObjectId.Random()) };
+
+            var selectedRevision = new GitRevision(ObjectId.WorkTreeId)
             {
-                ParentGuids = new[] { GitRevision.IndexGuid }
+                ParentIds = new[] { ObjectId.IndexId }
             };
+
             _tester.AllFirstAreParentsToSelected(firstSelected, selectedRevision).Should().BeFalse();
         }
 
         [Test]
         public void AllFirstAreParentsToSelected_should_return_true_if_all_parents_contains_all_of_selected_items()
         {
-            IEnumerable<GitRevision> firstSelected2 = new List<GitRevision> { new GitRevision("Parent1"), new GitRevision("Parent2") };
-            GitRevision selectedRevision2 = new GitRevision("HEAD")
+            var parent1 = ObjectId.Random();
+            var parent2 = ObjectId.Random();
+
+            var firstSelected2 = new[]
             {
-                ParentGuids = new[] { "Parent1", "Parent2" }
+                new GitRevision(parent1),
+                new GitRevision(parent2)
             };
+
+            var selectedRevision2 = new GitRevision(ObjectId.Random())
+            {
+                ParentIds = new[] { parent1, parent2 }
+            };
+
             _tester.AllFirstAreParentsToSelected(firstSelected2, selectedRevision2).Should().BeTrue();
         }
 
@@ -104,7 +115,7 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void Matches_should_not_throw_if_revsion_null()
+        public void Matches_should_not_throw_if_revision_null()
         {
             _tester.Matches(null, null).Should().BeFalse();
         }
@@ -114,7 +125,7 @@ namespace GitCommandsTests.Git
         [TestCase("\t")]
         public void Matches_should_not_throw_if_criteria_null_or_empty(string criteria)
         {
-            _tester.Matches(new GitRevision(""), criteria).Should().BeFalse();
+            _tester.Matches(new GitRevision(ObjectId.Random()), criteria).Should().BeFalse();
         }
 
         [TestCase("myname")]
@@ -123,7 +134,7 @@ namespace GitCommandsTests.Git
         {
             var gitRef = Substitute.For<IGitRef>();
             gitRef.Name.Returns(x => "Name is MyName");
-            var revision = new GitRevision("") { Refs = new[] { gitRef } };
+            var revision = new GitRevision(ObjectId.Random()) { Refs = new[] { gitRef } };
 
             _tester.Matches(revision, criteria).Should().BeTrue();
         }
@@ -137,7 +148,7 @@ namespace GitCommandsTests.Git
             var gitRef = Substitute.For<IGitRef>();
             gitRef.Name.Returns(x => "Name is MyName");
 
-            var revision = new GitRevision("0011223344") { Refs = new[] { gitRef } };
+            var revision = new GitRevision(ObjectId.Parse("0011223344556677889900112233445566778899")) { Refs = new[] { gitRef } };
 
             _tester.Matches(revision, criteria).Should().Be(expected);
         }

@@ -68,7 +68,8 @@ namespace GitCommandsTests.Git
 
         private static string GetLsTreeOutput()
         {
-            return string.Concat("100644 blob 25d7b5d771e84982a3dfd8bd537531d8fb45d491	.editorconfig", "\n",
+            return string.Concat(
+                "100644 blob 25d7b5d771e84982a3dfd8bd537531d8fb45d491	.editorconfig", "\n",
                 "100644 blob bf29d31ff93be092ce746849e8db0984d4a83231	.gitattributes", "\0",
                 "040000 tree 93185d6bd18327f5a23bc34e7eb75e66ec0ef2d1	.github", "\n",
                 "100644 blob 46cccae116d2e5a1a2f818b0b31adde4ab3800a9	.gitignore", "\0",

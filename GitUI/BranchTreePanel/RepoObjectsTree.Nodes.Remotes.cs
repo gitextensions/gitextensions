@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,17 +15,13 @@ namespace GitUI.BranchTreePanel
 {
     public partial class RepoObjectsTree
     {
-        private class RemoteBranchTree : Tree
+        private sealed class RemoteBranchTree : Tree
         {
             public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
             {
-                uiCommands.GitUICommandsChanged += UiCommands_GitUICommandsChanged;
-            }
-
-            private void UiCommands_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
-            {
-                TreeViewNode.TreeView.SelectedNode = null;
+                // TODO unsubscribe this event as needed
+                uiCommands.UICommandsChanged += delegate { TreeViewNode.TreeView.SelectedNode = null; };
             }
 
             protected override async Task LoadNodesAsync(CancellationToken token)
@@ -35,42 +32,39 @@ namespace GitUI.BranchTreePanel
 
                 var branches = Module.GetRefs()
                     .Where(branch => branch.IsRemote && !branch.IsTag)
-                    .OrderBy(r => r.Name)
+                    .OrderBy(branch => branch.Name)
                     .Select(branch => branch.Name);
 
                 token.ThrowIfCancellationRequested();
-                var remotes = Module.GetRemotes(allowEmpty: true);
-                var branchFullPaths = new List<string>();
+                var remoteByName = Module.GetRemotes().ToDictionary(r => r.Name);
                 foreach (var branchPath in branches)
                 {
                     token.ThrowIfCancellationRequested();
-                    var remote = branchPath.Split('/').First();
-                    if (!remotes.Contains(remote))
+                    var remoteName = branchPath.SubstringUntil('/');
+                    if (remoteByName.TryGetValue(remoteName, out var remote))
                     {
-                        continue;
+                        var remoteBranchNode = new RemoteBranchNode(this, branchPath);
+                        var parent = remoteBranchNode.CreateRootNode(
+                            nodes,
+                            (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
+                        if (parent != null)
+                        {
+                            Nodes.AddNode(parent);
+                        }
                     }
-
-                    var remoteBranchNode = new RemoteBranchNode(this, branchPath);
-                    var parent = remoteBranchNode.CreateRootNode(nodes,
-                        (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
-                    if (parent != null)
-                    {
-                        Nodes.AddNode(parent);
-                    }
-
-                    branchFullPaths.Add(remoteBranchNode.FullPath);
                 }
-            }
 
-            private static BaseBranchNode CreateRemoteBranchPathNode(Tree tree,
-                string parentPath, string remoteName)
-            {
-                if (parentPath == remoteName)
+                return;
+
+                BaseBranchNode CreateRemoteBranchPathNode(Tree tree, string parentPath, Remote remote)
                 {
-                    return new RemoteRepoNode(tree, parentPath);
-                }
+                    if (parentPath == remote.Name)
+                    {
+                        return new RemoteRepoNode(tree, parentPath, remote);
+                    }
 
-                return new BasePathNode(tree, parentPath);
+                    return new BasePathNode(tree, parentPath);
+                }
             }
 
             protected override void FillTreeViewNode()
@@ -104,27 +98,37 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            private struct RemoteBranchInfo
+            private readonly struct RemoteBranchInfo
             {
-                public string Remote { get; set; }
+                public string Remote { get; }
+                public string BranchName { get; }
 
-                public string BranchName { get; set; }
+                public RemoteBranchInfo(string remote, string branchName)
+                {
+                    Remote = remote;
+                    BranchName = branchName;
+                }
             }
 
             private RemoteBranchInfo GetRemoteBranchInfo()
             {
                 var remote = FullPath.Split('/').First();
                 var branch = FullPath.Substring(remote.Length + 1);
-                return new RemoteBranchInfo
-                {
-                    Remote = remote,
-                    BranchName = branch
-                };
+                return new RemoteBranchInfo(remote, branch);
             }
 
             public void CreateBranch()
             {
-                UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, new GitRevision(FullPath));
+                var objectId = Module.RevParse(FullPath);
+
+                if (objectId == null)
+                {
+                    MessageBox.Show($"Branch \"{FullPath}\" could not be resolved.");
+                }
+                else
+                {
+                    UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, objectId);
+                }
             }
 
             public void Delete()
@@ -169,30 +173,42 @@ namespace GitUI.BranchTreePanel
 
             public void Reset()
             {
-                using (var form = new FormResetCurrentBranch(UICommands, new GitRevision(FullPath)))
+                var objectId = Module.RevParse(FullPath);
+
+                if (objectId == null)
                 {
-                    form.ShowDialog(TreeViewNode.TreeView);
+                    MessageBox.Show($"Branch \"{FullPath}\" could not be resolved.");
+                }
+                else
+                {
+                    using (var form = new FormResetCurrentBranch(UICommands, new GitRevision(objectId)))
+                    {
+                        form.ShowDialog(TreeViewNode.TreeView);
+                    }
                 }
             }
 
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(MsVsImages.BranchRemote_16x);
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.BranchRemote);
             }
         }
 
         private sealed class RemoteRepoNode : BaseBranchNode
         {
-            public RemoteRepoNode(Tree tree, string fullPath) : base(tree, fullPath)
+            private readonly Remote _remote;
+
+            public RemoteRepoNode(Tree tree, string fullPath, Remote remote) : base(tree, fullPath)
             {
+                _remote = remote;
             }
 
             public void Fetch()
             {
                 var cmd = Module.FetchCmd(FullPath, null, null, null);
-                var ret = FormRemoteProcess.ShowDialog(TreeViewNode.TreeView, Module, cmd);
-                if (ret)
+
+                if (FormRemoteProcess.ShowDialog(TreeViewNode.TreeView, Module, cmd))
                 {
                     UICommands.RepoChangedNotifier.Notify();
                 }
@@ -201,7 +217,30 @@ namespace GitUI.BranchTreePanel
             protected override void ApplyStyle()
             {
                 base.ApplyStyle();
-                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(MsVsImages.Repository_16x);
+
+                TreeViewNode.ToolTipText = _remote.FetchUrl != _remote.PushUrl
+                    ? $"Push: {_remote.PushUrl}\nFetch: {_remote.FetchUrl}"
+                    : _remote.FetchUrl;
+
+                string imageKey;
+                if (_remote.PushUrl.Contains("github.com") || _remote.FetchUrl.Contains("github.com"))
+                {
+                    imageKey = nameof(Images.GitHub);
+                }
+                else if (_remote.PushUrl.Contains("bitbucket.") || _remote.FetchUrl.Contains("bitbucket."))
+                {
+                    imageKey = nameof(Images.BitBucket);
+                }
+                else if (_remote.PushUrl.Contains("visualstudio.com") || _remote.FetchUrl.Contains("visualstudio.com"))
+                {
+                    imageKey = nameof(Images.VisualStudioTeamServices);
+                }
+                else
+                {
+                    imageKey = nameof(Images.Remote);
+                }
+
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = imageKey;
             }
         }
     }

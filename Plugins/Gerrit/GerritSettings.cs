@@ -50,7 +50,7 @@ namespace Gerrit
                 throw new GerritSettingsException(_settingsErrorProjectNotEntered.Text);
             }
 
-            var remotes = _module.GetRemotes(true);
+            var remotes = _module.GetRemoteNames();
 
             if (!remotes.Contains(DefaultRemote))
             {
@@ -58,11 +58,13 @@ namespace Gerrit
             }
         }
 
+        [CanBeNull]
         public static GerritSettings Load([NotNull] IGitModule module)
         {
             return Load(null, module);
         }
 
+        [CanBeNull]
         public static GerritSettings Load([CanBeNull] IWin32Window owner, [NotNull] IGitModule module)
         {
             if (module == null)

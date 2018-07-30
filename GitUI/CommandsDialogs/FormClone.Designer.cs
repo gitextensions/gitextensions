@@ -303,7 +303,7 @@ namespace GitUI.CommandsDialogs
             // 
             // LoadSSHKey
             // 
-            this.LoadSSHKey.Image = global::GitUI.Properties.Resources.putty;
+            this.LoadSSHKey.Image = global::GitUI.Properties.Images.Putty;
             this.LoadSSHKey.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LoadSSHKey.Location = new System.Drawing.Point(3, 3);
             this.LoadSSHKey.Name = "LoadSSHKey";

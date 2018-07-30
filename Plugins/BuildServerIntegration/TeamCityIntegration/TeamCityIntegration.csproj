@@ -101,9 +101,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Settings\TeamCityBuildChooser.resx">
-      <DependentUpon>TeamCityBuildChooser.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Settings\TeamCitySettingsUserControl.resx">
       <DependentUpon>TeamCitySettingsUserControl.cs</DependentUpon>
     </EmbeddedResource>

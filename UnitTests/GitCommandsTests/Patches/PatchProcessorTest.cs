@@ -69,7 +69,7 @@ namespace GitCommandsTests.Patches
         }
 
         [Test]
-        public void TestCorrectlyLoadsTheRightFilenamesInAPatchFile()
+        public void TestCorrectlyLoadsTheRightFileNamesInAPatchFile()
         {
             var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, Encoding.UTF8).ToList();
 

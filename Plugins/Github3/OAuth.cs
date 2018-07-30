@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Git.hub;
 
-namespace Github3
+namespace GitHub3
 {
     public partial class OAuth : Form
     {
@@ -21,7 +21,7 @@ namespace Github3
             {
                 webBrowser1.ScriptErrorsSuppressed = true;
                 webBrowser1.CausesValidation = false;
-                string url = "https://github.com/login/oauth/authorize?client_id=" + GithubAPIInfo.client_id + "&scope=repo,public_repo";
+                string url = "https://github.com/login/oauth/authorize?client_id=" + GitHubApiInfo.client_id + "&scope=repo,public_repo";
                 webBrowser1.Navigate(url);
             }
             catch (NullReferenceException)
@@ -59,13 +59,13 @@ namespace Github3
 
             if (url.Contains("?code="))
             {
-                Uri uri = new Uri(url);
+                var uri = new Uri(url);
                 var queryParams = GetParams(uri.Query);
                 if (queryParams.TryGetValue("code", out var code))
                 {
                     Hide();
                     Close();
-                    string token = OAuth2Helper.requestToken(GithubAPIInfo.client_id, GithubAPIInfo.client_secret, code);
+                    string token = OAuth2Helper.requestToken(GitHubApiInfo.client_id, GitHubApiInfo.client_secret, code);
                     if (token == null)
                     {
                         return;
@@ -73,9 +73,9 @@ namespace Github3
 
                     _gotToken = true;
 
-                    GithubLoginInfo.OAuthToken = token;
+                    GitHubLoginInfo.OAuthToken = token;
 
-                    MessageBox.Show(Owner, "Successfully retrieved OAuth token.", "Github Authorization");
+                    MessageBox.Show(Owner, "Successfully retrieved OAuth token.", "GitHub Authorization");
                 }
             }
         }

@@ -46,7 +46,7 @@
             this.helpTranslate = new System.Windows.Forms.LinkLabel();
             this.gbAuthorImages = new System.Windows.Forms.GroupBox();
             this.tlpnlAuthor = new System.Windows.Forms.TableLayoutPanel();
-            this.ShowAuthorGravatar = new System.Windows.Forms.CheckBox();
+            this.ShowAuthorAvatar = new System.Windows.Forms.CheckBox();
             this.ClearImageCache = new System.Windows.Forms.Button();
             this.NoImageService = new System.Windows.Forms.ComboBox();
             this.lblCacheDays = new System.Windows.Forms.Label();
@@ -82,7 +82,7 @@
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
-            tlpnlMain.Size = new System.Drawing.Size(2465, 1355);
+            tlpnlMain.Size = new System.Drawing.Size(757, 515);
             tlpnlMain.TabIndex = 0;
             // 
             // gbGeneral
@@ -94,7 +94,7 @@
             this.gbGeneral.Location = new System.Drawing.Point(3, 3);
             this.gbGeneral.Name = "gbGeneral";
             this.gbGeneral.Padding = new System.Windows.Forms.Padding(8);
-            this.gbGeneral.Size = new System.Drawing.Size(2459, 126);
+            this.gbGeneral.Size = new System.Drawing.Size(751, 153);
             this.gbGeneral.TabIndex = 0;
             this.gbGeneral.TabStop = false;
             this.gbGeneral.Text = "General";
@@ -120,7 +120,7 @@
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlGeneral.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlGeneral.Size = new System.Drawing.Size(2443, 96);
+            this.tlpnlGeneral.Size = new System.Drawing.Size(735, 123);
             this.tlpnlGeneral.TabIndex = 0;
             // 
             // chkShowRelativeDate
@@ -130,7 +130,7 @@
             this.chkShowRelativeDate.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkShowRelativeDate.Location = new System.Drawing.Point(3, 3);
             this.chkShowRelativeDate.Name = "chkShowRelativeDate";
-            this.chkShowRelativeDate.Size = new System.Drawing.Size(256, 17);
+            this.chkShowRelativeDate.Size = new System.Drawing.Size(281, 17);
             this.chkShowRelativeDate.TabIndex = 0;
             this.chkShowRelativeDate.Text = "Show relative date instead of full date";
             this.chkShowRelativeDate.UseVisualStyleBackColor = true;
@@ -145,16 +145,16 @@
             "Compact",
             "Trim start",
             "Filename only"});
-            this.truncatePathMethod.Location = new System.Drawing.Point(130, 72);
+            this.truncatePathMethod.Location = new System.Drawing.Point(130, 99);
             this.truncatePathMethod.Name = "truncatePathMethod";
-            this.truncatePathMethod.Size = new System.Drawing.Size(129, 21);
+            this.truncatePathMethod.Size = new System.Drawing.Size(154, 21);
             this.truncatePathMethod.TabIndex = 4;
             // 
             // truncateLongFilenames
             // 
             this.truncateLongFilenames.AutoSize = true;
             this.truncateLongFilenames.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.truncateLongFilenames.Location = new System.Drawing.Point(3, 69);
+            this.truncateLongFilenames.Location = new System.Drawing.Point(3, 96);
             this.truncateLongFilenames.Name = "truncateLongFilenames";
             this.truncateLongFilenames.Size = new System.Drawing.Size(121, 27);
             this.truncateLongFilenames.TabIndex = 3;
@@ -168,7 +168,7 @@
             this.chkEnableAutoScale.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkEnableAutoScale.Location = new System.Drawing.Point(3, 49);
             this.chkEnableAutoScale.Name = "chkEnableAutoScale";
-            this.chkEnableAutoScale.Size = new System.Drawing.Size(256, 17);
+            this.chkEnableAutoScale.Size = new System.Drawing.Size(281, 17);
             this.chkEnableAutoScale.TabIndex = 2;
             this.chkEnableAutoScale.Text = "Auto scale user interface when high DPI is used";
             this.chkEnableAutoScale.UseVisualStyleBackColor = true;
@@ -180,7 +180,7 @@
             this.chkShowCurrentBranchInVisualStudio.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chkShowCurrentBranchInVisualStudio.Location = new System.Drawing.Point(3, 26);
             this.chkShowCurrentBranchInVisualStudio.Name = "chkShowCurrentBranchInVisualStudio";
-            this.chkShowCurrentBranchInVisualStudio.Size = new System.Drawing.Size(256, 17);
+            this.chkShowCurrentBranchInVisualStudio.Size = new System.Drawing.Size(281, 17);
             this.chkShowCurrentBranchInVisualStudio.TabIndex = 1;
             this.chkShowCurrentBranchInVisualStudio.Text = "Show current branch in Visual Studio";
             this.chkShowCurrentBranchInVisualStudio.UseVisualStyleBackColor = true;
@@ -191,10 +191,10 @@
             this.gbLanguages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbLanguages.Controls.Add(this.tlpnlLanguage);
             this.gbLanguages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbLanguages.Location = new System.Drawing.Point(3, 277);
+            this.gbLanguages.Location = new System.Drawing.Point(3, 304);
             this.gbLanguages.Name = "gbLanguages";
             this.gbLanguages.Padding = new System.Windows.Forms.Padding(8);
-            this.gbLanguages.Size = new System.Drawing.Size(2459, 84);
+            this.gbLanguages.Size = new System.Drawing.Size(751, 84);
             this.gbLanguages.TabIndex = 2;
             this.gbLanguages.TabStop = false;
             this.gbLanguages.Text = "Language";
@@ -220,7 +220,7 @@
             this.tlpnlLanguage.RowCount = 2;
             this.tlpnlLanguage.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlLanguage.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlLanguage.Size = new System.Drawing.Size(2443, 54);
+            this.tlpnlLanguage.Size = new System.Drawing.Size(735, 54);
             this.tlpnlLanguage.TabIndex = 0;
             // 
             // Dictionary
@@ -300,10 +300,10 @@
             this.gbAuthorImages.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gbAuthorImages.Controls.Add(this.tlpnlAuthor);
             this.gbAuthorImages.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbAuthorImages.Location = new System.Drawing.Point(3, 135);
+            this.gbAuthorImages.Location = new System.Drawing.Point(3, 162);
             this.gbAuthorImages.Name = "gbAuthorImages";
             this.gbAuthorImages.Padding = new System.Windows.Forms.Padding(8);
-            this.gbAuthorImages.Size = new System.Drawing.Size(2459, 136);
+            this.gbAuthorImages.Size = new System.Drawing.Size(751, 136);
             this.gbAuthorImages.TabIndex = 1;
             this.gbAuthorImages.TabStop = false;
             this.gbAuthorImages.Text = "Author images";
@@ -316,7 +316,7 @@
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlAuthor.Controls.Add(this.ShowAuthorGravatar, 0, 0);
+            this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatar, 0, 0);
             this.tlpnlAuthor.Controls.Add(this.ClearImageCache, 1, 3);
             this.tlpnlAuthor.Controls.Add(this.NoImageService, 1, 2);
             this.tlpnlAuthor.Controls.Add(this.lblCacheDays, 0, 1);
@@ -330,20 +330,20 @@
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlAuthor.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tlpnlAuthor.Size = new System.Drawing.Size(2443, 106);
+            this.tlpnlAuthor.Size = new System.Drawing.Size(735, 106);
             this.tlpnlAuthor.TabIndex = 0;
             // 
-            // ShowAuthorGravatar
+            // ShowAuthorAvatar
             // 
-            this.ShowAuthorGravatar.AutoSize = true;
-            this.tlpnlAuthor.SetColumnSpan(this.ShowAuthorGravatar, 2);
-            this.ShowAuthorGravatar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ShowAuthorGravatar.Location = new System.Drawing.Point(3, 3);
-            this.ShowAuthorGravatar.Name = "ShowAuthorGravatar";
-            this.ShowAuthorGravatar.Size = new System.Drawing.Size(217, 17);
-            this.ShowAuthorGravatar.TabIndex = 0;
-            this.ShowAuthorGravatar.Text = "Get author image from gravatar.com";
-            this.ShowAuthorGravatar.UseVisualStyleBackColor = true;
+            this.ShowAuthorAvatar.AutoSize = true;
+            this.tlpnlAuthor.SetColumnSpan(this.ShowAuthorAvatar, 2);
+            this.ShowAuthorAvatar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ShowAuthorAvatar.Location = new System.Drawing.Point(3, 3);
+            this.ShowAuthorAvatar.Name = "ShowAuthorAvatar";
+            this.ShowAuthorAvatar.Size = new System.Drawing.Size(217, 17);
+            this.ShowAuthorAvatar.TabIndex = 0;
+            this.ShowAuthorAvatar.Text = "Show author's avatar in the commit info view";
+            this.ShowAuthorAvatar.UseVisualStyleBackColor = true;
             // 
             // ClearImageCache
             // 
@@ -427,7 +427,8 @@
             this.MinimumSize = new System.Drawing.Size(258, 255);
             this.Name = "AppearanceSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(2481, 1371);
+            this.Size = new System.Drawing.Size(773, 531);
+            this.Text = "Appearance";
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             this.gbGeneral.ResumeLayout(false);
@@ -468,7 +469,7 @@
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_DaysToCacheImages;
         private System.Windows.Forms.Label lblCacheDays;
         private System.Windows.Forms.Button ClearImageCache;
-        private System.Windows.Forms.CheckBox ShowAuthorGravatar;
+        private System.Windows.Forms.CheckBox ShowAuthorAvatar;
         private System.Windows.Forms.FontDialog diffFontDialog;
         private System.Windows.Forms.FontDialog applicationDialog;
         private System.Windows.Forms.FontDialog commitFontDialog;

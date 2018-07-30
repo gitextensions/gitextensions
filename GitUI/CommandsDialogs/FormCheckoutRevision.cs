@@ -9,10 +9,8 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormCheckoutRevision : GitModuleForm
     {
-        private readonly TranslationString _noRevisionSelectedMsgBox =
-            new TranslationString("Select 1 revision to checkout.");
-        private readonly TranslationString _noRevisionSelectedMsgBoxCaption =
-            new TranslationString("Checkout");
+        private readonly TranslationString _noRevisionSelectedMsgBox = new TranslationString("Select 1 revision to checkout.");
+        private readonly TranslationString _noRevisionSelectedMsgBoxCaption = new TranslationString("Checkout");
 
         /// <summary>
         /// For VS designer
@@ -26,7 +24,7 @@ namespace GitUI.CommandsDialogs
             : base(true, commands)
         {
             InitializeComponent();
-            Translate();
+            InitializeComplete();
         }
 
         public void SetRevision(string commitHash)
@@ -38,20 +36,24 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                var commitHash = commitPickerSmallControl1.SelectedCommitHash;
-                if (commitHash.IsNullOrEmpty())
+                var selectedObjectId = commitPickerSmallControl1.SelectedObjectId;
+
+                if (selectedObjectId == null)
                 {
                     MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text);
                     return;
                 }
 
-                var originalHash = Module.GetCurrentCheckout();
+                var checkedOutObjectId = Module.GetCurrentCheckout();
+
+                Debug.Assert(checkedOutObjectId != null, "checkedOutObjectId != null");
+
                 ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 
-                string command = GitCommandHelpers.CheckoutCmd(commitHash, Force.Checked ? LocalChangesAction.Reset : 0);
+                string command = GitCommandHelpers.CheckoutCmd(selectedObjectId.ToString(), Force.Checked ? LocalChangesAction.Reset : 0);
                 if (FormProcess.ShowDialog(this, command))
                 {
-                    if (!string.Equals(commitHash, originalHash, StringComparison.OrdinalIgnoreCase))
+                    if (selectedObjectId != checkedOutObjectId)
                     {
                         UICommands.UpdateSubmodules(this);
                     }

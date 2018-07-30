@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Threading;
+using JetBrains.Annotations;
 
 namespace GitCommands
 {
@@ -48,7 +49,7 @@ namespace GitCommands
         {
             string stdOutputLoader = null;
 
-            Thread stdOutputLoaderThread = new Thread(_ => stdOutputLoader = process.StandardOutput.ReadToEnd());
+            var stdOutputLoaderThread = new Thread(_ => stdOutputLoader = process.StandardOutput.ReadToEnd());
             stdOutputLoaderThread.Start();
 
             stdError = process.StandardError.ReadToEnd();
@@ -62,13 +63,13 @@ namespace GitCommands
         /// This function reads the output to a byte[]. This function is used because it doesn't need to know the
         /// correct encoding.
         /// </summary>
-        public static void ReadBytes(Process process, out byte[] stdOutput, out byte[] stdError)
+        public static void ReadBytes(Process process, out byte[] stdOutput, [CanBeNull] out byte[] stdError)
         {
             byte[] stdOutputLoader = null;
 
             // We cannot use the async functions because these functions will read the output to a string, this
             // can cause problems because the correct encoding is not used.
-            Thread stdOutputLoaderThread = new Thread(_ => stdOutputLoader = ReadByte(process.StandardOutput.BaseStream));
+            var stdOutputLoaderThread = new Thread(_ => stdOutputLoader = ReadByte(process.StandardOutput.BaseStream));
             stdOutputLoaderThread.Start();
 
             stdError = ReadByte(process.StandardError.BaseStream);
@@ -78,6 +79,7 @@ namespace GitCommands
             stdOutput = stdOutputLoader;
         }
 
+        [CanBeNull]
         private static byte[] ReadByte(Stream stream)
         {
             if (!stream.CanRead)
@@ -85,7 +87,7 @@ namespace GitCommands
                 return null;
             }
 
-            using (MemoryStream memStream = new MemoryStream())
+            using (var memStream = new MemoryStream())
             {
                 stream.CopyTo(memStream);
                 return memStream.ToArray();

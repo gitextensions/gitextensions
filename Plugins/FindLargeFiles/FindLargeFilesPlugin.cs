@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using FindLargeFiles.Properties;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -12,6 +13,7 @@ namespace FindLargeFiles
         {
             SetNameAndDescription("Find large files");
             Translate();
+            Icon = Resources.IconFindLargeFiles;
         }
 
         private readonly NumberSetting<float> _sizeLargeFile = new NumberSetting<float>("Find large files bigger than (Mb)", 1);
