@@ -367,6 +367,12 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnLoad(EventArgs e)
         {
+            InternalInitialize(false);
+            if (_startWithDashboard)
+            {
+                return;
+            }
+
             _windowsJumpListManager.CreateJumpList(
                 Handle,
                 new WindowsThumbnailToolbarButtons(
@@ -382,7 +388,6 @@ namespace GitUI.CommandsDialogs
             _filterBranchHelper.InitToolStripBranchFilter();
 
             LayoutRevisionInfo();
-            InternalInitialize(false);
             RevisionGrid.Focus();
             RevisionGrid.IndexWatcher.Reset();
 
@@ -632,14 +637,12 @@ namespace GitUI.CommandsDialogs
                 }
 
                 bool hasWorkingDir = !string.IsNullOrEmpty(Module.WorkingDir);
-                if (hasWorkingDir && !_startWithDashboard)
+                if (hasWorkingDir)
                 {
                     HideDashboard();
                 }
                 else
                 {
-                    // Consume the startup arguments, no specific directory was requested
-                    _startWithDashboard = false;
                     ShowDashboard();
                 }
 
@@ -726,12 +729,12 @@ namespace GitUI.CommandsDialogs
 
                 OnActivate();
 
-                // load custom user menu
                 LoadUserMenu();
-                ReloadRepoObjectsTree();
 
                 if (validBrowseDir)
                 {
+                    ReloadRepoObjectsTree();
+
                     _windowsJumpListManager.AddToRecent(Module.WorkingDir);
 
                     // add Navigate and View menu
