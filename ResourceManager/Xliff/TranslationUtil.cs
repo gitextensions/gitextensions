@@ -271,6 +271,7 @@ namespace ResourceManager.Xliff
             "SMDiag",
             "System",
             "vshost",
+            "Atlassian",
         };
 
         /// <summary>true if the specified <see cref="Assembly"/> may be translatable.</summary>
