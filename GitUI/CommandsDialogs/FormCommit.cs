@@ -1797,20 +1797,21 @@ namespace GitUI.CommandsDialogs
 
                     var files = new List<GitItemStatus>();
 
-                    foreach (var gitItemStatus in items)
+                    foreach (var item in items)
                     {
                         toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
-                        if (gitItemStatus.Name.EndsWith("/"))
-                        {
-                            gitItemStatus.Name = gitItemStatus.Name.TrimEnd('/');
-                        }
-
-                        files.Add(gitItemStatus);
+                        item.Name = item.Name.TrimEnd('/');
+                        files.Add(item);
                     }
 
                     bool wereErrors = false;
                     if (AppSettings.ShowErrorsWhenStagingFiles)
                     {
+                        using (var form = new FormStatus(ProcessStart, _stageDetails.Text))
+                        {
+                            form.ShowDialogOnError(this);
+                        }
+
                         void ProcessStart(FormStatus form)
                         {
                             form.AppendMessageCrossThread(
@@ -1819,11 +1820,6 @@ namespace GitUI.CommandsDialogs
                             var output = Module.StageFiles(files, out wereErrors);
                             form.AppendMessageCrossThread(output);
                             form.Done(string.IsNullOrEmpty(output));
-                        }
-
-                        using (var process = new FormStatus(ProcessStart, null) { Text = _stageDetails.Text })
-                        {
-                            process.ShowDialogOnError(this);
                         }
                     }
                     else
@@ -1963,9 +1959,9 @@ namespace GitUI.CommandsDialogs
                                 {
                                     File.Delete(path);
                                 }
-                                else
+                                else if (Directory.Exists(path))
                                 {
-                                    Directory.Delete(path, true);
+                                    Directory.Delete(path, recursive: true);
                                 }
                             }
                             catch (IOException)

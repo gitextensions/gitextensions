@@ -55,25 +55,26 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             if (_grid.TryGetSuperProjectInfo(out var spi))
             {
-                if (spi.Conflict_Base == revision.Guid)
+                if (spi.ConflictBase == revision.ObjectId)
                 {
                     DrawSuperProjectRef("Base");
                 }
 
-                if (spi.Conflict_Local == revision.Guid)
+                if (spi.ConflictLocal == revision.ObjectId)
                 {
                     DrawSuperProjectRef("Local");
                 }
 
-                if (spi.Conflict_Remote == revision.Guid)
+                if (spi.ConflictRemote == revision.ObjectId)
                 {
                     DrawSuperProjectRef("Remote");
                 }
 
-                if (spi.Refs?.ContainsKey(revision.Guid) == true)
+                if (spi.Refs != null &&
+                    revision.ObjectId != null &&
+                    spi.Refs.TryGetValue(revision.ObjectId, out var refs))
                 {
-                    superprojectRefs.AddRange(
-                        spi.Refs[revision.Guid].Where(RevisionGridControl.ShowRemoteRef));
+                    superprojectRefs.AddRange(refs.Where(RevisionGridControl.ShowRemoteRef));
                 }
 
                 void DrawSuperProjectRef(string label)

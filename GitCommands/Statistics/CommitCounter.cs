@@ -24,6 +24,11 @@ namespace GitCommands.Statistics
                     .Split('\n');
 
             return ParseCommitsPerContributor(unformattedCommitsPerContributor);
+
+            string GetDateParameter(DateTime sinceDate, string paramName)
+            {
+                return $" --{paramName}=\"{sinceDate:yyyy-MM-dd hh:mm:ss}\"";
+            }
         }
 
         private static (Dictionary<string, int> commitsPerContributor, int totalCommits)
@@ -65,11 +70,6 @@ namespace GitCommands.Statistics
             }
 
             return (commitsPerContributor, totalCommits);
-        }
-
-        private static string GetDateParameter(DateTime sinceDate, string paramName)
-        {
-            return string.Format(" --{1}=\"{0}\"", sinceDate.ToString("yyyy-MM-dd hh:mm:ss"), paramName);
         }
     }
 }

@@ -980,9 +980,9 @@ namespace GitUI
             {
                 // return local and remote hashes
                 var array = gitModule.SuperprojectModule.GetConflict(gitModule.SubmodulePath);
-                spi.Conflict_Base = array.Base.Hash;
-                spi.Conflict_Local = array.Local.Hash;
-                spi.Conflict_Remote = array.Remote.Hash;
+                spi.ConflictBase = array.Base.ObjectId;
+                spi.ConflictLocal = array.Local.ObjectId;
+                spi.ConflictRemote = array.Remote.ObjectId;
             }
             else
             {
@@ -993,7 +993,10 @@ namespace GitUI
 
             if (refs != null)
             {
-                spi.Refs = refs.Where(a => a.Value != null).GroupBy(a => a.Value.Guid).ToDictionary(gr => gr.Key, gr => gr.Select(a => a.Key).ToList());
+                spi.Refs = refs
+                    .Where(a => a.Value != null)
+                    .GroupBy(a => a.Value.ObjectId)
+                    .ToDictionary(gr => gr.Key, gr => gr.Select(a => a.Key).AsReadOnlyList());
             }
 
             return spi;

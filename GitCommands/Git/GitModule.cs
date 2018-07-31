@@ -54,13 +54,13 @@ namespace GitCommands
 
     public readonly struct ConflictedFileData
     {
-        public ConflictedFileData(string hash, string filename)
+        public ConflictedFileData(ObjectId objectId, string filename)
         {
-            Hash = hash;
+            ObjectId = objectId;
             Filename = filename;
         }
 
-        public string Hash { get; }
+        public ObjectId ObjectId { get; }
         public string Filename { get; }
     }
 
@@ -961,7 +961,7 @@ namespace GitCommands
                         item = new ConflictedFileData[3];
                     }
 
-                    item[stage - 1] = new ConflictedFileData(hash, itemName);
+                    item[stage - 1] = new ConflictedFileData(ObjectId.Parse(hash), itemName);
                     prevItemName = itemName;
                 }
             }
@@ -1337,28 +1337,28 @@ namespace GitCommands
             }
         }
 
-        public (char code, string currentCommitId) GetSuperprojectCurrentCheckout()
+        public (char code, ObjectId currentCommitId) GetSuperprojectCurrentCheckout()
         {
             if (SuperprojectModule == null)
             {
-                return (' ', "");
+                return (' ', null);
             }
 
             var lines = SuperprojectModule.RunGitCmd("submodule status --cached " + _submodulePath).Split('\n');
 
             if (lines.Length == 0)
             {
-                return (' ', "");
+                return (' ', null);
             }
 
             string submodule = lines[0];
+
             if (submodule.Length < 43)
             {
-                return (' ', "");
+                return (' ', null);
             }
 
-            var currentCommitGuid = submodule.Substring(1, 40).Trim();
-            return (submodule[0], currentCommitGuid);
+            return (submodule[0], ObjectId.Parse(submodule, 1));
         }
 
         public bool ExistsMergeCommit(string startRev, string endRev)
@@ -1538,9 +1538,11 @@ namespace GitCommands
                 var lines = File.ReadLines(WorkingDir + ".git");
                 foreach (string line in lines)
                 {
-                    if (line.StartsWith("gitdir:"))
+                    const string gitdir = "gitdir:";
+
+                    if (line.StartsWith(gitdir))
                     {
-                        string gitPath = line.Substring(7).Trim();
+                        string gitPath = line.Substring(gitdir.Length).Trim();
                         int pos = gitPath.IndexOf("/.git/modules/");
                         if (pos != -1)
                         {
@@ -2082,19 +2084,6 @@ namespace GitCommands
             return File.Exists(file) ? File.ReadAllText(file).Trim() : "";
         }
 
-        private static string AppendQuotedString(string str1, string str2)
-        {
-            var m1 = QuotedText.Match(str1);
-            var m2 = QuotedText.Match(str2);
-            if (!m1.Success || !m2.Success)
-            {
-                return str1 + str2;
-            }
-
-            Debug.Assert(m1.Groups[1].Value == m2.Groups[1].Value, "m1.Groups[1].Value == m2.Groups[1].Value");
-            return str1.Substring(0, str1.Length - 2) + m2.Groups[2].Value + "?=";
-        }
-
         private static string DecodeString(string str)
         {
             // decode QuotedPrintable text using .NET internal decoder
@@ -2252,6 +2241,19 @@ namespace GitCommands
             }
 
             return patchFiles;
+
+            string AppendQuotedString(string str1, string str2)
+            {
+                var m1 = QuotedText.Match(str1);
+                var m2 = QuotedText.Match(str2);
+                if (!m1.Success || !m2.Success)
+                {
+                    return str1 + str2;
+                }
+
+                Debug.Assert(m1.Groups[1].Value == m2.Groups[1].Value, "m1.Groups[1].Value == m2.Groups[1].Value");
+                return str1.Substring(0, str1.Length - 2) + m2.Groups[2].Value + "?=";
+            }
         }
 
         public string CommitCmd(bool amend, bool signOff = false, string author = "", bool useExplicitCommitMessage = true, bool noVerify = false, bool gpgSign = false, string gpgKeyId = "")
@@ -2856,13 +2858,14 @@ namespace GitCommands
         public string GetRemoteBranch(string branch)
         {
             string remote = GetSetting(string.Format(SettingKeyString.BranchRemote, branch));
-            string merge = GetSetting(string.Format("branch.{0}.merge", branch));
+            string merge = GetSetting($"branch.{branch}.merge");
+
             if (string.IsNullOrEmpty(remote) || string.IsNullOrEmpty(merge))
             {
                 return "";
             }
 
-            return remote + "/" + (merge.StartsWith("refs/heads/") ? merge.Substring(11) : merge);
+            return $"{remote}/{merge.RemovePrefix(GitRefName.RefsHeadsPrefix)}";
         }
 
         public IEnumerable<IGitRef> GetRemoteBranches()
@@ -3139,25 +3142,41 @@ namespace GitCommands
 
             tag = tag.Trim();
 
-            string info = RunGitCmd("tag -l -n10 " + tag, SystemEncoding);
+            var output = RunGitCmd("tag -l -n10 " + tag, SystemEncoding);
 
-            if (IsGitErrorMessage(info))
+            /*
+             * $ git tag -l -n10 1.50
+             * 1.50            Added close checkbox to process dialog
+             *
+             * $ git tag -l -n10 1.57
+             * 1.57            Minor changes.
+             *
+             *     Packed with Git-1.6.1 to avoid a bug in Git-1.6.2
+             *     When installing 64bit version, both 32bit and 64bit shell extensions will be registered
+             *     Application settings are saved when closing settings dialog instead of when application exits
+             *     Revert commit handles merge conflicts better
+             *     Diff in browse dialog now shows the diff between revisions if 2 revisions are selected
+             *     Bug solved: files in diff viewer are not shown correctly when 2 revisions are selected
+             *     Format path dialog improved
+             */
+
+            if (IsGitErrorMessage(output))
             {
                 return null;
             }
 
-            if (!info.StartsWith(tag))
+            if (!output.StartsWith(tag))
             {
                 return null;
             }
 
-            info = info.Substring(tag.Length).Trim();
-            if (info.Length == 0)
+            output = output.Substring(tag.Length).Trim();
+            if (output.Length == 0)
             {
                 return null;
             }
 
-            return info;
+            return output;
         }
 
         /// <summary>

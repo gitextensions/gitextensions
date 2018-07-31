@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -69,7 +70,7 @@ namespace GitCommands.Patches
         [NotNull]
         private static string CorrectHeaderForNewFile([NotNull] string header)
         {
-            string[] headerLines = header.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] headerLines = header.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             string pppLine = null;
             foreach (string line in headerLines)
             {
@@ -85,11 +86,11 @@ namespace GitCommands.Patches
             {
                 if (line.StartsWith("---"))
                 {
-                    sb.Append(pppLine + "\n");
+                    sb.Append(pppLine).Append('\n');
                 }
                 else if (!line.StartsWith("new file mode"))
                 {
-                    sb.Append(line + "\n");
+                    sb.Append(line).Append('\n');
                 }
             }
 
@@ -99,52 +100,46 @@ namespace GitCommands.Patches
         [CanBeNull]
         public static byte[] GetSelectedLinesAsNewPatch([NotNull] GitModule module, [NotNull] string newFileName, [NotNull] string text, int selectionPosition, int selectionLength, [NotNull] Encoding fileContentEncoding, bool reset, byte[] filePreamble)
         {
-            var sb = new StringBuilder();
-            const string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
-            sb.Append(string.Format("diff --git a/{0} b/{0}", newFileName));
-            sb.Append("\n");
-            if (!reset)
-            {
-                sb.Append("new file mode " + fileMode);
-                sb.Append("\n");
-            }
-
-            sb.Append("index 0000000..0000000");
-            sb.Append("\n");
-            if (reset)
-            {
-                sb.Append("--- a/" + newFileName);
-            }
-            else
-            {
-                sb.Append("--- /dev/null");
-            }
-
-            sb.Append("\n");
-            sb.Append("+++ b/" + newFileName);
-            sb.Append("\n");
-
-            string header = sb.ToString();
-
             var selectedChunks = FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreamble, fileContentEncoding);
 
             string body = ToIndexPatch(selectedChunks, isIndex: false, isWholeFile: true);
 
+            if (body == null)
+            {
+                return null;
+            }
+
             // git apply has problem with dealing with autocrlf
             // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if (reset && body != null && module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
+            if (reset && module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
             {
                 body = body.Replace("\r", "");
             }
 
-            if (header == null || body == null)
+            const string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
+            var header = new StringBuilder();
+
+            header.Append("diff --git a/").Append(newFileName).Append(" b/").Append(newFileName).Append('\n');
+
+            if (!reset)
             {
-                return null;
+                header.Append("new file mode ").Append(fileMode).Append('\n');
+            }
+
+            header.Append("index 0000000..0000000\n");
+
+            if (reset)
+            {
+                header.Append("--- a/").Append(newFileName).Append('\n');
             }
             else
             {
-                return GetPatchBytes(header, body, fileContentEncoding);
+                header.Append("--- /dev/null").Append('\n');
             }
+
+            header.Append("+++ b/").Append(newFileName).Append('\n');
+
+            return GetPatchBytes(header.ToString(), body, fileContentEncoding);
         }
 
         [NotNull]
@@ -210,10 +205,7 @@ namespace GitCommands.Patches
         [NotNull]
         private static IReadOnlyList<Chunk> FromNewFile([NotNull] GitModule module, [NotNull] string text, int selectionPosition, int selectionLength, bool reset, [NotNull] byte[] filePreamble, [NotNull] Encoding fileContentEncoding)
         {
-            return new List<Chunk>
-            {
-                Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreamble, fileContentEncoding)
-            };
+            return new[] { Chunk.FromNewFile(module, text, selectionPosition, selectionLength, reset, filePreamble, fileContentEncoding) };
         }
 
         [CanBeNull]
@@ -264,6 +256,7 @@ namespace GitCommands.Patches
         }
     }
 
+    [DebuggerDisplay("{" + nameof(Text) + "}")]
     internal sealed class PatchLine
     {
         public string Text { get; private set; }
@@ -303,7 +296,8 @@ namespace GitCommands.Patches
             string prePart = null;
             string postPart = null;
             bool inPostPart = false;
-            bool selectedLastLine = false;
+            bool selectedLastRemovedLine = false;
+            bool selectedLastAddedLine = false;
             addedCount += PreContext.Count + PostContext.Count;
             removedCount += PreContext.Count + PostContext.Count;
 
@@ -312,10 +306,9 @@ namespace GitCommands.Patches
                 diff = diff.Combine("\n", line.Text);
             }
 
-            for (int i = 0; i < RemovedLines.Count; i++)
+            foreach (var removedLine in RemovedLines)
             {
-                PatchLine removedLine = RemovedLines[i];
-                selectedLastLine = removedLine.Selected;
+                selectedLastAddedLine = removedLine.Selected;
                 if (removedLine.Selected)
                 {
                     wereSelectedLines = true;
@@ -339,12 +332,9 @@ namespace GitCommands.Patches
                 }
             }
 
-            bool selectedLastRemovedLine = selectedLastLine;
-
-            for (int i = 0; i < AddedLines.Count; i++)
+            foreach (var addedLine in AddedLines)
             {
-                PatchLine addedLine = AddedLines[i];
-                selectedLastLine = addedLine.Selected;
+                selectedLastRemovedLine = addedLine.Selected;
                 if (addedLine.Selected)
                 {
                     wereSelectedLines = true;
@@ -370,7 +360,7 @@ namespace GitCommands.Patches
 
             diff = diff.Combine("\n", prePart);
             diff = diff.Combine("\n", removePart);
-            if (PostContext.Count == 0 && (!isIndex || selectedLastRemovedLine))
+            if (PostContext.Count == 0 && (selectedLastRemovedLine || !isIndex))
             {
                 diff = diff.Combine("\n", WasNoNewLineAtTheEnd);
             }
@@ -383,7 +373,7 @@ namespace GitCommands.Patches
             }
 
             // stage no new line at the end only if last +- line is selected
-            if (PostContext.Count == 0 && (selectedLastLine || isIndex || isWholeFile))
+            if (PostContext.Count == 0 && (selectedLastAddedLine || isIndex || isWholeFile))
             {
                 diff = diff.Combine("\n", IsNoNewLineAtTheEnd);
             }
@@ -397,6 +387,7 @@ namespace GitCommands.Patches
         }
 
         // patch base is changed file
+        [CanBeNull]
         public string ToResetWorkTreeLinesPatch(ref int addedCount, ref int removedCount, ref bool wereSelectedLines)
         {
             string diff = null;

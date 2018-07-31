@@ -281,5 +281,18 @@ namespace GitCommands
             exactPath = null;
             return false;
         }
+
+        [CanBeNull]
+        public static string GetFileExtension(string fileName)
+        {
+            var index = fileName.LastIndexOf('.');
+
+            if (index != -1)
+            {
+                return fileName.Substring(index + 1);
+            }
+
+            return null;
+        }
     }
 }

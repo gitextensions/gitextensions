@@ -8,9 +8,10 @@ namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormMergeSubmodule : GitModuleForm
     {
-        private readonly string _filename;
         private readonly TranslationString _stageFilename = new TranslationString("Stage {0}");
         private readonly TranslationString _deleted = new TranslationString("deleted");
+
+        private readonly string _filename;
 
         public FormMergeSubmodule(GitUICommands commands, string filename)
             : base(commands)
@@ -24,9 +25,10 @@ namespace GitUI.CommandsDialogs
         private void FormMergeSubmodule_Load(object sender, EventArgs e)
         {
             var item = Module.GetConflict(_filename);
-            tbBase.Text = item.Base.Hash ?? _deleted.Text;
-            tbLocal.Text = item.Local.Hash ?? _deleted.Text;
-            tbRemote.Text = item.Remote.Hash ?? _deleted.Text;
+
+            tbBase.Text = item.Base.ObjectId?.ToString() ?? _deleted.Text;
+            tbLocal.Text = item.Local.ObjectId?.ToString() ?? _deleted.Text;
+            tbRemote.Text = item.Remote.ObjectId?.ToString() ?? _deleted.Text;
             tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout()?.ToString() ?? "";
         }
 
@@ -37,17 +39,17 @@ namespace GitUI.CommandsDialogs
 
         private void StageSubmodule()
         {
+            using (var form = new FormStatus(ProcessStart, string.Format(_stageFilename.Text, _filename)))
+            {
+                form.ShowDialogOnError(this);
+            }
+
             void ProcessStart(FormStatus form)
             {
                 form.AddMessageLine(string.Format(_stageFilename.Text, _filename));
                 string output = Module.RunGitCmd($"add -- \"{_filename}\"");
                 form.AddMessageLine(output);
                 form.Done(string.IsNullOrEmpty(output));
-            }
-
-            using (var process = new FormStatus(ProcessStart, null) { Text = string.Format(_stageFilename.Text, _filename) })
-            {
-                process.ShowDialogOnError(this);
             }
         }
 

@@ -135,8 +135,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else if (objectType == LostObjectType.Blob)
                 {
-                    var hash = objectId.ToString();
-                    var blobPath = Path.Combine(module.WorkingDirGitDir, "objects", hash.Substring(0, 2), hash.Substring(2, ObjectId.Sha1CharCount - 2));
+                    var blobPath = objectId.ToObjectFilePath(module.WorkingDirGitDir);
                     result.Date = new FileInfo(blobPath).CreationTime;
                 }
 

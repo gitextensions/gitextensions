@@ -158,7 +158,7 @@ namespace TfsIntegration
 
         private static BuildInfo CreateBuildInfo(IBuild buildDetail)
         {
-            var objectId = ObjectId.Parse(buildDetail.Revision.Substring(buildDetail.Revision.LastIndexOf(":") + 1));
+            var objectId = ObjectId.Parse(buildDetail.Revision.SubstringAfter(':'));
 
             return new BuildInfo
             {

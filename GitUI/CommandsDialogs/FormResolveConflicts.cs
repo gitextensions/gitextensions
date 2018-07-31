@@ -646,12 +646,12 @@ namespace GitUI.CommandsDialogs
 
         private string GetShortHash(ConflictedFileData item)
         {
-            if (item.Hash == null)
+            if (item.ObjectId == null)
             {
                 return "@" + _deleted.Text;
             }
 
-            return '@' + item.Hash.Substring(0, 8);
+            return '@' + item.ObjectId.ToShortString(8);
         }
 
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
@@ -1069,9 +1069,9 @@ namespace GitUI.CommandsDialogs
                     AddExtension = true
                 })
                 {
-                    fileDialog.DefaultExt = GitCommandHelpers.GetFileExtension(fileDialog.FileName);
-                    fileDialog.Filter = string.Format(_currentFormatFilter.Text, GitCommandHelpers.GetFileExtension(fileDialog.FileName)) + "|*." +
-                                        GitCommandHelpers.GetFileExtension(fileDialog.FileName) + "|" + _allFilesFilter.Text + "|*.*";
+                    var ext = PathUtil.GetFileExtension(fileDialog.FileName);
+                    fileDialog.DefaultExt = ext;
+                    fileDialog.Filter = string.Format(_currentFormatFilter.Text, ext) + "|*." + ext + "|" + _allFilesFilter.Text + "|*.*";
 
                     if (fileDialog.ShowDialog(this) == DialogResult.OK)
                     {
@@ -1169,17 +1169,17 @@ namespace GitUI.CommandsDialogs
 
         private void StageFile(string filename)
         {
+            using (var form = new FormStatus(ProcessStart, string.Format(_stageFilename.Text, filename)))
+            {
+                form.ShowDialogOnError(this);
+            }
+
             void ProcessStart(FormStatus form)
             {
                 form.AddMessageLine(string.Format(_stageFilename.Text, filename));
                 string output = Module.RunGitCmd("add -- \"" + filename + "\"");
                 form.AddMessageLine(output);
                 form.Done(string.IsNullOrEmpty(output));
-            }
-
-            using (var process = new FormStatus(ProcessStart, null) { Text = string.Format(_stageFilename.Text, filename) })
-            {
-                process.ShowDialogOnError(this);
             }
         }
 

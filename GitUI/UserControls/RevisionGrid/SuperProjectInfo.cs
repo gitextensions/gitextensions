@@ -1,14 +1,16 @@
 using System.Collections.Generic;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitUI
 {
     internal sealed class SuperProjectInfo
     {
-        public string CurrentBranch;
-        public string Conflict_Base;
-        public string Conflict_Remote;
-        public string Conflict_Local;
-        public Dictionary<string, List<IGitRef>> Refs;
+        // TODO nothing reads this property
+        [CanBeNull] public ObjectId CurrentBranch { get; set; }
+        [CanBeNull] public ObjectId ConflictBase { get; set; }
+        [CanBeNull] public ObjectId ConflictRemote { get; set; }
+        [CanBeNull] public ObjectId ConflictLocal { get; set; }
+        [CanBeNull] public IReadOnlyDictionary<ObjectId, IReadOnlyList<IGitRef>> Refs { get; set; }
     }
 }

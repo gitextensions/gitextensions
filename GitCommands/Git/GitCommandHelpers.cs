@@ -761,7 +761,7 @@ namespace GitCommands
                     // We are looking for lines resembling:
                     //
                     // -Subproject commit bfef4454fc51e345051ee5bf66686dc28deed627
-                    // +Subproject commit 8b20498b954609770205c2cc794b868b4ac3ee69
+                    // +Subproject commit 8b20498b954609770205c2cc794b868b4ac3ee69-dirty
 
                     if (!line.Contains("Subproject"))
                     {
@@ -1111,7 +1111,7 @@ namespace GitCommands
                     continue;
                 }
 
-                string fileName = line.Substring(line.IndexOf(' ') + 1);
+                string fileName = line.SubstringAfter(' ');
                 GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.Unknown, fileName, statusCharacter);
                 gitItemStatus.IsAssumeUnchanged = true;
                 result.Add(gitItemStatus);
@@ -1128,7 +1128,7 @@ namespace GitCommands
             {
                 char statusCharacter = line[0];
 
-                string fileName = line.Substring(line.IndexOf(' ') + 1);
+                string fileName = line.SubstringAfter(' ');
                 GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.Unknown, fileName, statusCharacter);
                 if (gitItemStatus.IsSkipWorktree)
                 {
@@ -1216,17 +1216,6 @@ namespace GitCommands
             };
 
             return args.ToString();
-        }
-
-        [CanBeNull]
-        public static string GetFileExtension(string fileName)
-        {
-            if (fileName.Contains(".") && fileName.LastIndexOf(".") < fileName.Length)
-            {
-                return fileName.Substring(fileName.LastIndexOf('.') + 1);
-            }
-
-            return null;
         }
 
         // returns " --find-renames=..." according to app settings

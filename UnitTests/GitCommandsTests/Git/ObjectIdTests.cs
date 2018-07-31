@@ -6,6 +6,8 @@ using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
+// ReSharper disable StringLiteralTypo
+
 namespace GitCommandsTests.Git
 {
     // TODO SUT is in GitUIPluginInterfaces but no test assembly exists for that assembly
@@ -275,6 +277,13 @@ namespace GitCommandsTests.Git
             Assert.False(ObjectId.Random().Equals("gibberish"));
             Assert.False(ObjectId.Parse("0123456789012345678901234567890123456789").Equals(" 0123456789012345678901234567890123456789 "));
             Assert.False(ObjectId.Parse("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").Equals("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
+        }
+
+        [TestCase("0123456789abcdef0123456789abcdef01234567", "", "objects\\01\\23456789abcdef0123456789abcdef01234567")]
+        [TestCase("0123456789abcdef0123456789abcdef01234567", ".git", ".git\\objects\\01\\23456789abcdef0123456789abcdef01234567")]
+        public void ToObjectFilePath_works_as_expected(string hash, string gitDir, string expected)
+        {
+            Assert.AreEqual(expected, ObjectId.Parse(hash).ToObjectFilePath(gitDir));
         }
     }
 }

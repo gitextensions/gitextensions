@@ -112,28 +112,12 @@ namespace Gerrit
                 {
                     if (hadNewChanges)
                     {
-                        change = line;
-                        const string remotePrefix = "remote:";
-
-                        if (change.StartsWith(remotePrefix))
-                        {
-                            change = change.Substring(remotePrefix.Length);
-                        }
-
-                        int escapePos = change.LastIndexOf((char)27);
-                        if (escapePos != -1)
-                        {
-                            change = change.Substring(0, escapePos);
-                        }
-
-                        change = change.Trim();
-
-                        int spacePos = change.IndexOf(' ');
-                        if (spacePos != -1)
-                        {
-                            change = change.Substring(0, spacePos);
-                        }
-
+                        const char esc = (char)27;
+                        change = line
+                            .RemovePrefix("remote:")
+                            .SubstringUntilLast(esc)
+                            .Trim()
+                            .SubstringUntil(' ');
                         break;
                     }
                     else if (line.Contains("New Changes"))
