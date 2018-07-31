@@ -55,7 +55,7 @@ namespace GitCommands
             {
                 var basePath = (item as GitItem)?.FileName ?? string.Empty;
 
-                foreach (var subItem in module.GetTree(item.Guid, full: false))
+                foreach (var subItem in module.GetTree(item.ObjectId, full: false))
                 {
                     if (subItem is GitItem gitItem)
                     {

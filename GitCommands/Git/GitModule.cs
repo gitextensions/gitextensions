@@ -2548,9 +2548,9 @@ namespace GitCommands
             return resultCollection;
         }
 
-        public IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId treeGuid, bool full)
+        public IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId commitId, bool full)
         {
-            var tree = GetTree(treeGuid.ToString(), full);
+            var tree = GetTree(commitId, full);
 
             var list = tree
                 .Select(file => new GitItemStatus
@@ -3196,19 +3196,17 @@ namespace GitCommands
                 .Split('\0', '\n');
         }
 
-        public IEnumerable<IGitItem> GetTree(string id, bool full)
+        public IEnumerable<IGitItem> GetTree(ObjectId commitId, bool full)
         {
             var args = new ArgumentBuilder
             {
                 "ls-tree",
                 "-z",
                 { full, "-r" },
-                id.Quote()
+                commitId
             };
 
-            var tree = GitRevision.IsFullSha1Hash(id)
-                ? RunCacheableGitCmd(args.ToString(), SystemEncoding)
-                : ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(AppSettings.GitCommand, args.ToString(), SystemEncoding));
+            var tree = RunCacheableGitCmd(args.ToString(), SystemEncoding);
 
             return _gitTreeParser.Parse(tree);
         }
