@@ -1109,19 +1109,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            const long fiveMB = 5 * 1024 * 1024;
-
-            long length = GetItemLength(item.Name);
-            if (length < fiveMB)
-            {
-                SetSelectedDiff(item, staged);
-            }
-            else
-            {
-                SelectedDiff.Clear();
-                SelectedDiff.Refresh();
-                llShowPreview.Show();
-            }
+            SetSelectedDiff(item, staged);
 
             _stageSelectedLinesToolStripMenuItem.Text = staged ? _unstageSelectedLines.Text : _stageSelectedLines.Text;
             _stageSelectedLinesToolStripMenuItem.Image = staged ? toolUnstageItem.Image : toolStageItem.Image;
@@ -1129,29 +1117,6 @@ namespace GitUI.CommandsDialogs
                 GetShortcutKeys((int)(staged ? Commands.UnStageSelectedFile : Commands.StageSelectedFile)).ToShortcutKeyDisplayString();
 
             return;
-
-            long GetItemLength(string fileName)
-            {
-                long len = -1;
-                string path = fileName;
-                if (!File.Exists(fileName))
-                {
-                    path = _fullPathResolver.Resolve(fileName);
-                }
-
-                if (File.Exists(path))
-                {
-                    len = new FileInfo(path).Length;
-                }
-
-                return len;
-            }
-        }
-
-        private void llShowPreview_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            llShowPreview.Hide();
-            SetSelectedDiff(_currentItem, _currentItemStaged);
         }
 
         private void SetSelectedDiff(GitItemStatus item, bool staged)
@@ -1172,7 +1137,6 @@ namespace GitUI.CommandsDialogs
 
         private void ClearDiffViewIfNoFilesLeft()
         {
-            llShowPreview.Hide();
             if ((Staged.IsEmpty && Unstaged.IsEmpty) || (!Unstaged.SelectedItems.Any() && !Staged.SelectedItems.Any()))
             {
                 SelectedDiff.Clear();

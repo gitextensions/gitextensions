@@ -114,7 +114,6 @@ namespace GitUI.CommandsDialogs
             this.toolUnstageItem = new System.Windows.Forms.ToolStripButton();
             this.Ok = new System.Windows.Forms.Button();
             this.splitRight = new System.Windows.Forms.SplitContainer();
-            this.llShowPreview = new System.Windows.Forms.LinkLabel();
             this.SolveMergeconflicts = new System.Windows.Forms.Button();
             this.SelectedDiff = new GitUI.Editor.FileViewer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -1024,7 +1023,6 @@ namespace GitUI.CommandsDialogs
             //
             // splitRight.Panel1
             //
-            this.splitRight.Panel1.Controls.Add(this.llShowPreview);
             this.splitRight.Panel1.Controls.Add(this.SolveMergeconflicts);
             this.splitRight.Panel1.Controls.Add(this.SelectedDiff);
             //
@@ -1035,18 +1033,6 @@ namespace GitUI.CommandsDialogs
             this.splitRight.SplitterDistance = 426;
             this.splitRight.TabIndex = 0;
             this.splitRight.TabStop = false;
-            //
-            // llShowPreview
-            //
-            this.llShowPreview.AutoSize = true;
-            this.llShowPreview.Location = new System.Drawing.Point(43, 23);
-            this.llShowPreview.Name = "llShowPreview";
-            this.llShowPreview.Size = new System.Drawing.Size(214, 13);
-            this.llShowPreview.TabIndex = 9;
-            this.llShowPreview.TabStop = true;
-            this.llShowPreview.Text = "This file is over 5 MB. Click to show preview";
-            this.llShowPreview.Visible = false;
-            this.llShowPreview.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llShowPreview_LinkClicked);
             //
             // SolveMergeconflicts
             //
@@ -1589,7 +1575,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripLabel toolStripLabel1;
         private ToolStripComboBox selectionFilter;
         private ToolStripMenuItem selectionFilterToolStripMenuItem;
-        private LinkLabel llShowPreview;
         private ContextMenuStrip UnstagedSubmoduleContext;
         private ToolStripMenuItem openSubmoduleMenuItem;
         private ToolStripMenuItem updateSubmoduleMenuItem;
