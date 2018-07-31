@@ -140,24 +140,6 @@ namespace GitUI.UserControls
             }
         }
 
-        public void SetCurrentBranch(string branch, bool remote)
-        {
-            // Set current branch after initialize, because initialize will reset it
-            if (!string.IsNullOrEmpty(branch))
-            {
-                Branches.Items.Add(branch);
-                Branches.SelectedItem = branch;
-            }
-
-            if (_containRevisions != null)
-            {
-                if (Branches.Items.Count == 0)
-                {
-                    Initialize(remote, _containRevisions);
-                }
-            }
-        }
-
         private void LocalBranch_CheckedChanged(object sender, EventArgs e)
         {
             Branches.Focus();

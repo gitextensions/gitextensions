@@ -28,7 +28,7 @@ namespace GitUI.CommandsDialogs
 
             FileName = fileName;
 
-            blameControl1.LoadBlame(revision ?? Module.GetRevision("Head"), null, fileName, null, null, Module.FilesEncoding, initialLine);
+            blameControl1.LoadBlame(revision ?? Module.GetRevision(), null, fileName, null, null, Module.FilesEncoding, initialLine);
         }
 
         public string FileName { get; set; }

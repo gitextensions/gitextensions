@@ -727,16 +727,18 @@ namespace GitCommands
             return result;
         }
 
-        public void EditNotes(string revision)
+        public void EditNotes(ObjectId commitId)
         {
-            string editor = GetEffectiveSetting("core.editor").ToLower();
+            var arguments = new ArgumentBuilder { "notes", "edit", commitId };
+            var editor = GetEffectiveSetting("core.editor").ToLower();
+
             if (editor.Contains("gitextensions") || editor.Contains("notepad"))
             {
-                RunGitCmd("notes edit " + revision);
+                RunGitCmd(arguments);
             }
             else
             {
-                RunExternalCmdShowConsole(AppSettings.GitCommand, "notes edit " + revision);
+                RunExternalCmdShowConsole(AppSettings.GitCommand, arguments.ToString());
             }
         }
 
@@ -1163,12 +1165,7 @@ namespace GitCommands
             return GetParents(objectId).Count > 1;
         }
 
-        public GitRevision GetRevision(ObjectId objectId, bool shortFormat = false, bool loadRefs = false)
-        {
-            return GetRevision(objectId.ToString(), shortFormat, loadRefs);
-        }
-
-        public GitRevision GetRevision(string commit, bool shortFormat = false, bool loadRefs = false)
+        public GitRevision GetRevision([CanBeNull] ObjectId objectId = null, bool shortFormat = false, bool loadRefs = false)
         {
             const string formatString =
                 /* Hash           */ "%H%n" +
@@ -1184,9 +1181,17 @@ namespace GitCommands
 
             var format = formatString + (shortFormat ? "%s" : "%B%nNotes:%n%-N");
 
-            var revInfo = RunCacheableGitCmd($"log -n1 --format=format:{format} {commit}", LosslessEncoding);
+            var args = new ArgumentBuilder
+            {
+                "log",
+                "-n1",
+                $"--format=format:{format}",
+                objectId
+            };
 
-            // TODO improve parsing to reduce temporary string (see similar code in RevisionGraph)
+            var revInfo = RunCacheableGitCmd(args.ToString(), LosslessEncoding);
+
+            // TODO improve parsing to reduce temporary string (see similar code in RevisionReader)
             string[] lines = revInfo.Split('\n');
 
             var revision = new GitRevision(ObjectId.Parse(lines[0]))

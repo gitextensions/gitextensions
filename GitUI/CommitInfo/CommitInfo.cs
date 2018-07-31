@@ -655,7 +655,7 @@ namespace GitUI.CommitInfo
 
         private void addNoteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Module.EditNotes(_revision.Guid);
+            Module.EditNotes(_revision.ObjectId);
             ReloadCommitInfo();
         }
 

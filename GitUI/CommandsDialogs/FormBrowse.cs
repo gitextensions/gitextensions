@@ -347,6 +347,21 @@ namespace GitUI.CommandsDialogs
 
             InitializeComplete();
             RestorePosition();
+
+            return;
+
+            void ManageWorktreeSupport()
+            {
+                if (!GitCommandHelpers.VersionInUse.SupportWorktree)
+                {
+                    createWorktreeToolStripMenuItem.Enabled = false;
+                }
+
+                if (!GitCommandHelpers.VersionInUse.SupportWorktreeList)
+                {
+                    manageWorktreeToolStripMenuItem.Enabled = false;
+                }
+            }
         }
 
         protected override void Dispose(bool disposing)
@@ -462,19 +477,6 @@ namespace GitUI.CommandsDialogs
 
                 // Execute the "Show all branches" menu option
                 RevisionGrid.ShowAllBranches();
-            }
-        }
-
-        private void ManageWorktreeSupport()
-        {
-            if (!GitCommandHelpers.VersionInUse.SupportWorktree)
-            {
-                createWorktreeToolStripMenuItem.Enabled = false;
-            }
-
-            if (!GitCommandHelpers.VersionInUse.SupportWorktreeList)
-            {
-                manageWorktreeToolStripMenuItem.Enabled = false;
             }
         }
 
@@ -753,6 +755,85 @@ namespace GitUI.CommandsDialogs
             }
 
             toolPanel.ResumeLayout();
+
+            return;
+
+            void SetShortcutKeyDisplayStringsFromHotkeySettings()
+            {
+                // Add shortcuts to the menu items
+                gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitBash).ToShortcutKeyDisplayString();
+                commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.Commit).ToShortcutKeyDisplayString();
+                stashChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.Stash).ToShortcutKeyDisplayString();
+                stashPopToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.StashPop).ToShortcutKeyDisplayString();
+                closeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CloseRepository).ToShortcutKeyDisplayString();
+                gitGUIToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGui).ToShortcutKeyDisplayString();
+                kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGitK).ToShortcutKeyDisplayString();
+                checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CheckoutBranch).ToShortcutKeyDisplayString();
+                settingsToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.OpenSettings).ToShortcutKeyDisplayString();
+
+                // TODO: add more
+            }
+
+            void LoadUserMenu()
+            {
+                var scripts = ScriptManager.GetScripts()
+                    .Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)
+                    .ToList();
+
+                for (int i = ToolStrip.Items.Count - 1; i >= 0; i--)
+                {
+                    if (ToolStrip.Items[i].Tag as string == "userscript")
+                    {
+                        ToolStrip.Items.RemoveAt(i);
+                    }
+                }
+
+                if (scripts.Count == 0)
+                {
+                    return;
+                }
+
+                ToolStrip.Items.Add(new ToolStripSeparator { Tag = "userscript" });
+
+                foreach (var script in scripts)
+                {
+                    var button = new ToolStripButton
+                    {
+                        // store scriptname
+                        Text = script.Name,
+                        Tag = "userscript",
+                        Enabled = true,
+                        Visible = true,
+                        Image = script.GetIcon(),
+                        DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
+                    };
+
+                    button.Click += delegate
+                    {
+                        if (ScriptRunner.RunScript(this, Module, script.Name, RevisionGrid))
+                        {
+                            RevisionGrid.RefreshRevisions();
+                        }
+                    };
+
+                    // add to toolstrip
+                    ToolStrip.Items.Add(button);
+                }
+            }
+
+            void ShowRevisions()
+            {
+                if (RevisionGrid.IndexWatcher.IndexChanged)
+                {
+                    FillFileTree();
+                    FillDiff();
+                    FillCommitInfo();
+                    ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
+                    FillBuildReport();
+                }
+
+                RevisionGrid.IndexWatcher.Reset();
+            }
         }
 
         private void ReloadRepoObjectsTree()
@@ -770,6 +851,124 @@ namespace GitUI.CommandsDialogs
             CheckForMergeConflicts();
             UpdateStashCount();
             UpdateSubmodulesList();
+
+            return;
+
+            void CheckForMergeConflicts()
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+
+                bool validWorkingDir = Module.IsValidGitWorkingDir();
+
+                if (validWorkingDir && Module.InTheMiddleOfBisect())
+                {
+                    if (_bisect == null)
+                    {
+                        _bisect = new WarningToolStripItem { Text = _warningMiddleOfBisect.Text };
+                        _bisect.Click += BisectClick;
+                        statusStrip.Items.Add(_bisect);
+                    }
+                }
+                else
+                {
+                    if (_bisect != null)
+                    {
+                        _bisect.Click -= BisectClick;
+                        statusStrip.Items.Remove(_bisect);
+                        _bisect = null;
+                    }
+                }
+
+                if (validWorkingDir &&
+                    (Module.InTheMiddleOfRebase() || Module.InTheMiddleOfPatch()))
+                {
+                    if (_rebase == null)
+                    {
+                        _rebase = new WarningToolStripItem
+                        {
+                            Text = Module.InTheMiddleOfRebase()
+                                ? _warningMiddleOfRebase.Text
+                                : _warningMiddleOfPatchApply.Text
+                        };
+                        _rebase.Click += RebaseClick;
+                        statusStrip.Items.Add(_rebase);
+                    }
+                }
+                else
+                {
+                    if (_rebase != null)
+                    {
+                        _rebase.Click -= RebaseClick;
+                        statusStrip.Items.Remove(_rebase);
+                        _rebase = null;
+                    }
+                }
+
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await TaskScheduler.Default;
+
+                    var result = validWorkingDir
+                        && Module.InTheMiddleOfConflictedMerge()
+                        && !Directory.Exists(Module.WorkingDirGitDir + "rebase-apply\\");
+
+                    await this.SwitchToMainThreadAsync();
+
+                    if (result)
+                    {
+                        if (_warning == null)
+                        {
+                            _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
+                            _warning.Click += WarningClick;
+                            statusStrip.Items.Add(_warning);
+                        }
+                    }
+                    else
+                    {
+                        if (_warning != null)
+                        {
+                            _warning.Click -= WarningClick;
+                            statusStrip.Items.Remove(_warning);
+                            _warning = null;
+                        }
+                    }
+
+                    // Only show status strip when there are status items on it.
+                    // There is always a close (x) button, do not count first item.
+                    if (statusStrip.Items.Count > 1)
+                    {
+                        statusStrip.Show();
+                    }
+                    else
+                    {
+                        statusStrip.Hide();
+                    }
+                }).FileAndForget();
+            }
+
+            void UpdateStashCount()
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+
+                if (AppSettings.ShowStashCount)
+                {
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        await TaskScheduler.Default;
+
+                        var result = Module.GetStashes().Count;
+
+                        await this.SwitchToMainThreadAsync();
+
+                        toolStripSplitStash.Text = string.Format(_stashCount.Text, result,
+                            result != 1 ? _stashPlural.Text : _stashSingular.Text);
+                    }).FileAndForget();
+                }
+                else
+                {
+                    toolStripSplitStash.Text = string.Empty;
+                }
+            }
         }
 
         #region Working directory combo box
@@ -866,169 +1065,6 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private void LoadUserMenu()
-        {
-            var scripts = ScriptManager.GetScripts()
-                .Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)
-                .ToList();
-
-            for (int i = ToolStrip.Items.Count - 1; i >= 0; i--)
-            {
-                if (ToolStrip.Items[i].Tag as string == "userscript")
-                {
-                    ToolStrip.Items.RemoveAt(i);
-                }
-            }
-
-            if (scripts.Count == 0)
-            {
-                return;
-            }
-
-            ToolStrip.Items.Add(new ToolStripSeparator { Tag = "userscript" });
-
-            foreach (var script in scripts)
-            {
-                var button = new ToolStripButton
-                {
-                    // store scriptname
-                    Text = script.Name,
-                    Tag = "userscript",
-                    Enabled = true,
-                    Visible = true,
-                    Image = script.GetIcon(),
-                    DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
-                };
-
-                button.Click += delegate
-                {
-                    if (ScriptRunner.RunScript(this, Module, script.Name, RevisionGrid))
-                    {
-                        RevisionGrid.RefreshRevisions();
-                    }
-                };
-
-                // add to toolstrip
-                ToolStrip.Items.Add(button);
-            }
-        }
-
-        private void UpdateStashCount()
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            if (AppSettings.ShowStashCount)
-            {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    await TaskScheduler.Default;
-
-                    var result = Module.GetStashes().Count;
-
-                    await this.SwitchToMainThreadAsync();
-
-                    toolStripSplitStash.Text = string.Format(_stashCount.Text, result,
-                            result != 1 ? _stashPlural.Text : _stashSingular.Text);
-                }).FileAndForget();
-            }
-            else
-            {
-                toolStripSplitStash.Text = string.Empty;
-            }
-        }
-
-        private void CheckForMergeConflicts()
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            bool validWorkingDir = Module.IsValidGitWorkingDir();
-
-            if (validWorkingDir && Module.InTheMiddleOfBisect())
-            {
-                if (_bisect == null)
-                {
-                    _bisect = new WarningToolStripItem { Text = _warningMiddleOfBisect.Text };
-                    _bisect.Click += BisectClick;
-                    statusStrip.Items.Add(_bisect);
-                }
-            }
-            else
-            {
-                if (_bisect != null)
-                {
-                    _bisect.Click -= BisectClick;
-                    statusStrip.Items.Remove(_bisect);
-                    _bisect = null;
-                }
-            }
-
-            if (validWorkingDir &&
-                (Module.InTheMiddleOfRebase() || Module.InTheMiddleOfPatch()))
-            {
-                if (_rebase == null)
-                {
-                    _rebase = new WarningToolStripItem
-                    {
-                        Text = Module.InTheMiddleOfRebase()
-                            ? _warningMiddleOfRebase.Text
-                            : _warningMiddleOfPatchApply.Text
-                    };
-                    _rebase.Click += RebaseClick;
-                    statusStrip.Items.Add(_rebase);
-                }
-            }
-            else
-            {
-                if (_rebase != null)
-                {
-                    _rebase.Click -= RebaseClick;
-                    statusStrip.Items.Remove(_rebase);
-                    _rebase = null;
-                }
-            }
-
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await TaskScheduler.Default;
-
-                var result = validWorkingDir
-                    && Module.InTheMiddleOfConflictedMerge()
-                    && !Directory.Exists(Module.WorkingDirGitDir + "rebase-apply\\");
-
-                await this.SwitchToMainThreadAsync();
-
-                if (result)
-                {
-                    if (_warning == null)
-                    {
-                        _warning = new WarningToolStripItem { Text = _hintUnresolvedMergeConflicts.Text };
-                        _warning.Click += WarningClick;
-                        statusStrip.Items.Add(_warning);
-                    }
-                }
-                else
-                {
-                    if (_warning != null)
-                    {
-                        _warning.Click -= WarningClick;
-                        statusStrip.Items.Remove(_warning);
-                        _warning = null;
-                    }
-                }
-
-                // Only show status strip when there are status items on it.
-                // There is always a close (x) button, do not count first item.
-                if (statusStrip.Items.Count > 1)
-                {
-                    statusStrip.Show();
-                }
-                else
-                {
-                    statusStrip.Hide();
-                }
-            }).FileAndForget();
-        }
-
         private void RebaseClick(object sender, EventArgs e)
         {
             if (Module.InTheMiddleOfRebase())
@@ -1039,20 +1075,6 @@ namespace GitUI.CommandsDialogs
             {
                 UICommands.StartApplyPatchDialog(this);
             }
-        }
-
-        private void ShowRevisions()
-        {
-            if (RevisionGrid.IndexWatcher.IndexChanged)
-            {
-                FillFileTree();
-                FillDiff();
-                FillCommitInfo();
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
-                FillBuildReport();
-            }
-
-            RevisionGrid.IndexWatcher.Reset();
         }
 
         private void FillFileTree()
@@ -1992,27 +2014,9 @@ namespace GitUI.CommandsDialogs
             return GetShortcutKeys((int)cmd);
         }
 
-        /// <summary>
-        /// Add shortcuts to the menu items
-        /// </summary>
-        private void SetShortcutKeyDisplayStringsFromHotkeySettings()
-        {
-            gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitBash).ToShortcutKeyDisplayString();
-            commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.Commit).ToShortcutKeyDisplayString();
-            stashChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.Stash).ToShortcutKeyDisplayString();
-            stashPopToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.StashPop).ToShortcutKeyDisplayString();
-            closeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CloseRepository).ToShortcutKeyDisplayString();
-            gitGUIToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGui).ToShortcutKeyDisplayString();
-            kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGitK).ToShortcutKeyDisplayString();
-            checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CheckoutBranch).ToShortcutKeyDisplayString();
-            settingsToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.OpenSettings).ToShortcutKeyDisplayString();
-
-            // TODO: add more
-        }
-
         private void AddNotes()
         {
-            Module.EditNotes(RevisionGrid.GetSelectedRevisions().Count > 0 ? RevisionGrid.GetSelectedRevisions()[0].Guid : string.Empty);
+            Module.EditNotes(RevisionGrid.GetSelectedRevisions().FirstOrDefault()?.ObjectId);
             FillCommitInfo();
         }
 

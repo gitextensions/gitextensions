@@ -121,11 +121,11 @@ namespace GitUITests.CommandsDialogs.CommitDialog
                             break;
 
                         case CommitKind.Squash:
-                            Assert.True(_commands.StartSquashCommitDialog(owner: null, _referenceRepository.Module.GetRevision("HEAD")));
+                            Assert.True(_commands.StartSquashCommitDialog(owner: null, _referenceRepository.Module.GetRevision()));
                             break;
 
                         case CommitKind.Fixup:
-                            Assert.True(_commands.StartFixupCommitDialog(owner: null, _referenceRepository.Module.GetRevision("HEAD")));
+                            Assert.True(_commands.StartFixupCommitDialog(owner: null, _referenceRepository.Module.GetRevision()));
                             break;
 
                         default:
