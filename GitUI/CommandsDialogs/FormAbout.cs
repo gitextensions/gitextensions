@@ -6,11 +6,14 @@ using GitCommands;
 using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
     public sealed partial class FormAbout : GitExtensionsForm
     {
+        private readonly TranslationString _thanksToContributors = new TranslationString("Thanks to over {0:#,##0} contributors: ");
+
         public FormAbout()
         {
             InitializeComponent();
@@ -19,12 +22,14 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_labelVersionInfo.Text += AppSettings.ProductVersion;
 
             // Click handlers
+            _NO_TRANSLATE_labelProductName.LinkClicked += (s, e) => { Process.Start(@"http://github.com/gitextensions/gitextensions"); };
             thanksTo.LinkClicked += delegate { ShowContributorsForm(); };
             pictureDonate.Click += delegate { Process.Start(FormDonate.DonationUrl); };
             linkLabelIcons.LinkClicked += delegate { Process.Start("http://p.yusukekamiyamane.com/"); };
-            okButton.Click += delegate { Close(); };
 
             var contributorsList = GetContributorList();
+            var thanksToContributorsText = string.Format(_thanksToContributors.Text, contributorsList.Count);
+
             var random = new Random();
 
             thanksTimer.Tick += delegate { ThankNextContributor(); };
@@ -49,7 +54,7 @@ namespace GitUI.CommandsDialogs
                 // Select a contributor at random
                 var contributorName = contributorsList[random.Next(contributorsList.Count - 1)].Trim();
 
-                thanksTo.Text = $"Thanks to over {contributorsList.Count:#,##0} contributors: {contributorName}";
+                thanksTo.Text = thanksToContributorsText + contributorName;
             }
 
             IReadOnlyList<string> GetContributorList()
