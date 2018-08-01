@@ -382,7 +382,12 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnLoad(EventArgs e)
         {
+            SetSplitterPositions();
+            HideVariableMainMenuItems();
+            RefreshSplitViewLayout();
+            LayoutRevisionInfo();
             InternalInitialize(false);
+
             if (_startWithDashboard)
             {
                 return;
@@ -395,14 +400,9 @@ namespace GitUI.CommandsDialogs
                     new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
                     new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
 
-            SetSplitterPositions();
-            HideVariableMainMenuItems();
-            RefreshSplitViewLayout();
-
             RevisionGrid.Load();
             _filterBranchHelper.InitToolStripBranchFilter();
 
-            LayoutRevisionInfo();
             RevisionGrid.Focus();
             RevisionGrid.IndexWatcher.Reset();
 
