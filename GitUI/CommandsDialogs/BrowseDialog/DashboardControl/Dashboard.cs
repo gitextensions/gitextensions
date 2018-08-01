@@ -210,8 +210,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             showCurrentBranchMenuItem.Click += showCurrentBranchMenuItem_Click;
             showCurrentBranchMenuItem.Checked = AppSettings.DashboardShowCurrentBranch;
 
-            var form = Application.OpenForms.Cast<Form>().FirstOrDefault(x => x.Name == nameof(FormBrowse));
-            if (form != null)
+            if (Parent.FindForm() is FormBrowse form)
             {
                 var menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "menuStrip1");
                 var dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");

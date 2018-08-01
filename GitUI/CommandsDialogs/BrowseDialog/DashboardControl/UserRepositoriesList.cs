@@ -530,8 +530,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void RecentRepositoriesList_Load(object sender, EventArgs e)
         {
-            var form = Application.OpenForms.Cast<Form>().FirstOrDefault(x => x.Name == nameof(FormBrowse));
-            if (form == null)
+            if (!(Parent.FindForm() is FormBrowse form))
             {
                 return;
             }
