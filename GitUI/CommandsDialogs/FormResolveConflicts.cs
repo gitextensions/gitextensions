@@ -646,12 +646,12 @@ namespace GitUI.CommandsDialogs
 
         private string GetShortHash(ConflictedFileData item)
         {
-            if (item.Hash == null)
+            if (item.ObjectId == null)
             {
                 return "@" + _deleted.Text;
             }
 
-            return '@' + item.Hash.Substring(0, 8);
+            return '@' + item.ObjectId.ToShortString(8);
         }
 
         private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)

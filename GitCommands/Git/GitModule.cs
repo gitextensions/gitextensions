@@ -54,13 +54,13 @@ namespace GitCommands
 
     public readonly struct ConflictedFileData
     {
-        public ConflictedFileData(string hash, string filename)
+        public ConflictedFileData(ObjectId objectId, string filename)
         {
-            Hash = hash;
+            ObjectId = objectId;
             Filename = filename;
         }
 
-        public string Hash { get; }
+        public ObjectId ObjectId { get; }
         public string Filename { get; }
     }
 
@@ -961,7 +961,7 @@ namespace GitCommands
                         item = new ConflictedFileData[3];
                     }
 
-                    item[stage - 1] = new ConflictedFileData(hash, itemName);
+                    item[stage - 1] = new ConflictedFileData(ObjectId.Parse(hash), itemName);
                     prevItemName = itemName;
                 }
             }
@@ -1337,28 +1337,28 @@ namespace GitCommands
             }
         }
 
-        public (char code, string currentCommitId) GetSuperprojectCurrentCheckout()
+        public (char code, ObjectId currentCommitId) GetSuperprojectCurrentCheckout()
         {
             if (SuperprojectModule == null)
             {
-                return (' ', "");
+                return (' ', null);
             }
 
             var lines = SuperprojectModule.RunGitCmd("submodule status --cached " + _submodulePath).Split('\n');
 
             if (lines.Length == 0)
             {
-                return (' ', "");
+                return (' ', null);
             }
 
             string submodule = lines[0];
+
             if (submodule.Length < 43)
             {
-                return (' ', "");
+                return (' ', null);
             }
 
-            var currentCommitGuid = submodule.Substring(1, 40).Trim();
-            return (submodule[0], currentCommitGuid);
+            return (submodule[0], ObjectId.Parse(submodule, 1));
         }
 
         public bool ExistsMergeCommit(string startRev, string endRev)
@@ -2548,9 +2548,9 @@ namespace GitCommands
             return resultCollection;
         }
 
-        public IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId treeGuid, bool full)
+        public IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId commitId, bool full)
         {
-            var tree = GetTree(treeGuid.ToString(), full);
+            var tree = GetTree(commitId, full);
 
             var list = tree
                 .Select(file => new GitItemStatus
@@ -3196,19 +3196,17 @@ namespace GitCommands
                 .Split('\0', '\n');
         }
 
-        public IEnumerable<IGitItem> GetTree(string id, bool full)
+        public IEnumerable<IGitItem> GetTree(ObjectId commitId, bool full)
         {
             var args = new ArgumentBuilder
             {
                 "ls-tree",
                 "-z",
                 { full, "-r" },
-                id.Quote()
+                commitId
             };
 
-            var tree = GitRevision.IsFullSha1Hash(id)
-                ? RunCacheableGitCmd(args.ToString(), SystemEncoding)
-                : ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(AppSettings.GitCommand, args.ToString(), SystemEncoding));
+            var tree = RunCacheableGitCmd(args.ToString(), SystemEncoding);
 
             return _gitTreeParser.Parse(tree);
         }

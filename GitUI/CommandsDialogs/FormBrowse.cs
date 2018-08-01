@@ -1463,7 +1463,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else if (revisions[1].ObjectId == currentCheckout)
                 {
-                    from = revisions[0].Guid.Substring(0, 8);
+                    from = revisions[0].ObjectId.ToShortString(8);
                     to = currentBranch;
                 }
 
