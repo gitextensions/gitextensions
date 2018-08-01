@@ -4000,7 +4000,7 @@ namespace GitCommands
 
         public bool StopTrackingFile(string filename)
         {
-            return RunGitCmdResult("rm --cached " + filename).ExitedSuccessfully;
+            return RunGitCmdResult($"rm --cached \"{filename}\"").ExitedSuccessfully;
         }
 
         [CanBeNull]
