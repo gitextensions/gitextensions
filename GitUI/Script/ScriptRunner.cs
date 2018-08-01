@@ -401,6 +401,18 @@ namespace GitUI.Script
                         }
 
                         break;
+                    case "{UserFiles}":
+                        using (FormFilePrompt prompt = new FormFilePrompt())
+                        {
+                            if (prompt.ShowDialog(owner) != DialogResult.OK)
+                            {
+                                return false;
+                            }
+
+                            argument = argument.Replace(option, prompt.FileInput);
+                            break;
+                        }
+
                     case "{WorkingDir}":
                         argument = argument.Replace(option, module.WorkingDir);
                         break;
@@ -560,6 +572,7 @@ namespace GitUI.Script
             "{cDefaultRemoteUrl}",
             "{cDefaultRemotePathFromUrl}",
             "{UserInput}",
+            "{UserFiles}",
             "{WorkingDir}"
         };
 

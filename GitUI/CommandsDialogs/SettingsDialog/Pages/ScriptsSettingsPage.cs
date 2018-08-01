@@ -19,6 +19,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private readonly TranslationString _scriptSettingsPageHelpDisplayArgumentsHelp = new TranslationString("Arguments help");
         private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new TranslationString(@"User Input:
 {UserInput}
+{UserFiles}
 
 Working Dir:
 {WorkingDir}
