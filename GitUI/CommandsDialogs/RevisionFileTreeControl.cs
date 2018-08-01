@@ -163,7 +163,7 @@ See the changes in the commit form.");
                 tvGitTree.Nodes.Clear();
 
                 // restore selected file and scroll position when new selection is done
-                if (_revision != null && tvGitTree.ImageList != null)
+                if (_revision != null && !_revision.IsArtificial && tvGitTree.ImageList != null)
                 {
                     _revisionFileTreeController.LoadChildren(_revision, tvGitTree.Nodes, tvGitTree.ImageList.Images);
                     ////GitTree.Sort();
