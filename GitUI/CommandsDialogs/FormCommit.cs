@@ -998,8 +998,9 @@ namespace GitUI.CommandsDialogs
             }
 
             var headId = Module.RevParse("HEAD");
+            var headRevision = headId != null ? new GitRevision(headId) : null;
             Unstaged.SetDiffs(new GitRevision(ObjectId.WorkTreeId), new GitRevision(ObjectId.IndexId), unstagedFiles);
-            Staged.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(headId), stagedFiles);
+            Staged.SetDiffs(new GitRevision(ObjectId.IndexId), headRevision, stagedFiles);
 
             var doChangesExist = Unstaged.AllItems.Any() || Staged.AllItems.Any();
 
