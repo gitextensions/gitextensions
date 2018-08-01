@@ -1797,15 +1797,11 @@ namespace GitUI.CommandsDialogs
 
                     var files = new List<GitItemStatus>();
 
-                    foreach (var gitItemStatus in items)
+                    foreach (var item in items)
                     {
                         toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
-                        if (gitItemStatus.Name.EndsWith("/"))
-                        {
-                            gitItemStatus.Name = gitItemStatus.Name.TrimEnd('/');
-                        }
-
-                        files.Add(gitItemStatus);
+                        item.Name = item.Name.TrimEnd('/');
+                        files.Add(item);
                     }
 
                     bool wereErrors = false;
@@ -1963,9 +1959,9 @@ namespace GitUI.CommandsDialogs
                                 {
                                     File.Delete(path);
                                 }
-                                else
+                                else if (Directory.Exists(path))
                                 {
-                                    Directory.Delete(path, true);
+                                    Directory.Delete(path, recursive: true);
                                 }
                             }
                             catch (IOException)

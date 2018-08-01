@@ -86,7 +86,7 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 // what is this magic number "MaxVisibleItemsWithoutScroll + 0.5"?
                 // we are limiting number of visible items in the listbox before enabling vscroll, this is to reduce the risk of not fitting on user's screen.
-                // when listbox.IntergralHeight=true, the listbox automatically calculates its size and only show full items (i.e. you can't render it
+                // when listbox.IntegralHeight=true, the listbox automatically calculates its size and only show full items (i.e. you can't render it
                 // at 20px high if the ItemHeight=13px, it can only be 13, 26, 39 etc (NB: slightly more if you account for the furniture)).
                 // listbox.PreferredHeight returns the height of the listbox showing all items.
                 // for some strange reason, MaxVisibleItemsWithoutScroll*listbox.ItemHeight renders the listbox showing MaxVisibleItemsWithoutScroll-1 items.

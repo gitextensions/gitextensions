@@ -94,10 +94,10 @@ namespace GitFlow
         {
             foreach (Branch branch in Enum.GetValues(typeof(Branch)))
             {
-                var startRef = branch.ToString("G") + "/";
+                var startRef = branch + "/";
                 if (currentRef.StartsWith(startRef))
                 {
-                    branchType = branch.ToString("G");
+                    branchType = branch.ToString();
                     branchName = currentRef.Substring(startRef.Length);
                     return true;
                 }

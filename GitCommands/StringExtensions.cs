@@ -5,24 +5,6 @@ using JetBrains.Annotations;
 
 namespace System
 {
-    public static class DateTimeExtensions
-    {
-        public static DateTimeOffset ToDateTimeOffset(this DateTime dateTime)
-        {
-            if (dateTime.ToUniversalTime() <= DateTimeOffset.MinValue.UtcDateTime)
-            {
-                return DateTimeOffset.MinValue;
-            }
-
-            if (dateTime.ToUniversalTime() >= DateTimeOffset.MaxValue.UtcDateTime)
-            {
-                return DateTimeOffset.MaxValue;
-            }
-
-            return new DateTimeOffset(dateTime);
-        }
-    }
-
     public static class StringExtensions
     {
         /// <summary>'\n'</summary>
