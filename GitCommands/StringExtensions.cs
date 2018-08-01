@@ -3,73 +3,137 @@ using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 
+// ReSharper disable once CheckNamespace
+
 namespace System
 {
     public static class StringExtensions
     {
-        /// <summary>'\n'</summary>
-        private static readonly char[] NewLineSeparator = { '\n' };
+        private static readonly char[] _newLine = { '\n' };
+        private static readonly char[] _space = { ' ' };
 
+        // NOTE ordinal string comparison is the default as most string comparison in GE is against static ASCII output from git.exe
+
+        /// <summary>
+        /// Returns <paramref name="str"/> without <paramref name="prefix"/>.
+        /// If <paramref name="prefix"/> is not found, <paramref name="str"/> is returned unchanged.
+        /// </summary>
         [Pure]
-        [CanBeNull]
-        public static string SkipStr([CanBeNull] this string str, [NotNull] string toSkip)
+        [NotNull]
+        public static string RemovePrefix([NotNull] this string str, [NotNull] string prefix, StringComparison comparison = StringComparison.Ordinal)
         {
-            if (str == null)
-            {
-                return null;
-            }
-
-            var idx = str.IndexOf(toSkip);
-            if (idx != -1)
-            {
-                return str.Substring(idx + toSkip.Length);
-            }
-            else
-            {
-                return null;
-            }
+            return str.StartsWith(prefix, comparison)
+                ? str.Substring(prefix.Length)
+                : str;
         }
 
+        /// <summary>
+        /// Returns <paramref name="str"/> without <paramref name="suffix"/>.
+        /// If <paramref name="suffix"/> is not found, <paramref name="str"/> is returned unchanged.
+        /// </summary>
         [Pure]
-        [ContractAnnotation("str:null=>null")]
-        [ContractAnnotation("str:notnull=>notnull")]
-        public static string SubstringUntil([CanBeNull] this string str, [NotNull] string untilStr)
+        [NotNull]
+        public static string RemoveSuffix([NotNull] this string str, [NotNull] string suffix, StringComparison comparison = StringComparison.Ordinal)
         {
-            if (str == null)
-            {
-                return null;
-            }
-
-            var idx = str.IndexOf(untilStr);
-            if (idx != -1)
-            {
-                return str.Substring(0, idx);
-            }
-            else
-            {
-                return str;
-            }
+            return str.EndsWith(suffix, comparison)
+                ? str.Substring(0, str.Length - suffix.Length)
+                : str;
         }
 
+        /// <summary>
+        /// Returns the substring of <paramref name="str"/> up until (and excluding) the first
+        /// instance of character <paramref name="c"/>.
+        /// If <paramref name="c"/> is not found, <paramref name="str"/> is returned unchanged.
+        /// </summary>
         [Pure]
-        [ContractAnnotation("str:null=>null")]
-        [ContractAnnotation("str:notnull=>notnull")]
-        public static string SubstringUntil(this string str, char untilChar)
+        [NotNull]
+        public static string SubstringUntil([NotNull] this string str, char c)
         {
-            if (str == null)
-            {
-                return null;
-            }
+            var index = str.IndexOf(c);
 
-            var idx = str.IndexOf(untilChar);
-            if (idx != -1)
-            {
-                return str.Substring(0, idx);
-            }
-            else
-            {
-                return str;
-            }
+            return index != -1
+                ? str.Substring(0, index)
+                : str;
+        }
+
+        /// <summary>
+        /// Returns the substring of <paramref name="str"/> up until (and excluding) the last
+        /// instance of character <paramref name="c"/>.
+        /// If <paramref name="c"/> is not found, <paramref name="str"/> is returned unchanged.
+        /// </summary>
+        [Pure]
+        [NotNull]
+        public static string SubstringUntilLast([NotNull] this string str, char c)
+        {
+            var index = str.LastIndexOf(c);
+
+            return index != -1
+                ? str.Substring(0, index)
+                : str;
+        }
+
+        /// <summary>
+        /// Returns the substring of <paramref name="str"/> after (and excluding) the first
+        /// instance of character <paramref name="c"/>.
+        /// If <paramref name="c"/> is not found, <paramref name="str"/> is returned unchanged.
+        /// </summary>
+        [Pure]
+        [NotNull]
+        public static string SubstringAfter([NotNull] this string str, char c)
+        {
+            var index = str.IndexOf(c);
+
+            return index != -1
+                ? str.Substring(index + 1)
+                : str;
+        }
+
+        /// <summary>
+        /// Returns the substring of <paramref name="str"/> up until (and excluding) the first
+        /// instance of string <paramref name="s"/>.
+        /// If <paramref name="s"/> is not found, <paramref name="str"/> is returned unchanged.
+        /// </summary>
+        [Pure]
+        [NotNull]
+        public static string SubstringAfter([NotNull] this string str, string s, StringComparison comparison = StringComparison.Ordinal)
+        {
+            var index = str.IndexOf(s, comparison);
+
+            return index != -1
+                ? str.Substring(index + s.Length)
+                : str;
+        }
+
+        /// <summary>
+        /// Returns the substring of <paramref name="str"/> after (and excluding) the last
+        /// instance of character <paramref name="c"/>.
+        /// If <paramref name="c"/> is not found, <paramref name="str"/> is returned unchanged.
+        /// </summary>
+        [Pure]
+        [NotNull]
+        public static string SubstringAfterLast([NotNull] this string str, char c)
+        {
+            var index = str.LastIndexOf(c);
+
+            return index != -1
+                ? str.Substring(index + 1)
+                : str;
+        }
+
+        /// <summary>
+        /// Returns the substring of <paramref name="str"/> up until (and excluding) the last
+        /// instance of string <paramref name="s"/>.
+        /// If <paramref name="s"/> is not found, <paramref name="str"/> is returned unchanged.
+        /// </summary>
+        [Pure]
+        [NotNull]
+        public static string SubstringAfterLast([NotNull] this string str, string s, StringComparison comparison = StringComparison.Ordinal)
+        {
+            var index = str.LastIndexOf(s, comparison);
+
+            return index != -1
+                ? str.Substring(index + s.Length)
+                : str;
         }
 
         [Pure]
@@ -223,9 +287,7 @@ namespace System
         /// <summary>Split a string, delimited by line-breaks, excluding empty entries.</summary>
         [Pure]
         [NotNull]
-        public static string[] SplitLines([NotNull] this string value) => value.Split(NewLineSeparator, StringSplitOptions.RemoveEmptyEntries);
-
-        private static readonly char[] _space = new[] { ' ' };
+        public static string[] SplitLines([NotNull] this string value) => value.Split(_newLine, StringSplitOptions.RemoveEmptyEntries);
 
         /// <summary>Split a string, delimited by the space character, excluding empty entries.</summary>
         [Pure]
@@ -266,8 +328,7 @@ namespace System
         /// true if the <paramref name="other"/> parameter occurs within <paramref name="str"/>,
         /// or if <paramref name="other"/> is the empty string (""); otherwise, false.
         /// </returns>
-        public static bool Contains([NotNull]this string str, [NotNull] string other,
-            StringComparison stringComparison)
+        public static bool Contains([NotNull] this string str, [NotNull] string other, StringComparison stringComparison)
         {
             return str.IndexOf(other, stringComparison) != -1;
         }

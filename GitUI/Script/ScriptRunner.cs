@@ -81,24 +81,13 @@ namespace GitUI.Script
 
         private static string GetRemotePath(string url)
         {
-            Uri uri;
-            string path = "";
-            if (Uri.TryCreate(url, UriKind.Absolute, out uri))
+            if (Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
+                Uri.TryCreate("ssh://" + url.Replace(":", "/"), UriKind.Absolute, out uri))
             {
-                path = uri.LocalPath;
-            }
-            else if (Uri.TryCreate("ssh://" + url.Replace(":", "/"), UriKind.Absolute, out uri))
-            {
-                path = uri.LocalPath;
+                return uri.LocalPath.SubstringAfterLast('.');
             }
 
-            int pos = path.LastIndexOf(".");
-            if (pos >= 0)
-            {
-                path = path.Substring(0, pos);
-            }
-
-            return path;
+            return "";
         }
 
         private static bool RunScript(IWin32Window owner, GitModule module, ScriptInfo scriptInfo, RevisionGridControl revisionGrid)
