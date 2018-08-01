@@ -48,11 +48,11 @@ namespace GitUI
             InitializeComplete();
         }
 
-        public FormStatus(Action<FormStatus> process, Action<FormStatus> abort)
+        public FormStatus(Action<FormStatus> process, string text)
             : this(new EditboxBasedConsoleOutputControl(), true)
         {
             ProcessCallback = process;
-            AbortCallback = abort;
+            Text = text;
         }
 
         protected readonly ConsoleOutputControl ConsoleOutput;

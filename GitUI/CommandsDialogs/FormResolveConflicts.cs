@@ -1169,17 +1169,17 @@ namespace GitUI.CommandsDialogs
 
         private void StageFile(string filename)
         {
+            using (var form = new FormStatus(ProcessStart, string.Format(_stageFilename.Text, filename)))
+            {
+                form.ShowDialogOnError(this);
+            }
+
             void ProcessStart(FormStatus form)
             {
                 form.AddMessageLine(string.Format(_stageFilename.Text, filename));
                 string output = Module.RunGitCmd("add -- \"" + filename + "\"");
                 form.AddMessageLine(output);
                 form.Done(string.IsNullOrEmpty(output));
-            }
-
-            using (var process = new FormStatus(ProcessStart, null) { Text = string.Format(_stageFilename.Text, filename) })
-            {
-                process.ShowDialogOnError(this);
             }
         }
 
