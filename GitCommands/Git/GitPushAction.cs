@@ -69,13 +69,15 @@ namespace GitCommands
         /// <summary>Creates the 'push' command string. <example>"push --progress origin master:master"</example></summary>
         public override string ToString()
         {
-            var combined = string.Join(" ", PushActions);
+            var args = new ArgumentBuilder
+            {
+                "push",
+                { ReportProgress, "--progress" },
+                Remote.Quote(),
+                PushActions.Select(action => action.ToString())
+            };
 
-            return string.Format("push {0} \"{1}\" {2}",
-                        ReportProgress ? "--progress " : "",
-                        Remote,
-                        combined)
-                .Trim();
+            return args.ToString();
         }
     }
 
@@ -104,8 +106,9 @@ namespace GitCommands
         /// <param name="branch">Remote branch to delete.</param>
         public static GitPushAction DeleteRemoteBranch(string branch)
         {
-            branch = GitRefName.GetFullBranchName(branch);
-            return new GitPushAction(null, branch);
+            return new GitPushAction(
+                source: null,
+                destination: GitRefName.GetFullBranchName(branch));
         }
 
         /// <summary>Creates the push action command part.</summary>
@@ -113,13 +116,10 @@ namespace GitCommands
         {
             if (_localBranch.IsNullOrWhiteSpace())
             {
-                return string.Format(":{0}", _remoteBranch);
+                return $":{_remoteBranch}";
             }
 
-            return string.Format("{0}{1}:{2}",
-                _force ? "+" : "",
-                _localBranch,
-                _remoteBranch);
+            return $"{(_force ? "+" : "")}{_localBranch}:{_remoteBranch}";
         }
     }
 }

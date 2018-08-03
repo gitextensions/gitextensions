@@ -194,7 +194,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             if (EnvUtils.RunningOnWindows())
             {
                 var command = (from cmd in GetWindowsCommandLocations(possibleNewPath)
-                               let output = ThreadHelper.JoinableTaskFactory.Run(() => Module.RunCmdAsync(cmd, string.Empty))
+                               let output = new Executable(cmd).GetOutput()
                                where !string.IsNullOrEmpty(output)
                                select cmd).FirstOrDefault();
 

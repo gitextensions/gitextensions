@@ -454,7 +454,7 @@ namespace GitUI.Script
                 }
                 else
                 {
-                    module.RunExternalCmdDetached(command, argument);
+                    new Executable(command, module.WorkingDir).Start(argument);
                 }
             }
 
@@ -471,7 +471,7 @@ namespace GitUI.Script
                                                              List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
         {
             GitRevision selectedRevision = revisionGrid.LatestSelectedRevision;
-            foreach (GitRef head in selectedRevision.Refs)
+            foreach (var head in selectedRevision.Refs)
             {
                 if (head.IsTag)
                 {

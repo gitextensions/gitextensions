@@ -314,7 +314,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             string repoSrc = repo.CloneReadWriteUrl;
 
-            string cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir);
+            var cmd = GitCommandHelpers.CloneCmd(repoSrc, targetDir);
 
             var formRemoteProcess = new FormRemoteProcess(new GitModule(null), AppSettings.GitCommand, cmd)
             {

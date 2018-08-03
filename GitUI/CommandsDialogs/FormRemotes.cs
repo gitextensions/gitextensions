@@ -466,11 +466,11 @@ Inactive remote is completely invisible to git.");
 
         private void TestConnectionClick(object sender, EventArgs e)
         {
-            string url = GitCommandHelpers.GetPlinkCompatibleUrl(Url.Text);
+            var url = Url.Text;
 
-            Module.RunExternalCmdDetachedShowConsole(
-                "cmd.exe",
-                string.Format("/k \"\"{0}\" -T {1}\"", AppSettings.Plink, url));
+            ThreadHelper.JoinableTaskFactory
+                .RunAsync(() => new Plink().ConnectAsync(url))
+                .FileAndForget();
         }
 
         private void PruneClick(object sender, EventArgs e)

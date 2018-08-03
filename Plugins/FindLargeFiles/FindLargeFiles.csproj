@@ -64,6 +64,10 @@
     <Compile Include="SortableObjectsList.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\GitCommands\GitCommands.csproj">
+      <Project>{BD6AA2A2-997D-4AFF-ACC7-B64F6E51D181}</Project>
+      <Name>GitCommands</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj">
       <Project>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</Project>
       <Name>GitExtUtils</Name>

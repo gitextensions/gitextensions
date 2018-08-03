@@ -58,7 +58,6 @@
     <Compile Include="Avatars\AvatarPersistentCacheTests.cs" />
     <Compile Include="Avatars\AvatarTestBase.cs" />
     <Compile Include="Avatars\BackupAvatarProviderTests.cs" />
-    <Compile Include="Avatars\MruCacheTests.cs" />
     <Compile Include="CancellationTokenSequenceTests.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\FormInitTests.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\FormCommitTests.cs" />

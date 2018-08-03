@@ -243,29 +243,21 @@ namespace GitUI.CommandsDialogs
                         fileName.Quote()
                     };
 
-                    StringBuilder listOfFileNames;
+                    var listOfFileNames = new StringBuilder(fileName.Quote());
 
-                    using (var process = Module.RunGitCmdDetached(args.ToString(), GitModule.LosslessEncoding))
+                    // keep a set of the file names already seen
+                    var setOfFileNames = new HashSet<string> { fileName };
+
+                    var lines = Module.GetGitOutputLines(args, GitModule.LosslessEncoding);
+
+                    foreach (var line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
                     {
-                        listOfFileNames = new StringBuilder("\"" + fileName + "\"");
-
-                        // keep a set of the file names already seen
-                        var setOfFileNames = new HashSet<string> { fileName };
-
-                        string line;
-                        do
+                        if (!string.IsNullOrEmpty(line) && setOfFileNames.Add(line))
                         {
-                            line = process.StandardOutput.ReadLine();
-                            line = GitModule.ReEncodeFileNameFromLossless(line);
-
-                            if (!string.IsNullOrEmpty(line) && setOfFileNames.Add(line))
-                            {
-                                listOfFileNames.Append(" \"");
-                                listOfFileNames.Append(line);
-                                listOfFileNames.Append('\"');
-                            }
+                            listOfFileNames.Append(" \"");
+                            listOfFileNames.Append(line);
+                            listOfFileNames.Append('\"');
                         }
-                        while (line != null);
                     }
 
                     // here we need --name-only to get the previous filenames in the revision graph

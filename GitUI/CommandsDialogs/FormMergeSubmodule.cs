@@ -55,7 +55,7 @@ namespace GitUI.CommandsDialogs
                 form.AddMessageLine(string.Format(_stageFilename.Text, _filename));
                 string output = Module.RunGitCmd($"add -- \"{_filename}\"");
                 form.AddMessageLine(output);
-                form.Done(string.IsNullOrEmpty(output));
+                form.Done(isSuccess: string.IsNullOrWhiteSpace(output));
             }
         }
 

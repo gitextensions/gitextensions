@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     continue;
                 }
 
-                string fullName = string.Empty;
+                string fullName;
                 string programFilesPath = Environment.GetEnvironmentVariable("ProgramFiles") ?? "";
 
                 if (CheckFileExists(programFilesPath))
@@ -72,7 +72,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 }
             }
 
-            return string.Empty;
+            return "";
         }
 
         [CanBeNull]
@@ -101,7 +101,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 if (EnvUtils.RunningOnUnix())
                 {
                     // Maybe command -v is better, but didn't work
-                    kdiff3path = GitCommandHelpers.RunCmd("which", "kdiff3").Replace("\n", string.Empty);
+                    kdiff3path = new Executable("which").GetOutput("kdiff3").Replace("\n", "");
                     if (string.IsNullOrEmpty(kdiff3path))
                     {
                         return null;

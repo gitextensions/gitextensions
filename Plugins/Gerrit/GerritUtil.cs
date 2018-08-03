@@ -60,11 +60,9 @@ namespace Gerrit
 
             StartAgent(owner, module, remote);
 
-            var sshCmd = SshPathLocatorInstance.Find(AppSettings.GitBinDir);
-            if (GitCommandHelpers.Plink())
-            {
-                sshCmd = AppSettings.Plink;
-            }
+            var sshCmd = GitCommandHelpers.Plink()
+                ? AppSettings.Plink
+                : SshPathLocatorInstance.Find(AppSettings.GitBinDir);
 
             if (string.IsNullOrEmpty(sshCmd))
             {
@@ -100,11 +98,8 @@ namespace Gerrit
             sb.Append(command);
             sb.Append("\"");
 
-            return await module.RunCmdAsync(
-                sshCmd,
-                sb.ToString(),
-                encoding: null,
-                stdIn).ConfigureAwait(false);
+            return await new Executable(sshCmd)
+                .GetOutputAsync(sb.ToString(), stdIn).ConfigureAwait(false);
         }
 
         public static void StartAgent([NotNull] IWin32Window owner, [NotNull] IGitModule module, [NotNull] string remote)

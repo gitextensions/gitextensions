@@ -341,12 +341,12 @@ namespace GitUI.CommandsDialogs
 
             void ManageWorktreeSupport()
             {
-                if (!GitCommandHelpers.VersionInUse.SupportWorktree)
+                if (!GitVersion.Current.SupportWorktree)
                 {
                     createWorktreeToolStripMenuItem.Enabled = false;
                 }
 
-                if (!GitCommandHelpers.VersionInUse.SupportWorktreeList)
+                if (!GitVersion.Current.SupportWorktreeList)
                 {
                     manageWorktreeToolStripMenuItem.Enabled = false;
                 }
@@ -624,7 +624,7 @@ namespace GitUI.CommandsDialogs
                 if (AppSettings.LastUpdateCheck.AddDays(7) < DateTime.Now)
                 {
                     AppSettings.LastUpdateCheck = DateTime.Now;
-                    var updateForm = new FormUpdates(Module.AppVersion);
+                    var updateForm = new FormUpdates(AppSettings.AppVersion);
                     updateForm.SearchForUpdatesAndShow(Owner, false);
                 }
 
@@ -1486,12 +1486,12 @@ namespace GitUI.CommandsDialogs
 
         private void StartAuthenticationAgentToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Module.RunExternalCmdDetached(AppSettings.Pageant, "");
+            new Executable(AppSettings.Pageant, Module.WorkingDir).Start();
         }
 
         private void GenerateOrImportKeyToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Module.RunExternalCmdDetached(AppSettings.Puttygen, "");
+            new Executable(AppSettings.Puttygen, Module.WorkingDir).Start();
         }
 
         private void CommitInfoTabControl_SelectedIndexChanged(object sender, EventArgs e)
@@ -2678,7 +2678,7 @@ namespace GitUI.CommandsDialogs
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var updateForm = new FormUpdates(Module.AppVersion);
+            var updateForm = new FormUpdates(AppSettings.AppVersion);
             updateForm.SearchForUpdatesAndShow(Owner, true);
         }
 

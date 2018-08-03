@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.Win32;
 using StringSetting = GitCommands.Settings.StringSetting;

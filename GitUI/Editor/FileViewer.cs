@@ -308,18 +308,15 @@ namespace GitUI.Editor
             ExtraDiffArgumentsChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        [NotNull]
-        public string GetExtraDiffArguments()
+        public ArgumentString GetExtraDiffArguments()
         {
-            var args = new ArgumentBuilder
+            return new ArgumentBuilder
             {
                 { ignoreAllWhitespaces.Checked, "--ignore-all-space" },
                 { !ignoreAllWhitespaces.Checked && IgnoreWhitespaceChanges, "--ignore-space-change" },
                 { ShowEntireFile, "--inter-hunk-context=9000 --unified=9000", $"--unified={NumberOfVisibleLines}" },
                 { TreatAllFilesAsText, "--text" }
             };
-
-            return args.ToString();
         }
 
         public void SaveCurrentScrollPos()
@@ -718,7 +715,7 @@ namespace GitUI.Editor
                 getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), sha),
                 openWithDifftool: () => Module.OpenWithDifftool(fileName, firstRevision: sha));
 
-            string GetFileTextIfBlobExists() => sha != null ? Module.GetFileText(sha, Encoding) : "";
+            string GetFileTextIfBlobExists() => objectId != null ? Module.GetFileText(objectId, Encoding) : "";
 
             Image GetImage()
             {

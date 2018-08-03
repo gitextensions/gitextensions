@@ -5,7 +5,6 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs;
-using GitUI.Properties;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;

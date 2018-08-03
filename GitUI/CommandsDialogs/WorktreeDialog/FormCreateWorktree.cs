@@ -113,7 +113,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
                 { radioButtonCreateNewBranch.Checked, $"-b {textBoxNewBranchName.Text}", ((GitRef)comboBoxBranches.SelectedItem).Name }
             };
 
-            UICommands.StartGitCommandProcessDialog(this, args.ToString());
+            UICommands.StartGitCommandProcessDialog(this, args);
             DialogResult = DialogResult.OK;
         }
 

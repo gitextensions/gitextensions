@@ -1,4 +1,5 @@
 ﻿using System;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands.Git.Tag
@@ -18,7 +19,7 @@ namespace GitCommands.Git.Tag
         public override bool AccessesRemote => false;
         public override bool ChangesRepoState => true;
 
-        protected override ArgumentBuilder BuildArguments()
+        protected override ArgumentString BuildArguments()
         {
             return new ArgumentBuilder
             {

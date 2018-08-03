@@ -1,6 +1,5 @@
 ﻿using System;
 using GitUIPluginInterfaces;
-using JetBrains.Annotations;
 
 namespace GitCommands.Git
 {

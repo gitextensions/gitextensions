@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -128,7 +129,7 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 Directory.SetCurrentDirectory(Module.WorkingDir);
-                Module.RunExternalCmdShowConsole(AppSettings.GitCommand, "mergetool");
+                Module.RunMergeTool();
                 Initialize();
             }
         }
@@ -227,9 +228,12 @@ namespace GitUI.CommandsDialogs
             return (ConflictData)ConflictedFiles.SelectedRows[0].DataBoundItem;
         }
 
-        private ConflictData[] GetConflicts()
+        private IReadOnlyList<ConflictData> GetConflicts()
         {
-            return (from DataGridViewRow selectedRow in ConflictedFiles.SelectedRows select (ConflictData)selectedRow.DataBoundItem).ToArray();
+            return ConflictedFiles.SelectedRows
+                .Cast<DataGridViewRow>()
+                .Select(selectedRow => (ConflictData)selectedRow.DataBoundItem)
+                .ToArray();
         }
 
         private string GetFileName()
@@ -244,13 +248,13 @@ namespace GitUI.CommandsDialogs
 
         private readonly Dictionary<string, string> _mergeScripts = new Dictionary<string, string>
         {
-                { ".doc",  "merge-doc.js" },
-                { ".docx", "merge-doc.js" },
-                { ".docm", "merge-doc.js" },
-                { ".ods",  "merge-ods.vbs" },
-                { ".odt",  "merge-ods.vbs" },
-                { ".sxw",  "merge-ods.vbs" },
-            };
+            { ".doc", "merge-doc.js" },
+            { ".docx", "merge-doc.js" },
+            { ".docm", "merge-doc.js" },
+            { ".ods", "merge-ods.vbs" },
+            { ".odt", "merge-ods.vbs" },
+            { ".sxw", "merge-ods.vbs" },
+        };
 
         private bool TryMergeWithScript(string fileName, string baseFileName, string localFileName, string remoteFileName)
         {
@@ -301,9 +305,16 @@ namespace GitUI.CommandsDialogs
                 lastWriteTimeBeforeMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(fileName));
             }
 
-            Module.RunExternalCmdDetached("wscript", "\"" + mergeScript + "\" \"" +
-                FixPath(_fullPathResolver.Resolve(fileName)) + "\" \"" + FixPath(remoteFileName) + "\" \"" +
-                FixPath(localFileName) + "\" \"" + FixPath(baseFileName) + "\"");
+            var args = new ArgumentBuilder
+            {
+                mergeScript.Quote(),
+                FixPath(_fullPathResolver.Resolve(fileName)).Quote(),
+                FixPath(remoteFileName).Quote(),
+                FixPath(localFileName).Quote(),
+                FixPath(baseFileName).Quote()
+            };
+
+            new Executable("wscript", Module.WorkingDir).Start(args);
 
             if (MessageBox.Show(this, string.Format(_askMergeConflictSolvedAfterCustomMergeScript.Text,
                 FixPath(_fullPathResolver.Resolve(fileName))), _askMergeConflictSolvedCaption.Text,
@@ -395,7 +406,7 @@ namespace GitUI.CommandsDialogs
                 {
                     var items = GetConflicts();
 
-                    StartProgressBarWithMaxValue(items.Length);
+                    StartProgressBarWithMaxValue(items.Count);
                     foreach (var conflictData in items)
                     {
                         IncrementProgressBarValue();
@@ -447,7 +458,8 @@ namespace GitUI.CommandsDialogs
 
         private void ResolveFilesConflict(ConflictData item)
         {
-            string[] fileNames = Module.CheckoutConflictedFiles(item);
+            var fileNames = Module.CheckoutConflictedFiles(item);
+
             try
             {
                 if (CheckForLocalRevision(item) &&
@@ -505,7 +517,7 @@ namespace GitUI.CommandsDialogs
                         lastWriteTimeBeforeMerge = File.GetLastWriteTime(_fullPathResolver.Resolve(item.Filename));
                     }
 
-                    var res = Module.RunCmdResult(_mergetoolPath, "" + arguments + "");
+                    var res = new Executable(_mergetoolPath, Module.WorkingDir).Execute(arguments);
 
                     DateTime lastWriteTimeAfterMerge = lastWriteTimeBeforeMerge;
                     if (File.Exists(_fullPathResolver.Resolve(item.Filename)))
@@ -535,25 +547,27 @@ namespace GitUI.CommandsDialogs
             }
             finally
             {
-                DeleteTemporaryFiles(fileNames);
-            }
-        }
-
-        private static void DeleteTemporaryFiles(string[] fileNames)
-        {
-            if (fileNames[0] != null && File.Exists(fileNames[0]))
-            {
-                File.Delete(fileNames[0]);
+                DeleteTemporaryFiles();
             }
 
-            if (fileNames[1] != null && File.Exists(fileNames[1]))
-            {
-                File.Delete(fileNames[1]);
-            }
+            return;
 
-            if (fileNames[2] != null && File.Exists(fileNames[2]))
+            void DeleteTemporaryFiles()
             {
-                File.Delete(fileNames[2]);
+                if (fileNames[0] != null && File.Exists(fileNames[0]))
+                {
+                    File.Delete(fileNames[0]);
+                }
+
+                if (fileNames[1] != null && File.Exists(fileNames[1]))
+                {
+                    File.Delete(fileNames[1]);
+                }
+
+                if (fileNames[2] != null && File.Exists(fileNames[2]))
+                {
+                    File.Delete(fileNames[2]);
+                }
             }
         }
 
@@ -751,7 +765,7 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 var conflictItems = GetConflicts();
-                StartProgressBarWithMaxValue(conflictItems.Length);
+                StartProgressBarWithMaxValue(conflictItems.Count);
                 foreach (var conflictItem in conflictItems)
                 {
                     if (CheckForBaseRevision(conflictItem))
@@ -780,7 +794,7 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 var conflictItems = GetConflicts();
-                StartProgressBarWithMaxValue(conflictItems.Length);
+                StartProgressBarWithMaxValue(conflictItems.Count);
                 foreach (var conflictItem in conflictItems)
                 {
                     if (CheckForLocalRevision(conflictItem))
@@ -809,7 +823,7 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 var conflictItems = GetConflicts();
-                StartProgressBarWithMaxValue(conflictItems.Length);
+                StartProgressBarWithMaxValue(conflictItems.Count);
                 foreach (var conflictItem in conflictItems)
                 {
                     if (CheckForRemoteRevision(conflictItem))
@@ -1159,7 +1173,7 @@ namespace GitUI.CommandsDialogs
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string fileName = GetFileName();
-            System.Diagnostics.Process.Start(_fullPathResolver.Resolve(fileName));
+            Process.Start(_fullPathResolver.Resolve(fileName));
         }
 
         private void openWithToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1180,7 +1194,7 @@ namespace GitUI.CommandsDialogs
                 form.AddMessageLine(string.Format(_stageFilename.Text, filename));
                 string output = Module.RunGitCmd("add -- \"" + filename + "\"");
                 form.AddMessageLine(output);
-                form.Done(string.IsNullOrEmpty(output));
+                form.Done(isSuccess: string.IsNullOrWhiteSpace(output));
             }
         }
 

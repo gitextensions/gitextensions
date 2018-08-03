@@ -204,7 +204,7 @@ namespace GitUI.CommandsDialogs
 
         private void MergetoolClick(object sender, EventArgs e)
         {
-            Module.RunExternalCmdShowConsole(AppSettings.GitCommand, "mergetool");
+            Module.RunMergeTool();
 
             if (MessageBox.Show(this, _allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
                                 MessageBoxButtons.YesNo) != DialogResult.Yes)

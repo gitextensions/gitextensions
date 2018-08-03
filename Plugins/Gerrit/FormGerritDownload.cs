@@ -148,7 +148,7 @@ namespace Gerrit
         private static string FetchCommand(string remote, string remoteBranch)
         {
             var progressOption = "";
-            if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
+            if (GitVersion.Current.FetchCanAskForProgress)
             {
                 progressOption = "--progress ";
             }

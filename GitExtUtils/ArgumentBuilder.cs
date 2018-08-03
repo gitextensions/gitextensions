@@ -19,9 +19,8 @@ namespace GitCommands
     /// <para>This class has been designed to work with C# collection initialiser syntax which makes
     /// its use quite ergonomic. See the example for more information.</para>
     ///
-    /// <para>The type accepts strings, however conversion from other types (eg. <see cref="ForcePushOptions"/>
-    /// enum) is achieved via extension methods on <see cref="ArgumentBuilderExtensions"/> by adding a
-    /// method named <c>Add</c> that accepts the required type.</para>
+    /// <para>The type accepts strings, however conversion from other types is achieved via extension
+    /// methods by adding a method named <c>Add</c> that accepts the required type.</para>
     /// </remarks>
     /// <example>
     /// <code>

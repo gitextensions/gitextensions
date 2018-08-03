@@ -112,8 +112,7 @@ namespace GitUI.CommandsDialogs
                 if (Orphan.Checked && wasSuccessful && ClearOrphan.Checked)
                 {
                     // orphan AND orphan creation success AND clear
-                    cmd = GitCommandHelpers.RemoveCmd();
-                    FormProcess.ShowDialog(this, cmd);
+                    FormProcess.ShowDialog(this, GitCommandHelpers.RemoveCmd());
                 }
 
                 if (wasSuccessful && chkbxCheckoutAfterCreate.Checked && objectId != originalHash)
