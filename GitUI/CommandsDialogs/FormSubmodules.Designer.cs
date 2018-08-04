@@ -391,7 +391,7 @@ namespace GitUI.CommandsDialogs
             // 
             // SubModuleCommit
             // 
-            this.SubModuleCommit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.gitSubmoduleBindingSource, "CurrentCommitGuid", true));
+            this.SubModuleCommit.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.gitSubmoduleBindingSource, "CurrentCommitId", true));
             this.SubModuleCommit.Dock = System.Windows.Forms.DockStyle.Top;
             this.SubModuleCommit.Location = new System.Drawing.Point(120, 111);
             this.SubModuleCommit.Name = "SubModuleCommit";
