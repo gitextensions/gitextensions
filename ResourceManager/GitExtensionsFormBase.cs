@@ -93,6 +93,7 @@ namespace ResourceManager
                 : AutoScaleMode.None;
 
             this.AdjustForDpiScaling();
+            this.EnableRemoveWordHotkey();
         }
 
         #region Translation

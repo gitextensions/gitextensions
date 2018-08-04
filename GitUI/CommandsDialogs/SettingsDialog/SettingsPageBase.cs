@@ -45,6 +45,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             var result = new T();
 
             result.AdjustForDpiScaling();
+            result.EnableRemoveWordHotkey();
 
             result.Init(pageHost);
 
