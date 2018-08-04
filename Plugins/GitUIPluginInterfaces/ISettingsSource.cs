@@ -133,7 +133,7 @@ namespace GitUIPluginInterfaces
             SetValue(name, value, x => x.ToString());
         }
 
-        public T GetEnum<T>([NotNull] string name, T defaultValue) where T : struct
+        public T GetEnum<T>([NotNull] string name, T defaultValue) where T : struct, Enum
         {
             return GetValue(name, defaultValue, x =>
             {
@@ -148,7 +148,7 @@ namespace GitUIPluginInterfaces
             });
         }
 
-        public void SetNullableEnum<T>([NotNull] string name, T? value) where T : struct
+        public void SetNullableEnum<T>([NotNull] string name, T? value) where T : struct, Enum
         {
             SetValue(name, value, x => x.HasValue ? x.ToString() : string.Empty);
         }

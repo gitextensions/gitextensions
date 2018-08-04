@@ -1639,12 +1639,12 @@ namespace GitCommands
             SettingsContainer.SetEnum(name, value);
         }
 
-        public static T GetEnum<T>(string name, T defaultValue) where T : struct
+        public static T GetEnum<T>(string name, T defaultValue) where T : struct, Enum
         {
             return SettingsContainer.GetEnum(name, defaultValue);
         }
 
-        public static void SetNullableEnum<T>(string name, T? value) where T : struct
+        public static void SetNullableEnum<T>(string name, T? value) where T : struct, Enum
         {
             SettingsContainer.SetNullableEnum(name, value);
         }
