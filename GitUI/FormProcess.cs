@@ -37,7 +37,12 @@ namespace GitUI
             Remote = "";
             ProcessInput = input;
             WorkingDirectory = workingDirectory;
-            Text += $" ({PathUtil.GetDisplayPath(WorkingDirectory)})";
+
+            var displayPath = PathUtil.GetDisplayPath(WorkingDirectory);
+            if (!string.IsNullOrWhiteSpace(displayPath))
+            {
+                Text += $" ({displayPath})";
+            }
 
             ConsoleOutput.ProcessExited += delegate { OnExit(ConsoleOutput.ExitCode); };
             ConsoleOutput.DataReceived += DataReceivedCore;
