@@ -127,10 +127,11 @@ namespace GitCommands
         public Version AppVersion => AppSettings.AppVersion;
 
         private bool _superprojectInit;
-        private GitModule _superprojectModule;
-        private string _submoduleName;
-        private string _submodulePath;
+        [CanBeNull] private GitModule _superprojectModule;
+        [CanBeNull] private string _submoduleName;
+        [CanBeNull] private string _submodulePath;
 
+        [CanBeNull]
         public string SubmoduleName
         {
             get
@@ -140,6 +141,7 @@ namespace GitCommands
             }
         }
 
+        [CanBeNull]
         public string SubmodulePath
         {
             get
@@ -149,6 +151,7 @@ namespace GitCommands
             }
         }
 
+        [CanBeNull]
         public GitModule SuperprojectModule
         {
             get
