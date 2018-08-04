@@ -248,38 +248,34 @@ namespace GitCommands
         [ContractAnnotation("path:null=>false,exactPath:null")]
         public static bool TryGetExactPath(string path, out string exactPath)
         {
-            // From https://stackoverflow.com/a/29578292/24874
-
-            // DirectoryInfo accepts either a file path or a directory path, and most of its properties work for either.
-            // However, its Exists property only works for a directory path.
-            var directory = new DirectoryInfo(path);
-
-            if (File.Exists(path) || directory.Exists)
+            if (!File.Exists(path) && !Directory.Exists(path))
             {
-                var parts = new List<string>();
-
-                var parentDirectory = directory.Parent;
-                while (parentDirectory != null)
-                {
-                    var entry = parentDirectory.EnumerateFileSystemInfos(directory.Name).First();
-                    parts.Add(entry.Name);
-
-                    directory = parentDirectory;
-                    parentDirectory = directory.Parent;
-                }
-
-                // Handle the root part (i.e., drive letter or UNC \\server\share).
-                var root = directory.FullName;
-
-                parts.Add(root.Contains(':') ? root.ToUpper() : root.ToLower());
-                parts.Reverse();
-
-                exactPath = Path.Combine(parts.ToArray());
-                return true;
+                exactPath = null;
+                return false;
             }
 
-            exactPath = null;
-            return false;
+            var directory = new DirectoryInfo(path);
+
+            var parts = new List<string>();
+
+            var parentDirectory = directory.Parent;
+            while (parentDirectory != null)
+            {
+                var entry = parentDirectory.EnumerateFileSystemInfos(directory.Name).First();
+                parts.Add(entry.Name);
+
+                directory = parentDirectory;
+                parentDirectory = directory.Parent;
+            }
+
+            // Handle the root part (i.e., drive letter or UNC \\server\share).
+            var root = directory.FullName;
+
+            parts.Add(root.Contains(':') ? root.ToUpper() : root.ToLower());
+            parts.Reverse();
+
+            exactPath = Path.Combine(parts.ToArray());
+            return true;
         }
 
         [CanBeNull]
