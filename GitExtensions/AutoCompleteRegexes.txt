@@ -5,7 +5,7 @@
 .build = \sname\s*=\s*\"(\w+)\"
 .cbl, .cpy = ^.{6} ([A-Z][A-Z0-9-]*)(?: SECTION)?\.
 .c, .cc, .cpp, .cxx = \s(?:[\w]+)::([\w]+)|[ \t:.>]([\w]+)\s?\([\w\s,.)]*\);|^#\s*define\s+(\w+)
-.asp, .aspx, .cs = (?:(?:(?:public|protected|private|internal)\s+(?:[\w.]+(?:\s*<[<>\w\s.,]+>)?\s+)*([\w.]+)(?:\s*<[<>\w\s.,]+>)?)|(?:namespace\s+([\w.]+)))
+.asp, .aspx, .cs = (?:(?:(?:public|protected|private|internal)\s+(?:[\w.]+(?:\s*<[<>\w\s.,]+>)?\s+)*([\w.]+)(?:\s*<[<>\w\s.,]+>)?)|(?:namespace\s+([\w.]+))|(?:new\s+([\w]+))|(?:using\s+([\w.]+)))
 .h, .hpp, .hxx = ^\s*(?:class|struct)\s+([\w]+)|^\s+(?:\w+\s+)*([\w]+)\s*\(|^#define\s+(\w+)
 .html = \"#(\w+)\"
 .java = (?:public|protected|private|internal)\s+(?:[\w.]+\s+)*([\w.]+)|class\s+([\w]+)(?:(?:\s+)?(?:extends|implements)(?:\s+)?([\w]+)?)
