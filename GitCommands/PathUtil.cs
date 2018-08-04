@@ -310,5 +310,28 @@ namespace GitCommands
 
             return null;
         }
+
+        [NotNull, ItemNotNull]
+        public static IEnumerable<string> FindAncestors([NotNull] string path)
+        {
+            path = path.RemoveTrailingPathSeparator();
+
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                yield break;
+            }
+
+            while (true)
+            {
+                path = Path.GetDirectoryName(path);
+
+                if (string.IsNullOrEmpty(path))
+                {
+                    yield break;
+                }
+
+                yield return path.EnsureTrailingPathSeparator();
+            }
+        }
     }
 }

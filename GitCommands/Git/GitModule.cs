@@ -102,11 +102,77 @@ namespace GitCommands
 
         public GitModule([CanBeNull] string workingDir)
         {
-            _superprojectInit = false;
             WorkingDir = (workingDir ?? "").EnsureTrailingPathSeparator();
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
+
+            (SuperprojectModule, SubmodulePath, SubmoduleName) = TryInitSubmodule();
+
+            return;
+
+            (GitModule superprojectModule, string submodulePath, string submoduleName) TryInitSubmodule()
+            {
+                if (!IsValidGitWorkingDir())
+                {
+                    return (null, null, null);
+                }
+
+                var currentPath = WorkingDir.RemoveTrailingPathSeparator();
+
+                // Try to find an ancestor path that contains a .gitmodules file and is a valid work dir
+                var superprojectPath = PathUtil.FindAncestors(currentPath).FirstOrDefault(HasGitModulesFile);
+
+                // If we didn't find it, but there's a .git file in the current folder, look for a gitdir:
+                // line in that file that points to the location of the .git folder
+                var gitDir = Path.Combine(WorkingDir, ".git");
+                if (superprojectPath == null && File.Exists(gitDir))
+                {
+                    foreach (var line in File.ReadLines(gitDir))
+                    {
+                        const string gitdir = "gitdir:";
+
+                        if (line.StartsWith(gitdir))
+                        {
+                            string gitPath = line.Substring(gitdir.Length).Trim();
+                            int pos = gitPath.IndexOf("/.git/modules/", StringComparison.Ordinal);
+                            if (pos != -1)
+                            {
+                                gitPath = gitPath.Substring(0, pos + 1).Replace('/', '\\');
+                                gitPath = Path.GetFullPath(Path.Combine(WorkingDir, gitPath));
+                                if (HasGitModulesFile(gitPath))
+                                {
+                                    superprojectPath = gitPath;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(superprojectPath) && currentPath.StartsWith(superprojectPath))
+                {
+                    var submodulePath = currentPath.Substring(superprojectPath.Length).ToPosixPath();
+                    var configFile = new ConfigFile(Path.Combine(superprojectPath, ".gitmodules"), local: true);
+
+                    foreach (var configSection in configFile.ConfigSections)
+                    {
+                        if (configSection.GetValue("path") == submodulePath.ToPosixPath())
+                        {
+                            var submoduleName = configSection.SubSection;
+                            var superprojectModule = new GitModule(superprojectPath);
+
+                            return (superprojectModule, submodulePath, submoduleName);
+                        }
+                    }
+
+                    return (null, submodulePath, null);
+                }
+
+                return (null, null, null);
+
+                bool HasGitModulesFile(string path)
+                    => File.Exists(Path.Combine(path, ".gitmodules")) && IsValidGitWorkingDir(path);
+            }
         }
 
         /// <summary>
@@ -126,50 +192,23 @@ namespace GitCommands
 
         public Version AppVersion => AppSettings.AppVersion;
 
-        private bool _superprojectInit;
-        [CanBeNull] private GitModule _superprojectModule;
-        [CanBeNull] private string _submoduleName;
-        [CanBeNull] private string _submodulePath;
-
+        /// <summary>
+        /// If this module is a submodule, returns its name, otherwise <c>null</c>.
+        /// </summary>
         [CanBeNull]
-        public string SubmoduleName
-        {
-            get
-            {
-                InitSuperproject();
-                return _submoduleName;
-            }
-        }
+        public string SubmoduleName { get; }
 
+        /// <summary>
+        /// If this module is a submodule, returns its path, otherwise <c>null</c>.
+        /// </summary>
         [CanBeNull]
-        public string SubmodulePath
-        {
-            get
-            {
-                InitSuperproject();
-                return _submodulePath;
-            }
-        }
+        public string SubmodulePath { get; }
 
+        /// <summary>
+        /// If this module is a submodule, returns its superproject <see cref="GitModule"/>, otherwise <c>null</c>.
+        /// </summary>
         [CanBeNull]
-        public GitModule SuperprojectModule
-        {
-            get
-            {
-                InitSuperproject();
-                return _superprojectModule;
-            }
-        }
-
-        private void InitSuperproject()
-        {
-            if (!_superprojectInit)
-            {
-                string superprojectDir = FindGitSuperprojectPath(out _submoduleName, out _submodulePath);
-                _superprojectModule = superprojectDir == null ? null : new GitModule(superprojectDir);
-                _superprojectInit = true;
-            }
-        }
+        public GitModule SuperprojectModule { get; }
 
         [CanBeNull]
         public GitModule FindTopProjectModule()
@@ -1364,7 +1403,7 @@ namespace GitCommands
                 return (' ', null);
             }
 
-            var lines = SuperprojectModule.RunGitCmd("submodule status --cached " + _submodulePath).Split('\n');
+            var lines = SuperprojectModule.RunGitCmd("submodule status --cached " + SubmodulePath).Split('\n');
 
             if (lines.Length == 0)
             {
@@ -1516,82 +1555,6 @@ namespace GitCommands
                     isUpToDate: code != '+');
                 return true;
             }
-        }
-
-        [CanBeNull]
-        public string FindGitSuperprojectPath(out string submoduleName, [CanBeNull] out string submodulePath)
-        {
-            submoduleName = null;
-            submodulePath = null;
-            if (!IsValidGitWorkingDir())
-            {
-                return null;
-            }
-
-            string superprojectPath = null;
-
-            string currentPath = Path.GetDirectoryName(WorkingDir); // remove last slash
-            if (!string.IsNullOrEmpty(currentPath))
-            {
-                string path = Path.GetDirectoryName(currentPath);
-                for (int i = 0; i < 5; i++)
-                {
-                    if (string.IsNullOrEmpty(path))
-                    {
-                        break;
-                    }
-
-                    if (File.Exists(Path.Combine(path, ".gitmodules")) &&
-                        IsValidGitWorkingDir(path))
-                    {
-                        superprojectPath = path.EnsureTrailingPathSeparator();
-                        break;
-                    }
-
-                    // Check upper directory
-                    path = Path.GetDirectoryName(path);
-                }
-            }
-
-            if (superprojectPath == null && File.Exists(WorkingDir + ".git"))
-            {
-                var lines = File.ReadLines(WorkingDir + ".git");
-                foreach (string line in lines)
-                {
-                    const string gitdir = "gitdir:";
-
-                    if (line.StartsWith(gitdir))
-                    {
-                        string gitPath = line.Substring(gitdir.Length).Trim();
-                        int pos = gitPath.IndexOf("/.git/modules/");
-                        if (pos != -1)
-                        {
-                            gitPath = gitPath.Substring(0, pos + 1).Replace('/', '\\');
-                            gitPath = Path.GetFullPath(Path.Combine(WorkingDir, gitPath));
-                            if (File.Exists(gitPath + ".gitmodules") && IsValidGitWorkingDir(gitPath))
-                            {
-                                superprojectPath = gitPath;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (!string.IsNullOrEmpty(superprojectPath) && currentPath.StartsWith(superprojectPath))
-            {
-                submodulePath = currentPath.Substring(superprojectPath.Length).ToPosixPath();
-                var configFile = new ConfigFile(superprojectPath + ".gitmodules", true);
-                foreach (ConfigSection configSection in configFile.ConfigSections)
-                {
-                    if (configSection.GetValue("path") == submodulePath.ToPosixPath())
-                    {
-                        submoduleName = configSection.SubSection;
-                        return superprojectPath;
-                    }
-                }
-            }
-
-            return null;
         }
 
         public string GetSubmoduleSummary(string submodule)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using GitCommands;
 using NUnit.Framework;
@@ -276,6 +277,18 @@ namespace GitCommandsTests.Helpers
             Assert.AreEqual("", PathUtil.GetFileExtension("..."));
             Assert.Null(PathUtil.GetFileExtension("foo"));
             Assert.Null(PathUtil.GetFileExtension(""));
+        }
+
+        [TestCase("/foo/bar", new[] { "\\foo\\", "\\" })]
+        [TestCase("/foo/bar/", new[] { "\\foo\\", "\\" })]
+        [TestCase("/foo", new[] { "\\" })]
+        [TestCase("/foo/", new[] { "\\" })]
+        [TestCase("/", new string[0])]
+        [TestCase("C:\\foo\\bar", new[] { "C:\\foo\\", "C:\\" })]
+        [TestCase("C:\\", new string[0])]
+        public void FindAncestors(string path, string[] expected)
+        {
+            Assert.AreEqual(expected, PathUtil.FindAncestors(path).ToArray());
         }
     }
 }
