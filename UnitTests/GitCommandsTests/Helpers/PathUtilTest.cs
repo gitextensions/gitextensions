@@ -46,24 +46,46 @@ namespace GitCommandsTests.Helpers
         [Test]
         public void EnsureTrailingPathSeparatorTest()
         {
+            Assert.IsNull(((string)null).EnsureTrailingPathSeparator());
+            Assert.AreEqual("".EnsureTrailingPathSeparator(), "");
+
             if (Path.DirectorySeparatorChar == '\\')
             {
-                Assert.AreEqual("".EnsureTrailingPathSeparator(), "");
                 Assert.AreEqual("C".EnsureTrailingPathSeparator(), "C\\");
                 Assert.AreEqual("C:".EnsureTrailingPathSeparator(), "C:\\");
                 Assert.AreEqual("C:\\".EnsureTrailingPathSeparator(), "C:\\");
                 Assert.AreEqual("C:\\Work\\GitExtensions".EnsureTrailingPathSeparator(), "C:\\Work\\GitExtensions\\");
                 Assert.AreEqual("C:\\Work\\GitExtensions\\".EnsureTrailingPathSeparator(), "C:\\Work\\GitExtensions\\");
                 Assert.AreEqual("C:/Work/GitExtensions/".EnsureTrailingPathSeparator(), "C:/Work/GitExtensions/");
+                Assert.AreEqual("\\".EnsureTrailingPathSeparator(), "\\");
+                Assert.AreEqual("/".EnsureTrailingPathSeparator(), "/");
             }
             else
             {
-                Assert.AreEqual("".EnsureTrailingPathSeparator(), "");
                 Assert.AreEqual("/".EnsureTrailingPathSeparator(), "/");
                 Assert.AreEqual("/Work/GitExtensions".EnsureTrailingPathSeparator(), "/Work/GitExtensions/");
                 Assert.AreEqual("/Work/GitExtensions/".EnsureTrailingPathSeparator(), "/Work/GitExtensions/");
                 Assert.AreEqual("/Work/GitExtensions\\".EnsureTrailingPathSeparator(), "/Work/GitExtensions\\/");
             }
+        }
+
+        [Test]
+        public void RemoveTrailingPathSeparatorTest()
+        {
+            Assert.IsNull(((string)null).RemoveTrailingPathSeparator());
+            Assert.AreEqual("".RemoveTrailingPathSeparator(), "");
+
+            var s = Path.DirectorySeparatorChar;
+
+            Assert.AreEqual($"C:{s}".RemoveTrailingPathSeparator(), "C:");
+            Assert.AreEqual("foo".RemoveTrailingPathSeparator(), "foo");
+            Assert.AreEqual($"foo{s}".RemoveTrailingPathSeparator(), "foo");
+            Assert.AreEqual($"foo{s}bar".RemoveTrailingPathSeparator(), $"foo{s}bar");
+            Assert.AreEqual($"foo{s}bar{s}".RemoveTrailingPathSeparator(), $"foo{s}bar");
+
+            Assert.AreEqual("foo/".RemoveTrailingPathSeparator(), "foo");
+            Assert.AreEqual("foo/bar".RemoveTrailingPathSeparator(), "foo/bar");
+            Assert.AreEqual("foo/bar/".RemoveTrailingPathSeparator(), "foo/bar");
         }
 
         [Test]

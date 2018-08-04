@@ -31,6 +31,23 @@ namespace GitCommands
         }
 
         /// <summary>
+        /// Removes any trailing path separator character from the end of <paramref name="dirPath"/>.
+        /// </summary>
+        [ContractAnnotation("dirPath:null=>null")]
+        [ContractAnnotation("dirPath:notnull=>notnull")]
+        public static string RemoveTrailingPathSeparator([CanBeNull] this string dirPath)
+        {
+            if (dirPath?.Length > 0 &&
+                (dirPath[dirPath.Length - 1] == NativeDirectorySeparatorChar ||
+                 dirPath[dirPath.Length - 1] == PosixDirectorySeparatorChar))
+            {
+                return dirPath.Substring(0, dirPath.Length - 1);
+            }
+
+            return dirPath;
+        }
+
+        /// <summary>
         /// Code guideline: "A directory path should always end with / or \.
         /// Better use Path.Combine instead of Setting.PathSeparator"
         ///
