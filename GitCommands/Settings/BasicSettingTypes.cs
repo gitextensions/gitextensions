@@ -1,4 +1,6 @@
-﻿namespace GitCommands.Settings
+﻿using System;
+
+namespace GitCommands.Settings
 {
     public class StringSetting : Setting<string>
     {
@@ -60,7 +62,7 @@
         }
     }
 
-    public class EnumSetting<T> : Setting<T> where T : struct
+    public class EnumSetting<T> : Setting<T> where T : struct, Enum
     {
         public EnumSetting(string name, SettingsPath settingsSource, T defaultValue)
             : base(name, settingsSource, defaultValue)
@@ -74,7 +76,7 @@
         }
     }
 
-    public class EnumNullableSetting<T> : Setting<T?> where T : struct
+    public class EnumNullableSetting<T> : Setting<T?> where T : struct, Enum
     {
         public EnumNullableSetting(string name, SettingsPath settingsSource)
             : base(name, settingsSource, null)
