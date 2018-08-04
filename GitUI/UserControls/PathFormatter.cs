@@ -66,7 +66,7 @@ namespace GitUI
         [CanBeNull]
         public static string FormatTextForFileNameOnly(string name, string oldName)
         {
-            name = name.TrimEnd(AppSettings.PosixPathSeparator);
+            name = name.TrimEnd(PathUtil.PosixDirectorySeparatorChar);
             var fileName = Path.GetFileName(name);
             var oldFileName = Path.GetFileName(oldName);
 

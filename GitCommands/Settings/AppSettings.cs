@@ -45,7 +45,6 @@ namespace GitCommands
     public static class AppSettings
     {
         // semi-constants
-        public static readonly char PosixPathSeparator = '/';
         public static Version AppVersion => Assembly.GetCallingAssembly().GetName().Version;
         public static string ProductVersion => Application.ProductVersion;
         public static readonly string SettingsFileName = "GitExtensions.settings";

@@ -13,18 +13,21 @@ namespace GitCommands
         private static readonly IEnvironmentAbstraction EnvironmentAbstraction = new EnvironmentAbstraction();
         private static readonly IEnvironmentPathsProvider EnvironmentPathsProvider = new EnvironmentPathsProvider(EnvironmentAbstraction);
 
+        public static readonly char PosixDirectorySeparatorChar = '/';
+        public static readonly char NativeDirectorySeparatorChar = Path.DirectorySeparatorChar;
+
         /// <summary>Replaces native path separator with posix path separator.</summary>
         [NotNull]
         public static string ToPosixPath([NotNull] this string path)
         {
-            return path.Replace(Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator);
+            return path.Replace(NativeDirectorySeparatorChar, PosixDirectorySeparatorChar);
         }
 
         /// <summary>Replaces '\' with '/'.</summary>
         [NotNull]
         public static string ToNativePath([NotNull] this string path)
         {
-            return path.Replace(AppSettings.PosixPathSeparator, Path.DirectorySeparatorChar);
+            return path.Replace(PosixDirectorySeparatorChar, NativeDirectorySeparatorChar);
         }
 
         /// <summary>
@@ -38,10 +41,10 @@ namespace GitCommands
         public static string EnsureTrailingPathSeparator([CanBeNull] this string dirPath)
         {
             if (!dirPath.IsNullOrEmpty() &&
-                dirPath[dirPath.Length - 1] != Path.DirectorySeparatorChar &&
-                dirPath[dirPath.Length - 1] != AppSettings.PosixPathSeparator)
+                dirPath[dirPath.Length - 1] != NativeDirectorySeparatorChar &&
+                dirPath[dirPath.Length - 1] != PosixDirectorySeparatorChar)
             {
-                dirPath += Path.DirectorySeparatorChar;
+                dirPath += NativeDirectorySeparatorChar;
             }
 
             return dirPath;
@@ -71,7 +74,7 @@ namespace GitCommands
         [NotNull]
         public static string GetFileName([NotNull] string fileName)
         {
-            var pathSeparators = new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator };
+            var pathSeparators = new[] { NativeDirectorySeparatorChar, PosixDirectorySeparatorChar };
             var pos = fileName.LastIndexOfAny(pathSeparators);
             if (pos != -1)
             {
@@ -84,13 +87,13 @@ namespace GitCommands
         [NotNull]
         public static string GetDirectoryName([NotNull] string fileName)
         {
-            var pathSeparators = new[] { Path.DirectorySeparatorChar, AppSettings.PosixPathSeparator };
+            var pathSeparators = new[] { NativeDirectorySeparatorChar, PosixDirectorySeparatorChar };
             var pos = fileName.LastIndexOfAny(pathSeparators);
             if (pos != -1)
             {
-                if (pos == 0 && fileName[0] == AppSettings.PosixPathSeparator)
+                if (pos == 0 && fileName[0] == PosixDirectorySeparatorChar)
                 {
-                    return fileName.Length == 1 ? string.Empty : AppSettings.PosixPathSeparator.ToString();
+                    return fileName.Length == 1 ? "" : PosixDirectorySeparatorChar.ToString();
                 }
 
                 fileName = fileName.Substring(0, pos);
