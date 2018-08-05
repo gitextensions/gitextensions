@@ -207,6 +207,8 @@ namespace GitCommandsTests.Helpers
                 @"Does not exist",
                 @"\\" + Environment.MachineName.ToLower() + @"\c$\Windows\System32",
                 @"..",
+                "",
+                " "
             };
 
             var expectedExactPaths = new Dictionary<string, string>()
