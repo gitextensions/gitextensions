@@ -20,7 +20,6 @@ using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
-using SmartFormat;
 
 namespace GitCommands
 {
@@ -1155,9 +1154,15 @@ namespace GitCommands
 
         public string Init(bool bare, bool shared)
         {
-            var result = RunGitCmd(Smart.Format("init{0: --bare|}{1: --shared=all|}", bare, shared));
+            var output = RunGitCmd(new ArgumentBuilder
+            {
+                "init",
+                { bare, "--bare" },
+                { shared, "--shared=all" }
+            });
+
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
-            return result;
+            return output;
         }
 
         public bool IsMerge(ObjectId objectId)
