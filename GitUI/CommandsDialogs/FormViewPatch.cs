@@ -10,11 +10,16 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormViewPatch : GitModuleForm
     {
-        private readonly TranslationString _patchFileFilterString =
-            new TranslationString("Patch file (*.Patch)");
+        private readonly TranslationString _patchFileFilterString = new TranslationString("Patch file (*.Patch)");
+        private readonly TranslationString _patchFileFilterTitle = new TranslationString("Select patch file");
 
-        private readonly TranslationString _patchFileFilterTitle =
-            new TranslationString("Select patch file");
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormViewPatch()
+        {
+            InitializeComponent();
+        }
 
         public FormViewPatch(GitUICommands commands)
             : base(commands)

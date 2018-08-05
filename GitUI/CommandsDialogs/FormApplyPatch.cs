@@ -30,11 +30,11 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         /// <summary>
-        /// For VS designer
+        /// For VS designer and translation test.
         /// </summary>
         private FormApplyPatch()
-            : this(null)
         {
+            InitializeComponent();
         }
 
         public FormApplyPatch(GitUICommands commands)
@@ -42,10 +42,7 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             InitializeComplete();
-            if (commands != null)
-            {
-                EnableButtons();
-            }
+            EnableButtons();
         }
 
         public void SetPatchFile(string name)

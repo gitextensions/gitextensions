@@ -47,7 +47,7 @@ namespace GitUI
         /// </remarks>
         /// <exception cref="InvalidOperationException">Unable to initialise the source as
         /// no ancestor of type <see cref="IGitUICommandsSource"/> was found.</exception>
-        [CanBeNull]
+        [NotNull]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
         public IGitUICommandsSource UICommandsSource
@@ -68,6 +68,7 @@ namespace GitUI
                     }
                 }
 
+                // ReSharper disable once AssignNullToNotNullAttribute
                 return _uiCommandsSource;
             }
             set
@@ -83,9 +84,9 @@ namespace GitUI
         }
 
         /// <summary>Gets the <see cref="UICommandsSource"/>'s <see cref="GitUICommands"/> reference.</summary>
-        [CanBeNull]
+        [NotNull]
         [Browsable(false)]
-        public GitUICommands UICommands => UICommandsSource?.UICommands;
+        public GitUICommands UICommands => UICommandsSource.UICommands;
 
         /// <summary>
         /// Gets the UI commands, if they've initialised.
@@ -105,10 +106,10 @@ namespace GitUI
         }
 
         /// <summary>Gets the <see cref="UICommands"/>' <see cref="GitModule"/> reference.</summary>
-        [CanBeNull]
+        [NotNull]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public GitModule Module => UICommands?.Module;
+        public GitModule Module => UICommands.Module;
 
         protected GitModuleControl()
         {

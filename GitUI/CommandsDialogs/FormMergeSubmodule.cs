@@ -13,6 +13,14 @@ namespace GitUI.CommandsDialogs
 
         private readonly string _filename;
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormMergeSubmodule()
+        {
+            InitializeComponent();
+        }
+
         public FormMergeSubmodule(GitUICommands commands, string filename)
             : base(commands)
         {

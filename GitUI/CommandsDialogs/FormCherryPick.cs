@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.HelperDialogs;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -19,19 +20,22 @@ namespace GitUI.CommandsDialogs
 
         private bool _isMerge;
 
+        [CanBeNull]
         public GitRevision Revision { get; set; }
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
         private FormCherryPick()
-            : this(null, null)
         {
+            InitializeComponent();
         }
 
-        public FormCherryPick(GitUICommands commands, GitRevision revision)
+        public FormCherryPick(GitUICommands commands, [CanBeNull] GitRevision revision)
             : base(commands)
         {
             Revision = revision;
             InitializeComponent();
-
             InitializeComplete();
         }
 

@@ -270,17 +270,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             void commandsSource_activate(IGitUICommandsSource sender)
             {
                 var newCommands = sender.UICommands;
-                if (newCommands != null)
-                {
-                    newCommands.PreCheckoutBranch += GitUICommands_PreCheckout;
-                    newCommands.PreCheckoutRevision += GitUICommands_PreCheckout;
-                    newCommands.PostCheckoutBranch += GitUICommands_PostCheckout;
-                    newCommands.PostCheckoutRevision += GitUICommands_PostCheckout;
-                    newCommands.PostEditGitIgnore += GitUICommands_PostEditGitIgnore;
+                newCommands.PreCheckoutBranch += GitUICommands_PreCheckout;
+                newCommands.PreCheckoutRevision += GitUICommands_PreCheckout;
+                newCommands.PostCheckoutBranch += GitUICommands_PostCheckout;
+                newCommands.PostCheckoutRevision += GitUICommands_PostCheckout;
+                newCommands.PostEditGitIgnore += GitUICommands_PostEditGitIgnore;
 
-                    var module = newCommands.Module;
-                    StartWatchingChanges(module.WorkingDir, module.WorkingDirGitDir);
-                }
+                var module = newCommands.Module;
+                StartWatchingChanges(module.WorkingDir, module.WorkingDirGitDir);
             }
 
             void GitUICommands_PreCheckout(object sender, GitUIEventArgs e)

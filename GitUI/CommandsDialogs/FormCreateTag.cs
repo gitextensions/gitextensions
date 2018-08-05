@@ -23,7 +23,15 @@ namespace GitUI.CommandsDialogs
         private readonly IGitTagController _gitTagController;
         private string _currentRemote = "";
 
-        public FormCreateTag([CanBeNull] GitUICommands commands, [CanBeNull] ObjectId objectId)
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormCreateTag()
+        {
+            InitializeComponent();
+        }
+
+        public FormCreateTag([NotNull] GitUICommands commands, [CanBeNull] ObjectId objectId)
             : base(commands)
         {
             InitializeComponent();
@@ -44,10 +52,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            if (commands != null)
-            {
-                _gitTagController = new GitTagController(commands);
-            }
+            _gitTagController = new GitTagController(commands);
         }
 
         private void FormCreateTag_Load(object sender, EventArgs e)

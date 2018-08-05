@@ -185,10 +185,7 @@ namespace GitUI.CommitInfo
 
             UpdateRevisionInfo();
 
-            if (Module != null)
-            {
-                StartAsyncDataLoad();
-            }
+            StartAsyncDataLoad();
 
             return;
 

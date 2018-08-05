@@ -31,6 +31,14 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _anotherCommitTooltip = new TranslationString("Select another commit");
         private readonly TranslationString _btnSwapTooltip = new TranslationString("Swap BASE and Compare commits");
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormDiff()
+        {
+            InitializeComponent();
+        }
+
         public FormDiff(
             GitUICommands commands, bool firstParentIsValid,
             ObjectId baseId, ObjectId headId,

@@ -6,9 +6,12 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormBlame : GitModuleForm
     {
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
         private FormBlame()
-            : this(null)
         {
+            InitializeComponent();
         }
 
         private FormBlame(GitUICommands commands)

@@ -13,11 +13,11 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noRevisionSelectedMsgBoxCaption = new TranslationString("Checkout");
 
         /// <summary>
-        /// For VS designer
+        /// For VS designer and translation test.
         /// </summary>
         private FormCheckoutRevision()
-            : this(null)
         {
+            InitializeComponent();
         }
 
         public FormCheckoutRevision(GitUICommands commands)

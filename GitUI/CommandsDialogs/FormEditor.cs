@@ -18,6 +18,14 @@ namespace GitUI.CommandsDialogs
 
         private bool _hasChanges;
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormEditor()
+        {
+            InitializeComponent();
+        }
+
         public FormEditor([NotNull] GitUICommands commands, [CanBeNull] string fileName, bool showWarning)
             : base(commands)
         {

@@ -195,7 +195,7 @@ namespace GitUI.SpellChecker
             set => TextBox.SelectedText = value;
         }
 
-        protected RepoDistSettings Settings => Module?.EffectiveSettings ?? AppSettings.SettingsContainer;
+        protected RepoDistSettings Settings => Module.EffectiveSettings ?? AppSettings.SettingsContainer;
 
         public void SelectAll()
         {
@@ -553,7 +553,7 @@ namespace GitUI.SpellChecker
             // if a Module is available, then always change the "repository local" setting
             // it will set a dictionary only for this Module (repository) locally
 
-            var settings = Module?.LocalSettings ?? Settings;
+            var settings = Module.LocalSettings ?? Settings;
 
             settings.Dictionary = ((ToolStripItem)sender).Text;
             LoadDictionary();

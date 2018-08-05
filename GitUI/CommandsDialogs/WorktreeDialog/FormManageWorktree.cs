@@ -12,6 +12,14 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
     {
         private List<WorkTree> _worktrees;
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormManageWorktree()
+        {
+            InitializeComponent();
+        }
+
         public FormManageWorktree(GitUICommands commands)
             : base(commands)
         {

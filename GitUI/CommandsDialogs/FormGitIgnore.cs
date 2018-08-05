@@ -63,6 +63,14 @@ namespace GitUI.CommandsDialogs
 
         private readonly IGitIgnoreDialogModel _dialogModel;
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormGitIgnore()
+        {
+            InitializeComponent();
+        }
+
         public FormGitIgnore(GitUICommands commands, bool localExclude)
             : base(commands)
         {

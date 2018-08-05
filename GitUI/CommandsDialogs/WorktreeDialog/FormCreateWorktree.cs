@@ -21,6 +21,14 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         public IReadOnlyList<IGitRef> ExistingBranches { get; set; }
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormCreateWorktree()
+        {
+            InitializeComponent();
+        }
+
         public FormCreateWorktree(GitUICommands commands)
             : base(commands)
         {

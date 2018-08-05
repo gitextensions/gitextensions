@@ -19,6 +19,14 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
         private readonly bool _localExclude;
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormAddToGitIgnore()
+        {
+            InitializeComponent();
+        }
+
         public FormAddToGitIgnore(GitUICommands commands, bool localExclude, params string[] filePatterns)
             : base(commands)
         {

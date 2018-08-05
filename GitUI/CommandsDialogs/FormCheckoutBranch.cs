@@ -52,9 +52,12 @@ namespace GitUI.CommandsDialogs
         private IReadOnlyList<IGitRef> _localBranches;
         private IReadOnlyList<IGitRef> _remoteBranches;
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
         private FormCheckoutBranch()
-            : this(null)
         {
+            InitializeComponent();
         }
 
         internal FormCheckoutBranch(GitUICommands commands)

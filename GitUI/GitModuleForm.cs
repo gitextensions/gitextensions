@@ -31,8 +31,8 @@ namespace GitUI
             }
             protected set
             {
-                GitUICommands oldCommands = _uiCommands;
-                _uiCommands = value;
+                var oldCommands = _uiCommands;
+                _uiCommands = value ?? throw new ArgumentNullException(nameof(value));
                 UICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldCommands));
             }
         }
@@ -41,20 +41,23 @@ namespace GitUI
         protected bool IsUICommandsInitialized => _uiCommands != null;
 
         /// <summary>Gets a <see cref="GitModule"/> reference.</summary>
-        [CanBeNull]
+        [NotNull]
         [Browsable(false)]
-        public GitModule Module => _uiCommands?.Module;
+        public GitModule Module => UICommands.Module;
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
         protected GitModuleForm()
         {
         }
 
-        protected GitModuleForm([CanBeNull] GitUICommands commands)
+        protected GitModuleForm([NotNull] GitUICommands commands)
             : this(true, commands)
         {
         }
 
-        protected GitModuleForm(bool enablePositionRestore, [CanBeNull] GitUICommands commands)
+        protected GitModuleForm(bool enablePositionRestore, [NotNull] GitUICommands commands)
             : base(enablePositionRestore)
         {
             if (commands != null)

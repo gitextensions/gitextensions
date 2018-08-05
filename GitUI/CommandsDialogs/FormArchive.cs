@@ -89,11 +89,11 @@ namespace GitUI.CommandsDialogs
         }
 
         /// <summary>
-        /// For VS designer
+        /// For VS designer and translation test.
         /// </summary>
         private FormArchive()
-            : this(null)
         {
+            InitializeComponent();
         }
 
         public FormArchive(GitUICommands commands)

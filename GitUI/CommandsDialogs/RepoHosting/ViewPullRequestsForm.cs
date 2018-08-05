@@ -28,10 +28,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private bool _isFirstLoad;
         private readonly AsyncLoader _loader = new AsyncLoader();
 
-        // only for translation
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
         private ViewPullRequestsForm()
-            : this(null)
         {
+            InitializeComponent();
         }
 
         private ViewPullRequestsForm(GitUICommands commands)

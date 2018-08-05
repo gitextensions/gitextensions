@@ -168,14 +168,14 @@ namespace GitUI.CommandsDialogs
         private int _alreadyLoadedTemplatesCount = -1;
 
         /// <summary>
-        /// For VS designer
+        /// For VS designer and translation test.
         /// </summary>
         private FormCommit()
-            : this(null)
         {
+            InitializeComponent();
         }
 
-        public FormCommit([CanBeNull] GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null)
+        public FormCommit([NotNull] GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null)
             : base(enablePositionRestore: true, commands)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
@@ -189,12 +189,8 @@ namespace GitUI.CommandsDialogs
 
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;
-
-            if (Module != null)
-            {
-                Message.AddAutoCompleteProvider(new CommitAutoCompleteProvider(Module));
-                _commitTemplateManager = new CommitTemplateManager(Module);
-            }
+            Message.AddAutoCompleteProvider(new CommitAutoCompleteProvider(Module));
+            _commitTemplateManager = new CommitTemplateManager(Module);
 
             SolveMergeconflicts.Font = new Font(SolveMergeconflicts.Font, FontStyle.Bold);
 

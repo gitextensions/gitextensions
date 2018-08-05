@@ -4,9 +4,12 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormLog : GitModuleForm
     {
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
         private FormLog()
-            : this(null)
         {
+            InitializeComponent();
         }
 
         public FormLog(GitUICommands commands)

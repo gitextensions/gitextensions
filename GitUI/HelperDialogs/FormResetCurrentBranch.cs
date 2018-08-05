@@ -18,6 +18,14 @@ namespace GitUI.HelperDialogs
             Hard
         }
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormResetCurrentBranch()
+        {
+            InitializeComponent();
+        }
+
         public FormResetCurrentBranch(GitUICommands commands, GitRevision revision, ResetType resetType = ResetType.Mixed)
             : base(commands)
         {

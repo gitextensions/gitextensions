@@ -16,14 +16,16 @@ namespace GitUI.CommandsDialogs
         [CanBeNull]
         private IDisposable _disposable1;
 
-        public FormSparseWorkingCopy([CanBeNull] GitUICommands commands /* Translation tests set it to NULL */)
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormSparseWorkingCopy()
+        {
+        }
+
+        public FormSparseWorkingCopy([NotNull] GitUICommands commands)
             : base(commands)
         {
-            if (commands == null)
-            {
-                return;
-            }
-
             var sparse = new FormSparseWorkingCopyViewModel(commands);
             BindToViewModelGlobal(sparse);
             CreateView(sparse);

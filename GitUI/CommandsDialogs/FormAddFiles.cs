@@ -5,11 +5,11 @@ namespace GitUI.CommandsDialogs
     public sealed partial class FormAddFiles : GitModuleForm
     {
         /// <summary>
-        /// For VS designer
+        /// For VS designer and translation test.
         /// </summary>
         private FormAddFiles()
-            : this(null)
         {
+            InitializeComponent();
         }
 
         public FormAddFiles(GitUICommands commands, string addFile = null)

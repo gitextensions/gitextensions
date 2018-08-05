@@ -31,12 +31,15 @@ namespace GitUI.CommandsDialogs
 
         private string FileName { get; set; }
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
         private FormFileHistory()
-            : this(null)
         {
+            InitializeComponent();
         }
 
-        private FormFileHistory([CanBeNull] GitUICommands commands)
+        private FormFileHistory([NotNull] GitUICommands commands)
             : base(commands)
         {
             InitializeComponent();

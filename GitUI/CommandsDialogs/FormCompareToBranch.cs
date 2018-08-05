@@ -7,12 +7,16 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormCompareToBranch : GitModuleForm
     {
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
         private FormCompareToBranch()
-            : this(null, null)
         {
+            InitializeComponent();
         }
 
-        public FormCompareToBranch([CanBeNull] GitUICommands commands, [CanBeNull] ObjectId selectedCommit) : base(commands)
+        public FormCompareToBranch([NotNull] GitUICommands commands, [CanBeNull] ObjectId selectedCommit)
+            : base(commands)
         {
             MinimizeBox = false;
             MaximizeBox = false;

@@ -2,6 +2,14 @@
 {
     public partial class FormEdit : GitModuleForm
     {
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormEdit()
+        {
+            InitializeComponent();
+        }
+
         public FormEdit(GitUICommands commands, string text)
             : base(true, commands)
         {

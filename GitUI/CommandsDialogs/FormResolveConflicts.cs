@@ -94,6 +94,14 @@ namespace GitUI.CommandsDialogs
 
         private readonly IFullPathResolver _fullPathResolver;
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormResolveConflicts()
+        {
+            InitializeComponent();
+        }
+
         public FormResolveConflicts(GitUICommands commands, bool offerCommit = true)
             : base(commands)
         {
@@ -104,11 +112,6 @@ namespace GitUI.CommandsDialogs
 
             FileName.DataPropertyName = nameof(ConflictData.Filename);
             authorDataGridViewTextBoxColumn1.DataPropertyName = "Author"; // TODO this property does not exist on the target type
-        }
-
-        private FormResolveConflicts()
-            : this(null)
-        {
         }
 
         protected override void OnRuntimeLoad(EventArgs e)

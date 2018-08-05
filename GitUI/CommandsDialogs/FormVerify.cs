@@ -26,12 +26,15 @@ namespace GitUI.CommandsDialogs
         private readonly DataGridViewCheckBoxHeaderCell _selectedItemsHeader = new DataGridViewCheckBoxHeaderCell();
         private readonly IGitTagController _gitTagController;
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
         private FormVerify()
-            : this(null)
         {
+            InitializeComponent();
         }
 
-        public FormVerify([CanBeNull] GitUICommands commands)
+        public FormVerify([NotNull] GitUICommands commands)
             : base(commands)
         {
             InitializeComponent();
@@ -58,10 +61,7 @@ namespace GitUI.CommandsDialogs
             columnHash.DataPropertyName = nameof(LostObject.ObjectId);
             columnParent.DataPropertyName = nameof(LostObject.Parent);
 
-            if (commands != null)
-            {
-                _gitTagController = new GitTagController(commands);
-            }
+            _gitTagController = new GitTagController(commands);
         }
 
         [CanBeNull]

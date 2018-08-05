@@ -17,6 +17,14 @@ namespace GitUI.CommandsDialogs
         private readonly IGitBranchNameNormaliser _branchNameNormaliser;
         private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
 
+        /// <summary>
+        /// For VS designer and translation test.
+        /// </summary>
+        private FormCreateBranch()
+        {
+            InitializeComponent();
+        }
+
         public FormCreateBranch(GitUICommands commands, ObjectId objectId)
             : base(commands)
         {
