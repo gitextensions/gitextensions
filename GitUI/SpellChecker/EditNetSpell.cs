@@ -551,7 +551,7 @@ namespace GitUI.SpellChecker
         private void DicToolStripMenuItemClick(object sender, EventArgs e)
         {
             // if a Module is available, then always change the "repository local" setting
-            // it will set a dictionary only for this Module (repository) localy
+            // it will set a dictionary only for this Module (repository) locally
 
             var settings = Module?.LocalSettings ?? Settings;
 

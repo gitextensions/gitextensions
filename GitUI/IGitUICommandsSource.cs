@@ -1,25 +1,17 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace GitUI
 {
-    public class GitUICommandsChangedEventArgs : EventArgs
+    public sealed class GitUICommandsChangedEventArgs : EventArgs
     {
-        public GitUICommandsChangedEventArgs(GitUICommands oldCommands)
+        public GitUICommandsChangedEventArgs([CanBeNull] GitUICommands oldCommands)
         {
             OldCommands = oldCommands;
         }
 
+        [CanBeNull]
         public GitUICommands OldCommands { get; }
-    }
-
-    public class GitUICommandsSourceEventArgs : EventArgs
-    {
-        public GitUICommandsSourceEventArgs(IGitUICommandsSource gitUiCommandsSource)
-        {
-            GitUICommandsSource = gitUiCommandsSource;
-        }
-
-        public IGitUICommandsSource GitUICommandsSource { get; }
     }
 
     /// <summary>Provides <see cref="GitUICommands"/> and a change notification.</summary>
@@ -29,6 +21,8 @@ namespace GitUI
         event EventHandler<GitUICommandsChangedEventArgs> UICommandsChanged;
 
         /// <summary>Gets the <see cref="GitUICommands"/> value.</summary>
+        /// <exception cref="InvalidOperationException">Attempting to get a value when none has been set.</exception>
+        [NotNull]
         GitUICommands UICommands { get; }
     }
 }

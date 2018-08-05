@@ -9,6 +9,17 @@ using ResourceManager;
 
 namespace GitUI
 {
+    public sealed class GitUICommandsSourceEventArgs : EventArgs
+    {
+        public GitUICommandsSourceEventArgs([NotNull] IGitUICommandsSource gitUiCommandsSource)
+        {
+            GitUICommandsSource = gitUiCommandsSource;
+        }
+
+        [NotNull]
+        public IGitUICommandsSource GitUICommandsSource { get; }
+    }
+
     /// <summary>
     /// Base class for a <see cref="UserControl"/> requiring <see cref="GitModule"/> and <see cref="GitUICommands"/>.
     /// </summary>
@@ -138,7 +149,7 @@ namespace GitUI
         }
 
         /// <summary>Raises the <see cref="UICommandsSourceSet"/> event.</summary>
-        protected virtual void OnUICommandsSourceChanged(IGitUICommandsSource source)
+        protected virtual void OnUICommandsSourceChanged([NotNull] IGitUICommandsSource source)
         {
             UICommandsSourceSet?.Invoke(this, new GitUICommandsSourceEventArgs(source));
         }

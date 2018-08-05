@@ -301,7 +301,7 @@ Inactive remote is completely invisible to git.");
 
             // adjust width of the labels if required
             // this may be necessary if the translated labels require more space than English versions
-            // the longest label is likely to be lebel3 (Private key file), so use it as a guide
+            // the longest label is likely to be label3 (Private key file), so use it as a guide
             var widestLabelMinSize = new Size(label3.Width, 0);
             label1.MinimumSize = label1.MaximumSize = widestLabelMinSize;        // Name
             label2.MinimumSize = label2.MaximumSize = widestLabelMinSize;        // Url

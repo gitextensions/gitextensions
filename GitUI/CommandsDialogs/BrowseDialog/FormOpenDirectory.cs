@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         [CanBeNull] private GitModule _chosenModule;
 
-        public FormOpenDirectory(GitModule currentModule)
+        public FormOpenDirectory([CanBeNull] GitModule currentModule)
         {
             InitializeComponent();
             InitializeComplete();
@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             MinimumSize = DpiUtil.Scale(new Size(450, 116));
         }
 
-        private static IReadOnlyList<string> GetDirectories(GitModule currentModule, IEnumerable<Repository> repositoryHistory)
+        private static IReadOnlyList<string> GetDirectories([CanBeNull] GitModule currentModule, IEnumerable<Repository> repositoryHistory)
         {
             var directories = new List<string>();
 
@@ -83,7 +83,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         }
 
         [CanBeNull]
-        public static GitModule OpenModule(IWin32Window owner, GitModule currentModule)
+        public static GitModule OpenModule(IWin32Window owner, [CanBeNull] GitModule currentModule)
         {
             using (var open = new FormOpenDirectory(currentModule))
             {
