@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -19,25 +18,19 @@ namespace GitUI
 
             var isDpiScaled = DpiUtil.IsNonStandard;
 
-            var queue = new Queue<Control>();
-            queue.Enqueue(control);
-
-            while (queue.Count != 0)
+            // If we are in design mode, don't scale anything as the designer may
+            // write scaled values back to InitializeComponent.
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
             {
-                var next = queue.Dequeue();
+                return;
+            }
 
-                if (next is IComponent component && component.Site?.DesignMode == true)
-                {
-                    // If we are in design mode, don't scale anything as the designer may
-                    // write scaled values back to InitializeComponent.
-                    return;
-                }
-
+            foreach (var descendant in control.FindDescendants())
+            {
                 // NOTE we can't automatically scale TreeView or ListView here as
                 // adjustment must be done before images are added to the
                 // ImageList otherwise they're all removed.
-
-                switch (next)
+                switch (descendant)
                 {
                     case ButtonBase button:
                     {
@@ -72,7 +65,6 @@ namespace GitUI
                             tabControl.Padding = DpiUtil.Scale(new Point(8, 6));
                         }
 
-                        EnqueueChildren();
                         break;
                     }
 
@@ -91,40 +83,23 @@ namespace GitUI
                         }
 
                         splitContainer.BackColor = Color.FromArgb(218, 218, 218);
-                        EnqueueChildren();
                         break;
                     }
 
-                    case TextBoxBase textBox when next.Margin == new Padding(12):
+                    case TextBoxBase textBox when textBox.Margin == new Padding(12):
                     {
                         // Work around a bug in WinForms where the control's margin gets scaled beyond expectations
                         // see https://github.com/gitextensions/gitextensions/issues/5098
                         textBox.Margin = DpiUtil.Scale(new Padding(3));
-                        EnqueueChildren();
                         break;
                     }
 
-                    case UpDownBase upDown when next.Margin == new Padding(96):
+                    case UpDownBase upDown when upDown.Margin == new Padding(96):
                     {
                         // Work around a bug in WinForms where the control's margin gets scaled beyond expectations
                         // see https://github.com/gitextensions/gitextensions/issues/5098
                         upDown.Margin = DpiUtil.Scale(new Padding(3));
-                        EnqueueChildren();
                         break;
-                    }
-
-                    default:
-                    {
-                        EnqueueChildren();
-                        break;
-                    }
-                }
-
-                void EnqueueChildren()
-                {
-                    foreach (Control child in next.Controls)
-                    {
-                        queue.Enqueue(child);
                     }
                 }
             }

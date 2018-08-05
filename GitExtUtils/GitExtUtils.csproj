@@ -49,7 +49,9 @@
     <Compile Include="GitUI\CancellationTokenSequence.cs" />
     <Compile Include="GitUI\ComboBoxExtensions.cs" />
     <Compile Include="GitUI\ControlDpiExtensions.cs" />
+    <Compile Include="GitUI\ControlHotkeyExtensions.cs" />
     <Compile Include="GitUI\ControlThreadingExtensions.cs" />
+    <Compile Include="GitUI\ControlUtil.cs" />
     <Compile Include="GitUI\DpiUtil.cs" />
     <Compile Include="GitUI\TableLayoutPanelExtensions.cs" />
     <Compile Include="GitUI\ThreadHelper.cs" />
