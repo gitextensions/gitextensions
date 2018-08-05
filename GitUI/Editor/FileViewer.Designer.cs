@@ -50,6 +50,7 @@ namespace GitUI.Editor
             this.ignoreAllWhitespaces = new System.Windows.Forms.ToolStripButton();
             this.PictureBox = new System.Windows.Forms.PictureBox();
             this.revertSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._NO_TRANSLATE_lblShowPreview = new System.Windows.Forms.LinkLabel();
             this.contextMenu.SuspendLayout();
             this.fileviewerToolbar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
@@ -348,10 +349,24 @@ namespace GitUI.Editor
             this.revertSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.revertSelectedLinesToolStripMenuItem.Text = "Revert selected lines";
             this.revertSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.revertSelectedLinesToolStripMenuItem_Click);
+            //
+            // llShowPreview
+            //
+            this._NO_TRANSLATE_lblShowPreview.AutoSize = true;
+            this._NO_TRANSLATE_lblShowPreview.BackColor = System.Drawing.Color.White;
+            this._NO_TRANSLATE_lblShowPreview.Location = new System.Drawing.Point(43, 23);
+            this._NO_TRANSLATE_lblShowPreview.Name = "_NO_TRANSLATE_lblShowPreview";
+            this._NO_TRANSLATE_lblShowPreview.Size = new System.Drawing.Size(214, 13);
+            this._NO_TRANSLATE_lblShowPreview.TabIndex = 9;
+            this._NO_TRANSLATE_lblShowPreview.TabStop = true;
+            this._NO_TRANSLATE_lblShowPreview.Text = "This file is over 5 MB. Click to show preview";
+            this._NO_TRANSLATE_lblShowPreview.Visible = false;
+            this._NO_TRANSLATE_lblShowPreview.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.llShowPreview_LinkClicked);
             // 
             // FileViewer
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.Controls.Add(this._NO_TRANSLATE_lblShowPreview);
             this.Controls.Add(this.PictureBox);
             this.Controls.Add(this.fileviewerToolbar);
             this.Margin = new System.Windows.Forms.Padding(0);
@@ -400,5 +415,6 @@ namespace GitUI.Editor
         private System.Windows.Forms.ToolStripMenuItem revertSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton ignoreAllWhitespaces;
         private System.Windows.Forms.ToolStripMenuItem ignoreAllWhitespaceChangesToolStripMenuItem;
+        private LinkLabel _NO_TRANSLATE_lblShowPreview;
     }
 }
