@@ -1079,13 +1079,32 @@ namespace GitUI.CommandsDialogs
 
         private void FillFileTree()
         {
+            var revision = RevisionGrid.GetSelectedRevisions().FirstOrDefault();
+
+            // Don't show the "File Tree" tab for artificial commits
+            var showFileTreeTab = revision?.IsArtificial != true;
+
+            if (showFileTreeTab)
+            {
+                if (TreeTabPage.Parent == null)
+                {
+                    var index = CommitInfoTabControl.TabPages.IndexOf(DiffTabPage);
+                    Debug.Assert(index != -1, "TabControl should contain diff tab page");
+                    CommitInfoTabControl.TabPages.Insert(index + 1, TreeTabPage);
+                }
+            }
+            else
+            {
+                TreeTabPage.Parent = null;
+            }
+
             if (CommitInfoTabControl.SelectedTab != TreeTabPage || _selectedRevisionUpdatedTargets.HasFlag(UpdateTargets.FileTree))
             {
                 return;
             }
 
             _selectedRevisionUpdatedTargets |= UpdateTargets.FileTree;
-            fileTree.LoadRevision(RevisionGrid.GetSelectedRevisions().FirstOrDefault());
+            fileTree.LoadRevision(revision);
         }
 
         private void FillDiff()
