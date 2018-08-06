@@ -29,7 +29,10 @@ namespace GitUI
 
         private int _isDisposed;
 
-        /// <summary>Occurs after the <see cref="UICommandsSource"/> is changed.</summary>
+        /// <summary>
+        /// Occurs after the <see cref="UICommandsSource"/> is set.
+        /// Will only occur once, as the source cannot change after being set.
+        /// </summary>
         [Browsable(false)]
         public event EventHandler<GitUICommandsSourceEventArgs> UICommandsSourceSet;
 
@@ -75,7 +78,7 @@ namespace GitUI
                 }
 
                 _uiCommandsSource = value ?? throw new ArgumentException($"Can not assign null value to {nameof(UICommandsSource)}.");
-                OnUICommandsSourceChanged(_uiCommandsSource);
+                OnUICommandsSourceSet(_uiCommandsSource);
             }
         }
 
@@ -149,7 +152,7 @@ namespace GitUI
         }
 
         /// <summary>Raises the <see cref="UICommandsSourceSet"/> event.</summary>
-        protected virtual void OnUICommandsSourceChanged([NotNull] IGitUICommandsSource source)
+        protected virtual void OnUICommandsSourceSet([NotNull] IGitUICommandsSource source)
         {
             UICommandsSourceSet?.Invoke(this, new GitUICommandsSourceEventArgs(source));
         }
