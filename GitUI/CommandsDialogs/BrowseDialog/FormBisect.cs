@@ -60,19 +60,21 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     Close();
                 }
             }
-        }
 
-        private void BisectRange(ObjectId startRevision, ObjectId endRevision)
-        {
-            var command = GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good, startRevision);
-            var errorOccurred = !FormProcess.ShowDialog(this, command);
-            if (errorOccurred)
+            return;
+
+            void BisectRange(ObjectId startRevision, ObjectId endRevision)
             {
-                return;
-            }
+                var command = GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good, startRevision);
+                var errorOccurred = !FormProcess.ShowDialog(this, command);
+                if (errorOccurred)
+                {
+                    return;
+                }
 
-            command = GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Bad, endRevision);
-            FormProcess.ShowDialog(this, command);
+                command = GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Bad, endRevision);
+                FormProcess.ShowDialog(this, command);
+            }
         }
 
         private void Good_Click(object sender, EventArgs e)
