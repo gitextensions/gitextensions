@@ -1713,47 +1713,57 @@ namespace GitUI.CommandsDialogs
             this.toolPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
-        
-        private System.Windows.Forms.SplitContainer RightSplitContainer;
-        private System.Windows.Forms.SplitContainer RevisionsSplitContainer;
+
+        private SplitContainer MainSplitContainer;
+        private SplitContainer RightSplitContainer;
+        private SplitContainer RevisionsSplitContainer;
+
         private FullBleedTabControl CommitInfoTabControl;
-        private System.Windows.Forms.TabPage TreeTabPage;
-        private System.Windows.Forms.BindingSource gitRevisionBindingSource;
-        private System.Windows.Forms.BindingSource gitItemBindingSource;
+        private TabPage CommitInfoTabPage;
+        private TabPage DiffTabPage;
+        private TabPage TreeTabPage;
+        private TabPage GpgInfoTabPage;
+
+        private BindingSource gitRevisionBindingSource;
+        private BindingSource gitItemBindingSource;
         private GitUI.RevisionGridControl RevisionGrid;
         private ToolStripEx ToolStrip;
-        private System.Windows.Forms.ToolStripButton toolStripButtonCommit;
-        private System.Windows.Forms.ToolStripSplitButton _NO_TRANSLATE_WorkingDir;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator0;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton GitBash;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripButton EditSettings;
-        private System.Windows.Forms.ToolStripButton RefreshButton;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripTextBox toolStripRevisionFilterTextBox;
-        private System.Windows.Forms.TabPage DiffTabPage;
-        private System.Windows.Forms.ToolStripButton toolStripButtonPush;
-        private System.Windows.Forms.TabPage CommitInfoTabPage;
-        private System.Windows.Forms.TabPage GpgInfoTabPage;
         private CommitInfo.CommitInfo RevisionInfo;
-        private System.Windows.Forms.ToolStripLabel toolStripRevisionFilterLabel;
-        private System.Windows.Forms.ToolStripSplitButton toolStripSplitStash;
-        private System.Windows.Forms.ToolStripMenuItem stashChangesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem stashPopToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-        private System.Windows.Forms.ToolStripMenuItem manageStashesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator17;
+        private StatusStrip statusStrip;
+        private MenuStripEx menuStrip1;
+        private GitUI.BranchTreePanel.RepoObjectsTree repoObjectsTree;
+        private ToolTip FilterToolTip;
+        private RevisionFileTreeControl fileTree;
+        private RevisionDiffControl revisionDiff;
+        private ToolStripContainer toolPanel;
+        private RevisionGpgInfoControl revisionGpgInfo1;
+
+        private ToolStripButton toolStripButtonCommit;
+        private ToolStripSplitButton _NO_TRANSLATE_WorkingDir;
+        private ToolStripSeparator toolStripSeparator0;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripButton GitBash;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripButton EditSettings;
+        private ToolStripButton RefreshButton;
+        private ToolStripSeparator toolStripSeparator5;
+        private ToolStripTextBox toolStripRevisionFilterTextBox;
+        private ToolStripButton toolStripButtonPush;
+        private ToolStripLabel toolStripRevisionFilterLabel;
+        private ToolStripSplitButton toolStripSplitStash;
+        private ToolStripMenuItem stashChangesToolStripMenuItem;
+        private ToolStripMenuItem stashPopToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator9;
+        private ToolStripMenuItem manageStashesToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator17;
         private ToolStripSeparator toolStripSeparator19;
         private ToolStripLabel toolStripLabel1;
         private ToolStripComboBox toolStripBranchFilterComboBox;
         private ToolStripDropDownButton toolStripBranchFilterDropDownButton;
         private ToolStripDropDownButton toolStripRevisionFilterDropDownButton;
-        private StatusStrip statusStrip;
         private ToolStripStatusLabel closeStatusBarItem;
         private ToolStripSplitButton branchSelect;
         private ToolStripButton toggleBranchTreePanel;
@@ -1833,7 +1843,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator16;
         private ToolStripMenuItem donateToolStripMenuItem;
         private ToolStripMenuItem aboutToolStripMenuItem;
-        private MenuStripEx menuStrip1;
         private ToolStripSeparator toolStripSeparator21;
         private ToolStripSeparator toolStripSeparator25;
         private ToolStripSeparator toolStripSeparator22;
@@ -1856,13 +1865,10 @@ namespace GitUI.CommandsDialogs
         private ToolStripSeparator toolStripSeparator45;
         private ToolStripSeparator toolStripSeparator46;
         private ToolStripMenuItem checkForUpdatesToolStripMenuItem;
-        private SplitContainer MainSplitContainer;
-        private GitUI.BranchTreePanel.RepoObjectsTree repoObjectsTree;
         private ToolStripMenuItem gitcommandLogToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripMenuItem menuitemSparse;
         private ToolStripButton ShowFirstParent;
-        private ToolTip FilterToolTip;
         private ToolStripSeparator toolStripSeparator10;
         private ToolStripMenuItem editgitinfoexcludeToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItemReflog;
@@ -1872,10 +1878,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem tsmiRecentRepositoriesClear;
         private ToolStripSeparator clearRecentRepositoriesListToolStripMenuItem;
         private ToolStripButton toolStripFileExplorer;
-        private RevisionFileTreeControl fileTree;
-        private RevisionDiffControl revisionDiff;
-        private ToolStripContainer toolPanel;
-        private RevisionGpgInfoControl revisionGpgInfo1;
         private ToolStripMenuItem createAStashToolStripMenuItem;
         private ToolStripMenuItem undoLastCommitToolStripMenuItem;
         private ToolStripMenuItem tsmiFavouriteRepositories;
