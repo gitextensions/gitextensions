@@ -44,13 +44,6 @@ namespace System.Linq
             return result;
         }
 
-        [NotNull]
-        public static IEnumerable<TValue> SelectMany<TValue>(
-            [NotNull] this IEnumerable<IEnumerable<TValue>> source)
-        {
-            return source.SelectMany(i => i);
-        }
-
         [Pure]
         [NotNull]
         public static string Join([NotNull] this IEnumerable<string> source, [NotNull] string separator)
