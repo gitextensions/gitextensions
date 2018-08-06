@@ -48,6 +48,7 @@
     </Compile>
     <Compile Include="ArgumentBuilder.cs" />
     <Compile Include="ArrayExtensions.cs" />
+    <Compile Include="GitArgumentBuilder.cs" />
     <Compile Include="GitUI\CancellationTokenSequence.cs" />
     <Compile Include="GitUI\ComboBoxExtensions.cs" />
     <Compile Include="GitUI\ControlDpiExtensions.cs" />
@@ -73,6 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
+    <PackageReference Include="System.ValueTuple">
+      <Version>4.4.0</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

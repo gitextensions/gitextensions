@@ -32,7 +32,7 @@ namespace GitCommands
     /// };
     /// </code>
     /// </example>
-    public sealed class ArgumentBuilder : IEnumerable
+    public class ArgumentBuilder : IEnumerable
     {
         private readonly StringBuilder _arguments = new StringBuilder(capacity: 16);
 
