@@ -22,12 +22,12 @@ namespace GitUI
         {
             get
             {
-                if (_uiCommands == null)
-                {
-                    throw new InvalidOperationException("UICommands is null");
-                }
-
-                return _uiCommands;
+                // If this exception is seen, it's because the parameterless constructor was called.
+                // That constructor is only for use by the VS designer, and translation unit tests.
+                // Using it at run time is an error.
+                return _uiCommands
+                       ?? throw new InvalidOperationException(
+                           $"{nameof(UICommands)} is null. {GetType().FullName} was constructed incorrectly.");
             }
             protected set
             {
