@@ -43,5 +43,17 @@ namespace GitUITests
                 }
             }
         }
+
+        [Test]
+        public void IndexOf()
+        {
+            var ints = new[] { 0, 1, 2, 3 };
+
+            Assert.AreEqual(0, ints.IndexOf(i => i == 0));
+            Assert.AreEqual(1, ints.IndexOf(i => i == 1));
+            Assert.AreEqual(2, ints.IndexOf(i => i == 2));
+            Assert.AreEqual(3, ints.IndexOf(i => i == 3));
+            Assert.AreEqual(-1, ints.IndexOf(i => i == 4));
+        }
     }
 }

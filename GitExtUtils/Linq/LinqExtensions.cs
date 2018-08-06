@@ -181,6 +181,27 @@ namespace System.Linq
 
         [Pure]
         [MustUseReturnValue]
+        public static int IndexOf<T>(
+            [NotNull] this IEnumerable<T> source,
+            [NotNull, InstantHandle] Func<T, bool> predicate)
+        {
+            var index = 0;
+
+            foreach (var element in source)
+            {
+                if (predicate(element))
+                {
+                    return index;
+                }
+
+                index++;
+            }
+
+            return -1;
+        }
+
+        [Pure]
+        [MustUseReturnValue]
         public static TResult[] ToArray<TSource, TResult>(
             [NotNull] this IReadOnlyList<TSource> source,
             [NotNull, InstantHandle] Func<TSource, TResult> map)
