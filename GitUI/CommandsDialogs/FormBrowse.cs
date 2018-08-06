@@ -125,7 +125,7 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormBrowse([NotNull] GitUICommands commands, string filter, ObjectId selectCommit = null, bool startWithDashboard = false)
-            : base(true, commands)
+            : base(commands)
         {
             _startWithDashboard = startWithDashboard;
 

@@ -23,7 +23,7 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormCleanupRepository(GitUICommands commands)
-            : base(true, commands)
+            : base(commands)
         {
             InitializeComponent();
             InitializeComplete();

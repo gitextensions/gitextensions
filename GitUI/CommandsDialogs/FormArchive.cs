@@ -97,7 +97,7 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormArchive(GitUICommands commands)
-            : base(true, commands)
+            : base(commands)
         {
             InitializeComponent();
             InitializeComplete();

@@ -11,7 +11,7 @@
         }
 
         public FormEdit(GitUICommands commands, string text)
-            : base(true, commands)
+            : base(commands)
         {
             InitializeComponent();
             InitializeComplete();

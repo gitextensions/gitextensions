@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormApplyPatch(GitUICommands commands)
-            : base(true, commands)
+            : base(commands)
         {
             InitializeComponent();
             InitializeComplete();

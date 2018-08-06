@@ -176,7 +176,7 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormCommit([NotNull] GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null)
-            : base(enablePositionRestore: true, commands)
+            : base(commands)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 

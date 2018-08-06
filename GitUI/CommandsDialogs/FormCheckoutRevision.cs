@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormCheckoutRevision(GitUICommands commands)
-            : base(true, commands)
+            : base(commands)
         {
             InitializeComponent();
             InitializeComplete();

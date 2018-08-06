@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs
         }
 
         public FormLog(GitUICommands commands)
-            : base(enablePositionRestore: true, commands)
+            : base(commands)
         {
             InitializeComponent();
             InitializeComplete();
