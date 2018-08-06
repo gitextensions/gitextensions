@@ -62,7 +62,6 @@
     </Compile>
     <Compile Include="AppTitleGenerator.cs" />
     <Compile Include="ArgumentBuilderExtensions.cs" />
-    <Compile Include="ArrayExtensions.cs" />
     <Compile Include="AsyncLoader.cs" />
     <Compile Include="CommitData.cs" />
     <Compile Include="CommitDataManager.cs" />
