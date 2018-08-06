@@ -389,6 +389,7 @@ namespace GitUI.CommandsDialogs
 
             if (_startWithDashboard)
             {
+                base.OnLoad(e);
                 return;
             }
 
