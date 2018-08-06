@@ -195,12 +195,7 @@ namespace GitUI.CommandsDialogs
             SolveMergeconflicts.Font = new Font(SolveMergeconflicts.Font, FontStyle.Bold);
 
             SelectedDiff.ExtraDiffArgumentsChanged += SelectedDiffExtraDiffArgumentsChanged;
-
-            if (IsUICommandsInitialized)
-            {
-                StageInSuperproject.Visible = Module.SuperprojectModule != null;
-            }
-
+            StageInSuperproject.Visible = Module.SuperprojectModule != null;
             StageInSuperproject.Checked = AppSettings.StageInSuperprojectAfterCommit;
             closeDialogAfterEachCommitToolStripMenuItem.Checked = AppSettings.CloseCommitDialogAfterCommit;
             closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = AppSettings.CloseCommitDialogAfterLastCommit;
@@ -425,7 +420,7 @@ namespace GitUI.CommandsDialogs
             {
                 Message.Text = message;
             }
-            else if (IsUICommandsInitialized)
+            else
             {
                 AssignCommitMessageFromTemplate();
             }

@@ -43,13 +43,11 @@ namespace GitUI.CommandsDialogs
             tagMessage.MistakeFont = new Font(tagMessage.MistakeFont, FontStyle.Underline);
 
             commitPickerSmallControl1.UICommandsSource = this;
-            if (IsUICommandsInitialized)
+
+            objectId = objectId ?? Module.GetCurrentCheckout();
+            if (objectId != null)
             {
-                objectId = objectId ?? Module.GetCurrentCheckout();
-                if (objectId != null)
-                {
-                    commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
-                }
+                commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
             }
 
             _gitTagController = new GitTagController(commands);

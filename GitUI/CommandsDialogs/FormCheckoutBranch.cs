@@ -215,33 +215,30 @@ namespace GitUI.CommandsDialogs
 
         private void PopulateBranches()
         {
-            if (IsUICommandsInitialized)
+            Branches.Items.Clear();
+
+            IEnumerable<string> branchNames;
+
+            if (_containRevisions == null)
             {
-                Branches.Items.Clear();
+                var branches = LocalBranch.Checked ? GetLocalBranches() : GetRemoteBranches();
 
-                IEnumerable<string> branchNames;
+                branchNames = branches.Select(b => b.Name);
+            }
+            else
+            {
+                branchNames = GetContainsRevisionBranches();
+            }
 
-                if (_containRevisions == null)
-                {
-                    var branches = LocalBranch.Checked ? GetLocalBranches() : GetRemoteBranches();
+            Branches.Items.AddRange(branchNames.Where(name => name.IsNotNullOrWhitespace()).ToArray<object>());
 
-                    branchNames = branches.Select(b => b.Name);
-                }
-                else
-                {
-                    branchNames = GetContainsRevisionBranches();
-                }
-
-                Branches.Items.AddRange(branchNames.Where(name => name.IsNotNullOrWhitespace()).ToArray<object>());
-
-                if (_containRevisions != null && Branches.Items.Count == 1)
-                {
-                    Branches.SelectedIndex = 0;
-                }
-                else
-                {
-                    Branches.Text = null;
-                }
+            if (_containRevisions != null && Branches.Items.Count == 1)
+            {
+                Branches.SelectedIndex = 0;
+            }
+            else
+            {
+                Branches.Text = null;
             }
 
             IReadOnlyList<string> GetContainsRevisionBranches()

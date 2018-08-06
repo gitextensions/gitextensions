@@ -37,9 +37,6 @@ namespace GitUI
             }
         }
 
-        /// <summary>true if <see cref="UICommands"/> has been initialized.</summary>
-        protected bool IsUICommandsInitialized => _uiCommands != null;
-
         /// <summary>Gets a <see cref="GitModule"/> reference.</summary>
         [NotNull]
         [Browsable(false)]
