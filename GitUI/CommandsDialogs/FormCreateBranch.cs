@@ -38,7 +38,6 @@ namespace GitUI.CommandsDialogs
 
             groupBox1.AutoSize = true;
 
-            commitPickerSmallControl1.UICommandsSource = this;
             objectId = objectId ?? Module.GetCurrentCheckout();
             if (objectId != null)
             {

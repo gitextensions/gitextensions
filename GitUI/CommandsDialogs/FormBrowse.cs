@@ -159,9 +159,6 @@ namespace GitUI.CommandsDialogs
                 CommitInfoTabControl.RemoveIfExists(GpgInfoTabPage);
             }
 
-            RevisionGrid.UICommandsSource = this;
-            repoObjectsTree.UICommandsSource = this;
-
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default;
