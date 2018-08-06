@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// </summary>
         public event EventHandler<GitWorkingDirectoryStatusEventArgs> GitWorkingDirectoryStatusChanged;
 
-        public GitStatusMonitor()
+        public GitStatusMonitor(IGitUICommandsSource commandsSource)
         {
             _timerRefresh = new Timer
             {
@@ -104,6 +104,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _globalIgnoreWatcher.Error += WorkTreeWatcherError;
             _globalIgnoreWatcher.IncludeSubdirectories = false;
             _globalIgnoreWatcher.NotifyFilter = NotifyFilters.LastWrite;
+
+            Init(commandsSource);
 
             return;
 
@@ -241,7 +243,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private IGitUICommandsSource UICommandsSource { get; set; }
 
-        public void Init(IGitUICommandsSource commandsSource)
+        private void Init(IGitUICommandsSource commandsSource)
         {
             UICommandsSource = commandsSource ?? throw new ArgumentNullException(nameof(commandsSource));
             UICommandsSource.UICommandsChanged += commandsSource_GitUICommandsChanged;
