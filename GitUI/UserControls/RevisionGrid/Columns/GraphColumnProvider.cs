@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -19,26 +18,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     {
         private const int MaxLanes = 40;
 
-        private static readonly IReadOnlyList<Color> _graphColors = new[]
-        {
-            Color.FromArgb(240, 36, 117),
-            Color.FromArgb(52, 152, 219),
-            Color.FromArgb(46, 204, 113),
-            Color.FromArgb(142, 68, 173),
-            Color.FromArgb(231, 76, 60),
-            Color.FromArgb(40, 40, 40),
-            Color.FromArgb(26, 188, 156),
-            Color.FromArgb(241, 196, 15)
-        };
-
         private static readonly int _nodeDimension = DpiUtil.Scale(10);
         private static readonly int _laneWidth = DpiUtil.Scale(16);
         private static readonly int _laneLineWidth = DpiUtil.Scale(2);
 
-        private readonly Color _nonRelativeColor = Color.LightGray;
-        private readonly HashSet<int> _adjacentColors = new HashSet<int>();
-        private readonly List<Color> _junctionColors = new List<Color>(capacity: 2);
-        private readonly Random _random = new Random();
+        private readonly JunctionStyler _junctionStyler = new JunctionStyler(new JunctionColorProvider());
 
         private readonly RevisionGridControl _grid;
         private readonly GraphModel _graphModel;
@@ -307,42 +291,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         {
                             LaneInfo laneInfo = row[lane, item];
 
-                            UpdateJunctionColors(laneInfo.Junctions);
+                            _junctionStyler.UpdateJunctionColors(laneInfo.Junctions, _revisionGraphDrawStyleCache);
 
                             // Create the brush for drawing the line
-                            Brush lineBrush = null;
+                            Brush laneBrush = null;
                             try
                             {
-                                if (_junctionColors.Count == 1 || !AppSettings.StripedBranchChange)
-                                {
-                                    if (_junctionColors[0] != _nonRelativeColor)
-                                    {
-                                        lineBrush = new SolidBrush(GetAdjustedLineColor(_junctionColors[0]));
-                                    }
-                                    else if (_junctionColors.Count > 1 && _junctionColors[1] != _nonRelativeColor)
-                                    {
-                                        lineBrush = new SolidBrush(GetAdjustedLineColor(_junctionColors[1]));
-                                    }
-                                    else
-                                    {
-                                        lineBrush = new SolidBrush(GetAdjustedLineColor(_nonRelativeColor));
-                                    }
-                                }
-                                else
-                                {
-                                    Color lastRealColor = _junctionColors.LastOrDefault(c => c != _nonRelativeColor);
-
-                                    if (lastRealColor.IsEmpty)
-                                    {
-                                        lineBrush = new SolidBrush(GetAdjustedLineColor(_nonRelativeColor));
-                                    }
-                                    else
-                                    {
-                                        lineBrush = new HatchBrush(HatchStyle.DarkDownwardDiagonal, GetAdjustedLineColor(_junctionColors[0]), lastRealColor);
-                                    }
-                                }
-
-                                Color GetAdjustedLineColor(Color c) => ColorHelper.MakeColorDarker(c, amount: 0.1);
+                                laneBrush = _junctionStyler.GetLaneBrush();
 
                                 // Precalculate line endpoints
                                 bool sameLane = laneInfo.ConnectLane == lane;
@@ -354,12 +309,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                                 var p0 = new Point(x0, y0);
                                 var p1 = new Point(x1, y1);
 
-                                using (var linePen = new Pen(lineBrush, _laneLineWidth))
+                                using (var lanePen = new Pen(laneBrush, _laneLineWidth))
                                 {
                                     if (sameLane)
                                     {
                                         g.SmoothingMode = SmoothingMode.None;
-                                        g.DrawLine(linePen, p0, p1);
+                                        g.DrawLine(lanePen, p0, p1);
                                     }
                                     else
                                     {
@@ -375,13 +330,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                                         var c1 = new PointF(offset + x1, yMid);
                                         var e0 = new PointF(offset + p0.X, p0.Y);
                                         var e1 = new PointF(offset + p1.X, p1.Y);
-                                        g.DrawBezier(linePen, e0, c0, c1, e1);
+                                        g.DrawBezier(lanePen, e0, c0, c1, e1);
                                     }
                                 }
                             }
                             finally
                             {
-                                lineBrush?.Dispose();
+                                laneBrush?.Dispose();
                             }
                         }
                     }
@@ -397,25 +352,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         _nodeDimension);
 
                     Color? nodeColor = null;
-                    Brush nodeBrush;
 
-                    UpdateJunctionColors(row.Node.Ancestors);
-
+                    _junctionStyler.UpdateJunctionColors(row.Node.Ancestors, _revisionGraphDrawStyleCache);
                     bool highlight = (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray && row.Node.Ancestors.Any(j => j.IsRelative)) ||
                                      (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected && row.Node.Ancestors.Any(j => j.IsHighlighted)) ||
                                      (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.Normal);
-
-                    if (_junctionColors.Count == 1)
-                    {
-                        nodeColor = highlight ? _junctionColors[0] : _nonRelativeColor;
-                        nodeBrush = new SolidBrush(nodeColor.Value);
-                    }
-                    else
-                    {
-                        nodeBrush = new LinearGradientBrush(
-                            nodeRect, _junctionColors[0], _junctionColors[1],
-                            LinearGradientMode.Horizontal);
-                    }
+                    var nodeBrush = _junctionStyler.GetNodeBrush(nodeRect, highlight);
 
                     var square = row.Node.HasRef;
                     var hasOutline = row.Node.IsCheckedOut;
@@ -473,95 +415,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     g.SmoothingMode = oldSmoothingMode;
 
                     return true;
-
-                    void UpdateJunctionColors(IReadOnlyList<Junction> junctions)
-                    {
-                        _junctionColors.Clear();
-
-                        // Select one or two colours to use when rendering this junction
-                        if (junctions.Count == 0)
-                        {
-                            _junctionColors.Add(Color.Black);
-                        }
-                        else
-                        {
-                            for (var i = 0; i < 2 && i < junctions.Count; i++)
-                            {
-                                _junctionColors.Add(GetJunctionColor(junctions[i]));
-                            }
-                        }
-
-                        Color GetJunctionColor(Junction junction)
-                        {
-                            // Non relatives or non-highlighted in grey
-                            switch (_revisionGraphDrawStyleCache)
-                            {
-                                case RevisionGraphDrawStyleEnum.DrawNonRelativesGray when !junction.IsRelative:
-                                case RevisionGraphDrawStyleEnum.HighlightSelected when !junction.IsHighlighted:
-                                    return _nonRelativeColor;
-                            }
-
-                            if (!AppSettings.MulticolorBranches)
-                            {
-                                return AppSettings.GraphColor;
-                            }
-
-                            // See if this junction's colour has already been calculated
-                            if (junction.ColorIndex != -1)
-                            {
-                                return _graphColors[junction.ColorIndex];
-                            }
-
-                            var colorIndex = FindDistinctColour();
-
-                            junction.ColorIndex = colorIndex;
-
-                            return _graphColors[colorIndex];
-
-                            int FindDistinctColour()
-                            {
-                                // NOTE we reuse _adjacentColors to avoid allocating lists during UI painting.
-                                // This is safe as we are always on the UI thread here.
-                                _adjacentColors.Clear();
-                                AddAdjacentColors(junction.Youngest.Ancestors);
-                                AddAdjacentColors(junction.Youngest.Descendants);
-                                AddAdjacentColors(junction.Oldest.Ancestors);
-                                AddAdjacentColors(junction.Oldest.Descendants);
-
-                                if (_adjacentColors.Count == 0)
-                                {
-                                    // This is an end-point. Use the first colour.
-                                    return 0;
-                                }
-
-                                // This is a parent branch, calculate new color based on parent branch
-                                for (var i = 0; i < _graphColors.Count; i++)
-                                {
-                                    if (!_adjacentColors.Contains(i))
-                                    {
-                                        return i;
-                                    }
-                                }
-
-                                // All colours are adjacent (highly uncommon!) so just pick one at random
-                                return _random.Next(_graphColors.Count);
-
-                                void AddAdjacentColors(IReadOnlyList<Junction> peers)
-                                {
-                                    // ReSharper disable once ForCanBeConvertedToForeach
-                                    for (var i = 0; i < peers.Count; i++)
-                                    {
-                                        var peer = peers[i];
-                                        var peerColorIndex = peer.ColorIndex;
-                                        if (peerColorIndex != -1)
-                                        {
-                                            _adjacentColors.Add(peerColorIndex);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -616,7 +469,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return;
             }
 
-            int width = 1;
+            int laneCount = 1;
             lock (_graphModel)
             {
                 foreach (var index in range)
@@ -624,7 +477,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     var laneRow = _graphModel.GetLaneRow(index);
                     if (laneRow != null)
                     {
-                        width = Math.Max(laneRow.Count, width);
+                        laneCount = Math.Max(laneRow.Count, laneCount);
                     }
                 }
             }
@@ -639,7 +492,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     ? 1
                     : MaxLanes;
 
-            var laneCount = Math.Min(Math.Max(1, width), maxLanes);
+            laneCount = Math.Min(Math.Max(1, laneCount), maxLanes);
             var columnWidth = (_laneWidth * laneCount) + ColumnLeftMargin;
             if (Column.Width != columnWidth && columnWidth > Column.MinimumWidth)
             {
