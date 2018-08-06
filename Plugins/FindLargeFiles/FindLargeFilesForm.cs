@@ -188,7 +188,7 @@ namespace FindLargeFiles
                 var sb = new StringBuilder();
                 foreach (GitObject gitObject in _gitObjects.Where(gitObject => gitObject.Delete))
                 {
-                    sb.AppendLine(string.Format("\"{0}\" filter-branch --index-filter \"git rm -r -f --cached --ignore-unmatch {1}\" --prune-empty -- --all",
+                    sb.AppendLine(string.Format("\"{0}\" filter-branch --index-filter \"git rm -r -f --cached --ignore-unmatch \\\"{1}\\\"\" --prune-empty -- --all",
                         _gitCommands.GitCommand, gitObject.Path));
                 }
 
