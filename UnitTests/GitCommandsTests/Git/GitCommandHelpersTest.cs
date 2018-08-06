@@ -553,31 +553,31 @@ namespace GitCommandsTests.Git
         public void RebaseCmd()
         {
             Assert.AreEqual(
-                "rebase \"branch\"",
+                "-c rebase.autoSquash=false rebase \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false).Arguments);
             Assert.AreEqual(
-                "rebase -i --no-autosquash \"branch\"",
+                "-c rebase.autoSquash=false rebase -i --no-autosquash \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: false, autoStash: false).Arguments);
             Assert.AreEqual(
-                "rebase --preserve-merges \"branch\"",
+                "-c rebase.autoSquash=false rebase --preserve-merges \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: true, autosquash: false, autoStash: false).Arguments);
             Assert.AreEqual(
-                "rebase \"branch\"",
+                "-c rebase.autoSquash=false rebase \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: true, autoStash: false).Arguments);
             Assert.AreEqual(
-                "rebase --autostash \"branch\"",
+                "-c rebase.autoSquash=false rebase --autostash \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: true).Arguments);
             Assert.AreEqual(
-                "rebase -i --autosquash \"branch\"",
+                "-c rebase.autoSquash=false rebase -i --autosquash \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: true, autoStash: false).Arguments);
             Assert.AreEqual(
-                "rebase -i --autosquash --preserve-merges --autostash \"branch\"",
+                "-c rebase.autoSquash=false rebase -i --autosquash --preserve-merges --autostash \"branch\"",
                 GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true).Arguments);
 
             // TODO quote 'onto'?
 
             Assert.AreEqual(
-                "rebase \"from\" \"branch\" --onto onto",
+                "-c rebase.autoSquash=false rebase \"from\" \"branch\" --onto onto",
                 GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, "from", "onto").Arguments);
 
             Assert.Throws<ArgumentException>(
