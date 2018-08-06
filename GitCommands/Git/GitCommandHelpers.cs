@@ -585,7 +585,7 @@ namespace GitCommands
             return "bisect start";
         }
 
-        public static string ContinueBisectCmd(GitBisectOption bisectOption, params string[] revisions)
+        public static string ContinueBisectCmd(GitBisectOption bisectOption, params ObjectId[] revisions)
         {
             var args = new ArgumentBuilder
             {

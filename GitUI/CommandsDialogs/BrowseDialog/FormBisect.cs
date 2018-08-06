@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
@@ -55,13 +56,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 if (MessageBox.Show(this, _bisectStart.Text, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    BisectRange(revisions.First().Guid, revisions.Last().Guid);
+                    BisectRange(revisions.First().ObjectId, revisions.Last().ObjectId);
                     Close();
                 }
             }
         }
 
-        private void BisectRange(string startRevision, string endRevision)
+        private void BisectRange(ObjectId startRevision, ObjectId endRevision)
         {
             var command = GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good, startRevision);
             var errorOccurred = !FormProcess.ShowDialog(this, command);
