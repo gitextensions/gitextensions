@@ -34,9 +34,9 @@ namespace GitCommands
     /// </example>
     public sealed class ArgumentBuilder : IEnumerable
     {
-        private readonly StringBuilder _command = new StringBuilder(capacity: 16);
+        private readonly StringBuilder _arguments = new StringBuilder(capacity: 16);
 
-        public bool IsEmpty => _command.Length == 0;
+        public bool IsEmpty => _arguments.Length == 0;
 
         /// <summary>
         /// Adds <paramref name="s"/> to the argument list.
@@ -53,12 +53,12 @@ namespace GitCommands
                 return;
             }
 
-            if (_command.Length != 0)
+            if (_arguments.Length != 0)
             {
-                _command.Append(' ');
+                _arguments.Append(' ');
             }
 
-            _command.Append(s);
+            _arguments.Append(s);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace GitCommands
         /// </summary>
         public override string ToString()
         {
-            return _command.ToString();
+            return _arguments.ToString();
         }
 
         /// <summary>
