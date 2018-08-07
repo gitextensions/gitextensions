@@ -428,17 +428,19 @@ namespace GitCommandsTests.Git
         [Test]
         public void RevertCmd()
         {
-            Assert.AreEqual(
-                "revert commit",
-                GitCommandHelpers.RevertCmd("commit", autoCommit: true, parentIndex: 0));
+            var commitId = ObjectId.Random();
 
             Assert.AreEqual(
-                "revert --no-commit commit",
-                GitCommandHelpers.RevertCmd("commit", autoCommit: false, parentIndex: 0));
+                $"revert {commitId}",
+                GitCommandHelpers.RevertCmd(commitId, autoCommit: true, parentIndex: 0));
 
             Assert.AreEqual(
-                "revert -m 1 commit",
-                GitCommandHelpers.RevertCmd("commit", autoCommit: true, parentIndex: 1));
+                $"revert --no-commit {commitId}",
+                GitCommandHelpers.RevertCmd(commitId, autoCommit: false, parentIndex: 0));
+
+            Assert.AreEqual(
+                $"revert -m 1 {commitId}",
+                GitCommandHelpers.RevertCmd(commitId, autoCommit: true, parentIndex: 1));
         }
 
         [Test]
@@ -610,6 +612,9 @@ namespace GitCommandsTests.Git
         [Test]
         public void ContinueBisectCmd()
         {
+            var id1 = ObjectId.Random();
+            var id2 = ObjectId.Random();
+
             Assert.AreEqual(
                 "bisect good",
                 GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good));
@@ -620,8 +625,8 @@ namespace GitCommandsTests.Git
                 "bisect skip",
                 GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Skip));
             Assert.AreEqual(
-                "bisect good rev1 rev2",
-                GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good, "rev1", "rev2"));
+                $"bisect good {id1} {id2}",
+                GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good, id1, id2));
         }
 
         [Test]

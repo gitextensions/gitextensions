@@ -315,14 +315,14 @@ namespace GitCommands
             }
         }
 
-        public static string CherryPickCmd(string cherry, bool commit, string arguments)
+        public static string CherryPickCmd(ObjectId commitId, bool commit, string arguments)
         {
             var args = new ArgumentBuilder
             {
                 "cherry-pick",
                 { !commit, "--no-commit" },
                 arguments,
-                cherry.Quote()
+                commitId
             };
 
             return args.ToString();
@@ -375,14 +375,14 @@ namespace GitCommands
             return args.ToString();
         }
 
-        public static string RevertCmd(string commit, bool autoCommit, int parentIndex)
+        public static string RevertCmd(ObjectId commitId, bool autoCommit, int parentIndex)
         {
             var args = new ArgumentBuilder
             {
                 "revert",
                 { !autoCommit, "--no-commit" },
                 { parentIndex > 0, $"-m {parentIndex}" },
-                commit
+                commitId
             };
 
             return args.ToString();
@@ -585,7 +585,7 @@ namespace GitCommands
             return "bisect start";
         }
 
-        public static string ContinueBisectCmd(GitBisectOption bisectOption, params string[] revisions)
+        public static string ContinueBisectCmd(GitBisectOption bisectOption, params ObjectId[] revisions)
         {
             var args = new ArgumentBuilder
             {

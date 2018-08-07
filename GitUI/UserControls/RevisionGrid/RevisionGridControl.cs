@@ -1872,7 +1872,7 @@ namespace GitUI
                 return;
             }
 
-            FormProcess.ShowDialog(this, Module, GitCommandHelpers.ContinueBisectCmd(bisectOption, LatestSelectedRevision.Guid), false);
+            FormProcess.ShowDialog(this, Module, GitCommandHelpers.ContinueBisectCmd(bisectOption, LatestSelectedRevision.ObjectId), false);
             RefreshRevisions();
         }
 

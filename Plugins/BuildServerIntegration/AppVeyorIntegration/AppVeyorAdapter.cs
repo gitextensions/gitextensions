@@ -58,7 +58,7 @@ namespace AppVeyorIntegration
         private HttpClient _httpClientGitHub;
 
         private List<AppVeyorBuildInfo> _allBuilds = new List<AppVeyorBuildInfo>();
-        private HashSet<string> _fetchBuilds;
+        private HashSet<ObjectId> _fetchBuilds;
         private string _accountToken;
         private static readonly Dictionary<string, Project> Projects = new Dictionary<string, Project>();
         private Func<ObjectId, bool> _isCommitInRevisionGrid;
@@ -67,7 +67,8 @@ namespace AppVeyorIntegration
         private string _gitHubToken;
 
         public void Initialize(
-            IBuildServerWatcher buildServerWatcher, ISettingsSource config,
+            IBuildServerWatcher buildServerWatcher,
+            ISettingsSource config,
             Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
             if (_buildServerWatcher != null)
@@ -90,7 +91,7 @@ namespace AppVeyorIntegration
             _shouldDisplayGitHubPullRequestBuilds = config.GetBool("AppVeyorDisplayGitHubPullRequests", false)
                     && !string.IsNullOrWhiteSpace(_gitHubToken);
 
-            _fetchBuilds = new HashSet<string>();
+            _fetchBuilds = new HashSet<ObjectId>();
 
             _httpClientAppVeyor = GetHttpClient(WebSiteUrl, _accountToken);
 
@@ -273,8 +274,8 @@ namespace AppVeyorIntegration
                                 Id = version,
                                 BuildId = b["buildId"].ToObject<string>(),
                                 Branch = b["branch"].ToObject<string>(),
-                                CommitId = commitSha1,
-                                CommitHashList = new[] { ObjectId.Parse(commitSha1) },
+                                CommitId = objectId,
+                                CommitHashList = new[] { objectId },
                                 Status = status,
                                 StartDate = b["started"]?.ToObject<DateTime>() ?? DateTime.MinValue,
                                 BaseWebUrl = baseWebUrl,
@@ -544,7 +545,7 @@ namespace AppVeyorIntegration
         private int _buildProgressCount;
 
         public string BuildId { get; set; }
-        public string CommitId { get; set; }
+        public ObjectId CommitId { get; set; }
         public string AppVeyorBuildReportUrl { get; set; }
         public string Branch { get; set; }
         public string BaseApiUrl { get; set; }

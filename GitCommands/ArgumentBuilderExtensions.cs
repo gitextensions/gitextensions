@@ -226,5 +226,27 @@ namespace GitCommands
 
             builder.Add(objectId.ToString());
         }
+
+        /// <summary>
+        /// Adds a sequence of <paramref name="objectIds"/> to the builder.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="objectIds"/> is <c>null</c> then no change is made to the arguments.
+        /// </remarks>
+        /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
+        /// <param name="objectIds">A sequence of SHA-1 object IDs to add to the builder, or <c>null</c>.</param>
+        /// <exception cref="ArgumentException"><paramref name="objectIds"/> contains an artificial commit.</exception>
+        public static void Add(this ArgumentBuilder builder, [CanBeNull, ItemCanBeNull] IEnumerable<ObjectId> objectIds)
+        {
+            if (objectIds == null)
+            {
+                return;
+            }
+
+            foreach (var objectId in objectIds)
+            {
+                builder.Add(objectId);
+            }
+        }
     }
 }
