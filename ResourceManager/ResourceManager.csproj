@@ -59,7 +59,7 @@
     <Compile Include="GitExtensionsFormBase.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GitExtensionsUserControl.cs">
+    <Compile Include="GitExtensionsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GitPluginBase.cs" />
@@ -108,8 +108,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="GitExtensionsUserControl.resx">
-      <DependentUpon>GitExtensionsUserControl.cs</DependentUpon>
+    <EmbeddedResource Include="GitExtensionsControl.resx">
+      <DependentUpon>GitExtensionsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

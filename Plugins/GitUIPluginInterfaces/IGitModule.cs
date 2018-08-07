@@ -10,6 +10,7 @@ namespace GitUIPluginInterfaces
     /// <summary>Provides manipulation with git module.</summary>
     public interface IGitModule
     {
+        [NotNull]
         IConfigFileSettings LocalConfigFile { get; }
 
         string AddRemote(string remoteName, string path);
@@ -143,6 +144,7 @@ namespace GitUIPluginInterfaces
 
         bool IsRunningGitProcess();
 
+        [NotNull]
         ISettingsSource GetEffectiveSettings();
 
         string ReEncodeStringFromLossless(string s);

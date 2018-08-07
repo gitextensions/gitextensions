@@ -11,6 +11,9 @@ namespace GitUI
     /// <see cref="GitModule"/> and <see cref="GitUICommands"/>.</summary>
     public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
     {
+        /// <inheritdoc />
+        public event EventHandler<GitUICommandsChangedEventArgs> UICommandsChanged;
+
         [CanBeNull] private GitUICommands _uiCommands;
 
         /// <inheritdoc />
@@ -42,9 +45,6 @@ namespace GitUI
         [Browsable(false)]
         public GitModule Module => _uiCommands?.Module;
 
-        /// <inheritdoc />
-        public event EventHandler<GitUICommandsChangedEventArgs> UICommandsChanged;
-
         protected GitModuleForm()
         {
         }
@@ -57,7 +57,10 @@ namespace GitUI
         protected GitModuleForm(bool enablePositionRestore, [CanBeNull] GitUICommands commands)
             : base(enablePositionRestore)
         {
-            UICommands = commands;
+            if (commands != null)
+            {
+                UICommands = commands;
+            }
         }
 
         protected override bool ExecuteCommand(int command)

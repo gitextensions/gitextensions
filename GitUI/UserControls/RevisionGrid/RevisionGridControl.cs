@@ -1914,11 +1914,6 @@ namespace GitUI
             {
                 var scripts = ScriptManager.GetScripts();
 
-                if (scripts == null)
-                {
-                    return;
-                }
-
                 var lastIndex = mainContextMenu.Items.Count;
 
                 foreach (var script in scripts)

@@ -43,7 +43,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 _widthByLengthByFont[style.normalFont] = widthByLength;
             }
 
-            if (revision.ObjectId != null && !revision.IsArtificial)
+            if (!revision.IsArtificial)
             {
                 var i = Array.FindIndex(widthByLength, w => w > Column.Width);
 
@@ -60,7 +60,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
         {
-            if (revision.ObjectId?.IsArtificial == true)
+            if (revision.ObjectId.IsArtificial)
             {
                 toolTip = default;
                 return false;

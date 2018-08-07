@@ -1,14 +1,17 @@
 ﻿using System;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitCommands.Settings
 {
     public class SettingsContainer<TLowerPriority, TCache> : ISettingsSource where TLowerPriority : SettingsContainer<TLowerPriority, TCache> where TCache : SettingsCache
     {
+        [CanBeNull]
         public TLowerPriority LowerPriority { get; }
+        [NotNull]
         public TCache SettingsCache { get; }
 
-        public SettingsContainer(TLowerPriority lowerPriority, TCache settingsCache)
+        public SettingsContainer([CanBeNull] TLowerPriority lowerPriority, [NotNull] TCache settingsCache)
         {
             LowerPriority = lowerPriority;
             SettingsCache = settingsCache;

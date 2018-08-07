@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -67,7 +66,7 @@ namespace GitUI.Editor
             InitializeComponent();
             InitializeComplete();
 
-            UICommandsSourceSet += FileViewer_UICommandsSourceSet;
+            UICommandsSourceSet += OnUICommandsSourceSet;
 
             _internalFileViewer = new FileViewerInternal(() => Module);
             _internalFileViewer.MouseEnter += (_, e) => OnMouseEnter(e);
@@ -171,15 +170,15 @@ namespace GitUI.Editor
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
         }
 
-        private void FileViewer_UICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
+        private void OnUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
         {
-            UICommandsSource.UICommandsChanged += UICommandsSourceChanged;
-            UICommandsSourceChanged(UICommandsSource, null);
+            UICommandsSource.UICommandsChanged += OnUICommandsChanged;
+            OnUICommandsChanged(UICommandsSource, null);
         }
 
         protected override void DisposeUICommandsSource()
         {
-            UICommandsSource.UICommandsChanged -= UICommandsSourceChanged;
+            UICommandsSource.UICommandsChanged -= OnUICommandsChanged;
             base.DisposeUICommandsSource();
         }
 
@@ -234,7 +233,7 @@ namespace GitUI.Editor
             set => _internalFileViewer.ScrollPos = value;
         }
 
-        private void UICommandsSourceChanged(object sender, GitUICommandsChangedEventArgs e)
+        private void OnUICommandsChanged(object sender, [CanBeNull] GitUICommandsChangedEventArgs e)
         {
             if (e?.OldCommands != null)
             {
@@ -1367,7 +1366,7 @@ namespace GitUI.Editor
         {
             if (disposing)
             {
-                UICommandsSourceSet -= FileViewer_UICommandsSourceSet;
+                UICommandsSourceSet -= OnUICommandsSourceSet;
                 _async.Dispose();
                 components?.Dispose();
 

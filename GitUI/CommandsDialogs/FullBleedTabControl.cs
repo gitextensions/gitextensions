@@ -1,10 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace GitUI.CommandsDialogs
 {
     /// <summary>
-    /// Subclass of <see cref="TabControl"/> whose tab items have no gaps with the border..
+    /// Subclass of <see cref="TabControl"/> whose tab items have no gaps with the border.
     /// </summary>
     public sealed class FullBleedTabControl : TabControl
     {
@@ -23,6 +24,7 @@ namespace GitUI.CommandsDialogs
             base.WndProc(ref m);
         }
 
+        [SuppressMessage("ReSharper", "NotAccessedField.Local")]
         private struct RECT
         {
             public int Left;

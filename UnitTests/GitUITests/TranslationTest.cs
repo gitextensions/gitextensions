@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using GitUI;
 using NUnit.Framework;
@@ -21,12 +21,13 @@ namespace GitUITests
 
             var translatableTypes = TranslationUtil.GetTranslatableTypes();
 
-            var testTranslation = new Dictionary<string, TranslationFile>();
+            var problems = new List<(string typeName, Exception exception)>();
 
-            foreach (var (key, types) in translatableTypes)
+            foreach (var types in translatableTypes.Values)
             {
                 var translation = new TranslationFile();
-                foreach (Type type in types)
+
+                foreach (var type in types)
                 {
                     try
                     {
@@ -35,14 +36,18 @@ namespace GitUITests
                         obj.AddTranslationItems(translation);
                         obj.TranslateItems(translation);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Trace.WriteLine("Problem with class: " + type.FullName);
-                        throw;
+                        problems.Add((type.FullName, ex));
                     }
                 }
+            }
 
-                testTranslation[key] = translation;
+            if (problems.Count != 0)
+            {
+                Assert.Fail(string.Join(
+                    "\n\n--------\n\n",
+                    problems.Select(p => $"Problem with type {p.typeName}\n\n{p.exception}")));
             }
         }
     }

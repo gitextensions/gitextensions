@@ -77,7 +77,7 @@ namespace GitUITests.Helpers
             var revisions = new[] { new GitRevision(headParent), new GitRevision(head) };
 
             Assert.True(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffALocal, out _, out var firstRevision, out var secondRevision, out _), "null rev");
-            Assert.AreEqual(head?.ToString(), firstRevision, "first");
+            Assert.AreEqual(head.ToString(), firstRevision, "first");
             Assert.AreEqual(null, secondRevision, "second");
         }
 

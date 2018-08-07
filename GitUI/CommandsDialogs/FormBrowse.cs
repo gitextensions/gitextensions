@@ -201,8 +201,7 @@ namespace GitUI.CommandsDialogs
 
                 var repoStateVisualiser = new RepoStateVisualiser();
 
-                _gitStatusMonitor = new GitStatusMonitor();
-                _gitStatusMonitor.Init(this);
+                _gitStatusMonitor = new GitStatusMonitor(this);
 
                 _gitStatusMonitor.GitStatusMonitorStateChanged += (s, e) =>
                 {
@@ -390,6 +389,7 @@ namespace GitUI.CommandsDialogs
 
             if (_startWithDashboard)
             {
+                base.OnLoad(e);
                 return;
             }
 

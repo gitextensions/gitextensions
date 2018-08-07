@@ -566,9 +566,7 @@
       <DependentUpon>FormVerify.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GitModuleControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="GitModuleControl.cs" />
     <Compile Include="GitModuleForm.cs">
       <SubType>Form</SubType>
     </Compile>

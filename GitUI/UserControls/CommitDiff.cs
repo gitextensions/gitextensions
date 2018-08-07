@@ -23,7 +23,7 @@ namespace GitUI.UserControls
             splitContainer2.SplitterDistance = DpiUtil.Scale(260);
         }
 
-        public void SetRevision(ObjectId objectId, [CanBeNull] string fileToSelect)
+        public void SetRevision([CanBeNull] ObjectId objectId, [CanBeNull] string fileToSelect)
         {
             // We cannot use the GitRevision from revision grid. When a filtered commit list
             // is shown (file history/normal filter) the parent guids are not the 'real' parents,

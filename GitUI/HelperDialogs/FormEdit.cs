@@ -14,8 +14,8 @@
 
         public bool IsReadOnly
         {
-            get { return Viewer.IsReadOnly; }
-            set { Viewer.IsReadOnly = value; }
+            get => Viewer.IsReadOnly;
+            set => Viewer.IsReadOnly = value;
         }
     }
 }

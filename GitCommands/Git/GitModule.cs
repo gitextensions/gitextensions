@@ -168,6 +168,7 @@ namespace GitCommands
             }
         }
 
+        [CanBeNull]
         public GitModule FindTopProjectModule()
         {
             GitModule module = SuperprojectModule;
@@ -190,6 +191,8 @@ namespace GitCommands
         }
 
         private RepoDistSettings _effectiveSettings;
+
+        [NotNull]
         public RepoDistSettings EffectiveSettings
         {
             get
@@ -215,6 +218,8 @@ namespace GitCommands
         }
 
         private RepoDistSettings _localSettings;
+
+        [NotNull]
         public RepoDistSettings LocalSettings
         {
             get
@@ -235,6 +240,8 @@ namespace GitCommands
         }
 
         private ConfigFileSettings _effectiveConfigFile;
+
+        [NotNull]
         public ConfigFileSettings EffectiveConfigFile
         {
             get
@@ -260,6 +267,8 @@ namespace GitCommands
 
         // encoding for files paths
         private static Encoding _systemEncoding;
+
+        [NotNull]
         public static Encoding SystemEncoding
         {
             get
@@ -302,15 +311,18 @@ namespace GitCommands
         //    when core.quotepath is on, every non ASCII character is escaped
         //    with \ followed by its code as a three digit octal number
         // 4) branch, tag name, errors, warnings, hints encoded in system default encoding
-        public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1"); // is any better?
+        [NotNull] public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1"); // is any better?
 
+        [NotNull]
         public Encoding FilesEncoding => EffectiveConfigFile.FilesEncoding ?? new UTF8Encoding(false);
 
+        [NotNull]
         public Encoding CommitEncoding => EffectiveConfigFile.CommitEncoding ?? new UTF8Encoding(false);
 
         /// <summary>
         /// Encoding for commit header (message, notes, author, committer, emails)
         /// </summary>
+        [NotNull]
         public Encoding LogOutputEncoding => EffectiveConfigFile.LogOutputEncoding ?? CommitEncoding;
 
         public AppSettings.PullAction LastPullAction

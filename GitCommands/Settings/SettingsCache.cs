@@ -155,6 +155,11 @@ namespace GitCommands
 
         public bool TryGetValue<T>([NotNull] string name, T defaultValue, [NotNull] Func<string, T> decode, out T value)
         {
+            if (decode == null)
+            {
+                throw new ArgumentNullException(nameof(decode), $"The decode parameter for setting {name} is null.");
+            }
+
             T val = defaultValue;
 
             bool result = LockedAction(() =>
@@ -173,11 +178,6 @@ namespace GitCommands
                         default:
                             throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
                     }
-                }
-
-                if (decode == null)
-                {
-                    throw new ArgumentNullException(nameof(decode), string.Format("The decode parameter for setting {0} is null.", name));
                 }
 
                 string s = GetValue(name);

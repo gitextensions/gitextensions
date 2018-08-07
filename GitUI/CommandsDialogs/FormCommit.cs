@@ -278,7 +278,7 @@ namespace GitUI.CommandsDialogs
                 .Throttle(TimeSpan.FromMilliseconds(250))
                 .ObserveOn(SynchronizationContext.Current)
                 .Subscribe(
-                filterText =>
+                    filterText =>
                     {
                         ThreadHelper.AssertOnUIThread();
 

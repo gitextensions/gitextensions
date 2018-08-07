@@ -44,7 +44,7 @@ namespace GitUI
 
         public IGitModule GitModule => Module;
 
-        #region IGitUICommands Members
+        #region Events
 
         public event EventHandler<GitUIEventArgs> PreCheckoutRevision;
         public event EventHandler<GitUIPostActionEventArgs> PostCheckoutRevision;
@@ -1208,7 +1208,18 @@ namespace GitUI
 
         private bool InvokeEvent([CanBeNull] IWin32Window ownerForm, [CanBeNull] EventHandler<GitUIEventArgs> gitUIEventHandler)
         {
-            return InvokeEvent(this, ownerForm, gitUIEventHandler);
+            try
+            {
+                var e = new GitUIEventArgs(ownerForm, this);
+                gitUIEventHandler?.Invoke(this, e);
+                return !e.Cancel;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Exception");
+            }
+
+            return true;
         }
 
         private void InvokePostEvent([CanBeNull] IWin32Window ownerForm, bool actionDone, EventHandler<GitUIPostActionEventArgs> gitUIEventHandler)
@@ -1218,23 +1229,6 @@ namespace GitUI
                 var e = new GitUIPostActionEventArgs(ownerForm, this, actionDone);
                 gitUIEventHandler(this, e);
             }
-        }
-
-        private bool InvokeEvent(object sender, IWin32Window ownerForm, [CanBeNull] EventHandler<GitUIEventArgs> gitUIEventHandler)
-        {
-            try
-            {
-                var e = new GitUIEventArgs(ownerForm, this);
-                gitUIEventHandler?.Invoke(sender, e);
-
-                return !e.Cancel;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Exception");
-            }
-
-            return true;
         }
 
         private void WrapRepoHostingCall(string name, IRepositoryHostPlugin gitHoster, Action<IRepositoryHostPlugin> call)

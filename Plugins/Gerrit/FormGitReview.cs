@@ -31,11 +31,6 @@ namespace Gerrit
 
         public event EventHandler<GitUICommandsChangedEventArgs> UICommandsChanged;
 
-        private void OnGitUICommandsChanged(GitUICommands oldcommands)
-        {
-            UICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldcommands));
-        }
-
         private GitUICommands _uiCommands;
         public GitUICommands UICommands
         {
@@ -44,7 +39,7 @@ namespace Gerrit
             {
                 var oldCommands = _uiCommands;
                 _uiCommands = value;
-                OnGitUICommandsChanged(oldCommands);
+                UICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldCommands));
             }
         }
 
