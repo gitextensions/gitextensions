@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs
+﻿using System.Windows.Forms;
+
+namespace GitUI.CommandsDialogs
 {
     partial class FormDiff
     {
@@ -36,6 +38,8 @@
             this.settingsLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.btnSwap = new System.Windows.Forms.Button();
             this.ckCompareToMergeBase = new System.Windows.Forms.CheckBox();
+            this.btnCompareDirectoriesWithDiffTool = new System.Windows.Forms.Button();
+            this.diffOptionsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.baseCommitGroup = new System.Windows.Forms.GroupBox();
             this.baseCommitPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.lblBaseCommit = new System.Windows.Forms.Label();
@@ -136,7 +140,7 @@
             this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.settingsLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.settingsLayoutPanel.Controls.Add(this.btnSwap, 1, 0);
-            this.settingsLayoutPanel.Controls.Add(this.ckCompareToMergeBase, 0, 1);
+            this.settingsLayoutPanel.Controls.Add(this.diffOptionsPanel, 0, 1);
             this.settingsLayoutPanel.Controls.Add(this.baseCommitGroup, 0, 0);
             this.settingsLayoutPanel.Controls.Add(this.headCommitGroup, 2, 0);
             this.settingsLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -166,14 +170,39 @@
             // 
             // ckCompareToMergeBase
             // 
+            this.ckCompareToMergeBase.Anchor = AnchorStyles.Left;
             this.ckCompareToMergeBase.AutoSize = true;
-            this.ckCompareToMergeBase.Location = new System.Drawing.Point(3, 51);
             this.ckCompareToMergeBase.Name = "ckCompareToMergeBase";
-            this.ckCompareToMergeBase.Size = new System.Drawing.Size(141, 17);
-            this.ckCompareToMergeBase.TabIndex = 8;
-            this.ckCompareToMergeBase.Text = "Compare to merge base";
+            this.ckCompareToMergeBase.TabIndex = 9;
+            this.ckCompareToMergeBase.Text = "Compare to merge &base";
+            this.ckCompareToMergeBase.UseMnemonic = true;
             this.ckCompareToMergeBase.UseVisualStyleBackColor = true;
             this.ckCompareToMergeBase.CheckedChanged += new System.EventHandler(this.ckCompareToMergeBase_CheckedChanged);
+            // 
+            // btnCompareDirectoriesWithDiffTool
+            // 
+            this.btnCompareDirectoriesWithDiffTool.Anchor = AnchorStyles.Left;
+            this.btnCompareDirectoriesWithDiffTool.AutoSize = true;
+            this.btnCompareDirectoriesWithDiffTool.Name = "btnCompareDirectoriesWithDiffTool";
+            this.btnCompareDirectoriesWithDiffTool.Margin = new System.Windows.Forms.Padding(0);
+            this.btnCompareDirectoriesWithDiffTool.Size = new System.Drawing.Size(141, 17);
+            this.btnCompareDirectoriesWithDiffTool.TabIndex = 10;
+            this.btnCompareDirectoriesWithDiffTool.Text = "Open diff using &directory diff tool";
+            this.btnCompareDirectoriesWithDiffTool.UseMnemonic = true;
+            this.btnCompareDirectoriesWithDiffTool.UseVisualStyleBackColor = true;
+            this.btnCompareDirectoriesWithDiffTool.Click += new System.EventHandler(this.btnCompareDirectoriesWithDiffTool_Clicked);
+            this.btnCompareDirectoriesWithDiffTool.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            // 
+            // diffOptionsPanel
+            // 
+            this.diffOptionsPanel.AutoSize = true;
+            this.diffOptionsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.diffOptionsPanel.Controls.Add(this.ckCompareToMergeBase);
+            this.diffOptionsPanel.Controls.Add(this.btnCompareDirectoriesWithDiffTool);
+            this.diffOptionsPanel.Margin = new System.Windows.Forms.Padding(3);
+            this.diffOptionsPanel.Name = "diffOptionsPanel";
+            this.diffOptionsPanel.Size = new System.Drawing.Size(491, 23);
+            this.diffOptionsPanel.TabIndex = 14;
             // 
             // baseCommitGroup
             // 
@@ -237,7 +266,7 @@
             this.btnAnotherBaseCommit.Location = new System.Drawing.Point(237, 3);
             this.btnAnotherBaseCommit.Name = "btnAnotherBaseCommit";
             this.btnAnotherBaseCommit.Size = new System.Drawing.Size(22, 22);
-            this.btnAnotherBaseCommit.TabIndex = 9;
+            this.btnAnotherBaseCommit.TabIndex = 10;
             this.btnAnotherBaseCommit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnAnotherBaseCommit.UseVisualStyleBackColor = true;
             this.btnAnotherBaseCommit.Click += new System.EventHandler(this.btnAnotherCommit_Click);
@@ -449,6 +478,8 @@
             this.splitContainer1.ResumeLayout(false);
             this.settingsLayoutPanel.ResumeLayout(false);
             this.settingsLayoutPanel.PerformLayout();
+            this.diffOptionsPanel.ResumeLayout(false);
+            this.diffOptionsPanel.PerformLayout();
             this.baseCommitGroup.ResumeLayout(false);
             this.baseCommitGroup.PerformLayout();
             this.baseCommitPanel.ResumeLayout(false);
@@ -493,8 +524,10 @@
         private System.Windows.Forms.FlowLayoutPanel headCommitPanel;
         private System.Windows.Forms.Button btnAnotherHeadBranch;
         private System.Windows.Forms.Button btnAnotherHeadCommit;
+        private System.Windows.Forms.Button btnCompareDirectoriesWithDiffTool;
         private System.Windows.Forms.CheckBox ckCompareToMergeBase;
         private System.Windows.Forms.GroupBox baseCommitGroup;
         private System.Windows.Forms.GroupBox headCommitGroup;
+        private System.Windows.Forms.FlowLayoutPanel diffOptionsPanel;
     }
 }

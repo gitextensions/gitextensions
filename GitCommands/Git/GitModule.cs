@@ -3522,6 +3522,12 @@ namespace GitCommands
                 });
         }
 
+        public string OpenWithDifftoolDirDiff(string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.WorkTreeGuid, string extraDiffArguments = null)
+        {
+            extraDiffArguments = ((extraDiffArguments ?? "") + " --dir-diff").Trim();
+            return OpenWithDifftool(null, null, firstRevision: firstRevision, secondRevision: secondRevision, extraDiffArguments: extraDiffArguments);
+        }
+
         public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.WorkTreeGuid, string extraDiffArguments = null, bool isTracked = true)
         {
             var args = new ArgumentBuilder

@@ -44,6 +44,7 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 // null when TranslationApp is started
                 TriggerMenuChanged(); // trigger refresh
+                _revisionGrid.SetShortcutKeys();
             }
 
             return;
