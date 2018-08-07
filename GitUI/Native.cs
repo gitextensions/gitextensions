@@ -34,8 +34,44 @@ namespace GitUI
             public CHARRANGE chrg;         // Range of text to draw (see earlier declaration)
         }
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        internal struct LOGFONT
+        {
+            public const int LF_FACESIZE = 32;
+            public int lfHeight;
+            public int lfWidth;
+            public int lfEscapement;
+            public int lfOrientation;
+            public int lfWeight;
+            public byte lfItalic;
+            public byte lfUnderline;
+            public byte lfStrikeOut;
+            public byte lfCharSet;
+            public byte lfOutPrecision;
+            public byte lfClipPrecision;
+            public byte lfQuality;
+            public byte lfPitchAndFamily;
+            [MarshalAsAttribute(UnmanagedType.ByValTStr, SizeConst = LF_FACESIZE)]
+            public string lfFaceName;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct COLORREF
+        {
+            public byte R;
+            public byte G;
+            public byte B;
+        }
+
         internal const int WM_USER = 0x0400;
         internal const int EM_FORMATRANGE = WM_USER + 57;
+
+        // from vsstyle.h
+        internal const int TEXT_MAININSTRUCTION = 1;
+
+        // from vssym32.h
+        internal const int TMT_TEXTCOLOR = 3803;
+        internal const int TMT_FONT = 210;
 
         [DllImport("user32")]
         internal static extern IntPtr SendMessage(IntPtr hWnd, uint msg, IntPtr wp, ref FORMATRANGE lp);
@@ -65,6 +101,19 @@ namespace GitUI
 
         [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
         internal static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
+
+        [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
+        internal static extern IntPtr OpenThemeData(IntPtr hWnd, string classList);
+
+        [DllImport("uxtheme.dll", ExactSpelling = true)]
+        internal static extern int CloseThemeData(IntPtr hTheme);
+
+        [DllImport("uxtheme", ExactSpelling = true)]
+        internal static extern int GetThemeColor(IntPtr hTheme, int iPartId, int iStateId, int iPropId, out COLORREF pColor);
+
+        [DllImport("uxtheme", ExactSpelling = true, CharSet = CharSet.Unicode)]
+        internal static extern int GetThemeFont(IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, int iPropId, out LOGFONT pFont);
+
         #endregion
     }
 

@@ -83,8 +83,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                     _systemInfoReplacement = kvps.ToList();
 
-                    _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFont", SystemFonts.DialogFont.Name));
-                    _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFontSize", string.Format("{0}pt", SystemFonts.DialogFont.SizeInPoints)));
+                    // TODO: is it safe to rename the keys ('SF.DialogFont', 'SF.DialogFontSize') to 'SF.MessageBoxFont' or not?
+                    _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFont", SystemFonts.MessageBoxFont.Name));
+                    _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFontSize", string.Format("{0}pt", SystemFonts.MessageBoxFont.SizeInPoints)));
 
                     _systemInfoReplacement.Sort((p1, p2) => p2.Key.CompareTo(p1.Key)); // Required.
                 }

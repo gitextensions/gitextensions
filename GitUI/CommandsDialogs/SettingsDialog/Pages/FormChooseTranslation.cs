@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -13,6 +14,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         public FormChooseTranslation()
         {
             InitializeComponent();
+            label1.Font = FontUtil.MainInstructionFont;
+            label1.ForeColor = FontUtil.MainInstructionColor;
             InitializeComplete();
         }
 
@@ -20,70 +23,38 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             base.OnLoad(e);
 
-            const int labelHeight = 20;
-            const int imageHeight = 75;
-            const int imageWidth = 150;
-            int x = -(imageWidth + 6);
-            int y = 0;
             var translations = new List<string>(Translator.GetAllTranslations());
             translations.Sort();
             translations.Insert(0, "English");
 
+            var imageList = new ImageList
+            {
+                ImageSize = DpiUtil.Scale(new Size(150, 75)),
+            };
+
             foreach (string translation in translations)
             {
-                x += imageWidth + 6;
-                if (x > imageWidth * 4)
+                var imagePath = Path.Combine(Translator.GetTranslationDir(), translation + ".gif");
+                if (File.Exists(imagePath))
                 {
-                    x = 0;
-                    y += imageHeight + 6 + labelHeight;
+                    var image = Image.FromFile(imagePath);
+                    imageList.Images.Add(translation, image);
                 }
+            }
 
-                var translationImage = new PictureBox
+            lvTranslations.LargeImageList = imageList;
+
+            foreach (string translation in translations)
+            {
+                if (imageList.Images.ContainsKey(translation))
                 {
-                    Top = y + 34,
-                    Left = x + 15,
-                    Height = imageHeight,
-                    Width = imageWidth,
-                    BackgroundImageLayout = ImageLayout.Stretch
-                };
-                if (File.Exists(Path.Combine(Translator.GetTranslationDir(), translation + ".gif")))
-                {
-                    translationImage.BackgroundImage = Image.FromFile(Path.Combine(Translator.GetTranslationDir(), translation + ".gif"));
+                    lvTranslations.Items.Add(new ListViewItem(translation, translation) { Tag = translation });
                 }
                 else
                 {
-                    translationImage.BackColor = Color.Black;
+                    lvTranslations.Items.Add(new ListViewItem(translation) { Tag = translation });
                 }
-
-                translationImage.Cursor = Cursors.Hand;
-                translationImage.Tag = translation;
-                translationImage.Click += translationImage_Click;
-
-                Controls.Add(translationImage);
-
-                var label = new Label
-                {
-                    Text = translation,
-                    Tag = translation,
-                    Left = translationImage.Left,
-                    Width = translationImage.Width,
-                    Top = translationImage.Bottom,
-                    Height = labelHeight,
-                    TextAlign = ContentAlignment.TopCenter
-                };
-                label.Click += translationImage_Click;
-                Controls.Add(label);
             }
-
-            Height = 34 + y + imageHeight + labelHeight + SystemInformation.CaptionHeight + 37;
-            Width = ((imageWidth + 6) * 4) + 24;
-            label2.Top = Height - SystemInformation.CaptionHeight - 25;
-        }
-
-        private void translationImage_Click(object sender, EventArgs e)
-        {
-            AppSettings.Translation = ((Control)sender).Tag.ToString();
-            Close();
         }
 
         private void FormChooseTranslation_FormClosing(object sender, FormClosingEventArgs e)
@@ -92,6 +63,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 AppSettings.Translation = "English";
             }
+        }
+
+        private void lvTranslations_ItemActivate(object sender, EventArgs e)
+        {
+            AppSettings.Translation = ((ListView)sender).SelectedItems[0].Tag.ToString();
+            Close();
         }
     }
 }

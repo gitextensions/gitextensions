@@ -32,7 +32,8 @@ namespace GitUI.CommandsDialogs
             annotate.Items.AddRange(new object[] { _trsLightweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text });
             annotate.SelectedIndex = 0;
 
-            tagMessage.MistakeFont = new Font(SystemFonts.MessageBoxFont, FontStyle.Underline);
+            tagMessage.MistakeFont = new Font(tagMessage.MistakeFont, FontStyle.Underline);
+
             commitPickerSmallControl1.UICommandsSource = this;
             if (IsUICommandsInitialized)
             {

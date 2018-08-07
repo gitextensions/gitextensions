@@ -74,7 +74,6 @@ namespace GitUI
             //
             this._gridView.AllowUserToAddRows = false;
             this._gridView.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this._gridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this._gridView.BackgroundColor = System.Drawing.SystemColors.Window;
             this._gridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -83,22 +82,18 @@ namespace GitUI
             this._gridView.ContextMenuStrip = this.mainContextMenu;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption;
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this._gridView.DefaultCellStyle = dataGridViewCellStyle4;
             this._gridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._gridView.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this._gridView.GridColor = System.Drawing.SystemColors.Window;
             this._gridView.Location = new System.Drawing.Point(0, 0);
             this._gridView.Name = "_gridView";
             this._gridView.ReadOnly = true;
             this._gridView.RowHeadersVisible = false;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this._gridView.RowsDefaultCellStyle = dataGridViewCellStyle6;
-            this._gridView.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this._gridView.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(157)))), ((int)(((byte)(185)))), ((int)(((byte)(235)))));
             this._gridView.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             this._gridView.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.False;

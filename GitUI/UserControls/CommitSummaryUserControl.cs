@@ -29,6 +29,11 @@ namespace GitUI.UserControls
             _messageY = labelMessage.Location.Y;
             _messageHeight = labelMessage.Height;
             labelMessage.AutoSize = true;
+
+            labelMessage.Font = new Font(labelMessage.Font, FontStyle.Bold);
+            labelAuthor.Font = new Font(labelAuthor.Font, FontStyle.Bold);
+            labelTags.Font = new Font(labelTags.Font, FontStyle.Bold);
+            labelBranches.Font = new Font(labelBranches.Font, FontStyle.Bold);
         }
 
         private GitRevision _revision;

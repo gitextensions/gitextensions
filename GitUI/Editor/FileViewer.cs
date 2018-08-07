@@ -257,7 +257,7 @@ namespace GitUI.Editor
         protected override void OnRuntimeLoad()
         {
             ReloadHotkeys();
-            Font = AppSettings.DiffFont;
+            Font = AppSettings.FixedWidthFont;
         }
 
         public void ReloadHotkeys()

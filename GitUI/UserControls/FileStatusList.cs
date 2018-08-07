@@ -62,7 +62,7 @@ namespace GitUI
 
             HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
             Controls.SetChildIndex(NoFiles, 0);
-            NoFiles.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Italic);
+            NoFiles.Font = new Font(NoFiles.Font, FontStyle.Italic);
 
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
             _revisionTester = new GitRevisionTester(_fullPathResolver);
