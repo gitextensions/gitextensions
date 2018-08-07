@@ -62,7 +62,7 @@ namespace GitCommands.Git
 
             var mode = int.Parse(match.Groups["mode"].Value);
             var typeName = match.Groups["type"].Value;
-            var objectId = ObjectId.Parse(match.Groups["objectid"].Value);
+            var objectId = ObjectId.Parse(rawItem, match.Groups["objectid"]);
             var name = match.Groups["name"].Value;
 
             Enum.TryParse(typeName, ignoreCase: true, out GitObjectType type);

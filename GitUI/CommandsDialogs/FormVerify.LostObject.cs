@@ -97,7 +97,7 @@ namespace GitUI.CommandsDialogs
                 var matchedGroups = patternMatch.Groups;
                 var rawType = matchedGroups[1].Value;
                 var objectType = GetObjectType(matchedGroups[3]);
-                var objectId = ObjectId.Parse(matchedGroups[4].Value);
+                var objectId = ObjectId.Parse(raw, matchedGroups[4]);
                 var result = new LostObject(objectType, rawType, objectId);
 
                 if (objectType == LostObjectType.Commit)
@@ -126,7 +126,7 @@ namespace GitUI.CommandsDialogs
                     var tagPatternMatch = TagRegex.Match(tagData);
                     if (tagPatternMatch.Success)
                     {
-                        result.Parent = ObjectId.Parse(tagPatternMatch.Groups[1].Value);
+                        result.Parent = ObjectId.Parse(tagData, tagPatternMatch.Groups[1]);
                         result.Author = module.ReEncodeStringFromLossless(tagPatternMatch.Groups[3].Value);
                         result.TagName = tagPatternMatch.Groups[2].Value;
                         result.Subject = result.TagName + ":" + tagPatternMatch.Groups[5].Value;

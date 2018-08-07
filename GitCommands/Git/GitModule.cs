@@ -3037,7 +3037,7 @@ namespace GitCommands
             foreach (Match match in matches)
             {
                 var refName = match.Groups["refname"].Value;
-                var objectId = ObjectId.Parse(match.Groups["objectid"].Value);
+                var objectId = ObjectId.Parse(refList, match.Groups["objectid"]);
                 var remoteName = GitRefName.GetRemoteName(refName);
                 var head = new GitRef(this, objectId, refName, remoteName);
 
@@ -3356,7 +3356,7 @@ namespace GitCommands
 
                 if (match.Success)
                 {
-                    objectId = ObjectId.Parse(match.Groups["objectid"].Value);
+                    objectId = ObjectId.Parse(line, match.Groups["objectid"]);
                     finalLineNumber = int.Parse(match.Groups["finallinenum"].Value);
                     originLineNumber = int.Parse(match.Groups["origlinenum"].Value);
                 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -98,6 +99,17 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(
                 sha1.Substring(offset, 40),
                 ObjectId.Parse(sha1, offset).ToString());
+        }
+
+        [Test]
+        public void ParseFromRegexCapture()
+        {
+            var objectId = ObjectId.Random();
+            var str = "XYZ" + objectId + "XYZ";
+
+            Assert.AreEqual(objectId, ObjectId.Parse(str, Regex.Match(str, "[a-f0-9]{40}")));
+            Assert.Throws<FormatException>(() => ObjectId.Parse(str, Regex.Match(str, "[a-f0-9]{39}")));
+            Assert.Throws<FormatException>(() => ObjectId.Parse(str, Regex.Match(str, "[XYZa-f0-9]{39}")));
         }
 
         [Test]

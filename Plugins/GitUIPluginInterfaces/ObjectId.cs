@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 using JetBrains.Annotations;
 
@@ -348,6 +349,29 @@ namespace GitUIPluginInterfaces
                 success = false;
                 return -1;
             }
+        }
+
+        /// <summary>
+        /// Parses an <see cref="ObjectId"/> from a regex <see cref="Capture"/> that was produced by matching against <paramref name="s"/>.
+        /// </summary>
+        /// <remarks>
+        /// <para>This method avoids the temporary string created by calling <see cref="Capture.Value"/>.</para>
+        /// <para>For parsing to succeed, <paramref name="s"/> must be a valid 40-character SHA-1 string.</para>
+        /// </remarks>
+        /// <param name="s">The string that the regex <see cref="Capture"/> was produced from.</param>
+        /// <param name="capture">The regex capture/group that describes the location of the SHA-1 hash within <paramref name="s"/>.</param>
+        /// <returns>The parsed <see cref="ObjectId"/>.</returns>
+        /// <exception cref="FormatException"><paramref name="s"/> did not contain a valid 40-character SHA-1 hash.</exception>
+        [NotNull]
+        [MustUseReturnValue]
+        public static ObjectId Parse([NotNull] string s, [NotNull] Capture capture)
+        {
+            if (s == null || capture == null || capture.Length != Sha1CharCount || !TryParse(s, capture.Index, out var id))
+            {
+                throw new FormatException($"Unable to parse object ID \"{s}\".");
+            }
+
+            return id;
         }
 
         #endregion
