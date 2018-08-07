@@ -315,14 +315,14 @@ namespace GitCommands
             }
         }
 
-        public static string CherryPickCmd(string cherry, bool commit, string arguments)
+        public static string CherryPickCmd(ObjectId commitId, bool commit, string arguments)
         {
             var args = new ArgumentBuilder
             {
                 "cherry-pick",
                 { !commit, "--no-commit" },
                 arguments,
-                cherry.Quote()
+                commitId
             };
 
             return args.ToString();
