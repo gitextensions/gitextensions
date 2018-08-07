@@ -2973,7 +2973,7 @@ namespace GitCommands
             }
 
             // BUG this sorting logic has no effect as CommitDate is not set by the GitRevision constructor
-            DateTime GetDate(IGitRef head) => new GitRevision(ObjectId.Parse(head.Guid)).CommitDate;
+            DateTime GetDate(IGitRef head) => new GitRevision(head.ObjectId).CommitDate;
         }
 
         public enum GetTagRefsSortOrder

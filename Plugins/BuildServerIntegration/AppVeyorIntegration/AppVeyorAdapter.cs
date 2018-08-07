@@ -274,7 +274,7 @@ namespace AppVeyorIntegration
                                 BuildId = b["buildId"].ToObject<string>(),
                                 Branch = b["branch"].ToObject<string>(),
                                 CommitId = commitSha1,
-                                CommitHashList = new[] { ObjectId.Parse(commitSha1) },
+                                CommitHashList = new[] { objectId },
                                 Status = status,
                                 StartDate = b["started"]?.ToObject<DateTime>() ?? DateTime.MinValue,
                                 BaseWebUrl = baseWebUrl,
