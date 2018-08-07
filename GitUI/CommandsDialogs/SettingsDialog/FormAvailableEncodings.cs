@@ -6,7 +6,7 @@ using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    public partial class FormAvailableEncodings : GitModuleForm
+    public partial class FormAvailableEncodings : GitExtensionsForm
     {
         public FormAvailableEncodings()
         {

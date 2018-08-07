@@ -9,7 +9,7 @@ using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid
 {
-    public partial class FormQuickGitRefSelector : GitModuleForm
+    public partial class FormQuickGitRefSelector : GitExtensionsForm
     {
         private readonly TranslationString _actionRename = new TranslationString("Rename");
         private readonly TranslationString _actionDelete = new TranslationString("Delete");
