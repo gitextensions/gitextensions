@@ -18,9 +18,7 @@ namespace GitUI.HelperDialogs
             Hard
         }
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormResetCurrentBranch()
         {
             InitializeComponent();

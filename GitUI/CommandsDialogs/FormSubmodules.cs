@@ -18,9 +18,7 @@ namespace GitUI.CommandsDialogs
         private readonly BindingList<IGitSubmoduleInfo> _modules = new BindingList<IGitSubmoduleInfo>();
         private GitSubmoduleInfo _oldSubmoduleInfo;
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormSubmodules()
         {
             InitializeComponent();

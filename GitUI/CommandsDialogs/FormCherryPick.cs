@@ -23,9 +23,7 @@ namespace GitUI.CommandsDialogs
         [CanBeNull]
         public GitRevision Revision { get; set; }
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCherryPick()
         {
             InitializeComponent();

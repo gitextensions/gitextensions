@@ -16,9 +16,7 @@ namespace GitUI.CommandsDialogs
         [CanBeNull]
         private IDisposable _disposable1;
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormSparseWorkingCopy()
         {
         }

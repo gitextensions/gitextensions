@@ -23,9 +23,7 @@ namespace GitUI.CommandsDialogs
         private readonly IGitTagController _gitTagController;
         private string _currentRemote = "";
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCreateTag()
         {
             InitializeComponent();

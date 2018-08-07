@@ -29,9 +29,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private string _prevTitle;
         private readonly AsyncLoader _remoteLoader = new AsyncLoader();
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private CreatePullRequestForm()
         {
             InitializeComponent();

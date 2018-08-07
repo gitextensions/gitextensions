@@ -84,9 +84,7 @@ Inactive remote is completely invisible to git.");
             new TranslationString("Inactive");
         #endregion
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormRemotes()
         {
             InitializeComponent();

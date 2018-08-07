@@ -29,9 +29,7 @@ namespace GitUI.CommandsDialogs
         public bool ManageStashes { get; set; }
         private GitStash _currentWorkingDirStashItem;
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormStash()
         {
             InitializeComponent();

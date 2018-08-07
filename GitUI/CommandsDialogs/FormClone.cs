@@ -32,9 +32,7 @@ namespace GitUI.CommandsDialogs
         private string _puttySshKey;
         private readonly IReadOnlyList<string> _defaultBranchItems;
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormClone()
         {
             InitializeComponent();

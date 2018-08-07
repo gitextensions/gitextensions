@@ -1,10 +1,10 @@
-﻿namespace GitUI.HelperDialogs
+﻿using System;
+
+namespace GitUI.HelperDialogs
 {
     public partial class FormEdit : GitModuleForm
     {
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormEdit()
         {
             InitializeComponent();

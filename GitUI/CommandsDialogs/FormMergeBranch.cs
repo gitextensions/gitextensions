@@ -14,9 +14,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _formMergeBranchHoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
         private readonly string _defaultBranch;
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormMergeBranch()
         {
             InitializeComponent();

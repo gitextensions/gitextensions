@@ -23,9 +23,7 @@ namespace GitUI.CommandsDialogs
         private bool _isDirtyDir;
         private int _lastHitRowIndex;
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormReflog()
         {
             InitializeComponent();

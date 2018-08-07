@@ -34,9 +34,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noGitMailConfigured =
             new TranslationString("There is no email address configured in the settings dialog.");
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormFormatPatch()
         {
             InitializeComponent();

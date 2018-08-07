@@ -21,9 +21,7 @@ namespace GitUI.CommandsDialogs
         private readonly HashSet<string> _mergedBranches = new HashSet<string>();
         private readonly string _defaultRemoteBranch;
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormDeleteRemoteBranch()
         {
             InitializeComponent();

@@ -18,9 +18,7 @@ namespace GitUI.CommandsDialogs
 
         private bool _hasChanges;
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormEditor()
         {
             InitializeComponent();

@@ -43,9 +43,7 @@ namespace GitUI
         [Browsable(false)]
         public GitModule Module => UICommands.Module;
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         protected GitModuleForm()
         {
         }

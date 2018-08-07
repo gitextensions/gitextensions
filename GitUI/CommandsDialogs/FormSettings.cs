@@ -36,9 +36,7 @@ namespace GitUI.CommandsDialogs
 
         private IEnumerable<ISettingsPage> SettingsPages => settingsTreeView.SettingsPages;
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormSettings()
         {
             InitializeComponent();

@@ -24,9 +24,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly AsyncLoader _tagsLoader = new AsyncLoader();
         private readonly AsyncLoader _branchesLoader = new AsyncLoader();
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormGoToCommit()
         {
             InitializeComponent();

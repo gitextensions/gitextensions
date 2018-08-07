@@ -82,9 +82,7 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormPush()
         {
             InitializeComponent();

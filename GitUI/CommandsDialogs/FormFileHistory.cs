@@ -31,9 +31,7 @@ namespace GitUI.CommandsDialogs
 
         private string FileName { get; set; }
 
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormFileHistory()
         {
             InitializeComponent();

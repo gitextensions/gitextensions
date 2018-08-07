@@ -6,9 +6,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormBlame : GitModuleForm
     {
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormBlame()
         {
             InitializeComponent();

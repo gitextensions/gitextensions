@@ -7,9 +7,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormCompareToBranch : GitModuleForm
     {
-        /// <summary>
-        /// For VS designer and translation test.
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCompareToBranch()
         {
             InitializeComponent();
