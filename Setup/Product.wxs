@@ -130,6 +130,9 @@
       <Component Id="System.Reactive.PlatformServices.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reactive.PlatformServices.dll" />
       </Component>
+      <Component Id="System.ValueTuple.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ValueTuple.dll" />
+      </Component>
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
         <RemoveFile Name="GithubSharp.Core.dll" Id="GithubSharp.Core.dll" On="both" />
@@ -571,6 +574,7 @@
       <ComponentRef Id="System.Reactive.Interfaces.dll" />
       <ComponentRef Id="System.Reactive.Linq.dll" />
       <ComponentRef Id="System.Reactive.PlatformServices.dll" />
+      <ComponentRef Id="System.ValueTuple.dll" />
       <ComponentRef Id="NBug.dll" />
       <ComponentRef Id="SmartFormat.dll" />
       <ComponentRef Id="NetSpell.SpellChecker.dll" />
