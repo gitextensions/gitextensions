@@ -120,6 +120,20 @@ namespace GitExtUtilsTests
         }
 
         [Test]
+        public void Command_with_config_item_that_overrides_default_different_case()
+        {
+            var args = new GitArgumentBuilder("log")
+            {
+                new GitConfigItem("LOG.showSIGNATURE", "true"),
+                "-n 1"
+            };
+
+            Assert.AreEqual(
+                "-c LOG.showSIGNATURE=true log -n 1",
+                args.ToString());
+        }
+
+        [Test]
         public void Throws_for_invalid_command_strings()
         {
             Assert.Throws<ArgumentNullException>(() => new GitArgumentBuilder(null));

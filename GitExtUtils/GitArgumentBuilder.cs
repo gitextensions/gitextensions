@@ -158,7 +158,7 @@ namespace GitCommands
         public void Add(GitConfigItem configItem)
         {
             // Append or replace config item based upon its key
-            var index = _configItems.IndexOf(item => item.Key == configItem.Key);
+            var index = _configItems.IndexOf(item => string.Equals(item.Key, configItem.Key, StringComparison.OrdinalIgnoreCase));
 
             if (index == -1)
             {
