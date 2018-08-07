@@ -91,7 +91,6 @@ namespace TfsIntegration.Settings
             // 
             labelBuildIdFilter.Anchor = System.Windows.Forms.AnchorStyles.Left;
             labelBuildIdFilter.AutoSize = true;
-            labelBuildIdFilter.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             labelBuildIdFilter.Location = new System.Drawing.Point(138, 101);
             labelBuildIdFilter.Name = "labelBuildIdFilter";
             labelBuildIdFilter.Size = new System.Drawing.Size(45, 15);
@@ -101,7 +100,6 @@ namespace TfsIntegration.Settings
             // labelRegexError
             // 
             this.labelRegexError.AutoSize = true;
-            this.labelRegexError.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             this.labelRegexError.ForeColor = System.Drawing.Color.Red;
             this.labelRegexError.Location = new System.Drawing.Point(138, 121);
             this.labelRegexError.Margin = new System.Windows.Forms.Padding(3, 5, 3, 0);

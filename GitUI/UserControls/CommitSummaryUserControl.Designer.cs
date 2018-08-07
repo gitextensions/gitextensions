@@ -56,7 +56,6 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.labelMessage.AutoEllipsis = true;
-            this.labelMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMessage.Location = new System.Drawing.Point(12, 22);
             this.labelMessage.MaximumSize = new System.Drawing.Size(1000, 50);
             this.labelMessage.Name = "labelMessage";
@@ -70,7 +69,6 @@
             // 
             this.labelAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelAuthor.AutoSize = true;
-            this.labelAuthor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelAuthor.Location = new System.Drawing.Point(100, 89);
             this.labelAuthor.Name = "labelAuthor";
             this.labelAuthor.Size = new System.Drawing.Size(19, 13);
@@ -82,7 +80,6 @@
             this.labelTags.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTags.AutoSize = true;
             this.labelTags.BackColor = System.Drawing.Color.LightSteelBlue;
-            this.labelTags.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTags.Location = new System.Drawing.Point(100, 112);
             this.labelTags.Name = "labelTags";
             this.labelTags.Size = new System.Drawing.Size(19, 13);
@@ -93,7 +90,6 @@
             // 
             this.labelBranches.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelBranches.AutoSize = true;
-            this.labelBranches.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelBranches.Location = new System.Drawing.Point(100, 135);
             this.labelBranches.Name = "labelBranches";
             this.labelBranches.Size = new System.Drawing.Size(19, 13);

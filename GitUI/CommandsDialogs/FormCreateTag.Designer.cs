@@ -129,9 +129,8 @@ namespace GitUI.CommandsDialogs
             this.tagMessage.Location = new System.Drawing.Point(140, 142);
             this.tagMessage.Margin = new System.Windows.Forms.Padding(2);
             this.tagMessage.Name = "tagMessage";
-            this.tagMessage.Size = new System.Drawing.Size(306, 53);
+            this.tagMessage.Size = new System.Drawing.Size(327, 75);
             this.tagMessage.TabIndex = 9;
-            this.tagMessage.TextBoxFont = new System.Drawing.Font("Segoe UI", 9F);
             // 
             // label2
             // 
@@ -215,7 +214,7 @@ namespace GitUI.CommandsDialogs
             this.Controls.Add(this.tableLayoutPanel2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(450, 260);
+            this.MinimumSize = new System.Drawing.Size(455, 260);
             this.Name = "FormCreateTag";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

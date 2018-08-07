@@ -29,6 +29,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             InitializeComponent();
             InitializeComplete();
 
+            label1.Font = new System.Drawing.Font(label1.Font, System.Drawing.FontStyle.Bold);
+
             if (page != null)
             {
                 settingsPagePanel.Controls.Add(page);

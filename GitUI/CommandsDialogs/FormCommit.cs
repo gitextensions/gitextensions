@@ -196,7 +196,7 @@ namespace GitUI.CommandsDialogs
                 _commitTemplateManager = new CommitTemplateManager(Module);
             }
 
-            SolveMergeconflicts.Font = new Font(SystemFonts.MessageBoxFont, FontStyle.Bold);
+            SolveMergeconflicts.Font = new Font(SolveMergeconflicts.Font, FontStyle.Bold);
 
             SelectedDiff.ExtraDiffArgumentsChanged += SelectedDiffExtraDiffArgumentsChanged;
 

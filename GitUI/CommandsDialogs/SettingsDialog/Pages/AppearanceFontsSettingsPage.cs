@@ -21,13 +21,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void SettingsToPage()
         {
             SetCurrentApplicationFont(AppSettings.Font);
-            SetCurrentDiffFont(AppSettings.DiffFont);
+            SetCurrentDiffFont(AppSettings.FixedWidthFont);
             SetCurrentCommitFont(AppSettings.CommitFont);
         }
 
         protected override void PageToSettings()
         {
-            AppSettings.DiffFont = _diffFont;
+            AppSettings.FixedWidthFont = _diffFont;
             AppSettings.Font = _applicationFont;
             AppSettings.CommitFont = _commitFont;
         }

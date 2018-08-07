@@ -52,7 +52,7 @@
             this.lblCacheDays = new System.Windows.Forms.Label();
             this.lblNoImageService = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_DaysToCacheImages = new System.Windows.Forms.NumericUpDown();
-            this.diffFontDialog = new System.Windows.Forms.FontDialog();
+            this.fixedWidthFontDialog = new System.Windows.Forms.FontDialog();
             this.applicationDialog = new System.Windows.Forms.FontDialog();
             this.commitFontDialog = new System.Windows.Forms.FontDialog();
             tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
@@ -403,11 +403,11 @@
             this._NO_TRANSLATE_DaysToCacheImages.TabIndex = 2;
             this._NO_TRANSLATE_DaysToCacheImages.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // diffFontDialog
+            // fixedWidthFontDialog
             // 
-            this.diffFontDialog.AllowVerticalFonts = false;
-            this.diffFontDialog.Color = System.Drawing.SystemColors.ControlText;
-            this.diffFontDialog.FixedPitchOnly = true;
+            this.fixedWidthFontDialog.AllowVerticalFonts = false;
+            this.fixedWidthFontDialog.Color = System.Drawing.SystemColors.ControlText;
+            this.fixedWidthFontDialog.FixedPitchOnly = true;
             // 
             // applicationDialog
             // 
@@ -470,7 +470,7 @@
         private System.Windows.Forms.Label lblCacheDays;
         private System.Windows.Forms.Button ClearImageCache;
         private System.Windows.Forms.CheckBox ShowAuthorAvatar;
-        private System.Windows.Forms.FontDialog diffFontDialog;
+        private System.Windows.Forms.FontDialog fixedWidthFontDialog;
         private System.Windows.Forms.FontDialog applicationDialog;
         private System.Windows.Forms.FontDialog commitFontDialog;
         private System.Windows.Forms.TableLayoutPanel tlpnlLanguage;

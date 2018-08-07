@@ -74,7 +74,7 @@ namespace GitStatistics
             splitContainer7.SplitterDistance = DpiUtil.Scale(splitContainer7.SplitterDistance);
             splitContainer8.SplitterDistance = DpiUtil.Scale(splitContainer8.SplitterDistance);
 
-            TotalLinesOfCode.Font = new Font(SystemFonts.MessageBoxFont.FontFamily, 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            TotalLinesOfCode.Font = new Font(TotalLinesOfCode.Font, FontStyle.Bold);
             TotalLinesOfCode2.Font = TotalLinesOfCode.Font;
             TotalLinesOfTestCode.Font = TotalLinesOfCode.Font;
             TotalCommits.Font = TotalLinesOfCode.Font;

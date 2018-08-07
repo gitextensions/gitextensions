@@ -1088,7 +1088,6 @@ namespace GitUI.CommandsDialogs
             this.Message.Name = "Message";
             this.Message.Size = new System.Drawing.Size(340, 164);
             this.Message.TabIndex = 7;
-            this.Message.TextBoxFont = new System.Drawing.Font("Tahoma", 8.25F);
             this.Message.SelectionChanged += new System.EventHandler(this.Message_SelectionChanged);
             this.Message.Enter += new System.EventHandler(this.Message_Enter);
             this.Message.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Message_KeyDown);

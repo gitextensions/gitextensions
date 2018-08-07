@@ -87,7 +87,6 @@ namespace TeamCityIntegration.Settings
             // 
             labelProjectNameComment.Anchor = System.Windows.Forms.AnchorStyles.Left;
             labelProjectNameComment.AutoSize = true;
-            labelProjectNameComment.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             labelProjectNameComment.Location = new System.Drawing.Point(117, 72);
             labelProjectNameComment.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             labelProjectNameComment.Name = "labelProjectNameComment";
@@ -98,7 +97,6 @@ namespace TeamCityIntegration.Settings
             // labelBuildIdFilter
             // 
             labelBuildIdFilter.AutoSize = true;
-            labelBuildIdFilter.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             labelBuildIdFilter.Location = new System.Drawing.Point(3, 0);
             labelBuildIdFilter.Name = "labelBuildIdFilter";
             labelBuildIdFilter.Size = new System.Drawing.Size(45, 15);
@@ -140,7 +138,6 @@ namespace TeamCityIntegration.Settings
             // labelRegexError
             // 
             this.labelRegexError.AutoSize = true;
-            this.labelRegexError.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             this.labelRegexError.ForeColor = System.Drawing.Color.Red;
             this.labelRegexError.Location = new System.Drawing.Point(54, 0);
             this.labelRegexError.Name = "labelRegexError";
