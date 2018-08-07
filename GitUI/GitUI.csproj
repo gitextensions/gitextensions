@@ -369,6 +369,8 @@
     <Compile Include="SpellChecker\SpellCheckerHelper.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractor.cs" />
     <Compile Include="TaskbarProgress.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\JunctionColorProvider.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\JunctionStyler.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\MultilineIndicator.cs" />
     <Compile Include="UserControls\HslColor.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\ActiveLaneRow.cs" />
