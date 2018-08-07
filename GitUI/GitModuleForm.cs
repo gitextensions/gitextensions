@@ -15,6 +15,8 @@ namespace GitUI
         /// <inheritdoc />
         public event EventHandler<GitUICommandsChangedEventArgs> UICommandsChanged;
 
+        internal static bool IsUnitTestActive { get; set; }
+
         [CanBeNull] private GitUICommands _uiCommands;
 
         /// <inheritdoc />
@@ -46,6 +48,11 @@ namespace GitUI
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         protected GitModuleForm()
         {
+            if (LicenseManager.UsageMode != LicenseUsageMode.Designtime && !IsUnitTestActive)
+            {
+                throw new InvalidOperationException(
+                    "This constructor is only to be called by the Visual Studio designer, and the translation unit tests.");
+            }
         }
 
         protected GitModuleForm([NotNull] GitUICommands commands)

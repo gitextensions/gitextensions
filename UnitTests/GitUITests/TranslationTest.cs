@@ -10,15 +10,24 @@ using ResourceManager.Xliff;
 namespace GitUITests
 {
     [TestFixture]
-    public class TranslationTest
+    public sealed class TranslationTest
     {
+        [SetUp]
+        public void SetUp()
+        {
+            GitModuleForm.IsUnitTestActive = true;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            GitModuleForm.IsUnitTestActive = false;
+        }
+
         [Test]
         [Apartment(ApartmentState.STA)]
         public void CreateInstanceOfClass()
         {
-            // just reference to GitUI
-            MouseWheelRedirector.Active = true;
-
             var translatableTypes = TranslationUtil.GetTranslatableTypes();
 
             var problems = new List<(string typeName, Exception exception)>();
