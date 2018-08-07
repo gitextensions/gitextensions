@@ -428,17 +428,19 @@ namespace GitCommandsTests.Git
         [Test]
         public void RevertCmd()
         {
-            Assert.AreEqual(
-                "revert commit",
-                GitCommandHelpers.RevertCmd("commit", autoCommit: true, parentIndex: 0));
+            var commitId = ObjectId.Random();
 
             Assert.AreEqual(
-                "revert --no-commit commit",
-                GitCommandHelpers.RevertCmd("commit", autoCommit: false, parentIndex: 0));
+                $"revert {commitId}",
+                GitCommandHelpers.RevertCmd(commitId, autoCommit: true, parentIndex: 0));
 
             Assert.AreEqual(
-                "revert -m 1 commit",
-                GitCommandHelpers.RevertCmd("commit", autoCommit: true, parentIndex: 1));
+                $"revert --no-commit {commitId}",
+                GitCommandHelpers.RevertCmd(commitId, autoCommit: false, parentIndex: 0));
+
+            Assert.AreEqual(
+                $"revert -m 1 {commitId}",
+                GitCommandHelpers.RevertCmd(commitId, autoCommit: true, parentIndex: 1));
         }
 
         [Test]

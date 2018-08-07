@@ -375,14 +375,14 @@ namespace GitCommands
             return args.ToString();
         }
 
-        public static string RevertCmd(string commit, bool autoCommit, int parentIndex)
+        public static string RevertCmd(ObjectId commitId, bool autoCommit, int parentIndex)
         {
             var args = new ArgumentBuilder
             {
                 "revert",
                 { !autoCommit, "--no-commit" },
                 { parentIndex > 0, $"-m {parentIndex}" },
-                commit
+                commitId
             };
 
             return args.ToString();

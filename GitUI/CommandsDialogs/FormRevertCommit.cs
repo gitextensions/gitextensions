@@ -68,7 +68,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            FormProcess.ShowDialog(this, GitCommandHelpers.RevertCmd(Revision.Guid, AutoCommit.Checked, parentIndex));
+            FormProcess.ShowDialog(this, GitCommandHelpers.RevertCmd(Revision.ObjectId, AutoCommit.Checked, parentIndex));
             MergeConflictHandler.HandleMergeConflicts(UICommands, this, AutoCommit.Checked);
             DialogResult = DialogResult.OK;
             Close();
