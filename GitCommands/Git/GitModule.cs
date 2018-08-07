@@ -107,11 +107,13 @@ namespace GitCommands
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
 
-            (SuperprojectModule, SubmodulePath, SubmoduleName) = TryInitSubmodule();
+            // If this is a submodule, populate relevant properties.
+            // If this is not a submodule, these will all be null.
+            (SuperprojectModule, SubmodulePath, SubmoduleName) = InitialiseSubmoduleProperties();
 
             return;
 
-            (GitModule superprojectModule, string submodulePath, string submoduleName) TryInitSubmodule()
+            (GitModule superprojectModule, string submodulePath, string submoduleName) InitialiseSubmoduleProperties()
             {
                 if (!IsValidGitWorkingDir())
                 {
