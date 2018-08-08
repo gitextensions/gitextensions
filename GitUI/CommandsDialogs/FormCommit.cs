@@ -167,16 +167,14 @@ namespace GitUI.CommandsDialogs
         [CanBeNull] private IReadOnlyList<GitItemStatus> _currentSelection;
         private int _alreadyLoadedTemplatesCount = -1;
 
-        /// <summary>
-        /// For VS designer
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCommit()
-            : this(null)
         {
+            InitializeComponent();
         }
 
-        public FormCommit([CanBeNull] GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null)
-            : base(enablePositionRestore: true, commands)
+        public FormCommit([NotNull] GitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision editedCommit = null)
+            : base(commands)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -189,22 +187,13 @@ namespace GitUI.CommandsDialogs
 
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;
-
-            if (Module != null)
-            {
-                Message.AddAutoCompleteProvider(new CommitAutoCompleteProvider(Module));
-                _commitTemplateManager = new CommitTemplateManager(Module);
-            }
+            Message.AddAutoCompleteProvider(new CommitAutoCompleteProvider(Module));
+            _commitTemplateManager = new CommitTemplateManager(Module);
 
             SolveMergeconflicts.Font = new Font(SolveMergeconflicts.Font, FontStyle.Bold);
 
             SelectedDiff.ExtraDiffArgumentsChanged += SelectedDiffExtraDiffArgumentsChanged;
-
-            if (IsUICommandsInitialized)
-            {
-                StageInSuperproject.Visible = Module.SuperprojectModule != null;
-            }
-
+            StageInSuperproject.Visible = Module.SuperprojectModule != null;
             StageInSuperproject.Checked = AppSettings.StageInSuperprojectAfterCommit;
             closeDialogAfterEachCommitToolStripMenuItem.Checked = AppSettings.CloseCommitDialogAfterCommit;
             closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = AppSettings.CloseCommitDialogAfterLastCommit;
@@ -429,7 +418,7 @@ namespace GitUI.CommandsDialogs
             {
                 Message.Text = message;
             }
-            else if (IsUICommandsInitialized)
+            else
             {
                 AssignCommitMessageFromTemplate();
             }

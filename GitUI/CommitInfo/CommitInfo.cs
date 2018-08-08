@@ -70,7 +70,7 @@ namespace GitUI.CommitInfo
             InitializeComponent();
             InitializeComplete();
 
-            UICommandsSourceSet += delegate { ReloadCommitInfo(); };
+            UICommandsSourceSet += delegate { this.InvokeAsync(() => ReloadCommitInfo()).FileAndForget(); };
 
             _commitDataManager = new CommitDataManager(() => Module);
 
@@ -185,10 +185,7 @@ namespace GitUI.CommitInfo
 
             UpdateRevisionInfo();
 
-            if (Module != null)
-            {
-                StartAsyncDataLoad();
-            }
+            StartAsyncDataLoad();
 
             return;
 

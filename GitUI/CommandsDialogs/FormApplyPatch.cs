@@ -29,23 +29,18 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        /// <summary>
-        /// For VS designer
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormApplyPatch()
-            : this(null)
         {
+            InitializeComponent();
         }
 
         public FormApplyPatch(GitUICommands commands)
-            : base(true, commands)
+            : base(commands)
         {
             InitializeComponent();
             InitializeComplete();
-            if (commands != null)
-            {
-                EnableButtons();
-            }
+            EnableButtons();
         }
 
         public void SetPatchFile(string name)

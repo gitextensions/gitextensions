@@ -13,6 +13,12 @@ namespace GitUI.CommandsDialogs
 
         private bool _isMerge;
 
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
+        private FormRevertCommit()
+        {
+            InitializeComponent();
+        }
+
         public FormRevertCommit(GitUICommands commands, GitRevision revision)
             : base(commands)
         {

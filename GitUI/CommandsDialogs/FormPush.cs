@@ -82,12 +82,13 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormPush()
-            : this(null)
         {
+            InitializeComponent();
         }
 
-        public FormPush([CanBeNull] GitUICommands commands)
+        public FormPush([NotNull] GitUICommands commands)
             : base(commands)
         {
             InitializeComponent();
@@ -114,11 +115,8 @@ namespace GitUI.CommandsDialogs
 
             // can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
             // they are reset to false
-            if (commands != null)
-            {
-                _remoteManager = new GitRemoteManager(() => Module);
-                Init();
-            }
+            _remoteManager = new GitRemoteManager(() => Module);
+            Init();
 
             void Init()
             {

@@ -27,6 +27,12 @@ namespace GitUI.CommandsDialogs
         public string MailMapFile = string.Empty;
         private readonly IFullPathResolver _fullPathResolver;
 
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
+        private FormMailMap()
+        {
+            InitializeComponent();
+        }
+
         public FormMailMap(GitUICommands commands)
             : base(commands)
         {

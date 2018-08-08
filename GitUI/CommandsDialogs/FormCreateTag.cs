@@ -23,7 +23,13 @@ namespace GitUI.CommandsDialogs
         private readonly IGitTagController _gitTagController;
         private string _currentRemote = "";
 
-        public FormCreateTag([CanBeNull] GitUICommands commands, [CanBeNull] ObjectId objectId)
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
+        private FormCreateTag()
+        {
+            InitializeComponent();
+        }
+
+        public FormCreateTag([NotNull] GitUICommands commands, [CanBeNull] ObjectId objectId)
             : base(commands)
         {
             InitializeComponent();
@@ -34,20 +40,13 @@ namespace GitUI.CommandsDialogs
 
             tagMessage.MistakeFont = new Font(tagMessage.MistakeFont, FontStyle.Underline);
 
-            commitPickerSmallControl1.UICommandsSource = this;
-            if (IsUICommandsInitialized)
+            objectId = objectId ?? Module.GetCurrentCheckout();
+            if (objectId != null)
             {
-                objectId = objectId ?? Module.GetCurrentCheckout();
-                if (objectId != null)
-                {
-                    commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
-                }
+                commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
             }
 
-            if (commands != null)
-            {
-                _gitTagController = new GitTagController(commands);
-            }
+            _gitTagController = new GitTagController(commands);
         }
 
         private void FormCreateTag_Load(object sender, EventArgs e)

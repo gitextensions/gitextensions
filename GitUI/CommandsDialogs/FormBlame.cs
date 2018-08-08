@@ -6,9 +6,12 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormBlame : GitModuleForm
     {
+        public string FileName { get; set; }
+
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormBlame()
-            : this(null)
         {
+            InitializeComponent();
         }
 
         private FormBlame(GitUICommands commands)
@@ -30,8 +33,6 @@ namespace GitUI.CommandsDialogs
 
             blameControl1.LoadBlame(revision ?? Module.GetRevision(), null, fileName, null, null, Module.FilesEncoding, initialLine);
         }
-
-        public string FileName { get; set; }
 
         private void FormBlameLoad(object sender, EventArgs e)
         {

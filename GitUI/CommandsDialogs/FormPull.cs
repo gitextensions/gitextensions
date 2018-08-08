@@ -108,10 +108,10 @@ namespace GitUI.CommandsDialogs
 
         public bool ErrorOccurred { get; private set; }
 
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormPull()
         {
             InitializeComponent();
-            InitializeComplete();
         }
 
         public FormPull(GitUICommands commands, string defaultRemoteBranch, string defaultRemote)

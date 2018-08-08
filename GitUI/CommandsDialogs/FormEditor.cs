@@ -18,6 +18,12 @@ namespace GitUI.CommandsDialogs
 
         private bool _hasChanges;
 
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
+        private FormEditor()
+        {
+            InitializeComponent();
+        }
+
         public FormEditor([NotNull] GitUICommands commands, [CanBeNull] string fileName, bool showWarning)
             : base(commands)
         {

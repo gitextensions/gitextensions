@@ -31,6 +31,12 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _anotherCommitTooltip = new TranslationString("Select another commit");
         private readonly TranslationString _btnSwapTooltip = new TranslationString("Swap BASE and Compare commits");
 
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
+        private FormDiff()
+        {
+            InitializeComponent();
+        }
+
         public FormDiff(
             GitUICommands commands, bool firstParentIsValid,
             ObjectId baseId, ObjectId headId,
@@ -49,12 +55,6 @@ namespace GitUI.CommandsDialogs
             _toolTipControl.SetToolTip(btnAnotherBaseCommit, _anotherCommitTooltip.Text);
             _toolTipControl.SetToolTip(btnAnotherHeadCommit, _anotherCommitTooltip.Text);
             _toolTipControl.SetToolTip(btnSwap, _btnSwapTooltip.Text);
-
-            if (!IsUICommandsInitialized)
-            {
-                // UICommands is not initialized in translation unit test.
-                return;
-            }
 
             _baseRevision = new GitRevision(baseId);
             _headRevision = new GitRevision(headId);

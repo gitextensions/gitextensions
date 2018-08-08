@@ -12,16 +12,14 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noRevisionSelectedMsgBox = new TranslationString("Select 1 revision to checkout.");
         private readonly TranslationString _noRevisionSelectedMsgBoxCaption = new TranslationString("Checkout");
 
-        /// <summary>
-        /// For VS designer
-        /// </summary>
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCheckoutRevision()
-            : this(null)
         {
+            InitializeComponent();
         }
 
         public FormCheckoutRevision(GitUICommands commands)
-            : base(true, commands)
+            : base(commands)
         {
             InitializeComponent();
             InitializeComplete();

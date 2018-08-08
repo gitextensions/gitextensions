@@ -14,6 +14,12 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _formMergeBranchHoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
         private readonly string _defaultBranch;
 
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
+        private FormMergeBranch()
+        {
+            InitializeComponent();
+        }
+
         /// <summary>Initializes <see cref="FormMergeBranch"/>.</summary>
         /// <param name="defaultBranch">Branch to merge into the current branch.</param>
         public FormMergeBranch(GitUICommands commands, string defaultBranch)
@@ -29,12 +35,9 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             _defaultBranch = defaultBranch;
 
-            if (commands != null)
-            {
-                noFastForward.Checked = Module.EffectiveSettings.NoFastForwardMerge;
-                addLogMessages.Checked = Module.EffectiveSettings.Detailed.AddMergeLogMessages.ValueOrDefault;
-                nbMessages.Value = Module.EffectiveSettings.Detailed.MergeLogMessagesCount.ValueOrDefault;
-            }
+            noFastForward.Checked = Module.EffectiveSettings.NoFastForwardMerge;
+            addLogMessages.Checked = Module.EffectiveSettings.Detailed.AddMergeLogMessages.ValueOrDefault;
+            nbMessages.Value = Module.EffectiveSettings.Detailed.MergeLogMessagesCount.ValueOrDefault;
 
             advanced.Checked = AppSettings.AlwaysShowAdvOpt;
             advanced_CheckedChanged(null, null);

@@ -29,13 +29,13 @@ namespace GitUI.CommandsDialogs
         private readonly bool _openedFromProtocolHandler;
         private readonly string _url;
         private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
-        private string _puttySshKey;
         private readonly IReadOnlyList<string> _defaultBranchItems;
+        private string _puttySshKey;
 
-        // for translation only
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormClone()
-            : this(null, null, false, null)
         {
+            InitializeComponent();
         }
 
         public FormClone(GitUICommands commands, string url, bool openedFromProtocolHandler, EventHandler<GitModuleEventArgs> gitModuleChanged)

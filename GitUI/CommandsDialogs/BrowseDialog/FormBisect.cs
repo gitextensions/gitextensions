@@ -16,9 +16,10 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private readonly RevisionGridControl _revisionGrid;
 
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormBisect()
-            : this((GitUICommands)null)
         {
+            InitializeComponent();
         }
 
         private FormBisect(GitUICommands commands)

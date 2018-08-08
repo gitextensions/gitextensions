@@ -22,13 +22,15 @@ namespace GitUI
         private readonly IFullPathResolver _fullPathResolver;
         private readonly IFindFilePredicateProvider _findFilePredicateProvider;
 
+        [NotNull]
         public GitModule Module { get; private set; }
         public ILockableNotifier RepoChangedNotifier { get; }
         [CanBeNull] public IBrowseRepo BrowseRepo { get; set; }
 
         public GitUICommands([NotNull] GitModule module)
         {
-            Module = module;
+            Module = module ?? throw new ArgumentNullException(nameof(module));
+
             _commitTemplateManager = new CommitTemplateManager(module);
             RepoChangedNotifier = new ActionNotifier(
                 () => InvokeEvent(null, PostRepositoryChanged));

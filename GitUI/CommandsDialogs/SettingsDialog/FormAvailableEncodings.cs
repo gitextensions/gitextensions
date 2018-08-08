@@ -6,7 +6,7 @@ using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
-    public partial class FormAvailableEncodings : GitModuleForm
+    public partial class FormAvailableEncodings : GitExtensionsForm
     {
         public FormAvailableEncodings()
         {
@@ -21,7 +21,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             ListIncludedEncodings.BeginUpdate();
             try
             {
-                ListIncludedEncodings.Items.AddRange(includedEncoding.Values.ToArray());
+                ListIncludedEncodings.Items.AddRange(includedEncoding.Values.ToArray<object>());
                 ListIncludedEncodings.DisplayMember = nameof(Encoding.EncodingName);
             }
             finally
@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             ListAvailableEncodings.BeginUpdate();
             try
             {
-                ListAvailableEncodings.Items.AddRange(availableEncoding.ToArray());
+                ListAvailableEncodings.Items.AddRange(availableEncoding.ToArray<object>());
                 ListAvailableEncodings.DisplayMember = nameof(Encoding.EncodingName);
             }
             finally
@@ -58,9 +58,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (ListAvailableEncodings.SelectedItem != null)
             {
-                var indx = ListAvailableEncodings.SelectedIndex;
+                var index = ListAvailableEncodings.SelectedIndex;
                 ListIncludedEncodings.Items.Add(ListAvailableEncodings.SelectedItem);
-                ListAvailableEncodings.Items.RemoveAt(indx);
+                ListAvailableEncodings.Items.RemoveAt(index);
             }
         }
 
@@ -84,9 +84,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             if (ListIncludedEncodings.SelectedItem != null)
             {
-                var indx = ListIncludedEncodings.SelectedIndex;
+                var index = ListIncludedEncodings.SelectedIndex;
                 ListAvailableEncodings.Items.Add(ListIncludedEncodings.SelectedItem);
-                ListIncludedEncodings.Items.RemoveAt(indx);
+                ListIncludedEncodings.Items.RemoveAt(index);
             }
         }
 

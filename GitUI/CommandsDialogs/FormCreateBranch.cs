@@ -14,36 +14,33 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noRevisionSelected = new TranslationString("Select 1 revision to create the branch on.");
         private readonly TranslationString _branchNameIsEmpty = new TranslationString("Enter branch name.");
         private readonly TranslationString _branchNameIsNotValid = new TranslationString("“{0}” is not valid branch name.");
-        private readonly IGitBranchNameNormaliser _branchNameNormaliser;
+        private readonly IGitBranchNameNormaliser _branchNameNormaliser = new GitBranchNameNormaliser();
         private readonly GitBranchNameOptions _gitBranchNameOptions = new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol);
+
+        public bool CheckoutAfterCreation { get; set; } = true;
+        public bool UserAbleToChangeRevision { get; set; } = true;
+        public bool CouldBeOrphan { get; set; } = true;
+
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
+        private FormCreateBranch()
+        {
+            InitializeComponent();
+        }
 
         public FormCreateBranch(GitUICommands commands, ObjectId objectId)
             : base(commands)
         {
-            _branchNameNormaliser = new GitBranchNameNormaliser();
-            CheckoutAfterCreation = true;
-            UserAbleToChangeRevision = true;
-            CouldBeOrphan = true;
-
             InitializeComponent();
             InitializeComplete();
 
             groupBox1.AutoSize = true;
 
-            commitPickerSmallControl1.UICommandsSource = this;
-            if (IsUICommandsInitialized)
+            objectId = objectId ?? Module.GetCurrentCheckout();
+            if (objectId != null)
             {
-                objectId = objectId ?? Module.GetCurrentCheckout();
-                if (objectId != null)
-                {
-                    commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
-                }
+                commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
             }
         }
-
-        public bool CheckoutAfterCreation { get; set; }
-        public bool UserAbleToChangeRevision { get; set; }
-        public bool CouldBeOrphan { get; set; }
 
         private void BranchNameTextBox_Leave(object sender, EventArgs e)
         {

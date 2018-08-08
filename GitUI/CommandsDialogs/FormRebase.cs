@@ -28,14 +28,16 @@ namespace GitUI.CommandsDialogs
         private readonly string _defaultToBranch;
         private readonly bool _startRebaseImmediately;
 
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormRebase()
-            : this(null)
         {
+            InitializeComponent();
         }
 
-        private FormRebase(GitUICommands commands)
+        public FormRebase(GitUICommands commands, string defaultBranch)
             : base(commands)
         {
+            _defaultBranch = defaultBranch;
             InitializeComponent();
             InitializeComplete();
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
@@ -44,12 +46,6 @@ namespace GitUI.CommandsDialogs
             {
                 ShowOptions_LinkClicked(null, null);
             }
-        }
-
-        public FormRebase(GitUICommands commands, string defaultBranch)
-            : this(commands)
-        {
-            _defaultBranch = defaultBranch;
         }
 
         public FormRebase(GitUICommands commands, string from, string to, string defaultBranch, bool interactive = false,

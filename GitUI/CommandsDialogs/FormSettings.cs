@@ -36,24 +36,19 @@ namespace GitUI.CommandsDialogs
 
         private IEnumerable<ISettingsPage> SettingsPages => settingsTreeView.SettingsPages;
 
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormSettings()
-            : this(null)
         {
+            InitializeComponent();
         }
 
-        public FormSettings([CanBeNull] GitUICommands commands, SettingsPageReference initialPage = null)
+        public FormSettings([NotNull] GitUICommands commands, SettingsPageReference initialPage = null)
             : base(commands)
         {
             InitializeComponent();
             _translatedTitle = Text;
 
             settingsTreeView.SuspendLayout();
-
-            // if form is created for translation purpose
-            if (commands == null)
-            {
-                return;
-            }
 
 #if DEBUG
             buttonDiscard.Visible = true;

@@ -9,19 +9,20 @@ namespace GitUI.HelperDialogs
 {
     public partial class FormChooseCommit : GitModuleForm
     {
+        [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormChooseCommit()
-            : this(null)
         {
+            InitializeComponent();
         }
 
-        private FormChooseCommit(GitUICommands commands)
+        private FormChooseCommit([NotNull] GitUICommands commands)
             : base(commands)
         {
             InitializeComponent();
             InitializeComplete();
         }
 
-        public FormChooseCommit(GitUICommands commands, [CanBeNull] string preselectCommit, bool showArtificial = false)
+        public FormChooseCommit([NotNull] GitUICommands commands, [CanBeNull] string preselectCommit, bool showArtificial = false)
             : this(commands)
         {
             revisionGrid.MultiSelect = false;

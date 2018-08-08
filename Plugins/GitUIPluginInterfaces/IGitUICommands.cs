@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
@@ -13,7 +14,9 @@ namespace GitUIPluginInterfaces
         event EventHandler<GitUIEventArgs> PostRegisterPlugin;
         event EventHandler<GitUIEventArgs> PreCommit;
 
+        [NotNull]
         IGitModule GitModule { get; }
+
         IGitRemoteCommand CreateRemoteCommand();
 
         /// <summary>
