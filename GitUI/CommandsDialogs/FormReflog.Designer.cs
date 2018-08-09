@@ -206,7 +206,6 @@ namespace GitUI.CommandsDialogs
             // 
             // contextMenuStripReflog
             // 
-            this.contextMenuStripReflog.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripReflog.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copySha1ToolStripMenuItem,
             this.createABranchOnThisCommitToolStripMenuItem,

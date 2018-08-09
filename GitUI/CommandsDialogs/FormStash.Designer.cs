@@ -1,5 +1,4 @@
 using System.Windows.Forms;
-using GitCommands.Git;
 using GitUI.Editor;
 using GitUI.UserControls.RevisionGrid;
 
@@ -277,7 +276,6 @@ namespace GitUI.CommandsDialogs
             this.toolStrip1.ClickThrough = true;
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showToolStripLabel,
             this.Stashes,

@@ -8,7 +8,6 @@ using GitCommands;
 using GitCommands.Git;
 using GitCommands.Patches;
 using GitExtUtils.GitUI;
-using GitUI.Properties;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
