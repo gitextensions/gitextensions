@@ -15,12 +15,15 @@ namespace GitCommands
     /// recently used commands are removed.
     /// </para>
     /// <para>
-    /// Not all commands may be cached.
+    /// Commands that don't change over time may be cached, e.g.
     /// <list type="bullet">
-    ///   <item>Refs are moveable and cannot be cached.</item>
-    ///   <item>Commit notes can change, and cannot be cached.</item>
-    ///   <item>Commit data, queried by commit ID, will not change over time and can be cached.</item>
-    ///   <item>Diffs between commit IDs can be cached.</item>
+    ///   <item>Commit data queried by commit ID, or</item>
+    ///   <item>Diffs between commit IDs.</item>
+    /// </list>
+    /// Commands that deal with changeable data should never be cached, e.g.
+    /// <list type="bullet">
+    ///   <item>Refs, because they are moveable, or</item>
+    ///   <item>Commit notes, because they can change.</item>
     /// </list>
     /// </para>
     /// </remarks>

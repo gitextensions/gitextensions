@@ -56,6 +56,7 @@
     <Compile Include="..\..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ArgumentString.cs" />
     <Compile Include="BuildServerIntegration\BuildDurationFormatter.cs" />
     <Compile Include="BuildServerIntegration\BuildInfo.cs" />
     <Compile Include="BuildServerIntegration\BuildServerAdapterMetadataAttribute.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="BuildServerIntegration\IBuildServerSettingsUserControl.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerTypeMetadata.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerWatcher.cs" />
+    <Compile Include="ExecutionResult.cs" />
     <Compile Include="GitCmdResult.cs" />
     <Compile Include="GitUIPostActionEventArgs.cs" />
     <Compile Include="IBrowseRepo.cs" />

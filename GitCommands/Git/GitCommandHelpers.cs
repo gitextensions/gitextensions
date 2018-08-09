@@ -62,10 +62,10 @@ namespace GitCommands
 
         public static bool UseSsh(string arguments)
         {
-            var x = !Plink() && GetArgumentsRequiresSsh();
+            var x = !Plink() && DoArgumentsRequireSsh();
             return x || arguments.Contains("plink");
 
-            bool GetArgumentsRequiresSsh()
+            bool DoArgumentsRequireSsh()
             {
                 return (arguments.Contains("@") && arguments.Contains("://")) ||
                        (arguments.Contains("@") && arguments.Contains(":")) ||

@@ -1,47 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
-using GitCommands;
 using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
-    [DebuggerDisplay("{" + nameof(Arguments) + "}")]
-    public readonly struct ArgumentString
-    {
-        [CanBeNull] public string Arguments { get; }
-
-        private ArgumentString([NotNull] string arguments)
-        {
-            Arguments = arguments ?? throw new ArgumentNullException(nameof(arguments));
-        }
-
-        public static implicit operator ArgumentString(string args) => new ArgumentString(args);
-        public static implicit operator ArgumentString(ArgumentBuilder args) => new ArgumentString(args.ToString());
-        [CanBeNull]
-        public static implicit operator string(ArgumentString args) => args.Arguments;
-        public override string ToString() => Arguments ?? "";
-    }
-
-    public readonly struct ExecutionResult
-    {
-        [CanBeNull] public string StandardOutput { get; }
-        [CanBeNull] public string StandardError { get; }
-        public int? ExitCode { get; }
-
-        public ExecutionResult([NotNull] string standardOutput, [NotNull] string standardError, int? exitCode)
-        {
-            StandardOutput = standardOutput;
-            StandardError = standardError;
-            ExitCode = exitCode;
-        }
-
-        public bool ExitedSuccessfully => ExitCode == 0;
-
-        [NotNull] public string AllOutput => string.Concat(StandardOutput, Environment.NewLine, StandardError);
-    }
-
     /// <summary>Provides manipulation with git module.</summary>
     public interface IGitModule
     {

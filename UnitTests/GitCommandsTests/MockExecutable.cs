@@ -14,19 +14,19 @@ namespace GitCommandsTests
 {
     internal sealed class MockExecutable : IExecutable
     {
-        private readonly ConcurrentDictionary<string, ConcurrentStack<string>> _outputStackByArguments = new ConcurrentDictionary<string, ConcurrentStack<string>>();
+        private readonly ConcurrentDictionary<string, ConcurrentStack<(string output, int? exitCode)>> _outputStackByArguments = new ConcurrentDictionary<string, ConcurrentStack<(string output, int? exitCode)>>();
         private readonly ConcurrentDictionary<string, int> _commandArgumentsSet = new ConcurrentDictionary<string, int>();
         private readonly List<MockProcess> _processes = new List<MockProcess>();
         private int _nextCommandId;
 
         [MustUseReturnValue]
-        public IDisposable StageOutput(string arguments, string output)
+        public IDisposable StageOutput(string arguments, string output, int? exitCode = 0)
         {
             var stack = _outputStackByArguments.GetOrAdd(
                 arguments,
-                args => new ConcurrentStack<string>());
+                args => new ConcurrentStack<(string output, int? exitCode)>());
 
-            stack.Push(output);
+            stack.Push((output, exitCode));
 
             return new DelegateDisposable(
                 () =>
@@ -69,14 +69,14 @@ namespace GitCommandsTests
 
         public IProcess Start(ArgumentString arguments, bool createWindow, bool redirectInput, bool redirectOutput, Encoding outputEncoding)
         {
-            if (_outputStackByArguments.TryRemove(arguments, out var queue) && queue.TryPop(out var output))
+            if (_outputStackByArguments.TryRemove(arguments, out var queue) && queue.TryPop(out var item))
             {
                 if (queue.Count == 0)
                 {
                     _outputStackByArguments.TryRemove(arguments, out _);
                 }
 
-                var process = new MockProcess(output);
+                var process = new MockProcess(item.output, item.exitCode);
 
                 _processes.Add(process);
                 return process;
@@ -94,11 +94,12 @@ namespace GitCommandsTests
 
         private sealed class MockProcess : IProcess
         {
-            public MockProcess([CanBeNull] string output)
+            public MockProcess([CanBeNull] string output, int? exitCode)
             {
                 StandardOutput = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(output ?? "")));
                 StandardError = new StreamReader(new MemoryStream());
                 StandardInput = new StreamWriter(new MemoryStream());
+                ExitCode = exitCode;
             }
 
             public MockProcess()

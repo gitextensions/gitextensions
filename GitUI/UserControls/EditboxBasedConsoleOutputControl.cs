@@ -41,13 +41,15 @@ namespace GitUI.UserControls
                 Debug.Assert(text != null, "text != null");
                 Debug.Assert(!InvokeRequired, "!InvokeRequired");
 
-                if (!IsDisposed)
+                if (IsDisposed)
                 {
-                    _editbox.Visible = true;
-                    _editbox.Text += text;
-                    _editbox.SelectionStart = _editbox.Text.Length;
-                    _editbox.ScrollToCaret();
+                    return;
                 }
+
+                _editbox.Visible = true;
+                _editbox.Text += text;
+                _editbox.SelectionStart = _editbox.Text.Length;
+                _editbox.ScrollToCaret();
             }
         }
 
