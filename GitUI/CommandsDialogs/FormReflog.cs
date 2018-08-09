@@ -113,16 +113,13 @@ namespace GitUI.CommandsDialogs
             var row = GetSelectedRow();
             var refLine = (RefLine)row.DataBoundItem;
             return refLine.Sha;
-        }
 
-        private DataGridViewRow GetSelectedRow()
-        {
-            if (gridReflog.SelectedRows.Count > 0)
+            DataGridViewRow GetSelectedRow()
             {
-                return gridReflog.SelectedRows[0];
+                return gridReflog.SelectedRows.Count > 0
+                    ? gridReflog.SelectedRows[0]
+                    : gridReflog.Rows[gridReflog.SelectedCells[0].RowIndex];
             }
-
-            return gridReflog.Rows[gridReflog.SelectedCells[0].RowIndex];
         }
 
         private void resetCurrentBranchOnThisCommitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -161,7 +158,8 @@ namespace GitUI.CommandsDialogs
 
         private void gridReflog_MouseMove(object sender, MouseEventArgs e)
         {
-            DataGridView.HitTestInfo hit = gridReflog.HitTest(e.X, e.Y);
+            var hit = gridReflog.HitTest(e.X, e.Y);
+
             if (hit.Type == DataGridViewHitTestType.Cell && _lastHitRowIndex != hit.RowIndex)
             {
                 gridReflog.Rows[_lastHitRowIndex].Selected = false;
