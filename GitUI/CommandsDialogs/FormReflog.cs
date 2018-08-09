@@ -162,7 +162,7 @@ namespace GitUI.CommandsDialogs
         private void gridReflog_MouseMove(object sender, MouseEventArgs e)
         {
             DataGridView.HitTestInfo hit = gridReflog.HitTest(e.X, e.Y);
-            if (hit.Type == DataGridViewHitTestType.Cell)
+            if (hit.Type == DataGridViewHitTestType.Cell && _lastHitRowIndex != hit.RowIndex)
             {
                 gridReflog.Rows[_lastHitRowIndex].Selected = false;
                 _lastHitRowIndex = hit.RowIndex;
