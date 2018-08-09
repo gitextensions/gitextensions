@@ -167,7 +167,6 @@ namespace GitUI.CommandsDialogs
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gridReflog.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
-            this.gridReflog.ColumnHeadersHeight = 30;
             this.gridReflog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Sha,
             this.Ref,
@@ -178,7 +177,6 @@ namespace GitUI.CommandsDialogs
             this.gridReflog.MultiSelect = false;
             this.gridReflog.Name = "gridReflog";
             this.gridReflog.ReadOnly = true;
-            this.gridReflog.RowTemplate.Height = 24;
             this.gridReflog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridReflog.Size = new System.Drawing.Size(825, 509);
             this.gridReflog.TabIndex = 33;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -34,6 +35,9 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             InitializeComplete();
+
+            gridReflog.RowTemplate.Height = DpiUtil.Scale(24);
+            gridReflog.ColumnHeadersHeight = DpiUtil.Scale(30);
 
             Sha.DataPropertyName = nameof(RefLine.Sha);
             Ref.DataPropertyName = nameof(RefLine.Ref);
