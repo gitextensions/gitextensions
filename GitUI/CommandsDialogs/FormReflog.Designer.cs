@@ -226,7 +226,7 @@ namespace GitUI.CommandsDialogs
             this.createABranchOnThisCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.BranchCreate;
             this.createABranchOnThisCommitToolStripMenuItem.Name = "createABranchOnThisCommitToolStripMenuItem";
             this.createABranchOnThisCommitToolStripMenuItem.Size = new System.Drawing.Size(322, 26);
-            this.createABranchOnThisCommitToolStripMenuItem.Text = "Create a branch on this commit";
+            this.createABranchOnThisCommitToolStripMenuItem.Text = "Create a branch on this commit...";
             this.createABranchOnThisCommitToolStripMenuItem.Click += new System.EventHandler(this.createABranchOnThisCommitToolStripMenuItem_Click);
             // 
             // resetCurrentBranchOnThisCommitToolStripMenuItem
@@ -234,7 +234,7 @@ namespace GitUI.CommandsDialogs
             this.resetCurrentBranchOnThisCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetCurrentBranchToHere;
             this.resetCurrentBranchOnThisCommitToolStripMenuItem.Name = "resetCurrentBranchOnThisCommitToolStripMenuItem";
             this.resetCurrentBranchOnThisCommitToolStripMenuItem.Size = new System.Drawing.Size(322, 26);
-            this.resetCurrentBranchOnThisCommitToolStripMenuItem.Text = "Reset current branch on this commit";
+            this.resetCurrentBranchOnThisCommitToolStripMenuItem.Text = "Reset current branch to this commit...";
             this.resetCurrentBranchOnThisCommitToolStripMenuItem.Click += new System.EventHandler(this.resetCurrentBranchOnThisCommitToolStripMenuItem_Click);
             // 
             // lblDirtyWorkingDirectory

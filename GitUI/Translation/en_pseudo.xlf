@@ -7115,7 +7115,7 @@ Nothing to rebase.</source>
         
       </trans-unit>
       <trans-unit id="_continueResetCurrentBranchEvenWithChangesText.Text">
-        <source>You've got changes in your working directory that could be lost.
+        <source>You have changes in your working directory that could be lost.
 
 Do you want to continue?</source>
         <target>[Ẏǿŭ'ṽḗ ɠǿŧ ƈħȧƞɠḗş īƞ ẏǿŭř ẇǿřķīƞɠ ḓīřḗƈŧǿřẏ ŧħȧŧ ƈǿŭŀḓ ƀḗ ŀǿşŧ.
@@ -7129,7 +7129,7 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="createABranchOnThisCommitToolStripMenuItem.Text">
-        <source>Create a branch on this commit</source>
+        <source>Create a branch on this commit...</source>
         <target>[Ƈřḗȧŧḗ ȧ ƀřȧƞƈħ ǿƞ ŧħīş ƈǿḿḿīŧ ϐ靐ϖϕ鶱ϰ ς 鶱]</target>
         
       </trans-unit>
@@ -7161,7 +7161,7 @@ Stash them before if you don't want to lose them.</source>
         
       </trans-unit>
       <trans-unit id="resetCurrentBranchOnThisCommitToolStripMenuItem.Text">
-        <source>Reset current branch on this commit</source>
+        <source>Reset current branch to this commit...</source>
         <target>[Řḗşḗŧ ƈŭřřḗƞŧ ƀřȧƞƈħ ǿƞ ŧħīş ƈǿḿḿīŧ ǈ鶱ϰǲǋ ςǅ靐ıϵ]</target>
         
       </trans-unit>
