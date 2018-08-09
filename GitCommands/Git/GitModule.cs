@@ -724,72 +724,57 @@ namespace GitCommands
             return side;
         }
 
-        public IReadOnlyList<string> CheckoutConflictedFiles(ConflictData unmergedData)
+        public (string baseFile, string localFile, string remoteFile) CheckoutConflictedFiles(ConflictData unmergedData)
         {
             Directory.SetCurrentDirectory(WorkingDir);
 
-            var fileNames = new[]
-            {
-                unmergedData.Filename + ".BASE",
-                unmergedData.Filename + ".LOCAL",
-                unmergedData.Filename + ".REMOTE"
-            };
+            var baseFile = CheckoutPart(1, unmergedData.Filename + ".BASE", unmergedData.Base.Filename);
+            var localFile = CheckoutPart(2, unmergedData.Filename + ".LOCAL", unmergedData.Local.Filename);
+            var remoteFile = CheckoutPart(3, unmergedData.Filename + ".REMOTE", unmergedData.Remote.Filename);
 
-            var unmerged = new[]
-            {
-                unmergedData.Base.Filename,
-                unmergedData.Local.Filename,
-                unmergedData.Remote.Filename
-            };
+            return (baseFile, localFile, remoteFile);
 
-            for (var i = 0; i < unmerged.Length; i++)
+            string CheckoutPart(int part, string fileName, string unmerged)
             {
-                if (unmerged[i] == null)
+                if (unmerged != null)
                 {
-                    continue;
-                }
+                    // Check out the part to a temporary file
+                    var output = _gitExecutable.GetOutput(
+                        $"checkout-index --temp --stage={part} -- \"{unmergedData.Filename}\"");
 
-                var tempFile = _gitExecutable.GetOutput(
-                    $"checkout-index --temp --stage={i + 1} -- \"{unmergedData.Filename}\"");
+                    var tempFile = Path.Combine(WorkingDir, output.SubstringUntil('\t'));
 
-                tempFile = tempFile.SubstringUntil('\t');
-                tempFile = Path.Combine(WorkingDir, tempFile);
+                    fileName = FindAvailableFileName(Path.Combine(WorkingDir, fileName));
 
-                var newFileName = Path.Combine(WorkingDir, fileNames[i]);
-                try
-                {
-                    fileNames[i] = newFileName;
-                    var index = 1;
-                    while (File.Exists(fileNames[i]) && index < 50)
+                    try
                     {
-                        fileNames[i] = newFileName + index;
-                        index++;
+                        File.Move(tempFile, fileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex);
                     }
 
-                    File.Move(tempFile, fileNames[i]);
+                    return fileName;
                 }
-                catch (Exception ex)
+
+                return File.Exists(fileName) ? fileName : null;
+            }
+
+            string FindAvailableFileName(string basePath)
+            {
+                // If necessary, append an index to the base path until the file does not exist
+                var index = 1;
+                var test = basePath;
+
+                while (File.Exists(test) && index < 50)
                 {
-                    Trace.WriteLine(ex);
+                    test = basePath + index;
+                    index++;
                 }
-            }
 
-            if (!File.Exists(fileNames[0]))
-            {
-                fileNames[0] = null;
+                return test;
             }
-
-            if (!File.Exists(fileNames[1]))
-            {
-                fileNames[1] = null;
-            }
-
-            if (!File.Exists(fileNames[2]))
-            {
-                fileNames[2] = null;
-            }
-
-            return fileNames;
         }
 
         public ConflictData GetConflict(string filename)

@@ -458,14 +458,14 @@ namespace GitUI.CommandsDialogs
 
         private void ResolveFilesConflict(ConflictData item)
         {
-            var fileNames = Module.CheckoutConflictedFiles(item);
+            var (baseFile, localFile, remoteFile) = Module.CheckoutConflictedFiles(item);
 
             try
             {
                 if (CheckForLocalRevision(item) &&
                     CheckForRemoteRevision(item))
                 {
-                    if (TryMergeWithScript(item.Filename, fileNames[0], fileNames[1], fileNames[2]))
+                    if (TryMergeWithScript(item.Filename, baseFile, localFile, remoteFile))
                     {
                         Cursor.Current = Cursors.Default;
                         return;
@@ -505,9 +505,9 @@ namespace GitUI.CommandsDialogs
                         }
                     }
 
-                    arguments = arguments.Replace("$BASE", fileNames[0]);
-                    arguments = arguments.Replace("$LOCAL", fileNames[1]);
-                    arguments = arguments.Replace("$REMOTE", fileNames[2]);
+                    arguments = arguments.Replace("$BASE", baseFile);
+                    arguments = arguments.Replace("$LOCAL", localFile);
+                    arguments = arguments.Replace("$REMOTE", remoteFile);
                     arguments = arguments.Replace("$MERGED", item.Filename);
 
                     // get timestamp of file before merge. This is an extra check to verify if merge was successful
@@ -547,26 +547,18 @@ namespace GitUI.CommandsDialogs
             }
             finally
             {
-                DeleteTemporaryFiles();
+                DeleteTemporaryFile(baseFile);
+                DeleteTemporaryFile(localFile);
+                DeleteTemporaryFile(remoteFile);
             }
 
             return;
 
-            void DeleteTemporaryFiles()
+            void DeleteTemporaryFile(string path)
             {
-                if (fileNames[0] != null && File.Exists(fileNames[0]))
+                if (path != null && File.Exists(path))
                 {
-                    File.Delete(fileNames[0]);
-                }
-
-                if (fileNames[1] != null && File.Exists(fileNames[1]))
-                {
-                    File.Delete(fileNames[1]);
-                }
-
-                if (fileNames[2] != null && File.Exists(fileNames[2]))
-                {
-                    File.Delete(fileNames[2]);
+                    File.Delete(path);
                 }
             }
         }
