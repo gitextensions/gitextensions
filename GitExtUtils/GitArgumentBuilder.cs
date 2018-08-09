@@ -175,14 +175,14 @@ namespace GitCommands
         {
             var arguments = base.ToString();
 
-            var capacity = _command.Length + 1 + arguments.Length + 1 + _configItems.Sum(i => i.Key.Length + i.Value.Length + 5);
+            // 7 = "-c " + "=" + " " + 2 (for possible quotes of value)
+            var capacity = _configItems.Sum(i => i.Key.Length + i.Value.Length + 7) + _command.Length + 1 + arguments.Length;
 
             var str = new StringBuilder(capacity);
 
             foreach (var (key, value) in _configItems)
             {
-                str.Append("-c ").Append(key).Append('=').Append(value);
-                str.Append(' ');
+                str.Append("-c ").Append(key).Append('=').AppendQuoted(value).Append(' ');
             }
 
             str.Append(_command);

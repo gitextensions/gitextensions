@@ -50,6 +50,32 @@ namespace GitExtUtilsTests
         }
 
         [Test]
+        public void Command_with_custom_config_item_quoted()
+        {
+            var args = new GitArgumentBuilder("foo")
+            {
+                new GitConfigItem("bar", "baz bax")
+            };
+
+            Assert.AreEqual(
+                "-c bar=\"baz bax\" foo",
+                args.ToString());
+        }
+
+        [Test]
+        public void Command_with_custom_config_item_already_quoted()
+        {
+            var args = new GitArgumentBuilder("foo")
+            {
+                new GitConfigItem("bar", "\"baz bax\"")
+            };
+
+            Assert.AreEqual(
+                "-c bar=\"baz bax\" foo",
+                args.ToString());
+        }
+
+        [Test]
         public void Command_with_custom_config_item_and_argument()
         {
             var args = new GitArgumentBuilder("foo")
