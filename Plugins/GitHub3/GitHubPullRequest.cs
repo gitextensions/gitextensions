@@ -27,6 +27,7 @@ namespace GitHub3
         private string _diffData;
         public string DiffData
         {
+            // TODO convert to method -- properties should not do heavy work (make async?)
             get
             {
                 if (_diffData == null)
@@ -95,6 +96,7 @@ namespace GitHub3
         {
             get
             {
+                // TODO convert to method -- properties should not do heavy work (make async?)
                 if (_discussion == null)
                 {
                     _discussion = new GitHubPullRequestDiscussion(_pullRequest);

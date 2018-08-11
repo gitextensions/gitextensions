@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces.RepositoryHosts;
+using JetBrains.Annotations;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -103,15 +106,26 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _selectHostedRepoCB.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
-            AsyncLoader.DoAsync(
-               hostedRepo.GetPullRequests,
-               res =>
-               {
-                   SetPullRequestsData(res);
-                   _selectHostedRepoCB.Enabled = true;
-               },
-               ex => MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Exception.Message,
-                                       _strError.Text));
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    try
+                    {
+                        await TaskScheduler.Default;
+
+                        var pullRequests = hostedRepo.GetPullRequests();
+
+                        await this.SwitchToMainThreadAsync();
+
+                        SetPullRequestsData(pullRequests);
+                        _selectHostedRepoCB.Enabled = true;
+                    }
+                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    {
+                        MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Message, _strError.Text);
+                    }
+                })
+                .FileAndForget();
         }
 
         private void SetPullRequestsData(IReadOnlyList<IPullRequestInformation> infos)
@@ -241,17 +255,29 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void LoadDiscussion()
         {
-            AsyncLoader.DoAsync(
-                () => _currentPullRequestInfo.Discussion,
-                LoadDiscussion,
-                ex =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
                 {
-                    MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Exception.Message, _strError.Text);
-                    LoadDiscussion(null);
-                });
+                    try
+                    {
+                        await TaskScheduler.Default;
+
+                        var discussion = _currentPullRequestInfo.Discussion;
+
+                        await this.SwitchToMainThreadAsync();
+
+                        LoadDiscussion(discussion);
+                    }
+                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    {
+                        MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message, _strError.Text);
+                        LoadDiscussion(null);
+                    }
+                })
+                .FileAndForget();
         }
 
-        private void LoadDiscussion(IPullRequestDiscussion discussion)
+        private void LoadDiscussion([CanBeNull] IPullRequestDiscussion discussion)
         {
             var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion?.Entries);
             _discussionWB.DocumentText = t;
@@ -270,11 +296,25 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void LoadDiffPatch()
         {
-            AsyncLoader.DoAsync(
-                () => _currentPullRequestInfo.DiffData,
-                SplitAndLoadDiff,
-                ex => MessageBox.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Exception.Message,
-                                    _strError.Text));
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    try
+                    {
+                        await TaskScheduler.Default;
+
+                        var content = _currentPullRequestInfo.DiffData;
+
+                        await this.SwitchToMainThreadAsync();
+
+                        SplitAndLoadDiff(content);
+                    }
+                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    {
+                        MessageBox.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Message, _strError.Text);
+                    }
+                })
+                .FileAndForget();
         }
 
         private Dictionary<string, string> _diffCache;

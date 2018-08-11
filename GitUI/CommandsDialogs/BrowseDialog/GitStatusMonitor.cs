@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -391,7 +393,30 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _commandIsRunning = true;
             _statusIsUpToDate = true;
             _previousUpdateTime = Environment.TickCount;
-            AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, OnUpdateStatusError);
+
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    try
+                    {
+                        await TaskScheduler.Default;
+
+                        // TODO parse response output on thread pool, not UI thread
+                        var content = RunStatusCommand();
+
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                        UpdatedStatusReceived(content);
+                    }
+                    catch
+                    {
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                        _commandIsRunning = false;
+                        CurrentStatus = GitStatusMonitorState.Stopped;
+                    }
+                })
+                .FileAndForget();
 
             // Schedule update every 5 min, even if we don't know that anything changed
             CalculateNextUpdateTime(MaxUpdatePeriod);
@@ -435,12 +460,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     // Still not up-to-date, but present what received, GetAllChangedFilesCmd() is the heavy command
                     CalculateNextUpdateTime(UpdateDelay);
                 }
-            }
-
-            void OnUpdateStatusError(AsyncErrorEventArgs e)
-            {
-                _commandIsRunning = false;
-                CurrentStatus = GitStatusMonitorState.Stopped;
             }
         }
 

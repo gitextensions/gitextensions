@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -104,11 +106,17 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _remoteBranchesCB.Items.Clear();
             _remoteBranchesCB.Text = _strLoading.Text;
 
-            AsyncLoader.DoAsync(
-                () => _currentHostedRemote.GetHostedRepository().Branches,
-                branches =>
+            // TODO merge with nearly identical code below
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
                 {
-                    branches.Sort((a, b) => string.Compare(a.Name, b.Name, true));
+                    await TaskScheduler.Default;
+
+                    var branches = _currentHostedRemote.GetHostedRepository().Branches;
+                    branches.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
+
+                    await this.SwitchToMainThreadAsync();
+
                     int selectItem = 0;
                     _remoteBranchesCB.Items.Clear();
                     for (int i = 0; i < branches.Count; i++)
@@ -126,8 +134,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     {
                         _remoteBranchesCB.SelectedIndex = selectItem;
                     }
-                },
-                ex => { ex.Handled = false; });
+                })
+                .FileAndForget();
         }
 
         [CanBeNull]
@@ -142,11 +150,17 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             }
 
-            AsyncLoader.DoAsync(
-                () => MyRemote.GetHostedRepository().Branches,
-                branches =>
+            // TODO merge with nearly identical code above
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
                 {
-                    branches.Sort((a, b) => string.Compare(a.Name, b.Name, true));
+                    await TaskScheduler.Default;
+
+                    var branches = MyRemote.GetHostedRepository().Branches;
+                    branches.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
+
+                    await this.SwitchToMainThreadAsync();
+
                     int selectItem = 0;
                     for (int i = 0; i < branches.Count; i++)
                     {
@@ -163,8 +177,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     {
                         _yourBranchesCB.SelectedIndex = selectItem;
                     }
-                },
-                ex => { ex.Handled = false; });
+                })
+                .FileAndForget();
         }
 
         private void _yourBranchCB_SelectedIndexChanged(object sender, EventArgs e)
