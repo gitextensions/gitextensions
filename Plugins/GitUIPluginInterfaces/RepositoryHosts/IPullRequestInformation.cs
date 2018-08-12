@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GitUIPluginInterfaces.RepositoryHosts
 {
@@ -10,7 +11,7 @@ namespace GitUIPluginInterfaces.RepositoryHosts
         string Owner { get; }
         DateTime Created { get; }
 
-        string DiffData { get; }
+        Task<string> GetDiffDataAsync();
 
         IHostedRepository BaseRepo { get; }
         IHostedRepository HeadRepo { get; }
@@ -25,7 +26,7 @@ namespace GitUIPluginInterfaces.RepositoryHosts
 
         void Close();
 
-        IPullRequestDiscussion Discussion { get; }
+        IPullRequestDiscussion GetDiscussion();
     }
 
     public interface IDiscussionEntry

@@ -24,8 +24,11 @@ namespace GitUIPluginInterfaces.RepositoryHosts
         string CloneReadWriteUrl { get; }
         string CloneReadOnlyUrl { get; }
 
-        // Slow op
-        List<IHostedBranch> Branches { get; }
+        /// <summary>
+        /// Requests details of branches from the GitHub remote repository.
+        /// </summary>
+        /// <returns>A list of branches, ordered by name.</returns>
+        IReadOnlyList<IHostedBranch> GetBranches();
 
         /// <summary>
         /// Forks the repo owned by somebody else to "my" repos.
@@ -42,6 +45,6 @@ namespace GitUIPluginInterfaces.RepositoryHosts
     public interface IHostedBranch
     {
         string Name { get; }
-        string Sha { get; }
+        ObjectId Sha { get; }
     }
 }

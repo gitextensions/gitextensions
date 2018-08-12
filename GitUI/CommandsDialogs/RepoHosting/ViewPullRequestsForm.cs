@@ -262,7 +262,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     {
                         await TaskScheduler.Default;
 
-                        var discussion = _currentPullRequestInfo.Discussion;
+                        // TODO make this operation async (requires change to Git.hub submodule)
+                        var discussion = _currentPullRequestInfo.GetDiscussion();
 
                         await this.SwitchToMainThreadAsync();
 
@@ -301,9 +302,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 {
                     try
                     {
-                        await TaskScheduler.Default;
-
-                        var content = _currentPullRequestInfo.DiffData;
+                        var content = await _currentPullRequestInfo.GetDiffDataAsync();
 
                         await this.SwitchToMainThreadAsync();
 

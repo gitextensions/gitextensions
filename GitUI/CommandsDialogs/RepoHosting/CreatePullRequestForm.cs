@@ -133,8 +133,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     {
                         await TaskScheduler.Default;
 
-                        var branches = remote.GetHostedRepository().Branches;
-                        branches.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
+                        var branches = remote.GetHostedRepository().GetBranches();
 
                         await this.SwitchToMainThreadAsync();
 
