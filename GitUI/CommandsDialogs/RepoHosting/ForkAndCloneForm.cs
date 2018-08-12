@@ -98,13 +98,20 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         await this.SwitchToMainThreadAsync();
 
                         _myReposLV.Items.Clear();
+
                         foreach (var repo in repos)
                         {
-                            var lvi = new ListViewItem { Tag = repo, Text = repo.Name };
-                            lvi.SubItems.Add(repo.IsAFork ? _strYes.Text : _strNo.Text);
-                            lvi.SubItems.Add(repo.Forks.ToString());
-                            lvi.SubItems.Add(repo.IsPrivate ? _strYes.Text : _strNo.Text);
-                            _myReposLV.Items.Add(lvi);
+                            _myReposLV.Items.Add(new ListViewItem
+                            {
+                                Tag = repo,
+                                Text = repo.Name,
+                                SubItems =
+                                {
+                                    repo.IsAFork ? _strYes.Text : _strNo.Text,
+                                    repo.Forks.ToString(),
+                                    repo.IsPrivate ? _strYes.Text : _strNo.Text
+                                }
+                            });
                         }
                     }
                     catch (Exception ex) when (!(ex is OperationCanceledException))

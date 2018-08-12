@@ -195,24 +195,24 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _fileStatusList.SetDiffs();
 
             _pullRequestsList.Items.Clear();
-            var lvi = new ListViewItem("");
-            lvi.SubItems.Add(_strLoading.Text);
-            _pullRequestsList.Items.Add(lvi);
+            _pullRequestsList.Items.Add(new ListViewItem("") { SubItems = { _strLoading.Text } });
         }
 
         private void LoadListView()
         {
             foreach (var info in _pullRequestsInfo)
             {
-                var lvi = new ListViewItem
+                _pullRequestsList.Items.Add(new ListViewItem
                 {
                     Text = info.Id,
-                    Tag = info
-                };
-                lvi.SubItems.Add(info.Title);
-                lvi.SubItems.Add(info.Owner);
-                lvi.SubItems.Add(info.Created.ToString());
-                _pullRequestsList.Items.Add(lvi);
+                    Tag = info,
+                    SubItems =
+                    {
+                        info.Title,
+                        info.Owner,
+                        info.Created.ToString()
+                    }
+                });
             }
 
             if (_pullRequestsList.Items.Count > 0)
