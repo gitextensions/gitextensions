@@ -401,12 +401,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     {
                         await TaskScheduler.Default;
 
-                        // TODO parse response output on thread pool, not UI thread
-                        var content = RunStatusCommand();
+                        _ignoredFilesPending = _ignoredFilesAreStale;
+
+                        // git-status with ignored files when needed only
+                        var cmd = GitCommandHelpers.GetAllChangedFilesCmd(!_ignoredFilesPending, UntrackedFilesMode.Default, noLocks: true);
+                        var output = Module.RunGitCmd(cmd);
+                        var changedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(Module, output);
 
                         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-                        UpdatedStatusReceived(content);
+                        UpdatedStatusReceived(changedFiles);
                     }
                     catch
                     {
@@ -423,16 +427,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             return;
 
-            string RunStatusCommand()
-            {
-                _ignoredFilesPending = _ignoredFilesAreStale;
-
-                // git-status with ignored files when needed only
-                string command = GitCommandHelpers.GetAllChangedFilesCmd(!_ignoredFilesPending, UntrackedFilesMode.Default, noLocks: true);
-                return Module.RunGitCmd(command);
-            }
-
-            void UpdatedStatusReceived(string updatedStatus)
+            void UpdatedStatusReceived(IReadOnlyList<GitItemStatus> changedFiles)
             {
                 // Adjust the interval between updates. (This does not affect an update already scheduled).
                 _currentUpdateInterval = Math.Max(MinUpdateInterval, 3 * (Environment.TickCount - _previousUpdateTime));
@@ -443,12 +438,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     return;
                 }
 
-                var allChangedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(Module, updatedStatus);
-                GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs(allChangedFiles.Where(item => !item.IsIgnored)));
+                GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs(changedFiles.Where(item => !item.IsIgnored)));
                 if (_ignoredFilesPending)
                 {
                     _ignoredFilesPending = false;
-                    _ignoredFiles = new HashSet<string>(allChangedFiles.Where(item => item.IsIgnored).Select(item => item.Name));
+                    _ignoredFiles = new HashSet<string>(changedFiles.Where(item => item.IsIgnored).Select(item => item.Name));
                     if (_statusIsUpToDate)
                     {
                         _ignoredFilesAreStale = false;
