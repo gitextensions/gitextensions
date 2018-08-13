@@ -7103,7 +7103,7 @@ Rien à rebaser.</target>
         
       </trans-unit>
       <trans-unit id="_continueResetCurrentBranchEvenWithChangesText.Text">
-        <source>You've got changes in your working directory that could be lost.
+        <source>You have changes in your working directory that could be lost.
 
 Do you want to continue?</source>
         <target>Vous avez des modifications dans votre espace de travail qui peuvent être perdues.
@@ -7117,7 +7117,7 @@ Voulez-vous continuer?</target>
         
       </trans-unit>
       <trans-unit id="createABranchOnThisCommitToolStripMenuItem.Text">
-        <source>Create a branch on this commit</source>
+        <source>Create a branch on this commit...</source>
         <target>Créer un branche sur ce commit</target>
         
       </trans-unit>
@@ -7149,7 +7149,7 @@ Réservez les avant si vous ne voulez pas les perdre.</target>
         
       </trans-unit>
       <trans-unit id="resetCurrentBranchOnThisCommitToolStripMenuItem.Text">
-        <source>Reset current branch on this commit</source>
+        <source>Reset current branch to this commit...</source>
         <target>Réinitialiser la branche courante à ce commit</target>
         
       </trans-unit>

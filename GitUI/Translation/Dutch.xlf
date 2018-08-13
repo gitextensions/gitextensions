@@ -7105,7 +7105,7 @@ Er is niets te doen.</target>
         
       </trans-unit>
       <trans-unit id="_continueResetCurrentBranchEvenWithChangesText.Text">
-        <source>You've got changes in your working directory that could be lost.
+        <source>You have changes in your working directory that could be lost.
 
 Do you want to continue?</source>
         <target>U heeft wijzigingen in uw werk directory de verloren kunnen gaan.
@@ -7118,7 +7118,7 @@ Wilt u doorgaan?</target>
         
       </trans-unit>
       <trans-unit id="createABranchOnThisCommitToolStripMenuItem.Text">
-        <source>Create a branch on this commit</source>
+        <source>Create a branch on this commit...</source>
         <target>Maak een branch op deze commit</target>
         
       </trans-unit>
@@ -7148,7 +7148,7 @@ Stash them before if you don't want to lose them.</source>
         
       </trans-unit>
       <trans-unit id="resetCurrentBranchOnThisCommitToolStripMenuItem.Text">
-        <source>Reset current branch on this commit</source>
+        <source>Reset current branch to this commit...</source>
         <target>Reset de huidige branch op deze commit</target>
         
       </trans-unit>

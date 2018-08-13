@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -13,7 +14,7 @@ namespace GitUI.CommandsDialogs
 {
     public partial class FormReflog : GitModuleForm
     {
-        private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new TranslationString("You've got changes in your working directory that could be lost.\n\nDo you want to continue?");
+        private readonly TranslationString _continueResetCurrentBranchEvenWithChangesText = new TranslationString("You have changes in your working directory that could be lost.\n\nDo you want to continue?");
         private readonly TranslationString _continueResetCurrentBranchCaptionText = new TranslationString("Changes not committed...");
 
         private readonly Regex _regexReflog = new Regex("^([^ ]+) ([^:]+): (.+)$", RegexOptions.Compiled);
@@ -34,6 +35,9 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             InitializeComplete();
+
+            gridReflog.RowTemplate.Height = DpiUtil.Scale(24);
+            gridReflog.ColumnHeadersHeight = DpiUtil.Scale(30);
 
             Sha.DataPropertyName = nameof(RefLine.Sha);
             Ref.DataPropertyName = nameof(RefLine.Ref);
@@ -109,16 +113,13 @@ namespace GitUI.CommandsDialogs
             var row = GetSelectedRow();
             var refLine = (RefLine)row.DataBoundItem;
             return refLine.Sha;
-        }
 
-        private DataGridViewRow GetSelectedRow()
-        {
-            if (gridReflog.SelectedRows.Count > 0)
+            DataGridViewRow GetSelectedRow()
             {
-                return gridReflog.SelectedRows[0];
+                return gridReflog.SelectedRows.Count > 0
+                    ? gridReflog.SelectedRows[0]
+                    : gridReflog.Rows[gridReflog.SelectedCells[0].RowIndex];
             }
-
-            return gridReflog.Rows[gridReflog.SelectedCells[0].RowIndex];
         }
 
         private void resetCurrentBranchOnThisCommitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -157,8 +158,9 @@ namespace GitUI.CommandsDialogs
 
         private void gridReflog_MouseMove(object sender, MouseEventArgs e)
         {
-            DataGridView.HitTestInfo hit = gridReflog.HitTest(e.X, e.Y);
-            if (hit.Type == DataGridViewHitTestType.Cell)
+            var hit = gridReflog.HitTest(e.X, e.Y);
+
+            if (hit.Type == DataGridViewHitTestType.Cell && _lastHitRowIndex != hit.RowIndex)
             {
                 gridReflog.Rows[_lastHitRowIndex].Selected = false;
                 _lastHitRowIndex = hit.RowIndex;

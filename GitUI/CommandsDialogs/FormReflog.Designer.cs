@@ -167,7 +167,6 @@ namespace GitUI.CommandsDialogs
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gridReflog.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCellsExceptHeader;
-            this.gridReflog.ColumnHeadersHeight = 30;
             this.gridReflog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Sha,
             this.Ref,
@@ -178,7 +177,6 @@ namespace GitUI.CommandsDialogs
             this.gridReflog.MultiSelect = false;
             this.gridReflog.Name = "gridReflog";
             this.gridReflog.ReadOnly = true;
-            this.gridReflog.RowTemplate.Height = 24;
             this.gridReflog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridReflog.Size = new System.Drawing.Size(825, 509);
             this.gridReflog.TabIndex = 33;
@@ -208,7 +206,6 @@ namespace GitUI.CommandsDialogs
             // 
             // contextMenuStripReflog
             // 
-            this.contextMenuStripReflog.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStripReflog.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copySha1ToolStripMenuItem,
             this.createABranchOnThisCommitToolStripMenuItem,
@@ -218,6 +215,7 @@ namespace GitUI.CommandsDialogs
             // 
             // copySha1ToolStripMenuItem
             // 
+            this.copySha1ToolStripMenuItem.Image = global::GitUI.Properties.Images.CommitId;
             this.copySha1ToolStripMenuItem.Name = "copySha1ToolStripMenuItem";
             this.copySha1ToolStripMenuItem.Size = new System.Drawing.Size(322, 26);
             this.copySha1ToolStripMenuItem.Text = "Copy SHA-1";
@@ -225,16 +223,18 @@ namespace GitUI.CommandsDialogs
             // 
             // createABranchOnThisCommitToolStripMenuItem
             // 
+            this.createABranchOnThisCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.BranchCreate;
             this.createABranchOnThisCommitToolStripMenuItem.Name = "createABranchOnThisCommitToolStripMenuItem";
             this.createABranchOnThisCommitToolStripMenuItem.Size = new System.Drawing.Size(322, 26);
-            this.createABranchOnThisCommitToolStripMenuItem.Text = "Create a branch on this commit";
+            this.createABranchOnThisCommitToolStripMenuItem.Text = "Create a branch on this commit...";
             this.createABranchOnThisCommitToolStripMenuItem.Click += new System.EventHandler(this.createABranchOnThisCommitToolStripMenuItem_Click);
             // 
             // resetCurrentBranchOnThisCommitToolStripMenuItem
             // 
+            this.resetCurrentBranchOnThisCommitToolStripMenuItem.Image = global::GitUI.Properties.Images.ResetCurrentBranchToHere;
             this.resetCurrentBranchOnThisCommitToolStripMenuItem.Name = "resetCurrentBranchOnThisCommitToolStripMenuItem";
             this.resetCurrentBranchOnThisCommitToolStripMenuItem.Size = new System.Drawing.Size(322, 26);
-            this.resetCurrentBranchOnThisCommitToolStripMenuItem.Text = "Reset current branch on this commit";
+            this.resetCurrentBranchOnThisCommitToolStripMenuItem.Text = "Reset current branch to this commit...";
             this.resetCurrentBranchOnThisCommitToolStripMenuItem.Click += new System.EventHandler(this.resetCurrentBranchOnThisCommitToolStripMenuItem_Click);
             // 
             // lblDirtyWorkingDirectory
