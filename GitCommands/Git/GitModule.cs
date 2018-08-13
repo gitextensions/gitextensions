@@ -191,11 +191,6 @@ namespace GitCommands
         [NotNull]
         public string WorkingDirGitDir { get; private set; }
 
-        /// <summary>Gets the path to the git application executable.</summary>
-        public string GitCommand => AppSettings.GitCommand;
-
-        public Version AppVersion => AppSettings.AppVersion;
-
         /// <summary>
         /// If this module is a submodule, returns its name, otherwise <c>null</c>.
         /// </summary>
