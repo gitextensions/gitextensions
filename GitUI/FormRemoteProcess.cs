@@ -85,9 +85,11 @@ namespace GitUI
             // An error occurred!
             if (isError && Plink)
             {
+                var output = GetOutputString();
+
                 // there might be another error, this condition is too weak
                 /*
-                if (GetOutputString().Contains("successfully authenticated"))
+                if (output.Contains("successfully authenticated"))
                 {
                     isError = false;
                     return false;
@@ -95,7 +97,7 @@ namespace GitUI
                 */
 
                 // If the authentication failed because of a missing key, ask the user to supply one.
-                if (GetOutputString().Contains("FATAL ERROR") && GetOutputString().Contains("authentication"))
+                if (output.Contains("FATAL ERROR") && output.Contains("authentication"))
                 {
                     if (FormPuttyError.AskForKey(this, out var loadedKey))
                     {
@@ -112,7 +114,7 @@ namespace GitUI
                     }
                 }
 
-                if (GetOutputString().ToLower().Contains("the server's host key is not cached in the registry"))
+                if (output.ToLower().Contains("the server's host key is not cached in the registry"))
                 {
                     string remoteUrl;
 
