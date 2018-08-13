@@ -26,7 +26,8 @@ namespace ResourceManager
         {
             _initialiser = new GitExtensionsControlInitialiser(this);
 
-            ShowInTaskbar = Application.OpenForms.Count <= 0;
+            var openFormCount = Application.OpenForms.Count;
+            ShowInTaskbar = openFormCount <= 0;
             Icon = Resources.GitExtensionsLogoIcon;
         }
 
