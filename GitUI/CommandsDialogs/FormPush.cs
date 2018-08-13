@@ -512,7 +512,7 @@ namespace GitUI.CommandsDialogs
                     bool cancel = false;
                     string destination = _NO_TRANSLATE_Remotes.Text;
                     string buttons = _pullRepositoryButtons.Text;
-                    switch (Module.LastPullAction)
+                    switch (AppSettings.FormPullAction)
                     {
                         case AppSettings.PullAction.Fetch:
                         case AppSettings.PullAction.FetchAll:
@@ -604,14 +604,10 @@ namespace GitUI.CommandsDialogs
                     return false;
                 }
 
-                if (AppSettings.AutoPullOnPushRejectedAction == AppSettings.PullAction.Default)
+                if (AppSettings.AutoPullOnPushRejectedAction == AppSettings.PullAction.Default &&
+                    AppSettings.FormPullAction == AppSettings.PullAction.None)
                 {
-                    if (Module.LastPullAction == AppSettings.PullAction.None)
-                    {
-                        return false;
-                    }
-
-                    Module.LastPullActionToFormPullAction();
+                    return false;
                 }
 
                 if (AppSettings.FormPullAction == AppSettings.PullAction.Fetch)

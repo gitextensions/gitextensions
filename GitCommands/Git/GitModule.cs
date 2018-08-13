@@ -369,24 +369,6 @@ namespace GitCommands
         [NotNull]
         public Encoding LogOutputEncoding => EffectiveConfigFile.LogOutputEncoding ?? CommitEncoding;
 
-        public AppSettings.PullAction LastPullAction
-        {
-            get => AppSettings.GetEnum("LastPullAction_" + WorkingDir, AppSettings.PullAction.None);
-            set => AppSettings.SetEnum("LastPullAction_" + WorkingDir, value);
-        }
-
-        public void LastPullActionToFormPullAction()
-        {
-            if (LastPullAction == AppSettings.PullAction.FetchAll)
-            {
-                AppSettings.FormPullAction = AppSettings.PullAction.Fetch;
-            }
-            else if (LastPullAction != AppSettings.PullAction.None)
-            {
-                AppSettings.FormPullAction = LastPullAction;
-            }
-        }
-
         /// <summary>Indicates whether the <see cref="WorkingDir"/> contains a git repository.</summary>
         public bool IsValidGitWorkingDir()
         {

@@ -286,8 +286,6 @@ namespace GitUI.CommandsDialogs
                 return DialogResult.No;
             }
 
-            UpdateSettingsDuringPull();
-
             DialogResult dr = ShouldRebaseMergeCommit();
             if (dr != DialogResult.Yes)
             {
@@ -397,26 +395,6 @@ namespace GitUI.CommandsDialogs
                 }
 
                 return true;
-            }
-
-            void UpdateSettingsDuringPull()
-            {
-                if (Merge.Checked)
-                {
-                    AppSettings.FormPullAction = AppSettings.PullAction.Merge;
-                }
-
-                if (Rebase.Checked)
-                {
-                    AppSettings.FormPullAction = AppSettings.PullAction.Rebase;
-                }
-
-                if (Fetch.Checked)
-                {
-                    AppSettings.FormPullAction = AppSettings.PullAction.Fetch;
-                }
-
-                AppSettings.AutoStash = AutoStash.Checked;
             }
 
             string CalculateSource()
