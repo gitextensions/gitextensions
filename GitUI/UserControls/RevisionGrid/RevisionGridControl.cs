@@ -1085,7 +1085,7 @@ namespace GitUI
             {
                 "rev-list",
                 { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
-                { AppSettings.MaxRevisionGraphCommits > 0, $"--max-count=\"{AppSettings.MaxRevisionGraphCommits}\"" },
+                { AppSettings.MaxRevisionGraphCommits > 0, $"--max-count={AppSettings.MaxRevisionGraphCommits}" },
                 objectId
             };
 

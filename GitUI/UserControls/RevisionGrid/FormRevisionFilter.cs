@@ -109,7 +109,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (LimitCheck.Checked && _NO_TRANSLATE_Limit.Value > 0)
             {
-                filter.Add($"--max-count=\"{(int)_NO_TRANSLATE_Limit.Value}\"");
+                filter.Add($"--max-count={(int)_NO_TRANSLATE_Limit.Value}");
             }
 
             return filter;
