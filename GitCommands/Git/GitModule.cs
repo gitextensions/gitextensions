@@ -98,7 +98,19 @@ namespace GitCommands
         private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
 
         public static readonly string NoNewLineAtTheEnd = "\\ No newline at end of file";
-        private const string DiffCommandWithStandardArgs = "-c diff.submodule=short -c diff.noprefix=false diff --no-color ";
+        private const string DiffCommandWithStandardArgs = "diff --no-color ";
+        private static KeyValuePair<string, string>[] diffConfigs = new KeyValuePair<string, string>[]
+             {
+             new KeyValuePair<string, string>("diff.submodule", "short"),
+             new KeyValuePair<string, string>("diff.noprefix", "false")
+             };
+
+        // Config options to add to the beginning of the git cmd
+        // git -c log.ShowSignature=false log --pretty='%h %G?'
+        private static KeyValuePair<string, string>[] DefaultConfigValues = new KeyValuePair<string, string>[]
+         {
+            new KeyValuePair<string, string>("log.ShowSignature", "false") // Prevent git config log.ShowSignature true from including gpg lines in log output for our log calls
+         };
 
         public GitModule([CanBeNull] string workingDir)
         {
@@ -583,6 +595,18 @@ namespace GitCommands
             return AnsiCodePattern.Replace(input, "");
         }
 
+        private static string GetConfigArguments(IEnumerable<KeyValuePair<string, string>> configValues)
+        {
+            KeyValuePair<string, string>[] configs = DefaultConfigValues.Concat(configValues) // DO NOT sort.  The overrides are controlled by the order of the elements.
+                  .Where(kv => !string.IsNullOrWhiteSpace(kv.Key))
+                  .GroupBy(kv => kv.Key.ToLower())
+                  .Select(gkv => gkv.Last()).ToArray(); // Allow overrides of defaults with passed in config values.
+
+            string config = configs.Any() ? " -c " + string.Join(" -c ", configs.Select(kv => $"{kv.Key}={(string.IsNullOrWhiteSpace(kv.Value) ? string.Empty : kv.Value)}")) + " " : string.Empty;
+
+            return config;
+        }
+
         /// <summary>
         /// Run command, console window is visible
         /// </summary>
@@ -652,12 +676,30 @@ namespace GitCommands
         [NotNull]
         public Process RunGitCmdDetached(string arguments, Encoding encoding = null)
         {
+            return RunGitCmdDetached(arguments, Enumerable.Empty<KeyValuePair<string, string>>(), encoding);
+        }
+
+        /// <summary>
+        /// Run git command, console window is hidden, redirect output
+        /// </summary>
+        [NotNull]
+        public Process RunGitCmdDetached(string arguments, IEnumerable<KeyValuePair<string, string>> configValues, Encoding encoding = null)
+        {
+            string config = GetConfigArguments(configValues);
+            arguments = config + arguments;
             return GitCommandHelpers.StartProcess(
                 AppSettings.GitCommand, arguments, WorkingDir, encoding ?? SystemEncoding);
         }
 
         public string RunCacheableGitCmd(string arguments, Encoding encoding = null)
         {
+            return RunCacheableGitCmd(arguments, Enumerable.Empty<KeyValuePair<string, string>>(), encoding);
+        }
+
+        public string RunCacheableGitCmd(string arguments, IEnumerable<KeyValuePair<string, string>> configValues, Encoding encoding = null)
+        {
+            string config = GetConfigArguments(configValues);
+            arguments = config + arguments;
             return RunCacheableCmd(AppSettings.GitCommand, arguments, encoding);
         }
 
@@ -724,8 +766,26 @@ namespace GitCommands
         /// <summary>
         /// Run git command, console window is hidden, wait for exit, redirect output
         /// </summary>
+        public string RunGitCmd(ArgumentBuilder arguments, IEnumerable<KeyValuePair<string, string>> configValues, Encoding encoding = null, byte[] stdInput = null)
+        {
+            return RunGitCmd(arguments.ToString(), configValues, encoding, stdInput);
+        }
+
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
         public string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
+            return RunGitCmd(arguments, Enumerable.Empty<KeyValuePair<string, string>>(), encoding, stdInput);
+        }
+
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        public string RunGitCmd(string arguments, IEnumerable<KeyValuePair<string, string>> configValues, Encoding encoding = null, byte[] stdInput = null)
+        {
+            string config = GetConfigArguments(configValues);
+            arguments = config + arguments;
             return ThreadHelper.JoinableTaskFactory.Run(() =>
             {
                 return RunCmdAsync(AppSettings.GitCommand, arguments, encoding, stdInput);
@@ -737,6 +797,16 @@ namespace GitCommands
         /// </summary>
         public CmdResult RunGitCmdResult(string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
+            return RunGitCmdResult(arguments, Enumerable.Empty<KeyValuePair<string, string>>(), encoding, stdInput);
+        }
+
+        /// <summary>
+        /// Run git command, console window is hidden, wait for exit, redirect output
+        /// </summary>
+        public CmdResult RunGitCmdResult(string arguments, IEnumerable<KeyValuePair<string, string>> configValues, Encoding encoding = null, byte[] stdInput = null)
+        {
+            string config = GetConfigArguments(configValues);
+            arguments = config + arguments;
             return RunCmdResult(AppSettings.GitCommand, arguments, encoding, stdInput);
         }
 
@@ -2440,8 +2510,8 @@ namespace GitCommands
                 !firstRevision.IsNullOrEmpty();
 
             var patch = cacheResult
-                ? RunCacheableGitCmd(args.ToString(), LosslessEncoding)
-                : ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(AppSettings.GitCommand, args.ToString(), LosslessEncoding));
+                ? RunCacheableGitCmd(args.ToString(), diffConfigs, LosslessEncoding)
+                : ThreadHelper.JoinableTaskFactory.Run(() => RunCmdAsync(AppSettings.GitCommand, GetConfigArguments(diffConfigs) + args.ToString(), LosslessEncoding));
 
             var patches = PatchProcessor.CreatePatchesFromString(patch, encoding).ToList();
 
@@ -2479,7 +2549,8 @@ namespace GitCommands
         public string GetDiffFilesText(string firstRevision, string secondRevision, bool noCache = false)
         {
             string cmd = DiffCommandWithStandardArgs + "-M -C --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
-            return noCache ? RunGitCmd(cmd) : RunCacheableGitCmd(cmd, SystemEncoding);
+
+            return noCache ? RunGitCmd(cmd, diffConfigs) : RunCacheableGitCmd(cmd, diffConfigs, SystemEncoding);
         }
 
         public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string firstRevision, string secondRevision, string parentToSecond)
@@ -2493,7 +2564,8 @@ namespace GitCommands
         {
             noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
             string cmd = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
-            string result = noCache ? RunGitCmd(cmd) : RunCacheableGitCmd(cmd, SystemEncoding);
+
+            string result = noCache ? RunGitCmd(cmd, diffConfigs) : RunCacheableGitCmd(cmd, diffConfigs, SystemEncoding);
             var resultCollection = GitCommandHelpers.GetDiffChangedFilesFromString(this, result, firstRevision, secondRevision, parentToSecond).ToList();
             if (firstRevision == GitRevision.WorkTreeGuid || secondRevision == GitRevision.WorkTreeGuid)
             {
@@ -2647,7 +2719,7 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetIndexFiles()
         {
-            string status = RunGitCmd(DiffCommandWithStandardArgs + "-M -C -z --cached --name-status", SystemEncoding);
+            string status = RunGitCmd(DiffCommandWithStandardArgs + "-M -C -z --cached --name-status", diffConfigs, SystemEncoding);
 
             if (status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
             {
@@ -2706,6 +2778,7 @@ namespace GitCommands
                     fileName.ToPosixPath().Quote(),
                     { staged, oldFileName?.ToPosixPath().Quote() }
                 },
+                diffConfigs,
                 LosslessEncoding);
 
             var patches = PatchProcessor.CreatePatchesFromString(output, encoding).ToList();
