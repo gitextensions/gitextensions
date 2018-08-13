@@ -114,7 +114,7 @@ namespace GitUI
                     }
                 }
 
-                if (output.ToLower().Contains("the server's host key is not cached in the registry"))
+                if (output.Contains("the server's host key is not cached in the registry", StringComparison.OrdinalIgnoreCase))
                 {
                     string remoteUrl;
 
