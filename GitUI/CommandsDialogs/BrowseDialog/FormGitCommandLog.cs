@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -21,11 +20,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             InitializeComponent();
             InitializeComplete();
 
+            LogItems.DisplayMember = nameof(CommandLogEntry.ColumnLine);
+
             var font = new Font(FontFamily.GenericMonospace, 9);
             LogItems.Font = font;
             CommandCacheItems.Font = font;
             LogOutput.Font = font;
             commandCacheOutput.Font = font;
+
+            chkCaptureCallStacks.Checked = CommandLog.CaptureCallStacks;
+            chkCaptureCallStacks.CheckedChanged += delegate { CommandLog.CaptureCallStacks = chkCaptureCallStacks.Checked; };
 
             chkWordWrap.CheckedChanged += delegate
             {
@@ -74,7 +78,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (TabControl.SelectedTab == tabPageCommandLog)
             {
-                RefreshListBox(LogItems, CommandLog.Commands.Select(cle => cle.ToString()).ToArray());
+                RefreshListBox(LogItems, CommandLog.Commands.ToArray());
             }
         }
 
@@ -86,7 +90,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
-        private static void RefreshListBox(ListBox log, IReadOnlyList<string> items)
+        private static void RefreshListBox(ListBox log, object dataSource)
         {
             var isLastIndexSelected = log.Items.Count == 0 || log.SelectedIndex == log.Items.Count - 1;
             var lastIndex = -1;
@@ -98,7 +102,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             try
             {
                 log.BeginUpdate();
-                log.DataSource = items;
+                log.DataSource = dataSource;
             }
             finally
             {
@@ -142,7 +146,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void LogItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LogOutput.Text = (string)LogItems.SelectedItem;
+            var entry = (CommandLogEntry)LogItems.SelectedItem;
+
+            LogOutput.Text = entry.Detail;
         }
 
         private void TabControl_SelectedIndexChanged(object sender, EventArgs e)

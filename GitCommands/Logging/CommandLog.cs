@@ -2,7 +2,9 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using GitUI;
+using JetBrains.Annotations;
 
 namespace GitCommands.Logging
 {
@@ -55,6 +57,7 @@ namespace GitCommands.Logging
         public TimeSpan? Duration { get; internal set; }
         public int? ProcessId { get; set; }
         public int? ExitCode { get; set; }
+        [CanBeNull] public StackTrace CallStack { get; set; }
 
         internal CommandLogEntry(string fileName, string arguments, DateTime startedAt, bool isOnMainThread)
         {
@@ -64,23 +67,53 @@ namespace GitCommands.Logging
             IsOnMainThread = isOnMainThread;
         }
 
-        public override string ToString()
+        public string ColumnLine
         {
-            var duration = Duration == null
-                ? "running"
-                : $"{((TimeSpan)Duration).TotalMilliseconds:0}ms";
-
-            var fileName = FileName;
-
-            if (fileName.EndsWith("git.exe"))
+            get
             {
-                fileName = "git";
+                var duration = Duration == null
+                    ? "running"
+                    : $"{((TimeSpan)Duration).TotalMilliseconds:0}ms";
+
+                var fileName = FileName;
+
+                if (fileName.EndsWith("git.exe"))
+                {
+                    fileName = "git";
+                }
+
+                var pid = ProcessId == null ? "     " : $"{ProcessId,5}";
+                var exit = ExitCode == null ? "  " : $"{ExitCode,2}";
+
+                return $"{StartedAt:HH:mm:ss.fff} {duration,7} {pid} {(IsOnMainThread ? "UI" : "  ")} {exit} {fileName} {Arguments}";
             }
+        }
 
-            var pid = ProcessId == null ? "     " : $"{ProcessId,5}";
-            var exit = ExitCode == null ? "  " : $"{ExitCode,2}";
+        public string Detail
+        {
+            get
+            {
+                var s = new StringBuilder();
 
-            return $"{StartedAt:HH:mm:ss.fff} {duration,7} {pid} {(IsOnMainThread ? "UI" : "  ")} {exit} {fileName} {Arguments}";
+                s.Append("File name:  ").AppendLine(FileName);
+                s.Append("Arguments:  ").AppendLine(Arguments);
+                s.Append("Process ID: ").Append(ProcessId == null ? "unknown" : ProcessId.ToString()).AppendLine();
+                s.Append("Started at: ").Append(StartedAt.ToString("O")).AppendLine();
+                s.Append("UI Thread?: ").Append(IsOnMainThread).AppendLine();
+                s.Append("Duration:   ").Append(Duration == null ? "still running" : $"{Duration.Value.TotalMilliseconds:0.###} ms").AppendLine();
+                s.Append("Exit code:  ").Append(ExitCode == null ? "unknown" : ExitCode.ToString()).AppendLine();
+
+                if (CallStack != null)
+                {
+                    s.AppendLine("Call stack: ").Append(CallStack);
+                }
+                else
+                {
+                    s.Append("Call stack: not captured");
+                }
+
+                return s.ToString();
+            }
         }
     }
 
@@ -90,6 +123,8 @@ namespace GitCommands.Logging
 
         private static ConcurrentQueue<CommandLogEntry> _queue = new ConcurrentQueue<CommandLogEntry>();
 
+        public static bool CaptureCallStacks { get; set; }
+
         public static IEnumerable<CommandLogEntry> Commands => _queue;
 
         public static ProcessOperation LogProcessStart(string fileName, string arguments = "")
@@ -97,6 +132,11 @@ namespace GitCommands.Logging
             const int MaxEntryCount = 500;
 
             var entry = new CommandLogEntry(fileName, arguments, DateTime.Now, ThreadHelper.JoinableTaskContext.IsOnMainThread);
+
+            if (CaptureCallStacks)
+            {
+                entry.CallStack = new StackTrace();
+            }
 
             _queue.Enqueue(entry);
 
