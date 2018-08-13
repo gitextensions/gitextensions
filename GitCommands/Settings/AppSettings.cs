@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands.Settings;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.Win32;
 using StringSetting = GitCommands.Settings.StringSetting;
@@ -680,10 +679,10 @@ namespace GitCommands
             Default
         }
 
-        public static PullAction FormPullAction
+        public static PullAction DefaultPullAction
         {
-            get => GetEnum("FormPullAction", PullAction.Merge);
-            set => SetEnum("FormPullAction", value);
+            get => GetEnum("DefaultPullAction", PullAction.Merge);
+            set => SetEnum("DefaultPullAction", value);
         }
 
         public static bool SetNextPullActionAsDefault

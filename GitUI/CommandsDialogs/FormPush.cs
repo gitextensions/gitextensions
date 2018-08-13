@@ -470,7 +470,7 @@ namespace GitUI.CommandsDialogs
 
         private bool IsRebasingMergeCommit()
         {
-            if (AppSettings.FormPullAction == AppSettings.PullAction.Rebase &&
+            if (AppSettings.DefaultPullAction == AppSettings.PullAction.Rebase &&
                 _candidateForRebasingMergeCommit &&
                 _selectedBranch == _currentBranchName &&
                 _selectedRemote == _currentBranchRemote)
@@ -512,7 +512,7 @@ namespace GitUI.CommandsDialogs
                     bool cancel = false;
                     string destination = _NO_TRANSLATE_Remotes.Text;
                     string buttons = _pullRepositoryButtons.Text;
-                    switch (AppSettings.FormPullAction)
+                    switch (AppSettings.DefaultPullAction)
                     {
                         case AppSettings.PullAction.Fetch:
                         case AppSettings.PullAction.FetchAll:
@@ -551,18 +551,18 @@ namespace GitUI.CommandsDialogs
 
                             break;
                         case 1:
-                            AppSettings.FormPullAction = AppSettings.PullAction.Rebase;
+                            AppSettings.DefaultPullAction = AppSettings.PullAction.Rebase;
                             if (rememberDecision)
                             {
-                                AppSettings.AutoPullOnPushRejectedAction = AppSettings.FormPullAction;
+                                AppSettings.AutoPullOnPushRejectedAction = AppSettings.DefaultPullAction;
                             }
 
                             break;
                         case 2:
-                            AppSettings.FormPullAction = AppSettings.PullAction.Merge;
+                            AppSettings.DefaultPullAction = AppSettings.PullAction.Merge;
                             if (rememberDecision)
                             {
-                                AppSettings.AutoPullOnPushRejectedAction = AppSettings.FormPullAction;
+                                AppSettings.AutoPullOnPushRejectedAction = AppSettings.DefaultPullAction;
                             }
 
                             break;
@@ -605,12 +605,12 @@ namespace GitUI.CommandsDialogs
                 }
 
                 if (AppSettings.AutoPullOnPushRejectedAction == AppSettings.PullAction.Default &&
-                    AppSettings.FormPullAction == AppSettings.PullAction.None)
+                    AppSettings.DefaultPullAction == AppSettings.PullAction.None)
                 {
                     return false;
                 }
 
-                if (AppSettings.FormPullAction == AppSettings.PullAction.Fetch)
+                if (AppSettings.DefaultPullAction == AppSettings.PullAction.Fetch)
                 {
                     form.AppendOutput(Environment.NewLine +
                         "Can not perform auto pull, when merge option is set to fetch.");
