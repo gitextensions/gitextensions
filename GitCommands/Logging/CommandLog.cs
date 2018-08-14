@@ -36,6 +36,14 @@ namespace GitCommands.Logging
             _entry.ProcessId = processId;
             _raiseCommandsChanged();
         }
+
+        public void NotifyDisposed()
+        {
+            if (_entry.Duration == null)
+            {
+                _entry.Duration = _stopwatch.Elapsed;
+            }
+        }
     }
 
     public sealed class CommandLogEntry

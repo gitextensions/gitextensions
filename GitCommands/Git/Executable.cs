@@ -187,6 +187,8 @@ namespace GitCommands
                 _exitTaskCompletionSource.TrySetResult(null);
 
                 _process.Dispose();
+
+                _logOperation.NotifyDisposed();
             }
         }
 
