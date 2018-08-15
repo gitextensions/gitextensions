@@ -19,7 +19,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
     {
         private readonly TranslationString _groupRecentRepositories = new TranslationString("Recent repositories");
         private readonly TranslationString _directoryIsNotAValidRepositoryCaption = new TranslationString("Open");
-        private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to abort it from the recent repositories list?");
+        private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to remove it from the recent repositories list?");
 
         private readonly Font _secondaryFont;
         private static readonly Color DefaultFavouriteColor = Color.DarkGoldenrod;
