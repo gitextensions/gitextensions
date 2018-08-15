@@ -128,16 +128,17 @@ namespace GitFlow
 
         private IReadOnlyList<string> GetBranches(string typeBranch)
         {
-            var result = _gitUiCommands.GitModule.RunGitCmdResult("flow " + typeBranch);
+            var result = _gitUiCommands.GitModule.RunGitCmdResult($"flow {typeBranch}");
 
-            if (result.ExitCode != 0)
+            if (result.ExitCode != 0 || result.StandardOutput == null)
             {
                 return Array.Empty<string>();
             }
 
-            string[] references = result.StdOutput.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-            return references.Select(e => e.Trim('*', ' ', '\n', '\r')).ToList();
+            return result.StandardOutput
+                .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(e => e.Trim('*', ' ', '\n', '\r'))
+                .ToList();
         }
 
         private void DisplayBranchData()
@@ -234,21 +235,17 @@ namespace GitFlow
 
         private void btnPublish_Click(object sender, EventArgs e)
         {
-            var branchType = cbManageType.SelectedValue.ToString();
-            RunCommand(string.Format("flow {0} publish {1}", branchType, cbBranches.SelectedValue));
+            RunCommand($"flow {cbManageType.SelectedValue} publish {cbBranches.SelectedValue}");
         }
 
         private void btnPull_Click(object sender, EventArgs e)
         {
-            var branchType = cbManageType.SelectedValue.ToString();
-            RunCommand(string.Format("flow {0} pull {1} {2}", branchType, cbRemote.SelectedValue, cbBranches.SelectedValue));
+            RunCommand($"flow {cbManageType.SelectedValue} pull {cbRemote.SelectedValue} {cbBranches.SelectedValue}");
         }
 
         private void btnFinish_Click(object sender, EventArgs e)
         {
-            var command = string.Format("flow {0} finish {1} {2}", cbManageType.SelectedValue, cbPushAfterFinish.Checked ? " -p" : string.Empty, cbBranches.SelectedValue);
-
-            RunCommand(command);
+            RunCommand($"flow {cbManageType.SelectedValue} finish {(cbPushAfterFinish.Checked ? " -p" : "")} {cbBranches.SelectedValue}");
         }
 
         private bool RunCommand(string commandText)
@@ -268,23 +265,25 @@ namespace GitFlow
             ttDebug.RemoveAll();
             ttDebug.SetToolTip(lblDebug, "cmd: git " + commandText + "\n" + "exit code:" + result.ExitCode);
 
-            var resultText = Regex.Replace(result.GetString(), @"\r\n?|\n", Environment.NewLine);
+            var resultText = Regex.Replace(result.AllOutput, @"\r\n?|\n", Environment.NewLine);
+
             if (result.ExitCode == 0)
             {
                 pbResultCommand.Image = DpiUtil.Scale(Resource.success);
                 ShowToolTip(pbResultCommand, resultText);
                 DisplayHead();
-                txtResult.Text = resultText;
             }
             else
             {
                 pbResultCommand.Image = DpiUtil.Scale(Resource.error);
                 ShowToolTip(pbResultCommand, "error: " + resultText);
-                txtResult.Text = resultText;
             }
+
+            txtResult.Text = resultText;
 
             return result.ExitCode == 0;
         }
+
         #endregion
 
         #region GUI interactions

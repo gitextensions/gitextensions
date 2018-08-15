@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GitCommands
 {
     public class GitVersion : IComparable<GitVersion>
     {
-        private static readonly GitVersion v1_7_0 = new GitVersion("1.7.0");
         private static readonly GitVersion v1_7_1 = new GitVersion("1.7.1");
         private static readonly GitVersion v1_7_7 = new GitVersion("1.7.7");
         private static readonly GitVersion v1_7_11 = new GitVersion("1.7.11");
@@ -22,7 +22,21 @@ namespace GitCommands
         public static readonly GitVersion LastSupportedVersion = v2_11_0;
         public static readonly GitVersion LastRecommendedVersion = v2_18_0;
 
-        private const string Prefix = "git version";
+        private static GitVersion _current;
+
+        public static GitVersion Current
+        {
+            get
+            {
+                if (_current == null || _current.IsUnknown)
+                {
+                    var output = new Executable(AppSettings.GitCommand).GetOutput("--version");
+                    _current = new GitVersion(output);
+                }
+
+                return _current;
+            }
+        }
 
         public readonly string Full;
         private readonly int _a;
@@ -32,13 +46,51 @@ namespace GitCommands
 
         public GitVersion(string version)
         {
-            Full = Fix(version);
+            Full = Fix();
 
-            var numbers = GetNumbers(Full);
+            var numbers = GetNumbers();
             _a = Get(numbers, 0);
             _b = Get(numbers, 1);
             _c = Get(numbers, 2);
             _d = Get(numbers, 3);
+
+            string Fix()
+            {
+                if (version == null)
+                {
+                    return "";
+                }
+
+                const string Prefix = "git version";
+
+                if (version.StartsWith(Prefix))
+                {
+                    return version.Substring(Prefix.Length).Trim();
+                }
+
+                return version.Trim();
+            }
+
+            IReadOnlyList<int> GetNumbers()
+            {
+                return ParseNumbers().ToList();
+
+                IEnumerable<int> ParseNumbers()
+                {
+                    foreach (var number in Full.Split('.'))
+                    {
+                        if (int.TryParse(number, out var value))
+                        {
+                            yield return value;
+                        }
+                    }
+                }
+            }
+
+            int Get(IReadOnlyList<int> values, int index)
+            {
+                return index < values.Count ? values[index] : 0;
+            }
         }
 
         public bool FetchCanAskForProgress => this >= v1_7_1;
@@ -100,50 +152,6 @@ namespace GitCommands
             return true;
         }
 
-        private static string Fix(string version)
-        {
-            if (version == null)
-            {
-                return string.Empty;
-            }
-
-            if (version.StartsWith(Prefix))
-            {
-                return version.Substring(Prefix.Length).Trim();
-            }
-
-            return version.Trim();
-        }
-
-        private static int Get(IReadOnlyList<int> values, int index)
-        {
-            return index < values.Count ? values[index] : 0;
-        }
-
-        private static IReadOnlyList<int> GetNumbers(string version)
-        {
-            IEnumerable<int> numbers = ParseNumbers(version);
-            return new List<int>(numbers);
-        }
-
-        private static IEnumerable<int> ParseNumbers(string version)
-        {
-            string[] numbers = version.Split('.');
-
-            foreach (var number in numbers)
-            {
-                if (int.TryParse(number, out var value))
-                {
-                    yield return value;
-                }
-            }
-        }
-
-        public int CompareTo(GitVersion other)
-        {
-            return Compare(this, other);
-        }
-
         private static int Compare(GitVersion left, GitVersion right)
         {
             if (left == null && right == null)
@@ -182,25 +190,12 @@ namespace GitCommands
             return left._d.CompareTo(right._d);
         }
 
-        public static bool operator >(GitVersion left, GitVersion right)
-        {
-            return Compare(left, right) > 0;
-        }
+        public int CompareTo(GitVersion other) => Compare(this, other);
 
-        public static bool operator <(GitVersion left, GitVersion right)
-        {
-            return Compare(left, right) < 0;
-        }
-
-        public static bool operator >=(GitVersion left, GitVersion right)
-        {
-            return Compare(left, right) >= 0;
-        }
-
-        public static bool operator <=(GitVersion left, GitVersion right)
-        {
-            return Compare(left, right) <= 0;
-        }
+        public static bool operator >(GitVersion left, GitVersion right) => Compare(left, right) > 0;
+        public static bool operator <(GitVersion left, GitVersion right) => Compare(left, right) < 0;
+        public static bool operator >=(GitVersion left, GitVersion right) => Compare(left, right) >= 0;
+        public static bool operator <=(GitVersion left, GitVersion right) => Compare(left, right) <= 0;
 
         public override string ToString()
         {

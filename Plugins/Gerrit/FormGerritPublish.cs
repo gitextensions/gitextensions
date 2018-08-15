@@ -40,17 +40,15 @@ namespace Gerrit
             }
         }
 
-        private static string PushCmd(string remote, string toBranch)
+        private static ArgumentString PushCmd(string remote, string toBranch)
         {
-            var args = new ArgumentBuilder
+            return new ArgumentBuilder
             {
                 "push",
-                { GitCommandHelpers.VersionInUse.PushCanAskForProgress, "--progress" },
+                { GitVersion.Current.PushCanAskForProgress, "--progress" },
                 remote.ToPosixPath().Trim().Quote(),
                 $"HEAD:{GitRefName.GetFullBranchName(toBranch)?.Replace(" ", "")}"
             };
-
-            return args.ToString();
         }
 
         private bool PublishChange(IWin32Window owner)

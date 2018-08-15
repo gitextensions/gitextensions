@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 
@@ -52,13 +53,13 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private void Initialize()
         {
-            var listWorktree = ThreadHelper.JoinableTaskFactory.Run(() => UICommands.CommandLineCommandAsync("git", "worktree list --porcelain"));
-            var worktreesLines = listWorktree.Split('\n').GetEnumerator();
+            var lines = new Executable("git").GetOutput("worktree list --porcelain").Split('\n').GetEnumerator();
+
             _worktrees = new List<WorkTree>();
             WorkTree currentWorktree = null;
-            while (worktreesLines.MoveNext())
+            while (lines.MoveNext())
             {
-                var current = (string)worktreesLines.Current;
+                var current = (string)lines.Current;
                 if (string.IsNullOrWhiteSpace(current))
                 {
                     continue;

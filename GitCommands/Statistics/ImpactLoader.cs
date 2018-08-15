@@ -145,13 +145,14 @@ namespace GitCommands.Statistics
 
         private void LoadModuleInfo(string command, IGitModule module, CancellationToken token)
         {
-            using (var process = module.RunGitCmdDetached(command))
+            using (var lineEnumerator = module.GetGitOutputLines(command).GetEnumerator())
             {
-                var line = process.StandardOutput.ReadLine();
-
                 // Analyze commit listing
-                while (!token.IsCancellationRequested)
+                while (!token.IsCancellationRequested && lineEnumerator.MoveNext())
                 {
+                    // Read line
+                    var line = lineEnumerator.Current;
+
                     // Reached the end ?
                     if (line == null)
                     {
@@ -161,7 +162,6 @@ namespace GitCommands.Statistics
                     // Look for commit delimiters
                     if (!line.StartsWith("--- "))
                     {
-                        line = process.StandardOutput.ReadLine();
                         continue;
                     }
 
@@ -170,6 +170,7 @@ namespace GitCommands.Statistics
 
                     // Split date and author
                     string[] header = line.Split(new[] { " --- " }, 2, StringSplitOptions.RemoveEmptyEntries);
+
                     if (header.Length != 2)
                     {
                         continue;
@@ -190,7 +191,7 @@ namespace GitCommands.Statistics
                     var deleted = 0;
 
                     // Parse commit lines
-                    while ((line = process.StandardOutput.ReadLine()) != null && !line.StartsWith("--- ") && !token.IsCancellationRequested)
+                    while (lineEnumerator.MoveNext() && (line = lineEnumerator.Current) != null && !line.StartsWith("--- ") && !token.IsCancellationRequested)
                     {
                         // Skip empty line
                         if (string.IsNullOrEmpty(line))

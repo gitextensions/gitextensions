@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
@@ -74,11 +73,6 @@ namespace GitUI
 
         #endregion
 
-        public async Task<string> CommandLineCommandAsync(string cmd, string arguments)
-        {
-            return await Module.RunCmdAsync(cmd, arguments).ConfigureAwait(false);
-        }
-
         private bool RequiresValidWorkingDir([CanBeNull] object owner)
         {
             if (!Module.IsValidGitWorkingDir())
@@ -124,12 +118,12 @@ namespace GitUI
             return executed;
         }
 
-        public void StartCommandLineProcessDialog(IWin32Window owner, string command, string arguments)
+        public void StartCommandLineProcessDialog(IWin32Window owner, string command, ArgumentString arguments)
         {
             FormProcess.ShowDialog(owner, Module, command, arguments);
         }
 
-        public void StartGitCommandProcessDialog(IWin32Window owner, string arguments)
+        public void StartGitCommandProcessDialog(IWin32Window owner, ArgumentString arguments)
         {
             FormProcess.ShowDialog(owner, Module, arguments);
         }
@@ -644,7 +638,7 @@ namespace GitUI
 
                 if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
                 {
-                    Module.RunGitCmd("clean -df");
+                    Module.Clean(dryRun: false, directories: true);
                 }
 
                 return true;

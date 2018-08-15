@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUIPluginInterfaces;
@@ -189,15 +190,15 @@ namespace FindLargeFiles
                 foreach (GitObject gitObject in _gitObjects.Where(gitObject => gitObject.Delete))
                 {
                     sb.AppendLine(string.Format("\"{0}\" filter-branch --index-filter \"git rm -r -f --cached --ignore-unmatch {1}\" --prune-empty -- --all",
-                        _gitCommands.GitCommand, gitObject.Path));
+                        AppSettings.GitCommand, gitObject.Path));
                 }
 
                 sb.AppendLine(string.Format("for /f %%a IN ('\"{0}\" for-each-ref --format=%%^(refname^) refs/original/') DO \"{0}\" update-ref -d %%a",
-                    _gitCommands.GitCommand));
+                    AppSettings.GitCommand));
                 sb.AppendLine(string.Format("\"{0}\" reflog expire --expire=now --all",
-                    _gitCommands.GitCommand));
+                    AppSettings.GitCommand));
                 sb.AppendLine(string.Format("\"{0}\" gc --aggressive --prune=now",
-                    _gitCommands.GitCommand));
+                    AppSettings.GitCommand));
                 _gitUiCommands.GitUICommands.StartBatchFileProcessDialog(sb.ToString());
             }
 

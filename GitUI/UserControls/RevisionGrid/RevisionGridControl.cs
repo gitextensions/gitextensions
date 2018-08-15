@@ -364,7 +364,7 @@ namespace GitUI
             if (!string.IsNullOrEmpty(filter))
             {
                 // hash filtering only possible in memory
-                var cmdLineSafe = GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(filter);
+                var cmdLineSafe = GitVersion.Current.IsRegExStringCmdPassable(filter);
                 revListArgs = " --regexp-ignore-case ";
                 if (filterCommit)
                 {
@@ -1097,7 +1097,7 @@ namespace GitUI
 
             var list = new List<ObjectId>();
 
-            foreach (var line in Module.ReadGitOutputLines(args))
+            foreach (var line in Module.GetGitOutputLines(args))
             {
                 if (!ObjectId.TryParse(line, out var parentId))
                 {

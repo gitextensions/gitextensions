@@ -6,7 +6,6 @@ using GitUI;
 
 namespace GitCommands.Logging
 {
-    // TODO capture process exit code
     // TODO capture process working directory
     // TODO capture number of input bytes
     // TODO capture number of standard output bytes
@@ -25,9 +24,10 @@ namespace GitCommands.Logging
             _raiseCommandsChanged = raiseCommandsChanged;
         }
 
-        public void LogProcessEnd()
+        public void LogProcessEnd(int? exitCode = null)
         {
             _entry.Duration = _stopwatch.Elapsed;
+            _entry.ExitCode = exitCode;
             _raiseCommandsChanged();
         }
 
@@ -35,6 +35,14 @@ namespace GitCommands.Logging
         {
             _entry.ProcessId = processId;
             _raiseCommandsChanged();
+        }
+
+        public void NotifyDisposed()
+        {
+            if (_entry.Duration == null)
+            {
+                _entry.Duration = _stopwatch.Elapsed;
+            }
         }
     }
 
@@ -46,6 +54,7 @@ namespace GitCommands.Logging
         public bool IsOnMainThread { get; }
         public TimeSpan? Duration { get; internal set; }
         public int? ProcessId { get; set; }
+        public int? ExitCode { get; set; }
 
         internal CommandLogEntry(string fileName, string arguments, DateTime startedAt, bool isOnMainThread)
         {
@@ -69,8 +78,9 @@ namespace GitCommands.Logging
             }
 
             var pid = ProcessId == null ? "     " : $"{ProcessId,5}";
+            var exit = ExitCode == null ? "  " : $"{ExitCode,2}";
 
-            return $"{StartedAt:HH:mm:ss.fff} {duration,7} {pid} {(IsOnMainThread ? "UI" : "  ")} {fileName} {Arguments}";
+            return $"{StartedAt:HH:mm:ss.fff} {duration,7} {pid} {(IsOnMainThread ? "UI" : "  ")} {exit} {fileName} {Arguments}";
         }
     }
 

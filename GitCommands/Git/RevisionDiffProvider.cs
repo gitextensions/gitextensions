@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands.Git
@@ -11,7 +12,7 @@ namespace GitCommands.Git
         /// </summary>
         /// <param name="firstRevision">The first revision, "A"</param>
         /// <param name="secondRevision">The second "current" revision, "B"</param>
-        string Get(string firstRevision, string secondRevision);
+        ArgumentString Get(string firstRevision, string secondRevision);
 
         /// <summary>
         /// options to git-diff from GE arguments, including artificial commits
@@ -21,7 +22,7 @@ namespace GitCommands.Git
         /// <param name="fileName">The file to compare</param>
         /// <param name="oldFileName">The old name of the file</param>
         /// <param name="isTracked">The file is tracked</param>
-        string Get(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked);
+        ArgumentString Get(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked);
     }
 
     /// <summary>
@@ -38,7 +39,7 @@ namespace GitCommands.Git
         /// </summary>
         /// <param name="firstRevision">The first revision</param>
         /// <param name="secondRevision">The second "current" revision</param>
-        public string Get(string firstRevision, string secondRevision)
+        public ArgumentString Get(string firstRevision, string secondRevision)
         {
             return GetInternal(firstRevision, secondRevision);
         }
@@ -51,12 +52,12 @@ namespace GitCommands.Git
         /// <param name="fileName">The file to compare</param>
         /// <param name="oldFileName">The old name of the file</param>
         /// <param name="isTracked">The file is tracked</param>
-        public string Get(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
+        public ArgumentString Get(string firstRevision, string secondRevision, string fileName, string oldFileName, bool isTracked)
         {
             return GetInternal(firstRevision, secondRevision, fileName, oldFileName, isTracked);
         }
 
-        private string GetInternal([CanBeNull] string firstRevision, [CanBeNull] string secondRevision, string fileName = null, string oldFileName = null, bool isTracked = true)
+        private ArgumentString GetInternal([CanBeNull] string firstRevision, [CanBeNull] string secondRevision, string fileName = null, string oldFileName = null, bool isTracked = true)
         {
             // Combined Diff artificial commit should not be included in diffs
             if (firstRevision == GitRevision.CombinedDiffGuid || secondRevision == GitRevision.CombinedDiffGuid)
@@ -125,7 +126,7 @@ namespace GitCommands.Git
                 extra.Add(oldFileName.QuoteNE());
             }
 
-            return extra.ToString();
+            return extra;
         }
 
         /// <summary>

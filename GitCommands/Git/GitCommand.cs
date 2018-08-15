@@ -18,7 +18,7 @@ namespace GitCommands
             }
         }
 
-        protected abstract ArgumentBuilder BuildArguments();
+        protected abstract ArgumentString BuildArguments();
 
         /// <value>Gets whether this command accesses a remote repository.</value>
         public abstract bool AccessesRemote { get; }

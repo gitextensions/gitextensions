@@ -39,7 +39,7 @@ namespace GitUI.UserControls
 
         public abstract void Reset();
 
-        public abstract void StartProcess([NotNull] string command, string arguments, string workdir, Dictionary<string, string> envVariables);
+        public abstract void StartProcess([NotNull] string command, string arguments, string workDir, Dictionary<string, string> envVariables);
 
         public event EventHandler<TextEventArgs> DataReceived;
 

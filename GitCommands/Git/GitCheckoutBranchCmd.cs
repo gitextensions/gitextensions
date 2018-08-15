@@ -1,4 +1,5 @@
 ﻿using System;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.Git
 {
@@ -34,7 +35,7 @@ namespace GitCommands.Git
         public override bool AccessesRemote => false;
         public override bool ChangesRepoState => true;
 
-        protected override ArgumentBuilder BuildArguments()
+        protected override ArgumentString BuildArguments()
         {
             return new ArgumentBuilder
             {

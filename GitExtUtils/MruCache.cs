@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 
-namespace GitUI.Avatars
+namespace GitExtUtils
 {
-    // TODO consider moving this type (and associated test fixture) to a more general assembly
-
     /// <summary>
     /// Associative cache with fixed capacity that expires the last used item first.
     /// </summary>
@@ -36,6 +35,8 @@ namespace GitUI.Avatars
             Capacity = capacity;
             _nodeByKey = new Dictionary<TKey, LinkedListNode<Entry>>(capacity);
         }
+
+        public IReadOnlyList<TKey> Keys => _nodeByKey.Keys.ToList();
 
         /// <summary>
         /// Adds an entry to the cache.

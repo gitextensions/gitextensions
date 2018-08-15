@@ -1,7 +1,7 @@
-﻿using GitUI.Avatars;
+﻿using GitExtUtils;
 using NUnit.Framework;
 
-namespace GitUITests.Avatars
+namespace GitExtUtilsTests
 {
     [TestFixture]
     public sealed class MruCacheTests

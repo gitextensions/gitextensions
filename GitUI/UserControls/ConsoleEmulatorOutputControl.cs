@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using ConEmu.WinForms;
 using GitCommands;
+using GitCommands.Logging;
 using GitCommands.Utils;
 
 namespace GitUI.UserControls
@@ -72,59 +72,57 @@ namespace GitUI.UserControls
 
         protected override void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
             if (disposing)
             {
                 _terminal?.Dispose();
             }
+
+            base.Dispose(disposing);
         }
 
-        public override void StartProcess(string command, string arguments, string workdir, Dictionary<string, string> envVariables)
+        public override void StartProcess(string command, string arguments, string workDir, Dictionary<string, string> envVariables)
         {
-            var cmdl = new StringBuilder();
-            if (command != null)
+            var commandLine = new ArgumentBuilder { command.Quote(), arguments }.ToString();
+            var outputProcessor = new ConsoleCommandLineOutputProcessor(commandLine.Length, FireDataReceived);
+
+            var startInfo = new ConEmuStartInfo
             {
-                cmdl.Append(command.Quote() /* do the escaping for it */);
-                cmdl.Append(" ");
-            }
+                ConsoleProcessCommandLine = commandLine,
+                IsEchoingConsoleCommandLine = true,
+                WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage,
+                AnsiStreamChunkReceivedEventSink = outputProcessor.AnsiStreamChunkReceived,
+                StartupDirectory = workDir
+            };
 
-            cmdl.Append(arguments /* expecting to be already escaped */);
-
-            var startinfo = new ConEmuStartInfo();
-            startinfo.ConsoleProcessCommandLine = cmdl.ToString();
             if (AppSettings.ConEmuStyle.ValueOrDefault != "Default")
             {
-                startinfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + AppSettings.ConEmuStyle.ValueOrDefault + "\"";
+                startInfo.ConsoleProcessExtraArgs = " -new_console:P:\"" + AppSettings.ConEmuStyle.ValueOrDefault + "\"";
             }
-
-            startinfo.StartupDirectory = workdir;
 
             foreach (var (name, value) in envVariables)
             {
-                startinfo.SetEnv(name, value);
+                startInfo.SetEnv(name, value);
             }
 
-            startinfo.WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage;
-            var outputProcessor = new ConsoleCommandLineOutputProcessor(startinfo.ConsoleProcessCommandLine.Length, FireDataReceived);
-            startinfo.AnsiStreamChunkReceivedEventSink = outputProcessor.AnsiStreamChunkReceived;
+            var operation = CommandLog.LogProcessStart(command, arguments);
 
-            startinfo.ConsoleProcessExitedEventSink = (sender, args) =>
+            startInfo.ConsoleProcessExitedEventSink = (_, args) =>
             {
-                outputProcessor.Flush();
                 _nLastExitCode = args.ExitCode;
+                operation.LogProcessEnd(_nLastExitCode);
+                outputProcessor.Flush();
                 FireProcessExited();
             };
 
-            startinfo.ConsoleEmulatorClosedEventSink = (s, e) =>
+            startInfo.ConsoleEmulatorClosedEventSink = (sender, _) =>
+            {
+                if (sender == _terminal.RunningSession)
                 {
-                    if (s == _terminal.RunningSession)
-                    {
-                        FireTerminated();
-                    }
-                };
-            startinfo.IsEchoingConsoleCommandLine = true;
+                    FireTerminated();
+                }
+            };
 
-            _terminal.Start(startinfo, ThreadHelper.JoinableTaskFactory);
+            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory);
         }
     }
 

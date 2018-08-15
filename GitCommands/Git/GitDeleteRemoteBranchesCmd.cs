@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.Git
 {
@@ -28,7 +29,7 @@ namespace GitCommands.Git
         public override bool AccessesRemote => true;
         public override bool ChangesRepoState => true;
 
-        protected override ArgumentBuilder BuildArguments()
+        protected override ArgumentString BuildArguments()
         {
             return new ArgumentBuilder
             {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
@@ -33,46 +31,21 @@ namespace GitUIPluginInterfaces
         void SetSetting(string setting, string value);
         void UnsetSetting(string setting);
 
-        /// <summary>
-        /// Run git command, console window is hidden, redirect output
-        /// </summary>
-        Process RunGitCmdDetached(string arguments, Encoding encoding = null);
+        #region Git process execution
+
+        IEnumerable<string> GetGitOutputLines(ArgumentString arguments, Encoding outputEncoding = null);
 
         /// <summary>
         /// Run git command, console window is hidden, wait for exit, redirect output
         /// </summary>
-        string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null);
+        string RunGitCmd(ArgumentString arguments, Encoding outputEncoding = null, byte[] stdInput = null);
 
         /// <summary>
         /// Run git command, console window is hidden, wait for exit, redirect output
         /// </summary>
-        CmdResult RunGitCmdResult(string arguments, Encoding encoding = null, byte[] stdInput = null);
+        ExecutionResult RunGitCmdResult(ArgumentString arguments);
 
-        /// <summary>
-        /// Run command, console window is hidden, wait for exit, redirect output
-        /// </summary>
-        Task<string> RunCmdAsync(string cmd, string arguments, Encoding encoding = null, byte[] stdIn = null);
-
-        /// <summary>
-        /// Run command, console window is hidden, wait for exit, redirect output
-        /// </summary>
-        CmdResult RunCmdResult(string cmd, string arguments, Encoding encoding = null, byte[] stdInput = null);
-
-        Task<string> RunBatchFileAsync(string batchFile);
-
-        /// <summary>
-        /// Determines whether the given repository has index.lock file.
-        /// </summary>
-        /// <returns><see langword="true"/> is index is locked; otherwise <see langword="false"/>.</returns>
-        bool IsIndexLocked();
-
-        /// <summary>
-        /// Delete index.lock in the current working folder.
-        /// </summary>
-        /// <param name="includeSubmodules">
-        ///     If <see langword="true"/> all submodules will be scanned for index.lock files and have them delete, if found.
-        /// </param>
-        void UnlockIndex(bool includeSubmodules);
+        #endregion
 
         /// <summary>Gets the directory which contains the git repository.</summary>
         string WorkingDir { get; }
@@ -99,11 +72,6 @@ namespace GitUIPluginInterfaces
         [ContractAnnotation("=>false,objectId:null")]
         [ContractAnnotation("=>true,objectId:notnull")]
         bool TryResolvePartialCommitId(string objectIdPrefix, out ObjectId objectId);
-
-        /// <summary>Gets the path to the git application executable.</summary>
-        string GitCommand { get; }
-
-        Version AppVersion { get; }
 
         string GetSubmoduleFullPath(string localPath);
 
@@ -152,5 +120,7 @@ namespace GitUIPluginInterfaces
         string ReEncodeCommitMessage(string s, string toEncodingName);
 
         string GetDescribe(ObjectId commitId);
+
+        (int totalCount, Dictionary<string, int> countByName) GetCommitsByContributor(DateTime? since = null, DateTime? until = null);
     }
 }

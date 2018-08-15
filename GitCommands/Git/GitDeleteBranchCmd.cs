@@ -19,7 +19,7 @@ namespace GitCommands
         public override bool AccessesRemote => false;
         public override bool ChangesRepoState => true;
 
-        protected override ArgumentBuilder BuildArguments()
+        protected override ArgumentString BuildArguments()
         {
             var hasRemoteBranch = _branches.Any(branch => branch.IsRemote);
             var hasNonRemoteBranch = _branches.Any(branch => !branch.IsRemote);

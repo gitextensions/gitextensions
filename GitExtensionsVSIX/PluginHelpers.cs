@@ -1,5 +1,5 @@
 // Copyright (C) 2006-2008 Jim Tilander. See COPYING for and README for more details.
-using System;
+
 using System.Linq;
 using EnvDTE;
 using Microsoft.VisualStudio.CommandBars;

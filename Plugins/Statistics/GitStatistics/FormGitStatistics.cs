@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Statistics;
 using GitExtUtils.GitUI;
 using GitStatistics.PieChart;
 using GitUI;
@@ -104,7 +103,7 @@ namespace GitStatistics
                 {
                     await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
-                    var (commitsPerUser, totalCommits) = CommitCounter.GroupAllCommitsByContributor(_module);
+                    var (totalCommits, commitsPerUser) = _module.GetCommitsByContributor();
 
                     await this.SwitchToMainThreadAsync();
 

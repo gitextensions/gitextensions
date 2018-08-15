@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Load += delegate
             {
                 CommandLog.CommandsChanged += OnGitCommandLogChanged;
-                GitCommandCache.CachedCommandsChanged += OnCachedCommandsLogChanged;
+                GitModule.GitCommandCache.Changed += OnCachedCommandsLogChanged;
 
                 RefreshLogItems();
                 RefreshCommandCacheItems();
@@ -44,7 +45,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             FormClosed += delegate
             {
                 CommandLog.CommandsChanged -= OnGitCommandLogChanged;
-                GitCommandCache.CachedCommandsChanged -= OnCachedCommandsLogChanged;
+                GitModule.GitCommandCache.Changed -= OnCachedCommandsLogChanged;
                 instance = null;
             };
 
@@ -81,11 +82,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             if (TabControl.SelectedTab == tabPageCommandCache)
             {
-                RefreshListBox(CommandCacheItems, GitCommandCache.CachedCommands());
+                RefreshListBox(CommandCacheItems, GitModule.GitCommandCache.GetCachedCommands());
             }
         }
 
-        private static void RefreshListBox(ListBox log, string[] items)
+        private static void RefreshListBox(ListBox log, IReadOnlyList<string> items)
         {
             var isLastIndexSelected = log.Items.Count == 0 || log.SelectedIndex == log.Items.Count - 1;
             var lastIndex = -1;
@@ -125,7 +126,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         {
             var command = (string)CommandCacheItems.SelectedItem;
 
-            if (GitCommandCache.TryGet(command, out var cmdOut, out var cmdErr))
+            if (GitModule.GitCommandCache.TryGet(command, out var cmdOut, out var cmdErr))
             {
                 Encoding encoding = GitModule.SystemEncoding;
                 commandCacheOutput.Text =

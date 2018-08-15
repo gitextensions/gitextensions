@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.IO;
 using GitCommands;
 using GitCommands.Git;
 using GitUIPluginInterfaces;
@@ -66,51 +67,52 @@ namespace GitCommandsTests.Git
         [Test]
         public void TestFetchArguments()
         {
-            var module = new GitModule(null);
+            // TODO produce a valid working directory
+            var module = new GitModule(Path.GetTempPath());
             {
                 // Specifying a remote and a local branch creates a local branch
-                var fetchCmd = module.FetchCmd("origin", "some-branch", "local");
+                var fetchCmd = module.FetchCmd("origin", "some-branch", "local").Arguments;
                 Assert.AreEqual("fetch --progress \"origin\" +some-branch:refs/heads/local --no-tags", fetchCmd);
             }
 
             {
-                var fetchCmd = module.FetchCmd("origin", "some-branch", "local", true);
+                var fetchCmd = module.FetchCmd("origin", "some-branch", "local", true).Arguments;
                 Assert.AreEqual("fetch --progress \"origin\" +some-branch:refs/heads/local --tags", fetchCmd);
             }
 
             {
                 // Using a URL as remote and passing a local branch creates the branch
-                var fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", "local");
+                var fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", "local").Arguments;
                 Assert.AreEqual("fetch --progress \"https://host.com/repo\" +some-branch:refs/heads/local --no-tags", fetchCmd);
             }
 
             {
                 // Using a URL as remote and not passing a local branch
-                var fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", null);
+                var fetchCmd = module.FetchCmd("https://host.com/repo", "some-branch", null).Arguments;
                 Assert.AreEqual("fetch --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
             }
 
             {
                 // No remote branch -> No local branch
-                var fetchCmd = module.FetchCmd("origin", "", "local");
+                var fetchCmd = module.FetchCmd("origin", "", "local").Arguments;
                 Assert.AreEqual("fetch --progress \"origin\" --no-tags", fetchCmd);
             }
 
             {
                 // Pull doesn't accept a local branch ever
-                var fetchCmd = module.PullCmd("origin", "some-branch", false);
+                var fetchCmd = module.PullCmd("origin", "some-branch", false).Arguments;
                 Assert.AreEqual("pull --progress \"origin\" +some-branch --no-tags", fetchCmd);
             }
 
             {
                 // Not even for URL remote
-                var fetchCmd = module.PullCmd("https://host.com/repo", "some-branch", false);
+                var fetchCmd = module.PullCmd("https://host.com/repo", "some-branch", false).Arguments;
                 Assert.AreEqual("pull --progress \"https://host.com/repo\" +some-branch --no-tags", fetchCmd);
             }
 
             {
                 // Pull with rebase
-                var fetchCmd = module.PullCmd("origin", "some-branch", true);
+                var fetchCmd = module.PullCmd("origin", "some-branch", true).Arguments;
                 Assert.AreEqual("pull --rebase --progress \"origin\" +some-branch --no-tags", fetchCmd);
             }
         }
@@ -118,7 +120,8 @@ namespace GitCommandsTests.Git
         [Test]
         public void TestGetDiffChangedFilesFromString()
         {
-            var module = new GitModule(null);
+            // TODO produce a valid working directory
+            var module = new GitModule(Path.GetTempPath());
             {
                 // git diff -M -C -z --cached --name-status
                 string statusString = "\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0";
@@ -210,7 +213,8 @@ namespace GitCommandsTests.Git
         [Test]
         public void TestGetStatusChangedFilesFromString()
         {
-            var module = new GitModule(null);
+            // TODO produce a valid working directory
+            var module = new GitModule(Path.GetTempPath());
             {
                 // git status --porcelain=2 --untracked-files=no -z
                 // porcelain v1: string statusString = "M  adfs.h\0M  dir.c\0";
@@ -243,112 +247,18 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void TestGetPlinkCompatibleUrl_Incompatible()
-        {
-            // Test urls that are incompatible and need to be changed
-            string inUrl, expectUrl, outUrl;
-
-            // ssh urls can cause problems
-            inUrl = "ssh://user@example.com/path/to/project.git";
-            expectUrl = "\"user@example.com:path/to/project.git\"";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual(expectUrl, outUrl);
-
-            inUrl = "ssh://user@example.com:29418/path/to/project.git";
-            expectUrl = "-P 29418 \"user@example.com:path/to/project.git\"";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual(expectUrl, outUrl);
-
-            // ssh, no user
-            inUrl = "ssh://example.com/path/to/project.git";
-            expectUrl = "\"example.com:path/to/project.git\"";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual(expectUrl, outUrl);
-        }
-
-        [Test]
-        public void TestGetPlinkCompatibleUrl_Compatible()
-        {
-            // Test urls that are already compatible, these shouldn't be changed
-            string inUrl, outUrl;
-
-            // ssh in compatible form
-            inUrl = "git@github.com:gitextensions/gitextensions.git";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual("\"" + inUrl + "\"", outUrl);
-
-            // ssh in compatible form, no user
-            inUrl = "example.org:some/path/to/repo.git";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual("\"" + inUrl + "\"", outUrl);
-        }
-
-        [Test]
-        public void TestGetPlinkCompatibleUrl_NoPlink()
-        {
-            // Test urls that are no valid uris, these should be ignored
-            string inUrl, outUrl;
-
-            // git protocol does not have authentication
-            inUrl = "git://server/path/to/project.git";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual("\"" + inUrl + "\"", outUrl);
-
-            // git protocol, different port
-            inUrl = "git://server:123/path/to/project.git";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual("\"" + inUrl + "\"", outUrl);
-
-            // we don't need plink for http
-            inUrl = "http://user@server/path/to/project.git";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual("\"" + inUrl + "\"", outUrl);
-
-            // http, different port
-            inUrl = "http://user@server:123/path/to/project.git";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual("\"" + inUrl + "\"", outUrl);
-
-            // http, no user
-            inUrl = "http://server/path/to/project.git";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual("\"" + inUrl + "\"", outUrl);
-
-            // we don't need plink for https
-            inUrl = "https://user@server/path/to/project.git";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual("\"" + inUrl + "\"", outUrl);
-
-            // https, different port
-            inUrl = "https://user@server:123/path/to/project.git";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual("\"" + inUrl + "\"", outUrl);
-
-            // https, no user
-            inUrl = "https://server/path/to/project.git";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual("\"" + inUrl + "\"", outUrl);
-        }
-
-        [Test]
-        public void TestGetPlinkCompatibleUrl_Invalid()
-        {
-            // Test urls that are no valid uris, these should be ignored
-            string inUrl, outUrl;
-
-            inUrl = "foo://server/path/to/project.git";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual("\"" + inUrl + "\"", outUrl);
-
-            inUrl = @"ssh:\\server\path\to\project.git";
-            outUrl = GitCommandHelpers.GetPlinkCompatibleUrl(inUrl);
-            Assert.AreEqual("\"" + inUrl + "\"", outUrl);
-        }
-
-        [Test]
         public void GetSubmoduleNamesFromDiffTest()
         {
-            var testModule = new GitModule("C:\\Test\\SuperProject");
+            // TODO produce a valid working directory
+            var root = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+
+            // Create actual working directories so that Process.Start doesn't throw Win32Exception due to an invalid path
+            Directory.CreateDirectory(Path.Combine(root, "Externals", "conemu-inside"));
+            Directory.CreateDirectory(Path.Combine(root, "Externals", "conemu-inside-a"));
+            Directory.CreateDirectory(Path.Combine(root, "Externals", "conemu-inside-b"));
+            Directory.CreateDirectory(Path.Combine(root, "Assets", "Core", "Vehicle Physics core assets"));
+
+            var testModule = new GitModule(root);
 
             // Submodule name without spaces in the name
 
@@ -395,14 +305,24 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(fileName, status.Name);
             Assert.IsNull(status.OldCommit);
             Assert.AreEqual("Externals/ICSharpCode.TextEditor", status.OldName);
+
+            try
+            {
+                // Clean up temporary folders
+                Directory.Delete(root, recursive: true);
+            }
+            catch
+            {
+                // Ignore
+            }
         }
 
         [Test]
         public void SubmoduleSyncCmd()
         {
-            Assert.AreEqual("submodule sync \"foo\"", GitCommandHelpers.SubmoduleSyncCmd("foo"));
-            Assert.AreEqual("submodule sync", GitCommandHelpers.SubmoduleSyncCmd(""));
-            Assert.AreEqual("submodule sync", GitCommandHelpers.SubmoduleSyncCmd(null));
+            Assert.AreEqual("submodule sync \"foo\"", GitCommandHelpers.SubmoduleSyncCmd("foo").Arguments);
+            Assert.AreEqual("submodule sync", GitCommandHelpers.SubmoduleSyncCmd("").Arguments);
+            Assert.AreEqual("submodule sync", GitCommandHelpers.SubmoduleSyncCmd(null).Arguments);
         }
 
         [Test]
@@ -410,19 +330,19 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "submodule add -b \"branch\" \"remotepath\" \"localpath\"",
-                GitCommandHelpers.AddSubmoduleCmd("remotepath", "localpath", "branch", force: false));
+                GitCommandHelpers.AddSubmoduleCmd("remotepath", "localpath", "branch", force: false).Arguments);
 
             Assert.AreEqual(
                 "submodule add \"remotepath\" \"localpath\"",
-                GitCommandHelpers.AddSubmoduleCmd("remotepath", "localpath", branch: null, force: false));
+                GitCommandHelpers.AddSubmoduleCmd("remotepath", "localpath", branch: null, force: false).Arguments);
 
             Assert.AreEqual(
                 "submodule add -f -b \"branch\" \"remotepath\" \"localpath\"",
-                GitCommandHelpers.AddSubmoduleCmd("remotepath", "localpath", "branch", force: true));
+                GitCommandHelpers.AddSubmoduleCmd("remotepath", "localpath", "branch", force: true).Arguments);
 
             Assert.AreEqual(
                 "submodule add -f -b \"branch\" \"remote/path\" \"local/path\"",
-                GitCommandHelpers.AddSubmoduleCmd("remote\\path", "local\\path", "branch", force: true));
+                GitCommandHelpers.AddSubmoduleCmd("remote\\path", "local\\path", "branch", force: true).Arguments);
         }
 
         [Test]
@@ -432,15 +352,15 @@ namespace GitCommandsTests.Git
 
             Assert.AreEqual(
                 $"revert {commitId}",
-                GitCommandHelpers.RevertCmd(commitId, autoCommit: true, parentIndex: 0));
+                GitCommandHelpers.RevertCmd(commitId, autoCommit: true, parentIndex: 0).Arguments);
 
             Assert.AreEqual(
                 $"revert --no-commit {commitId}",
-                GitCommandHelpers.RevertCmd(commitId, autoCommit: false, parentIndex: 0));
+                GitCommandHelpers.RevertCmd(commitId, autoCommit: false, parentIndex: 0).Arguments);
 
             Assert.AreEqual(
                 $"revert -m 1 {commitId}",
-                GitCommandHelpers.RevertCmd(commitId, autoCommit: true, parentIndex: 1));
+                GitCommandHelpers.RevertCmd(commitId, autoCommit: true, parentIndex: 1).Arguments);
         }
 
         [Test]
@@ -448,37 +368,37 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "clone -v --progress \"from\" \"to\"",
-                GitCommandHelpers.CloneCmd("from", "to"));
+                GitCommandHelpers.CloneCmd("from", "to").Arguments);
             Assert.AreEqual(
                 "clone -v --progress \"from/path\" \"to/path\"",
-                GitCommandHelpers.CloneCmd("from\\path", "to\\path"));
+                GitCommandHelpers.CloneCmd("from\\path", "to\\path").Arguments);
             Assert.AreEqual(
                 "clone -v --bare --progress \"from\" \"to\"",
-                GitCommandHelpers.CloneCmd("from", "to", central: true));
+                GitCommandHelpers.CloneCmd("from", "to", central: true).Arguments);
             Assert.AreEqual(
                 "clone -v --recurse-submodules --progress \"from\" \"to\"",
-                GitCommandHelpers.CloneCmd("from", "to", initSubmodules: true));
+                GitCommandHelpers.CloneCmd("from", "to", initSubmodules: true).Arguments);
             Assert.AreEqual(
                 "clone -v --recurse-submodules --progress \"from\" \"to\"",
-                GitCommandHelpers.CloneCmd("from", "to", initSubmodules: true));
+                GitCommandHelpers.CloneCmd("from", "to", initSubmodules: true).Arguments);
             Assert.AreEqual(
                 "clone -v --depth 2 --progress \"from\" \"to\"",
-                GitCommandHelpers.CloneCmd("from", "to", depth: 2));
+                GitCommandHelpers.CloneCmd("from", "to", depth: 2).Arguments);
             Assert.AreEqual(
                 "clone -v --single-branch --progress \"from\" \"to\"",
-                GitCommandHelpers.CloneCmd("from", "to", isSingleBranch: true));
+                GitCommandHelpers.CloneCmd("from", "to", isSingleBranch: true).Arguments);
             Assert.AreEqual(
                 "clone -v --no-single-branch --progress \"from\" \"to\"",
-                GitCommandHelpers.CloneCmd("from", "to", isSingleBranch: false));
+                GitCommandHelpers.CloneCmd("from", "to", isSingleBranch: false).Arguments);
             Assert.AreEqual(
                 "clone -v --progress --branch branch \"from\" \"to\"",
-                GitCommandHelpers.CloneCmd("from", "to", branch: "branch"));
+                GitCommandHelpers.CloneCmd("from", "to", branch: "branch").Arguments);
             Assert.AreEqual(
                 "clone -v --progress --no-checkout \"from\" \"to\"",
-                GitCommandHelpers.CloneCmd("from", "to", branch: null));
+                GitCommandHelpers.CloneCmd("from", "to", branch: null).Arguments);
             Assert.AreEqual(
                 "lfs clone -v --progress \"from\" \"to\"",
-                GitCommandHelpers.CloneCmd("from", "to", lfs: true));
+                GitCommandHelpers.CloneCmd("from", "to", lfs: true).Arguments);
         }
 
         [Test]
@@ -486,16 +406,16 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "checkout \"branch\"",
-                GitCommandHelpers.CheckoutCmd("branch", LocalChangesAction.DontChange));
+                GitCommandHelpers.CheckoutCmd("branch", LocalChangesAction.DontChange).Arguments);
             Assert.AreEqual(
                 "checkout --merge \"branch\"",
-                GitCommandHelpers.CheckoutCmd("branch", LocalChangesAction.Merge));
+                GitCommandHelpers.CheckoutCmd("branch", LocalChangesAction.Merge).Arguments);
             Assert.AreEqual(
                 "checkout --force \"branch\"",
-                GitCommandHelpers.CheckoutCmd("branch", LocalChangesAction.Reset));
+                GitCommandHelpers.CheckoutCmd("branch", LocalChangesAction.Reset).Arguments);
             Assert.AreEqual(
                 "checkout \"branch\"",
-                GitCommandHelpers.CheckoutCmd("branch", LocalChangesAction.Stash));
+                GitCommandHelpers.CheckoutCmd("branch", LocalChangesAction.Stash).Arguments);
         }
 
         [Test]
@@ -505,16 +425,16 @@ namespace GitCommandsTests.Git
 
             Assert.AreEqual(
                 "rm --force -r .",
-                GitCommandHelpers.RemoveCmd());
+                GitCommandHelpers.RemoveCmd().Arguments);
             Assert.AreEqual(
                 "rm -r .",
-                GitCommandHelpers.RemoveCmd(force: false));
+                GitCommandHelpers.RemoveCmd(force: false).Arguments);
             Assert.AreEqual(
                 "rm --force .",
-                GitCommandHelpers.RemoveCmd(isRecursive: false));
+                GitCommandHelpers.RemoveCmd(isRecursive: false).Arguments);
             Assert.AreEqual(
                 "rm --force -r a b c",
-                GitCommandHelpers.RemoveCmd(files: new[] { "a", "b", "c" }));
+                GitCommandHelpers.RemoveCmd(files: new[] { "a", "b", "c" }).Arguments);
         }
 
         [Test]
@@ -524,50 +444,50 @@ namespace GitCommandsTests.Git
 
             Assert.AreEqual(
                 "checkout -b \"branch\" \"revision\"",
-                GitCommandHelpers.BranchCmd("branch", "revision", checkout: true));
+                GitCommandHelpers.BranchCmd("branch", "revision", checkout: true).Arguments);
             Assert.AreEqual(
                 "branch \"branch\" \"revision\"",
-                GitCommandHelpers.BranchCmd("branch", "revision", checkout: false));
+                GitCommandHelpers.BranchCmd("branch", "revision", checkout: false).Arguments);
             Assert.AreEqual(
                 "checkout -b \"branch\"",
-                GitCommandHelpers.BranchCmd("branch", null, checkout: true));
+                GitCommandHelpers.BranchCmd("branch", null, checkout: true).Arguments);
             Assert.AreEqual(
                 "checkout -b \"branch\"",
-                GitCommandHelpers.BranchCmd("branch", "", checkout: true));
+                GitCommandHelpers.BranchCmd("branch", "", checkout: true).Arguments);
             Assert.AreEqual(
                 "checkout -b \"branch\"",
-                GitCommandHelpers.BranchCmd("branch", "  ", checkout: true));
+                GitCommandHelpers.BranchCmd("branch", "  ", checkout: true).Arguments);
         }
 
         [Test]
         public void PushTagCmd()
         {
             // TODO test case where this is false
-            Assert.True(GitCommandHelpers.VersionInUse.PushCanAskForProgress);
+            Assert.True(GitVersion.Current.PushCanAskForProgress);
 
             Assert.AreEqual(
                 "push --progress \"path\" tag tag",
-                GitCommandHelpers.PushTagCmd("path", "tag", all: false));
+                GitCommandHelpers.PushTagCmd("path", "tag", all: false).Arguments);
             Assert.AreEqual(
                 "push --progress \"path\" tag tag",
-                GitCommandHelpers.PushTagCmd("path", " tag ", all: false));
+                GitCommandHelpers.PushTagCmd("path", " tag ", all: false).Arguments);
             Assert.AreEqual(
                 "push --progress \"path/path\" tag tag",
-                GitCommandHelpers.PushTagCmd("path\\path", " tag ", all: false));
+                GitCommandHelpers.PushTagCmd("path\\path", " tag ", all: false).Arguments);
             Assert.AreEqual(
                 "push --progress \"path\" --tags",
-                GitCommandHelpers.PushTagCmd("path", "tag", all: true));
+                GitCommandHelpers.PushTagCmd("path", "tag", all: true).Arguments);
             Assert.AreEqual(
                 "push -f --progress \"path\" --tags",
-                GitCommandHelpers.PushTagCmd("path", "tag", all: true, force: ForcePushOptions.Force));
+                GitCommandHelpers.PushTagCmd("path", "tag", all: true, force: ForcePushOptions.Force).Arguments);
             Assert.AreEqual(
                 "push --force-with-lease --progress \"path\" --tags",
-                GitCommandHelpers.PushTagCmd("path", "tag", all: true, force: ForcePushOptions.ForceWithLease));
+                GitCommandHelpers.PushTagCmd("path", "tag", all: true, force: ForcePushOptions.ForceWithLease).Arguments);
 
             // TODO this should probably throw rather than return an empty string
             Assert.AreEqual(
                 "",
-                GitCommandHelpers.PushTagCmd("path", "", all: false));
+                GitCommandHelpers.PushTagCmd("path", "", all: false).Arguments);
         }
 
         [Test]
@@ -578,35 +498,35 @@ namespace GitCommandsTests.Git
             // TODO test case where selectedFiles contains whitespaces (not currently quoted)
 
             // TODO test case where this is false
-            Assert.True(GitCommandHelpers.VersionInUse.StashUntrackedFilesSupported);
+            Assert.True(GitVersion.Current.StashUntrackedFilesSupported);
 
             Assert.AreEqual(
                 "stash save",
-                GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, null, Array.Empty<string>()));
+                GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, null, Array.Empty<string>()).Arguments);
 
             Assert.AreEqual(
                 "stash save",
-                GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, null, null));
+                GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, null, null).Arguments);
 
             Assert.AreEqual(
                 "stash save -u",
-                GitCommandHelpers.StashSaveCmd(untracked: true, keepIndex: false, null, null));
+                GitCommandHelpers.StashSaveCmd(untracked: true, keepIndex: false, null, null).Arguments);
 
             Assert.AreEqual(
                 "stash save --keep-index",
-                GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: true, null, null));
+                GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: true, null, null).Arguments);
 
             Assert.AreEqual(
                 "stash save --keep-index",
-                GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: true, null, null));
+                GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: true, null, null).Arguments);
 
             Assert.AreEqual(
                 "stash save \"message\"",
-                GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, "message", null));
+                GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, "message", null).Arguments);
 
             Assert.AreEqual(
                 "stash push -- a b",
-                GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, null, new[] { "a", "b" }));
+                GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, null, new[] { "a", "b" }).Arguments);
         }
 
         [Test]
@@ -617,16 +537,16 @@ namespace GitCommandsTests.Git
 
             Assert.AreEqual(
                 "bisect good",
-                GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good));
+                GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good).Arguments);
             Assert.AreEqual(
                 "bisect bad",
-                GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Bad));
+                GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Bad).Arguments);
             Assert.AreEqual(
                 "bisect skip",
-                GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Skip));
+                GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Skip).Arguments);
             Assert.AreEqual(
                 $"bisect good {id1} {id2}",
-                GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good, id1, id2));
+                GitCommandHelpers.ContinueBisectCmd(GitBisectOption.Good, id1, id2).Arguments);
         }
 
         [Test]
@@ -634,31 +554,31 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "rebase \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false).Arguments);
             Assert.AreEqual(
                 "rebase -i --no-autosquash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: false, autoStash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: false, autoStash: false).Arguments);
             Assert.AreEqual(
                 "rebase --preserve-merges \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: true, autosquash: false, autoStash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: true, autosquash: false, autoStash: false).Arguments);
             Assert.AreEqual(
                 "rebase \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: true, autoStash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: true, autoStash: false).Arguments);
             Assert.AreEqual(
                 "rebase --autostash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: true));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: true).Arguments);
             Assert.AreEqual(
                 "rebase -i --autosquash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: true, autoStash: false));
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: false, autosquash: true, autoStash: false).Arguments);
             Assert.AreEqual(
                 "rebase -i --autosquash --preserve-merges --autostash \"branch\"",
-                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true));
+                GitCommandHelpers.RebaseCmd("branch", interactive: true, preserveMerges: true, autosquash: true, autoStash: true).Arguments);
 
             // TODO quote 'onto'?
 
             Assert.AreEqual(
                 "rebase \"from\" \"branch\" --onto onto",
-                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, "from", "onto"));
+                GitCommandHelpers.RebaseCmd("branch", interactive: false, preserveMerges: false, autosquash: false, autoStash: false, "from", "onto").Arguments);
 
             Assert.Throws<ArgumentException>(
                 () => GitCommandHelpers.RebaseCmd("branch", false, false, false, false, from: null, onto: "onto"));
@@ -672,25 +592,25 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "clean -f",
-                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: false));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: false).Arguments);
             Assert.AreEqual(
                 "clean --dry-run",
-                GitCommandHelpers.CleanUpCmd(dryRun: true, directories: false, nonIgnored: true, ignored: false));
+                GitCommandHelpers.CleanUpCmd(dryRun: true, directories: false, nonIgnored: true, ignored: false).Arguments);
             Assert.AreEqual(
                 "clean -d -f",
-                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: true, nonIgnored: true, ignored: false));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: true, nonIgnored: true, ignored: false).Arguments);
             Assert.AreEqual(
                 "clean -x -f",
-                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: false, ignored: false));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: false, ignored: false).Arguments);
             Assert.AreEqual(
                 "clean -X -f",
-                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: true));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: true).Arguments);
             Assert.AreEqual(
                 "clean -X -f",
-                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: false, ignored: true));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: false, ignored: true).Arguments);
             Assert.AreEqual(
                 "clean -f paths",
-                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: false, "paths"));
+                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: false, "paths").Arguments);
         }
 
         [Test]
@@ -698,37 +618,37 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "status --porcelain=2 -z --untracked-files --ignore-submodules",
-                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default));
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
                 "status --porcelain=2 -z --untracked-files --ignore-submodules --ignored",
-                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: false, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default));
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: false, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
                 "status --porcelain=2 -z --untracked-files=no --ignore-submodules",
-                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.No, IgnoreSubmodulesMode.Default));
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
                 "status --porcelain=2 -z --untracked-files=normal --ignore-submodules",
-                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Normal, IgnoreSubmodulesMode.Default));
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Normal, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
                 "status --porcelain=2 -z --untracked-files=all --ignore-submodules",
-                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.All, IgnoreSubmodulesMode.Default));
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Arguments);
             Assert.AreEqual(
                 "status --porcelain=2 -z --untracked-files --ignore-submodules=none",
-                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.None));
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.None).Arguments);
             Assert.AreEqual(
                 "status --porcelain=2 -z --untracked-files --ignore-submodules=none",
-                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default));
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default).Arguments);
             Assert.AreEqual(
                 "status --porcelain=2 -z --untracked-files --ignore-submodules=untracked",
-                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Untracked));
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Untracked).Arguments);
             Assert.AreEqual(
                 "status --porcelain=2 -z --untracked-files --ignore-submodules=dirty",
-                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Dirty));
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Dirty).Arguments);
             Assert.AreEqual(
                 "status --porcelain=2 -z --untracked-files --ignore-submodules=all",
-                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.All));
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.All).Arguments);
             Assert.AreEqual(
                 "--no-optional-locks status --porcelain=2 -z --untracked-files --ignore-submodules",
-                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default, noLocks: true));
+                GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default, noLocks: true).Arguments);
         }
 
         [Test]
@@ -736,31 +656,31 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "merge branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: null, log: null, strategy: null));
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: null, log: null, strategy: null).Arguments);
             Assert.AreEqual(
                 "merge --no-ff branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: false, squash: false, noCommit: false, allowUnrelatedHistories: false, message: null, log: null, strategy: null));
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: false, squash: false, noCommit: false, allowUnrelatedHistories: false, message: null, log: null, strategy: null).Arguments);
             Assert.AreEqual(
                 "merge --squash branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: true, noCommit: false, allowUnrelatedHistories: false, message: null, log: null, strategy: null));
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: true, noCommit: false, allowUnrelatedHistories: false, message: null, log: null, strategy: null).Arguments);
             Assert.AreEqual(
                 "merge --no-commit branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: true, allowUnrelatedHistories: false, message: null, log: null, strategy: null));
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: true, allowUnrelatedHistories: false, message: null, log: null, strategy: null).Arguments);
             Assert.AreEqual(
                 "merge --allow-unrelated-histories branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: true, message: null, log: null, strategy: null));
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: true, message: null, log: null, strategy: null).Arguments);
             Assert.AreEqual(
                 "merge -m \"message\" branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: "message", log: null, strategy: null));
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: "message", log: null, strategy: null).Arguments);
             Assert.AreEqual(
                 "merge --log=0 branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: null, log: 0, strategy: null));
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: null, log: 0, strategy: null).Arguments);
             Assert.AreEqual(
                 "merge --strategy=strategy branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: null, log: null, strategy: "strategy"));
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: true, squash: false, noCommit: false, allowUnrelatedHistories: false, message: null, log: null, strategy: "strategy").Arguments);
             Assert.AreEqual(
                 "merge --no-ff --strategy=strategy --squash --no-commit --allow-unrelated-histories -m \"message\" --log=1 branch",
-                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: false, squash: true, noCommit: true, allowUnrelatedHistories: true, message: "message", log: 1, strategy: "strategy"));
+                GitCommandHelpers.MergeBranchCmd("branch", allowFastForward: false, squash: true, noCommit: true, allowUnrelatedHistories: true, message: "message", log: 1, strategy: "strategy").Arguments);
         }
 
         [Test]
@@ -768,10 +688,10 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "apply \"hello/world.patch\"",
-                GitCommandHelpers.ApplyDiffPatchCmd(false, "hello\\world.patch"));
+                GitCommandHelpers.ApplyDiffPatchCmd(false, "hello\\world.patch").Arguments);
             Assert.AreEqual(
                 "apply --ignore-whitespace \"hello/world.patch\"",
-                GitCommandHelpers.ApplyDiffPatchCmd(true, "hello\\world.patch"));
+                GitCommandHelpers.ApplyDiffPatchCmd(true, "hello\\world.patch").Arguments);
         }
 
         [Test]
@@ -779,13 +699,13 @@ namespace GitCommandsTests.Git
         {
             Assert.AreEqual(
                 "am --3way --signoff \"hello/world.patch\"",
-                GitCommandHelpers.ApplyMailboxPatchCmd(false, "hello\\world.patch"));
+                GitCommandHelpers.ApplyMailboxPatchCmd(false, "hello\\world.patch").Arguments);
             Assert.AreEqual(
                 "am --3way --signoff --ignore-whitespace \"hello/world.patch\"",
-                GitCommandHelpers.ApplyMailboxPatchCmd(true, "hello\\world.patch"));
+                GitCommandHelpers.ApplyMailboxPatchCmd(true, "hello\\world.patch").Arguments);
             Assert.AreEqual(
                 "am --3way --signoff --ignore-whitespace",
-                GitCommandHelpers.ApplyMailboxPatchCmd(true));
+                GitCommandHelpers.ApplyMailboxPatchCmd(true).Arguments);
         }
     }
 }

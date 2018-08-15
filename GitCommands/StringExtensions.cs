@@ -194,7 +194,7 @@ namespace System
         {
             if (s == null)
             {
-                return string.Empty;
+                return "";
             }
 
             return quotationMark + s + quotationMark;

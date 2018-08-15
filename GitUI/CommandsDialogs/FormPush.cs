@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs
 
             InitializeComplete();
 
-            if (!GitCommandHelpers.VersionInUse.SupportPushForceWithLease)
+            if (!GitVersion.Current.SupportPushForceWithLease)
             {
                 ckForceWithLease.Visible = false;
                 ForcePushTags.DataBindings.Add("Checked", ForcePushBranches, "Checked",
@@ -121,11 +121,11 @@ namespace GitUI.CommandsDialogs
             void Init()
             {
                 _gitRefs = Module.GetRefs();
-                if (GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesCheck)
+                if (GitVersion.Current.SupportPushWithRecursiveSubmodulesCheck)
                 {
                     RecursiveSubmodules.Enabled = true;
                     RecursiveSubmodules.SelectedIndex = AppSettings.RecursiveSubmodules;
-                    if (!GitCommandHelpers.VersionInUse.SupportPushWithRecursiveSubmodulesOnDemand)
+                    if (!GitVersion.Current.SupportPushWithRecursiveSubmodulesOnDemand)
                     {
                         RecursiveSubmodules.Items.RemoveAt(2);
                     }
@@ -358,7 +358,7 @@ namespace GitUI.CommandsDialogs
 
                 if (ForcePushBranches.Checked)
                 {
-                    if (GitCommandHelpers.VersionInUse.SupportPushForceWithLease)
+                    if (GitVersion.Current.SupportPushForceWithLease)
                     {
                         var choice = MessageBox.Show(owner,
                                                      _useForceWithLeaseInstead.Text,
@@ -591,7 +591,7 @@ namespace GitUI.CommandsDialogs
                     {
                         Trace.Assert(form.ProcessArguments.StartsWith("push "), "Arguments should start with 'push' command");
 
-                        string forceArg = GitCommandHelpers.VersionInUse.SupportPushForceWithLease ? " --force-with-lease" : " -f";
+                        string forceArg = GitVersion.Current.SupportPushForceWithLease ? " --force-with-lease" : " -f";
                         form.ProcessArguments = form.ProcessArguments.Insert("push".Length, forceArg);
                     }
 

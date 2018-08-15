@@ -1,5 +1,6 @@
 ﻿using System;
 using GitCommands;
+using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid
 {
@@ -72,21 +73,21 @@ namespace GitUI.UserControls.RevisionGrid
                     FileFilterCheck.Checked;
         }
 
-        public string GetRevisionFilter()
+        public ArgumentString GetRevisionFilter()
         {
             var filter = new ArgumentBuilder();
 
-            if (AuthorCheck.Checked && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Author.Text))
+            if (AuthorCheck.Checked && GitVersion.Current.IsRegExStringCmdPassable(Author.Text))
             {
                 filter.Add($"--author=\"{Author.Text}\"");
             }
 
-            if (CommitterCheck.Checked && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Committer.Text))
+            if (CommitterCheck.Checked && GitVersion.Current.IsRegExStringCmdPassable(Committer.Text))
             {
                 filter.Add($"--committer=\"{Committer.Text}\"");
             }
 
-            if (MessageCheck.Checked && GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Message.Text))
+            if (MessageCheck.Checked && GitVersion.Current.IsRegExStringCmdPassable(Message.Text))
             {
                 filter.Add($"--grep=\"{Message.Text}\"");
             }
@@ -111,7 +112,7 @@ namespace GitUI.UserControls.RevisionGrid
                 filter.Add($"--max-count=\"{(int)_NO_TRANSLATE_Limit.Value}\"");
             }
 
-            return filter.ToString();
+            return filter;
         }
 
         public string GetPathFilter()
@@ -132,7 +133,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public string GetInMemAuthorFilter()
         {
-            if (AuthorCheck.Checked && !GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Author.Text))
+            if (AuthorCheck.Checked && !GitVersion.Current.IsRegExStringCmdPassable(Author.Text))
             {
                 return Author.Text;
             }
@@ -142,7 +143,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public string GetInMemCommitterFilter()
         {
-            if (CommitterCheck.Checked && !GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Committer.Text))
+            if (CommitterCheck.Checked && !GitVersion.Current.IsRegExStringCmdPassable(Committer.Text))
             {
                 return Committer.Text;
             }
@@ -152,7 +153,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public string GetInMemMessageFilter()
         {
-            if (MessageCheck.Checked && !GitCommandHelpers.VersionInUse.IsRegExStringCmdPassable(Message.Text))
+            if (MessageCheck.Checked && !GitVersion.Current.IsRegExStringCmdPassable(Message.Text))
             {
                 return Message.Text;
             }

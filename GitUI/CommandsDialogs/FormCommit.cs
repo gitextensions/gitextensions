@@ -1785,7 +1785,7 @@ namespace GitUI.CommandsDialogs
                                     _stageFiles.Text + "\n", files.Count));
                             var output = Module.StageFiles(files, out wereErrors);
                             form.AppendMessageCrossThread(output);
-                            form.Done(string.IsNullOrEmpty(output));
+                            form.Done(isSuccess: string.IsNullOrWhiteSpace(output));
                         }
                     }
                     else
@@ -2427,17 +2427,25 @@ namespace GitUI.CommandsDialogs
 
         private void ResetPartOfFileToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItems.Count() != 1)
+            var items = Unstaged.SelectedItems.ToList();
+
+            if (items.Count != 1)
             {
                 MessageBox.Show(this, _onlyStageChunkOfSingleFileError.Text, _resetStageChunkOfFileCaption.Text);
                 return;
             }
 
-            foreach (var gitItemStatus in Unstaged.SelectedItems)
-            {
-                Module.RunExternalCmdShowConsole(AppSettings.GitCommand, string.Format("checkout -p \"{0}\"", gitItemStatus.Name));
-                Initialize();
-            }
+            var item = items.Single();
+
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                    async () =>
+                    {
+                        await TaskScheduler.Default;
+                        await Module.ResetInteractiveAsync(item);
+                        await this.SwitchToMainThreadAsync();
+                        Initialize();
+                    })
+                .FileAndForget();
         }
 
         private void ResetClick(object sender, EventArgs e)
@@ -3033,29 +3041,24 @@ namespace GitUI.CommandsDialogs
 
         private void interactiveAddToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (Unstaged.SelectedItem == null)
+            var item = Unstaged.SelectedItem;
+
+            if (item == null)
             {
                 return;
             }
 
-            Process gitProcess = Module.RunExternalCmdDetachedShowConsole(
-                AppSettings.GitCommand,
-                "add -p \"" + Unstaged.SelectedItem.Name + "\"");
+            var token = _interactiveAddSequence.Next();
 
-            if (gitProcess != null)
-            {
-                var token = _interactiveAddSequence.Next();
-
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
                 {
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                    await gitProcess.WaitForExitAsync().ConfigureAwait(false);
-                    gitProcess.Dispose();
-
+                    await TaskScheduler.Default;
+                    await Module.AddInteractiveAsync(item);
                     await this.SwitchToMainThreadAsync(token);
                     RescanChanges();
-                });
-            }
+                })
+                .FileAndForget();
         }
 
         private void Amend_CheckedChanged(object sender, EventArgs e)

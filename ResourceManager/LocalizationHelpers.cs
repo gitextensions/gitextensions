@@ -245,7 +245,7 @@ namespace ResourceManager
             {
                 if (status.IsDirty)
                 {
-                    string statusText = gitModule.GetStatusText(false);
+                    string statusText = gitModule.GetStatusText(untracked: false);
                     if (!string.IsNullOrEmpty(statusText))
                     {
                         sb.AppendLine("\nStatus:");

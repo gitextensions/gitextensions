@@ -294,22 +294,22 @@ namespace GitUI.CommandsDialogs
             {
                 // selected, all are the same
                 var deletedItems = selectedItems.Where(item => item.IsDeleted);
-                Module.RemoveFiles(deletedItems.Select(item => item.Name), false);
+                Module.RemoveFiles(deletedItems.Select(item => item.Name).ToList(), false);
 
                 var itemsToCheckout = selectedItems.Where(item => !item.IsDeleted);
-                Module.CheckoutFiles(itemsToCheckout.Select(item => item.Name), DiffFiles.Revision.ObjectId, force: false);
+                Module.CheckoutFiles(itemsToCheckout.Select(item => item.Name).ToList(), DiffFiles.Revision.ObjectId, force: false);
             }
             else
             {
                 // acts as parent
                 // if file is new to the parent, it has to be removed
                 var addedItems = selectedItems.Where(item => item.IsNew);
-                Module.RemoveFiles(addedItems.Select(item => item.Name), false);
+                Module.RemoveFiles(addedItems.Select(item => item.Name).ToList(), false);
 
                 foreach (var parent in DiffFiles.SelectedItemParents)
                 {
                     var itemsToCheckout = DiffFiles.SelectedItemsWithParent.Where(item => !item.Item.IsNew && item.ParentRevision.ObjectId == parent.ObjectId);
-                    Module.CheckoutFiles(itemsToCheckout.Select(item => item.Item.Name), parent.ObjectId, force: false);
+                    Module.CheckoutFiles(itemsToCheckout.Select(item => item.Item.Name).ToList(), parent.ObjectId, force: false);
                 }
             }
 
