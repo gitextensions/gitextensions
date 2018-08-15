@@ -78,7 +78,7 @@ namespace GitUI.CommandsDialogs
 
                 for (int i = 0; i < parents.Count; i++)
                 {
-                    ParentsList.Items.Add(new ListViewItem(i + 1 + "")
+                    ParentsList.Items.Add(new ListViewItem((i + 1).ToString())
                     {
                         SubItems =
                         {

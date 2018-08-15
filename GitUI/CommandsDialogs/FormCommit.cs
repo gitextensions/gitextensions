@@ -80,7 +80,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _notOnBranchMainInstruction = new TranslationString("You are not working on a branch");
         private readonly TranslationString _notOnBranch =
             new TranslationString("This commit will be unreferenced when switching to another branch and can be lost." +
-                                  Environment.NewLine + "" + Environment.NewLine + "Do you want to continue?");
+                                  Environment.NewLine + Environment.NewLine + "Do you want to continue?");
         private readonly TranslationString _notOnBranchButtons = new TranslationString("Checkout branch|Create branch|Continue");
         private readonly TranslationString _notOnBranchCaption = new TranslationString("Not on a branch");
 
