@@ -928,9 +928,10 @@ namespace GitCommands
             {
                 // locate gitk based on location of git executable
                 var cmd = AppSettings.GitCommand
-                    .Replace("git.cmd", "gitk")
                     .Replace("bin\\git.exe", "cmd\\gitk")
-                    .Replace("bin/git.exe", "cmd/gitk");
+                    .Replace("bin/git.exe", "cmd/gitk")
+                    .Replace("git.exe", "gitk")
+                    .Replace("git.cmd", "gitk");
 
                 new Executable("cmd.exe", WorkingDir).Start($"/c \"\"{cmd}\" --branches --tags --remotes\"");
             }
