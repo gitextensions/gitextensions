@@ -187,8 +187,6 @@ namespace GitUI
             _gridView.AddColumn(new DateColumnProvider(this));
             _gridView.AddColumn(new CommitIdColumnProvider(this));
             _gridView.AddColumn(_buildServerWatcher.ColumnProvider);
-
-            fixupCommitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CreateFixupCommit).ToShortcutKeyDisplayString();
         }
 
         protected override void Dispose(bool disposing)
@@ -1137,10 +1135,16 @@ namespace GitUI
 
             var selectedRevisions = GetSelectedRevisions();
             var firstSelectedRevision = selectedRevisions.FirstOrDefault();
+            var secondSelectedRevision = selectedRevisions.Skip(1).FirstOrDefault();
+
             if (selectedRevisions.Count == 1 && firstSelectedRevision != null)
             {
                 _navigationHistory.Push(firstSelectedRevision.ObjectId);
             }
+
+            compareToWorkingDirectoryMenuItem.Enabled = firstSelectedRevision != null && firstSelectedRevision.ObjectId != ObjectId.WorkTreeId;
+            compareWithCurrentBranchToolStripMenuItem.Enabled = Module.GetSelectedBranch().IsNotNullOrWhitespace();
+            compareSelectedCommitsMenuItem.Enabled = firstSelectedRevision != null && secondSelectedRevision != null;
 
             if (Parent != null &&
                 !_gridView.UpdatingVisibleRows &&
@@ -1434,7 +1438,6 @@ namespace GitUI
             SetEnabled(bisectSkipRevisionToolStripMenuItem, inTheMiddleOfBisect);
             SetEnabled(stopBisectToolStripMenuItem, inTheMiddleOfBisect);
             SetEnabled(bisectSeparator, inTheMiddleOfBisect);
-            SetEnabled(compareWithCurrentBranchToolStripMenuItem, Module.GetSelectedBranch().IsNotNullOrWhitespace());
 
             var deleteTagDropDown = new ContextMenuStrip();
             var deleteBranchDropDown = new ContextMenuStrip();
@@ -2157,6 +2160,21 @@ namespace GitUI
             }
         }
 
+        internal void SetShortcutKeys()
+        {
+            SetShortcutString(fixupCommitToolStripMenuItem, Commands.CreateFixupCommit);
+            SetShortcutString(selectAsBaseToolStripMenuItem, Commands.SelectAsBaseToCompare);
+            SetShortcutString(compareToBaseToolStripMenuItem, Commands.CompareToBase);
+            SetShortcutString(compareToWorkingDirectoryMenuItem, Commands.CompareToWorkingDirectory);
+            SetShortcutString(compareSelectedCommitsMenuItem, Commands.CompareSelectedCommits);
+        }
+
+        private void SetShortcutString(ToolStripMenuItem item, Commands command)
+        {
+            item.ShortcutKeyDisplayString = GetShortcutKeys(command)
+                .ToShortcutKeyDisplayString();
+        }
+
         internal Keys GetShortcutKeys(Commands cmd)
         {
             return GetShortcutKeys((int)cmd);
@@ -2178,11 +2196,16 @@ namespace GitUI
 
         private void CompareWithCurrentBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var baseCommit = GetSelectedRevisions().First();
             var headBranch = Module.GetSelectedBranch();
+            if (headBranch.IsNullOrWhiteSpace())
+            {
+                MessageBox.Show(this, "No branch is currently selected");
+                return;
+            }
+
+            var baseCommit = GetSelectedRevisions().First();
             var headBranchName = Module.RevParse(headBranch);
-            UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit.ObjectId, headBranchName,
-                baseCommit.Subject, headBranch);
+            UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit.ObjectId, headBranchName, baseCommit.Subject, headBranch);
         }
 
         private void selectAsBaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2200,8 +2223,34 @@ namespace GitUI
             }
 
             var headCommit = GetSelectedRevisions().First();
-            UICommands.ShowFormDiff(IsFirstParentValid(), _baseCommitToCompare.ObjectId, headCommit.ObjectId,
-                _baseCommitToCompare.Subject, headCommit.Subject);
+            UICommands.ShowFormDiff(IsFirstParentValid(), _baseCommitToCompare.ObjectId, headCommit.ObjectId, _baseCommitToCompare.Subject, headCommit.Subject);
+        }
+
+        private void compareToWorkingDirectoryMenuItem_Click(object sender, EventArgs e)
+        {
+            var baseCommit = GetSelectedRevisions().First();
+            if (baseCommit.ObjectId == ObjectId.WorkTreeId)
+            {
+                MessageBox.Show(this, "Cannot diff working directory to itself");
+                return;
+            }
+
+            UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit.ObjectId, ObjectId.WorkTreeId, baseCommit.Subject, "Working directory");
+        }
+
+        private void compareSelectedCommitsMenuItem_Click(object sender, EventArgs e)
+        {
+            var revisions = GetSelectedRevisions();
+            var headCommit = revisions.FirstOrDefault();
+            var baseCommit = revisions.Skip(1)
+                .FirstOrDefault();
+            if (headCommit == null || baseCommit == null)
+            {
+                MessageBox.Show(this, "You must have two commits selected to compare");
+                return;
+            }
+
+            UICommands.ShowFormDiff(IsFirstParentValid(), baseCommit.ObjectId, headCommit.ObjectId, baseCommit.Subject, headCommit.Subject);
         }
 
         private void getHelpOnHowToUseTheseFeaturesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2412,7 +2461,11 @@ namespace GitUI
             SelectAsBaseToCompare = 23,
             CompareToBase = 24,
             CreateFixupCommit = 25,
-            ToggleShowTags = 26
+            ToggleShowTags = 26,
+            CompareToWorkingDirectory = 27,
+            CompareToCurrentBranch = 28,
+            CompareToBranch = 29,
+            CompareSelectedCommits = 30,
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -2445,12 +2498,16 @@ namespace GitUI
                 case Commands.SelectAsBaseToCompare: selectAsBaseToolStripMenuItem_Click(null, null); break;
                 case Commands.CompareToBase: compareToBaseToolStripMenuItem_Click(null, null); break;
                 case Commands.CreateFixupCommit: FixupCommitToolStripMenuItemClick(null, null); break;
+                case Commands.CompareToWorkingDirectory: compareToWorkingDirectoryMenuItem_Click(null, null); break;
+                case Commands.CompareToCurrentBranch: CompareWithCurrentBranchToolStripMenuItem_Click(null, null); break;
+                case Commands.CompareToBranch: CompareToBranchToolStripMenuItem_Click(null, null); break;
+                case Commands.CompareSelectedCommits: compareSelectedCommitsMenuItem_Click(null, null); break;
                 default:
-                {
-                    bool result = base.ExecuteCommand(cmd);
-                    RefreshRevisions();
-                    return result;
-                }
+                    {
+                        bool result = base.ExecuteCommand(cmd);
+                        RefreshRevisions();
+                        return result;
+                    }
             }
 
             return true;

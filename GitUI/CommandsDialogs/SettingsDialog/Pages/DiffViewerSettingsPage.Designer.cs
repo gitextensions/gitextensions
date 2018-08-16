@@ -82,7 +82,7 @@
             this.chkShowDiffForAllParents.Name = "chkShowDiffForAllParents";
             this.chkShowDiffForAllParents.Size = new System.Drawing.Size(280, 17);
             this.chkShowDiffForAllParents.TabIndex = 10;
-            this.chkShowDiffForAllParents.Text = "Show file differences for all parents in browse dialog.";
+            this.chkShowDiffForAllParents.Text = "Show file differences for all parents in browse dialog";
             this.chkShowDiffForAllParents.UseVisualStyleBackColor = true;
             // 
             // chkOpenSubmoduleDiffInSeparateWindow
