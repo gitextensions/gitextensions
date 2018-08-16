@@ -516,6 +516,7 @@ namespace GitUI.CommandsDialogs
                     {
                         case AppSettings.PullAction.Fetch:
                         case AppSettings.PullAction.FetchAll:
+                        case AppSettings.PullAction.FetchPruneAll:
                             buttons = string.Format(buttons, _pullActionFetch.Text);
                             break;
                         case AppSettings.PullAction.Merge:

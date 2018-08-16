@@ -478,24 +478,24 @@ namespace GitUI
             return DoActionOnRepo(owner, false, true, null, null, Action);
         }
 
-        public bool StartPullDialogAndPullImmediately(IWin32Window owner = null, string remoteBranch = null, string remote = null, bool fetchAll = false)
+        public bool StartPullDialogAndPullImmediately(IWin32Window owner = null, string remoteBranch = null, string remote = null, bool fetchAll = false, bool prune = false)
         {
-            return StartPullDialogAndPullImmediately(out _, owner, remoteBranch, remote, fetchAll);
+            return StartPullDialogAndPullImmediately(out _, owner, remoteBranch, remote, fetchAll, prune);
         }
 
         /// <param name="pullCompleted">true if pull completed with no errors</param>
         /// <returns>if revision grid should be refreshed</returns>
-        public bool StartPullDialogAndPullImmediately(out bool pullCompleted, IWin32Window owner = null, string remoteBranch = null, string remote = null, bool fetchAll = false)
+        public bool StartPullDialogAndPullImmediately(out bool pullCompleted, IWin32Window owner = null, string remoteBranch = null, string remote = null, bool fetchAll = false, bool prune = false)
         {
-            return StartPullDialogInternal(owner, pullOnShow: true, out pullCompleted, remoteBranch, remote, fetchAll);
+            return StartPullDialogInternal(owner, pullOnShow: true, out pullCompleted, remoteBranch, remote, fetchAll, prune);
         }
 
-        public bool StartPullDialog(IWin32Window owner = null, string remoteBranch = null, string remote = null, bool fetchAll = false)
+        public bool StartPullDialog(IWin32Window owner = null, string remoteBranch = null, string remote = null, bool fetchAll = false, bool prune = false)
         {
-            return StartPullDialogInternal(owner, pullOnShow: false, out _, remoteBranch, remote, fetchAll);
+            return StartPullDialogInternal(owner, pullOnShow: false, out _, remoteBranch, remote, fetchAll, prune);
         }
 
-        private bool StartPullDialogInternal(IWin32Window owner, bool pullOnShow, out bool pullCompleted, string remoteBranch, string remote, bool fetchAll)
+        private bool StartPullDialogInternal(IWin32Window owner, bool pullOnShow, out bool pullCompleted, string remoteBranch, string remote, bool fetchAll, bool prune)
         {
             var pulled = false;
 
@@ -506,6 +506,11 @@ namespace GitUI
                     if (fetchAll)
                     {
                         formPull.SetForFetchAll();
+                    }
+
+                    if (prune)
+                    {
+                        formPull.SetPrune();
                     }
 
                     var dlgResult = pullOnShow

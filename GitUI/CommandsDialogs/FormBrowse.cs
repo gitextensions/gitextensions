@@ -65,6 +65,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _pullFetch = new TranslationString("Pull - fetch");
         private readonly TranslationString _pullFetchAll = new TranslationString("Pull - fetch all");
+        private readonly TranslationString _pullFetchPruneAll = new TranslationString("Pull - fetch and prune all");
         private readonly TranslationString _pullMerge = new TranslationString("Pull - merge");
         private readonly TranslationString _pullRebase = new TranslationString("Pull - rebase");
         private readonly TranslationString _pullOpenDialog = new TranslationString("Open pull dialog");
@@ -1220,6 +1221,11 @@ namespace GitUI.CommandsDialogs
                     fetchAllToolStripMenuItem_Click(sender, e);
                     return;
                 }
+                else if (AppSettings.DefaultPullAction == AppSettings.PullAction.FetchPruneAll)
+                {
+                    fetchPruneAllToolStripMenuItem_Click(sender, e);
+                    return;
+                }
                 else
                 {
                     isSilent = sender == toolStripButtonPull;
@@ -2232,6 +2238,11 @@ namespace GitUI.CommandsDialogs
                     toolStripButtonPull.ToolTipText = _pullFetchAll.Text;
                     break;
 
+                case AppSettings.PullAction.FetchPruneAll:
+                    toolStripButtonPull.Image = Images.PullFetchPruneAll;
+                    toolStripButtonPull.ToolTipText = _pullFetchPruneAll.Text;
+                    break;
+
                 case AppSettings.PullAction.Merge:
                     toolStripButtonPull.Image = Images.PullMerge;
                     toolStripButtonPull.ToolTipText = _pullMerge.Text;
@@ -2254,11 +2265,21 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.SetNextPullActionAsDefault)
             {
                 AppSettings.DefaultPullAction = AppSettings.PullAction.FetchAll;
+                RefreshPullIcon();
             }
 
-            RefreshPullIcon();
-
             UICommands.StartPullDialogAndPullImmediately(this, fetchAll: true);
+        }
+
+        private void fetchPruneAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (AppSettings.SetNextPullActionAsDefault)
+            {
+                AppSettings.DefaultPullAction = AppSettings.PullAction.FetchPruneAll;
+                RefreshPullIcon();
+            }
+
+            UICommands.StartPullDialogAndPullImmediately(this, fetchAll: true, prune: true);
         }
 
         private void branchSelect_MouseUp(object sender, MouseEventArgs e)

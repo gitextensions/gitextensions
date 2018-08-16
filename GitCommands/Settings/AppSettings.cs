@@ -686,6 +686,7 @@ namespace GitCommands
             Rebase,
             Fetch,
             FetchAll,
+            FetchPruneAll,
             Default
         }
 
