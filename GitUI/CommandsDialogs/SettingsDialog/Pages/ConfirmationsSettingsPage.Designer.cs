@@ -42,6 +42,7 @@
             this.chkPushNewBranch = new System.Windows.Forms.CheckBox();
             this.chkUpdateModules = new System.Windows.Forms.CheckBox();
             this.chkUndoLastCommitConfirmation = new System.Windows.Forms.CheckBox();
+            this.chkFetchAndPruneAllConfirmation = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel2.SuspendLayout();
             this.CheckoutGB.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -81,6 +82,7 @@
             this.tableLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel3.ColumnCount = 1;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel3.Controls.Add(this.chkFetchAndPruneAllConfirmation, 0, 11);
             this.tableLayoutPanel3.Controls.Add(this.chkUndoLastCommitConfirmation, 0, 10);
             this.tableLayoutPanel3.Controls.Add(this.chkSecondAbortConfirmation, 0, 9);
             this.tableLayoutPanel3.Controls.Add(this.chkCommitAfterConflictsResolved, 0, 8);
@@ -94,7 +96,8 @@
             this.tableLayoutPanel3.Controls.Add(this.chkUpdateModules, 0, 6);
             this.tableLayoutPanel3.Location = new System.Drawing.Point(5, 19);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 11;
+            this.tableLayoutPanel3.RowCount = 12;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -227,6 +230,16 @@
             this.chkUndoLastCommitConfirmation.ThreeState = true;
             this.chkUndoLastCommitConfirmation.UseVisualStyleBackColor = true;
             // 
+            // chkFetchAllAndPruneConfirmation
+            // 
+            this.chkFetchAndPruneAllConfirmation.AutoSize = true;
+            this.chkFetchAndPruneAllConfirmation.Location = new System.Drawing.Point(3, 246);
+            this.chkFetchAndPruneAllConfirmation.Name = "chkUndoLastCommitConfirmation";
+            this.chkFetchAndPruneAllConfirmation.Size = new System.Drawing.Size(107, 17);
+            this.chkFetchAndPruneAllConfirmation.TabIndex = 11;
+            this.chkFetchAndPruneAllConfirmation.Text = "Fetch and prune all";
+            this.chkFetchAndPruneAllConfirmation.UseVisualStyleBackColor = true;
+            // 
             // ConfirmationsSettingsPage
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -260,5 +273,6 @@
         private System.Windows.Forms.CheckBox chkResolveConflicts;
         private System.Windows.Forms.CheckBox chkSecondAbortConfirmation;
         private System.Windows.Forms.CheckBox chkUndoLastCommitConfirmation;
+        private System.Windows.Forms.CheckBox chkFetchAndPruneAllConfirmation;
     }
 }

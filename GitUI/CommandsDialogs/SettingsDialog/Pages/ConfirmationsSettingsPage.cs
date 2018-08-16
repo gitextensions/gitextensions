@@ -25,6 +25,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkCommitAfterConflictsResolved.Checked = AppSettings.DontConfirmCommitAfterConflictsResolved;
             chkSecondAbortConfirmation.Checked = AppSettings.DontConfirmSecondAbortConfirmation;
             chkUndoLastCommitConfirmation.Checked = AppSettings.DontConfirmUndoLastCommit;
+            chkFetchAndPruneAllConfirmation.Checked = AppSettings.DontConfirmFetchAndPruneAll;
         }
 
         protected override void PageToSettings()
@@ -40,6 +41,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DontConfirmCommitAfterConflictsResolved = chkCommitAfterConflictsResolved.Checked;
             AppSettings.DontConfirmSecondAbortConfirmation = chkSecondAbortConfirmation.Checked;
             AppSettings.DontConfirmUndoLastCommit = chkUndoLastCommitConfirmation.Checked;
+            AppSettings.DontConfirmFetchAndPruneAll = chkFetchAndPruneAllConfirmation.Checked;
         }
 
         public static SettingsPageReference GetPageReference()

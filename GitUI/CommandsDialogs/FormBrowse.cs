@@ -69,6 +69,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pullMerge = new TranslationString("Pull - merge");
         private readonly TranslationString _pullRebase = new TranslationString("Pull - rebase");
         private readonly TranslationString _pullOpenDialog = new TranslationString("Open pull dialog");
+        private readonly TranslationString _pullFetchPruneAllConfirmation = new TranslationString("Warning! The fetch with prune will remove all the remote-tracking references which no longer exist on remotes. Do you want to proceed?");
 
         private readonly TranslationString _buildReportTabCaption = new TranslationString("Build Report");
         private readonly TranslationString _consoleTabCaption = new TranslationString("Console");
@@ -2279,7 +2280,16 @@ namespace GitUI.CommandsDialogs
                 RefreshPullIcon();
             }
 
-            UICommands.StartPullDialogAndPullImmediately(this, fetchAll: true, prune: true);
+            bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
+                                     || MessageBox.Show(
+                                         this,
+                                         _pullFetchPruneAllConfirmation.Text,
+                                         _pullFetchPruneAll.Text,
+                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
+            if (isActionConfirmed)
+            {
+                UICommands.StartPullDialogAndPullImmediately(this, fetchAll: true, prune: true);
+            }
         }
 
         private void branchSelect_MouseUp(object sender, MouseEventArgs e)
