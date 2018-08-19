@@ -346,9 +346,8 @@ namespace GitCommands
                 throw new ArgumentException($"For arguments \"{nameof(from)}\" and \"{nameof(onto)}\", either both must have values, or neither may.");
             }
 
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("rebase")
             {
-                "rebase",
                 { interactive, "-i" },
                 { interactive && autosquash, "--autosquash" },
                 { interactive && !autosquash, "--no-autosquash" },
@@ -362,7 +361,7 @@ namespace GitCommands
 
         public static ArgumentString AbortRebaseCmd()
         {
-            return "rebase --abort";
+            return new GitArgumentBuilder("rebase") { "--abort" };
         }
 
         public static ArgumentString ResolvedCmd()

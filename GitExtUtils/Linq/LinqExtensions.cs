@@ -44,13 +44,6 @@ namespace System.Linq
             return result;
         }
 
-        [NotNull]
-        public static IEnumerable<TValue> SelectMany<TValue>(
-            [NotNull] this IEnumerable<IEnumerable<TValue>> source)
-        {
-            return source.SelectMany(i => i);
-        }
-
         [Pure]
         [NotNull]
         public static string Join([NotNull] this IEnumerable<string> source, [NotNull] string separator)
@@ -184,6 +177,27 @@ namespace System.Linq
 
                 return list;
             }
+        }
+
+        [Pure]
+        [MustUseReturnValue]
+        public static int IndexOf<T>(
+            [NotNull] this IEnumerable<T> source,
+            [NotNull, InstantHandle] Func<T, bool> predicate)
+        {
+            var index = 0;
+
+            foreach (var element in source)
+            {
+                if (predicate(element))
+                {
+                    return index;
+                }
+
+                index++;
+            }
+
+            return -1;
         }
 
         [Pure]

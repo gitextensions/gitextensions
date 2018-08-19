@@ -32,5 +32,19 @@ namespace GitCommandsTests
                 Array.Empty<int>(),
                 nums.Subsequence(9, 0));
         }
+
+        [Test]
+        public void Append()
+        {
+            Assert.AreEqual(
+                new[] { 0, 1 },
+                new[] { 0 }.Append(1));
+            Assert.AreEqual(
+                new[] { 0 },
+                Array.Empty<int>().Append(0));
+            Assert.AreEqual(
+                new[] { 0, 1, 2 },
+                Array.Empty<int>().Append(0).Append(1).Append(2));
+        }
     }
 }

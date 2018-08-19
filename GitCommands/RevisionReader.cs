@@ -158,9 +158,8 @@ namespace GitCommands
 
             ArgumentBuilder BuildArguments()
             {
-                return new ArgumentBuilder
+                return new GitArgumentBuilder("log")
                 {
-                    "log",
                     "-z",
                     $"--pretty=format:\"{fullFormat}\"",
                     { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },

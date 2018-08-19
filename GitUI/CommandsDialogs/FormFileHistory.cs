@@ -232,9 +232,8 @@ namespace GitUI.CommandsDialogs
                     // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
                     //
 
-                    var args = new ArgumentBuilder
+                    var args = new GitArgumentBuilder("log")
                     {
-                        "log",
                         "--format=\"%n\"",
                         "--name-only",
                         "--format",

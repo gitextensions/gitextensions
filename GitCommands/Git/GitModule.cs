@@ -86,8 +86,6 @@ namespace GitCommands
     [DebuggerDisplay("GitModule ( {" + nameof(WorkingDir) + "} )")]
     public sealed class GitModule : IGitModule
     {
-        private const string DiffCommandWithStandardArgs = "-c diff.submodule=short -c diff.noprefix=false diff --no-color ";
-
         private static readonly Regex CpEncodingPattern = new Regex("cp\\d+", RegexOptions.Compiled);
         private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
 
@@ -1036,9 +1034,8 @@ namespace GitCommands
 
             var format = formatString + (shortFormat ? "%s" : "%B%nNotes:%n%-N");
 
-            var args = new ArgumentBuilder
+            var args = new GitArgumentBuilder("log")
             {
-                "log",
                 "-n1",
                 $"--format={format}",
                 objectId
@@ -2263,9 +2260,9 @@ namespace GitCommands
 
             string diffOptions = _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked);
 
-            var args = new ArgumentBuilder
+            var args = new GitArgumentBuilder("diff")
             {
-                DiffCommandWithStandardArgs,
+                "--no-color",
                 extraDiffArguments,
                 { AppSettings.UsePatienceDiffAlgorithm, "--patience" },
                 "-M -C",
@@ -2318,11 +2315,14 @@ namespace GitCommands
 
         public string GetDiffFilesText(string firstRevision, string secondRevision, bool noCache = false)
         {
-            var args = DiffCommandWithStandardArgs + "-M -C --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
-
-            var cache = noCache ? null : GitCommandCache;
-
-            return _gitExecutable.GetOutput(args, cache: cache);
+            return _gitExecutable.GetOutput(
+                new GitArgumentBuilder("diff")
+                {
+                    "--no-color",
+                    "-M -C --name-status",
+                    _revisionDiffProvider.Get(firstRevision, secondRevision)
+                },
+                cache: noCache ? null : GitCommandCache);
         }
 
         public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(string firstRevision, string secondRevision, string parentToSecond)
@@ -2336,11 +2336,14 @@ namespace GitCommands
         {
             noCache = noCache || firstRevision.IsArtificial() || secondRevision.IsArtificial();
 
-            var args = DiffCommandWithStandardArgs + "-M -C -z --name-status " + _revisionDiffProvider.Get(firstRevision, secondRevision);
-
-            var cache = noCache ? null : GitCommandCache;
-
-            var output = _gitExecutable.GetOutput(args, cache: cache);
+            var output = _gitExecutable.GetOutput(
+                new GitArgumentBuilder("diff")
+                {
+                    "--no-color",
+                    "-M -C -z --name-status",
+                    _revisionDiffProvider.Get(firstRevision, secondRevision)
+                },
+                cache: noCache ? null : GitCommandCache);
 
             var resultCollection = GitCommandHelpers.GetDiffChangedFilesFromString(this, output, firstRevision, secondRevision, parentToSecond).ToList();
 
@@ -2499,21 +2502,25 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetIndexFiles()
         {
-            var status = _gitExecutable.GetOutput(DiffCommandWithStandardArgs + "-M -C -z --cached --name-status");
+            var output = _gitExecutable.GetOutput(
+                new GitArgumentBuilder("diff")
+                {
+                    "--no-color -M -C -z --cached --name-status"
+                });
 
-            if (status.Length < 50 && status.Contains("fatal: No HEAD commit to compare"))
+            if (output.Length < 50 && output.Contains("fatal: No HEAD commit to compare"))
             {
                 // This command is a little more expensive because it will return both staged and unstaged files
                 var command = GitCommandHelpers.GetAllChangedFilesCmd(excludeIgnoredFiles: true, UntrackedFilesMode.No);
 
-                status = _gitExecutable.GetOutput(command);
+                output = _gitExecutable.GetOutput(command);
 
-                return GitCommandHelpers.GetStatusChangedFilesFromString(this, status)
+                return GitCommandHelpers.GetStatusChangedFilesFromString(this, output)
                     .Where(item => item.Staged == StagedStatus.Index)
                     .ToList();
             }
 
-            return GitCommandHelpers.GetDiffChangedFilesFromString(this, status, "HEAD", GitRevision.IndexGuid, "HEAD");
+            return GitCommandHelpers.GetDiffChangedFilesFromString(this, output, "HEAD", GitRevision.IndexGuid, "HEAD");
         }
 
         public IReadOnlyList<GitItemStatus> GetIndexFilesWithSubmodulesStatus()
@@ -2551,9 +2558,9 @@ namespace GitCommands
         public Patch GetCurrentChanges(string fileName, [CanBeNull] string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
         {
             var output = _gitExecutable.GetOutput(
-                new ArgumentBuilder
+                new GitArgumentBuilder("diff")
                 {
-                    DiffCommandWithStandardArgs,
+                    "--no-color",
                     { staged, "-M -C --cached" },
                     extraDiffArguments,
                     { AppSettings.UsePatienceDiffAlgorithm, "--patience" },

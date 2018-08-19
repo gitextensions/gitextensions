@@ -50,7 +50,6 @@
   <ItemGroup>
     <Compile Include="AppTitleGeneratorTests.cs" />
     <Compile Include="ArgumentBuilderExtensionsTests.cs" />
-    <Compile Include="ArrayExtensionsTests.cs" />
     <Compile Include="CommitDataManagerTest.cs" />
     <Compile Include="CommitTemplateManagerTests.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
