@@ -1737,17 +1737,17 @@ namespace GitUI
         {
             if (arguments.ContainsKey("merge"))
             {
-                AppSettings.FormPullAction = AppSettings.PullAction.Merge;
+                AppSettings.DefaultPullAction = AppSettings.PullAction.Merge;
             }
 
             if (arguments.ContainsKey("rebase"))
             {
-                AppSettings.FormPullAction = AppSettings.PullAction.Rebase;
+                AppSettings.DefaultPullAction = AppSettings.PullAction.Rebase;
             }
 
             if (arguments.ContainsKey("fetch"))
             {
-                AppSettings.FormPullAction = AppSettings.PullAction.Fetch;
+                AppSettings.DefaultPullAction = AppSettings.PullAction.Fetch;
             }
 
             if (arguments.ContainsKey("autostash"))
