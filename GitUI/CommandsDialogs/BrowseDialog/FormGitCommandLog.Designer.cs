@@ -45,6 +45,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.chkAlwaysOnTop = new System.Windows.Forms.CheckBox();
             this.chkWordWrap = new System.Windows.Forms.CheckBox();
             this.mnuClear = new System.Windows.Forms.ToolStripMenuItem();
+            this.chkCaptureCallStacks = new System.Windows.Forms.CheckBox();
             this.TabControl.SuspendLayout();
             this.tabPageCommandLog.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -127,7 +128,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // 
             // mnuSaveToFile
             // 
-            this.mnuSaveToFile.Image = GitUI.Properties.Images.SaveAs;
+            this.mnuSaveToFile.Image = global::GitUI.Properties.Images.SaveAs;
             this.mnuSaveToFile.Name = "mnuSaveToFile";
             this.mnuSaveToFile.Size = new System.Drawing.Size(131, 22);
             this.mnuSaveToFile.Text = "Save to file";
@@ -135,7 +136,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             // 
             // mnuClear
             // 
-            this.mnuClear.Image = GitUI.Properties.Images.ClearLog;
+            this.mnuClear.Image = global::GitUI.Properties.Images.ClearLog;
             this.mnuClear.Name = "mnuClear";
             this.mnuClear.Size = new System.Drawing.Size(131, 22);
             this.mnuClear.Text = "Clear";
@@ -231,11 +232,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             this.chkWordWrap.Text = "Word wrap";
             this.chkWordWrap.UseVisualStyleBackColor = true;
             // 
+            // chkCaptureCallStacks
+            // 
+            this.chkCaptureCallStacks.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.chkCaptureCallStacks.AutoSize = true;
+            this.chkCaptureCallStacks.Location = new System.Drawing.Point(191, 450);
+            this.chkCaptureCallStacks.Name = "chkCaptureCallStacks";
+            this.chkCaptureCallStacks.Size = new System.Drawing.Size(122, 17);
+            this.chkCaptureCallStacks.TabIndex = 4;
+            this.chkCaptureCallStacks.Text = "Capture call stacks";
+            this.chkCaptureCallStacks.UseVisualStyleBackColor = true;
+            // 
             // FormGitCommandLog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(659, 470);
+            this.Controls.Add(this.chkCaptureCallStacks);
             this.Controls.Add(this.chkWordWrap);
             this.Controls.Add(this.chkAlwaysOnTop);
             this.Controls.Add(this.TabControl);
@@ -274,5 +287,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private ToolStripMenuItem mnuSaveToFile;
         private CheckBox chkWordWrap;
         private ToolStripMenuItem mnuClear;
+        private CheckBox chkCaptureCallStacks;
     }
 }
