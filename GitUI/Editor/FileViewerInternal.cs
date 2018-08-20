@@ -87,6 +87,8 @@ namespace GitUI.Editor
         public event EventHandler ScrollPosChanged;
         public new event EventHandler TextChanged;
 
+        public bool CanGotoLine => _isGotoLineUIApplicable;
+
         public string GetText()
         {
             return TextEditor.Text;
@@ -270,12 +272,12 @@ namespace GitUI.Editor
 
         public void GoToLine(int lineNumber)
         {
-            TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(0, lineNumber);
-        }
+            if (!CanGotoLine)
+            {
+                return;
+            }
 
-        public bool IsGotoLineUIApplicable()
-        {
-            return _isGotoLineUIApplicable;
+            TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(0, lineNumber);
         }
 
         public int LineAtCaret => TextEditor.ActiveTextAreaControl.Caret.Position.Line;

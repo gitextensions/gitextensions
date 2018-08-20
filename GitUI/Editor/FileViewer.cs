@@ -164,7 +164,7 @@ namespace GitUI.Editor
             contextMenu.Opening += (sender, e) =>
             {
                 copyToolStripMenuItem.Enabled = _internalFileViewer.GetSelectionLength() > 0;
-                goToLineToolStripMenuItem.Enabled = _internalFileViewer.IsGotoLineUIApplicable();
+                goToLineToolStripMenuItem.Enabled = _internalFileViewer.CanGotoLine;
 
                 goToLineToolStripMenuItem.ShortcutKeys = GetShortcutKeys((int)Commands.GoToLine);
 
@@ -1237,7 +1237,7 @@ namespace GitUI.Editor
 
         private void goToLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!_internalFileViewer.IsGotoLineUIApplicable())
+            if (!_internalFileViewer.CanGotoLine)
             {
                 return;
             }
