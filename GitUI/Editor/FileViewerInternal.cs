@@ -124,7 +124,7 @@ namespace GitUI.Editor
             }
 
             TextEditor.Text = text;
-            _isGotoLineUIApplicable = !isDiff;
+            _isGotoLineUIApplicable = isDiff;
 
             if (isDiff)
             {
