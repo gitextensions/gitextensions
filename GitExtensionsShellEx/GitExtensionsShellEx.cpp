@@ -478,7 +478,7 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
     if (isValidDir)
     {
         isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcBrowse);
-        cmdid = AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Browse", IDI_ICONBROWSEFILEEXPLORER, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+        cmdid = AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Open repository", IDI_ICONBROWSEFILEEXPLORER, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
         commandsId[cmdid]=gcBrowse;
 
         if (isFolder)
@@ -539,7 +539,7 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
         commandsId[cmdid]=gcAddFiles;
 
         isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcApplyPatch);
-        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Apply patch...", 0, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
+        cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Apply patch...", IDI_ICONPATCHAPPLY, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
         commandsId[cmdid]=gcApplyPatch;
     }
 

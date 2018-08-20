@@ -83,6 +83,9 @@
     <None Include="Resources\IconRepoCreate.ico">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Resources\IconPatchApply.ico">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">

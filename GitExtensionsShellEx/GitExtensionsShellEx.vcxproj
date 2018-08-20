@@ -260,6 +260,7 @@
     <None Include="Resources\IconCommit.ico" />
     <None Include="Resources\IconDiff.ico" />
     <None Include="Resources\IconFileHistory.ico" />
+    <None Include="Resources\IconPatchApply.ico" />
     <None Include="Resources\IconPull.ico" />
     <None Include="Resources\IconPush.ico" />
     <None Include="Resources\IconRepoCreate.ico" />
