@@ -29,7 +29,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 HeaderText = "Message",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                Width = DpiUtil.Scale(500)
+                Width = DpiUtil.Scale(500),
+                MinimumWidth = DpiUtil.Scale(25)
             };
         }
 

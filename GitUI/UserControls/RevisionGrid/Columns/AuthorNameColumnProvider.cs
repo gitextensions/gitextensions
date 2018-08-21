@@ -22,7 +22,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 HeaderText = "Author Name",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                Width = DpiUtil.Scale(130)
+                Width = DpiUtil.Scale(130),
+                MinimumWidth = DpiUtil.Scale(25)
             };
         }
 
