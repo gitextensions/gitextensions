@@ -64,9 +64,9 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _updateCurrentSubmodule = new TranslationString("Update current submodule");
 
-        private readonly TranslationString _pullFetch = new TranslationString("Pull - fetch");
-        private readonly TranslationString _pullFetchAll = new TranslationString("Pull - fetch all");
-        private readonly TranslationString _pullFetchPruneAll = new TranslationString("Pull - fetch and prune all");
+        private readonly TranslationString _pullFetch = new TranslationString("Fetch");
+        private readonly TranslationString _pullFetchAll = new TranslationString("Fetch all");
+        private readonly TranslationString _pullFetchPruneAll = new TranslationString("Fetch and prune all");
         private readonly TranslationString _pullMerge = new TranslationString("Pull - merge");
         private readonly TranslationString _pullRebase = new TranslationString("Pull - rebase");
         private readonly TranslationString _pullOpenDialog = new TranslationString("Open pull dialog");
