@@ -2028,7 +2028,8 @@ namespace GitUI.CommandsDialogs
 
             void AddBranchesMenuItems()
             {
-                foreach (var branchName in GetBranchNames())
+                var currentBranch = UICommands.GitModule.GetSelectedBranch();
+                foreach (var branchName in GetBranchNames().Where(b => b != currentBranch))
                 {
                     var toolStripItem = branchSelect.DropDownItems.Add(branchName);
                     toolStripItem.Click
