@@ -53,14 +53,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             if (localSettings == null)
             {
                 GlobalRB.Checked = true;
-
                 EffectiveRB.Visible = false;
                 DistributedRB.Visible = false;
                 LocalRB.Visible = false;
-                arrows1.Visible = false;
-                arrows2.Visible = false;
+                arrow1.Visible = false;
+                arrow2.Visible = false;
                 arrow3.Visible = false;
-                tableLayoutPanel2.RowStyles[2].Height = 0;
             }
             else
             {
@@ -76,16 +74,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 {
                     if (EffectiveRB.Checked)
                     {
-                        arrows1.ForeColor = EffectiveRB.ForeColor;
+                        arrow1.ForeColor = EffectiveRB.ForeColor;
                         localSettings.SetEffectiveSettings();
                     }
                     else
                     {
-                        arrows1.ForeColor = arrows1.BackColor;
+                        arrow1.ForeColor = arrow1.BackColor;
                     }
 
-                    arrows2.ForeColor = arrows1.ForeColor;
-                    arrow3.ForeColor = arrows1.ForeColor;
+                    arrow2.ForeColor = arrow1.ForeColor;
+                    arrow3.ForeColor = arrow1.ForeColor;
                 };
 
                 EffectiveRB.Checked = true;
