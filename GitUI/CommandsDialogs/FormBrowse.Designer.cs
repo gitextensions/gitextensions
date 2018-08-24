@@ -27,7 +27,10 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator0 = new System.Windows.Forms.ToolStripSeparator();
             this.toggleBranchTreePanel = new System.Windows.Forms.ToolStripButton();
             this.toggleSplitViewLayout = new System.Windows.Forms.ToolStripButton();
-            this.toggleCommitInfoOnRight = new System.Windows.Forms.ToolStripButton();
+            this.menuCommitInfoPosition = new System.Windows.Forms.ToolStripSplitButton();
+            this.commitInfoBelowMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.commitInfoLeftwardMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.commitInfoRightwardMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator17 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonLevelUp = new System.Windows.Forms.ToolStripSplitButton();
             this._NO_TRANSLATE_WorkingDir = new System.Windows.Forms.ToolStripSplitButton();
@@ -242,7 +245,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator0,
             this.toggleBranchTreePanel,
             this.toggleSplitViewLayout,
-            this.toggleCommitInfoOnRight,
+            this.menuCommitInfoPosition,
             this.toolStripSeparator17,
             this.toolStripButtonLevelUp,
             this._NO_TRANSLATE_WorkingDir,
@@ -305,14 +308,42 @@ namespace GitUI.CommandsDialogs
             this.toggleSplitViewLayout.ToolTipText = "Toggle split view layout";
             this.toggleSplitViewLayout.Click += new System.EventHandler(this.toggleSplitViewLayout_Click);
             // 
-            // toggleCommitInfoOnRight
+            // menuCommitInfoPosition
             // 
-            this.toggleCommitInfoOnRight.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toggleCommitInfoOnRight.Image = global::GitUI.Properties.Images.LayoutSidebarRight;
-            this.toggleCommitInfoOnRight.Name = "toggleCommitInfoOnRight";
-            this.toggleCommitInfoOnRight.Size = new System.Drawing.Size(23, 22);
-            this.toggleCommitInfoOnRight.ToolTipText = "Toggle commit info at right";
-            this.toggleCommitInfoOnRight.Click += new System.EventHandler(this.toggleCommitInfoOnRight_Click);
+            this.menuCommitInfoPosition.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.menuCommitInfoPosition.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.commitInfoBelowMenuItem,
+            this.commitInfoLeftwardMenuItem,
+            this.commitInfoRightwardMenuItem});
+            this.menuCommitInfoPosition.Image = global::GitUI.Properties.Images.LayoutFooterTab;
+            this.menuCommitInfoPosition.Name = "menuCommitInfoPosition";
+            this.menuCommitInfoPosition.Size = new System.Drawing.Size(32, 22);
+            this.menuCommitInfoPosition.ToolTipText = "Commit info position";
+            this.menuCommitInfoPosition.Click += new System.EventHandler(this.CommitInfoPositionClick);
+            // 
+            // commitInfoBelowMenuItem
+            // 
+            this.commitInfoBelowMenuItem.Image = global::GitUI.Properties.Images.LayoutFooterTab;
+            this.commitInfoBelowMenuItem.Name = "commitInfoBelowMenuItem";
+            this.commitInfoBelowMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.commitInfoBelowMenuItem.Text = "Commit info below graph";
+            this.commitInfoBelowMenuItem.Click += new System.EventHandler(this.CommitInfoBelowClick);
+            // 
+            // commitInfoLeftwardMenuItem
+            // 
+            this.commitInfoLeftwardMenuItem.Image = global::GitUI.Properties.Images.LayoutSidebarTopLeft;
+            this.commitInfoLeftwardMenuItem.Name = "commitInfoLeftwardMenuItem";
+            this.commitInfoLeftwardMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.commitInfoLeftwardMenuItem.Text = "Commit info left of graph";
+            this.commitInfoLeftwardMenuItem.Click += new System.EventHandler(this.CommitInfoLeftwardClick);
+            // 
+            // commitInfoRightwardMenuItem
+            // 
+            this.commitInfoRightwardMenuItem.Image = global::GitUI.Properties.Images.LayoutSidebarTopRight;
+            this.commitInfoRightwardMenuItem.Name = "commitInfoRightwardMenuItem";
+            this.commitInfoRightwardMenuItem.Size = new System.Drawing.Size(259, 22);
+            this.commitInfoRightwardMenuItem.Text = "Commit info right of graph";
+            this.commitInfoRightwardMenuItem.Click += new System.EventHandler(this.CommitInfoRightwardClick);
             // 
             // toolStripSeparator17
             // 
@@ -332,7 +363,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripButtonLevelUp.ButtonClick += new System.EventHandler(this.toolStripButtonLevelUp_ButtonClick);
             this.toolStripButtonLevelUp.DropDownOpening += new System.EventHandler(this.toolStripButtonLevelUp_DropDownOpening);
             // 
-            // _NO_TRANSLATE_Workingdir
+            // _NO_TRANSLATE_WorkingDir
             // 
             this._NO_TRANSLATE_WorkingDir.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this._NO_TRANSLATE_WorkingDir.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -413,7 +444,7 @@ namespace GitUI.CommandsDialogs
             this.createAStashToolStripMenuItem.Text = "Create a stash...";
             this.createAStashToolStripMenuItem.Click += new System.EventHandler(this.CreateStashToolStripMenuItemClick);
             // 
-            // toolStripButton1
+            // toolStripButtonCommit
             // 
             this.toolStripButtonCommit.Image = global::GitUI.Properties.Images.RepoStateClean;
             this.toolStripButtonCommit.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -802,7 +833,7 @@ namespace GitUI.CommandsDialogs
             this.statusStrip.Size = new System.Drawing.Size(923, 22);
             this.statusStrip.TabIndex = 4;
             // 
-            // toolStripStatusLabel1
+            // closeStatusBarItem
             // 
             this.closeStatusBarItem.Name = "closeStatusBarItem";
             this.closeStatusBarItem.Size = new System.Drawing.Size(14, 17);
@@ -1052,7 +1083,7 @@ namespace GitUI.CommandsDialogs
             this.editgitinfoexcludeToolStripMenuItem.Text = "Edit .git/info/exclude";
             this.editgitinfoexcludeToolStripMenuItem.Click += new System.EventHandler(this.EditGitInfoExcludeToolStripMenuItemClick);
             // 
-            // editgitattributesToolStripMenuItem
+            // editGitAttributesToolStripMenuItem
             // 
             this.editGitAttributesToolStripMenuItem.Name = "editGitAttributesToolStripMenuItem";
             this.editGitAttributesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
@@ -1098,7 +1129,7 @@ namespace GitUI.CommandsDialogs
             this.compressGitDatabaseToolStripMenuItem.Text = "Compress git database";
             this.compressGitDatabaseToolStripMenuItem.Click += new System.EventHandler(this.CompressGitDatabaseToolStripMenuItemClick);
             // 
-            // verifyGitDatabaseToolStripMenuItem
+            // recoverLostObjectsToolStripMenuItem
             // 
             this.recoverLostObjectsToolStripMenuItem.Image = global::GitUI.Properties.Images.RecoverLostObjects;
             this.recoverLostObjectsToolStripMenuItem.Name = "recoverLostObjectsToolStripMenuItem";
@@ -1106,7 +1137,7 @@ namespace GitUI.CommandsDialogs
             this.recoverLostObjectsToolStripMenuItem.Text = "Recover lost objects...";
             this.recoverLostObjectsToolStripMenuItem.Click += new System.EventHandler(this.recoverLostObjectsToolStripMenuItemClick);
             // 
-            // deleteIndexlockToolStripMenuItem
+            // deleteIndexLockToolStripMenuItem
             // 
             this.deleteIndexLockToolStripMenuItem.Image = global::GitUI.Properties.Images.DeleteIndexLock;
             this.deleteIndexLockToolStripMenuItem.Name = "deleteIndexLockToolStripMenuItem";
@@ -1663,7 +1694,6 @@ namespace GitUI.CommandsDialogs
             // toolPanel.ContentPanel
             // 
             this.toolPanel.ContentPanel.Controls.Add(this.MainSplitContainer);
-            this.toolPanel.ContentPanel.Size = new System.Drawing.Size(923, 502);
             this.toolPanel.ContentPanel.Margin = new System.Windows.Forms.Padding(0);
             this.toolPanel.ContentPanel.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
             this.toolPanel.ContentPanel.Size = new System.Drawing.Size(1846, 1023);
@@ -1890,6 +1920,9 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem createAStashToolStripMenuItem;
         private ToolStripMenuItem undoLastCommitToolStripMenuItem;
         private ToolStripMenuItem tsmiFavouriteRepositories;
-        private ToolStripButton toggleCommitInfoOnRight;
+        private ToolStripSplitButton menuCommitInfoPosition;
+        private ToolStripMenuItem commitInfoBelowMenuItem;
+        private ToolStripMenuItem commitInfoLeftwardMenuItem;
+        private ToolStripMenuItem commitInfoRightwardMenuItem;
     }
 }

@@ -41,6 +41,13 @@ namespace GitCommands
         MiddleDots
     }
 
+    public enum CommitInfoPosition
+    {
+        BelowList = 0,
+        LeftwardFromList = 1,
+        RightwardFromList = 2
+    }
+
     public static class AppSettings
     {
         // semi-constants
@@ -359,10 +366,13 @@ namespace GitCommands
         public static readonly StringSetting ConEmuFontSize = new StringSetting("ConEmuFontSize", DetailedSettingsPath, "12");
         public static readonly BoolNullableSetting ShowGpgInformation = new BoolNullableSetting("ShowGpgInformation", DetailedSettingsPath, false);
 
-        public static bool ShowRevisionInfoNextToRevisionGrid
+        public static CommitInfoPosition CommitInfoPosition
         {
-            get => DetailedSettingsPath.GetBool("ShowRevisionInfoNextToRevisionGrid", false);
-            set => DetailedSettingsPath.SetBool("ShowRevisionInfoNextToRevisionGrid", value);
+            get => DetailedSettingsPath.GetNullableEnum<CommitInfoPosition>("CommitInfoPosition") ?? (
+                DetailedSettingsPath.GetBool("ShowRevisionInfoNextToRevisionGrid") == true // legacy setting
+                    ? CommitInfoPosition.RightwardFromList
+                    : CommitInfoPosition.BelowList);
+            set => DetailedSettingsPath.SetEnum("CommitInfoPosition", value);
         }
 
         public static bool ShowSplitViewLayout

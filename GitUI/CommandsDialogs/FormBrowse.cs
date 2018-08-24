@@ -147,6 +147,7 @@ namespace GitUI.CommandsDialogs
                     { nameof(Images.Key), Images.Key }
                 }
             };
+
             CommitInfoTabPage.ImageKey = nameof(Images.CommitSummary);
             DiffTabPage.ImageKey = nameof(Images.Diff);
             TreeTabPage.ImageKey = nameof(Images.FileTree);
@@ -303,7 +304,7 @@ namespace GitUI.CommandsDialogs
             _appTitleGenerator = new AppTitleGenerator(repositoryDescriptionProvider);
             _windowsJumpListManager = new WindowsJumpListManager(repositoryDescriptionProvider);
 
-            FillBuildReport();  // Ensure correct page visibility
+            FillBuildReport(); // Ensure correct page visibility
             RevisionGrid.ShowBuildServerInfo = true;
 
             _formBrowseMenus = new FormBrowseMenus(menuStrip1);
@@ -569,6 +570,7 @@ namespace GitUI.CommandsDialogs
                             RefreshRevisions();
                         }
                     };
+
                     pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
                 }
 
@@ -880,6 +882,7 @@ namespace GitUI.CommandsDialogs
                                 ? _warningMiddleOfRebase.Text
                                 : _warningMiddleOfPatchApply.Text
                         };
+
                         _rebase.Click += RebaseClick;
                         statusStrip.Items.Add(_rebase);
                     }
@@ -986,6 +989,7 @@ namespace GitUI.CommandsDialogs
                     MeasureFont = _NO_TRANSLATE_WorkingDir.Font,
                     Graphics = graphics
                 };
+
                 splitter.SplitRecentRepos(recentRepositoryHistory, mostRecentRepos, mostRecentRepos);
 
                 var ri = mostRecentRepos.Find(e => e.Repo.Path.Equals(path, StringComparison.InvariantCultureIgnoreCase));
@@ -1035,6 +1039,7 @@ namespace GitUI.CommandsDialogs
 
                 RefreshWorkingDirComboText();
             };
+
             _NO_TRANSLATE_WorkingDir.DropDownItems.Add(mnuRecentReposSettings);
 
             PreventToolStripSplitButtonClosing((ToolStripSplitButton)sender);
@@ -1120,7 +1125,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            if (!AppSettings.ShowRevisionInfoNextToRevisionGrid && CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
+            if (AppSettings.CommitInfoPosition == CommitInfoPosition.BelowList && CommitInfoTabControl.SelectedTab != CommitInfoTabPage)
             {
                 return;
             }
@@ -1344,7 +1349,7 @@ namespace GitUI.CommandsDialogs
         private void OnShowSettingsClick(object sender, EventArgs e)
         {
             var translation = AppSettings.Translation;
-            var showRevisionInfoNextToRevisionGrid = AppSettings.ShowRevisionInfoNextToRevisionGrid;
+            var commitInfoPosition = AppSettings.CommitInfoPosition;
 
             UICommands.StartSettingsDialog(this);
 
@@ -1353,7 +1358,7 @@ namespace GitUI.CommandsDialogs
                 Translator.Translate(this, AppSettings.CurrentTranslation);
             }
 
-            if (showRevisionInfoNextToRevisionGrid != AppSettings.ShowRevisionInfoNextToRevisionGrid)
+            if (commitInfoPosition != AppSettings.CommitInfoPosition)
             {
                 LayoutRevisionInfo();
             }
@@ -1584,6 +1589,7 @@ namespace GitUI.CommandsDialogs
                                                         MessageBoxButtons.YesNo,
                                                         MessageBoxIcon.Exclamation,
                                                         MessageBoxDefaultButton.Button1);
+
             if (dialogResult != DialogResult.Yes)
             {
                 return;
@@ -1673,6 +1679,7 @@ namespace GitUI.CommandsDialogs
                     MeasureFont = container.Font,
                     Graphics = graphics
                 };
+
                 splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, lessRecentRepos);
             }
 
@@ -1700,6 +1707,7 @@ namespace GitUI.CommandsDialogs
                     {
                         DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
                     };
+
                     menuItemCategory.DropDownItems.Add(item);
 
                     item.Click += delegate { ChangeWorkingDir(r.Repo.Path); };
@@ -1730,6 +1738,7 @@ namespace GitUI.CommandsDialogs
                     MeasureFont = container.Font,
                     Graphics = graphics
                 };
+
                 splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, lessRecentRepos);
             }
 
@@ -1762,6 +1771,7 @@ namespace GitUI.CommandsDialogs
                 {
                     DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
                 };
+
                 container.DropDownItems.Add(item);
 
                 item.Click += (hs, he) => ChangeWorkingDir(repo.Path);
@@ -1923,6 +1933,7 @@ namespace GitUI.CommandsDialogs
                     ShortcutKeys = checkoutBranchToolStripMenuItem.ShortcutKeys,
                     ShortcutKeyDisplayString = checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString
                 };
+
                 branchSelect.DropDownItems.Add(checkoutBranchItem);
                 checkoutBranchItem.Click += CheckoutBranchToolStripMenuItemClick;
             }
@@ -2005,6 +2016,7 @@ namespace GitUI.CommandsDialogs
             QuickFetch = 11,
             QuickPull = 12,
             QuickPush = 13,
+
             /* deprecated: RotateApplicationIcon = 14, */
             CloseRepository = 15,
             Stash = 16,
@@ -2734,6 +2746,7 @@ namespace GitUI.CommandsDialogs
                     {
                         var nodeFontSize =
                             startInfoBaseConfiguration.SelectSingleNode("/key/key/key/value[@name='FontSize']");
+
                         if (nodeFontSize?.Attributes != null)
                         {
                             nodeFontSize.Attributes["data"].Value = fontSize.ToString("X8");
@@ -2875,9 +2888,28 @@ namespace GitUI.CommandsDialogs
             RefreshLayoutToggleButtonStates();
         }
 
-        private void toggleCommitInfoOnRight_Click(object sender, EventArgs e)
+        private void CommitInfoPositionClick(object sender, EventArgs e)
         {
-            AppSettings.ShowRevisionInfoNextToRevisionGrid = !AppSettings.ShowRevisionInfoNextToRevisionGrid;
+            if (!menuCommitInfoPosition.DropDownButtonPressed)
+            {
+                SetCommitInfoPosition((CommitInfoPosition)(
+                    ((int)AppSettings.CommitInfoPosition + 1) %
+                    Enum.GetValues(typeof(CommitInfoPosition)).Length));
+            }
+        }
+
+        private void CommitInfoBelowClick(object sender, EventArgs e) =>
+            SetCommitInfoPosition(CommitInfoPosition.BelowList);
+
+        private void CommitInfoLeftwardClick(object sender, EventArgs e) =>
+            SetCommitInfoPosition(CommitInfoPosition.LeftwardFromList);
+
+        private void CommitInfoRightwardClick(object sender, EventArgs e) =>
+            SetCommitInfoPosition(CommitInfoPosition.RightwardFromList);
+
+        private void SetCommitInfoPosition(CommitInfoPosition position)
+        {
+            AppSettings.CommitInfoPosition = position;
             LayoutRevisionInfo();
             RefreshLayoutToggleButtonStates();
         }
@@ -2892,7 +2924,11 @@ namespace GitUI.CommandsDialogs
         {
             toggleBranchTreePanel.Checked = !MainSplitContainer.Panel1Collapsed;
             toggleSplitViewLayout.Checked = AppSettings.ShowSplitViewLayout;
-            toggleCommitInfoOnRight.Checked = AppSettings.ShowRevisionInfoNextToRevisionGrid;
+
+            int commitInfoPositionNumber = (int)AppSettings.CommitInfoPosition;
+            var selectedMenuItem = menuCommitInfoPosition.DropDownItems[commitInfoPositionNumber];
+            menuCommitInfoPosition.Image = selectedMenuItem.Image;
+            menuCommitInfoPosition.ToolTipText = selectedMenuItem.Text;
         }
 
         private void LayoutRevisionInfo()
@@ -2904,24 +2940,46 @@ namespace GitUI.CommandsDialogs
             CommitInfoTabControl.SuspendLayout();
             RevisionsSplitContainer.SuspendLayout();
 
-            var isRight = AppSettings.ShowRevisionInfoNextToRevisionGrid;
+            var commitInfoPosition = AppSettings.CommitInfoPosition;
 
-            RevisionInfo.SetAvatarPosition(isRight);
+            RevisionInfo.SetAvatarPosition(right: commitInfoPosition == CommitInfoPosition.RightwardFromList);
 
-            if (isRight)
+            if (commitInfoPosition == CommitInfoPosition.BelowList)
             {
-                RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
-                RevisionsSplitContainer.SplitterDistance = RevisionsSplitContainer.Width - DpiUtil.Scale(420);
-                CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
+                CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
+                CommitInfoTabControl.SelectedTab = CommitInfoTabPage;
+
+                RevisionsSplitContainer.FixedPanel = FixedPanel.Panel2;
+                RevisionInfo.Parent = CommitInfoTabPage;
+                RevisionGrid.Parent = RevisionsSplitContainer.Panel1;
+                RevisionsSplitContainer.Panel2Collapsed = true;
             }
             else
             {
-                RevisionInfo.Parent = CommitInfoTabPage;
-                CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
-                CommitInfoTabControl.SelectedTab = CommitInfoTabPage;
-            }
+                int width = DpiUtil.Scale(420);
+                CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
 
-            RevisionsSplitContainer.Panel2Collapsed = !isRight;
+                if (commitInfoPosition == CommitInfoPosition.RightwardFromList)
+                {
+                    RevisionsSplitContainer.FixedPanel = FixedPanel.Panel2;
+                    RevisionsSplitContainer.SplitterDistance = RevisionsSplitContainer.Width - width;
+                    RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
+                    RevisionGrid.Parent = RevisionsSplitContainer.Panel1;
+                }
+                else if (commitInfoPosition == CommitInfoPosition.LeftwardFromList)
+                {
+                    RevisionsSplitContainer.FixedPanel = FixedPanel.Panel1;
+                    RevisionsSplitContainer.SplitterDistance = width;
+                    RevisionInfo.Parent = RevisionsSplitContainer.Panel1;
+                    RevisionGrid.Parent = RevisionsSplitContainer.Panel2;
+                }
+                else
+                {
+                    throw new NotSupportedException();
+                }
+
+                RevisionsSplitContainer.Panel2Collapsed = false;
+            }
 
             RevisionInfo.ResumeLayout(performLayout: true);
             CommitInfoTabControl.ResumeLayout(performLayout: true);
