@@ -486,9 +486,6 @@
   <data name="LayoutSidebarLeft" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\LayoutSidebarLeft.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="LayoutSidebarRight" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Icons\LayoutSidebarRight.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="LayoutFooter" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\LayoutFooter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -776,5 +773,14 @@
   </data>
   <data name="GitExtensionsLogo256" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Logo\git-extensions-logo-256px.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LayoutSidebarTopLeft" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\LayoutSidebarTopLeft.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LayoutSidebarTopRight" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\LayoutSidebarTopRight.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LayoutFooterTab" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\LayoutFooterTab.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

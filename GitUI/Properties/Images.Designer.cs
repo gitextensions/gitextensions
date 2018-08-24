@@ -1113,6 +1113,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap LayoutFooterTab {
+            get {
+                object obj = ResourceManager.GetObject("LayoutFooterTab", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap LayoutSidebarLeft {
             get {
                 object obj = ResourceManager.GetObject("LayoutSidebarLeft", resourceCulture);
@@ -1123,9 +1133,19 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap LayoutSidebarRight {
+        public static System.Drawing.Bitmap LayoutSidebarTopLeft {
             get {
-                object obj = ResourceManager.GetObject("LayoutSidebarRight", resourceCulture);
+                object obj = ResourceManager.GetObject("LayoutSidebarTopLeft", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap LayoutSidebarTopRight {
+            get {
+                object obj = ResourceManager.GetObject("LayoutSidebarTopRight", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
