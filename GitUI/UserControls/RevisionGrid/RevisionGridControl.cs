@@ -668,24 +668,6 @@ namespace GitUI
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();
                 GitModule capturedModule = Module;
-                JoinableTask<SuperProjectInfo> newSuperProjectInfo =
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                        return GetSuperprojectCheckout(ShowRemoteRef, capturedModule);
-                    });
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                {
-                    try
-                    {
-                        await newSuperProjectInfo;
-                    }
-                    finally
-                    {
-                        await this.SwitchToMainThreadAsync();
-                        Refresh();
-                    }
-                }).FileAndForget();
 
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
@@ -699,12 +681,9 @@ namespace GitUI
                     _selectedObjectIds = null;
                 }
 
-                _gridView.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
                 _filteredCurrentCheckout = null;
                 _currentCheckoutParents = null;
-                _superprojectCurrentCheckout = newSuperProjectInfo;
-                _gridView.Clear();
                 _isRefreshingRevisions = true;
                 base.Refresh();
 
@@ -793,6 +772,8 @@ namespace GitUI
 
                 _gridView.SuspendLayout();
                 _gridView.SelectionChanged -= OnGridViewSelectionChanged;
+                _gridView.ClearSelection();
+                _gridView.Clear();
                 _gridView.Enabled = true;
                 _gridView.Focus();
                 _gridView.SelectionChanged += OnGridViewSelectionChanged;
@@ -800,15 +781,20 @@ namespace GitUI
 
                 if (_initialLoad)
                 {
-                    _initialLoad = false;
-
                     _selectionTimer.Enabled = false;
                     _selectionTimer.Stop();
                     _selectionTimer.Enabled = true;
                     _selectionTimer.Start();
+
+                    _initialLoad = false;
                 }
 
-                _gridView.Refresh();
+                _superprojectCurrentCheckout = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await TaskScheduler.Default;
+                    return GetSuperprojectCheckout(ShowRemoteRef, capturedModule);
+                });
+
                 ResetNavigationHistory();
             }
             catch
