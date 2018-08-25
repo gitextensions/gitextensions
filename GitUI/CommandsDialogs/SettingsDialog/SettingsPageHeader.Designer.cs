@@ -30,120 +30,81 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         /// </summary>
         private void InitializeComponent()
         {
-            this.HeaderPanel = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.HeaderPanel = new System.Windows.Forms.TableLayoutPanel();
             this.linePanel = new System.Windows.Forms.Panel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.labelSettingsSource = new System.Windows.Forms.Label();
+            this.flowLayoutPanelSettingsSource = new System.Windows.Forms.FlowLayoutPanel();
             this.DistributedRB = new System.Windows.Forms.RadioButton();
             this.arrow3 = new System.Windows.Forms.Label();
-            this.arrows2 = new System.Windows.Forms.Label();
+            this.arrow2 = new System.Windows.Forms.Label();
             this.LocalRB = new System.Windows.Forms.RadioButton();
             this.GlobalRB = new System.Windows.Forms.RadioButton();
             this.EffectiveRB = new System.Windows.Forms.RadioButton();
-            this.arrows1 = new System.Windows.Forms.Label();
+            this.arrow1 = new System.Windows.Forms.Label();
             this.settingsPagePanel = new System.Windows.Forms.Panel();
             this.HeaderPanel.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.flowLayoutPanelSettingsSource.SuspendLayout();
             this.SuspendLayout();
             // 
             // HeaderPanel
             // 
             this.HeaderPanel.AutoSize = true;
             this.HeaderPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.HeaderPanel.Controls.Add(this.tableLayoutPanel2);
+            this.HeaderPanel.ColumnCount = 1;
+            this.HeaderPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.HeaderPanel.Controls.Add(this.linePanel, 0, 1);
+            this.HeaderPanel.Controls.Add(this.flowLayoutPanelSettingsSource, 0, 0);
             this.HeaderPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.HeaderPanel.Location = new System.Drawing.Point(0, 4);
             this.HeaderPanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.HeaderPanel.Name = "HeaderPanel";
-            this.HeaderPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 7);
+            this.HeaderPanel.RowCount = 2;
+            this.HeaderPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.HeaderPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.HeaderPanel.Size = new System.Drawing.Size(930, 73);
             this.HeaderPanel.TabIndex = 0;
             // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.linePanel, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 0, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 3;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 13F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(930, 66);
-            this.tableLayoutPanel2.TabIndex = 1;
-            // 
-            // linePanel
+            // labelSettingsSource
             // 
             this.linePanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.linePanel.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.linePanel.Location = new System.Drawing.Point(3, 45);
-            this.linePanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.linePanel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 17);
             this.linePanel.Name = "linePanel";
             this.linePanel.Size = new System.Drawing.Size(924, 4);
             this.linePanel.TabIndex = 10;
             // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel1.Controls.Add(this.label1);
-            this.flowLayoutPanel1.Controls.Add(this.tableLayoutPanel1);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 4);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 0);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(924, 37);
-            this.flowLayoutPanel1.TabIndex = 5;
-            // 
             // label1
             // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
-            this.label1.Location = new System.Drawing.Point(3, 12);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(98, 13);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Settings source:";
+            this.labelSettingsSource.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.labelSettingsSource.AutoSize = true;
+            this.labelSettingsSource.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+            this.labelSettingsSource.Location = new System.Drawing.Point(3, 12);
+            this.labelSettingsSource.Name = "labelSettingsSource";
+            this.labelSettingsSource.Size = new System.Drawing.Size(98, 13);
+            this.labelSettingsSource.TabIndex = 7;
+            this.labelSettingsSource.Text = "Settings source:";
             // 
-            // tableLayoutPanel1
+            // flowLayoutPanelSettingsSource
             // 
-            this.tableLayoutPanel1.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel1.ColumnCount = 7;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.DistributedRB, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.arrow3, 5, 0);
-            this.tableLayoutPanel1.Controls.Add(this.arrows2, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.LocalRB, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.GlobalRB, 6, 0);
-            this.tableLayoutPanel1.Controls.Add(this.EffectiveRB, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.arrows1, 1, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(107, 4);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(782, 29);
-            this.tableLayoutPanel1.TabIndex = 8;
+            this.flowLayoutPanelSettingsSource.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.flowLayoutPanelSettingsSource.AutoSize = true;
+            this.flowLayoutPanelSettingsSource.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanelSettingsSource.Controls.Add(this.labelSettingsSource);
+            this.flowLayoutPanelSettingsSource.Controls.Add(this.EffectiveRB);
+            this.flowLayoutPanelSettingsSource.Controls.Add(this.arrow1);
+            this.flowLayoutPanelSettingsSource.Controls.Add(this.LocalRB);
+            this.flowLayoutPanelSettingsSource.Controls.Add(this.arrow2);
+            this.flowLayoutPanelSettingsSource.Controls.Add(this.DistributedRB);
+            this.flowLayoutPanelSettingsSource.Controls.Add(this.arrow3);
+            this.flowLayoutPanelSettingsSource.Controls.Add(this.GlobalRB);
+            this.flowLayoutPanelSettingsSource.Dock = System.Windows.Forms.DockStyle.Top;
+            this.flowLayoutPanelSettingsSource.Location = new System.Drawing.Point(3, 4);
+            this.flowLayoutPanelSettingsSource.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.flowLayoutPanelSettingsSource.Name = "flowLayoutPanelSettingsSource";
+            this.flowLayoutPanelSettingsSource.Size = new System.Drawing.Size(924, 37);
+            this.flowLayoutPanelSettingsSource.TabIndex = 5;
             // 
             // DistributedRB
             // 
@@ -167,15 +128,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             this.arrow3.TabIndex = 11;
             this.arrow3.Text = "<<";
             // 
-            // arrows2
+            // arrow2
             // 
-            this.arrows2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.arrows2.AutoSize = true;
-            this.arrows2.Location = new System.Drawing.Point(307, 6);
-            this.arrows2.Name = "arrows2";
-            this.arrows2.Size = new System.Drawing.Size(26, 17);
-            this.arrows2.TabIndex = 10;
-            this.arrows2.Text = "<<";
+            this.arrow2.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.arrow2.AutoSize = true;
+            this.arrow2.Location = new System.Drawing.Point(307, 6);
+            this.arrow2.Name = "arrow2";
+            this.arrow2.Size = new System.Drawing.Size(26, 17);
+            this.arrow2.TabIndex = 10;
+            this.arrow2.Text = "<<";
             // 
             // LocalRB
             // 
@@ -216,15 +177,15 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             this.EffectiveRB.Text = "Effective";
             this.EffectiveRB.UseVisualStyleBackColor = true;
             // 
-            // arrows1
+            // arrow1
             // 
-            this.arrows1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.arrows1.AutoSize = true;
-            this.arrows1.Location = new System.Drawing.Point(83, 6);
-            this.arrows1.Name = "arrows1";
-            this.arrows1.Size = new System.Drawing.Size(26, 17);
-            this.arrows1.TabIndex = 3;
-            this.arrows1.Text = "<<";
+            this.arrow1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.arrow1.AutoSize = true;
+            this.arrow1.Location = new System.Drawing.Point(83, 6);
+            this.arrow1.Name = "arrow1";
+            this.arrow1.Size = new System.Drawing.Size(26, 17);
+            this.arrow1.TabIndex = 3;
+            this.arrow1.Text = "<<";
             // 
             // settingsPagePanel
             // 
@@ -246,12 +207,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             this.Size = new System.Drawing.Size(930, 565);
             this.HeaderPanel.ResumeLayout(false);
             this.HeaderPanel.PerformLayout();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.flowLayoutPanelSettingsSource.ResumeLayout(false);
+            this.flowLayoutPanelSettingsSource.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -259,19 +216,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         #endregion
 
-        private System.Windows.Forms.Panel HeaderPanel;
         private System.Windows.Forms.Panel settingsPagePanel;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel HeaderPanel;
         private System.Windows.Forms.Panel linePanel;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Label labelSettingsSource;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelSettingsSource;
         private System.Windows.Forms.RadioButton DistributedRB;
         private System.Windows.Forms.Label arrow3;
-        private System.Windows.Forms.Label arrows2;
+        private System.Windows.Forms.Label arrow2;
         private System.Windows.Forms.RadioButton LocalRB;
         private System.Windows.Forms.RadioButton GlobalRB;
         private System.Windows.Forms.RadioButton EffectiveRB;
-        private System.Windows.Forms.Label arrows1;
+        private System.Windows.Forms.Label arrow1;
     }
 }
