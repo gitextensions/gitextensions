@@ -37,10 +37,6 @@ namespace GitUI.CommandsDialogs
     {
         #region Translation
 
-        private readonly TranslationString _stashCount = new TranslationString("{0} saved {1}");
-        private readonly TranslationString _stashPlural = new TranslationString("stashes");
-        private readonly TranslationString _stashSingular = new TranslationString("stash");
-
         private readonly TranslationString _warningMiddleOfBisect = new TranslationString("You are in the middle of a bisect");
         private readonly TranslationString _warningMiddleOfRebase = new TranslationString("You are in the middle of a rebase");
         private readonly TranslationString _warningMiddleOfPatchApply = new TranslationString("You are in the middle of a patch apply");
@@ -953,8 +949,7 @@ namespace GitUI.CommandsDialogs
 
                         await this.SwitchToMainThreadAsync();
 
-                        toolStripSplitStash.Text = string.Format(_stashCount.Text, result,
-                            result != 1 ? _stashPlural.Text : _stashSingular.Text);
+                        toolStripSplitStash.Text = $"({result})";
                     }).FileAndForget();
                 }
                 else
