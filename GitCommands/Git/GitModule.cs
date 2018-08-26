@@ -1456,7 +1456,7 @@ namespace GitCommands
                     { force, "--force" },
                     revision,
                     "--",
-                    files
+                    files.Select(f => f.ToPosixPath().Quote())
                 });
         }
 
@@ -1473,7 +1473,7 @@ namespace GitCommands
                     "rm",
                     { force, "--force" },
                     "--",
-                    files
+                    files.Select(f => f.ToPosixPath().Quote())
                 });
         }
 
@@ -3828,7 +3828,7 @@ namespace GitCommands
                 revisionOfMergeCommit.Guid,
                 { AppSettings.UsePatienceDiffAlgorithm, "--patience" },
                 "--",
-                filePath
+                filePath.ToPosixPath().Quote()
             };
 
             var patch = _gitExecutable.GetOutput(args, cache: GitCommandCache, outputEncoding: LosslessEncoding);
@@ -3850,7 +3850,7 @@ namespace GitCommands
 
         public bool StopTrackingFile(string filename)
         {
-            return _gitExecutable.Execute($"rm --cached {filename}").ExitedSuccessfully;
+            return _gitExecutable.Execute($"rm --cached {filename.ToPosixPath().Quote()}").ExitedSuccessfully;
         }
 
         [CanBeNull]
