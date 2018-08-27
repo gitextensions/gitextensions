@@ -65,6 +65,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     return fullName;
                 }
 
+                string localAppDataProgramsPath = Path.Combine(localAppDataPath, "Programs");
+
+                if (CheckFileExists(localAppDataProgramsPath))
+                {
+                    return fullName;
+                }
+
                 bool CheckFileExists(string path)
                 {
                     fullName = Path.Combine(path, location, fileName);
