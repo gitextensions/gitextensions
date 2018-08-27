@@ -151,12 +151,12 @@ namespace GitUI.BranchTreePanel
 
         public async Task ReloadAsync()
         {
+            var currentBranch = Module.GetSelectedBranch();
             await this.SwitchToMainThreadAsync();
 
             var token = CancelBackgroundTasks();
             Enabled = false;
 
-            var currentBranch = Module.GetSelectedBranch();
             try
             {
                 var tasks = _rootNodes.Select(r => r.ReloadAsync(token)).ToArray();
