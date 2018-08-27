@@ -43,7 +43,7 @@ namespace GitUI.Editor
         int GetSelectionPosition();
         int GetSelectionLength();
         void AddPatchHighlighting();
-        Action OpenWithDifftool { get;  }
+        Action OpenWithDifftool { get; }
         int ScrollPos { get; set; }
 
         bool ShowLineNumbers { get; set; }
@@ -67,7 +67,7 @@ namespace GitUI.Editor
         /// Indicates if the Goto line UI is applicable or not.
         /// Code-behind goto line function is always availabe, so we can goto next diff section.
         /// </summary>
-        bool IsGotoLineUIApplicable();
+        bool CanGotoLine { get; }
 
         Font Font { get; set; }
 

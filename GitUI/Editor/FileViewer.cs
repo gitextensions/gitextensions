@@ -164,6 +164,10 @@ namespace GitUI.Editor
             contextMenu.Opening += (sender, e) =>
             {
                 copyToolStripMenuItem.Enabled = _internalFileViewer.GetSelectionLength() > 0;
+                goToLineToolStripMenuItem.Enabled = _internalFileViewer.CanGotoLine;
+
+                goToLineToolStripMenuItem.ShortcutKeys = GetShortcutKeys((int)Commands.GoToLine);
+
                 ContextMenuOpening?.Invoke(sender, e);
             };
 
@@ -387,9 +391,9 @@ namespace GitUI.Editor
                 using (var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 using (var reader = new StreamReader(stream, Module.FilesEncoding))
                 {
-                    #pragma warning disable VSTHRD103 // Call async methods when in an async method
+#pragma warning disable VSTHRD103 // Call async methods when in an async method
                     var content = reader.ReadToEnd();
-                    #pragma warning restore VSTHRD103 // Call async methods when in an async method
+#pragma warning restore VSTHRD103 // Call async methods when in an async method
                     FilePreamble = reader.CurrentEncoding.GetPreamble();
                     return content;
                 }
@@ -1233,7 +1237,7 @@ namespace GitUI.Editor
 
         private void goToLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!_internalFileViewer.IsGotoLineUIApplicable())
+            if (!_internalFileViewer.CanGotoLine)
             {
                 return;
             }
