@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
+using GitUI.Properties;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
@@ -32,17 +33,22 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
             treeView1.ImageList = new ImageList();
             treeView1.ImageList.ImageSize = DpiUtil.Scale(new Size(16, 16)); // Scale ImageSize and images scale automatically
+            treeView1.ImageList.Images.Add(Images.Blank);
             this.AdjustForDpiScaling();
         }
 
+        /// <summary>Add page to settings tree</summary>
+        /// <param name="page">The settings page to add</param>
+        /// <param name="parentPageReference">An already added settings page to be a parent in the tree</param>
+        /// <param name="icon">An icon to display in tree node</param>
         /// <param name="asRoot">only one page can be set as the root page (for the GitExt and Plugin root node)</param>
-        public void AddSettingsPage(ISettingsPage page, SettingsPageReference parentPageReference, bool asRoot = false)
+        public void AddSettingsPage(ISettingsPage page, SettingsPageReference parentPageReference, Image icon, bool asRoot = false)
         {
             TreeNode node;
             if (parentPageReference == null)
             {
                 // add one of the root nodes (e. g. "Git Extensions" or "Plugins"
-                node = treeView1.Nodes.Add(page.GetTitle());
+                node = AddPage(treeView1.Nodes, page, icon);
             }
             else
             {
@@ -58,13 +64,26 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                         throw new ArgumentException("You have to add parent page first: " + parentPageReference);
                     }
 
-                    node = parentNode.Nodes.Add(page.GetTitle());
+                    node = AddPage(parentNode.Nodes, page, icon);
                 }
             }
 
             node.Tag = page;
             _pages2NodeMap.Add(page.PageReference, node);
             _settingsPages.Add(page);
+        }
+
+        private TreeNode AddPage(TreeNodeCollection treeNodeCollection, ISettingsPage page, Image icon)
+        {
+            var node = treeNodeCollection.Add(page.GetTitle());
+            if (icon == null)
+            {
+                return node;
+            }
+
+            treeView1.ImageList.Images.Add(icon);
+            node.ImageIndex = node.SelectedImageIndex = treeView1.ImageList.Images.Count - 1;
+            return node;
         }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
