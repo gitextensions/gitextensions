@@ -17,12 +17,12 @@ namespace GitCommands
 
         public SubmoduleStatus Status { get; set; } = SubmoduleStatus.Unknown;
 
-        public GitSubmoduleStatus(string name, string oldName, bool isDirty, ObjectId commit, [CanBeNull] ObjectId oldCommit, int? addedCommits, int? removedCommits)
+        public GitSubmoduleStatus(string name, [CanBeNull] string oldName, bool isDirty, [CanBeNull] ObjectId commit, [CanBeNull] ObjectId oldCommit, int? addedCommits, int? removedCommits)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            OldName = oldName ?? throw new ArgumentNullException(nameof(oldName));
+            OldName = oldName;
             IsDirty = isDirty;
-            Commit = commit ?? throw new ArgumentNullException(nameof(commit));
+            Commit = commit;
             OldCommit = oldCommit;
             AddedCommits = addedCommits;
             RemovedCommits = removedCommits;
