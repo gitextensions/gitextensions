@@ -226,7 +226,10 @@ See the changes in the commit form.");
         {
             ShowHistory = 0,
             Blame = 1,
-            OpenWithDifftool = 2
+            OpenWithDifftool = 2,
+            OpenAsTempFile = 3,
+            OpenAsTempFileWith = 4,
+            EditFile = 5
         }
 
         public bool ExecuteCommand(Command cmd)
@@ -241,6 +244,9 @@ See the changes in the commit form.");
                 case Command.ShowHistory: fileHistoryToolStripMenuItem.PerformClick(); break;
                 case Command.Blame: blameToolStripMenuItem1.PerformClick(); break;
                 case Command.OpenWithDifftool: openWithDifftoolToolStripMenuItem.PerformClick(); break;
+                case Command.OpenAsTempFile: openFileToolStripMenuItem.PerformClick(); break;
+                case Command.OpenAsTempFileWith: openFileWithToolStripMenuItem.PerformClick(); break;
+                case Command.EditFile: editCheckedOutFileToolStripMenuItem.PerformClick(); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
@@ -253,6 +259,9 @@ See the changes in the commit form.");
             fileHistoryToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
             blameToolStripMenuItem1.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Blame);
             openWithDifftoolToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenWithDifftool);
+            openFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenAsTempFile);
+            openFileWithToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenAsTempFileWith);
+            editCheckedOutFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
             FileText.ReloadHotkeys();
         }
 
@@ -278,8 +287,6 @@ See the changes in the commit form.");
             };
 
             ReloadHotkeys();
-
-            GotFocus += (s, e1) => tvGitTree.Focus();
 
             base.OnRuntimeLoad();
         }
@@ -759,6 +766,18 @@ See the changes in the commit form.");
             if (e.Button == MouseButtons.Right)
             {
                 tvGitTree.SelectedNode = e.Node;
+            }
+        }
+
+        public void SwitchFocus(bool alreadyContainedFocus)
+        {
+            if (alreadyContainedFocus && tvGitTree.Focused)
+            {
+                FileText.Focus();
+            }
+            else
+            {
+                tvGitTree.Focus();
             }
         }
     }

@@ -208,17 +208,24 @@ namespace GitUI.CommandsDialogs
             HotkeysEnabled = true;
             Hotkeys = HotkeySettingsManager.LoadHotkeys(HotkeySettingsName);
 
+            openToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenFile);
+            openWithToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenFileWith);
+            editFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
+            stagedOpenToolStripMenuItem7.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenFile);
+            stagedOpenWithToolStripMenuItem8.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenFileWith);
+            stagedEditFileToolStripMenuItem11.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
+
             SelectedDiff.AddContextMenuSeparator();
             _stageSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_stageSelectedLines.Text, StageSelectedLinesToolStripMenuItemClick);
-            _stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.StageSelectedFile).ToShortcutKeyDisplayString();
+            _stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.StageSelectedFile);
             _resetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
-            _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ResetSelectedFiles).ToShortcutKeyDisplayString();
+            _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ResetSelectedFiles);
             _resetSelectedLinesToolStripMenuItem.Image = Reset.Image;
             resetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
             stagedResetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
-            deleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.DeleteSelectedFiles).ToShortcutKeyDisplayString();
-            viewFileHistoryToolStripItem.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
-            stagedFileHistoryToolStripMenuItem6.ShortcutKeyDisplayString = GetShortcutKeys((int)Commands.ShowHistory).ToShortcutKeyDisplayString();
+            deleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.DeleteSelectedFiles);
+            viewFileHistoryToolStripItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
+            stagedFileHistoryToolStripMenuItem6.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
             commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
             skipWorktreeToolStripMenuItem.ToolTipText = _skipWorktreeToolTip.Text;
             assumeUnchangedToolStripMenuItem.ToolTipText = _assumeUnchangedToolTip.Text;
@@ -516,7 +523,7 @@ namespace GitUI.CommandsDialogs
 
         public static readonly string HotkeySettingsName = "Commit";
 
-        internal enum Commands
+        internal enum Command
         {
             AddToGitIgnore = 0,
             DeleteSelectedFiles = 1,
@@ -530,7 +537,15 @@ namespace GitUI.CommandsDialogs
             ShowHistory = 9,
             ToggleSelectionFilter = 10,
             StageAll = 11,
-            OpenWithDifftool = 12
+            OpenWithDifftool = 12,
+            OpenFile = 13,
+            OpenFileWith = 14,
+            EditFile = 15
+        }
+
+        private string GetShortcutKeyDisplayString(Command cmd)
+        {
+            return GetShortcutKeys((int)cmd).ToShortcutKeyDisplayString();
         }
 
         private bool AddToGitIgnore()
@@ -676,21 +691,24 @@ namespace GitUI.CommandsDialogs
 
         protected override bool ExecuteCommand(int cmd)
         {
-            switch ((Commands)cmd)
+            switch ((Command)cmd)
             {
-                case Commands.AddToGitIgnore: return AddToGitIgnore();
-                case Commands.DeleteSelectedFiles: return DeleteSelectedFiles();
-                case Commands.FocusStagedFiles: return FocusStagedFiles();
-                case Commands.FocusUnstagedFiles: return FocusUnstagedFiles();
-                case Commands.FocusSelectedDiff: return FocusSelectedDiff();
-                case Commands.FocusCommitMessage: return FocusCommitMessage();
-                case Commands.ResetSelectedFiles: return ResetSelectedFiles();
-                case Commands.StageSelectedFile: return StageSelectedFile();
-                case Commands.UnStageSelectedFile: return UnStageSelectedFile();
-                case Commands.ShowHistory: return StartFileHistoryDialog();
-                case Commands.ToggleSelectionFilter: return ToggleSelectionFilter();
-                case Commands.StageAll: return StageAllFiles();
-                case Commands.OpenWithDifftool: SelectedDiff.OpenWithDifftool?.Invoke(); return true;
+                case Command.AddToGitIgnore: return AddToGitIgnore();
+                case Command.DeleteSelectedFiles: return DeleteSelectedFiles();
+                case Command.FocusStagedFiles: return FocusStagedFiles();
+                case Command.FocusUnstagedFiles: return FocusUnstagedFiles();
+                case Command.FocusSelectedDiff: return FocusSelectedDiff();
+                case Command.FocusCommitMessage: return FocusCommitMessage();
+                case Command.ResetSelectedFiles: return ResetSelectedFiles();
+                case Command.StageSelectedFile: return StageSelectedFile();
+                case Command.UnStageSelectedFile: return UnStageSelectedFile();
+                case Command.ShowHistory: return StartFileHistoryDialog();
+                case Command.ToggleSelectionFilter: return ToggleSelectionFilter();
+                case Command.StageAll: return StageAllFiles();
+                case Command.OpenWithDifftool: SelectedDiff.OpenWithDifftool?.Invoke(); return true;
+                case Command.OpenFile: openToolStripMenuItem.PerformClick(); return true;
+                case Command.OpenFileWith: openWithToolStripMenuItem.PerformClick(); return true;
+                case Command.EditFile: editFileToolStripMenuItem.PerformClick(); return true;
                 default: return base.ExecuteCommand(cmd);
             }
         }
@@ -1105,7 +1123,7 @@ namespace GitUI.CommandsDialogs
             _stageSelectedLinesToolStripMenuItem.Text = staged ? _unstageSelectedLines.Text : _stageSelectedLines.Text;
             _stageSelectedLinesToolStripMenuItem.Image = staged ? toolUnstageItem.Image : toolStageItem.Image;
             _stageSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString =
-                GetShortcutKeys((int)(staged ? Commands.UnStageSelectedFile : Commands.StageSelectedFile)).ToShortcutKeyDisplayString();
+                GetShortcutKeyDisplayString(staged ? Command.UnStageSelectedFile : Command.StageSelectedFile);
 
             return;
         }
@@ -2516,13 +2534,19 @@ namespace GitUI.CommandsDialogs
                 : $"{committer} {_commitAuthorInfo.Text} {toolAuthor.Text}";
         }
 
-        private static bool SenderToFileStatusList(object sender, out FileStatusList list)
+        private bool SenderToFileStatusList(object sender, out FileStatusList list)
         {
             ToolStripMenuItem item = sender as ToolStripMenuItem;
             ContextMenuStrip menu = item?.Owner as ContextMenuStrip;
             ListView lv = menu?.SourceControl as ListView;
 
             list = lv?.Parent as FileStatusList;
+            if (list == null /* menu action triggered directly by hotkey */)
+            {
+                // The inactive list's selection has been cleared.
+                list = Staged.SelectedItems.Any() ? Staged : Unstaged.SelectedItems.Any() ? list = Unstaged : null;
+            }
+
             return list != null;
         }
 

@@ -95,7 +95,7 @@ namespace GitUI.CommitInfo
             _RevisionHeader.SelectionTabs = _commitDataHeaderRenderer.GetTabStops().ToArray();
 
             Hotkeys = HotkeySettingsManager.LoadHotkeys(FormBrowse.HotkeySettingsName);
-            addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)FormBrowse.Commands.AddNotes).ToShortcutKeyDisplayString();
+            addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)FormBrowse.Command.AddNotes).ToShortcutKeyDisplayString();
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
