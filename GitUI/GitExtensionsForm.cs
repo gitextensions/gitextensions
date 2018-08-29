@@ -150,6 +150,11 @@ namespace GitUI
             ResumeLayout();
         }
 
+        public WindowPosition LookupWindowPosition(string name)
+        {
+            return _windowPositionManager.LookupWindowPosition(name);
+        }
+
         // This is a base class for many forms, which have own GetTestAccessor() methods. This has to be unique
         internal GitExtensionsFormTestAccessor GetGitExtensionsFormTestAccessor() => new GitExtensionsFormTestAccessor(this);
 

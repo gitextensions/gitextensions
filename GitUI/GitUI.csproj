@@ -301,6 +301,7 @@
     <Compile Include="Editor\GitHighlightingStrategyBase.cs" />
     <Compile Include="Editor\RebaseTodoHighlightingStrategy.cs" />
     <Compile Include="FindFilePredicateProvider.cs" />
+    <Compile Include="IControlPositionProvider.cs" />
     <Compile Include="Properties\Images.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

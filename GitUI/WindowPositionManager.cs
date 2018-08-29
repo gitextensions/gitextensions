@@ -23,6 +23,8 @@ namespace GitUI
         /// </summary>
         /// <param name="form">The form to save the position for.</param>
         void SavePosition(Form form);
+
+        WindowPosition LookupWindowPosition(string name);
     }
 
     internal sealed class WindowPositionManager : IWindowPositionManager
@@ -130,11 +132,55 @@ namespace GitUI
 
                 var position = new WindowPosition(rectangle, DpiUtil.DpiX, formWindowState, name);
                 _windowPositionList.AddOrUpdate(position);
+                CollectChildControlPositions(form.Controls).ForEach(pos => _windowPositionList.AddOrUpdate(pos));
                 _windowPositionList.Save();
             }
             catch
             {
                 // TODO: how to restore a corrupted config?
+            }
+        }
+
+        public WindowPosition LookupWindowPosition(string name)
+        {
+            try
+            {
+                if (_windowPositionList == null)
+                {
+                    _windowPositionList = WindowPositionList.Load();
+                }
+
+                var pos = _windowPositionList?.Get(name);
+
+                if (pos != null && !pos.Rect.IsEmpty)
+                {
+                    return pos;
+                }
+            }
+            catch
+            {
+                // TODO: how to restore a corrupted config?
+            }
+
+            return null;
+        }
+
+        private IEnumerable<WindowPosition> CollectChildControlPositions(Control.ControlCollection controls)
+        {
+            foreach (Control control in controls)
+            {
+                if (control is IControlPositionProvider ctrl)
+                {
+                    foreach (var position in ctrl.GetPositions())
+                    {
+                        yield return position;
+                    }
+                }
+
+                foreach (var position in CollectChildControlPositions(control.Controls))
+                {
+                    yield return position;
+                }
             }
         }
     }
