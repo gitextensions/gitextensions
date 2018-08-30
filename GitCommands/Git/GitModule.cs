@@ -3429,14 +3429,20 @@ namespace GitCommands
                 : null;
         }
 
-        public SubmoduleStatus CheckSubmoduleStatus(ObjectId commit, [CanBeNull] ObjectId oldCommit, CommitData data, CommitData oldData, bool loadData = false)
+        public SubmoduleStatus CheckSubmoduleStatus([CanBeNull] ObjectId commit, [CanBeNull] ObjectId oldCommit, CommitData data, CommitData oldData, bool loadData = false)
         {
             if (!IsValidGitWorkingDir() || oldCommit == null)
             {
                 return SubmoduleStatus.NewSubmodule;
             }
 
-            if (commit == null || commit == oldCommit)
+            if (commit == null)
+            {
+                // Actually removed submodule, no special status for this uncommon status
+                return SubmoduleStatus.Unknown;
+            }
+
+            if (commit == oldCommit)
             {
                 return SubmoduleStatus.Unknown;
             }
@@ -3493,7 +3499,7 @@ namespace GitCommands
             return SubmoduleStatus.Unknown;
         }
 
-        public SubmoduleStatus CheckSubmoduleStatus(ObjectId commit, [CanBeNull] ObjectId oldCommit)
+        public SubmoduleStatus CheckSubmoduleStatus([CanBeNull] ObjectId commit, [CanBeNull] ObjectId oldCommit)
         {
             return CheckSubmoduleStatus(commit, oldCommit, null, null, true);
         }
