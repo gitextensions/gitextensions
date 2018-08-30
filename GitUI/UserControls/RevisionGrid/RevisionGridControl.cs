@@ -64,6 +64,9 @@ namespace GitUI
         private readonly BuildServerWatcher _buildServerWatcher;
         private readonly Timer _selectionTimer;
         private readonly GraphColumnProvider _graphColumnProvider;
+        private readonly List<DataGridViewColumn> _resizableColumns;
+        private readonly DataGridViewColumn _maximizedColumn;
+        private DataGridViewColumn _lastVisibleResizableColumn = null;
 
         private RefFilterOptions _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
 
@@ -187,6 +190,8 @@ namespace GitUI
             _gridView.AddColumn(new DateColumnProvider(this));
             _gridView.AddColumn(new CommitIdColumnProvider(this));
             _gridView.AddColumn(_buildServerWatcher.ColumnProvider);
+            _resizableColumns = _gridView.Columns.Cast<DataGridViewColumn>().Where(column => column.Resizable == DataGridViewTriState.True).ToList();
+            _maximizedColumn = _resizableColumns.FirstOrDefault(column => column.AutoSizeMode == DataGridViewAutoSizeColumnMode.Fill);
         }
 
         protected override void Dispose(bool disposing)
@@ -449,6 +454,19 @@ namespace GitUI
             base.Refresh();
 
             _toolTipProvider.Clear();
+
+            if (_maximizedColumn != null)
+            {
+                // restore the resizable state
+                _resizableColumns.ForEach(column => column.Resizable = DataGridViewTriState.True);
+
+                // suppress the manual resizing of the last visible column because it will be resized when the maximized column is resized
+                _lastVisibleResizableColumn = _gridView.Columns.GetLastColumn(DataGridViewElementStates.Visible | DataGridViewElementStates.Resizable, DataGridViewElementStates.None);
+                if (_lastVisibleResizableColumn != null)
+                {
+                    _lastVisibleResizableColumn.Resizable = DataGridViewTriState.False;
+                }
+            }
         }
 
         protected override void OnCreateControl()
@@ -1207,13 +1225,23 @@ namespace GitUI
 
         private void OnGridViewMouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.XButton1)
+            switch (e.Button)
             {
-                NavigateBackward();
-            }
-            else if (e.Button == MouseButtons.XButton2)
-            {
-                NavigateForward();
+                case MouseButtons.XButton1: NavigateBackward(); break;
+                case MouseButtons.XButton2: NavigateForward();  break;
+                case MouseButtons.Left when _maximizedColumn != null && _lastVisibleResizableColumn != null:
+                    // make resizing of the maximized column work and restore the settings afterwards
+                    void OnGridViewMouseCaptureChanged(object ignoredSender, EventArgs ignoredArgs)
+                    {
+                        _gridView.MouseCaptureChanged -= OnGridViewMouseCaptureChanged;
+                        _lastVisibleResizableColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                        _maximizedColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    }
+
+                    _gridView.MouseCaptureChanged += OnGridViewMouseCaptureChanged;
+                    _maximizedColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                    _lastVisibleResizableColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    break;
             }
         }
 

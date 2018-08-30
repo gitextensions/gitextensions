@@ -25,11 +25,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             Column = new DataGridViewTextBoxColumn
             {
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
                 HeaderText = "Message",
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                Width = DpiUtil.Scale(500)
+                Width = DpiUtil.Scale(500),
+                MinimumWidth = DpiUtil.Scale(25)
             };
         }
 
