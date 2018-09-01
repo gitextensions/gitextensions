@@ -14,6 +14,7 @@ using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Gpg;
+using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
@@ -80,7 +81,6 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
         private readonly ToolStripMenuItem _toolStripGitStatus;
         private readonly GitStatusMonitor _gitStatusMonitor;
@@ -91,6 +91,7 @@ namespace GitUI.CommandsDialogs
         private readonly ICommitDataManager _commitDataManager;
         private readonly IAppTitleGenerator _appTitleGenerator;
         private readonly WindowsJumpListManager _windowsJumpListManager;
+        private readonly SubmoduleStatusProvider _submoduleStatusProvider;
 
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
         private ConEmuControl _terminal;
@@ -295,6 +296,7 @@ namespace GitUI.CommandsDialogs
             UICommands.BrowseRepo = this;
             _controller = new FormBrowseController(new GitGpgController(() => Module));
             _commitDataManager = new CommitDataManager(() => Module);
+            _submoduleStatusProvider = new SubmoduleStatusProvider();
 
             var repositoryDescriptionProvider = new RepositoryDescriptionProvider(new GitDirectoryResolver());
             _appTitleGenerator = new AppTitleGenerator(repositoryDescriptionProvider);
@@ -354,7 +356,7 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
-                _submodulesStatusSequence?.Dispose();
+                _submoduleStatusProvider?.Dispose();
                 _formBrowseMenus?.Dispose();
                 _filterRevisionsHelper?.Dispose();
                 _filterBranchHelper?.Dispose();
@@ -838,7 +840,7 @@ namespace GitUI.CommandsDialogs
         {
             CheckForMergeConflicts();
             UpdateStashCount();
-            UpdateSubmodulesList();
+            InitiateSubmodulesUpdate();
 
             return;
 
@@ -2346,7 +2348,7 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
         {
-            LoadSubmodulesIntoDropDownMenu();
+            InitiateSubmodulesUpdate();
             PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
@@ -2401,240 +2403,83 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private DateTime _previousSubmoduleUpdateTime;
 
-        private void LoadSubmodulesIntoDropDownMenu()
+        private void InitiateSubmodulesUpdate()
         {
-            TimeSpan elapsed = DateTime.Now - _previousSubmoduleUpdateTime;
-            if (elapsed.TotalSeconds > 15)
+            if (!_submoduleStatusProvider.ShouldUpdateSubmodules())
             {
                 UpdateSubmodulesList();
             }
+
+            _submoduleStatusProvider.UpdateSubmodulesList(
+                Module.WorkingDir, _noBranchTitle.Text,
+                () =>
+                {
+                    RemoveSubmoduleButtons();
+                    toolStripButtonLevelUp.DropDownItems.Add(_loading.Text);
+                },
+                PopulateToolbarAsync);
+
         }
 
-        /// <summary>Holds submodule information that is gathered asynchronously.</summary>
-        private class SubmoduleInfo
+        private async Task PopulateToolbarAsync(SubmoduleInfoResult result, CancellationToken cancelToken)
         {
-            public string Text; // User-friendly display text
-            public string Path; // Full path to submodule
-            public SubmoduleStatus? Status;
-            public bool IsDirty;
-            public bool Bold;
-        }
-
-        /// <summary>Complete set of gathered submodule information.</summary>
-        private class SubmoduleInfoResult
-        {
-            public readonly List<SubmoduleInfo> OurSubmodules = new List<SubmoduleInfo>();
-            public readonly List<SubmoduleInfo> SuperSubmodules = new List<SubmoduleInfo>();
-            public SubmoduleInfo TopProject;
-            public SubmoduleInfo Superproject;
-            public string CurrentSubmoduleName;
-        }
-
-        private static async Task GetSubmoduleStatusAsync(SubmoduleInfo info, CancellationToken cancelToken)
-        {
-            await TaskScheduler.Default;
-            cancelToken.ThrowIfCancellationRequested();
-
-            var submodule = new GitModule(info.Path);
-            var supermodule = submodule.SuperprojectModule;
-            var submoduleName = submodule.GetCurrentSubmoduleLocalPath();
-
-            info.Status = null;
-
-            if (string.IsNullOrEmpty(submoduleName) || supermodule == null)
-            {
-                return;
-            }
-
-            var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(supermodule, submoduleName);
-            if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
-            {
-                submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(supermodule));
-            }
-
-            if (submoduleStatus != null)
-            {
-                info.Status = submoduleStatus.Status;
-                info.IsDirty = submoduleStatus.IsDirty;
-                info.Text += submoduleStatus.AddedAndRemovedString();
-            }
-        }
-
-        private void UpdateSubmodulesList()
-        {
-            _previousSubmoduleUpdateTime = DateTime.Now;
-
-            // Cancel any previous async activities:
-            var cancelToken = _submodulesStatusSequence.Next();
+            // Second task: Populate toolbar menu on UI thread.  Note further tasks are created by
+            // CreateSubmoduleMenuItem to update images with submodule status.
+            await this.SwitchToMainThreadAsync(cancelToken);
 
             RemoveSubmoduleButtons();
-            toolStripButtonLevelUp.DropDownItems.Add(_loading.Text);
 
-            // Start gathering new submodule information asynchronously.  This makes a significant difference in UI
-            // responsiveness if there are numerous submodules (e.g. > 100).
-            string thisModuleDir = Module.WorkingDir;
+            var newItems = result.OurSubmodules
+                .Select(submodule => CreateSubmoduleMenuItem(submodule))
+                .ToList<ToolStripItem>();
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            if (result.OurSubmodules.Count == 0)
             {
-                // First task: Gather list of submodules on a background thread.
+                newItems.Add(new ToolStripMenuItem(_noSubmodulesPresent.Text));
+            }
 
-                // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
-                var threadModule = new GitModule(thisModuleDir);
-                var result = new SubmoduleInfoResult();
-
-                // Add all submodules inside the current repository:
-                foreach (var submodule in threadModule.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName))
-                {
-                    cancelToken.ThrowIfCancellationRequested();
-                    var name = submodule;
-                    string path = threadModule.GetSubmoduleFullPath(submodule);
-                    if (AppSettings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                    {
-                        name = name + " " + GetModuleBranch(path);
-                    }
-
-                    var smi = new SubmoduleInfo { Text = name, Path = path };
-                    result.OurSubmodules.Add(smi);
-                    GetSubmoduleStatusAsync(smi, cancelToken).FileAndForget();
-                }
-
-                if (threadModule.SuperprojectModule != null)
-                {
-                    GitModule supersuperproject = threadModule.FindTopProjectModule();
-                    if (threadModule.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
-                    {
-                        var name = Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
-                        string path = supersuperproject.WorkingDir;
-                        if (AppSettings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                        {
-                            name = name + " " + GetModuleBranch(path);
-                        }
-
-                        result.TopProject = new SubmoduleInfo { Text = name, Path = supersuperproject.WorkingDir };
-                        GetSubmoduleStatusAsync(result.TopProject, cancelToken).FileAndForget();
-                    }
-
-                    {
-                        string name;
-                        if (threadModule.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
-                        {
-                            var localPath = threadModule.SuperprojectModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                            localPath = PathUtil.GetDirectoryName(localPath.ToPosixPath());
-                            name = localPath;
-                        }
-                        else
-                        {
-                            name = Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
-                        }
-
-                        string path = threadModule.SuperprojectModule.WorkingDir;
-                        if (AppSettings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                        {
-                            name = name + " " + GetModuleBranch(path);
-                        }
-
-                        result.Superproject = new SubmoduleInfo { Text = name, Path = threadModule.SuperprojectModule.WorkingDir };
-                        GetSubmoduleStatusAsync(result.Superproject, cancelToken).FileAndForget();
-                    }
-
-                    var submodules = supersuperproject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName);
-                    if (submodules.Any())
-                    {
-                        string localPath = threadModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                        localPath = PathUtil.GetDirectoryName(localPath.ToPosixPath());
-
-                        foreach (var submodule in submodules)
-                        {
-                            cancelToken.ThrowIfCancellationRequested();
-                            var name = submodule;
-                            string path = supersuperproject.GetSubmoduleFullPath(submodule);
-                            if (AppSettings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                            {
-                                name = name + " " + GetModuleBranch(path);
-                            }
-
-                            bool bold = false;
-                            if (submodule == localPath)
-                            {
-                                result.CurrentSubmoduleName = threadModule.GetCurrentSubmoduleLocalPath();
-                                bold = true;
-                            }
-
-                            var smi = new SubmoduleInfo { Text = name, Path = path, Bold = bold };
-                            result.SuperSubmodules.Add(smi);
-                            GetSubmoduleStatusAsync(smi, cancelToken).FileAndForget();
-                        }
-                    }
-                }
-
-                // Second task: Populate toolbar menu on UI thread.  Note further tasks are created by
-                // CreateSubmoduleMenuItem to update images with submodule status.
-                await this.SwitchToMainThreadAsync(cancelToken);
-
-                RemoveSubmoduleButtons();
-
-                var newItems = result.OurSubmodules
-                    .Select(submodule => CreateSubmoduleMenuItem(submodule))
-                    .ToList<ToolStripItem>();
-
-                if (result.OurSubmodules.Count == 0)
-                {
-                    newItems.Add(new ToolStripMenuItem(_noSubmodulesPresent.Text));
-                }
-
-                if (result.Superproject != null)
-                {
-                    newItems.Add(new ToolStripSeparator());
-                    if (result.TopProject != null)
-                    {
-                        newItems.Add(CreateSubmoduleMenuItem(result.TopProject, _topProjectModuleFormat.Text));
-                    }
-
-                    newItems.Add(CreateSubmoduleMenuItem(result.Superproject, _superprojectModuleFormat.Text));
-                    newItems.AddRange(result.SuperSubmodules.Select(submodule => CreateSubmoduleMenuItem(submodule)));
-                }
-
+            if (result.Superproject != null)
+            {
                 newItems.Add(new ToolStripSeparator());
-
-                var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text);
-                mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
-                newItems.Add(mi);
-
-                if (result.CurrentSubmoduleName != null)
+                if (result.TopProject != null)
                 {
-                    var item = new ToolStripMenuItem(_updateCurrentSubmodule.Text) { Tag = result.CurrentSubmoduleName };
-                    item.Click += UpdateSubmoduleToolStripMenuItemClick;
-                    newItems.Add(item);
+                    newItems.Add(CreateSubmoduleMenuItem(result.TopProject, _topProjectModuleFormat.Text));
                 }
 
-                // Using AddRange is critical: if you used Add to add menu items one at a
-                // time, performance would be extremely slow with many submodules (> 100).
-                toolStripButtonLevelUp.DropDownItems.AddRange(newItems.ToArray());
+                newItems.Add(CreateSubmoduleMenuItem(result.Superproject, _superprojectModuleFormat.Text));
+                newItems.AddRange(result.SuperSubmodules.Select(submodule => CreateSubmoduleMenuItem(submodule)));
+            }
 
-                _previousSubmoduleUpdateTime = DateTime.Now;
-            });
+            newItems.Add(new ToolStripSeparator());
 
-            void RemoveSubmoduleButtons()
+            var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text);
+            mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
+            newItems.Add(mi);
+
+            if (result.CurrentSubmoduleName != null)
             {
-                foreach (var item in toolStripButtonLevelUp.DropDownItems)
+                var item = new ToolStripMenuItem(_updateCurrentSubmodule.Text) { Tag = result.CurrentSubmoduleName };
+                item.Click += UpdateSubmoduleToolStripMenuItemClick;
+                newItems.Add(item);
+            }
+
+            // Using AddRange is critical: if you used Add to add menu items one at a
+            // time, performance would be extremely slow with many submodules (> 100).
+            toolStripButtonLevelUp.DropDownItems.AddRange(newItems.ToArray());
+        }
+
+        private void RemoveSubmoduleButtons()
+        {
+            foreach (var item in toolStripButtonLevelUp.DropDownItems)
+            {
+                if (item is ToolStripMenuItem toolStripButton)
                 {
-                    if (item is ToolStripMenuItem toolStripButton)
-                    {
-                        toolStripButton.Click -= SubmoduleToolStripButtonClick;
-                    }
+                    toolStripButton.Click -= SubmoduleToolStripButtonClick;
                 }
-
-                toolStripButtonLevelUp.DropDownItems.Clear();
             }
 
-            string GetModuleBranch(string path)
-            {
-                var branch = GitModule.GetSelectedBranchFast(path);
-                var text = DetachedHeadParser.IsDetachedHead(branch) ? _noBranchTitle.Text : branch;
-                return $"[{text}]";
-            }
+            toolStripButtonLevelUp.DropDownItems.Clear();
         }
 
         #endregion
