@@ -99,9 +99,6 @@ namespace GitUI.BranchTreePanel
         {
             protected readonly Nodes Nodes;
             private readonly IGitUICommandsSource _uiCommandsSource;
-            public GitUICommands UICommands => _uiCommandsSource.UICommands;
-            protected GitModule Module => UICommands.Module;
-            public TreeNode TreeViewNode { get; }
 
             protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
             {
@@ -109,6 +106,16 @@ namespace GitUI.BranchTreePanel
                 _uiCommandsSource = uiCommands;
                 TreeViewNode = treeNode;
             }
+
+            public TreeNode TreeViewNode { get; }
+            public GitUICommands UICommands => _uiCommandsSource.UICommands;
+
+            /// <summary>
+            /// A flag to indicate that node SelectionChanged event is not user-originated and
+            /// must not trigger the event handling sequence.
+            /// </summary>
+            public bool IgnoreSelectionChangedEvent { get; set; }
+            protected GitModule Module => UICommands.Module;
 
             public async Task ReloadAsync(CancellationToken token)
             {
