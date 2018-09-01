@@ -82,6 +82,11 @@ namespace GitUI.BranchTreePanel
 
             internal override void OnSelected()
             {
+                if (Tree.IgnoreSelectionChangedEvent)
+                {
+                    return;
+                }
+
                 base.OnSelected();
                 SelectRevision();
             }
