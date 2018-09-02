@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using JetBrains.Annotations;
@@ -51,7 +52,7 @@ namespace GitUI
             {
                 result = FormatString(name, oldName, step, isNameBeingTruncated);
 
-                if (_graphics.MeasureString(result, _font).Width <= width)
+                if (MeasureString(result, withPadding: true).Width <= width)
                 {
                     break;
                 }
@@ -77,6 +78,25 @@ namespace GitUI
 
             return fileName.Combine(" ", oldFileName.AddParenthesesNE());
         }
+
+        public Size MeasureString(string str, bool withPadding = false)
+        {
+            var formatFlags = FilePathStringFormat;
+            if (!withPadding)
+            {
+                formatFlags |= TextFormatFlags.NoPadding;
+            }
+
+            return TextRenderer.MeasureText(
+                _graphics,
+                str,
+                _font,
+                new Size(int.MaxValue, int.MaxValue),
+                formatFlags);
+        }
+
+        public void DrawString(string str, Rectangle rect, Color color) =>
+            TextRenderer.DrawText(_graphics, str, _font, rect, color, FilePathStringFormat);
 
         private static string FormatString(string name, string oldName, int step, bool isNameTruncated)
         {
@@ -122,5 +142,11 @@ namespace GitUI
                 return path;
             }
         }
+
+        private const TextFormatFlags FilePathStringFormat =
+            TextFormatFlags.NoClipping |
+            TextFormatFlags.NoPrefix |
+            TextFormatFlags.VerticalCenter |
+            TextFormatFlags.TextBoxControl;
     }
 }

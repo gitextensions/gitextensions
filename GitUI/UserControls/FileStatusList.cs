@@ -26,13 +26,6 @@ namespace GitUI
 
     public sealed partial class FileStatusList : GitModuleControl
     {
-        private static readonly StringFormat FilePathStringFormat = new StringFormat
-        {
-            LineAlignment = StringAlignment.Center,
-            Trimming = StringTrimming.None,
-            FormatFlags = StringFormatFlags.NoWrap
-        };
-
         private static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
 
         private readonly TranslationString _diffWithParent = new TranslationString("Diff with:");
@@ -309,63 +302,54 @@ namespace GitUI
 
         private void FileStatusListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            if (e.Item?.Tag is GitItemStatus gitItemStatus)
+            if (!(e.Item?.Tag is GitItemStatus gitItemStatus))
             {
-                var imageWidth = 0;
-                if (e.Item.ImageList != null && e.Item.ImageIndex != -1)
+                return;
+            }
+
+            var imageWidth = 0;
+            if (e.Item.ImageList != null && e.Item.ImageIndex != -1)
+            {
+                var image = e.Item.ImageList.Images[e.Item.ImageIndex];
+                imageWidth = image.Width;
+                e.Graphics.DrawImageUnscaled(image, e.Item.Position.X, e.Item.Position.Y);
+            }
+
+            var font = FileStatusListView.Font;
+            var textStartX = e.Item.Position.X + imageWidth;
+            var textSpace = e.Item.Bounds.Width - textStartX;
+            var formatter = new PathFormatter(e.Graphics, font);
+
+            var text = formatter.FormatTextForDrawing(textSpace, gitItemStatus.Name, gitItemStatus.OldName);
+
+            text = AppendItemSubmoduleStatus(text, gitItemStatus);
+
+            var slashIndex = text.LastIndexOf('/');
+
+            var textRect = new Rectangle(textStartX, e.Item.Bounds.Top, textSpace, e.Item.Bounds.Height);
+
+            if (slashIndex == -1 || slashIndex >= text.Length - 1)
+            {
+                formatter.DrawString(text, textRect, SystemColors.ControlText);
+                return;
+            }
+
+            var prefix = text.Substring(0, slashIndex + 1);
+            var tail = text.Substring(slashIndex + 1);
+
+            var prefixSize = formatter.MeasureString(prefix);
+
+            DrawString(textRect, prefix, SystemColors.GrayText);
+
+            textRect.Offset(prefixSize.Width, 0);
+            DrawString(textRect, tail, SystemColors.ControlText);
+
+            void DrawString(Rectangle rect, string s, Color color)
+            {
+                rect.Intersect(Rectangle.Round(e.Graphics.ClipBounds));
+                if (rect.Width != 0 && rect.Height != 0)
                 {
-                    var image = e.Item.ImageList.Images[e.Item.ImageIndex];
-                    imageWidth = image.Width;
-                    e.Graphics.DrawImageUnscaled(image, e.Item.Position.X, e.Item.Position.Y);
-                }
-
-                var font = FileStatusListView.Font;
-                var textStartX = e.Item.Position.X + imageWidth;
-                var textSpace = e.Item.Bounds.Width - textStartX;
-                var text = new PathFormatter(e.Graphics, font)
-                    .FormatTextForDrawing(textSpace, gitItemStatus.Name, gitItemStatus.OldName);
-
-                text = AppendItemSubmoduleStatus(text, gitItemStatus);
-
-                var slashIndex = text.LastIndexOf('/');
-
-                if (slashIndex != -1 && slashIndex < text.Length - 1)
-                {
-                    var prefix = text.Substring(0, slashIndex + 1);
-                    var tail = text.Substring(slashIndex + 1);
-
-                    CharacterRange[] ranges =
-                    {
-                        new CharacterRange(0, prefix.Length),
-                        new CharacterRange(prefix.Length, tail.Length)
-                    };
-
-                    FilePathStringFormat.SetMeasurableCharacterRanges(ranges);
-
-                    var regions = e.Graphics.MeasureCharacterRanges(
-                        text,
-                        font,
-                        new RectangleF(textStartX, e.Item.Bounds.Top, textSpace, e.Item.Bounds.Height),
-                        FilePathStringFormat);
-
-                    DrawString(regions[0], prefix, SystemBrushes.GrayText);
-                    DrawString(regions[1], tail, SystemBrushes.ControlText);
-
-                    void DrawString(Region region, string s, Brush brush)
-                    {
-                        var bounds = region.GetBounds(e.Graphics);
-                        if (bounds.Width != 0 && bounds.Height != 0)
-                        {
-                            e.Graphics.DrawString(s, font, brush, ExpandRight(bounds), FilePathStringFormat);
-                        }
-
-                        RectangleF ExpandRight(RectangleF r) => new RectangleF(r.X, r.Y, r.Width + r.Height, r.Height);
-                    }
-                }
-                else
-                {
-                    var textRect = new RectangleF(textStartX, e.Item.Bounds.Top, textSpace, e.Item.Bounds.Height);
-                    e.Graphics.DrawString(text, font, SystemBrushes.ControlText, textRect, FilePathStringFormat);
+                    formatter.DrawString(s, rect, color);
                 }
             }
         }
