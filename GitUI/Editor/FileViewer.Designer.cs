@@ -205,7 +205,7 @@
             this.ignoreAllWhitespaces,
             this.encodingToolStripComboBox,
             this.settingsButton});
-            this.fileviewerToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
+            this.fileviewerToolbar.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.StackWithOverflow;
             this.fileviewerToolbar.Location = new System.Drawing.Point(458, 0);
             this.fileviewerToolbar.Name = "fileviewerToolbar";
             this.fileviewerToolbar.Size = new System.Drawing.Size(393, 23);
