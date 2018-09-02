@@ -101,6 +101,9 @@ namespace GitUI.CommandsDialogs
         private ToolStripItem _warning;
         private bool _startWithDashboard;
 
+        private bool _submoduleStatusUpdateNeeded = true;
+        private bool _stashCountUpdateNeeded = true;
+
         [Flags]
         private enum UpdateTargets
         {
@@ -252,6 +255,14 @@ namespace GitUI.CommandsDialogs
                             }
                         }
                     }
+
+                    if (_submoduleStatusProvider.CheckSubmoduleList(status))
+                    {
+                        // Force an update
+                        _submoduleStatusUpdateNeeded = true;
+
+                        // Note: if CheckSubmoduleList() is more finegrained, this could call InitiateSubmodulesUpdate() directly
+                    }
                 };
 
                 // TODO: Replace with a status page?
@@ -397,6 +408,7 @@ namespace GitUI.CommandsDialogs
 
             RevisionGrid.IndexWatcher.Changed += (_, args) =>
             {
+                _stashCountUpdateNeeded = true;
                 bool indexChanged = args.IsIndexChanged;
                 this.InvokeAsync(
                         () =>
@@ -471,6 +483,8 @@ namespace GitUI.CommandsDialogs
 
         private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
         {
+            _submoduleStatusUpdateNeeded = true;
+            _stashCountUpdateNeeded = true;
             this.InvokeAsync(RefreshRevisions).FileAndForget();
         }
 
@@ -839,8 +853,13 @@ namespace GitUI.CommandsDialogs
         private void OnActivate()
         {
             CheckForMergeConflicts();
-            UpdateStashCount();
             InitiateSubmodulesUpdate();
+
+            if (_stashCountUpdateNeeded)
+            {
+                _stashCountUpdateNeeded = false;
+                UpdateStashCount();
+            }
 
             return;
 
@@ -1244,6 +1263,8 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
         {
+            _submoduleStatusUpdateNeeded = true;
+            _stashCountUpdateNeeded = true;
             RefreshRevisions();
         }
 
@@ -1297,6 +1318,7 @@ namespace GitUI.CommandsDialogs
 
         private void StashToolStripMenuItemClick(object sender, EventArgs e)
         {
+            _stashCountUpdateNeeded = true;
             UICommands.StartStashDialog(this);
         }
 
@@ -1518,6 +1540,7 @@ namespace GitUI.CommandsDialogs
 
         private void ManageSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
+            _submoduleStatusUpdateNeeded = true;
             UICommands.StartSubmodulesDialog(this);
         }
 
@@ -1534,36 +1557,43 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
+            _submoduleStatusUpdateNeeded = true;
             UICommands.StartUpdateSubmodulesDialog(this);
         }
 
         private void SynchronizeAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
+            _submoduleStatusUpdateNeeded = true;
             UICommands.StartSyncSubmodulesDialog(this);
         }
 
         private void ToolStripSplitStashButtonClick(object sender, EventArgs e)
         {
+            _stashCountUpdateNeeded = true;
             UICommands.StartStashDialog(this);
         }
 
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
+            _stashCountUpdateNeeded = true;
             UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
         }
 
         private void StashPopToolStripMenuItemClick(object sender, EventArgs e)
         {
+            _stashCountUpdateNeeded = true;
             UICommands.StashPop(this);
         }
 
         private void ManageStashesToolStripMenuItemClick(object sender, EventArgs e)
         {
+            _stashCountUpdateNeeded = true;
             UICommands.StartStashDialog(this);
         }
 
         private void CreateStashToolStripMenuItemClick(object sender, EventArgs e)
         {
+            _stashCountUpdateNeeded = true;
             UICommands.StartStashDialog(this, false);
         }
 
@@ -2403,14 +2433,14 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-
         private void InitiateSubmodulesUpdate()
         {
-            if (!_submoduleStatusProvider.ShouldUpdateSubmodules())
+            if (!_submoduleStatusUpdateNeeded)
             {
-                UpdateSubmodulesList();
+                return;
             }
 
+            _submoduleStatusUpdateNeeded = false;
             _submoduleStatusProvider.UpdateSubmodulesList(
                 Module.WorkingDir, _noBranchTitle.Text,
                 () =>
@@ -2419,7 +2449,6 @@ namespace GitUI.CommandsDialogs
                     toolStripButtonLevelUp.DropDownItems.Add(_loading.Text);
                 },
                 PopulateToolbarAsync);
-
         }
 
         private async Task PopulateToolbarAsync(SubmoduleInfoResult result, CancellationToken cancelToken)

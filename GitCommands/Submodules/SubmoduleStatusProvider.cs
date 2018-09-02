@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -14,20 +15,13 @@ namespace GitCommands.Submodules
     public sealed class SubmoduleStatusProvider : IDisposable
     {
         private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
-        private DateTime _previousSubmoduleUpdateTime;
-
-        public bool ShouldUpdateSubmodules()
-        {
-            TimeSpan elapsed = DateTime.Now - _previousSubmoduleUpdateTime;
-            return elapsed.TotalSeconds > 15;
-        }
 
         public void Dispose()
         {
             _submodulesStatusSequence.Dispose();
         }
 
-        public async Task GetSubmoduleStatusAsync(SubmoduleInfo info, CancellationToken cancelToken)
+        private async Task GetSubmoduleStatusAsync(SubmoduleInfo info, CancellationToken cancelToken)
         {
             await TaskScheduler.Default;
             cancelToken.ThrowIfCancellationRequested();
@@ -57,15 +51,25 @@ namespace GitCommands.Submodules
             }
         }
 
-        public void UpdateSubmodulesList(string workingDirectory, string noBranchText, Action onUpdateBegin, Func<SubmoduleInfoResult, CancellationToken, Task> onUpdateCompleteAsync)
+        public bool CheckSubmoduleList([CanBeNull] IReadOnlyList<GitItemStatus> allChangedFiles)
         {
-            if (!ShouldUpdateSubmodules())
+            if (allChangedFiles == null)
             {
-                return;
+                return false;
             }
 
-            _previousSubmoduleUpdateTime = DateTime.Now;
+            // If any submodules are changed, trigger an update
+            // TBD This should change should check the status against las updated list and only update the required modules
+            // (maybe even ignore count)
+            return allChangedFiles.Any(i => i.IsSubmodule && (i.IsChanged || !i.IsTracked));
+        }
 
+        public void UpdateSubmodulesList(string workingDirectory,
+            string noBranchText,
+            Action onUpdateBegin,
+            Func<SubmoduleInfoResult,
+                CancellationToken, Task> onUpdateCompleteAsync)
+        {
             // Cancel any previous async activities:
             var cancelToken = _submodulesStatusSequence.Next();
 
@@ -88,8 +92,6 @@ namespace GitCommands.Submodules
 
                 // populate toolbar
                 await onUpdateCompleteAsync(result, cancelToken);
-
-                _previousSubmoduleUpdateTime = DateTime.Now;
             });
         }
 
