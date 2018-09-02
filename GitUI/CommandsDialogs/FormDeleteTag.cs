@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Windows.Forms;
+using GitExtUtils.GitUI;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 
@@ -18,6 +20,11 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
+
+            // scale up for hi DPI
+            MaximumSize = DpiUtil.Scale(new Size(1000, 210));
+            MinimumSize = DpiUtil.Scale(new Size(470, 210));
+
             InitializeComplete();
             Tag = tag;
         }
