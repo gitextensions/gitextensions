@@ -104,6 +104,7 @@ namespace GitUI.Editor
             ShowEntireFile = AppSettings.ShowEntireFile;
             showEntireFileButton.Checked = ShowEntireFile;
             showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
+            SetStateOfContextLinesButtons();
 
             showNonPrintChars.Checked = AppSettings.ShowNonPrintingChars;
             showNonprintableCharactersToolStripMenuItem.Checked = AppSettings.ShowNonPrintingChars;
@@ -911,8 +912,17 @@ namespace GitUI.Editor
             ShowEntireFile = !ShowEntireFile;
             showEntireFileButton.Checked = ShowEntireFile;
             showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
+            SetStateOfContextLinesButtons();
             AppSettings.ShowEntireFile = ShowEntireFile;
             OnExtraDiffArgumentsChanged();
+        }
+
+        private void SetStateOfContextLinesButtons()
+        {
+            increaseNumberOfLines.Enabled = !ShowEntireFile;
+            DecreaseNumberOfLines.Enabled = !ShowEntireFile;
+            increaseNumberOfLinesToolStripMenuItem.Enabled = !ShowEntireFile;
+            decreaseNumberOfLinesToolStripMenuItem.Enabled = !ShowEntireFile;
         }
 
         private void TreatAllFilesAsTextToolStripMenuItemClick(object sender, EventArgs e)
