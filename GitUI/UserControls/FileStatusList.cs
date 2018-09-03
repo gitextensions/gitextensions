@@ -300,7 +300,7 @@ namespace GitUI
             }
         }
 
-        private void FileStatusListView_DrawItem(object sender, DrawListViewItemEventArgs e)
+        private void FileStatusListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
             if (!(e.Item?.Tag is GitItemStatus gitItemStatus))
             {
