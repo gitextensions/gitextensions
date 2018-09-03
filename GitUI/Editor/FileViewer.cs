@@ -920,7 +920,7 @@ namespace GitUI.Editor
         private void SetStateOfContextLinesButtons()
         {
             increaseNumberOfLines.Enabled = !ShowEntireFile;
-            DecreaseNumberOfLines.Enabled = !ShowEntireFile;
+            decreaseNumberOfLines.Enabled = !ShowEntireFile;
             increaseNumberOfLinesToolStripMenuItem.Enabled = !ShowEntireFile;
             decreaseNumberOfLinesToolStripMenuItem.Enabled = !ShowEntireFile;
         }

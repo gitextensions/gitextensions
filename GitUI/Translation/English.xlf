@@ -1167,7 +1167,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   </file>
   <file datatype="plaintext" original="FileViewer" source-language="en">
     <body>
-      <trans-unit id="DecreaseNumberOfLines.ToolTipText">
+      <trans-unit id="decreaseNumberOfLines.ToolTipText">
         <source>Decrease the number of lines of context</source>
         <target />
       </trans-unit>

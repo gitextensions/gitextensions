@@ -1569,7 +1569,7 @@ Do you want to open it?</source>
   </file>
   <file datatype="plaintext" original="FileViewer" source-language="en">
     <body>
-      <trans-unit id="DecreaseNumberOfLines.ToolTipText">
+      <trans-unit id="decreaseNumberOfLines.ToolTipText">
         <source>Decrease number of visible lines</source>
         <target>[Ḓḗƈřḗȧşḗ ƞŭḿƀḗř ǿƒ ṽīşīƀŀḗ ŀīƞḗş 衋ǈǲǈſϖǈϕ ΰ衋]</target>
         

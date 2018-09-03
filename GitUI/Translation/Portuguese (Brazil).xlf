@@ -1542,7 +1542,7 @@ Quer abri-lo?</target>
   </file>
   <file datatype="plaintext" original="FileViewer" source-language="en" target-language="pt-BR">
     <body>
-      <trans-unit id="DecreaseNumberOfLines.ToolTipText">
+      <trans-unit id="decreaseNumberOfLines.ToolTipText">
         <source>Decrease number of visible lines</source>
         <target>Diminuir o número de linhas visíveis</target>
         

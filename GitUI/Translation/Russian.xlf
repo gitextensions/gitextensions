@@ -1566,7 +1566,7 @@ Do you want to open it?</source>
   </file>
   <file datatype="plaintext" original="FileViewer" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="DecreaseNumberOfLines.ToolTipText">
+      <trans-unit id="decreaseNumberOfLines.ToolTipText">
         <source>Decrease number of visible lines</source>
         <target>Уменьшить количество видимых строк</target>
         
