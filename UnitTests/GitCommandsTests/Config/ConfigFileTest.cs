@@ -723,12 +723,14 @@ namespace GitCommandsTests.Config
         {
             // create test data
             {
-                var configFile = new ConfigFile(GetConfigFileName(), true);
-                configFile.SetValue("branch.BranchName1.remote", "origin1");
-                configFile.Save();
-
-                AddConfigValue(GetConfigFileName(), "branch.\"BranchName2\".remote", "origin2");
-                AddConfigValue(GetConfigFileName(), "branch.\"branchName2\".remote", "origin3");
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("[branch \"BranchName1\"]");
+                sb.AppendLine("remote = origin1");
+                sb.AppendLine("[branch \"BranchName2\"]");
+                sb.AppendLine("remote = origin2");
+                sb.AppendLine("[branch \"branchName2\"]");
+                sb.AppendLine("remote = origin3");
+                File.WriteAllText(GetConfigFileName(), sb.ToString());
             }
 
             // verify
