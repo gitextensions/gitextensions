@@ -17,6 +17,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             base.OnRuntimeLoad();
 
+            if (!IsSettingsLoaded)
+            {
+                SettingsToPage();
+            }
+
             // align 1st columns across all tables
             tlpnlRevisionGraph.AdjustWidthToSize(0, MulticolorBranches, lblColorLineRemoved);
             tlpnlDiffView.AdjustWidthToSize(0, MulticolorBranches, lblColorLineRemoved);
