@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands;
+using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using NUnit.Framework;
@@ -94,12 +95,12 @@ namespace GitCommandsTests
 
         private sealed class MockProcess : IProcess
         {
-            public MockProcess([CanBeNull] string output, int? exitCode)
+            public MockProcess([CanBeNull] string output, int? exitCode = 0)
             {
                 StandardOutput = new StreamReader(new MemoryStream(Encoding.UTF8.GetBytes(output ?? "")));
                 StandardError = new StreamReader(new MemoryStream());
                 StandardInput = new StreamWriter(new MemoryStream());
-                ExitCode = exitCode;
+                _exitCode = exitCode;
             }
 
             public MockProcess()
@@ -107,24 +108,32 @@ namespace GitCommandsTests
                 StandardOutput = new StreamReader(new MemoryStream());
                 StandardError = new StreamReader(new MemoryStream());
                 StandardInput = new StreamWriter(new MemoryStream());
+                _exitCode = 0;
             }
 
+            private int? _exitCode;
             public StreamWriter StandardInput { get; }
             public StreamReader StandardOutput { get; }
             public StreamReader StandardError { get; }
 
-            public int? ExitCode { get; }
-
-            public int? WaitForExit()
+            public int WaitForExit()
             {
-                // TODO implement if needed
-                return 0;
+                return ThreadHelper.JoinableTaskFactory.Run(() => WaitForExitAsync());
             }
 
-            public Task<int?> WaitForExitAsync()
+            public Task<int> WaitForExitAsync()
             {
-                // TODO implement if needed
-                return Task.FromResult((int?)0);
+                if (_exitCode.HasValue)
+                {
+                    return Task.FromResult(_exitCode.Value);
+                }
+                else
+                {
+                    var cts = new CancellationTokenSource();
+                    var ct = cts.Token;
+                    cts.Cancel();
+                    return Task.FromCanceled<int>(ct);
+                }
             }
 
             public void WaitForInputIdle()

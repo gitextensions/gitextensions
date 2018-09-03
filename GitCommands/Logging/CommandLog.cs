@@ -44,6 +44,7 @@ namespace GitCommands.Logging
             if (_entry.Duration == null)
             {
                 _entry.Duration = _stopwatch.Elapsed;
+                _raiseCommandsChanged();
             }
         }
     }

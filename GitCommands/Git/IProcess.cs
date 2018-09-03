@@ -44,25 +44,16 @@ namespace GitCommands
         StreamReader StandardError { get; }
 
         /// <summary>
-        /// Gets any exit code returned by this process.
-        /// </summary>
-        /// <remarks>
-        /// This value will be <c>null</c> if the process is still running, or if this object was disposed
-        /// before the process exited.
-        /// </remarks>
-        int? ExitCode { get; }
-
-        /// <summary>
         /// Blocks the calling thread until the process exits, or when this object is disposed.
         /// </summary>
         /// <returns>The process's exit code, or <c>null</c> if this object was disposed before the process exited.</returns>
-        int? WaitForExit();
+        int WaitForExit();
 
         /// <summary>
         /// Returns a task that completes when the process exits, or when this object is disposed.
         /// </summary>
         /// <returns>A task that yields the process's exit code, or <c>null</c> if this object was disposed before the process exited.</returns>
-        Task<int?> WaitForExitAsync();
+        Task<int> WaitForExitAsync();
 
         /// <summary>
         /// Waits for the process to reach an idle state.
