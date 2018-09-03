@@ -1168,7 +1168,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   <file datatype="plaintext" original="FileViewer" source-language="en">
     <body>
       <trans-unit id="DecreaseNumberOfLines.ToolTipText">
-        <source>Decrease number of visible lines</source>
+        <source>Decrease the number of lines of context</source>
         <target />
       </trans-unit>
       <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
@@ -1192,7 +1192,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="descreaseNumberOfLinesToolStripMenuItem.Text">
-        <source>Decrease number of lines visible</source>
+        <source>Decrease the number of lines of context</source>
         <target />
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
@@ -1220,11 +1220,11 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="increaseNumberOfLines.ToolTipText">
-        <source>Increase number of visible lines</source>
+        <source>Increase the number of lines of context</source>
         <target />
       </trans-unit>
       <trans-unit id="increaseNumberOfLinesToolStripMenuItem.Text">
-        <source>Increase number of lines visible</source>
+        <source>Increase the number of lines of context</source>
         <target />
       </trans-unit>
       <trans-unit id="nextChangeButton.ToolTipText">
