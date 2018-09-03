@@ -407,24 +407,28 @@ namespace GitUI
             // 
             // navigateToolStripMenuItem
             // 
+            this.navigateToolStripMenuItem.Image = global::GitUI.Properties.Images.GotoCommit;
             this.navigateToolStripMenuItem.Name = "navigateToolStripMenuItem";
             this.navigateToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.navigateToolStripMenuItem.Text = "Navigate";
             // 
             // viewToolStripMenuItem
             // 
+            this.viewToolStripMenuItem.Image = global::GitUI.Properties.Images.AdvancedSettings;
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.viewToolStripMenuItem.Text = "View";
             // 
             // runScriptToolStripMenuItem
             // 
+            this.runScriptToolStripMenuItem.Image = global::GitUI.Properties.Images.Console;
             this.runScriptToolStripMenuItem.Name = "runScriptToolStripMenuItem";
             this.runScriptToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.runScriptToolStripMenuItem.Text = "Run script";
             // 
             // openBuildReportToolStripMenuItem
             // 
+            this.openBuildReportToolStripMenuItem.Image = global::GitUI.Properties.Images.Integration;
             this.openBuildReportToolStripMenuItem.Name = "openBuildReportToolStripMenuItem";
             this.openBuildReportToolStripMenuItem.Size = new System.Drawing.Size(301, 26);
             this.openBuildReportToolStripMenuItem.Text = "Open build report in the browser";
