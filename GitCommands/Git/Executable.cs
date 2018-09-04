@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Logging;
+using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
@@ -53,17 +54,15 @@ namespace GitCommands
         private sealed class ProcessWrapper : IProcess
         {
             // TODO should this use TaskCreationOptions.RunContinuationsAsynchronously
-            private readonly TaskCompletionSource<int?> _exitTaskCompletionSource = new TaskCompletionSource<int?>();
+            private readonly TaskCompletionSource<int> _exitTaskCompletionSource = new TaskCompletionSource<int>();
 
+            private readonly object _syncRoot = new object();
             private readonly Process _process;
             private readonly ProcessOperation _logOperation;
             private readonly bool _redirectInput;
             private readonly bool _redirectOutput;
 
-            private int _disposed;
-
-            /// <inheritdoc />
-            public int? ExitCode { get; private set; }
+            private bool _disposed;
 
             [SuppressMessage("ReSharper", "AssignNullToNotNullAttribute")]
             public ProcessWrapper(string fileName, string arguments, string workDir, bool createWindow, bool redirectInput, bool redirectOutput, [CanBeNull] Encoding outputEncoding)
@@ -102,15 +101,17 @@ namespace GitCommands
 
             private void OnProcessExit(object sender, EventArgs eventArgs)
             {
-                // The Exited event can be raised after the process is disposed, however
-                // if the Process is disposed then reading ExitCode will throw.
-                if (_disposed == 0)
+                lock (_syncRoot)
                 {
-                    ExitCode = _process.ExitCode;
+                    // The Exited event can be raised after the process is disposed, however
+                    // if the Process is disposed then reading ExitCode will throw.
+                    if (!_disposed)
+                    {
+                        var exitCode = _process.ExitCode;
+                        _logOperation.LogProcessEnd(exitCode);
+                        _exitTaskCompletionSource.TrySetResult(exitCode);
+                    }
                 }
-
-                _logOperation.LogProcessEnd(ExitCode);
-                _exitTaskCompletionSource.TrySetResult(ExitCode);
             }
 
             /// <inheritdoc />
@@ -159,32 +160,30 @@ namespace GitCommands
             public void WaitForInputIdle() => _process.WaitForInputIdle();
 
             /// <inheritdoc />
-            public Task<int?> WaitForExitAsync() => _exitTaskCompletionSource.Task;
+            public Task<int> WaitForExitAsync() => _exitTaskCompletionSource.Task;
 
             /// <inheritdoc />
-            public int? WaitForExit()
+            public int WaitForExit()
             {
-                if (_disposed != 0)
-                {
-                    return ExitCode;
-                }
-
-                _process.WaitForExit();
-
-                return GitUI.ThreadHelper.JoinableTaskFactory.Run(() => _exitTaskCompletionSource.Task);
+                return ThreadHelper.JoinableTaskFactory.Run(() => WaitForExitAsync());
             }
 
             /// <inheritdoc />
             public void Dispose()
             {
-                if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
+                lock (_syncRoot)
                 {
-                    return;
+                    if (_disposed)
+                    {
+                        return;
+                    }
+
+                    _disposed = true;
                 }
 
                 _process.Exited -= OnProcessExit;
 
-                _exitTaskCompletionSource.TrySetResult(null);
+                _exitTaskCompletionSource.TrySetCanceled();
 
                 _process.Dispose();
 

@@ -100,7 +100,7 @@ namespace GitCommands
                 output = outputBuffer.ToArray();
                 error = errorBuffer.ToArray();
 
-                if (cache != null && process.ExitCode == 0)
+                if (cache != null && await exitTask == 0)
                 {
                     cache.Add(arguments, output, error);
                 }
