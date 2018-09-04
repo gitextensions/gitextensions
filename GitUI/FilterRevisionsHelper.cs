@@ -88,9 +88,9 @@ namespace GitUI
 
             label.Click += delegate { ApplyFilter(); };
             _NO_TRANSLATE_textBox.Leave += delegate { ApplyFilter(); };
-            _NO_TRANSLATE_textBox.KeyPress += (sender, e) =>
+            _NO_TRANSLATE_textBox.KeyUp += (sender, e) =>
             {
-                if (e.KeyChar == (char)Keys.Enter)
+                if (e.KeyValue == (char)Keys.Enter)
                 {
                     ApplyFilter();
                 }
