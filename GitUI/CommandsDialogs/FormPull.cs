@@ -808,6 +808,11 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.Text = AllRemotes;
         }
 
+        public void SetPrune()
+        {
+            Prune.Checked = true;
+        }
+
         private void PullFromUrlCheckedChanged(object sender, EventArgs e)
         {
             if (!PullFromUrl.Checked)

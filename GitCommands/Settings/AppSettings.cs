@@ -686,6 +686,7 @@ namespace GitCommands
             Rebase,
             Fetch,
             FetchAll,
+            FetchPruneAll,
             Default
         }
 
@@ -825,6 +826,12 @@ namespace GitCommands
         {
             get => GetBool("DontConfirmUndoLastCommit", false);
             set => SetBool("DontConfirmUndoLastCommit", value);
+        }
+
+        public static bool DontConfirmFetchAndPruneAll
+        {
+            get => GetBool("DontConfirmFetchAndPruneAll", false);
+            set => SetBool("DontConfirmFetchAndPruneAll", value);
         }
 
         public static bool IncludeUntrackedFilesInAutoStash

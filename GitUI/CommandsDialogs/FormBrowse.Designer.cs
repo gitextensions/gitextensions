@@ -49,6 +49,7 @@ namespace GitUI.CommandsDialogs
             this.fetchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pullToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.fetchAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fetchPruneAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setNextPullActionAsDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButtonPush = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -463,6 +464,7 @@ namespace GitUI.CommandsDialogs
             this.rebaseToolStripMenuItem1,
             this.fetchToolStripMenuItem,
             this.fetchAllToolStripMenuItem,
+            this.fetchPruneAllToolStripMenuItem,
             toolStripSeparator14,
             this.setNextPullActionAsDefaultToolStripMenuItem});
             this.toolStripButtonPull.Image = global::GitUI.Properties.Images.Pull;
@@ -518,6 +520,14 @@ namespace GitUI.CommandsDialogs
             this.fetchAllToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.fetchAllToolStripMenuItem.Text = "Fetch all";
             this.fetchAllToolStripMenuItem.Click += new System.EventHandler(this.fetchAllToolStripMenuItem_Click);
+            // 
+            // fetchPruneAllToolStripMenuItem
+            // 
+            this.fetchPruneAllToolStripMenuItem.Image = global::GitUI.Properties.Images.PullFetchPruneAll;
+            this.fetchPruneAllToolStripMenuItem.Name = "fetchPruneAllToolStripMenuItem";
+            this.fetchPruneAllToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.fetchPruneAllToolStripMenuItem.Text = "Fetch and prune all";
+            this.fetchPruneAllToolStripMenuItem.Click += new System.EventHandler(this.fetchPruneAllToolStripMenuItem_Click);
             // 
             // setNextPullActionAsDefaultToolStripMenuItem
             // 
@@ -1895,6 +1905,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem pullToolStripMenuItem1;
         private ToolStripMenuItem setNextPullActionAsDefaultToolStripMenuItem;
         private ToolStripMenuItem fetchAllToolStripMenuItem;
+        private ToolStripMenuItem fetchPruneAllToolStripMenuItem;
         private ToolStripMenuItem resetToolStripMenuItem;
         private ToolStripMenuItem reportAnIssueToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator41;
