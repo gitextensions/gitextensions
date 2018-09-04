@@ -1,6 +1,17 @@
 Changelog
 =========
 
+### [Version 2.51.05] (2 September 2018)
+
+#### Fixes:
+* Git config log.showSignature breaks revision grid - Issue [5179]
+
+#### Fixes (Mono specific):
+* Settings causes crash under linux/mono - Issue [5311]
+* Git Extension crashes when trying to access settings page in Ubuntu 16.04 - Issue [5187]
+* Diff view options are positioned wrong, cannot be selected under linux/mono - Issue [4978]
+
+
 ### [Version 2.51.04] (8 July 2018)
 
 #### Fixes:
@@ -417,11 +428,11 @@ Changelog
 
 ### [Version 2.50.02] (06 September 2017)
 
-#### Features: 
+#### Features:
 * Remote repositories modal defaults to inactive repo - Issue [3861]
 * Allow cherry-picking multiple commits from FormBrowse menu - PR [3852]
 
-#### Fixes: 
+#### Fixes:
 * Clicking Commit causes a crash - Issue [3827]
 * 2.50.01 Quoting issues on git checkout command - Issue [3969]
 * Can't delete index.lock because it is being used by another process. - Issue [3902]
@@ -439,7 +450,7 @@ Changelog
 
 ### [Version 2.50.01] (07 July 2017)
 
-#### Fixes: 
+#### Fixes:
 * Push branch with no upstream defaults to first remote and not to "origin" - Issue [3821]
 * [Bug] after 2.50 unable to use "Revert selected lines" from commit window - Issue [3819]
 * [Bug / Regression] It is not possible to run an external difftool (F3) in the diff view of "Commit index / Current unstaged changes" - Issue [3814]
@@ -450,7 +461,7 @@ Changelog
 
 ### [Version 2.50] (23 June 2017)
 
-#### Features: 
+#### Features:
 * Hotkey for "Stage All" button - Issue [3756]
 * Increased width for 'Open local repository' dialog. - PR [3644]
 * Shortcut key for "Create fixup commit" - Issue [3616]
@@ -498,7 +509,7 @@ Changelog
 * Ability to clear recent repositories. - Issue [1064]
 
 
-#### Fixes: 
+#### Fixes:
 * "Recover lost object" sometime doesn't show result - Issue [3777]
 * Very slow if "Show first parent" enabled - Issue [3767]
 * Win32Exception when clicking on Revision Link - Issue [3763]
@@ -535,13 +546,13 @@ Changelog
 * 2.47.x IME error with Spell checker - Issue [2301]
 
 ### Version 2.50RC2 (15 June 2017)
-#### Fixes: 
+#### Fixes:
 * fix Teamcity build chooser [3762]
 * Crash after saving settings - Issue [3755]
 * System.ArgumentException on start - Issue [3761]
 
 ### Version 2.50RC1 (10 June 2017)
-#### Features: 
+#### Features:
 * Increased width for 'Open local repository' dialog. - PR [3644]
 * Shortcut key for "Create fixup commit" - Issue [3616]
 * Open diff form not in modal - PR [3598]
@@ -587,7 +598,7 @@ Changelog
 * allow multi-select in resolve conflict window - Issue [1845]
 * Ability to clear recent repositories. - Issue [1064]
 
-#### Fixes: 
+#### Fixes:
 * The found text is not highlighted when searching in DiffView - Issue [3719]
 * Commit messages are corrupted if there are "mixed" encodings in log - Issue [3707]
 * Bug in Scripts - Issue [3691]
@@ -634,7 +645,7 @@ Changelog
 * Fix problem with incorrect building command line arguments. PR #3551
 
 ### Version 2.49.01 (12 March 2017)
-* Fixed issue #3587. Diff view is blank if git configuration is diff.color=always 
+* Fixed issue #3587. Diff view is blank if git configuration is diff.color=always
 * Fixed issue #3427. Pushing to a different remote wrongly ask about new branch bug.
 * Fixed issue #3560. GitExtensions doesn't respect core.commentChar setting in interactive rebase.
 * Fixed issue #3507. Branch normalization strips valid characters from the branch name.
@@ -2573,3 +2584,10 @@ Changelog
 [Version 2.51.04]:https://github.com/gitextensions/gitextensions/releases/tag/v2.51.04
 [5127]:https://github.com/gitextensions/gitextensions/issues/5127
 [5119]:https://github.com/gitextensions/gitextensions/issues/5119
+
+
+[Version 2.51.05]:https://github.com/gitextensions/gitextensions/releases/tag/v2.51.05
+[5311]:https://github.com/gitextensions/gitextensions/issues/5311
+[5187]:https://github.com/gitextensions/gitextensions/issues/5187
+[5179]:https://github.com/gitextensions/gitextensions/issues/5179
+[4978]:https://github.com/gitextensions/gitextensions/issues/4978
