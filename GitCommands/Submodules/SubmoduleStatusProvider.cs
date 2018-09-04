@@ -12,13 +12,97 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.Submodules
 {
-    public sealed class SubmoduleStatusProvider : IDisposable
+    public interface ISubmoduleStatusProvider : IDisposable
+    {
+        bool HasSubmodulesStatusChanged([CanBeNull] IReadOnlyList<GitItemStatus> allChangedFiles);
+        void UpdateSubmodulesStatus(string workingDirectory, string noBranchText, Action onUpdateBegin, Func<SubmoduleInfoResult, CancellationToken, Task> onUpdateCompleteAsync);
+    }
+
+    public sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     {
         private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
 
         public void Dispose()
         {
             _submodulesStatusSequence.Dispose();
+        }
+
+        public bool HasSubmodulesStatusChanged([CanBeNull] IReadOnlyList<GitItemStatus> allChangedFiles)
+        {
+            if (allChangedFiles == null)
+            {
+                return false;
+            }
+
+            // If any submodules are changed, trigger an update
+            // TBD: This should check the status against last updated list and only update the required modules
+            // (maybe even ignore count)
+            return allChangedFiles.Any(i => i.IsSubmodule && (i.IsChanged || !i.IsTracked));
+        }
+
+        public void UpdateSubmodulesStatus(string workingDirectory,
+            string noBranchText,
+            Action onUpdateBegin,
+            Func<SubmoduleInfoResult, CancellationToken, Task> onUpdateCompleteAsync)
+        {
+            // Cancel any previous async activities:
+            var cancelToken = _submodulesStatusSequence.Next();
+
+            onUpdateBegin();
+
+            // Start gathering new submodule information asynchronously.  This makes a significant difference in UI
+            // responsiveness if there are numerous submodules (e.g. > 100).
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                // First task: Gather list of submodules on a background thread.
+
+                // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
+                var threadModule = new GitModule(workingDirectory);
+                var result = new SubmoduleInfoResult();
+
+                // Add all submodules inside the current repository:
+                GetRepositorySubmodulesStatus(result, threadModule, cancelToken, noBranchText);
+
+                GetSuperProjectRepositorySubmodulesStatus(result, threadModule, cancelToken, noBranchText);
+
+                await onUpdateCompleteAsync(result, cancelToken);
+            });
+        }
+
+        [NotNull]
+        private static GitModule FindTopProjectModule(GitModule superModule)
+        {
+            GitModule topSuperModule = superModule;
+            do
+            {
+                if (topSuperModule.SuperprojectModule == null)
+                {
+                    break;
+                }
+
+                topSuperModule = topSuperModule.SuperprojectModule;
+            }
+            while (topSuperModule != null);
+
+            return topSuperModule;
+        }
+
+        private void GetRepositorySubmodulesStatus(SubmoduleInfoResult result, IGitModule module, CancellationToken cancelToken, string noBranchText)
+        {
+            foreach (var submodule in module.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName))
+            {
+                cancelToken.ThrowIfCancellationRequested();
+                var name = submodule;
+                string path = module.GetSubmoduleFullPath(submodule);
+                if (AppSettings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
+                {
+                    name = name + " " + GetModuleBranch(path, noBranchText);
+                }
+
+                var smi = new SubmoduleInfo { Text = name, Path = path };
+                result.OurSubmodules.Add(smi);
+                GetSubmoduleStatusAsync(smi, cancelToken).FileAndForget();
+            }
         }
 
         private async Task GetSubmoduleStatusAsync(SubmoduleInfo info, CancellationToken cancelToken)
@@ -48,68 +132,6 @@ namespace GitCommands.Submodules
                 info.Status = submoduleStatus.Status;
                 info.IsDirty = submoduleStatus.IsDirty;
                 info.Text += submoduleStatus.AddedAndRemovedString();
-            }
-        }
-
-        public bool CheckSubmoduleList([CanBeNull] IReadOnlyList<GitItemStatus> allChangedFiles)
-        {
-            if (allChangedFiles == null)
-            {
-                return false;
-            }
-
-            // If any submodules are changed, trigger an update
-            // TBD This should change should check the status against las updated list and only update the required modules
-            // (maybe even ignore count)
-            return allChangedFiles.Any(i => i.IsSubmodule && (i.IsChanged || !i.IsTracked));
-        }
-
-        public void UpdateSubmodulesList(string workingDirectory,
-            string noBranchText,
-            Action onUpdateBegin,
-            Func<SubmoduleInfoResult,
-                CancellationToken, Task> onUpdateCompleteAsync)
-        {
-            // Cancel any previous async activities:
-            var cancelToken = _submodulesStatusSequence.Next();
-
-            onUpdateBegin();
-
-            // Start gathering new submodule information asynchronously.  This makes a significant difference in UI
-            // responsiveness if there are numerous submodules (e.g. > 100).
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                // First task: Gather list of submodules on a background thread.
-
-                // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
-                var threadModule = new GitModule(workingDirectory);
-                var result = new SubmoduleInfoResult();
-
-                // Add all submodules inside the current repository:
-                GetRepositorySubmodulesStatus(result, threadModule, cancelToken, noBranchText);
-
-                GetSuperProjectRepositorySubmodulesStatus(result, threadModule, cancelToken, noBranchText);
-
-                // populate toolbar
-                await onUpdateCompleteAsync(result, cancelToken);
-            });
-        }
-
-        private void GetRepositorySubmodulesStatus(SubmoduleInfoResult result, IGitModule module, CancellationToken cancelToken, string noBranchText)
-        {
-            foreach (var submodule in module.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName))
-            {
-                cancelToken.ThrowIfCancellationRequested();
-                var name = submodule;
-                string path = module.GetSubmoduleFullPath(submodule);
-                if (AppSettings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                {
-                    name = name + " " + GetModuleBranch(path, noBranchText);
-                }
-
-                var smi = new SubmoduleInfo { Text = name, Path = path };
-                result.OurSubmodules.Add(smi);
-                GetSubmoduleStatusAsync(smi, cancelToken).FileAndForget();
             }
         }
 
@@ -152,8 +174,8 @@ namespace GitCommands.Submodules
                 name = name + " " + GetModuleBranch(path, noBranchText);
             }
 
-            result.Superproject = new SubmoduleInfo { Text = name, Path = module.SuperprojectModule.WorkingDir };
-            GetSubmoduleStatusAsync(result.Superproject, cancelToken).FileAndForget();
+            result.SuperProject = new SubmoduleInfo { Text = name, Path = module.SuperprojectModule.WorkingDir };
+            GetSubmoduleStatusAsync(result.SuperProject, cancelToken).FileAndForget();
 
             var submodules = supersuperproject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName).ToArray();
             if (submodules.Any())
@@ -185,25 +207,7 @@ namespace GitCommands.Submodules
             }
         }
 
-        [NotNull]
-        public GitModule FindTopProjectModule(GitModule superModule)
-        {
-            GitModule topSuperModule = superModule;
-            do
-            {
-                if (topSuperModule.SuperprojectModule == null)
-                {
-                    break;
-                }
-
-                topSuperModule = topSuperModule.SuperprojectModule;
-            }
-            while (topSuperModule != null);
-
-            return topSuperModule;
-        }
-
-        private string GetModuleBranch(string path, string noBranchText)
+        private static string GetModuleBranch(string path, string noBranchText)
         {
             var branch = GitModule.GetSelectedBranchFast(path);
             var text = DetachedHeadParser.IsDetachedHead(branch) ? noBranchText : branch;

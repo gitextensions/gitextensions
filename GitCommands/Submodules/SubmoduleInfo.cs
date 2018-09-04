@@ -1,12 +1,22 @@
 ﻿namespace GitCommands.Submodules
 {
-    /// <summary>Holds submodule information that is gathered asynchronously.</summary>
+    /// <summary>
+    /// Contains submodule information that is loaded asynchronously.
+    /// </summary>
     public class SubmoduleInfo
     {
-        public string Text; // User-friendly display text
-        public string Path; // Full path to submodule
-        public SubmoduleStatus? Status;
-        public bool IsDirty;
-        public bool Bold;
+        /// <summary>
+        /// User-friendly display text.
+        /// </summary>
+        public string Text { get; set; }
+
+        /// <summary>
+        /// Full path to submodule
+        /// </summary>
+        public string Path { get; set; }
+
+        public SubmoduleStatus? Status { get; set; }
+        public bool IsDirty { get; set; }
+        public bool Bold { get; set; }
     }
 }
