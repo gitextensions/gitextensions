@@ -5,8 +5,8 @@ using NUnit.Framework;
 
 namespace GitCommandsTests.Git
 {
-    [SetCulture("")]
-    [SetUICulture("")]
+    [SetCulture("en-US")]
+    [SetUICulture("en-US")]
     [TestFixture]
     public class GitBranchNameOptionsTest
     {

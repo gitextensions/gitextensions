@@ -11,8 +11,8 @@ using ResourceManager.CommitDataRenders;
 
 namespace ResourceManagerTests.CommitDataRenders
 {
-    [SetCulture("")]
-    [SetUICulture("")]
+    [SetCulture("en-US")]
+    [SetUICulture("en-US")]
     [TestFixture]
     public class CommitDataHeaderRendererTests
     {
