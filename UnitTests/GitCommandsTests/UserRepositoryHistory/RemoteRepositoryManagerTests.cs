@@ -16,12 +16,23 @@ namespace GitCommandsTests.UserRepositoryHistory
         private const string Key = "history remote";
         private IRepositoryStorage _repositoryStorage;
         private RemoteRepositoryManager _manager;
+        private int _userSetting;
 
         [SetUp]
         public void Setup()
         {
+            // backup the user setting, will restore it at the end of the test run
+            _userSetting = AppSettings.RecentRepositoriesHistorySize;
+            AppSettings.RecentRepositoriesHistorySize = 30;
+
             _repositoryStorage = Substitute.For<IRepositoryStorage>();
             _manager = new RemoteRepositoryManager(_repositoryStorage);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            AppSettings.RecentRepositoriesHistorySize = _userSetting;
         }
 
         [Test]
