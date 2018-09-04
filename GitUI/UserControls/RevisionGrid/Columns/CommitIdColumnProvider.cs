@@ -13,6 +13,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     {
         private readonly Dictionary<Font, int[]> _widthByLengthByFont = new Dictionary<Font, int[]>(capacity: 4);
         private readonly RevisionGridControl _grid;
+        private readonly Font _monospaceFont = AppSettings.MonospaceFont;
 
         public CommitIdColumnProvider(RevisionGridControl grid)
             : base("Commit ID")
@@ -35,12 +36,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
         {
-            if (!_widthByLengthByFont.TryGetValue(style.normalFont, out var widthByLength))
+            if (!_widthByLengthByFont.TryGetValue(_monospaceFont, out var widthByLength))
             {
-                var normalFont = style.normalFont;
+                var normalFont = _monospaceFont;
                 widthByLength = Enumerable.Range(0, ObjectId.Sha1CharCount + 1).Select(c => TextRenderer.MeasureText(new string('8', c), normalFont).Width).ToArray();
 
-                _widthByLengthByFont[style.normalFont] = widthByLength;
+                _widthByLengthByFont[_monospaceFont] = widthByLength;
             }
 
             if (!revision.IsArtificial)
@@ -49,11 +50,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 if (i == -1 && Column.Width > widthByLength[widthByLength.Length - 1])
                 {
-                    _grid.DrawColumnText(e, revision.ObjectId.ToString(), style.normalFont, style.foreColor, e.CellBounds, useEllipsis: false);
+                    _grid.DrawColumnText(e, revision.ObjectId.ToString(), _monospaceFont, style.foreColor, e.CellBounds, useEllipsis: false);
                 }
                 else if (i > 1)
                 {
-                    _grid.DrawColumnText(e, revision.ObjectId.ToShortString(i - 1), style.normalFont, style.foreColor, e.CellBounds, useEllipsis: false);
+                    _grid.DrawColumnText(e, revision.ObjectId.ToShortString(i - 1), _monospaceFont, style.foreColor, e.CellBounds, useEllipsis: false);
                 }
             }
         }

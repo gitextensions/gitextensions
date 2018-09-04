@@ -1218,6 +1218,12 @@ namespace GitCommands
             set => SetFont("commitfont", value);
         }
 
+        public static Font MonospaceFont
+        {
+            get => GetFont("monospacefont", new Font("Consolas", 9));
+            set => SetFont("monospacefont", value);
+        }
+
         public static Font Font
         {
             get => GetFont("font", SystemFonts.MessageBoxFont);
