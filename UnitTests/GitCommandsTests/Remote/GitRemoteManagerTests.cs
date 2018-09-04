@@ -10,8 +10,8 @@ using NUnit.Framework;
 
 namespace GitCommandsTests.Remote
 {
-    [SetCulture("")]
-    [SetUICulture("")]
+    [SetCulture("en-US")]
+    [SetUICulture("en-US")]
     [TestFixture]
     internal class GitRemoteManagerTests
     {

@@ -7,6 +7,7 @@ using NUnit.Framework;
 namespace GitExtUtilsTests
 {
     [SetCulture("en-US")]
+    [SetUICulture("en-US")]
     [TestFixture]
     public class TableLayoutPanelExtensionsTests
     {
