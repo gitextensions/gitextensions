@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces.RepositoryHosts;
+using JetBrains.Annotations;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -103,15 +106,26 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _selectHostedRepoCB.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
-            AsyncLoader.DoAsync(
-               hostedRepo.GetPullRequests,
-               res =>
-               {
-                   SetPullRequestsData(res);
-                   _selectHostedRepoCB.Enabled = true;
-               },
-               ex => MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Exception.Message,
-                                       _strError.Text));
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    try
+                    {
+                        await TaskScheduler.Default;
+
+                        var pullRequests = hostedRepo.GetPullRequests();
+
+                        await this.SwitchToMainThreadAsync();
+
+                        SetPullRequestsData(pullRequests);
+                        _selectHostedRepoCB.Enabled = true;
+                    }
+                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    {
+                        MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Message, _strError.Text);
+                    }
+                })
+                .FileAndForget();
         }
 
         private void SetPullRequestsData(IReadOnlyList<IPullRequestInformation> infos)
@@ -181,24 +195,24 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _fileStatusList.SetDiffs();
 
             _pullRequestsList.Items.Clear();
-            var lvi = new ListViewItem("");
-            lvi.SubItems.Add(_strLoading.Text);
-            _pullRequestsList.Items.Add(lvi);
+            _pullRequestsList.Items.Add(new ListViewItem("") { SubItems = { _strLoading.Text } });
         }
 
         private void LoadListView()
         {
             foreach (var info in _pullRequestsInfo)
             {
-                var lvi = new ListViewItem
+                _pullRequestsList.Items.Add(new ListViewItem
                 {
                     Text = info.Id,
-                    Tag = info
-                };
-                lvi.SubItems.Add(info.Title);
-                lvi.SubItems.Add(info.Owner);
-                lvi.SubItems.Add(info.Created.ToString());
-                _pullRequestsList.Items.Add(lvi);
+                    Tag = info,
+                    SubItems =
+                    {
+                        info.Title,
+                        info.Owner,
+                        info.Created.ToString()
+                    }
+                });
             }
 
             if (_pullRequestsList.Items.Count > 0)
@@ -241,17 +255,30 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void LoadDiscussion()
         {
-            AsyncLoader.DoAsync(
-                () => _currentPullRequestInfo.Discussion,
-                LoadDiscussion,
-                ex =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
                 {
-                    MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Exception.Message, _strError.Text);
-                    LoadDiscussion(null);
-                });
+                    try
+                    {
+                        await TaskScheduler.Default;
+
+                        // TODO make this operation async (requires change to Git.hub submodule)
+                        var discussion = _currentPullRequestInfo.GetDiscussion();
+
+                        await this.SwitchToMainThreadAsync();
+
+                        LoadDiscussion(discussion);
+                    }
+                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    {
+                        MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message, _strError.Text);
+                        LoadDiscussion(null);
+                    }
+                })
+                .FileAndForget();
         }
 
-        private void LoadDiscussion(IPullRequestDiscussion discussion)
+        private void LoadDiscussion([CanBeNull] IPullRequestDiscussion discussion)
         {
             var t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion?.Entries);
             _discussionWB.DocumentText = t;
@@ -270,11 +297,23 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void LoadDiffPatch()
         {
-            AsyncLoader.DoAsync(
-                () => _currentPullRequestInfo.DiffData,
-                SplitAndLoadDiff,
-                ex => MessageBox.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Exception.Message,
-                                    _strError.Text));
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    try
+                    {
+                        var content = await _currentPullRequestInfo.GetDiffDataAsync();
+
+                        await this.SwitchToMainThreadAsync();
+
+                        SplitAndLoadDiff(content);
+                    }
+                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    {
+                        MessageBox.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Message, _strError.Text);
+                    }
+                })
+                .FileAndForget();
         }
 
         private Dictionary<string, string> _diffCache;

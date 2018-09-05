@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using Git.hub;
 using GitUIPluginInterfaces.RepositoryHosts;
 
@@ -25,24 +26,20 @@ namespace GitHub3
         public DateTime Created => _pullRequest.CreatedAt;
 
         private string _diffData;
-        public string DiffData
-        {
-            get
-            {
-                if (_diffData == null)
-                {
-                    var wr = (HttpWebRequest)WebRequest.Create(_pullRequest.DiffUrl);
-                    using (var response = wr.GetResponse())
-                    {
-                        using (var respStream = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
-                    {
-                        _diffData = respStream.ReadToEnd();
-                    }
-                    }
-                }
 
-                return _diffData;
+        public async Task<string> GetDiffDataAsync()
+        {
+            if (_diffData == null)
+            {
+                var request = (HttpWebRequest)WebRequest.Create(_pullRequest.DiffUrl);
+                using (var response = await request.GetResponseAsync())
+                using (var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                {
+                    _diffData = await reader.ReadToEndAsync();
+                }
             }
+
+            return _diffData;
         }
 
         private IHostedRepository _baseRepo;
@@ -91,17 +88,15 @@ namespace GitHub3
         }
 
         private IPullRequestDiscussion _discussion;
-        public IPullRequestDiscussion Discussion
-        {
-            get
-            {
-                if (_discussion == null)
-                {
-                    _discussion = new GitHubPullRequestDiscussion(_pullRequest);
-                }
 
-                return _discussion;
+        public IPullRequestDiscussion GetDiscussion()
+        {
+            if (_discussion == null)
+            {
+                _discussion = new GitHubPullRequestDiscussion(_pullRequest);
             }
+
+            return _discussion;
         }
     }
 }

@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -391,23 +393,41 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _commandIsRunning = true;
             _statusIsUpToDate = true;
             _previousUpdateTime = Environment.TickCount;
-            AsyncLoader.DoAsync(RunStatusCommand, UpdatedStatusReceived, OnUpdateStatusError);
+
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    try
+                    {
+                        await TaskScheduler.Default;
+
+                        _ignoredFilesPending = _ignoredFilesAreStale;
+
+                        // git-status with ignored files when needed only
+                        var cmd = GitCommandHelpers.GetAllChangedFilesCmd(!_ignoredFilesPending, UntrackedFilesMode.Default, noLocks: true);
+                        var output = Module.RunGitCmd(cmd);
+                        var changedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(Module, output);
+
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                        UpdatedStatusReceived(changedFiles);
+                    }
+                    catch
+                    {
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                        _commandIsRunning = false;
+                        CurrentStatus = GitStatusMonitorState.Stopped;
+                    }
+                })
+                .FileAndForget();
 
             // Schedule update every 5 min, even if we don't know that anything changed
             CalculateNextUpdateTime(MaxUpdatePeriod);
 
             return;
 
-            string RunStatusCommand()
-            {
-                _ignoredFilesPending = _ignoredFilesAreStale;
-
-                // git-status with ignored files when needed only
-                string command = GitCommandHelpers.GetAllChangedFilesCmd(!_ignoredFilesPending, UntrackedFilesMode.Default, noLocks: true);
-                return Module.RunGitCmd(command);
-            }
-
-            void UpdatedStatusReceived(string updatedStatus)
+            void UpdatedStatusReceived(IReadOnlyList<GitItemStatus> changedFiles)
             {
                 // Adjust the interval between updates. (This does not affect an update already scheduled).
                 _currentUpdateInterval = Math.Max(MinUpdateInterval, 3 * (Environment.TickCount - _previousUpdateTime));
@@ -418,12 +438,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     return;
                 }
 
-                var allChangedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(Module, updatedStatus);
-                GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs(allChangedFiles.Where(item => !item.IsIgnored)));
+                GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs(changedFiles.Where(item => !item.IsIgnored)));
                 if (_ignoredFilesPending)
                 {
                     _ignoredFilesPending = false;
-                    _ignoredFiles = new HashSet<string>(allChangedFiles.Where(item => item.IsIgnored).Select(item => item.Name));
+                    _ignoredFiles = new HashSet<string>(changedFiles.Where(item => item.IsIgnored).Select(item => item.Name));
                     if (_statusIsUpToDate)
                     {
                         _ignoredFilesAreStale = false;
@@ -435,12 +454,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     // Still not up-to-date, but present what received, GetAllChangedFilesCmd() is the heavy command
                     CalculateNextUpdateTime(UpdateDelay);
                 }
-            }
-
-            void OnUpdateStatusError(AsyncErrorEventArgs e)
-            {
-                _commandIsRunning = false;
-                CurrentStatus = GitStatusMonitorState.Stopped;
             }
         }
 

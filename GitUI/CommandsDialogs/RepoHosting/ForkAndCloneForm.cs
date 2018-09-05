@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -84,29 +86,48 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _myReposLV.Items.Clear();
             _myReposLV.Items.Add(new ListViewItem { Text = _strLoading.Text });
 
-            AsyncLoader.DoAsync(
-                () => _gitHoster.GetMyRepos(),
-                repos =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
                 {
-                    _myReposLV.Items.Clear();
-                    foreach (var repo in repos)
+                    try
                     {
-                        var lvi = new ListViewItem { Tag = repo, Text = repo.Name };
-                        lvi.SubItems.Add(repo.IsAFork ? _strYes.Text : _strNo.Text);
-                        lvi.SubItems.Add(repo.Forks.ToString());
-                        lvi.SubItems.Add(repo.IsPrivate ? _strYes.Text : _strNo.Text);
-                        _myReposLV.Items.Add(lvi);
+                        await TaskScheduler.Default;
+
+                        var repos = _gitHoster.GetMyRepos();
+
+                        await this.SwitchToMainThreadAsync();
+
+                        _myReposLV.Items.Clear();
+
+                        foreach (var repo in repos)
+                        {
+                            _myReposLV.Items.Add(new ListViewItem
+                            {
+                                Tag = repo,
+                                Text = repo.Name,
+                                SubItems =
+                                {
+                                    repo.IsAFork ? _strYes.Text : _strNo.Text,
+                                    repo.Forks.ToString(),
+                                    repo.IsPrivate ? _strYes.Text : _strNo.Text
+                                }
+                            });
+                        }
                     }
-                },
-                ex =>
-                {
-                    _myReposLV.Items.Clear();
-                    _helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Description) +
-                        "\r\n\r\nException: " + ex.Exception.Message + "\r\n\r\n" + _helpTextLbl.Text;
-                });
+                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    {
+                        await this.SwitchToMainThreadAsync();
+
+                        _myReposLV.Items.Clear();
+                        _helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Description) +
+                                            "\r\n\r\nException: " + ex.Message + "\r\n\r\n" + _helpTextLbl.Text;
+                    }
+                })
+                .FileAndForget();
         }
 
         #region GUI Handlers
+
         private void _searchBtn_Click(object sender, EventArgs e)
         {
             var search = _searchTB.Text;
@@ -117,15 +138,28 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             PrepareSearch(sender, e);
 
-            AsyncLoader.DoAsync(
-                () => _gitHoster.SearchForRepository(search),
-                HandleSearchResult,
-                ex =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
                 {
-                    MessageBox.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Exception.Message,
-                        _strError.Text);
-                    _searchBtn.Enabled = true;
-                });
+                    try
+                    {
+                        await TaskScheduler.Default;
+
+                        var repositories = _gitHoster.SearchForRepository(search);
+
+                        await this.SwitchToMainThreadAsync();
+
+                        HandleSearchResult(repositories);
+                    }
+                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    {
+                        await this.SwitchToMainThreadAsync();
+
+                        MessageBox.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Message, _strError.Text);
+                        _searchBtn.Enabled = true;
+                    }
+                })
+                .FileAndForget();
         }
 
         private void _getFromUserBtn_Click(object sender, EventArgs e)
@@ -138,23 +172,37 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             PrepareSearch(sender, e);
 
-            AsyncLoader.DoAsync(
-                () => _gitHoster.GetRepositoriesOfUser(search.Trim()),
-                HandleSearchResult,
-                ex =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
                 {
-                    if (ex.Exception.Message.Contains("404"))
+                    try
                     {
-                        MessageBox.Show(this, _strUserNotFound.Text, _strError.Text);
-                    }
-                    else
-                    {
-                        MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + Environment.NewLine +
-                            ex.Exception.Message, _strError.Text);
-                    }
+                        await TaskScheduler.Default;
 
-                    _searchBtn.Enabled = true;
-                });
+                        var repositories = _gitHoster.GetRepositoriesOfUser(search.Trim());
+
+                        await this.SwitchToMainThreadAsync();
+
+                        HandleSearchResult(repositories);
+                    }
+                    catch (Exception ex) when (!(ex is OperationCanceledException))
+                    {
+                        await this.SwitchToMainThreadAsync();
+
+                        if (ex.Message.Contains("404"))
+                        {
+                            MessageBox.Show(this, _strUserNotFound.Text, _strError.Text);
+                        }
+                        else
+                        {
+                            MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + Environment.NewLine +
+                                                  ex.Message, _strError.Text);
+                        }
+
+                        _searchBtn.Enabled = true;
+                    }
+                })
+                .FileAndForget();
         }
 
         private void PrepareSearch(object sender, EventArgs e)

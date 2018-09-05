@@ -245,7 +245,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     var isInvalidRepo = !_controller.IsValidGitWorkingDir(repository.Repo.Path);
                     _hasInvalidRepos |= isInvalidRepo;
 
-                    var item = new ListViewItem(repository.Caption)
+                    listView1.Items.Add(new ListViewItem(repository.Caption)
                     {
                         ForeColor = ForeColor,
                         Font = AppSettings.Font,
@@ -253,12 +253,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         ImageIndex = isInvalidRepo ? 1 : 0,
                         UseItemStyleForSubItems = false,
                         Tag = repository.Repo,
-                        ToolTipText = repository.Repo.Path
-                    };
-                    item.SubItems.Add(_controller.GetCurrentBranchName(repository.Repo.Path), BranchNameColor, BackColor, _secondaryFont);
-                    item.SubItems.Add(repository.Repo.Category, SystemColors.GrayText, BackColor, _secondaryFont);
-
-                    listView1.Items.Add(item);
+                        ToolTipText = repository.Repo.Path,
+                        SubItems =
+                        {
+                            { _controller.GetCurrentBranchName(repository.Repo.Path), BranchNameColor, BackColor, _secondaryFont },
+                            { repository.Repo.Category, SystemColors.GrayText, BackColor, _secondaryFont }
+                        }
+                    });
                 }
 
                 void SetupGroups(IEnumerable<string> categories)

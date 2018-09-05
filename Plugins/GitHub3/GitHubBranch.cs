@@ -1,18 +1,18 @@
 ﻿using Git.hub;
+using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace GitHub3
 {
-    internal class GitHubBranch : IHostedBranch
+    internal sealed class GitHubBranch : IHostedBranch
     {
-        private readonly Branch _branch;
-
         public GitHubBranch(Branch branch)
         {
-            _branch = branch;
+            Name = branch.Name;
+            Sha = ObjectId.Parse(branch.Commit.Sha);
         }
 
-        public string Name => _branch.Name;
-        public string Sha => _branch.Commit.Sha;
+        public string Name { get; }
+        public ObjectId Sha { get; }
     }
 }

@@ -73,8 +73,13 @@ namespace GitHub3
         public string CloneReadWriteUrl => _repo.SshUrl;
         public string CloneReadOnlyUrl => _repo.GitUrl;
 
-        public List<IHostedBranch> Branches
-            => _repo.GetBranches().Select(branch => new GitHubBranch(branch)).ToList<IHostedBranch>();
+        public IReadOnlyList<IHostedBranch> GetBranches()
+        {
+            return _repo.GetBranches()
+                .Select(branch => new GitHubBranch(branch))
+                .OrderBy(branch => branch.Name, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
 
         public IHostedRepository Fork()
         {
