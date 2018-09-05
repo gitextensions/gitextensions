@@ -110,6 +110,9 @@
     <Compile Include="Remotes\GitRemoteManager.cs" />
     <Compile Include="Remotes\RepoNameExtractor.cs" />
     <Compile Include="Settings\DefaultImageType.cs" />
+    <Compile Include="Submodules\SubmoduleInfo.cs" />
+    <Compile Include="Submodules\SubmoduleInfoResult.cs" />
+    <Compile Include="Submodules\SubmoduleStatusProvider.cs" />
     <Compile Include="UserRepositoryHistory\IRepositoryManager.cs" />
     <Compile Include="UserRepositoryHistory\IRepositorySerialiser.cs" />
     <Compile Include="UserRepositoryHistory\Legacy\Repository.cs" />
@@ -216,5 +219,6 @@
       <Name>GitUIPluginInterfaces</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

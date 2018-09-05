@@ -207,30 +207,6 @@ namespace GitCommands
         [CanBeNull]
         public GitModule SuperprojectModule { get; }
 
-        [CanBeNull]
-        public GitModule FindTopProjectModule()
-        {
-            var module = SuperprojectModule;
-
-            if (module == null)
-            {
-                return null;
-            }
-
-            do
-            {
-                if (module.SuperprojectModule == null)
-                {
-                    return module;
-                }
-
-                module = module.SuperprojectModule;
-            }
-            while (module != null);
-
-            return null;
-        }
-
         private RepoDistSettings _effectiveSettings;
 
         [NotNull]
