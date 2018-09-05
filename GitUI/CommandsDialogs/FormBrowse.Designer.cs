@@ -503,6 +503,7 @@ namespace GitUI.CommandsDialogs
             this.fetchToolStripMenuItem.Name = "fetchToolStripMenuItem";
             this.fetchToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.fetchToolStripMenuItem.Text = "Fetch";
+            this.fetchToolStripMenuItem.ToolTipText = "Fetch branches and tags";
             this.fetchToolStripMenuItem.Click += new System.EventHandler(this.fetchToolStripMenuItem_Click);
             // 
             // pullToolStripMenuItem1
@@ -519,6 +520,7 @@ namespace GitUI.CommandsDialogs
             this.fetchAllToolStripMenuItem.Name = "fetchAllToolStripMenuItem";
             this.fetchAllToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.fetchAllToolStripMenuItem.Text = "Fetch all";
+            this.fetchAllToolStripMenuItem.ToolTipText = "Fetch branches and tags from all remote repositories";
             this.fetchAllToolStripMenuItem.Click += new System.EventHandler(this.fetchAllToolStripMenuItem_Click);
             // 
             // fetchPruneAllToolStripMenuItem
@@ -527,6 +529,7 @@ namespace GitUI.CommandsDialogs
             this.fetchPruneAllToolStripMenuItem.Name = "fetchPruneAllToolStripMenuItem";
             this.fetchPruneAllToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.fetchPruneAllToolStripMenuItem.Text = "Fetch and prune all";
+            this.fetchPruneAllToolStripMenuItem.ToolTipText = "Fetch branches and tags from all remote repositories also prune deleted refs";
             this.fetchPruneAllToolStripMenuItem.Click += new System.EventHandler(this.fetchPruneAllToolStripMenuItem_Click);
             // 
             // setNextPullActionAsDefaultToolStripMenuItem
