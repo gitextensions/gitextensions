@@ -291,14 +291,22 @@ namespace GitUI.CommandsDialogs
             UICommandsChanged += (a, e) =>
             {
                 var oldCommands = e.OldCommands;
-                RefreshPullIcon();
+                RefreshDefaultPullAction();
                 oldCommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
                 UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
                 oldCommands.BrowseRepo = null;
                 UICommands.BrowseRepo = this;
             };
 
-            RefreshPullIcon();
+            pullToolStripMenuItem1.Tag = AppSettings.PullAction.None;
+            mergeToolStripMenuItem.Tag = AppSettings.PullAction.Merge;
+            rebaseToolStripMenuItem1.Tag = AppSettings.PullAction.Rebase;
+            fetchToolStripMenuItem.Tag = AppSettings.PullAction.Fetch;
+            fetchAllToolStripMenuItem.Tag = AppSettings.PullAction.FetchAll;
+            fetchPruneAllToolStripMenuItem.Tag = AppSettings.PullAction.FetchPruneAll;
+
+            FillNextPullActionAsDefaultToolStripMenuItems();
+            RefreshDefaultPullAction();
             UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             UICommands.BrowseRepo = this;
             _controller = new FormBrowseController(new GitGpgController(() => Module));
@@ -356,6 +364,52 @@ namespace GitUI.CommandsDialogs
                 {
                     manageWorktreeToolStripMenuItem.Enabled = false;
                 }
+            }
+        }
+
+        private void FillNextPullActionAsDefaultToolStripMenuItems()
+        {
+            var setDefaultPullActionDropDown = (ToolStripDropDownMenu)setDefaultPullButtonActionToolStripMenuItem.DropDown;
+
+            // Show both Check and Image margins in a menu
+            setDefaultPullActionDropDown.ShowImageMargin = true;
+            setDefaultPullActionDropDown.ShowCheckMargin = true;
+
+            // Prevent submenu from closing while options are changed
+            setDefaultPullActionDropDown.Closing += (sender, args) =>
+            {
+                if (args.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
+                {
+                    args.Cancel = true;
+                }
+            };
+
+            var setDefaultPullActionDropDownItems = toolStripButtonPull.DropDownItems
+                .OfType<ToolStripMenuItem>()
+                .Where(tsmi => tsmi.Tag is AppSettings.PullAction)
+                .Select(tsmi =>
+                {
+                    ToolStripItem tsi = new ToolStripMenuItem
+                    {
+                        Name = $"{tsmi.Name}SetDefault",
+                        Text = tsmi.Text,
+                        CheckOnClick = true,
+                        Image = tsmi.Image,
+                        Tag = tsmi.Tag
+                    };
+
+                    tsi.Click += SetDefaultPullActionMenuItemClick;
+
+                    return tsi;
+                });
+
+            setDefaultPullActionDropDown.Items.AddRange(setDefaultPullActionDropDownItems.ToArray());
+
+            void SetDefaultPullActionMenuItemClick(object sender, EventArgs eventArgs)
+            {
+                var clickedMenuItem = (ToolStripMenuItem)sender;
+                AppSettings.DefaultPullAction = (AppSettings.PullAction)clickedMenuItem.Tag;
+                RefreshDefaultPullAction();
             }
         }
 
@@ -2196,52 +2250,36 @@ namespace GitUI.CommandsDialogs
               enabled;
         }
 
-        private void dontSetAsDefaultToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AppSettings.SetNextPullActionAsDefault = !setNextPullActionAsDefaultToolStripMenuItem.Checked;
-            setNextPullActionAsDefaultToolStripMenuItem.Checked = AppSettings.SetNextPullActionAsDefault;
-        }
-
-        private void SetDefaultPullActionIfNeeded(AppSettings.PullAction actionKind)
-        {
-            if (AppSettings.SetNextPullActionAsDefault)
-            {
-                AppSettings.DefaultPullAction = actionKind;
-                RefreshPullIcon();
-            }
-        }
-
         private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetDefaultPullActionIfNeeded(AppSettings.PullAction.Merge);
-
             PullToolStripMenuItemClick(sender, e);
         }
 
         private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            SetDefaultPullActionIfNeeded(AppSettings.PullAction.Rebase);
-
             PullToolStripMenuItemClick(sender, e);
         }
 
         private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetDefaultPullActionIfNeeded(AppSettings.PullAction.Fetch);
-
             PullToolStripMenuItemClick(sender, e);
         }
 
         private void pullToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            SetDefaultPullActionIfNeeded(AppSettings.PullAction.None);
-
             PullToolStripMenuItemClick(sender, e);
         }
 
-        private void RefreshPullIcon()
+        private void RefreshDefaultPullAction()
         {
-            switch (AppSettings.DefaultPullAction)
+            var defaultPullAction = AppSettings.DefaultPullAction;
+
+            foreach (ToolStripMenuItem menuItem in setDefaultPullButtonActionToolStripMenuItem.DropDown.Items)
+            {
+                menuItem.Checked = (AppSettings.PullAction)menuItem.Tag == defaultPullAction;
+            }
+
+            switch (defaultPullAction)
             {
                 case AppSettings.PullAction.Fetch:
                     toolStripButtonPull.Image = Images.PullFetch;
@@ -2277,15 +2315,11 @@ namespace GitUI.CommandsDialogs
 
         private void fetchAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetDefaultPullActionIfNeeded(AppSettings.PullAction.FetchAll);
-
             UICommands.StartPullDialogAndPullImmediately(this, fetchAll: true);
         }
 
         private void fetchPruneAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SetDefaultPullActionIfNeeded(AppSettings.PullAction.FetchPruneAll);
-
             bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
                                      || MessageBox.Show(
                                          this,
@@ -2543,7 +2577,6 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripButtonPull_DropDownOpened(object sender, EventArgs e)
         {
-            setNextPullActionAsDefaultToolStripMenuItem.Checked = AppSettings.SetNextPullActionAsDefault;
             PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 

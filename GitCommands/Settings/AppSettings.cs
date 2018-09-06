@@ -696,12 +696,6 @@ namespace GitCommands
             set => SetEnum("DefaultPullAction", value);
         }
 
-        public static bool SetNextPullActionAsDefault
-        {
-            get => !GetBool("DonSetAsLastPullAction", true);
-            set => SetBool("DonSetAsLastPullAction", !value);
-        }
-
         public static string SmtpServer
         {
             get => GetString("SmtpServer", "smtp.gmail.com");

@@ -2314,8 +2314,8 @@ Do you want to remove it from the recent repositories list?</source>
         <source>Solve merge conflicts...</source>
         <target />
       </trans-unit>
-      <trans-unit id="setNextPullActionAsDefaultToolStripMenuItem.Text">
-        <source>Set the next selection as default</source>
+      <trans-unit id="setDefaultPullButtonActionToolStripMenuItem.Text">
+        <source>Set default Pull button action</source>
         <target />
       </trans-unit>
       <trans-unit id="settingsToolStripMenuItem.Text">
