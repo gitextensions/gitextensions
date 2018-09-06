@@ -249,14 +249,19 @@ namespace GitCommandsTests.Helpers
 
                 if (actual)
                 {
+                    string expectedPath;
                     if (expectedExactPaths.TryGetValue(path, out var expectedExactPath))
                     {
-                        Assert.AreEqual(expectedExactPath, exactPath);
+                        expectedPath = expectedExactPath;
                     }
                     else
                     {
-                        Assert.AreEqual(path, exactPath);
+                        expectedPath = path;
                     }
+
+                    var lowercaseDriveExpected = char.ToLower(expectedPath[0]).ToString() + expectedPath.Substring(1);
+                    var lowercaseDriveExact = char.ToLower(exactPath[0]).ToString() + exactPath.Substring(1);
+                    Assert.AreEqual(lowercaseDriveExpected, lowercaseDriveExact);
                 }
                 else
                 {
