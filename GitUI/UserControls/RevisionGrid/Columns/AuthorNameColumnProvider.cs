@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
 
@@ -29,13 +28,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void Refresh(int rowHeight, in VisibleRowRange range) => Column.Visible = AppSettings.ShowAuthorNameColumn;
 
-        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
+        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
             if (!revision.IsArtificial)
             {
-                var font = _authorHighlighting.IsHighlighted(revision) ? style.boldFont : style.normalFont;
+                var font = _authorHighlighting.IsHighlighted(revision) ? style.BoldFont : style.NormalFont;
 
-                _grid.DrawColumnText(e, (string)e.FormattedValue, font, style.foreColor, e.CellBounds.ReduceLeft(ColumnLeftMargin));
+                _grid.DrawColumnText(e, (string)e.FormattedValue, font, style.ForeColor, e.CellBounds.ReduceLeft(ColumnLeftMargin));
             }
         }
 

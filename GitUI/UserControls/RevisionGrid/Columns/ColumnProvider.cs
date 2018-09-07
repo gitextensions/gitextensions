@@ -26,7 +26,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         public int Index => Column.Index;
 
         /// <summary>Renders the content of a cell in this column.</summary>
-        public abstract void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style);
+        public abstract void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style);
 
         /// <summary>Formats the textual representation of a cell in this column.</summary>
         /// <remarks>Implementations may set <c>e.Value</c> to the required string, and then set <c>e.FormattingApplied</c> to <c>true</c>.</remarks>
