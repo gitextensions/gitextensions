@@ -127,9 +127,20 @@ namespace GitUI.CommandsDialogs
             _branch = Module.GetSelectedBranch();
             BindRemotesDropDown(defaultRemote);
 
-            Merge.Checked = AppSettings.DefaultPullAction == AppSettings.PullAction.Merge;
-            Rebase.Checked = AppSettings.DefaultPullAction == AppSettings.PullAction.Rebase;
-            Fetch.Checked = AppSettings.DefaultPullAction == AppSettings.PullAction.Fetch;
+            if (AppSettings.DefaultPullAction == AppSettings.PullAction.Merge)
+            {
+                Merge.Checked = true;
+            }
+            else if (AppSettings.DefaultPullAction == AppSettings.PullAction.Rebase)
+            {
+                Rebase.Checked = true;
+            }
+            else
+            {
+                // Set to fetch for Fetch, FetchAll, FetchPruneAll and None
+                Fetch.Checked = true;
+            }
+
             localBranch.Enabled = Fetch.Checked;
             AutoStash.Checked = AppSettings.AutoStash;
             Prune.Enabled = AppSettings.DefaultPullAction == AppSettings.PullAction.Merge || AppSettings.DefaultPullAction == AppSettings.PullAction.Fetch;
