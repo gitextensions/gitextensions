@@ -50,7 +50,7 @@ namespace GitUI.CommandsDialogs
             this.pullToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.fetchAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fetchPruneAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setNextPullActionAsDefaultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setDefaultPullButtonActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButtonPush = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripFileExplorer = new System.Windows.Forms.ToolStripButton();
@@ -466,7 +466,7 @@ namespace GitUI.CommandsDialogs
             this.fetchAllToolStripMenuItem,
             this.fetchPruneAllToolStripMenuItem,
             toolStripSeparator14,
-            this.setNextPullActionAsDefaultToolStripMenuItem});
+            this.setDefaultPullButtonActionToolStripMenuItem});
             this.toolStripButtonPull.Image = global::GitUI.Properties.Images.Pull;
             this.toolStripButtonPull.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonPull.Name = "toolStripButtonPull";
@@ -532,14 +532,11 @@ namespace GitUI.CommandsDialogs
             this.fetchPruneAllToolStripMenuItem.ToolTipText = "Fetch branches and tags from all remote repositories also prune deleted refs";
             this.fetchPruneAllToolStripMenuItem.Click += new System.EventHandler(this.fetchPruneAllToolStripMenuItem_Click);
             // 
-            // setNextPullActionAsDefaultToolStripMenuItem
+            // setDefaultPullButtonActionToolStripMenuItem
             // 
-            this.setNextPullActionAsDefaultToolStripMenuItem.Checked = true;
-            this.setNextPullActionAsDefaultToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.setNextPullActionAsDefaultToolStripMenuItem.Name = "setNextPullActionAsDefaultToolStripMenuItem";
-            this.setNextPullActionAsDefaultToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
-            this.setNextPullActionAsDefaultToolStripMenuItem.Text = "Set the next selection as default";
-            this.setNextPullActionAsDefaultToolStripMenuItem.Click += new System.EventHandler(this.dontSetAsDefaultToolStripMenuItem_Click);
+            this.setDefaultPullButtonActionToolStripMenuItem.Name = "setDefaultPullButtonActionToolStripMenuItem";
+            this.setDefaultPullButtonActionToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.setDefaultPullButtonActionToolStripMenuItem.Text = "Set default Pull button action";
             // 
             // toolStripButtonPush
             // 
@@ -1906,7 +1903,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripMenuItem rebaseToolStripMenuItem1;
         private ToolStripMenuItem fetchToolStripMenuItem;
         private ToolStripMenuItem pullToolStripMenuItem1;
-        private ToolStripMenuItem setNextPullActionAsDefaultToolStripMenuItem;
+        private ToolStripMenuItem setDefaultPullButtonActionToolStripMenuItem;
         private ToolStripMenuItem fetchAllToolStripMenuItem;
         private ToolStripMenuItem fetchPruneAllToolStripMenuItem;
         private ToolStripMenuItem resetToolStripMenuItem;
