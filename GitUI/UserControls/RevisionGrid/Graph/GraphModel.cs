@@ -9,7 +9,12 @@ using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
-    internal sealed class GraphModel
+    internal interface ILaneRowProvider
+    {
+        ILaneRow GetLaneRow(int row);
+    }
+
+    internal sealed class GraphModel : ILaneRowProvider
     {
         public event Action Updated;
 

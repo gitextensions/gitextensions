@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
@@ -17,13 +16,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     internal sealed class GraphColumnProvider : ColumnProvider
     {
         private const int MaxLanes = 40;
-
-        private static readonly int _nodeDimension = DpiUtil.Scale(10);
-        private static readonly int _laneWidth = DpiUtil.Scale(16);
-        private static readonly int _laneLineWidth = DpiUtil.Scale(2);
+        private static readonly int LaneLineWidth = DpiUtil.Scale(2);
+        private static readonly int LaneWidth = DpiUtil.Scale(16);
+        private static readonly int NodeDimension = DpiUtil.Scale(10);
 
         private readonly JunctionStyler _junctionStyler = new JunctionStyler(new JunctionColorProvider());
-
+        private readonly LaneInfoProvider _laneInfoProvider;
         private readonly RevisionGridControl _grid;
         private readonly GraphModel _graphModel;
 
@@ -41,6 +39,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             _grid = grid;
             _graphModel = graphModel;
+            _laneInfoProvider = new LaneInfoProvider(new LaneNodeLocator(_graphModel));
 
             // TODO is it worth creating a lighter-weight column type?
 
@@ -251,7 +250,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         }
 
                         _graphBitmap = new Bitmap(
-                            Math.Max(width, _laneWidth * 3),
+                            Math.Max(width, LaneWidth * 3),
                             height,
                             PixelFormat.Format32bppPArgb);
                         _graphBitmapGraphics = Graphics.FromImage(_graphBitmap);
@@ -286,7 +285,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                     for (int lane = 0; lane < row.Count; lane++)
                     {
-                        int mid = g.RenderingOrigin.X + (int)((lane + 0.5) * _laneWidth);
+                        int mid = g.RenderingOrigin.X + (int)((lane + 0.5) * LaneWidth);
 
                         for (int item = 0; item < row.LaneInfoCount(lane); item++)
                         {
@@ -304,13 +303,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                                 bool sameLane = laneInfo.ConnectLane == lane;
                                 int x0 = mid;
                                 int y0 = top - 1;
-                                int x1 = sameLane ? x0 : mid + ((laneInfo.ConnectLane - lane) * _laneWidth);
+                                int x1 = sameLane ? x0 : mid + ((laneInfo.ConnectLane - lane) * LaneWidth);
                                 int y1 = top + rowHeight;
 
                                 var p0 = new Point(x0, y0);
                                 var p1 = new Point(x1, y1);
 
-                                using (var lanePen = new Pen(laneBrush, _laneLineWidth))
+                                using (var lanePen = new Pen(laneBrush, LaneLineWidth))
                                 {
                                     if (sameLane)
                                     {
@@ -347,10 +346,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                     // Draw node
                     var nodeRect = new Rectangle(
-                        g.RenderingOrigin.X + ((_laneWidth - _nodeDimension) / 2) + (row.NodeLane * _laneWidth),
-                        g.RenderingOrigin.Y + ((rowHeight - _nodeDimension) / 2),
-                        _nodeDimension,
-                        _nodeDimension);
+                        g.RenderingOrigin.X + ((LaneWidth - NodeDimension) / 2) + (row.NodeLane * LaneWidth),
+                        g.RenderingOrigin.Y + ((rowHeight - NodeDimension) / 2),
+                        NodeDimension,
+                        NodeDimension);
 
                     Color? nodeColor = null;
 
@@ -370,7 +369,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     }
                     else //// Circle
                     {
-                        nodeRect.Width = nodeRect.Height = _nodeDimension - 1;
+                        nodeRect.Width = nodeRect.Height = NodeDimension - 1;
 
                         g.SmoothingMode = SmoothingMode.AntiAlias;
                         g.FillEllipse(nodeBrush, nodeRect);
@@ -493,7 +492,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     : MaxLanes;
 
             laneCount = Math.Min(laneCount, maxLanes);
-            var columnWidth = (_laneWidth * laneCount) + ColumnLeftMargin;
+            var columnWidth = (LaneWidth * laneCount) + ColumnLeftMargin;
             if (Column.Width != columnWidth && columnWidth > Column.MinimumWidth)
             {
                 Column.Width = columnWidth;
@@ -508,66 +507,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
         {
-            if (!revision.IsArtificial)
-            {
-                toolTip = GetLaneInfo(e.X - ColumnLeftMargin, e.RowIndex);
-                return true;
-            }
-
-            toolTip = default;
-            return false;
-
-            string GetLaneInfo(int x, int rowIndex)
-            {
-                int lane = x / _laneWidth;
-                var laneInfoText = new StringBuilder();
-                lock (_graphModel)
-                {
-                    ILaneRow laneRow = _graphModel.GetLaneRow(rowIndex);
-                    if (laneRow != null)
-                    {
-                        Node node = null;
-                        if (lane == laneRow.NodeLane)
-                        {
-                            node = laneRow.Node;
-                            if (!node.Revision.IsArtificial)
-                            {
-                                laneInfoText.AppendLine(node.Revision.Guid);
-                            }
-                        }
-                        else if (lane >= 0 && lane < laneRow.Count)
-                        {
-                            for (int laneInfoIndex = 0, laneInfoCount = laneRow.LaneInfoCount(lane); laneInfoIndex < laneInfoCount; ++laneInfoIndex)
-                            {
-                                // search for next node below this row
-                                LaneInfo laneInfo = laneRow[lane, laneInfoIndex];
-                                Junction firstJunction = laneInfo.Junctions.First();
-                                for (int nodeIndex = 0, nodeCount = firstJunction.NodeCount; nodeIndex < nodeCount; ++nodeIndex)
-                                {
-                                    Node laneNode = firstJunction[nodeIndex];
-                                    if (laneNode.Index > rowIndex)
-                                    {
-                                        node = laneNode;
-                                        break; // from for (nodes)
-                                    }
-                                }
-                            }
-                        }
-
-                        if (node != null)
-                        {
-                            if (laneInfoText.Length > 0)
-                            {
-                                laneInfoText.AppendLine();
-                            }
-
-                            laneInfoText.Append(node.Revision.Body ?? node.Revision.Subject);
-                        }
-                    }
-                }
-
-                return laneInfoText.ToString();
-            }
+            toolTip = _laneInfoProvider.GetLaneInfo(e.X - ColumnLeftMargin, e.RowIndex, LaneWidth);
+            return true;
         }
     }
 }
