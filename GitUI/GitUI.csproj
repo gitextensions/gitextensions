@@ -391,6 +391,8 @@
     <Compile Include="UserControls\GitItemStatusWithParent.cs" />
     <Compile Include="UserControls\RevisionGrid\CellStyle.cs" />
     <Compile Include="UserControls\ListViewGroupHitInfo.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\LaneInfoProvider.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\LaneNodeLocator.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\RevisionGraphColumnProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\MultilineIndicator.cs" />
     <Compile Include="UserControls\HslColor.cs" />

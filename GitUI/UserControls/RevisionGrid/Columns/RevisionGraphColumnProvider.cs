@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -18,10 +18,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     {
         private const int MaxLanes = 40;
 
-        private static readonly int NodeDimension = DpiUtil.Scale(10);
-        private static readonly int LaneWidth = DpiUtil.Scale(16);
         private static readonly int LaneLineWidth = DpiUtil.Scale(2);
+        private static readonly int LaneWidth = DpiUtil.Scale(16);
+        private static readonly int NodeDimension = DpiUtil.Scale(10);
 
+        private readonly LaneInfoProvider _laneInfoProvider;
         private readonly RevisionGridControl _grid;
         private readonly RevisionGraph _revisionGraph;
         private readonly GraphCache _graphCache = new GraphCache();
@@ -34,6 +35,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             _grid = grid;
             _revisionGraph = revisionGraph;
+            _laneInfoProvider = new LaneInfoProvider(new LaneNodeLocator(_revisionGraph));
 
             // TODO is it worth creating a lighter-weight column type?
 
@@ -368,7 +370,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             return brush;
         }
 
-        private static int GetLaneForRow(RevisionGraphRow row, RevisionGraphSegment revisionGraphRevision)
+        private static int GetLaneForRow(IRevisionGraphRow row, RevisionGraphSegment revisionGraphRevision)
         {
             if (row != null)
             {
@@ -474,44 +476,15 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
         {
-            if (!revision.IsArtificial)
+            if (e.X >= ColumnLeftMargin && LaneWidth >= 0 && e.RowIndex >= 0)
             {
-                toolTip = GetLaneInfo(e.X - ColumnLeftMargin, e.RowIndex);
+                int lane = (e.X - ColumnLeftMargin) / LaneWidth;
+                toolTip = _laneInfoProvider.GetLaneInfo(e.RowIndex, lane);
                 return true;
             }
 
             toolTip = default;
             return false;
-
-            string GetLaneInfo(int x, int rowIndex)
-            {
-                int lane = x / LaneWidth;
-                var laneInfoText = new StringBuilder();
-                RevisionGraphRow row = _revisionGraph.GetSegmentsForRow(rowIndex);
-                if (row != null)
-                {
-                    IEnumerable<RevisionGraphSegment> segmentsForLane = row.GetSegmentsForIndex(lane);
-
-                    if (segmentsForLane.Count() == 1)
-                    {
-                        // Crossing lange
-                        laneInfoText.Append(segmentsForLane.First().Parent.GitRevision?.Body ?? segmentsForLane.First().Parent.GitRevision?.Subject);
-                    }
-                    else
-                    if (segmentsForLane.Count() > 1)
-                    {
-                        // Current revision
-                        if (!row.Revision.Objectid.IsArtificial)
-                        {
-                            laneInfoText.AppendLine(row.Revision.Objectid.ToString());
-                            laneInfoText.AppendLine();
-                            laneInfoText.Append(row.Revision.GitRevision?.Body ?? row.Revision.GitRevision?.Subject);
-                        }
-                    }
-                }
-
-                return laneInfoText.ToString();
-            }
         }
     }
 

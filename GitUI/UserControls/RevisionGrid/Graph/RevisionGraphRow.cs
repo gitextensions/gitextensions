@@ -3,11 +3,21 @@ using System.Collections.Generic;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
+    public interface IRevisionGraphRow
+    {
+        RevisionGraphRevision Revision { get; }
+        IReadOnlyList<RevisionGraphSegment> Segments { get; }
+        int GetCurrentRevisionLane();
+        int GetLaneCount();
+        IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index);
+        int GetLaneIndexForSegment(RevisionGraphSegment revisionGraphRevision);
+    }
+
     // The RevisionGraphRow contains an ordered list of Segments that crosses the row or connects to the revision in the row.
     // The segments can be returned in the order how it is stored.
     // Segments are not the same as lanes.A crossing segment is a lane, but multiple segments can connect to the revision.
     // Therefor, a single lane can have multiple segments.
-    public class RevisionGraphRow
+    public class RevisionGraphRow : IRevisionGraphRow
     {
         public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments)
         {
