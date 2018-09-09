@@ -41,6 +41,7 @@ namespace GitUI.CommandsDialogs
         private readonly IReadOnlyList<ObjectId> _containRevisions;
         private readonly bool _isLoading;
         private readonly string _rbResetBranchDefaultText;
+        private TranslationString _invalidBranchName = new TranslationString("An existing branch must be selected.");
         private bool? _isDirtyDir;
         private string _remoteName = "";
         private string _newLocalBranchName = "";
@@ -577,6 +578,17 @@ namespace GitUI.CommandsDialogs
             var normalisedBranchName = _branchNameNormaliser.Normalise(txtCustomBranchName.Text, _gitBranchNameOptions);
             txtCustomBranchName.Text = normalisedBranchName;
             txtCustomBranchName.SelectionStart = caretPosition;
+        }
+
+        private void Branches_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = Branches.SelectedIndex == -1 || !Branches.Items.Contains(Branches.Text);
+            Errors.SetError(Branches, e.Cancel ? _invalidBranchName.ToString() : "");
+        }
+
+        private void Branches_TextChanged(object sender, EventArgs e)
+        {
+            Errors.SetError(Branches, "");
         }
     }
 }
