@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
@@ -11,7 +13,7 @@ namespace GitUI.UserControls.RevisionGrid
 {
     public sealed class CopyContextMenuItem : ToolStripMenuItem
     {
-        [CanBeNull] private Func<GitRevision> _revisionFunc;
+        [CanBeNull] private Func<IReadOnlyList<GitRevision>> _revisionFunc;
 
         public CopyContextMenuItem()
         {
@@ -26,9 +28,8 @@ namespace GitUI.UserControls.RevisionGrid
 
             void OnDropDownOpening(object sender, EventArgs e)
             {
-                var revision = _revisionFunc?.Invoke();
-
-                if (revision == null)
+                var revisions = _revisionFunc?.Invoke();
+                if (revisions == null || revisions.Count == 0)
                 {
                     HideDropDown();
                     return;
@@ -36,9 +37,14 @@ namespace GitUI.UserControls.RevisionGrid
 
                 DropDownItems.Clear();
 
-                var refLists = new GitRefListsForRevision(revision);
-                var branchNames = refLists.GetAllBranchNames();
-                var tagNames = refLists.GetAllTagNames();
+                List<string> branchNames = new List<string>();
+                List<string> tagNames = new List<string>();
+                foreach (var revision in revisions)
+                {
+                    var refLists = new GitRefListsForRevision(revision);
+                    branchNames.AddRange(refLists.GetAllBranchNames());
+                    tagNames.AddRange(refLists.GetAllTagNames());
+                }
 
                 // Add items for branches
                 if (branchNames.Any())
@@ -49,7 +55,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                     foreach (var name in branchNames)
                     {
-                        AddItem(name, _ => name, Images.Branch);
+                        AddImmutableItem(name, Images.Branch);
                     }
 
                     DropDownItems.Add(new ToolStripSeparator());
@@ -64,29 +70,21 @@ namespace GitUI.UserControls.RevisionGrid
 
                     foreach (var name in tagNames)
                     {
-                        AddItem(name, _ => name, Images.Tag);
+                        AddImmutableItem(name, Images.Tag);
                     }
 
                     DropDownItems.Add(new ToolStripSeparator());
                 }
 
                 // Add other items
-                AddItem($"{Strings.CommitHash}     ({revision.ObjectId.ToShortString()}...)", r => r.Guid, Images.CommitId, Keys.Control | Keys.C);
-                AddItem($"{Strings.Message}     ({revision.Subject.ShortenTo(30)})", r => r.Body ?? r.Subject, Images.Message);
-                AddItem($"{Strings.Author}     ({revision.Author})", r => r.Author, Images.Author);
-
-                if (revision.AuthorDate == revision.CommitDate)
-                {
-                    AddItem($"{Strings.Date}     ({revision.CommitDate})", r => r.CommitDate.ToString(), Images.Date);
-                }
-                else
-                {
-                    AddItem($"{Strings.AuthorDate}     ({revision.AuthorDate})", r => r.AuthorDate.ToString(), Images.Date);
-                    AddItem($"{Strings.CommitDate}     ({revision.CommitDate})", r => r.CommitDate.ToString(), Images.Date);
-                }
+                AddItem(Strings.CommitHash,  (GitRevision r) => r.Guid, Images.CommitId, Keys.Control | Keys.C);
+                AddItem(Strings.Message,     r => r.Body ?? r.Subject, Images.Message);
+                AddItem(Strings.Author,      r => r.Author, Images.Author);
+                AddItem(Strings.AuthorDate,  r => r.AuthorDate.ToString(), Images.Date);
+                AddItem(Strings.CommitDate,  r => r.CommitDate.ToString(), Images.Date);
             }
 
-            void AddItem(string displayText, Func<GitRevision, string> clipboardText, Image image, Keys shortcutKeys = Keys.None, bool showShortcutKeys = true)
+            void AddImmutableItem(string displayText, Image image, Keys shortcutKeys = Keys.None, bool showShortcutKeys = true)
             {
                 var item = new ToolStripMenuItem
                 {
@@ -95,21 +93,40 @@ namespace GitUI.UserControls.RevisionGrid
                     ShowShortcutKeys = showShortcutKeys,
                     Image = image
                 };
-
                 item.Click += delegate
                 {
-                    var revision = _revisionFunc?.Invoke();
-                    if (revision != null)
+                    Clipboard.SetText(displayText);
+                };
+
+                DropDownItems.Add(item);
+            }
+
+            void AddItem(string displayText, Func<GitRevision, string> extractTextFunc, Image image, Keys shortcutKeys = Keys.None, bool showShortcutKeys = true)
+            {
+                var item = new ToolStripMenuItem
+                {
+                    Text = displayText,
+                    ShortcutKeys = shortcutKeys,
+                    ShowShortcutKeys = showShortcutKeys,
+                    Image = image
+                };
+                item.Click += delegate
+                {
+                    var revisions = _revisionFunc?.Invoke();
+                    var sb = new StringBuilder();
+                    foreach (var revision in revisions)
                     {
-                        Clipboard.SetText(clipboardText(revision));
+                        sb.AppendLine(extractTextFunc(revision));
                     }
+
+                    Clipboard.SetText(sb.ToString());
                 };
 
                 DropDownItems.Add(item);
             }
         }
 
-        public void SetRevisionFunc(Func<GitRevision> revisionFunc)
+        public void SetRevisionFunc(Func<IReadOnlyList<GitRevision>> revisionFunc)
         {
             _revisionFunc = revisionFunc;
         }
