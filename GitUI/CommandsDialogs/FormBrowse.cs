@@ -1832,7 +1832,10 @@ namespace GitUI.CommandsDialogs
 
             foreach (var repo in mostRecentRepos)
             {
-                AddRecentRepositories(repo.Repo, repo.Caption);
+                if (repo.ShortName != _NO_TRANSLATE_WorkingDir.Text)
+                {
+                    AddRecentRepositories(repo.Repo, repo.Caption);
+                }
             }
 
             if (lessRecentRepos.Count > 0)
@@ -1844,7 +1847,10 @@ namespace GitUI.CommandsDialogs
 
                 foreach (var repo in lessRecentRepos)
                 {
-                    AddRecentRepositories(repo.Repo, repo.Caption);
+                    if (repo.ShortName != _NO_TRANSLATE_WorkingDir.Text)
+                    {
+                        AddRecentRepositories(repo.Repo, repo.Caption);
+                    }
                 }
             }
 
