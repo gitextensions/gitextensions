@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -71,6 +73,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                     _currentBranch = Module.IsValidGitWorkingDir() ? Module.GetSelectedBranch() : "";
                     LoadRemotes(foreignHostedRemotes);
+                    LoadPRTemplate();
                     LoadMyBranches();
                 });
         }
@@ -111,6 +114,26 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         [CanBeNull]
         private IHostedRemote MyRemote => _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
+
+        private void LoadPRTemplate()
+        {
+            var selected = (IHostedRemote)_pullReqTargetsCB.SelectedItem;
+            var url = $"https://raw.githubusercontent.com/{selected.Data}/master/.github/PULL_REQUEST_TEMPLATE.md";
+            var request = WebRequest.Create(url);
+            request.Proxy = WebRequest.DefaultWebProxy;
+            request.Proxy.Credentials = CredentialCache.DefaultCredentials;
+            using (var response = request.GetResponse())
+            {
+                if (((HttpWebResponse)response).StatusCode == HttpStatusCode.OK)
+                {
+                    using (Stream stream = response.GetResponseStream())
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        _bodyTB.Text = reader.ReadToEnd();
+                    }
+                }
+            }
+        }
 
         private void LoadMyBranches()
         {
