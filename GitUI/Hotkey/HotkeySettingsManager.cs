@@ -271,7 +271,9 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Commands.CloseRepository, Keys.Control | Keys.W),
                     Hk(FormBrowse.Commands.OpenSettings, Keys.Control | Keys.Oemcomma),
                     Hk(FormBrowse.Commands.OpenWithDifftool, OpenWithDifftoolHotkey),
-                    Hk(FormBrowse.Commands.ToggleBranchTreePanel, Keys.Control | Keys.Alt | Keys.C)),
+                    Hk(FormBrowse.Commands.ToggleBranchTreePanel, Keys.Control | Keys.Alt | Keys.C),
+                    Hk(FormBrowse.Commands.GoToSubmodule, Keys.None),
+                    Hk(FormBrowse.Commands.GoToSuperproject, Keys.None)),
                 new HotkeySettings(
                     RevisionGridControl.HotkeySettingsName,
                     Hk(RevisionGridControl.Commands.RevisionFilter, Keys.Control | Keys.F),

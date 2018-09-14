@@ -2106,7 +2106,9 @@ namespace GitUI.CommandsDialogs
             FocusFilter = 18,
             OpenWithDifftool = 19,
             OpenSettings = 20,
-            ToggleBranchTreePanel = 21
+            ToggleBranchTreePanel = 21,
+            GoToSuperproject = 27,
+            GoToSubmodule = 28
         }
 
         internal Keys GetShortcutKeys(Commands cmd)
@@ -2179,6 +2181,8 @@ namespace GitUI.CommandsDialogs
                 case Commands.OpenWithDifftool: OpenWithDifftool(); break;
                 case Commands.OpenSettings: OnShowSettingsClick(null, null); break;
                 case Commands.ToggleBranchTreePanel: toggleBranchTreePanel_Click(null, null); break;
+                case Commands.GoToSuperproject: toolStripButtonLevelUp_ButtonClick(null, null); break;
+                case Commands.GoToSubmodule: toolStripButtonLevelUp.ShowDropDown(); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
