@@ -119,25 +119,34 @@ namespace GitCommands.Submodules
             var supermodule = submodule.SuperprojectModule;
             var submoduleName = submodule.GetCurrentSubmoduleLocalPath();
 
-            info.Status = null;
-
             if (string.IsNullOrEmpty(submoduleName) || supermodule == null)
             {
                 return;
             }
 
-            var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(supermodule, submoduleName);
-            if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+            info.Detailed = new AsyncLazy<DetailedSubmoduleInfo>(async () =>
             {
-                submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(supermodule));
-            }
+                await TaskScheduler.Default;
+                cancelToken.ThrowIfCancellationRequested();
 
-            if (submoduleStatus != null)
-            {
-                info.Status = submoduleStatus.Status;
-                info.IsDirty = submoduleStatus.IsDirty;
-                info.Text += submoduleStatus.AddedAndRemovedString();
-            }
+                var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(supermodule, submoduleName);
+                if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+                {
+                    submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(supermodule));
+                }
+
+                if (submoduleStatus != null)
+                {
+                    return new DetailedSubmoduleInfo()
+                    {
+                        Status = submoduleStatus.Status,
+                        IsDirty = submoduleStatus.IsDirty,
+                        AddedAndRemovedText = submoduleStatus.AddedAndRemovedString()
+                    };
+                }
+
+                return null;
+            }, ThreadHelper.JoinableTaskFactory);
         }
 
         private async Task GetSuperProjectRepositorySubmodulesStatusAsync(SubmoduleInfoResult result, GitModule module, CancellationToken cancelToken, string noBranchText)

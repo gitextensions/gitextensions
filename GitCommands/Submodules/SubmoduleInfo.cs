@@ -1,4 +1,6 @@
-﻿namespace GitCommands.Submodules
+﻿using Microsoft.VisualStudio.Threading;
+
+namespace GitCommands.Submodules
 {
     /// <summary>
     /// Contains submodule information that is loaded asynchronously.
@@ -15,8 +17,7 @@
         /// </summary>
         public string Path { get; set; }
 
-        public SubmoduleStatus? Status { get; set; }
-        public bool IsDirty { get; set; }
+        public AsyncLazy<DetailedSubmoduleInfo> Detailed { get; set; }
         public bool Bold { get; set; }
     }
 }
