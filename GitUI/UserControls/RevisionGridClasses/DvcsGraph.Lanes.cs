@@ -11,7 +11,7 @@ namespace GitUI.RevisionGridClasses
         private sealed class Lanes : IEnumerable<Graph.ILaneRow>
         {
             private readonly ActiveLaneRow _currentRow = new ActiveLaneRow();
-            private readonly List<LaneJunctionDetail> _laneNodes = new List<LaneJunctionDetail>();
+            private readonly SynchronizedCollection<LaneJunctionDetail> _laneNodes = new SynchronizedCollection<LaneJunctionDetail>();
             private readonly List<Graph.ILaneRow> _laneRows;
             private readonly Graph _sourceGraph;
 
@@ -78,15 +78,22 @@ namespace GitUI.RevisionGridClasses
 
             public bool CacheTo(int row)
             {
-                int handled = 0;
-                bool isValid = true;
-                while (handled < 3 && isValid && row >= CachedCount)
+                try
                 {
-                    isValid = MoveNext();
-                    handled++;
-                }
+                    int handled = 0;
+                    bool isValid = true;
+                    while (handled < 3 && isValid && row >= CachedCount)
+                    {
+                        isValid = MoveNext();
+                        handled++;
+                    }
 
-                return isValid;
+                    return isValid;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
             }
 
             public void Update(Node node)
@@ -176,7 +183,7 @@ namespace GitUI.RevisionGridClasses
                 for (int curLane = 0; curLane < _laneNodes.Count; curLane++)
                 {
                     LaneJunctionDetail lane = _laneNodes[curLane];
-                    if (lane.Count == 0)
+                    if (lane == null || lane.Count == 0)
                     {
                         continue;
                     }

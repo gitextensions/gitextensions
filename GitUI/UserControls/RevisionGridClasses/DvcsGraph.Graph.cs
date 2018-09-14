@@ -261,7 +261,7 @@ namespace GitUI.RevisionGridClasses
 
             public bool CacheTo(int idx)
             {
-                return _lanes.CacheTo(idx);
+                 return _lanes.CacheTo(idx);
             }
 
 #if false
