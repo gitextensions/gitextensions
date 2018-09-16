@@ -1,4 +1,5 @@
-﻿using GitUI.UserControls;
+﻿using System;
+using GitUI.UserControls;
 namespace GitUI
 {
     partial class FileStatusList
@@ -64,6 +65,7 @@ namespace GitUI
             this.FileStatusListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FileStatusListView_KeyDown);
             this.FileStatusListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FileStatusListView_MouseDown);
             this.FileStatusListView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FileStatusListView_MouseMove);
+            this.FileStatusListView.GroupMouseDown += new System.EventHandler<ListViewGroupMouseEventArgs>(this.FileStatusListView_GroupMouseDown);
             // 
             // columnHeader1
             // 

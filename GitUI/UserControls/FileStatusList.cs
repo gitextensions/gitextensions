@@ -506,6 +506,15 @@ namespace GitUI
             }
         }
 
+        private void FileStatusListView_GroupMouseDown(object sender, ListViewGroupMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                // prevent selecting all sub-items when left-clicking group
+                e.Handled = true;
+            }
+        }
+
         public int UnfilteredItemsCount => GitItemStatusesWithParents?.Sum(tuple => tuple.statuses.Count) ?? 0;
 
         public int AllItemsCount => FileStatusListView.Items.Count;

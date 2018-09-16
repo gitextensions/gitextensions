@@ -5,12 +5,13 @@ namespace GitUI.UserControls
     /// <inheritdoc />
     internal class ListViewGroupMouseEventArgs : MouseEventArgs
     {
-        public ListViewGroupMouseEventArgs(MouseButtons button, ListViewGroup group, int clicks, int x, int y, int delta)
-            : base(button, clicks, x, y, delta)
+        public ListViewGroupMouseEventArgs(MouseButtons button, ListViewGroupHitInfo groupHitInfo, int clicks, int delta)
+            : base(button, clicks, groupHitInfo.Location.X, groupHitInfo.Location.Y, delta)
         {
-            Group = group;
+            GroupInfo = groupHitInfo;
         }
 
-        public ListViewGroup Group { get; }
+        public ListViewGroupHitInfo GroupInfo { get; }
+        public bool Handled { get; set; }
     }
 }

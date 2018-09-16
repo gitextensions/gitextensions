@@ -370,6 +370,7 @@
     <Compile Include="SpellChecker\WordAtCursorExtractor.cs" />
     <Compile Include="TaskbarProgress.cs" />
     <Compile Include="UserControls\RevisionGrid\CellStyle.cs" />
+    <Compile Include="UserControls\ListViewGroupHitInfo.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\JunctionColorProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\JunctionStyler.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\MultilineIndicator.cs" />
