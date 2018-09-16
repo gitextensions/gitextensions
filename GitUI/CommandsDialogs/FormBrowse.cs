@@ -2427,13 +2427,13 @@ namespace GitUI.CommandsDialogs
 
         #region Submodules
 
-        private ToolStripMenuItem CreateSubmoduleMenuItem(SubmoduleInfo info, string textFormat = "{0}")
+        private ToolStripMenuItem CreateSubmoduleMenuItem(CancellationToken cancelToken, SubmoduleInfo info, string textFormat = "{0}")
         {
             var item = new ToolStripMenuItem(string.Format(textFormat, info.Text))
             {
                 Width = 200,
                 Tag = info.Path,
-                Image = GetSubmoduleItemImage()
+                Image = Images.FolderSubmodule
             };
 
             if (info.Bold)
@@ -2443,36 +2443,52 @@ namespace GitUI.CommandsDialogs
 
             item.Click += SubmoduleToolStripButtonClick;
 
+            if (info.Detailed != null)
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    var details = await info.Detailed.GetValueAsync(cancelToken);
+                    if (details == null)
+                    {
+                        return;
+                    }
+
+                    await this.SwitchToMainThreadAsync(cancelToken);
+                    item.Image = GetSubmoduleItemImage(details);
+                    item.Text = string.Format(textFormat, info.Text + details.AddedAndRemovedText);
+                }).FileAndForget();
+            }
+
             return item;
 
-            Image GetSubmoduleItemImage()
+            Image GetSubmoduleItemImage(DetailedSubmoduleInfo details)
             {
-                if (info.Status == null)
+                if (details.Status == null)
                 {
                     return Images.FolderSubmodule;
                 }
 
-                if (info.Status == SubmoduleStatus.FastForward)
+                if (details.Status == SubmoduleStatus.FastForward)
                 {
-                    return info.IsDirty ? Images.SubmoduleRevisionUpDirty : Images.SubmoduleRevisionUp;
+                    return details.IsDirty ? Images.SubmoduleRevisionUpDirty : Images.SubmoduleRevisionUp;
                 }
 
-                if (info.Status == SubmoduleStatus.Rewind)
+                if (details.Status == SubmoduleStatus.Rewind)
                 {
-                    return info.IsDirty ? Images.SubmoduleRevisionDownDirty : Images.SubmoduleRevisionDown;
+                    return details.IsDirty ? Images.SubmoduleRevisionDownDirty : Images.SubmoduleRevisionDown;
                 }
 
-                if (info.Status == SubmoduleStatus.NewerTime)
+                if (details.Status == SubmoduleStatus.NewerTime)
                 {
-                    return info.IsDirty ? Images.SubmoduleRevisionSemiUpDirty : Images.SubmoduleRevisionSemiUp;
+                    return details.IsDirty ? Images.SubmoduleRevisionSemiUpDirty : Images.SubmoduleRevisionSemiUp;
                 }
 
-                if (info.Status == SubmoduleStatus.OlderTime)
+                if (details.Status == SubmoduleStatus.OlderTime)
                 {
-                    return info.IsDirty ? Images.SubmoduleRevisionSemiDownDirty : Images.SubmoduleRevisionSemiDown;
+                    return details.IsDirty ? Images.SubmoduleRevisionSemiDownDirty : Images.SubmoduleRevisionSemiDown;
                 }
 
-                return info.IsDirty ? Images.SubmoduleDirty : Images.FileStatusModified;
+                return details.IsDirty ? Images.SubmoduleDirty : Images.FileStatusModified;
             }
         }
 
@@ -2503,7 +2519,7 @@ namespace GitUI.CommandsDialogs
             RemoveSubmoduleButtons();
 
             var newItems = result.OurSubmodules
-                .Select(submodule => CreateSubmoduleMenuItem(submodule))
+                .Select(submodule => CreateSubmoduleMenuItem(cancelToken, submodule))
                 .ToList<ToolStripItem>();
 
             if (result.OurSubmodules.Count == 0)
@@ -2516,11 +2532,11 @@ namespace GitUI.CommandsDialogs
                 newItems.Add(new ToolStripSeparator());
                 if (result.TopProject != null)
                 {
-                    newItems.Add(CreateSubmoduleMenuItem(result.TopProject, _topProjectModuleFormat.Text));
+                    newItems.Add(CreateSubmoduleMenuItem(cancelToken, result.TopProject, _topProjectModuleFormat.Text));
                 }
 
-                newItems.Add(CreateSubmoduleMenuItem(result.SuperProject, _superprojectModuleFormat.Text));
-                newItems.AddRange(result.SuperSubmodules.Select(submodule => CreateSubmoduleMenuItem(submodule)));
+                newItems.Add(CreateSubmoduleMenuItem(cancelToken, result.SuperProject, _superprojectModuleFormat.Text));
+                newItems.AddRange(result.SuperSubmodules.Select(submodule => CreateSubmoduleMenuItem(cancelToken, submodule)));
             }
 
             newItems.Add(new ToolStripSeparator());
