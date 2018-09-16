@@ -72,7 +72,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             set { _revisionGraphDrawStyle = value; }
         }
 
-        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
+        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
             if (AppSettings.ShowRevisionGridGraphColumn &&
                 e.State.HasFlag(DataGridViewElementStates.Visible) &&

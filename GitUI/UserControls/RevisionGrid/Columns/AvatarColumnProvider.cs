@@ -35,7 +35,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void Refresh(int rowHeight, in VisibleRowRange range) => Column.Visible = AppSettings.ShowAuthorAvatarColumn;
 
-        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in (Brush backBrush, Color foreColor, Font normalFont, Font boldFont) style)
+        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
         {
             if (revision.IsArtificial)
             {
@@ -84,17 +84,17 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             e.Graphics.DrawImage(image, rect);
             e.Graphics.EndContainer(container);
 
-            e.Graphics.FillRectangle(style.backBrush, rect.Left, rect.Top, 2, 1);
-            e.Graphics.FillRectangle(style.backBrush, rect.Left, rect.Top, 1, 2);
+            e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Top, 2, 1);
+            e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Top, 1, 2);
 
-            e.Graphics.FillRectangle(style.backBrush, rect.Right - 2, rect.Top, 2, 1);
-            e.Graphics.FillRectangle(style.backBrush, rect.Right - 1, rect.Top, 1, 2);
+            e.Graphics.FillRectangle(style.BackBrush, rect.Right - 2, rect.Top, 2, 1);
+            e.Graphics.FillRectangle(style.BackBrush, rect.Right - 1, rect.Top, 1, 2);
 
-            e.Graphics.FillRectangle(style.backBrush, rect.Left, rect.Bottom - 1, 2, 1);
-            e.Graphics.FillRectangle(style.backBrush, rect.Left, rect.Bottom - 2, 1, 2);
+            e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Bottom - 1, 2, 1);
+            e.Graphics.FillRectangle(style.BackBrush, rect.Left, rect.Bottom - 2, 1, 2);
 
-            e.Graphics.FillRectangle(style.backBrush, rect.Right - 2, rect.Bottom - 1, 2, 1);
-            e.Graphics.FillRectangle(style.backBrush, rect.Right - 1, rect.Bottom - 2, 1, 2);
+            e.Graphics.FillRectangle(style.BackBrush, rect.Right - 2, rect.Bottom - 1, 2, 1);
+            e.Graphics.FillRectangle(style.BackBrush, rect.Right - 1, rect.Bottom - 2, 1, 2);
         }
     }
 }

@@ -45,6 +45,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         private Font _normalFont;
         private Font _boldFont;
+        private Font _monospaceFont;
 
         public bool UpdatingVisibleRows { get; private set; }
 
@@ -58,6 +59,7 @@ namespace GitUI.UserControls.RevisionGrid
             _backgroundThread.Start();
 
             NormalFont = AppSettings.Font;
+            _monospaceFont = AppSettings.MonospaceFont;
 
             InitializeComponent();
 
@@ -311,7 +313,7 @@ namespace GitUI.UserControls.RevisionGrid
                 var backBrush = GetBackground(e.State, e.RowIndex);
                 var foreColor = GetForeground(e.State, e.RowIndex);
 
-                provider.OnCellPainting(e, revision, _rowHeight, (backBrush, foreColor, _normalFont, _boldFont));
+                provider.OnCellPainting(e, revision, _rowHeight, new CellStyle(backBrush, foreColor, _normalFont, _boldFont, _monospaceFont));
 
                 e.Handled = true;
             }

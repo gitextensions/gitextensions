@@ -10,6 +10,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private Font _diffFont;
         private Font _applicationFont;
         private Font _commitFont;
+        private Font _monospaceFont;
 
         public AppearanceFontsSettingsPage()
         {
@@ -23,6 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             SetCurrentApplicationFont(AppSettings.Font);
             SetCurrentDiffFont(AppSettings.FixedWidthFont);
             SetCurrentCommitFont(AppSettings.CommitFont);
+            SetCurrentMonospaceFont(AppSettings.MonospaceFont);
         }
 
         protected override void PageToSettings()
@@ -30,6 +32,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.FixedWidthFont = _diffFont;
             AppSettings.Font = _applicationFont;
             AppSettings.CommitFont = _commitFont;
+            AppSettings.MonospaceFont = _monospaceFont;
         }
 
         private void diffFontChangeButton_Click(object sender, EventArgs e)
@@ -65,6 +68,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
         }
 
+        private void monospaceFontChangeButton_Click(object sender, EventArgs e)
+        {
+            monospaceFontDialog.Font = _monospaceFont;
+            DialogResult result = monospaceFontDialog.ShowDialog(this);
+
+            if (result == DialogResult.OK || result == DialogResult.Yes)
+            {
+                SetCurrentMonospaceFont(monospaceFontDialog.Font);
+            }
+        }
+
         private void SetCurrentDiffFont(Font newFont)
         {
             _diffFont = newFont;
@@ -81,6 +95,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             _commitFont = newFont;
             SetFontButtonText(newFont, commitFontChangeButton);
+        }
+
+        private void SetCurrentMonospaceFont(Font newFont)
+        {
+            _monospaceFont = newFont;
+            SetFontButtonText(newFont, monospaceFontChangeButton);
         }
 
         private static void SetFontButtonText(Font font, Button button)
