@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -60,9 +61,14 @@ namespace GitUI.UserControls
         private static readonly PropertyInfo ListViewGroupIdProperty;
 
         /// <summary>
-        /// Occurs when the user clicks a <see cref="ListViewGroup"/> within the list view control.
+        /// Occurs when the user presses mouse button in a <see cref="ListViewGroup"/> within the list view control.
         /// </summary>
-        public event EventHandler<ListViewGroupMouseEventArgs> GroupMouseClick;
+        public event EventHandler<ListViewGroupMouseEventArgs> GroupMouseDown;
+
+        /// <summary>
+        /// Occurs when the user releases mouse button in a <see cref="ListViewGroup"/> within the list view control.
+        /// </summary>
+        public event EventHandler<ListViewGroupMouseEventArgs> GroupMouseUp;
 
         static ExListView()
         {
@@ -102,6 +108,9 @@ namespace GitUI.UserControls
             public const int LVM_HITTEST = LVM_FIRST + 18;
             public const int LVM_SETGROUPINFO = LVM_FIRST + 147;
             public const int LVM_SUBITEMHITTEST = LVM_FIRST + 57;
+
+            public const int NM_FIRST = 0;
+            public const int NM_CUSTOMDRAW = NM_FIRST - 12;
 
             #endregion
 
@@ -219,88 +228,95 @@ namespace GitUI.UserControls
 
         protected override void WndProc(ref Message m)
         {
+            var message = m;
+            var groupHitInfo = new Lazy<ListViewGroupHitInfo>(() => GetGroupHitInfo(message));
+
             switch (m.Msg)
             {
+                case NativeMethods.WM_LBUTTONUP when groupHitInfo.Value?.IsCollapseButton == true:
+                    DefWndProc(ref m); // collapse / expand by clicking button in group header
+                    break;
+
                 case NativeMethods.WM_PAINT:
                     _isInWmPaintMsg = true;
                     base.WndProc(ref m);
                     _isInWmPaintMsg = false;
                     break;
-                case NativeMethods.WM_REFLECT_NOTIFY:
-                    var nmhdr = (NativeMethods.NMHDR)m.GetLParam(typeof(NativeMethods.NMHDR));
-                    if (nmhdr.code == -12)
-                    {
-                        // NM_CUSTOMDRAW
-                        if (_isInWmPaintMsg)
-                        {
-                            base.WndProc(ref m);
-                        }
-                    }
-                    else
-                    {
-                        base.WndProc(ref m);
-                    }
 
+                case NativeMethods.WM_REFLECT_NOTIFY when IsCustomDraw(m) && !_isInWmPaintMsg:
+                case NativeMethods.WM_RBUTTONUP when IsGroupMouseEventHandled(groupHitInfo.Value, MouseButtons.Right, isDown: false):
+                case NativeMethods.WM_RBUTTONDOWN when IsGroupMouseEventHandled(groupHitInfo.Value, MouseButtons.Right, isDown: true):
+                case NativeMethods.WM_LBUTTONUP when IsGroupMouseEventHandled(groupHitInfo.Value, MouseButtons.Left, isDown: false):
+                case NativeMethods.WM_LBUTTONDOWN when IsGroupMouseEventHandled(groupHitInfo.Value, MouseButtons.Left, isDown: true):
                     break;
-                case NativeMethods.WM_LBUTTONUP:
-                case NativeMethods.WM_LBUTTONDOWN:
-                    {
-                        if (IsListViewGroupClickHandled((uint)m.LParam, MouseButtons.Left))
-                        {
-                            return;
-                        }
-
-                        base.WndProc(ref m);
-                        break;
-                    }
-
-                case NativeMethods.WM_RBUTTONUP:
-                case NativeMethods.WM_RBUTTONDOWN:
-                    {
-                        if (IsListViewGroupClickHandled((uint)m.LParam, MouseButtons.Right))
-                        {
-                            return;
-                        }
-
-                        base.WndProc(ref m);
-                        break;
-                    }
 
                 default:
                     base.WndProc(ref m);
                     break;
             }
 
-            bool IsListViewGroupClickHandled(uint lparam, MouseButtons button)
+            bool IsGroupMouseEventHandled(ListViewGroupHitInfo hitInfo, MouseButtons button, bool isDown)
             {
-                var info = new NativeMethods.LVHITTESTINFO
-                {
-                    pt = NativeMethods.LParamToPOINT(lparam)
-                };
-
-                var handleRef = new HandleRef(this, Handle);
-                if (NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) == new IntPtr(-1))
+                if (hitInfo == null)
                 {
                     return false;
                 }
 
-                if ((info.flags & NativeMethods.LVHITTESTFLAGS.LVHT_EX_GROUP_HEADER) == 0)
+                var eventArgs = new ListViewGroupMouseEventArgs(button, hitInfo, 1, 0);
+                if (isDown)
                 {
-                    return false;
+                    GroupMouseDown?.Invoke(this, eventArgs);
+                }
+                else
+                {
+                    GroupMouseUp?.Invoke(this, eventArgs);
                 }
 
-                foreach (ListViewGroup group in Groups)
-                {
-                    var groupId = GetGroupId(group);
-                    if (info.iItem == groupId)
-                    {
-                        GroupMouseClick?.Invoke(this, new ListViewGroupMouseEventArgs(button, group, 1, info.pt.X, info.pt.Y, 0));
-                        return true;
-                    }
-                }
-
-                return false;
+                return eventArgs.Handled;
             }
+
+            bool IsCustomDraw(Message msg)
+            {
+                var nmhdr = (NativeMethods.NMHDR)msg.GetLParam(typeof(NativeMethods.NMHDR));
+                return nmhdr.code == NativeMethods.NM_CUSTOMDRAW;
+            }
+        }
+
+        private ListViewGroupHitInfo GetGroupHitInfo(Message msg)
+        {
+            var point = NativeMethods.LParamToPOINT((uint)msg.LParam);
+            return GetGroupHitInfo(point);
+        }
+
+        private ListViewGroupHitInfo GetGroupHitInfo(NativeMethods.POINT location)
+        {
+            var info = new NativeMethods.LVHITTESTINFO
+            {
+                pt = location
+            };
+
+            var handleRef = new HandleRef(this, Handle);
+            if (NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SUBITEMHITTEST, (IntPtr)(-1), ref info) == new IntPtr(-1))
+            {
+                return null;
+            }
+
+            if ((info.flags & NativeMethods.LVHITTESTFLAGS.LVHT_EX_GROUP_HEADER) == 0)
+            {
+                return null;
+            }
+
+            foreach (ListViewGroup group in Groups)
+            {
+                var groupId = GetGroupId(group);
+                if (info.iItem == groupId)
+                {
+                    bool isCollapseButton = (info.flags & NativeMethods.LVHITTESTFLAGS.LVHT_EX_GROUP_COLLAPSE) > 0;
+                    return new ListViewGroupHitInfo(group, isCollapseButton, new Point(location.X, location.Y));
+                }
+            }
+
+            return null;
         }
 
         private static int GetGroupId(ListViewGroup listViewGroup)
