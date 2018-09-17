@@ -453,7 +453,7 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.Load();
             _filterBranchHelper.InitToolStripBranchFilter();
 
-            RevisionGrid.Focus();
+            ActiveControl = RevisionGrid;
             RevisionGrid.IndexWatcher.Reset();
 
             RevisionGrid.IndexWatcher.Changed += (_, args) =>
@@ -815,15 +815,15 @@ namespace GitUI.CommandsDialogs
             void SetShortcutKeyDisplayStringsFromHotkeySettings()
             {
                 // Add shortcuts to the menu items
-                gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitBash).ToShortcutKeyDisplayString();
-                commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.Commit).ToShortcutKeyDisplayString();
-                stashChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.Stash).ToShortcutKeyDisplayString();
-                stashPopToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.StashPop).ToShortcutKeyDisplayString();
-                closeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CloseRepository).ToShortcutKeyDisplayString();
-                gitGUIToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGui).ToShortcutKeyDisplayString();
-                kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGitK).ToShortcutKeyDisplayString();
-                checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.CheckoutBranch).ToShortcutKeyDisplayString();
-                settingsToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.OpenSettings).ToShortcutKeyDisplayString();
+                gitBashToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitBash).ToShortcutKeyDisplayString();
+                commitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Commit).ToShortcutKeyDisplayString();
+                stashChangesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.Stash).ToShortcutKeyDisplayString();
+                stashPopToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.StashPop).ToShortcutKeyDisplayString();
+                closeToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CloseRepository).ToShortcutKeyDisplayString();
+                gitGUIToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitGui).ToShortcutKeyDisplayString();
+                kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitGitK).ToShortcutKeyDisplayString();
+                checkoutBranchToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.CheckoutBranch).ToShortcutKeyDisplayString();
+                settingsToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.OpenSettings).ToShortcutKeyDisplayString();
 
                 // TODO: add more
             }
@@ -1578,6 +1578,11 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.JoinableTaskFactory.RunAsync(() => FillGpgInfoAsync());
             FillBuildReport();
             FillTerminalTab();
+            if (CommitInfoTabControl.SelectedTab == DiffTabPage)
+            {
+                // workaround to avoid focusing the "filter files" combobox
+                revisionDiff.SwitchFocus(alreadyContainedFocus: false);
+            }
         }
 
         private void ChangelogToolStripMenuItemClick(object sender, EventArgs e)
@@ -2082,15 +2087,15 @@ namespace GitUI.CommandsDialogs
 
         public static readonly string HotkeySettingsName = "Browse";
 
-        internal enum Commands
+        internal enum Command
         {
             GitBash = 0,
             GitGui = 1,
             GitGitK = 2,
             FocusRevisionGrid = 3,
             FocusCommitInfo = 4,
-            FocusFileTree = 5,
-            FocusDiff = 6,
+            FocusDiff = 5,
+            FocusFileTree = 6,
             Commit = 7,
             AddNotes = 8,
             FindFileInSelectedCommit = 9,
@@ -2107,11 +2112,20 @@ namespace GitUI.CommandsDialogs
             OpenWithDifftool = 19,
             OpenSettings = 20,
             ToggleBranchTreePanel = 21,
+            EditFile = 22,
+            OpenAsTempFile = 23,
+            OpenAsTempFileWith = 24,
+            FocusBranchTree = 25,
+            FocusGpgInfo = 26,
             GoToSuperproject = 27,
-            GoToSubmodule = 28
+            GoToSubmodule = 28,
+            FocusGitConsole = 29,
+            FocusBuildServerStatus = 30,
+            FocusNextTab = 31,
+            FocusPrevTab = 32
         }
 
-        internal Keys GetShortcutKeys(Commands cmd)
+        internal Keys GetShortcutKeys(Command cmd)
         {
             return GetShortcutKeys((int)cmd);
         }
@@ -2144,52 +2158,127 @@ namespace GitUI.CommandsDialogs
             UICommands.RepoChangedNotifier.Notify();
         }
 
-        private void OpenWithDifftool()
-        {
-            if (revisionDiff.Visible)
-            {
-                revisionDiff.ExecuteCommand(RevisionDiffControl.Command.OpenWithDifftool);
-            }
-            else if (fileTree.Visible)
-            {
-                fileTree.ExecuteCommand(RevisionFileTreeControl.Command.OpenWithDifftool);
-            }
-        }
-
         protected override bool ExecuteCommand(int cmd)
         {
-            switch ((Commands)cmd)
+            switch ((Command)cmd)
             {
-                case Commands.GitBash: Module.RunBash(); break;
-                case Commands.GitGui: Module.RunGui(); break;
-                case Commands.GitGitK: Module.RunGitK(); break;
-                case Commands.FocusRevisionGrid: RevisionGrid.Focus(); break;
-                case Commands.FocusCommitInfo: CommitInfoTabControl.SelectedTab = CommitInfoTabPage; break;
-                case Commands.FocusFileTree: CommitInfoTabControl.SelectedTab = TreeTabPage; fileTree.Focus(); break;
-                case Commands.FocusDiff: CommitInfoTabControl.SelectedTab = DiffTabPage; revisionDiff.Focus(); break;
-                case Commands.FocusFilter: FocusFilter(); break;
-                case Commands.Commit: CommitToolStripMenuItemClick(null, null); break;
-                case Commands.AddNotes: AddNotes(); break;
-                case Commands.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
-                case Commands.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
-                case Commands.QuickFetch: QuickFetch(); break;
-                case Commands.QuickPull: UICommands.StartPullDialogAndPullImmediately(this); break;
-                case Commands.QuickPush: UICommands.StartPushDialog(this, true); break;
-                case Commands.CloseRepository: CloseToolStripMenuItemClick(null, null); break;
-                case Commands.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
-                case Commands.StashPop: UICommands.StashPop(this); break;
-                case Commands.OpenWithDifftool: OpenWithDifftool(); break;
-                case Commands.OpenSettings: OnShowSettingsClick(null, null); break;
-                case Commands.ToggleBranchTreePanel: toggleBranchTreePanel_Click(null, null); break;
-                case Commands.GoToSuperproject: toolStripButtonLevelUp_ButtonClick(null, null); break;
-                case Commands.GoToSubmodule: toolStripButtonLevelUp.ShowDropDown(); break;
+                case Command.GitBash: Module.RunBash(); break;
+                case Command.GitGui: Module.RunGui(); break;
+                case Command.GitGitK: Module.RunGitK(); break;
+                case Command.FocusBranchTree: FocusBranchTree(); break;
+                case Command.FocusRevisionGrid: RevisionGrid.Focus(); break;
+                case Command.FocusCommitInfo: FocusCommitInfo(); break;
+                case Command.FocusDiff: FocusTabOf(revisionDiff, (c, alreadyContainedFocus) => c.SwitchFocus(alreadyContainedFocus)); break;
+                case Command.FocusFileTree: FocusTabOf(fileTree, (c, alreadyContainedFocus) => c.SwitchFocus(alreadyContainedFocus)); break;
+                case Command.FocusGpgInfo when AppSettings.ShowGpgInformation.ValueOrDefault: FocusTabOf(revisionGpgInfo1, (c, alreadyContainedFocus) => c.Focus()); break;
+                case Command.FocusGitConsole: FocusGitConsole(); break;
+                case Command.FocusBuildServerStatus: FocusTabOf(_buildReportTabPageExtension.Control, (c, alreadyContainedFocus) => c.Focus()); break;
+                case Command.FocusNextTab: FocusNextTab(); break;
+                case Command.FocusPrevTab: FocusNextTab(forward: false); break;
+                case Command.FocusFilter: FocusFilter(); break;
+                case Command.Commit: CommitToolStripMenuItemClick(null, null); break;
+                case Command.AddNotes: AddNotes(); break;
+                case Command.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
+                case Command.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
+                case Command.QuickFetch: QuickFetch(); break;
+                case Command.QuickPull: UICommands.StartPullDialogAndPullImmediately(this); break;
+                case Command.QuickPush: UICommands.StartPushDialog(this, true); break;
+                case Command.CloseRepository: CloseToolStripMenuItemClick(null, null); break;
+                case Command.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
+                case Command.StashPop: UICommands.StashPop(this); break;
+                case Command.OpenWithDifftool: OpenWithDifftool(); break;
+                case Command.OpenSettings: OnShowSettingsClick(null, null); break;
+                case Command.ToggleBranchTreePanel: toggleBranchTreePanel_Click(null, null); break;
+                case Command.EditFile: EditFile(); break;
+                case Command.OpenAsTempFile when fileTree.Visible: fileTree.ExecuteCommand(RevisionFileTreeControl.Command.OpenAsTempFile); break;
+                case Command.OpenAsTempFileWith when fileTree.Visible: fileTree.ExecuteCommand(RevisionFileTreeControl.Command.OpenAsTempFileWith); break;
+                case Command.GoToSuperproject: toolStripButtonLevelUp_ButtonClick(null, null); break;
+                case Command.GoToSubmodule: toolStripButtonLevelUp.ShowDropDown(); break;
                 default: return base.ExecuteCommand(cmd);
             }
 
             return true;
+
+            void FocusBranchTree()
+            {
+                if (!MainSplitContainer.Panel1Collapsed)
+                {
+                    repoObjectsTree.Focus();
+                }
+            }
+
+            void FocusCommitInfo()
+            {
+                if (AppSettings.CommitInfoPosition == CommitInfoPosition.BelowList)
+                {
+                    CommitInfoTabControl.SelectedTab = CommitInfoTabPage;
+                }
+
+                RevisionInfo.Focus();
+            }
+
+            void FocusTabOf<T>(T control, Action<T, bool> switchFocus) where T : Control
+            {
+                if (control != null)
+                {
+                    var tabPage = control.Parent as TabPage;
+                    if (CommitInfoTabControl.TabPages.IndexOf(tabPage) >= 0)
+                    {
+                        bool alreadyContainedFocus = control.ContainsFocus;
+
+                        if (CommitInfoTabControl.SelectedTab != tabPage)
+                        {
+                            CommitInfoTabControl.SelectedTab = tabPage;
+                        }
+
+                        switchFocus(control, alreadyContainedFocus);
+                    }
+                }
+            }
+
+            void FocusGitConsole()
+            {
+                FillTerminalTab();
+                var tabPageCaption = _consoleTabCaption.Text;
+                if (CommitInfoTabControl.TabPages.ContainsKey(tabPageCaption))
+                {
+                    CommitInfoTabControl.SelectedTab = CommitInfoTabControl.TabPages[tabPageCaption];
+                }
+            }
+
+            void FocusNextTab(bool forward = true)
+            {
+                int tabIndex = CommitInfoTabControl.SelectedIndex;
+                tabIndex += forward ? 1 : (CommitInfoTabControl.TabCount - 1);
+                CommitInfoTabControl.SelectedIndex = tabIndex % CommitInfoTabControl.TabCount;
+            }
+
+            void OpenWithDifftool()
+            {
+                if (revisionDiff.Visible)
+                {
+                    revisionDiff.ExecuteCommand(RevisionDiffControl.Command.OpenWithDifftool);
+                }
+                else if (fileTree.Visible)
+                {
+                    fileTree.ExecuteCommand(RevisionFileTreeControl.Command.OpenWithDifftool);
+                }
+            }
+
+            void EditFile()
+            {
+                if (revisionDiff.Visible)
+                {
+                    revisionDiff.ExecuteCommand(RevisionDiffControl.Command.EditFile);
+                }
+                else if (fileTree.Visible)
+                {
+                    fileTree.ExecuteCommand(RevisionFileTreeControl.Command.EditFile);
+                }
+            }
         }
 
-        internal bool ExecuteCommand(Commands cmd)
+        internal bool ExecuteCommand(Command cmd)
         {
             return ExecuteCommand((int)cmd);
         }
