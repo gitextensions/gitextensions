@@ -105,8 +105,7 @@ namespace GitCommands
                 /* Author email    */ "%aE%n" +
                 /* Committer name  */ "%cN%n" +
                 /* Committer email */ "%cE%n" +
-                /* Commit subject  */ "%s%n%n" +
-                /* Commit body     */ "%b";
+                /* Commit subject  */ "%s%n%n";
 
             // TODO add AppBuilderExtensions support for flags enums, starting with RefFilterOptions, then use it in the below construction
 
@@ -125,7 +124,7 @@ namespace GitCommands
                 // Pool string values likely to form a small set: encoding, authorname, authoremail, committername, committeremail
                 var stringPool = new StringPool();
 
-                var buffer = new byte[4096];
+                var buffer = new byte[4 * 1024];
 
                 foreach (var chunk in process.StandardOutput.BaseStream.ReadNullTerminatedChunks(ref buffer))
                 {
@@ -135,10 +134,6 @@ namespace GitCommands
                     {
                         if (revisionPredicate == null || revisionPredicate(revision))
                         {
-                            // Remove full commit message to reduce memory consumption (28% for a repo with 69K commits)
-                            // Full commit message is used in InMemFilter but later it's not needed
-                            revision.Body = null;
-
                             // Look up any refs associate with this revision
                             revision.Refs = refsByObjectId[revision.Guid].AsReadOnlyList();
 
@@ -166,7 +161,7 @@ namespace GitCommands
                     "log",
                     "-z",
                     $"--pretty=format:\"{fullFormat}\"",
-                    { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
+                    { AppSettings.OrderRevisionByDate, "--date-order" }, ////Do not use topo-order. It will decrease performance on large repositories
                     { AppSettings.ShowReflogReferences, "--reflog" },
                     {
                         refFilterOptions.HasFlag(RefFilterOptions.All),
@@ -351,13 +346,7 @@ namespace GitCommands
             var subject = reader.ReadLine(advance: false);
             Debug.Assert(subject != null, "subject != null");
 
-            // NOTE the convention is that the Subject string is duplicated at the start of the Body string
-            // Therefore we read the subject twice.
-            // If there are not enough characters remaining for a body, then just assign the subject string directly.
-            var body = reader.Remaining - subject.Length == 2 ? subject : reader.ReadToEnd();
-            Debug.Assert(body != null, "body != null");
-
-            if (author == null || authorEmail == null || committer == null || committerEmail == null || subject == null || body == null)
+            if (author == null || authorEmail == null || committer == null || committerEmail == null || subject == null)
             {
                 // TODO log this parse error
                 Debug.Fail("Unable to read an entry from the log -- this should not happen");
@@ -383,9 +372,7 @@ namespace GitCommands
                 CommitterEmail = committerEmail,
                 CommitDate = commitDate,
                 MessageEncoding = encodingName,
-                Subject = subject,
-                Body = body,
-                HasMultiLineMessage = !ReferenceEquals(subject, body)
+                Subject = subject
             };
 
             return true;

@@ -237,7 +237,7 @@ namespace GitUI
             bool showToolTip = false;
             if (e.ColumnIndex == GraphDataGridViewColumn.Index)
             {
-                newToolTip = Revisions.GetLaneInfo(e.RowIndex, e.X, Module);
+                ////newToolTip = Revisions.GetLaneInfo(e.RowIndex, e.X, Module); Way too slow for large repositories
             }
             else if (e.ColumnIndex == IsMessageMultilineDataGridViewColumn.Index)
             {
