@@ -1,6 +1,7 @@
 using System.Windows.Forms;
 using GitUI.Hotkey;
 using GitUI.UserControls.RevisionGrid;
+using GitUI.UserControls.RevisionGrid.Columns;
 
 namespace GitUI
 {
@@ -28,7 +29,7 @@ namespace GitUI
             this.bisectSkipRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stopBisectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bisectSeparator = new System.Windows.Forms.ToolStripSeparator();
-            this.copyToClipboardToolStripMenuItem = new GitUI.UserControls.RevisionGrid.CopyContextMenuItem();
+            this.copyToClipboardToolStripMenuItem = new GitUI.UserControls.RevisionGrid.CopyContextMenuItem(() => _commitIdColumnProvider?.Length ?? CommitIdColumnProvider.DefaultLength);
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.checkoutBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();

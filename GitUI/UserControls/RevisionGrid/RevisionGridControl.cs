@@ -64,6 +64,7 @@ namespace GitUI
         private readonly BuildServerWatcher _buildServerWatcher;
         private readonly Timer _selectionTimer;
         private readonly GraphColumnProvider _graphColumnProvider;
+        private readonly CommitIdColumnProvider _commitIdColumnProvider;
         private readonly List<DataGridViewColumn> _resizableColumns;
         private readonly DataGridViewColumn _maximizedColumn;
         private DataGridViewColumn _lastVisibleResizableColumn = null;
@@ -112,6 +113,7 @@ namespace GitUI
         internal bool ShowUncommittedChangesIfPossible { get; set; } = true;
         internal bool ShowBuildServerInfo { get; set; }
         internal bool DoubleClickDoesNotOpenCommitInfo { get; set; }
+        internal CopyContextMenuItem CopyToClipboardToolStripMenuItem => copyToClipboardToolStripMenuItem;
 
         [CanBeNull]
         internal ObjectId InitialObjectId { private get; set; }
@@ -183,12 +185,13 @@ namespace GitUI
             _buildServerWatcher = new BuildServerWatcher(this, _gridView, () => Module);
 
             _graphColumnProvider = new GraphColumnProvider(this, _gridView._graphModel);
+            _commitIdColumnProvider = new CommitIdColumnProvider(this);
             _gridView.AddColumn(_graphColumnProvider);
             _gridView.AddColumn(new MessageColumnProvider(this));
             _gridView.AddColumn(new AvatarColumnProvider(_gridView, AvatarService.Default));
             _gridView.AddColumn(new AuthorNameColumnProvider(this, _authorHighlighting));
             _gridView.AddColumn(new DateColumnProvider(this));
-            _gridView.AddColumn(new CommitIdColumnProvider(this));
+            _gridView.AddColumn(_commitIdColumnProvider);
             _gridView.AddColumn(_buildServerWatcher.ColumnProvider);
             _resizableColumns = _gridView.Columns.Cast<DataGridViewColumn>().Where(column => column.Resizable == DataGridViewTriState.True).ToList();
             _maximizedColumn = _resizableColumns.FirstOrDefault(column => column.AutoSizeMode == DataGridViewAutoSizeColumnMode.Fill);

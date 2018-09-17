@@ -47,6 +47,7 @@ namespace ResourceManager
         private readonly TranslationString _committerText  = new TranslationString("Committer");
         private readonly TranslationString _commitDateText = new TranslationString("{0:Commit date|Commits dates}");
         private readonly TranslationString _commitHashText = new TranslationString("{0:Commit hash|Commits hashs}");
+        private readonly TranslationString _commitHashShortenedText = new TranslationString("{0:Commit hash shortened|Commits hashs shortened}");
         private readonly TranslationString _messageText    = new TranslationString("{0:Message|Messages}");
         private readonly TranslationString _workspaceText  = new TranslationString("Working directory");
         private readonly TranslationString _indexText      = new TranslationString("Commit index");
@@ -78,6 +79,11 @@ namespace ResourceManager
         public static string GetCommitHash(int value)
         {
             return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._commitHashText.Text, value, Math.Abs(value));
+        }
+
+        public static string GetCommitHashShortened(int value)
+        {
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._commitHashShortenedText.Text, value, Math.Abs(value));
         }
 
         public static string GetMessage(int value)
