@@ -45,6 +45,7 @@ namespace GitUI
             InitializeComponent();
             InitialiseFiltering();
             CreateOpenSubmoduleMenuItem();
+            lblSplitter.Height = DpiUtil.Scale(1);
             InitializeComplete();
             FilterVisible = false;
 

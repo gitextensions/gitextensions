@@ -1,5 +1,4 @@
-﻿using System;
-using GitUI.UserControls;
+﻿using GitUI.UserControls;
 namespace GitUI
 {
     partial class FileStatusList
@@ -37,6 +36,7 @@ namespace GitUI
             this.FilterComboBox = new System.Windows.Forms.ComboBox();
             this.FilterWatermarkLabel = new System.Windows.Forms.Label();
             this.FilterToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.lblSplitter = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // FileStatusListView
@@ -56,7 +56,7 @@ namespace GitUI
             this.FileStatusListView.ShowItemToolTips = true;
             this.FileStatusListView.Size = new System.Drawing.Size(682, 464);
             this.FileStatusListView.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.FileStatusListView.TabIndex = 1;
+            this.FileStatusListView.TabIndex = 2;
             this.FileStatusListView.UseCompatibleStateImageBehavior = false;
             this.FileStatusListView.View = System.Windows.Forms.View.Details;
             this.FileStatusListView.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.FileStatusListView_DrawSubItem);
@@ -107,7 +107,7 @@ namespace GitUI
             this.FilterWatermarkLabel.Location = new System.Drawing.Point(4, 4);
             this.FilterWatermarkLabel.Name = "FilterWatermarkLabel";
             this.FilterWatermarkLabel.Size = new System.Drawing.Size(65, 13);
-            this.FilterWatermarkLabel.TabIndex = 3;
+            this.FilterWatermarkLabel.TabIndex = 0;
             this.FilterWatermarkLabel.Text = "Filter files...";
             this.FilterWatermarkLabel.Click += new System.EventHandler(this.FilterWatermarkLabel_Click);
             // 
@@ -120,12 +120,21 @@ namespace GitUI
             this.FilterToolTip.UseAnimation = false;
             this.FilterToolTip.UseFading = false;
             // 
+            // lblSplitter
+            // 
+            this.lblSplitter.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblSplitter.Location = new System.Drawing.Point(0, 22);
+            this.lblSplitter.Name = "lblSplitter";
+            this.lblSplitter.Size = new System.Drawing.Size(682, 2);
+            this.lblSplitter.TabIndex = 1;
+            // 
             // FileStatusList
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.Controls.Add(this.FileStatusListView);
+            this.Controls.Add(this.lblSplitter);
             this.Controls.Add(this.FilterWatermarkLabel);
             this.Controls.Add(this.NoFiles);
-            this.Controls.Add(this.FileStatusListView);
             this.Controls.Add(this.FilterComboBox);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FileStatusList";
@@ -143,5 +152,6 @@ namespace GitUI
         private System.Windows.Forms.ComboBox FilterComboBox;
         private System.Windows.Forms.Label FilterWatermarkLabel;
         private System.Windows.Forms.ToolTip FilterToolTip;
+        private System.Windows.Forms.Label lblSplitter;
     }
 }
