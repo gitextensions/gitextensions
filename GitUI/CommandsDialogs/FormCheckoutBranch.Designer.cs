@@ -30,6 +30,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.Ok = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -54,12 +55,14 @@ namespace GitUI.CommandsDialogs
             this.rbResetBranch = new System.Windows.Forms.RadioButton();
             this.rbCreateBranchWithCustomName = new System.Windows.Forms.RadioButton();
             this.branchName = new System.Windows.Forms.Label();
+            this.Errors = new System.Windows.Forms.ErrorProvider(this.components);
             this.tableLayoutPanel1.SuspendLayout();
             this.setBranchPanel.SuspendLayout();
             this.localChangesPanel.SuspendLayout();
             this.localChangesGB.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.remoteOptionsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Errors)).BeginInit();
             this.SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -137,6 +140,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.LocalBranch.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.LocalBranch.AutoSize = true;
+            this.LocalBranch.CausesValidation = false;
             this.LocalBranch.Checked = true;
             this.LocalBranch.Location = new System.Drawing.Point(2, 2);
             this.LocalBranch.Margin = new System.Windows.Forms.Padding(2);
@@ -153,6 +157,7 @@ namespace GitUI.CommandsDialogs
             this.Remotebranch.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.Remotebranch.AutoSize = true;
             this.Remotebranch.Location = new System.Drawing.Point(91, 2);
+            this.Remotebranch.CausesValidation = false;
             this.Remotebranch.Margin = new System.Windows.Forms.Padding(2);
             this.Remotebranch.Name = "Remotebranch";
             this.Remotebranch.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
@@ -184,11 +189,13 @@ namespace GitUI.CommandsDialogs
             this.Branches.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.Branches.FormattingEnabled = true;
             this.Branches.Location = new System.Drawing.Point(92, 24);
+            this.Errors.SetIconAlignment(this.Branches, System.Windows.Forms.ErrorIconAlignment.MiddleLeft);
             this.Branches.Name = "Branches";
             this.Branches.Size = new System.Drawing.Size(433, 21);
-            this.Branches.DropDownStyle = ComboBoxStyle.DropDownList;
             this.Branches.TabIndex = 3;
             this.Branches.SelectedIndexChanged += new System.EventHandler(this.Branches_SelectedIndexChanged);
+            this.Branches.TextChanged += new System.EventHandler(this.Branches_TextChanged);
+            this.Branches.Validating += new System.ComponentModel.CancelEventHandler(this.Branches_Validating);
             // 
             // lbChanges
             // 
@@ -423,6 +430,10 @@ namespace GitUI.CommandsDialogs
             this.branchName.TabIndex = 24;
             this.branchName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // Errors
+            // 
+            this.Errors.ContainerControl = this;
+            // 
             // FormCheckoutBranch
             // 
             this.AcceptButton = this.Ok;
@@ -448,6 +459,7 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel2.PerformLayout();
             this.remoteOptionsPanel.ResumeLayout(false);
             this.remoteOptionsPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Errors)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -478,5 +490,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Label lbChanges;
         private System.Windows.Forms.CheckBox chkSetLocalChangesActionAsDefault;
         private FlowLayoutPanel flowLayoutPanel2;
+        private ErrorProvider Errors;
     }
 }
