@@ -89,11 +89,12 @@ namespace GitUI.UserControls.RevisionGrid
                     DropDownItems.Add(new ToolStripSeparator());
                 }
 
-                AddItem(Strings.CommitHash, () => extractText(r => r.Guid), Images.CommitId, Keys.Control | Keys.C);
-                AddItem(Strings.Message, () => extractText(r => r.Body ?? r.Subject), Images.Message);
-                AddItem(Strings.Author, () => extractText(r => r.Author), Images.Author);
-                AddItem(Strings.AuthorDate, () => extractText(r => r.AuthorDate.ToString()), Images.Date);
-                AddItem(Strings.CommitDate, () => extractText(r => r.CommitDate.ToString()), Images.Date);
+                var count = revisions.Count();
+                AddItem(Strings.GetCommitHash(count), () => extractText(r => r.Guid), Images.CommitId, Keys.Control | Keys.C);
+                AddItem(Strings.GetMessage(count), () => extractText(r => r.Body ?? r.Subject), Images.Message);
+                AddItem(Strings.GetAuthor(count), () => extractText(r => r.Author), Images.Author);
+                AddItem(Strings.GetAuthorDate(count), () => extractText(r => r.AuthorDate.ToString()), Images.Date);
+                AddItem(Strings.GetCommitDate(count), () => extractText(r => r.CommitDate.ToString()), Images.Date);
             }
 
             void AddItem(string displayText, Action clickAction, Image image, Keys shortcutKeys = Keys.None, bool showShortcutKeys = true)
