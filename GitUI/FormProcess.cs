@@ -138,6 +138,23 @@ namespace GitUI
         {
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.Escape:
+                    {
+                        Close();
+                        return true;
+                    }
+
+                default:
+                    {
+                        return base.ProcessCmdKey(ref msg, keyData);
+                    }
+            }
+        }
+
         private void ProcessStart(FormStatus form)
         {
             BeforeProcessStart();
