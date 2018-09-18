@@ -231,6 +231,7 @@ namespace GitUI
                 return;
             }
 
+            var openFormsCount = Application.OpenForms.Count;
             Form form = provideForm();
 
             void FormClosed(object sender, FormClosedEventArgs e)
@@ -242,7 +243,7 @@ namespace GitUI
             form.FormClosed += FormClosed;
             form.ShowInTaskbar = true;
 
-            if (Application.OpenForms.Count > 0)
+            if (openFormsCount > 0)
             {
                 form.Show();
             }
