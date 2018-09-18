@@ -106,6 +106,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private static void SetFontButtonText(Font font, Button button)
         {
             button.Text = string.Format("{0}, {1}", font.FontFamily.Name, (int)(font.Size + 0.5f));
+            button.Font = font;
         }
     }
 }
