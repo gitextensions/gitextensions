@@ -409,7 +409,7 @@ namespace GitUI
                 {
                     if (cmdLineSafe)
                     {
-                        revListArgs += "\"-S" + filter + "\" ";
+                        revListArgs += "-G" + filter.Quote();
                     }
                     else
                     {
