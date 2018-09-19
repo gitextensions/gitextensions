@@ -158,7 +158,6 @@ namespace GitUI
             FillMenuFromMenuCommands(navigateMenuCommands, navigateToolStripMenuItem);
 
             NormalFont = AppSettings.Font;
-            Loading.Paint += Loading_Paint;
 
             Revisions.CellPainting += RevisionsCellPainting;
             Revisions.CellFormatting += RevisionsCellFormatting;
@@ -303,18 +302,6 @@ namespace GitUI
             }
         }
 
-        private void Loading_Paint(object sender, PaintEventArgs e)
-        {
-            // If our loading state has changed since the last paint, update it.
-            if (Loading != null)
-            {
-                if (Loading.Visible != _isLoading)
-                {
-                    Loading.Visible = _isLoading;
-                }
-            }
-        }
-
         [Browsable(false)]
         public Font HeadFont { get; private set; }
         [Browsable(false)]
@@ -456,10 +443,39 @@ namespace GitUI
         private bool _isLoading;
         private void RevisionsLoading(object sender, DvcsGraph.LoadingEventArgs e)
         {
+            SetIsLoading(e.IsLoading);
+        }
+
+        private void SetIsLoading(bool isLoading)
+        {
             // Since this can happen on a background thread, we'll just set a
             // flag and deal with it next time we paint (a bit of a hack, but
             // it works)
-            _isLoading = e.IsLoading;
+
+            if (_isLoading && !isLoading)
+            {
+                _isLoading = false;
+
+                Invoke((MethodInvoker)delegate
+                {
+                    // Running on the UI thread
+                    BuildServerWatcher.UpdateUI();
+                    SelectInitialRevision();
+                    Revisions.UpdateColumnWidth();
+                    Revisions.Visible = true;
+                    base.Refresh();
+                });
+            }
+            else if (!_isLoading && isLoading)
+            {
+                _isLoading = true;
+
+                Invoke((MethodInvoker)delegate
+                {
+                    // Running on the UI thread
+                    Revisions.Visible = false;
+                });
+            }
         }
 
         private void ShowQuickSearchString()
@@ -883,7 +899,8 @@ namespace GitUI
             NoGit.Visible = false;
             Revisions.Visible = false;
             Loading.Visible = true;
-            Loading.BringToFront();
+            Loading.SendToBack();
+            Revisions.BringToFront();
         }
 
         public new void Load()
@@ -900,6 +917,11 @@ namespace GitUI
 
         private void SetSelectedIndex(int index)
         {
+            if (Revisions.Rows.Count <= index)
+            {
+                return;
+            }
+
             if (Revisions.Rows[index].Selected)
             {
                 return;
@@ -1214,7 +1236,6 @@ namespace GitUI
 
                 DisposeRevisionReader();
 
-                var newCurrentCheckout = Module.GetCurrentCheckout();
                 GitModule capturedModule = Module;
                 JoinableTask<SuperProjectInfo> newSuperPrjectInfo =
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
@@ -1235,6 +1256,16 @@ namespace GitUI
                     }
                 }).FileAndForget();
 
+                NoCommits.Visible = false;
+                NoGit.Visible = false;
+                Revisions.Visible = false;
+                Revisions.Enabled = false;
+                Loading.Visible = true;
+                SetIsLoading(true);
+                _isRefreshingRevisions = true;
+
+                var newCurrentCheckout = Module.GetCurrentCheckout();
+
                 // If the current checkout changed, don't get the currently selected rows, select the
                 // new current checkout instead.
                 if (newCurrentCheckout == CurrentCheckout)
@@ -1247,7 +1278,7 @@ namespace GitUI
                     LastSelectedRows = null;
                 }
 
-                Revisions.ClearSelection();
+                ////Revisions.ClearSelection();
                 CurrentCheckout = newCurrentCheckout;
                 _filtredCurrentCheckout = null;
                 _currentCheckoutParents = null;
@@ -1259,7 +1290,6 @@ namespace GitUI
                 {
                     Revisions.Visible = false;
                     NoCommits.Visible = true;
-                    Loading.Visible = false;
                     NoGit.Visible = true;
                     string dir = Module.WorkingDir;
                     if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir) ||
@@ -1277,15 +1307,6 @@ namespace GitUI
                     return;
                 }
 
-                NoCommits.Visible = false;
-                NoGit.Visible = false;
-                Revisions.Visible = true;
-                Revisions.BringToFront();
-                Revisions.Enabled = false;
-                Loading.Visible = true;
-                Loading.BringToFront();
-                _isLoading = true;
-                _isRefreshingRevisions = true;
                 base.Refresh();
 
                 IndexWatcher.Reset();
@@ -1367,7 +1388,7 @@ namespace GitUI
                     predicate);
 
                 LoadRevisions();
-                SetRevisionsLayout();
+                ////SetRevisionsLayout();
                 ResetNavigationHistory();
             }
             catch (Exception)
@@ -1438,7 +1459,6 @@ namespace GitUI
                         NoGit.Visible = false;
                         NoCommits.Visible = false;
                         Revisions.Visible = false;
-                        Loading.Visible = false;
                     })
                 .FileAndForget();
 
@@ -1478,7 +1498,7 @@ namespace GitUI
 
         private void OnRevisionReadCompleted()
         {
-            _isLoading = false;
+            SetIsLoading(false);
 
             if (_revisionReader.RevisionCount == 0 &&
                 !FilterIsApplied(true))
@@ -1491,7 +1511,6 @@ namespace GitUI
                             NoCommits.Visible = true;
                             ////NoCommits.BringToFront();
                             Revisions.Visible = false;
-                            Loading.Visible = false;
                             _isRefreshingRevisions = false;
                         })
                     .FileAndForget();
@@ -1503,8 +1522,8 @@ namespace GitUI
                 {
                     await this.SwitchToMainThreadAsync();
                     OnRevisionRead();
-                    Loading.Visible = false;
                     _isRefreshingRevisions = false;
+
                     SelectInitialRevision();
                     if (ShowBuildServerInfo)
                     {
@@ -1638,15 +1657,6 @@ namespace GitUI
 
         private void RevisionsCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            // If our loading state has changed since the last paint, update it.
-            if (Loading != null)
-            {
-                if (Loading.Visible != _isLoading)
-                {
-                    Loading.Visible = _isLoading;
-                }
-            }
-
             var columnIndex = e.ColumnIndex;
 
             int graphColIndex = GraphDataGridViewColumn.Index;

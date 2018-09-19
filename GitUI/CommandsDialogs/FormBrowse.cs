@@ -1786,7 +1786,6 @@ namespace GitUI.CommandsDialogs
             else
             {
                 dashboardToolStripMenuItem.Visible = true;
-
                 RevisionGrid.IndexWatcher.Reset();
                 MainSplitContainer.Visible = false;
                 ShowDashboard();

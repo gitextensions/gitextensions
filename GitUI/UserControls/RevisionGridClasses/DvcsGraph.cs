@@ -196,7 +196,7 @@ namespace GitUI.RevisionGridClasses
 
                 lock (_backgroundEvent)
                 {
-                    lock (_graphData)
+                    ////lock (_graphData)
                     {
                         ClearSelection();
                         CurrentCell = null;
@@ -286,7 +286,7 @@ namespace GitUI.RevisionGridClasses
 
         public void Add(GitRevision revision, DataTypes types)
         {
-            lock (_graphData)
+            ////lock (_graphData)
             {
                 _graphData.Add(revision, types);
             }
@@ -305,7 +305,7 @@ namespace GitUI.RevisionGridClasses
                 Thread.Sleep(2);
             }
 
-            lock (_graphData)
+            ////lock (_graphData)
             {
                 SetRowCount(0);
                 _colorByJunction.Clear();
@@ -326,7 +326,7 @@ namespace GitUI.RevisionGridClasses
 
         public bool RowIsRelative(int rowIndex)
         {
-            lock (_graphData)
+            ////lock (_graphData)
             {
                 Graph.ILaneRow row = _graphData[rowIndex];
                 if (row == null)
@@ -345,7 +345,7 @@ namespace GitUI.RevisionGridClasses
 
         public GitRevision GetRowData(int rowIndex)
         {
-            lock (_graphData)
+            ////lock (_graphData)
             {
                 return _graphData[rowIndex]?.Node.Data;
             }
@@ -374,7 +374,7 @@ namespace GitUI.RevisionGridClasses
         {
             int lane = (x - _laneSidePadding) / _laneWidth;
             var laneInfoText = new System.Text.StringBuilder();
-            lock (_graphData)
+            ////lock (_graphData)
             {
                 Graph.ILaneRow laneRow = _graphData[row];
                 if (laneRow != null)
@@ -457,7 +457,7 @@ namespace GitUI.RevisionGridClasses
 
         public string GetRowId(int rowIndex)
         {
-            lock (_graphData)
+            ////lock (_graphData)
             {
                 return _graphData[rowIndex]?.Node.Id;
             }
@@ -465,7 +465,7 @@ namespace GitUI.RevisionGridClasses
 
         public int FindRow(string id)
         {
-            lock (_graphData)
+            ////lock (_graphData)
             {
                 int i;
                 for (i = 0; i < _graphData.CachedCount; i++)
@@ -619,7 +619,7 @@ namespace GitUI.RevisionGridClasses
                         }
 
                         int curCount;
-                        lock (_graphData)
+                        ////lock (_graphData)
                         {
                             curCount = _graphDataCount;
                             _graphDataCount = _graphData.CachedCount;
@@ -687,7 +687,7 @@ namespace GitUI.RevisionGridClasses
             _visibleTop = FirstDisplayedCell?.RowIndex ?? 0;
             _visibleBottom = _rowHeight > 0 ? _visibleTop + (Height / _rowHeight) : _visibleTop;
 
-            // Add 5 for safe merge (1 for rounding and 1 for whitespace)....
+            // Add 2 for safe merge (1 for rounding and 1 for whitespace)....
             if (_visibleBottom + 2 > _graphData.Count)
             {
                 // Currently we are doing some important work; we are recieving
@@ -723,7 +723,7 @@ namespace GitUI.RevisionGridClasses
         {
             if (RowCount < _graphData.Count)
             {
-                lock (_graphData)
+                ////lock (_graphData)
                 {
                     SetRowCount(_graphData.Count);
                 }
@@ -748,7 +748,7 @@ namespace GitUI.RevisionGridClasses
 
         public bool UpdatingVisibleRows { get; private set; }
 
-        private void UpdateColumnWidth()
+        public void UpdateColumnWidth()
         {
             // Auto scale width on scroll
             if (GraphColumn.Visible)
@@ -758,8 +758,8 @@ namespace GitUI.RevisionGridClasses
                 {
                     int width = 1;
                     int start = VerticalScrollBar.Value / _rowHeight;
-                    int stop = start + DisplayedRowCount(true);
-                    lock (_graphData)
+                    int stop = start + (Height == 0 ? 0 : Height / _rowHeight);
+                    ////lock (_graphData)
                     {
                         for (int i = start; i < stop && _graphData[i] != null; i++)
                         {
@@ -1331,7 +1331,7 @@ namespace GitUI.RevisionGridClasses
 
         public int? TryGetRevisionIndex(string guid)
         {
-            if (Rows.Count == 0)
+            if (_graphData.Count == 0)
             {
                 return null;
             }

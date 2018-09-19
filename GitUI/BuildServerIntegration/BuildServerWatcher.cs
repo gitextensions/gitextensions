@@ -358,7 +358,7 @@ namespace GitUI.BuildServerIntegration
             return null;
         }
 
-        private void UpdateUI()
+        public void UpdateUI()
         {
             var columnsAreVisible = _buildServerAdapter != null;
 

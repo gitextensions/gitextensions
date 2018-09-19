@@ -674,10 +674,7 @@ namespace GitCommands
         /// </summary>
         public string RunGitCmd(string arguments, Encoding encoding = null, byte[] stdInput = null)
         {
-            return ThreadHelper.JoinableTaskFactory.Run(() =>
-            {
-                return RunCmdAsync(AppSettings.GitCommand, arguments, encoding, stdInput);
-            });
+            return RunCmdResult(AppSettings.GitCommand, arguments, encoding, stdInput).GetString();
         }
 
         /// <summary>
