@@ -152,6 +152,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             foreach (var node in _nodesFoundByTextBox)
             {
                 HighlightNode(node, true);
+                node.EnsureVisible();
             }
 
             if (_nodesFoundByTextBox.Any())
