@@ -60,7 +60,6 @@ namespace GitUI
             this.FileStatusListView.UseCompatibleStateImageBehavior = false;
             this.FileStatusListView.View = System.Windows.Forms.View.Details;
             this.FileStatusListView.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.FileStatusListView_DrawSubItem);
-            this.FileStatusListView.SizeChanged += new System.EventHandler(this.FileStatusListView_SizeChanged);
             this.FileStatusListView.DoubleClick += new System.EventHandler(this.FileStatusListView_DoubleClick);
             this.FileStatusListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FileStatusListView_KeyDown);
             this.FileStatusListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FileStatusListView_MouseDown);
@@ -131,10 +130,10 @@ namespace GitUI
             // FileStatusList
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.FileStatusListView);
-            this.Controls.Add(this.lblSplitter);
             this.Controls.Add(this.FilterWatermarkLabel);
             this.Controls.Add(this.NoFiles);
+            this.Controls.Add(this.FileStatusListView);
+            this.Controls.Add(this.lblSplitter);
             this.Controls.Add(this.FilterComboBox);
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "FileStatusList";
