@@ -24,13 +24,6 @@ namespace GitCommands.Patches
 
             string body = ToResetWorkTreeLinesPatch(selectedChunks);
 
-            // git apply has problem with dealing with autocrlf
-            // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if (body != null && module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
-            {
-                body = body.Replace("\r", "");
-            }
-
             if (header == null || body == null)
             {
                 return null;
@@ -107,13 +100,6 @@ namespace GitCommands.Patches
             if (body == null)
             {
                 return null;
-            }
-
-            // git apply has problem with dealing with autocrlf
-            // I noticed that patch applies when '\r' chars are removed from patch if autocrlf is set to true
-            if (reset && module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
-            {
-                body = body.Replace("\r", "");
             }
 
             const string fileMode = "100000"; // given fake mode to satisfy patch format, git will override this
