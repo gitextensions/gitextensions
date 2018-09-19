@@ -2,6 +2,7 @@
 
 # Git Extensions
 
+Git Extensions is a standalone UI tool for managing git repositories.
 
 It also integrates with Windows Explorer and Microsoft Visual Studio (2015/2017).
 
