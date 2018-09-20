@@ -147,7 +147,7 @@ namespace GitUI
             _authorHighlighting = new AuthorRevisionHighlighting();
             _indexWatcher = new Lazy<IndexWatcher>(() => new IndexWatcher(UICommandsSource));
 
-            copyToClipboardToolStripMenuItem.SetRevisionFunc(() => LatestSelectedRevision);
+            copyToClipboardToolStripMenuItem.SetRevisionFunc(() => GetSelectedRevisions());
 
             MenuCommands = new RevisionGridMenuCommands(this);
             MenuCommands.CreateOrUpdateMenuCommands();

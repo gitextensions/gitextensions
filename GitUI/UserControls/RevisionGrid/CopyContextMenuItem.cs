@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Properties;
@@ -11,24 +13,36 @@ namespace GitUI.UserControls.RevisionGrid
 {
     public sealed class CopyContextMenuItem : ToolStripMenuItem
     {
-        [CanBeNull] private Func<GitRevision> _revisionFunc;
+        [CanBeNull] private Func<IReadOnlyList<GitRevision>> _revisionFunc;
 
         public CopyContextMenuItem()
         {
             Image = Images.CopyToClipboard;
             Text = "Copy to clipboard";
 
+            // Action template
+            Action<Func<GitRevision, string>> extractText = (Func<GitRevision, string> extractRevisionText) =>
+            {
+                var gitRevisions = _revisionFunc?.Invoke();
+                var sb = new StringBuilder();
+                foreach (var revision in gitRevisions)
+                {
+                    sb.AppendLine(extractRevisionText(revision));
+                }
+
+                Clipboard.SetText(sb.ToString());
+            };
+
             // Add a dummy copy item, so that the shortcut key works.
             // This item will never be seen by the user, as the submenu is rebuilt on opening.
-            AddItem("Dummy item", r => r.Guid, image: null, Keys.Control | Keys.C, showShortcutKeys: false);
+            AddItem("Dummy item", () => extractText(r => r.Guid), image: null, Keys.Control | Keys.C, showShortcutKeys: false);
 
             DropDownOpening += OnDropDownOpening;
 
             void OnDropDownOpening(object sender, EventArgs e)
             {
-                var revision = _revisionFunc?.Invoke();
-
-                if (revision == null)
+                var revisions = _revisionFunc?.Invoke();
+                if (revisions == null || revisions.Count == 0)
                 {
                     HideDropDown();
                     return;
@@ -36,9 +50,14 @@ namespace GitUI.UserControls.RevisionGrid
 
                 DropDownItems.Clear();
 
-                var refLists = new GitRefListsForRevision(revision);
-                var branchNames = refLists.GetAllBranchNames();
-                var tagNames = refLists.GetAllTagNames();
+                List<string> branchNames = new List<string>();
+                List<string> tagNames = new List<string>();
+                foreach (var revision in revisions)
+                {
+                    var refLists = new GitRefListsForRevision(revision);
+                    branchNames.AddRange(refLists.GetAllBranchNames());
+                    tagNames.AddRange(refLists.GetAllTagNames());
+                }
 
                 // Add items for branches
                 if (branchNames.Any())
@@ -49,7 +68,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                     foreach (var name in branchNames)
                     {
-                        AddItem(name, _ => name, Images.Branch);
+                        AddItem(name, () => Clipboard.SetText(name), Images.Branch);
                     }
 
                     DropDownItems.Add(new ToolStripSeparator());
@@ -64,29 +83,21 @@ namespace GitUI.UserControls.RevisionGrid
 
                     foreach (var name in tagNames)
                     {
-                        AddItem(name, _ => name, Images.Tag);
+                        AddItem(name, () => Clipboard.SetText(name), Images.Tag);
                     }
 
                     DropDownItems.Add(new ToolStripSeparator());
                 }
 
-                // Add other items
-                AddItem($"{Strings.CommitHash}     ({revision.ObjectId.ToShortString()}...)", r => r.Guid, Images.CommitId, Keys.Control | Keys.C);
-                AddItem($"{Strings.Message}     ({revision.Subject.ShortenTo(30)})", r => r.Body ?? r.Subject, Images.Message);
-                AddItem($"{Strings.Author}     ({revision.Author})", r => r.Author, Images.Author);
-
-                if (revision.AuthorDate == revision.CommitDate)
-                {
-                    AddItem($"{Strings.Date}     ({revision.CommitDate})", r => r.CommitDate.ToString(), Images.Date);
-                }
-                else
-                {
-                    AddItem($"{Strings.AuthorDate}     ({revision.AuthorDate})", r => r.AuthorDate.ToString(), Images.Date);
-                    AddItem($"{Strings.CommitDate}     ({revision.CommitDate})", r => r.CommitDate.ToString(), Images.Date);
-                }
+                var count = revisions.Count();
+                AddItem(Strings.GetCommitHash(count), () => extractText(r => r.Guid), Images.CommitId, Keys.Control | Keys.C);
+                AddItem(Strings.GetMessage(count), () => extractText(r => r.Body ?? r.Subject), Images.Message);
+                AddItem(Strings.GetAuthor(count), () => extractText(r => r.Author), Images.Author);
+                AddItem(Strings.GetAuthorDate(count), () => extractText(r => r.AuthorDate.ToString()), Images.Date);
+                AddItem(Strings.GetCommitDate(count), () => extractText(r => r.CommitDate.ToString()), Images.Date);
             }
 
-            void AddItem(string displayText, Func<GitRevision, string> clipboardText, Image image, Keys shortcutKeys = Keys.None, bool showShortcutKeys = true)
+            void AddItem(string displayText, Action clickAction, Image image, Keys shortcutKeys = Keys.None, bool showShortcutKeys = true)
             {
                 var item = new ToolStripMenuItem
                 {
@@ -95,21 +106,16 @@ namespace GitUI.UserControls.RevisionGrid
                     ShowShortcutKeys = showShortcutKeys,
                     Image = image
                 };
-
                 item.Click += delegate
                 {
-                    var revision = _revisionFunc?.Invoke();
-                    if (revision != null)
-                    {
-                        Clipboard.SetText(clipboardText(revision));
-                    }
+                    clickAction();
                 };
 
                 DropDownItems.Add(item);
             }
         }
 
-        public void SetRevisionFunc(Func<GitRevision> revisionFunc)
+        public void SetRevisionFunc(Func<IReadOnlyList<GitRevision>> revisionFunc)
         {
             _revisionFunc = revisionFunc;
         }

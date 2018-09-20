@@ -8764,11 +8764,11 @@ When OpenSSH is used, command line dialogs are shown!
   <file datatype="plaintext" original="Strings" source-language="en">
     <body>
       <trans-unit id="_authorDateText.Text">
-        <source>Author date</source>
+        <source>{0:Author date|Author dates}</source>
         <target />
       </trans-unit>
       <trans-unit id="_authorText.Text">
-        <source>Author</source>
+        <source>{0:Author|Authors}</source>
         <target />
       </trans-unit>
       <trans-unit id="_childrenText.Text">
@@ -8776,11 +8776,11 @@ When OpenSSH is used, command line dialogs are shown!
         <target />
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
-        <source>Commit date</source>
+        <source>{0:Commit date|Commits dates}</source>
         <target />
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
-        <source>Commit hash</source>
+        <source>{0:Commit hash|Commits hashs}</source>
         <target />
       </trans-unit>
       <trans-unit id="_committerText.Text">
@@ -8812,7 +8812,7 @@ When OpenSSH is used, command line dialogs are shown!
         <target />
       </trans-unit>
       <trans-unit id="_messageText.Text">
-        <source>Message</source>
+        <source>{0:Message|Messages}</source>
         <target />
       </trans-unit>
       <trans-unit id="_minutesAgo.Text">

@@ -26,12 +26,12 @@ namespace ResourceManager
         }
 
         public static string Date => _instance.Value._dateText.Text;
-        public static string Author => _instance.Value._authorText.Text;
-        public static string AuthorDate => _instance.Value._authorDateText.Text;
+        public static string Author => GetAuthor(1);
+        public static string AuthorDate => GetAuthorDate(1);
         public static string Committer => _instance.Value._committerText.Text;
-        public static string CommitDate => _instance.Value._commitDateText.Text;
-        public static string CommitHash => _instance.Value._commitHashText.Text;
-        public static string Message => _instance.Value._messageText.Text;
+        public static string CommitDate => GetCommitDate(1);
+        public static string CommitHash => GetCommitHash(1);
+        public static string Message => GetMessage(1);
         public static string Workspace => _instance.Value._workspaceText.Text;
         public static string Index => _instance.Value._indexText.Text;
         public static string LoadingData => _instance.Value._loadingDataText.Text;
@@ -42,12 +42,12 @@ namespace ResourceManager
         public static string Tags => _instance.Value._tagsText.Text;
 
         private readonly TranslationString _dateText       = new TranslationString("Date");
-        private readonly TranslationString _authorText     = new TranslationString("Author");
-        private readonly TranslationString _authorDateText = new TranslationString("Author date");
+        private readonly TranslationString _authorText     = new TranslationString("{0:Author|Authors}");
+        private readonly TranslationString _authorDateText = new TranslationString("{0:Author date|Author dates}");
         private readonly TranslationString _committerText  = new TranslationString("Committer");
-        private readonly TranslationString _commitDateText = new TranslationString("Commit date");
-        private readonly TranslationString _commitHashText = new TranslationString("Commit hash");
-        private readonly TranslationString _messageText    = new TranslationString("Message");
+        private readonly TranslationString _commitDateText = new TranslationString("{0:Commit date|Commits dates}");
+        private readonly TranslationString _commitHashText = new TranslationString("{0:Commit hash|Commits hashs}");
+        private readonly TranslationString _messageText    = new TranslationString("{0:Message|Messages}");
         private readonly TranslationString _workspaceText  = new TranslationString("Working directory");
         private readonly TranslationString _indexText      = new TranslationString("Commit index");
         private readonly TranslationString _loadingDataText = new TranslationString("Loading data...");
@@ -55,6 +55,9 @@ namespace ResourceManager
         private readonly TranslationString _branchesText   = new TranslationString("Branches");
         private readonly TranslationString _remotesText    = new TranslationString("Remotes");
         private readonly TranslationString _tagsText       = new TranslationString("Tags");
+
+        private readonly TranslationString _parentsText    = new TranslationString("{0:Parent|Parents}");
+        private readonly TranslationString _childrenText   = new TranslationString("{0:Child|Children}");
 
         public static string GetParents(int value)
         {
@@ -66,8 +69,31 @@ namespace ResourceManager
             return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._childrenText.Text, value, Math.Abs(value));
         }
 
-        private readonly TranslationString _parentsText    = new TranslationString("{0:Parent|Parents}");
-        private readonly TranslationString _childrenText   = new TranslationString("{0:Child|Children}");
+        public static string GetCommitDate(int value)
+        {
+            string v = Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._commitDateText.Text, value, Math.Abs(value));
+            return v;
+        }
+
+        public static string GetCommitHash(int value)
+        {
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._commitHashText.Text, value, Math.Abs(value));
+        }
+
+        public static string GetMessage(int value)
+        {
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._messageText.Text, value, Math.Abs(value));
+        }
+
+        public static string GetAuthor(int value)
+        {
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._authorText.Text, value, Math.Abs(value));
+        }
+
+        public static string GetAuthorDate(int value)
+        {
+            return Smart.Format(AppSettings.CurrentCultureInfo, _instance.Value._authorDateText.Text, value, Math.Abs(value));
+        }
 
         public static string GetNSecondsAgoText(int value)
         {
