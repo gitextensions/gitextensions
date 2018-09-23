@@ -97,7 +97,6 @@ namespace GitUI
         /// Same as <see cref="CurrentCheckout"/> except <c>null</c> until the associated revision is loaded.
         /// </summary>
         [CanBeNull] private ObjectId _filteredCurrentCheckout;
-        [CanBeNull] private IReadOnlyList<ObjectId> _currentCheckoutParents;
         private bool _settingsLoaded;
 
         // NOTE internal properties aren't serialised by the WinForms designer
@@ -701,7 +700,6 @@ namespace GitUI
 
                 CurrentCheckout = newCurrentCheckout;
                 _filteredCurrentCheckout = null;
-                _currentCheckoutParents = null;
                 _isRefreshingRevisions = true;
                 base.Refresh();
 
@@ -832,15 +830,6 @@ namespace GitUI
                     if (revision.ObjectId == CurrentCheckout)
                     {
                         _filteredCurrentCheckout = CurrentCheckout;
-                    }
-                    else
-                    {
-                        if (_currentCheckoutParents == null)
-                        {
-                            TryGetParents(CurrentCheckout, out _currentCheckoutParents);
-                        }
-
-                        _filteredCurrentCheckout = _currentCheckoutParents?.FirstOrDefault(parent => parent == revision.ObjectId);
                     }
                 }
 
@@ -1229,7 +1218,7 @@ namespace GitUI
             {
                 case MouseButtons.XButton1: NavigateBackward(); break;
                 case MouseButtons.XButton2: NavigateForward(); break;
-                case MouseButtons.Left when _maximizedColumn != null && _lastVisibleResizableColumn != null:
+                /*case MouseButtons.Left when _maximizedColumn != null && _lastVisibleResizableColumn != null:
                     // make resizing of the maximized column work and restore the settings afterwards
                     void OnGridViewMouseCaptureChanged(object ignoredSender, EventArgs ignoredArgs)
                     {
@@ -1241,7 +1230,7 @@ namespace GitUI
                     _gridView.MouseCaptureChanged += OnGridViewMouseCaptureChanged;
                     _maximizedColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                     _lastVisibleResizableColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-                    break;
+                    break;*/
             }
         }
 

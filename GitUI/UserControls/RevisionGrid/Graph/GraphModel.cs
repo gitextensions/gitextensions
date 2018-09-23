@@ -179,7 +179,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // For each revision we create a node for the revision and its parents.
             // Most of the time we will have a node for this revision, created for
             // a parent of revision processed beforehand.
-            if (!GetOrCreateNode(revision.ObjectId, out var node) && (parentIds == null || parentIds.Count == 0))
+            if (!GetOrCreateNode(revision.ObjectId, out Node node) && (parentIds == null || parentIds.Count == 0))
             {
                 // The revision has not been seen yet -- it must be a leaf node.
                 // Create a junction for it.

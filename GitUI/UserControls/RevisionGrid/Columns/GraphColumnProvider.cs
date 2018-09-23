@@ -425,7 +425,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             lock (_graphModel)
             {
                 _graphModel.Clear();
-                ////_graphDataCount = 0;
                 _cacheHead = -1;
                 _cacheHeadRow = 0;
                 ClearDrawCache();
