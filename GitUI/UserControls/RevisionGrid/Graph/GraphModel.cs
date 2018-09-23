@@ -387,6 +387,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             for (int curLane = 0; curLane < _laneNodes.Count; curLane++)
             {
                 LaneJunctionDetail lane = _laneNodes[curLane];
+                if (lane == null)
+                {
+                    // Abort, something went. Try again next time.
+                    return false;
+                }
+
                 if (lane.Count == 0)
                 {
                     continue;
@@ -433,6 +439,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             for (int curLane = 0; curLane < _laneNodes.Count; curLane++)
             {
                 LaneJunctionDetail lane = _laneNodes[curLane];
+                if (lane == null)
+                {
+                    // Abort, something went. Try again next time.
+                    return false;
+                }
+
                 if (lane.Count == 0)
                 {
                     continue;
@@ -599,7 +611,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     {
                         for (int i = 0; i < _laneNodes.Count; i++)
                         {
-                            if (_laneNodes[i].Current == addedLane.Current)
+                            if (_laneNodes[i] != null && _laneNodes[i].Current == addedLane.Current)
                             {
                                 // We still advance the lane so it gets
                                 // marked as processed.
@@ -644,7 +656,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 // If any other lanes have this node on top, merge them together
                 for (int i = 0; i < _laneNodes.Count; i++)
                 {
-                    if (i == curLane || curLane >= _laneNodes.Count)
+                    if (i == curLane || curLane >= _laneNodes.Count || _laneNodes[i] == null)
                     {
                         continue;
                     }
