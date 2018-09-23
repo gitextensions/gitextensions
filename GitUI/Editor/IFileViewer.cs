@@ -60,14 +60,12 @@ namespace GitUI.Editor
         string GetLineText(int line);
         int TotalNumberOfLines { get; }
 
-        // lineNumber is 0 based
-        void GoToLine(int lineNumber);
-
         /// <summary>
-        /// Indicates if the Goto line UI is applicable or not.
-        /// Code-behind goto line function is always availabe, so we can goto next diff section.
+        /// positions to the given line number
         /// </summary>
-        bool IsGotoLineUIApplicable();
+        /// <param name="lineNumber">1..MaxLineNumber</param>
+        void GoToLine(int lineNumber);
+        int MaxLineNumber { get; }
 
         Font Font { get; set; }
 

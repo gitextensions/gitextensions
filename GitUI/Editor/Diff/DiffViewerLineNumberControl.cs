@@ -14,12 +14,24 @@ namespace GitUI.Editor.Diff
 
         private Dictionary<int, DiffLineNum> DiffLines { get; set; }
 
-        private int _maxValueOfLineNum;
+        public int MaxValueOfLineNum { get; private set; }
+
         private bool _visible = true;
 
         public DiffViewerLineNumberControl(TextArea textArea) : base(textArea)
         {
             DiffLines = new Dictionary<int, DiffLineNum>();
+        }
+
+        /// <summary>
+        /// returns the according line numbers or null if the caretLine is not mapped
+        /// </summary>
+        /// <param name="caretLine">0-based (in contrast to the displayed line numbers which are 1-based)</param>
+        public DiffLineNum GetLineNum(int caretLine)
+        {
+            DiffLineNum diffLine;
+            DiffLines.TryGetValue(caretLine + 1, out diffLine);
+            return diffLine;
         }
 
         public override int Width
@@ -28,7 +40,7 @@ namespace GitUI.Editor.Diff
             {
                 if (_visible && DiffLines.Any())
                 {
-                    return textArea.TextView.WideSpaceWidth * ((int)Math.Log10(_maxValueOfLineNum) + TextHorizontalMargin + 3);
+                    return textArea.TextView.WideSpaceWidth * ((int)Math.Log10(MaxValueOfLineNum) + TextHorizontalMargin + 3);
                 }
 
                 return 0;
@@ -113,7 +125,7 @@ namespace GitUI.Editor.Diff
         {
             var result = new DiffLineNumAnalyzer().Analyze(diff);
             DiffLines = result.LineNumbers;
-            _maxValueOfLineNum = result.MaxLineNumber;
+            MaxValueOfLineNum = result.MaxLineNumber;
         }
 
         public void Clear(bool forDiff)
