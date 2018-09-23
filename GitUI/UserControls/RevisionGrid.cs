@@ -459,10 +459,15 @@ namespace GitUI
                 Invoke((MethodInvoker)delegate
                 {
                     // Running on the UI thread
-                    BuildServerWatcher.UpdateUI();
+                    if (BuildServerWatcher != null)
+                    {
+                        BuildServerWatcher.UpdateUI();
+                    }
+
                     SelectInitialRevision();
                     Revisions.UpdateColumnWidth();
-                    Revisions.Visible = true;
+                    ////Revisions.Visible = true;
+                    Loading.Visible = false;
                     base.Refresh();
                 });
             }
@@ -473,7 +478,8 @@ namespace GitUI
                 Invoke((MethodInvoker)delegate
                 {
                     // Running on the UI thread
-                    Revisions.Visible = false;
+                    ////Revisions.Visible = false;
+                    Loading.Visible = true;
                 });
             }
         }
@@ -898,9 +904,8 @@ namespace GitUI
             NoCommits.Visible = false;
             NoGit.Visible = false;
             Revisions.Visible = false;
-            Loading.Visible = true;
-            Loading.SendToBack();
             Revisions.BringToFront();
+            Loading.BringToFront();
         }
 
         public new void Load()
@@ -1225,6 +1230,8 @@ namespace GitUI
         {
             try
             {
+                SetIsLoading(true);
+
                 RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
                 IsMessageMultilineDataGridViewColumn.Visible = AppSettings.ShowIndicatorForMultilineMessage;
 
@@ -1258,10 +1265,10 @@ namespace GitUI
 
                 NoCommits.Visible = false;
                 NoGit.Visible = false;
-                Revisions.Visible = false;
+                Revisions.Visible = true;
                 Revisions.Enabled = false;
-                Loading.Visible = true;
-                SetIsLoading(true);
+                ////Loading.Visible = true;
+                ////SetIsLoading(true);
                 _isRefreshingRevisions = true;
 
                 var newCurrentCheckout = Module.GetCurrentCheckout();

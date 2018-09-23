@@ -96,8 +96,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         public static void CheckHomePath()
         {
-            EnvironmentConfiguration.SetEnvironmentVariables();
-
             if (IsFixHome())
             {
                 using (var frm = new FormFixHome())

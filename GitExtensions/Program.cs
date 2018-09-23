@@ -67,6 +67,8 @@ namespace GitExtensions
                 ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
             }
 
+            EnvironmentConfiguration.SetEnvironmentVariables();
+
             AppSettings.LoadSettings();
             if (EnvUtils.RunningOnWindows())
             {

@@ -98,7 +98,6 @@ namespace GitUI.RevisionGridClasses
         {
             _backgroundThread = new Thread(BackgroundThreadEntry)
             {
-                Priority = ThreadPriority.Lowest,
                 IsBackground = true,
                 Name = "DvcsGraph.backgroundThread"
             };
@@ -300,10 +299,11 @@ namespace GitUI.RevisionGridClasses
             _backgroundScrollTo = 0;
             _shouldRun = false;
 
-            while (_backgroundThread.IsAlive)
+            _backgroundThread.Abort();
+            /*while (_backgroundThread.IsAlive)
             {
                 Thread.Sleep(2);
-            }
+            }*/
 
             ////lock (_graphData)
             {
@@ -316,7 +316,6 @@ namespace GitUI.RevisionGridClasses
 
             _backgroundThread = new Thread(BackgroundThreadEntry)
             {
-                Priority = ThreadPriority.Lowest,
                 IsBackground = true,
                 Name = "DvcsGraph.backgroundThread"
             };
@@ -601,7 +600,7 @@ namespace GitUI.RevisionGridClasses
             bool keepRunning = false;
             while (_shouldRun)
             {
-                if (keepRunning || _backgroundEvent.WaitOne(500))
+                if (keepRunning || _backgroundEvent.WaitOne(50))
                 {
                     keepRunning = false;
 
@@ -633,7 +632,7 @@ namespace GitUI.RevisionGridClasses
                         else
                         {
                             // do nothing... do not cache, the graph is invisible
-                            Thread.Sleep(10);
+                            Thread.Sleep(4);
                         }
                     }
                 }
@@ -687,35 +686,33 @@ namespace GitUI.RevisionGridClasses
             _visibleTop = FirstDisplayedCell?.RowIndex ?? 0;
             _visibleBottom = _rowHeight > 0 ? _visibleTop + (Height / _rowHeight) : _visibleTop;
 
+            int graphDataCount = _graphData.Count;
+            if (_visibleBottom >= graphDataCount)
+            {
+                _visibleBottom = graphDataCount;
+            }
+
+            int targetBottom = _visibleBottom + 50;
+            targetBottom = Math.Min(targetBottom, graphDataCount);
+
+            _backgroundScrollTo = targetBottom;
+            if (targetBottom > 0)
+            {
+               _backgroundEvent.Set();
+            }
+
             // Add 2 for safe merge (1 for rounding and 1 for whitespace)....
-            if (_visibleBottom + 2 > _graphData.Count)
+            if (graphDataCount == 0)
             {
                 // Currently we are doing some important work; we are recieving
                 // rows that the user is viewing
-                if (Loading != null && _graphData.Count > RowCount) //// && graphData.Count != RowCount)
-                {
-                    Loading(this, new LoadingEventArgs(true));
-                }
+                Loading?.Invoke(this, new LoadingEventArgs(true));
             }
             else
             {
                 // All rows that the user is viewing are loaded. We now can hide the loading
                 // animation that is shown. (the event Loading(bool) triggers this!)
                 Loading?.Invoke(this, new LoadingEventArgs(false));
-            }
-
-            if (_visibleBottom >= _graphData.Count)
-            {
-                _visibleBottom = _graphData.Count;
-            }
-
-            int targetBottom = _visibleBottom + 250;
-            targetBottom = Math.Min(targetBottom, _graphData.Count);
-
-            _backgroundScrollTo = targetBottom;
-            if (targetBottom > 0)
-            {
-                _backgroundEvent.Set();
             }
         }
 
@@ -1359,12 +1356,15 @@ namespace GitUI.RevisionGridClasses
 
         private void dataGrid_Resize(object sender, EventArgs e)
         {
-            _rowHeight = RowTemplate.Height;
+            if (_rowHeight != RowTemplate.Height)
+            {
+                _rowHeight = RowTemplate.Height;
 
-            // Keep an extra page in the cache
-            _cacheCountMax = (Height * 2 / _rowHeight) + 1;
-            ClearDrawCache();
-            dataGrid_Scroll(null, null);
+                // Keep an extra page in the cache
+                _cacheCountMax = (Height * 2 / _rowHeight) + 1;
+                ClearDrawCache();
+                dataGrid_Scroll(null, null);
+            }
         }
 
         protected override void OnKeyDown(KeyEventArgs e)

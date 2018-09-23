@@ -348,8 +348,8 @@ namespace GitUI.CommandsDialogs
 
             if (_dashboard == null || !_dashboard.Visible)
             {
-                revisionDiff.ForceRefreshRevisions();
                 RevisionGrid.ForceRefreshRevisions();
+                revisionDiff.ForceRefreshRevisions();
                 InternalInitialize(true);
             }
         }

@@ -82,7 +82,7 @@ namespace GitCommands
         [NotNull]
         internal static Process StartProcess(string fileName, string arguments, string workingDirectory, Encoding outputEncoding)
         {
-            EnvironmentConfiguration.SetEnvironmentVariables();
+            ////EnvironmentConfiguration.SetEnvironmentVariables();
 
             var startCmd = AppSettings.GitLog.Log(fileName, arguments);
 
@@ -199,7 +199,7 @@ namespace GitCommands
         /// </summary>
         public static IEnumerable<string> ReadCmdOutputLines(string cmd, string arguments, string workDir, string stdInput)
         {
-            EnvironmentConfiguration.SetEnvironmentVariables();
+            ////EnvironmentConfiguration.SetEnvironmentVariables();
             arguments = arguments.Replace("$QUOTE$", "\\\"");
             return StartProcessAndReadLines(arguments, cmd, workDir, stdInput);
         }
@@ -231,7 +231,7 @@ namespace GitCommands
         {
             try
             {
-                EnvironmentConfiguration.SetEnvironmentVariables();
+                ////EnvironmentConfiguration.SetEnvironmentVariables();
 
                 arguments = arguments.Replace("$QUOTE$", "\\\"");
 

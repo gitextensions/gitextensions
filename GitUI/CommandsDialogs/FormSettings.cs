@@ -206,6 +206,8 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
+                EnvironmentConfiguration.SetEnvironmentVariables();
+
                 foreach (var settingsPage in SettingsPages)
                 {
                     settingsPage.LoadSettings();
@@ -260,6 +262,8 @@ namespace GitUI.CommandsDialogs
 
             // TODO: this method has a generic sounding name but only saves some specific settings
             AppSettings.SaveSettings();
+
+            EnvironmentConfiguration.SetEnvironmentVariables();
 
             return true;
         }

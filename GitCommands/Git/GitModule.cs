@@ -509,7 +509,7 @@ namespace GitCommands
         [NotNull]
         private static Process StartProccess([NotNull] string fileName, [NotNull] string arguments, [NotNull] string workingDir, bool showConsole)
         {
-            EnvironmentConfiguration.SetEnvironmentVariables();
+            ////EnvironmentConfiguration.SetEnvironmentVariables();
 
             var startInfo = new ProcessStartInfo
             {

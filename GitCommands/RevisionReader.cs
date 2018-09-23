@@ -71,7 +71,7 @@ namespace GitCommands
 
             await TaskScheduler.Default;
 
-            subject.OnNext(null);
+            ////subject.OnNext(null);
 
             token.ThrowIfCancellationRequested();
 

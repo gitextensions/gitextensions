@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
@@ -6,7 +7,7 @@ namespace GitCommands
 {
     public abstract class SettingsCache : IDisposable
     {
-        private readonly Dictionary<string, object> _byNameMap = new Dictionary<string, object>();
+        private readonly ConcurrentDictionary<string, object> _byNameMap = new ConcurrentDictionary<string, object>();
 
         public void Dispose()
         {
@@ -33,6 +34,11 @@ namespace GitCommands
             {
                 return action();
             }
+        }
+
+        protected T Action<T>(Func<T> action)
+        {
+            return action();
         }
 
         protected abstract void SaveImpl();
@@ -113,7 +119,7 @@ namespace GitCommands
 
         private string GetValue(string name)
         {
-            return LockedAction(() =>
+            return Action(() =>
             {
                 EnsureSettingsAreUpToDate();
                 return GetValueImpl(name);
@@ -131,7 +137,7 @@ namespace GitCommands
                 ? encode(value)
                 : null;
 
-            return LockedAction(() =>
+            return Action(() =>
             {
                 string inMemValue = GetValue(name);
                 return inMemValue != null && !string.Equals(inMemValue, s);
@@ -148,7 +154,8 @@ namespace GitCommands
             {
                 SetValue(name, s);
 
-                _byNameMap[name] = s == null ? (object)null : value;
+                object newValue = s == null ? (object)null : value;
+                _byNameMap.AddOrUpdate(name, newValue, (key, oldValue) => newValue);
             });
         }
 
@@ -156,7 +163,7 @@ namespace GitCommands
         {
             T val = defaultValue;
 
-            bool result = LockedAction(() =>
+            bool result = Action(() =>
             {
                 EnsureSettingsAreUpToDate();
 
@@ -188,7 +195,7 @@ namespace GitCommands
                 }
 
                 val = decode(s);
-                _byNameMap[name] = val;
+                _byNameMap.AddOrUpdate(name, val, (key, oldValue) => val);
                 return true;
             });
             value = val;

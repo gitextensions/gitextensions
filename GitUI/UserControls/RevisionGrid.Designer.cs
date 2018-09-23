@@ -675,7 +675,6 @@ namespace GitUI
             // 
             // Loading
             // 
-            this.Loading.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.Loading.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Loading.Location = new System.Drawing.Point(0, 0);
             this.Loading.Name = "Loading";
