@@ -472,7 +472,7 @@ namespace GitUI
         protected override void OnCreateControl()
         {
             base.OnCreateControl();
-            SetPage(_loadingImage);
+            ////SetPage(_loadingImage);
         }
 
         public new void Load()

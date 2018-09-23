@@ -49,7 +49,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                Resizable = DataGridViewTriState.False
+                Resizable = DataGridViewTriState.False,
+                MinimumWidth = DpiUtil.Scale(10)
             };
         }
 
@@ -473,14 +474,14 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             lock (_graphModel)
             {
                 foreach (var index in range)
+                {
+                    var laneRow = _graphModel.GetLaneRow(index);
+                    if (laneRow != null)
                     {
-                        var laneRow = _graphModel.GetLaneRow(index);
-                        if (laneRow != null)
-                        {
-                            laneCount = Math.Max(laneRow.Count, laneCount);
-                        }
+                        laneCount = Math.Max(laneRow.Count, laneCount);
                     }
                 }
+            }
 
             // When 'git log --first-parent' filtration is enabled and when only current
             // branch needed to be rendered (and this filter actually works),

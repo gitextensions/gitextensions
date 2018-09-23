@@ -491,6 +491,19 @@ namespace GitUI.UserControls.RevisionGrid
                             UpdateGraph(curCount, Math.Min(_graphDataCount + 4, scrollTo));
                             keepRunning = curCount < scrollTo;
                         }
+
+                        if (!keepRunning)
+                        {
+                            this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
+
+                            void NotifyProvidersVisibleRowRangeChanged()
+                            {
+                                foreach (var provider in _columnProviders)
+                                {
+                                    provider.OnVisibleRowsChanged(_visibleRowRange);
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -578,10 +591,8 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
-            this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
-
             var targetBottom = Math.Min(
-                toIndex + 50,
+                toIndex + 1,
                 _graphModel.Count);
 
             // We always want to set _backgroundScrollTo. Because we want the backgroundthread to stop working whwn we scroll up
@@ -592,14 +603,6 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             return;
-
-            void NotifyProvidersVisibleRowRangeChanged()
-            {
-                foreach (var provider in _columnProviders)
-                {
-                    provider.OnVisibleRowsChanged(_visibleRowRange);
-                }
-            }
         }
 
         public override void Refresh()
