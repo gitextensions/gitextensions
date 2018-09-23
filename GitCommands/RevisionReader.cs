@@ -99,8 +99,8 @@ namespace GitCommands
                 /* Author email    */ "%aE%n" +
                 /* Committer name  */ "%cN%n" +
                 /* Committer email */ "%cE%n" +
-                /* Commit subject  */ "%s%n%n" +
-                /* Commit body     */ "%b";
+                /* Commit subject  */ "%s%n%n"; // +
+                /////* Commit body     */ "%b";
 
             var arguments = BuildArguments();
 
@@ -162,7 +162,7 @@ namespace GitCommands
                 {
                     "-z",
                     $"--pretty=format:\"{fullFormat}\"",
-                    { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
+                    { AppSettings.OrderRevisionByDate, "--date-order" },
                     { AppSettings.ShowReflogReferences, "--reflog" },
                     {
                         refFilterOptions.HasFlag(RefFilterOptions.All),

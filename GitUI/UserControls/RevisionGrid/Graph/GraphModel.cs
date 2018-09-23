@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using GitCommands;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -107,7 +108,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 //     00:00:00.0000723 : 9049
                 //
                 //
-                CacheTo(row);
+                ////CacheTo(row);
                 #endregion
 
                 return new SavedLaneRow(_nodes[row]);

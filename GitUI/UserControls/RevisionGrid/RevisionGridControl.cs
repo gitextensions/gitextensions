@@ -666,7 +666,7 @@ namespace GitUI
         {
             ThreadHelper.AssertOnUIThread();
 
-            SetPage(_loadingImage);
+            ////SetPage(_loadingImage);
 
             var revisionCount = 0;
 
@@ -944,7 +944,7 @@ namespace GitUI
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
                         await this.SwitchToMainThreadAsync();
-                        _gridView.Prune();
+                        ////_gridView.Prune();
                         SetPage(_gridView);
                         _isRefreshingRevisions = false;
                         SelectInitialRevision();
@@ -1088,7 +1088,7 @@ namespace GitUI
             var args = new ArgumentBuilder
             {
                 "rev-list",
-                { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
+                { AppSettings.OrderRevisionByDate, "--date-order" },
                 { AppSettings.MaxRevisionGraphCommits > 0, $"--max-count={AppSettings.MaxRevisionGraphCommits}" },
                 objectId
             };
