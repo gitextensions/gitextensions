@@ -2260,7 +2260,7 @@ namespace GitUI.CommandsDialogs
             foreach (var (path, name) in modules)
             {
                 string diff = Module.RunGitCmd(
-                     string.Format("diff --cached -z -- {0}", name));
+                     string.Format("diff --submodule=short --cached -z -- {0}", name));
                 var lines = diff.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 const string subprojectCommit = "Subproject commit ";
                 var from = lines.Single(s => s.StartsWith("-" + subprojectCommit)).Substring(subprojectCommit.Length + 1);
