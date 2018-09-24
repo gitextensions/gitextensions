@@ -24,7 +24,14 @@ namespace Gerrit
 
         public static Uri GetFetchUrl(IGitModule module, string remote)
         {
-            string remotes = module.RunGitCmd("remote show -n \"" + remote + "\"");
+            var args = new GitArgumentBuilder("remote")
+            {
+                "show",
+                "-n",
+                remote.QuoteNE()
+            };
+
+            string remotes = module.RunGitCmd(args);
 
             string fetchUrlLine = remotes.Split('\n').Select(p => p.Trim()).First(p => p.StartsWith("Push"));
 

@@ -1308,7 +1308,11 @@ namespace GitUI.Editor
         private void applySelectedLines(int selectionStart, int selectionLength, bool reverse)
         {
             // Prepare git command
-            const string args = "apply --3way --whitespace=nowarn";
+            var args = new GitArgumentBuilder("apply")
+            {
+                "--3way",
+                "--whitespace=nowarn"
+            };
 
             byte[] patch;
 

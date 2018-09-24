@@ -170,7 +170,8 @@ namespace GitCommands
             return new CommitData(revision.ObjectId, revision.TreeGuid, revision.ParentIds,
                 string.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
                 string.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
-                revision.Body ?? revision.Subject) { ChildIds = children };
+                revision.Body ?? revision.Subject)
+            { ChildIds = children };
         }
 
         [NotNull]
@@ -197,7 +198,12 @@ namespace GitCommands
                 return false;
             }
 
-            var arguments = $"log -1 --pretty=\"format:{format}\" {commitId}";
+            var arguments = new GitArgumentBuilder("log")
+            {
+                "-1",
+                $"--pretty=\"format:{format}\"",
+                commitId
+            };
 
             // Do not cache this command, since notes can be added
             data = GetModule().RunGitCmd(arguments, GitModule.LosslessEncoding);

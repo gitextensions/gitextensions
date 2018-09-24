@@ -102,10 +102,15 @@ namespace GitCommands.Gpg
             return await Task.Run(() =>
             {
                 CommitStatus cmtStatus;
+                var args = new GitArgumentBuilder("log")
+                {
+                    "--pretty=\"format:%G?\"",
+                    "-1",
+                    revision.Guid
+                };
+                string gpg = module.RunGitCmd(args);
 
-                string gpg = module.RunGitCmd($"log --pretty=\"format:%G?\" -1 {revision.Guid}");
-
-                #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
+#pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
                 switch (gpg)
                 {
                     case GoodSign:         // "G" for a good (valid) signature
@@ -126,7 +131,7 @@ namespace GitCommands.Gpg
                         cmtStatus = CommitStatus.NoSignature;
                         break;
                 }
-                #pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
+#pragma warning restore SA1025 // Code should not contain multiple whitespace in a row
 
                 return cmtStatus;
             });
@@ -198,7 +203,13 @@ namespace GitCommands.Gpg
             }
 
             var module = GetModule();
-            return module.RunGitCmd($"log --pretty=\"format:%GG\" -1 {revision.Guid}");
+            var args = new GitArgumentBuilder("log")
+            {
+                "--pretty=\"format:%GG\"",
+                "-1",
+                revision.Guid
+            };
+            return module.RunGitCmd(args);
         }
 
         /// <summary>
@@ -224,10 +235,13 @@ namespace GitCommands.Gpg
                 return null;
             }
 
-            string rawFlag = raw ? "--raw" : "";
-
             var module = GetModule();
-            return module.RunGitCmd($"verify-tag {rawFlag} {tagName}");
+            var args = new GitArgumentBuilder("verify-tag")
+            {
+                { raw, "--raw" },
+                tagName
+            };
+            return module.RunGitCmd(args);
         }
 
         private string EvaluateTagVerifyMessage(IReadOnlyList<IGitRef> usefulTagRefs)

@@ -55,13 +55,26 @@ namespace GitCommandsTests.Config
 
         private void AddConfigValue(string cfgFile, string section, string value)
         {
-            string args = "config -f " + "\"" + cfgFile + "\"" + " --add " + section + " " + value;
+            var args = new GitArgumentBuilder("config")
+            {
+                "-f",
+                cfgFile.QuoteNE(),
+                "--add",
+                section,
+                value
+            };
             Module.RunGitCmd(args);
         }
 
         private string GetConfigValue(string cfgFile, string key)
         {
-            string args = "config -f " + "\"" + cfgFile + "\"" + " --get " + key.Quote();
+            var args = new GitArgumentBuilder("config")
+            {
+                "-f",
+                cfgFile.QuoteNE(),
+                "--get",
+                key.Quote()
+            };
             return Module.RunGitCmd(args).TrimEnd('\n');
         }
 

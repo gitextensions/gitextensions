@@ -300,7 +300,11 @@ namespace GitCommands
                     // git config --get with a malformed key (no section) returns:
                     // "error: key does not contain a section: <key>"
                     const string controlStr = "ą"; // "a caudata"
-                    string arguments = $"config --get {controlStr}";
+                    var arguments = new GitArgumentBuilder("config")
+                    {
+                        "--get",
+                        controlStr
+                    };
 
                     string s = new GitModule("").RunGitCmd(arguments, Encoding.UTF8);
                     if (s != null && s.IndexOf(controlStr) != -1)
@@ -1172,7 +1176,13 @@ namespace GitCommands
                 return (' ', null);
             }
 
-            var lines = SuperprojectModule.RunGitCmd("submodule status --cached " + SubmodulePath).Split('\n');
+            var args = new GitArgumentBuilder("submodule")
+            {
+                "status",
+                "--cached",
+                SubmodulePath
+            };
+            var lines = SuperprojectModule.RunGitCmd(args).Split('\n');
 
             if (lines.Length == 0)
             {
@@ -1196,8 +1206,15 @@ namespace GitCommands
                 return false;
             }
 
+            var args = new GitArgumentBuilder($"rev-list")
+            {
+                "--parents",
+                "--no-walk",
+                $"{startRev}..{endRev}"
+            };
+
             return _gitExecutable
-                .GetOutputLines($"rev-list --parents --no-walk {startRev}..{endRev}")
+                .GetOutputLines(args)
                 .Any(IsTwoSha1Hashes);
 
             bool IsTwoSha1Hashes(string parents)
@@ -3323,7 +3340,12 @@ namespace GitCommands
 
             try
             {
-                using (var process = RunGitCmdDetached($"cat-file blob {blob}", redirectOutput: true))
+                var args = new GitArgumentBuilder("cat-file")
+                {
+                    "blob",
+                    blob
+                };
+                using (var process = RunGitCmdDetached(args, redirectOutput: true))
                 {
                     var stream = new MemoryStream();
                     process.StandardOutput.BaseStream.CopyTo(stream);
@@ -3341,8 +3363,15 @@ namespace GitCommands
 
         public IEnumerable<string> GetPreviousCommitMessages(int count, string revision = "HEAD")
         {
+            var args = new GitArgumentBuilder("log")
+            {
+                "-z",
+                $"-n {count}",
+                revision,
+                "--pretty=format:%e%n%s%n%n%b"
+            };
             var messages = _gitExecutable.GetOutput(
-                $"log -z -n {count} {revision} --pretty=format:%e%n%s%n%n%b",
+                args,
                 outputEncoding: LosslessEncoding).Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (messages.Length == 0)
@@ -3368,9 +3397,10 @@ namespace GitCommands
 
         public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.WorkTreeGuid, string extraDiffArguments = null, bool isTracked = true)
         {
-            RunGitCmdDetached(new ArgumentBuilder
+            RunGitCmdDetached(new GitArgumentBuilder("difftool")
             {
-                "difftool --gui --no-prompt",
+                "--gui",
+                "--no-prompt",
                 extraDiffArguments,
                 _revisionDiffProvider.Get(firstRevision, secondRevision, filename, oldFileName, isTracked)
             });
@@ -3838,7 +3868,14 @@ namespace GitCommands
         [CanBeNull]
         public string GetDescribe(ObjectId commitId)
         {
-            var output = RunGitCmd("describe --tags --first-parent --abbrev=40 " + commitId).TrimEnd();
+            var args = new GitArgumentBuilder("describe")
+            {
+                "--tags",
+                "--first-parent",
+                "--abbrev=40",
+                commitId
+            };
+            var output = RunGitCmd(args).TrimEnd();
 
             if (IsGitErrorMessage(output))
             {

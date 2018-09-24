@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitCommands;
 using GitUI;
 using GitUI.Avatars;
 using GitUIPluginInterfaces;
@@ -87,7 +88,8 @@ namespace Gource
                 File.Delete(file);
             }
 
-            var lines = GitUIArgs.GitModule.RunGitCmd("log --pretty=format:\"%aE|%aN\"").Split('\n');
+            var args = new GitArgumentBuilder("log") { "--pretty=format:\"%aE|%aN\"" };
+            var lines = GitUIArgs.GitModule.RunGitCmd(args).Split('\n');
 
             var authors = lines.Select(
                 line =>

@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using BackgroundFetch.Properties;
+using GitCommands;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -81,16 +83,27 @@ namespace BackgroundFetch
                               .ObserveOn(ThreadPoolScheduler.Instance)
                               .Subscribe(i =>
                                   {
+                                      GitArgumentBuilder args;
                                       if (_fetchAllSubmodules.ValueOrDefault(Settings))
                                       {
-                                          _currentGitUiCommands.GitModule.RunGitCmd("submodule foreach --recursive git fetch --all");
+                                        args = new GitArgumentBuilder("submodule")
+                                        {
+                                            "foreach",
+                                            "--recursive",
+                                            "git",
+                                            "fetch",
+                                            "--all"
+                                        };
+
+                                        _currentGitUiCommands.GitModule.RunGitCmd(args);
                                       }
 
-                                      var gitCmd = _gitCommand.ValueOrDefault(Settings).Trim();
-                                      var msg = _currentGitUiCommands.GitModule.RunGitCmd(gitCmd);
+                                      var gitCmd = _gitCommand.ValueOrDefault(Settings).Trim().SplitBySpace();
+                                      args = new GitArgumentBuilder(gitCmd[0]) { gitCmd.Skip(1) };
+                                      var msg = _currentGitUiCommands.GitModule.RunGitCmd(args);
                                       if (_autoRefresh.ValueOrDefault(Settings))
                                       {
-                                          if (gitCmd.StartsWith("fetch", StringComparison.InvariantCultureIgnoreCase))
+                                          if (gitCmd[0].Equals("fetch", StringComparison.InvariantCultureIgnoreCase))
                                           {
                                               if (msg.Contains("From"))
                                               {

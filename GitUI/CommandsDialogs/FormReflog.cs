@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
@@ -71,7 +72,11 @@ namespace GitUI.CommandsDialogs
             {
                 var item = (string)Branches.SelectedItem;
                 await TaskScheduler.Default;
-                var arguments = $"reflog --no-abbrev {item}";
+                var arguments = new GitArgumentBuilder("reflog")
+                {
+                    "--no-abbrev",
+                    item
+                };
                 var output = UICommands.GitModule.RunGitCmd(arguments);
                 var refLines = ConvertReflogOutput().ToList();
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();

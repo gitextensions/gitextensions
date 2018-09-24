@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
+using GitCommands;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -58,8 +59,12 @@ namespace ReleaseNotesGenerator
                 return;
             }
 
-            string logArgs = string.Format(_NO_TRANSLATE_textBoxGitLogArguments.Text, textBoxRevFrom.Text, textBoxRevTo.Text);
-            string result = _gitUiCommands.GitModule.RunGitCmd("log " + logArgs);
+            var args = new GitArgumentBuilder("log")
+            {
+                string.Format(_NO_TRANSLATE_textBoxGitLogArguments.Text, textBoxRevFrom.Text, textBoxRevTo.Text)
+            };
+
+            string result = _gitUiCommands.GitModule.RunGitCmd(args);
 
             if (EnvUtils.RunningOnWindows())
             {

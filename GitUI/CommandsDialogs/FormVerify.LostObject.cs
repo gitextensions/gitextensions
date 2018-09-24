@@ -28,9 +28,17 @@ namespace GitUI.CommandsDialogs
             /// %s  - subject.
             /// %ct - committer date, UNIX timestamp (easy to parse format).
             /// </summary>
-            private const string LogCommandArgumentsFormat = "log -n1 --pretty=format:\"%aN, %e, %s, %ct, %P\" {0}";
+            private static readonly string LogCommandArgumentsFormat = (ArgumentString)new GitArgumentBuilder("log")
+            {
+                "-n1",
+                "--pretty=format:\"%aN, %e, %s, %ct, %P\" {0}"
+            };
 
-            private const string TagCommandArgumentsFormat = "cat-file -p {0}";
+            private static readonly string TagCommandArgumentsFormat = (ArgumentString)new GitArgumentBuilder("cat-file")
+            {
+                "-p",
+                "{0}"
+            };
 
             private static readonly Regex RawDataRegex = new Regex(@"^((dangling|missing|unreachable) (commit|blob|tree|tag)|warning in tree) ([a-f\d]{40})(.)*$", RegexOptions.Compiled);
             private static readonly Regex LogRegex = new Regex(@"^([^,]+), (.*), (.+), (\d+), (.+)?$", RegexOptions.Compiled | RegexOptions.Singleline);
@@ -145,7 +153,7 @@ namespace GitUI.CommandsDialogs
                 string GetLostCommitLog() => VerifyHashAndRunCommand(LogCommandArgumentsFormat);
                 string GetLostTagData() => VerifyHashAndRunCommand(TagCommandArgumentsFormat);
 
-                string VerifyHashAndRunCommand(string commandFormat)
+                string VerifyHashAndRunCommand(ArgumentString commandFormat)
                 {
                     return module.RunGitCmd(string.Format(commandFormat, objectId), GitModule.LosslessEncoding);
                 }
