@@ -550,8 +550,13 @@ namespace GitUI.UserControls.RevisionGrid
         private void UpdateVisibleRowRange()
         {
             var oldRange = _visibleRowRange;
-            var fromIndex = FirstDisplayedCell?.RowIndex ?? 0;
+            var fromIndex = FirstDisplayedScrollingRowIndex;
             var toIndex = _rowHeight > 0 ? fromIndex + (Height / _rowHeight) + 1/*Add 1 for rounding*/ : fromIndex;
+
+            if (fromIndex >= _graphModel.Count)
+            {
+                fromIndex = 0;
+            }
 
             if (toIndex >= _graphModel.Count)
             {
