@@ -842,7 +842,7 @@ namespace GitCommands
 
         public static bool OrderRevisionByDate
         {
-            get => GetBool("orderrevisionbydate", true);
+            get => GetBool("orderrevisionbydate", false);
             set => SetBool("orderrevisionbydate", value);
         }
 
