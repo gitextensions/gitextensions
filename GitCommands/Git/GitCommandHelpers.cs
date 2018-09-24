@@ -836,7 +836,7 @@ namespace GitCommands
                 }
 
                 string fileName = line.SubstringAfter(' ');
-                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.Unknown, fileName, statusCharacter);
+                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.WorkTree, fileName, statusCharacter);
                 gitItemStatus.IsAssumeUnchanged = true;
                 result.Add(gitItemStatus);
             }
@@ -853,7 +853,7 @@ namespace GitCommands
                 char statusCharacter = line[0];
 
                 string fileName = line.SubstringAfter(' ');
-                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.Unknown, fileName, statusCharacter);
+                GitItemStatus gitItemStatus = GitItemStatusFromStatusCharacter(StagedStatus.WorkTree, fileName, statusCharacter);
                 if (gitItemStatus.IsSkipWorktree)
                 {
                     result.Add(gitItemStatus);
