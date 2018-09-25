@@ -329,17 +329,21 @@ namespace GitUI.UserControls.RevisionGrid
         public void Clear()
         {
             _backgroundScrollTo = 0;
+
+            // Force the background thread to be killed, we need to be sure no background processes are running. Not the best practice, but safe.
             _backgroundThread.Abort();
 
-            foreach (var columnProvider in _columnProviders)
-            {
-                columnProvider.Clear();
-            }
-
+            // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about te delete the data
             SetRowCount(0);
             _graphDataCount = 0;
             _revisionByRowIndex.Clear();
             _isRelativeByIndex.Clear();
+
+            // The graphdata is stored in one of the columnproviders, clear this last
+            foreach (var columnProvider in _columnProviders)
+            {
+                columnProvider.Clear();
+            }
 
             ////// Redraw
             UpdateVisibleRowRange();
@@ -468,7 +472,7 @@ namespace GitUI.UserControls.RevisionGrid
                             int curCount = _graphDataCount;
                             _graphDataCount = _graphModel.CachedCount;
 
-                            UpdateGraph(curCount, Math.Min(_graphDataCount + 4, scrollTo));
+                            UpdateGraph(curCount, Math.Min(curCount + 150, scrollTo));
                             keepRunning = curCount < scrollTo;
                         }
 
@@ -505,57 +509,55 @@ namespace GitUI.UserControls.RevisionGrid
                         Debug.WriteLine("Cached item FAILED {0}", rowIndex);
                         lock (_backgroundThread)
                         {
-                            _backgroundScrollTo = rowIndex;
+                            // Something went wrong, reset the counters
+                            _backgroundScrollTo = _graphModel.CachedCount;
+                            _graphDataCount = _graphModel.CachedCount;
+                            rowIndex = _graphModel.CachedCount; // Needed for 'updaterow'
                         }
 
                         break;
-                    }
-
-                    // Update the row (if needed)
-                    if (rowIndex == Math.Min(toIndex, _visibleRowRange.ToIndex) - 1)
-                    {
-                        this.InvokeAsync(UpdateRow, rowIndex).FileAndForget();
                     }
 
                     rowIndex = _graphModel.CachedCount;
                     _graphDataCount = rowIndex;
                 }
 
+                this.InvokeAsync(UpdateRow, rowIndex).FileAndForget();
                 return;
 
                 void UpdateRow(int row)
-        {
-            if (RowCount < _graphModel.Count)
-            {
-                SetRowCount(_graphModel.Count);
-            }
+                {
+                    if (RowCount < _graphModel.Count)
+                    {
+                        SetRowCount(_graphModel.Count);
+                    }
 
-            // We only need to invalidate if the row is visible
-            if (_visibleRowRange.Contains(row) && row < RowCount)
-            {
-                try
-                {
-                    InvalidateRow(row);
+                    // We only need to invalidate if the row is visible
+                    if (_visibleRowRange.Contains(row) && row < RowCount)
+                    {
+                        try
+                        {
+                            InvalidateRow(row);
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            // Ignore. It is possible that RowCount gets changed before
+                            // this is processed and the row is larger than RowCount.
+                        }
+                    }
                 }
-                catch (ArgumentOutOfRangeException)
-                {
-                    // Ignore. It is possible that RowCount gets changed before
-                    // this is processed and the row is larger than RowCount.
-                }
-            }
-        }
             }
         }
 
         private void UpdateVisibleRowRange()
         {
             var oldRange = _visibleRowRange;
-            var fromIndex = FirstDisplayedScrollingRowIndex;
+            var fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
             var toIndex = _rowHeight > 0 ? fromIndex + (Height / _rowHeight) + 1/*Add 1 for rounding*/ : fromIndex;
 
             if (fromIndex >= _graphModel.Count)
             {
-                fromIndex = 0;
+                fromIndex = _graphModel.Count;
             }
 
             if (toIndex >= _graphModel.Count)
@@ -572,7 +574,7 @@ namespace GitUI.UserControls.RevisionGrid
                     return;
                 }
 
-                // We always want to set _backgroundScrollTo. Because we want the backgroundthread to stop working whwn we scroll up
+                // We always want to set _backgroundScrollTo. Because we want the backgroundthread to stop working when we scroll up
                 if (_backgroundScrollTo != toIndex)
                 {
                     _backgroundScrollTo = toIndex;
