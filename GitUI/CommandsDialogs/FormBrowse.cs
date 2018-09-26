@@ -3028,6 +3028,11 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripBranchFilterComboBox_Click(object sender, EventArgs e)
         {
+            if (toolStripBranchFilterComboBox.Items.Count == 0)
+            {
+                return;
+            }
+
             toolStripBranchFilterComboBox.DroppedDown = true;
         }
 
