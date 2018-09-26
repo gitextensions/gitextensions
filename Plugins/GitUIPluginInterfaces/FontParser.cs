@@ -15,13 +15,12 @@ namespace GitUIPluginInterfaces
 
         public static Font Parse(this string value, Font defaultValue)
         {
-            if (value == null)
+            if (string.IsNullOrWhiteSpace(value))
             {
                 return defaultValue;
             }
 
             string[] parts = value.Split(';');
-
             if (parts.Length < 2)
             {
                 return defaultValue;
