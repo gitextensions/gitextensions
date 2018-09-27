@@ -182,6 +182,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExtUtilsTests", "UnitTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ICSharpCode.TextEditor", "Externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj", "{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUIPluginInterfacesTests", "UnitTests\Plugins\GitUIPluginInterfacesTests\GitUIPluginInterfacesTests.csproj", "{4DBDE0EB-9E03-48E0-8B1A-338850111373}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -358,6 +360,10 @@ Global
 		{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DBDE0EB-9E03-48E0-8B1A-338850111373}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DBDE0EB-9E03-48E0-8B1A-338850111373}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DBDE0EB-9E03-48E0-8B1A-338850111373}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DBDE0EB-9E03-48E0-8B1A-338850111373}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -403,6 +409,7 @@ Global
 		{17FD2A6B-4005-41DC-BFAC-59F936DF33AA} = {C5855184-8571-4AD0-A373-B98215BA56CA}
 		{2B9B62FA-3E0C-45C5-9287-68B69413C5DF} = {020F800B-9170-4BB3-83C9-FCF83596D83C}
 		{2D18BE89-D210-49EB-A9DD-2246FBB3DF6D} = {0E859634-B3DF-46AC-A73C-D49734F19D6A}
+		{4DBDE0EB-9E03-48E0-8B1A-338850111373} = {C2276A26-13DF-485A-8B2C-414CF507798F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}
