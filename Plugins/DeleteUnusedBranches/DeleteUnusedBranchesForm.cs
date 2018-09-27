@@ -163,18 +163,17 @@ namespace DeleteUnusedBranches
             {
                 await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
-                if (remoteBranches.Count > 0)
+                foreach (var remoteBranch in remoteBranches)
                 {
-                    // TODO: use GitCommandHelpers.PushMultipleCmd after moving this window to GE (see FormPush as example)
+                    // Delete branches one by one, because it is possible one fails
                     var remoteBranchNameOffset = remoteBranchPrefix.Length;
-                    var remoteBranchNames = string.Join(" ", remoteBranches.Select(branch => ":" + branch.Name.Substring(remoteBranchNameOffset)));
-                    _gitCommands.RunGitCmd($"push {remoteName} {remoteBranchNames}");
+                    _gitCommands.RunGitCmd($"push {remoteName} :{remoteBranch.Name.Substring(remoteBranchNameOffset)}");
                 }
 
-                if (localBranches.Count > 0)
+                foreach (var localBranch in localBranches)
                 {
-                    var localBranchNames = string.Join(" ", localBranches.Select(branch => branch.Name));
-                    _gitCommands.RunGitCmd("branch -d " + localBranchNames);
+                    // Delete branches one by one, because it is possible one fails
+                    _gitCommands.RunGitCmd("branch -d " + localBranch.Name);
                 }
 
                 await this.SwitchToMainThreadAsync();
