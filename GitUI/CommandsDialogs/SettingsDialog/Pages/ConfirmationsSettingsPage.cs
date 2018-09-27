@@ -24,6 +24,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkResolveConflicts.Checked = AppSettings.DontConfirmResolveConflicts;
             chkCommitAfterConflictsResolved.Checked = AppSettings.DontConfirmCommitAfterConflictsResolved;
             chkSecondAbortConfirmation.Checked = AppSettings.DontConfirmSecondAbortConfirmation;
+            chkRebaseOnTopOfSelectedCommit.Checked = AppSettings.DontConfirmRebase;
             chkUndoLastCommitConfirmation.Checked = AppSettings.DontConfirmUndoLastCommit;
             chkFetchAndPruneAllConfirmation.Checked = AppSettings.DontConfirmFetchAndPruneAll;
         }
@@ -40,6 +41,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DontConfirmResolveConflicts = chkResolveConflicts.Checked;
             AppSettings.DontConfirmCommitAfterConflictsResolved = chkCommitAfterConflictsResolved.Checked;
             AppSettings.DontConfirmSecondAbortConfirmation = chkSecondAbortConfirmation.Checked;
+            AppSettings.DontConfirmRebase = chkRebaseOnTopOfSelectedCommit.Checked;
             AppSettings.DontConfirmUndoLastCommit = chkUndoLastCommitConfirmation.Checked;
             AppSettings.DontConfirmFetchAndPruneAll = chkFetchAndPruneAllConfirmation.Checked;
         }

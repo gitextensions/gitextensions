@@ -953,7 +953,7 @@ namespace GitUI
         public bool StartRebase(IWin32Window owner, string onto)
         {
             return StartRebaseDialog(owner, from: "", to: null, onto: onto,
-                interactive: false, startRebaseImmediately: AppSettings.SkipRebaseDialog);
+                interactive: false, startRebaseImmediately: true);
         }
 
         public bool StartTheContinueRebaseDialog(IWin32Window owner)
@@ -964,7 +964,7 @@ namespace GitUI
         public bool StartInteractiveRebase(IWin32Window owner, string onto)
         {
             return StartRebaseDialog(owner, from: "", to: null, onto: onto,
-                interactive: true, startRebaseImmediately: AppSettings.SkipRebaseDialog);
+                interactive: true, startRebaseImmediately: true);
         }
 
         public bool StartRebaseDialogWithAdvOptions(IWin32Window owner, string onto)

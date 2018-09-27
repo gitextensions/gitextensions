@@ -726,12 +726,6 @@ namespace GitCommands
             set => SetBool("RebaseAutostash", value);
         }
 
-        public static bool SkipRebaseDialog
-        {
-            get => GetBool("SkipRebaseDialog", false);
-            set => SetBool("SkipRebaseDialog", value);
-        }
-
         public static LocalChangesAction CheckoutBranchAction
         {
             get => GetEnum("checkoutbranchaction", LocalChangesAction.DontChange);
@@ -808,6 +802,12 @@ namespace GitCommands
         {
             get => GetBool("DontConfirmSecondAbortConfirmation", false);
             set => SetBool("DontConfirmSecondAbortConfirmation", value);
+        }
+
+        public static bool DontConfirmRebase
+        {
+            get => GetBool("DontConfirmRebase", false);
+            set => SetBool("DontConfirmRebase", value);
         }
 
         public static bool DontConfirmResolveConflicts

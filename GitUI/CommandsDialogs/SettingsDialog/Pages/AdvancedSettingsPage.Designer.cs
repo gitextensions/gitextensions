@@ -31,9 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdvancedSettingsPage));
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.grpRebase = new System.Windows.Forms.GroupBox();
-            this.tableLayoutOfRebase = new System.Windows.Forms.TableLayoutPanel();
-            this.chkRebaseConfirmation = new System.Windows.Forms.CheckBox();
             this.grpCommit = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.chkCommitAndPushForcedWhenAmend = new System.Windows.Forms.CheckBox();
@@ -53,8 +50,6 @@
             this.cboAutoNormaliseSymbol = new System.Windows.Forms.ComboBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanel2.SuspendLayout();
-            this.grpRebase.SuspendLayout();
-            this.tableLayoutOfRebase.SuspendLayout();
             this.grpCommit.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             this.CheckoutGB.SuspendLayout();
@@ -70,60 +65,19 @@
             this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel2.Controls.Add(this.grpRebase, 0, 3);
             this.tableLayoutPanel2.Controls.Add(this.grpCommit, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.CheckoutGB, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.GeneralGB, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(8, 8);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 4;
+            this.tableLayoutPanel2.RowCount = 3;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(1600, 753);
             this.tableLayoutPanel2.TabIndex = 1;
-            // 
-            // grpRebase
-            // 
-            this.grpRebase.AutoSize = true;
-            this.grpRebase.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.grpRebase.Controls.Add(this.tableLayoutOfRebase);
-            this.grpRebase.Dock = System.Windows.Forms.DockStyle.Top;
-            this.grpRebase.Location = new System.Drawing.Point(3, 335);
-            this.grpRebase.Name = "grpRebase";
-            this.grpRebase.Padding = new System.Windows.Forms.Padding(8);
-            this.grpRebase.Size = new System.Drawing.Size(1594, 53);
-            this.grpRebase.TabIndex = 4;
-            this.grpRebase.TabStop = false;
-            this.grpRebase.Text = "Rebase";
-            // 
-            // tableLayoutOfRebase
-            // 
-            this.tableLayoutOfRebase.AutoSize = true;
-            this.tableLayoutOfRebase.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutOfRebase.ColumnCount = 1;
-            this.tableLayoutOfRebase.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutOfRebase.Controls.Add(this.chkRebaseConfirmation, 0, 0);
-            this.tableLayoutOfRebase.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutOfRebase.Location = new System.Drawing.Point(8, 22);
-            this.tableLayoutOfRebase.Name = "tableLayoutOfRebase";
-            this.tableLayoutOfRebase.RowCount = 2;
-            this.tableLayoutOfRebase.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutOfRebase.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutOfRebase.Size = new System.Drawing.Size(1578, 23);
-            this.tableLayoutOfRebase.TabIndex = 1;
-            // 
-            // chkRebaseConfirmation
-            // 
-            this.chkRebaseConfirmation.AutoSize = true;
-            this.chkRebaseConfirmation.Location = new System.Drawing.Point(3, 3);
-            this.chkRebaseConfirmation.Name = "chkRebaseConfirmation";
-            this.chkRebaseConfirmation.Size = new System.Drawing.Size(353, 17);
-            this.chkRebaseConfirmation.TabIndex = 12;
-            this.chkRebaseConfirmation.Text = "Don\'t show the rebase dialog unless rebasing with advanced options";
-            this.chkRebaseConfirmation.UseVisualStyleBackColor = true;
             // 
             // grpCommit
             // 
@@ -378,10 +332,6 @@
             this.Size = new System.Drawing.Size(1616, 769);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
-            this.grpRebase.ResumeLayout(false);
-            this.grpRebase.PerformLayout();
-            this.tableLayoutOfRebase.ResumeLayout(false);
-            this.tableLayoutOfRebase.PerformLayout();
             this.grpCommit.ResumeLayout(false);
             this.grpCommit.PerformLayout();
             this.tableLayoutPanel5.ResumeLayout(false);
@@ -422,8 +372,5 @@
         private System.Windows.Forms.GroupBox grpCommit;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.CheckBox chkCommitAndPushForcedWhenAmend;
-        private System.Windows.Forms.GroupBox grpRebase;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutOfRebase;
-        private System.Windows.Forms.CheckBox chkRebaseConfirmation;
     }
 }
