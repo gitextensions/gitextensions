@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using JetBrains.Annotations;
 
 namespace GitCommands
@@ -7,6 +8,7 @@ namespace GitCommands
     public readonly struct ArgumentString
     {
         [CanBeNull] public string Arguments { get; }
+        public int Length { get => Arguments?.Length ?? 0; }
 
         private ArgumentString([NotNull] string arguments)
         {
