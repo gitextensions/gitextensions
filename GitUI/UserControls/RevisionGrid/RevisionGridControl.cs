@@ -218,8 +218,20 @@ namespace GitUI
         private void SetPage(Control content)
         {
             _loadingImage.IsAnimating = ReferenceEquals(content, _loadingImage);
-            Controls.Clear();
-            Controls.Add(content);
+
+            for (int i = Controls.Count - 1; i >= 0; i--)
+            {
+                Control oldControl = Controls[i];
+                if (!oldControl.Equals(content))
+                {
+                    Controls.RemoveAt(i);
+                }
+            }
+
+            if (Controls.Count == 0)
+            {
+                Controls.Add(content);
+            }
         }
 
         internal int DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds, bool useEllipsis = true)
@@ -1053,7 +1065,8 @@ namespace GitUI
                     return exactIndex;
                 }
 
-                // Not found, so search for its parents
+                /* The code below is extremely slow, TryGetParents will return a huge list of parents
+                /// Not found, so search for its parents
                 if (TryGetParents(objectId, out var parentIds))
                 {
                     foreach (var parentId in parentIds)
@@ -1064,6 +1077,7 @@ namespace GitUI
                         }
                     }
                 }
+                */
 
                 // Not found...
                 return -1;
