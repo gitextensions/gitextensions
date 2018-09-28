@@ -1,9 +1,7 @@
-﻿using System;
-using System.Diagnostics;
-using GitCommands;
+﻿using System.Diagnostics;
 using JetBrains.Annotations;
 
-namespace GitUIPluginInterfaces
+namespace GitCommands
 {
     [DebuggerDisplay("{" + nameof(Arguments) + "}")]
     public readonly struct ArgumentString
