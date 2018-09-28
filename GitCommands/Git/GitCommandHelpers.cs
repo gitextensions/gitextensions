@@ -443,10 +443,10 @@ namespace GitCommands
 
         public static ArgumentString GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = IgnoreSubmodulesMode.None, bool noLocks = false)
         {
-            return new GitArgumentBuilder(
+            return new GitArgumentBuilder("status", gitOptions:
                 noLocks && GitVersion.Current.SupportNoOptionalLocks
-                    ? "--no-optional-locks status"
-                    : "status")
+                    ? (ArgumentString)"--no-optional-locks"
+                    : default)
             {
                 $"--porcelain={(GitVersion.Current.SupportStatusPorcelainV2 ? 2 : 1)} -z",
                 untrackedFiles,
