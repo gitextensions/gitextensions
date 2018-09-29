@@ -83,18 +83,18 @@ namespace GitUI.Editor.Diff
                 }
 
                 var diffLine = _diffLines[curLine + 1];
-                if (diffLine.LineType != DiffLineInfo.DiffLineType.Context)
+                if (diffLine.LineType != DiffLineType.Context)
                 {
                     var brush = default(Brush);
                     switch (diffLine.LineType)
                     {
-                        case DiffLineInfo.DiffLineType.Plus:
+                        case DiffLineType.Plus:
                             brush = new SolidBrush(AppSettings.DiffAddedColor);
                             break;
-                        case DiffLineInfo.DiffLineType.Minus:
+                        case DiffLineType.Minus:
                             brush = new SolidBrush(AppSettings.DiffRemovedColor);
                             break;
-                        case DiffLineInfo.DiffLineType.Header:
+                        case DiffLineType.Header:
                             brush = new SolidBrush(AppSettings.DiffSectionColor);
                             break;
                     }
