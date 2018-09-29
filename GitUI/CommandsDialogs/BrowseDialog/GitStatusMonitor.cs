@@ -185,6 +185,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
+        public void RequestRefresh()
+        {
+            CalculateNextUpdateTime(UpdateDelay);
+        }
+
         public void Dispose()
         {
             _workTreeWatcher.Dispose();

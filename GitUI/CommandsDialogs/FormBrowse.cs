@@ -1453,6 +1453,7 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshButtonClick(object sender, EventArgs e)
         {
+            _gitStatusMonitor.RequestRefresh();
             RefreshRevisions();
         }
 
