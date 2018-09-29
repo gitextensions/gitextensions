@@ -21,9 +21,6 @@ namespace GitUI.Editor
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
         private readonly DiffViewerLineNumberControl _lineNumbersControl;
         private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
-        private ViewPosition _previousViewPosition;
-
-        public Action OpenWithDifftool { get; private set; }
 
         private struct ViewPosition
         {
@@ -69,6 +66,8 @@ namespace GitUI.Editor
             set => TextEditor.Font = value;
         }
 
+        public Action OpenWithDifftool { get; private set; }
+
         public void Find()
         {
             _findAndReplaceForm.ShowFor(TextEditor, false);
@@ -105,54 +104,14 @@ namespace GitUI.Editor
 
         public void SetText(string text, Action openWithDifftool, bool isDiff = false)
         {
-            if (TotalNumberOfLines > 1)
-            {
-                // store the previous view position
-                _previousViewPosition.FirstLine = GetLineText(0);
-                _previousViewPosition.TotalNumberOfLines = TotalNumberOfLines;
-                _previousViewPosition.CaretPosition = TextEditor.ActiveTextAreaControl.Caret.Position;
-                _previousViewPosition.FirstVisibleLine = FirstVisibleLine;
-                _previousViewPosition.CaretVisible
-                    = _previousViewPosition.CaretPosition.Line >= _previousViewPosition.FirstVisibleLine
-                      && _previousViewPosition.CaretPosition.Line < _previousViewPosition.FirstVisibleLine + TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
-                _previousViewPosition.ActiveLineNum = null;
-                int initialActiveLine = _previousViewPosition.CaretVisible ? _previousViewPosition.CaretPosition.Line : _previousViewPosition.FirstVisibleLine;
-                if (/*a diff was displayed*/!TextEditor.ShowLineNumbers)
-                {
-                    void SetActiveLineNum(int line)
-                    {
-                        _previousViewPosition.ActiveLineNum = _lineNumbersControl.GetLineInfo(line);
-                        if (_previousViewPosition.ActiveLineNum != null)
-                        {
-                            if (_previousViewPosition.ActiveLineNum.LeftLineNumber == DiffLineInfo.NotApplicableLineNum
-                                && _previousViewPosition.ActiveLineNum.RightLineNumber == DiffLineInfo.NotApplicableLineNum)
-                            {
-                                _previousViewPosition.ActiveLineNum = null;
-                            }
-                        }
-                    }
-
-                    // search downwards for a code line, i.e. a line with line numbers
-                    for (int activeLine = initialActiveLine; activeLine < _previousViewPosition.TotalNumberOfLines && _previousViewPosition.ActiveLineNum == null; ++activeLine)
-                    {
-                        SetActiveLineNum(activeLine);
-                    }
-
-                    // if none found, search upwards
-                    for (int activeLine = initialActiveLine - 1; activeLine >= 0 && _previousViewPosition.ActiveLineNum == null; --activeLine)
-                    {
-                        SetActiveLineNum(activeLine);
-                    }
-                }
-            }
+            var viewPosition = GetCurrentViewPosition();
 
             OpenWithDifftool = openWithDifftool;
             _lineNumbersControl.Clear(isDiff);
+            _lineNumbersControl.SetVisibility(isDiff);
 
             if (isDiff)
             {
-                TextEditor.ShowLineNumbers = false;
-                _lineNumbersControl.SetVisibility(true);
                 var index = TextEditor.ActiveTextAreaControl.TextArea.LeftMargins.IndexOf(_lineNumbersControl);
                 if (index == -1)
                 {
@@ -162,50 +121,15 @@ namespace GitUI.Editor
                 _diffHighlightService = DiffHighlightService.IsCombinedDiff(text)
                     ? CombinedDiffHighlightService.Instance
                     : DiffHighlightService.Instance;
-            }
-            else
-            {
-                TextEditor.ShowLineNumbers = true;
-                _lineNumbersControl.SetVisibility(false);
-            }
 
-            TextEditor.Text = text;
-
-            if (isDiff)
-            {
                 _lineNumbersControl.DisplayLineNumFor(text);
             }
 
+            TextEditor.ShowLineNumbers = !isDiff;
+            TextEditor.Text = text;
             TextEditor.Refresh();
 
-            if (TotalNumberOfLines > 1)
-            {
-                if (TotalNumberOfLines == _previousViewPosition.TotalNumberOfLines)
-                {
-                    FirstVisibleLine = _previousViewPosition.FirstVisibleLine;
-                    TextEditor.ActiveTextAreaControl.Caret.Position = _previousViewPosition.CaretPosition;
-                    if (!_previousViewPosition.CaretVisible)
-                    {
-                        FirstVisibleLine = _previousViewPosition.FirstVisibleLine;
-                    }
-                }
-                else if (isDiff && GetLineText(0) == _previousViewPosition.FirstLine && _previousViewPosition.ActiveLineNum != null)
-                {
-                    // prefer the LeftLineNum because the base revision will not change
-                    int line = _previousViewPosition.ActiveLineNum.LeftLineNumber != DiffLineInfo.NotApplicableLineNum
-                               ? GetCaretLine(_previousViewPosition.ActiveLineNum.LeftLineNumber, rightFile: false)
-                               : GetCaretLine(_previousViewPosition.ActiveLineNum.RightLineNumber, rightFile: true);
-                    if (_previousViewPosition.CaretVisible)
-                    {
-                        TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(_previousViewPosition.CaretPosition.Column, line);
-                        TextEditor.ActiveTextAreaControl.CenterViewOn(line, treshold: 5);
-                    }
-                    else
-                    {
-                        FirstVisibleLine = line;
-                    }
-                }
-            }
+            SetCurrentViewPosition(isDiff, viewPosition);
         }
 
         public void SetHighlighting(string syntax)
@@ -406,5 +330,100 @@ namespace GitUI.Editor
         }
 
         #endregion
+
+        private ViewPosition GetCurrentViewPosition()
+        {
+            if (TotalNumberOfLines <= 1)
+            {
+                return new ViewPosition();
+            }
+
+            // store the previous view position
+            var previousViewPosition = new ViewPosition
+            {
+                ActiveLineNum = null,
+                FirstLine = GetLineText(0),
+                TotalNumberOfLines = TotalNumberOfLines,
+                CaretPosition = TextEditor.ActiveTextAreaControl.Caret.Position,
+                FirstVisibleLine = FirstVisibleLine
+            };
+            previousViewPosition.CaretVisible = previousViewPosition.CaretPosition.Line >= previousViewPosition.FirstVisibleLine &&
+                                                previousViewPosition.CaretPosition.Line < previousViewPosition.FirstVisibleLine + TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
+
+            if (TextEditor.ShowLineNumbers)
+            {
+                // a diff was displayed
+                return previousViewPosition;
+            }
+
+            int initialActiveLine = previousViewPosition.CaretVisible ? previousViewPosition.CaretPosition.Line : previousViewPosition.FirstVisibleLine;
+
+            // search downwards for a code line, i.e. a line with line numbers
+            int activeLine = initialActiveLine;
+            while (activeLine < previousViewPosition.TotalNumberOfLines && previousViewPosition.ActiveLineNum == null)
+            {
+                SetActiveLineNum(activeLine);
+                ++activeLine;
+            }
+
+            // if none found, search upwards
+            activeLine = initialActiveLine - 1;
+            while (activeLine >= 0 && previousViewPosition.ActiveLineNum == null)
+            {
+                SetActiveLineNum(activeLine);
+                --activeLine;
+            }
+
+            return previousViewPosition;
+
+            void SetActiveLineNum(int line)
+            {
+                previousViewPosition.ActiveLineNum = _lineNumbersControl.GetLineInfo(line);
+                if (previousViewPosition.ActiveLineNum == null)
+                {
+                    return;
+                }
+
+                if (previousViewPosition.ActiveLineNum.LeftLineNumber == DiffLineInfo.NotApplicableLineNum &&
+                    previousViewPosition.ActiveLineNum.RightLineNumber == DiffLineInfo.NotApplicableLineNum)
+                {
+                    previousViewPosition.ActiveLineNum = null;
+                }
+            }
+        }
+
+        private void SetCurrentViewPosition(bool isDiff, ViewPosition viewPosition)
+        {
+            if (TotalNumberOfLines <= 1)
+            {
+                return;
+            }
+
+            if (TotalNumberOfLines == viewPosition.TotalNumberOfLines)
+            {
+                FirstVisibleLine = viewPosition.FirstVisibleLine;
+                TextEditor.ActiveTextAreaControl.Caret.Position = viewPosition.CaretPosition;
+                if (!viewPosition.CaretVisible)
+                {
+                    FirstVisibleLine = viewPosition.FirstVisibleLine;
+                }
+            }
+            else if (isDiff && GetLineText(0) == viewPosition.FirstLine && viewPosition.ActiveLineNum != null)
+            {
+                // prefer the LeftLineNum because the base revision will not change
+                int line = viewPosition.ActiveLineNum.LeftLineNumber != DiffLineInfo.NotApplicableLineNum
+                    ? GetCaretLine(viewPosition.ActiveLineNum.LeftLineNumber, rightFile: false)
+                    : GetCaretLine(viewPosition.ActiveLineNum.RightLineNumber, rightFile: true);
+                if (viewPosition.CaretVisible)
+                {
+                    TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(viewPosition.CaretPosition.Column, line);
+                    TextEditor.ActiveTextAreaControl.CenterViewOn(line, treshold: 5);
+                }
+                else
+                {
+                    FirstVisibleLine = line;
+                }
+            }
+        }
     }
 }
