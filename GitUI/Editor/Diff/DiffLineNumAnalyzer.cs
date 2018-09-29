@@ -13,27 +13,33 @@ namespace GitUI.Editor.Diff
             @"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public class Result
+        public sealed class DiffLinesInfo
         {
-            public Dictionary<int, DiffLineNum> LineNumbers { get; } = new Dictionary<int, DiffLineNum>();
-            public int MaxLineNumber;
-        }
+            private readonly Dictionary<int, DiffLineInfo> _diffLines = new Dictionary<int, DiffLineInfo>();
 
-        private static void AddToResult(Result result, DiffLineNum diffLine)
-        {
-            result.LineNumbers.Add(diffLine.LineNumInDiff, diffLine);
-            result.MaxLineNumber = Math.Max(result.MaxLineNumber,
-                Math.Max(diffLine.LeftLineNum, diffLine.RightLineNum));
+            public IReadOnlyDictionary<int, DiffLineInfo> DiffLines => _diffLines;
+
+            /// <summary>
+            /// Gets the maximum line number from either left or right version.
+            /// </summary>
+            public int MaxLineNumber { get; private set; }
+
+            public void Add(DiffLineInfo diffLine)
+            {
+                _diffLines.Add(diffLine.LineNumInDiff, diffLine);
+                MaxLineNumber = Math.Max(MaxLineNumber,
+                    Math.Max(diffLine.LeftLineNumber, diffLine.RightLineNumber));
+            }
         }
 
         [NotNull]
-        public Result Analyze([NotNull] string diffContent)
+        public DiffLinesInfo Analyze([NotNull] string diffContent)
         {
-            var ret = new Result();
+            var ret = new DiffLinesInfo();
             var isCombinedDiff = PatchProcessor.IsCombinedDiff(diffContent);
             var lineNumInDiff = 0;
-            var leftLineNum = DiffLineNum.NotApplicableLineNum;
-            var rightLineNum = DiffLineNum.NotApplicableLineNum;
+            var leftLineNum = DiffLineInfo.NotApplicableLineNum;
+            var rightLineNum = DiffLineInfo.NotApplicableLineNum;
             var isHeaderLineLocated = false;
             string[] lines = diffContent.Split('\n');
             for (int i = 0; i < lines.Length; i++)
@@ -47,95 +53,95 @@ namespace GitUI.Editor.Diff
                 lineNumInDiff++;
                 if (line.StartsWith("@"))
                 {
-                    var meta = new DiffLineNum
+                    var meta = new DiffLineInfo
                     {
                         LineNumInDiff = lineNumInDiff,
-                        LeftLineNum = DiffLineNum.NotApplicableLineNum,
-                        RightLineNum = DiffLineNum.NotApplicableLineNum,
-                        Style = DiffLineNum.DiffLineStyle.Header
+                        LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
+                        RightLineNumber = DiffLineInfo.NotApplicableLineNum,
+                        LineType = DiffLineInfo.DiffLineType.Header
                     };
 
                     var lineNumbers = regex.Match(line);
                     leftLineNum = int.Parse(lineNumbers.Groups["leftStart"].Value);
                     rightLineNum = int.Parse(lineNumbers.Groups["rightStart"].Value);
 
-                    AddToResult(ret, meta);
+                    ret.Add(meta);
                     isHeaderLineLocated = true;
                 }
                 else if (isHeaderLineLocated && isCombinedDiff)
                 {
-                    var meta = new DiffLineNum
+                    var meta = new DiffLineInfo
                     {
                         LineNumInDiff = lineNumInDiff,
-                        LeftLineNum = DiffLineNum.NotApplicableLineNum,
-                        RightLineNum = DiffLineNum.NotApplicableLineNum,
+                        LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
+                        RightLineNumber = DiffLineInfo.NotApplicableLineNum,
                     };
 
                     if (IsMinusLineInCombinedDiff(line))
                     {
-                        meta.Style = DiffLineNum.DiffLineStyle.Minus;
+                        meta.LineType = DiffLineInfo.DiffLineType.Minus;
                     }
                     else if (IsPlusLineInCombinedDiff(line))
                     {
-                        meta.Style = DiffLineNum.DiffLineStyle.Plus;
-                        meta.RightLineNum = rightLineNum;
+                        meta.LineType = DiffLineInfo.DiffLineType.Plus;
+                        meta.RightLineNumber = rightLineNum;
                         rightLineNum++;
                     }
                     else
                     {
-                        meta.Style = DiffLineNum.DiffLineStyle.Context;
-                        meta.RightLineNum = rightLineNum;
+                        meta.LineType = DiffLineInfo.DiffLineType.Context;
+                        meta.RightLineNumber = rightLineNum;
                         rightLineNum++;
                     }
 
-                    AddToResult(ret, meta);
+                    ret.Add(meta);
                 }
                 else if (isHeaderLineLocated && IsMinusLine(line))
                 {
-                    var meta = new DiffLineNum
+                    var meta = new DiffLineInfo
                     {
                         LineNumInDiff = lineNumInDiff,
-                        LeftLineNum = leftLineNum,
-                        RightLineNum = DiffLineNum.NotApplicableLineNum,
-                        Style = DiffLineNum.DiffLineStyle.Minus
+                        LeftLineNumber = leftLineNum,
+                        RightLineNumber = DiffLineInfo.NotApplicableLineNum,
+                        LineType = DiffLineInfo.DiffLineType.Minus
                     };
-                    AddToResult(ret, meta);
+                    ret.Add(meta);
 
                     leftLineNum++;
                 }
                 else if (isHeaderLineLocated && IsPlusLine(line))
                 {
-                    var meta = new DiffLineNum
+                    var meta = new DiffLineInfo
                     {
                         LineNumInDiff = lineNumInDiff,
-                        LeftLineNum = DiffLineNum.NotApplicableLineNum,
-                        RightLineNum = rightLineNum,
-                        Style = DiffLineNum.DiffLineStyle.Plus,
+                        LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
+                        RightLineNumber = rightLineNum,
+                        LineType = DiffLineInfo.DiffLineType.Plus,
                     };
-                    AddToResult(ret, meta);
+                    ret.Add(meta);
                     rightLineNum++;
                 }
                 else if (line.StartsWith(GitModule.NoNewLineAtTheEnd))
                 {
-                    var meta = new DiffLineNum
+                    var meta = new DiffLineInfo
                     {
                         LineNumInDiff = lineNumInDiff,
-                        LeftLineNum = DiffLineNum.NotApplicableLineNum,
-                        RightLineNum = DiffLineNum.NotApplicableLineNum,
-                        Style = DiffLineNum.DiffLineStyle.Header
+                        LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
+                        RightLineNumber = DiffLineInfo.NotApplicableLineNum,
+                        LineType = DiffLineInfo.DiffLineType.Header
                     };
-                    AddToResult(ret, meta);
+                    ret.Add(meta);
                 }
                 else if (isHeaderLineLocated)
                 {
-                    var meta = new DiffLineNum
+                    var meta = new DiffLineInfo
                     {
                         LineNumInDiff = lineNumInDiff,
-                        LeftLineNum = leftLineNum,
-                        RightLineNum = rightLineNum,
-                        Style = DiffLineNum.DiffLineStyle.Context,
+                        LeftLineNumber = leftLineNum,
+                        RightLineNumber = rightLineNum,
+                        LineType = DiffLineInfo.DiffLineType.Context,
                     };
-                    AddToResult(ret, meta);
+                    ret.Add(meta);
 
                     leftLineNum++;
                     rightLineNum++;
@@ -166,9 +172,9 @@ namespace GitUI.Editor.Diff
         }
     }
 
-    public class DiffLineNum
+    public class DiffLineInfo
     {
-        public enum DiffLineStyle
+        public enum DiffLineType
         {
             Header,
             Plus,
@@ -178,8 +184,8 @@ namespace GitUI.Editor.Diff
 
         public static readonly int NotApplicableLineNum = -1;
         public int LineNumInDiff { get; set; }
-        public int LeftLineNum { get; set; }
-        public int RightLineNum { get; set; }
-        public DiffLineStyle Style { get; set; }
+        public int LeftLineNumber { get; set; }
+        public int RightLineNumber { get; set; }
+        public DiffLineType LineType { get; set; }
     }
 }
