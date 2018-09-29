@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Patches;
@@ -12,25 +11,6 @@ namespace GitUI.Editor.Diff
         private static readonly Regex regex = new Regex(
             @"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        public sealed class DiffLinesInfo
-        {
-            private readonly Dictionary<int, DiffLineInfo> _diffLines = new Dictionary<int, DiffLineInfo>();
-
-            public IReadOnlyDictionary<int, DiffLineInfo> DiffLines => _diffLines;
-
-            /// <summary>
-            /// Gets the maximum line number from either left or right version.
-            /// </summary>
-            public int MaxLineNumber { get; private set; }
-
-            public void Add(DiffLineInfo diffLine)
-            {
-                _diffLines.Add(diffLine.LineNumInDiff, diffLine);
-                MaxLineNumber = Math.Max(MaxLineNumber,
-                    Math.Max(diffLine.LeftLineNumber, diffLine.RightLineNumber));
-            }
-        }
 
         [NotNull]
         public DiffLinesInfo Analyze([NotNull] string diffContent)
@@ -58,7 +38,7 @@ namespace GitUI.Editor.Diff
                         LineNumInDiff = lineNumInDiff,
                         LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
                         RightLineNumber = DiffLineInfo.NotApplicableLineNum,
-                        LineType = DiffLineInfo.DiffLineType.Header
+                        LineType = DiffLineType.Header
                     };
 
                     var lineNumbers = regex.Match(line);
@@ -79,17 +59,17 @@ namespace GitUI.Editor.Diff
 
                     if (IsMinusLineInCombinedDiff(line))
                     {
-                        meta.LineType = DiffLineInfo.DiffLineType.Minus;
+                        meta.LineType = DiffLineType.Minus;
                     }
                     else if (IsPlusLineInCombinedDiff(line))
                     {
-                        meta.LineType = DiffLineInfo.DiffLineType.Plus;
+                        meta.LineType = DiffLineType.Plus;
                         meta.RightLineNumber = rightLineNum;
                         rightLineNum++;
                     }
                     else
                     {
-                        meta.LineType = DiffLineInfo.DiffLineType.Context;
+                        meta.LineType = DiffLineType.Context;
                         meta.RightLineNumber = rightLineNum;
                         rightLineNum++;
                     }
@@ -103,7 +83,7 @@ namespace GitUI.Editor.Diff
                         LineNumInDiff = lineNumInDiff,
                         LeftLineNumber = leftLineNum,
                         RightLineNumber = DiffLineInfo.NotApplicableLineNum,
-                        LineType = DiffLineInfo.DiffLineType.Minus
+                        LineType = DiffLineType.Minus
                     };
                     ret.Add(meta);
 
@@ -116,7 +96,7 @@ namespace GitUI.Editor.Diff
                         LineNumInDiff = lineNumInDiff,
                         LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
                         RightLineNumber = rightLineNum,
-                        LineType = DiffLineInfo.DiffLineType.Plus,
+                        LineType = DiffLineType.Plus,
                     };
                     ret.Add(meta);
                     rightLineNum++;
@@ -128,7 +108,7 @@ namespace GitUI.Editor.Diff
                         LineNumInDiff = lineNumInDiff,
                         LeftLineNumber = DiffLineInfo.NotApplicableLineNum,
                         RightLineNumber = DiffLineInfo.NotApplicableLineNum,
-                        LineType = DiffLineInfo.DiffLineType.Header
+                        LineType = DiffLineType.Header
                     };
                     ret.Add(meta);
                 }
@@ -139,7 +119,7 @@ namespace GitUI.Editor.Diff
                         LineNumInDiff = lineNumInDiff,
                         LeftLineNumber = leftLineNum,
                         RightLineNumber = rightLineNum,
-                        LineType = DiffLineInfo.DiffLineType.Context,
+                        LineType = DiffLineType.Context,
                     };
                     ret.Add(meta);
 
@@ -170,22 +150,5 @@ namespace GitUI.Editor.Diff
         {
             return line.StartsWith("--") || line.StartsWith("- ") || line.StartsWith(" -");
         }
-    }
-
-    public class DiffLineInfo
-    {
-        public enum DiffLineType
-        {
-            Header,
-            Plus,
-            Minus,
-            Context
-        }
-
-        public static readonly int NotApplicableLineNum = -1;
-        public int LineNumInDiff { get; set; }
-        public int LeftLineNumber { get; set; }
-        public int RightLineNumber { get; set; }
-        public DiffLineType LineType { get; set; }
     }
 }
