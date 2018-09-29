@@ -21,6 +21,7 @@ namespace GitCommands.Submodules
     public sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     {
         private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
+        private DateTime _previousSubmoduleUpdateTime;
 
         public void Dispose()
         {
@@ -29,7 +30,10 @@ namespace GitCommands.Submodules
 
         public bool HasSubmodulesStatusChanged([CanBeNull] IReadOnlyList<GitItemStatus> allChangedFiles)
         {
-            if (allChangedFiles == null)
+            TimeSpan elapsed = DateTime.Now - _previousSubmoduleUpdateTime;
+
+            // Throttle updates triggered from status updates
+            if (allChangedFiles == null || elapsed.TotalSeconds <= 15)
             {
                 return false;
             }
@@ -47,6 +51,7 @@ namespace GitCommands.Submodules
         {
             // Cancel any previous async activities:
             var cancelToken = _submodulesStatusSequence.Next();
+            _previousSubmoduleUpdateTime = DateTime.Now;
 
             onUpdateBegin();
 
@@ -68,6 +73,8 @@ namespace GitCommands.Submodules
                 await Task.WhenAll(submodulesTask, superTask);
 
                 await onUpdateCompleteAsync(result, cancelToken);
+
+                _previousSubmoduleUpdateTime = DateTime.Now;
             }).FileAndForget();
         }
 
