@@ -21,21 +21,12 @@ namespace GitUI.Editor
         public new event EventHandler DoubleClick;
 
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
+        private readonly CurrentViewPositionCache _currentViewPositionCache;
         private readonly DiffViewerLineNumberControl _lineNumbersControl;
         private readonly Func<IGitModule> _moduleProvider;
         private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
 
         public Action OpenWithDifftool { get; private set; }
-
-        private struct ViewPosition
-        {
-            internal string FirstLine; // contains the file names in case of a diff
-            internal int TotalNumberOfLines; // if changed, CaretPosition and FirstVisibleLine must be ignored and the line number must be searched
-            internal TextLocation CaretPosition;
-            internal int FirstVisibleLine;
-            internal bool CaretVisible; // if not, FirstVisibleLine has priority for restoring
-            internal DiffLineInfo ActiveLineNum;
-        }
 
         public FileViewerInternal(Func<IGitModule> moduleProvider)
         {
@@ -43,6 +34,8 @@ namespace GitUI.Editor
 
             InitializeComponent();
             InitializeComplete();
+
+            _currentViewPositionCache = new CurrentViewPositionCache(this);
 
             TextEditor.TextChanged += (s, e) => TextChanged?.Invoke(s, e);
             TextEditor.ActiveTextAreaControl.VScrollBar.ValueChanged += (s, e) => ScrollPosChanged?.Invoke(s, e);
@@ -109,7 +102,7 @@ namespace GitUI.Editor
 
         public void SetText(string text, Action openWithDifftool, bool isDiff)
         {
-            var viewPosition = GetCurrentViewPosition();
+            _currentViewPositionCache.Capture();
 
             OpenWithDifftool = openWithDifftool;
             _lineNumbersControl.Clear(isDiff);
@@ -134,7 +127,7 @@ namespace GitUI.Editor
             TextEditor.Text = text;
             TextEditor.Refresh();
 
-            SetCurrentViewPosition(isDiff, viewPosition);
+            _currentViewPositionCache.Restore(isDiff);
         }
 
         public void SetHighlighting(string syntax)
@@ -336,99 +329,144 @@ namespace GitUI.Editor
 
         #endregion
 
-        private ViewPosition GetCurrentViewPosition()
+        internal sealed class CurrentViewPositionCache
         {
-            if (TotalNumberOfLines <= 1)
+            private readonly FileViewerInternal _viewer;
+            private ViewPosition _currentViewPosition;
+            internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+            public CurrentViewPositionCache(FileViewerInternal viewer)
             {
-                return new ViewPosition();
+                _viewer = viewer;
             }
 
-            // store the previous view position
-            var previousViewPosition = new ViewPosition
+            public void Capture()
             {
-                ActiveLineNum = null,
-                FirstLine = GetLineText(0),
-                TotalNumberOfLines = TotalNumberOfLines,
-                CaretPosition = TextEditor.ActiveTextAreaControl.Caret.Position,
-                FirstVisibleLine = FirstVisibleLine
-            };
-            previousViewPosition.CaretVisible = previousViewPosition.CaretPosition.Line >= previousViewPosition.FirstVisibleLine &&
-                                                previousViewPosition.CaretPosition.Line < previousViewPosition.FirstVisibleLine + TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
-
-            if (TextEditor.ShowLineNumbers)
-            {
-                // a diff was displayed
-                return previousViewPosition;
-            }
-
-            int initialActiveLine = previousViewPosition.CaretVisible ? previousViewPosition.CaretPosition.Line : previousViewPosition.FirstVisibleLine;
-
-            // search downwards for a code line, i.e. a line with line numbers
-            int activeLine = initialActiveLine;
-            while (activeLine < previousViewPosition.TotalNumberOfLines && previousViewPosition.ActiveLineNum == null)
-            {
-                SetActiveLineNum(activeLine);
-                ++activeLine;
-            }
-
-            // if none found, search upwards
-            activeLine = initialActiveLine - 1;
-            while (activeLine >= 0 && previousViewPosition.ActiveLineNum == null)
-            {
-                SetActiveLineNum(activeLine);
-                --activeLine;
-            }
-
-            return previousViewPosition;
-
-            void SetActiveLineNum(int line)
-            {
-                previousViewPosition.ActiveLineNum = _lineNumbersControl.GetLineInfo(line);
-                if (previousViewPosition.ActiveLineNum == null)
+                if (_viewer.TotalNumberOfLines <= 1)
                 {
                     return;
                 }
 
-                if (previousViewPosition.ActiveLineNum.LeftLineNumber == DiffLineInfo.NotApplicableLineNum &&
-                    previousViewPosition.ActiveLineNum.RightLineNumber == DiffLineInfo.NotApplicableLineNum)
+                // store the previous view position
+                var currentViewPosition = new ViewPosition
                 {
-                    previousViewPosition.ActiveLineNum = null;
+                    ActiveLineNum = null,
+                    FirstLine = _viewer.GetLineText(0),
+                    TotalNumberOfLines = _viewer.TotalNumberOfLines,
+                    CaretPosition = _viewer.TextEditor.ActiveTextAreaControl.Caret.Position,
+                    FirstVisibleLine = _viewer.FirstVisibleLine
+                };
+                currentViewPosition.CaretVisible = currentViewPosition.CaretPosition.Line >= currentViewPosition.FirstVisibleLine &&
+                                                   currentViewPosition.CaretPosition.Line < currentViewPosition.FirstVisibleLine + _viewer.TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
+
+                if (_viewer.TextEditor.ShowLineNumbers)
+                {
+                    // a diff was displayed
+                    _currentViewPosition = currentViewPosition;
+                    return;
                 }
+
+                int initialActiveLine = currentViewPosition.CaretVisible ?
+                                            currentViewPosition.CaretPosition.Line :
+                                            currentViewPosition.FirstVisibleLine;
+
+                // search downwards for a code line, i.e. a line with line numbers
+                int activeLine = initialActiveLine;
+                while (activeLine < currentViewPosition.TotalNumberOfLines && currentViewPosition.ActiveLineNum == null)
+                {
+                    SetActiveLineNum(activeLine);
+                    ++activeLine;
+                }
+
+                // if none found, search upwards
+                activeLine = initialActiveLine - 1;
+                while (activeLine >= 0 && currentViewPosition.ActiveLineNum == null)
+                {
+                    SetActiveLineNum(activeLine);
+                    --activeLine;
+                }
+
+                _currentViewPosition = currentViewPosition;
+                return;
+
+                void SetActiveLineNum(int line)
+                {
+                    currentViewPosition.ActiveLineNum = _viewer._lineNumbersControl.GetLineInfo(line);
+                    if (currentViewPosition.ActiveLineNum == null)
+                    {
+                        return;
+                    }
+
+                    if (currentViewPosition.ActiveLineNum.LeftLineNumber == DiffLineInfo.NotApplicableLineNum &&
+                        currentViewPosition.ActiveLineNum.RightLineNumber == DiffLineInfo.NotApplicableLineNum)
+                    {
+                        currentViewPosition.ActiveLineNum = null;
+                    }
+                }
+            }
+
+            public void Restore(bool isDiff)
+            {
+                if (_viewer.TotalNumberOfLines <= 1)
+                {
+                    return;
+                }
+
+                var viewPosition = _currentViewPosition;
+                if (_viewer.TotalNumberOfLines == viewPosition.TotalNumberOfLines)
+                {
+                    _viewer.FirstVisibleLine = viewPosition.FirstVisibleLine;
+                    _viewer.TextEditor.ActiveTextAreaControl.Caret.Position = viewPosition.CaretPosition;
+                    if (!viewPosition.CaretVisible)
+                    {
+                        _viewer.FirstVisibleLine = viewPosition.FirstVisibleLine;
+                    }
+                }
+                else if (isDiff && _viewer.GetLineText(0) == viewPosition.FirstLine && viewPosition.ActiveLineNum != null)
+                {
+                    // prefer the LeftLineNum because the base revision will not change
+                    int line = viewPosition.ActiveLineNum.LeftLineNumber != DiffLineInfo.NotApplicableLineNum
+                        ? _viewer.GetCaretLine(viewPosition.ActiveLineNum.LeftLineNumber, rightFile: false)
+                        : _viewer.GetCaretLine(viewPosition.ActiveLineNum.RightLineNumber, rightFile: true);
+                    if (viewPosition.CaretVisible)
+                    {
+                        _viewer.TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(viewPosition.CaretPosition.Column, line);
+                        _viewer.TextEditor.ActiveTextAreaControl.CenterViewOn(line, treshold: 5);
+                    }
+                    else
+                    {
+                        _viewer.FirstVisibleLine = line;
+                    }
+                }
+            }
+
+            public readonly struct TestAccessor
+            {
+                private readonly CurrentViewPositionCache _viewPositionCache;
+
+                public TestAccessor(CurrentViewPositionCache viewPositionCache)
+                {
+                    _viewPositionCache = viewPositionCache;
+                }
+
+                public ViewPosition ViewPosition
+                {
+                    get => _viewPositionCache._currentViewPosition;
+                    set => _viewPositionCache._currentViewPosition = value;
+                }
+
+                public TextEditorControl TextEditor => _viewPositionCache._viewer.TextEditor;
             }
         }
 
-        private void SetCurrentViewPosition(bool isDiff, ViewPosition viewPosition)
+        internal struct ViewPosition
         {
-            if (TotalNumberOfLines <= 1)
-            {
-                return;
-            }
-
-            if (TotalNumberOfLines == viewPosition.TotalNumberOfLines)
-            {
-                FirstVisibleLine = viewPosition.FirstVisibleLine;
-                TextEditor.ActiveTextAreaControl.Caret.Position = viewPosition.CaretPosition;
-                if (!viewPosition.CaretVisible)
-                {
-                    FirstVisibleLine = viewPosition.FirstVisibleLine;
-                }
-            }
-            else if (isDiff && GetLineText(0) == viewPosition.FirstLine && viewPosition.ActiveLineNum != null)
-            {
-                // prefer the LeftLineNum because the base revision will not change
-                int line = viewPosition.ActiveLineNum.LeftLineNumber != DiffLineInfo.NotApplicableLineNum
-                    ? GetCaretLine(viewPosition.ActiveLineNum.LeftLineNumber, rightFile: false)
-                    : GetCaretLine(viewPosition.ActiveLineNum.RightLineNumber, rightFile: true);
-                if (viewPosition.CaretVisible)
-                {
-                    TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(viewPosition.CaretPosition.Column, line);
-                    TextEditor.ActiveTextAreaControl.CenterViewOn(line, treshold: 5);
-                }
-                else
-                {
-                    FirstVisibleLine = line;
-                }
-            }
+            internal string FirstLine; // contains the file names in case of a diff
+            internal int TotalNumberOfLines; // if changed, CaretPosition and FirstVisibleLine must be ignored and the line number must be searched
+            internal TextLocation CaretPosition;
+            internal int FirstVisibleLine;
+            internal bool CaretVisible; // if not, FirstVisibleLine has priority for restoring
+            internal DiffLineInfo ActiveLineNum;
         }
     }
 }
