@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using GitCommands;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor
@@ -16,7 +17,7 @@ namespace GitUI.Editor
 
         private readonly char _commentChar;
 
-        protected GitHighlightingStrategyBase(string name, GitModule module)
+        protected GitHighlightingStrategyBase(string name, IGitModule module)
         {
             Name = name;
 
@@ -35,7 +36,8 @@ namespace GitUI.Editor
             // characters for each line[0] and take the character with most.
             // That would work well in practice.
 
-            string commentCharSetting = module.EffectiveConfigFile.GetString("core.commentChar", "#");
+            // HACK: this needs to be reconciled and refactored separately
+            string commentCharSetting = ((GitModule)module).EffectiveConfigFile.GetString("core.commentChar", "#");
 
             _commentChar = commentCharSetting?.Length == 1 ? commentCharSetting[0] : '#';
         }

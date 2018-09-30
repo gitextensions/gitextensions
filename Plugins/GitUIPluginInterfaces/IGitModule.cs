@@ -10,6 +10,7 @@ namespace GitUIPluginInterfaces
     {
         [NotNull]
         IConfigFileSettings LocalConfigFile { get; }
+        IConfigFileSettings EffectiveConfigFile { get; }
 
         string AddRemote(string remoteName, string path);
         IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true);

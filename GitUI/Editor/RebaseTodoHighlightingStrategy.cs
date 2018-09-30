@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using GitCommands;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using JetBrains.Annotations;
@@ -31,7 +31,7 @@ namespace GitUI.Editor
             { 'd', ("drop", new HighlightColor(Color.Red, bold: true, italic: false)) }
         };
 
-        public RebaseTodoHighlightingStrategy([NotNull] GitModule module)
+        public RebaseTodoHighlightingStrategy([NotNull] IGitModule module)
             : base("GitRebaseTodo", module)
         {
         }
@@ -89,66 +89,66 @@ namespace GitUI.Editor
                 switch (state)
                 {
                     case State.Command:
-                    {
-                        if (index == 1 && char.IsWhiteSpace(c))
                         {
-                            state = State.SpacesAfterCommand;
-                        }
-                        else if (index == cmd.longForm.Length && char.IsWhiteSpace(c))
-                        {
-                            state = State.SpacesAfterCommand;
-                        }
-                        else if (index >= cmd.longForm.Length || c != cmd.longForm[index])
-                        {
-                            return false;
-                        }
-
-                        break;
-                    }
-
-                    case State.SpacesAfterCommand:
-                    {
-                        if (IsHexChar())
-                        {
-                            idStartIndex = index;
-                            state = State.Id;
-                        }
-                        else if (!char.IsWhiteSpace(c))
-                        {
-                            return false;
-                        }
-
-                        break;
-                    }
-
-                    case State.Id:
-                    {
-                        if (char.IsWhiteSpace(c))
-                        {
-                            var idLength = index - idStartIndex;
-
-                            if (idLength <= 5)
+                            if (index == 1 && char.IsWhiteSpace(c))
+                            {
+                                state = State.SpacesAfterCommand;
+                            }
+                            else if (index == cmd.longForm.Length && char.IsWhiteSpace(c))
+                            {
+                                state = State.SpacesAfterCommand;
+                            }
+                            else if (index >= cmd.longForm.Length || c != cmd.longForm[index])
                             {
                                 return false;
                             }
 
-                            line.Words = new List<TextWord>(capacity: 3)
+                            break;
+                        }
+
+                    case State.SpacesAfterCommand:
+                        {
+                            if (IsHexChar())
+                            {
+                                idStartIndex = index;
+                                state = State.Id;
+                            }
+                            else if (!char.IsWhiteSpace(c))
+                            {
+                                return false;
+                            }
+
+                            break;
+                        }
+
+                    case State.Id:
+                        {
+                            if (char.IsWhiteSpace(c))
+                            {
+                                var idLength = index - idStartIndex;
+
+                                if (idLength <= 5)
+                                {
+                                    return false;
+                                }
+
+                                line.Words = new List<TextWord>(capacity: 3)
                             {
                                 new TextWord(document, line, 0, idStartIndex, cmd.color, hasDefaultColor: false),
                                 new TextWord(document, line, idStartIndex, idLength, cmd.color, hasDefaultColor: false),
                                 new TextWord(document, line, index, line.Length - index, ColorNormal, hasDefaultColor: true)
                             };
 
-                            return true;
-                        }
+                                return true;
+                            }
 
-                        if (!IsHexChar())
-                        {
-                            return false;
-                        }
+                            if (!IsHexChar())
+                            {
+                                return false;
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                 }
 
                 index++;

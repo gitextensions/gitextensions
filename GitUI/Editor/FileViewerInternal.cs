@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.Editor.Diff;
+using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 using ResourceManager;
@@ -21,8 +22,7 @@ namespace GitUI.Editor
 
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
         private readonly DiffViewerLineNumberControl _lineNumbersControl;
-        private readonly Func<GitModule> _moduleProvider;
-
+        private readonly Func<IGitModule> _moduleProvider;
         private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
 
         public Action OpenWithDifftool { get; private set; }
@@ -37,7 +37,7 @@ namespace GitUI.Editor
             internal DiffLineInfo ActiveLineNum;
         }
 
-        public FileViewerInternal(Func<GitModule> moduleProvider)
+        public FileViewerInternal(Func<IGitModule> moduleProvider)
         {
             _moduleProvider = moduleProvider;
 
