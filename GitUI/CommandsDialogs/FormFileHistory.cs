@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -328,6 +329,36 @@ namespace GitUI.CommandsDialogs
             }
 
             SetTitle(fileName);
+
+            if (revision.IsArtificial)
+            {
+                tabControl1.SelectedTab = DiffTab;
+
+                CommitInfoTabPage.Parent = null;
+                BlameTab.Parent = null;
+                ViewTab.Parent = null;
+            }
+            else
+            {
+                if (CommitInfoTabPage.Parent == null)
+                {
+                    tabControl1.TabPages.Insert(0, CommitInfoTabPage);
+                }
+
+                if (ViewTab.Parent == null)
+                {
+                    var index = tabControl1.TabPages.IndexOf(DiffTab);
+                    Debug.Assert(index != -1, "TabControl should contain diff tab page");
+                    tabControl1.TabPages.Insert(index + 1, ViewTab);
+                }
+
+                if (BlameTab.Parent == null)
+                {
+                    var index = tabControl1.TabPages.IndexOf(ViewTab);
+                    Debug.Assert(index != -1, "TabControl should contain view tab page");
+                    tabControl1.TabPages.Insert(index + 1, BlameTab);
+                }
+            }
 
             if (tabControl1.SelectedTab == BlameTab)
             {
