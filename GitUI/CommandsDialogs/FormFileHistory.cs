@@ -70,8 +70,8 @@ namespace GitUI.CommandsDialogs
                     Images =
                     {
                         Images.CommitSummary,
-                        Images.ViewFile,
                         Images.Diff,
+                        Images.ViewFile,
                         Images.Blame
                     }
                 };

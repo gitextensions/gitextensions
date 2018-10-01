@@ -210,8 +210,8 @@ namespace GitUI.CommandsDialogs
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.CommitInfoTabPage);
-            this.tabControl1.Controls.Add(this.ViewTab);
             this.tabControl1.Controls.Add(this.DiffTab);
+            this.tabControl1.Controls.Add(this.ViewTab);
             this.tabControl1.Controls.Add(this.BlameTab);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
