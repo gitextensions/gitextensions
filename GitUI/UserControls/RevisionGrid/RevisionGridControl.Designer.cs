@@ -299,6 +299,7 @@ namespace GitUI
             // 
             // compareToolStripMenuItem
             // 
+            this.compareToolStripMenuItem.Image = global::GitUI.Properties.Images.Diff;
             this.compareToolStripMenuItem.Name = "compareToolStripMenuItem";
             this.compareToolStripMenuItem.Size = new System.Drawing.Size(230, 22);
             this.compareToolStripMenuItem.Text = "Compare";
