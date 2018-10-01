@@ -370,8 +370,15 @@ namespace GitCommandsTests
         [Test]
         public void GetParents_calls_correct_command_and_parses_response()
         {
+            var args = new GitArgumentBuilder("log")
+            {
+                "-n 1",
+                "--format=format:%P",
+                Sha1
+            };
+
             using (_executable.StageOutput(
-                $"log -n 1 --format=format:%P \"{Sha1}\"",
+                args.ToString(),
                 $"{Sha2} {Sha3}"))
             {
                 var parents = _gitModule.GetParents(Sha1);
