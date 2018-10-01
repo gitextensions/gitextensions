@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using NUnit.Framework;
@@ -219,6 +220,8 @@ namespace GitCommandsTests.Helpers
         [Test]
         public void TryGetExactPathName()
         {
+            // TODO: needs rework/refactor
+
             var paths = new[]
             {
                 @"C:\Users\Public\desktop.ini",
@@ -249,24 +252,31 @@ namespace GitCommandsTests.Helpers
 
                 if (actual)
                 {
-                    string expectedPath;
-                    if (expectedExactPaths.TryGetValue(path, out var expectedExactPath))
-                    {
-                        expectedPath = expectedExactPath;
-                    }
-                    else
-                    {
-                        expectedPath = path;
-                    }
-
-                    var lowercaseDriveExpected = char.ToLower(expectedPath[0]).ToString() + expectedPath.Substring(1);
-                    var lowercaseDriveExact = char.ToLower(exactPath[0]).ToString() + exactPath.Substring(1);
-                    Assert.AreEqual(lowercaseDriveExpected, lowercaseDriveExact);
+                    var expectedPath = expectedExactPaths.TryGetValue(path, out string expectedExactPath) ? expectedExactPath : path;
+                    Assert.AreEqual(expectedPath.ToLower(), exactPath.ToLower());
                 }
                 else
                 {
                     Assert.IsNull(exactPath);
                 }
+            }
+        }
+
+        [TestCase("Folder1\\file1.txt", true, true)]
+        [TestCase("FOLDER1\\file1.txt", true, false)]
+        [TestCase("fOLDER1\\file1.txt", true, false)]
+        [TestCase("Folder2\\file1.txt", false, false)]
+        public void TryGetExactPathName_should_check_if_path_matches_case(string relativePath, bool isResolved, bool doesMatch)
+        {
+            using (var repo = new GitModuleTestHelper())
+            {
+                // Create a file
+                var notUsed = repo.CreateFile(Path.Combine(repo.TemporaryPath, "Folder1"), "file1.txt", "bla");
+
+                var expected = Path.Combine(repo.TemporaryPath, relativePath);
+
+                Assert.AreEqual(isResolved, PathUtil.TryGetExactPath(expected, out string exactPath));
+                Assert.AreEqual(doesMatch, exactPath == expected);
             }
         }
 
