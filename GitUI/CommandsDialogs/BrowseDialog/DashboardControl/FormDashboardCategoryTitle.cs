@@ -10,6 +10,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
     {
         private readonly TranslationString _categoryNameRequiredText = new TranslationString("Category name is required");
         private readonly TranslationString _categoryNameExistsText = new TranslationString("Category name already exists");
+        private readonly TranslationString _renameCategoryText = new TranslationString("Rename category");
         private readonly List<string> _existingCategories = new List<string>();
 
         public FormDashboardCategoryTitle()
@@ -18,12 +19,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             InitializeComplete();
         }
 
-        public FormDashboardCategoryTitle(IEnumerable<string> existingCategories)
+        public FormDashboardCategoryTitle(IEnumerable<string> existingCategories, string originalName = null)
             : this()
         {
             if (existingCategories != null)
             {
                 _existingCategories.AddRange(existingCategories);
+            }
+
+            if (originalName != null)
+            {
+                Category = originalName;
+                txtCategoryName.Text = originalName;
+                txtCategoryName.SelectAll();
+                Text = _renameCategoryText.Text;
             }
         }
 
@@ -53,6 +62,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private void btnCancel_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void txtCategoryName_TextChanged(object sender, EventArgs e)
+        {
+            btnOk.Enabled = txtCategoryName.Text != Category;
         }
     }
 }

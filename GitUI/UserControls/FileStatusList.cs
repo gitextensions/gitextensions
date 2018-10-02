@@ -53,6 +53,7 @@ namespace GitUI
 
             FileStatusListView.SmallImageList = CreateImageList();
             FileStatusListView.LargeImageList = CreateImageList();
+            FileStatusListView.AllowCollapseGroups = true;
 
             HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
             Controls.SetChildIndex(NoFiles, 0);
@@ -927,7 +928,6 @@ namespace GitUI
                 }
             }
 
-            FileStatusListView.SetGroupState(ListViewGroupState.Collapsible);
             FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
             FileStatusListView.EndUpdate();
 
