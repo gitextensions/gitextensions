@@ -743,6 +743,8 @@ namespace GitUI
 
                 IndexWatcher.Reset();
 
+                SelectInitialRevision();
+
                 if (!AppSettings.ShowGitNotes && _refFilterOptions.HasFlag(RefFilterOptions.All | RefFilterOptions.Boundary))
                 {
                     _refFilterOptions |= RefFilterOptions.ShowGitNotes;
@@ -973,7 +975,7 @@ namespace GitUI
                         await this.SwitchToMainThreadAsync();
                         SetPage(_gridView);
                         _isRefreshingRevisions = false;
-                        SelectInitialRevision();
+                        CheckAndRepairInitialRevision();
                         if (ShowBuildServerInfo)
                         {
                             await _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync();
@@ -1054,30 +1056,39 @@ namespace GitUI
             var filteredCurrentCheckout = _filteredCurrentCheckout;
             var selectedObjectIds = _selectedObjectIds ?? Array.Empty<ObjectId>();
 
-            // filter out all unavailable commits from LastSelectedRows.
-            selectedObjectIds = selectedObjectIds.Where(revision => FindRevisionIndex(revision) >= 0).ToArray();
+            if (selectedObjectIds.Count == 0 && InitialObjectId != null)
+            {
+                selectedObjectIds = new ObjectId[] { InitialObjectId };
+            }
 
-            if (selectedObjectIds.Count != 0)
+            if (selectedObjectIds.Count == 0 && filteredCurrentCheckout != null)
             {
-                _gridView.SelectedObjectIds = selectedObjectIds;
-                _selectedObjectIds = null;
+                selectedObjectIds = new ObjectId[] { filteredCurrentCheckout };
             }
-            else if (InitialObjectId != null)
+
+            if (selectedObjectIds.Count == 0)
             {
-                int index = SearchRevision(InitialObjectId);
-                if (index >= 0)
-                {
-                    SetSelectedIndex(index);
-                }
+                selectedObjectIds = new ObjectId[] { Module.GetCurrentCheckout() };
             }
-            else
-            {
-                SetSelectedRevision(filteredCurrentCheckout);
-            }
+
+            _gridView.ToBeSelectedObjectIds = selectedObjectIds.ToHashSet();
+            _selectedObjectIds = null;
 
             if (filteredCurrentCheckout != null && !_gridView.IsRevisionRelative(filteredCurrentCheckout))
             {
                 HighlightBranch(filteredCurrentCheckout);
+            }
+        }
+
+        private void CheckAndRepairInitialRevision()
+        {
+            if (_gridView.ToBeSelectedObjectIds.Any())
+            {
+                int index = SearchRevision(_gridView.ToBeSelectedObjectIds.First());
+                if (index >= 0)
+                {
+                    SetSelectedIndex(index);
+                }
             }
 
             return;
@@ -1091,14 +1102,11 @@ namespace GitUI
                 }
 
                 // Not found, so search for its parents
-                if (TryGetParents(objectId, out var parentIds))
+                foreach (var parentId in TryGetParents(objectId))
                 {
-                    foreach (var parentId in parentIds)
+                    if (_gridView.TryGetRevisionIndex(parentId) is int parentIndex)
                     {
-                        if (_gridView.TryGetRevisionIndex(parentId) is int parentIndex)
-                        {
-                            return parentIndex;
-                        }
+                        return parentIndex;
                     }
                 }
 
@@ -1109,7 +1117,7 @@ namespace GitUI
 
         [ContractAnnotation("=>false,parentIds:null")]
         [ContractAnnotation("=>true,parentIds:notnull")]
-        private bool TryGetParents(ObjectId objectId, out IReadOnlyList<ObjectId> parentIds)
+        private IEnumerable<ObjectId> TryGetParents(ObjectId objectId)
         {
             var args = new ArgumentBuilder
             {
@@ -1123,21 +1131,13 @@ namespace GitUI
             //
             // "fatal: bad object b897cd39543bd933da30af872a633760e79472c9"
 
-            var list = new List<ObjectId>();
-
             foreach (var line in Module.GetGitOutputLines(args))
             {
-                if (!ObjectId.TryParse(line, out var parentId))
+                if (ObjectId.TryParse(line, out var parentId))
                 {
-                    parentIds = default;
-                    return false;
+                    yield return parentId;
                 }
-
-                list.Add(parentId);
             }
-
-            parentIds = list;
-            return true;
         }
 
         #region Graph event handlers
