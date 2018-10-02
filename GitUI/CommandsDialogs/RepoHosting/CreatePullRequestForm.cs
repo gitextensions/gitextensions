@@ -118,7 +118,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void LoadPRTemplate()
         {
             var selected = (IHostedRemote)_pullReqTargetsCB.SelectedItem;
-            var url = $"https://raw.githubusercontent.com/{selected.Data}/master/.github/PULL_REQUEST_TEMPLATE.md";
+            var url = $"https://raw.githubusercontent.com/{selected.Data}/{_currentBranch}/.github/PULL_REQUEST_TEMPLATE.md";
             var request = WebRequest.Create(url);
             request.Proxy = WebRequest.DefaultWebProxy;
             request.Proxy.Credentials = CredentialCache.DefaultCredentials;
