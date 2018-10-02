@@ -1504,6 +1504,12 @@ namespace GitCommands
             set => SetDate("LastUpdateCheck", value);
         }
 
+        public static bool CheckForUpdates
+        {
+            get => GetBool("CheckForUpdates", true);
+            set => SetBool("CheckForUpdates", value);
+        }
+
         public static bool CheckForReleaseCandidates
         {
             get => GetBool("CheckForReleaseCandidates", false);

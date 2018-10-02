@@ -28,6 +28,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkUseLocalChangesAction.Checked = AppSettings.UseDefaultCheckoutBranchAction;
             chkDontSHowHelpImages.Checked = AppSettings.DontShowHelpImages;
             chkAlwaysShowAdvOpt.Checked = AppSettings.AlwaysShowAdvOpt;
+            chkCheckForUpdates.Checked = AppSettings.CheckForUpdates;
             chkCheckForRCVersions.Checked = AppSettings.CheckForReleaseCandidates;
             chkConsoleEmulator.Checked = AppSettings.UseConsoleEmulatorForCommands;
             chkAutoNormaliseBranchName.Checked = AppSettings.AutoNormaliseBranchName;
@@ -42,6 +43,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.UseDefaultCheckoutBranchAction = chkUseLocalChangesAction.Checked;
             AppSettings.DontShowHelpImages = chkDontSHowHelpImages.Checked;
             AppSettings.AlwaysShowAdvOpt = chkAlwaysShowAdvOpt.Checked;
+            AppSettings.CheckForUpdates = chkCheckForUpdates.Checked;
             AppSettings.CheckForReleaseCandidates = chkCheckForRCVersions.Checked;
             AppSettings.UseConsoleEmulatorForCommands = chkConsoleEmulator.Checked;
             AppSettings.AutoNormaliseBranchName = chkAutoNormaliseBranchName.Checked;

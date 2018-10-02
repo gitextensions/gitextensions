@@ -685,7 +685,7 @@ namespace GitUI.CommandsDialogs
             using (WaitCursorScope.Enter())
             {
                 // check for updates
-                if (AppSettings.LastUpdateCheck.AddDays(7) < DateTime.Now)
+                if (AppSettings.CheckForUpdates && AppSettings.LastUpdateCheck.AddDays(7) < DateTime.Now)
                 {
                     AppSettings.LastUpdateCheck = DateTime.Now;
                     var updateForm = new FormUpdates(AppSettings.AppVersion);
