@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -49,17 +50,24 @@ namespace GitUI
 
             string GetToolTipText()
             {
-                if (_gridView.Columns[e.ColumnIndex].Tag is ColumnProvider provider &&
-                    provider.TryGetToolTip(e, revision, out var toolTip) &&
-                    !string.IsNullOrWhiteSpace(toolTip))
+                try
                 {
-                    return toolTip;
-                }
+                    if (_gridView.Columns[e.ColumnIndex].Tag is ColumnProvider provider &&
+                        provider.TryGetToolTip(e, revision, out var toolTip) &&
+                        !string.IsNullOrWhiteSpace(toolTip))
+                    {
+                        return toolTip;
+                    }
 
-                if (_isTruncatedByCellPos.TryGetValue(new Point(e.ColumnIndex, e.RowIndex), out var showToolTip)
-                    && showToolTip)
+                    if (_isTruncatedByCellPos.TryGetValue(new Point(e.ColumnIndex, e.RowIndex), out var showToolTip)
+                        && showToolTip)
+                    {
+                        return _gridView.Rows[e.RowIndex].Cells[e.ColumnIndex].FormattedValue?.ToString() ?? "";
+                    }
+                }
+                catch (Exception)
                 {
-                    return _gridView.Rows[e.RowIndex].Cells[e.ColumnIndex].FormattedValue?.ToString() ?? "";
+                    // Ignore exception when fetching tooltip. It's not worth crashing for.
                 }
 
                 // no tooltip unless always active or truncated
