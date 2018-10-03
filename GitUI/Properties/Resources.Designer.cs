@@ -64,19 +64,21 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
+        ///### [Version 2.51.05] (2 September 2018)
+        ///
+        ///#### Fixes:
+        ///* Git config log.showSignature breaks revision grid - Issue [5179]
+        ///
+        ///#### Fixes (Mono specific):
+        ///* Settings causes crash under linux/mono - Issue [5311]
+        ///* Git Extension crashes when trying to access settings page in Ubuntu 16.04 - Issue [5187]
+        ///* Diff view options are positioned wrong, cannot be selected under linux/mono - Issue [4978]
+        ///
+        ///
         ///### [Version 2.51.04] (8 July 2018)
         ///
         ///#### Fixes:
-        ///* A number of changed files on Commit button is always &apos;2&apos; - Issue [5127]
-        ///* Error on push deleting a remote branch when a tag with the same name exists - Issue [5119]
-        ///
-        ///
-        ///### [Version 2.51.03] (26 June 2018)
-        ///
-        ///#### Features:
-        ///* Set recommended version Git version to 2.17.1 - PR [5095]
-        ///* RTF round-trip bug causes System.ArgumentException: File format is not valid - Issue [5005]
-        ///* Recheck filter against displayed file name when w [rest of string was truncated]&quot;;.
+        ///* A number of changed files on Co [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -85,11 +87,12 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Henk Westhuis, Arkady Shapkin, Janusz Białobrzewski, RussKie, Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
+        ///   Looks up a localized string similar to Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
         ///Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington,
         ///Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick,
         ///Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl,
-        ///Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jø [rest of string was truncated]&quot;;.
+        ///Emanuel Henrique do Prado, Lukasz Byczynski, Steffen M. Colding-Jørgensen, alexeik, arBmind, mausch, xaro,
+        ///Xharze, Kim Christen [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Coders {
             get {
@@ -103,6 +106,15 @@ namespace GitUI.Properties {
         internal static string Designers {
             get {
                 return ResourceManager.GetString("Designers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Henk Westhuis, Arkady Shapkin, Janusz Białobrzewski, Igor Velikorossov aka RussKie, Gerhard Olsson, Drew Noakes.
+        /// </summary>
+        internal static string Team {
+            get {
+                return ResourceManager.GetString("Team", resourceCulture);
             }
         }
         

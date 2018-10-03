@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -121,8 +121,11 @@
   <data name="ChangeLog" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/ChangeLog.md;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="Team" xml:space="preserve">
+    <value>Henk Westhuis, Arkady Shapkin, Janusz Białobrzewski, Igor Velikorossov aka RussKie, Gerhard Olsson, Drew Noakes</value>
+  </data>
   <data name="Coders" xml:space="preserve">
-    <value>Henk Westhuis, Arkady Shapkin, Janusz Białobrzewski, RussKie, Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
+    <value>Steffen Forkmann, Jacob Stanley, Nick Mayer, Kevin Moore, Davide,
 Dominique Plante, Grzegorz Pachocki, Seth Behunin, bleis-tift, Chris Meaney, Nathanael Schmied, Adrian Codrington,
 Troels Thomsen, Wilbert van Dolleweerd, Tobias Bieniek, Radoslaw Miazio, Stan Angeloff, Matt McCormick,
 Bjørn Moe, William Swanson, Daniel Locantore, Harald Deischinger, Radek Miazio, Stefan Rueckl,
@@ -144,16 +147,21 @@ Sam Kelleher, Sui, Tom Rathbone, Ulrich Buchgraber, Alexander Ulitin, Bill Yang,
 lanfeust69, ulatekh, vitaly, jtacoma, forbjok, Sergey Azarkevich, Joshua Tacoma, Klas Mellbourn, Erik Peters,
 Dmitry Oksenchuk, Andrew Orlov, BinSys, careri, Alan Nelson, Alexander Kostikov, Andrey Dodonov, Arsen Shnurkov,
 Ashod Nakashian, Bastian Eicher, Benjamin Burgy, Bernd Herzog, BinSys, Carbenium, Christian Schuster,
-Christophe Chevalier, Clay Anderson, Cristian Stoica, David Kemp, Dmitri Suvorov, Drew Noakes, Eben Zhang,
+Christophe Chevalier, Clay Anderson, Cristian Stoica, David Kemp, Dmitri Suvorov, Eben Zhang,
 Fernsehkind, James Johnston, Joe Flynn, Joe Hayes, Johannes Linke, KSACEK, Kim Gybels, Klas Mellbourn,
 Lazar Sumar, Luis G, Marc Brooks, Matthias Koch, Max Kirillov, Michael Karmazin, Michal Kuncl, Noguai,
 Patrik Gustavssonm, Per Erik Stendahl, Phil Richards, Quppa, Ralf Wagner, Robert Schmidt-Cisternas,
 Sam Harwell, Seto, Tachikawa, Tomas Deml, Oleg Ovcharenko, Valery Petrov, hypersw, idealist1508,
 j-a-b, ksemenenko, lodici, m08pvv, maadani, maxbog, mgorbulsky, mnz, wangzq, Amit.Joshi, Arnaud, David Frey,
-EbenZhang, Erik Leo, Gabriele Pongelli, GavriYashar, Gerhard Olsson, Julius Vitkauskas,
+EbenZhang, Erik Leo, Gabriele Pongelli, GavriYashar, Julius Vitkauskas,
 Katelyn Gigante, Levente Koncz, Lucas Trzesniewski, Lysogorskiy Aleksey, Matt Si, Matthias Serfling,
 Oleksandr Redko, Ondrej Novak, Orgad Shaneh, RaMMicHaeL, Rui Lopes, Sebastien ROBERT, Tao Gomez Gil,
-agabden, crypto_rsa, gpongelli, ierof, leak, liiws, mserfli, palver123</value>
+agabden, crypto_rsa, gpongelli, ierof, leak, liiws, mserfli, palver123, Alex Povar, Andrey Helldar,
+David Warner, Duncan Ogilvie, Eric Wieser, Evgeny Morozov, Fabrizio Mancin, Fisher Tsai, Glen Nicol,
+Hans F. Nordhaug, IEVin, Ilya Mokin, Ivan Vinogradov, Johan Henkens, Markas Gedminas, Michael Seibt, 
+Michael Werle, Mihai Pantea, Mohamed Hamdy, Nikolay Hidalgo Diaz, NikolayHD, Nikos Polideropoulos,
+Ori Ashual, Paul McSweeney, SamuelLongchamps, Szali Szali, Thomas Butz, Thomas Levesque, Vladimir Shimanskiy,
+aivanov-oneinc, chun, oriash93, pmme, szaliszali, Ákos Szabados</value>
   </data>
   <data name="Designers" xml:space="preserve">
     <value>Andréj Telle, Oliver Friedrich</value>
