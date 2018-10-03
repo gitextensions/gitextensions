@@ -55,6 +55,7 @@ namespace GitUI.CommandsDialogs
             txtFrom.Text = from;
             _defaultToBranch = to;
             chkInteractive.Checked = interactive;
+            chkAutosquash.Enabled = interactive;
             _startRebaseImmediately = startRebaseImmediately;
         }
 

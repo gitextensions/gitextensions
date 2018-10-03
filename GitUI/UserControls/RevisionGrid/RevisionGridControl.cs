@@ -52,6 +52,11 @@ namespace GitUI
         private readonly TranslationString _noRevisionFoundError = new TranslationString("No revision found.");
         private readonly TranslationString _baseForCompareNotSelectedError = new TranslationString("Base commit for compare is not selected.");
         private readonly TranslationString _strError = new TranslationString("Error");
+        private readonly TranslationString _rebaseConfirmTitle = new TranslationString("Rebase Confirmation");
+        private readonly TranslationString _rebaseBranch = new TranslationString("Rebase branch.");
+        private readonly TranslationString _rebaseBranchInteractive = new TranslationString("Rebase branch interactively.");
+        private readonly TranslationString _areYouSureRebase = new TranslationString("Are you sure you want to rebase? This action will rewrite commit history.");
+        private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
@@ -1651,7 +1656,34 @@ namespace GitUI
         {
             if (_rebaseOnTopOf != null)
             {
-                UICommands.StartRebase(this, _rebaseOnTopOf);
+                if (!AppSettings.DontConfirmRebase)
+                {
+                    DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
+                        this,
+                        _rebaseConfirmTitle.Text,
+                        _rebaseBranch.Text,
+                        _areYouSureRebase.Text,
+                        "",
+                        "",
+                        _dontShowAgain.Text,
+                        PSTaskDialog.eTaskDialogButtons.OKCancel,
+                        PSTaskDialog.eSysIcons.Information,
+                        PSTaskDialog.eSysIcons.Information);
+
+                    if (res == DialogResult.OK)
+                    {
+                        UICommands.StartRebase(this, _rebaseOnTopOf);
+                    }
+
+                    if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                    {
+                        AppSettings.DontConfirmRebase = true;
+                    }
+                }
+                else
+                {
+                    UICommands.StartRebase(this, _rebaseOnTopOf);
+                }
             }
         }
 
@@ -1659,7 +1691,34 @@ namespace GitUI
         {
             if (_rebaseOnTopOf != null)
             {
-                UICommands.StartInteractiveRebase(this, _rebaseOnTopOf);
+                if (!AppSettings.DontConfirmRebase)
+                {
+                    DialogResult res = PSTaskDialog.cTaskDialog.MessageBox(
+                        this,
+                        _rebaseConfirmTitle.Text,
+                        _rebaseBranchInteractive.Text,
+                        _areYouSureRebase.Text,
+                        "",
+                        "",
+                        _dontShowAgain.Text,
+                        PSTaskDialog.eTaskDialogButtons.OKCancel,
+                        PSTaskDialog.eSysIcons.Information,
+                        PSTaskDialog.eSysIcons.Information);
+
+                    if (res == DialogResult.OK)
+                    {
+                        UICommands.StartInteractiveRebase(this, _rebaseOnTopOf);
+                    }
+
+                    if (PSTaskDialog.cTaskDialog.VerificationChecked)
+                    {
+                        AppSettings.DontConfirmRebase = true;
+                    }
+                }
+                else
+                {
+                    UICommands.StartInteractiveRebase(this, _rebaseOnTopOf);
+                }
             }
         }
 
