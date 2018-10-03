@@ -444,10 +444,7 @@ namespace GitUI.Editor
             ThreadHelper.JoinableTaskFactory.Run(() => _deferShowFunc());
         }
 
-        public string GetText()
-        {
-            return internalFileViewer.GetText();
-        }
+        public string GetText() => internalFileViewer.GetText();
 
         public void ViewCurrentChanges(GitItemStatus item)
         {
@@ -1285,14 +1282,27 @@ namespace GitUI.Editor
             Clipboard.SetText(DoAutoCRLF(code));
         }
 
-        private string DoAutoCRLF(string s)
+        private string DoAutoCRLF(string text)
         {
-            if (Module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
+            if (Module.EffectiveConfigFile.core.autocrlf.ValueOrDefault != AutoCRLFType.@true)
             {
-                return s.Replace("\n", Environment.NewLine);
+                return text;
             }
 
-            return s;
+            if (text.Contains("\r\n"))
+            {
+                // AutoCRLF is set to true but the text contains windows endings.
+                // Maybe the user that committed the file had another AutoCRLF setting.
+                return text.Replace("\r\n", Environment.NewLine);
+            }
+
+            if (text.Contains("\r"))
+            {
+                // Old MAC lines (pre OS X). See "if (text.Contains("\r\n"))" above.
+                return text.Replace("\r", Environment.NewLine);
+            }
+
+            return text.Replace("\n", Environment.NewLine);
         }
 
         private void copyNewVersionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1395,6 +1405,22 @@ namespace GitUI.Editor
             ignoreAllWhitespaceChangesToolStripMenuItem.Checked = newIgnoreValue;
             AppSettings.IgnoreAllWhitespaceChanges = newIgnoreValue;
             OnExtraDiffArgumentsChanged();
+        }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FileViewer _fileViewer;
+
+            public TestAccessor(FileViewer fileViewer)
+            {
+                _fileViewer = fileViewer;
+            }
+
+            public ToolStripMenuItem CopyToolStripMenuItem => _fileViewer.copyToolStripMenuItem;
+
+            public FileViewerInternal FileViewerInternal => _fileViewer.internalFileViewer;
         }
     }
 }

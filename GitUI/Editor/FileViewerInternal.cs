@@ -475,5 +475,19 @@ namespace GitUI.Editor
             internal bool CaretVisible; // if not, FirstVisibleLine has priority for restoring
             internal DiffLineInfo ActiveLineNum;
         }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FileViewerInternal _control;
+
+            public TestAccessor(FileViewerInternal control)
+            {
+                _control = control;
+            }
+
+            public TextEditorControl TextEditor => _control.TextEditor;
+        }
     }
 }
