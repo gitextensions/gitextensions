@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -33,8 +34,11 @@ namespace TranslationApp
                 NBug.Settings.SleepBeforeSend = 30;
                 NBug.Settings.StoragePath = NBug.Enums.StoragePath.WindowsTemp;
 
-                AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
-                Application.ThreadException += NBug.Handler.ThreadException;
+                if (!Debugger.IsAttached)
+                {
+                    AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
+                    Application.ThreadException += NBug.Handler.ThreadException;
+                }
             }
 
             // This form created for obtain UI synchronization context only

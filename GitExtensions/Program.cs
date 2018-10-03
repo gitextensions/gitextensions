@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using GitCommands;
@@ -36,8 +37,11 @@ namespace GitExtensions
                 NBug.Settings.SleepBeforeSend = 30;
                 NBug.Settings.StoragePath = NBug.Enums.StoragePath.WindowsTemp;
 
-                AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
-                Application.ThreadException += NBug.Handler.ThreadException;
+                if (!Debugger.IsAttached)
+                {
+                    AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
+                    Application.ThreadException += NBug.Handler.ThreadException;
+                }
             }
             catch (TypeInitializationException tie)
             {
