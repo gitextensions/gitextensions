@@ -98,6 +98,7 @@
             this.txtCategoryName.Name = "txtCategoryName";
             this.txtCategoryName.Size = new System.Drawing.Size(292, 21);
             this.txtCategoryName.TabIndex = 1;
+            this.txtCategoryName.TextChanged += new System.EventHandler(this.txtCategoryName_TextChanged);
             // 
             // tableLayoutPanel1
             // 

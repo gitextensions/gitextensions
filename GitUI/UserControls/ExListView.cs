@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -59,6 +63,8 @@ namespace GitUI.UserControls
     internal class ExListView : NativeListView
     {
         private static readonly PropertyInfo ListViewGroupIdProperty;
+        private static readonly PropertyInfo ListViewGroupListProperty;
+        private static readonly PropertyInfo ListViewDefaultGroupProperty;
 
         /// <summary>
         /// Occurs when the user presses mouse button in a <see cref="ListViewGroup"/> within the list view control.
@@ -72,12 +78,109 @@ namespace GitUI.UserControls
 
         static ExListView()
         {
-            ListViewGroupIdProperty = typeof(ListViewGroup).GetProperty("ID", BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.NonPublic);
+            ListViewGroupIdProperty = typeof(ListViewGroup).GetProperty("ID",
+                BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.NonPublic);
+
+            ListViewGroupListProperty = typeof(ListViewGroupCollection).GetProperty("List",
+                BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.NonPublic);
+
+            ListViewDefaultGroupProperty = typeof(ListView).GetProperty("DefaultGroup",
+                BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.NonPublic);
         }
 
         public ExListView()
         {
             DoubleBuffered = true;
+            IsGroupStateSupported = EnvUtils.RunningOnWindows() && Environment.OSVersion.Version.Major >= 6;
+        }
+
+        /// <summary>
+        /// Call this method once after <see cref="ListView.Groups"/> collection was cleared (or created)
+        /// before making any calls to <see cref="ListViewGroupCollection.Insert"/>
+        ///
+        /// <see cref="ListViewGroupCollection.Add(System.Windows.Forms.ListViewGroup)"/> calls must
+        /// not be used after calling this method
+        /// </summary>
+        private void BeginGroupInsertion()
+        {
+            // .NET ListView.Groups.Insert(...) implementation has a bug
+            // It does not count the technical "Default" group from ListView when passing inserted
+            // group index to native Win32 ListView.
+
+            // ListView.Groups.Add(...) implementation on the other hand does count the
+            // technical "Default" group correctly therefore it becomes broken after calling this method
+
+            var defaultGroup = ListViewDefaultGroupProperty.GetValue(this);
+            var list = (ArrayList)ListViewGroupListProperty.GetValue(Groups);
+            if (list.Count > 0 && list[0] == defaultGroup)
+            {
+                throw new InvalidOperationException($"{nameof(BeginGroupInsertion)} was already called");
+            }
+
+            list.Insert(0, defaultGroup);
+            _minGroupInsertionIndex = 1;
+        }
+
+        private void EndGroupInsertion()
+        {
+            var defaultGroup = ListViewDefaultGroupProperty.GetValue(this);
+            var list = (ArrayList)ListViewGroupListProperty.GetValue(Groups);
+
+            if (list.Count == 0 || list[0] != defaultGroup)
+            {
+                throw new InvalidOperationException($"{nameof(BeginGroupInsertion)} was not called before");
+            }
+
+            list.RemoveAt(0);
+            _minGroupInsertionIndex = 0;
+        }
+
+        [Category("Behavior"), DefaultValue(false)]
+        public bool AllowCollapseGroups { get; set; }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        private bool IsGroupStateSupported { get; }
+
+        /// <summary>
+        /// Modifies <see cref="ListView.Groups"/> collection to match supplied one.
+        /// </summary>
+        /// <remarks>
+        /// The order of newly inserted groups is preserved.
+        /// The mutual order of already existing groups is left intact to keep algorithm simpler and non-destructive.
+        /// </remarks>
+        public void SetGroups(IReadOnlyList<ListViewGroup> groups, StringComparer nameComparer)
+        {
+            var groupNames = new HashSet<string>(groups.Select(g => g.Name), nameComparer);
+
+            BeginGroupInsertion();
+
+            try
+            {
+                var toRemove = GetGroups().Where(grp => !groupNames.Contains(grp.Name)).ToArray();
+                foreach (var grp in toRemove)
+                {
+                    Groups.Remove(grp);
+                }
+
+                var existingGroups = GetGroups().ToArray();
+
+                // leave only names to be inserted
+                groupNames.ExceptWith(existingGroups.Select(g => g.Name));
+                for (int i = 0; i < groups.Count; i++)
+                {
+                    if (groupNames.Contains(groups[i].Name))
+                    {
+                        Groups.Insert(i + _minGroupInsertionIndex, groups[i]);
+                    }
+                }
+            }
+            finally
+            {
+                EndGroupInsertion();
+            }
+
+            IEnumerable<ListViewGroup> GetGroups() =>
+                Groups.Cast<ListViewGroup>().Skip(_minGroupInsertionIndex);
         }
 
         #region Win32 Apis
@@ -108,6 +211,7 @@ namespace GitUI.UserControls
             public const int LVM_HITTEST = LVM_FIRST + 18;
             public const int LVM_SETGROUPINFO = LVM_FIRST + 147;
             public const int LVM_SUBITEMHITTEST = LVM_FIRST + 57;
+            public const int LVM_INSERTGROUP = LVM_FIRST + 145;
 
             public const int NM_FIRST = 0;
             public const int NM_CUSTOMDRAW = NM_FIRST - 12;
@@ -237,6 +341,11 @@ namespace GitUI.UserControls
                     DefWndProc(ref m); // collapse / expand by clicking button in group header
                     break;
 
+                case NativeMethods.LVM_INSERTGROUP:
+                    base.WndProc(ref m);
+                    HandleAddedGroup(m);
+                    break;
+
                 case NativeMethods.WM_PAINT:
                     _isInWmPaintMsg = true;
                     base.WndProc(ref m);
@@ -253,6 +362,56 @@ namespace GitUI.UserControls
                 default:
                     base.WndProc(ref m);
                     break;
+            }
+
+            void HandleAddedGroup(Message msg)
+            {
+                if (!IsGroupStateSupported || !AllowCollapseGroups)
+                {
+                    return;
+                }
+
+                int groupIndex = GetGroupIndex();
+                if (groupIndex < _minGroupInsertionIndex)
+                {
+                    return;
+                }
+
+                var listViewGroup = Groups[groupIndex];
+                SetGrpState(listViewGroup, ListViewGroupState.Collapsible);
+                Invalidate();
+
+                int GetGroupIndex()
+                {
+                    // https://docs.microsoft.com/en-us/windows/desktop/controls/lvm-insertgroup
+                    int index = msg.WParam.ToInt32();
+                    if (index == -1)
+                    {
+                        // -1 because addition already happened
+                        return Groups.Count - 1;
+                    }
+
+                    return index - 1 + _minGroupInsertionIndex;
+                }
+
+                void SetGrpState(ListViewGroup grp, ListViewGroupState state)
+                {
+                    int groupId = GetGroupId(grp);
+                    if (groupId < 0)
+                    {
+                        groupId = Groups.IndexOf(grp) - _minGroupInsertionIndex;
+                    }
+
+                    var lvgroup = new NativeMethods.LVGROUP();
+                    lvgroup.CbSize = Marshal.SizeOf(lvgroup);
+                    lvgroup.State = state;
+                    lvgroup.Mask = NativeMethods.ListViewGroupMask.State;
+                    lvgroup.IGroupId = groupId;
+
+                    var handleRef = new HandleRef(this, Handle);
+
+                    NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SETGROUPINFO, (IntPtr)groupId, ref lvgroup);
+                }
             }
 
             bool IsGroupMouseEventHandled(ListViewGroupHitInfo hitInfo, MouseButtons button, bool isDown)
@@ -281,6 +440,9 @@ namespace GitUI.UserControls
                 return nmhdr.code == NativeMethods.NM_CUSTOMDRAW;
             }
         }
+
+        public ListViewGroupHitInfo GetGroupHitInfo(Point location) =>
+            GetGroupHitInfo((NativeMethods.POINT)location);
 
         private ListViewGroupHitInfo GetGroupHitInfo(Message msg)
         {
@@ -336,37 +498,7 @@ namespace GitUI.UserControls
             return -1;
         }
 
-        public void SetGroupState(ListViewGroupState state)
-        {
-            if (!EnvUtils.RunningOnWindows() || Environment.OSVersion.Version.Major < 6)
-            {
-                // Only Vista and forward
-                // allows collapse of ListViewGroups
-                return;
-            }
-
-            foreach (ListViewGroup lvg in Groups)
-            {
-                SetGrpState(lvg);
-            }
-
-            Refresh();
-            return;
-
-            void SetGrpState(ListViewGroup lstvwgrp)
-            {
-                int groupId = GetGroupId(lstvwgrp);
-                int groupIndex = Groups.IndexOf(lstvwgrp);
-
-                var group = new NativeMethods.LVGROUP();
-                group.CbSize = Marshal.SizeOf(group);
-                group.State = state;
-                group.Mask = NativeMethods.ListViewGroupMask.State;
-
-                var handleRef = new HandleRef(this, Handle);
-                group.IGroupId = groupId > 0 ? groupId : groupIndex;
-                NativeMethods.SendMessage(handleRef, NativeMethods.LVM_SETGROUPINFO, (IntPtr)group.IGroupId, ref group);
-            }
-        }
+        /// <summary> Position in <see cref="ListView.Groups"/> collection after the technical "Default" group </summary>
+        private int _minGroupInsertionIndex;
     }
 }
