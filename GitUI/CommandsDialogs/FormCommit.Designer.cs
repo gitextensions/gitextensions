@@ -306,6 +306,7 @@ namespace GitUI.CommandsDialogs
             //
             // deleteFileToolStripMenuItem
             //
+            this.deleteFileToolStripMenuItem.Image = global::GitUI.Properties.Images.DeleteFile;
             this.deleteFileToolStripMenuItem.Name = "deleteFileToolStripMenuItem";
             this.deleteFileToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
             this.deleteFileToolStripMenuItem.Text = "Delete file";
@@ -571,7 +572,7 @@ namespace GitUI.CommandsDialogs
             //
             // openFolderMenuItem
             //
-            this.openFolderMenuItem.Image = global::GitUI.Properties.Images.FolderSubmodule;
+            this.openFolderMenuItem.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
             this.openFolderMenuItem.Name = "openFolderMenuItem";
             this.openFolderMenuItem.Size = new System.Drawing.Size(228, 22);
             this.openFolderMenuItem.Text = "Open containing folder";
