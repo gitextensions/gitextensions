@@ -59,6 +59,11 @@ Die Veröffentlichung dieses Programms erfolgt in der Hoffnung, dass es Ihnen vo
         <target>Branchname automatisch normalisieren</target>
 
       </trans-unit>
+      <trans-unit id="chkCheckForUpdates.Text">
+        <source>Check for updates weekly</source>
+        <target>Wöchentlich nach updates suchen</target>
+
+      </trans-unit>
       <trans-unit id="chkCheckForRCVersions.Text">
         <source>Check for release candidate versions</source>
         <target>Nach Release Candidate Versionen suchen.</target>

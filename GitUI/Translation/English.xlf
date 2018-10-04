@@ -48,6 +48,10 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
         <source>Auto normalise branch name</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkCheckForUpdates.Text">
+        <source>Check for updates weekly</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkCheckForRCVersions.Text">
         <source>Check for release candidate versions</source>
         <target />
