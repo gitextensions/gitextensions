@@ -7881,7 +7881,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
-        <source>Reveal in Explorer</source>
+        <source>Open containing folder</source>
         <target />
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">

@@ -186,7 +186,7 @@
             this.fileTreeOpenContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
             this.fileTreeOpenContainingFolderToolStripMenuItem.Name = "fileTreeOpenContainingFolderToolStripMenuItem";
             this.fileTreeOpenContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
-            this.fileTreeOpenContainingFolderToolStripMenuItem.Text = "Reveal in Explorer";
+            this.fileTreeOpenContainingFolderToolStripMenuItem.Text = "Open containing folder";
             this.fileTreeOpenContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.fileTreeOpenContainingFolderToolStripMenuItem_Click);
             // 
             // fileTreeArchiveToolStripMenuItem

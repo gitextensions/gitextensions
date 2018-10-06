@@ -272,6 +272,7 @@ namespace GitUI.CommandsDialogs
             // 
             // diffDeleteFileToolStripMenuItem
             // 
+            this.diffDeleteFileToolStripMenuItem.Image = global::GitUI.Properties.Images.DeleteFile;
             this.diffDeleteFileToolStripMenuItem.Name = "diffDeleteFileToolStripMenuItem";
             this.diffDeleteFileToolStripMenuItem.Size = new System.Drawing.Size(228, 22);
             this.diffDeleteFileToolStripMenuItem.Text = "Delete file";
