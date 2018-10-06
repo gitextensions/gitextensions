@@ -35,9 +35,6 @@ namespace AppVeyorIntegration.Settings
                 AppVeyorAccountName.Text = buildServerConfig.GetString("AppVeyorAccountName", string.Empty);
                 AppVeyorAccountToken.Text = buildServerConfig.GetString("AppVeyorAccountToken", string.Empty);
                 cbLoadTestResults.Checked = buildServerConfig.GetBool("AppVeyorLoadTestsResults", false);
-                cbGitHubPullRequest.Checked = buildServerConfig.GetBool("AppVeyorDisplayGitHubPullRequests", false);
-                txtGitHubToken.Text = buildServerConfig.GetString("AppVeyorGitHubToken", string.Empty);
-                txtGitHubToken.Enabled = cbGitHubPullRequest.Checked;
             }
         }
 
@@ -47,13 +44,6 @@ namespace AppVeyorIntegration.Settings
             buildServerConfig.SetString("AppVeyorAccountName", AppVeyorAccountName.Text);
             buildServerConfig.SetString("AppVeyorAccountToken", AppVeyorAccountToken.Text);
             buildServerConfig.SetBool("AppVeyorLoadTestsResults", cbLoadTestResults.Checked);
-            buildServerConfig.SetBool("AppVeyorDisplayGitHubPullRequests", cbGitHubPullRequest.Checked);
-            buildServerConfig.SetString("AppVeyorGitHubToken", txtGitHubToken.Text);
-        }
-
-        private void cbGitHubPullRequest_CheckedChanged(object sender, System.EventArgs e)
-        {
-            txtGitHubToken.Enabled = cbGitHubPullRequest.Checked;
         }
     }
 }
