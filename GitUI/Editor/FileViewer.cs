@@ -48,7 +48,7 @@ namespace GitUI.Editor
         public bool IgnoreWhitespaceChanges { get; set; }
         [Description("Show diffs with <n> lines of context.")]
         [DefaultValue(3)]
-        public int NumberOfVisibleLines { get; set; }
+        public int NumberOfContextLines { get; set; }
         [Description("Show diffs with entire file.")]
         [DefaultValue(false)]
         public bool ShowEntireFile { get; set; }
@@ -62,7 +62,7 @@ namespace GitUI.Editor
         {
             TreatAllFilesAsText = false;
             ShowEntireFile = false;
-            NumberOfVisibleLines = AppSettings.NumberOfContextLines;
+            NumberOfContextLines = AppSettings.NumberOfContextLines;
             InitializeComponent();
             InitializeComplete();
 
@@ -104,6 +104,7 @@ namespace GitUI.Editor
             ShowEntireFile = AppSettings.ShowEntireFile;
             showEntireFileButton.Checked = ShowEntireFile;
             showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
+            SetStateOfContextLinesButtons();
 
             showNonPrintChars.Checked = AppSettings.ShowNonPrintingChars;
             showNonprintableCharactersToolStripMenuItem.Checked = AppSettings.ShowNonPrintingChars;
@@ -314,7 +315,7 @@ namespace GitUI.Editor
             {
                 { ignoreAllWhitespaces.Checked, "--ignore-all-space" },
                 { !ignoreAllWhitespaces.Checked && IgnoreWhitespaceChanges, "--ignore-space-change" },
-                { ShowEntireFile, "--inter-hunk-context=9000 --unified=9000", $"--unified={NumberOfVisibleLines}" },
+                { ShowEntireFile, "--inter-hunk-context=9000 --unified=9000", $"--unified={NumberOfContextLines}" },
                 { TreatAllFilesAsText, "--text" }
             };
         }
@@ -886,23 +887,23 @@ namespace GitUI.Editor
 
         private void IncreaseNumberOfLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            NumberOfVisibleLines++;
-            AppSettings.NumberOfContextLines = NumberOfVisibleLines;
+            NumberOfContextLines++;
+            AppSettings.NumberOfContextLines = NumberOfContextLines;
             OnExtraDiffArgumentsChanged();
         }
 
         private void DecreaseNumberOfLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (NumberOfVisibleLines > 0)
+            if (NumberOfContextLines > 0)
             {
-                NumberOfVisibleLines--;
+                NumberOfContextLines--;
             }
             else
             {
-                NumberOfVisibleLines = 0;
+                NumberOfContextLines = 0;
             }
 
-            AppSettings.NumberOfContextLines = NumberOfVisibleLines;
+            AppSettings.NumberOfContextLines = NumberOfContextLines;
             OnExtraDiffArgumentsChanged();
         }
 
@@ -911,8 +912,17 @@ namespace GitUI.Editor
             ShowEntireFile = !ShowEntireFile;
             showEntireFileButton.Checked = ShowEntireFile;
             showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
+            SetStateOfContextLinesButtons();
             AppSettings.ShowEntireFile = ShowEntireFile;
             OnExtraDiffArgumentsChanged();
+        }
+
+        private void SetStateOfContextLinesButtons()
+        {
+            increaseNumberOfLines.Enabled = !ShowEntireFile;
+            decreaseNumberOfLines.Enabled = !ShowEntireFile;
+            increaseNumberOfLinesToolStripMenuItem.Enabled = !ShowEntireFile;
+            decreaseNumberOfLinesToolStripMenuItem.Enabled = !ShowEntireFile;
         }
 
         private void TreatAllFilesAsTextToolStripMenuItemClick(object sender, EventArgs e)

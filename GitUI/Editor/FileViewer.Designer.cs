@@ -40,7 +40,7 @@ namespace GitUI.Editor
             this.previousChangeButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.increaseNumberOfLines = new System.Windows.Forms.ToolStripButton();
-            this.DecreaseNumberOfLines = new System.Windows.Forms.ToolStripButton();
+            this.decreaseNumberOfLines = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.showEntireFileButton = new System.Windows.Forms.ToolStripButton();
             this.showNonPrintChars = new System.Windows.Forms.ToolStripButton();
@@ -148,7 +148,7 @@ namespace GitUI.Editor
             this.increaseNumberOfLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.NumberOfLinesIncrease;
             this.increaseNumberOfLinesToolStripMenuItem.Name = "increaseNumberOfLinesToolStripMenuItem";
             this.increaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.increaseNumberOfLinesToolStripMenuItem.Text = "Increase number of lines visible";
+            this.increaseNumberOfLinesToolStripMenuItem.Text = "Increase the number of lines of context";
             this.increaseNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.IncreaseNumberOfLinesToolStripMenuItemClick);
             // 
             // descreaseNumberOfLinesToolStripMenuItem
@@ -156,7 +156,7 @@ namespace GitUI.Editor
             this.decreaseNumberOfLinesToolStripMenuItem.Image = global::GitUI.Properties.Images.NumberOfLinesDecrease;
             this.decreaseNumberOfLinesToolStripMenuItem.Name = "decreaseNumberOfLinesToolStripMenuItem";
             this.decreaseNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.decreaseNumberOfLinesToolStripMenuItem.Text = "Decrease number of lines visible";
+            this.decreaseNumberOfLinesToolStripMenuItem.Text = "Decrease the number of lines of context";
             this.decreaseNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.DecreaseNumberOfLinesToolStripMenuItemClick);
             // 
             // showEntireFileToolStripMenuItem
@@ -205,7 +205,7 @@ namespace GitUI.Editor
             this.previousChangeButton,
             this.toolStripSeparator3,
             this.increaseNumberOfLines,
-            this.DecreaseNumberOfLines,
+            this.decreaseNumberOfLines,
             this.toolStripSeparator4,
             this.showEntireFileButton,
             this.showNonPrintChars,
@@ -253,18 +253,18 @@ namespace GitUI.Editor
             this.increaseNumberOfLines.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.increaseNumberOfLines.Name = "increaseNumberOfLines";
             this.increaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
-            this.increaseNumberOfLines.ToolTipText = "Increase number of visible lines";
+            this.increaseNumberOfLines.ToolTipText = "Increase the number of lines of context";
             this.increaseNumberOfLines.Click += new System.EventHandler(this.IncreaseNumberOfLinesToolStripMenuItemClick);
             // 
             // DecreaseNumberOfLines
             // 
-            this.DecreaseNumberOfLines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.DecreaseNumberOfLines.Image = global::GitUI.Properties.Images.NumberOfLinesDecrease;
-            this.DecreaseNumberOfLines.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.DecreaseNumberOfLines.Name = "DecreaseNumberOfLines";
-            this.DecreaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
-            this.DecreaseNumberOfLines.ToolTipText = "Decrease number of visible lines";
-            this.DecreaseNumberOfLines.Click += new System.EventHandler(this.DecreaseNumberOfLinesToolStripMenuItemClick);
+            this.decreaseNumberOfLines.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.decreaseNumberOfLines.Image = global::GitUI.Properties.Images.NumberOfLinesDecrease;
+            this.decreaseNumberOfLines.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.decreaseNumberOfLines.Name = "decreaseNumberOfLines";
+            this.decreaseNumberOfLines.Size = new System.Drawing.Size(23, 20);
+            this.decreaseNumberOfLines.ToolTipText = "Decrease the number of lines of context";
+            this.decreaseNumberOfLines.Click += new System.EventHandler(this.DecreaseNumberOfLinesToolStripMenuItemClick);
             // 
             // toolStripSeparator4
             // 
@@ -399,7 +399,7 @@ namespace GitUI.Editor
         private System.Windows.Forms.ToolStripButton previousChangeButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton increaseNumberOfLines;
-        private System.Windows.Forms.ToolStripButton DecreaseNumberOfLines;
+        private System.Windows.Forms.ToolStripButton decreaseNumberOfLines;
         private System.Windows.Forms.ToolStripButton showEntireFileButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton showNonPrintChars;
