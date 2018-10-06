@@ -944,6 +944,7 @@ namespace GitUI.CommandsDialogs
             // 
             // closeToolStripMenuItem
             // 
+            this.closeToolStripMenuItem.Image = global::GitUI.Properties.Images.DashboardFolderGit;
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
             this.closeToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.closeToolStripMenuItem.Text = "Close (go to Dashboard)";
@@ -1033,6 +1034,7 @@ namespace GitUI.CommandsDialogs
             // 
             // updateAllSubmodulesToolStripMenuItem
             // 
+            this.updateAllSubmodulesToolStripMenuItem.Image = global::GitUI.Properties.Images.SubmodulesUpdate;
             this.updateAllSubmodulesToolStripMenuItem.Name = "updateAllSubmodulesToolStripMenuItem";
             this.updateAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.updateAllSubmodulesToolStripMenuItem.Text = "Update all submodules";
@@ -1040,6 +1042,7 @@ namespace GitUI.CommandsDialogs
             // 
             // synchronizeAllSubmodulesToolStripMenuItem
             // 
+            this.synchronizeAllSubmodulesToolStripMenuItem.Image = global::GitUI.Properties.Images.SubmodulesSync;
             this.synchronizeAllSubmodulesToolStripMenuItem.Name = "synchronizeAllSubmodulesToolStripMenuItem";
             this.synchronizeAllSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
             this.synchronizeAllSubmodulesToolStripMenuItem.Text = "Synchronize all submodules";
@@ -1081,6 +1084,7 @@ namespace GitUI.CommandsDialogs
             // 
             // editgitignoreToolStripMenuItem1
             // 
+            this.editgitignoreToolStripMenuItem1.Image = global::GitUI.Properties.Images.EditGitIgnore;
             this.editgitignoreToolStripMenuItem1.Name = "editgitignoreToolStripMenuItem1";
             this.editgitignoreToolStripMenuItem1.Size = new System.Drawing.Size(221, 22);
             this.editgitignoreToolStripMenuItem1.Text = "Edit .gitignore";
@@ -1349,6 +1353,7 @@ namespace GitUI.CommandsDialogs
             // 
             // runMergetoolToolStripMenuItem
             // 
+            this.runMergetoolToolStripMenuItem.Image = global::GitUI.Properties.Images.Conflict;
             this.runMergetoolToolStripMenuItem.Name = "runMergetoolToolStripMenuItem";
             this.runMergetoolToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.runMergetoolToolStripMenuItem.Text = "Solve merge conflicts...";
