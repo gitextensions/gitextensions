@@ -479,14 +479,6 @@ namespace GitUI.UserControls.RevisionGrid
                         if (!keepRunning)
                         {
                             this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
-
-                            void NotifyProvidersVisibleRowRangeChanged()
-                            {
-                                foreach (var provider in _columnProviders)
-                                {
-                                    provider.OnVisibleRowsChanged(_visibleRowRange);
-                                }
-                            }
                         }
                     }
                     else
@@ -577,6 +569,16 @@ namespace GitUI.UserControls.RevisionGrid
                     _backgroundScrollTo = toIndex;
                     _backgroundEvent.Set();
                 }
+
+                this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
+            }
+        }
+
+        private void NotifyProvidersVisibleRowRangeChanged()
+        {
+            foreach (var provider in _columnProviders)
+            {
+                provider.OnVisibleRowsChanged(_visibleRowRange);
             }
         }
 
