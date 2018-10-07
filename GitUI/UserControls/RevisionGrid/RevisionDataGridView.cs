@@ -483,8 +483,7 @@ namespace GitUI.UserControls.RevisionGrid
                     }
                     else
                     {
-                        // Graph is not visible, so sleep a little while to prevent wasting time do nothing... do not cache, the graph is invisible
-                        Thread.Sleep(10);
+                        UpdateGraph(_graphModel.Count, _graphModel.Count);
                     }
                 }
             }
