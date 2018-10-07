@@ -351,6 +351,7 @@ namespace GitUI.UserControls.RevisionGrid
             _graphDataCount = 0;
             _revisionByRowIndex.Clear();
             _isRelativeByIndex.Clear();
+            ToBeSelectedRowIndexes = new HashSet<int>();
 
             // The graphdata is stored in one of the columnproviders, clear this last
             foreach (var columnProvider in _columnProviders)
@@ -443,8 +444,9 @@ namespace GitUI.UserControls.RevisionGrid
                     RowCount = count;
                     }
 
-                    foreach (int toBeSelectedRowIndex in ToBeSelectedRowIndexes)
+                    for (int i = 0; i < ToBeSelectedRowIndexes.Count; i++)
                     {
+                        int toBeSelectedRowIndex = ToBeSelectedRowIndexes.ElementAt(i);
                         if (count > toBeSelectedRowIndex)
                         {
                             Rows[toBeSelectedRowIndex].Selected = true;
