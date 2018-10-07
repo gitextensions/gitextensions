@@ -35,7 +35,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         private readonly List<ColumnProvider> _columnProviders = new List<ColumnProvider>();
         private readonly AutoResetEvent _backgroundEvent = new AutoResetEvent(false);
-        private readonly Thread _backgroundThread;
+        private Thread _backgroundThread;
         private volatile bool _shouldRun = LicenseManager.UsageMode != LicenseUsageMode.Designtime;
         private int _backgroundScrollTo;
 
@@ -218,7 +218,6 @@ namespace GitUI.UserControls.RevisionGrid
                 }
 
                 lock (_backgroundEvent)
-                lock (_graphModel)
                 {
                     if (value == null)
                     {
@@ -321,10 +320,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void Add(GitRevision revision, RevisionNodeFlags types = RevisionNodeFlags.None)
         {
-            lock (_graphModel)
-            {
-                _graphModel.Add(revision, types);
-            }
+            _graphModel.Add(revision, types);
 
             UpdateVisibleRowRange();
         }
@@ -332,27 +328,33 @@ namespace GitUI.UserControls.RevisionGrid
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         public void Clear()
         {
-            lock (_backgroundThread)
-            {
-                _backgroundScrollTo = 0;
-            }
+            _backgroundScrollTo = 0;
 
+            // Force the background thread to be killed, we need to be sure no background processes are running. Not the best practice, but safe.
+            _backgroundThread.Abort();
+
+            // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about te delete the data
+            SetRowCount(0);
+            _graphDataCount = 0;
+            _revisionByRowIndex.Clear();
+            _isRelativeByIndex.Clear();
+
+            // The graphdata is stored in one of the columnproviders, clear this last
             foreach (var columnProvider in _columnProviders)
             {
                 columnProvider.Clear();
             }
 
-            lock (_graphModel)
-            {
-                SetRowCount(0);
-                _graphDataCount = 0;
-                _revisionByRowIndex.Clear();
-                _isRelativeByIndex.Clear();
+            ////// Redraw
+            UpdateVisibleRowRange();
+            Invalidate(invalidateChildren: true);
 
-                ////// Redraw
-                UpdateVisibleRowRange();
-                Invalidate(invalidateChildren: true);
-            }
+            _backgroundThread = new Thread(BackgroundThreadEntry)
+            {
+                IsBackground = true,
+                Name = "RevisionDataGridView.backgroundThread"
+            };
+            _backgroundThread.Start();
         }
 
         public bool RowIsRelative(int rowIndex)
@@ -361,22 +363,19 @@ namespace GitUI.UserControls.RevisionGrid
 
             bool IsRelative(int index)
             {
-                lock (_graphModel)
+                var laneRow = _graphModel.GetLaneRow(index);
+
+                if (laneRow == null)
                 {
-                    var laneRow = _graphModel.GetLaneRow(index);
-
-                    if (laneRow == null)
-                    {
-                        return false;
-                    }
-
-                    if (laneRow.Node.Ancestors.Count > 0)
-                    {
-                        return laneRow.Node.Ancestors[0].IsRelative;
-                    }
-
-                    return true;
+                    return false;
                 }
+
+                if (laneRow.Node.Ancestors.Count > 0)
+                {
+                    return laneRow.Node.Ancestors[0].IsRelative;
+                }
+
+                return true;
             }
         }
 
@@ -387,23 +386,17 @@ namespace GitUI.UserControls.RevisionGrid
 
             GitRevision Create(int row)
             {
-                lock (_graphModel)
-                {
-                    return _graphModel.GetLaneRow(row)?.Node.Revision;
-                }
+                return _graphModel.GetLaneRow(row)?.Node.Revision;
             }
         }
 
         public void Prune()
         {
-            lock (_graphModel)
-            {
-                _graphModel.Prune();
-                _revisionByRowIndex.Clear();
-                _isRelativeByIndex.Clear();
+            _graphModel.Prune();
+            _revisionByRowIndex.Clear();
+            _isRelativeByIndex.Clear();
 
-                SetRowCount(_graphModel.Count);
-            }
+            SetRowCount(_graphModel.Count);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
@@ -449,6 +442,7 @@ namespace GitUI.UserControls.RevisionGrid
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         private void BackgroundThreadEntry()
         {
+            bool keepRunning = false;
             while (_shouldRun)
             {
                 if (!_shouldRun)
@@ -456,8 +450,10 @@ namespace GitUI.UserControls.RevisionGrid
                     return;
                 }
 
-                if (_backgroundEvent.WaitOne(500))
+                if (keepRunning || _backgroundEvent.WaitOne(500))
                 {
+                    keepRunning = false;
+
                     if (!_shouldRun)
                     {
                         return;
@@ -473,14 +469,24 @@ namespace GitUI.UserControls.RevisionGrid
                                 scrollTo = _backgroundScrollTo;
                             }
 
-                            int curCount;
-                            lock (_graphModel)
-                            {
-                                curCount = _graphDataCount;
-                                _graphDataCount = _graphModel.CachedCount;
-                            }
+                            int curCount = _graphDataCount;
+                            _graphDataCount = _graphModel.CachedCount;
 
-                            UpdateGraph(curCount, scrollTo);
+                            UpdateGraph(curCount, Math.Min(curCount + 150, scrollTo));
+                            keepRunning = curCount < scrollTo;
+                        }
+
+                        if (!keepRunning)
+                        {
+                            this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
+
+                            void NotifyProvidersVisibleRowRangeChanged()
+                            {
+                                foreach (var provider in _columnProviders)
+                                {
+                                    provider.OnVisibleRowsChanged(_visibleRowRange);
+                                }
+                            }
                         }
                     }
                     else
@@ -497,41 +503,30 @@ namespace GitUI.UserControls.RevisionGrid
 
                 while (rowIndex < toIndex)
                 {
-                    lock (_graphModel)
+                    // Cache the next item
+                    if (!_graphModel.CacheTo(rowIndex))
                     {
-                        // Cache the next item
-                        if (!_graphModel.CacheTo(rowIndex))
+                        Debug.WriteLine("Cached item FAILED {0}", rowIndex);
+                        lock (_backgroundThread)
                         {
-                            Debug.WriteLine("Cached item FAILED {0}", rowIndex);
-                            lock (_backgroundThread)
-                            {
-                                _backgroundScrollTo = rowIndex;
-                            }
-
-                            break;
+                            _backgroundScrollTo = rowIndex;
                         }
 
-                        // Update the row (if needed)
-                        if (rowIndex == Math.Min(toIndex, _visibleRowRange.ToIndex) - 1)
-                        {
-                            this.InvokeAsync(UpdateRow, rowIndex).FileAndForget();
-                        }
-
-                        rowIndex = _graphModel.CachedCount;
-                        _graphDataCount = rowIndex;
+                        break;
                     }
+
+                    rowIndex = _graphModel.CachedCount;
+                    _graphDataCount = rowIndex;
                 }
 
+                this.InvokeAsync(UpdateRow, rowIndex).FileAndForget();
                 return;
 
                 void UpdateRow(int row)
                 {
                     if (RowCount < _graphModel.Count)
                     {
-                        lock (_graphModel)
-                        {
-                            SetRowCount(_graphModel.Count);
-                        }
+                        SetRowCount(_graphModel.Count);
                     }
 
                     // We only need to invalidate if the row is visible
@@ -554,40 +549,33 @@ namespace GitUI.UserControls.RevisionGrid
         private void UpdateVisibleRowRange()
         {
             var oldRange = _visibleRowRange;
-            var fromIndex = FirstDisplayedCell?.RowIndex ?? 0;
-            var toIndex = _rowHeight > 0 ? fromIndex + (Height / _rowHeight) : fromIndex;
+            var fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
+            var toIndex = _rowHeight > 0 ? fromIndex + (Height / _rowHeight) + 5/*Add 5 for rounding*/ : fromIndex;
+
+            if (fromIndex >= _graphModel.Count)
+            {
+                fromIndex = _graphModel.Count;
+            }
 
             if (toIndex >= _graphModel.Count)
             {
                 toIndex = _graphModel.Count;
             }
 
-            _visibleRowRange = new VisibleRowRange(fromIndex, toIndex);
-
-            if (oldRange == _visibleRowRange)
+            if (toIndex > 0)
             {
-                return;
-            }
+                _visibleRowRange = new VisibleRowRange(fromIndex, toIndex);
 
-            this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
-
-            var targetBottom = Math.Min(
-                toIndex + 250,
-                _graphModel.Count);
-
-            if (_backgroundScrollTo < targetBottom)
-            {
-                _backgroundScrollTo = targetBottom;
-                _backgroundEvent.Set();
-            }
-
-            return;
-
-            void NotifyProvidersVisibleRowRangeChanged()
-            {
-                foreach (var provider in _columnProviders)
+                if (oldRange == _visibleRowRange)
                 {
-                    provider.OnVisibleRowsChanged(_visibleRowRange);
+                    return;
+                }
+
+                // We always want to set _backgroundScrollTo. Because we want the backgroundthread to stop working when we scroll up
+                if (_backgroundScrollTo != toIndex)
+                {
+                    _backgroundScrollTo = toIndex;
+                    _backgroundEvent.Set();
                 }
             }
         }

@@ -27,7 +27,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 Resizable = DataGridViewTriState.True,
                 Width = DpiUtil.Scale(60),
-                MinimumWidth = DpiUtil.Scale(32)
+                MinimumWidth = DpiUtil.Scale(32),
+                Visible = AppSettings.ShowObjectIdColumn
             };
         }
 

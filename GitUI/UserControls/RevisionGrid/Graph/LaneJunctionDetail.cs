@@ -37,7 +37,23 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         }
 
         [CanBeNull]
-        public Node Current => _node ?? (_index < Junction.NodeCount ? Junction[_index] : null);
+        public Node Current
+        {
+            get
+            {
+                if (_node != null)
+                {
+                    return _node;
+                }
+
+                if (Junction == null)
+                {
+                    return null;
+                }
+
+                return _index < Junction.NodeCount ? Junction[_index] : null;
+            }
+        }
 
         public bool IsClear => Junction == null && _node == null;
 

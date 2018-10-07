@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -12,12 +13,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     {
         public event Action Updated;
 
-        private readonly List<Junction> _junctions = new List<Junction>();
         private readonly ActiveLaneRow _currentRow = new ActiveLaneRow();
-        private readonly List<LaneJunctionDetail> _laneNodes = new List<LaneJunctionDetail>();
-        private readonly List<ILaneRow> _laneRows = new List<ILaneRow>();
-        private readonly Dictionary<ObjectId, Node> _nodeByObjectId = new Dictionary<ObjectId, Node>();
-        private readonly List<Node> _nodes = new List<Node>();
+
+        // Use threadsafe collections. Adding items to the collections is done on a seperate thread.
+        private readonly SynchronizedCollection<Junction> _junctions = new SynchronizedCollection<Junction>();
+        private readonly SynchronizedCollection<LaneJunctionDetail> _laneNodes = new SynchronizedCollection<LaneJunctionDetail>();
+        private readonly SynchronizedCollection<ILaneRow> _laneRows = new SynchronizedCollection<ILaneRow>();
+        private readonly SynchronizedCollection<Node> _nodes = new SynchronizedCollection<Node>();
+        private readonly ConcurrentDictionary<ObjectId, Node> _nodeByObjectId = new ConcurrentDictionary<ObjectId, Node>();
 
         private int _processedNodes;
         public int Count { get; private set; }
@@ -37,79 +40,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             if (row < _nodes.Count)
             {
-                #region refresh the cache and recalculate nodes' edges
-                // Whenever we refresh we trigger clear sequence that clears the model and
-                // all claculated information about rows edges.
-                // Without this information we are unable to correctly render the graph...
-                // The recalculation is typically done on a background thread by the RevisionDataGridView,
-                // however here for us it is too late, and as a work around we must kick off the recalculation manually.
-                // This feels dirty but it addresses a major regression https://github.com/gitextensions/gitextensions/issues/5167
-                //
-                // The method seems to be pretty snappy, when measured in Debug build with StopWatch the timings were
-                // typically in vicinity of ns:
-                //
-                //  Loaded GitExtensions repo:
-                //
-                //     00:00:00.0005014 : 1
-                //     00:00:00.0016211 : 6
-                //     00:00:00.0000095 : 7
-                //     00:00:00.0000079 : 8
-                //     00:00:00.0000167 : 9
-                //     00:00:00.0001133 : 10
-                //     00:00:00.0000553 : 11
-                //     00:00:00.0000402 : 12
-                //     00:00:00.0000388 : 13
-                //     00:00:00.0000362 : 14
-                //
-                // Fast scroll with mouse to an arbitrary commit:
-                //
-                //     00:00:00.0229141 : 1057
-                //     00:00:00.0000355 : 1058
-                //     00:00:00.0000332 : 1068
-                //     00:00:00.0000330 : 1069
-                //     00:00:00.0000320 : 1070
-                //     00:00:00.0000328 : 1071
-                //     ...snip few brewity...
-                //     00:00:00.0632790 : 2959
-                //     00:00:00.0001009 : 2960
-                //     00:00:00.0000907 : 2961
-                //     ...snip few brewity...
-                //     00:00:00.0000684 : 2971
-                //     00:00:00.0001053 : 2972
-                //     00:00:00.0000941 : 2973
-                //     00:00:00.2486322 : 8245
-                //     00:00:00.0000229 : 8246
-                //     ...snip few brewity...
-                //     00:00:00.0000206 : 8258
-                //     00:00:00.0000165 : 8259
-                //     00:00:00.0108505 : 9038
-                //     00:00:00.0000314 : 9039
-                //     00:00:00.0000178 : 9040
-                //     ...snip few brewity...
-                //     00:00:00.0000215 : 9050
-                //     00:00:00.0000211 : 9051
-                //     00:00:00.0000180 : 9052
-                //
-                // Refresh at commit #9049:
-                //
-                //     00:00:00.0000180 : 0
-                //     00:00:00.0000117 : 1
-                //     00:00:00.0000827 : 2
-                //     00:00:00.0000681 : 3
-                //     00:00:00.0001763 : 4
-                //     00:00:00.0000702 : 5
-                //     00:00:00.0000783 : 8
-                //     00:00:00.0000236 : 11
-                //     00:00:00.0000189 : 12
-                //     00:00:00.0000250 : 13
-                //     00:00:00.0000112 : 14
-                //     00:00:00.7471912 : 9048
-                //     00:00:00.0000723 : 9049
-                //
-                //
-                CacheTo(row);
-                #endregion
-
                 return new SavedLaneRow(_nodes[row]);
             }
 
@@ -178,7 +108,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // For each revision we create a node for the revision and its parents.
             // Most of the time we will have a node for this revision, created for
             // a parent of revision processed beforehand.
-            if (!GetOrCreateNode(revision.ObjectId, out var node) && (parentIds == null || parentIds.Count == 0))
+            if (!GetOrCreateNode(revision.ObjectId, out Node node) && (parentIds == null || parentIds.Count == 0))
             {
                 // The revision has not been seen yet -- it must be a leaf node.
                 // Create a junction for it.
@@ -287,7 +217,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 if (!_nodeByObjectId.TryGetValue(objectId, out n))
                 {
                     n = new Node(objectId);
-                    _nodeByObjectId.Add(objectId, n);
+                    _nodeByObjectId.TryAdd(objectId, n);
+
                     return false;
                 }
 
@@ -733,7 +664,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // Remove all nodes that don't have a value associated with them.
             foreach (var node in nodesToRemove)
             {
-                _nodeByObjectId.Remove(node.ObjectId);
+                _nodeByObjectId.TryRemove(node.ObjectId, out Node removedValue);
 
                 // This guy should have been at the end of some junctions
                 foreach (var descendant in node.Descendants)

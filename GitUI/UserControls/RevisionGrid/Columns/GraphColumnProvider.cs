@@ -49,7 +49,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
-                Resizable = DataGridViewTriState.False
+                Resizable = DataGridViewTriState.False,
+                MinimumWidth = DpiUtil.Scale(10)
             };
         }
 
@@ -424,7 +425,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             lock (_graphModel)
             {
                 _graphModel.Clear();
-                ////_graphDataCount = 0;
                 _cacheHead = -1;
                 _cacheHeadRow = 0;
                 ClearDrawCache();
