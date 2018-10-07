@@ -275,6 +275,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             this.listView1.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.listView1_DrawItem);
             this.listView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseClick);
             this.listView1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseMove);
+            this.listView1.MouseLeave += new System.EventHandler(this.listView1_MouseLeave);
             this.listView1.GroupMouseUp += new System.EventHandler<ListViewGroupMouseEventArgs>(this.listView1_GroupMouseUp);
             // 
             // clmhdrPath
