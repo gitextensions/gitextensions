@@ -2,15 +2,18 @@
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitUI.Properties;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.AboutBoxDialog
 {
     public sealed class FormContributors : GitExtensionsForm
     {
-        private static readonly string[] tabCaptions = { "The Coders", "The Translators", "The Designers" };
-
-        private readonly TextBox[] _textBoxes = new TextBox[tabCaptions.Length];
-        private readonly TabPage[] _tabPages = new TabPage[tabCaptions.Length];
+        private readonly TranslationString _developers = new TranslationString("Developers");
+        private readonly TranslationString _translators = new TranslationString("Translators");
+        private readonly TranslationString _designers = new TranslationString("Designers");
+        private readonly TranslationString _team = new TranslationString("Team");
+        private readonly TranslationString _contributors = new TranslationString("Contributors");
+        private readonly TranslationString _caption = new TranslationString("The application would not be possible without...");
 
         public FormContributors()
         {
@@ -24,16 +27,21 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
 
                 var tabControl = GetNewTabControl();
 
+                var tabCaptions = new[] { _developers.Text, _translators.Text, _designers.Text };
+                var textBoxes = new TextBox[tabCaptions.Length];
+                var tabPages = new TabPage[tabCaptions.Length];
                 for (var i = 0; i < tabCaptions.Length; i++)
                 {
-                    _textBoxes[i] = GetNewTextBox();
-                    _tabPages[i] = GetNewTabPage(_textBoxes[i], tabCaptions[i]);
+                    textBoxes[i] = GetNewTextBox();
+                    tabPages[i] = GetNewTabPage(textBoxes[i], tabCaptions[i]);
                 }
 
                 const string NEWLINES = @"\r\n?|\n";
-                _textBoxes[0].Text = Regex.Replace(Resources.Coders, NEWLINES, " ");
-                _textBoxes[1].Text = Regex.Replace(Resources.Translators, NEWLINES, " ");
-                _textBoxes[2].Text = Regex.Replace(Resources.Designers, NEWLINES, " ");
+                textBoxes[0].Text = string.Format("{0}:\r\n{1}\r\n\r\n{2}:\r\n{3}",
+                    _team.Text, Regex.Replace(Resources.Team, NEWLINES, " "),
+                    _contributors.Text, Regex.Replace(Resources.Coders, NEWLINES, " "));
+                textBoxes[1].Text = Regex.Replace(Resources.Translators, NEWLINES, " ");
+                textBoxes[2].Text = Regex.Replace(Resources.Designers, NEWLINES, " ");
 
                 Controls.Add(tabControl);
 
@@ -44,7 +52,7 @@ namespace GitUI.CommandsDialogs.AboutBoxDialog
                 MaximizeBox = false;
                 MinimizeBox = false;
                 StartPosition = FormStartPosition.CenterParent;
-                Text = "Thanks to...";
+                Text = _caption.Text;
 
                 ResumeLayout(false);
 
