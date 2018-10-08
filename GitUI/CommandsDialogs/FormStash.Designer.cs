@@ -260,7 +260,6 @@ namespace GitUI.CommandsDialogs
             // 
             // Stashed
             // 
-            this.Stashed.DescribeRevision = null;
             this.Stashed.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Stashed.FilterVisible = false;
             this.Stashed.Location = new System.Drawing.Point(0, 0);
