@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
@@ -6,7 +7,7 @@ namespace GitCommands
 {
     public abstract class SettingsCache : IDisposable
     {
-        private readonly Dictionary<string, object> _byNameMap = new Dictionary<string, object>();
+        private readonly ConcurrentDictionary<string, object> _byNameMap = new ConcurrentDictionary<string, object>();
 
         public void Dispose()
         {
@@ -149,10 +150,13 @@ namespace GitCommands
             {
                 SetValue(name, s);
 
-                _byNameMap[name] = s == null ? (object)null : value;
+                _byNameMap.AddOrUpdate(name, value, (key, oldValue) => value);
             });
         }
 
+        // This method will attempt to get the value from cache first. If the setting is not cached, it will call GetValue.
+        // GetValue will not look in the cache. This method doesn't require a lock. A lock is only required when GetValue is
+        // called. GetValue will set the lock.
         public bool TryGetValue<T>([NotNull] string name, T defaultValue, [NotNull] Func<string, T> decode, out T value)
         {
             if (decode == null)
@@ -160,40 +164,36 @@ namespace GitCommands
                 throw new ArgumentNullException(nameof(decode), $"The decode parameter for setting {name} is null.");
             }
 
-            T val = defaultValue;
+            value = defaultValue;
 
-            bool result = LockedAction(() =>
+            EnsureSettingsAreUpToDate();
+
+            if (_byNameMap.TryGetValue(name, out object o))
             {
-                EnsureSettingsAreUpToDate();
-
-                if (_byNameMap.TryGetValue(name, out object o))
+                switch (o)
                 {
-                    switch (o)
-                    {
-                        case null:
-                            return false;
-                        case T t:
-                            val = t;
-                            return true;
-                        default:
-                            throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
-                    }
+                    case null:
+                        return false;
+                    case T t:
+                        value = t;
+                        return true;
+                    default:
+                        throw new Exception("Incompatible class for settings: " + name + ". Expected: " + typeof(T).FullName + ", found: " + o.GetType().FullName);
                 }
+            }
 
-                string s = GetValue(name);
+            string s = GetValue(name);
 
-                if (s == null)
-                {
-                    val = defaultValue;
-                    return false;
-                }
+            if (s == null)
+            {
+                value = defaultValue;
+                return false;
+            }
 
-                val = decode(s);
-                _byNameMap[name] = val;
-                return true;
-            });
-            value = val;
-            return result;
+            T decodedValue = decode(s);
+            value = decodedValue;
+            _byNameMap.AddOrUpdate(name, decodedValue, (key, oldValue) => decodedValue);
+            return true;
         }
     }
 }
