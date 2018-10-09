@@ -1119,15 +1119,10 @@ namespace GitUI
 
         private void FileStatusListView_KeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
+            switch (e.KeyData)
             {
-                case Keys.A:
+                case Keys.Control | Keys.A:
                     {
-                        if (!e.Control)
-                        {
-                            break;
-                        }
-
                         FileStatusListView.BeginUpdate();
                         try
                         {
