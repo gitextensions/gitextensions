@@ -35,6 +35,11 @@ namespace GitUI
                 bounds.Y + outerMarginTopBottom,
                 Math.Min(bounds.Width - offset, textSize.Width + arrowWidth + paddingLeftRight + paddingLeftRight - 1),
                 backgroundHeight);
+            if (rect.Width == 0 || rect.Height == 0)
+            {
+                // it may happen, as observe in #5396
+                return;
+            }
 
             DrawRefBackground(
                 isRowSelected,
