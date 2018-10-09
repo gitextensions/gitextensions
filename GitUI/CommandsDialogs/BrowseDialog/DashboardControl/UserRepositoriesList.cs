@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         private Brush _branchNameColorBrush = new SolidBrush(DefaultBranchNameColor);
         private Brush _favouriteColorBrush = new SolidBrush(DefaultFavouriteColor);
         private Brush _hoverColorBrush = new SolidBrush(SystemColors.InactiveCaption);
-        private ListViewItem _prevHoveredItem;
+        private ListViewItem _hoveredItem;
         private readonly ListViewGroup _lvgRecentRepositories;
         private readonly IUserRepositoriesListController _controller = new UserRepositoriesListController(RepositoryHistoryManager.Locals);
         private bool _hasInvalidRepos;
@@ -214,6 +214,30 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 _mainBackColor = value;
                 BackColor = value;
                 listView1.BackColor = value;
+            }
+        }
+
+        private ListViewItem HoveredItem
+        {
+            get => _hoveredItem;
+            set
+            {
+                if (value == _hoveredItem)
+                {
+                    return;
+                }
+
+                if (_hoveredItem != null)
+                {
+                    listView1.Invalidate(listView1.GetItemRect(_hoveredItem.Index));
+                }
+
+                if (value != null)
+                {
+                    listView1.Invalidate(listView1.GetItemRect(value.Index));
+                }
+
+                _hoveredItem = value;
             }
         }
 
@@ -480,7 +504,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             var textOffset = spacing2 + imageList1.ImageSize.Width + spacing2;
             int textWidth = AppSettings.RecentReposComboMinWidth > 0 ? AppSettings.RecentReposComboMinWidth : e.Bounds.Width;
 
-            if (e.Item == _prevHoveredItem)
+            if (e.Item == HoveredItem)
             {
                 e.Graphics.FillRectangle(_hoverColorBrush, e.Bounds);
             }
@@ -577,8 +601,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private void listView1_MouseMove(object sender, MouseEventArgs e)
         {
-            var item = listView1.GetItemAt(e.X, e.Y);
-            _prevHoveredItem = item;
+            HoveredItem = listView1.GetItemAt(e.X, e.Y);
+        }
+
+        private void listView1_MouseLeave(object sender, EventArgs e)
+        {
+            HoveredItem = null;
         }
 
         private void mnuConfigure_Click(object sender, EventArgs e)
