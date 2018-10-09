@@ -301,7 +301,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                         SubItems =
                         {
                             { _controller.GetCurrentBranchName(repository.Repo.Path), BranchNameColor, BackColor, _secondaryFont },
-                            { repository.Repo.Category, SystemColors.GrayText, BackColor, _secondaryFont }
+                            //// NB: we can add a 3rd row as well: { repository.Repo.Category, SystemColors.GrayText, BackColor, _secondaryFont }
                         }
                     });
                 }
@@ -535,7 +535,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             var branchBounds = DrawText(e.Graphics, e.Item.SubItems[1].Text, _secondaryFont, _branchNameColorBrush, textWidth, pointBranch, spacing4 * 2);
 
             // render category
-            if (!string.IsNullOrWhiteSpace(e.Item.SubItems[2].Text))
+            if (e.Item.SubItems.Count > 2 && !string.IsNullOrWhiteSpace(e.Item.SubItems[2].Text))
             {
                 var pointCategory = string.IsNullOrWhiteSpace(e.Item.SubItems[1].Text) ?
                                     pointBranch :
