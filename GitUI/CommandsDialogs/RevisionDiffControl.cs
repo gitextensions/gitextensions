@@ -43,7 +43,7 @@ namespace GitUI.CommandsDialogs
         public RevisionDiffControl()
         {
             InitializeComponent();
-            DiffFiles.AlwaysRevisionGroups = true;
+            DiffFiles.GroupByRevision = true;
             InitializeComplete();
             HotkeysEnabled = true;
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);

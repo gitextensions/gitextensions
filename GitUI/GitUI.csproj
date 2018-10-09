@@ -369,6 +369,7 @@
     <Compile Include="SpellChecker\SpellCheckerHelper.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractor.cs" />
     <Compile Include="TaskbarProgress.cs" />
+    <Compile Include="UserControls\GitItemStatusWithParent.cs" />
     <Compile Include="UserControls\RevisionGrid\CellStyle.cs" />
     <Compile Include="UserControls\ListViewGroupHitInfo.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\JunctionColorProvider.cs" />
