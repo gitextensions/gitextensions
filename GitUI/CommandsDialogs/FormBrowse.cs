@@ -437,7 +437,7 @@ namespace GitUI.CommandsDialogs
             LayoutRevisionInfo();
             InternalInitialize(false);
 
-            if (_startWithDashboard)
+            if (_startWithDashboard || !Module.IsValidGitWorkingDir())
             {
                 base.OnLoad(e);
                 return;
