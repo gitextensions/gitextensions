@@ -517,17 +517,24 @@ namespace GitUI
 
         private void SetSelectedIndex(int index)
         {
-            if (_gridView.Rows[index].Selected)
+            try
             {
-                return;
+                if (_gridView.Rows[index].Selected)
+                {
+                    return;
+                }
+
+                _gridView.ClearSelection();
+
+                _gridView.Rows[index].Selected = true;
+                _gridView.CurrentCell = _gridView.Rows[index].Cells[1];
+
+                _gridView.Select();
             }
-
-            _gridView.ClearSelection();
-
-            _gridView.Rows[index].Selected = true;
-            _gridView.CurrentCell = _gridView.Rows[index].Cells[1];
-
-            _gridView.Select();
+            catch (ArgumentException)
+            {
+                // Ignore if selection failed. Datagridview is not threadsafe
+            }
         }
 
         /// <summary>
@@ -1192,17 +1199,17 @@ namespace GitUI
             {
                 case Keys.BrowserBack:
                 case Keys.Left when e.Modifiers.HasFlag(Keys.Alt):
-                {
-                    NavigateBackward();
-                    break;
-                }
+                    {
+                        NavigateBackward();
+                        break;
+                    }
 
                 case Keys.BrowserForward:
                 case Keys.Right when e.Modifiers.HasFlag(Keys.Alt):
-                {
-                    NavigateForward();
-                    break;
-                }
+                    {
+                        NavigateForward();
+                        break;
+                    }
             }
         }
 
@@ -1218,36 +1225,36 @@ namespace GitUI
             switch (e.KeyCode)
             {
                 case Keys.F2:
-                {
-                    InitiateRefAction(
-                        new GitRefListsForRevision(selectedRevision).GetRenameableLocalBranches(),
-                        gitRef => UICommands.StartRenameDialog(this, gitRef.Name),
-                        FormQuickGitRefSelector.Action.Rename);
-                    break;
-                }
+                    {
+                        InitiateRefAction(
+                            new GitRefListsForRevision(selectedRevision).GetRenameableLocalBranches(),
+                            gitRef => UICommands.StartRenameDialog(this, gitRef.Name),
+                            FormQuickGitRefSelector.Action.Rename);
+                        break;
+                    }
 
                 case Keys.Delete:
-                {
-                    InitiateRefAction(
-                        new GitRefListsForRevision(selectedRevision).GetDeletableRefs(Module.GetSelectedBranch()),
-                        gitRef =>
-                        {
-                            if (gitRef.IsTag)
+                    {
+                        InitiateRefAction(
+                            new GitRefListsForRevision(selectedRevision).GetDeletableRefs(Module.GetSelectedBranch()),
+                            gitRef =>
                             {
-                                UICommands.StartDeleteTagDialog(this, gitRef.Name);
-                            }
-                            else if (gitRef.IsRemote)
-                            {
-                                UICommands.StartDeleteRemoteBranchDialog(this, gitRef.Name);
-                            }
-                            else
-                            {
-                                UICommands.StartDeleteBranchDialog(this, gitRef.Name);
-                            }
-                        },
-                        FormQuickGitRefSelector.Action.Delete);
-                    break;
-                }
+                                if (gitRef.IsTag)
+                                {
+                                    UICommands.StartDeleteTagDialog(this, gitRef.Name);
+                                }
+                                else if (gitRef.IsRemote)
+                                {
+                                    UICommands.StartDeleteRemoteBranchDialog(this, gitRef.Name);
+                                }
+                                else
+                                {
+                                    UICommands.StartDeleteBranchDialog(this, gitRef.Name);
+                                }
+                            },
+                            FormQuickGitRefSelector.Action.Delete);
+                        break;
+                    }
             }
         }
 
