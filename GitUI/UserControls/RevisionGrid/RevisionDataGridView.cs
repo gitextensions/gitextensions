@@ -449,11 +449,18 @@ namespace GitUI.UserControls.RevisionGrid
                         int toBeSelectedRowIndex = ToBeSelectedRowIndexes.ElementAt(i);
                         if (count > toBeSelectedRowIndex)
                         {
-                            Rows[toBeSelectedRowIndex].Selected = true;
-                            ToBeSelectedRowIndexes.Remove(toBeSelectedRowIndex);
-                            if (CurrentCell == null)
+                            try
                             {
-                                CurrentCell = Rows[toBeSelectedRowIndex].Cells[1];
+                                ToBeSelectedRowIndexes.Remove(toBeSelectedRowIndex);
+                                Rows[toBeSelectedRowIndex].Selected = true;
+                                if (CurrentCell == null)
+                                {
+                                    CurrentCell = Rows[toBeSelectedRowIndex].Cells[1];
+                                }
+                            }
+                            catch (ArgumentOutOfRangeException)
+                            {
+                                // Not worth crashing for. Ignore exception.
                             }
 
                             break;
