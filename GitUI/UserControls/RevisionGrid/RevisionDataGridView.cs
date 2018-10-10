@@ -177,10 +177,11 @@ namespace GitUI.UserControls.RevisionGrid
             }
         }
 
-        // Contains the object Id's that will be selected as soon as they are loaded
+        // Contains the object Id's that will be selected as soon as they are loaded.
         public HashSet<ObjectId> ToBeSelectedObjectIds { get; set; } = new HashSet<ObjectId>();
 
-        private HashSet<int> ToBeSelectedRowIndexes { get; set; } = new HashSet<int>();
+        // The ToBeSelectedObjectId's should be converted to indexes. This queue is then used to select the correct index. This is used cross-threads.
+        private ConcurrentQueue<int> ToBeSelectedRowIndexes { get; set; } = new ConcurrentQueue<int>();
 
         public bool HasSelection()
         {
@@ -328,11 +329,8 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
             {
-                lock (_backgroundThread)
-                {
-                    ToBeSelectedObjectIds.Remove(revision.ObjectId);
-                    ToBeSelectedRowIndexes.Add(_graphModel.Count - 1);
-                }
+                ToBeSelectedObjectIds.Remove(revision.ObjectId);
+                ToBeSelectedRowIndexes.Enqueue(_graphModel.Count - 1);
             }
 
             UpdateVisibleRowRange();
@@ -351,7 +349,7 @@ namespace GitUI.UserControls.RevisionGrid
             _graphDataCount = 0;
             _revisionByRowIndex.Clear();
             _isRelativeByIndex.Clear();
-            ToBeSelectedRowIndexes = new HashSet<int>();
+            ToBeSelectedRowIndexes = new ConcurrentQueue<int>();
 
             // The graphdata is stored in one of the columnproviders, clear this last
             foreach (var columnProvider in _columnProviders)
@@ -442,29 +440,25 @@ namespace GitUI.UserControls.RevisionGrid
                 else
                 {
                     RowCount = count;
-                    }
+                }
 
-                    for (int i = 0; i < ToBeSelectedRowIndexes.Count; i++)
+                if (ToBeSelectedRowIndexes.Any() &&
+                    ToBeSelectedRowIndexes.TryPeek(out int toBeSelectedRowIndex) &&
+                    count > toBeSelectedRowIndex)
+                {
+                    try
                     {
-                        int toBeSelectedRowIndex = ToBeSelectedRowIndexes.ElementAt(i);
-                        if (count > toBeSelectedRowIndex)
+                        ToBeSelectedRowIndexes.TryDequeue(out int ignore);
+                        Rows[toBeSelectedRowIndex].Selected = true;
+                        if (CurrentCell == null)
                         {
-                            try
-                            {
-                                ToBeSelectedRowIndexes.Remove(toBeSelectedRowIndex);
-                                Rows[toBeSelectedRowIndex].Selected = true;
-                                if (CurrentCell == null)
-                                {
-                                    CurrentCell = Rows[toBeSelectedRowIndex].Cells[1];
-                                }
-                            }
-                            catch (ArgumentOutOfRangeException)
-                            {
-                                // Not worth crashing for. Ignore exception.
-                            }
-
-                            break;
+                            CurrentCell = Rows[toBeSelectedRowIndex].Cells[1];
                         }
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        // Not worth crashing for. Ignore exception.
+                    }
                 }
             }
             finally
