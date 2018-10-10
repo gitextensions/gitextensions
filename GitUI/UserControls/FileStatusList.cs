@@ -108,6 +108,26 @@ namespace GitUI
             }
         }
 
+        private void FileStatusListView_ClientSizeChanged(object sender, EventArgs e)
+        {
+            if (!FileStatusListView.IsHandleCreated)
+            {
+                return;
+            }
+
+            var formatter = new PathFormatter(FileStatusListView.CreateGraphics(), FileStatusListView.Font);
+            foreach (ListViewItem item in FileStatusListView.Items)
+            {
+                var (_, text) = GetDisplayElements(item, formatter, FileStatusListView.ClientSize.Width);
+
+                // let FileStatusListView know the actual displayed text
+                // in order to properly display horizontal scroll
+                item.Text = text;
+            }
+
+            UpdateColumnWidth();
+        }
+
         // Properties
 
         [Browsable(false)]
@@ -493,6 +513,81 @@ namespace GitUI
             }
         }
 
+        private void FileStatusListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        {
+            var item = e.Item;
+            var formatter = new PathFormatter(e.Graphics, FileStatusListView.Font);
+
+            var (image, text) = GetDisplayElements(item, formatter, item.Bounds.Width);
+            if (image == default && text == default)
+            {
+                return;
+            }
+
+            if (image != null)
+            {
+                e.Graphics.DrawImageUnscaled(image, item.Position.X, item.Position.Y);
+            }
+
+            var slashIndex = text.LastIndexOf('/');
+
+            var (textStartX, textWidth) = GetHorizontalTextRange(item, image, item.Bounds.Width);
+            var textRect = new Rectangle(textStartX, item.Bounds.Top, textWidth, item.Bounds.Height);
+
+            if (slashIndex == -1 || slashIndex >= text.Length - 1)
+            {
+                formatter.DrawString(text, textRect, SystemColors.ControlText);
+                return;
+            }
+
+            var prefix = text.Substring(0, slashIndex + 1);
+            var tail = text.Substring(slashIndex + 1);
+
+            var prefixSize = formatter.MeasureString(prefix);
+
+            DrawString(textRect, prefix, SystemColors.GrayText);
+
+            textRect.Offset(prefixSize.Width, 0);
+            DrawString(textRect, tail, SystemColors.ControlText);
+
+            void DrawString(Rectangle rect, string s, Color color)
+            {
+                rect.Intersect(Rectangle.Round(e.Graphics.ClipBounds));
+                if (rect.Width != 0 && rect.Height != 0)
+                {
+                    formatter.DrawString(s, rect, color);
+                }
+            }
+        }
+
+        private static (Image Image, string Text) GetDisplayElements(ListViewItem item, PathFormatter formatter, int itemWidth)
+        {
+            if (!(item?.Tag is GitItemStatus gitItemStatus))
+            {
+                return (default, default);
+            }
+
+            Image image = null;
+            if (item.ImageList != null && item.ImageIndex != -1)
+            {
+                image = item.ImageList.Images[item.ImageIndex];
+            }
+
+            var (_, textWidth) = GetHorizontalTextRange(item, image, itemWidth);
+            var text = formatter.FormatTextForDrawing(textWidth, gitItemStatus.Name, gitItemStatus.OldName);
+            text = AppendItemSubmoduleStatus(text, gitItemStatus);
+
+            return (image, text);
+        }
+
+        private static (int TextStartX, int TextWidth) GetHorizontalTextRange(ListViewItem item, Image image, int itemWidth)
+        {
+            var textStartX = item.Position.X + (image?.Width ?? 0);
+            var textWidth = itemWidth - textStartX;
+
+            return (textStartX, textWidth);
+        }
+
         public void SelectAll()
         {
             try
@@ -738,8 +833,6 @@ namespace GitUI
                 HandleVisibility_NoFilesLabel_FilterComboBox(filesPresent: true);
             }
 
-            FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
-
             HashSet<GitItemStatus> previouslySelectedItems = null;
 
             if (updateCausedByFilter)
@@ -757,7 +850,6 @@ namespace GitUI
             FileStatusListView.Items.Clear();
 
             var truncateMethod = AppSettings.TruncatePathMethod;
-            var clientSizeWidth = truncateMethod == TruncatePathMethod.Compact || truncateMethod == TruncatePathMethod.TrimStart;
             var fileNameOnlyMode = truncateMethod == TruncatePathMethod.FileNameOnly;
 
             var list = new List<ListViewItem>();
@@ -784,6 +876,8 @@ namespace GitUI
                     FileStatusListView.Groups.Add(group);
                 }
 
+                var pathFormatter = new PathFormatter(FileStatusListView.CreateGraphics(), FileStatusListView.Font);
+
                 foreach (var item in statuses)
                 {
                     if (!(_filter?.IsMatch(item.Name) ?? true))
@@ -791,30 +885,7 @@ namespace GitUI
                         continue;
                     }
 
-                    string text;
-                    if (clientSizeWidth)
-                    {
-                        // list-item has client width, so we don't need horizontal scrollbar (which is determined by this text width)
-                        text = string.Empty;
-                    }
-                    else if (fileNameOnlyMode)
-                    {
-                        // we need to put filename in list-item text -> then horizontal scrollbar
-                        // will have proper width (by the longest filename, and not all path)
-                        text = PathFormatter.FormatTextForFileNameOnly(item.Name, item.OldName);
-                        if (!(_filter?.IsMatch(text) ?? true))
-                        {
-                            continue;
-                        }
-
-                        text = AppendItemSubmoduleStatus(text, item);
-                    }
-                    else
-                    {
-                        text = item.Name;
-                    }
-
-                    var listItem = new ListViewItem(text, group)
+                    var listItem = new ListViewItem(string.Empty, group)
                     {
                         ImageIndex = GetItemImageIndex(item)
                     };
@@ -840,6 +911,19 @@ namespace GitUI
                     }
 
                     listItem.Tag = item;
+
+                    var (image, text) = GetDisplayElements(listItem, pathFormatter, FileStatusListView.ClientSize.Width);
+                    if (image == default && text == default)
+                    {
+                        continue;
+                    }
+
+                    if (fileNameOnlyMode && !(_filter?.IsMatch(text) ?? true))
+                    {
+                        continue;
+                    }
+
+                    listItem.Text = text;
                     list.Add(listItem);
                 }
             }
@@ -856,9 +940,8 @@ namespace GitUI
                 }
             }
 
-            FileStatusListView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
             FileStatusListView.EndUpdate();
-
+            UpdateColumnWidth();
             return;
 
             void EnsureSelectedIndexChangeSubscription()
@@ -948,6 +1031,32 @@ namespace GitUI
             }
         }
 
+        private void UpdateColumnWidth()
+        {
+            Task.Run(async () =>
+            {
+                // by changing the width after delay we workaround ListView bug
+                // that renders ListView unusable if column Width is set within any
+                // event handler like SizeChanged, ClientSizeChanged, Layout and etc.
+                // https://github.com/gitextensions/gitextensions/issues/5437
+                await Task.Delay(TimeSpan.FromMilliseconds(10));
+
+                Invoke((Action)delegate
+                {
+                    FileStatusListView.BeginUpdate();
+                    columnHeader.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+
+                    var minWidth = FileStatusListView.ClientSize.Width;
+                    if (columnHeader.Width < minWidth)
+                    {
+                        columnHeader.Width = minWidth;
+                    }
+
+                    FileStatusListView.EndUpdate();
+                });
+            });
+        }
+
         private void HandleVisibility_NoFilesLabel_FilterComboBox(bool filesPresent)
         {
             NoFiles.Visible = !filesPresent;
@@ -996,60 +1105,6 @@ namespace GitUI
             else
             {
                 DoubleClick(sender, e);
-            }
-        }
-
-        private void FileStatusListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
-        {
-            if (!(e.Item?.Tag is GitItemStatus gitItemStatus))
-            {
-                return;
-            }
-
-            var imageWidth = 0;
-            if (e.Item.ImageList != null && e.Item.ImageIndex != -1)
-            {
-                var image = e.Item.ImageList.Images[e.Item.ImageIndex];
-                imageWidth = image.Width;
-                e.Graphics.DrawImageUnscaled(image, e.Item.Position.X, e.Item.Position.Y);
-            }
-
-            var font = FileStatusListView.Font;
-            var textStartX = e.Item.Position.X + imageWidth;
-            var textSpace = e.Item.Bounds.Width - textStartX;
-            var formatter = new PathFormatter(e.Graphics, font);
-
-            var text = formatter.FormatTextForDrawing(textSpace, gitItemStatus.Name, gitItemStatus.OldName);
-
-            text = AppendItemSubmoduleStatus(text, gitItemStatus);
-
-            var slashIndex = text.LastIndexOf('/');
-
-            var textRect = new Rectangle(textStartX, e.Item.Bounds.Top, textSpace, e.Item.Bounds.Height);
-
-            if (slashIndex == -1 || slashIndex >= text.Length - 1)
-            {
-                formatter.DrawString(text, textRect, SystemColors.ControlText);
-                return;
-            }
-
-            var prefix = text.Substring(0, slashIndex + 1);
-            var tail = text.Substring(slashIndex + 1);
-
-            var prefixSize = formatter.MeasureString(prefix);
-
-            DrawString(textRect, prefix, SystemColors.GrayText);
-
-            textRect.Offset(prefixSize.Width, 0);
-            DrawString(textRect, tail, SystemColors.ControlText);
-
-            void DrawString(Rectangle rect, string s, Color color)
-            {
-                rect.Intersect(Rectangle.Round(e.Graphics.ClipBounds));
-                if (rect.Width != 0 && rect.Height != 0)
-                {
-                    formatter.DrawString(s, rect, color);
-                }
             }
         }
 
@@ -1320,6 +1375,12 @@ namespace GitUI
         private void FilterWatermarkLabel_Click(object sender, EventArgs e)
         {
             FilterComboBox.Focus();
+        }
+
+        private void FilterComboBox_SizeChanged(object sender, EventArgs e)
+        {
+            // strangely it does not invalidate itself on resize so its look becomes distorted
+            FilterComboBox.Invalidate();
         }
 
         #endregion

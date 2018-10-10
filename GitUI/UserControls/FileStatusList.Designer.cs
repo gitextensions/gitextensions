@@ -1,5 +1,4 @@
-﻿using GitUI.UserControls;
-namespace GitUI
+﻿namespace GitUI
 {
     partial class FileStatusList
     {
@@ -31,7 +30,7 @@ namespace GitUI
         {
             this.components = new System.ComponentModel.Container();
             this.FileStatusListView = new GitUI.UserControls.ExListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.NoFiles = new System.Windows.Forms.Label();
             this.FilterComboBox = new System.Windows.Forms.ComboBox();
             this.FilterWatermarkLabel = new System.Windows.Forms.Label();
@@ -43,7 +42,7 @@ namespace GitUI
             // 
             this.FileStatusListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.FileStatusListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
+            this.columnHeader});
             this.FileStatusListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileStatusListView.FullRowSelect = true;
             this.FileStatusListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
@@ -64,12 +63,13 @@ namespace GitUI
             this.FileStatusListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FileStatusListView_KeyDown);
             this.FileStatusListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.FileStatusListView_MouseDown);
             this.FileStatusListView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FileStatusListView_MouseMove);
-            this.FileStatusListView.GroupMouseDown += new System.EventHandler<ListViewGroupMouseEventArgs>(this.FileStatusListView_GroupMouseDown);
+            this.FileStatusListView.GroupMouseDown += new System.EventHandler<GitUI.UserControls.ListViewGroupMouseEventArgs>(this.FileStatusListView_GroupMouseDown);
+            this.FileStatusListView.ClientSizeChanged += new System.EventHandler(this.FileStatusListView_ClientSizeChanged);
             // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "Files";
-            this.columnHeader1.Width = 678;
+            this.columnHeader.Text = "Files";
+            this.columnHeader.Width = 678;
             // 
             // NoFiles
             // 
@@ -97,6 +97,7 @@ namespace GitUI
             this.FilterComboBox.GotFocus += new System.EventHandler(this.FilterComboBox_GotFocus);
             this.FilterComboBox.LostFocus += new System.EventHandler(this.FilterComboBox_LostFocus);
             this.FilterComboBox.MouseEnter += new System.EventHandler(this.FilterComboBox_MouseEnter);
+            this.FilterComboBox.SizeChanged += new System.EventHandler(this.FilterComboBox_SizeChanged);
             // 
             // FilterWatermarkLabel
             // 
@@ -145,9 +146,9 @@ namespace GitUI
 
         #endregion
 
-        private ExListView FileStatusListView;
+        private GitUI.UserControls.ExListView FileStatusListView;
         private System.Windows.Forms.Label NoFiles;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader;
         private System.Windows.Forms.ComboBox FilterComboBox;
         private System.Windows.Forms.Label FilterWatermarkLabel;
         private System.Windows.Forms.ToolTip FilterToolTip;
