@@ -21,7 +21,7 @@ namespace GitUI.UserControls.RevisionGrid
             ToIndex = toIndex;
         }
 
-        public int Count => ToIndex - FromIndex;
+        public int Count => ToIndex - FromIndex + 1;
 
         public bool Contains(int index) => index >= FromIndex && index <= ToIndex;
 
