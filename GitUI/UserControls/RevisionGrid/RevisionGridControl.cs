@@ -1082,16 +1082,18 @@ namespace GitUI
 
         private void CheckAndRepairInitialRevision()
         {
-            if (_gridView.ToBeSelectedObjectIds.Any())
+            // Check if there is any commit that couldn't be selected.
+            if (!_gridView.ToBeSelectedObjectIds.Any())
             {
-                int index = SearchRevision(_gridView.ToBeSelectedObjectIds.First());
-                if (index >= 0)
-                {
-                    SetSelectedIndex(index);
-                }
+                return;
             }
 
-            return;
+            // Search for the commitid that was not selected in the grid. If not found, select the first parent.
+            int index = SearchRevision(_gridView.ToBeSelectedObjectIds.First());
+            if (index >= 0)
+            {
+                SetSelectedIndex(index);
+            }
 
             int SearchRevision(ObjectId objectId)
             {
