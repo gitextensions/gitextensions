@@ -157,10 +157,7 @@ namespace GitUI.UserControls.RevisionGrid
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2002:DoNotLockOnObjectsWithWeakIdentity", Justification = "It looks like such lock was made intentionally but it is better to rewrite this")]
         protected override void Dispose(bool disposing)
         {
-            lock (_backgroundEvent)
-            {
-                _shouldRun = false;
-            }
+            _shouldRun = false;
 
             if (disposing)
             {
@@ -217,43 +214,40 @@ namespace GitUI.UserControls.RevisionGrid
                     return;
                 }
 
-                lock (_backgroundEvent)
+                if (value == null)
                 {
-                    if (value == null)
-                    {
-                        // Setting CurrentCell to null internally calls ClearSelection
-                        CurrentCell = null;
-                        return;
-                    }
+                    // Setting CurrentCell to null internally calls ClearSelection
+                    CurrentCell = null;
+                    return;
+                }
 
-                    DataGridViewCell currentCell = null;
+                DataGridViewCell currentCell = null;
 
-                    foreach (var guid in value)
+                foreach (var guid in value)
+                {
+                    if (TryGetRevisionIndex(guid) is int index &&
+                        index >= 0 &&
+                        index < Rows.Count)
                     {
-                        if (TryGetRevisionIndex(guid) is int index &&
-                            index >= 0 &&
-                            index < Rows.Count)
+                        Rows[index].Selected = true;
+
+                        if (currentCell == null)
                         {
-                            Rows[index].Selected = true;
-
-                            if (currentCell == null)
-                            {
-                                // Set the current cell to the first item. We use cell
-                                // 1 because cell 0 could be hidden if they've chosen to
-                                // not see the graph
-                                currentCell = Rows[index].Cells[1];
-                            }
+                            // Set the current cell to the first item. We use cell
+                            // 1 because cell 0 could be hidden if they've chosen to
+                            // not see the graph
+                            currentCell = Rows[index].Cells[1];
                         }
                     }
-
-                    // Only clear selection if we have a current cell
-                    if (currentCell != null)
-                    {
-                        ClearSelection();
-                    }
-
-                    CurrentCell = currentCell;
                 }
+
+                // Only clear selection if we have a current cell
+                if (currentCell != null)
+                {
+                    ClearSelection();
+                }
+
+                CurrentCell = currentCell;
             }
         }
 
@@ -458,16 +452,13 @@ namespace GitUI.UserControls.RevisionGrid
 
                     if (AppSettings.ShowRevisionGridGraphColumn)
                     {
-                        lock (_backgroundEvent)
-                        {
-                            int scrollTo = _backgroundScrollTo;
+                        int scrollTo = _backgroundScrollTo;
 
-                            int curCount = _graphDataCount;
-                            _graphDataCount = _graphModel.CachedCount;
+                        int curCount = _graphDataCount;
+                        _graphDataCount = _graphModel.CachedCount;
 
-                            UpdateGraph(curCount, Math.Min(curCount + 150, scrollTo));
-                            keepRunning = curCount < scrollTo;
-                        }
+                        UpdateGraph(curCount, Math.Min(curCount + 150, scrollTo));
+                        keepRunning = curCount < scrollTo;
 
                         if (!keepRunning)
                         {
