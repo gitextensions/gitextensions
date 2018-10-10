@@ -416,26 +416,23 @@ namespace GitUI.UserControls.RevisionGrid
                 return;
             }
 
-            lock (_backgroundThread)
-            {
-                UpdatingVisibleRows = true;
+            UpdatingVisibleRows = true;
 
-                try
+            try
+            {
+                if (CurrentCell == null)
                 {
-                    if (CurrentCell == null)
-                    {
-                        RowCount = count;
-                        CurrentCell = null;
-                    }
-                    else
-                    {
-                        RowCount = count;
-                    }
+                    RowCount = count;
+                    CurrentCell = null;
                 }
-                finally
+                else
                 {
-                    UpdatingVisibleRows = false;
+                    RowCount = count;
                 }
+            }
+            finally
+            {
+                UpdatingVisibleRows = false;
             }
         }
 
@@ -463,11 +460,7 @@ namespace GitUI.UserControls.RevisionGrid
                     {
                         lock (_backgroundEvent)
                         {
-                            int scrollTo;
-                            lock (_backgroundThread)
-                            {
-                                scrollTo = _backgroundScrollTo;
-                            }
+                            int scrollTo = _backgroundScrollTo;
 
                             int curCount = _graphDataCount;
                             _graphDataCount = _graphModel.CachedCount;
@@ -498,10 +491,7 @@ namespace GitUI.UserControls.RevisionGrid
                     if (!_graphModel.CacheTo(rowIndex))
                     {
                         Debug.WriteLine("Cached item FAILED {0}", rowIndex);
-                        lock (_backgroundThread)
-                        {
-                            _backgroundScrollTo = rowIndex;
-                        }
+                        _backgroundScrollTo = rowIndex;
 
                         break;
                     }
