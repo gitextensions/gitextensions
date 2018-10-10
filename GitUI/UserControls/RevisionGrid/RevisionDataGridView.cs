@@ -345,7 +345,7 @@ namespace GitUI.UserControls.RevisionGrid
                 columnProvider.Clear();
             }
 
-            ////// Redraw
+            // Redraw
             UpdateVisibleRowRange();
             Invalidate(invalidateChildren: true);
 

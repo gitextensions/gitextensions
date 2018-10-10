@@ -140,7 +140,7 @@ namespace GitUI
                 BorderStyle = BorderStyle.None,
                 ForeColor = SystemColors.InfoText,
                 BackColor = SystemColors.Info,
-                Font = new Font(FontFamily.GenericSansSerif, 11, FontStyle.Bold),
+                Font = AppSettings.Font,
                 Visible = false,
                 UseMnemonic = false,
                 AutoSize = true,
