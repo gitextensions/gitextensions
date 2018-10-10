@@ -140,7 +140,6 @@ namespace GitUI.CommandsDialogs
 
         public void DisplayDiffTab()
         {
-            DiffText.SaveCurrentScrollPos();
             var revisions = _revisionGrid.GetSelectedRevisions();
             DiffFiles.SetDiffs(revisions);
             if (_oldDiffItem != null && DiffFiles.Revision?.Guid == _oldRevision)

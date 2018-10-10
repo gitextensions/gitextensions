@@ -278,6 +278,8 @@ namespace GitCommands
             }
         }
 
+        IConfigFileSettings IGitModule.EffectiveConfigFile => EffectiveConfigFile;
+
         public ConfigFileSettings LocalConfigFile => new ConfigFileSettings(null, EffectiveConfigFile.SettingsCache);
 
         IConfigFileSettings IGitModule.LocalConfigFile => LocalConfigFile;

@@ -287,9 +287,6 @@ namespace GitUI.CommandsDialogs
 
         private void FileChangesSelectionChanged(object sender, EventArgs e)
         {
-            View.SaveCurrentScrollPos();
-            Diff.SaveCurrentScrollPos();
-
             UpdateSelectedFileViewers();
         }
 
@@ -366,11 +363,8 @@ namespace GitUI.CommandsDialogs
             }
             else if (tabControl1.SelectedTab == ViewTab)
             {
-                var scrollPos = View.ScrollPos;
-
                 View.Encoding = Diff.Encoding;
                 View.ViewGitItemRevisionAsync(fileName, revision.ObjectId);
-                View.ScrollPos = scrollPos;
             }
             else if (tabControl1.SelectedTab == DiffTab)
             {

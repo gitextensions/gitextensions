@@ -150,7 +150,6 @@ See the changes in the commit form.");
                 if (tvGitTree.SelectedNode != null)
                 {
                     var node = tvGitTree.SelectedNode;
-                    FileText.SaveCurrentScrollPos();
                     _lastSelectedNodes.Clear();
                     while (node != null)
                     {
@@ -196,12 +195,6 @@ See the changes in the commit form.");
                             lastMatchedNode = matchedNode;
                             currentNodes = matchedNode.Nodes;
                         }
-                    }
-
-                    // if there is no exact match, don't restore scroll position
-                    if (lastMatchedNode != matchedNode)
-                    {
-                        FileText.ResetCurrentScrollPos();
                     }
 
                     tvGitTree.SelectedNode = lastMatchedNode;
