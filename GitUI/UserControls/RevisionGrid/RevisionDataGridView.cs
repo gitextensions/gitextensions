@@ -459,15 +459,15 @@ namespace GitUI.UserControls.RevisionGrid
 
                         UpdateGraph(curCount, Math.Min(curCount + 150, scrollTo));
                         keepRunning = curCount < scrollTo;
-
-                        if (!keepRunning)
-                        {
-                            this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
-                        }
                     }
                     else
                     {
                         UpdateGraph(_graphModel.Count, _graphModel.Count);
+                    }
+
+                    if (!keepRunning)
+                    {
+                        this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
                     }
                 }
             }
