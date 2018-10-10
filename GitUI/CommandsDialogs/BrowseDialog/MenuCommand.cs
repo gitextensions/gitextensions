@@ -35,7 +35,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 Text = menuCommand.Text,
                 Image = menuCommand.Image,
                 ShortcutKeys = menuCommand.ShortcutKeys,
-                ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString
+                ShortcutKeyDisplayString = menuCommand.ShortcutKeyDisplayString,
+                ToolTipText = menuCommand.ToolTipText,
             };
 
             toolStripMenuItem.Click += (obj, sender) =>
@@ -69,6 +70,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// text of the menu item
         /// </summary>
         public string Text { get; set; }
+
+        /// <summary>
+        /// tooltip text of the menu item
+        /// </summary>
+        public string ToolTipText { get; set; }
 
         /// <summary>
         /// image of the menu item

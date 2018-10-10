@@ -57,6 +57,7 @@ namespace GitUI
         private readonly TranslationString _rebaseBranchInteractive = new TranslationString("Rebase branch interactively.");
         private readonly TranslationString _areYouSureRebase = new TranslationString("Are you sure you want to rebase? This action will rewrite commit history.");
         private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
+        private readonly TranslationString _noMergeBaseCommit = new TranslationString("There is no merge base commit between these 2 commits.");
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
@@ -2192,6 +2193,24 @@ namespace GitUI
             }
         }
 
+        private void goToMergeBaseCommitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedRevision = LatestSelectedRevision;
+            if (selectedRevision == null)
+            {
+                return;
+            }
+
+            var mergeBaseCommitId = UICommands.GitModule.RunGitCmd("merge-base HEAD " + selectedRevision.Guid).TrimEnd('\n');
+            if (string.IsNullOrWhiteSpace(mergeBaseCommitId))
+            {
+                MessageBox.Show(_noMergeBaseCommit.Text);
+                return;
+            }
+
+            SetSelectedRevision(ObjectId.Parse(mergeBaseCommitId));
+        }
+
         private void goToChildToolStripMenuItem_Click()
         {
             var r = LatestSelectedRevision;
@@ -2539,6 +2558,7 @@ namespace GitUI
             CompareToCurrentBranch = 28,
             CompareToBranch = 29,
             CompareSelectedCommits = 30,
+            GoToMergeBaseCommit = 31,
         }
 
         protected override bool ExecuteCommand(int cmd)
@@ -2562,6 +2582,7 @@ namespace GitUI
                 case Commands.SelectCurrentRevision: SetSelectedRevision(new GitRevision(CurrentCheckout)); break;
                 case Commands.GoToCommit: MenuCommands.GotoCommitExecute(); break;
                 case Commands.GoToParent: goToParentToolStripMenuItem_Click(); break;
+                case Commands.GoToMergeBaseCommit: goToMergeBaseCommitToolStripMenuItem_Click(null, null); break;
                 case Commands.GoToChild: goToChildToolStripMenuItem_Click(); break;
                 case Commands.ToggleHighlightSelectedBranch: ToggleHighlightSelectedBranch(); break;
                 case Commands.NextQuickSearch: _quickSearchProvider.NextResult(down: true); break;

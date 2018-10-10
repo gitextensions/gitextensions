@@ -107,6 +107,14 @@ namespace GitUI.UserControls.RevisionGrid
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.GoToParent),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Commands.GoToParent)
                 },
+                new MenuCommand
+                {
+                    Name = "GotoMergeBaseCommit",
+                    Text = "Go to merge base commit",
+                    ToolTipText = "Go to the merge base commit (last common commit) between the currently checked out commit (HEAD) and the currently selected commit",
+                    ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.GoToMergeBaseCommit),
+                    ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Commands.GoToMergeBaseCommit)
+                },
                 MenuCommand.CreateSeparator(),
                 new MenuCommand
                 {
@@ -129,6 +137,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "QuickSearch",
                     Text = "Quick search",
+                    ToolTipText = _quickSearchQuickHelp.Text,
                     ExecuteAction = () => MessageBox.Show(_quickSearchQuickHelp.Text)
                 },
                 new MenuCommand
