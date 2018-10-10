@@ -526,12 +526,12 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (fromIndex >= _graphModel.Count)
             {
-                fromIndex = _graphModel.Count;
+                fromIndex = _graphModel.Count - 1;
             }
 
             if (toIndex >= _graphModel.Count)
             {
-                toIndex = _graphModel.Count;
+                toIndex = _graphModel.Count - 1;
             }
 
             if (toIndex > 0)
