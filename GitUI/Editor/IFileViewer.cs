@@ -43,7 +43,7 @@ namespace GitUI.Editor
         int GetSelectionPosition();
         int GetSelectionLength();
         void AddPatchHighlighting();
-        Action OpenWithDifftool { get;  }
+        Action OpenWithDifftool { get; }
         int ScrollPos { get; set; }
 
         bool ShowLineNumbers { get; set; }

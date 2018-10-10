@@ -6,11 +6,10 @@ using GitCommands;
 using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
-using ResourceManager;
 
 namespace GitUI.Editor
 {
-    public partial class FileViewerInternal : GitExtensionsControl, IFileViewer
+    public partial class FileViewerInternal : GitModuleControl, IFileViewer
     {
         public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
         public new event MouseEventHandler MouseMove;
@@ -21,17 +20,14 @@ namespace GitUI.Editor
 
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
         private readonly DiffViewerLineNumberControl _lineNumbersControl;
-        private readonly Func<GitModule> _moduleProvider;
 
         private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
         private bool _isGotoLineUIApplicable = true;
 
         public Action OpenWithDifftool { get; private set; }
 
-        public FileViewerInternal(Func<GitModule> moduleProvider)
+        public FileViewerInternal()
         {
-            _moduleProvider = moduleProvider;
-
             InitializeComponent();
             InitializeComplete();
 
@@ -98,7 +94,7 @@ namespace GitUI.Editor
             set => TextEditor.ShowLineNumbers = value;
         }
 
-        public void SetText(string text, Action openWithDifftool, bool isDiff)
+        public void SetText(string text, Action openWithDifftool, bool isDiff = false)
         {
             OpenWithDifftool = openWithDifftool;
             _lineNumbersControl.Clear(isDiff);
@@ -146,11 +142,11 @@ namespace GitUI.Editor
 
             if (filename.EndsWith("git-rebase-todo"))
             {
-                highlightingStrategy = new RebaseTodoHighlightingStrategy(_moduleProvider());
+                highlightingStrategy = new RebaseTodoHighlightingStrategy(Module);
             }
             else if (filename.EndsWith("COMMIT_EDITMSG"))
             {
-                highlightingStrategy = new CommitMessageHighlightingStrategy(_moduleProvider());
+                highlightingStrategy = new CommitMessageHighlightingStrategy(Module);
             }
             else
             {
