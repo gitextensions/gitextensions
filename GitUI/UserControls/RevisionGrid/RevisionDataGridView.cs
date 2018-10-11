@@ -478,7 +478,7 @@ namespace GitUI.UserControls.RevisionGrid
                     return;
                 }
 
-                if (keepRunning || _backgroundEvent.WaitOne(500))
+                if (keepRunning || _backgroundEvent.WaitOne(200))
                 {
                     keepRunning = false;
 
@@ -505,6 +505,13 @@ namespace GitUI.UserControls.RevisionGrid
                     if (!keepRunning)
                     {
                         this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
+                    }
+                }
+                else
+                {
+                    if (RowCount < _graphModel.Count)
+                    {
+                        this.InvokeAsync(() => { SetRowCount(_graphModel.Count); }).FileAndForget();
                     }
                 }
             }
