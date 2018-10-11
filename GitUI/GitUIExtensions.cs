@@ -100,45 +100,41 @@ namespace GitUI
             if (firstRevision == null)
             {
                 // The previous commit does not exist, nothing to compare with
-                if (file.TreeGuid != null)
-                {
-                    if (secondRevision == null)
-                    {
-                        throw new ArgumentNullException(nameof(secondRevision));
-                    }
-
-                    return diffViewer.ViewGitItemRevisionAsync(file.Name, secondRevision);
-                }
-                else
+                if (file.TreeGuid == null)
                 {
                     return diffViewer.ViewGitItemAsync(file.Name, file.TreeGuid);
                 }
-            }
-            else
-            {
-                return diffViewer.ViewPatchAsync(() =>
+
+                if (secondRevision == null)
                 {
-                    string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
-                    if (selectedPatch == null)
-                    {
-                        return (text: defaultText, openWithDifftool: null /* not applicable */);
-                    }
+                    throw new ArgumentNullException(nameof(secondRevision));
+                }
 
-                    return (text: selectedPatch,
-                            openWithDifftool: openWithDifftool ?? OpenWithDifftool);
-
-                    void OpenWithDifftool()
-                    {
-                        diffViewer.Module.OpenWithDifftool(
-                            file.Name,
-                            null,
-                            firstRevision.ToString(),
-                            firstRevision.ToString(),
-                            "",
-                            file.IsTracked);
-                    }
-                });
+                return diffViewer.ViewGitItemRevisionAsync(file.Name, secondRevision);
             }
+
+            return diffViewer.ViewPatchAsync(() =>
+            {
+                string selectedPatch = diffViewer.GetSelectedPatch(firstRevision, secondRevision, file);
+                if (selectedPatch == null)
+                {
+                    return (text: defaultText, openWithDifftool: null /* not applicable */);
+                }
+
+                return (text: selectedPatch,
+                    openWithDifftool: openWithDifftool ?? OpenWithDifftool);
+
+                void OpenWithDifftool()
+                {
+                    diffViewer.Module.OpenWithDifftool(
+                        file.Name,
+                        null,
+                        firstRevision.ToString(),
+                        firstRevision.ToString(),
+                        "",
+                        file.IsTracked);
+                }
+            });
         }
 
         public static void RemoveIfExists(this TabControl tabControl, TabPage page)
