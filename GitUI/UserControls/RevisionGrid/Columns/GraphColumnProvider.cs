@@ -50,7 +50,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 ReadOnly = true,
                 SortMode = DataGridViewColumnSortMode.NotSortable,
                 Resizable = DataGridViewTriState.False,
-                MinimumWidth = DpiUtil.Scale(10)
+                MinimumWidth = DpiUtil.Scale(5)
             };
         }
 
@@ -469,7 +469,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 return;
             }
 
-            int laneCount = 1;
+            int laneCount = 0;
             lock (_graphModel)
             {
                 foreach (var index in range)
@@ -492,7 +492,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     ? 1
                     : MaxLanes;
 
-            laneCount = Math.Min(Math.Max(1, laneCount), maxLanes);
+            laneCount = Math.Min(laneCount, maxLanes);
             var columnWidth = (_laneWidth * laneCount) + ColumnLeftMargin;
             if (Column.Width != columnWidth && columnWidth > Column.MinimumWidth)
             {
