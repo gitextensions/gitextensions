@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitExtUtils.GitUI;
 using GitUI.Avatars;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
@@ -62,7 +63,8 @@ namespace GitUI
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
-        private readonly Control _loadingControl;
+        private readonly Control _loadingControlAsync;
+        private readonly Control _loadingControlSync;
         private readonly RevisionGridToolTipProvider _toolTipProvider;
         private readonly QuickSearchProvider _quickSearchProvider;
         private readonly ParentChildNavigationHistory _parentChildNavigationHistory;
@@ -132,11 +134,9 @@ namespace GitUI
             InitializeComponent();
             InitializeComplete();
 
-            _loadingControl = new Label
+            _loadingControlAsync = new Label
             {
-                Location = new Point(0, 0),
-                Dock = DockStyle.Right,
-                Padding = new Padding(7, 5, 5, 5),
+                Padding = DpiUtil.Scale(new Padding(7, 5, 5, 5)),
                 BorderStyle = BorderStyle.None,
                 ForeColor = SystemColors.InfoText,
                 BackColor = SystemColors.Info,
@@ -145,6 +145,13 @@ namespace GitUI
                 UseMnemonic = false,
                 AutoSize = true,
                 Text = _strLoading.Text
+            };
+
+            _loadingControlSync = new WaitSpinner
+            {
+                BackColor = SystemColors.Window,
+                Visible = false,
+                Size = DpiUtil.Scale(new Size(50, 50))
             };
 
             // Delay raising the SelectionChanged event for a barely noticeable period to throttle
@@ -699,11 +706,18 @@ namespace GitUI
             return false;
         }
 
-        private void ShowLoading(bool show = true)
+        private void ShowLoading(bool sync = true)
         {
-            _loadingControl.Visible = show;
-            Controls.Add(_loadingControl);
-            _loadingControl.BringToFront();
+            _loadingControlSync.Visible = sync;
+            _loadingControlSync.Left = (ClientSize.Width - _loadingControlSync.Width) / 2;
+            _loadingControlSync.Top = (ClientSize.Height - _loadingControlSync.Height) / 2;
+
+            _loadingControlAsync.Visible = !sync;
+            _loadingControlAsync.Left = ClientSize.Width - _loadingControlSync.Width;
+            Controls.Add(_loadingControlSync);
+            Controls.Add(_loadingControlAsync);
+            _loadingControlSync.BringToFront();
+            _loadingControlAsync.BringToFront();
         }
 
         public void ForceRefreshRevisions()
@@ -871,6 +885,11 @@ namespace GitUI
             void OnRevisionRead(GitRevision revision)
             {
                 revisionCount++;
+
+                if (revisionCount < 2)
+                {
+                    this.InvokeAsync(() => { ShowLoading(false); }).FileAndForget();
+                }
 
                 if (_filteredCurrentCheckout == null)
                 {
