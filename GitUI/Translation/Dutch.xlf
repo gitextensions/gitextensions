@@ -2529,13 +2529,13 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="_pullFetch.Text">
-        <source>Pull - fetch</source>
-        <target>Pullen - fetch</target>
+        <source>Fetch</source>
+        <target>Fetch</target>
         
       </trans-unit>
       <trans-unit id="_pullFetchAll.Text">
-        <source>Pull - fetch all</source>
-        <target>Pullen - fetch alles</target>
+        <source>Fetch all</source>
+        <target>Fetch alles</target>
         
       </trans-unit>
       <trans-unit id="_pullMerge.Text">

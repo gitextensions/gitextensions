@@ -2530,13 +2530,13 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="_pullFetch.Text">
-        <source>Pull - fetch</source>
-        <target>拉取 - 获取</target>
+        <source>Fetch</source>
+        <target>获取</target>
         
       </trans-unit>
       <trans-unit id="_pullFetchAll.Text">
-        <source>Pull - fetch all</source>
-        <target>拉取 - 获取全部</target>
+        <source>Fetch all</source>
+        <target>获取全部</target>
         
       </trans-unit>
       <trans-unit id="_pullMerge.Text">

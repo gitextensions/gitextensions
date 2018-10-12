@@ -2517,13 +2517,13 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="_pullFetch.Text">
-        <source>Pull - fetch</source>
-        <target>[Ƥŭŀŀ - ƒḗŧƈħ ǅϵϕẛ ǅ ǋϕϕ]</target>
+        <source>Fetch</source>
+        <target>[Fḗŧƈħ ǅϵϕẛ ǅ ǋϕϕ]</target>
         
       </trans-unit>
       <trans-unit id="_pullFetchAll.Text">
-        <source>Pull - fetch all</source>
-        <target>[Ƥŭŀŀ - ƒḗŧƈħ ȧŀŀ ǅ靐ςς ς ϵ鶱衋ϖ]</target>
+        <source>Fetch all</source>
+        <target>[Fḗŧƈħ ȧŀŀ ǅ靐ςς ς ϵ鶱衋ϖ]</target>
         
       </trans-unit>
       <trans-unit id="_pullMerge.Text">

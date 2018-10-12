@@ -2485,13 +2485,13 @@ confrontare con la prima:</target>
         
       </trans-unit>
       <trans-unit id="_pullFetch.Text">
-        <source>Pull - fetch</source>
-        <target>Pull - fetch</target>
+        <source>Fetch</source>
+        <target>Fetch</target>
         
       </trans-unit>
       <trans-unit id="_pullFetchAll.Text">
-        <source>Pull - fetch all</source>
-        <target>Pull - fetch all</target>
+        <source>Fetch all</source>
+        <target>Fetch all</target>
         
       </trans-unit>
       <trans-unit id="_pullMerge.Text">

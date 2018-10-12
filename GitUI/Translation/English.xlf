@@ -1945,11 +1945,11 @@ compare with first:</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullFetch.Text">
-        <source>Pull - fetch</source>
+        <source>Fetch</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullFetchAll.Text">
-        <source>Pull - fetch all</source>
+        <source>Fetch all</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullMerge.Text">

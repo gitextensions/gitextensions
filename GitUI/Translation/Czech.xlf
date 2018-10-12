@@ -2492,13 +2492,13 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="_pullFetch.Text">
-        <source>Pull - fetch</source>
-        <target>Stáhnout - přenést</target>
+        <source>Fetch</source>
+        <target>Přenést</target>
         
       </trans-unit>
       <trans-unit id="_pullFetchAll.Text">
-        <source>Pull - fetch all</source>
-        <target>Stáhnout - přenést všechny</target>
+        <source>Fetch all</source>
+        <target>Přenést všechny</target>
         
       </trans-unit>
       <trans-unit id="_pullMerge.Text">
