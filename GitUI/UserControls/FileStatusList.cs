@@ -966,9 +966,17 @@ namespace GitUI
 
         private void UpdateColumnWidth()
         {
+            FileStatusListView.BeginUpdate();
+            columnHeader.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+            var minWidth = FileStatusListView.ClientSize.Width;
+            if (columnHeader.Width < minWidth)
+            {
+                columnHeader.Width = minWidth;
+            }
+
             Task.Run(async () =>
             {
-                // by changing the width after delay we workaround ListView bug
+                // by postponing ListView redraw we workaround the bug
                 // that renders ListView unusable if column Width is set within any
                 // event handler like SizeChanged, ClientSizeChanged, Layout and etc.
                 // https://github.com/gitextensions/gitextensions/issues/5437
@@ -976,15 +984,6 @@ namespace GitUI
 
                 Invoke((Action)delegate
                 {
-                    FileStatusListView.BeginUpdate();
-                    columnHeader.AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
-
-                    var minWidth = FileStatusListView.ClientSize.Width;
-                    if (columnHeader.Width < minWidth)
-                    {
-                        columnHeader.Width = minWidth;
-                    }
-
                     FileStatusListView.EndUpdate();
                 });
             });
