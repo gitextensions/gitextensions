@@ -1110,12 +1110,15 @@ namespace GitUI
                     return exactIndex;
                 }
 
-                // Not found, so search for its parents
-                foreach (var parentId in TryGetParents(objectId))
+                if (!objectId.IsArtificial)
                 {
-                    if (_gridView.TryGetRevisionIndex(parentId) is int parentIndex)
+                    // Not found, so search for its parents
+                    foreach (var parentId in TryGetParents(objectId))
                     {
-                        return parentIndex;
+                        if (_gridView.TryGetRevisionIndex(parentId) is int parentIndex)
+                        {
+                            return parentIndex;
+                        }
                     }
                 }
 
