@@ -327,9 +327,8 @@ namespace GitUI.UserControls.RevisionGrid
         {
             _graphModel.Add(revision, types);
 
-            if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
+            if (ToBeSelectedObjectIds.Remove(revision.ObjectId))
             {
-                ToBeSelectedObjectIds.Remove(revision.ObjectId);
                 ToBeSelectedRowIndexes.Enqueue(_graphModel.Count - 1);
             }
 
@@ -442,13 +441,12 @@ namespace GitUI.UserControls.RevisionGrid
                     RowCount = count;
                 }
 
-                if (ToBeSelectedRowIndexes.Any() &&
-                    ToBeSelectedRowIndexes.TryPeek(out int toBeSelectedRowIndex) &&
+                if (ToBeSelectedRowIndexes.TryPeek(out int toBeSelectedRowIndex) &&
                     count > toBeSelectedRowIndex)
                 {
                     try
                     {
-                        ToBeSelectedRowIndexes.TryDequeue(out int ignore);
+                        ToBeSelectedRowIndexes.TryDequeue(out _);
                         Rows[toBeSelectedRowIndex].Selected = true;
                         if (CurrentCell == null)
                         {

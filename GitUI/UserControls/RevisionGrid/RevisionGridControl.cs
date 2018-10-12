@@ -1124,8 +1124,7 @@ namespace GitUI
             }
         }
 
-        [ContractAnnotation("=>false,parentIds:null")]
-        [ContractAnnotation("=>true,parentIds:notnull")]
+        [NotNull]
         private IEnumerable<ObjectId> TryGetParents(ObjectId objectId)
         {
             var args = new ArgumentBuilder
