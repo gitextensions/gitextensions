@@ -108,26 +108,6 @@ namespace GitUI
             }
         }
 
-        private void FileStatusListView_ClientSizeChanged(object sender, EventArgs e)
-        {
-            if (!FileStatusListView.IsHandleCreated)
-            {
-                return;
-            }
-
-            var formatter = new PathFormatter(FileStatusListView.CreateGraphics(), FileStatusListView.Font);
-            foreach (ListViewItem item in FileStatusListView.Items)
-            {
-                var (_, text) = GetDisplayElements(item, formatter, FileStatusListView.ClientSize.Width);
-
-                // let FileStatusListView know the actual displayed text
-                // in order to properly display horizontal scroll
-                item.Text = text;
-            }
-
-            UpdateColumnWidth();
-        }
-
         // Properties
 
         [Browsable(false)]
@@ -510,53 +490,6 @@ namespace GitUI
                 }
 
                 return -1;
-            }
-        }
-
-        private void FileStatusListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
-        {
-            var item = e.Item;
-            var formatter = new PathFormatter(e.Graphics, FileStatusListView.Font);
-
-            var (image, text) = GetDisplayElements(item, formatter, item.Bounds.Width);
-            if (image == default && text == default)
-            {
-                return;
-            }
-
-            if (image != null)
-            {
-                e.Graphics.DrawImageUnscaled(image, item.Position.X, item.Position.Y);
-            }
-
-            var slashIndex = text.LastIndexOf('/');
-
-            var (textStartX, textWidth) = GetHorizontalTextRange(item, image, item.Bounds.Width);
-            var textRect = new Rectangle(textStartX, item.Bounds.Top, textWidth, item.Bounds.Height);
-
-            if (slashIndex == -1 || slashIndex >= text.Length - 1)
-            {
-                formatter.DrawString(text, textRect, SystemColors.ControlText);
-                return;
-            }
-
-            var prefix = text.Substring(0, slashIndex + 1);
-            var tail = text.Substring(slashIndex + 1);
-
-            var prefixSize = formatter.MeasureString(prefix);
-
-            DrawString(textRect, prefix, SystemColors.GrayText);
-
-            textRect.Offset(prefixSize.Width, 0);
-            DrawString(textRect, tail, SystemColors.ControlText);
-
-            void DrawString(Rectangle rect, string s, Color color)
-            {
-                rect.Intersect(Rectangle.Round(e.Graphics.ClipBounds));
-                if (rect.Width != 0 && rect.Height != 0)
-                {
-                    formatter.DrawString(s, rect, color);
-                }
             }
         }
 
@@ -1068,6 +1001,26 @@ namespace GitUI
 
         // Event handlers
 
+        private void FileStatusListView_ClientSizeChanged(object sender, EventArgs e)
+        {
+            if (!FileStatusListView.IsHandleCreated)
+            {
+                return;
+            }
+
+            var formatter = new PathFormatter(FileStatusListView.CreateGraphics(), FileStatusListView.Font);
+            foreach (ListViewItem item in FileStatusListView.Items)
+            {
+                var (_, text) = GetDisplayElements(item, formatter, FileStatusListView.ClientSize.Width);
+
+                // let FileStatusListView know the actual displayed text
+                // in order to properly display horizontal scroll
+                item.Text = text;
+            }
+
+            UpdateColumnWidth();
+        }
+
         private void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
         {
             var cm = (ContextMenuStrip)sender;
@@ -1105,6 +1058,53 @@ namespace GitUI
             else
             {
                 DoubleClick(sender, e);
+            }
+        }
+
+        private void FileStatusListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        {
+            var item = e.Item;
+            var formatter = new PathFormatter(e.Graphics, FileStatusListView.Font);
+
+            var (image, text) = GetDisplayElements(item, formatter, item.Bounds.Width);
+            if (image == default && text == default)
+            {
+                return;
+            }
+
+            if (image != null)
+            {
+                e.Graphics.DrawImageUnscaled(image, item.Position.X, item.Position.Y);
+            }
+
+            var slashIndex = text.LastIndexOf('/');
+
+            var (textStartX, textWidth) = GetHorizontalTextRange(item, image, item.Bounds.Width);
+            var textRect = new Rectangle(textStartX, item.Bounds.Top, textWidth, item.Bounds.Height);
+
+            if (slashIndex == -1 || slashIndex >= text.Length - 1)
+            {
+                formatter.DrawString(text, textRect, SystemColors.ControlText);
+                return;
+            }
+
+            var prefix = text.Substring(0, slashIndex + 1);
+            var tail = text.Substring(slashIndex + 1);
+
+            var prefixSize = formatter.MeasureString(prefix);
+
+            DrawString(textRect, prefix, SystemColors.GrayText);
+
+            textRect.Offset(prefixSize.Width, 0);
+            DrawString(textRect, tail, SystemColors.ControlText);
+
+            void DrawString(Rectangle rect, string s, Color color)
+            {
+                rect.Intersect(Rectangle.Round(e.Graphics.ClipBounds));
+                if (rect.Width != 0 && rect.Height != 0)
+                {
+                    formatter.DrawString(s, rect, color);
+                }
             }
         }
 
