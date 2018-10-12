@@ -32,6 +32,64 @@ namespace GitUI.UserControls.RevisionGrid
             _revisionFunc = revisionFunc;
         }
 
+        private void AddItem(string displayText, Func<GitRevision, string> extractRevisionText, Image image, char? hotkey, Keys shortcutKeys = Keys.None)
+        {
+            if (hotkey.HasValue)
+            {
+                int position = displayText.IndexOf(hotkey.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                if (position >= 0)
+                {
+                    displayText = displayText.Insert(position, "&");
+                }
+            }
+            else
+            {
+                displayText = PrependItemNumber(displayText);
+            }
+
+            var texts = ExtractRevisionTexts(extractRevisionText);
+            if (texts != null)
+            {
+                displayText += ":   " + texts.Select(t => t.SubstringUntil('\n')).Join(", ").ShortenTo(40);
+            }
+
+            var item = new ToolStripMenuItem
+            {
+                Text = displayText,
+                ShortcutKeys = shortcutKeys,
+                ShowShortcutKeys = true,
+                Image = image
+            };
+            item.Click += delegate
+            {
+                var textToCopy = ExtractRevisionTexts(extractRevisionText);
+                if (textToCopy == null)
+                {
+                    return;
+                }
+
+                Clipboard.SetText(textToCopy.Join("\n"));
+            };
+
+            DropDownItems.Add(item);
+        }
+
+        private IEnumerable<string> ExtractRevisionTexts(Func<GitRevision, string> extractRevisionText)
+        {
+            if (extractRevisionText == null)
+            {
+                return null;
+            }
+
+            var gitRevisions = _revisionFunc?.Invoke();
+            if (gitRevisions == null || gitRevisions.Count == 0)
+            {
+                return null;
+            }
+
+            return gitRevisions.Select(extractRevisionText).Distinct();
+        }
+
         private void OnDropDownOpening(object sender, EventArgs e)
         {
             var revisions = _revisionFunc?.Invoke();
@@ -107,64 +165,6 @@ namespace GitUI.UserControls.RevisionGrid
                 AddItem(Strings.GetAuthorDate(count), r => r.AuthorDate.ToString(), Images.Date, 'T');
                 AddItem(Strings.GetCommitDate(count), r => r.CommitDate.ToString(), Images.Date, 'D');
             }
-        }
-
-        private IEnumerable<string> ExtractRevisionTexts(Func<GitRevision, string> extractRevisionText)
-        {
-            if (extractRevisionText == null)
-            {
-                return null;
-            }
-
-            var gitRevisions = _revisionFunc?.Invoke();
-            if (gitRevisions == null || gitRevisions.Count == 0)
-            {
-                return null;
-            }
-
-            return gitRevisions.Select(extractRevisionText).Distinct();
-        }
-
-        private void AddItem(string displayText, Func<GitRevision, string> extractRevisionText, Image image, char? hotkey, Keys shortcutKeys = Keys.None)
-        {
-            if (hotkey.HasValue)
-            {
-                int position = displayText.IndexOf(hotkey.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
-                if (position >= 0)
-                {
-                    displayText = displayText.Insert(position, "&");
-                }
-            }
-            else
-            {
-                displayText = PrependItemNumber(displayText);
-            }
-
-            var texts = ExtractRevisionTexts(extractRevisionText);
-            if (texts != null)
-            {
-                displayText += ":   " + texts.Select(t => t.SubstringUntil('\n')).Join(", ").ShortenTo(40);
-            }
-
-            var item = new ToolStripMenuItem
-            {
-                Text = displayText,
-                ShortcutKeys = shortcutKeys,
-                ShowShortcutKeys = true,
-                Image = image
-            };
-            item.Click += delegate
-            {
-                var textToCopy = ExtractRevisionTexts(extractRevisionText);
-                if (textToCopy == null)
-                {
-                    return;
-                }
-
-                Clipboard.SetText(textToCopy.Join("\n"));
-            };
-
-            DropDownItems.Add(item);
         }
 
         private string PrependItemNumber(string name)
