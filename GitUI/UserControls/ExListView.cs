@@ -328,6 +328,16 @@ namespace GitUI.UserControls
         }
         #endregion
 
+        protected override void SetBoundsCore(int x, int y, int width, int height, BoundsSpecified specified)
+        {
+            // Prevent flickering horizontal scrollbar when control width is reduced,
+            // by preventing redrawing the control before column width is adjusted to new width in
+            // some event handler e.g. ClientSizeChanged.
+            BeginUpdate();
+            base.SetBoundsCore(x, y, width, height, specified);
+            EndUpdate();
+        }
+
         private bool _isInWmPaintMsg;
 
         protected override void WndProc(ref Message m)
