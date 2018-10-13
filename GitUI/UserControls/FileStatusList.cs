@@ -974,7 +974,7 @@ namespace GitUI
                 columnHeader.Width = minWidth;
             }
 
-            Task.Run(async () =>
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 // by postponing ListView redraw we workaround the bug
                 // that renders ListView unusable if column Width is set within any
@@ -982,11 +982,9 @@ namespace GitUI
                 // https://github.com/gitextensions/gitextensions/issues/5437
                 await Task.Delay(TimeSpan.FromMilliseconds(10));
 
-                Invoke((Action)delegate
-                {
-                    FileStatusListView.EndUpdate();
-                });
-            });
+                await this.SwitchToMainThreadAsync();
+                FileStatusListView.EndUpdate();
+            }).FileAndForget();
         }
 
         private void HandleVisibility_NoFilesLabel_FilterComboBox(bool filesPresent)
