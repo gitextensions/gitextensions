@@ -27,7 +27,6 @@ namespace GitUI.CommandsDialogs
             this.followFileHistoryRenamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fullHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.copyToClipboardToolStripMenuItem = new GitUI.UserControls.RevisionGrid.CopyContextMenuItem();
             this.tabControl1 = new GitUI.CommandsDialogs.FullBleedTabControl();
             this.CommitInfoTabPage = new System.Windows.Forms.TabPage();
             this.CommitDiff = new GitUI.UserControls.CommitDiff();
@@ -100,7 +99,7 @@ namespace GitUI.CommandsDialogs
             // FileHistoryContextMenu
             // 
             this.FileHistoryContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyToClipboardToolStripMenuItem,
+            FileChanges.CopyToClipboardToolStripMenuItem,
             this.separatorAfterCopySubmenu,
             this.openWithDifftoolToolStripMenuItem,
             this.diffToolRemoteLocalStripMenuItem,
@@ -200,12 +199,6 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(336, 6);
-            // 
-            // copyToClipboardToolStripMenuItem
-            // 
-            this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
-            this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(491, 30);
-            this.copyToClipboardToolStripMenuItem.Text = "Copy to clipboard";
             // 
             // tabControl1
             // 
@@ -541,7 +534,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem ignoreWhitespaceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem detectMoveAndCopyInThisFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem detectMoveAndCopyInAllFilesToolStripMenuItem;
-        private GitUI.UserControls.RevisionGrid.CopyContextMenuItem copyToClipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator separatorAfterCopySubmenu;
     }
 }

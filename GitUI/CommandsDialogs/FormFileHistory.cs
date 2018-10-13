@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs
             _commitDataManager = new CommitDataManager(() => Module);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
 
-            copyToClipboardToolStripMenuItem.SetRevisionFunc(() => FileChanges.GetSelectedRevisions());
+            FileChanges.CopyToClipboardToolStripMenuItem.SetRevisionFunc(() => FileChanges.GetSelectedRevisions());
 
             InitializeComplete();
 
@@ -515,7 +515,7 @@ namespace GitUI.CommandsDialogs
             manipulateCommitToolStripMenuItem.Enabled =
                 selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
             saveAsToolStripMenuItem.Enabled = selectedRevisions.Count == 1;
-            copyToClipboardToolStripMenuItem.Enabled =
+            FileChanges.CopyToClipboardToolStripMenuItem.Enabled =
                 selectedRevisions.Count >= 1 && !selectedRevisions[0].IsArtificial;
         }
 
