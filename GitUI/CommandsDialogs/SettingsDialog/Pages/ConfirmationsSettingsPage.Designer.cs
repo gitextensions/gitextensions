@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.CheckoutGB = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.tlpnlMain = new System.Windows.Forms.TableLayoutPanel();
+            this.gbConfirmations = new System.Windows.Forms.GroupBox();
+            this.tlpnlConfirmations = new System.Windows.Forms.TableLayoutPanel();
             this.chkFetchAndPruneAllConfirmation = new System.Windows.Forms.CheckBox();
             this.chkUndoLastCommitConfirmation = new System.Windows.Forms.CheckBox();
             this.chkRebaseOnTopOfSelectedCommit = new System.Windows.Forms.CheckBox();
@@ -44,76 +44,78 @@
             this.chkAddTrackingRef = new System.Windows.Forms.CheckBox();
             this.chkPushNewBranch = new System.Windows.Forms.CheckBox();
             this.chkUpdateModules = new System.Windows.Forms.CheckBox();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.CheckoutGB.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
+            this.tlpnlMain.SuspendLayout();
+            this.gbConfirmations.SuspendLayout();
+            this.tlpnlConfirmations.SuspendLayout();
             this.SuspendLayout();
             // 
-            // tableLayoutPanel2
+            // tlpnlMain
             // 
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.CheckoutGB, 0, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(500, 372);
-            this.tableLayoutPanel2.TabIndex = 2;
+            this.tlpnlMain.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tlpnlMain.ColumnCount = 1;
+            this.tlpnlMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpnlMain.Location = new System.Drawing.Point(3, 3);
+            this.tlpnlMain.Controls.Add(this.gbConfirmations, 0, 0);
+            this.tlpnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpnlMain.Name = "tlpnlMain";
+            this.tlpnlMain.RowCount = 2;
+            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlMain.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlMain.Size = new System.Drawing.Size(500, 372);
+            this.tlpnlMain.TabIndex = 2;
             // 
-            // CheckoutGB
+            // gbConfirmations
             // 
-            this.CheckoutGB.AutoSize = true;
-            this.CheckoutGB.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.CheckoutGB.Controls.Add(this.tableLayoutPanel3);
-            this.CheckoutGB.Dock = System.Windows.Forms.DockStyle.Top;
-            this.CheckoutGB.Location = new System.Drawing.Point(3, 3);
-            this.CheckoutGB.Name = "CheckoutGB";
-            this.CheckoutGB.Size = new System.Drawing.Size(494, 366);
-            this.CheckoutGB.TabIndex = 0;
-            this.CheckoutGB.TabStop = false;
-            this.CheckoutGB.Text = "Don\'t ask to confirm to (use with caution)";
+            this.gbConfirmations.AutoSize = true;
+            this.gbConfirmations.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.gbConfirmations.Controls.Add(this.tlpnlConfirmations);
+            this.gbConfirmations.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gbConfirmations.Location = new System.Drawing.Point(3, 3);
+            this.gbConfirmations.Name = "gbConfirmations";
+            this.gbConfirmations.Padding = new System.Windows.Forms.Padding(8);
+            this.gbConfirmations.Size = new System.Drawing.Size(494, 366);
+            this.gbConfirmations.TabIndex = 0;
+            this.gbConfirmations.TabStop = false;
+            this.gbConfirmations.Text = "Don\'t ask to confirm to (use with caution)";
             // 
-            // tableLayoutPanel3
+            // tlpnlConfirmations
             // 
-            this.tableLayoutPanel3.AutoSize = true;
-            this.tableLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayoutPanel3.ColumnCount = 1;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel3.Controls.Add(this.chkFetchAndPruneAllConfirmation, 0, 12);
-            this.tableLayoutPanel3.Controls.Add(this.chkUndoLastCommitConfirmation, 0, 11);
-            this.tableLayoutPanel3.Controls.Add(this.chkRebaseOnTopOfSelectedCommit, 0, 10);
-            this.tableLayoutPanel3.Controls.Add(this.chkSecondAbortConfirmation, 0, 9);
-            this.tableLayoutPanel3.Controls.Add(this.chkCommitAfterConflictsResolved, 0, 8);
-            this.tableLayoutPanel3.Controls.Add(this.chkResolveConflicts, 0, 7);
-            this.tableLayoutPanel3.Controls.Add(this.chkAmend, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.chkCommitIfNoBranch, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.chkAutoPopStashAfterPull, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.chkAutoPopStashAfterCheckout, 0, 3);
-            this.tableLayoutPanel3.Controls.Add(this.chkAddTrackingRef, 0, 4);
-            this.tableLayoutPanel3.Controls.Add(this.chkPushNewBranch, 0, 5);
-            this.tableLayoutPanel3.Controls.Add(this.chkUpdateModules, 0, 6);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(5, 19);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 13;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(483, 325);
-            this.tableLayoutPanel3.TabIndex = 1;
+            this.tlpnlConfirmations.AutoSize = true;
+            this.tlpnlConfirmations.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tlpnlConfirmations.ColumnCount = 1;
+            this.tlpnlConfirmations.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tlpnlConfirmations.Controls.Add(this.chkFetchAndPruneAllConfirmation, 0, 12);
+            this.tlpnlConfirmations.Controls.Add(this.chkUndoLastCommitConfirmation, 0, 11);
+            this.tlpnlConfirmations.Controls.Add(this.chkRebaseOnTopOfSelectedCommit, 0, 10);
+            this.tlpnlConfirmations.Controls.Add(this.chkSecondAbortConfirmation, 0, 9);
+            this.tlpnlConfirmations.Controls.Add(this.chkCommitAfterConflictsResolved, 0, 8);
+            this.tlpnlConfirmations.Controls.Add(this.chkResolveConflicts, 0, 7);
+            this.tlpnlConfirmations.Controls.Add(this.chkAmend, 0, 0);
+            this.tlpnlConfirmations.Controls.Add(this.chkCommitIfNoBranch, 0, 1);
+            this.tlpnlConfirmations.Controls.Add(this.chkAutoPopStashAfterPull, 0, 2);
+            this.tlpnlConfirmations.Controls.Add(this.chkAutoPopStashAfterCheckout, 0, 3);
+            this.tlpnlConfirmations.Controls.Add(this.chkAddTrackingRef, 0, 4);
+            this.tlpnlConfirmations.Controls.Add(this.chkPushNewBranch, 0, 5);
+            this.tlpnlConfirmations.Controls.Add(this.chkUpdateModules, 0, 6);
+            this.tlpnlConfirmations.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpnlConfirmations.Location = new System.Drawing.Point(5, 19);
+            this.tlpnlConfirmations.Name = "tlpnlConfirmations";
+            this.tlpnlConfirmations.RowCount = 13;
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlConfirmations.Size = new System.Drawing.Size(483, 325);
+            this.tlpnlConfirmations.TabIndex = 1;
             // 
             // chkFetchAndPruneAllConfirmation
             // 
@@ -256,16 +258,18 @@
             // 
             // ConfirmationsSettingsPage
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.tableLayoutPanel2);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.Controls.Add(this.tlpnlMain);
             this.Name = "ConfirmationsSettingsPage";
-            this.Size = new System.Drawing.Size(1506, 978);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            this.CheckoutGB.ResumeLayout(false);
-            this.CheckoutGB.PerformLayout();
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
+            this.Padding = new System.Windows.Forms.Padding(8);
+            this.Size = new System.Drawing.Size(1001, 614);
+            this.tlpnlMain.ResumeLayout(false);
+            this.tlpnlMain.PerformLayout();
+            this.gbConfirmations.ResumeLayout(false);
+            this.gbConfirmations.PerformLayout();
+            this.tlpnlConfirmations.ResumeLayout(false);
+            this.tlpnlConfirmations.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -273,9 +277,9 @@
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.GroupBox CheckoutGB;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.TableLayoutPanel tlpnlMain;
+        private System.Windows.Forms.GroupBox gbConfirmations;
+        private System.Windows.Forms.TableLayoutPanel tlpnlConfirmations;
         private System.Windows.Forms.CheckBox chkAmend;
         private System.Windows.Forms.CheckBox chkAutoPopStashAfterPull;
         private System.Windows.Forms.CheckBox chkPushNewBranch;
