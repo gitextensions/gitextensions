@@ -105,9 +105,8 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
         {
             // https://git-scm.com/docs/git-worktree
 
-            var args = new ArgumentBuilder
+            var args = new GitArgumentBuilder("worktree")
             {
-                "worktree",
                 "add",
                 WorktreeDirectory.Quote(),
                 { radioButtonCreateNewBranch.Checked, $"-b {textBoxNewBranchName.Text}", ((GitRef)comboBoxBranches.SelectedItem).Name }

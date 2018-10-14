@@ -566,7 +566,7 @@ namespace GitCommands
 
         public bool EditNotes(ObjectId commitId)
         {
-            var arguments = new ArgumentBuilder { "notes", "edit", commitId };
+            var arguments = new GitArgumentBuilder("notes") { "edit", commitId };
             var editor = GetEffectiveSetting("core.editor").ToLower();
             var createWindow = !editor.Contains("gitextensions") && !editor.Contains("notepad");
 
@@ -1610,9 +1610,8 @@ namespace GitCommands
 
         public ArgumentString FetchCmd([CanBeNull] string remote, [CanBeNull] string remoteBranch, [CanBeNull] string localBranch, bool? fetchTags = false, bool isUnshallow = false, bool prune = false)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("fetch")
             {
-                "fetch",
                 { GitVersion.Current.FetchCanAskForProgress, "--progress" },
                 {
                     !string.IsNullOrEmpty(remote) || !string.IsNullOrEmpty(remoteBranch) || !string.IsNullOrEmpty(localBranch),
@@ -1623,9 +1622,8 @@ namespace GitCommands
 
         public ArgumentString PullCmd(string remote, string remoteBranch, bool rebase, bool? fetchTags = false, bool isUnshallow = false, bool prune = false)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("pull")
             {
-                "pull",
                 { rebase, "--rebase" },
                 { GitVersion.Current.FetchCanAskForProgress, "--progress" },
                 GetFetchArgs(remote, remoteBranch, null, fetchTags, isUnshallow, prune && !rebase)
@@ -1702,9 +1700,8 @@ namespace GitCommands
         public ArgumentString PushAllCmd(string remote, ForcePushOptions force, bool track, int recursiveSubmodules)
         {
             // TODO make an enum for RecursiveSubmodulesOption and add to ArgumentBuilderExtensions
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("push")
             {
-                "push",
                 force,
                 { track, "-u" },
                 { recursiveSubmodules == 1, "--recurse-submodules=check" },
@@ -1737,9 +1734,8 @@ namespace GitCommands
             }
 
             // TODO make an enum for RecursiveSubmodulesOption and add to ArgumentBuilderExtensions
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("push")
             {
-                "push",
                 force,
                 { track, "-u" },
                 { recursiveSubmodules == 1, "--recurse-submodules=check" },
@@ -3043,9 +3039,8 @@ namespace GitCommands
             }
 
             var output = _gitExecutable.GetOutput(
-                new ArgumentBuilder
+                new GitArgumentBuilder("branch")
                 {
-                    "branch",
                     { getRemote && getLocal, "-a" },
                     { getRemote && !getLocal, "-r" },
                     "--contains",
@@ -3186,9 +3181,8 @@ namespace GitCommands
 
         public IEnumerable<IGitItem> GetTree(ObjectId commitId, bool full)
         {
-            var args = new ArgumentBuilder
+            var args = new GitArgumentBuilder("ls-tree")
             {
-                "ls-tree",
                 "-z",
                 { full, "-r" },
                 commitId
@@ -3201,9 +3195,8 @@ namespace GitCommands
 
         public GitBlame Blame(string fileName, string from, Encoding encoding, string lines = null)
         {
-            var args = new ArgumentBuilder
+            var args = new GitArgumentBuilder("blame")
             {
-                "blame",
                 "--porcelain",
                 { AppSettings.DetectCopyInFileOnBlame, "-M" },
                 { AppSettings.DetectCopyInAllOnBlame, "-C" },

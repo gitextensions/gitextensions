@@ -21,9 +21,8 @@ namespace GitCommands.Git.Tag
 
         protected override ArgumentString BuildArguments()
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("tag")
             {
-                "tag",
                 { CreateTagArguments.Force, "-f" },
                 GetArgumentForOperation(),
                 { CreateTagArguments.Operation.CanProvideMessage(), $"-F {TagMessageFileName.Quote()}" },

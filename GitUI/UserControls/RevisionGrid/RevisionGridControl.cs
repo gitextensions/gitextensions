@@ -1149,9 +1149,8 @@ namespace GitUI
         [NotNull]
         private IEnumerable<ObjectId> TryGetParents(ObjectId objectId)
         {
-            var args = new ArgumentBuilder
+            var args = new GitArgumentBuilder("rev-list")
             {
-                "rev-list",
                 { AppSettings.OrderRevisionByDate, "--date-order" },
                 { AppSettings.MaxRevisionGraphCommits > 0, $"--max-count={AppSettings.MaxRevisionGraphCommits}" },
                 objectId
