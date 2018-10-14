@@ -20,9 +20,7 @@ namespace GitUI.Editor
 
         private readonly FindAndReplaceForm _findAndReplaceForm = new FindAndReplaceForm();
         private readonly DiffViewerLineNumberControl _lineNumbersControl;
-
         private DiffHighlightService _diffHighlightService = DiffHighlightService.Instance;
-
         private ViewPosition _previousViewPosition;
 
         public Action OpenWithDifftool { get; private set; }
@@ -34,10 +32,10 @@ namespace GitUI.Editor
             internal TextLocation CaretPosition;
             internal int FirstVisibleLine;
             internal bool CaretVisible; // if not, FirstVisibleLine has priority for restoring
-            internal DiffLineNum ActiveLineNum;
+            internal DiffLineInfo ActiveLineNum;
         }
 
-        public FileViewerInternal(Func<GitModule> moduleProvider)
+        public FileViewerInternal()
         {
             InitializeComponent();
             InitializeComplete();
@@ -123,11 +121,11 @@ namespace GitUI.Editor
                 {
                     void SetActiveLineNum(int line)
                     {
-                        _previousViewPosition.ActiveLineNum = _lineNumbersControl.GetLineNum(line);
+                        _previousViewPosition.ActiveLineNum = _lineNumbersControl.GetLineInfo(line);
                         if (_previousViewPosition.ActiveLineNum != null)
                         {
-                            if (_previousViewPosition.ActiveLineNum.LeftLineNum == DiffLineNum.NotApplicableLineNum
-                                && _previousViewPosition.ActiveLineNum.RightLineNum == DiffLineNum.NotApplicableLineNum)
+                            if (_previousViewPosition.ActiveLineNum.LeftLineNumber == DiffLineInfo.NotApplicableLineNum
+                                && _previousViewPosition.ActiveLineNum.RightLineNumber == DiffLineInfo.NotApplicableLineNum)
                             {
                                 _previousViewPosition.ActiveLineNum = null;
                             }
@@ -194,9 +192,9 @@ namespace GitUI.Editor
                 else if (isDiff && GetLineText(0) == _previousViewPosition.FirstLine && _previousViewPosition.ActiveLineNum != null)
                 {
                     // prefer the LeftLineNum because the base revision will not change
-                    int line = _previousViewPosition.ActiveLineNum.LeftLineNum != DiffLineNum.NotApplicableLineNum
-                               ? GetCaretLine(_previousViewPosition.ActiveLineNum.LeftLineNum, rightFile: false)
-                               : GetCaretLine(_previousViewPosition.ActiveLineNum.RightLineNum, rightFile: true);
+                    int line = _previousViewPosition.ActiveLineNum.LeftLineNumber != DiffLineInfo.NotApplicableLineNum
+                               ? GetCaretLine(_previousViewPosition.ActiveLineNum.LeftLineNumber, rightFile: false)
+                               : GetCaretLine(_previousViewPosition.ActiveLineNum.RightLineNumber, rightFile: true);
                     if (_previousViewPosition.CaretVisible)
                     {
                         TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(_previousViewPosition.CaretPosition.Column, line);
@@ -359,11 +357,11 @@ namespace GitUI.Editor
             {
                 for (int line = 0; line < TotalNumberOfLines; ++line)
                 {
-                    DiffLineNum diffLineNum = _lineNumbersControl.GetLineNum(line);
+                    DiffLineInfo diffLineNum = _lineNumbersControl.GetLineInfo(line);
                     if (diffLineNum != null)
                     {
-                        int diffLine = rightFile ? diffLineNum.RightLineNum : diffLineNum.LeftLineNum;
-                        if (diffLine != DiffLineNum.NotApplicableLineNum && diffLine >= lineNumber)
+                        int diffLine = rightFile ? diffLineNum.RightLineNumber : diffLineNum.LeftLineNumber;
+                        if (diffLine != DiffLineInfo.NotApplicableLineNum && diffLine >= lineNumber)
                         {
                             return line;
                         }
@@ -374,7 +372,7 @@ namespace GitUI.Editor
             return 0;
         }
 
-        public int MaxLineNumber => TextEditor.ShowLineNumbers ? TotalNumberOfLines : _lineNumbersControl.MaxValueOfLineNum;
+        public int MaxLineNumber => TextEditor.ShowLineNumbers ? TotalNumberOfLines : _lineNumbersControl.MaxLineNumber;
 
         public int LineAtCaret => TextEditor.ActiveTextAreaControl.Caret.Position.Line;
 
