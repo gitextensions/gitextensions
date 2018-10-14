@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
@@ -10,6 +11,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             Text = "Shell extension";
             InitializeComplete();
+
+            // when the dock is set in the deigner it causes wierd visual artifacts in scaled Windows environments
+            chlMenuEntries.Dock = DockStyle.Fill;
         }
 
         protected override void SettingsToPage()
