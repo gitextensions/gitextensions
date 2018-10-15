@@ -66,6 +66,7 @@
     <Compile Include="CommandsDialogs\RevisionFileTreeControllerTests.cs" />
     <Compile Include="CommandsDialogs\RevisionDiffControllerTests.cs" />
     <Compile Include="ControlThreadingExtensionsTests.cs" />
+    <Compile Include="Editor\FileViewerInternal.CurrentViewPositionCacheTests.cs" />
     <Compile Include="FindFilePredicateProviderTest.cs" />
     <Compile Include="Helpers\DiffKindRevisionTests.cs" />
     <Compile Include="ControlUtilTests.cs" />
@@ -78,7 +79,7 @@
     <Compile Include="UITest.cs" />
     <Compile Include="UserControls\AuthorRevisionHighlightingFixture.cs" />
     <Compile Include="UserControls\ConsoleEmulatorOutputControlFixture.cs" />
-    <Compile Include="Editor\Diff\DiffLineNumAnalyzerFixture.cs" />
+    <Compile Include="Editor\Diff\DiffLineNumAnalyzerTests.cs" />
     <Compile Include="Editor\Diff\LinePrefixHelperFixture.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\FormUpdateFixture.cs" />
     <Compile Include="Hotkey\HotkeySettingsManagerFixture.cs" />

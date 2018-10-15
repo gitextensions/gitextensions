@@ -37,7 +37,6 @@ namespace GitUI.Editor
 
         private readonly AsyncLoader _async;
         private readonly IFullPathResolver _fullPathResolver;
-        private int _currentScrollPos = -1;
         private bool _currentViewIsPatch;
         private bool _patchHighlighting;
         private Encoding _encoding;
@@ -338,27 +337,6 @@ namespace GitUI.Editor
             };
         }
 
-        public void SaveCurrentScrollPos()
-        {
-            _currentScrollPos = ScrollPos;
-        }
-
-        public void ResetCurrentScrollPos()
-        {
-            _currentScrollPos = 0;
-        }
-
-        private void RestoreCurrentScrollPos()
-        {
-            if (_currentScrollPos < 0)
-            {
-                return;
-            }
-
-            ScrollPos = _currentScrollPos;
-            ResetCurrentScrollPos();
-        }
-
         public Task ViewFileAsync(string fileName)
         {
             return ShowOrDeferAsync(
@@ -406,9 +384,9 @@ namespace GitUI.Editor
                 using (var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 using (var reader = new StreamReader(stream, Module.FilesEncoding))
                 {
-                    #pragma warning disable VSTHRD103 // Call async methods when in an async method
+#pragma warning disable VSTHRD103 // Call async methods when in an async method
                     var content = reader.ReadToEnd();
-                    #pragma warning restore VSTHRD103 // Call async methods when in an async method
+#pragma warning restore VSTHRD103 // Call async methods when in an async method
                     FilePreamble = reader.CurrentEncoding.GetPreamble();
                     return content;
                 }
@@ -545,7 +523,6 @@ namespace GitUI.Editor
                         ResetForDiff();
                         internalFileViewer.SetText(text, openWithDifftool, isDiff: true);
                         TextLoaded?.Invoke(this, null);
-                        RestoreCurrentScrollPos();
                         return Task.CompletedTask;
                     }));
         }
@@ -581,8 +558,6 @@ namespace GitUI.Editor
             {
                 internalFileViewer.SetText(text, openWithDifftool);
                 TextLoaded?.Invoke(this, null);
-
-                RestoreCurrentScrollPos();
             }
 
             async Task<string> SummariseBinaryFileAsync()
@@ -1261,17 +1236,12 @@ namespace GitUI.Editor
 
         private void goToLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (!internalFileViewer.IsGotoLineUIApplicable())
-            {
-                return;
-            }
-
             using (var formGoToLine = new FormGoToLine())
             {
-                formGoToLine.SetMaxLineNumber(internalFileViewer.TotalNumberOfLines);
+                formGoToLine.SetMaxLineNumber(internalFileViewer.MaxLineNumber);
                 if (formGoToLine.ShowDialog(this) == DialogResult.OK)
                 {
-                    GoToLine(formGoToLine.GetLineNumber() - 1);
+                    GoToLine(formGoToLine.GetLineNumber());
                 }
             }
         }

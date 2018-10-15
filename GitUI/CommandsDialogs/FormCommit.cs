@@ -817,38 +817,8 @@ namespace GitUI.CommandsDialogs
                 Unstaged.StoreNextIndexToSelect();
             }
 
-            ScheduleGoToLine();
             _selectedDiffReloaded = false;
             RescanChanges();
-
-            return;
-
-            void ScheduleGoToLine()
-            {
-                int selectedDiffLineToSelect = SelectedDiff.GetText().Substring(0, SelectedDiff.GetSelectionPosition()).Count(c => c == '\n');
-                int scrollPosition = SelectedDiff.ScrollPos;
-                string selectedFileName = _currentItem.Name;
-
-                OnStageAreaLoaded += StageAreaLoaded;
-
-                void StageAreaLoaded()
-                {
-                    void TextLoaded(object a, EventArgs b)
-                    {
-                        if (_currentItem != null && _currentItem.Name == selectedFileName)
-                        {
-                            SelectedDiff.GoToLine(selectedDiffLineToSelect);
-                            SelectedDiff.ScrollPos = scrollPosition;
-                        }
-
-                        SelectedDiff.TextLoaded -= TextLoaded;
-                        _selectedDiffReloaded = true;
-                    }
-
-                    SelectedDiff.TextLoaded += TextLoaded;
-                    OnStageAreaLoaded -= StageAreaLoaded;
-                }
-            }
         }
 
         private void ResetSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
