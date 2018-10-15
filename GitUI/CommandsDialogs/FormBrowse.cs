@@ -1409,7 +1409,9 @@ namespace GitUI.CommandsDialogs
 
         private void TagToolStripMenuItemClick(object sender, EventArgs e)
         {
-            UICommands.StartCreateTagDialog(this);
+            var revision = RevisionGrid.LatestSelectedRevision;
+
+            UICommands.StartCreateTagDialog(this, revision);
         }
 
         private void RefreshButtonClick(object sender, EventArgs e)

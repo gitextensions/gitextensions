@@ -791,11 +791,11 @@ namespace GitUI
             return DoActionOnRepo(owner, true, false, null, null, Action);
         }
 
-        public bool StartCreateTagDialog(IWin32Window owner = null)
+        public bool StartCreateTagDialog(IWin32Window owner = null, GitRevision revision = null)
         {
             bool Action()
             {
-                using (var form = new FormCreateTag(this, null))
+                using (var form = new FormCreateTag(this, revision?.ObjectId))
                 {
                     return form.ShowDialog(owner) == DialogResult.OK;
                 }
