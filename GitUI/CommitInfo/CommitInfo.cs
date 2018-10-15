@@ -636,7 +636,7 @@ namespace GitUI.CommitInfo
 
         private void copyCommitInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var commitInfo = $"{_RevisionHeader.GetPlaintText()}{Environment.NewLine}{RevisionInfo.GetPlaintText()}";
+            var commitInfo = $"{_RevisionHeader.GetPlainText()}{Environment.NewLine}{RevisionInfo.GetPlainText()}";
             Clipboard.SetText(commitInfo);
         }
 
@@ -678,6 +678,18 @@ namespace GitUI.CommitInfo
             void DoCommandClick(string command)
             {
                 CommandClick?.Invoke(this, new CommandEventArgs(command, null));
+            }
+        }
+
+        private void RichTextBox_KeyEvent(object sender, KeyEventArgs e)
+        {
+            var rtb = sender as RichTextBox;
+
+            // Override RichTextBox Ctrl-c handling to copy plain text
+            if (rtb != null && e.Control && e.KeyCode == Keys.C)
+            {
+                Clipboard.SetText(rtb.GetSelectionPlainText());
+                e.Handled = true;
             }
         }
 
