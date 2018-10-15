@@ -114,7 +114,7 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
         }
 
-        public FormPull(GitUICommands commands, string defaultRemoteBranch, string defaultRemote)
+        public FormPull(GitUICommands commands, string defaultRemoteBranch, string defaultRemote, AppSettings.PullAction pullAction)
             : base(commands)
         {
             InitializeComponent();
@@ -127,23 +127,38 @@ namespace GitUI.CommandsDialogs
             _branch = Module.GetSelectedBranch();
             BindRemotesDropDown(defaultRemote);
 
-            if (AppSettings.DefaultPullAction == AppSettings.PullAction.Merge)
+            switch (pullAction)
             {
-                Merge.Checked = true;
-            }
-            else if (AppSettings.DefaultPullAction == AppSettings.PullAction.Rebase)
-            {
-                Rebase.Checked = true;
-            }
-            else
-            {
-                // Set to fetch for Fetch, FetchAll, FetchPruneAll and None
-                Fetch.Checked = true;
+                case AppSettings.PullAction.None:
+                    // Treat None as Fetch
+                    goto case AppSettings.PullAction.Fetch;
+                case AppSettings.PullAction.Merge:
+                    Merge.Checked = true;
+                    Prune.Enabled = true;
+                    break;
+                case AppSettings.PullAction.Rebase:
+                    Rebase.Checked = true;
+                    break;
+                case AppSettings.PullAction.Fetch:
+                    Fetch.Checked = true;
+                    Prune.Enabled = true;
+                    break;
+                case AppSettings.PullAction.FetchAll:
+                    Fetch.Checked = true;
+                    _NO_TRANSLATE_Remotes.Text = AllRemotes;
+                    break;
+                case AppSettings.PullAction.FetchPruneAll:
+                    Fetch.Checked = true;
+                    _NO_TRANSLATE_Remotes.Text = AllRemotes;
+                    Prune.Checked = true;
+                    break;
+                case AppSettings.PullAction.Default:
+                    Debug.Assert(false, "pullAction is not a valid action");
+                    break;
             }
 
             localBranch.Enabled = Fetch.Checked;
             AutoStash.Checked = AppSettings.AutoStash;
-            Prune.Enabled = AppSettings.DefaultPullAction == AppSettings.PullAction.Merge || AppSettings.DefaultPullAction == AppSettings.PullAction.Fetch;
 
             ErrorOccurred = false;
 
@@ -812,16 +827,6 @@ namespace GitUI.CommandsDialogs
         private bool IsPullAll()
         {
             return _NO_TRANSLATE_Remotes.Text.Equals(AllRemotes, StringComparison.InvariantCultureIgnoreCase);
-        }
-
-        public void SetForFetchAll()
-        {
-            _NO_TRANSLATE_Remotes.Text = AllRemotes;
-        }
-
-        public void SetPrune()
-        {
-            Prune.Checked = true;
         }
 
         private void PullFromUrlCheckedChanged(object sender, EventArgs e)

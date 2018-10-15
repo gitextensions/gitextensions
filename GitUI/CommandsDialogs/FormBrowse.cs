@@ -1277,45 +1277,6 @@ namespace GitUI.CommandsDialogs
             UICommands.StartPushDialog(this, pushOnShow: ModifierKeys.HasFlag(Keys.Shift));
         }
 
-        private void PullToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            bool isSilent;
-            if (sender == toolStripButtonPull || sender == pullToolStripMenuItem)
-            {
-                if (AppSettings.DefaultPullAction == AppSettings.PullAction.None)
-                {
-                    isSilent = (ModifierKeys & Keys.Shift) != 0;
-                }
-                else if (AppSettings.DefaultPullAction == AppSettings.PullAction.FetchAll)
-                {
-                    fetchAllToolStripMenuItem_Click(sender, e);
-                    return;
-                }
-                else if (AppSettings.DefaultPullAction == AppSettings.PullAction.FetchPruneAll)
-                {
-                    fetchPruneAllToolStripMenuItem_Click(sender, e);
-                    return;
-                }
-                else
-                {
-                    isSilent = sender == toolStripButtonPull;
-                }
-            }
-            else
-            {
-                isSilent = sender != pullToolStripMenuItem1;
-            }
-
-            if (isSilent)
-            {
-                UICommands.StartPullDialogAndPullImmediately(this);
-            }
-            else
-            {
-                UICommands.StartPullDialog(this);
-            }
-        }
-
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
         {
             _submoduleStatusUpdateNeeded = true;
@@ -1944,11 +1905,6 @@ namespace GitUI.CommandsDialogs
             GitBashToolStripMenuItemClick1(sender, e);
         }
 
-        private void ToolStripButtonPullClick(object sender, EventArgs e)
-        {
-            PullToolStripMenuItemClick(sender, e);
-        }
-
         private void editGitAttributesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UICommands.StartEditGitAttributesDialog(this);
@@ -2344,24 +2300,78 @@ namespace GitUI.CommandsDialogs
               enabled;
         }
 
-        private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PullToolStripMenuItemClick(object sender, EventArgs e)
         {
-            PullToolStripMenuItemClick(sender, e);
+            // "Pull/Fetch..." menu item always opens the dialog
+            DoPull(pullAction: AppSettings.DefaultPullAction, isSilent: false);
         }
 
-        private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void ToolStripButtonPullClick(object sender, EventArgs e)
         {
-            PullToolStripMenuItemClick(sender, e);
-        }
-
-        private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            PullToolStripMenuItemClick(sender, e);
+            // Clicking on the Pull button toolbar button will perform the default selected action silently,
+            // except if that action is to open the dialog (PullAction.None)
+            bool isSilent = AppSettings.DefaultPullAction != AppSettings.PullAction.None;
+            DoPull(pullAction: AppSettings.DefaultPullAction, isSilent: isSilent);
         }
 
         private void pullToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            PullToolStripMenuItemClick(sender, e);
+            // "Open Pull Dialog..." toolbar menu item always open the dialog with the current default action
+            DoPull(pullAction: AppSettings.DefaultPullAction, isSilent: false);
+        }
+
+        private void mergeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoPull(pullAction: AppSettings.PullAction.Merge, isSilent: true);
+        }
+
+        private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            DoPull(pullAction: AppSettings.PullAction.Rebase, isSilent: true);
+        }
+
+        private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoPull(pullAction: AppSettings.PullAction.Fetch, isSilent: true);
+        }
+
+        private void fetchAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoPull(pullAction: AppSettings.PullAction.FetchAll, isSilent: true);
+        }
+
+        private void fetchPruneAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoPull(pullAction: AppSettings.PullAction.FetchPruneAll, isSilent: true);
+        }
+
+        private void DoPull(AppSettings.PullAction pullAction, bool isSilent)
+        {
+            // Special case for FetchPruneAll to make sure user confirms the action
+            if (pullAction == AppSettings.PullAction.FetchPruneAll)
+            {
+                bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
+                                         || MessageBox.Show(
+                                             this,
+                                             _pullFetchPruneAllConfirmation.Text,
+                                             _pullFetchPruneAll.Text,
+                                             MessageBoxButtons.YesNo) == DialogResult.Yes;
+                if (isActionConfirmed)
+                {
+                    UICommands.StartPullDialogAndPullImmediately(this, pullAction: AppSettings.PullAction.FetchPruneAll);
+                }
+
+                return;
+            }
+
+            if (isSilent)
+            {
+                UICommands.StartPullDialogAndPullImmediately(this, pullAction: pullAction);
+            }
+            else
+            {
+                UICommands.StartPullDialog(this, pullAction: pullAction);
+            }
         }
 
         private void RefreshDefaultPullAction()
@@ -2404,25 +2414,6 @@ namespace GitUI.CommandsDialogs
                     toolStripButtonPull.Image = Images.Pull;
                     toolStripButtonPull.ToolTipText = _pullOpenDialog.Text;
                     break;
-            }
-        }
-
-        private void fetchAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            UICommands.StartPullDialogAndPullImmediately(this, fetchAll: true);
-        }
-
-        private void fetchPruneAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
-                                     || MessageBox.Show(
-                                         this,
-                                         _pullFetchPruneAllConfirmation.Text,
-                                         _pullFetchPruneAll.Text,
-                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
-            if (isActionConfirmed)
-            {
-                UICommands.StartPullDialogAndPullImmediately(this, fetchAll: true, prune: true);
             }
         }
 
