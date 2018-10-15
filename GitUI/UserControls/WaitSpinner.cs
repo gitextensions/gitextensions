@@ -51,7 +51,7 @@ namespace GitUI.UserControls
             _angles = GetAngles();
             UpdateCentre();
 
-            _timer = new Timer { Interval = 1000 / 60 }; // 60 fps
+            _timer = new Timer { Interval = 1000 / 30 }; // 30 fps
             _timer.Tick += delegate
             {
                 _progress = (_progress + 1) % _dotCount;
@@ -70,7 +70,7 @@ namespace GitUI.UserControls
 
             IReadOnlyList<Brush> GetBrushes()
             {
-                var alphaDelta = byte.MaxValue / _dotCount;
+                var alphaDelta = (byte.MaxValue / 2) / _dotCount;
 
                 var brushes = new Brush[_dotCount];
                 var alpha = 0;
@@ -130,8 +130,8 @@ namespace GitUI.UserControls
                 ref var angle = ref _angles[p];
                 e.Graphics.FillEllipse(
                     _brushes[i],
-                    _centre.X + (_circleRadius * angle.cos),
-                    _centre.Y + (_circleRadius * angle.sin),
+                    (_centre.X - (_dotRadius / 2)) + (_circleRadius * angle.cos),
+                    (_centre.Y - (_dotRadius / 2)) + (_circleRadius * angle.sin),
                     _dotRadius,
                     _dotRadius);
                 p++;
