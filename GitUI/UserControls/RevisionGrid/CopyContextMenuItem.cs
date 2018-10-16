@@ -154,7 +154,7 @@ namespace GitUI.UserControls.RevisionGrid
             int count = revisions.Count();
             AddItem(Strings.GetCommitHash(count), r => r.Guid, Images.CommitId, 'C', Keys.Control | Keys.C);
             AddItem(Strings.GetMessage(count), r => r.Body ?? r.Subject, Images.Message, 'M');
-            AddItem(Strings.GetAuthor(count), r => r.Author, Images.Author, 'A');
+            AddItem(Strings.GetAuthor(count), r => $"{r.Author} <{r.AuthorEmail}>", Images.Author, 'A');
 
             if (count == 1 && revisions.First().AuthorDate == revisions.First().CommitDate)
             {

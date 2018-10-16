@@ -1097,8 +1097,23 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
         }
 
-        public static string GetPlaintText(this RichTextBox rtb)
+        public static string GetPlainText(this RichTextBox rtb)
         {
+            return GetPlainText(rtb, 0, rtb.TextLength);
+        }
+
+        public static string GetSelectionPlainText(this RichTextBox rtb)
+        {
+            return GetPlainText(rtb, rtb.SelectionStart, rtb.SelectionStart + rtb.SelectionLength);
+        }
+
+        public static string GetPlainText(this RichTextBox rtb, int from, int to)
+        {
+            if (to == 0)
+            {
+                return string.Empty;
+            }
+
             ////rtb.HideSelection = true;
             IntPtr oldMask = rtb.BeginUpdate();
 
@@ -1113,7 +1128,7 @@ namespace GitUI.Editor.RichTextBoxExtension
                 // but RichTextBox doesn't provide another method to
                 // get something like an array of charformat and paraformat
                 //--------------------------------
-                for (int i = 0; i < rtb.TextLength; i++)
+                for (int i = from; i < to; i++)
                 {
                     // select one character
                     rtb.Select(i, 1);
