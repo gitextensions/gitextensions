@@ -1089,7 +1089,11 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            SetSelectedDiff(item, staged);
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await SetSelectedDiffAsync(item, staged);
+                _selectedDiffReloaded = true;
+            }).FileAndForget();
 
             _stageSelectedLinesToolStripMenuItem.Text = staged ? _unstageSelectedLines.Text : _stageSelectedLines.Text;
             _stageSelectedLinesToolStripMenuItem.Image = staged ? toolUnstageItem.Image : toolStageItem.Image;
@@ -1099,11 +1103,11 @@ namespace GitUI.CommandsDialogs
             return;
         }
 
-        private void SetSelectedDiff(GitItemStatus item, bool staged)
+        private async Task SetSelectedDiffAsync(GitItemStatus item, bool staged)
         {
             if (item.Name.EndsWith(".png"))
             {
-                SelectedDiff.ViewFileAsync(item.Name);
+                await SelectedDiff.ViewFileAsync(item.Name);
             }
             else if (item.IsTracked)
             {
@@ -1111,7 +1115,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                SelectedDiff.ViewFileAsync(item.Name);
+                await SelectedDiff.ViewFileAsync(item.Name);
             }
         }
 
