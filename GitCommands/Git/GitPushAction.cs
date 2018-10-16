@@ -69,9 +69,8 @@ namespace GitCommands
         /// <summary>Creates the 'push' command string. <example>"push --progress origin master:master"</example></summary>
         public override string ToString()
         {
-            var args = new ArgumentBuilder
+            var args = new GitArgumentBuilder("push")
             {
-                "push",
                 { ReportProgress, "--progress" },
                 Remote.Quote(),
                 PushActions.Select(action => action.ToString())

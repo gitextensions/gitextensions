@@ -24,9 +24,8 @@ namespace GitCommands
             var hasRemoteBranch = _branches.Any(branch => branch.IsRemote);
             var hasNonRemoteBranch = _branches.Any(branch => !branch.IsRemote);
 
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("branch")
             {
-                "branch",
                 { _force, "-D", "-d" },
                 { hasRemoteBranch && hasNonRemoteBranch, "-a" },
                 { hasRemoteBranch && !hasNonRemoteBranch, "-r" },

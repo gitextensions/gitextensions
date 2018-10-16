@@ -31,9 +31,8 @@ namespace GitCommands.Git
 
         protected override ArgumentString BuildArguments()
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("push")
             {
-                "push",
                 _remote,
                 _branches.Select(branch => $":refs/heads/{branch.Quote()}")
             };

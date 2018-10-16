@@ -47,6 +47,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ArgumentBuilder.cs" />
+    <Compile Include="ArgumentString.cs" />
     <Compile Include="ArrayExtensions.cs" />
     <Compile Include="GitArgumentBuilder.cs" />
     <Compile Include="GitUI\CancellationTokenSequence.cs" />

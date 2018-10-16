@@ -105,9 +105,8 @@ namespace GitCommands
 
         public static ArgumentString CherryPickCmd(ObjectId commitId, bool commit, string arguments)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("cherry-pick")
             {
-                "cherry-pick",
                 { !commit, "--no-commit" },
                 arguments,
                 commitId
@@ -127,23 +126,29 @@ namespace GitCommands
 
         private static ArgumentString SubmoduleUpdateCommand(string name)
         {
-            return "submodule update --init --recursive " + name;
+            return new GitArgumentBuilder("submodule")
+            {
+                "update",
+                "--init",
+                "--recursive",
+                name
+            };
         }
 
         public static ArgumentString SubmoduleSyncCmd([CanBeNull] string name)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("submodule")
             {
-                "submodule sync",
+                "sync",
                 name?.Trim().QuoteNE()
             };
         }
 
         public static ArgumentString AddSubmoduleCmd(string remotePath, string localPath, string branch, bool force)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("submodule")
             {
-                "submodule add",
+                "add",
                 { force, "-f" },
                 { !string.IsNullOrEmpty(branch), $"-b \"{branch?.Trim()}\"" },
                 remotePath.ToPosixPath().Quote(),
@@ -153,9 +158,8 @@ namespace GitCommands
 
         public static ArgumentString RevertCmd(ObjectId commitId, bool autoCommit, int parentIndex)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("revert")
             {
-                "revert",
                 { !autoCommit, "--no-commit" },
                 { parentIndex > 0, $"-m {parentIndex}" },
                 commitId
@@ -164,17 +168,29 @@ namespace GitCommands
 
         public static ArgumentString ResetSoftCmd(string commit)
         {
-            return "reset --soft \"" + commit + "\"";
+            return new GitArgumentBuilder("reset")
+            {
+                "--soft",
+                commit.QuoteNE()
+            };
         }
 
         public static ArgumentString ResetMixedCmd(string commit)
         {
-            return "reset --mixed \"" + commit + "\"";
+            return new GitArgumentBuilder("reset")
+            {
+                "--mixed",
+                commit.QuoteNE()
+            };
         }
 
         public static ArgumentString ResetHardCmd(string commit)
         {
-            return "reset --hard \"" + commit + "\"";
+            return new GitArgumentBuilder("reset")
+            {
+                "--hard",
+                commit.QuoteNE()
+            };
         }
 
         /// <summary>
@@ -197,10 +213,9 @@ namespace GitCommands
         {
             var from = PathUtil.IsLocalFile(fromPath) ? fromPath.ToPosixPath() : fromPath;
 
-            return new ArgumentBuilder
+            return new GitArgumentBuilder(lfs ? "lfs" : "clone")
             {
-                { lfs, "lfs" },
-                "clone",
+                { lfs, "clone" },
                 "-v",
                 { central, "--bare" },
                 { initSubmodules, "--recurse-submodules" },
@@ -217,9 +232,8 @@ namespace GitCommands
 
         public static ArgumentString CheckoutCmd(string branchOrRevisionName, LocalChangesAction changesAction)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("checkout")
             {
-                "checkout",
                 { changesAction == LocalChangesAction.Merge, "--merge" },
                 { changesAction == LocalChangesAction.Reset, "--force" },
                 branchOrRevisionName.Quote()
@@ -229,7 +243,12 @@ namespace GitCommands
         /// <summary>Create a new orphan branch from <paramref name="startPoint"/> and switch to it.</summary>
         public static ArgumentString CreateOrphanCmd(string newBranchName, ObjectId startPoint = null)
         {
-            return $"checkout --orphan {newBranchName} {startPoint}";
+            return new GitArgumentBuilder("checkout")
+            {
+                "--orphan",
+                newBranchName,
+                startPoint
+            };
         }
 
         /// <summary>Remove files from the working tree and from the index. <remarks>git rm</remarks></summary>
@@ -238,9 +257,8 @@ namespace GitCommands
         /// <param name="files">Files to remove. File globs can be given to remove matching files.</param>
         public static ArgumentString RemoveCmd(bool force = true, bool isRecursive = true, params string[] files)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("rm")
             {
-                "rm",
                 { force, "--force" },
                 { isRecursive, "-r" },
                 { files.Length == 0, "." },
@@ -250,9 +268,9 @@ namespace GitCommands
 
         public static ArgumentString BranchCmd(string branchName, string revision, bool checkout)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder(checkout ? "checkout" : "branch")
             {
-                { checkout, "checkout -b", "branch" },
+                { checkout, "-b" },
                 branchName.Trim().Quote(),
                 revision?.Trim().QuoteNE()
             };
@@ -260,9 +278,11 @@ namespace GitCommands
 
         public static ArgumentString MergedBranches(bool includeRemote = false)
         {
-            return includeRemote
-                ? "branch -a --merged"
-                : "branch --merged";
+            return new GitArgumentBuilder("branch")
+            {
+                { includeRemote, "-a" },
+                "--merged"
+            };
         }
 
         /// <summary>Pushes multiple sets of local branches to remote branches.</summary>
@@ -282,9 +302,8 @@ namespace GitCommands
                 return "";
             }
 
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("push")
             {
-                "push",
                 force,
                 { GitVersion.Current.PushCanAskForProgress, "--progress" },
                 path.ToPosixPath().Trim().Quote(),
@@ -297,9 +316,8 @@ namespace GitCommands
         {
             var isPartialStash = selectedFiles != null && selectedFiles.Any();
 
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("stash")
             {
-                "stash",
                 { isPartialStash, "push", "save" },
                 { untracked && GitVersion.Current.StashUntrackedFilesSupported, "-u" },
                 { keepIndex, "--keep-index" },
@@ -311,24 +329,23 @@ namespace GitCommands
 
         public static ArgumentString ContinueRebaseCmd()
         {
-            return "rebase --continue";
+            return new GitArgumentBuilder("rebase") { "--continue" };
         }
 
         public static ArgumentString SkipRebaseCmd()
         {
-            return "rebase --skip";
+            return new GitArgumentBuilder("rebase") { "--skip" };
         }
 
         public static ArgumentString StartBisectCmd()
         {
-            return "bisect start";
+            return new GitArgumentBuilder("bisect") { "start" };
         }
 
         public static ArgumentString ContinueBisectCmd(GitBisectOption bisectOption, params ObjectId[] revisions)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("bisect")
             {
-                "bisect",
                 bisectOption,
                 revisions
             };
@@ -336,7 +353,7 @@ namespace GitCommands
 
         public static ArgumentString StopBisectCmd()
         {
-            return "bisect reset";
+            return new GitArgumentBuilder("bisect") { "reset" };
         }
 
         public static ArgumentString RebaseCmd(string branch, bool interactive, bool preserveMerges, bool autosquash, bool autoStash, string from = null, string onto = null)
@@ -366,24 +383,35 @@ namespace GitCommands
 
         public static ArgumentString ResolvedCmd()
         {
-            return "am --3way --resolved";
+            return new GitArgumentBuilder("am")
+            {
+                "--3way",
+                "--resolved"
+            };
         }
 
         public static ArgumentString SkipCmd()
         {
-            return "am --3way --skip";
+            return new GitArgumentBuilder("am")
+            {
+                "--3way",
+                "--skip"
+            };
         }
 
         public static ArgumentString AbortCmd()
         {
-            return "am --3way --abort";
+            return new GitArgumentBuilder("am")
+            {
+                "--3way",
+                "--abort"
+            };
         }
 
         public static ArgumentString ApplyMailboxPatchCmd(bool ignoreWhiteSpace, string patchFile = null)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("am")
             {
-                "am",
                 "--3way",
                 "--signoff",
                 { ignoreWhiteSpace, "--ignore-whitespace" },
@@ -393,9 +421,8 @@ namespace GitCommands
 
         public static ArgumentString ApplyDiffPatchCmd(bool ignoreWhiteSpace, [NotNull] string patchFile)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("apply")
             {
-                "apply",
                 { ignoreWhiteSpace, "--ignore-whitespace" },
                 patchFile.ToPosixPath().Quote()
             };
@@ -403,9 +430,8 @@ namespace GitCommands
 
         public static ArgumentString CleanUpCmd(bool dryRun, bool directories, bool nonIgnored, bool ignored, string paths = null)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("clean")
             {
-                "clean",
                 { directories, "-d" },
                 { !nonIgnored && !ignored, "-x" },
                 { ignored, "-X" },
@@ -417,10 +443,12 @@ namespace GitCommands
 
         public static ArgumentString GetAllChangedFilesCmd(bool excludeIgnoredFiles, UntrackedFilesMode untrackedFiles, IgnoreSubmodulesMode ignoreSubmodules = IgnoreSubmodulesMode.None, bool noLocks = false)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("status", gitOptions:
+                noLocks && GitVersion.Current.SupportNoOptionalLocks
+                    ? (ArgumentString)"--no-optional-locks"
+                    : default)
             {
-                { noLocks && GitVersion.Current.SupportNoOptionalLocks, "--no-optional-locks" },
-                $"status --porcelain={(GitVersion.Current.SupportStatusPorcelainV2 ? 2 : 1)} -z",
+                $"--porcelain={(GitVersion.Current.SupportStatusPorcelainV2 ? 2 : 1)} -z",
                 untrackedFiles,
                 ignoreSubmodules,
                 { !excludeIgnoredFiles, "--ignored" }
@@ -926,9 +954,8 @@ namespace GitCommands
         {
             // TODO Quote should (optionally?) escape any " characters, at least for usages like the below
 
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("merge")
             {
-                "merge",
                 { !allowFastForward, "--no-ff" },
                 { !string.IsNullOrEmpty(strategy), $"--strategy={strategy}" },
                 { squash, "--squash" },

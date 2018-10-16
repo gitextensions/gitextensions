@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using GitCommands;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -53,7 +54,12 @@ namespace GitUI.CommandsDialogs
             void ProcessStart(FormStatus form)
             {
                 form.AddMessageLine(string.Format(_stageFilename.Text, _filename));
-                string output = Module.RunGitCmd($"add -- \"{_filename}\"");
+                var args = new GitArgumentBuilder("add")
+                {
+                    "--",
+                    _filename.QuoteNE()
+                };
+                string output = Module.RunGitCmd(args);
                 form.AddMessageLine(output);
                 form.Done(isSuccess: string.IsNullOrWhiteSpace(output));
             }

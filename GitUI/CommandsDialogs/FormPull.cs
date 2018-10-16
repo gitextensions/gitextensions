@@ -721,7 +721,12 @@ namespace GitUI.CommandsDialogs
             string remoteBranchName = Module.GetSetting(string.Format("branch.{0}.merge", _branch));
             if (!remoteBranchName.IsNullOrEmpty())
             {
-                remoteBranchName = Module.RunGitCmd(string.Format("name-rev --name-only \"{0}\"", remoteBranchName)).Trim();
+                var args = new GitArgumentBuilder("name=rev")
+                {
+                    "--name-only",
+                    remoteBranchName.QuoteNE()
+                };
+                remoteBranchName = Module.RunGitCmd(args).Trim();
             }
 
             return remoteBranchName;

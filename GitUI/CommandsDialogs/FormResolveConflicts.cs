@@ -895,7 +895,12 @@ namespace GitUI.CommandsDialogs
                 if (frm.KeepBase)
                 {
                     // delete
-                    Module.RunGitCmd("rm -- \"" + item.Filename + "\"");
+                    var args = new GitArgumentBuilder("rm")
+                    {
+                        "--",
+                        item.Filename.QuoteNE()
+                    };
+                    Module.RunGitCmd(args);
                 }
 
                 if (frm.KeepLocal)
@@ -942,7 +947,12 @@ namespace GitUI.CommandsDialogs
                 if (frm.KeepLocal)
                 {
                     // delete
-                    Module.RunGitCmd("rm -- \"" + item.Filename + "\"");
+                    var args = new GitArgumentBuilder("rm")
+                    {
+                        "--",
+                        item.Filename.QuoteNE()
+                    };
+                    Module.RunGitCmd(args);
                 }
 
                 if (frm.KeepRemote)
@@ -989,7 +999,12 @@ namespace GitUI.CommandsDialogs
                 if (frm.KeepRemote)
                 {
                     // remote
-                    Module.RunGitCmd("rm -- \"" + item.Filename + "\"");
+                    var args = new GitArgumentBuilder("rm")
+                    {
+                        "--",
+                        item.Filename.QuoteNE()
+                    };
+                    Module.RunGitCmd(args);
                 }
             }
 
@@ -1184,7 +1199,12 @@ namespace GitUI.CommandsDialogs
             void ProcessStart(FormStatus form)
             {
                 form.AddMessageLine(string.Format(_stageFilename.Text, filename));
-                string output = Module.RunGitCmd("add -- \"" + filename + "\"");
+                var args = new GitArgumentBuilder("add")
+                {
+                    "--",
+                    filename.QuoteNE()
+                };
+                string output = Module.RunGitCmd(args);
                 form.AddMessageLine(output);
                 form.Done(isSuccess: string.IsNullOrWhiteSpace(output));
             }

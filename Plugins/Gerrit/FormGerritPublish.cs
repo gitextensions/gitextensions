@@ -42,9 +42,8 @@ namespace Gerrit
 
         private static ArgumentString PushCmd(string remote, string toBranch)
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("push")
             {
-                "push",
                 { GitVersion.Current.PushCanAskForProgress, "--progress" },
                 remote.ToPosixPath().Trim().Quote(),
                 $"HEAD:{GitRefName.GetFullBranchName(toBranch)?.Replace(" ", "")}"

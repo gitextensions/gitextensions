@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
-
 namespace GitCommands
 {
     /// <summary>
@@ -115,6 +114,7 @@ namespace GitCommands
         private static readonly Regex _commandRegex = new Regex("^[a-z0-9_.-]+$", RegexOptions.Compiled);
 
         private readonly List<GitConfigItem> _configItems;
+        private readonly ArgumentString _gitArgs;
         private readonly string _command;
 
         /// <summary>
@@ -122,9 +122,10 @@ namespace GitCommands
         /// </summary>
         /// <param name="command">The git command this builder is compiling arguments for.</param>
         /// <param name="commandConfiguration">Optional source for default command configuration items. Pass <c>null</c> to use the Git Extensions defaults.</param>
+        /// <param name="gitOptions">Optional arguments that are for the git command.  EX: git --no-optional-locks status </param>
         /// <exception cref="ArgumentNullException"><paramref name="command"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentException"><paramref name="command"/> is an invalid string.</exception>
-        public GitArgumentBuilder([NotNull] string command, [CanBeNull] GitCommandConfiguration commandConfiguration = null)
+        public GitArgumentBuilder([NotNull] string command, [CanBeNull] GitCommandConfiguration commandConfiguration = null, [CanBeNull] ArgumentString gitOptions = default)
         {
             if (command == null)
             {
@@ -137,7 +138,7 @@ namespace GitCommands
             }
 
             _command = command;
-
+            _gitArgs = gitOptions;
             commandConfiguration = commandConfiguration ?? GitCommandConfiguration.Default;
 
             var defaultConfig = commandConfiguration.Get(command);
@@ -174,11 +175,23 @@ namespace GitCommands
         public override string ToString()
         {
             var arguments = base.ToString();
+            var gitArgsLength = _gitArgs.Length;
+            if (gitArgsLength == 0)
+            {
+                gitArgsLength = -1; // prevent extra capacity when length is 0
+            }
 
             // 7 = "-c " + "=" + " " + 2 (for possible quotes of value)
             var capacity = _configItems.Sum(i => i.Key.Length + i.Value.Length + 7) + _command.Length + 1 + arguments.Length;
+            capacity += gitArgsLength + 1;
 
             var str = new StringBuilder(capacity);
+
+            if (gitArgsLength > 0)
+            {
+                str.Append(_gitArgs.ToString());
+                str.Append(' ');
+            }
 
             foreach (var (key, value) in _configItems)
             {

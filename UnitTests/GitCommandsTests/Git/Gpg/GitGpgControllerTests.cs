@@ -36,8 +36,14 @@ namespace GitCommandsTests.Git.Gpg
             var objectId = ObjectId.Random();
 
             var revision = new GitRevision(objectId);
-
-            _module().RunGitCmd($"log --pretty=\"format:%G?\" -1 {revision.Guid}").Returns(gitCmdReturn);
+            var args = new GitArgumentBuilder("log")
+            {
+                "--pretty=\"format:%G?\"",
+                "-1",
+                revision.Guid
+            };
+            _module().RunGitCmd(Arg.Is<ArgumentString>(arg => arg.ToString().Equals(args.ToString())))
+                .Returns(x => gitCmdReturn);
 
             var actual = await _gpgController.GetRevisionCommitSignatureStatusAsync(revision);
 
@@ -86,8 +92,12 @@ namespace GitCommandsTests.Git.Gpg
             var gitRef = new GitRef(_module(), objectId, "refs/tags/FirstTag^{}");
 
             var revision = new GitRevision(objectId) { Refs = new[] { gitRef } };
-
-            _module().RunGitCmd($"verify-tag --raw {gitRef.LocalName}").Returns(gitCmdReturn);
+            var args = new GitArgumentBuilder("verify-tag")
+            {
+                "--raw",
+                gitRef.LocalName
+            };
+            _module().RunGitCmd(args).Returns(gitCmdReturn);
 
             var actual = await _gpgController.GetRevisionTagSignatureStatusAsync(revision);
 
@@ -99,8 +109,14 @@ namespace GitCommandsTests.Git.Gpg
         {
             var objectId = ObjectId.Random();
             var revision = new GitRevision(objectId);
-
-            _module().RunGitCmd($"log --pretty=\"format:%GG\" -1 {objectId}").Returns(returnString);
+            var args = new GitArgumentBuilder("log")
+            {
+                "--pretty=\"format:%GG\"",
+                "-1",
+                revision.Guid
+            };
+            _module().RunGitCmd(Arg.Is<ArgumentString>(arg => arg.Arguments.Equals(args.ToString())))
+                .Returns(x => returnString);
 
             var actual = _gpgController.GetCommitVerificationMessage(revision);
 
@@ -130,42 +146,46 @@ namespace GitCommandsTests.Git.Gpg
             switch (usefulTagRefNumber)
             {
                 case 0:
-                {
-                    // Tag but not dereference
-                    var gitRef = new GitRef(_module(), objectId, "refs/tags/TagName");
-                    revision.Refs = new[] { gitRef };
+                    {
+                        // Tag but not dereference
+                        var gitRef = new GitRef(_module(), objectId, "refs/tags/TagName");
+                        revision.Refs = new[] { gitRef };
 
-                    _module().RunGitCmd($"verify-tag  {gitRef.LocalName}").Returns("");
+                        var args = new GitArgumentBuilder("verify-tag") { gitRef.LocalName };
+                        _module().RunGitCmd(args).Returns("");
 
-                    break;
-                }
+                        break;
+                    }
 
                 case 1:
-                {
-                    // One tag that's also IsDereference == true
-                    var gitRef = new GitRef(_module(), objectId, "refs/tags/TagName^{}");
-                    revision.Refs = new[] { gitRef };
+                    {
+                        // One tag that's also IsDereference == true
+                        var gitRef = new GitRef(_module(), objectId, "refs/tags/TagName^{}");
+                        revision.Refs = new[] { gitRef };
 
-                    _module().RunGitCmd($"verify-tag  {gitRef.LocalName}").Returns(gitRef.LocalName);
+                        var args = new GitArgumentBuilder("verify-tag") { gitRef.LocalName };
+                        _module().RunGitCmd(args).Returns(gitRef.LocalName);
 
-                    break;
-                }
+                        break;
+                    }
 
                 case 2:
-                {
-                    // Two tag that's also IsDereference == true
-                    var gitRef1 = new GitRef(_module(), objectId, "refs/tags/FirstTag^{}");
-                    revision.Refs = new[] { gitRef1 };
+                    {
+                        // Two tag that's also IsDereference == true
+                        var gitRef1 = new GitRef(_module(), objectId, "refs/tags/FirstTag^{}");
+                        revision.Refs = new[] { gitRef1 };
 
-                    _module().RunGitCmd($"verify-tag  {gitRef1.LocalName}").Returns(gitRef1.LocalName);
+                        var args = new GitArgumentBuilder("verify-tag") { gitRef1.LocalName };
+                        _module().RunGitCmd(args).Returns(gitRef1.LocalName);
 
-                    var gitRef2 = new GitRef(_module(), objectId, "refs/tags/SecondTag^{}");
-                    revision.Refs = new[] { gitRef1, gitRef2 };
+                        var gitRef2 = new GitRef(_module(), objectId, "refs/tags/SecondTag^{}");
+                        revision.Refs = new[] { gitRef1, gitRef2 };
 
-                    _module().RunGitCmd($"verify-tag  {gitRef2.LocalName}").Returns(gitRef2.LocalName);
+                        args = new GitArgumentBuilder("verify-tag") { gitRef2.LocalName };
+                        _module().RunGitCmd(args).Returns(gitRef2.LocalName);
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             var actual = _gpgController.GetTagVerifyMessage(revision);

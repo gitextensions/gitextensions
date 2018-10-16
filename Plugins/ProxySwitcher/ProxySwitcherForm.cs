@@ -2,9 +2,9 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using GitCommands;
 using GitUIPluginInterfaces;
 using ResourceManager;
-using Settings = GitCommands.AppSettings;
 
 namespace ProxySwitcher
 {
@@ -55,8 +55,19 @@ namespace ProxySwitcher
 
         private void RefreshProxy()
         {
-            LocalHttpProxy_TextBox.Text = HidePassword(_gitCommands.RunGitCmd("config --get http.proxy"));
-            GlobalHttpProxy_TextBox.Text = HidePassword(_gitCommands.RunGitCmd("config --global --get http.proxy"));
+            var args = new GitArgumentBuilder("config")
+            {
+                "--get",
+                "http.proxy"
+            };
+            LocalHttpProxy_TextBox.Text = HidePassword(_gitCommands.RunGitCmd(args));
+            args = new GitArgumentBuilder("config")
+            {
+                "--global",
+                "--get",
+                "http.proxy"
+            };
+            GlobalHttpProxy_TextBox.Text = HidePassword(_gitCommands.RunGitCmd(args));
             ApplyGlobally_CheckBox.Checked = string.Equals(LocalHttpProxy_TextBox.Text, GlobalHttpProxy_TextBox.Text);
         }
 
@@ -99,11 +110,13 @@ namespace ProxySwitcher
         {
             var httpProxy = BuildHttpProxy();
 
-            var arguments = ApplyGlobally_CheckBox.Checked
-                ? $"config --global http.proxy {httpProxy}"
-                : $"config http.proxy {httpProxy}";
-
-            _gitCommands.RunGitCmd(arguments);
+            var args = new GitArgumentBuilder("config")
+            {
+                { ApplyGlobally_CheckBox.Checked, "--global" },
+                "http.proxy",
+                httpProxy
+            };
+            _gitCommands.RunGitCmd(args);
 
             RefreshProxy();
         }

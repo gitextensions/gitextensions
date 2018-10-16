@@ -61,7 +61,13 @@ namespace FindLargeFiles
                     DateTime date;
                     if (!revData.ContainsKey(commit))
                     {
-                        string revDate = _gitCommands.RunGitCmd(string.Format("show -s {0} --format=\"%ci\"", commit));
+                        var args = new GitArgumentBuilder("show")
+                        {
+                            "-s",
+                            commit,
+                            "--format=\"%ci\""
+                        };
+                        string revDate = _gitCommands.RunGitCmd(args);
                         DateTime.TryParse(revDate, out date);
                         revData.Add(commit, date);
                     }
@@ -102,7 +108,13 @@ namespace FindLargeFiles
                     var packFiles = Directory.GetFiles(objectsPackDirectory, "pack-*.idx");
                     foreach (var pack in packFiles)
                     {
-                        string[] objects = _gitCommands.RunGitCmd(string.Concat("verify-pack -v ", pack)).Split('\n');
+                        var args = new GitArgumentBuilder("verify-pack")
+                        {
+                            "-v",
+                            pack
+                        };
+
+                        string[] objects = _gitCommands.RunGitCmd(args).Split('\n');
                         ThreadHelper.JoinableTaskFactory.Run(async () =>
                         {
                             await pbRevisions.SwitchToMainThreadAsync();
@@ -146,7 +158,9 @@ namespace FindLargeFiles
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            _revList = _gitCommands.RunGitCmd("rev-list HEAD").Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var args = new GitArgumentBuilder("rev-list") { "HEAD" };
+            _revList = _gitCommands.RunGitCmd(args).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             pbRevisions.Maximum = (int)(_revList.Length * 1.1f);
             BranchesGrid.DataSource = _gitObjects;
             var thread = new Thread(FindLargeFilesFunction);
@@ -164,7 +178,12 @@ namespace FindLargeFiles
                     pbRevisions.Value = i;
                 });
                 string rev = _revList[i];
-                string[] objects = _gitCommands.RunGitCmd(string.Concat("ls-tree -zrl ", rev)).Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+                var args = new GitArgumentBuilder("ls-tree")
+                {
+                    "-zrl",
+                    rev
+                };
+                string[] objects = _gitCommands.RunGitCmd(args).Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string objData in objects)
                 {
                     // "100644 blob b17a497cdc6140aa3b9a681344522f44768165ac 2120195\tBin/Dictionaries/de-DE.dic"

@@ -6,12 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DeleteUnusedBranches.Properties;
+using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
-
 namespace DeleteUnusedBranches
 {
     public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
@@ -88,7 +88,13 @@ namespace DeleteUnusedBranches
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
 
-                var commitLog = context.Commands.RunGitCmd(string.Concat("log --pretty=%ci\n%an\n%s ", branchName, "^1..", branchName)).Split('\n');
+                var args = new GitArgumentBuilder("log")
+                {
+                    "--pretty=%ci\n%an\n%s",
+                    $"{branchName}^1..{branchName}"
+                };
+
+                var commitLog = context.Commands.RunGitCmd(args).Split('\n');
                 DateTime.TryParse(commitLog[0], out var commitDate);
                 var authorName = commitLog.Length > 1 ? commitLog[1] : string.Empty;
                 var message = commitLog.Length > 2 ? commitLog[2] : string.Empty;
@@ -112,7 +118,14 @@ namespace DeleteUnusedBranches
             var regex = string.IsNullOrEmpty(context.RegexFilter) ? null : new Regex(context.RegexFilter, options);
             bool regexMustMatch = !context.RegexDoesNotMatch;
 
-            string[] branches = context.Commands.RunGitCmd("branch" + (context.IncludeRemotes ? " -r" : "") + (context.IncludeUnmerged ? "" : " --merged " + context.ReferenceBranch))
+            var args = new GitArgumentBuilder("branch")
+            {
+                 { context.IncludeRemotes, "-r" },
+                 { !context.IncludeUnmerged, "--merged" },
+                 context.ReferenceBranch
+            };
+
+            string[] branches = context.Commands.RunGitCmd(args)
                 .Split('\n')
                 .Where(branchName => !string.IsNullOrEmpty(branchName))
                 .Select(branchName => branchName.Trim('*', ' ', '\n', '\r'))
@@ -162,18 +175,29 @@ namespace DeleteUnusedBranches
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-
                 foreach (var remoteBranch in remoteBranches)
                 {
                     // Delete branches one by one, because it is possible one fails
                     var remoteBranchNameOffset = remoteBranchPrefix.Length;
-                    _gitCommands.RunGitCmd($"push {remoteName} :{remoteBranch.Name.Substring(remoteBranchNameOffset)}");
+                    var args = new GitArgumentBuilder("push")
+                    {
+                        remoteName,
+                        $":{remoteBranch.Name.Substring(remoteBranchNameOffset)}"
+                    };
+                    _gitCommands.RunGitCmd(args);
                 }
 
                 foreach (var localBranch in localBranches)
                 {
+                    var args = new GitArgumentBuilder("branch")
+                    {
+                        "-d",
+                        localBranch.Name
+                    };
+                    _gitCommands.RunGitCmd(args);
+
                     // Delete branches one by one, because it is possible one fails
-                    _gitCommands.RunGitCmd("branch -d " + localBranch.Name);
+                    _gitCommands.RunGitCmd(args);
                 }
 
                 await this.SwitchToMainThreadAsync();

@@ -623,7 +623,12 @@ namespace GitUI
             {
                 if (onlyWorkTree)
                 {
-                    Module.RunGitCmd("checkout -- .");
+                    var args = new GitArgumentBuilder("checkout")
+                    {
+                        "--",
+                        "."
+                    };
+                    Module.RunGitCmd(args);
                 }
                 else
                 {

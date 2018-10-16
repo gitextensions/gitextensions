@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 
@@ -37,6 +39,7 @@ namespace GitCommands
         private readonly StringBuilder _arguments = new StringBuilder(capacity: 16);
 
         public bool IsEmpty => _arguments.Length == 0;
+        public int Length => _arguments.Length;
 
         /// <summary>
         /// Adds <paramref name="s"/> to the argument list.
@@ -59,6 +62,19 @@ namespace GitCommands
             }
 
             _arguments.Append(s);
+        }
+
+        /// <summary>
+        /// Adds a range of arguments
+        /// </summary>
+        /// <param name="args">The arguments to add to this builder</param>
+        public void AddRange(IEnumerable<string> args)
+        {
+            args = args.Where(a => !string.IsNullOrEmpty(a));
+            foreach (string s in args)
+            {
+                Add(s);
+            }
         }
 
         /// <summary>

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
-using GitCommands;
 using JetBrains.Annotations;
 
-namespace GitUIPluginInterfaces
+namespace GitCommands
 {
     [DebuggerDisplay("{" + nameof(Arguments) + "}")]
     public readonly struct ArgumentString
     {
         [CanBeNull] public string Arguments { get; }
+        public int Length { get => Arguments?.Length ?? 0; }
 
         private ArgumentString([NotNull] string arguments)
         {

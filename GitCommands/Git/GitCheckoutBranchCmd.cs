@@ -37,9 +37,8 @@ namespace GitCommands.Git
 
         protected override ArgumentString BuildArguments()
         {
-            return new ArgumentBuilder
+            return new GitArgumentBuilder("checkout")
             {
-                "checkout",
                 { LocalChanges == LocalChangesAction.Merge, "--merge" },
                 { LocalChanges == LocalChangesAction.Reset, "--force" },
                 { Remote && NewBranchMode == CheckoutNewBranchMode.Create, $"-b {NewBranchName.Quote()}" },

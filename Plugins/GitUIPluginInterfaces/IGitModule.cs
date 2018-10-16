@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GitCommands;
 using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces

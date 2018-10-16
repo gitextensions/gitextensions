@@ -463,29 +463,29 @@ namespace GitUI.CommandsDialogs
             switch (e.KeyData)
             {
                 case Keys.Control | Keys.Enter when !Message.ContainsFocus:
-                {
-                    FocusCommitMessage();
-                    e.Handled = true;
-                    break;
-                }
+                    {
+                        FocusCommitMessage();
+                        e.Handled = true;
+                        break;
+                    }
 
                 case Keys.Control | Keys.P:
                 case Keys.Alt | Keys.Up:
                 case Keys.Alt | Keys.Left:
-                {
-                    MoveSelection(-1);
-                    e.Handled = true;
-                    break;
-                }
+                    {
+                        MoveSelection(-1);
+                        e.Handled = true;
+                        break;
+                    }
 
                 case Keys.Control | Keys.N:
                 case Keys.Alt | Keys.Down:
                 case Keys.Alt | Keys.Right:
-                {
-                    MoveSelection(+1);
-                    e.Handled = true;
-                    break;
-                }
+                    {
+                        MoveSelection(+1);
+                        e.Handled = true;
+                        break;
+                    }
             }
 
             base.OnKeyUp(e);
@@ -787,9 +787,8 @@ namespace GitUI.CommandsDialogs
 
             if (patch != null && patch.Length > 0)
             {
-                var args = new ArgumentBuilder
+                var args = new GitArgumentBuilder("apply")
                 {
-                    "apply",
                     "--cached",
                     "--whitespace=nowarn",
                     { _currentItemStaged,  "--reverse" }
@@ -860,9 +859,8 @@ namespace GitUI.CommandsDialogs
 
             if (patch != null && patch.Length > 0)
             {
-                var args = new ArgumentBuilder
+                var args = new GitArgumentBuilder("apply")
                 {
-                    "apply",
                     "--whitespace=nowarn",
                     { _currentItemStaged,  "--reverse --index" }
                 };
@@ -2230,8 +2228,14 @@ namespace GitUI.CommandsDialogs
 
             foreach (var (path, name) in modules)
             {
-                string diff = Module.RunGitCmd(
-                     string.Format("diff --cached -z -- {0}", name));
+                var args = new GitArgumentBuilder("diff")
+                {
+                    "--cached",
+                    "-z",
+                    "--",
+                    name.QuoteNE()
+                };
+                string diff = Module.RunGitCmd(args);
                 var lines = diff.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 const string subprojectCommit = "Subproject commit ";
                 var from = lines.Single(s => s.StartsWith("-" + subprojectCommit)).Substring(subprojectCommit.Length + 1);
@@ -2240,8 +2244,15 @@ namespace GitUI.CommandsDialogs
                 {
                     sb.AppendLine("Submodule " + path + ":");
                     var module = new GitModule(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
-                    string log = module.RunGitCmd(
-                         string.Format("log --pretty=format:\"    %m %h - %s\" --no-merges {0}...{1}", from, to));
+                    args = new GitArgumentBuilder("log")
+                    {
+                        "--pretty = format:\"    %m %h - %s\"",
+                        "--no-merges",
+                        $"{from}...{to}"
+                    };
+
+                    string log = module.RunGitCmd(args);
+
                     if (log.Length != 0)
                     {
                         sb.AppendLine(log);
