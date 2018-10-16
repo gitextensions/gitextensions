@@ -681,16 +681,17 @@ namespace GitUI.CommitInfo
             }
         }
 
-        private void RichTextBox_KeyEvent(object sender, KeyEventArgs e)
+        private void RichTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             var rtb = sender as RichTextBox;
+            if (rtb == null || !e.Control || e.KeyCode != Keys.C)
+            {
+                return;
+            }
 
             // Override RichTextBox Ctrl-c handling to copy plain text
-            if (rtb != null && e.Control && e.KeyCode == Keys.C)
-            {
-                Clipboard.SetText(rtb.GetSelectionPlainText());
-                e.Handled = true;
-            }
+            Clipboard.SetText(rtb.GetSelectionPlainText());
+            e.Handled = true;
         }
 
         private void _RevisionHeader_ContentsResized(object sender, ContentsResizedEventArgs e)
