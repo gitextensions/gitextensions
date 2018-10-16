@@ -2277,29 +2277,38 @@ namespace GitUI.CommandsDialogs
         {
             // Most options do not make sense for artificial commits or no revision selected at all
             var selectedRevisions = RevisionGrid.GetSelectedRevisions();
-            bool enabled = selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
+            bool singleNormalCommit = selectedRevisions.Count == 1 && !selectedRevisions[0].IsArtificial;
 
+            // Some commands like stash, undo commit etc has no relation to selections
+
+            // Require that a single commit is selected
+            // Some commands like delete branch could be available for artificial as no default is used,
+            // but hide for consistency
             branchToolStripMenuItem.Enabled =
             deleteBranchToolStripMenuItem.Enabled =
             mergeBranchToolStripMenuItem.Enabled =
             rebaseToolStripMenuItem.Enabled =
-            stashToolStripMenuItem.Enabled =
-              selectedRevisions.Count > 0 && !Module.IsBareRepository();
-
-            undoLastCommitToolStripMenuItem.Enabled =
-            resetToolStripMenuItem.Enabled =
             checkoutBranchToolStripMenuItem.Enabled =
-            runMergetoolToolStripMenuItem.Enabled =
             cherryPickToolStripMenuItem.Enabled =
             checkoutToolStripMenuItem.Enabled =
-            toolStripMenuItemReflog.Enabled =
             bisectToolStripMenuItem.Enabled =
-              enabled && !Module.IsBareRepository();
+                singleNormalCommit && !Module.IsBareRepository();
 
             tagToolStripMenuItem.Enabled =
             deleteTagToolStripMenuItem.Enabled =
             archiveToolStripMenuItem.Enabled =
-              enabled;
+                singleNormalCommit;
+
+            // Not operating on selected revision
+            commitToolStripMenuItem.Enabled =
+            undoLastCommitToolStripMenuItem.Enabled =
+            runMergetoolToolStripMenuItem.Enabled =
+            stashToolStripMenuItem.Enabled =
+            resetToolStripMenuItem.Enabled =
+            cleanupToolStripMenuItem.Enabled =
+            toolStripMenuItemReflog.Enabled =
+            applyPatchToolStripMenuItem.Enabled =
+                !Module.IsBareRepository();
         }
 
         private void PullToolStripMenuItemClick(object sender, EventArgs e)
