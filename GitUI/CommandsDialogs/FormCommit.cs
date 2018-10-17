@@ -520,6 +520,11 @@ namespace GitUI.CommandsDialogs
             _resetSelectedLinesToolStripMenuItem.Enabled = _stageSelectedLinesToolStripMenuItem.Enabled;
         }
 
+        private void SelectedDiff_TextLoaded(object sender, EventArgs e)
+        {
+            _selectedDiffReloaded = true;
+        }
+
         #region Hotkey commands
 
         public static readonly string HotkeySettingsName = "Commit";
