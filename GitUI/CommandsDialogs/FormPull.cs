@@ -721,7 +721,7 @@ namespace GitUI.CommandsDialogs
             string remoteBranchName = Module.GetSetting(string.Format("branch.{0}.merge", _branch));
             if (!remoteBranchName.IsNullOrEmpty())
             {
-                var args = new GitArgumentBuilder("name=rev")
+                var args = new GitArgumentBuilder("name-rev")
                 {
                     "--name-only",
                     remoteBranchName.QuoteNE()
