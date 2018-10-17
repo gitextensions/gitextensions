@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using GitCommands.Gpg;
 using GitCommands.Utils;
+using GitExtUtils.GitUI;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -56,15 +57,15 @@ namespace GitUI.CommandsDialogs
                 switch (commitStatus)
                 {
                     case CommitStatus.GoodSignature:
-                        commitSignPicture.Image = Images.CommitSignatureOk;
+                        commitSignPicture.Image = DpiUtil.Scale(Images.CommitSignatureOk);
                         commitSignPicture.Visible = true;
                         break;
                     case CommitStatus.MissingPublicKey:
-                        commitSignPicture.Image = Images.CommitSignatureWarning;
+                        commitSignPicture.Image = DpiUtil.Scale(Images.CommitSignatureWarning);
                         commitSignPicture.Visible = true;
                         break;
                     case CommitStatus.SignatureError:
-                        commitSignPicture.Image = Images.CommitSignatureError;
+                        commitSignPicture.Image = DpiUtil.Scale(Images.CommitSignatureError);
                         commitSignPicture.Visible = true;
                         break;
                     case CommitStatus.NoSignature:
@@ -80,25 +81,25 @@ namespace GitUI.CommandsDialogs
                 switch (tagStatus)
                 {
                     case TagStatus.OneGood:
-                        tagSignPicture.Image = Images.TagOk;
+                        tagSignPicture.Image = DpiUtil.Scale(Images.TagOk);
                         tagSignPicture.Visible = true;
                         /* This shows the Tag row in ApplyLayout */
                         txtTagGpgInfo.Visible = true;
                         break;
                     case TagStatus.OneBad:
-                        tagSignPicture.Image = Images.TagError;
+                        tagSignPicture.Image = DpiUtil.Scale(Images.TagError);
                         tagSignPicture.Visible = true;
                         /* This shows the Tag row in ApplyLayout */
                         txtTagGpgInfo.Visible = true;
                         break;
                     case TagStatus.Many:
-                        tagSignPicture.Image = Images.TagMany;
+                        tagSignPicture.Image = DpiUtil.Scale(Images.TagMany);
                         tagSignPicture.Visible = true;
                         /* This shows the Tag row in ApplyLayout */
                         txtTagGpgInfo.Visible = true;
                         break;
                     case TagStatus.NoPubKey:
-                        tagSignPicture.Image = Images.TagWarning;
+                        tagSignPicture.Image = DpiUtil.Scale(Images.TagWarning);
                         tagSignPicture.Visible = true;
                         /* This shows the Tag row in ApplyLayout */
                         txtTagGpgInfo.Visible = true;
