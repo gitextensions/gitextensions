@@ -119,8 +119,13 @@ namespace GitUI.Editor
             }
 
             TextEditor.BeginUpdate();
-            TextEditor.ShowLineNumbers = !isDiff;
+
             TextEditor.Text = text;
+
+            // important to set after the text was changed
+            // otherwise the may be rendering artifacts as noted in #5568
+            TextEditor.ShowLineNumbers = !isDiff;
+
             TextEditor.EndUpdate();
 
             _currentViewPositionCache.Restore(isDiff);
