@@ -48,6 +48,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noSubmodulesPresent = new TranslationString("No submodules");
         private readonly TranslationString _topProjectModuleFormat = new TranslationString("Top project: {0}");
         private readonly TranslationString _superprojectModuleFormat = new TranslationString("Superproject: {0}");
+        private readonly TranslationString _goToSuperProject = new TranslationString("Go to superproject");
 
         private readonly TranslationString _indexLockCantDelete = new TranslationString("Failed to delete index.lock.");
 
@@ -80,7 +81,6 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _undoLastCommitText = new TranslationString("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
         private readonly TranslationString _undoLastCommitCaption = new TranslationString("Undo last commit");
-
         #endregion
 
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
@@ -2582,6 +2582,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
+            toolStripButtonLevelUp.ToolTipText = "";
             _submoduleStatusUpdateNeeded = false;
             _submoduleStatusProvider.UpdateSubmodulesStatus(
                 Module.WorkingDir, _noBranchTitle.Text,
@@ -2620,6 +2621,7 @@ namespace GitUI.CommandsDialogs
 
                 newItems.Add(CreateSubmoduleMenuItem(cancelToken, result.SuperProject, _superprojectModuleFormat.Text));
                 newItems.AddRange(result.SuperSubmodules.Select(submodule => CreateSubmoduleMenuItem(cancelToken, submodule)));
+                toolStripButtonLevelUp.ToolTipText = _goToSuperProject.Text;
             }
 
             newItems.Add(new ToolStripSeparator());

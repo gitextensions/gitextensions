@@ -355,12 +355,12 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolStripButtonLevelUp.AutoToolTip = false;
             this.toolStripButtonLevelUp.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonLevelUp.Image = global::GitUI.Properties.Images.NavigateUp;
+            this.toolStripButtonLevelUp.Image = global::GitUI.Properties.Images.FolderSubmodule;
             this.toolStripButtonLevelUp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLevelUp.Name = "toolStripButtonLevelUp";
             this.toolStripButtonLevelUp.Size = new System.Drawing.Size(32, 22);
             this.toolStripButtonLevelUp.Text = "Go to superproject";
-            this.toolStripButtonLevelUp.ToolTipText = "Go to superproject";
+            this.toolStripButtonLevelUp.ToolTipText = "";
             this.toolStripButtonLevelUp.ButtonClick += new System.EventHandler(this.toolStripButtonLevelUp_ButtonClick);
             this.toolStripButtonLevelUp.DropDownOpening += new System.EventHandler(this.toolStripButtonLevelUp_DropDownOpening);
             // 
