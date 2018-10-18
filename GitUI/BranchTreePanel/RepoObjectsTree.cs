@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
@@ -159,6 +160,7 @@ namespace GitUI.BranchTreePanel
 
             try
             {
+                treeMain.BeginUpdate();
                 var tasks = _rootNodes.Select(r => r.ReloadAsync(token)).ToArray();
                 await Task.WhenAll(tasks).ConfigureAwait(false);
             }
@@ -176,6 +178,8 @@ namespace GitUI.BranchTreePanel
                     _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = false);
                     treeMain.SelectedNode.EnsureVisible();
                 }
+
+                treeMain.EndUpdate();
             }
         }
 
@@ -232,6 +236,7 @@ namespace GitUI.BranchTreePanel
             tree.TreeViewNode.SelectedImageKey = tree.TreeViewNode.ImageKey;
             tree.TreeViewNode.Tag = tree;
             treeMain.Nodes.Add(tree.TreeViewNode);
+            treeMain.Font = AppSettings.Font;
             _rootNodes.Add(tree);
         }
 

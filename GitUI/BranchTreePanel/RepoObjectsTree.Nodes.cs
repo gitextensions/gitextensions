@@ -220,7 +220,6 @@ namespace GitUI.BranchTreePanel
 
             protected virtual void ApplyStyle()
             {
-                TreeViewNode.NodeFont = AppSettings.Font;
             }
 
             internal virtual void OnSelected()
