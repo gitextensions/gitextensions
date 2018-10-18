@@ -251,7 +251,7 @@ namespace GitUI.CommandsDialogs
             ((ToolStripDropDownMenu)commitMessageToolStripMenuItem.DropDown).ShowCheckMargin = false;
 
             selectionFilter.Size = DpiUtil.Scale(selectionFilter.Size);
-            toolStripStatusBranchIcon.Size = DpiUtil.Scale(toolStripStatusBranchIcon.Size);
+            toolStripStatusBranchIcon.Width = DpiUtil.Scale(toolStripStatusBranchIcon.Width);
 
             _splitterManager.AddSplitter(splitMain, "splitMain");
             _splitterManager.AddSplitter(splitRight, "splitRight");
