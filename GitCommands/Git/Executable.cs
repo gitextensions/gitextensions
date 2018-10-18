@@ -4,11 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Permissions;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Logging;
 using GitUI;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands
@@ -17,17 +15,12 @@ namespace GitCommands
     public sealed class Executable : IExecutable
     {
         private readonly string _workingDir;
-        private readonly Func<string> _fileNameProvider;
+        private readonly string _fileName;
 
         public Executable([NotNull] string fileName, [NotNull] string workingDir = "")
-            : this(() => fileName, workingDir)
-        {
-        }
-
-        public Executable([NotNull] Func<string> fileNameProvider, [NotNull] string workingDir = "")
         {
             _workingDir = workingDir;
-            _fileNameProvider = fileNameProvider;
+            _fileName = fileName;
         }
 
         /// <inheritdoc />
@@ -39,7 +32,10 @@ namespace GitCommands
 
             var args = (arguments.Arguments ?? "").Replace("$QUOTE$", "\\\"");
 
-            var fileName = _fileNameProvider();
+            if (!PathUtil.TryFindFullPath(_fileName, out var fileName))
+            {
+                throw new ExecutableNotFoundException(_fileName);
+            }
 
             return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding);
         }

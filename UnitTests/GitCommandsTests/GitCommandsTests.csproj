@@ -54,6 +54,7 @@
     <Compile Include="CommitTemplateManagerTests.cs" />
     <Compile Include="Config\ConfigFileTest.cs" />
     <Compile Include="EnvironmentPathsProviderTests.cs" />
+    <Compile Include="ExceptionUtilsTests.cs" />
     <Compile Include="ExternalLinks\ConfiguredLinkDefinitionsProviderTests.cs" />
     <Compile Include="ExternalLinks\ExternalLinkRevisionParserTests.cs" />
     <Compile Include="ExternalLinks\ExternalLinksManagerIntegrationTests.cs" />

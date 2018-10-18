@@ -10,6 +10,7 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
+using ResourceManager;
 
 namespace GitExtensions
 {
@@ -93,8 +94,8 @@ namespace GitExtensions
                 // or AppSettings.CheckSettings is set to false.
                 if (!(args.Length >= 2 && args[1] == "uninstall")
                     && (AppSettings.CheckSettings
-                    || string.IsNullOrEmpty(AppSettings.GitCommandValue)
-                    || !File.Exists(AppSettings.GitCommandValue)))
+                        || string.IsNullOrEmpty(AppSettings.GitCommandValue)
+                        || !File.Exists(AppSettings.GitCommandValue)))
                 {
                     var uiCommands = new GitUICommands("");
                     var commonLogic = new CommonLogic(uiCommands.Module);
@@ -111,6 +112,14 @@ namespace GitExtensions
                         }
                     }
                 }
+            }
+            catch (Exception ex) when (ex.HasInnerOfType<ExecutableNotFoundException>())
+            {
+                var iex = ex.InnerOfType<ExecutableNotFoundException>();
+                string messageTemplate = iex.FileName.Contains("git") ? Strings.GitExecutableNotFound : Strings.ExecutableNotFound;
+                MessageBox.Show(null, string.Format(messageTemplate, iex.FileName), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                Environment.Exit(-1);
             }
             catch
             {

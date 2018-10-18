@@ -8,6 +8,41 @@ namespace GitCommands
 {
     public static class ExceptionUtils
     {
+        /// <summary>
+        /// Determines whether the <paramref name="ex"/> contains an inner exception of the desired type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">Desired exception type.</typeparam>
+        /// <param name="ex">The exception to inspect.</param>
+        /// <returns><see langword="true"/> if one of the inner exceptions are of desired type; otherwise <see langword="false"/>.</returns>
+        public static bool HasInnerOfType<T>(this Exception ex)
+           where T : Exception
+        {
+            return ex.InnerOfType<T>() != null;
+        }
+
+        /// <summary>
+        /// Determines whether the <paramref name="ex"/> contains an inner exception of the desired type <typeparamref name="T"/> and returns it, if found.
+        /// </summary>
+        /// <typeparam name="T">Desired exception type.</typeparam>
+        /// <param name="ex">The exception to inspect.</param>
+        /// <returns>The inner exceptions are of desired type; otherwise <see langword="null"/>.</returns>
+        public static T InnerOfType<T>(this Exception ex)
+             where T : Exception
+        {
+            var iex = ex.InnerException;
+            while (iex != null)
+            {
+                if (iex is T variable)
+                {
+                    return variable;
+                }
+
+                iex = iex.InnerException;
+            }
+
+            return null;
+        }
+
         public static void ShowException(Exception e, bool canIgnore = true)
         {
             ShowException(e, string.Empty, canIgnore);
@@ -22,7 +57,7 @@ namespace GitCommands
         {
             if (!(canIgnore && IsIgnorable(e)))
             {
-                MessageBox.Show(owner, string.Join(Environment.NewLine + Environment.NewLine, info, e.ToStringWithData()), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(owner, string.Join(info, Environment.NewLine + Environment.NewLine, e.ToStringWithData()), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -34,7 +69,7 @@ namespace GitCommands
         public static string ToStringWithData(this Exception e)
         {
             var sb = new StringBuilder();
-            sb.AppendLine(e.ToString());
+            sb.AppendLine(e.Message);
             sb.AppendLine();
             foreach (DictionaryEntry entry in e.Data)
             {

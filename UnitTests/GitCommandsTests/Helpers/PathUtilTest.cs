@@ -193,6 +193,15 @@ namespace GitCommandsTests.Helpers
             PathUtil.TryFindFullPath(fileName, out _).Should().BeFalse();
         }
 
+        [Platform(Include = "Win")]
+        [TestCase("git.exe")]
+        [TestCase("cmd.exe")]
+        public void TryFindFullPath_resolve_global_tools(string fileName)
+        {
+            PathUtil.TryFindFullPath(fileName, out var fullPath).Should().BeTrue();
+            fullPath.Should().NotBeEmpty();
+        }
+
         private static IEnumerable<string> GetInvalidPaths()
         {
             if (Path.DirectorySeparatorChar == '\\')

@@ -1,6 +1,6 @@
 using System;
 
-namespace GitCommands.Git
+namespace GitCommands
 {
     public class FileDeleteException : Exception
     {
