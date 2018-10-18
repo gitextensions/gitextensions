@@ -465,7 +465,7 @@ namespace GitCommands
                     var submodule = GetSubmodule(submodules[i]);
 
                     var subSubmodules = GetSubmodulePaths(submodule)
-                        .Select(p => Path.Combine(submodules[i], p))
+                        .Select(p => Path.Combine(submodules[i], p).ToPosixPath())
                         .ToList();
 
                     submodules.InsertRange(i + 1, subSubmodules);
