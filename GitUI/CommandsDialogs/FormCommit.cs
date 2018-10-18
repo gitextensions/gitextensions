@@ -939,11 +939,10 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
-                var headId = Module.RevParse("HEAD");
                 SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
                 Staged.SetDiffs(
                     new GitRevision(ObjectId.IndexId),
-                    new GitRevision(headId),
+                    GetHeadRevision(),
                     Module.GetIndexFilesWithSubmodulesStatus());
             }
         }
@@ -974,10 +973,8 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            var headId = Module.RevParse("HEAD");
-            var headRevision = headId != null ? new GitRevision(headId) : null;
             Unstaged.SetDiffs(new GitRevision(ObjectId.WorkTreeId), new GitRevision(ObjectId.IndexId), unstagedFiles);
-            Staged.SetDiffs(new GitRevision(ObjectId.IndexId), headRevision, stagedFiles);
+            Staged.SetDiffs(new GitRevision(ObjectId.IndexId), GetHeadRevision(), stagedFiles);
 
             var doChangesExist = Unstaged.AllItems.Any() || Staged.AllItems.Any();
 
@@ -1620,9 +1617,8 @@ namespace GitUI.CommandsDialogs
                         unstagedFiles.Add(item);
                     }
 
-                    var headId = Module.RevParse("HEAD");
                     Unstaged.SetDiffs(new GitRevision(ObjectId.WorkTreeId), new GitRevision(ObjectId.IndexId), unstagedFiles);
-                    Staged.SetDiffs(new GitRevision(ObjectId.IndexId), new GitRevision(headId), stagedFiles);
+                    Staged.SetDiffs(new GitRevision(ObjectId.IndexId), GetHeadRevision(), stagedFiles);
                     _skipUpdate = false;
                     Staged.SelectStoredNextIndex();
 
@@ -1654,6 +1650,18 @@ namespace GitUI.CommandsDialogs
             {
                 UICommands.RepoChangedNotifier.Notify();
             }
+        }
+
+        [CanBeNull]
+        private GitRevision GetHeadRevision()
+        {
+            var headId = Module.RevParse("HEAD");
+            if (headId != null)
+            {
+                return new GitRevision(headId);
+            }
+
+            return null;
         }
 
         private void StageClick(object sender, EventArgs e)
