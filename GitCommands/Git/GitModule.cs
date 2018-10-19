@@ -1678,7 +1678,7 @@ namespace GitCommands
             return "fetch " + progressOption + GetFetchArgs(remote, remoteBranch, localBranch, fetchTags, isUnshallow, prune);
         }
 
-        public string PullCmd(string remote, string remoteBranch, bool rebase, bool? fetchTags = false, bool isUnshallow = false, bool prune = false)
+        public string PullCmd(string remote, string remoteBranch, bool rebase, bool fastForwardOnly, bool? fetchTags = false, bool isUnshallow = false, bool prune = false)
         {
             var pullArgs = "";
             if (GitCommandHelpers.VersionInUse.FetchCanAskForProgress)
@@ -1686,6 +1686,9 @@ namespace GitCommands
 
             if (rebase)
                 pullArgs = "--rebase".Combine(" ", pullArgs);
+
+            if (fastForwardOnly)
+                pullArgs = "--ff-only".Combine(" ", pullArgs);
 
             return "pull " + pullArgs + GetFetchArgs(remote, remoteBranch, null, fetchTags, isUnshallow, prune && !rebase);
         }

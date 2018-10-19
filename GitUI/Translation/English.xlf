@@ -2056,6 +2056,10 @@ compare with first:</source>
         <source>Pull - merge</source>
         <target />
       </trans-unit>
+      <trans-unit id="_pullMergeFFOnly.Text">
+        <source>Pull - merge (fast-forward only)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_pullOpenDialog.Text">
         <source>Open pull dialog</source>
         <target />
@@ -2340,6 +2344,10 @@ Do you want to abort and remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="mergeToolStripMenuItem.Text">
         <source>Pull - merge</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mergeFFOnlyToolStripMenuItem.Text">
+        <source>Pull - merge (fast-forward only)</source>
         <target />
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
@@ -4943,11 +4951,15 @@ ancestor tree.</source>
         <target />
       </trans-unit>
       <trans-unit id="Fetch.Text">
-        <source>Do not merge, only &amp;fetch remote changes</source>
+        <source>Do not merge, only &amp;fetch remote changes (safest)</source>
         <target />
       </trans-unit>
       <trans-unit id="Merge.Text">
         <source>&amp;Merge remote branch into current branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="MergeFFOnly.Text">
+        <source>Merge remote branch into current branch (&amp;only if fast-forward, safe)</source>
         <target />
       </trans-unit>
       <trans-unit id="Mergetool.Text">

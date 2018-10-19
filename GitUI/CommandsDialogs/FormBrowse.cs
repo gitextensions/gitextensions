@@ -98,6 +98,8 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Pull - fetch all");
         private readonly TranslationString _pullMerge =
             new TranslationString("Pull - merge");
+        private readonly TranslationString _pullMergeFFOnly =
+            new TranslationString("Pull - merge (fast-forward only)");
         private readonly TranslationString _pullRebase =
             new TranslationString("Pull - rebase");
         private readonly TranslationString _pullOpenDialog =
@@ -587,6 +589,7 @@ namespace GitUI.CommandsDialogs
             {
                 commitToolStripMenuItem.Enabled = !bareRepository;
                 mergeToolStripMenuItem.Enabled = !bareRepository;
+                mergeFFOnlyToolStripMenuItem.Enabled = !bareRepository;
                 rebaseToolStripMenuItem1.Enabled = !bareRepository;
                 pullToolStripMenuItem1.Enabled = !bareRepository;
                 cleanupToolStripMenuItem.Enabled = !bareRepository;
@@ -2110,6 +2113,16 @@ namespace GitUI.CommandsDialogs
             );
         }
 
+        private void mergeFFOnlyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DoPullAction(() =>
+            {
+                Module.LastPullAction = AppSettings.PullAction.MergeFFOnly;
+                PullToolStripMenuItemClick(sender, e);
+            }
+            );
+        }
+
         private void rebaseToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             DoPullAction(() =>
@@ -2160,6 +2173,11 @@ namespace GitUI.CommandsDialogs
                 case AppSettings.PullAction.Merge:
                     toolStripButtonPull.Image = Resources.PullMerge;
                     toolStripButtonPull.ToolTipText = _pullMerge.Text;
+                    break;
+
+                case AppSettings.PullAction.MergeFFOnly:
+                    toolStripButtonPull.Image = Resources.PullMergeFFOnly;
+                    toolStripButtonPull.ToolTipText = _pullMergeFFOnly.Text;
                     break;
 
                 case AppSettings.PullAction.Rebase:

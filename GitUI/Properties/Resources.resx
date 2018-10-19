@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -415,6 +415,9 @@
   <data name="PullMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/PullMerge.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="PullMergeFFOnly" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\PullMergeFFOnly.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="PullRebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/PullRebase.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -447,6 +450,9 @@
   </data>
   <data name="IconMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/IconMerge.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IconMergeFFOnly" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\IconMergeFFOnly.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="IconRebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>../Resources/Icons/IconRebase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -676,7 +682,7 @@ EbenZhang, Erik Leo, Gabriele Pongelli, GavriYashar, Gerhard Olsson, Julius Vitk
 Katelyn Gigante, Levente Koncz, Lucas Trzesniewski, Lysogorskiy Aleksey, Matt Si, Matthias Serfling,
 Oleksandr Redko, Ondrej Novak, Orgad Shaneh, RaMMicHaeL, Rui Lopes, Sebastien ROBERT, Tao Gomez Gil,
 agabden, crypto_rsa, gpongelli, ierof, leak, liiws, mserfli, palver123, Andrey Helldar, Evgeny Morozov, Vladimir Shimanskiy,
-aivanov-oneinc, chun, pmme, Ákos Szabados, Glen Nicol, Szali Szali, Michael Seibt, Michael Werle, Mihai Pantea, Ori Ashual, Aleksey Shubin, mjpap, Ilya Mokin, NikolayHD</value>
+aivanov-oneinc, chun, pmme, Ákos Szabados, Glen Nicol, Szali Szali, Michael Seibt, Michael Werle, Mihai Pantea, Ori Ashual, Aleksey Shubin, mjpap, Ilya Mokin, NikolayHD, Alexandre Weinberger</value>
   </data>
   <data name="Designers" xml:space="preserve">
     <value>Andréj Telle, Oliver Friedrich</value>
