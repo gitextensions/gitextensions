@@ -57,6 +57,7 @@
     <Compile Include="GitUI\ControlThreadingExtensions.cs" />
     <Compile Include="GitUI\ControlUtil.cs" />
     <Compile Include="GitUI\DpiUtil.cs" />
+    <Compile Include="GitUI\ListViewExtensions.cs" />
     <Compile Include="GitUI\TableLayoutPanelExtensions.cs" />
     <Compile Include="GitUI\ThreadHelper.cs" />
     <Compile Include="GitUI\UIExtensions.cs" />

@@ -111,7 +111,8 @@ namespace GitUI
         // Properties
 
         [Browsable(false)]
-        public IEnumerable<GitItemStatus> AllItems => FileStatusListView.Items.Cast<ListViewItem>().Select(selectedItem => (GitItemStatus)selectedItem.Tag);
+        public IEnumerable<GitItemStatus> AllItems =>
+            FileStatusListView.ItemTags<GitItemStatus>();
 
         public int AllItemsCount => FileStatusListView.Items.Count;
 
@@ -155,20 +156,8 @@ namespace GitUI
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public IReadOnlyList<GitItemStatus> GitItemFilteredStatuses
-        {
-            get
-            {
-                var result = new List<GitItemStatus>(FileStatusListView.Items.Count);
-
-                foreach (ListViewItem listViewItem in FileStatusListView.Items)
-                {
-                    result.Add(listViewItem.Tag as GitItemStatus);
-                }
-
-                return result;
-            }
-        }
+        public IReadOnlyList<GitItemStatus> GitItemFilteredStatuses =>
+            AllItems.AsReadOnlyList();
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
@@ -176,8 +165,8 @@ namespace GitUI
         {
             get
             {
-                return GitItemStatusesWithParents?.SelectMany(tuple => tuple.statuses).ToList()
-                       ?? (IReadOnlyList<GitItemStatus>)Array.Empty<GitItemStatus>();
+                return GitItemStatusesWithParents?.SelectMany(tuple => tuple.statuses).AsReadOnlyList()
+                       ?? Array.Empty<GitItemStatus>();
             }
         }
 
@@ -242,7 +231,11 @@ namespace GitUI
         [Browsable(false)]
         public GitItemStatus SelectedItem
         {
-            get { return SelectedItems.FirstOrDefault(); }
+            get
+            {
+                return FileStatusListView.LastSelectedItem()?.Tag<GitItemStatus>();
+            }
+
             set
             {
                 ClearSelected();
@@ -254,13 +247,15 @@ namespace GitUI
                 ListViewItem newSelected = null;
                 foreach (ListViewItem item in FileStatusListView.Items)
                 {
-                    if (value.CompareTo(item.Tag as GitItemStatus) == 0)
+                    var gitItemStatus = item.Tag<GitItemStatus>();
+
+                    if (value.CompareTo(gitItemStatus) == 0)
                     {
                         if (newSelected == null)
                         {
                             newSelected = item;
                         }
-                        else if (item.Tag == value)
+                        else if (gitItemStatus == value)
                         {
                             newSelected = item;
                             break;
@@ -279,25 +274,30 @@ namespace GitUI
         [CanBeNull]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
-        public GitRevision SelectedItemParent => SelectedItemParents.FirstOrDefault();
-
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        [Browsable(false)]
-        public IEnumerable<GitRevision> SelectedItemParents
+        public GitRevision SelectedItemParent
         {
             get
             {
-                return FileStatusListView.SelectedItems.Cast<ListViewItem>()
-                    .Where(i => i.Group?.Tag is GitRevision)
-                    .Select(i => (GitRevision)i.Group.Tag);
+                return FileStatusListView.LastSelectedItem()?.Group?.Tag<GitRevision>();
             }
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         [Browsable(false)]
+        public IEnumerable<GitRevision> SelectedItemParents =>
+            FileStatusListView.SelectedItems()
+                .Select(i => i.Group?.Tag<GitRevision>())
+                .Where(r => r != null);
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
         public IEnumerable<GitItemStatus> SelectedItems
         {
-            get { return FileStatusListView.SelectedItems.Cast<ListViewItem>().Select(i => (GitItemStatus)i.Tag); }
+            get
+            {
+                return FileStatusListView.SelectedItemTags<GitItemStatus>();
+            }
+
             set
             {
                 ClearSelected();
@@ -306,13 +306,13 @@ namespace GitUI
                     return;
                 }
 
-                foreach (var item in FileStatusListView.Items.Cast<ListViewItem>()
-                    .Where(i => value.Contains(i.Tag as GitItemStatus)))
+                foreach (var item in FileStatusListView.Items()
+                    .Where(i => value.Contains(i.Tag<GitItemStatus>())))
                 {
                     item.Selected = true;
                 }
 
-                var first = FileStatusListView.SelectedItems.Cast<ListViewItem>().FirstOrDefault(x => x.Selected);
+                var first = FileStatusListView.SelectedItems().FirstOrDefault(x => x.Selected);
                 first?.EnsureVisible();
                 StoreNextIndexToSelect();
             }
@@ -324,9 +324,9 @@ namespace GitUI
         {
             get
             {
-                return FileStatusListView.SelectedItems.Cast<ListViewItem>()
+                return FileStatusListView.SelectedItems()
                     .Where(i => i.Group?.Tag is GitRevision)
-                    .Select(i => new GitItemStatusWithParent((GitRevision)i.Group.Tag, i.Tag as GitItemStatus));
+                    .Select(i => new GitItemStatusWithParent(i.Group.Tag<GitRevision>(), i.Tag<GitItemStatus>()));
             }
         }
 
@@ -495,10 +495,7 @@ namespace GitUI
 
         private static (Image Image, string Text) GetDisplayElements(ListViewItem item, PathFormatter formatter, int itemWidth)
         {
-            if (!(item?.Tag is GitItemStatus gitItemStatus))
-            {
-                return (default, default);
-            }
+            var gitItemStatus = item.Tag<GitItemStatus>();
 
             Image image = null;
             if (item.ImageList != null && item.ImageIndex != -1)
@@ -548,10 +545,10 @@ namespace GitUI
                 return;
             }
 
-            var group = FileStatusListView.Groups.Cast<ListViewGroup>().FirstOrDefault(gr => gr.Items.Count > 0);
+            var group = FileStatusListView.Groups().FirstOrDefault(gr => gr.Items.Count > 0);
             if (group != null)
             {
-                ListViewItem sortedFirstGroupItem = FileStatusListView.Items.Cast<ListViewItem>().FirstOrDefault(item => item.Group == group);
+                ListViewItem sortedFirstGroupItem = FileStatusListView.Items().FirstOrDefault(item => item.Group == group);
                 if (sortedFirstGroupItem != null)
                 {
                     sortedFirstGroupItem.Selected = true;
@@ -770,9 +767,8 @@ namespace GitUI
 
             if (updateCausedByFilter)
             {
-                previouslySelectedItems = FileStatusListView.SelectedItems
-                    .Cast<ListViewItem>()
-                    .ToHashSet(i => (GitItemStatus)i.Tag);
+                previouslySelectedItems = FileStatusListView.SelectedItems()
+                    .ToHashSet(i => i.Tag<GitItemStatus>());
 
                 DataSourceChanged?.Invoke(this, EventArgs.Empty);
             }
@@ -1230,7 +1226,9 @@ namespace GitUI
                     hoveredItem = null;
                 }
 
-                if (hoveredItem?.Tag is GitItemStatus gitItemStatus)
+                var gitItemStatus = hoveredItem?.Tag<GitItemStatus>();
+
+                if (gitItemStatus != null)
                 {
                     string text;
                     if (gitItemStatus.IsRenamed || gitItemStatus.IsCopied)
