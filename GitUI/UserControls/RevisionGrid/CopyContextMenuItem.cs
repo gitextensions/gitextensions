@@ -34,6 +34,26 @@ namespace GitUI.UserControls.RevisionGrid
 
         private void AddItem(string displayText, Func<GitRevision, string> extractRevisionText, Image image, char? hotkey, Keys shortcutKeys = Keys.None)
         {
+            var textToCopy = ExtractRevisionTexts(extractRevisionText);
+            if (textToCopy != null)
+            {
+                displayText += ":   " + textToCopy.Select(t => t.SubstringUntil('\n')).Join(", ").ShortenTo(40);
+                AddItem(displayText, textToCopy.Join("\n"), image, hotkey);
+            }
+        }
+
+        private void AddItem([NotNull] string displayText, [NotNull] string textToCopy, Image image, char? hotkey, Keys shortcutKeys = Keys.None)
+        {
+            if (displayText == null)
+            {
+                throw new ArgumentNullException(nameof(displayText));
+            }
+
+            if (textToCopy == null)
+            {
+                throw new ArgumentNullException(nameof(textToCopy));
+            }
+
             if (hotkey.HasValue)
             {
                 int position = displayText.IndexOf(hotkey.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
@@ -47,12 +67,6 @@ namespace GitUI.UserControls.RevisionGrid
                 displayText = PrependItemNumber(displayText);
             }
 
-            var texts = ExtractRevisionTexts(extractRevisionText);
-            if (texts != null)
-            {
-                displayText += ":   " + texts.Select(t => t.SubstringUntil('\n')).Join(", ").ShortenTo(40);
-            }
-
             var item = new ToolStripMenuItem
             {
                 Text = displayText,
@@ -60,15 +74,10 @@ namespace GitUI.UserControls.RevisionGrid
                 ShowShortcutKeys = true,
                 Image = image
             };
+
             item.Click += delegate
             {
-                var textToCopy = ExtractRevisionTexts(extractRevisionText);
-                if (textToCopy == null)
-                {
-                    return;
-                }
-
-                Clipboard.SetText(textToCopy.Join("\n"));
+                Clipboard.SetText(textToCopy);
             };
 
             DropDownItems.Add(item);
@@ -129,7 +138,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                 foreach (var name in branchNames)
                 {
-                    AddItem(name, extractRevisionText: null, Images.Branch, hotkey: null);
+                    AddItem(name, textToCopy: name, Images.Branch, hotkey: null);
                 }
 
                 DropDownItems.Add(new ToolStripSeparator());
@@ -144,7 +153,7 @@ namespace GitUI.UserControls.RevisionGrid
 
                 foreach (var name in tagNames)
                 {
-                    AddItem(name, extractRevisionText: null, Images.Tag, hotkey: null);
+                    AddItem(name, textToCopy: name, Images.Tag, hotkey: null);
                 }
 
                 DropDownItems.Add(new ToolStripSeparator());
