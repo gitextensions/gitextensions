@@ -15,12 +15,17 @@ namespace GitCommands
     public sealed class Executable : IExecutable
     {
         private readonly string _workingDir;
-        private readonly string _fileName;
+        private readonly Func<string> _fileNameProvider;
 
         public Executable([NotNull] string fileName, [NotNull] string workingDir = "")
+            : this(() => fileName, workingDir)
+        {
+        }
+
+        public Executable([NotNull] Func<string> fileNameProvider, [NotNull] string workingDir = "")
         {
             _workingDir = workingDir;
-            _fileName = fileName;
+            _fileNameProvider = fileNameProvider;
         }
 
         /// <inheritdoc />
@@ -32,9 +37,10 @@ namespace GitCommands
 
             var args = (arguments.Arguments ?? "").Replace("$QUOTE$", "\\\"");
 
-            if (!PathUtil.TryFindFullPath(_fileName, out var fileName))
+            var providedFileName = _fileNameProvider();
+            if (!PathUtil.TryFindFullPath(providedFileName, out var fileName))
             {
-                throw new ExecutableNotFoundException(_fileName);
+                throw new ExecutableNotFoundException(providedFileName);
             }
 
             return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding);

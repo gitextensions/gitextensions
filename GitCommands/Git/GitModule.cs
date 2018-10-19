@@ -105,7 +105,7 @@ namespace GitCommands
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
-            _gitExecutable = executable ?? new Executable(AppSettings.GitCommand, WorkingDir);
+            _gitExecutable = executable ?? new Executable(() => AppSettings.GitCommand, WorkingDir);
 
             // If this is a submodule, populate relevant properties.
             // If this is not a submodule, these will all be null.
