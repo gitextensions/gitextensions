@@ -94,6 +94,7 @@ namespace GitUI.CommandsDialogs
         private readonly IAppTitleGenerator _appTitleGenerator;
         private readonly WindowsJumpListManager _windowsJumpListManager;
         private readonly SubmoduleStatusProvider _submoduleStatusProvider;
+        private readonly bool _startWithDashboard;
 
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
         private ConEmuControl _terminal;
@@ -101,7 +102,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripItem _rebase;
         private ToolStripItem _bisect;
         private ToolStripItem _warning;
-        private bool _startWithDashboard;
 
         private bool _submoduleStatusUpdateNeeded = true;
         private bool _stashCountUpdateNeeded = true;
@@ -134,7 +134,7 @@ namespace GitUI.CommandsDialogs
             commandsToolStripMenuItem.DropDownOpening += CommandsToolStripMenuItem_DropDownOpening;
 
             MainSplitContainer.Visible = false;
-            MainSplitContainer.SplitterDistance = DpiUtil.Scale(120);
+            MainSplitContainer.SplitterDistance = DpiUtil.Scale(260);
 
             // set tab page images
             CommitInfoTabControl.ImageList = new ImageList
