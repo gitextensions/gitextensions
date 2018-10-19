@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitCommands;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -110,7 +111,7 @@ namespace GitUI.BranchTreePanel
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.BranchDocument);
                 if (IsActive)
                 {
-                    TreeViewNode.NodeFont = new Font(TreeViewNode.NodeFont, FontStyle.Bold);
+                    TreeViewNode.NodeFont = new Font(AppSettings.Font, FontStyle.Bold);
                 }
             }
 
