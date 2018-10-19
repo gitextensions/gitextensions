@@ -837,6 +837,15 @@ namespace GitUI
                 var refs = Module.GetRefs();
                 _ambiguousRefs = GitRef.GetAmbiguousRefNames(refs);
 
+                _gridView.SuspendLayout();
+                _gridView.SelectionChanged -= OnGridViewSelectionChanged;
+                _gridView.ClearSelection();
+                _gridView.Clear();
+                _gridView.Enabled = true;
+                _gridView.Focus();
+                _gridView.SelectionChanged += OnGridViewSelectionChanged;
+                _gridView.ResumeLayout();
+
                 _revisionReader.Execute(
                     Module,
                     refs,
@@ -846,15 +855,6 @@ namespace GitUI
                     _revisionFilter.GetRevisionFilter() + QuickRevisionFilter + _fixedRevisionFilter,
                     _revisionFilter.GetPathFilter() + _fixedPathFilter,
                     predicate);
-
-                _gridView.SuspendLayout();
-                _gridView.SelectionChanged -= OnGridViewSelectionChanged;
-                _gridView.ClearSelection();
-                _gridView.Clear();
-                _gridView.Enabled = true;
-                _gridView.Focus();
-                _gridView.SelectionChanged += OnGridViewSelectionChanged;
-                _gridView.ResumeLayout();
 
                 if (_initialLoad)
                 {
