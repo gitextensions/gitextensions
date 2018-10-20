@@ -81,6 +81,9 @@ artifacts:
   # pushing a single file
   - path: GitExtensions-Portable-*.zip
 
+# here we are going to override common configuration
+for:
+
 # configuration for all branches starting from "dev-"
 # build in Debug mode and deploy locally for testing
 -
