@@ -73,6 +73,7 @@ namespace GitUI
         private readonly BuildServerWatcher _buildServerWatcher;
         private readonly Timer _selectionTimer;
         private readonly GraphColumnProvider _graphColumnProvider;
+        private readonly RevisionGraphColumnProvider _revisionGraphColumnProvider;
         private readonly List<DataGridViewColumn> _resizableColumns;
         private readonly DataGridViewColumn _maximizedColumn;
         private DataGridViewColumn _lastVisibleResizableColumn = null;
@@ -208,7 +209,9 @@ namespace GitUI
 
             _buildServerWatcher = new BuildServerWatcher(this, _gridView, () => Module);
 
-            _graphColumnProvider = new GraphColumnProvider(this, _gridView._graphModel);
+            _graphColumnProvider = new GraphColumnProvider(this, _gridView._graphModel, _gridView._revisionGraph);
+            _revisionGraphColumnProvider = new RevisionGraphColumnProvider(this, _gridView._revisionGraph);
+            _gridView.AddColumn(_revisionGraphColumnProvider);
             _gridView.AddColumn(_graphColumnProvider);
             _gridView.AddColumn(new MessageColumnProvider(this));
             _gridView.AddColumn(new AvatarColumnProvider(_gridView, AvatarService.Default));

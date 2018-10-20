@@ -376,6 +376,7 @@
     <Compile Include="UserControls\GitItemStatusWithParent.cs" />
     <Compile Include="UserControls\RevisionGrid\CellStyle.cs" />
     <Compile Include="UserControls\ListViewGroupHitInfo.cs" />
+    <Compile Include="UserControls\RevisionGrid\Columns\RevisionGraphColumnProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\JunctionColorProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\JunctionStyler.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\MultilineIndicator.cs" />
@@ -389,6 +390,7 @@
     <Compile Include="UserControls\RevisionGrid\Graph\LaneInfo.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\LaneJunctionDetail.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\Node.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraph.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\SavedLaneRow.cs" />
     <Compile Include="UserControls\RevisionGrid\RefArrowType.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\AuthorNameColumnProvider.cs" />

@@ -32,6 +32,7 @@ namespace GitUI.UserControls.RevisionGrid
         private readonly ConcurrentDictionary<int, GitRevision> _revisionByRowIndex = new ConcurrentDictionary<int, GitRevision>();
 
         internal readonly GraphModel _graphModel = new GraphModel();
+        internal RevisionGraph _revisionGraph = new RevisionGraph();
 
         private readonly List<ColumnProvider> _columnProviders = new List<ColumnProvider>();
         private readonly AutoResetEvent _backgroundEvent = new AutoResetEvent(false);
@@ -325,6 +326,8 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void Add(GitRevision revision, RevisionNodeFlags types = RevisionNodeFlags.None)
         {
+            _revisionGraph.Add(revision);
+
             _graphModel.Add(revision, types);
 
             if (ToBeSelectedObjectIds.Remove(revision.ObjectId))
@@ -342,6 +345,8 @@ namespace GitUI.UserControls.RevisionGrid
 
             // Force the background thread to be killed, we need to be sure no background processes are running. Not the best practice, but safe.
             _backgroundThread.Abort();
+
+            _revisionGraph.Clear();
 
             // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about te delete the data
             SetRowCount(0);
@@ -393,12 +398,14 @@ namespace GitUI.UserControls.RevisionGrid
         [CanBeNull]
         public GitRevision GetRevision(int rowIndex)
         {
+            return _revisionGraph.GetNodeForRow(rowIndex).GitRevision;
+            /*
             return _revisionByRowIndex.GetOrAdd(rowIndex, Create);
 
             GitRevision Create(int row)
             {
                 return _graphModel.GetLaneRow(row)?.Node.Revision;
-            }
+            }*/
         }
 
         public void Prune()
