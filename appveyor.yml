@@ -69,6 +69,7 @@ test_script:
 
 # scripts to run after tests
 after_test:
+- ps: |
     & Setup\BuildInstallers.cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
     & Setup\MakePortableArchive.cmd Release %APPVEYOR_BUILD_VERSION%
