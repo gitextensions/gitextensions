@@ -13,7 +13,12 @@ environment:
   SKIP_PAUSE: TRUE
   ARCHIVE_WITH_PDB: TRUE
 
+# Build settings, not to be confused with "before_build" and "after_build".
+# "project" is relative to the original build directory and not influenced by directory changes in "before_build".
 build:
+  # enable MSBuild parallel builds
+  parallel: true
+  # MSBuild verbosity level
   verbosity: minimal
 
 cache:
@@ -28,15 +33,14 @@ install:
     python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%Dev@%APPVEYOR_REPO_COMMIT:~0,5%
     cd ..
 
+# to run your custom scripts instead of automatic MSBuild
 build_script:
 - ps: |
     Write-Output "Platform: $env:IdeVersion"
-    & Setup\BuildInstallers.cmd
+    & Setup\Build.cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    & Setup\MakePortableArchive.cmd Release %APPVEYOR_BUILD_VERSION%
-    #Upload a portable archive, not a installer
-    Get-ChildItem Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 
+# to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
     $testAssemblies = @(
@@ -62,3 +66,29 @@ test_script:
     $codecov_version = $packageConfig.SelectSingleNode('/packages/package[@id="Codecov"]').version
     $codecov = "packages\Codecov.$codecov_version\tools\codecov.exe"
     &$codecov -f ".\OpenCover.GitExtensions.xml"
+
+# scripts to run after tests
+after_test:
+- ps: |
+    & Setup\BuildInstallers.cmd
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    & Setup\MakePortableArchive.cmd Release $env:APPVEYOR_BUILD_VERSION
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+
+artifacts:
+    # upload the generated portable archive only
+  - path: 'Setup/GitExtensions-Portable-*.zip'
+
+# here we are going to override common configuration
+for:
+
+# configuration for all branches starting from "dev-"
+# build in Debug mode and deploy locally for testing
+-
+  branches:
+    only:
+      - /release\/.*/
+
+  artifacts:
+    # upload the generated installer
+    - path: 'Setup/GitExtensions-*.msi'
