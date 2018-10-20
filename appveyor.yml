@@ -79,7 +79,7 @@ after_test:
 
 artifacts:
   # pushing a single file
-  - path: 'GitExtensions-Portable-*.zip'
+  - path: 'Setup/GitExtensions-Portable-*.zip'
 
 # here we are going to override common configuration
 for:
@@ -93,4 +93,4 @@ for:
 
   artifacts:
     # pushing a single file
-    - path: 'GitExtensions-*.msi'
+    - path: 'Setup/GitExtensions-*.msi'
