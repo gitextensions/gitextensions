@@ -78,9 +78,8 @@ after_test:
     #Get-ChildItem Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 
 artifacts:
-- ps: |
-    # upload a portable archive, not a installer
-    Get-ChildItem Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  # pushing a single file
+  - path: 'GitExtensions-Portable-*.zip'
 
 # here we are going to override common configuration
 for:
@@ -93,5 +92,5 @@ for:
       - /release\/.*/
 
   artifacts:
-    # upload the installer
-    Get-ChildItem Setup\GitExtensions*.msi | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+    # pushing a single file
+    - path: 'GitExtensions-*.msi'
