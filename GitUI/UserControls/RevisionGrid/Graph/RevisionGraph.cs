@@ -289,7 +289,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             {
                 if (!_nodeByObjectId.TryGetValue(parentObjectId, out RevisionGraphRevision parentRevisionGraphRevision))
                 {
-                    parentRevisionGraphRevision = new RevisionGraphRevision(parentObjectId, _nodes.Max(r => r.Score) + 1);
+                    parentRevisionGraphRevision = new RevisionGraphRevision(parentObjectId, ++_maxScore);
                     _nodes.Add(parentRevisionGraphRevision);
                     _nodeByObjectId.TryAdd(parentObjectId, parentRevisionGraphRevision);
 
