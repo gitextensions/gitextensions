@@ -2091,12 +2091,12 @@ namespace GitUI.CommandsDialogs
                 {
                     // When a committemplate is used, skip comments
                     // otherwise: "#" is probably not used for comment but for issue number
-                    if (!line.StartsWith("#") ||
+                    if ((!string.IsNullOrEmpty(line) && !line.StartsWith("#")) ||
                         string.IsNullOrEmpty(_commitTemplate))
                     {
                         if (addNewlineToCommitMessageWhenMissing)
                         {
-                            if (lineNumber == 1 && !string.IsNullOrEmpty(line))
+                            if (lineNumber == 1)
                             {
                                 textWriter.WriteLine();
                             }
