@@ -362,7 +362,7 @@ namespace GitImpact
                     h_max = Math.Max(h_max, y);
 
                     // Add week date label
-                    _weekLabels.Add((new PointF(x + (BlockWidth / 2), y), weekDate));
+                    _weekLabels.Add((new PointF(x + (BlockWidth / 2f), y), weekDate));
 
                     // Increase x for next week
                     x += BlockWidth + TransitionWidth;

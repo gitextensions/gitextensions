@@ -130,8 +130,8 @@ namespace GitUI.UserControls
                 ref var angle = ref _angles[p];
                 e.Graphics.FillEllipse(
                     _brushes[i],
-                    (_centre.X - (_dotRadius / 2)) + (_circleRadius * angle.cos),
-                    (_centre.Y - (_dotRadius / 2)) + (_circleRadius * angle.sin),
+                    (_centre.X - (_dotRadius / 2f)) + (_circleRadius * angle.cos),
+                    (_centre.Y - (_dotRadius / 2f)) + (_circleRadius * angle.sin),
                     _dotRadius,
                     _dotRadius);
                 p++;
