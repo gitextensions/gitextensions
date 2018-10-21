@@ -21,17 +21,23 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             Color.FromArgb(241, 196, 15)
         };
 
-        internal static readonly List<Pen> PresetGraphPens = new List<Pen>();
+        public static Color NonRelativeColor { get; } = Color.LightGray;
+
+        internal static Brush NonRelativeBrush { get; private set; }
+
+        internal static readonly List<Brush> PresetGraphPens = new List<Brush>();
 
         static RevisionGraphLaneColor()
         {
             foreach (Color color in PresetGraphColors)
             {
-                PresetGraphPens.Add(new Pen(color));
+                PresetGraphPens.Add(new SolidBrush(color));
             }
+
+            NonRelativeBrush = new SolidBrush(NonRelativeColor);
         }
 
-        public static Pen GetPenForLane(int laneIndex)
+        public static Brush GetPenForLane(int laneIndex)
         {
             return PresetGraphPens[laneIndex % PresetGraphPens.Count];
         }

@@ -325,7 +325,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void Add(GitRevision revision, RevisionNodeFlags types = RevisionNodeFlags.None)
         {
-            _revisionGraph.Add(revision);
+            _revisionGraph.Add(revision, types);
 
             if (ToBeSelectedObjectIds.Remove(revision.ObjectId))
             {

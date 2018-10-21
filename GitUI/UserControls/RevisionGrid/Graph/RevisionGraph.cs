@@ -50,6 +50,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             Score = guessScore;
         }
 
+        public bool IsRelative { get; set; }
+
         public int Score { get; private set; }
 
         public int LaneIndex { get; set; }
@@ -79,6 +81,16 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public ConcurrentBag<RevisionGraphSegment> StartSegments { get; private set; }
         public ConcurrentBag<RevisionGraphSegment> EndSegments { get; private set; }
 
+        public void MakeRelative()
+        {
+            IsRelative = true;
+
+            foreach (RevisionGraphRevision parent in Parents)
+            {
+                parent.MakeRelative();
+            }
+        }
+
         public RevisionGraphSegment AddParent(RevisionGraphRevision parent, out int maxScore)
         {
             if (Parents.Any())
@@ -88,6 +100,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             else
             {
                 parent.LaneIndex = LaneIndex;
+            }
+
+            if (IsRelative)
+            {
+                parent.MakeRelative();
             }
 
             Parents.Add(parent);
@@ -123,35 +140,67 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public RevisionGraphRevision Revision { get; private set; }
         public SynchronizedCollection<RevisionGraphSegment> Segments { get; private set; }
 
+        private Dictionary<RevisionGraphSegment, int> _segmentLanes;
+
+        private int _laneCount;
+
+        private void BuildSegmentLanes()
+        {
+            int currentRevisionLane = -1;
+            if (_segmentLanes == null)
+            {
+                _segmentLanes = new Dictionary<RevisionGraphSegment, int>();
+
+                int laneIndex = 0;
+                foreach (var segment in Segments.OrderByDescending(s => s.Child.LaneIndex))
+                {
+                    if (segment.Child == Revision || segment.Parent == Revision)
+                    {
+                        if (currentRevisionLane < 0)
+                        {
+                            currentRevisionLane = laneIndex;
+                            laneIndex++;
+                        }
+
+                        _segmentLanes.Add(segment, currentRevisionLane);
+                    }
+                    else
+                    {
+                        bool added = false;
+                        foreach (var searchParent in _segmentLanes)
+                        {
+                            if (searchParent.Key.Parent == segment.Parent)
+                            {
+                                _segmentLanes.Add(segment, searchParent.Value);
+                                added = true;
+                                break;
+                            }
+                        }
+
+                        if (!added)
+                        {
+                            _segmentLanes.Add(segment, laneIndex);
+                            laneIndex++;
+                        }
+                    }
+                }
+
+                _laneCount = laneIndex;
+            }
+        }
+
+        public int GetLaneCount()
+        {
+            BuildSegmentLanes();
+            return _laneCount;
+        }
+
         public int GetLaneIndexForSegment(RevisionGraphSegment revisionGraphRevision)
         {
-            int laneIndex = 0;
-            bool nodePassed = false;
-
-            foreach (var segment in Segments.OrderByDescending(s => s.Child.LaneIndex))
+            BuildSegmentLanes();
+            if (_segmentLanes.TryGetValue(revisionGraphRevision, out int index))
             {
-                if (segment == revisionGraphRevision)
-                {
-                    return laneIndex;
-                }
-
-                if (segment.Child == Revision || segment.Parent == Revision)
-                {
-                    if (revisionGraphRevision.Child == Revision || revisionGraphRevision.Parent == Revision)
-                    {
-                        return laneIndex;
-                    }
-
-                    if (!nodePassed)
-                    {
-                        laneIndex++;
-                        nodePassed = true;
-                    }
-                }
-                else
-                {
-                    laneIndex++;
-                }
+                return index;
             }
 
             return -1;
@@ -271,7 +320,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         private int _maxScore = 0;
 
-        public void Add(GitRevision revision)
+        public void Add(GitRevision revision, RevisionNodeFlags types)
         {
             if (!_nodeByObjectId.TryGetValue(revision.ObjectId, out RevisionGraphRevision revisionGraphRevision))
             {
@@ -279,6 +328,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 _maxScore = score;
 
                 revisionGraphRevision = new RevisionGraphRevision(revision.ObjectId, score);
+                if ((types & RevisionNodeFlags.CheckedOut) != 0)
+                {
+                    revisionGraphRevision.IsRelative = true;
+                }
+
                 ////revisionGraphRevision.LaneIndex = score;
                 revisionGraphRevision.GitRevision = revision;
                 _nodeByObjectId.TryAdd(revision.ObjectId, revisionGraphRevision);

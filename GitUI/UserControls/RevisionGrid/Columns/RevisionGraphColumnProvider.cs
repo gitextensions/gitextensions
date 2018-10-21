@@ -277,7 +277,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                     if (currentRow != null && previousRow != null && nextRow != null)
                     {
-                        foreach (RevisionGraphSegment revisionGraphRevision in currentRow.Segments)
+                        foreach (RevisionGraphSegment revisionGraphRevision in currentRow.Segments.OrderBy(s => s.Child.IsRelative))
                         {
                             int startLane = -10;
                             int centerLane = -10;
@@ -319,23 +319,32 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             int endX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionEnd.X + 0.5) * _laneWidth);
                             int endY = top + (revisionGraphRevisionPositionEnd.Y * rowHeight) + (rowHeight / 2);
 
-                            Pen pen = RevisionGraphLaneColor.GetPenForLane(revisionGraphRevision.Parent.LaneIndex);
+                            Brush brush;
+
+                            if (revisionGraphRevision.Child.IsRelative)
+                            {
+                                brush = RevisionGraphLaneColor.GetPenForLane(revisionGraphRevision.Parent.LaneIndex);
+                            }
+                            else
+                            {
+                                brush = RevisionGraphLaneColor.NonRelativeBrush;
+                            }
 
                             // EndLane
                             if (startLane >= 0 && centerLane >= 0)
                             {
-                                g.DrawLine(pen, startX, startY, centerX, centerY);
+                                DrawSegment(g, brush, startX, startY, centerX, centerY);
                             }
 
                             // StartLane
                             if (endLane >= 0 && centerLane >= 0)
                             {
-                                g.DrawLine(pen, centerX, centerY, endX, endY);
+                                DrawSegment(g, brush, centerX, centerY, endX, endY);
                             }
 
                             if (currentRow.Revision == revisionGraphRevision.Parent || currentRow.Revision == revisionGraphRevision.Child)
                             {
-                                g.DrawEllipse(pen, centerX - 2, centerY - 2, 4, 4);
+                                g.FillRectangle(brush, centerX - 2, centerY - 2, 4, 4);
                             }
                         }
                     }
@@ -346,6 +355,37 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     g.SmoothingMode = oldSmoothingMode;
 
                     return true;
+                }
+            }
+        }
+
+        private void DrawSegment(Graphics g, Brush laneBrush, int x0, int y0, int x1, int y1)
+        {
+            var p0 = new Point(x0, y0);
+            var p1 = new Point(x1, y1);
+
+            using (var lanePen = new Pen(laneBrush, _laneLineWidth))
+            {
+                if (y0 == y1)
+                {
+                    g.SmoothingMode = SmoothingMode.None;
+                    g.DrawLine(lanePen, p0, p1);
+                }
+                else
+                {
+                    // Anti-aliasing seems to introduce an offset of two thirds
+                    // of a pixel to the right - compensate it.
+                    g.SmoothingMode = SmoothingMode.AntiAlias;
+                    float offset = -0.667F;
+
+                    // Left shifting int is fast equivalent of dividing by two,
+                    // thus computing the average of y0 and y1.
+                    var yMid = (y0 + y1) >> 1;
+                    var c0 = new PointF(offset + x0, yMid);
+                    var c1 = new PointF(offset + x1, yMid);
+                    var e0 = new PointF(offset + p0.X, p0.Y);
+                    var e1 = new PointF(offset + p1.X, p1.Y);
+                    g.DrawBezier(lanePen, e0, c0, c1, e1);
                 }
             }
         }
@@ -401,7 +441,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 var laneRow = _revisionGraph.GetSegmentsForRow(index);
                 if (laneRow != null)
                 {
-                    laneCount = Math.Max(laneRow.Segments.Count, laneCount);
+                    laneCount = Math.Max(laneRow.GetLaneCount(), laneCount);
                 }
             }
 
