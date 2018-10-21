@@ -2389,10 +2389,10 @@ namespace GitCommands
             };
 
             var cache = cacheResult &&
-                        !secondRevision.IsArtificial() &&
-                        !firstRevision.IsArtificial() &&
                         !secondRevision.IsNullOrEmpty() &&
-                        !firstRevision.IsNullOrEmpty()
+                        !firstRevision.IsNullOrEmpty() &&
+                        !secondRevision.IsArtificial() &&
+                        !firstRevision.IsArtificial()
                 ? GitCommandCache
                 : null;
 
