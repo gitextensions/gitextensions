@@ -21,9 +21,9 @@ namespace GitUI.CommandsDialogs
             new TranslationString("You need to enter a mail subject.");
         private readonly TranslationString _wrongSmtpSettingsText =
             new TranslationString("You need to enter a valid smtp in the settings dialog.");
-        private readonly TranslationString _twoRevisionsNeededText =
-            new TranslationString("You need to select two revisions");
-        private readonly TranslationString _twoRevisionsNeededCaption =
+        private readonly TranslationString _revisionsNeededText =
+            new TranslationString("You need to select at least one revision");
+        private readonly TranslationString _revisionsNeededCaption =
             new TranslationString("Patch error");
         private readonly TranslationString _sendMailResult =
             new TranslationString("Send to:");
@@ -157,9 +157,9 @@ namespace GitUI.CommandsDialogs
                     }
                 }
             }
-            else if (string.IsNullOrEmpty(rev1) || string.IsNullOrEmpty(rev2))
+            else
             {
-                MessageBox.Show(this, _twoRevisionsNeededText.Text, _twoRevisionsNeededCaption.Text);
+                MessageBox.Show(this, _revisionsNeededText.Text, _revisionsNeededCaption.Text);
                 return;
             }
 
