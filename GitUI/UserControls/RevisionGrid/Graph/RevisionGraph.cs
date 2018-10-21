@@ -50,7 +50,16 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             Score = guessScore;
         }
 
+        public void ApplyFlags(RevisionNodeFlags types)
+        {
+            IsRelative |= (types & RevisionNodeFlags.CheckedOut) != 0;
+            HasRef = (types & RevisionNodeFlags.HasRef) != 0;
+            IsCheckedOut = (types & RevisionNodeFlags.CheckedOut) != 0;
+        }
+
         public bool IsRelative { get; set; }
+        public bool HasRef { get; set; }
+        public bool IsCheckedOut { get; set; }
 
         public int Score { get; private set; }
 
@@ -216,6 +225,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private bool _reorder = true;
         private List<RevisionGraphRevision> _orderedNodesCache = null;
         private List<RevisionGraphRow> _orderedRowCache = null;
+        private int _cachedUntillScore = -1;
 
         public event Action Updated;
 
@@ -254,6 +264,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             if (_orderedNodesCache == null || _reorder || _orderedNodesCache.Count <= untillRow)
             {
                 _orderedNodesCache = _nodes.OrderBy(n => n.Score).ToList();
+                if (_orderedNodesCache.Count > 0)
+                {
+                    _cachedUntillScore = _nodes.Last().Score;
+                }
+
                 _orderedRowCache = new List<RevisionGraphRow>();
                 _reorder = false;
             }
@@ -328,12 +343,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 _maxScore = score;
 
                 revisionGraphRevision = new RevisionGraphRevision(revision.ObjectId, score);
-                if ((types & RevisionNodeFlags.CheckedOut) != 0)
-                {
-                    revisionGraphRevision.IsRelative = true;
-                }
+                revisionGraphRevision.ApplyFlags(types);
 
-                ////revisionGraphRevision.LaneIndex = score;
                 revisionGraphRevision.GitRevision = revision;
                 _nodeByObjectId.TryAdd(revision.ObjectId, revisionGraphRevision);
                 _nodes.Add(revisionGraphRevision);
@@ -342,6 +353,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             {
                 // This revision was added as a parent. Probably only the objectid is known.
                 revisionGraphRevision.GitRevision = revision;
+                revisionGraphRevision.ApplyFlags(types);
+
+                // Invalidate cache if the new score is lower then the cached result
+                if (revisionGraphRevision.Score < _cachedUntillScore)
+                {
+                    _reorder = true;
+                }
             }
 
             foreach (ObjectId parentObjectId in revision.ParentIds)
@@ -355,16 +373,26 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     int newMaxScore;
                     _segments.Add(revisionGraphRevision.AddParent(parentRevisionGraphRevision, out newMaxScore));
                     _maxScore = Math.Max(_maxScore, newMaxScore);
+
+                    // Invalidate cache if the new score is lower then the cached result
+                    if (parentRevisionGraphRevision.Score < _cachedUntillScore)
+                    {
+                        _reorder = true;
+                    }
                 }
                 else
                 {
+                    // If the current score is lower, cache is invalid. The new score will (probably) be higher.
+                    if (parentRevisionGraphRevision.Score < _cachedUntillScore)
+                    {
+                        _reorder = true;
+                    }
+
                     int newMaxScore;
                     _segments.Add(revisionGraphRevision.AddParent(parentRevisionGraphRevision, out newMaxScore));
                     _maxScore = Math.Max(_maxScore, newMaxScore);
                 }
             }
-
-            _reorder = true;
         }
     }
 }

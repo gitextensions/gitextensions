@@ -323,7 +323,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                             if (revisionGraphRevision.Child.IsRelative)
                             {
-                                brush = RevisionGraphLaneColor.GetPenForLane(revisionGraphRevision.Parent.LaneIndex);
+                                brush = RevisionGraphLaneColor.GetPenForLane(revisionGraphRevision.Child.LaneIndex);
                             }
                             else
                             {
@@ -344,7 +344,44 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                             if (currentRow.Revision == revisionGraphRevision.Parent || currentRow.Revision == revisionGraphRevision.Child)
                             {
-                                g.FillRectangle(brush, centerX - 2, centerY - 2, 4, 4);
+                                Rectangle nodeRect = new Rectangle(centerX - (_nodeDimension / 2), centerY - (_nodeDimension / 2), _nodeDimension, _nodeDimension);
+
+                                var square = currentRow.Revision.HasRef;
+                                var hasOutline = currentRow.Revision.IsCheckedOut;
+
+                                if (square)
+                                {
+                                    g.SmoothingMode = SmoothingMode.None;
+                                    g.FillRectangle(brush, nodeRect);
+                                }
+                                else //// Circle
+                                {
+                                    nodeRect.Width = nodeRect.Height = _nodeDimension - 1;
+
+                                    g.SmoothingMode = SmoothingMode.AntiAlias;
+                                    g.FillEllipse(brush, nodeRect);
+                                }
+
+                                if (hasOutline)
+                                {
+                                    nodeRect.Inflate(1, 1);
+
+                                    var outlineColor = Color.Black;
+
+                                    using (var pen = new Pen(outlineColor, 2))
+                                    {
+                                        if (square)
+                                        {
+                                            g.SmoothingMode = SmoothingMode.None;
+                                            g.DrawRectangle(pen, nodeRect);
+                                        }
+                                        else //// Circle
+                                        {
+                                            g.SmoothingMode = SmoothingMode.AntiAlias;
+                                            g.DrawEllipse(pen, nodeRect);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

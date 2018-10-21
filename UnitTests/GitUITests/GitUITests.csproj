@@ -87,8 +87,6 @@
     <Compile Include="UserControls\RepoStateVisualiserTests.cs" />
     <Compile Include="UserControls\RevisionGrid\CopyContextMenuItemTests.cs" />
     <Compile Include="UserControls\RevisionGrid\GitRefListsForRevisionTests.cs" />
-    <Compile Include="UserControls\RevisionGrid\Graph\JunctionColorProviderTests.cs" />
-    <Compile Include="UserControls\RevisionGrid\Graph\JunctionStylerTests.cs" />
     <Compile Include="UserManual\SingleHtmlUserManualFixture.cs" />
     <Compile Include="UserManual\StandardHtmlUserManualFixture.cs" />
   </ItemGroup>
