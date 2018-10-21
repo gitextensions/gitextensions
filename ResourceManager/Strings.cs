@@ -46,7 +46,7 @@ namespace ResourceManager
         private readonly TranslationString _authorDateText = new TranslationString("{0:Author date|Author dates}");
         private readonly TranslationString _committerText  = new TranslationString("Committer");
         private readonly TranslationString _commitDateText = new TranslationString("{0:Commit date|Commits dates}");
-        private readonly TranslationString _commitHashText = new TranslationString("{0:Commit hash|Commits hashs}");
+        private readonly TranslationString _commitHashText = new TranslationString("{0:Commit hash|Commits hashes}");
         private readonly TranslationString _messageText    = new TranslationString("{0:Message|Messages}");
         private readonly TranslationString _workspaceText  = new TranslationString("Working directory");
         private readonly TranslationString _indexText      = new TranslationString("Commit index");

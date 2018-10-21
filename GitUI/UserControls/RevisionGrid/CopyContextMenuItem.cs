@@ -35,25 +35,17 @@ namespace GitUI.UserControls.RevisionGrid
         private void AddItem(string displayText, Func<GitRevision, string> extractRevisionText, Image image, char? hotkey, Keys shortcutKeys = Keys.None)
         {
             var textToCopy = ExtractRevisionTexts(extractRevisionText);
-            if (textToCopy != null)
+            if (textToCopy == null)
             {
-                displayText += ":   " + textToCopy.Select(t => t.SubstringUntil('\n')).Join(", ").ShortenTo(40);
-                AddItem(displayText, textToCopy.Join("\n"), image, hotkey);
+                return;
             }
+
+            displayText += ":   " + textToCopy.Select(t => t.SubstringUntil('\n')).Join(", ").ShortenTo(40);
+            AddItem(displayText, textToCopy.Join("\n"), image, hotkey, shortcutKeys);
         }
 
         private void AddItem([NotNull] string displayText, [NotNull] string textToCopy, Image image, char? hotkey, Keys shortcutKeys = Keys.None)
         {
-            if (displayText == null)
-            {
-                throw new ArgumentNullException(nameof(displayText));
-            }
-
-            if (textToCopy == null)
-            {
-                throw new ArgumentNullException(nameof(textToCopy));
-            }
-
             if (hotkey.HasValue)
             {
                 int position = displayText.IndexOf(hotkey.Value.ToString(), StringComparison.InvariantCultureIgnoreCase);
@@ -83,7 +75,7 @@ namespace GitUI.UserControls.RevisionGrid
             DropDownItems.Add(item);
         }
 
-        private IEnumerable<string> ExtractRevisionTexts(Func<GitRevision, string> extractRevisionText)
+        private string[] ExtractRevisionTexts(Func<GitRevision, string> extractRevisionText)
         {
             if (extractRevisionText == null)
             {
@@ -96,7 +88,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return null;
             }
 
-            return gitRevisions.Select(extractRevisionText).Distinct();
+            return gitRevisions.Select(extractRevisionText).Distinct().ToArray();
         }
 
         private void OnDropDownOpening(object sender, EventArgs e)
