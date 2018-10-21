@@ -92,11 +92,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public void MakeRelative()
         {
-            IsRelative = true;
-
-            foreach (RevisionGraphRevision parent in Parents)
+            if (!IsRelative)
             {
-                parent.MakeRelative();
+                IsRelative = true;
+
+                foreach (RevisionGraphRevision parent in Parents)
+                {
+                    parent.MakeRelative();
+                }
             }
         }
 
