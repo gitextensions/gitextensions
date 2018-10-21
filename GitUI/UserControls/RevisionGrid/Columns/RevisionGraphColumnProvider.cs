@@ -174,6 +174,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 bool DrawVisibleGraph()
                 {
+                    if (end - start > 0)
+                    {
+                        _revisionGraph.BuildGraph(end);
+                    }
+
                     for (var index = start; index < end; index++)
                     {
                         // Get the x,y value of the current item's upper left in the cache
@@ -268,66 +273,69 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                     var oldSmoothingMode = g.SmoothingMode;
 
-                    var previousRow = _revisionGraph.GetSegmentsForRow(Math.Max(0, index - 1), out RevisionGraphRevision previousRevision);
-                    var currentRow = _revisionGraph.GetSegmentsForRow(index, out RevisionGraphRevision currentRevision);
-                    var nextRow = _revisionGraph.GetSegmentsForRow(index + 1, out RevisionGraphRevision nextRevision);
+                    var previousRow = _revisionGraph.GetSegmentsForRow(Math.Max(0, index - 1));
+                    var currentRow = _revisionGraph.GetSegmentsForRow(index);
+                    var nextRow = _revisionGraph.GetSegmentsForRow(index + 1);
 
-                    int lane = 0;
-                    foreach (RevisionGraphSegment revisionGraphRevision in currentRow)
+                    if (currentRow != null && previousRow != null && nextRow != null)
                     {
-                        int startLane = previousRow.IndexOf(x => x.Child == revisionGraphRevision.Parent || x.Parent == revisionGraphRevision.Child || x.Parent == revisionGraphRevision.Parent || x.Child == revisionGraphRevision.Child);
-                        if (startLane < 0)
+                        int lane = 0;
+                        foreach (RevisionGraphSegment revisionGraphRevision in currentRow.Segments)
                         {
-                            startLane = previousRow.IndexOf(x => x == revisionGraphRevision);
+                            int startLane = previousRow.Segments.IndexOf(x => x.Child == revisionGraphRevision.Parent || x.Parent == revisionGraphRevision.Child || x.Parent == revisionGraphRevision.Parent || x.Child == revisionGraphRevision.Child);
+                            if (startLane < 0)
+                            {
+                                startLane = previousRow.Segments.IndexOf(x => x == revisionGraphRevision);
+                            }
+
+                            if (index == 0)
+                            {
+                                startLane = -10;
+                            }
+
+                            Point revisionGraphRevisionPositionStart = new Point(startLane, -1);
+
+                            int centerLane = currentRow.Segments.IndexOf(x => x.Child == revisionGraphRevision.Parent || x.Parent == revisionGraphRevision.Child || x.Parent == revisionGraphRevision.Parent || x.Child == revisionGraphRevision.Child);
+                            if (centerLane < 0)
+                            {
+                                centerLane = currentRow.Segments.IndexOf(x => x == revisionGraphRevision);
+                            }
+
+                            Point revisionGraphRevisionPositionCenter = new Point(centerLane, 0);
+                            int endlane = nextRow.Segments.IndexOf(x => x.Child == revisionGraphRevision.Parent || x.Parent == revisionGraphRevision.Child || x.Parent == revisionGraphRevision.Parent || x.Child == revisionGraphRevision.Child);
+                            if (endlane < 0)
+                            {
+                                endlane = nextRow.Segments.IndexOf(x => x == revisionGraphRevision);
+                            }
+
+                            Point revisionGraphRevisionPositionEnd = new Point(endlane, 1);
+
+                            int startX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionStart.X + 0.5) * _laneWidth);
+                            int startY = top + (revisionGraphRevisionPositionStart.Y * rowHeight) + (rowHeight / 2);
+
+                            int centerX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionCenter.X + 0.5) * _laneWidth);
+                            int centerY = top + (revisionGraphRevisionPositionCenter.Y * rowHeight) + (rowHeight / 2);
+
+                            int endX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionEnd.X + 0.5) * _laneWidth);
+                            int endY = top + (revisionGraphRevisionPositionEnd.Y * rowHeight) + (rowHeight / 2);
+
+                            if (startLane >= 0)
+                            {
+                                g.DrawLine(Pens.Black, startX, startY, centerX, centerY);
+                            }
+
+                            if (endlane >= 0)
+                            {
+                                g.DrawLine(Pens.Black, centerX, centerY, endX, endY);
+                            }
+
+                            if (currentRow.Revision == revisionGraphRevision.Parent || currentRow.Revision == revisionGraphRevision.Child)
+                            {
+                                g.DrawEllipse(Pens.OrangeRed, centerX - 2, centerY - 2, 4, 4);
+                            }
+
+                            lane++;
                         }
-
-                        if (index == 0)
-                        {
-                            startLane = -10;
-                        }
-
-                        Point revisionGraphRevisionPositionStart = new Point(startLane, -1);
-
-                        int centerLane = currentRow.IndexOf(x => x.Child == revisionGraphRevision.Parent || x.Parent == revisionGraphRevision.Child || x.Parent == revisionGraphRevision.Parent || x.Child == revisionGraphRevision.Child);
-                        if (centerLane < 0)
-                        {
-                            centerLane = currentRow.IndexOf(x => x == revisionGraphRevision);
-                        }
-
-                        Point revisionGraphRevisionPositionCenter = new Point(centerLane, 0);
-                        int endlane = nextRow.IndexOf(x => x.Child == revisionGraphRevision.Parent || x.Parent == revisionGraphRevision.Child || x.Parent == revisionGraphRevision.Parent || x.Child == revisionGraphRevision.Child);
-                        if (endlane < 0)
-                        {
-                            endlane = nextRow.IndexOf(x => x == revisionGraphRevision);
-                        }
-
-                        Point revisionGraphRevisionPositionEnd = new Point(endlane, 1);
-
-                        int startX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionStart.X + 0.5) * _laneWidth);
-                        int startY = top + (revisionGraphRevisionPositionStart.Y * rowHeight) + (rowHeight / 2);
-
-                        int centerX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionCenter.X + 0.5) * _laneWidth);
-                        int centerY = top + (revisionGraphRevisionPositionCenter.Y * rowHeight) + (rowHeight / 2);
-
-                        int endX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionEnd.X + 0.5) * _laneWidth);
-                        int endY = top + (revisionGraphRevisionPositionEnd.Y * rowHeight) + (rowHeight / 2);
-
-                        if (startLane >= 0)
-                        {
-                            g.DrawLine(Pens.Black, startX, startY, centerX, centerY);
-                        }
-
-                        if (endlane >= 0)
-                        {
-                            g.DrawLine(Pens.Black, centerX, centerY, endX, endY);
-                        }
-
-                        if (currentRevision == revisionGraphRevision.Parent || currentRevision == revisionGraphRevision.Child)
-                        {
-                            g.DrawEllipse(Pens.OrangeRed, centerX - 2, centerY - 2, 4, 4);
-                        }
-
-                        lane++;
                     }
 
                     // Reset graphics options

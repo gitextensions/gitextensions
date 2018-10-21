@@ -398,7 +398,8 @@ namespace GitUI.UserControls.RevisionGrid
         [CanBeNull]
         public GitRevision GetRevision(int rowIndex)
         {
-            return _revisionGraph.GetNodeForRow(rowIndex).GitRevision;
+            _revisionGraph.BuildGraph(rowIndex);
+            return _revisionGraph.GetNodeForRow(rowIndex)?.GitRevision;
             /*
             return _revisionByRowIndex.GetOrAdd(rowIndex, Create);
 

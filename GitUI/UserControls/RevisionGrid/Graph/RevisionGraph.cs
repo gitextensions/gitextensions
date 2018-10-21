@@ -44,6 +44,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             Parents = new ConcurrentBag<RevisionGraphRevision>();
             Children = new ConcurrentBag<RevisionGraphRevision>();
+            StartSegments = new ConcurrentBag<RevisionGraphSegment>();
+            EndSegments = new ConcurrentBag<RevisionGraphSegment>();
 
             Score = guessScore;
         }
@@ -71,6 +73,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         private ConcurrentBag<RevisionGraphRevision> Parents { get; set; }
         private ConcurrentBag<RevisionGraphRevision> Children { get; set; }
+        public ConcurrentBag<RevisionGraphSegment> StartSegments { get; private set; }
+        public ConcurrentBag<RevisionGraphSegment> EndSegments { get; private set; }
 
         public RevisionGraphSegment AddParent(RevisionGraphRevision parent)
         {
@@ -85,10 +89,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             Parents.Add(parent);
             parent.AddChild(this);
-
             parent.IncreaseScore(Score);
 
-            return new RevisionGraphSegment(parent, this);
+            RevisionGraphSegment revisionGraphSegment = new RevisionGraphSegment(parent, this);
+            parent.EndSegments.Add(revisionGraphSegment);
+            StartSegments.Add(revisionGraphSegment);
+
+            return revisionGraphSegment;
         }
 
         private void AddChild(RevisionGraphRevision child)
@@ -102,6 +109,18 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         }
     }
 
+    public class RevisionGraphRow
+    {
+        public RevisionGraphRow(RevisionGraphRevision revision)
+        {
+            Segments = new SynchronizedCollection<RevisionGraphSegment>();
+            Revision = revision;
+        }
+
+        public RevisionGraphRevision Revision { get; private set; }
+        public SynchronizedCollection<RevisionGraphSegment> Segments { get; private set; }
+    }
+
     public class RevisionGraph
     {
         private ConcurrentDictionary<ObjectId, RevisionGraphRevision> _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
@@ -110,6 +129,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         private bool _reorder = true;
         private List<RevisionGraphRevision> _orderedNodesCache = null;
+        private List<RevisionGraphRow> _orderedRowCache = null;
 
         public void Clear()
         {
@@ -119,15 +139,51 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _orderedNodesCache = null;
         }
 
-        public RevisionGraphRevision GetNodeForRow(int row)
+        public void BuildGraph(int untillRow)
         {
             if (_orderedNodesCache == null || _reorder)
             {
                 _orderedNodesCache = _nodes.OrderBy(n => n.Score).ToList();
-                _reorder = false;
+                _orderedRowCache = new List<RevisionGraphRow>();
             }
 
-            if (row >= _orderedNodesCache.Count)
+            int nextIndex = _orderedRowCache.Count;
+            if (nextIndex <= untillRow)
+            {
+                while (nextIndex <= untillRow + 50 && _orderedNodesCache.Count > nextIndex)
+                {
+                    RevisionGraphRow revisionGraphRow = new RevisionGraphRow(_orderedNodesCache[nextIndex]);
+
+                    if (nextIndex > 0)
+                    {
+                        // Copy lanes from last row
+                        RevisionGraphRow previousRevisionGraphRow = _orderedRowCache[nextIndex - 1];
+                        foreach (var segment in previousRevisionGraphRow.Segments)
+                        {
+                            if (!revisionGraphRow.Revision.EndSegments.Any(s => s == segment))
+                            {
+                                revisionGraphRow.Segments.Add(segment);
+                            }
+                        }
+                    }
+
+                    // Add new segments started by this revision
+                    foreach (var segment in revisionGraphRow.Revision.StartSegments.OrderBy(s => s.Parent.LaneIndex))
+                    {
+                        revisionGraphRow.Segments.Add(segment);
+                    }
+
+                    _orderedRowCache.Add(revisionGraphRow);
+                    nextIndex++;
+                }
+            }
+
+            _reorder = false;
+        }
+
+        public RevisionGraphRevision GetNodeForRow(int row)
+        {
+            if (_orderedNodesCache == null || row >= _orderedNodesCache.Count)
             {
                 return null;
             }
@@ -135,34 +191,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return _orderedNodesCache.ElementAt(row);
         }
 
-        public Point GetNodePosition(RevisionGraphRevision node)
+        public RevisionGraphRow GetSegmentsForRow(int row)
         {
-            if (_orderedNodesCache == null || _reorder)
+            if (row >= _orderedRowCache.Count)
             {
-                _orderedNodesCache = _nodes.OrderBy(n => n.Score).ToList();
-                _reorder = false;
+                return null;
             }
 
-            int row = _orderedNodesCache.IndexOf(node);
-            int lane = GetSegmentsForRow(row, out RevisionGraphRevision unused).IndexOf(s => s.Parent == node || s.Child == node);
-
-            return new Point(lane, row);
-        }
-
-        public IEnumerable<RevisionGraphSegment> GetSegmentsForRow(int row, out RevisionGraphRevision node)
-        {
-            int scoreToSearch;
-            node = GetNodeForRow(row);
-            if (node != null)
-            {
-                scoreToSearch = node.Score;
-            }
-            else
-            {
-                scoreToSearch = -10;
-            }
-
-            return _segments.Where(s => s.StartScore <= scoreToSearch && s.EndScore >= scoreToSearch).OrderBy(s => s.StartScore);
+            return _orderedRowCache[row];
         }
 
         public int Count
