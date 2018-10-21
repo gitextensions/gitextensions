@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                 // TODO: do not change text color on already assigned keys, which occur only once
                 ForeColor = HotkeySettingsManager.IsUniqueKey(_keyData) ? System.Drawing.Color.Red : System.Drawing.Color.Black;
-                Text = value.ToText() ?? _hotkeyNotSet.Text;
+                Text = _keyData.ToText();
             }
         }
         #endregion
