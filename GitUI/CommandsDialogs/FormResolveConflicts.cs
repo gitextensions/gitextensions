@@ -577,7 +577,7 @@ namespace GitUI.CommandsDialogs
                 _mergetoolCmd = Module.GetEffectiveSetting($"mergetool.{_mergetool}.cmd");
                 _mergetoolPath = Module.GetEffectiveSetting($"mergetool.{_mergetool}.path");
 
-                if (string.IsNullOrEmpty(_mergetool) || _mergetool == "kdiff3")
+                if (_mergetool == "kdiff3")
                 {
                     if (string.IsNullOrEmpty(_mergetoolPath))
                     {

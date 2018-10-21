@@ -363,8 +363,8 @@ namespace GitUI.CommandsDialogs
             if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
-                var isCommit = lostObject != null && lostObject.ObjectType == LostObjectType.Commit;
-                var isBlob = lostObject != null && lostObject.ObjectType == LostObjectType.Blob;
+                var isCommit = lostObject.ObjectType == LostObjectType.Commit;
+                var isBlob = lostObject.ObjectType == LostObjectType.Blob;
                 var contextMenu = Warnings.SelectedRows[0].ContextMenuStrip;
                 contextMenu.Items[1].Enabled = isCommit;
                 contextMenu.Items[2].Enabled = isCommit;
