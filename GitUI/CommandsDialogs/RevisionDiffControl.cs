@@ -442,7 +442,6 @@ namespace GitUI.CommandsDialogs
             diffCommitSubmoduleChanges.Visible =
                 diffResetSubmoduleChanges.Visible =
                 diffStashSubmoduleChangesToolStripMenuItem.Visible =
-                diffUpdateSubmoduleMenuItem.Visible =
                 diffSubmoduleSummaryMenuItem.Visible =
                 diffUpdateSubmoduleMenuItem.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
 
