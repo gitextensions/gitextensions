@@ -145,7 +145,6 @@ namespace GitUI.Script
                 else if (option.StartsWith("{s") && selectedRevision == null && revisionGrid != null)
                 {
                     allSelectedRevisions = revisionGrid.GetSelectedRevisions();
-                    allSelectedRevisions.Reverse(); // Put first clicked revisions first
                     selectedRevision = CalculateSelectedRevision(revisionGrid, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
                 }
 
