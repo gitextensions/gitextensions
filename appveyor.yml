@@ -33,4 +33,25 @@ build_script:
     Write-Output "Platform: $env:IdeVersion"
     & Setup\BuildInstallers.$env:IdeVersion.cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    Get-ChildItem Setup\GitExtensions-*-Mono.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+
+# scripts to run after tests
+after_test:
+- ps: |
+    & Setup\BuildArtifacts.cmd
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+
+artifacts:
+    # upload the generated portable archive only
+  - path: 'Setup/GitExtensions-*-Mono.zip'
+
+# here we are going to override common configuration
+for:
+
+-
+  branches:
+    only:
+      - /release\/.*/
+
+  artifacts:
+    # upload the generated installer
+    - path: 'Setup/GitExtensions-*.msi'

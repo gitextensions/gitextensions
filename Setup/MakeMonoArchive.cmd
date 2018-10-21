@@ -11,8 +11,11 @@ if not "%APPVEYOR_BUILD_VERSION%"=="" set version=%APPVEYOR_BUILD_VERSION%
 set normal=GitExtensions-%version%-Mono.zip
 set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"
 
-rd /q /s GitExtensions\
-rd /q %normal%
+ECHO Removing GitExtensions folder
+rd /q /s GitExtensions\ 2>nul
+ECHO Removing %normal%
+del /q %normal% 2>nul
+
 xcopy /y ..\GitExtensions\bin\Release\ConEmu\* GitExtensions\ConEmu\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\Release\ConEmu.WinForms.dll GitExtensions\
