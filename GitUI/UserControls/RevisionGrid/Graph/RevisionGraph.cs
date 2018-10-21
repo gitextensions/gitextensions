@@ -70,7 +70,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             int maxScore = Score;
             if (delta + 1 > Score)
             {
-                Score = Math.Max(delta + 1, Score);
+                Score = delta + 1;
 
                 foreach (RevisionGraphRevision parent in Parents)
                 {
@@ -181,7 +181,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         bool added = false;
                         foreach (var searchParent in _segmentLanes)
                         {
-                            if (searchParent.Key.Parent == segment.Parent)
+                            if (searchParent.Value != currentRevisionLane && searchParent.Key.Parent == segment.Parent)
                             {
                                 _segmentLanes.Add(segment, searchParent.Value);
                                 added = true;
@@ -264,6 +264,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public void CacheTo(int untillRow)
         {
+            Updated?.Invoke();
             if (_orderedNodesCache == null || _reorder || _orderedNodesCache.Count <= untillRow)
             {
                 _orderedNodesCache = _nodes.OrderBy(n => n.Score).ToList();
@@ -274,6 +275,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                 _orderedRowCache = new List<RevisionGraphRow>();
                 _reorder = false;
+                Updated?.Invoke();
             }
 
             int nextIndex = _orderedRowCache.Count;
