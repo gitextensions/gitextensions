@@ -88,6 +88,8 @@ namespace GitUI.Editor.Diff
                     var brush = default(Brush);
                     switch (diffLine.LineType)
                     {
+                        case DiffLineType.Context:
+                            break;
                         case DiffLineType.Plus:
                             brush = new SolidBrush(AppSettings.DiffAddedColor);
                             break;
