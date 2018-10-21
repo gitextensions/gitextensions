@@ -390,7 +390,37 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private void UpdateGraphColumnWidth(in VisibleRowRange range)
         {
-            Column.Width = 250;
+            if (!Column.Visible)
+            {
+                return;
+            }
+
+            int laneCount = 0;
+            foreach (var index in range)
+            {
+                var laneRow = _revisionGraph.GetSegmentsForRow(index);
+                if (laneRow != null)
+                {
+                    laneCount = Math.Max(laneRow.Segments.Count, laneCount);
+                }
+            }
+
+            // When 'git log --first-parent' filtration is enabled and when only current
+            // branch needed to be rendered (and this filter actually works),
+            // it is much more readable to limit max lanes to 1.
+            int maxLanes =
+                (AppSettings.ShowFirstParent &&
+                 AppSettings.ShowCurrentBranchOnly &&
+                 AppSettings.BranchFilterEnabled)
+                    ? 1
+                    : MaxLanes;
+
+            laneCount = Math.Min(laneCount, maxLanes);
+            var columnWidth = (_laneWidth * laneCount) + ColumnLeftMargin;
+            if (Column.Width != columnWidth && columnWidth > Column.MinimumWidth)
+            {
+                Column.Width = columnWidth;
+            }
         }
 
         private void ClearDrawCache()

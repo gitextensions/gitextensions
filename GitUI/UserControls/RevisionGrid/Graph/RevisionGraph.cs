@@ -168,6 +168,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private List<RevisionGraphRevision> _orderedNodesCache = null;
         private List<RevisionGraphRow> _orderedRowCache = null;
 
+        public event Action Updated;
+
         public void Clear()
         {
             _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
@@ -237,6 +239,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     _orderedRowCache.Add(revisionGraphRow);
                     nextIndex++;
                 }
+
+                Updated?.Invoke();
             }
         }
 

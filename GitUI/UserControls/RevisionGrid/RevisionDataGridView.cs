@@ -89,6 +89,25 @@ namespace GitUI.UserControls.RevisionGrid
             };
             RowPrePaint += OnRowPrePaint;
 
+            _revisionGraph.Updated += () =>
+            {
+                // We have to post this since the thread owns a lock on GraphData that we'll
+                // need in order to re-draw the graph.
+                this.InvokeAsync(() =>
+                    {
+                        Debug.Assert(_rowHeight != 0, "_rowHeight != 0");
+
+                        // Refresh column providers
+                        foreach (var columnProvider in _columnProviders)
+                        {
+                            columnProvider.Refresh(_rowHeight, _visibleRowRange);
+                        }
+
+                        Invalidate();
+                    })
+                    .FileAndForget();
+            };
+
             VirtualMode = true;
             Clear();
 
