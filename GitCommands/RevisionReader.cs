@@ -380,18 +380,24 @@ namespace GitCommands
             var committerEmail = reader.ReadLine(stringPool);
 
             var subject = reader.ReadLine(advance: false);
-            Debug.Assert(subject != null, "subject != null");
+
+            if (author == null || authorEmail == null || committer == null || committerEmail == null || subject == null)
+            {
+                // TODO log this parse error
+                Debug.Fail("Unable to read an entry from the log -- this should not happen");
+                revision = default;
+                return false;
+            }
 
             // NOTE the convention is that the Subject string is duplicated at the start of the Body string
             // Therefore we read the subject twice.
             // If there are not enough characters remaining for a body, then just assign the subject string directly.
             var body = reader.Remaining - subject.Length == 2 ? subject : reader.ReadToEnd();
-            Debug.Assert(body != null, "body != null");
 
-            if (author == null || authorEmail == null || committer == null || committerEmail == null || subject == null || body == null)
+            if (body == null)
             {
                 // TODO log this parse error
-                Debug.Fail("Unable to read an entry from the log -- this should not happen");
+                Debug.Fail("Unable to read body from the log -- this should not happen");
                 revision = default;
                 return false;
             }
