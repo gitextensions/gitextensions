@@ -472,7 +472,7 @@ namespace GitUI.UserControls.RevisionGrid
                         int curCount = _graphDataCount;
                         _graphDataCount = _revisionGraph.CachedCount;
 
-                        UpdateGraph(curCount, Math.Min(curCount + 150, scrollTo));
+                        UpdateGraph(curCount, scrollTo); ////Math.Min(curCount + 150, scrollTo));
                         keepRunning = curCount < scrollTo;
                     }
                     else
@@ -498,14 +498,11 @@ namespace GitUI.UserControls.RevisionGrid
             {
                 var rowIndex = fromIndex;
 
-                while (rowIndex < toIndex)
-                {
-                    // Cache the next item
-                    _revisionGraph.CacheTo(rowIndex);
+                // Cache the next item
+                _revisionGraph.CacheTo(toIndex);
 
-                    rowIndex = _revisionGraph.CachedCount;
-                    _graphDataCount = rowIndex;
-                }
+                rowIndex = _revisionGraph.CachedCount;
+                _graphDataCount = rowIndex;
 
                 this.InvokeAsync(UpdateRow, rowIndex).FileAndForget();
                 return;

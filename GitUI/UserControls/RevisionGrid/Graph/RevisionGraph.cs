@@ -128,7 +128,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             int laneIndex = 0;
             bool nodePassed = false;
 
-            foreach (var segment in Segments.OrderBy(s => s.Parent.LaneIndex))
+            foreach (var segment in Segments.OrderByDescending(s => s.Child.LaneIndex))
             {
                 if (segment == revisionGraphRevision)
                 {
@@ -210,7 +210,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             int nextIndex = _orderedRowCache.Count;
             if (nextIndex <= untillRow)
             {
-                while (nextIndex <= untillRow + 50 && _orderedNodesCache.Count > nextIndex)
+                int cacheCount = _orderedNodesCache.Count;
+                while (nextIndex <= untillRow + 50 && cacheCount > nextIndex)
                 {
                     RevisionGraphRow revisionGraphRow = new RevisionGraphRow(_orderedNodesCache[nextIndex]);
 

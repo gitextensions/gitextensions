@@ -352,6 +352,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void Clear()
         {
+            _revisionGraph.Clear();
+            _cacheHead = -1;
+            _cacheHeadRow = 0;
+            ClearDrawCache();
         }
 
         public override void Refresh(int rowHeight, in VisibleRowRange range)
