@@ -121,6 +121,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             Parents.Add(parent);
             parent.AddChild(this);
+
             maxScore = parent.IncreaseScore(Score);
 
             RevisionGraphSegment revisionGraphSegment = new RevisionGraphSegment(parent, this);
@@ -234,6 +235,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public void Clear()
         {
+            _maxScore = 0;
             _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
             _nodes = new ConcurrentBag<RevisionGraphRevision>();
             _segments = new ConcurrentBag<RevisionGraphSegment>();
@@ -349,6 +351,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                 revisionGraphRevision = new RevisionGraphRevision(revision.ObjectId, score);
                 revisionGraphRevision.ApplyFlags(types);
+                revisionGraphRevision.LaneIndex = -_nodes.Count;
 
                 revisionGraphRevision.GitRevision = revision;
                 _nodeByObjectId.TryAdd(revision.ObjectId, revisionGraphRevision);
@@ -359,12 +362,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 // This revision was added as a parent. Probably only the objectid is known.
                 revisionGraphRevision.GitRevision = revision;
                 revisionGraphRevision.ApplyFlags(types);
+            }
 
-                // Invalidate cache if the new score is lower then the cached result
-                if (revisionGraphRevision.Score < _cachedUntillScore)
-                {
-                    _reorder = true;
-                }
+            // Invalidate cache if the new score is lower then the cached result
+            if (revisionGraphRevision.Score <= _cachedUntillScore)
+            {
+                _reorder = true;
             }
 
             foreach (ObjectId parentObjectId in revision.ParentIds)
@@ -380,7 +383,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     _maxScore = Math.Max(_maxScore, newMaxScore);
 
                     // Invalidate cache if the new score is lower then the cached result
-                    if (parentRevisionGraphRevision.Score < _cachedUntillScore)
+                    if (parentRevisionGraphRevision.Score <= _cachedUntillScore)
                     {
                         _reorder = true;
                     }
@@ -388,7 +391,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 else
                 {
                     // If the current score is lower, cache is invalid. The new score will (probably) be higher.
-                    if (parentRevisionGraphRevision.Score < _cachedUntillScore)
+                    if (parentRevisionGraphRevision.Score <= _cachedUntillScore)
                     {
                         _reorder = true;
                     }

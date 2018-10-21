@@ -39,7 +39,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public static Brush GetPenForLane(int laneIndex)
         {
-            return PresetGraphPens[laneIndex % PresetGraphPens.Count];
+            return PresetGraphPens[Math.Abs(laneIndex) % PresetGraphPens.Count];
         }
     }
 }

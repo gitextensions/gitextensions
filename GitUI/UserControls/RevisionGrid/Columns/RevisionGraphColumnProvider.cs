@@ -331,18 +331,20 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             }
 
                             // EndLane
-                            if (startLane >= 0 && centerLane >= 0)
+                            if (startLane >= 0 && centerLane >= 0 && (startLane <= MaxLanes || centerLane <= MaxLanes))
                             {
                                 DrawSegment(g, brush, startX, startY, centerX, centerY);
                             }
 
                             // StartLane
-                            if (endLane >= 0 && centerLane >= 0)
+                            if (endLane >= 0 && centerLane >= 0 && (endLane <= MaxLanes || centerLane <= MaxLanes))
                             {
                                 DrawSegment(g, brush, centerX, centerY, endX, endY);
                             }
 
-                            if (currentRow.Revision == revisionGraphRevision.Parent || currentRow.Revision == revisionGraphRevision.Child)
+                            if (centerLane < MaxLanes &&
+                                (currentRow.Revision == revisionGraphRevision.Parent ||
+                                 currentRow.Revision == revisionGraphRevision.Child))
                             {
                                 Rectangle nodeRect = new Rectangle(centerX - (_nodeDimension / 2), centerY - (_nodeDimension / 2), _nodeDimension, _nodeDimension);
 
