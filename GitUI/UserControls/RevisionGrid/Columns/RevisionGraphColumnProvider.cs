@@ -279,36 +279,38 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                     if (currentRow != null && previousRow != null && nextRow != null)
                     {
-                        int lane = 0;
                         foreach (RevisionGraphSegment revisionGraphRevision in currentRow.Segments)
                         {
-                            int startLane = previousRow.Segments.IndexOf(x => x.Child == revisionGraphRevision.Parent || x.Parent == revisionGraphRevision.Child || x.Parent == revisionGraphRevision.Parent || x.Child == revisionGraphRevision.Child);
-                            if (startLane < 0)
-                            {
-                                startLane = previousRow.Segments.IndexOf(x => x == revisionGraphRevision);
-                            }
+                            int startLane = -10;
+                            int centerLane = -10;
+                            int endLane = -10;
 
-                            if (index == 0)
+                            if (revisionGraphRevision.Parent == currentRow.Revision)
                             {
-                                startLane = -10;
+                                // This lane ends here
+                                startLane = previousRow.GetLaneIndexForSegment(revisionGraphRevision);
+                                centerLane = currentRow.GetLaneIndexForSegment(revisionGraphRevision);
+                            }
+                            else
+                            {
+                                if (revisionGraphRevision.Child == currentRow.Revision)
+                                {
+                                    // This lane starts here
+                                    centerLane = currentRow.GetLaneIndexForSegment(revisionGraphRevision);
+                                    endLane = nextRow.GetLaneIndexForSegment(revisionGraphRevision);
+                                }
+                                else
+                                {
+                                    // this lane crosses
+                                    startLane = previousRow.GetLaneIndexForSegment(revisionGraphRevision);
+                                    centerLane = currentRow.GetLaneIndexForSegment(revisionGraphRevision);
+                                    endLane = nextRow.GetLaneIndexForSegment(revisionGraphRevision);
+                                }
                             }
 
                             Point revisionGraphRevisionPositionStart = new Point(startLane, -1);
-
-                            int centerLane = currentRow.Segments.IndexOf(x => x.Child == revisionGraphRevision.Parent || x.Parent == revisionGraphRevision.Child || x.Parent == revisionGraphRevision.Parent || x.Child == revisionGraphRevision.Child);
-                            if (centerLane < 0)
-                            {
-                                centerLane = currentRow.Segments.IndexOf(x => x == revisionGraphRevision);
-                            }
-
                             Point revisionGraphRevisionPositionCenter = new Point(centerLane, 0);
-                            int endlane = nextRow.Segments.IndexOf(x => x.Child == revisionGraphRevision.Parent || x.Parent == revisionGraphRevision.Child || x.Parent == revisionGraphRevision.Parent || x.Child == revisionGraphRevision.Child);
-                            if (endlane < 0)
-                            {
-                                endlane = nextRow.Segments.IndexOf(x => x == revisionGraphRevision);
-                            }
-
-                            Point revisionGraphRevisionPositionEnd = new Point(endlane, 1);
+                            Point revisionGraphRevisionPositionEnd = new Point(endLane, 1);
 
                             int startX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionStart.X + 0.5) * _laneWidth);
                             int startY = top + (revisionGraphRevisionPositionStart.Y * rowHeight) + (rowHeight / 2);
@@ -319,22 +321,22 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             int endX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionEnd.X + 0.5) * _laneWidth);
                             int endY = top + (revisionGraphRevisionPositionEnd.Y * rowHeight) + (rowHeight / 2);
 
-                            if (startLane >= 0)
+                            // EndLane
+                            if (startLane >= 0 && centerLane >= 0)
                             {
-                                g.DrawLine(Pens.Black, startX, startY, centerX, centerY);
+                                g.DrawLine(Pens.Green, startX, startY, centerX, centerY);
                             }
 
-                            if (endlane >= 0)
+                            // StartLane
+                            if (endLane >= 0 && centerLane >= 0)
                             {
-                                g.DrawLine(Pens.Black, centerX, centerY, endX, endY);
+                                g.DrawLine(Pens.Red, centerX, centerY, endX, endY);
                             }
 
                             if (currentRow.Revision == revisionGraphRevision.Parent || currentRow.Revision == revisionGraphRevision.Child)
                             {
                                 g.DrawEllipse(Pens.OrangeRed, centerX - 2, centerY - 2, 4, 4);
                             }
-
-                            lane++;
                         }
                     }
 

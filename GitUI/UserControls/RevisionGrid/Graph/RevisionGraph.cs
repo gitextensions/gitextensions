@@ -119,6 +119,40 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public RevisionGraphRevision Revision { get; private set; }
         public SynchronizedCollection<RevisionGraphSegment> Segments { get; private set; }
+
+        public int GetLaneIndexForSegment(RevisionGraphSegment revisionGraphRevision)
+        {
+            int laneIndex = 0;
+            bool nodePassed = false;
+
+            foreach (var segment in Segments)
+            {
+                if (segment == revisionGraphRevision)
+                {
+                    return laneIndex;
+                }
+
+                if (segment.Child == Revision || segment.Parent == Revision)
+                {
+                    if (revisionGraphRevision.Child == Revision || revisionGraphRevision.Parent == Revision)
+                    {
+                        return laneIndex;
+                    }
+
+                    if (!nodePassed)
+                    {
+                        laneIndex++;
+                        nodePassed = true;
+                    }
+                }
+                else
+                {
+                    laneIndex++;
+                }
+            }
+
+            return -1;
+        }
     }
 
     public class RevisionGraph
@@ -137,14 +171,16 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _nodes = new ConcurrentBag<RevisionGraphRevision>();
             _segments = new ConcurrentBag<RevisionGraphSegment>();
             _orderedNodesCache = null;
+            _orderedRowCache = null;
         }
 
         public void BuildGraph(int untillRow)
         {
-            if (_orderedNodesCache == null || _reorder)
+            if (_orderedNodesCache == null || _reorder || _orderedNodesCache.Count <= untillRow)
             {
                 _orderedNodesCache = _nodes.OrderBy(n => n.Score).ToList();
                 _orderedRowCache = new List<RevisionGraphRow>();
+                _reorder = false;
             }
 
             int nextIndex = _orderedRowCache.Count;
@@ -160,7 +196,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         RevisionGraphRow previousRevisionGraphRow = _orderedRowCache[nextIndex - 1];
                         foreach (var segment in previousRevisionGraphRow.Segments)
                         {
-                            if (!revisionGraphRow.Revision.EndSegments.Any(s => s == segment))
+                            if (!previousRevisionGraphRow.Revision.EndSegments.Any(s => s == segment))
                             {
                                 revisionGraphRow.Segments.Add(segment);
                             }
@@ -177,8 +213,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     nextIndex++;
                 }
             }
-
-            _reorder = false;
         }
 
         public RevisionGraphRevision GetNodeForRow(int row)
