@@ -72,7 +72,6 @@ namespace GitUI
         private readonly Lazy<IndexWatcher> _indexWatcher;
         private readonly BuildServerWatcher _buildServerWatcher;
         private readonly Timer _selectionTimer;
-        private readonly GraphColumnProvider _graphColumnProvider;
         private readonly RevisionGraphColumnProvider _revisionGraphColumnProvider;
         private readonly List<DataGridViewColumn> _resizableColumns;
         private readonly DataGridViewColumn _maximizedColumn;
@@ -209,10 +208,8 @@ namespace GitUI
 
             _buildServerWatcher = new BuildServerWatcher(this, _gridView, () => Module);
 
-            _graphColumnProvider = new GraphColumnProvider(this, _gridView._graphModel, _gridView._revisionGraph);
             _revisionGraphColumnProvider = new RevisionGraphColumnProvider(this, _gridView._revisionGraph);
             _gridView.AddColumn(_revisionGraphColumnProvider);
-            _gridView.AddColumn(_graphColumnProvider);
             _gridView.AddColumn(new MessageColumnProvider(this));
             _gridView.AddColumn(new AvatarColumnProvider(_gridView, AvatarService.Default));
             _gridView.AddColumn(new AuthorNameColumnProvider(this, _authorHighlighting));
@@ -593,8 +590,8 @@ namespace GitUI
 
         private void HighlightBranch(ObjectId id)
         {
-            _graphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
-            _graphColumnProvider.HighlightBranch(id);
+            _revisionGraphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
+            _revisionGraphColumnProvider.HighlightBranch(id);
             _gridView.Update();
         }
 
@@ -733,7 +730,7 @@ namespace GitUI
 
             try
             {
-                _graphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+                _revisionGraphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
 
                 // Apply filter from revision filter dialog
                 _branchFilter = _revisionFilter.GetBranchFilter();

@@ -22,8 +22,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private static readonly int _laneWidth = DpiUtil.Scale(16);
         private static readonly int _laneLineWidth = DpiUtil.Scale(2);
 
-        private readonly JunctionStyler _junctionStyler = new JunctionStyler(new JunctionColorProvider());
-
         private readonly RevisionGridControl _grid;
         private readonly RevisionGraph _revisionGraph;
 
@@ -174,11 +172,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 bool DrawVisibleGraph()
                 {
-                    if (end - start > 0)
-                    {
-                        _revisionGraph.BuildGraph(end);
-                    }
-
                     for (var index = start; index < end; index++)
                     {
                         // Get the x,y value of the current item's upper left in the cache
@@ -268,6 +261,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     g.Clip = newClip;
                     g.Clear(Color.Transparent);
 
+                    if (index > _revisionGraph.CachedCount)
+                    {
+                        return true;
+                    }
+
                     // Getting RevisionGraphDrawStyle results in call to AppSettings. This is not very cheap, cache.
                     _revisionGraphDrawStyleCache = RevisionGraphDrawStyle;
 
@@ -321,21 +319,23 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             int endX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionEnd.X + 0.5) * _laneWidth);
                             int endY = top + (revisionGraphRevisionPositionEnd.Y * rowHeight) + (rowHeight / 2);
 
+                            Pen pen = RevisionGraphLaneColor.GetPenForLane(revisionGraphRevision.Parent.LaneIndex);
+
                             // EndLane
                             if (startLane >= 0 && centerLane >= 0)
                             {
-                                g.DrawLine(Pens.Green, startX, startY, centerX, centerY);
+                                g.DrawLine(pen, startX, startY, centerX, centerY);
                             }
 
                             // StartLane
                             if (endLane >= 0 && centerLane >= 0)
                             {
-                                g.DrawLine(Pens.Red, centerX, centerY, endX, endY);
+                                g.DrawLine(pen, centerX, centerY, endX, endY);
                             }
 
                             if (currentRow.Revision == revisionGraphRevision.Parent || currentRow.Revision == revisionGraphRevision.Child)
                             {
-                                g.DrawEllipse(Pens.OrangeRed, centerX - 2, centerY - 2, 4, 4);
+                                g.DrawEllipse(pen, centerX - 2, centerY - 2, 4, 4);
                             }
                         }
                     }

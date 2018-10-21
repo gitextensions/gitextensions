@@ -54,29 +54,32 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public int LaneIndex { get; set; }
 
-        private void IncreaseScore(int delta)
+        private int IncreaseScore(int delta)
         {
+            int maxScore = Score;
             if (delta + 1 > Score)
             {
                 Score = Math.Max(delta + 1, Score);
 
                 foreach (RevisionGraphRevision parent in Parents)
                 {
-                    parent.IncreaseScore(Score);
+                    maxScore = Math.Max(parent.IncreaseScore(Score), maxScore);
                 }
             }
+
+            return maxScore;
         }
 
         public GitRevision GitRevision { get; set; }
 
         public ObjectId Objectid { get; set; }
 
-        private ConcurrentBag<RevisionGraphRevision> Parents { get; set; }
-        private ConcurrentBag<RevisionGraphRevision> Children { get; set; }
+        public ConcurrentBag<RevisionGraphRevision> Parents { get; private set; }
+        public ConcurrentBag<RevisionGraphRevision> Children { get; private set; }
         public ConcurrentBag<RevisionGraphSegment> StartSegments { get; private set; }
         public ConcurrentBag<RevisionGraphSegment> EndSegments { get; private set; }
 
-        public RevisionGraphSegment AddParent(RevisionGraphRevision parent)
+        public RevisionGraphSegment AddParent(RevisionGraphRevision parent, out int maxScore)
         {
             if (Parents.Any())
             {
@@ -89,7 +92,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             Parents.Add(parent);
             parent.AddChild(this);
-            parent.IncreaseScore(Score);
+            maxScore = parent.IncreaseScore(Score);
 
             RevisionGraphSegment revisionGraphSegment = new RevisionGraphSegment(parent, this);
             parent.EndSegments.Add(revisionGraphSegment);
@@ -125,7 +128,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             int laneIndex = 0;
             bool nodePassed = false;
 
-            foreach (var segment in Segments)
+            foreach (var segment in Segments.OrderBy(s => s.Parent.LaneIndex))
             {
                 if (segment == revisionGraphRevision)
                 {
@@ -174,7 +177,28 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _orderedRowCache = null;
         }
 
-        public void BuildGraph(int untillRow)
+        public int Count
+        {
+            get
+            {
+                return _nodes.Count;
+            }
+        }
+
+        public int CachedCount
+        {
+            get
+            {
+                if (_orderedRowCache == null)
+                {
+                    return 0;
+                }
+
+                return _orderedRowCache.Count;
+            }
+        }
+
+        public void CacheTo(int untillRow)
         {
             if (_orderedNodesCache == null || _reorder || _orderedNodesCache.Count <= untillRow)
             {
@@ -204,7 +228,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     }
 
                     // Add new segments started by this revision
-                    foreach (var segment in revisionGraphRow.Revision.StartSegments.OrderBy(s => s.Parent.LaneIndex))
+                    foreach (var segment in revisionGraphRow.Revision.StartSegments)
                     {
                         revisionGraphRow.Segments.Add(segment);
                     }
@@ -213,6 +237,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     nextIndex++;
                 }
             }
+        }
+
+        public bool TryGetNode(ObjectId objectId, out RevisionGraphRevision revision)
+        {
+            return _nodeByObjectId.TryGetValue(objectId, out revision);
         }
 
         public RevisionGraphRevision GetNodeForRow(int row)
@@ -235,26 +264,17 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return _orderedRowCache[row];
         }
 
-        public int Count
-        {
-            get
-            {
-                return _nodes.Count;
-            }
-        }
+        private int _maxScore = 0;
 
         public void Add(GitRevision revision)
         {
             if (!_nodeByObjectId.TryGetValue(revision.ObjectId, out RevisionGraphRevision revisionGraphRevision))
             {
-                int score = 0;
-                if (_nodes.Any())
-                {
-                    score = _nodes.Max(r => r.Score) + 1;
-                }
+                int score = _maxScore + 1;
+                _maxScore = score;
 
                 revisionGraphRevision = new RevisionGraphRevision(revision.ObjectId, score);
-                revisionGraphRevision.LaneIndex = score;
+                ////revisionGraphRevision.LaneIndex = score;
                 revisionGraphRevision.GitRevision = revision;
                 _nodeByObjectId.TryAdd(revision.ObjectId, revisionGraphRevision);
                 _nodes.Add(revisionGraphRevision);
@@ -273,11 +293,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     _nodes.Add(parentRevisionGraphRevision);
                     _nodeByObjectId.TryAdd(parentObjectId, parentRevisionGraphRevision);
 
-                    _segments.Add(revisionGraphRevision.AddParent(parentRevisionGraphRevision));
+                    int newMaxScore;
+                    _segments.Add(revisionGraphRevision.AddParent(parentRevisionGraphRevision, out newMaxScore));
+                    _maxScore = Math.Max(_maxScore, newMaxScore);
                 }
                 else
                 {
-                    _segments.Add(revisionGraphRevision.AddParent(parentRevisionGraphRevision));
+                    int newMaxScore;
+                    _segments.Add(revisionGraphRevision.AddParent(parentRevisionGraphRevision, out newMaxScore));
+                    _maxScore = Math.Max(_maxScore, newMaxScore);
                 }
             }
 
