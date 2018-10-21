@@ -1050,7 +1050,7 @@ namespace GitUI
             }
             else
             {
-                DoubleClick(sender, e);
+                DoubleClick?.Invoke(sender, e);
             }
         }
 

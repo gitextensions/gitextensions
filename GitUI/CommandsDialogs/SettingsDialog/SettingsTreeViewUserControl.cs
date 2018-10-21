@@ -110,7 +110,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                     }
                 }
 
-                SettingsPageSelected(this, new SettingsPageSelectedEventArgs { SettingsPage = page, IsTriggeredByGoto = _isSelectionChangeTriggeredByGoto });
+                SettingsPageSelected?.Invoke(this, new SettingsPageSelectedEventArgs { SettingsPage = page, IsTriggeredByGoto = _isSelectionChangeTriggeredByGoto });
             }
         }
 
