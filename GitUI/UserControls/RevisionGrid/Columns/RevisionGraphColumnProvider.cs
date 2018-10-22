@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -510,8 +511,44 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
         {
-            toolTip = string.Empty;
+            if (!revision.IsArtificial)
+            {
+                toolTip = GetLaneInfo(e.X - ColumnLeftMargin, e.RowIndex);
+                return true;
+            }
+
+            toolTip = default;
             return false;
+
+            string GetLaneInfo(int x, int rowIndex)
+            {
+                int lane = x / _laneWidth;
+                var laneInfoText = new StringBuilder();
+                RevisionGraphRow row = _revisionGraph.GetSegmentsForRow(rowIndex);
+                if (row != null)
+                {
+                    IEnumerable<RevisionGraphSegment> segmentsForLane = row.GetSegmentsForIndex(lane);
+
+                    if (segmentsForLane.Count() == 1)
+                    {
+                        // Crossing lange
+                        laneInfoText.Append(segmentsForLane.First().Parent.GitRevision.Body ?? segmentsForLane.First().Parent.GitRevision.Subject);
+                    }
+                    else
+                    if (segmentsForLane.Count() > 1)
+                    {
+                        // Current revision
+                        if (!row.Revision.Objectid.IsArtificial)
+                        {
+                            laneInfoText.AppendLine(row.Revision.Objectid.ToString());
+                            laneInfoText.AppendLine();
+                            laneInfoText.Append(row.Revision.GitRevision.Body ?? row.Revision.GitRevision.Subject);
+                        }
+                    }
+                }
+
+                return laneInfoText.ToString();
+            }
         }
     }
 }

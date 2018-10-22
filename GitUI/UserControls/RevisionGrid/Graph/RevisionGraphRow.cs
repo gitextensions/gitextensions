@@ -76,6 +76,18 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return _laneCount;
         }
 
+        public IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index)
+        {
+            BuildSegmentLanes();
+            foreach (var keyValye in _segmentLanes)
+            {
+                if (keyValye.Value == index)
+                {
+                    yield return keyValye.Key;
+                }
+            }
+        }
+
         public int GetLaneIndexForSegment(RevisionGraphSegment revisionGraphRevision)
         {
             BuildSegmentLanes();
