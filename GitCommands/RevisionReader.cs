@@ -163,8 +163,7 @@ namespace GitCommands
                     "-z",
                     $"--pretty=format:\"{fullFormat}\"",
                     { AppSettings.ShowReflogReferences, "--reflog" },
-                    { AppSettings.OrderRevisionByDate, "--date-order" },
-                    { AppSettings.ShowReflogReferences && !AppSettings.OrderRevisionByDate, "--topo-order" }, // if reflog is used, the revisions are not returned in topo-order. Force topo order, since we require topo order for the revision graph.
+                    { AppSettings.OrderRevisionByDate, "--date-order", "--topo-order" },
                     {
                         refFilterOptions.HasFlag(RefFilterOptions.All),
                         "--all",
