@@ -55,3 +55,21 @@ for:
   artifacts:
     # upload the generated installer
     - path: 'Setup/GitExtensions-*.msi'
+
+  notifications:
+  - provider: Webhook
+    url: https://app.signpath.io/API/v1/0838c0b6-8e2b-441a-81d4-6e895f8bed60/Integrations/AppVeyor
+    on_build_success: true
+    on_build_failure: false
+    on_build_status_changed: false
+    method: POST
+    headers:
+      Authorization:
+        secure: uwwviMihzoBt/uwQUINm7qhrlbVO6Y3T8Dp8AcVuEp7KVWWTt/jdazHQA1wg6rXL1FfxE0nxZ0lsIrHTZu9jow==
+    body: >-
+      {
+        "AccountName": "SignPath",
+        "ProjectSlug": "{{projectName}}",
+        "BuildVersion": "{{buildVersion}}",
+        "SigningPolicyId": "e7095762-6b2e-4744-aba6-c44bb9d9d199"
+      }
