@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing.Drawing2D;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
@@ -25,21 +23,21 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         internal static Brush NonRelativeBrush { get; private set; }
 
-        internal static readonly List<Brush> PresetGraphPens = new List<Brush>();
+        internal static readonly List<Brush> PresetGraphBrushes = new List<Brush>();
 
         static RevisionGraphLaneColor()
         {
             foreach (Color color in PresetGraphColors)
             {
-                PresetGraphPens.Add(new SolidBrush(color));
+                PresetGraphBrushes.Add(new SolidBrush(color));
             }
 
             NonRelativeBrush = new SolidBrush(NonRelativeColor);
         }
 
-        public static Brush GetPenForLane(int laneIndex)
+        public static Brush GetBrushForLane(int laneColor)
         {
-            return PresetGraphPens[Math.Abs(laneIndex) % PresetGraphPens.Count];
+            return PresetGraphBrushes[Math.Abs(laneColor) % PresetGraphBrushes.Count];
         }
     }
 }

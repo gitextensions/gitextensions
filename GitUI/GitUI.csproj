@@ -381,6 +381,9 @@
     <Compile Include="UserControls\HslColor.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraph.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphLaneColor.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphRevision.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphRow.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphSegment.cs" />
     <Compile Include="UserControls\RevisionGrid\RefArrowType.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\AuthorNameColumnProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\BuildStatusColumnProvider.cs" />

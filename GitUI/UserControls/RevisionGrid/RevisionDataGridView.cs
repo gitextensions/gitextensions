@@ -28,9 +28,6 @@ namespace GitUI.UserControls.RevisionGrid
     {
         private static readonly SolidBrush _alternatingRowBackgroundBrush = new SolidBrush(Color.FromArgb(250, 250, 250));
 
-        private readonly ConcurrentDictionary<int, bool> _isRelativeByIndex = new ConcurrentDictionary<int, bool>();
-        private readonly ConcurrentDictionary<int, GitRevision> _revisionByRowIndex = new ConcurrentDictionary<int, GitRevision>();
-
         internal RevisionGraph _revisionGraph = new RevisionGraph();
 
         private readonly List<ColumnProvider> _columnProviders = new List<ColumnProvider>();
@@ -348,8 +345,6 @@ namespace GitUI.UserControls.RevisionGrid
             // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about te delete the data
             SetRowCount(0);
             _graphDataCount = 0;
-            _revisionByRowIndex.Clear();
-            _isRelativeByIndex.Clear();
             ToBeSelectedRowIndexes = new ConcurrentQueue<int>();
 
             // The graphdata is stored in one of the columnproviders, clear this last
@@ -372,26 +367,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public bool RowIsRelative(int rowIndex)
         {
-            return _isRelativeByIndex.GetOrAdd(rowIndex, IsRelative);
-
-            bool IsRelative(int index)
-            {
-                /*
-                var laneRow = _revisionGraph.GetNodeForRow(index);
-
-                if (laneRow == null)
-                {
-                    return false;
-                }
-
-                if (laneRow.Node.Ancestors.Count > 0)
-                {
-                    return laneRow.Node.Ancestors[0].IsRelative;
-                }
-                */
-
-                return true;
-            }
+            return _revisionGraph.IsRowRelative(rowIndex);
         }
 
         [CanBeNull]
@@ -402,8 +378,6 @@ namespace GitUI.UserControls.RevisionGrid
 
         public void Prune()
         {
-            _revisionByRowIndex.Clear();
-            _isRelativeByIndex.Clear();
             _revisionGraph.Clear();
 
             SetRowCount(_revisionGraph.Count);
@@ -489,9 +463,9 @@ namespace GitUI.UserControls.RevisionGrid
                         int scrollTo = _backgroundScrollTo;
 
                         int curCount = _graphDataCount;
-                        _graphDataCount = _revisionGraph.CachedCount;
+                        _graphDataCount = _revisionGraph.GetCachedCount();
 
-                        UpdateGraph(curCount, scrollTo); ////Math.Min(curCount + 150, scrollTo));
+                        UpdateGraph(curCount, scrollTo);
                         keepRunning = curCount < scrollTo;
                     }
                     else
@@ -518,9 +492,9 @@ namespace GitUI.UserControls.RevisionGrid
                 var rowIndex = fromIndex;
 
                 // Cache the next item
-                _revisionGraph.CacheTo(toIndex);
+                _revisionGraph.CacheTo(toIndex, Math.Min(fromIndex + 1500, toIndex));
 
-                rowIndex = _revisionGraph.CachedCount;
+                rowIndex = _revisionGraph.GetCachedCount();
                 _graphDataCount = rowIndex;
 
                 this.InvokeAsync(UpdateRow, rowIndex).FileAndForget();
@@ -596,9 +570,6 @@ namespace GitUI.UserControls.RevisionGrid
 
         public override void Refresh()
         {
-            _revisionByRowIndex.Clear();
-            _isRelativeByIndex.Clear();
-
             // TODO allow custom grid font
             ////NormalFont = AppSettings.RevisionGridFont;
             ////NormalFont = new Font(Settings.Font.Name, Settings.Font.Size + 2); // SystemFonts.DefaultFont.FontFamily, SystemFonts.DefaultFont.Size + 2);
@@ -628,8 +599,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public bool IsRevisionRelative(ObjectId objectId)
         {
-            return true;
-            ////return _revisionGraph.IsRevisionRelative(objectId);
+            return _revisionGraph.IsRevisionRelative(objectId);
         }
 
         [CanBeNull]
@@ -640,15 +610,7 @@ namespace GitUI.UserControls.RevisionGrid
 
         public int? TryGetRevisionIndex([CanBeNull] ObjectId objectId)
         {
-            return null;
-            /*
-            if (Rows.Count == 0)
-            {
-                return null;
-            }
-
-            return objectId != null && _revisionGraph.TryGetNode(objectId, out var node) ? (int?)node.Index : null;
-            */
+            return objectId != null && _revisionGraph.TryGetRowIndex(objectId, out var index) ? (int?)index : null;
         }
 
         public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)

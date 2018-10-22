@@ -261,7 +261,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     g.Clip = newClip;
                     g.Clear(Color.Transparent);
 
-                    if (index > _revisionGraph.CachedCount)
+                    if (index > _revisionGraph.GetCachedCount())
                     {
                         return true;
                     }
@@ -323,7 +323,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                             if (revisionGraphRevision.Child.IsRelative)
                             {
-                                brush = RevisionGraphLaneColor.GetPenForLane(revisionGraphRevision.Parent.LaneIndex);
+                                brush = RevisionGraphLaneColor.GetBrushForLane(revisionGraphRevision.Parent.LaneColor);
                             }
                             else
                             {
