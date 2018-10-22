@@ -65,7 +65,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public int LaneIndex { get; set; }
 
-        private int IncreaseScore(int delta)
+        public int IncreaseScore(int delta)
         {
             int maxScore = Score;
             if (delta + 1 > Score)
@@ -362,6 +362,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 // This revision was added as a parent. Probably only the objectid is known.
                 revisionGraphRevision.GitRevision = revision;
                 revisionGraphRevision.ApplyFlags(types);
+                revisionGraphRevision.IncreaseScore(_maxScore);
+                _nodes.Add(revisionGraphRevision);
             }
 
             // Invalidate cache if the new score is lower then the cached result
@@ -375,7 +377,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 if (!_nodeByObjectId.TryGetValue(parentObjectId, out RevisionGraphRevision parentRevisionGraphRevision))
                 {
                     parentRevisionGraphRevision = new RevisionGraphRevision(parentObjectId, ++_maxScore);
-                    _nodes.Add(parentRevisionGraphRevision);
                     _nodeByObjectId.TryAdd(parentObjectId, parentRevisionGraphRevision);
 
                     int newMaxScore;

@@ -323,7 +323,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                             if (revisionGraphRevision.Child.IsRelative)
                             {
-                                brush = RevisionGraphLaneColor.GetPenForLane(revisionGraphRevision.Child.LaneIndex);
+                                brush = RevisionGraphLaneColor.GetPenForLane(revisionGraphRevision.Parent.LaneIndex);
                             }
                             else
                             {
