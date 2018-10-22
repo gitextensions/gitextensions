@@ -201,7 +201,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                         _graphBitmapGraphics.RenderingOrigin = new Point(x, y);
 
-                        var success = DrawItem(_graphBitmapGraphics, index);
+                        var success = DrawItem(_graphBitmapGraphics, index + 1);
 
                         _graphBitmapGraphics.Clip = oldClip;
 
