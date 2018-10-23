@@ -74,6 +74,13 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
+        public void LaneColorTest()
+        {
+            _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
+            Assert.AreNotEqual(_revisionGraph.GetSegmentsForRow(2).GetSegmentsForIndex(0).First().Parent.LaneColor, _revisionGraph.GetSegmentsForRow(2).GetSegmentsForIndex(1).Last().Parent.LaneColor);
+        }
+
+        [Test]
         public void ShouldReorderInTopoOrder()
         {
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
