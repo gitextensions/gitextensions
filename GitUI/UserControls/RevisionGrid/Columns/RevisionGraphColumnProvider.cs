@@ -405,9 +405,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             Column.Visible
                 = AppSettings.ShowRevisionGridGraphColumn &&
                   !_grid.ShouldHideGraph(inclBranchFilter: false);
+            if (!Column.Visible)
+            {
+                return;
+            }
 
             _graphCache.Reset();
-            UpdateGraphColumnWidth(range);
+            Column.Width = CalculateGraphColumnWidth(range, Column.Width, Column.MinimumWidth);
         }
 
         public override void OnColumnWidthChanged(DataGridViewColumnEventArgs e)
@@ -421,20 +425,20 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public override void OnVisibleRowsChanged(in VisibleRowRange range)
         {
-            // Keep an extra page in the cache
-            _graphCache.AdjustCapacity((range.Count * 2) + 1);
-            UpdateGraphColumnWidth(range);
-        }
-
-        // TODO when rendering, if we notice a row has too many lanes, trigger updating the column's width
-
-        private void UpdateGraphColumnWidth(in VisibleRowRange range)
-        {
             if (!Column.Visible)
             {
                 return;
             }
 
+            // Keep an extra page in the cache
+            _graphCache.AdjustCapacity((range.Count * 2) + 1);
+            Column.Width = CalculateGraphColumnWidth(range, Column.Width, Column.MinimumWidth);
+        }
+
+        // TODO when rendering, if we notice a row has too many lanes, trigger updating the column's width
+
+        private int CalculateGraphColumnWidth(in VisibleRowRange range, int currentWidth, int minimumWidth)
+        {
             int laneCount = range.Select(index => _revisionGraph.GetSegmentsForRow(index))
                                  .Where(laneRow => laneRow != null)
                                  .Max(laneRow => laneRow.GetLaneCount());
@@ -451,10 +455,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             laneCount = Math.Min(laneCount, maxLanes);
             var columnWidth = (LaneWidth * laneCount) + ColumnLeftMargin;
-            if (Column.Width != columnWidth && columnWidth > Column.MinimumWidth)
+            if (currentWidth != columnWidth && columnWidth > minimumWidth)
             {
-                Column.Width = columnWidth;
+                return columnWidth;
             }
+
+            return currentWidth;
         }
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
