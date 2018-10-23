@@ -62,7 +62,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 _orderedNodesCache = _nodes.Where(n => n.GitRevision != null).OrderBy(n => n.Score).ToList();
                 if (_orderedNodesCache.Count > 0)
                 {
-                    _cachedUntillScore = _nodes.Last().Score;
+                    _cachedUntillScore = _orderedNodesCache.Last().Score;
                 }
 
                 if (_reorder || _orderedRowCache == null)
