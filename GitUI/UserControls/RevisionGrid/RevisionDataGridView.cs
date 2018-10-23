@@ -36,7 +36,6 @@ namespace GitUI.UserControls.RevisionGrid
         private volatile bool _shouldRun = LicenseManager.UsageMode != LicenseUsageMode.Designtime;
         private int _backgroundScrollTo;
 
-        private int _graphDataCount;
         private int _rowHeight; // Height of elements in the cache. Is equal to the control's row height.
         private VisibleRowRange _visibleRowRange;
 
@@ -342,7 +341,6 @@ namespace GitUI.UserControls.RevisionGrid
 
             // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about te delete the data
             SetRowCount(0);
-            _graphDataCount = 0;
             _revisionGraph.Clear();
             ToBeSelectedRowIndexes = new ConcurrentQueue<int>();
 
@@ -461,8 +459,7 @@ namespace GitUI.UserControls.RevisionGrid
                     {
                         int scrollTo = _backgroundScrollTo;
 
-                        int curCount = _graphDataCount;
-                        _graphDataCount = _revisionGraph.GetCachedCount();
+                        int curCount = _revisionGraph.GetCachedCount();
 
                         UpdateGraph(curCount, scrollTo);
                         keepRunning = curCount < scrollTo;
@@ -494,30 +491,15 @@ namespace GitUI.UserControls.RevisionGrid
                 _revisionGraph.CacheTo(toIndex, Math.Min(fromIndex + 1500, toIndex));
 
                 rowIndex = _revisionGraph.GetCachedCount();
-                _graphDataCount = rowIndex;
 
-                this.InvokeAsync(UpdateRow, rowIndex).FileAndForget();
+                this.InvokeAsync(UpdateRowCount, toIndex).FileAndForget();
                 return;
 
-                void UpdateRow(int row)
+                void UpdateRowCount(int row)
                 {
                     if (RowCount < _revisionGraph.Count)
                     {
                         SetRowCount(_revisionGraph.Count);
-                    }
-
-                    // We only need to invalidate if the row is visible
-                    if (_visibleRowRange.Contains(row) && row < RowCount)
-                    {
-                        try
-                        {
-                            InvalidateRow(row);
-                        }
-                        catch (ArgumentOutOfRangeException)
-                        {
-                            // Ignore. It is possible that RowCount gets changed before
-                            // this is processed and the row is larger than RowCount.
-                        }
                     }
                 }
             }
