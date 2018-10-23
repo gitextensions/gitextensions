@@ -71,6 +71,7 @@ namespace GitUITests.UserControls.RevisionGrid
             Assert.AreEqual(2, _revisionGraph.GetSegmentsForRow(2).GetLaneCount());
             Assert.AreEqual(2, _revisionGraph.GetSegmentsForRow(3).GetLaneCount());
             Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(4).GetLaneCount());
+            Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(5).GetLaneCount());
         }
 
         [Test]
@@ -120,7 +121,9 @@ namespace GitUITests.UserControls.RevisionGrid
                  *        |
                  *     Commit2
                  *    /       \
-                 * Commit3   Commit4
+                 * Commit3     |
+                 *   |         |
+                 *   |       Commit4
                  *    \       /
                  *     Commit5
                  *        |
