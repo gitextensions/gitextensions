@@ -528,35 +528,27 @@ namespace GitUI.UserControls.RevisionGrid
         {
             var oldRange = _visibleRowRange;
             var fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
-            var toIndex = _rowHeight > 0 ? fromIndex + (Height / _rowHeight) + 5/*Add 5 for rounding*/ : fromIndex;
+            var visibleRowCount = _rowHeight > 0 ? (Height / _rowHeight) + 2/*Add 2 for rounding*/ : 0;
 
-            if (fromIndex >= _revisionGraph.Count)
+            visibleRowCount = Math.Min(_revisionGraph.Count, visibleRowCount);
+
+            if (_visibleRowRange.FromIndex != fromIndex || _visibleRowRange.Count != visibleRowCount)
             {
-                fromIndex = _revisionGraph.Count - 1;
-            }
+                _visibleRowRange = new VisibleRowRange(fromIndex, visibleRowCount);
 
-            if (toIndex >= _revisionGraph.Count)
-            {
-                toIndex = _revisionGraph.Count - 1;
-            }
-
-            if (toIndex > 0)
-            {
-                _visibleRowRange = new VisibleRowRange(fromIndex, toIndex);
-
-                if (oldRange == _visibleRowRange)
+                if (visibleRowCount > 0)
                 {
-                    return;
-                }
+                    int newBackgroundScrollTo = fromIndex + visibleRowCount;
 
-                // We always want to set _backgroundScrollTo. Because we want the backgroundthread to stop working when we scroll up
-                if (_backgroundScrollTo != toIndex)
-                {
-                    _backgroundScrollTo = toIndex;
-                    _backgroundEvent.Set();
-                }
+                    // We always want to set _backgroundScrollTo. Because we want the backgroundthread to stop working when we scroll up
+                    if (_backgroundScrollTo != newBackgroundScrollTo)
+                    {
+                        _backgroundScrollTo = newBackgroundScrollTo;
+                        _backgroundEvent.Set();
+                    }
 
-                this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
+                    this.InvokeAsync(NotifyProvidersVisibleRowRangeChanged).FileAndForget();
+                }
             }
         }
 

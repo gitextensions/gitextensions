@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
@@ -23,6 +24,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         // The cached lanecount
         private int _laneCount;
 
+        // The cached revisionlane
+        private int _revisionLane;
+
         // The row contains ordered segments. This method sorts the segments per lane.
         // Segments that cross this row (start above and end below) get there own private lane.
         // Segments that connect to the revision (node) for this row, share the same lane.
@@ -35,8 +39,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
-            int currentRevisionLane = -1;
-
             // We do not want SegementLanes to be build multiple times. Lock it.
             lock (Revision)
             {
@@ -45,6 +47,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 {
                     Dictionary<RevisionGraphSegment, int> newSegmentLanes = new Dictionary<RevisionGraphSegment, int>();
 
+                    int currentRevisionLane = -1;
                     int laneIndex = 0;
                     foreach (var segment in Segments)
                     {
@@ -104,8 +107,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                     _segmentLanes = newSegmentLanes;
                     _laneCount = laneIndex;
+                    _revisionLane = currentRevisionLane;
                 }
             }
+        }
+
+        public int GetCurrentRevisionLane()
+        {
+            BuildSegmentLanes();
+            return Math.Max(0, _revisionLane);
         }
 
         public int GetLaneCount()

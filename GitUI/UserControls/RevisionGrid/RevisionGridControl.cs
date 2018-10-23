@@ -635,6 +635,7 @@ namespace GitUI
 
             return rows
                 .Select(row => GetRevision(row.Index))
+                .Where(revision => revision != null)
                 .ToList();
         }
 
@@ -1129,7 +1130,7 @@ namespace GitUI
                     return exactIndex;
                 }
 
-                if (!objectId.IsArtificial)
+                if (objectId != null && !objectId.IsArtificial)
                 {
                     // Not found, so search for its parents
                     foreach (var parentId in TryGetParents(objectId))
@@ -1358,7 +1359,7 @@ namespace GitUI
         public void ViewSelectedRevisions()
         {
             var selectedRevisions = GetSelectedRevisions();
-            if (selectedRevisions.Any(rev => !rev.IsArtificial))
+            if (selectedRevisions.Any(rev => rev != null && !rev.IsArtificial))
             {
                 Form ProvideForm()
                 {

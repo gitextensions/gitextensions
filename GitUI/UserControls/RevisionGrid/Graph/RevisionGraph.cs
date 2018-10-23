@@ -253,12 +253,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 _nodes.Add(revisionGraphRevision);
             }
 
-            // Invalidate cache if the new score is lower then the cached result
-            if (revisionGraphRevision.Score <= _cachedUntillScore)
-            {
-                _reorder = true;
-            }
-
             // No build the revisions parent/child structure. The parents need to added here. The child structure is kept in synch in
             // the RevisionGraphRevision class.
             foreach (ObjectId parentObjectId in revision.ParentIds)
@@ -278,15 +272,22 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 {
                     // This revision is already loaded, add the existing revision to the parents list of new revision.
                     // If the current score is lower, cache is invalid. The new score will (probably) be higher.
-                    if (parentRevisionGraphRevision.Score <= _cachedUntillScore)
-                    {
-                        _reorder = true;
-                    }
+                    ResetCacheIfNeeded(parentRevisionGraphRevision);
 
                     // Store the newly created segment (connection between 2 revisions)
                     _segments.Add(revisionGraphRevision.AddParent(parentRevisionGraphRevision, out int newMaxScore));
                     _maxScore = Math.Max(_maxScore, newMaxScore);
                 }
+            }
+
+            ResetCacheIfNeeded(revisionGraphRevision);
+        }
+
+        private void ResetCacheIfNeeded(RevisionGraphRevision revisionGraphRevision)
+        {
+            if (revisionGraphRevision.Score <= _cachedUntillScore)
+            {
+                _reorder = true;
             }
         }
     }
