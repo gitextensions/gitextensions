@@ -527,9 +527,9 @@ namespace GitUI.UserControls.RevisionGrid
         {
             var oldRange = _visibleRowRange;
             var fromIndex = Math.Max(0, FirstDisplayedScrollingRowIndex);
-            var visibleRowCount = _rowHeight > 0 ? (Height / _rowHeight) + 2/*Add 2 for rounding*/ : 0;
+            var visibleRowCount = _rowHeight > 0 ? (Height / _rowHeight) + 2 /*Add 2 for rounding*/ : 0;
 
-            visibleRowCount = Math.Min(_revisionGraph.Count, visibleRowCount);
+            visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
 
             if (_visibleRowRange.FromIndex != fromIndex || _visibleRowRange.Count != visibleRowCount)
             {
