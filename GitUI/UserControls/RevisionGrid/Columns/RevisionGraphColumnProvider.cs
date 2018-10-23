@@ -442,7 +442,9 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             int laneCount = range.Select(index => _revisionGraph.GetSegmentsForRow(index))
                                  .Where(laneRow => laneRow != null)
-                                 .Max(laneRow => laneRow.GetLaneCount());
+                                 .Select(laneRow => laneRow.GetLaneCount())
+                                 .DefaultIfEmpty()
+                                 .Max();
 
             // When 'git log --first-parent' filtration is enabled and when only current
             // branch needed to be rendered (and this filter actually works),
