@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -19,21 +18,16 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     {
         private const int MaxLanes = 40;
 
-        private static readonly int _nodeDimension = DpiUtil.Scale(10);
-        private static readonly int _laneWidth = DpiUtil.Scale(16);
-        private static readonly int _laneLineWidth = DpiUtil.Scale(2);
+        private static readonly int NodeDimension = DpiUtil.Scale(10);
+        private static readonly int LaneWidth = DpiUtil.Scale(16);
+        private static readonly int LaneLineWidth = DpiUtil.Scale(2);
 
         private readonly RevisionGridControl _grid;
         private readonly RevisionGraph _revisionGraph;
+        private readonly GraphCache _graphCache = new GraphCache();
 
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyleCache;
         private RevisionGraphDrawStyleEnum _revisionGraphDrawStyle;
-        private int _cacheCount; // Number of elements in the cache.
-        private int _cacheCountMax; // Number of elements allowed in the cache. Is based on control height.
-        private int _cacheHead = -1; // The 'slot' that is the head of the circular bitmap
-        private int _cacheHeadRow; // The node row that is in the head slot
-        [CanBeNull] private Bitmap _graphBitmap;
-        [CanBeNull] private Graphics _graphBitmapGraphics;
 
         public RevisionGraphColumnProvider(RevisionGridControl grid, RevisionGraph revisionGraph)
             : base("Graph")
@@ -90,7 +84,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 // Draws the required row into _graphBitmap, or retrieves an equivalent one from the cache.
 
-                int height = _cacheCountMax * rowHeight;
+                int height = _graphCache.CountMax * rowHeight;
                 int width = Column.Width;
 
                 if (width <= 0 || height <= 0)
@@ -98,48 +92,48 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     return false;
                 }
 
-                EnsureCacheIsLargeEnough();
+                _graphCache.Resize(width, height, LaneWidth);
 
                 // Compute how much the head needs to move to show the requested item.
-                int neededHeadAdjustment = rowIndex - _cacheHead;
+                int neededHeadAdjustment = rowIndex - _graphCache.Head;
                 if (neededHeadAdjustment > 0)
                 {
-                    neededHeadAdjustment -= _cacheCountMax - 1;
+                    neededHeadAdjustment -= _graphCache.CountMax - 1;
                     if (neededHeadAdjustment < 0)
                     {
                         neededHeadAdjustment = 0;
                     }
                 }
 
-                var newRows = _cacheCount < _cacheCountMax
-                    ? (rowIndex - _cacheCount) + 1
+                var newRows = _graphCache.Count < _graphCache.CountMax
+                    ? (rowIndex - _graphCache.Count) + 1
                     : 0;
 
                 // Adjust the head of the cache
-                _cacheHead = _cacheHead + neededHeadAdjustment;
-                _cacheHeadRow = (_cacheHeadRow + neededHeadAdjustment) % _cacheCountMax;
-                if (_cacheHeadRow < 0)
+                _graphCache.Head = _graphCache.Head + neededHeadAdjustment;
+                _graphCache.HeadRow = (_graphCache.HeadRow + neededHeadAdjustment) % _graphCache.CountMax;
+                if (_graphCache.HeadRow < 0)
                 {
-                    _cacheHeadRow = _cacheCountMax + _cacheHeadRow;
+                    _graphCache.HeadRow = _graphCache.CountMax + _graphCache.HeadRow;
                 }
 
                 int start;
                 int end;
                 if (newRows > 0)
                 {
-                    start = _cacheHead + _cacheCount;
-                    _cacheCount = Math.Min(_cacheCount + newRows, _cacheCountMax);
-                    end = _cacheHead + _cacheCount;
+                    start = _graphCache.Head + _graphCache.Count;
+                    _graphCache.Count = Math.Min(_graphCache.Count + newRows, _graphCache.CountMax);
+                    end = _graphCache.Head + _graphCache.Count;
                 }
                 else if (neededHeadAdjustment > 0)
                 {
-                    end = _cacheHead + _cacheCount;
-                    start = Math.Max(_cacheHead, end - neededHeadAdjustment);
+                    end = _graphCache.Head + _graphCache.Count;
+                    start = Math.Max(_graphCache.Head, end - neededHeadAdjustment);
                 }
                 else if (neededHeadAdjustment < 0)
                 {
-                    start = _cacheHead;
-                    end = start + Math.Min(_cacheCountMax, -neededHeadAdjustment);
+                    start = _graphCache.Head;
+                    end = start + Math.Min(_graphCache.CountMax, -neededHeadAdjustment);
                 }
                 else
                 {
@@ -160,12 +154,12 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 {
                     var cellRect = new Rectangle(
                         0,
-                        ((_cacheHeadRow + rowIndex - _cacheHead) % _cacheCountMax) * rowHeight,
+                        ((_graphCache.HeadRow + rowIndex - _graphCache.Head) % _graphCache.CountMax) * rowHeight,
                         width,
                         rowHeight);
 
                     graphics.DrawImage(
-                        _graphBitmap,
+                        _graphCache.GraphBitmap,
                         cellBounds,
                         cellRect,
                         GraphicsUnit.Pixel);
@@ -176,35 +170,35 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     for (var index = start; index < end; index++)
                     {
                         // Get the x,y value of the current item's upper left in the cache
-                        var curCacheRow = (_cacheHeadRow + index - _cacheHead) % _cacheCountMax;
+                        var curCacheRow = (_graphCache.HeadRow + index - _graphCache.Head) % _graphCache.CountMax;
                         var x = ColumnLeftMargin;
                         var y = curCacheRow * rowHeight;
 
                         var laneRect = new Rectangle(0, y, width, rowHeight);
-                        var oldClip = _graphBitmapGraphics.Clip;
+                        var oldClip = _graphCache.GraphBitmapGraphics.Clip;
 
                         if (index == start || curCacheRow == 0)
                         {
                             // Draw previous row first. Clip top to row. We also need to clear the area
                             // before we draw since nothing else would clear the top 1/2 of the item to draw.
-                            _graphBitmapGraphics.RenderingOrigin = new Point(x, y - rowHeight);
-                            _graphBitmapGraphics.Clip = new Region(laneRect);
-                            _graphBitmapGraphics.Clear(Color.Transparent);
-                            DrawItem(_graphBitmapGraphics, index);
-                            _graphBitmapGraphics.Clip = oldClip;
+                            _graphCache.GraphBitmapGraphics.RenderingOrigin = new Point(x, y - rowHeight);
+                            _graphCache.GraphBitmapGraphics.Clip = new Region(laneRect);
+                            _graphCache.GraphBitmapGraphics.Clear(Color.Transparent);
+                            DrawItem(_graphCache.GraphBitmapGraphics, index);
+                            _graphCache.GraphBitmapGraphics.Clip = oldClip;
                         }
 
                         if (index == end - 1)
                         {
                             // Use a custom clip for the last row
-                            _graphBitmapGraphics.Clip = new Region(laneRect);
+                            _graphCache.GraphBitmapGraphics.Clip = new Region(laneRect);
                         }
 
-                        _graphBitmapGraphics.RenderingOrigin = new Point(x, y);
+                        _graphCache.GraphBitmapGraphics.RenderingOrigin = new Point(x, y);
 
-                        var success = DrawItem(_graphBitmapGraphics, index + 1);
+                        var success = DrawItem(_graphCache.GraphBitmapGraphics, index + 1);
 
-                        _graphBitmapGraphics.Clip = oldClip;
+                        _graphCache.GraphBitmapGraphics.Clip = oldClip;
 
                         if (!success)
                         {
@@ -214,39 +208,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     }
 
                     return true;
-                }
-
-                void EnsureCacheIsLargeEnough()
-                {
-                    if (_graphBitmap == null ||
-
-                        // Resize the bitmap when the with or height is changed. The height won't change very often.
-                        // The with changes more often, when branches become visible/invisible.
-                        // Try to be 'smart' and not resize the bitmap for each little change. Enlarge when needed
-                        // but never shrink the bitmap since the huge performance hit is worse than the little extra memory.
-                        _graphBitmap.Width < width || _graphBitmap.Height != height)
-                    {
-                        if (_graphBitmap != null)
-                        {
-                            _graphBitmap.Dispose();
-                            _graphBitmap = null;
-                        }
-
-                        if (_graphBitmapGraphics != null)
-                        {
-                            _graphBitmapGraphics.Dispose();
-                            _graphBitmapGraphics = null;
-                        }
-
-                        _graphBitmap = new Bitmap(
-                            Math.Max(width, _laneWidth * 3),
-                            height,
-                            PixelFormat.Format32bppPArgb);
-                        _graphBitmapGraphics = Graphics.FromImage(_graphBitmap);
-                        _graphBitmapGraphics.SmoothingMode = SmoothingMode.AntiAlias;
-                        _cacheHead = 0;
-                        _cacheCount = 0;
-                    }
                 }
 
                 bool DrawItem(Graphics g, int index)
@@ -311,13 +272,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             Point revisionGraphRevisionPositionCenter = new Point(centerLane, 0);
                             Point revisionGraphRevisionPositionEnd = new Point(endLane, 1);
 
-                            int startX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionStart.X + 0.5) * _laneWidth);
+                            int startX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionStart.X + 0.5) * LaneWidth);
                             int startY = top + (revisionGraphRevisionPositionStart.Y * rowHeight) + (rowHeight / 2);
 
-                            int centerX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionCenter.X + 0.5) * _laneWidth);
+                            int centerX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionCenter.X + 0.5) * LaneWidth);
                             int centerY = top + (revisionGraphRevisionPositionCenter.Y * rowHeight) + (rowHeight / 2);
 
-                            int endX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionEnd.X + 0.5) * _laneWidth);
+                            int endX = g.RenderingOrigin.X + (int)((revisionGraphRevisionPositionEnd.X + 0.5) * LaneWidth);
                             int endY = top + (revisionGraphRevisionPositionEnd.Y * rowHeight) + (rowHeight / 2);
 
                             Brush brush;
@@ -347,7 +308,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                                 (currentRow.Revision == revisionGraphRevision.Parent ||
                                  currentRow.Revision == revisionGraphRevision.Child))
                             {
-                                Rectangle nodeRect = new Rectangle(centerX - (_nodeDimension / 2), centerY - (_nodeDimension / 2), _nodeDimension, _nodeDimension);
+                                Rectangle nodeRect = new Rectangle(centerX - (NodeDimension / 2), centerY - (NodeDimension / 2), NodeDimension, NodeDimension);
 
                                 var square = currentRow.Revision.HasRef;
                                 var hasOutline = currentRow.Revision.IsCheckedOut;
@@ -359,7 +320,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                                 }
                                 else //// Circle
                                 {
-                                    nodeRect.Width = nodeRect.Height = _nodeDimension - 1;
+                                    nodeRect.Width = nodeRect.Height = NodeDimension - 1;
 
                                     g.SmoothingMode = SmoothingMode.AntiAlias;
                                     g.FillEllipse(brush, nodeRect);
@@ -404,7 +365,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             var p0 = new Point(x0, y0);
             var p1 = new Point(x1, y1);
 
-            using (var lanePen = new Pen(laneBrush, _laneLineWidth))
+            using (var lanePen = new Pen(laneBrush, LaneLineWidth))
             {
                 if (y0 == y1)
                 {
@@ -433,8 +394,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         public override void Clear()
         {
             _revisionGraph.Clear();
-            _cacheHead = -1;
-            _cacheHeadRow = 0;
+            _graphCache.Clear();
             ClearDrawCache();
         }
 
@@ -462,7 +422,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         public override void OnVisibleRowsChanged(in VisibleRowRange range)
         {
             // Keep an extra page in the cache
-            _cacheCountMax = (range.Count * 2) + 1;
+            _graphCache.CountMax = (range.Count * 2) + 1;
             UpdateGraphColumnWidth(range);
         }
 
@@ -496,7 +456,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     : MaxLanes;
 
             laneCount = Math.Min(laneCount, maxLanes);
-            var columnWidth = (_laneWidth * laneCount) + ColumnLeftMargin;
+            var columnWidth = (LaneWidth * laneCount) + ColumnLeftMargin;
             if (Column.Width != columnWidth && columnWidth > Column.MinimumWidth)
             {
                 Column.Width = columnWidth;
@@ -505,8 +465,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private void ClearDrawCache()
         {
-            _cacheHead = 0;
-            _cacheCount = 0;
+            _graphCache.Reset();
         }
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
@@ -522,7 +481,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             string GetLaneInfo(int x, int rowIndex)
             {
-                int lane = x / _laneWidth;
+                int lane = x / LaneWidth;
                 var laneInfoText = new StringBuilder();
                 RevisionGraphRow row = _revisionGraph.GetSegmentsForRow(rowIndex);
                 if (row != null)
@@ -549,6 +508,96 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 return laneInfoText.ToString();
             }
+        }
+    }
+
+    public sealed class GraphCache
+    {
+        [CanBeNull] private Bitmap _graphBitmap;
+        [CanBeNull] private Graphics _graphBitmapGraphics;
+        private int _cacheCount;
+        private int _cacheCountMax;
+        private int _cacheHead = -1;
+        private int _cacheHeadRow;
+
+        public Bitmap GraphBitmap => _graphBitmap;
+        public Graphics GraphBitmapGraphics => _graphBitmapGraphics;
+
+        /// <summary>
+        /// The 'slot' that is the head of the circular bitmap.
+        /// </summary>
+        public int Head
+        {
+            get => _cacheHead;
+            set => _cacheHead = value;
+        }
+
+        /// <summary>
+        /// The node row that is in the head slot.
+        /// </summary>
+        public int HeadRow
+        {
+            get => _cacheHeadRow;
+            set => _cacheHeadRow = value;
+        }
+
+        /// <summary>
+        /// Number of elements in the cache.
+        /// </summary>
+        public int Count
+        {
+            get => _cacheCount;
+            set => _cacheCount = value;
+        }
+
+        /// <summary>
+        /// Number of elements allowed in the cache. Is based on control height.
+        /// </summary>
+        public int CountMax
+        {
+            get => _cacheCountMax;
+            set => _cacheCountMax = value;
+        }
+
+        public void Resize(int width, int height, int laneWidth)
+        {
+            if (_graphBitmap != null && _graphBitmap.Width >= width && _graphBitmap.Height == height)
+            {
+                return;
+            }
+
+            if (_graphBitmap != null)
+            {
+                _graphBitmap.Dispose();
+                _graphBitmap = null;
+            }
+
+            if (_graphBitmapGraphics != null)
+            {
+                _graphBitmapGraphics.Dispose();
+                _graphBitmapGraphics = null;
+            }
+
+            _graphBitmap = new Bitmap(
+                Math.Max(width, laneWidth * 3),
+                height,
+                PixelFormat.Format32bppPArgb);
+            _graphBitmapGraphics = Graphics.FromImage(_graphBitmap);
+            _graphBitmapGraphics.SmoothingMode = SmoothingMode.AntiAlias;
+            _cacheHead = 0;
+            _cacheCount = 0;
+        }
+
+        public void Clear()
+        {
+            _cacheHead = -1;
+            _cacheHeadRow = 0;
+        }
+
+        public void Reset()
+        {
+            _cacheHead = 0;
+            _cacheCount = 0;
         }
     }
 }
