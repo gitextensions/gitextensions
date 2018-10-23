@@ -57,7 +57,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         // graphUntillRow: the graph can be build per x rows. This defines the row index that the graph will be cached until.
         public void CacheTo(int untillRow, int graphUntillRow)
         {
-            if (_orderedNodesCache == null || _reorder || _orderedNodesCache.Count <= untillRow)
+            if (_orderedNodesCache == null || _reorder || _orderedNodesCache.Count < untillRow)
             {
                 _orderedNodesCache = _nodes.OrderBy(n => n.Score).ToList();
                 if (_orderedNodesCache.Count > 0)
