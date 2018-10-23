@@ -50,7 +50,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return _orderedRowCache.Count;
         }
 
-        // Build the revision graph. There are to cached that are build in this method.
+        // Build the revision graph. There are two caches that are build in this method.
         // cache 1: an ordered list of the revisions. This is very cheap to build. (_orderedNodesCache)
         // cache 2: an ordered list of all prepared graphrows. This is expensive to build. (_orderedRowCache)
         // untillRow: the row that needs to be displayed. This ensures the orded revisions are available untill this index.
