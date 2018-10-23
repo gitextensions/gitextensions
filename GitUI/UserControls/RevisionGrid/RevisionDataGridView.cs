@@ -340,11 +340,10 @@ namespace GitUI.UserControls.RevisionGrid
             // Force the background thread to be killed, we need to be sure no background processes are running. Not the best practice, but safe.
             _backgroundThread.Abort();
 
-            _revisionGraph.Clear();
-
             // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about te delete the data
             SetRowCount(0);
             _graphDataCount = 0;
+            _revisionGraph.Clear();
             ToBeSelectedRowIndexes = new ConcurrentQueue<int>();
 
             // The graphdata is stored in one of the columnproviders, clear this last
