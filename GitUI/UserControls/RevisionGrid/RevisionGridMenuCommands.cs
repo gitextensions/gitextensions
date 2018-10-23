@@ -296,13 +296,6 @@ namespace GitUI.UserControls.RevisionGrid
                 },
                 new MenuCommand
                 {
-                    Name = "orderRevisionsByDateToolStripMenuItem",
-                    Text = "Order revisions by date",
-                    ExecuteAction = () => _revisionGrid.ToggleOrderRevisionByDate(),
-                    IsCheckedFunc = () => AppSettings.OrderRevisionByDate
-                },
-                new MenuCommand
-                {
                     Name = "showAuthorDateToolStripMenuItem",
                     Text = "Show author date",
                     ExecuteAction = () => _revisionGrid.ToggleShowAuthorDate(),

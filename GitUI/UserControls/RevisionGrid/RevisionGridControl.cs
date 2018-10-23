@@ -1151,7 +1151,6 @@ namespace GitUI
         {
             var args = new GitArgumentBuilder("rev-list")
             {
-                { AppSettings.OrderRevisionByDate, "--date-order" },
                 { AppSettings.MaxRevisionGraphCommits > 0, $"--max-count={AppSettings.MaxRevisionGraphCommits}" },
                 objectId
             };
@@ -1811,12 +1810,6 @@ namespace GitUI
         {
             AppSettings.ShowAuthorDate = !AppSettings.ShowAuthorDate;
             Refresh();
-        }
-
-        internal void ToggleOrderRevisionByDate()
-        {
-            AppSettings.OrderRevisionByDate = !AppSettings.OrderRevisionByDate;
-            ForceRefreshRevisions();
         }
 
         internal void ToggleShowRemoteBranches()
@@ -2617,7 +2610,6 @@ namespace GitUI
                 case Commands.ToggleRevisionGraph: ToggleRevisionGraphColumn(); break;
                 case Commands.RevisionFilter: ShowRevisionFilterDialog(); break;
                 case Commands.ToggleAuthorDateCommitDate: ToggleShowAuthorDate(); break;
-                case Commands.ToggleOrderRevisionsByDate: ToggleOrderRevisionByDate(); break;
                 case Commands.ToggleShowRelativeDate: ToggleShowRelativeDate(null); break;
                 case Commands.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;
                 case Commands.ToggleShowGitNotes: ToggleShowGitNotes(); break;

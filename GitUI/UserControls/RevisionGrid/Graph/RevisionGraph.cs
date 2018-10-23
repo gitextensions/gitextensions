@@ -176,6 +176,50 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return _orderedRowCache[row];
         }
 
+        public void HighlightBranch(ObjectId id)
+        {
+            // Clear current higlighting
+            foreach (var revision in _nodes)
+            {
+                revision.IsRelative = false;
+            }
+
+            // Highlight newrevision
+            if (TryGetNode(id, out RevisionGraphRevision revisionGraphRevision))
+            {
+                revisionGraphRevision.MakeRelative();
+            }
+        }
+
+        // This method will validate the topo order in brute force.
+        // Only used for unit testing.
+        public bool ValidateTopoOrder()
+        {
+            int currentIndex = 0;
+            foreach (var node in _orderedNodesCache)
+            {
+                foreach (var parent in node.Parents)
+                {
+                    if (!TryGetRowIndex(parent.Objectid, out int parentIndex) || parentIndex < currentIndex)
+                    {
+                        return false;
+                    }
+                }
+
+                foreach (var child in node.Children)
+                {
+                    if (!TryGetRowIndex(child.Objectid, out int childIndex) || childIndex > currentIndex)
+                    {
+                        return false;
+                    }
+                }
+
+                currentIndex++;
+            }
+
+            return true;
+        }
+
         public void Add(GitRevision revision, RevisionNodeFlags types)
         {
             if (!_nodeByObjectId.TryGetValue(revision.ObjectId, out RevisionGraphRevision revisionGraphRevision))

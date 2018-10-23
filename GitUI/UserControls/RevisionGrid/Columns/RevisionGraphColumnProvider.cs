@@ -457,6 +457,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         public void HighlightBranch(ObjectId id)
         {
+            _revisionGraph.HighlightBranch(id);
         }
 
         public override void OnVisibleRowsChanged(in VisibleRowRange range)
