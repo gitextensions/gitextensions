@@ -202,7 +202,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                         if (!success)
                         {
-                            ClearDrawCache();
+                            _graphCache.Reset();
                             return false;
                         }
                     }
@@ -395,7 +395,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             _revisionGraph.Clear();
             _graphCache.Clear();
-            ClearDrawCache();
+            _graphCache.Reset();
         }
 
         public override void Refresh(int rowHeight, in VisibleRowRange range)
@@ -406,13 +406,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 = AppSettings.ShowRevisionGridGraphColumn &&
                   !_grid.ShouldHideGraph(inclBranchFilter: false);
 
-            ClearDrawCache();
+            _graphCache.Reset();
             UpdateGraphColumnWidth(range);
         }
 
         public override void OnColumnWidthChanged(DataGridViewColumnEventArgs e)
         {
-            ClearDrawCache();
+            _graphCache.Reset();
         }
 
         public void HighlightBranch(ObjectId id)
@@ -461,11 +461,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 Column.Width = columnWidth;
             }
-        }
-
-        private void ClearDrawCache()
-        {
-            _graphCache.Reset();
         }
 
         public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, out string toolTip)
