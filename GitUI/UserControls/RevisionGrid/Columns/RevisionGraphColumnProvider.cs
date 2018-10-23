@@ -84,7 +84,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 // Draws the required row into _graphBitmap, or retrieves an equivalent one from the cache.
 
-                int height = _graphCache.CountMax * rowHeight;
+                int height = _graphCache.Capacity * rowHeight;
                 int width = Column.Width;
 
                 if (width <= 0 || height <= 0)
@@ -92,29 +92,29 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     return false;
                 }
 
-                _graphCache.Resize(width, height, LaneWidth);
+                _graphCache.Allocate(width, height, LaneWidth);
 
                 // Compute how much the head needs to move to show the requested item.
                 int neededHeadAdjustment = rowIndex - _graphCache.Head;
                 if (neededHeadAdjustment > 0)
                 {
-                    neededHeadAdjustment -= _graphCache.CountMax - 1;
+                    neededHeadAdjustment -= _graphCache.Capacity - 1;
                     if (neededHeadAdjustment < 0)
                     {
                         neededHeadAdjustment = 0;
                     }
                 }
 
-                var newRows = _graphCache.Count < _graphCache.CountMax
+                var newRows = _graphCache.Count < _graphCache.Capacity
                     ? (rowIndex - _graphCache.Count) + 1
                     : 0;
 
                 // Adjust the head of the cache
                 _graphCache.Head = _graphCache.Head + neededHeadAdjustment;
-                _graphCache.HeadRow = (_graphCache.HeadRow + neededHeadAdjustment) % _graphCache.CountMax;
+                _graphCache.HeadRow = (_graphCache.HeadRow + neededHeadAdjustment) % _graphCache.Capacity;
                 if (_graphCache.HeadRow < 0)
                 {
-                    _graphCache.HeadRow = _graphCache.CountMax + _graphCache.HeadRow;
+                    _graphCache.HeadRow = _graphCache.Capacity + _graphCache.HeadRow;
                 }
 
                 int start;
@@ -122,7 +122,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 if (newRows > 0)
                 {
                     start = _graphCache.Head + _graphCache.Count;
-                    _graphCache.Count = Math.Min(_graphCache.Count + newRows, _graphCache.CountMax);
+                    _graphCache.Count = Math.Min(_graphCache.Count + newRows, _graphCache.Capacity);
                     end = _graphCache.Head + _graphCache.Count;
                 }
                 else if (neededHeadAdjustment > 0)
@@ -133,7 +133,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 else if (neededHeadAdjustment < 0)
                 {
                     start = _graphCache.Head;
-                    end = start + Math.Min(_graphCache.CountMax, -neededHeadAdjustment);
+                    end = start + Math.Min(_graphCache.Capacity, -neededHeadAdjustment);
                 }
                 else
                 {
@@ -154,7 +154,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 {
                     var cellRect = new Rectangle(
                         0,
-                        ((_graphCache.HeadRow + rowIndex - _graphCache.Head) % _graphCache.CountMax) * rowHeight,
+                        ((_graphCache.HeadRow + rowIndex - _graphCache.Head) % _graphCache.Capacity) * rowHeight,
                         width,
                         rowHeight);
 
@@ -170,7 +170,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     for (var index = start; index < end; index++)
                     {
                         // Get the x,y value of the current item's upper left in the cache
-                        var curCacheRow = (_graphCache.HeadRow + index - _graphCache.Head) % _graphCache.CountMax;
+                        var curCacheRow = (_graphCache.HeadRow + index - _graphCache.Head) % _graphCache.Capacity;
                         var x = ColumnLeftMargin;
                         var y = curCacheRow * rowHeight;
 
@@ -422,7 +422,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         public override void OnVisibleRowsChanged(in VisibleRowRange range)
         {
             // Keep an extra page in the cache
-            _graphCache.CountMax = (range.Count * 2) + 1;
+            _graphCache.AdjustCapacity((range.Count * 2) + 1);
             UpdateGraphColumnWidth(range);
         }
 
@@ -515,10 +515,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     {
         [CanBeNull] private Bitmap _graphBitmap;
         [CanBeNull] private Graphics _graphBitmapGraphics;
-        private int _cacheCount;
-        private int _cacheCountMax;
-        private int _cacheHead = -1;
-        private int _cacheHeadRow;
 
         public Bitmap GraphBitmap => _graphBitmap;
         public Graphics GraphBitmapGraphics => _graphBitmapGraphics;
@@ -526,40 +522,34 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         /// <summary>
         /// The 'slot' that is the head of the circular bitmap.
         /// </summary>
-        public int Head
-        {
-            get => _cacheHead;
-            set => _cacheHead = value;
-        }
+        public int Head { get; set; } = -1;
 
         /// <summary>
         /// The node row that is in the head slot.
         /// </summary>
-        public int HeadRow
-        {
-            get => _cacheHeadRow;
-            set => _cacheHeadRow = value;
-        }
+        public int HeadRow { get; set; }
 
         /// <summary>
         /// Number of elements in the cache.
         /// </summary>
-        public int Count
-        {
-            get => _cacheCount;
-            set => _cacheCount = value;
-        }
+        public int Count { get; set; }
 
         /// <summary>
         /// Number of elements allowed in the cache. Is based on control height.
         /// </summary>
-        public int CountMax
+        public int Capacity { get; private set; }
+
+        public void AdjustCapacity(int capacity)
         {
-            get => _cacheCountMax;
-            set => _cacheCountMax = value;
+            if (capacity < 1)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            Capacity = capacity;
         }
 
-        public void Resize(int width, int height, int laneWidth)
+        public void Allocate(int width, int height, int laneWidth)
         {
             if (_graphBitmap != null && _graphBitmap.Width >= width && _graphBitmap.Height == height)
             {
@@ -584,20 +574,20 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 PixelFormat.Format32bppPArgb);
             _graphBitmapGraphics = Graphics.FromImage(_graphBitmap);
             _graphBitmapGraphics.SmoothingMode = SmoothingMode.AntiAlias;
-            _cacheHead = 0;
-            _cacheCount = 0;
+            Head = 0;
+            Count = 0;
         }
 
         public void Clear()
         {
-            _cacheHead = -1;
-            _cacheHeadRow = 0;
+            Head = -1;
+            HeadRow = 0;
         }
 
         public void Reset()
         {
-            _cacheHead = 0;
-            _cacheCount = 0;
+            Head = 0;
+            Count = 0;
         }
     }
 }
