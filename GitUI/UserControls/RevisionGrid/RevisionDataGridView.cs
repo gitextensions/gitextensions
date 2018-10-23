@@ -286,7 +286,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return SystemBrushes.Highlight;
             }
 
-            if (AppSettings.RevisionGraphDrawAlternateBackColor && rowIndex % 2 == 0)
+            if (rowIndex % 2 == 0 && AppSettings.RevisionGraphDrawAlternateBackColor)
             {
                 return _alternatingRowBackgroundBrush;
             }

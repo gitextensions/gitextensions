@@ -86,22 +86,20 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     {
                         // Copy lanes from last row
                         RevisionGraphRow previousRevisionGraphRow = _orderedRowCache[nextIndex - 1];
-                        foreach (var segment in previousRevisionGraphRow.Segments)
-                        {
-                            // This segment ends here
-                            if (!previousRevisionGraphRow.Revision.EndSegments.Any(s => s == segment))
-                            {
-                                revisionGraphRow.Segments.Add(segment);
 
+                        // Loop through all segments that do not end in this row
+                        foreach (var segment in previousRevisionGraphRow.Segments.Where(s => s.Parent != previousRevisionGraphRow.Revision))
+                        {
+                            revisionGraphRow.Segments.Add(segment);
+
+                            // This segments continues in the next row. Copy all other segments that start from this revision to this lane.
+                            if (revisionGraphRow.Revision == segment.Parent)
+                            {
                                 foreach (var startSegment in revisionGraphRow.Revision.StartSegments)
                                 {
-                                    // This segments continues in the next row
-                                    if (startSegment.Child == segment.Parent)
+                                    if (!revisionGraphRow.Segments.Contains(startSegment))
                                     {
-                                        if (!revisionGraphRow.Segments.Contains(startSegment))
-                                        {
-                                            revisionGraphRow.Segments.Add(startSegment);
-                                        }
+                                        revisionGraphRow.Segments.Add(startSegment);
                                     }
                                 }
                             }
