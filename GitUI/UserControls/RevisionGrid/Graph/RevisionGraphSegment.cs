@@ -1,13 +1,20 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using GitCommands;
-using GitUIPluginInterfaces;
-
-namespace GitUI.UserControls.RevisionGrid.Graph
+﻿namespace GitUI.UserControls.RevisionGrid.Graph
 {
+    // This class represents the connection between 2 revisions.
+    //     *
+    //     |   <- segment connects two commits
+    //     *
+    // A segment can span multiple rows when rendered as a graph.
+    // Example: This graph has 6 segements.
+    //     *
+    //   / | \
+    //  |  *  |
+    //  |  |  |
+    //  |  *  |
+    //   \ |  |
+    //     *  |
+    //     | /
+    //     *
     public class RevisionGraphSegment
     {
         public RevisionGraphSegment(RevisionGraphRevision parent, RevisionGraphRevision child)

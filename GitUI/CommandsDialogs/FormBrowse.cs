@@ -1207,11 +1207,13 @@ namespace GitUI.CommandsDialogs
 
             var revision = selectedRevisions[0];
 
-            if (revision != null)
+            if (revision == null)
             {
-                var children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
-                RevisionInfo.SetRevisionWithChildren(revision, children);
+                return;
             }
+
+            var children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
+            RevisionInfo.SetRevisionWithChildren(revision, children);
         }
 
         private async Task FillGpgInfoAsync()

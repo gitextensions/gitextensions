@@ -7,6 +7,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
+    // The RevisionGraph contains all the basic structures needed to render the graph.
     public class RevisionGraph
     {
         // Some unordered collections with raw data
@@ -14,7 +15,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         private ConcurrentBag<RevisionGraphRevision> _nodes = new ConcurrentBag<RevisionGraphRevision>();
         private ConcurrentBag<RevisionGraphSegment> _segments = new ConcurrentBag<RevisionGraphSegment>();
 
-        // maxscore is used during graph buiding. It is cheaper than doing .Max(.score)
+        // The maxscore is used to keep a chronological order during graph buiding. It is cheaper than doing _nodes.Max(n => n.Score)
         private int _maxScore = 0;
 
         // Some properties to hold the cached row data. The nodecache is an ordered list with the nodes. This is used to be able to draw commits before the graph is completed.
@@ -49,6 +50,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return _orderedRowCache.Count;
         }
 
+        // Build the revision graph. There are to cached that are build in this method.
+        // cache 1: an ordered list of the revisions. This is very cheap to build. (_orderedNodesCache)
+        // cache 2: an ordered list of all prepared graphrows. This is expensive to build. (_orderedRowCache)
+        // untillRow: the row that needs to be displayed. This ensures the orded revisions are available untill this index.
+        // graphUntillRow: the graph can be build per x rows. This defines the row index that the graph will be cached until.
         public void CacheTo(int untillRow, int graphUntillRow)
         {
             if (_orderedNodesCache == null || _reorder || _orderedNodesCache.Count <= untillRow)
@@ -184,7 +190,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 revision.IsRelative = false;
             }
 
-            // Highlight newrevision
+            // Highlight revision
             if (TryGetNode(id, out RevisionGraphRevision revisionGraphRevision))
             {
                 revisionGraphRevision.MakeRelative();
@@ -220,14 +226,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return true;
         }
 
+        // Add a single revision from the git log.
         public void Add(GitRevision revision, RevisionNodeFlags types)
         {
             if (!_nodeByObjectId.TryGetValue(revision.ObjectId, out RevisionGraphRevision revisionGraphRevision))
             {
-                int score = _maxScore + 1;
-                _maxScore = score;
-
-                revisionGraphRevision = new RevisionGraphRevision(revision.ObjectId, score);
+                // This revision is added from the log, but not seen before. This is probably a root node (new branch) OR the revisions
+                // are not in topo order. If this the case, we deal with it later.
+                revisionGraphRevision = new RevisionGraphRevision(revision.ObjectId, ++_maxScore);
                 revisionGraphRevision.ApplyFlags(types);
                 revisionGraphRevision.LaneColor = _nodes.Count;
 
@@ -237,10 +243,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
             else
             {
-                // This revision was added as a parent. Probably only the objectid is known.
+                // This revision was added as a parent before. Probably only the objectid is known. Set all the other properties.
                 revisionGraphRevision.GitRevision = revision;
                 revisionGraphRevision.ApplyFlags(types);
-                revisionGraphRevision.IncreaseScore(_maxScore);
+
+                // Since this revision was added earlier, but is now found in the log. Increase the score to the current maxScore
+                // to keep the order ok.
+                revisionGraphRevision.EnsureScoreIsAbove(++_maxScore);
                 _nodes.Add(revisionGraphRevision);
             }
 
@@ -250,33 +259,32 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 _reorder = true;
             }
 
+            // No build the revisions parent/child structure. The parents need to added here. The child structure is kept in synch in
+            // the RevisionGraphRevision class.
             foreach (ObjectId parentObjectId in revision.ParentIds)
             {
                 if (!_nodeByObjectId.TryGetValue(parentObjectId, out RevisionGraphRevision parentRevisionGraphRevision))
                 {
+                    // This parent is not loaded before. Create a new (partial) revision. We will complete the info in the revision
+                    // when this revision is loaded from the log.
                     parentRevisionGraphRevision = new RevisionGraphRevision(parentObjectId, ++_maxScore);
                     _nodeByObjectId.TryAdd(parentObjectId, parentRevisionGraphRevision);
 
-                    int newMaxScore;
-                    _segments.Add(revisionGraphRevision.AddParent(parentRevisionGraphRevision, out newMaxScore));
+                    // Store the newly created segment (connection between 2 revisions)
+                    _segments.Add(revisionGraphRevision.AddParent(parentRevisionGraphRevision, out int newMaxScore));
                     _maxScore = Math.Max(_maxScore, newMaxScore);
-
-                    // Invalidate cache if the new score is lower then the cached result
-                    if (parentRevisionGraphRevision.Score <= _cachedUntillScore)
-                    {
-                        _reorder = true;
-                    }
                 }
                 else
                 {
+                    // This revision is already loaded, add the existing revision to the parents list of new revision.
                     // If the current score is lower, cache is invalid. The new score will (probably) be higher.
                     if (parentRevisionGraphRevision.Score <= _cachedUntillScore)
                     {
                         _reorder = true;
                     }
 
-                    int newMaxScore;
-                    _segments.Add(revisionGraphRevision.AddParent(parentRevisionGraphRevision, out newMaxScore));
+                    // Store the newly created segment (connection between 2 revisions)
+                    _segments.Add(revisionGraphRevision.AddParent(parentRevisionGraphRevision, out int newMaxScore));
                     _maxScore = Math.Max(_maxScore, newMaxScore);
                 }
             }
