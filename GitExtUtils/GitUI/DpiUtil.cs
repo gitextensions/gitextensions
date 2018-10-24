@@ -91,7 +91,7 @@ namespace GitExtUtils.GitUI
         /// </summary>
         public static int Scale(int i)
         {
-            return (int)Math.Round(i * ScaleX);
+            return (int)Math.Round(i * ScaleX, MidpointRounding.AwayFromZero);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace GitExtUtils.GitUI
         /// </summary>
         public static float Scale(float i)
         {
-            return (float)Math.Round(i * ScaleX);
+            return (float)Math.Round(i * ScaleX, MidpointRounding.AwayFromZero);
         }
 
         /// <summary>
