@@ -29,6 +29,14 @@ namespace GitUIPluginInterfaces
         /// <param name="remoteName">The current remote name.</param>
         /// <param name="newName">The new remote name.</param>
         string RenameRemote(string remoteName, string newName);
+
+        /// <summary>
+        /// Parses the revisionExpression as a git reference and returns an <see cref="ObjectId"/>./>
+        /// </summary>
+        /// <param name="revisionExpression">An expression like HEAD or commit hash that can be parsed as a git reference.</param>
+        /// <returns>An ObjectID representing that git reference</returns>
+        ObjectId RevParse(string revisionExpression);
+
         void SetSetting(string setting, string value);
         void UnsetSetting(string setting);
 
