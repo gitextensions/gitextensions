@@ -47,17 +47,17 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         // E.g. the score needs to be higher that the score of its children.
         public int EnsureScoreIsAbove(int minimalScore)
         {
-            if (minimalScore < Score)
+            if (minimalScore <= Score)
             {
                 return Score;
             }
 
-            Score = minimalScore + 1;
+            Score = minimalScore;
 
             int maxScore = Score;
             foreach (RevisionGraphRevision parent in Parents)
             {
-                maxScore = Math.Max(parent.EnsureScoreIsAbove(Score), maxScore);
+                maxScore = Math.Max(parent.EnsureScoreIsAbove(Score + 1), maxScore);
             }
 
             return maxScore;

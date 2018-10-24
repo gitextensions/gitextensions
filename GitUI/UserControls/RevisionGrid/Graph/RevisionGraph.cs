@@ -13,7 +13,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         // Some unordered collections with raw data
         private ConcurrentDictionary<ObjectId, RevisionGraphRevision> _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
         private ConcurrentBag<RevisionGraphRevision> _nodes = new ConcurrentBag<RevisionGraphRevision>();
-        private ConcurrentBag<RevisionGraphSegment> _segments = new ConcurrentBag<RevisionGraphSegment>();
 
         // The maxscore is used to keep a chronological order during graph buiding. It is cheaper than doing _nodes.Max(n => n.Score)
         private int _maxScore = 0;
@@ -33,7 +32,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _maxScore = 0;
             _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
             _nodes = new ConcurrentBag<RevisionGraphRevision>();
-            _segments = new ConcurrentBag<RevisionGraphSegment>();
             _orderedNodesCache = null;
             _orderedRowCache = null;
         }
@@ -80,42 +78,47 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 int cacheCount = _orderedNodesCache.Count;
                 while (nextIndex <= graphUntillRow && cacheCount > nextIndex)
                 {
-                    RevisionGraphRow revisionGraphRow = new RevisionGraphRow(_orderedNodesCache[nextIndex]);
-
                     bool startSegmentsAdded = false;
+
+                    RevisionGraphRevision revision = _orderedNodesCache[nextIndex];
+
+                    // The list containing the segments is created later. We can set the correct capacity then, to prevent resizing
+                    List<RevisionGraphSegment> segments;
 
                     if (nextIndex > 0)
                     {
                         // Copy lanes from last row
                         RevisionGraphRow previousRevisionGraphRow = _orderedRowCache[nextIndex - 1];
 
+                        // Create segments list with te correct capacity
+                        segments = new List<RevisionGraphSegment>(previousRevisionGraphRow.Segments.Count + revision.StartSegments.Count);
+
                         // Loop through all segments that do not end in this row
                         foreach (var segment in previousRevisionGraphRow.Segments.Where(s => s.Parent != previousRevisionGraphRow.Revision))
                         {
-                            revisionGraphRow.Segments.Add(segment);
+                            segments.Add(segment);
 
                             // This segments continues in the next row. Copy all other segments that start from this revision to this lane.
-                            if (revisionGraphRow.Revision == segment.Parent && !startSegmentsAdded)
+                            if (revision == segment.Parent && !startSegmentsAdded)
                             {
                                 startSegmentsAdded = true;
-                                foreach (var startSegment in revisionGraphRow.Revision.StartSegments)
-                                {
-                                    revisionGraphRow.Segments.Add(startSegment);
-                                }
+                                segments.AddRange(revision.StartSegments);
                             }
                         }
+                    }
+                    else
+                    {
+                        // Create segments list with te correct capacity
+                        segments = new List<RevisionGraphSegment>(revision.StartSegments.Count);
                     }
 
                     if (!startSegmentsAdded)
                     {
                         // Add new segments started by this revision to the end
-                        foreach (var segment in revisionGraphRow.Revision.StartSegments)
-                        {
-                            revisionGraphRow.Segments.Add(segment);
-                        }
+                        segments.AddRange(revision.StartSegments);
                     }
 
-                    _orderedRowCache.Add(revisionGraphRow);
+                    _orderedRowCache.Add(new RevisionGraphRow(_orderedNodesCache[nextIndex], segments));
                     nextIndex++;
                 }
 
@@ -263,7 +266,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     _nodeByObjectId.TryAdd(parentObjectId, parentRevisionGraphRevision);
 
                     // Store the newly created segment (connection between 2 revisions)
-                    _segments.Add(revisionGraphRevision.AddParent(parentRevisionGraphRevision, out int newMaxScore));
+                    revisionGraphRevision.AddParent(parentRevisionGraphRevision, out int newMaxScore);
                     _maxScore = Math.Max(_maxScore, newMaxScore);
                 }
                 else
@@ -273,7 +276,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     ResetCacheIfNeeded(parentRevisionGraphRevision);
 
                     // Store the newly created segment (connection between 2 revisions)
-                    _segments.Add(revisionGraphRevision.AddParent(parentRevisionGraphRevision, out int newMaxScore));
+                    revisionGraphRevision.AddParent(parentRevisionGraphRevision, out int newMaxScore);
                     _maxScore = Math.Max(_maxScore, newMaxScore);
                 }
             }

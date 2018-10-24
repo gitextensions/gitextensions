@@ -9,14 +9,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     // Therefor, a single lane can have multiple segments.
     public class RevisionGraphRow
     {
-        public RevisionGraphRow(RevisionGraphRevision revision)
+        public RevisionGraphRow(RevisionGraphRevision revision, IReadOnlyList<RevisionGraphSegment> segments)
         {
-            Segments = new SynchronizedCollection<RevisionGraphSegment>();
             Revision = revision;
+            Segments = segments;
         }
 
         public RevisionGraphRevision Revision { get; private set; }
-        public SynchronizedCollection<RevisionGraphSegment> Segments { get; private set; }
+        public IReadOnlyList<RevisionGraphSegment> Segments { get; private set; }
 
         // This dictonary contains a cached list of all segments and the lane index the segment is in for this row.
         private IReadOnlyDictionary<RevisionGraphSegment, int> _segmentLanes;
