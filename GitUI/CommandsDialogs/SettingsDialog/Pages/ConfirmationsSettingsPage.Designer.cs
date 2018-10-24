@@ -41,6 +41,7 @@
             this.chkCommitIfNoBranch = new System.Windows.Forms.CheckBox();
             this.chkAutoPopStashAfterPull = new System.Windows.Forms.CheckBox();
             this.chkAutoPopStashAfterCheckout = new System.Windows.Forms.CheckBox();
+            this.chkConfirmStashDrop = new System.Windows.Forms.CheckBox();
             this.chkAddTrackingRef = new System.Windows.Forms.CheckBox();
             this.chkPushNewBranch = new System.Windows.Forms.CheckBox();
             this.chkUpdateModules = new System.Windows.Forms.CheckBox();
@@ -84,23 +85,25 @@
             this.tlpnlConfirmations.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tlpnlConfirmations.ColumnCount = 1;
             this.tlpnlConfirmations.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlConfirmations.Controls.Add(this.chkFetchAndPruneAllConfirmation, 0, 12);
-            this.tlpnlConfirmations.Controls.Add(this.chkUndoLastCommitConfirmation, 0, 11);
-            this.tlpnlConfirmations.Controls.Add(this.chkRebaseOnTopOfSelectedCommit, 0, 10);
-            this.tlpnlConfirmations.Controls.Add(this.chkSecondAbortConfirmation, 0, 9);
-            this.tlpnlConfirmations.Controls.Add(this.chkCommitAfterConflictsResolved, 0, 8);
-            this.tlpnlConfirmations.Controls.Add(this.chkResolveConflicts, 0, 7);
             this.tlpnlConfirmations.Controls.Add(this.chkAmend, 0, 0);
             this.tlpnlConfirmations.Controls.Add(this.chkCommitIfNoBranch, 0, 1);
             this.tlpnlConfirmations.Controls.Add(this.chkAutoPopStashAfterPull, 0, 2);
             this.tlpnlConfirmations.Controls.Add(this.chkAutoPopStashAfterCheckout, 0, 3);
-            this.tlpnlConfirmations.Controls.Add(this.chkAddTrackingRef, 0, 4);
-            this.tlpnlConfirmations.Controls.Add(this.chkPushNewBranch, 0, 5);
-            this.tlpnlConfirmations.Controls.Add(this.chkUpdateModules, 0, 6);
+            this.tlpnlConfirmations.Controls.Add(this.chkConfirmStashDrop, 0, 4);
+            this.tlpnlConfirmations.Controls.Add(this.chkAddTrackingRef, 0, 5);
+            this.tlpnlConfirmations.Controls.Add(this.chkPushNewBranch, 0, 6);
+            this.tlpnlConfirmations.Controls.Add(this.chkUpdateModules, 0, 7);
+            this.tlpnlConfirmations.Controls.Add(this.chkResolveConflicts, 0, 8);
+            this.tlpnlConfirmations.Controls.Add(this.chkCommitAfterConflictsResolved, 0, 9);
+            this.tlpnlConfirmations.Controls.Add(this.chkSecondAbortConfirmation, 0, 10);
+            this.tlpnlConfirmations.Controls.Add(this.chkRebaseOnTopOfSelectedCommit, 0, 11);
+            this.tlpnlConfirmations.Controls.Add(this.chkUndoLastCommitConfirmation, 0, 12);
+            this.tlpnlConfirmations.Controls.Add(this.chkFetchAndPruneAllConfirmation, 0, 13);
             this.tlpnlConfirmations.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlConfirmations.Location = new System.Drawing.Point(5, 19);
             this.tlpnlConfirmations.Name = "tlpnlConfirmations";
-            this.tlpnlConfirmations.RowCount = 13;
+            this.tlpnlConfirmations.RowCount = 14;
+            this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlConfirmations.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -123,7 +126,7 @@
             this.chkFetchAndPruneAllConfirmation.Location = new System.Drawing.Point(3, 303);
             this.chkFetchAndPruneAllConfirmation.Name = "chkFetchAndPruneAllConfirmation";
             this.chkFetchAndPruneAllConfirmation.Size = new System.Drawing.Size(127, 19);
-            this.chkFetchAndPruneAllConfirmation.TabIndex = 13;
+            this.chkFetchAndPruneAllConfirmation.TabIndex = 14;
             this.chkFetchAndPruneAllConfirmation.Text = "Fetch and prune all";
             this.chkFetchAndPruneAllConfirmation.UseVisualStyleBackColor = true;
             // 
@@ -133,7 +136,7 @@
             this.chkUndoLastCommitConfirmation.Location = new System.Drawing.Point(3, 278);
             this.chkUndoLastCommitConfirmation.Name = "chkUndoLastCommitConfirmation";
             this.chkUndoLastCommitConfirmation.Size = new System.Drawing.Size(121, 19);
-            this.chkUndoLastCommitConfirmation.TabIndex = 12;
+            this.chkUndoLastCommitConfirmation.TabIndex = 13;
             this.chkUndoLastCommitConfirmation.Text = "Undo last commit";
             this.chkUndoLastCommitConfirmation.ThreeState = true;
             this.chkUndoLastCommitConfirmation.UseVisualStyleBackColor = true;
@@ -144,7 +147,7 @@
             this.chkRebaseOnTopOfSelectedCommit.Location = new System.Drawing.Point(3, 253);
             this.chkRebaseOnTopOfSelectedCommit.Name = "chkRebaseOnTopOfSelectedCommit";
             this.chkRebaseOnTopOfSelectedCommit.Size = new System.Drawing.Size(206, 19);
-            this.chkRebaseOnTopOfSelectedCommit.TabIndex = 11;
+            this.chkRebaseOnTopOfSelectedCommit.TabIndex = 12;
             this.chkRebaseOnTopOfSelectedCommit.Text = "Rebase on top of selected commit";
             this.chkRebaseOnTopOfSelectedCommit.ThreeState = true;
             this.chkRebaseOnTopOfSelectedCommit.UseVisualStyleBackColor = true;
@@ -155,7 +158,7 @@
             this.chkSecondAbortConfirmation.Location = new System.Drawing.Point(3, 228);
             this.chkSecondAbortConfirmation.Name = "chkSecondAbortConfirmation";
             this.chkSecondAbortConfirmation.Size = new System.Drawing.Size(267, 19);
-            this.chkSecondAbortConfirmation.TabIndex = 10;
+            this.chkSecondAbortConfirmation.TabIndex = 11;
             this.chkSecondAbortConfirmation.Text = "Confirm for the second time to abort a merge";
             this.chkSecondAbortConfirmation.ThreeState = true;
             this.chkSecondAbortConfirmation.UseVisualStyleBackColor = true;
@@ -166,7 +169,7 @@
             this.chkCommitAfterConflictsResolved.Location = new System.Drawing.Point(3, 203);
             this.chkCommitAfterConflictsResolved.Name = "chkCommitAfterConflictsResolved";
             this.chkCommitAfterConflictsResolved.Size = new System.Drawing.Size(296, 19);
-            this.chkCommitAfterConflictsResolved.TabIndex = 9;
+            this.chkCommitAfterConflictsResolved.TabIndex = 10;
             this.chkCommitAfterConflictsResolved.Text = "Commit changes after conflicts have been resolved";
             this.chkCommitAfterConflictsResolved.ThreeState = true;
             this.chkCommitAfterConflictsResolved.UseVisualStyleBackColor = true;
@@ -177,7 +180,7 @@
             this.chkResolveConflicts.Location = new System.Drawing.Point(3, 178);
             this.chkResolveConflicts.Name = "chkResolveConflicts";
             this.chkResolveConflicts.Size = new System.Drawing.Size(114, 19);
-            this.chkResolveConflicts.TabIndex = 8;
+            this.chkResolveConflicts.TabIndex = 9;
             this.chkResolveConflicts.Text = "Resolve conflicts";
             this.chkResolveConflicts.ThreeState = true;
             this.chkResolveConflicts.UseVisualStyleBackColor = true;
@@ -225,13 +228,23 @@
             this.chkAutoPopStashAfterCheckout.ThreeState = true;
             this.chkAutoPopStashAfterCheckout.UseVisualStyleBackColor = true;
             // 
+            // chkConfirmStashDrop
+            // 
+            this.chkConfirmStashDrop.AutoSize = true;
+            this.chkConfirmStashDrop.Location = new System.Drawing.Point(3, 78);
+            this.chkConfirmStashDrop.Name = "chkConfirmStashDrop";
+            this.chkConfirmStashDrop.Size = new System.Drawing.Size(477, 19);
+            this.chkConfirmStashDrop.TabIndex = 5;
+            this.chkConfirmStashDrop.Text = "Drop stash";
+            this.chkConfirmStashDrop.UseVisualStyleBackColor = true;
+            // 
             // chkAddTrackingRef
             // 
             this.chkAddTrackingRef.AutoSize = true;
             this.chkAddTrackingRef.Location = new System.Drawing.Point(3, 103);
             this.chkAddTrackingRef.Name = "chkAddTrackingRef";
             this.chkAddTrackingRef.Size = new System.Drawing.Size(289, 19);
-            this.chkAddTrackingRef.TabIndex = 5;
+            this.chkAddTrackingRef.TabIndex = 6;
             this.chkAddTrackingRef.Text = "Add a tracking reference for newly pushed branch";
             this.chkAddTrackingRef.UseVisualStyleBackColor = true;
             // 
@@ -241,7 +254,7 @@
             this.chkPushNewBranch.Location = new System.Drawing.Point(3, 128);
             this.chkPushNewBranch.Name = "chkPushNewBranch";
             this.chkPushNewBranch.Size = new System.Drawing.Size(205, 19);
-            this.chkPushNewBranch.TabIndex = 6;
+            this.chkPushNewBranch.TabIndex = 7;
             this.chkPushNewBranch.Text = "Push a new branch for the remote";
             this.chkPushNewBranch.UseVisualStyleBackColor = true;
             // 
@@ -251,7 +264,7 @@
             this.chkUpdateModules.Location = new System.Drawing.Point(3, 153);
             this.chkUpdateModules.Name = "chkUpdateModules";
             this.chkUpdateModules.Size = new System.Drawing.Size(201, 19);
-            this.chkUpdateModules.TabIndex = 7;
+            this.chkUpdateModules.TabIndex = 8;
             this.chkUpdateModules.Text = "Update submodules on checkout";
             this.chkUpdateModules.ThreeState = true;
             this.chkUpdateModules.UseVisualStyleBackColor = true;
@@ -285,6 +298,7 @@
         private System.Windows.Forms.CheckBox chkPushNewBranch;
         private System.Windows.Forms.CheckBox chkAddTrackingRef;
         private System.Windows.Forms.CheckBox chkAutoPopStashAfterCheckout;
+        private System.Windows.Forms.CheckBox chkConfirmStashDrop;
         private System.Windows.Forms.CheckBox chkUpdateModules;
         private System.Windows.Forms.CheckBox chkCommitIfNoBranch;
         private System.Windows.Forms.CheckBox chkCommitAfterConflictsResolved;
