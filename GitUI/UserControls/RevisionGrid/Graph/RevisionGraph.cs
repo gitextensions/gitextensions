@@ -82,6 +82,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 {
                     RevisionGraphRow revisionGraphRow = new RevisionGraphRow(_orderedNodesCache[nextIndex]);
 
+                    bool startSegmentsAdded = false;
+
                     if (nextIndex > 0)
                     {
                         // Copy lanes from last row
@@ -93,23 +95,21 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                             revisionGraphRow.Segments.Add(segment);
 
                             // This segments continues in the next row. Copy all other segments that start from this revision to this lane.
-                            if (revisionGraphRow.Revision == segment.Parent)
+                            if (revisionGraphRow.Revision == segment.Parent && !startSegmentsAdded)
                             {
+                                startSegmentsAdded = true;
                                 foreach (var startSegment in revisionGraphRow.Revision.StartSegments)
                                 {
-                                    if (!revisionGraphRow.Segments.Contains(startSegment))
-                                    {
-                                        revisionGraphRow.Segments.Add(startSegment);
-                                    }
+                                    revisionGraphRow.Segments.Add(startSegment);
                                 }
                             }
                         }
                     }
 
-                    // Add new segments started by this revision to the end
-                    foreach (var segment in revisionGraphRow.Revision.StartSegments)
+                    if (!startSegmentsAdded)
                     {
-                        if (!revisionGraphRow.Segments.Contains(segment))
+                        // Add new segments started by this revision to the end
+                        foreach (var segment in revisionGraphRow.Revision.StartSegments)
                         {
                             revisionGraphRow.Segments.Add(segment);
                         }
