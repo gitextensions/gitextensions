@@ -297,7 +297,11 @@ namespace GitUI.Editor
 
         public int MaxLineNumber => TextEditor.ShowLineNumbers ? TotalNumberOfLines : _lineNumbersControl.MaxLineNumber;
 
-        public int LineAtCaret => TextEditor.ActiveTextAreaControl.Caret.Position.Line;
+        public int LineAtCaret
+        {
+            get => TextEditor.ActiveTextAreaControl.Caret.Position.Line;
+            set => TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(TextEditor.ActiveTextAreaControl.Caret.Position.Column, value);
+        }
 
         public void HighlightLine(int line, Color color)
         {
