@@ -1062,6 +1062,7 @@ namespace GitUI.CommandsDialogs
             this.SelectedDiff.TabIndex = 0;
             this.SelectedDiff.TabStop = false;
             this.SelectedDiff.ContextMenuOpening += new System.ComponentModel.CancelEventHandler(this.SelectedDiff_ContextMenuOpening);
+            this.SelectedDiff.TextLoaded += new System.EventHandler(this.SelectedDiff_TextLoaded); 
             //
             // tableLayoutPanel1
             //

@@ -520,6 +520,11 @@ namespace GitUI.CommandsDialogs
             _resetSelectedLinesToolStripMenuItem.Enabled = _stageSelectedLinesToolStripMenuItem.Enabled;
         }
 
+        private void SelectedDiff_TextLoaded(object sender, EventArgs e)
+        {
+            _selectedDiffReloaded = true;
+        }
+
         #region Hotkey commands
 
         public static readonly string HotkeySettingsName = "Commit";
@@ -1461,7 +1466,7 @@ namespace GitUI.CommandsDialogs
             Staged.ClearSelected();
 
             _currentSelection = Unstaged.SelectedItems.ToList();
-            GitItemStatus item = _currentSelection.LastOrDefault();
+            GitItemStatus item = Unstaged.SelectedItem;
             ShowChanges(item, false);
 
             if (!item.IsSubmodule)
@@ -1718,7 +1723,7 @@ namespace GitUI.CommandsDialogs
 
             Unstaged.ClearSelected();
             _currentSelection = Staged.SelectedItems.ToList();
-            GitItemStatus item = _currentSelection.LastOrDefault();
+            GitItemStatus item = Staged.SelectedItem;
             ShowChanges(item, true);
         }
 
