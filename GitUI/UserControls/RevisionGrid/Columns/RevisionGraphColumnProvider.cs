@@ -287,7 +287,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                                 brush = GetBrushForRevision(revisionGraphRevision.Parent, revisionGraphRevision.Child.IsRelative);
                             }
 
-
                             // EndLane
                             if (startLane >= 0 && centerLane >= 0 && (startLane <= MaxLanes || centerLane <= MaxLanes))
                             {
@@ -297,7 +296,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             // StartLane
                             if (endLane >= 0 && centerLane >= 0 && (endLane <= MaxLanes || centerLane <= MaxLanes))
                             {
-                                DrawSegment(g, brush, centerX, centerY, endX, endY);
+                                DrawSegment(g, brush, centerX, centerY - 1, endX, endY);
                             }
                         }
 
