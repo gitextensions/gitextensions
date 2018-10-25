@@ -358,7 +358,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         private Brush GetBrushForRevision(RevisionGraphRevision revisionGraphRevision, bool isRelative)
         {
             Brush brush;
-            if (!isRelative && _revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
+            if (!isRelative && (_revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray || _revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.HighlightSelected))
             {
                 brush = RevisionGraphLaneColor.NonRelativeBrush;
             }
