@@ -387,7 +387,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             using (var lanePen = new Pen(laneBrush, LaneLineWidth))
             {
-                if (y0 == y1)
+                if (x0 == x1)
                 {
                     g.SmoothingMode = SmoothingMode.None;
                     g.DrawLine(lanePen, p0, p1);
