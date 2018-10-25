@@ -61,7 +61,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _configureWorkingDirMenu = new TranslationString("Configure this menu");
 
         private readonly TranslationString _directoryIsNotAValidRepositoryCaption = new TranslationString("Open");
-        private readonly TranslationString _directoryIsNotAValidRepository = new TranslationString("The selected item is not a valid git repository.\n\nDo you want to remove it from the recent repositories list?");
+        private readonly TranslationString _directoryIsNotAValidRepositoryMainInstruction = new TranslationString("The selected item is not a valid git repository.");
+        private readonly TranslationString _directoryIsNotAValidRepositoryRemoveSelectedRepoCommand = new TranslationString("Remove the selected invalid repository");
+        private readonly TranslationString _directoryIsNotAValidRepositoryRemoveAllCommand = new TranslationString("Remove all {0} invalid repositories");
 
         private readonly TranslationString _updateCurrentSubmodule = new TranslationString("Update current submodule");
 
@@ -1635,18 +1637,36 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            DialogResult dialogResult = MessageBox.Show(this, _directoryIsNotAValidRepository.Text,
-                                                        _directoryIsNotAValidRepositoryCaption.Text,
-                                                        MessageBoxButtons.YesNo,
-                                                        MessageBoxIcon.Exclamation,
-                                                        MessageBoxDefaultButton.Button1);
-
-            if (dialogResult != DialogResult.Yes)
+            int invalidPathCount = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadRecentHistoryAsync()).Count(repo => !GitModule.IsValidGitWorkingDir(repo.Path));
+            string commandButtonCaptions = _directoryIsNotAValidRepositoryRemoveSelectedRepoCommand.Text;
+            if (invalidPathCount > 1)
             {
-                return;
+                commandButtonCaptions =
+                    string.Format("{0}|{1}", commandButtonCaptions, string.Format(_directoryIsNotAValidRepositoryRemoveAllCommand.Text, invalidPathCount));
             }
 
-            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(path));
+            int dialogResult = PSTaskDialog.cTaskDialog.ShowCommandBox(
+                Title: _directoryIsNotAValidRepositoryCaption.Text,
+                MainInstruction: _directoryIsNotAValidRepositoryMainInstruction.Text,
+                Content: "",
+                CommandButtons: commandButtonCaptions,
+                ShowCancelButton: true);
+
+            if (dialogResult < 0)
+            {
+                /* Cancel */
+                return;
+            }
+            else if (PSTaskDialog.cTaskDialog.CommandButtonResult == 0)
+            {
+                /* Remove selected invalid repo */
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveRecentAsync(path));
+            }
+            else if (PSTaskDialog.cTaskDialog.CommandButtonResult == 1)
+            {
+                /* Remove all invalid repos */
+                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveInvalidRepositoriesAsync(repoPath => GitModule.IsValidGitWorkingDir(repoPath)));
+            }
         }
 
         private void tsmiFavouriteRepositories_DropDownOpening(object sender, EventArgs e)
