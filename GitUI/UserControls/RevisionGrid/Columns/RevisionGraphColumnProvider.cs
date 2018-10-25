@@ -243,7 +243,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         int centerY = top + (rowHeight / 2);
                         int endY = top + rowHeight + (rowHeight / 2);
 
-                        foreach (RevisionGraphSegment revisionGraphRevision in currentRow.Segments.OrderBy(s => s.Child.IsRelative))
+                        foreach (RevisionGraphSegment revisionGraphRevision in currentRow.Segments.Reverse().OrderBy(s => s.Child.IsRelative))
                         {
                             int startLane = -10;
                             int centerLane = -10;
@@ -276,7 +276,17 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             int centerX = g.RenderingOrigin.X + (int)((centerLane + 0.5) * LaneWidth);
                             int endX = g.RenderingOrigin.X + (int)((endLane + 0.5) * LaneWidth);
 
-                            Brush brush = GetBrushForRevision(revisionGraphRevision.Parent, revisionGraphRevision.Child.IsRelative);
+                            Brush brush;
+
+                            if (revisionGraphRevision.Parent.EndSegments.Count > 1)
+                            {
+                                brush = GetBrushForRevision(revisionGraphRevision.Child, revisionGraphRevision.Child.IsRelative);
+                            }
+                            else
+                            {
+                                brush = GetBrushForRevision(revisionGraphRevision.Parent, revisionGraphRevision.Child.IsRelative);
+                            }
+
 
                             // EndLane
                             if (startLane >= 0 && centerLane >= 0 && (startLane <= MaxLanes || centerLane <= MaxLanes))
@@ -346,16 +356,16 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
         }
 
-        private static Brush GetBrushForRevision(RevisionGraphRevision revisionGraphRevision, bool isRelative)
+        private Brush GetBrushForRevision(RevisionGraphRevision revisionGraphRevision, bool isRelative)
         {
             Brush brush;
-            if (isRelative)
+            if (!isRelative && _revisionGraphDrawStyleCache == RevisionGraphDrawStyleEnum.DrawNonRelativesGray)
             {
-                brush = RevisionGraphLaneColor.GetBrushForLane(revisionGraphRevision.LaneColor);
+                brush = RevisionGraphLaneColor.NonRelativeBrush;
             }
             else
             {
-                brush = RevisionGraphLaneColor.NonRelativeBrush;
+                brush = RevisionGraphLaneColor.GetBrushForLane(revisionGraphRevision.LaneColor);
             }
 
             return brush;

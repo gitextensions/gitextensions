@@ -23,6 +23,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             EndSegments = new ConcurrentBag<RevisionGraphSegment>();
 
             Score = guessScore;
+
+            LaneColor = -1;
         }
 
         public void ApplyFlags(RevisionNodeFlags types)
@@ -92,7 +94,17 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public RevisionGraphSegment AddParent(RevisionGraphRevision parent, out int maxScore)
         {
             // Generate a LaneColor used for rendering
-            parent.LaneColor = Parents.Any() ? parent.Objectid.GetHashCode() : LaneColor;
+            if (Parents.Any())
+            {
+                parent.LaneColor = parent.Score;
+            }
+            else
+            {
+                if (parent.LaneColor == -1)
+                {
+                    parent.LaneColor = LaneColor;
+                }
+            }
 
             if (IsRelative)
             {

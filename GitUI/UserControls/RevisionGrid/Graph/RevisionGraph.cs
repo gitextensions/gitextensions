@@ -236,7 +236,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 // are not in topo order. If this the case, we deal with it later.
                 revisionGraphRevision = new RevisionGraphRevision(revision.ObjectId, ++_maxScore);
                 revisionGraphRevision.ApplyFlags(types);
-                revisionGraphRevision.LaneColor = _nodes.Count;
+                revisionGraphRevision.LaneColor = revisionGraphRevision.IsCheckedOut ? 0 : _maxScore;
 
                 revisionGraphRevision.GitRevision = revision;
                 _nodeByObjectId.TryAdd(revision.ObjectId, revisionGraphRevision);
