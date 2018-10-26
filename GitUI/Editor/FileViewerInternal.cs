@@ -11,6 +11,11 @@ namespace GitUI.Editor
 {
     public partial class FileViewerInternal : GitModuleControl, IFileViewer
     {
+        /// <summary>
+        /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
+        /// </summary>
+        public event Action EscapePressed;
+
         public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
         public new event MouseEventHandler MouseMove;
         public new event EventHandler MouseEnter;
@@ -29,6 +34,14 @@ namespace GitUI.Editor
             InitializeComplete();
 
             _currentViewPositionCache = new CurrentViewPositionCache(this);
+
+            TextEditor.ActiveTextAreaControl.TextArea.PreviewKeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Escape && !TextEditor.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
+                {
+                    EscapePressed?.Invoke();
+                }
+            };
 
             TextEditor.TextChanged += (s, e) => TextChanged?.Invoke(s, e);
             TextEditor.ActiveTextAreaControl.VScrollBar.ValueChanged += (s, e) => ScrollPosChanged?.Invoke(s, e);

@@ -17,7 +17,6 @@ using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
-using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.Editor
@@ -25,6 +24,11 @@ namespace GitUI.Editor
     [DefaultEvent("SelectedLineChanged")]
     public partial class FileViewer : GitModuleControl
     {
+        /// <summary>
+        /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
+        /// </summary>
+        public event Action EscapePressed;
+
         private readonly TranslationString _largeFileSizeWarning = new TranslationString("This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
 
         public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
@@ -71,6 +75,7 @@ namespace GitUI.Editor
             internalFileViewer.MouseLeave += (_, e) => OnMouseLeave(e);
             internalFileViewer.MouseMove += (_, e) => OnMouseMove(e);
             internalFileViewer.KeyUp += (_, e) => OnKeyUp(e);
+            internalFileViewer.EscapePressed += () => EscapePressed?.Invoke();
 
             _async = new AsyncLoader();
             _async.LoadingError +=
