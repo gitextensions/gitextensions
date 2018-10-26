@@ -64,7 +64,6 @@ namespace GitUI.CommitInfo
 
         private GitRevision _revision;
         private IReadOnlyList<ObjectId> _children;
-        private string _revisionInfo;
         private string _linksInfo;
         private IDictionary<string, string> _annotatedTagsMessages;
         private string _annotatedTagsInfo;
@@ -158,7 +157,6 @@ namespace GitUI.CommitInfo
             showMessagesOfAnnotatedTagsToolStripMenuItem.Checked = AppSettings.ShowAnnotatedTagsMessages;
             showTagThisCommitDerivesFromMenuItem.Checked = AppSettings.CommitInfoShowTagThisCommitDerivesFrom;
 
-            _revisionInfo = "";
             _linksInfo = "";
             _branchInfo = "";
             _annotatedTagsInfo = "";
@@ -179,10 +177,10 @@ namespace GitUI.CommitInfo
                 _revision.Body = data.Body;
             }
 
-            _revisionInfo = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent != null);
+            var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent != null);
             pnlCommitMessage.SuspendLayout();
             rtbxCommitMessage.SuspendLayout();
-            rtbxCommitMessage.SetXHTMLText(_revisionInfo);
+            rtbxCommitMessage.SetXHTMLText(commitMessage);
             rtbxCommitMessage.SelectionStart = 0; // scroll up
             rtbxCommitMessage.ScrollToCaret();    // scroll up
 
@@ -193,7 +191,13 @@ namespace GitUI.CommitInfo
             rtbxCommitMessage.ResumeLayout(true);
             pnlCommitMessage.ResumeLayout(true);
 
+            if (_revision == null || _revision.IsArtificial)
+            {
+                return;
+            }
+
             UpdateRevisionInfo();
+
             StartAsyncDataLoad();
 
             return;
@@ -209,29 +213,26 @@ namespace GitUI.CommitInfo
                     ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadSortedRefsAsync()).FileAndForget();
                 }
 
-                if (!_revision.IsArtificial)
+                // No branch/tag data for artificial commands
+
+                if (AppSettings.CommitInfoShowContainedInBranches)
                 {
-                    // No branch/tag data for artificial commands
+                    ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadBranchInfoAsync(_revision.ObjectId)).FileAndForget();
+                }
 
-                    if (AppSettings.CommitInfoShowContainedInBranches)
-                    {
-                        ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadBranchInfoAsync(_revision.ObjectId)).FileAndForget();
-                    }
+                if (AppSettings.ShowAnnotatedTagsMessages)
+                {
+                    ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadAnnotatedTagInfoAsync(_revision.Refs)).FileAndForget();
+                }
 
-                    if (AppSettings.ShowAnnotatedTagsMessages)
-                    {
-                        ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadAnnotatedTagInfoAsync(_revision.Refs)).FileAndForget();
-                    }
+                if (AppSettings.CommitInfoShowContainedInTags)
+                {
+                    ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadTagInfoAsync(_revision.ObjectId)).FileAndForget();
+                }
 
-                    if (AppSettings.CommitInfoShowContainedInTags)
-                    {
-                        ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadTagInfoAsync(_revision.ObjectId)).FileAndForget();
-                    }
-
-                    if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom)
-                    {
-                        ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadDescribeInfoAsync(_revision.ObjectId)).FileAndForget();
-                    }
+                if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom)
+                {
+                    ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadDescribeInfoAsync(_revision.ObjectId)).FileAndForget();
                 }
 
                 return;
@@ -461,21 +462,13 @@ namespace GitUI.CommitInfo
                 }
             }
 
-            string body;
-            if (Revision != null && !Revision.IsArtificial)
-            {
-                body = new StringBuilder()
+            string body = new StringBuilder()
                 .Append(_annotatedTagsInfo)
                 .Append(_linksInfo)
                 .Append(_branchInfo)
                 .Append(_tagInfo)
                 .Append(_gitDescribeInfo)
                 .ToString();
-            }
-            else
-            {
-                body = _revisionInfo;
-            }
 
             RevisionInfo.SuspendLayout();
             RevisionInfo.SetXHTMLText(body);
