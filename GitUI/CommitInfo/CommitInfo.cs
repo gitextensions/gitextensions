@@ -144,6 +144,13 @@ namespace GitUI.CommitInfo
             _revision = revision;
             _children = children;
 
+            if (revision == null)
+            {
+                tableLayout.Visible = false;
+                return;
+            }
+
+            tableLayout.Visible = true;
             commitInfoHeader.ShowCommitInfo(revision, children);
             ReloadCommitInfo();
         }
