@@ -2216,6 +2216,16 @@ namespace GitUI
             }
         }
 
+        private void renameBranchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var item = (ToolStripMenuItem)sender;
+
+            if (item.DropDown != null && item.DropDown.Items.Count == 1)
+            {
+                item.DropDown.Items[0].PerformClick();
+            }
+        }
+
         private void deleteBranchTagToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var item = (ToolStripMenuItem)sender;

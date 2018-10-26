@@ -242,6 +242,7 @@ namespace GitUI
             this.renameBranchToolStripMenuItem.Name = "renameBranchToolStripMenuItem";
             this.renameBranchToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
             this.renameBranchToolStripMenuItem.Text = "Rename branch";
+            this.renameBranchToolStripMenuItem.Click += new System.EventHandler(this.renameBranchToolStripMenuItem_Click);
             // 
             // deleteBranchToolStripMenuItem
             // 
