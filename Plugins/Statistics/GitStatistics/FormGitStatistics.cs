@@ -190,7 +190,7 @@ namespace GitStatistics
             void LoadLinesOfCodeForModule(IGitModule module)
             {
                 var filesToCheck = module
-                    .GetTree(null, full: true)
+                    .GetTree(module.RevParse("HEAD"), full: true)
                     .Select(file => Path.Combine(module.WorkingDir, file.Name))
                     .ToList();
 
