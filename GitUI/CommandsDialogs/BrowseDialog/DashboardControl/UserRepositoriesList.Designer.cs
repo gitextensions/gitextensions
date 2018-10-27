@@ -208,7 +208,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             this.tsmiOpenFolder.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
             this.tsmiOpenFolder.Name = "tsmiOpenFolder";
             this.tsmiOpenFolder.Size = new System.Drawing.Size(224, 22);
-            this.tsmiOpenFolder.Text = "Open containing folder";
+            this.tsmiOpenFolder.Text = "Show in folder";
             this.tsmiOpenFolder.Click += new System.EventHandler(this.tsmiOpenFolder_Click);
             // 
             // tsmiCategoryRename

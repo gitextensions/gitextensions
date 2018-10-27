@@ -275,7 +275,7 @@ namespace GitUI.CommandsDialogs
             this.openContainingFolderToolStripMenuItem.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
             this.openContainingFolderToolStripMenuItem.Name = "openContainingFolderToolStripMenuItem";
             this.openContainingFolderToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
-            this.openContainingFolderToolStripMenuItem.Text = "Open containing folder";
+            this.openContainingFolderToolStripMenuItem.Text = "Show in folder";
             this.openContainingFolderToolStripMenuItem.Click += new System.EventHandler(this.openContainingFolderToolStripMenuItem_Click);
             //
             // toolStripSeparator8
@@ -467,7 +467,7 @@ namespace GitUI.CommandsDialogs
             this.stagedOpenFolderToolStripMenuItem10.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
             this.stagedOpenFolderToolStripMenuItem10.Name = "stagedOpenFolderToolStripMenuItem10";
             this.stagedOpenFolderToolStripMenuItem10.Size = new System.Drawing.Size(232, 22);
-            this.stagedOpenFolderToolStripMenuItem10.Text = "Open containing folder";
+            this.stagedOpenFolderToolStripMenuItem10.Text = "Show in folder";
             this.stagedOpenFolderToolStripMenuItem10.Click += new System.EventHandler(this.openFolderToolStripMenuItem10_Click);
             //
             // stagedToolStripSeparator17
@@ -575,7 +575,7 @@ namespace GitUI.CommandsDialogs
             this.openFolderMenuItem.Image = global::GitUI.Properties.Images.BrowseFileExplorer;
             this.openFolderMenuItem.Name = "openFolderMenuItem";
             this.openFolderMenuItem.Size = new System.Drawing.Size(228, 22);
-            this.openFolderMenuItem.Text = "Open containing folder";
+            this.openFolderMenuItem.Text = "Show in folder";
             this.openFolderMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItemClick);
             //
             // openDiffMenuItem

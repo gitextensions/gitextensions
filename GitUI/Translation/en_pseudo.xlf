@@ -4237,7 +4237,7 @@ You can unset the template:
         
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Open containing folder</source>
+        <source>Show in folder</source>
         <target>[Ǿƥḗƞ ƈǿƞŧȧīƞīƞɠ ƒǿŀḓḗř ϑϑϕı ẛϱϑϰϐǋ]</target>
         
       </trans-unit>
@@ -4247,7 +4247,7 @@ You can unset the template:
         
       </trans-unit>
       <trans-unit id="openFolderMenuItem.Text">
-        <source>Open containing folder</source>
+        <source>Show in folder</source>
         <target>[Ǿƥḗƞ ƈǿƞŧȧīƞīƞɠ ƒǿŀḓḗř 靐ϱϵſ ǅǅ靐ǅϵ鶱]</target>
         
       </trans-unit>
@@ -4362,7 +4362,7 @@ You can unset the template:
         
       </trans-unit>
       <trans-unit id="stagedOpenFolderToolStripMenuItem10.Text">
-        <source>Open containing folder</source>
+        <source>Show in folder</source>
         <target>[Ǿƥḗƞ ƈǿƞŧȧīƞīƞɠ ƒǿŀḓḗř ϑ鶱衋ẛ ϕϖϕı衋ǋ]</target>
         
       </trans-unit>
@@ -5024,7 +5024,7 @@ in order to recover the lost commits.</source>
         
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Open containing folder(s)</source>
+        <source>Show in folder</source>
         <target>[Ǿƥḗƞ ƈǿƞŧȧīƞīƞɠ ƒǿŀḓḗř(ş) ϑϰǅϕ ΰǋǋϖẛς]</target>
         
       </trans-unit>
@@ -9821,7 +9821,7 @@ This will just checkout on the submodule the commit determined by the superproje
         
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Open containing folder(s)</source>
+        <source>Show in folder</source>
         <target>[Ǿƥḗƞ ƈǿƞŧȧīƞīƞɠ ƒǿŀḓḗř(ş) 衋ϵǈı ϱſϱςϑϵ]</target>
         
       </trans-unit>
