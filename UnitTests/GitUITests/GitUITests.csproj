@@ -41,6 +41,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ApprovalTests" Version="3.0.13" />
     <PackageReference Include="FluentAssertions" Version="5.2.0" />
     <PackageReference Include="LibGit2Sharp" Version="0.25.0" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />
@@ -67,6 +68,7 @@
     <Compile Include="CommandsDialogs\RevisionDiffControllerTests.cs" />
     <Compile Include="ControlThreadingExtensionsTests.cs" />
     <Compile Include="Editor\FileViewerInternal.CurrentViewPositionCacheTests.cs" />
+    <Compile Include="Editor\FileViewerTextTests.cs" />
     <Compile Include="FindFilePredicateProviderTest.cs" />
     <Compile Include="Helpers\DiffKindRevisionTests.cs" />
     <Compile Include="ControlUtilTests.cs" />
@@ -100,6 +102,7 @@
     <None Include="Editor\Diff\SampleCombined.diff">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="Editor\MockData\MacLines.bin" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Externals\conemu-inside\ConEmuWinForms\ConEmuWinForms.csproj">
@@ -134,6 +137,10 @@
       <Project>{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}</Project>
       <Name>CommonTestUtils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Editor\MockData\UnixLines.bin" />
+    <EmbeddedResource Include="Editor\MockData\WindowsLines.bin" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
