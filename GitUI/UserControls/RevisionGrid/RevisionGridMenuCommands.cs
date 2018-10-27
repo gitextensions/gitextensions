@@ -111,7 +111,7 @@ namespace GitUI.UserControls.RevisionGrid
                 {
                     Name = "GotoMergeBaseCommit",
                     Text = "Go to common ancestor (merge base)",
-                    ToolTipText = "Go to the common ancestor (merge base) commit, which is the best common commit between the currently checked out commit (HEAD) and the currently selected commit",
+                    ToolTipText = "Go to the common ancestor (merge base) commit, which is the best common commit for the selected commits (with one selected commit: to the currently checked out commit (HEAD))",
                     ShortcutKeyDisplayString = GetShortcutKeyDisplayStringFromRevisionGridIfAvailable(RevisionGridControl.Commands.GoToMergeBaseCommit),
                     ExecuteAction = () => _revisionGrid.ExecuteCommand(RevisionGridControl.Commands.GoToMergeBaseCommit)
                 },

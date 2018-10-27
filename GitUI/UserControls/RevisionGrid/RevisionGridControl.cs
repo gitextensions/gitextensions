@@ -620,6 +620,7 @@ namespace GitUI
             return description;
         }
 
+        [NotNull]
         public IReadOnlyList<GitRevision> GetSelectedRevisions(SortDirection? direction = null)
         {
             var rows = _gridView
@@ -643,7 +644,7 @@ namespace GitUI
             var revisions = GetSelectedRevisions();
 
             // Parents to First (A) are only known if A is explicitly selected (there is no explicit search for parents to parents of a single selected revision)
-            return revisions != null && revisions.Count > 1;
+            return revisions.Count > 1;
         }
 
         public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)
@@ -2244,13 +2245,25 @@ namespace GitUI
 
         private void goToMergeBaseCommitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var selectedRevision = LatestSelectedRevision;
-            if (selectedRevision == null)
+            // Artificial commits are replaced with HEAD
+            // If only one revision is selected, compare to HEAD
+            // => Fill with HEAD to if less than two normal revisions (it is OK to compare HEAD HEAD)
+            var revisions = GetSelectedRevisions().Select(i => i.ObjectId).Where(i => !i.IsArtificial).ToList();
+            bool hasArtificial = GetSelectedRevisions().Any(i => i.IsArtificial);
+            if (revisions.Count == 0 && !hasArtificial)
             {
                 return;
             }
 
-            var mergeBaseCommitId = UICommands.GitModule.RunGitCmd("merge-base HEAD " + selectedRevision.Guid).TrimEnd('\n');
+            var args = new GitArgumentBuilder("merge-base")
+            {
+                { revisions.Count > 2 || (revisions.Count == 2 && hasArtificial), "--octopus" },
+                { revisions.Count < 1, "HEAD" },
+                { revisions.Count < 2, "HEAD" },
+                revisions
+            };
+
+            var mergeBaseCommitId = UICommands.GitModule.RunGitCmd(args).TrimEnd('\n');
             if (string.IsNullOrWhiteSpace(mergeBaseCommitId))
             {
                 MessageBox.Show(_noMergeBaseCommit.Text);
