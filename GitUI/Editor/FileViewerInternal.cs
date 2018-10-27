@@ -297,7 +297,11 @@ namespace GitUI.Editor
 
         public int MaxLineNumber => TextEditor.ShowLineNumbers ? TotalNumberOfLines : _lineNumbersControl.MaxLineNumber;
 
-        public int LineAtCaret => TextEditor.ActiveTextAreaControl.Caret.Position.Line;
+        public int LineAtCaret
+        {
+            get => TextEditor.ActiveTextAreaControl.Caret.Position.Line;
+            set => TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(TextEditor.ActiveTextAreaControl.Caret.Position.Column, value);
+        }
 
         public void HighlightLine(int line, Color color)
         {
@@ -474,6 +478,20 @@ namespace GitUI.Editor
             internal int FirstVisibleLine;
             internal bool CaretVisible; // if not, FirstVisibleLine has priority for restoring
             internal DiffLineInfo ActiveLineNum;
+        }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FileViewerInternal _control;
+
+            public TestAccessor(FileViewerInternal control)
+            {
+                _control = control;
+            }
+
+            public TextEditorControl TextEditor => _control.TextEditor;
         }
     }
 }

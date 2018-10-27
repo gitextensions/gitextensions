@@ -3302,7 +3302,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Open containing folder</source>
+        <source>Show in folder</source>
         <target />
       </trans-unit>
       <trans-unit id="openDiffMenuItem.Text">
@@ -3310,7 +3310,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="openFolderMenuItem.Text">
-        <source>Open containing folder</source>
+        <source>Show in folder</source>
         <target />
       </trans-unit>
       <trans-unit id="openSubmoduleMenuItem.Text">
@@ -3402,7 +3402,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="stagedOpenFolderToolStripMenuItem10.Text">
-        <source>Open containing folder</source>
+        <source>Show in folder</source>
         <target />
       </trans-unit>
       <trans-unit id="stagedOpenToolStripMenuItem7.Text">
@@ -3936,7 +3936,7 @@ in order to recover the lost commits.</source>
         <target />
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Open containing folder(s)</source>
+        <source>Show in folder</source>
         <target />
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
@@ -7715,7 +7715,7 @@ This will just checkout on the submodule the commit determined by the superproje
         <target />
       </trans-unit>
       <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Open containing folder(s)</source>
+        <source>Show in folder</source>
         <target />
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
@@ -7881,7 +7881,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
-        <source>Open containing folder</source>
+        <source>Show in folder</source>
         <target />
       </trans-unit>
       <trans-unit id="findToolStripMenuItem.Text">
@@ -7947,7 +7947,7 @@ Do you want to remove it from the recent repositories list?</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiOpenFolder.Text">
-        <source>Open containing folder</source>
+        <source>Show in folder</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCategories.Text">

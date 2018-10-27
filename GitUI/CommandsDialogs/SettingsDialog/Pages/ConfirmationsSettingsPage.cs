@@ -18,6 +18,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkCommitIfNoBranch.Checked = AppSettings.DontConfirmCommitIfNoBranch;
             chkAutoPopStashAfterPull.CheckState = AppSettings.AutoPopStashAfterPull.ToCheckboxState();
             chkAutoPopStashAfterCheckout.CheckState = AppSettings.AutoPopStashAfterCheckoutBranch.ToCheckboxState();
+            chkConfirmStashDrop.Checked = !AppSettings.StashConfirmDropShow;
             chkPushNewBranch.Checked = AppSettings.DontConfirmPushNewBranch;
             chkAddTrackingRef.Checked = AppSettings.DontConfirmAddTrackingRef;
             chkUpdateModules.CheckState = AppSettings.UpdateSubmodulesOnCheckout.ToCheckboxState();
@@ -35,6 +36,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.DontConfirmCommitIfNoBranch = chkCommitIfNoBranch.Checked;
             AppSettings.AutoPopStashAfterPull = chkAutoPopStashAfterPull.CheckState.ToBoolean();
             AppSettings.AutoPopStashAfterCheckoutBranch = chkAutoPopStashAfterCheckout.CheckState.ToBoolean();
+            AppSettings.StashConfirmDropShow = !chkConfirmStashDrop.Checked;
             AppSettings.DontConfirmPushNewBranch = chkPushNewBranch.Checked;
             AppSettings.DontConfirmAddTrackingRef = chkAddTrackingRef.Checked;
             AppSettings.UpdateSubmodulesOnCheckout = chkUpdateModules.CheckState.ToBoolean();

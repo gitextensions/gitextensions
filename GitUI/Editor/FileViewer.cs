@@ -444,10 +444,7 @@ namespace GitUI.Editor
             ThreadHelper.JoinableTaskFactory.Run(() => _deferShowFunc());
         }
 
-        public string GetText()
-        {
-            return internalFileViewer.GetText();
-        }
+        public string GetText() => internalFileViewer.GetText();
 
         public void ViewCurrentChanges(GitItemStatus item)
         {
@@ -1044,11 +1041,13 @@ namespace GitUI.Editor
         {
             Focus();
 
-            var firstVisibleLine = internalFileViewer.LineAtCaret;
+            var currentVisibleLine = internalFileViewer.LineAtCaret;
             var totalNumberOfLines = internalFileViewer.TotalNumberOfLines;
             var emptyLineCheck = false;
 
-            for (var line = firstVisibleLine + 1; line < totalNumberOfLines; line++)
+            // skip the first pseudo-change containing the file names
+            var startLine = Math.Max(4, currentVisibleLine + 1);
+            for (var line = startLine; line < totalNumberOfLines; line++)
             {
                 var lineContent = internalFileViewer.GetLineText(line);
 
@@ -1057,7 +1056,7 @@ namespace GitUI.Editor
                     if (emptyLineCheck)
                     {
                         internalFileViewer.FirstVisibleLine = Math.Max(line - 4, 0);
-                        GoToLine(line);
+                        internalFileViewer.LineAtCaret = line;
                         return;
                     }
                 }
@@ -1084,17 +1083,17 @@ namespace GitUI.Editor
         {
             Focus();
 
-            var firstVisibleLine = internalFileViewer.LineAtCaret;
+            var startLine = internalFileViewer.LineAtCaret;
             var emptyLineCheck = false;
 
             // go to the top of change block
-            while (firstVisibleLine > 0 &&
-                internalFileViewer.GetLineText(firstVisibleLine).StartsWithAny(new[] { "+", "-" }))
+            while (startLine > 0 &&
+                internalFileViewer.GetLineText(startLine).StartsWithAny(new[] { "+", "-" }))
             {
-                firstVisibleLine--;
+                startLine--;
             }
 
-            for (var line = firstVisibleLine; line > 0; line--)
+            for (var line = startLine; line > 0; line--)
             {
                 var lineContent = internalFileViewer.GetLineText(line);
 
@@ -1108,7 +1107,7 @@ namespace GitUI.Editor
                     if (emptyLineCheck)
                     {
                         internalFileViewer.FirstVisibleLine = Math.Max(0, line - 3);
-                        GoToLine(line + 1);
+                        internalFileViewer.LineAtCaret = line + 1;
                         return;
                     }
                 }
@@ -1285,14 +1284,27 @@ namespace GitUI.Editor
             Clipboard.SetText(DoAutoCRLF(code));
         }
 
-        private string DoAutoCRLF(string s)
+        private string DoAutoCRLF(string text)
         {
-            if (Module.EffectiveConfigFile.core.autocrlf.ValueOrDefault == AutoCRLFType.@true)
+            if (Module.EffectiveConfigFile.core.autocrlf.ValueOrDefault != AutoCRLFType.@true)
             {
-                return s.Replace("\n", Environment.NewLine);
+                return text;
             }
 
-            return s;
+            if (text.Contains("\r\n"))
+            {
+                // AutoCRLF is set to true but the text contains windows endings.
+                // Maybe the user that committed the file had another AutoCRLF setting.
+                return text.Replace("\r\n", Environment.NewLine);
+            }
+
+            if (text.Contains("\r"))
+            {
+                // Old MAC lines (pre OS X). See "if (text.Contains("\r\n"))" above.
+                return text.Replace("\r", Environment.NewLine);
+            }
+
+            return text.Replace("\n", Environment.NewLine);
         }
 
         private void copyNewVersionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1395,6 +1407,22 @@ namespace GitUI.Editor
             ignoreAllWhitespaceChangesToolStripMenuItem.Checked = newIgnoreValue;
             AppSettings.IgnoreAllWhitespaceChanges = newIgnoreValue;
             OnExtraDiffArgumentsChanged();
+        }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FileViewer _fileViewer;
+
+            public TestAccessor(FileViewer fileViewer)
+            {
+                _fileViewer = fileViewer;
+            }
+
+            public ToolStripMenuItem CopyToolStripMenuItem => _fileViewer.copyToolStripMenuItem;
+
+            public FileViewerInternal FileViewerInternal => _fileViewer.internalFileViewer;
         }
     }
 }
