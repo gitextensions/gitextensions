@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.tableLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayout = new GitUI.UserControls.DoubleBufferedTableLayoutPanel();
             this.pnlCommitMessage = new System.Windows.Forms.Panel();
             this.rtbxCommitMessage = new System.Windows.Forms.RichTextBox();
             this.commitInfoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -248,6 +248,6 @@
         private CommitInfoHeader commitInfoHeader;
         private System.Windows.Forms.Panel pnlCommitMessage;
         private System.Windows.Forms.RichTextBox rtbxCommitMessage;
-        private System.Windows.Forms.TableLayoutPanel tableLayout;
+        private GitUI.UserControls.DoubleBufferedTableLayoutPanel tableLayout;
     }
 }

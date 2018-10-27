@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.Panel pnlAvatar;
-            System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+            GitUI.UserControls.DoubleBufferedTableLayoutPanel tableLayoutPanel1;
             this.avatarControl = new GitUI.AvatarControl();
             this.rtbRevisionHeader = new System.Windows.Forms.RichTextBox();
             pnlAvatar = new System.Windows.Forms.Panel();
-            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            tableLayoutPanel1 = new GitUI.UserControls.DoubleBufferedTableLayoutPanel();
             pnlAvatar.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
