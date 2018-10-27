@@ -750,9 +750,11 @@ namespace GitUI.CommandsDialogs
             // 
             // RevisionInfo
             // 
+            this.RevisionInfo.AutoSize = true;
+            this.RevisionInfo.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
             this.RevisionInfo.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Top;
             this.RevisionInfo.Location = new System.Drawing.Point(0, 0);
             this.RevisionInfo.Margin = new System.Windows.Forms.Padding(0);
             this.RevisionInfo.Name = "RevisionInfo";

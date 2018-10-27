@@ -90,6 +90,7 @@
             this.rtbRevisionHeader.Size = new System.Drawing.Size(156, 100);
             this.rtbRevisionHeader.TabIndex = 0;
             this.rtbRevisionHeader.Text = "";
+            this.rtbRevisionHeader.WordWrap = false;
             this.rtbRevisionHeader.ContentsResized += new System.Windows.Forms.ContentsResizedEventHandler(this.rtbRevisionHeader_ContentsResized);
             this.rtbRevisionHeader.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rtbRevisionHeader_LinkClicked);
             this.rtbRevisionHeader.KeyDown += new System.Windows.Forms.KeyEventHandler(this.rtbRevisionHeader_KeyDown);

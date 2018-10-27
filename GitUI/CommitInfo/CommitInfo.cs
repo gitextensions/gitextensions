@@ -481,6 +481,10 @@ namespace GitUI.CommitInfo
             RevisionInfo.SetXHTMLText(body);
             RevisionInfo.SelectionStart = 0; // scroll up
             RevisionInfo.ScrollToCaret();    // scroll up
+
+            var rtbSize = TextRenderer.MeasureText(RevisionInfo.GetPlainText(), RevisionInfo.Font, RevisionInfo.Size, TextFormatFlags.WordBreak);
+            RevisionInfo.Height = rtbSize.Height;
+
             RevisionInfo.ResumeLayout(true);
 
             return;

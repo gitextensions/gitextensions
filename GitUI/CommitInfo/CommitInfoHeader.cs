@@ -48,7 +48,13 @@ namespace GitUI.CommitInfo
 
                 var data = _commitDataManager.CreateFromRevision(revision, children);
                 var header = _commitDataHeaderRenderer.Render(data, showRevisionsAsLinks: CommandClicked != null);
+
+                rtbRevisionHeader.SuspendLayout();
                 rtbRevisionHeader.SetXHTMLText(header);
+                rtbRevisionHeader.SelectionStart = 0; // scroll up
+                rtbRevisionHeader.ScrollToCaret();    // scroll up
+                rtbRevisionHeader.ResumeLayout(true);
+
                 LoadAuthorImage(revision);
             }).FileAndForget();
         }

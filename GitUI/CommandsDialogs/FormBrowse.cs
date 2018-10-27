@@ -1209,6 +1209,11 @@ namespace GitUI.CommandsDialogs
 
             var children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
             RevisionInfo.SetRevisionWithChildren(revision, children);
+            if (RevisionInfo.Parent is Panel parent)
+            {
+                parent.AutoScroll = true;
+                parent.AutoScrollMinSize = RevisionInfo.PreferredSize;
+            }
         }
 
         private async Task FillGpgInfoAsync()
@@ -2999,6 +3004,7 @@ namespace GitUI.CommandsDialogs
                 RevisionsSplitContainer.Panel2Collapsed = false;
             }
 
+            RevisionInfo.Parent.BackColor = RevisionInfo.BackColor;
             RevisionInfo.ResumeLayout(performLayout: true);
             CommitInfoTabControl.ResumeLayout(performLayout: true);
             RevisionsSplitContainer.ResumeLayout(performLayout: true);
