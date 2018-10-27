@@ -279,6 +279,12 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.Designer.cs">
       <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommitInfo\CommitInfoHeader.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CommitInfo\CommitInfoHeader.Designer.cs">
+      <DependentUpon>CommitInfoHeader.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editor\Diff\DiffLineInfo.cs" />
     <Compile Include="Editor\Diff\DiffLinesInfo.cs" />
     <Compile Include="Editor\Diff\DiffLineType.cs" />
@@ -1238,6 +1244,9 @@
     <EmbeddedResource Include="CommandsDialogs\WorktreeDialog\FormManageWorktree.resx">
       <DependentUpon>FormManageWorktree.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CommitInfo\CommitInfoHeader.resx">
+      <DependentUpon>CommitInfoHeader.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HelperDialogs\FormBuildServerCredentials.resx">
       <DependentUpon>FormBuildServerCredentials.cs</DependentUpon>

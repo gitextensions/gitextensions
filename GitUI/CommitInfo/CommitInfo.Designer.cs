@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.tableLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.avatarControl = new GitUI.AvatarControl();
-            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
+            System.Windows.Forms.TableLayoutPanel tableLayout;
+            this.pnlCommitMessage = new System.Windows.Forms.Panel();
+            this.rtbxCommitMessage = new System.Windows.Forms.RichTextBox();
             this.commitInfoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyCommitInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -43,53 +43,66 @@
             this.showTagThisCommitDerivesFromMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.addNoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._RevisionHeader = new System.Windows.Forms.RichTextBox();
-            this.tableLayout.SuspendLayout();
+            this.commitInfoHeader = new GitUI.CommitInfo.CommitInfoHeader();
+            this.RevisionInfo = new System.Windows.Forms.RichTextBox();
+            tableLayout = new System.Windows.Forms.TableLayoutPanel();
+            tableLayout.SuspendLayout();
+            this.pnlCommitMessage.SuspendLayout();
             this.commitInfoContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayout
             // 
-            this.tableLayout.AutoSize = true;
-            this.tableLayout.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.tableLayout.BackColor = System.Drawing.SystemColors.Window;
-            this.tableLayout.ColumnCount = 2;
-            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayout.Controls.Add(this.avatarControl, 0, 0);
-            this.tableLayout.Controls.Add(this.RevisionInfo, 1, 1);
-            this.tableLayout.Controls.Add(this._RevisionHeader, 1, 0);
-            this.tableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-            this.tableLayout.Location = new System.Drawing.Point(0, 0);
-            this.tableLayout.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayout.Name = "tableLayout";
-            this.tableLayout.RowCount = 2;
-            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayout.Size = new System.Drawing.Size(893, 386);
-            this.tableLayout.TabIndex = 3;
+            tableLayout.AutoSize = true;
+            tableLayout.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            tableLayout.BackColor = System.Drawing.SystemColors.Window;
+            tableLayout.ColumnCount = 1;
+            tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            tableLayout.Controls.Add(this.pnlCommitMessage, 0, 1);
+            tableLayout.Controls.Add(this.commitInfoHeader, 0, 0);
+            tableLayout.Controls.Add(this.RevisionInfo, 0, 2);
+            tableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            tableLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            tableLayout.Location = new System.Drawing.Point(8, 8);
+            tableLayout.Margin = new System.Windows.Forms.Padding(0);
+            tableLayout.Name = "tableLayout";
+            tableLayout.Padding = new System.Windows.Forms.Padding(4);
+            tableLayout.RowCount = 3;
+            tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tableLayout.Size = new System.Drawing.Size(435, 282);
+            tableLayout.TabIndex = 0;
             // 
-            // RevisionInfo
+            // pnlCommitMessage
             // 
-            this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
-            this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
-            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RevisionInfo.Location = new System.Drawing.Point(96, 98);
-            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(0);
-            this.RevisionInfo.Name = "RevisionInfo";
-            this.RevisionInfo.ReadOnly = true;
-            this.RevisionInfo.Size = new System.Drawing.Size(797, 288);
-            this.RevisionInfo.TabIndex = 0;
-            this.RevisionInfo.Text = "";
-            this.RevisionInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
-            this.RevisionInfo.MouseDown += new System.Windows.Forms.MouseEventHandler(this._RevisionHeader_MouseDown);
-            this.RevisionInfo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RichTextBox_KeyDown);
+            this.pnlCommitMessage.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.pnlCommitMessage.Controls.Add(this.rtbxCommitMessage);
+            this.pnlCommitMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlCommitMessage.Location = new System.Drawing.Point(4, 112);
+            this.pnlCommitMessage.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlCommitMessage.Name = "pnlCommitMessage";
+            this.pnlCommitMessage.Padding = new System.Windows.Forms.Padding(8);
+            this.pnlCommitMessage.Size = new System.Drawing.Size(427, 36);
+            this.pnlCommitMessage.TabIndex = 0;
+            // 
+            // rtbxCommitMessage
+            // 
+            this.rtbxCommitMessage.AutoSize = true;
+            this.rtbxCommitMessage.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.rtbxCommitMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rtbxCommitMessage.ContextMenuStrip = this.commitInfoContextMenuStrip;
+            this.rtbxCommitMessage.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbxCommitMessage.Location = new System.Drawing.Point(8, 8);
+            this.rtbxCommitMessage.Margin = new System.Windows.Forms.Padding(0);
+            this.rtbxCommitMessage.Name = "rtbxCommitMessage";
+            this.rtbxCommitMessage.Size = new System.Drawing.Size(411, 20);
+            this.rtbxCommitMessage.TabIndex = 1;
+            this.rtbxCommitMessage.Text = "";
             // 
             // commitInfoContextMenuStrip
             // 
+            this.commitInfoContextMenuStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.commitInfoContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyCommitInfoToolStripMenuItem,
             this.toolStripSeparator1,
@@ -170,43 +183,48 @@
             this.addNoteToolStripMenuItem.Text = "Add notes";
             this.addNoteToolStripMenuItem.Click += new System.EventHandler(this.addNoteToolStripMenuItem_Click);
             // 
-            // _RevisionHeader
+            // commitInfoHeader
             // 
-            this._RevisionHeader.BackColor = System.Drawing.SystemColors.ControlLight;
-            this._RevisionHeader.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this._RevisionHeader.ContextMenuStrip = this.commitInfoContextMenuStrip;
-            this._RevisionHeader.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._RevisionHeader.Location = new System.Drawing.Point(96, 0);
-            this._RevisionHeader.Margin = new System.Windows.Forms.Padding(0);
-            this._RevisionHeader.Name = "_RevisionHeader";
-            this._RevisionHeader.ReadOnly = true;
-            this._RevisionHeader.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this._RevisionHeader.Size = new System.Drawing.Size(797, 98);
-            this._RevisionHeader.TabIndex = 0;
-            this._RevisionHeader.Text = "";
-            this._RevisionHeader.ContentsResized += new System.Windows.Forms.ContentsResizedEventHandler(this._RevisionHeader_ContentsResized);
-            this._RevisionHeader.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
-            this._RevisionHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this._RevisionHeader_MouseDown);
-            this._RevisionHeader.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RichTextBox_KeyDown);
+            this.commitInfoHeader.AutoSize = true;
+            this.commitInfoHeader.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.commitInfoHeader.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.commitInfoHeader.Location = new System.Drawing.Point(4, 4);
+            this.commitInfoHeader.Margin = new System.Windows.Forms.Padding(0);
+            this.commitInfoHeader.Name = "commitInfoHeader";
+            this.commitInfoHeader.Padding = new System.Windows.Forms.Padding(0, 0, 0, 8);
+            this.commitInfoHeader.Size = new System.Drawing.Size(427, 108);
+            this.commitInfoHeader.TabIndex = 0;
             // 
-            // avatarControl
+            // RevisionInfo
             // 
-            this.avatarControl.BackColor = System.Drawing.SystemColors.Window;
-            this.avatarControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.avatarControl.Location = new System.Drawing.Point(0, 0);
-            this.avatarControl.Margin = new System.Windows.Forms.Padding(0);
-            this.avatarControl.Name = "avatarControl";
-            this.avatarControl.Size = new System.Drawing.Size(96, 98);
-            this.avatarControl.TabIndex = 1;
+            this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
+            this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
+            this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RevisionInfo.Location = new System.Drawing.Point(4, 148);
+            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(0);
+            this.RevisionInfo.Name = "RevisionInfo";
+            this.RevisionInfo.ReadOnly = true;
+            this.RevisionInfo.Size = new System.Drawing.Size(427, 130);
+            this.RevisionInfo.TabIndex = 2;
+            this.RevisionInfo.Text = "";
+            this.RevisionInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
+            this.RevisionInfo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RichTextBox_KeyDown);
+            this.RevisionInfo.MouseDown += new System.Windows.Forms.MouseEventHandler(this._RevisionHeader_MouseDown);
             // 
             // CommitInfo
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.Controls.Add(this.tableLayout);
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.Controls.Add(tableLayout);
+            this.DoubleBuffered = true;
             this.Name = "CommitInfo";
-            this.Size = new System.Drawing.Size(893, 386);
-            this.tableLayout.ResumeLayout(false);
+            this.Padding = new System.Windows.Forms.Padding(8);
+            this.Size = new System.Drawing.Size(451, 298);
+            tableLayout.ResumeLayout(false);
+            tableLayout.PerformLayout();
+            this.pnlCommitMessage.ResumeLayout(false);
+            this.pnlCommitMessage.PerformLayout();
             this.commitInfoContextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -215,13 +233,10 @@
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayout;
-        private AvatarControl avatarControl;
         private System.Windows.Forms.RichTextBox RevisionInfo;
         private System.Windows.Forms.ContextMenuStrip commitInfoContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showContainedInTagsToolStripMenuItem;
-        private System.Windows.Forms.RichTextBox _RevisionHeader;
         private System.Windows.Forms.ToolStripMenuItem copyCommitInfoToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesRemoteToolStripMenuItem;
@@ -230,5 +245,8 @@
         private System.Windows.Forms.ToolStripMenuItem addNoteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showMessagesOfAnnotatedTagsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showTagThisCommitDerivesFromMenuItem;
+        private CommitInfoHeader commitInfoHeader;
+        private System.Windows.Forms.Panel pnlCommitMessage;
+        private System.Windows.Forms.RichTextBox rtbxCommitMessage;
     }
 }

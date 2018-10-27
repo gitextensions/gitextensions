@@ -759,7 +759,7 @@ namespace GitUI.CommandsDialogs
             this.RevisionInfo.ShowBranchesAsLinks = true;
             this.RevisionInfo.Size = new System.Drawing.Size(646, 264);
             this.RevisionInfo.TabIndex = 0;
-            this.RevisionInfo.CommandClick += new System.EventHandler<GitUI.CommitInfo.CommandEventArgs>(this.RevisionInfo_CommandClick);
+            this.RevisionInfo.CommandClicked += new System.EventHandler<GitUI.CommitInfo.CommandEventArgs>(this.RevisionInfo_CommandClicked);
             // 
             // TreeTabPage
             // 

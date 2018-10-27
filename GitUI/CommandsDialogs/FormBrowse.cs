@@ -2436,7 +2436,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void RevisionInfo_CommandClick(object sender, CommitInfo.CommandEventArgs e)
+        private void RevisionInfo_CommandClicked(object sender, CommitInfo.CommandEventArgs e)
         {
             // TODO this code duplicated in FormFileHistory.Blame_CommandClick
             switch (e.Command)
@@ -2962,9 +2962,6 @@ namespace GitUI.CommandsDialogs
             RevisionsSplitContainer.SuspendLayout();
 
             var commitInfoPosition = AppSettings.CommitInfoPosition;
-
-            RevisionInfo.SetAvatarPosition(right: commitInfoPosition == CommitInfoPosition.RightwardFromList);
-
             if (commitInfoPosition == CommitInfoPosition.BelowList)
             {
                 CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
