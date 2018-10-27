@@ -40,7 +40,7 @@ namespace ResourceManager.CommitDataRenders
                 throw new ArgumentNullException(nameof(commitData));
             }
 
-            var body = "\n" + WebUtility.HtmlEncode((commitData.Body ?? "").Trim());
+            var body = WebUtility.HtmlEncode((commitData.Body ?? "").Trim());
 
             if (showRevisionsAsLinks)
             {
