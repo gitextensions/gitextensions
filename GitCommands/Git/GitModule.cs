@@ -3728,7 +3728,7 @@ namespace GitCommands
             var cmd = Path.Combine(AppSettings.GitBinDir, "ps");
             var lines = new Executable(cmd).GetOutput("x").Split('\n');
 
-            if (lines.Length >= 2)
+            if (lines.Length <= 2)
             {
                 return false;
             }

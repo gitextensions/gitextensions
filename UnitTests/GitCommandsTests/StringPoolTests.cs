@@ -76,10 +76,7 @@ namespace GitCommandsTests
 
                     Assert.True(StringPool.EqualsAtIndex(s, index, s.Substring(index, length)), format, index, length);
 
-                    if (length < s.Length)
-                    {
-                        Assert.False(StringPool.EqualsAtIndex(s, index, s.Substring(index, length) + 'Z'), format, index, length);
-                    }
+                    Assert.False(StringPool.EqualsAtIndex(s, index, s.Substring(index, length) + 'Z'), format, index, length);
 
                     if (index > 0 && length > 0)
                     {
