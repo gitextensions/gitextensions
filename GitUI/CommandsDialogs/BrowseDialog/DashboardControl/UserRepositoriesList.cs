@@ -414,6 +414,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private static string ShortenText(string text, Font font, float maxWidth)
         {
+            var ellipsis = '…';
             var width = TextRenderer.MeasureText(text, font).Width;
             if (width < maxWidth)
             {
@@ -422,7 +423,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
             while (text.Length > 1)
             {
-                width = TextRenderer.MeasureText(text + "...", font).Width;
+                width = TextRenderer.MeasureText(text + ellipsis, font).Width;
                 if (width < maxWidth)
                 {
                     break;
@@ -431,7 +432,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 text = text.Substring(0, text.Length - 1);
             }
 
-            return text + "...";
+            return text + ellipsis;
         }
 
         private bool PromptCategoryName(List<string> categories, string originalName, out string name)
