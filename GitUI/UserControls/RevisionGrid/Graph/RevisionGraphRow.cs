@@ -43,72 +43,74 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             lock (Revision)
             {
                 // Another thread could be waiting for the lock, while the segmentlanes where being build. Check again if segmentslanes is null.
-                if (_segmentLanes == null)
+                if (_segmentLanes != null)
                 {
-                    Dictionary<RevisionGraphSegment, int> newSegmentLanes = new Dictionary<RevisionGraphSegment, int>();
+                    return;
+                }
 
-                    int currentRevisionLane = -1;
-                    int laneIndex = 0;
-                    foreach (var segment in Segments)
+                Dictionary<RevisionGraphSegment, int> newSegmentLanes = new Dictionary<RevisionGraphSegment, int>();
+
+                int currentRevisionLane = -1;
+                int laneIndex = 0;
+                foreach (var segment in Segments)
+                {
+                    if (segment.Child == Revision || segment.Parent == Revision)
                     {
-                        if (segment.Child == Revision || segment.Parent == Revision)
+                        // The current segment connects to the revision of this row. Store the revision lane.
+                        if (currentRevisionLane < 0)
                         {
-                            // The current segment connects to the revision of this row. Store the revision lane.
-                            if (currentRevisionLane < 0)
-                            {
-                                currentRevisionLane = laneIndex;
-                                laneIndex++;
-                            }
-
-                            // All segments that connect to the current revision are in the same lane.
-                            newSegmentLanes.Add(segment, currentRevisionLane);
+                            currentRevisionLane = laneIndex;
+                            laneIndex++;
                         }
-                        else
+
+                        // All segments that connect to the current revision are in the same lane.
+                        newSegmentLanes.Add(segment, currentRevisionLane);
+                    }
+                    else
+                    {
+                        // This is a crossing lane. We could not merge it in the lane with this row's revision.
+
+                        // Try to detect this:
+                        // *
+                        // |
+                        // | *
+                        // | |
+                        // | |  <- this is the row we are processing
+                        // |/
+                        // *    <- same parent, not on current row
+                        //
+                        // And change it into this, by merging the segments in a singe lane:
+                        // *
+                        // |
+                        // | *
+                        // |/
+                        // |    <- merge into a singe lane to simplify graph
+                        // |
+                        // *
+                        bool added = false;
+                        foreach (var searchParent in newSegmentLanes)
                         {
-                            // This is a crossing lane. We could not merge it in the lane with this row's revision.
-
-                            // Try to detect this:
-                            // *
-                            // |
-                            // | *
-                            // | |
-                            // | |  <- this is the row we are processing
-                            // |/
-                            // *    <- same parent, not on current row
-                            //
-                            // And change it into this, by merging the segments in a singe lane:
-                            // *
-                            // |
-                            // | *
-                            // |/
-                            // |    <- merge into a singe lane to simplify graph
-                            // |
-                            // *
-                            bool added = false;
-                            foreach (var searchParent in newSegmentLanes)
+                            // If there is another segment with the same parent, and its not this row's revision, merge into 1 lane.
+                            if (searchParent.Value != currentRevisionLane && searchParent.Key.Parent == segment.Parent)
                             {
-                                // If there is another segment with the same parent, and its not this row's revision, merge into 1 lane.
-                                if (searchParent.Value != currentRevisionLane && searchParent.Key.Parent == segment.Parent)
-                                {
-                                    newSegmentLanes.Add(segment, searchParent.Value);
-                                    added = true;
-                                    break;
-                                }
+                                newSegmentLanes.Add(segment, searchParent.Value);
+                                added = true;
+                                break;
                             }
+                        }
 
-                            // Segment has not been assigned a lane yet
-                            if (!added)
-                            {
-                                newSegmentLanes.Add(segment, laneIndex);
-                                laneIndex++;
-                            }
+                        // Segment has not been assigned a lane yet
+                        if (!added)
+                        {
+                            newSegmentLanes.Add(segment, laneIndex);
+                            laneIndex++;
                         }
                     }
-
-                    _segmentLanes = newSegmentLanes;
-                    _laneCount = laneIndex;
-                    _revisionLane = currentRevisionLane;
                 }
+
+                _segmentLanes = newSegmentLanes;
+                _laneCount = laneIndex;
+                _revisionLane = currentRevisionLane;
             }
         }
 
