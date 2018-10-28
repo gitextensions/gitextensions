@@ -1207,6 +1207,11 @@ namespace GitUI.CommandsDialogs
 
             var revision = selectedRevisions[0];
 
+            if (revision == null)
+            {
+                return;
+            }
+
             var children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
             RevisionInfo.SetRevisionWithChildren(revision, children);
             if (RevisionInfo.Parent is Panel parent)

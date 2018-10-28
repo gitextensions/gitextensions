@@ -840,12 +840,6 @@ namespace GitCommands
             set => SetBool("includeUntrackedFilesInManualStash", value);
         }
 
-        public static bool OrderRevisionByDate
-        {
-            get => GetBool("orderrevisionbydate", false); // Set default value to false. Date order us not needed for most use-cases but the ordering costs a lot of performance.
-            set => SetBool("orderrevisionbydate", value);
-        }
-
         public static bool ShowRemoteBranches
         {
             get => GetBool("showRemoteBranches", true);

@@ -30,14 +30,19 @@ namespace GitCommands
         public GitRevision([NotNull] ObjectId objectId)
         {
             ObjectId = objectId ?? throw new ArgumentNullException(nameof(objectId));
-            Guid = objectId.ToString();
         }
 
         [NotNull]
         public ObjectId ObjectId { get; }
 
         [NotNull]
-        public string Guid { get; }
+        public string Guid
+        {
+            get
+            {
+                return ObjectId.ToString();
+            }
+        }
 
         // TODO this should probably be null when not yet populated, similar to how ParentIds works
         [NotNull, ItemNotNull]

@@ -72,7 +72,7 @@ namespace GitUI
         private readonly Lazy<IndexWatcher> _indexWatcher;
         private readonly BuildServerWatcher _buildServerWatcher;
         private readonly Timer _selectionTimer;
-        private readonly GraphColumnProvider _graphColumnProvider;
+        private readonly RevisionGraphColumnProvider _revisionGraphColumnProvider;
         private readonly List<DataGridViewColumn> _resizableColumns;
         private readonly DataGridViewColumn _maximizedColumn;
         private DataGridViewColumn _lastVisibleResizableColumn = null;
@@ -208,8 +208,8 @@ namespace GitUI
 
             _buildServerWatcher = new BuildServerWatcher(this, _gridView, () => Module);
 
-            _graphColumnProvider = new GraphColumnProvider(this, _gridView._graphModel);
-            _gridView.AddColumn(_graphColumnProvider);
+            _revisionGraphColumnProvider = new RevisionGraphColumnProvider(this, _gridView._revisionGraph);
+            _gridView.AddColumn(_revisionGraphColumnProvider);
             _gridView.AddColumn(new MessageColumnProvider(this));
             _gridView.AddColumn(new AvatarColumnProvider(_gridView, AvatarService.Default));
             _gridView.AddColumn(new AuthorNameColumnProvider(this, _authorHighlighting));
@@ -590,8 +590,8 @@ namespace GitUI
 
         private void HighlightBranch(ObjectId id)
         {
-            _graphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
-            _graphColumnProvider.HighlightBranch(id);
+            _revisionGraphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.HighlightSelected;
+            _revisionGraphColumnProvider.HighlightBranch(id);
             _gridView.Update();
         }
 
@@ -635,6 +635,7 @@ namespace GitUI
 
             return rows
                 .Select(row => GetRevision(row.Index))
+                .Where(revision => revision != null)
                 .ToList();
         }
 
@@ -730,7 +731,7 @@ namespace GitUI
 
             try
             {
-                _graphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
+                _revisionGraphColumnProvider.RevisionGraphDrawStyle = RevisionGraphDrawStyleEnum.DrawNonRelativesGray;
 
                 // Apply filter from revision filter dialog
                 _branchFilter = _revisionFilter.GetBranchFilter();
@@ -1129,7 +1130,7 @@ namespace GitUI
                     return exactIndex;
                 }
 
-                if (!objectId.IsArtificial)
+                if (objectId != null && !objectId.IsArtificial)
                 {
                     // Not found, so search for its parents
                     foreach (var parentId in TryGetParents(objectId))
@@ -1151,7 +1152,6 @@ namespace GitUI
         {
             var args = new GitArgumentBuilder("rev-list")
             {
-                { AppSettings.OrderRevisionByDate, "--date-order" },
                 { AppSettings.MaxRevisionGraphCommits > 0, $"--max-count={AppSettings.MaxRevisionGraphCommits}" },
                 objectId
             };
@@ -1359,7 +1359,7 @@ namespace GitUI
         public void ViewSelectedRevisions()
         {
             var selectedRevisions = GetSelectedRevisions();
-            if (selectedRevisions.Any(rev => !rev.IsArtificial))
+            if (selectedRevisions.Any(rev => rev != null && !rev.IsArtificial))
             {
                 Form ProvideForm()
                 {
@@ -1811,12 +1811,6 @@ namespace GitUI
         {
             AppSettings.ShowAuthorDate = !AppSettings.ShowAuthorDate;
             Refresh();
-        }
-
-        internal void ToggleOrderRevisionByDate()
-        {
-            AppSettings.OrderRevisionByDate = !AppSettings.OrderRevisionByDate;
-            ForceRefreshRevisions();
         }
 
         internal void ToggleShowRemoteBranches()
@@ -2617,7 +2611,6 @@ namespace GitUI
                 case Commands.ToggleRevisionGraph: ToggleRevisionGraphColumn(); break;
                 case Commands.RevisionFilter: ShowRevisionFilterDialog(); break;
                 case Commands.ToggleAuthorDateCommitDate: ToggleShowAuthorDate(); break;
-                case Commands.ToggleOrderRevisionsByDate: ToggleOrderRevisionByDate(); break;
                 case Commands.ToggleShowRelativeDate: ToggleShowRelativeDate(null); break;
                 case Commands.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;
                 case Commands.ToggleShowGitNotes: ToggleShowGitNotes(); break;
