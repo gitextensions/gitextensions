@@ -2154,7 +2154,7 @@ namespace GitCommands
                             key = m.Groups[1].Value;
                             value = m.Groups[2].Value;
                         }
-                        else
+                        else if (!string.IsNullOrEmpty(line))
                         {
                             value = AppendQuotedString(value, line.Trim());
                         }
