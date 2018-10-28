@@ -1214,6 +1214,11 @@ namespace GitUI.CommandsDialogs
 
             var children = RevisionGrid.GetRevisionChildren(revision.ObjectId);
             RevisionInfo.SetRevisionWithChildren(revision, children);
+            if (RevisionInfo.Parent is Panel parent)
+            {
+                parent.AutoScroll = true;
+                parent.AutoScrollMinSize = RevisionInfo.PreferredSize;
+            }
         }
 
         private async Task FillGpgInfoAsync()
@@ -2441,7 +2446,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void RevisionInfo_CommandClick(object sender, CommitInfo.CommandEventArgs e)
+        private void RevisionInfo_CommandClicked(object sender, CommitInfo.CommandEventArgs e)
         {
             // TODO this code duplicated in FormFileHistory.Blame_CommandClick
             switch (e.Command)
@@ -2967,9 +2972,6 @@ namespace GitUI.CommandsDialogs
             RevisionsSplitContainer.SuspendLayout();
 
             var commitInfoPosition = AppSettings.CommitInfoPosition;
-
-            RevisionInfo.SetAvatarPosition(right: commitInfoPosition == CommitInfoPosition.RightwardFromList);
-
             if (commitInfoPosition == CommitInfoPosition.BelowList)
             {
                 CommitInfoTabControl.InsertIfNotExists(0, CommitInfoTabPage);
@@ -3007,6 +3009,7 @@ namespace GitUI.CommandsDialogs
                 RevisionsSplitContainer.Panel2Collapsed = false;
             }
 
+            RevisionInfo.Parent.BackColor = RevisionInfo.BackColor;
             RevisionInfo.ResumeLayout(performLayout: true);
             CommitInfoTabControl.ResumeLayout(performLayout: true);
             RevisionsSplitContainer.ResumeLayout(performLayout: true);
