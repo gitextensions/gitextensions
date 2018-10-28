@@ -393,7 +393,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             var width = AppSettings.RecentReposComboMinWidth;
             if (width < 1)
             {
-                width = longestPath.Width;
+                width = longestPath.Width + imageList1.ImageSize.Width;
             }
 
             var height = longestPath.Height + (2 * branchTextSize.Height) +
@@ -414,9 +414,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private static string ShortenText(string text, Font font, float maxWidth)
         {
+            var ellipsis = '…';
+            var width = TextRenderer.MeasureText(text, font).Width;
+            if (width < maxWidth)
+            {
+               return text;
+            }
+
             while (text.Length > 1)
             {
-                var width = TextRenderer.MeasureText(text, font).Width;
+                width = TextRenderer.MeasureText(text + ellipsis, font).Width;
                 if (width < maxWidth)
                 {
                     break;
@@ -425,7 +432,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 text = text.Substring(0, text.Length - 1);
             }
 
-            return text;
+            return text + ellipsis;
         }
 
         private bool PromptCategoryName(List<string> categories, string originalName, out string name)
@@ -502,7 +509,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             var spacing6 = DpiUtil.Scale(6f);
 
             var textOffset = spacing2 + imageList1.ImageSize.Width + spacing2;
-            int textWidth = AppSettings.RecentReposComboMinWidth > 0 ? AppSettings.RecentReposComboMinWidth : e.Bounds.Width;
+            int textWidth = e.Bounds.Width - (int)textOffset;
 
             if (e.Item == HoveredItem)
             {
