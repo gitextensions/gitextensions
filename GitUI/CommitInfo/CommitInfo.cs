@@ -254,6 +254,12 @@ namespace GitUI.CommitInfo
                     await TaskScheduler.Default;
                     var linksInfo = GetLinksForRevision();
 
+                    // Most commits do not have link; do not switch to main thread if nothing is changed
+                    if (_linksInfo == linksInfo)
+                    {
+                        return;
+                    }
+
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     _linksInfo = linksInfo;
                     UpdateRevisionInfo();
