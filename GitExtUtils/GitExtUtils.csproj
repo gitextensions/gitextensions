@@ -49,6 +49,7 @@
     <Compile Include="ArgumentBuilder.cs" />
     <Compile Include="ArgumentString.cs" />
     <Compile Include="ArrayExtensions.cs" />
+    <Compile Include="BinarySearch.cs" />
     <Compile Include="GitArgumentBuilder.cs" />
     <Compile Include="GitUI\CancellationTokenSequence.cs" />
     <Compile Include="GitUI\ComboBoxExtensions.cs" />

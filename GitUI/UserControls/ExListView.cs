@@ -76,6 +76,8 @@ namespace GitUI.UserControls
         /// </summary>
         public event EventHandler<ListViewGroupMouseEventArgs> GroupMouseUp;
 
+        public event ScrollEventHandler Scroll;
+
         static ExListView()
         {
             ListViewGroupIdProperty = typeof(ListViewGroup).GetProperty("ID",
@@ -199,6 +201,9 @@ namespace GitUI.UserControls
                                                    IntPtr wParam,
                                                    ref LVGROUP lParam);
 
+            [DllImport("user32.dll", CharSet = CharSet.Auto)]
+            public static extern int GetScrollPos(IntPtr hWnd, int nBar);
+
             #region Windows constants
 
             public const int WM_LBUTTONDOWN = 0x0201;
@@ -207,6 +212,12 @@ namespace GitUI.UserControls
             public const int WM_RBUTTONUP = 0x0205;
             public const int WM_PAINT = 0x0F;
             public const int WM_REFLECT_NOTIFY = 0x204E;
+
+            public const int WM_VSCROLL = 0x115;
+            public const int WM_MOUSEWHEEL = 0x020A;
+            public const int WM_KEYDOWN = 0x0100;
+            public const int SB_VERT = 1;
+
             public const int LVM_FIRST = 0x1000;
             public const int LVM_HITTEST = LVM_FIRST + 18;
             public const int LVM_SETGROUPINFO = LVM_FIRST + 147;
@@ -372,6 +383,59 @@ namespace GitUI.UserControls
                 default:
                     base.WndProc(ref m);
                     break;
+            }
+
+            HandleScroll(m);
+
+            void HandleScroll(Message msg)
+            {
+                ScrollEventType type;
+                int? newValue = null;
+
+                switch (msg.Msg)
+                {
+                    case NativeMethods.WM_VSCROLL:
+                        type = (ScrollEventType)(msg.WParam.ToInt32() & 0xffff);
+                        newValue = msg.WParam.ToInt32() & 0x0000ffff;
+                        break;
+
+                    case NativeMethods.WM_MOUSEWHEEL:
+                        type = ScrollEventType.EndScroll;
+                        break;
+
+                    case NativeMethods.WM_KEYDOWN:
+                        switch ((Keys)msg.WParam.ToInt32())
+                        {
+                            case Keys.Up:
+                                type = ScrollEventType.SmallDecrement;
+                                break;
+                            case Keys.Down:
+                                type = ScrollEventType.SmallIncrement;
+                                break;
+                            case Keys.PageUp:
+                                type = ScrollEventType.LargeDecrement;
+                                break;
+                            case Keys.PageDown:
+                                type = ScrollEventType.LargeIncrement;
+                                break;
+                            case Keys.Home:
+                                type = ScrollEventType.First;
+                                break;
+                            case Keys.End:
+                                type = ScrollEventType.Last;
+                                break;
+                            default:
+                                return;
+                        }
+
+                        break;
+
+                    default:
+                        return;
+                }
+
+                newValue = newValue ?? NativeMethods.GetScrollPos(Handle, NativeMethods.SB_VERT);
+                Scroll?.Invoke(this, new ScrollEventArgs(type, newValue.Value));
             }
 
             void HandleAddedGroup(Message msg)
