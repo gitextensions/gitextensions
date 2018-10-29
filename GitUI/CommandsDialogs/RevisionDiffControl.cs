@@ -442,7 +442,6 @@ namespace GitUI.CommandsDialogs
             diffCommitSubmoduleChanges.Visible =
                 diffResetSubmoduleChanges.Visible =
                 diffStashSubmoduleChangesToolStripMenuItem.Visible =
-                diffUpdateSubmoduleMenuItem.Visible =
                 diffSubmoduleSummaryMenuItem.Visible =
                 diffUpdateSubmoduleMenuItem.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
 
@@ -728,7 +727,7 @@ namespace GitUI.CommandsDialogs
                 }
 
                 var selectedItems = DiffFiles.SelectedItems;
-                if (DiffFiles.Revision?.ObjectId == ObjectId.IndexId)
+                if (DiffFiles.Revision.ObjectId == ObjectId.IndexId)
                 {
                     var files = new List<GitItemStatus>();
                     var stagedItems = selectedItems.Where(item => item.Staged == StagedStatus.Index);

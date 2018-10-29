@@ -349,7 +349,7 @@ Inactive remote is completely invisible to git.");
                 tabControl1.Enabled = false;
 
                 if ((string.IsNullOrEmpty(remotePushUrl) && checkBoxSepPushUrl.Checked) ||
-                    remotePushUrl.Equals(remoteUrl, StringComparison.OrdinalIgnoreCase))
+                    (!string.IsNullOrEmpty(remotePushUrl) && remotePushUrl.Equals(remoteUrl, StringComparison.OrdinalIgnoreCase)))
                 {
                     checkBoxSepPushUrl.Checked = false;
                 }

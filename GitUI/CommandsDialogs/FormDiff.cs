@@ -116,11 +116,10 @@ namespace GitUI.CommandsDialogs
             var baseCommit = ckCompareToMergeBase.Checked ? _mergeBase : _baseRevision;
 
             var items = new List<GitRevision> { _headRevision, baseCommit };
-
-            // TODO this can never be true
-            if (items.Count == 1)
+            if (baseCommit == null)
             {
-                items.Add(DiffFiles.SelectedItemParent);
+                // This should not happen
+                items = new List<GitRevision> { _headRevision, DiffFiles.SelectedItemParent };
             }
 
             DiffText.ViewChangesAsync(items, DiffFiles.SelectedItem, string.Empty);

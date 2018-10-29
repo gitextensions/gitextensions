@@ -373,7 +373,7 @@ namespace GitUI.CommandsDialogs
             {
                 StashMessage.ReadOnly = true;
             }
-            else if (button.Enabled && button.Checked)
+            else if (button.Checked)
             {
                 StashMessage.ReadOnly = false;
             }

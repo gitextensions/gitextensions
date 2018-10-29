@@ -10,8 +10,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     /// </summary>
     public partial class ControlHotkeys : GitExtensionsControl
     {
-        private readonly TranslationString _hotkeyNotSet = new TranslationString("None");
-
         #region Settings
         private HotkeySettings[] _settings;
         private HotkeySettings[] Settings
@@ -96,7 +94,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                     if (cmd != null)
                     {
                         listMappings.Items.Add(
-                            new ListViewItem(new[] { cmd.Name, cmd.KeyData.ToText() ?? _hotkeyNotSet.Text })
+                            new ListViewItem(new[] { cmd.Name, cmd.KeyData.ToText() })
                             {
                                 Tag = cmd
                             });

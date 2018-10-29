@@ -83,7 +83,7 @@ namespace GitUI.Hotkey
 
         public static string ToShortcutKeyDisplayString(this Keys key)
         {
-            return key.ToText() ?? "";
+            return key.ToText();
         }
 
         [CanBeNull]

@@ -47,7 +47,7 @@ namespace GitUI.CommandsDialogs
                 {
                     _mergedBranches.Add(branch.Trim());
                 }
-                else if (!branch.StartsWith("* ") || (branch.StartsWith("* ") && !DetachedHeadParser.IsDetachedHead(branch.Substring(2))))
+                else if (!branch.StartsWith("* ") || !DetachedHeadParser.IsDetachedHead(branch.Substring(2)))
                 {
                     _currentBranch = branch.Trim('*', ' ');
                 }

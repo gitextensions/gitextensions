@@ -232,10 +232,7 @@ namespace GitUI
                 {
                     _indexWatcher.Value.Dispose();
                 }
-            }
 
-            if (disposing)
-            {
                 components?.Dispose();
             }
 

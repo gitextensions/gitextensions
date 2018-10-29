@@ -2154,7 +2154,7 @@ namespace GitCommands
                             key = m.Groups[1].Value;
                             value = m.Groups[2].Value;
                         }
-                        else
+                        else if (!string.IsNullOrEmpty(line))
                         {
                             value = AppendQuotedString(value, line.Trim());
                         }
@@ -2389,10 +2389,10 @@ namespace GitCommands
             };
 
             var cache = cacheResult &&
-                        !secondRevision.IsArtificial() &&
-                        !firstRevision.IsArtificial() &&
                         !secondRevision.IsNullOrEmpty() &&
-                        !firstRevision.IsNullOrEmpty()
+                        !firstRevision.IsNullOrEmpty() &&
+                        !secondRevision.IsArtificial() &&
+                        !firstRevision.IsArtificial()
                 ? GitCommandCache
                 : null;
 
@@ -3728,7 +3728,7 @@ namespace GitCommands
             var cmd = Path.Combine(AppSettings.GitBinDir, "ps");
             var lines = new Executable(cmd).GetOutput("x").Split('\n');
 
-            if (lines.Length >= 2)
+            if (lines.Length <= 2)
             {
                 return false;
             }

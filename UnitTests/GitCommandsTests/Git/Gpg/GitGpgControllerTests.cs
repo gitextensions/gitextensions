@@ -173,7 +173,6 @@ namespace GitCommandsTests.Git.Gpg
                     {
                         // Two tag that's also IsDereference == true
                         var gitRef1 = new GitRef(_module(), objectId, "refs/tags/FirstTag^{}");
-                        revision.Refs = new[] { gitRef1 };
 
                         var args = new GitArgumentBuilder("verify-tag") { gitRef1.LocalName };
                         _module().RunGitCmd(args).Returns(gitRef1.LocalName);

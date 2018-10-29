@@ -217,7 +217,7 @@ namespace GitUI.CommandsDialogs
         /// </summary>
         private void SaveChangesTurningOffSparseSpecialCase()
         {
-            if (IsSparseCheckoutEnabled || (IsSparseCheckoutEnabled == _isSparseCheckoutEnabledAsSaved))
+            if (IsSparseCheckoutEnabled || !_isSparseCheckoutEnabledAsSaved)
             {
                 return; // Not turning off
             }

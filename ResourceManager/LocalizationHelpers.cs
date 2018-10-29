@@ -253,7 +253,7 @@ namespace ResourceManager
                     }
                 }
 
-                string diffs = gitModule.GetDiffFilesText(status.OldCommit?.ToString(), status.Commit?.ToString());
+                string diffs = gitModule.GetDiffFilesText(status.OldCommit.ToString(), status.Commit.ToString());
                 if (!string.IsNullOrEmpty(diffs))
                 {
                     sb.AppendLine("\nDifferences:");

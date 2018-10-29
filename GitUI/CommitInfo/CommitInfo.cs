@@ -178,7 +178,7 @@ namespace GitUI.CommitInfo
 
             var data = _commitDataManager.CreateFromRevision(_revision, _children);
 
-            if (_revision.Body == null)
+            if (_revision != null && _revision.Body == null)
             {
                 _commitDataManager.UpdateBody(data, out _);
                 _revision.Body = data.Body;

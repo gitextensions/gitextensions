@@ -485,12 +485,10 @@ namespace GitUI.UserControls.RevisionGrid
 
             void UpdateGraph(int fromIndex, in int toIndex)
             {
-                var rowIndex = fromIndex;
-
                 // Cache the next item
                 _revisionGraph.CacheTo(toIndex, Math.Min(fromIndex + 1500, toIndex));
 
-                rowIndex = _revisionGraph.GetCachedCount();
+                var rowIndex = _revisionGraph.GetCachedCount();
 
                 this.InvokeAsync(UpdateRowCount, toIndex).FileAndForget();
                 return;

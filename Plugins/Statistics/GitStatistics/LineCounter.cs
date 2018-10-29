@@ -34,14 +34,12 @@ namespace GitStatistics
 
                 AddFile(file);
 
-                if (Updated != null && DateTime.Now - lastUpdate > timer)
+                if (DateTime.Now - lastUpdate > timer)
                 {
                     lastUpdate = DateTime.Now;
-                    Updated(this, EventArgs.Empty);
+                    Updated?.Invoke(this, EventArgs.Empty);
                 }
             }
-
-            Updated?.Invoke(this, EventArgs.Empty);
 
             return;
 
