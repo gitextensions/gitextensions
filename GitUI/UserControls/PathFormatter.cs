@@ -28,40 +28,46 @@ namespace GitUI
             _font = font ?? throw new ArgumentNullException(nameof(font));
         }
 
-        public string FormatTextForDrawing(int width, string name, string oldName)
+        public (string Text, int Width) FormatTextForDrawing(int maxWidth, string name, string oldName)
         {
-            var truncatePathMethod = AppSettings.TruncatePathMethod;
-
-            if (truncatePathMethod == TruncatePathMethod.FileNameOnly)
-            {
-                return FormatTextForFileNameOnly(name, oldName);
-            }
-
-            if ((truncatePathMethod != TruncatePathMethod.Compact || !EnvUtils.RunningOnWindows()) &&
-                truncatePathMethod != TruncatePathMethod.TrimStart)
-            {
-                return FormatString(name, oldName, 0, false);
-            }
-
-            int step = 0;
-            bool isNameBeingTruncated = true;
-            int maxStep = oldName == null ? name.Length : Math.Max(name.Length, oldName.Length) * 2;
             string result = string.Empty;
+            int width = 0;
 
-            while (step <= maxStep)
+            switch (AppSettings.TruncatePathMethod)
             {
-                result = FormatString(name, oldName, step, isNameBeingTruncated);
+                case TruncatePathMethod.FileNameOnly:
+                    result = FormatTextForFileNameOnly(name, oldName);
+                    width = MeasureString(result, withPadding: true).Width;
+                    return (result, width);
 
-                if (MeasureString(result, withPadding: true).Width <= width)
-                {
-                    break;
-                }
+                case TruncatePathMethod.None:
+                case TruncatePathMethod.Compact when !EnvUtils.RunningOnWindows():
+                    result = FormatString(name, oldName, step: 0, isNameTruncated: false);
+                    width = MeasureString(result, withPadding: true).Width;
+                    return (result, width);
 
-                step++;
-                isNameBeingTruncated = !isNameBeingTruncated;
+                default:
+                    int maxStep = oldName == null
+                        ? name.Length
+                        : Math.Max(name.Length, oldName.Length) * 2;
+
+                    BinarySearch.Find(min: 0, count: maxStep + 1, step =>
+                    {
+                        var formatted = FormatString(name, oldName, step, isNameTruncated: step % 2 == 0);
+                        int measuredWidth = MeasureString(formatted, withPadding: true).Width;
+                        bool isShortEnough = measuredWidth <= maxWidth;
+
+                        if (isShortEnough)
+                        {
+                            result = formatted;
+                            width = measuredWidth;
+                        }
+
+                        return isShortEnough;
+                    });
+
+                    return (result, width);
             }
-
-            return result;
         }
 
         [CanBeNull]

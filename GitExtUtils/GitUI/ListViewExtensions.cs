@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -21,6 +22,16 @@ namespace GitUI
 
         public static T Tag<T>(this ListViewGroup grp) =>
             (T)grp.Tag;
+
+        public static Image Image(this ListViewItem item)
+        {
+            if (item.ImageList == null || item.ImageIndex == -1)
+            {
+                return null;
+            }
+
+            return item.ImageList.Images[item.ImageIndex];
+        }
 
         public static IEnumerable<T> ItemTags<T>(this ListView listView) =>
             listView.Items().Select(Tag<T>);
