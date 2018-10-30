@@ -53,6 +53,7 @@
             // avatarControl
             // 
             this.avatarControl.AutoSize = true;
+            this.avatarControl.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.avatarControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.avatarControl.Location = new System.Drawing.Point(0, 0);
             this.avatarControl.Margin = new System.Windows.Forms.Padding(0);
@@ -71,6 +72,7 @@
             tableLayoutPanel1.Controls.Add(this.rtbRevisionHeader, 1, 0);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -81,9 +83,7 @@
             // 
             this.rtbRevisionHeader.BackColor = System.Drawing.SystemColors.Window;
             this.rtbRevisionHeader.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rtbRevisionHeader.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rtbRevisionHeader.Location = new System.Drawing.Point(104, 0);
-            this.rtbRevisionHeader.Margin = new System.Windows.Forms.Padding(0);
             this.rtbRevisionHeader.Name = "rtbRevisionHeader";
             this.rtbRevisionHeader.ReadOnly = true;
             this.rtbRevisionHeader.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
@@ -91,7 +91,6 @@
             this.rtbRevisionHeader.TabIndex = 0;
             this.rtbRevisionHeader.Text = "";
             this.rtbRevisionHeader.WordWrap = false;
-            this.rtbRevisionHeader.ContentsResized += new System.Windows.Forms.ContentsResizedEventHandler(this.rtbRevisionHeader_ContentsResized);
             this.rtbRevisionHeader.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.rtbRevisionHeader_LinkClicked);
             this.rtbRevisionHeader.KeyDown += new System.Windows.Forms.KeyEventHandler(this.rtbRevisionHeader_KeyDown);
             this.rtbRevisionHeader.MouseDown += new System.Windows.Forms.MouseEventHandler(this.rtbRevisionHeader_MouseDown);

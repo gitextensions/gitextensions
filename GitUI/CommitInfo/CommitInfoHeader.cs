@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitExtUtils.GitUI;
 using GitUI.Editor.RichTextBoxExtension;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
@@ -18,6 +19,7 @@ namespace GitUI.CommitInfo
         private readonly ILinkFactory _linkFactory = new LinkFactory();
         private readonly ICommitDataManager _commitDataManager;
         private readonly ICommitDataHeaderRenderer _commitDataHeaderRenderer;
+        private readonly IDisposable _rtbResizedSubscription;
 
         public event EventHandler<CommandEventArgs> CommandClicked;
 
@@ -38,21 +40,31 @@ namespace GitUI.CommitInfo
             }
 
             rtbRevisionHeader.SelectionTabs = _commitDataHeaderRenderer.GetTabStops().ToArray();
+
+            _rtbResizedSubscription = Observable
+                .FromEventPattern<ContentsResizedEventHandler, ContentsResizedEventArgs>(
+                    h => rtbRevisionHeader.ContentsResized += h,
+                    h => rtbRevisionHeader.ContentsResized -= h)
+                .Throttle(TimeSpan.FromMilliseconds(100))
+                .ObserveOn(MainThreadScheduler.Instance)
+                .Subscribe(_ => rtbRevisionHeader_ContentsResized(_.EventArgs));
         }
 
         public void ShowCommitInfo(GitRevision revision, IReadOnlyList<ObjectId> children)
         {
             this.InvokeAsync(() =>
             {
-                rtbRevisionHeader.Clear();
-
                 var data = _commitDataManager.CreateFromRevision(revision, children);
                 var header = _commitDataHeaderRenderer.Render(data, showRevisionsAsLinks: CommandClicked != null);
 
                 rtbRevisionHeader.SuspendLayout();
+
+                rtbRevisionHeader.Clear();
                 rtbRevisionHeader.SetXHTMLText(header);
+
                 rtbRevisionHeader.SelectionStart = 0; // scroll up
                 rtbRevisionHeader.ScrollToCaret();    // scroll up
+
                 rtbRevisionHeader.ResumeLayout(true);
 
                 LoadAuthorImage(revision);
@@ -83,9 +95,9 @@ namespace GitUI.CommitInfo
             avatarControl.LoadImage(revision.AuthorEmail ?? revision.CommitterEmail);
         }
 
-        private void rtbRevisionHeader_ContentsResized(object sender, ContentsResizedEventArgs e)
+        private void rtbRevisionHeader_ContentsResized(ContentsResizedEventArgs e)
         {
-            rtbRevisionHeader.Height = Math.Max(e.NewRectangle.Height, DpiUtil.Scale(AppSettings.AuthorImageSizeInCommitInfo));
+            rtbRevisionHeader.ClientSize = e.NewRectangle.Size;
         }
 
         private void rtbRevisionHeader_KeyDown(object sender, KeyEventArgs e)
@@ -144,6 +156,12 @@ namespace GitUI.CommitInfo
             {
                 CommandClicked?.Invoke(this, new CommandEventArgs(command, null));
             }
+        }
+
+        protected override void DisposeCustomResources()
+        {
+            _rtbResizedSubscription.Dispose();
+            base.DisposeCustomResources();
         }
     }
 }
