@@ -1876,6 +1876,7 @@ namespace GitUI.CommandsDialogs
 #endif
 
                 HideDashboard();
+                RevisionInfo.SetRevisionWithChildren(null, Array.Empty<ObjectId>());
                 UICommands.RepoChangedNotifier.Notify();
                 RevisionGrid.IndexWatcher.Reset();
                 RegisterPlugins();
