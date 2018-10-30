@@ -1010,6 +1010,13 @@ namespace GitUI
                 return;
             }
 
+            if (!FileStatusListView.Created)
+            {
+                // The parent form gets closed, it destroys children controls.
+                // While processing WmDestroy ExListView.OnClientSize change fires
+                return;
+            }
+
             UpdateColumnWidth();
         }
 
