@@ -58,11 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="GitInfo">
-      <Version>2.0.18</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft-WindowsAPICodePack-Core">
       <Version>1.1.3.3</Version>
     </PackageReference>
