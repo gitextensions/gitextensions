@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using GitCommands;
 using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Properties;
@@ -13,13 +12,14 @@ namespace GitUI.CommandsDialogs
     public sealed partial class FormAbout : GitExtensionsForm
     {
         private readonly TranslationString _thanksToContributors = new TranslationString("Thanks to over {0:#,##0} contributors: ");
+        private readonly TranslationString _copyTooltip = new TranslationString("Copy environment info");
 
         public FormAbout()
         {
             InitializeComponent();
             InitializeComplete();
 
-            _NO_TRANSLATE_labelVersionInfo.Text += AppSettings.ProductVersion;
+            environmentInfo.SetCopyButtonTooltip(_copyTooltip.Text);
 
             // Click handlers
             _NO_TRANSLATE_labelProductName.LinkClicked += (s, e) => { Process.Start(@"http://github.com/gitextensions/gitextensions"); };

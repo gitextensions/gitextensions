@@ -133,7 +133,11 @@
       <Component Id="System.ValueTuple.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ValueTuple.dll" />
       </Component>
-      <!--Remove unused dll, installed in versions <= 2.31-->
+      <Component Id="System.Runtime.InteropServices.RuntimeInformation.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.InteropServices.RuntimeInformation.dll" />
+      </Component>
+
+        <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
         <RemoveFile Name="GithubSharp.Core.dll" Id="GithubSharp.Core.dll" On="both" />
       </Component>
@@ -601,6 +605,7 @@
       <ComponentRef Id="RestSharp.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Threading.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Validation.dll" />
+      <ComponentRef Id="System.Runtime.InteropServices.RuntimeInformation.dll" />
       <!--Remove unused dll, installed in versions <= 2.31-->
       <ComponentRef Id="GithubSharp.Core.dll" />
       <!--Remove unused dll, installed in versions <= 2.31-->

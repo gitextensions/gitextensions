@@ -17,6 +17,9 @@ Please also read CONTRIBUTING.md.
 
 **Environment you encounter the issue:**
 
+<!--
+Help->About Copy button or Help->Report an issue link will put this info in the clipboard.
+-->
 - GitExtensions version:
 - GIT version: 
 - OS version: 
