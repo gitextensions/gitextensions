@@ -240,6 +240,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private static void IssuesItem_Click(object sender, EventArgs e)
         {
+            UserEnvironmentInformation.CopyInformation();
             Process.Start(@"http://github.com/gitextensions/gitextensions/issues");
         }
 
