@@ -64,25 +64,19 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private class TagTree : Tree
+        private sealed class TagTree : Tree
         {
             public TagTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
             {
-                uiCommands.UICommandsChanged += OnUICommandsChanged;
             }
 
-            private void OnUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
+            public override void RefreshTree()
             {
-                if (TreeViewNode?.TreeView == null)
-                {
-                    return;
-                }
-
-                TreeViewNode.TreeView.SelectedNode = null;
+                ReloadNodes(LoadNodesAsync);
             }
 
-            protected override async Task LoadNodesAsync(CancellationToken token)
+            private async Task LoadNodesAsync(CancellationToken token)
             {
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
@@ -105,12 +99,9 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            protected override void FillTreeViewNode()
+            protected override void PostFillTreeViewNode()
             {
-                base.FillTreeViewNode();
-
                 TreeViewNode.Text = $@"{Strings.Tags} ({Nodes.Count})";
-
                 TreeViewNode.Collapse();
             }
         }

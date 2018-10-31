@@ -836,8 +836,6 @@ namespace GitUI.CommandsDialogs
 
                 if (validBrowseDir)
                 {
-                    ReloadRepoObjectsTree();
-
                     _windowsJumpListManager.AddToRecent(Module.WorkingDir);
 
                     // add Navigate and View menu
@@ -935,16 +933,6 @@ namespace GitUI.CommandsDialogs
 
                 RevisionGrid.IndexWatcher.Reset();
             }
-        }
-
-        private void ReloadRepoObjectsTree()
-        {
-            if (MainSplitContainer.Panel1Collapsed)
-            {
-                return;
-            }
-
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => repoObjectsTree.ReloadAsync()).FileAndForget();
         }
 
         private void OnActivate()
@@ -1332,6 +1320,7 @@ namespace GitUI.CommandsDialogs
         {
             RefreshRevisions();
             RefreshStatus();
+            repoObjectsTree.RefreshTree();
         }
 
         private void RefreshDashboardToolStripMenuItemClick(object sender, EventArgs e)
@@ -2973,7 +2962,6 @@ namespace GitUI.CommandsDialogs
         private void toggleBranchTreePanel_Click(object sender, EventArgs e)
         {
             MainSplitContainer.Panel1Collapsed = !MainSplitContainer.Panel1Collapsed;
-            ReloadRepoObjectsTree();
             RefreshLayoutToggleButtonStates();
         }
 
