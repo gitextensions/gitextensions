@@ -103,7 +103,6 @@ namespace GitUI.CommitInfo
             // 
             // commitInfoContextMenuStrip
             // 
-            this.commitInfoContextMenuStrip.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.commitInfoContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyCommitInfoToolStripMenuItem,
             this.toolStripSeparator1,
