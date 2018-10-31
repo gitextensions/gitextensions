@@ -780,7 +780,7 @@ namespace GitUI
                     _refFilterOptions |= RefFilterOptions.FirstParent;
                 }
 
-                if (AppSettings.ShowSimplifyByDecoration)
+                if (AppSettings.ShowSimplifyByDecoration && AppSettings.BranchFilterEnabled)
                 {
                     _refFilterOptions |= RefFilterOptions.SimplifyByDecoration;
                 }
