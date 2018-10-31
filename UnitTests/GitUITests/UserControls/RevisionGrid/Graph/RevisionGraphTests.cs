@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using FluentAssertions;
 using GitCommands;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
-using ResourceManager;
 
 namespace GitUITests.UserControls.RevisionGrid
 {
@@ -85,7 +81,7 @@ namespace GitUITests.UserControls.RevisionGrid
         public void ShouldReorderInTopoOrder()
         {
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
-            Assert.IsTrue(_revisionGraph.ValidateTopoOrder());
+            Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
 
             GitRevision commit1 = new GitRevision(ObjectId.Random());
 
@@ -96,12 +92,12 @@ namespace GitUITests.UserControls.RevisionGrid
             _revisionGraph.Add(commit2, RevisionNodeFlags.None); // This commit is now dangling
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
-            Assert.IsTrue(_revisionGraph.ValidateTopoOrder());
+            Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
 
             _revisionGraph.Add(commit1, RevisionNodeFlags.None); // Add the connecting commit
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
-            Assert.IsTrue(_revisionGraph.ValidateTopoOrder());
+            Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
 
             // Add a new head
             GitRevision newHead = new GitRevision(ObjectId.Random());
@@ -109,7 +105,7 @@ namespace GitUITests.UserControls.RevisionGrid
             _revisionGraph.Add(newHead, RevisionNodeFlags.None); // Add commit that has the current top node as parent.
 
             _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count); // Call to cache fix the order
-            Assert.IsTrue(_revisionGraph.ValidateTopoOrder());
+            Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
         }
 
         private static IEnumerable<GitRevision> Revisions

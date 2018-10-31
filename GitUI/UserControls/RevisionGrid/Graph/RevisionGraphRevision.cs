@@ -20,7 +20,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             Parents = new ConcurrentBag<RevisionGraphRevision>();
             Children = new ConcurrentBag<RevisionGraphRevision>();
             StartSegments = new SynchronizedCollection<RevisionGraphSegment>();
-            EndSegments = new ConcurrentBag<RevisionGraphSegment>();
 
             Score = guessScore;
 
@@ -38,9 +37,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public bool HasRef { get; set; }
         public bool IsCheckedOut { get; set; }
 
-        // The score is used to order the revisions in topo-order. The initial score will be assigned when the revision is loaded
-        // from the commit log (the result of git.exe). The score will be adjusted if required when this revision is added as a parent
-        // to a revision with a higher score.
+        /// <summary>
+        /// The score is used to order the revisions in topo-order. The initial score will be assigned when a revision is loaded
+        /// from the commit log (the result of git.exe). The score will be adjusted, if required, when this revision is added as a parent
+        /// to a revision with a higher score.
+        /// </summary>
         public int Score { get; private set; }
 
         public int LaneColor { get; set; }
@@ -69,10 +70,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public ObjectId Objectid { get; set; }
 
-        public ConcurrentBag<RevisionGraphRevision> Parents { get; private set; }
-        public ConcurrentBag<RevisionGraphRevision> Children { get; private set; }
-        public SynchronizedCollection<RevisionGraphSegment> StartSegments { get; private set; }
-        public ConcurrentBag<RevisionGraphSegment> EndSegments { get; private set; }
+        public ConcurrentBag<RevisionGraphRevision> Parents { get; }
+        public ConcurrentBag<RevisionGraphRevision> Children { get; }
+        public SynchronizedCollection<RevisionGraphSegment> StartSegments { get; }
 
         // Mark this commit, and all its parents, as relative. Used for branch highlighting.
         // By default, the current checkout will be marked relative.
@@ -117,7 +117,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             maxScore = parent.EnsureScoreIsAbove(Score);
 
             RevisionGraphSegment revisionGraphSegment = new RevisionGraphSegment(parent, this);
-            parent.EndSegments.Add(revisionGraphSegment);
             StartSegments.Add(revisionGraphSegment);
 
             return revisionGraphSegment;

@@ -278,7 +278,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                             Brush brush;
 
-                            if (revisionGraphRevision.Parent.EndSegments.Count > 1)
+                            if (revisionGraphRevision.Parent.Children.Count > 1)
                             {
                                 brush = GetBrushForRevision(revisionGraphRevision.Child, revisionGraphRevision.Child.IsRelative);
                             }
