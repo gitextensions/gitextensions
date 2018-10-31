@@ -441,6 +441,22 @@ namespace GitUI.Script
                 return false;
             }
 
+            if (command.StartsWith(NavigateToPrefix))
+            {
+                command = command.Replace(NavigateToPrefix, string.Empty);
+                if (!command.IsNullOrEmpty())
+                {
+                    var revisionRef = new Executable(command, module.WorkingDir).GetOutputLines(argument).FirstOrDefault();
+
+                    if (revisionRef != null)
+                    {
+                        revisionGrid.GoToRef(revisionRef, true);
+                    }
+                }
+
+                return false;
+            }
+
             if (!scriptInfo.RunInBackground)
             {
                 FormProcess.ShowStandardProcessDialog(owner, command, argument, module.WorkingDir, null, true);
@@ -576,6 +592,7 @@ namespace GitUI.Script
         };
 
         private const string PluginPrefix = "plugin:";
+        private const string NavigateToPrefix = "navigateTo:";
 
         private static string OverrideCommandWhenNecessary(string originalCommand)
         {
