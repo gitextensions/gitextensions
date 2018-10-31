@@ -31,6 +31,7 @@ namespace GitUI
                 gitVer = "";
             }
 
+            // Build and open FormAbout design to make sure info still looks good if you change this code.
             StringBuilder sb = new StringBuilder();
 
             sb.Append($"- Git Extensions {AppSettings.ProductVersion}{Environment.NewLine}");

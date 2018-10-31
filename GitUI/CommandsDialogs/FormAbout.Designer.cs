@@ -79,7 +79,7 @@
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            tableLayoutPanel1.Size = new System.Drawing.Size(374, 288);
+            tableLayoutPanel1.Size = new System.Drawing.Size(444, 318);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // _NO_TRANSLATE_labelProductDescription
@@ -90,7 +90,7 @@
             this._NO_TRANSLATE_labelProductDescription.Location = new System.Drawing.Point(12, 43);
             this._NO_TRANSLATE_labelProductDescription.Margin = new System.Windows.Forms.Padding(0);
             this._NO_TRANSLATE_labelProductDescription.Name = "_NO_TRANSLATE_labelProductDescription";
-            this._NO_TRANSLATE_labelProductDescription.Size = new System.Drawing.Size(350, 13);
+            this._NO_TRANSLATE_labelProductDescription.Size = new System.Drawing.Size(420, 13);
             this._NO_TRANSLATE_labelProductDescription.TabIndex = 1;
             this._NO_TRANSLATE_labelProductDescription.Text = "Visual Studio and Shell Explorer Extensions for Git";
             this._NO_TRANSLATE_labelProductDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -104,7 +104,7 @@
             this._NO_TRANSLATE_labelProductName.Location = new System.Drawing.Point(12, 24);
             this._NO_TRANSLATE_labelProductName.Margin = new System.Windows.Forms.Padding(0);
             this._NO_TRANSLATE_labelProductName.Name = "_NO_TRANSLATE_labelProductName";
-            this._NO_TRANSLATE_labelProductName.Size = new System.Drawing.Size(350, 19);
+            this._NO_TRANSLATE_labelProductName.Size = new System.Drawing.Size(420, 19);
             this._NO_TRANSLATE_labelProductName.TabIndex = 0;
             this._NO_TRANSLATE_labelProductName.TabStop = true;
             this._NO_TRANSLATE_labelProductName.Text = "Git Extensions";
@@ -131,7 +131,7 @@
             this._NO_TRANSLATE_labelCopyright.Location = new System.Drawing.Point(12, 64);
             this._NO_TRANSLATE_labelCopyright.Margin = new System.Windows.Forms.Padding(0);
             this._NO_TRANSLATE_labelCopyright.Name = "_NO_TRANSLATE_labelCopyright";
-            this._NO_TRANSLATE_labelCopyright.Size = new System.Drawing.Size(350, 15);
+            this._NO_TRANSLATE_labelCopyright.Size = new System.Drawing.Size(420, 15);
             this._NO_TRANSLATE_labelCopyright.TabIndex = 2;
             this._NO_TRANSLATE_labelCopyright.Text = "Proudly presented by Henk Westhuis and Team";
             this._NO_TRANSLATE_labelCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -145,7 +145,7 @@
             this.thanksTo.Location = new System.Drawing.Point(12, 79);
             this.thanksTo.Margin = new System.Windows.Forms.Padding(0);
             this.thanksTo.Name = "thanksTo";
-            this.thanksTo.Size = new System.Drawing.Size(350, 13);
+            this.thanksTo.Size = new System.Drawing.Size(420, 13);
             this.thanksTo.TabIndex = 3;
             this.thanksTo.TabStop = true;
             this.thanksTo.Text = "Thanks to over {0} contributors: {1}";
@@ -159,7 +159,7 @@
             this.label1.Location = new System.Drawing.Point(12, 220);
             this.label1.Margin = new System.Windows.Forms.Padding(0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(350, 56);
+            this.label1.Size = new System.Drawing.Size(420, 86);
             this.label1.TabIndex = 6;
             this.label1.Text = "This program is distributed in the hope that it will be useful, but WITHOUT ANY W" +
     "ARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A P" +
@@ -173,7 +173,7 @@
             this.environmentInfo.Location = new System.Drawing.Point(15, 108);
             this.environmentInfo.Name = "environmentInfo";
             this.environmentInfo.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
-            this.environmentInfo.Size = new System.Drawing.Size(344, 101);
+            this.environmentInfo.Size = new System.Drawing.Size(414, 101);
             this.environmentInfo.TabIndex = 5;
             this.environmentInfo.ToolTip = this.toolTip;
             // 
@@ -226,7 +226,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(157, 288);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(157, 318);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
             // panel1
@@ -236,14 +236,14 @@
             this.panel1.Location = new System.Drawing.Point(157, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(12);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(374, 288);
+            this.panel1.Size = new System.Drawing.Size(444, 318);
             this.panel1.TabIndex = 1;
             // 
             // FormAbout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(531, 288);
+            this.ClientSize = new System.Drawing.Size(601, 318);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.flowLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
