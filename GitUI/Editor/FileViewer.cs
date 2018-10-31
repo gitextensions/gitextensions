@@ -27,7 +27,7 @@ namespace GitUI.Editor
         /// <summary>
         /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
         /// </summary>
-        public event Action EscapePressed;
+        public event EventHandler<EventArgs> EscapePressed;
 
         private readonly TranslationString _largeFileSizeWarning = new TranslationString("This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
 
@@ -75,7 +75,7 @@ namespace GitUI.Editor
             internalFileViewer.MouseLeave += (_, e) => OnMouseLeave(e);
             internalFileViewer.MouseMove += (_, e) => OnMouseMove(e);
             internalFileViewer.KeyUp += (_, e) => OnKeyUp(e);
-            internalFileViewer.EscapePressed += () => EscapePressed?.Invoke();
+            internalFileViewer.EscapePressed += (_, e) => EscapePressed?.Invoke(this, e);
 
             _async = new AsyncLoader();
             _async.LoadingError +=

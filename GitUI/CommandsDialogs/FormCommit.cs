@@ -264,7 +264,7 @@ namespace GitUI.CommandsDialogs
             splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
             splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
 
-            SelectedDiff.EscapePressed += () => DialogResult = DialogResult.Cancel;
+            SelectedDiff.EscapePressed += delegate { DialogResult = DialogResult.Cancel; };
 
             InitializeComplete();
 
