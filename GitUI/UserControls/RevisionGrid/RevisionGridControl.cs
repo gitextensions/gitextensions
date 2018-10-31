@@ -1241,6 +1241,13 @@ namespace GitUI
             {
                 return;
             }
+			
+			// Check modifier detail if pressed.
+			
+			if (e.Modifiers == Keys.None)
+            {
+				return;
+			}
 
             switch (e.KeyCode)
             {
@@ -1255,11 +1262,8 @@ namespace GitUI
 
                 case Keys.Delete:
                     {
-                        // Check modifier detail if pressed.
-
-                        if (e.Modifiers == Keys.None)
-                        {
-                            InitiateRefAction(
+                        
+                        InitiateRefAction(
                             new GitRefListsForRevision(selectedRevision).GetDeletableRefs(Module.GetSelectedBranch()),
                             gitRef =>
                             {
@@ -1277,7 +1281,6 @@ namespace GitUI
                                 }
                             },
                             FormQuickGitRefSelector.Action.Delete);
-                        }
 
                         break;
                     }
