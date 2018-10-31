@@ -35,41 +35,55 @@ namespace GitUI
             }
         }
 
-        private IntPtr _previousHWnd = IntPtr.Zero;
-        private bool _gEControl;
-
         public bool PreFilterMessage(ref Message m)
         {
             const int WM_MOUSEWHEEL = 0x20a;
             const int WM_MOUSEHWHEEL = 0x20e;
-            if (m.Msg == WM_MOUSEWHEEL || m.Msg == WM_MOUSEHWHEEL)
+            if (m.Msg != WM_MOUSEWHEEL && m.Msg != WM_MOUSEHWHEEL)
             {
-                // WM_MOUSEWHEEL, find the control at screen position m.LParam
-                var pos = new Point(m.LParam.ToInt32());
-                IntPtr hwnd = NativeMethods.WindowFromPoint(pos);
-                if (hwnd != IntPtr.Zero && hwnd != m.HWnd && Control.FromHandle(hwnd) != null)
+                return false;
+            }
+
+            // WM_MOUSEWHEEL, find the control at screen position m.LParam
+            var pos = new Point(m.LParam.ToInt32());
+            IntPtr hwnd = NativeMethods.WindowFromPoint(pos);
+            if (hwnd == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            Control control = Control.FromHandle(hwnd);
+            if (control == null)
+            {
+                return false;
+            }
+
+            if (hwnd == m.HWnd && !isNonScrollableRichTextBox(control))
+            {
+                return false;
+            }
+
+            while (control != null && !(control is GitExtensionsControl))
+            {
+                bool nonScrollableRtbx = isNonScrollableRichTextBox(control);
+
+                control = control.Parent;
+                if (nonScrollableRtbx)
                 {
-                    if (_previousHWnd != hwnd)
-                    {
-                        Control control = Control.FromHandle(hwnd);
-                        while (control != null && !(control is GitExtensionsControl))
-                        {
-                            control = control.Parent;
-                        }
-
-                        _previousHWnd = hwnd;
-                        _gEControl = control != null;
-                    }
-
-                    if (_gEControl)
-                    {
-                        NativeMethods.SendMessage(hwnd, m.Msg, m.WParam, m.LParam);
-                        return true;
-                    }
+                    hwnd = control.Handle;
                 }
             }
 
-            return false;
+            if (control == null)
+            {
+                return false;
+            }
+
+            NativeMethods.SendMessage(hwnd, m.Msg, m.WParam, m.LParam);
+            return true;
+
+            bool isNonScrollableRichTextBox(Control c) =>
+                c is RichTextBox rtb && rtb.ScrollBars == RichTextBoxScrollBars.None;
         }
 
         private static class NativeMethods

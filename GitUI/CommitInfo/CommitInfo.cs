@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,6 +16,7 @@ using GitCommands.Remotes;
 using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -73,6 +75,8 @@ namespace GitUI.CommitInfo
         private string _branchInfo;
         private string _gitDescribeInfo;
         [CanBeNull] private IList<string> _sortedRefs;
+        private readonly IDisposable _revisionInfoResizedSubscription;
+        private readonly IDisposable _commitMessageResizedSubscription;
 
         [DefaultValue(false)]
         public bool ShowBranchesAsLinks { get; set; }
@@ -101,6 +105,18 @@ namespace GitUI.CommitInfo
 
             Hotkeys = HotkeySettingsManager.LoadHotkeys(FormBrowse.HotkeySettingsName);
             addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)FormBrowse.Command.AddNotes).ToShortcutKeyDisplayString();
+
+            _commitMessageResizedSubscription = subscribeToContentsResized(rtbxCommitMessage);
+            _revisionInfoResizedSubscription = subscribeToContentsResized(RevisionInfo);
+
+            IDisposable subscribeToContentsResized(RichTextBox richTextBox) =>
+                Observable
+                    .FromEventPattern<ContentsResizedEventHandler, ContentsResizedEventArgs>(
+                        h => richTextBox.ContentsResized += h,
+                        h => richTextBox.ContentsResized -= h)
+                    .Throttle(TimeSpan.FromMilliseconds(100))
+                    .ObserveOn(MainThreadScheduler.Instance)
+                    .Subscribe(_ => RichTextBox_ContentsResized(_.Sender, _.EventArgs));
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -185,18 +201,10 @@ namespace GitUI.CommitInfo
             }
 
             var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent != null);
-            pnlCommitMessage.SuspendLayout();
-            rtbxCommitMessage.SuspendLayout();
+
             rtbxCommitMessage.SetXHTMLText(commitMessage);
             rtbxCommitMessage.SelectionStart = 0; // scroll up
             rtbxCommitMessage.ScrollToCaret();    // scroll up
-
-            var rtbSize = TextRenderer.MeasureText(rtbxCommitMessage.Text, rtbxCommitMessage.Font, rtbxCommitMessage.Size, TextFormatFlags.WordBreak);
-            pnlCommitMessage.Height = rtbSize.Height + pnlCommitMessage.Padding.Top + pnlCommitMessage.Padding.Bottom;
-            rtbxCommitMessage.Height = rtbSize.Height;
-
-            rtbxCommitMessage.ResumeLayout(true);
-            pnlCommitMessage.ResumeLayout(true);
 
             if (_revision == null || _revision.IsArtificial)
             {
@@ -488,9 +496,6 @@ namespace GitUI.CommitInfo
             RevisionInfo.SelectionStart = 0; // scroll up
             RevisionInfo.ScrollToCaret();    // scroll up
 
-            var rtbSize = TextRenderer.MeasureText(RevisionInfo.GetPlainText(), RevisionInfo.Font, RevisionInfo.Size, TextFormatFlags.WordBreak);
-            RevisionInfo.Height = rtbSize.Height;
-
             RevisionInfo.ResumeLayout(true);
 
             return;
@@ -655,6 +660,11 @@ namespace GitUI.CommitInfo
             }
         }
 
+        private void RichTextBox_ContentsResized(object sender, ContentsResizedEventArgs e)
+        {
+            ((RichTextBox)sender).ClientSize = e.NewRectangle.Size;
+        }
+
         private void RichTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             var rtb = sender as RichTextBox;
@@ -666,6 +676,13 @@ namespace GitUI.CommitInfo
             // Override RichTextBox Ctrl-c handling to copy plain text
             Clipboard.SetText(rtb.GetSelectionPlainText());
             e.Handled = true;
+        }
+
+        protected override void DisposeCustomResources()
+        {
+            _revisionInfoResizedSubscription.Dispose();
+            _commitMessageResizedSubscription.Dispose();
+            base.DisposeCustomResources();
         }
 
         private sealed class ItemTpComparer : IComparer<string>
