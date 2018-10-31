@@ -58,6 +58,7 @@ namespace GitUI.UserControls.RevisionGrid
             _monospaceFont = AppSettings.MonospaceFont;
 
             InitializeComponent();
+            DoubleBuffered = true;
 
             UpdateRowHeight();
 
