@@ -87,6 +87,13 @@
   <ItemGroup>
     <EmbeddedResource Include="AutoCompleteRegexes.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="GitInfo">
+      <Version>2.0.18</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AddPluginBinaries" AfterTargets="ResolveProjectReferences">
     <ItemGroup>

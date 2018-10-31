@@ -28,6 +28,7 @@ namespace GitUITests
         [Apartment(ApartmentState.STA)]
         public void CreateInstanceOfClass()
         {
+            UserEnvironmentInformation.Initialise("", false);
             var translatableTypes = TranslationUtil.GetTranslatableTypes();
 
             var problems = new List<(string typeName, Exception exception)>();

@@ -8,13 +8,19 @@ namespace GitUI
 {
     public sealed class UserEnvironmentInformation
     {
-        public static void CopyInformation()
-        {
-            Clipboard.SetText(GetInformation());
-        }
+        private static bool _alreadySet;
+        private static bool _dirty;
+        private static string _sha;
+
+        public static void CopyInformation() => Clipboard.SetText(GetInformation());
 
         public static string GetInformation()
         {
+            if (!_alreadySet)
+            {
+                throw new InvalidOperationException($"{nameof(Initialise)} must be called first");
+            }
+
             string gitVer;
             try
             {
@@ -27,12 +33,24 @@ namespace GitUI
 
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("- Git Extensions {0}{1}", AppSettings.ProductVersion, Environment.NewLine);
-            sb.AppendFormat("- {0} {1}{2}", ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty ? " (Dirty)" : "", Environment.NewLine);
-            sb.AppendFormat("- Git {0}{1}", gitVer, Environment.NewLine);
-            sb.AppendFormat("- {0}{1}", Environment.OSVersion, Environment.NewLine);
-            sb.AppendFormat("- {0}", RuntimeInformation.FrameworkDescription);
+            sb.Append($"- Git Extensions {AppSettings.ProductVersion}{Environment.NewLine}");
+            sb.Append($"- {_sha} {(_dirty ? " (Dirty)" : "")}{Environment.NewLine}");
+            sb.Append($"- Git {gitVer}{Environment.NewLine}");
+            sb.Append($"- {Environment.OSVersion}{Environment.NewLine}");
+            sb.Append($"- {RuntimeInformation.FrameworkDescription}");
             return sb.ToString();
+        }
+
+        public static void Initialise(string sha, bool isDirty)
+        {
+            if (_alreadySet)
+            {
+                return;
+            }
+
+            _alreadySet = true;
+            _sha = sha;
+            _dirty = isDirty;
         }
     }
 }
