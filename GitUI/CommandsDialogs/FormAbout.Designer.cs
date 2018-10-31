@@ -194,24 +194,25 @@
             // 
             // pictureDonate
             // 
-            this.pictureDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureDonate.BackgroundImage = global::GitUI.Properties.Images.DonateBadge;
+            this.pictureDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pictureDonate.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureDonate.Image = global::GitUI.Properties.Images.DonateBadge;
-            this.pictureDonate.Location = new System.Drawing.Point(12, 164);
-            this.pictureDonate.Margin = new System.Windows.Forms.Padding(12, 12, 12, 4);
+            this.pictureDonate.Location = new System.Drawing.Point(6, 164);
+            this.pictureDonate.Margin = new System.Windows.Forms.Padding(6, 12, 6, 4);
             this.pictureDonate.Name = "pictureDonate";
-            this.pictureDonate.Size = new System.Drawing.Size(128, 32);
+            this.pictureDonate.Size = new System.Drawing.Size(145, 32);
             this.pictureDonate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureDonate.TabIndex = 25;
             this.pictureDonate.TabStop = false;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 204);
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.Location = new System.Drawing.Point(12, 156);
             this.label2.Margin = new System.Windows.Forms.Padding(12, 4, 12, 4);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(121, 30);
+            this.label2.Size = new System.Drawing.Size(133, 30);
             this.label2.TabIndex = 0;
             this.label2.Text = "Git Extensions is open source. Get involved!";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -219,8 +220,8 @@
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.logoPictureBox);
-            this.flowLayoutPanel1.Controls.Add(this.pictureDonate);
             this.flowLayoutPanel1.Controls.Add(this.label2);
+            this.flowLayoutPanel1.Controls.Add(this.pictureDonate);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);

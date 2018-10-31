@@ -30,72 +30,79 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDonate));
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.pbxDonate = new System.Windows.Forms.PictureBox();
+            this.lblText = new System.Windows.Forms.Label();
+            this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
+            ((System.ComponentModel.ISupportInitialize)(this.pbxDonate)).BeginInit();
+            this.tableLayoutPanel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // pictureBox1
+            // pbxDonate
             // 
-            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBox1.Image = global::GitUI.Properties.Images.DonateBadge;
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(12);
-            this.pictureBox1.MinimumSize = new System.Drawing.Size(90, 35);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(91, 35);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.PictureBox1Click);
+            this.pbxDonate.BackgroundImage = global::GitUI.Properties.Images.DonateBadge;
+            this.pbxDonate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pbxDonate.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pbxDonate.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbxDonate.Location = new System.Drawing.Point(12, 142);
+            this.pbxDonate.Margin = new System.Windows.Forms.Padding(12);
+            this.pbxDonate.MinimumSize = new System.Drawing.Size(90, 35);
+            this.pbxDonate.Name = "pbxDonate";
+            this.pbxDonate.Size = new System.Drawing.Size(452, 56);
+            this.pbxDonate.TabIndex = 0;
+            this.pbxDonate.TabStop = false;
+            this.pbxDonate.Click += new System.EventHandler(this.PictureBox1Click);
             // 
-            // richTextBox1
+            // lblText
             // 
-            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(118, 3);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.ReadOnly = true;
-            this.richTextBox1.Size = new System.Drawing.Size(327, 264);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
+            this.lblText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblText.Location = new System.Drawing.Point(10, 10);
+            this.lblText.Margin = new System.Windows.Forms.Padding(10);
+            this.lblText.Name = "lblText";
+            this.lblText.Size = new System.Drawing.Size(456, 110);
+            this.lblText.TabIndex = 0;
             // 
-            // tableLayoutPanel1
+            // tableLayoutPanel
             // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.richTextBox1, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.pictureBox1, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(448, 270);
-            this.tableLayoutPanel1.TabIndex = 2;
+            this.tableLayoutPanel.AutoSize = true;
+            this.tableLayoutPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel.ColumnCount = 1;
+            this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel.Controls.Add(this.lblText, 0, 0);
+            this.tableLayoutPanel.Controls.Add(this.pbxDonate, 0, 1);
+            this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel.Location = new System.Drawing.Point(16, 16);
+            this.tableLayoutPanel.Name = "tableLayoutPanel";
+            this.tableLayoutPanel.RowCount = 3;
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel.Size = new System.Drawing.Size(476, 234);
+            this.tableLayoutPanel.TabIndex = 2;
             // 
             // FormDonate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(448, 270);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ClientSize = new System.Drawing.Size(508, 266);
+            this.Controls.Add(this.tableLayoutPanel);
             this.Name = "FormDonate";
+            this.Padding = new System.Windows.Forms.Padding(16);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Donate";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbxDonate)).EndInit();
+            this.tableLayoutPanel.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private PictureBox pictureBox1;
-        private RichTextBox richTextBox1;
-        private TableLayoutPanel tableLayoutPanel1;
+        private PictureBox pbxDonate;
+        private Label lblText;
+        private TableLayoutPanel tableLayoutPanel;
 
     }
 }
