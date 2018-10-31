@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitExtUtils.GitUI;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI
@@ -14,10 +15,9 @@ namespace GitUI
     /// <remarks>Includes support for font, hotkey, icon, translation, and position restore.</remarks>
     public class GitExtensionsForm : GitExtensionsFormBase
     {
-        private static WindowPositionList _windowPositionList;
+        private readonly WindowPositionManager _windowPositionManager = new WindowPositionManager();
 
         private bool _needsPositionRestore;
-        private bool _needsPositionSave;
         private bool _windowCentred;
 
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
@@ -31,7 +31,7 @@ namespace GitUI
         /// will be restored upon being re-opened.</param>
         protected GitExtensionsForm(bool enablePositionRestore)
         {
-            _needsPositionSave = enablePositionRestore;
+            var needsPositionSave = enablePositionRestore;
             _needsPositionRestore = enablePositionRestore;
 
             FormClosing += GitExtensionsForm_FormClosing;
@@ -42,7 +42,13 @@ namespace GitUI
 
             void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
             {
-                SavePosition(GetType().Name);
+                if (!needsPositionSave)
+                {
+                    return;
+                }
+
+                needsPositionSave = false;
+                _windowPositionManager.SavePosition(this, GetType().Name);
                 TaskbarProgress.Clear();
             }
         }
@@ -71,8 +77,6 @@ namespace GitUI
         {
         }
 
-        #region Save & restore position
-
         /// <summary>
         ///   Restores the position of a form from the user settings. Does
         ///   nothing if there is no entry for the form in the settings, or the
@@ -92,8 +96,7 @@ namespace GitUI
 
             _windowCentred = StartPosition == FormStartPosition.CenterParent;
 
-            var position = LookupWindowPosition(GetType().Name);
-
+            var position = _windowPositionManager.LookupWindowPosition(GetType().Name);
             if (position == null)
             {
                 return;
@@ -125,7 +128,7 @@ namespace GitUI
             {
                 var location = DpiUtil.Scale(position.Rect.Location, originalDpi: position.DeviceDpi);
 
-                if (FindWindowScreen(location) is Rectangle rect)
+                if (_windowPositionManager.FindWindowScreen(location, Screen.AllScreens.Select(screen => screen.WorkingArea)) is Rectangle rect)
                 {
                     location.Y = rect.Y;
                 }
@@ -146,53 +149,62 @@ namespace GitUI
             }
 
             ResumeLayout();
+        }
+    }
 
-            return;
+    internal sealed class WindowPositionManager
+    {
+        private static WindowPositionList _windowPositionList;
 
-            Rectangle? FindWindowScreen(Point location)
+        /// <summary>
+        ///   Restores the position of a form from the user settings. Does
+        ///   nothing if there is no entry for the form in the settings, or the
+        ///   setting would be invisible on the current display configuration.
+        /// </summary>
+        [Pure]
+        public Rectangle? FindWindowScreen(Point location, IEnumerable<Rectangle> desktopWorkingArea)
+        {
+            var distance = new SortedDictionary<float, Rectangle>();
+
+            foreach (var rect in desktopWorkingArea)
             {
-                var distance = new SortedDictionary<float, Rectangle>();
-
-                foreach (var rect in Screen.AllScreens.Select(screen => screen.WorkingArea))
+                if (rect.Contains(location) && !distance.ContainsKey(0.0f))
                 {
-                    if (rect.Contains(location) && !distance.ContainsKey(0.0f))
-                    {
-                        return null; // title in screen
-                    }
-
-                    int midPointX = rect.X + (rect.Width / 2);
-                    int midPointY = rect.Y + (rect.Height / 2);
-                    var d = (float)Math.Sqrt(((location.X - midPointX) * (location.X - midPointX)) +
-                                               ((location.Y - midPointY) * (location.Y - midPointY)));
-                    distance.Add(d, rect);
+                    return null; // title in screen
                 }
 
-                return distance.FirstOrDefault().Value;
+                int midPointX = rect.X + (rect.Width / 2);
+                int midPointY = rect.Y + (rect.Height / 2);
+                var d = (float)Math.Sqrt(((location.X - midPointX) * (location.X - midPointX)) +
+                                           ((location.Y - midPointY) * (location.Y - midPointY)));
+                distance.Add(d, rect);
             }
 
-            WindowPosition LookupWindowPosition(string name)
+            return distance.FirstOrDefault().Value;
+        }
+
+        public WindowPosition LookupWindowPosition(string name)
+        {
+            try
             {
-                try
+                if (_windowPositionList == null)
                 {
-                    if (_windowPositionList == null)
-                    {
-                        _windowPositionList = WindowPositionList.Load();
-                    }
-
-                    var pos = _windowPositionList?.Get(name);
-
-                    if (pos != null && !pos.Rect.IsEmpty)
-                    {
-                        return pos;
-                    }
-                }
-                catch
-                {
-                    // TODO: how to restore a corrupted config?
+                    _windowPositionList = WindowPositionList.Load();
                 }
 
-                return null;
+                var pos = _windowPositionList?.Get(name);
+
+                if (pos != null && !pos.Rect.IsEmpty)
+                {
+                    return pos;
+                }
             }
+            catch
+            {
+                // TODO: how to restore a corrupted config?
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -201,29 +213,21 @@ namespace GitUI
         /// </summary>
         /// <param name = "name">The name to use when writing the position to the
         ///   settings</param>
-        private void SavePosition(string name)
+        public void SavePosition(Form form, string name)
         {
-            if (!_needsPositionSave)
-            {
-                return;
-            }
-
-            _needsPositionSave = false;
-
             try
             {
-                var rectangle = WindowState == FormWindowState.Normal
-                    ? DesktopBounds
-                    : RestoreBounds;
+                var rectangle = form.WindowState == FormWindowState.Normal
+                    ? form.DesktopBounds
+                    : form.RestoreBounds;
 
-                var formWindowState = WindowState == FormWindowState.Maximized
+                var formWindowState = form.WindowState == FormWindowState.Maximized
                     ? FormWindowState.Maximized
                     : FormWindowState.Normal;
 
                 if (_windowPositionList == null)
                 {
                     _windowPositionList = WindowPositionList.Load();
-
                     if (_windowPositionList == null)
                     {
                         return;
@@ -231,9 +235,10 @@ namespace GitUI
                 }
 
                 WindowPosition windowPosition = _windowPositionList.Get(name);
+                var windowCentred = form.StartPosition == FormStartPosition.CenterParent;
 
                 // Don't save location when we center modal form
-                if (windowPosition != null && Owner != null && _windowCentred)
+                if (windowPosition != null && form.Owner != null && windowCentred)
                 {
                     if (rectangle.Width <= windowPosition.Rect.Width && rectangle.Height <= windowPosition.Rect.Height)
                     {
@@ -250,7 +255,5 @@ namespace GitUI
                 // TODO: how to restore a corrupted config?
             }
         }
-
-        #endregion
     }
 }
