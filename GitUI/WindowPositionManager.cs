@@ -16,7 +16,7 @@ namespace GitUI
         /// Determines which screen a given point belongs to.
         /// </summary>
         [Pure]
-        public Rectangle? FindWindowScreen(Point location, IEnumerable<Rectangle> desktopWorkingArea)
+        public static Rectangle? FindWindowScreen(Point location, IEnumerable<Rectangle> desktopWorkingArea)
         {
             var distance = new SortedDictionary<float, Rectangle>();
 
@@ -31,7 +31,13 @@ namespace GitUI
                 int midPointY = rect.Y + (rect.Height / 2);
                 var d = (float)Math.Sqrt(((location.X - midPointX) * (location.X - midPointX)) +
                                          ((location.Y - midPointY) * (location.Y - midPointY)));
-                distance.Add(d, rect);
+
+                // In a very unlikely scenario where a user has several monitors, which are arranged in a particular way
+                // and a form's window happens to be in exact middle between monitors, if we don't check - it will crash
+                if (!distance.ContainsKey(d))
+                {
+                    distance.Add(d, rect);
+                }
             }
 
             return distance.FirstOrDefault().Value;

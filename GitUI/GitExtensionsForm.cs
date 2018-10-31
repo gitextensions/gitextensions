@@ -126,7 +126,7 @@ namespace GitUI
             {
                 var location = DpiUtil.Scale(position.Rect.Location, originalDpi: position.DeviceDpi);
 
-                if (_windowPositionManager.FindWindowScreen(location, Screen.AllScreens.Select(screen => screen.WorkingArea)) is Rectangle rect)
+                if (WindowPositionManager.FindWindowScreen(location, Screen.AllScreens.Select(screen => screen.WorkingArea)) is Rectangle rect)
                 {
                     location.Y = rect.Y;
                 }
