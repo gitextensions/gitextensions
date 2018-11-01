@@ -475,7 +475,6 @@ namespace GitUI.CommandsDialogs
             this.toolStripButtonPull.ButtonClick += new System.EventHandler(this.ToolStripButtonPullClick);
             this.toolStripButtonPull.DropDownOpened += new System.EventHandler(this.toolStripButtonPull_DropDownOpened);
             // 
-            // 
             // toolStripSeparator11
             // 
             toolStripSeparator11.Name = "toolStripSeparator11";
@@ -750,8 +749,6 @@ namespace GitUI.CommandsDialogs
             // 
             // RevisionInfo
             // 
-            this.RevisionInfo.AutoSize = true;
-            this.RevisionInfo.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
             this.RevisionInfo.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.RevisionInfo.Dock = System.Windows.Forms.DockStyle.Fill;

@@ -1005,7 +1005,7 @@ namespace GitUI
 
         private void FileStatusListView_ClientSizeChanged(object sender, EventArgs e)
         {
-            if (!FileStatusListView.IsHandleCreated)
+            if (!FileStatusListView.IsHandleCreated || !FileStatusListView.Created || DesignMode)
             {
                 return;
             }

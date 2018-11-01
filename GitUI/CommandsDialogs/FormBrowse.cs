@@ -3001,7 +3001,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                int width = DpiUtil.Scale(420);
+                int width = DpiUtil.Scale(480) + SystemInformation.VerticalScrollBarWidth;
                 CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
 
                 if (commitInfoPosition == CommitInfoPosition.RightwardFromList)
