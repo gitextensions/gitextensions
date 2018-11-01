@@ -216,7 +216,7 @@ namespace GitUI.Editor
                     }
                     else
                     {
-                        encodingToolStripComboBox.SelectedIndex = -1;
+                        encodingToolStripComboBox.SelectedIndex = 0;
                     }
                 }).FileAndForget();
             }
