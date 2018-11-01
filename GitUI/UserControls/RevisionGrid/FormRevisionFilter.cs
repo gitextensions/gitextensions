@@ -119,7 +119,7 @@ namespace GitUI.UserControls.RevisionGrid
         {
             if (FileFilterCheck.Checked)
             {
-                return FileFilter.Text.ToPosixPath().Quote();
+                return FileFilter.Text.ToPosixPath();
             }
 
             return "";
