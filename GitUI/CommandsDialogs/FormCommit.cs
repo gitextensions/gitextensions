@@ -398,8 +398,6 @@ namespace GitUI.CommandsDialogs
                 Initialize();
             }
 
-            AcceptButton = Commit;
-
             string message;
 
             switch (_commitKind)
@@ -1860,7 +1858,6 @@ namespace GitUI.CommandsDialogs
 
                 Commit.Enabled = true;
                 Amend.Enabled = true;
-                AcceptButton = Commit;
             }
 
             if (AppSettings.RevisionGraphShowWorkingDirChanges)
