@@ -74,88 +74,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </param>
         public void CacheTo(int currentRowIndex, int lastToCacheRowIndex)
         {
-            if (_orderedNodesCache == null || _reorder || _orderedNodesCache.Count < currentRowIndex)
-            {
-                _orderedNodesCache = _nodes.OrderBy(n => n.Score).ToList();
-                if (_orderedNodesCache.Count > 0)
-                {
-                    _orderedUntilScore = _orderedNodesCache.Last().Score;
-                }
+            BuildOrderedNodesCache(currentRowIndex);
 
-                _reorder = false;
-            }
-
-            if (_orderedRowCache == null || _rebuild)
-            {
-                _orderedRowCache = new List<RevisionGraphRow>(currentRowIndex);
-                _rebuild = false;
-            }
-
-            int nextIndex = _orderedRowCache.Count;
-            if (nextIndex > lastToCacheRowIndex)
-            {
-                return;
-            }
-
-            int cacheCount = _orderedNodesCache.Count;
-            while (nextIndex <= lastToCacheRowIndex && cacheCount > nextIndex)
-            {
-                bool startSegmentsAdded = false;
-
-                RevisionGraphRevision revision = _orderedNodesCache[nextIndex];
-
-                // The list containing the segments is created later. We can set the correct capacity then, to prevent resizing
-                List<RevisionGraphSegment> segments;
-
-                if (nextIndex > 0)
-                {
-                    // Copy lanes from last row
-                    RevisionGraphRow previousRevisionGraphRow = _orderedRowCache[nextIndex - 1];
-
-                    // Create segments list with te correct capacity
-                    segments = new List<RevisionGraphSegment>(previousRevisionGraphRow.Segments.Count + revision.StartSegments.Count);
-
-                    // Loop through all segments that do not end in this row
-                    foreach (var segment in previousRevisionGraphRow.Segments.Where(s => s.Parent != previousRevisionGraphRow.Revision))
-                    {
-                        segments.Add(segment);
-
-                        // This segments continues in the next row. Copy all other segments that start from this revision to this lane.
-                        if (revision == segment.Parent && !startSegmentsAdded)
-                        {
-                            startSegmentsAdded = true;
-                            segments.AddRange(revision.StartSegments);
-                        }
-                    }
-                }
-                else
-                {
-                    // Create segments list with te correct capacity
-                    segments = new List<RevisionGraphSegment>(revision.StartSegments.Count);
-                }
-
-                if (!startSegmentsAdded)
-                {
-                    // Add new segments started by this revision to the end
-                    segments.AddRange(revision.StartSegments);
-                }
-
-                _orderedRowCache.Add(new RevisionGraphRow(revision, segments));
-                _buildUntilScore = revision.Score;
-                nextIndex++;
-            }
-
-            Updated?.Invoke();
+            BuildOrderedRowCache(currentRowIndex, lastToCacheRowIndex);
         }
 
         public bool IsRowRelative(int row)
         {
-            if (_orderedNodesCache == null || _orderedNodesCache.Count < row)
-            {
-                return false;
-            }
-
-            return _orderedNodesCache[row].IsRelative;
+            var node = GetNodeForRow(row);
+            return node != null && node.IsRelative;
         }
 
         public bool IsRevisionRelative(ObjectId objectId)
@@ -175,7 +102,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public bool TryGetRowIndex(ObjectId objectId, out int index)
         {
-            CacheTo(Count, 0);
+            BuildOrderedNodesCache(Count);
 
             if (!TryGetNode(objectId, out RevisionGraphRevision revision))
             {
@@ -189,22 +116,26 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public RevisionGraphRevision GetNodeForRow(int row)
         {
-            if (_orderedNodesCache == null || row >= _orderedNodesCache.Count)
+            // Use a local variable, because the cached list can be reset
+            var localOrderedNodesCache = _orderedNodesCache;
+            if (localOrderedNodesCache == null || row >= localOrderedNodesCache.Count)
             {
                 return null;
             }
 
-            return _orderedNodesCache.ElementAt(row);
+            return localOrderedNodesCache.ElementAt(row);
         }
 
         public RevisionGraphRow GetSegmentsForRow(int row)
         {
-            if (_orderedRowCache == null || row >= _orderedRowCache.Count)
+            // Use a local variable, because the cached list can be reset
+            var localOrderedRowCache = _orderedRowCache;
+            if (localOrderedRowCache == null || row >= localOrderedRowCache.Count)
             {
                 return null;
             }
 
-            return _orderedRowCache[row];
+            return localOrderedRowCache[row];
         }
 
         public void HighlightBranch(ObjectId id)
@@ -275,6 +206,87 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             MarkCacheAsInvalidIfNeeded(revisionGraphRevision);
+        }
+
+        private void BuildOrderedRowCache(int currentRowIndex, int lastToCacheRowIndex)
+        {
+            if (_orderedRowCache == null || _rebuild)
+            {
+                _orderedRowCache = new List<RevisionGraphRow>(currentRowIndex);
+                _rebuild = false;
+            }
+
+            int nextIndex = _orderedRowCache.Count;
+            if (nextIndex > lastToCacheRowIndex)
+            {
+                return;
+            }
+
+            int cacheCount = _orderedNodesCache.Count;
+            while (nextIndex <= lastToCacheRowIndex && cacheCount > nextIndex)
+            {
+                bool startSegmentsAdded = false;
+
+                RevisionGraphRevision revision = _orderedNodesCache[nextIndex];
+
+                // The list containing the segments is created later. We can set the correct capacity then, to prevent resizing
+                List<RevisionGraphSegment> segments;
+
+                if (nextIndex > 0)
+                {
+                    // Copy lanes from last row
+                    RevisionGraphRow previousRevisionGraphRow = _orderedRowCache[nextIndex - 1];
+
+                    // Create segments list with te correct capacity
+                    segments = new List<RevisionGraphSegment>(previousRevisionGraphRow.Segments.Count + revision.StartSegments.Count);
+
+                    // Loop through all segments that do not end in this row
+                    foreach (var segment in previousRevisionGraphRow.Segments.Where(s => s.Parent != previousRevisionGraphRow.Revision))
+                    {
+                        segments.Add(segment);
+
+                        // This segments continues in the next row. Copy all other segments that start from this revision to this lane.
+                        if (revision == segment.Parent && !startSegmentsAdded)
+                        {
+                            startSegmentsAdded = true;
+                            segments.AddRange(revision.StartSegments);
+                        }
+                    }
+                }
+                else
+                {
+                    // Create segments list with te correct capacity
+                    segments = new List<RevisionGraphSegment>(revision.StartSegments.Count);
+                }
+
+                if (!startSegmentsAdded)
+                {
+                    // Add new segments started by this revision to the end
+                    segments.AddRange(revision.StartSegments);
+                }
+
+                _orderedRowCache.Add(new RevisionGraphRow(revision, segments));
+                _buildUntilScore = revision.Score;
+                nextIndex++;
+            }
+
+            Updated?.Invoke();
+        }
+
+        private void BuildOrderedNodesCache(int currentRowIndex)
+        {
+            if (_orderedNodesCache != null && !_reorder && _orderedNodesCache.Count >= currentRowIndex)
+            {
+                return;
+            }
+
+            _orderedNodesCache = _nodes.OrderBy(n => n.Score).ToList();
+            if (_orderedNodesCache.Count > 0)
+            {
+                _orderedUntilScore = _orderedNodesCache.Last().Score;
+            }
+
+            _reorder = false;
         }
 
         private void MarkCacheAsInvalidIfNeeded(RevisionGraphRevision revisionGraphRevision)
