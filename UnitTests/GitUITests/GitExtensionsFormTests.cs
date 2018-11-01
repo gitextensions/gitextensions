@@ -142,12 +142,14 @@ namespace GitUITests
             form.Size.Should().Be(new Size(expectedHeightAt96dpi, expectedHeightAt96dpi));
         }
 
-        [Test]
-        public void RestorePosition_should_position_window_with_Owner_set_and_CenterParent()
+        [TestCase(-1000, 100, /* -1000 + (800 - 300)/2 */ -750, /* 100 + (600-200)/2 */300)]
+        [TestCase(0, 0, /* 0 + (800 - 300)/2 */ 250, /* 0 + (600-200)/2 */200)]
+        [TestCase(1000, -400, /* 1000 + (800 - 300)/2 */ 1250, /* -400 + (600-200)/2 */ -200)]
+        public void RestorePosition_should_position_window_with_Owner_set_and_CenterParent(int ownerFormTop, int ownerFormLeft, int expectFormTop, int expectedFormLeft)
         {
             var owner = new Form
             {
-                Location = new Point(-1000, 100),
+                Location = new Point(ownerFormTop, ownerFormLeft),
                 Size = new Size(800, 600)
             };
             var form = new MockForm(true)
@@ -169,7 +171,7 @@ namespace GitUITests
 
             form.InvokeRestorePosition();
 
-            form.Location.Should().Be(new Point(/* -1000 + (800 - 300)/2 */-750, /* 100 + (600-200)/2 */300));
+            form.Location.Should().Be(new Point(expectFormTop, expectedFormLeft));
         }
 
         private class MockForm : GitExtensionsForm

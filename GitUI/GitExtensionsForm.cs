@@ -139,7 +139,7 @@ namespace GitUI
                 // Calculate location for modal form with parent
                 Location = new Point(
                     Owner.Left + (Owner.Width / 2) - (Width / 2),
-                    Math.Max(0, Owner.Top + (Owner.Height / 2) - (Height / 2)));
+                    Owner.Top + (Owner.Height / 2) - (Height / 2));
             }
 
             if (WindowState != position.State)
