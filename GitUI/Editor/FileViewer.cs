@@ -298,11 +298,6 @@ namespace GitUI.Editor
             return toolStripItem;
         }
 
-        public void EnableScrollBars(bool enable)
-        {
-            internalFileViewer.EnableScrollBars(enable);
-        }
-
         public void SetVisibilityDiffContextMenu(bool visible, bool isStagingDiff)
         {
             _currentViewIsPatch = visible;

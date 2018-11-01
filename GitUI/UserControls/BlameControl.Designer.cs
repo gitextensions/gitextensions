@@ -88,8 +88,9 @@
             // 
             // BlameCommitter
             // 
+            this.BlameCommitter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.BlameCommitter.ContextMenuStrip = this.contextMenu;
-            this.BlameCommitter.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BlameCommitter.IsReadOnly = false;
             this.BlameCommitter.Location = new System.Drawing.Point(0, 0);
             this.BlameCommitter.Margin = new System.Windows.Forms.Padding(0);

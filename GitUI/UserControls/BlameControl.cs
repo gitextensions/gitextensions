@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 using GitUI.CommitInfo;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
@@ -38,13 +39,13 @@ namespace GitUI.Blame
             InitializeComplete();
 
             BlameCommitter.IsReadOnly = true;
-            BlameCommitter.EnableScrollBars(false);
             BlameCommitter.ShowLineNumbers = false;
             BlameCommitter.ScrollPosChanged += BlameCommitter_ScrollPosChanged;
             BlameCommitter.MouseMove += BlameCommitter_MouseMove;
             BlameCommitter.MouseLeave += BlameCommitter_MouseLeave;
             BlameCommitter.SelectedLineChanged += SelectedLineChanged;
             BlameCommitter.RequestDiffView += ActiveTextAreaControlDoubleClick;
+            BlameCommitter.Width = DpiUtil.Scale(2000);
 
             BlameFile.IsReadOnly = true;
             BlameFile.ScrollPosChanged += BlameFile_ScrollPosChanged;
