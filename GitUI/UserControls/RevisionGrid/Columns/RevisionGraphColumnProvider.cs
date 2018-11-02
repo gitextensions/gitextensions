@@ -296,7 +296,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             // StartLane
                             if (endLane >= 0 && centerLane >= 0 && (endLane <= MaxLanes || centerLane <= MaxLanes))
                             {
-                                DrawSegment(g, brush, centerX, centerY - 1, endX, endY);
+                                DrawSegment(g, brush, centerX, centerY, endX, endY);
                             }
                         }
 
@@ -397,15 +397,16 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     // Anti-aliasing seems to introduce an offset of two thirds
                     // of a pixel to the right - compensate it.
                     g.SmoothingMode = SmoothingMode.AntiAlias;
+
                     float offset = -0.667F;
 
                     // Left shifting int is fast equivalent of dividing by two,
                     // thus computing the average of y0 and y1.
                     var yMid = (y0 + y1) >> 1;
-                    var c0 = new PointF(offset + x0, yMid);
-                    var c1 = new PointF(offset + x1, yMid);
-                    var e0 = new PointF(offset + p0.X, p0.Y);
-                    var e1 = new PointF(offset + p1.X, p1.Y);
+                    var c0 = new PointF(offset + x0, yMid - offset);
+                    var c1 = new PointF(offset + x1, yMid - offset);
+                    var e0 = new PointF(offset + p0.X, p0.Y + offset);
+                    var e1 = new PointF(offset + p1.X, p1.Y + offset);
                     g.DrawBezier(lanePen, e0, c0, c1, e1);
                 }
             }
