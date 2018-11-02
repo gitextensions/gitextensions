@@ -1,6 +1,6 @@
 ﻿namespace GitUI.UserControls.RevisionGrid
 {
-    partial class FormQuickGitRefSelector
+    partial class FormQuickItemSelector
     {
         /// <summary> 
         /// Required designer variable.

@@ -397,6 +397,12 @@
     <Compile Include="UserControls\RevisionGrid\Columns\RevisionGraphColumnProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\MultilineIndicator.cs" />
     <Compile Include="UserControls\HslColor.cs" />
+    <Compile Include="UserControls\RevisionGrid\FormQuickItemSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserControls\RevisionGrid\FormQuickItemSelector.Designer.cs">
+      <DependentUpon>FormQuickItemSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraph.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphLaneColor.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphRevision.cs" />
@@ -491,9 +497,6 @@
     <Compile Include="UserControls\RevisionGrid\AuthorRevisionHighlighting.cs" />
     <Compile Include="UserControls\RevisionGrid\FormQuickGitRefSelector.cs">
       <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserControls\RevisionGrid\FormQuickGitRefSelector.Designer.cs">
-      <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\RevisionGrid\RevisionGridToolTipProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\RevisionGridRefRenderer.cs" />
@@ -1585,6 +1588,9 @@
     <EmbeddedResource Include="UserControls\RevisionGrid\EmptyRepoControl.resx">
       <DependentUpon>EmptyRepoControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\RevisionGrid\FormQuickItemSelector.resx">
+      <DependentUpon>FormQuickItemSelector.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\RevisionGrid\FormRevisionFilter.resx">
       <DependentUpon>FormRevisionFilter.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1638,9 +1644,6 @@
     <EmbeddedResource Include="UserControls\RevisionGrid\RevisionGridControl.resx">
       <DependentUpon>RevisionGridControl.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\RevisionGrid\FormQuickGitRefSelector.resx">
-      <DependentUpon>FormQuickGitRefSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CommandsDialogs\SearchControl.resx">
       <DependentUpon>SearchControl.cs</DependentUpon>
