@@ -371,6 +371,7 @@ namespace GitUI.UserControls.RevisionGrid
         [CanBeNull]
         public GitRevision GetRevision(int rowIndex)
         {
+            _revisionGraph.CacheTo(rowIndex, /*no update of _orderedRowCache necessary*/ -1);
             return _revisionGraph.GetNodeForRow(rowIndex)?.GitRevision;
         }
 
