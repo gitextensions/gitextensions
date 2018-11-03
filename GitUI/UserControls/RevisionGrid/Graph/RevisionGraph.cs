@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
@@ -102,23 +103,21 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public bool TryGetRowIndex(ObjectId objectId, out int index)
         {
-            BuildOrderedNodesCache(Count);
-
             if (!TryGetNode(objectId, out RevisionGraphRevision revision))
             {
                 index = 0;
                 return false;
             }
 
-            index = _orderedNodesCache.IndexOf(revision);
+            index = BuildOrderedNodesCache(Count).IndexOf(revision);
             return index >= 0;
         }
 
         public RevisionGraphRevision GetNodeForRow(int row)
         {
             // Use a local variable, because the cached list can be reset
-            var localOrderedNodesCache = _orderedNodesCache;
-            if (localOrderedNodesCache == null || row >= localOrderedNodesCache.Count)
+            var localOrderedNodesCache = BuildOrderedNodesCache(row);
+            if (row >= localOrderedNodesCache.Count)
             {
                 return null;
             }
@@ -273,20 +272,25 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             Updated?.Invoke();
         }
 
-        private void BuildOrderedNodesCache(int currentRowIndex)
+        [NotNull]
+        private List<RevisionGraphRevision> BuildOrderedNodesCache(int currentRowIndex)
         {
             if (_orderedNodesCache != null && !_reorder && _orderedNodesCache.Count >= currentRowIndex)
             {
-                return;
+                return _orderedNodesCache;
             }
 
-            _orderedNodesCache = _nodes.OrderBy(n => n.Score).ToList();
-            if (_orderedNodesCache.Count > 0)
+            // Use a local variable, because the cached list can be reset
+            var localOrderedNodesCache = _nodes.OrderBy(n => n.Score).ToList();
+            _orderedNodesCache = localOrderedNodesCache;
+            if (localOrderedNodesCache.Count > 0)
             {
-                _orderedUntilScore = _orderedNodesCache.Last().Score;
+                _orderedUntilScore = localOrderedNodesCache.Last().Score;
             }
 
             _reorder = false;
+
+            return localOrderedNodesCache;
         }
 
         private void MarkCacheAsInvalidIfNeeded(RevisionGraphRevision revisionGraphRevision)
