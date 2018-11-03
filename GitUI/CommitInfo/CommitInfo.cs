@@ -213,10 +213,7 @@ namespace GitUI.CommitInfo
                 }
 
                 var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent != null);
-
                 rtbxCommitMessage.SetXHTMLText(commitMessage);
-                rtbxCommitMessage.SelectionStart = 0; // scroll up
-                rtbxCommitMessage.ScrollToCaret(); // scroll up
             }
 
             void StartAsyncDataLoad()
@@ -479,9 +476,6 @@ namespace GitUI.CommitInfo
                     .Where(_ => !string.IsNullOrEmpty(_)));
 
             RevisionInfo.SetXHTMLText(body);
-            RevisionInfo.SelectionStart = 0; // scroll up
-            RevisionInfo.ScrollToCaret();    // scroll up
-
             return;
 
             string GetAnnotatedTagsInfo(
