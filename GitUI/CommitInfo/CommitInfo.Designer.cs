@@ -31,7 +31,7 @@ namespace GitUI.CommitInfo
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.tableLayout = new GitUI.UserControls.DoubleBufferedTableLayoutPanel();
+            this.tableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.pnlCommitMessage = new System.Windows.Forms.Panel();
             this.rtbxCommitMessage = new System.Windows.Forms.RichTextBox();
             this.commitInfoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -221,7 +221,6 @@ namespace GitUI.CommitInfo
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.Controls.Add(this.tableLayout);
-            this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "CommitInfo";
             this.Size = new System.Drawing.Size(472, 262);
@@ -252,6 +251,6 @@ namespace GitUI.CommitInfo
         private CommitInfoHeader commitInfoHeader;
         private System.Windows.Forms.Panel pnlCommitMessage;
         private System.Windows.Forms.RichTextBox rtbxCommitMessage;
-        private GitUI.UserControls.DoubleBufferedTableLayoutPanel tableLayout;
+        private System.Windows.Forms.TableLayoutPanel tableLayout;
     }
 }
