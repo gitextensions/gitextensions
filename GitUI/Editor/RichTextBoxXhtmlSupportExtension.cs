@@ -356,11 +356,6 @@ namespace GitUI.Editor.RichTextBoxExtension
         }
         #endregion
 
-        internal static void SetHideSelectionInternal(HandleRef handleRef, bool bSet)
-        {
-            NativeMethods.SendMessage(handleRef, NativeMethods.EM_HIDESELECTION, bSet ? (IntPtr)1 : (IntPtr)0, IntPtr.Zero);
-        }
-
         public static void SetSuperScript(this RichTextBox rtb, bool bSet)
         {
             rtb.SetCharFormat(CFM.SUPERSCRIPT, bSet ? CFE.SUPERSCRIPT : 0);
@@ -1220,7 +1215,6 @@ namespace GitUI.Editor.RichTextBoxExtension
             cs.pf = GetDefaultParaFormat(handleRef); // to apply paragraph formatting
 
             IntPtr oldMask = BeginUpdate(handleRef);
-            SetHideSelectionInternal(handleRef, true);
 
             var settings = new XmlReaderSettings
             {
@@ -1252,8 +1246,6 @@ namespace GitUI.Editor.RichTextBoxExtension
                 rtb.Select(start, length);
                 SetCharFormat(handleRef, ncf);
             }
-
-            SetHideSelectionInternal(handleRef, false);
 
             // reposition to first
             rtb.Select(0, 0);
