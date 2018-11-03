@@ -1242,7 +1242,7 @@ namespace GitUI
                 return;
             }
 
-            if (e.Modifiers == Keys.None)
+            if (e.Modifiers != Keys.None)
             {
                 return;
             }
