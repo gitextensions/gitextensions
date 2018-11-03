@@ -106,7 +106,7 @@ namespace GitCommands.Git
                 return true;
             }
 
-            return revision.Author?.StartsWith(criteria, StringComparison.CurrentCultureIgnoreCase) == true ||
+            return revision.Author?.IndexOf(criteria, StringComparison.CurrentCultureIgnoreCase) >= 0 ||
                    revision.Subject?.IndexOf(criteria, StringComparison.OrdinalIgnoreCase) >= 0;
         }
     }
