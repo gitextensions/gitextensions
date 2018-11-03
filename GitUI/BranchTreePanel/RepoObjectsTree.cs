@@ -29,12 +29,10 @@ namespace GitUI.BranchTreePanel
         private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
         private readonly List<Tree> _rootNodes = new List<Tree>();
         private readonly SearchControl<string> _txtBranchCriterion;
-        private TreeNode _branchesTreeRootNode;
-        private TreeNode _remotesTreeRootNode;
-        private TreeNode _tagTreeRootNode;
         private BranchTree _branchesTree;
         private RemoteBranchTree _remotesTree;
         private TagTree _tagTree;
+        private SubmoduleTree _submoduleTree;
         private List<TreeNode> _searchResult;
         private FilterBranchHelper _filterBranchHelper;
         private IAheadBehindDataProvider _aheadBehindDataProvider;
@@ -63,6 +61,7 @@ namespace GitUI.BranchTreePanel
             tsmiShowBranches.Checked = AppSettings.RepoObjectsTreeShowBranches;
             tsmiShowRemotes.Checked = AppSettings.RepoObjectsTreeShowRemotes;
             tsmiShowTags.Checked = AppSettings.RepoObjectsTreeShowTags;
+            tsmiShowSubmodules.Checked = AppSettings.RepoObjectsTreeShowSubmodules;
 
             _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
             _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
@@ -85,6 +84,7 @@ namespace GitUI.BranchTreePanel
                     ImageSize = DpiUtil.Scale(new Size(16, 16 + rowPadding + rowPadding)), // Scale ImageSize and images scale automatically
                     Images =
                     {
+                        { nameof(Images.FolderClosed), Pad(Images.FolderClosed) },
                         { nameof(Images.BranchDocument), Pad(Images.BranchDocument) },
                         { nameof(Images.Branch), Pad(Images.Branch) },
                         { nameof(Images.Remote), Pad(Images.Remote) },
@@ -100,6 +100,17 @@ namespace GitUI.BranchTreePanel
                         { nameof(Images.EyeOpened), Pad(Images.EyeOpened) },
                         { nameof(Images.EyeClosed), Pad(Images.EyeClosed) },
                         { nameof(Images.RemoteEnableAndFetch), Pad(Images.RemoteEnableAndFetch) },
+                        { nameof(Images.FileStatusModified), Pad(Images.FileStatusModified) },
+                        { nameof(Images.FolderSubmodule), Pad(Images.FolderSubmodule) },
+                        { nameof(Images.SubmoduleDirty), Pad(Images.SubmoduleDirty) },
+                        { nameof(Images.SubmoduleRevisionUp), Pad(Images.SubmoduleRevisionUp) },
+                        { nameof(Images.SubmoduleRevisionDown), Pad(Images.SubmoduleRevisionDown) },
+                        { nameof(Images.SubmoduleRevisionSemiUp), Pad(Images.SubmoduleRevisionSemiUp) },
+                        { nameof(Images.SubmoduleRevisionSemiDown), Pad(Images.SubmoduleRevisionSemiDown) },
+                        { nameof(Images.SubmoduleRevisionUpDirty), Pad(Images.SubmoduleRevisionUpDirty) },
+                        { nameof(Images.SubmoduleRevisionDownDirty), Pad(Images.SubmoduleRevisionDownDirty) },
+                        { nameof(Images.SubmoduleRevisionSemiUpDirty), Pad(Images.SubmoduleRevisionSemiUpDirty) },
+                        { nameof(Images.SubmoduleRevisionSemiDownDirty), Pad(Images.SubmoduleRevisionSemiDownDirty) },
                     }
                 };
                 treeMain.SelectedImageKey = treeMain.ImageKey;
@@ -215,20 +226,12 @@ namespace GitUI.BranchTreePanel
         {
             base.OnUICommandsSourceSet(source);
 
-            if (tsmiShowBranches.Checked)
-            {
-                AddBranches();
-            }
+            CreateBranches();
+            CreateRemotes();
+            CreateTags();
+            CreateSubmodules();
 
-            if (tsmiShowRemotes.Checked)
-            {
-                AddRemotes();
-            }
-
-            if (tsmiShowTags.Checked)
-            {
-                AddTags();
-            }
+            ShowEnabledTrees();
         }
 
         private static void AddTreeNodeToSearchResult(ICollection<TreeNode> ret, TreeNode node)
@@ -237,46 +240,50 @@ namespace GitUI.BranchTreePanel
             ret.Add(node);
         }
 
-        private void AddBranches()
+        private void CreateBranches()
         {
-            _branchesTreeRootNode = new TreeNode(Strings.Branches)
+            var rootNode = new TreeNode(Strings.Branches)
             {
                 ImageKey = nameof(Images.BranchLocalRoot),
                 SelectedImageKey = nameof(Images.BranchLocalRoot),
             };
-            _branchesTree = new BranchTree(_branchesTreeRootNode, UICommandsSource, _aheadBehindDataProvider);
-            AddTree(_branchesTree, 0);
-            _searchResult = null;
+            _branchesTree = new BranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider);
         }
 
-        private void AddRemotes()
+        private void CreateRemotes()
         {
-            _remotesTreeRootNode = new TreeNode(Strings.Remotes)
+            var rootNode = new TreeNode(Strings.Remotes)
             {
                 ImageKey = nameof(Images.BranchRemoteRoot),
                 SelectedImageKey = nameof(Images.BranchRemoteRoot),
             };
-            _remotesTree = new RemoteBranchTree(_remotesTreeRootNode, UICommandsSource)
+            _remotesTree = new RemoteBranchTree(rootNode, UICommandsSource)
             {
                 TreeViewNode =
                 {
                     ContextMenuStrip = menuRemotes
                 }
             };
-            AddTree(_remotesTree, 1);
-            _searchResult = null;
         }
 
-        private void AddTags()
+        private void CreateTags()
         {
-            _tagTreeRootNode = new TreeNode(Strings.Tags)
+            var rootNode = new TreeNode(Strings.Tags)
             {
                 ImageKey = nameof(Images.TagHorizontal),
                 SelectedImageKey = nameof(Images.TagHorizontal),
             };
-            _tagTree = new TagTree(_tagTreeRootNode, UICommandsSource);
-            AddTree(_tagTree, 2);
-            _searchResult = null;
+            _tagTree = new TagTree(rootNode, UICommandsSource);
+        }
+
+        private void CreateSubmodules()
+        {
+            var rootNode = new TreeNode(Strings.Submodules)
+            {
+                ImageKey = nameof(Images.FolderSubmodule),
+                SelectedImageKey = nameof(Images.FolderSubmodule),
+            };
+            _submoduleTree = new SubmoduleTree(rootNode, UICommandsSource);
         }
 
         private void AddTree(Tree tree, int positionIndex)
@@ -299,6 +306,13 @@ namespace GitUI.BranchTreePanel
             treeMain.Font = AppSettings.Font;
             _rootNodes.Add(tree);
             tree.RefreshTree();
+        }
+
+        private void RemoveTree(Tree tree)
+        {
+            tree.CancelReloadNodes();
+            _rootNodes.Remove(tree);
+            treeMain.Nodes.Remove(tree.TreeViewNode);
         }
 
         private void DoSearch()

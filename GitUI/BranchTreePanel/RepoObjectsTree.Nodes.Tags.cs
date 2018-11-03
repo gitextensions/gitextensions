@@ -105,7 +105,7 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            protected override void PostFillTreeViewNode(bool firstTime)
+            protected override void PostFillTreeViewNode(CancellationToken token, bool firstTime)
             {
                 if (firstTime)
                 {

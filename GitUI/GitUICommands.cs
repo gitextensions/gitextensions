@@ -1075,11 +1075,22 @@ namespace GitUI
             return DoActionOnRepo(owner, true, true, null, null, Action);
         }
 
-        public bool StartUpdateSubmodulesDialog(IWin32Window owner)
+        public bool StartUpdateSubmodulesDialog(IWin32Window owner, string submoduleLocalPath = "")
         {
             bool Action()
             {
-                return FormProcess.ShowDialog(owner, Module, GitCommandHelpers.SubmoduleUpdateCmd(""));
+                return FormProcess.ShowDialog(owner, Module, GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath));
+            }
+
+            return DoActionOnRepo(owner, true, true, null, PostUpdateSubmodules, Action);
+        }
+
+        public bool StartUpdateSubmoduleDialog(IWin32Window owner, string submoduleLocalPath, string submoduleParentPath)
+        {
+            bool Action()
+            {
+                // Execute the submodule update comment from the submodule's parent directory
+                return FormProcess.ShowDialog(owner, null, GitCommandHelpers.SubmoduleUpdateCmd(submoduleLocalPath), submoduleParentPath, null, true);
             }
 
             return DoActionOnRepo(owner, true, true, null, PostUpdateSubmodules, Action);
@@ -1829,6 +1840,11 @@ namespace GitUI
         public void BrowseGoToRef(string refName, bool showNoRevisionMsg)
         {
             BrowseRepo?.GoToRef(refName, showNoRevisionMsg);
+        }
+
+        public void BrowseSetWorkingDir(string path)
+        {
+            BrowseRepo?.SetWorkingDir(path);
         }
 
         public IGitRemoteCommand CreateRemoteCommand()

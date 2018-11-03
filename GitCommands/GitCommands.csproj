@@ -121,6 +121,7 @@
     <Compile Include="Submodules\DetailedSubmoduleInfo.cs" />
     <Compile Include="Submodules\SubmoduleInfo.cs" />
     <Compile Include="Submodules\SubmoduleInfoResult.cs" />
+    <Compile Include="Submodules\SubmoduleStatusEventArgs.cs" />
     <Compile Include="Submodules\SubmoduleStatusProvider.cs" />
     <Compile Include="UserRepositoryHistory\IRepositoryManager.cs" />
     <Compile Include="UserRepositoryHistory\IRepositorySerialiser.cs" />

@@ -30,6 +30,11 @@ namespace GitUI.BranchTreePanel
                 _nodesList.Add(node);
             }
 
+            public void AddNodes(IEnumerable<Node> nodes)
+            {
+                _nodesList.AddRange(nodes);
+            }
+
             public void Clear()
             {
                 _nodesList.Clear();
@@ -108,8 +113,8 @@ namespace GitUI.BranchTreePanel
         {
             protected readonly Nodes Nodes;
             private readonly IGitUICommandsSource _uiCommandsSource;
-
             private readonly CancellationTokenSequence _reloadCancellationTokenSequence = new CancellationTokenSequence();
+            private bool _firstReloadNodesSinceModuleChanged = true;
 
             protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
             {
@@ -125,12 +130,11 @@ namespace GitUI.BranchTreePanel
                         TreeViewNode.TreeView.SelectedNode = null;
                     }
 
-                    // Also clear treeview nodes so that any previous state is flushed
-                    // (e.g. expanded/collapsed state, etc.)
-                    if (TreeViewNode != null)
-                    {
-                        TreeViewNode.Nodes.Clear();
-                    }
+                    // Certain operations need to happen the first time after we change modules. For example,
+                    // we don't want to use the expanded/collapsed state of existing nodes in the tree, but at
+                    // the same time, we don't want to remove them from the tree as this is visible to the user,
+                    // as well as less efficient.
+                    _firstReloadNodesSinceModuleChanged = true;
 
                     e.OldCommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
                     uiCommands.UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
@@ -142,7 +146,7 @@ namespace GitUI.BranchTreePanel
             private void UICommands_PostRepositoryChanged(object sender, GitUIPluginInterfaces.GitUIEventArgs e)
             {
                 // Run on UI thread
-                TreeViewNode.TreeView.InvokeAsync(RefreshTree).FileAndForget();
+                TreeViewNode.TreeView?.InvokeAsync(RefreshTree).FileAndForget();
             }
 
             public abstract void RefreshTree();
@@ -156,6 +160,11 @@ namespace GitUI.BranchTreePanel
             /// </summary>
             public bool IgnoreSelectionChangedEvent { get; set; }
             protected GitModule Module => UICommands.Module;
+
+            public void CancelReloadNodes()
+            {
+                _reloadCancellationTokenSequence.CancelCurrent();
+            }
 
             // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
             // input async function that should populate Nodes, then fills the tree view with its contents,
@@ -173,7 +182,6 @@ namespace GitUI.BranchTreePanel
                         var token = _reloadCancellationTokenSequence.Next();
 
                         repoObjectTree.Enabled = false;
-
                         TreeViewNode.TreeView.BeginUpdate();
                         IgnoreSelectionChangedEvent = true;
                         Nodes.Clear();
@@ -183,7 +191,7 @@ namespace GitUI.BranchTreePanel
                         token.ThrowIfCancellationRequested();
                         await TreeViewNode.TreeView.SwitchToMainThreadAsync();
 
-                        FillTreeViewNode();
+                        FillTreeViewNode(token, _firstReloadNodesSinceModuleChanged);
                     }
                     finally
                     {
@@ -191,26 +199,25 @@ namespace GitUI.BranchTreePanel
                         TreeViewNode.TreeView.EndUpdate();
                         repoObjectTree.Enabled = true;
                         ExpandPathToSelectedNode();
+                        _firstReloadNodesSinceModuleChanged = false;
                     }
                 }).FileAndForget();
             }
 
-            private void FillTreeViewNode()
+            private void FillTreeViewNode(CancellationToken token, bool firstTime)
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
 
-                bool firstTime = TreeViewNode.Nodes.Count == 0;
-
-                var expandedNodesState = TreeViewNode.GetExpandedNodesState();
+                var expandedNodesState = firstTime ? new HashSet<string>() : TreeViewNode.GetExpandedNodesState();
                 Nodes.FillTreeViewNode(TreeViewNode);
-                PostFillTreeViewNode(firstTime);
+                PostFillTreeViewNode(token, firstTime);
                 TreeViewNode.RestoreExpandedNodesState(expandedNodesState);
             }
 
             // Called after the TreeView has been populated from Nodes. A good place to update properties
             // of the TreeViewNode, such as it's name (TreeViewNode.Text), Expand/Collapse state, and
             // to set selected node (TreeViewNode.TreeView.SelectedNode).
-            protected virtual void PostFillTreeViewNode(bool firstTime)
+            protected virtual void PostFillTreeViewNode(CancellationToken token, bool firstTime)
             {
             }
 
@@ -268,9 +275,8 @@ namespace GitUI.BranchTreePanel
                 {
                     _treeViewNode = value;
                     _treeViewNode.Tag = this;
-                    _treeViewNode.Name = DisplayText();
-                    _treeViewNode.Text = DisplayText();
                     _treeViewNode.ContextMenuStrip = GetContextMenuStrip();
+                    ApplyText();
                     ApplyStyle();
                 }
             }
@@ -334,6 +340,12 @@ namespace GitUI.BranchTreePanel
                         TreeViewNode.NodeFont = new Font(AppSettings.Font, style);
                     }
                 }
+            }
+
+            protected void ApplyText()
+            {
+                _treeViewNode.Name = DisplayText();
+                _treeViewNode.Text = DisplayText();
             }
 
             protected virtual void ApplyStyle()

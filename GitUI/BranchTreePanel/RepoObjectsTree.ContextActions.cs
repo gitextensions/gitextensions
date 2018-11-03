@@ -93,6 +93,36 @@ namespace GitUI.BranchTreePanel
             mnubtnEnableRemoteAndFetch.Visible = !node.Enabled;
         }
 
+        private void ContextMenuSubmoduleSpecific(ContextMenuStrip contextMenu)
+        {
+            TreeNode selectedNode = (contextMenu.SourceControl as TreeView)?.SelectedNode;
+            if (selectedNode == null)
+            {
+                return;
+            }
+
+            if (contextMenu == menuAllSubmodules)
+            {
+                if (!(selectedNode.Tag is SubmoduleTree submoduleTree))
+                {
+                    return;
+                }
+            }
+            else if (contextMenu == menuSubmodule)
+            {
+                if (!(selectedNode.Tag is SubmoduleNode submoduleNode))
+                {
+                    return;
+                }
+
+                bool bareRepository = Module.IsBareRepository();
+                mnubtnOpenSubmodule.Visible = submoduleNode.CanOpen;
+                mnubtnUpdateSubmodule.Visible = true;
+                mnubtnManageSubmodules.Visible = !bareRepository && submoduleNode.IsCurrent;
+                mnubtnSynchronizeSubmodules.Visible = !bareRepository && submoduleNode.IsCurrent;
+            }
+        }
+
         private void OnNodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             _lastRightClickedNode = e.Button == MouseButtons.Right ? e.Node : null;
@@ -150,6 +180,12 @@ namespace GitUI.BranchTreePanel
             Node.RegisterContextMenu(typeof(TagNode), menuTag);
 
             RegisterClick(mnuBtnManageRemotesFromRootNode, () => _remotesTree.PopupManageRemotesForm(remoteName: null));
+
+            RegisterClick<SubmoduleNode>(mnubtnManageSubmodules, _ => _submoduleTree.ManageSubmodules(this));
+            RegisterClick<SubmoduleNode>(mnubtnSynchronizeSubmodules, _ => _submoduleTree.SynchronizeSubmodules(this));
+            RegisterClick<SubmoduleNode>(mnubtnOpenSubmodule, node => _submoduleTree.OpenSubmodule(this, node));
+            RegisterClick<SubmoduleNode>(mnubtnUpdateSubmodule, node => _submoduleTree.UpdateSubmodule(this, node));
+            Node.RegisterContextMenu(typeof(SubmoduleNode), menuSubmodule);
         }
 
         private void FilterInRevisionGrid(BaseBranchNode branch)
@@ -168,6 +204,7 @@ namespace GitUI.BranchTreePanel
             ContextMenuAddExpandCollapseTree(contextMenu);
             ContextMenuBranchSpecific(contextMenu);
             ContextMenuRemoteRepoSpecific(contextMenu);
+            ContextMenuSubmoduleSpecific(contextMenu);
         }
 
         /// <inheritdoc />

@@ -44,6 +44,7 @@ namespace ResourceManager
         public static string Branches => _instance.Value._branchesText.Text;
         public static string Remotes => _instance.Value._remotesText.Text;
         public static string Tags => _instance.Value._tagsText.Text;
+        public static string Submodules => _instance.Value._submodulesText.Text;
 
         public static string BodyNotLoaded => _instance.Value._bodyNotLoaded.Text;
 
@@ -66,6 +67,7 @@ namespace ResourceManager
         private readonly TranslationString _branchesText = new TranslationString("Branches");
         private readonly TranslationString _remotesText = new TranslationString("Remotes");
         private readonly TranslationString _tagsText = new TranslationString("Tags");
+        private readonly TranslationString _submodulesText = new TranslationString("Submodules");
         private readonly TranslationString _bodyNotLoaded  = new TranslationString("\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.");
 
         private readonly TranslationString _parentsText = new TranslationString("{0:Parent|Parents}");
