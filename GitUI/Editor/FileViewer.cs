@@ -212,13 +212,25 @@ namespace GitUI.Editor
                 {
                     if (_encoding != null)
                     {
-                        encodingToolStripComboBox.Text = _encoding.EncodingName;
+                        SetTextForToolStripComboBox(_encoding);
                     }
                     else
                     {
                         encodingToolStripComboBox.SelectedIndex = -1;
                     }
                 }).FileAndForget();
+            }
+        }
+
+        private void SetTextForToolStripComboBox(Encoding encoding)
+        {
+            if (encoding == Encoding.Default)
+            {
+                encodingToolStripComboBox.Text = "Default (" + encoding.HeaderName + ")";
+            }
+            else
+            {
+                encodingToolStripComboBox.Text = encoding.EncodingName;
             }
         }
 
@@ -243,7 +255,7 @@ namespace GitUI.Editor
                 commandSource.UICommands.PostSettings += UICommands_PostSettings;
             }
 
-            Encoding = null;
+            Encoding = Encoding.Default;
         }
 
         private void UICommands_PostSettings(object sender, GitUIPostActionEventArgs e)
