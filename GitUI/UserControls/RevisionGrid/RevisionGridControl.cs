@@ -1242,8 +1242,6 @@ namespace GitUI
                 return;
             }
 
-            // Check modifier detail if pressed.
-
             if (e.Modifiers == Keys.None)
             {
                 return;
