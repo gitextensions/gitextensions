@@ -74,6 +74,9 @@ namespace GitUI.CommitInfo
             // 
             // pnlCommitMessage
             // 
+            this.pnlCommitMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                | System.Windows.Forms.AnchorStyles.Left)
+                | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlCommitMessage.BackColor = System.Drawing.SystemColors.Control;
             this.pnlCommitMessage.Controls.Add(this.rtbxCommitMessage);
             this.pnlCommitMessage.Location = new System.Drawing.Point(8, 112);
@@ -193,6 +196,9 @@ namespace GitUI.CommitInfo
             // 
             // RevisionInfo
             // 
+            this.RevisionInfo.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                | System.Windows.Forms.AnchorStyles.Left)
+                | System.Windows.Forms.AnchorStyles.Right)));
             this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
             this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;

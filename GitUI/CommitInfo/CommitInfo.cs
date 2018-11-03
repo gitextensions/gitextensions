@@ -120,8 +120,6 @@ namespace GitUI.CommitInfo
                     .Throttle(TimeSpan.FromMilliseconds(100))
                     .ObserveOn(MainThreadScheduler.Instance)
                     .Subscribe(_ => handler(_.EventArgs));
-
-            Layout += layout;
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -480,11 +478,9 @@ namespace GitUI.CommitInfo
                 new[] { _annotatedTagsInfo, _linksInfo, _branchInfo, _tagInfo, _gitDescribeInfo }
                     .Where(_ => !string.IsNullOrEmpty(_)));
 
-            RevisionInfo.SuspendLayout();
             RevisionInfo.SetXHTMLText(body);
             RevisionInfo.SelectionStart = 0; // scroll up
             RevisionInfo.ScrollToCaret();    // scroll up
-            RevisionInfo.ResumeLayout();
 
             return;
 
@@ -655,7 +651,7 @@ namespace GitUI.CommitInfo
             PerformLayout();
         }
 
-        private void layout(object sender, LayoutEventArgs e)
+        protected override void OnLayout(LayoutEventArgs e)
         {
             tableLayout.SuspendLayout();
 
@@ -680,16 +676,12 @@ namespace GitUI.CommitInfo
             column.SizeType = SizeType.Absolute;
             column.Width = width;
 
-            pnlCommitMessage.Size = new Size(width - pnlCommitMessage.Margin.Horizontal, _commitMessageHeight + rtbxCommitMessage.Margin.Vertical);
-            RevisionInfo.Size = new Size(width - RevisionInfo.Margin.Horizontal, _revisionInfoHeight);
-
             tableLayout.Size = new Size(width, heights.Sum());
 
             tableLayout.ResumeLayout(false);
             tableLayout.PerformLayout();
 
-            rtbxCommitMessage.Refresh();
-            RevisionInfo.Refresh();
+            base.OnLayout(e);
         }
 
         private void RichTextBox_KeyDown(object sender, KeyEventArgs e)
