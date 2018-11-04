@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -13,10 +14,9 @@ namespace GitUI
     /// <remarks>Includes support for font, hotkey, icon, translation, and position restore.</remarks>
     public class GitExtensionsForm : GitExtensionsFormBase
     {
-        private readonly WindowPositionManager _windowPositionManager = new WindowPositionManager();
-
+        private IWindowPositionManager _windowPositionManager = new WindowPositionManager();
+        private Func<IReadOnlyList<Rectangle>> _getScreensWorkingArea = () => Screen.AllScreens.Select(screen => screen.WorkingArea).ToArray();
         private bool _needsPositionRestore;
-        private bool _windowCentred;
 
         /// <summary>Creates a new <see cref="GitExtensionsForm"/> without position restore.</summary>
         public GitExtensionsForm()
@@ -89,10 +89,9 @@ namespace GitUI
 
             if (WindowState == FormWindowState.Minimized)
             {
+                // TODO: do we still need to assert when restored it is shown on the correct monitor?
                 return;
             }
-
-            _windowCentred = StartPosition == FormStartPosition.CenterParent;
 
             var position = _windowPositionManager.LoadPosition(this);
             if (position == null)
@@ -102,7 +101,8 @@ namespace GitUI
 
             _needsPositionRestore = false;
 
-            if (!Screen.AllScreens.Any(screen => screen.WorkingArea.IntersectsWith(position.Rect)))
+            var workingArea = _getScreensWorkingArea();
+            if (!workingArea.Any(screen => screen.IntersectsWith(position.Rect)))
             {
                 if (position.State == FormWindowState.Maximized)
                 {
@@ -114,6 +114,7 @@ namespace GitUI
 
             SuspendLayout();
 
+            var windowCentred = StartPosition == FormStartPosition.CenterParent;
             StartPosition = FormStartPosition.Manual;
 
             if (FormBorderStyle == FormBorderStyle.Sizable ||
@@ -122,11 +123,11 @@ namespace GitUI
                 Size = DpiUtil.Scale(position.Rect.Size, originalDpi: position.DeviceDpi);
             }
 
-            if (Owner == null || !_windowCentred)
+            if (Owner == null || !windowCentred)
             {
                 var location = DpiUtil.Scale(position.Rect.Location, originalDpi: position.DeviceDpi);
 
-                if (WindowPositionManager.FindWindowScreen(location, Screen.AllScreens.Select(screen => screen.WorkingArea)) is Rectangle rect)
+                if (WindowPositionManager.FindWindowScreen(location, workingArea) is Rectangle rect)
                 {
                     location.Y = rect.Y;
                 }
@@ -138,7 +139,7 @@ namespace GitUI
                 // Calculate location for modal form with parent
                 Location = new Point(
                     Owner.Left + (Owner.Width / 2) - (Width / 2),
-                    Math.Max(0, Owner.Top + (Owner.Height / 2) - (Height / 2)));
+                    Owner.Top + (Owner.Height / 2) - (Height / 2));
             }
 
             if (WindowState != position.State)
@@ -147,6 +148,31 @@ namespace GitUI
             }
 
             ResumeLayout();
+        }
+
+        // This is a base class for many forms, which have own GetTestAccessor() methods. This has to be unique
+        internal GitExtensionsFormTestAccessor GetGitExtensionsFormTestAccessor() => new GitExtensionsFormTestAccessor(this);
+
+        internal readonly struct GitExtensionsFormTestAccessor
+        {
+            private readonly GitExtensionsForm _form;
+
+            public GitExtensionsFormTestAccessor(GitExtensionsForm form)
+            {
+                _form = form;
+            }
+
+            public IWindowPositionManager WindowPositionManager
+            {
+                get => _form._windowPositionManager;
+                set => _form._windowPositionManager = value;
+            }
+
+            public Func<IReadOnlyList<Rectangle>> GetScreensWorkingArea
+            {
+                get => _form._getScreensWorkingArea;
+                set => _form._getScreensWorkingArea = value;
+            }
         }
     }
 }

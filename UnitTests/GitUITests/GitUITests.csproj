@@ -70,6 +70,7 @@
     <Compile Include="Editor\FileViewerInternal.CurrentViewPositionCacheTests.cs" />
     <Compile Include="Editor\FileViewerTextTests.cs" />
     <Compile Include="FindFilePredicateProviderTest.cs" />
+    <Compile Include="GitExtensionsFormTests.cs" />
     <Compile Include="Helpers\DiffKindRevisionTests.cs" />
     <Compile Include="ControlUtilTests.cs" />
     <Compile Include="LinqExtensionsTests.cs" />

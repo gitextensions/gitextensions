@@ -8,7 +8,24 @@ using JetBrains.Annotations;
 
 namespace GitUI
 {
-    internal sealed class WindowPositionManager
+    internal interface IWindowPositionManager
+    {
+        /// <summary>
+        /// Retrieves a persisted position for the given <paramref name="form"/>.
+        /// </summary>
+        /// <param name="form">The form to look the position for.</param>
+        /// <returns>The form's persisted position; otherwise <see langword="null"/>.</returns>
+        WindowPosition LoadPosition(Form form);
+
+        /// <summary>
+        ///   Save the position of a form to the user settings. Hides the window
+        ///   as a side-effect.
+        /// </summary>
+        /// <param name="form">The form to save the position for.</param>
+        void SavePosition(Form form);
+    }
+
+    internal sealed class WindowPositionManager : IWindowPositionManager
     {
         private static WindowPositionList _windowPositionList;
 
