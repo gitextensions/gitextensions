@@ -649,9 +649,6 @@ namespace GitUI.CommitInfo
         {
             tableLayout.SuspendLayout();
 
-            int width = Math.Max(ClientSize.Width,
-                commitInfoHeader.Width + commitInfoHeader.Margin.Horizontal);
-
             int[] heights =
             {
                 commitInfoHeader.Height + commitInfoHeader.Margin.Vertical,
@@ -666,11 +663,20 @@ namespace GitUI.CommitInfo
                 tableLayout.RowStyles[i].Height = heights[i];
             }
 
-            var column = tableLayout.ColumnStyles[0];
-            column.SizeType = SizeType.Absolute;
-            column.Width = width;
+            int height = heights.Sum();
 
-            tableLayout.Size = new Size(width, heights.Sum());
+            int clientWidth = Width;
+            if (height > Height)
+            {
+                clientWidth -= SystemInformation.VerticalScrollBarWidth;
+            }
+
+            int width = Math.Max(clientWidth, commitInfoHeader.Width + commitInfoHeader.Margin.Horizontal);
+
+            tableLayout.ColumnStyles[0].SizeType = SizeType.Absolute;
+            tableLayout.ColumnStyles[0].Width = width;
+
+            tableLayout.Size = new Size(width, height);
 
             tableLayout.ResumeLayout(false);
             tableLayout.PerformLayout();
