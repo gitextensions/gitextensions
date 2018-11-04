@@ -26,3 +26,6 @@ Help->About Copy button or Help->Report an issue link will put this info in the 
 - .NET version: 
 
 **Did this work in previous version of GitExtensions (which)?**
+
+<!-- Love gitextensions? Please consider supporting our collective:
+👉  https://opencollective.com/gitextensions/donate -->
