@@ -10,7 +10,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         internal static readonly IReadOnlyList<Color> PresetGraphColors = new[]
 {
             Color.FromArgb(240, 36, 117),
-            Color.FromArgb(52, 152, 219),
+            Color.FromArgb(120, 180, 255), // light blue
             Color.FromArgb(46, 204, 113),
             Color.FromArgb(142, 68, 173),
             Color.FromArgb(231, 76, 60),
