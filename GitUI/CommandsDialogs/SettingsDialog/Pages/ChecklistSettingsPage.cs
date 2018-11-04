@@ -472,6 +472,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
                 IEnumerable<Func<bool>> CheckFuncs()
                 {
+                    yield return CheckGitCmdValid;
                     yield return CheckGlobalUserSettingsValid;
                     yield return CheckEditorTool;
                     yield return CheckMergeTool;
