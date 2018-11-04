@@ -59,7 +59,7 @@ namespace GitUI
         private readonly TranslationString _rebaseBranchInteractive = new TranslationString("Rebase branch interactively.");
         private readonly TranslationString _areYouSureRebase = new TranslationString("Are you sure you want to rebase? This action will rewrite commit history.");
         private readonly TranslationString _dontShowAgain = new TranslationString("Don't show me this message again.");
-        private readonly TranslationString _noMergeBaseCommit = new TranslationString("There is no merge base commit between these 2 commits.");
+        private readonly TranslationString _noMergeBaseCommit = new TranslationString("There is no common ancestor for the selected commits.");
 
         private readonly FormRevisionFilter _revisionFilter = new FormRevisionFilter();
         private readonly NavigationHistory _navigationHistory = new NavigationHistory();
