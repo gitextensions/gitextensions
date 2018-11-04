@@ -97,7 +97,7 @@ namespace GitUI.RevisionGridClasses
         {
             var filter = "";
             if (FileFilterCheck.Checked)
-                filter += string.Format(" \"{0}\"", FileFilter.Text.ToPosixPath());
+                filter += string.Format(" {0}", FileFilter.Text.ToPosixPath());
             return filter;
         }
 
