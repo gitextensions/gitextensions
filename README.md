@@ -9,6 +9,12 @@ It also integrates with Windows Explorer and Microsoft Visual Studio (2015/2017)
 
 <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+### Supporting Git Extensions
+
+We have a dedicated team of collaborators that spend a lot of time in this fixing bugs and adding features. You can support the project by making a financial contribution to the project. Donations will be used to cover the costs and to get the resources needed to keep the project running. We will also use donations to thank collaborators for their effort.
+
+* [Become a backer or sponsor on Open Collective.](https://opencollective.com/gitextensions)
+
 ### Current Status
 
 The work has been split into two streams:
