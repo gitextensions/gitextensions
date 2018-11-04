@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            GitUI.UserControls.DoubleBufferedTableLayoutPanel tableLayoutPanel1;
+            System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
             this.avatarControl = new GitUI.AvatarControl();
             this.rtbRevisionHeader = new System.Windows.Forms.RichTextBox();
-            tableLayoutPanel1 = new GitUI.UserControls.DoubleBufferedTableLayoutPanel();
+            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
