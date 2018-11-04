@@ -3001,7 +3001,8 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                int width = DpiUtil.Scale(420);
+                // enough to fit CommitInfoHeader in most cases, when the width is (avatar + commit hash)
+                int width = DpiUtil.Scale(490) + SystemInformation.VerticalScrollBarWidth;
                 CommitInfoTabControl.RemoveIfExists(CommitInfoTabPage);
 
                 if (commitInfoPosition == CommitInfoPosition.RightwardFromList)

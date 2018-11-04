@@ -64,6 +64,9 @@ namespace GitUI.CommitInfo
         private readonly GitDescribeProvider _gitDescribeProvider;
         private readonly CancellationTokenSequence _asyncLoadCancellation = new CancellationTokenSequence();
 
+        private readonly IDisposable _revisionInfoResizedSubscription;
+        private readonly IDisposable _commitMessageResizedSubscription;
+
         private GitRevision _revision;
         private IReadOnlyList<ObjectId> _children;
         private string _linksInfo;
@@ -75,8 +78,8 @@ namespace GitUI.CommitInfo
         private string _branchInfo;
         private string _gitDescribeInfo;
         [CanBeNull] private IList<string> _sortedRefs;
-        private readonly IDisposable _revisionInfoResizedSubscription;
-        private readonly IDisposable _commitMessageResizedSubscription;
+        private int _revisionInfoHeight;
+        private int _commitMessageHeight;
 
         [DefaultValue(false)]
         public bool ShowBranchesAsLinks { get; set; }
@@ -106,17 +109,17 @@ namespace GitUI.CommitInfo
             Hotkeys = HotkeySettingsManager.LoadHotkeys(FormBrowse.HotkeySettingsName);
             addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)FormBrowse.Command.AddNotes).ToShortcutKeyDisplayString();
 
-            _commitMessageResizedSubscription = subscribeToContentsResized(rtbxCommitMessage);
-            _revisionInfoResizedSubscription = subscribeToContentsResized(RevisionInfo);
+            _commitMessageResizedSubscription = subscribeToContentsResized(rtbxCommitMessage, CommitMessage_ContentsResized);
+            _revisionInfoResizedSubscription = subscribeToContentsResized(RevisionInfo, RevisionInfo_ContentsResized);
 
-            IDisposable subscribeToContentsResized(RichTextBox richTextBox) =>
+            IDisposable subscribeToContentsResized(RichTextBox richTextBox, Action<ContentsResizedEventArgs> handler) =>
                 Observable
                     .FromEventPattern<ContentsResizedEventHandler, ContentsResizedEventArgs>(
                         h => richTextBox.ContentsResized += h,
                         h => richTextBox.ContentsResized -= h)
                     .Throttle(TimeSpan.FromMilliseconds(100))
                     .ObserveOn(MainThreadScheduler.Instance)
-                    .Subscribe(_ => RichTextBox_ContentsResized(_.Sender, _.EventArgs));
+                    .Subscribe(_ => handler(_.EventArgs));
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -180,42 +183,41 @@ namespace GitUI.CommitInfo
             showMessagesOfAnnotatedTagsToolStripMenuItem.Checked = AppSettings.ShowAnnotatedTagsMessages;
             showTagThisCommitDerivesFromMenuItem.Checked = AppSettings.CommitInfoShowTagThisCommitDerivesFrom;
 
-            _linksInfo = "";
-            _branchInfo = "";
-            _annotatedTagsInfo = "";
-            _tagInfo = "";
-            _gitDescribeInfo = "";
             _branches = null;
             _annotatedTagsMessages = null;
             _tags = null;
             _linkFactory.Clear();
 
-            RevisionInfo.Clear();
+            UpdateCommitMessage();
 
-            var data = _commitDataManager.CreateFromRevision(_revision, _children);
+            _annotatedTagsInfo = "";
+            _linksInfo = "";
+            _branchInfo = "";
+            _tagInfo = "";
+            _gitDescribeInfo = "";
 
-            if (_revision != null && _revision.Body == null)
+            if (_revision != null && !_revision.IsArtificial)
             {
-                _commitDataManager.UpdateBody(data, out _);
-                _revision.Body = data.Body;
+                UpdateRevisionInfo();
+                StartAsyncDataLoad();
             }
 
-            var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent != null);
-
-            rtbxCommitMessage.SetXHTMLText(commitMessage);
-            rtbxCommitMessage.SelectionStart = 0; // scroll up
-            rtbxCommitMessage.ScrollToCaret();    // scroll up
-
-            if (_revision == null || _revision.IsArtificial)
+            void UpdateCommitMessage()
             {
-                return;
+                var data = _commitDataManager.CreateFromRevision(_revision, _children);
+
+                if (_revision != null && _revision.Body == null)
+                {
+                    _commitDataManager.UpdateBody(data, out _);
+                    _revision.Body = data.Body;
+                }
+
+                var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent != null);
+
+                // workaround the problem that with some DPI RichTextBox size height
+                // passed to ContentResized event is ~1 line less than needed
+                rtbxCommitMessage.SetXHTMLText(commitMessage + Environment.NewLine);
             }
-
-            UpdateRevisionInfo();
-
-            StartAsyncDataLoad();
-
-            return;
 
             void StartAsyncDataLoad()
             {
@@ -276,26 +278,15 @@ namespace GitUI.CommitInfo
 
                     string GetLinksForRevision()
                     {
-                        var links = _gitRevisionExternalLinksParser.Parse(revision, Module.EffectiveSettings).Distinct();
-                        var linksString = new StringBuilder();
+                        var links = _gitRevisionExternalLinksParser.Parse(revision, Module.EffectiveSettings);
+                        var result = string.Join(", ", links.Distinct().Select(link => _linkFactory.CreateLink(link.Caption, link.Uri)));
 
-                        linksString.AppendLine();
-                        linksString.Append(WebUtility.HtmlEncode(_trsLinksRelatedToRevision.Text));
-                        linksString.Append(' ');
-
-                        var any = false;
-                        foreach (var link in links)
+                        if (string.IsNullOrEmpty(result))
                         {
-                            if (any)
-                            {
-                                linksString.Append(", ");
-                            }
-
-                            linksString.Append(_linkFactory.CreateLink(link.Caption, link.Uri));
-                            any = true;
+                            return "";
                         }
 
-                        return any ? linksString.ToString() : "";
+                        return $"{WebUtility.HtmlEncode(_trsLinksRelatedToRevision.Text)} {result}";
                     }
                 }
 
@@ -483,21 +474,11 @@ namespace GitUI.CommitInfo
                 }
             }
 
-            string body = new StringBuilder()
-                .Append(_annotatedTagsInfo)
-                .Append(_linksInfo)
-                .Append(_branchInfo)
-                .Append(_tagInfo)
-                .Append(_gitDescribeInfo)
-                .ToString();
+            string body = string.Join(Environment.NewLine,
+                new[] { _annotatedTagsInfo, _linksInfo, _branchInfo, _tagInfo, _gitDescribeInfo }
+                    .Where(_ => !string.IsNullOrEmpty(_)));
 
-            RevisionInfo.SuspendLayout();
             RevisionInfo.SetXHTMLText(body);
-            RevisionInfo.SelectionStart = 0; // scroll up
-            RevisionInfo.ScrollToCaret();    // scroll up
-
-            RevisionInfo.ResumeLayout(true);
-
             return;
 
             string GetAnnotatedTagsInfo(
@@ -514,12 +495,7 @@ namespace GitUI.CommitInfo
                     }
                 }
 
-                if (result.Length == 0)
-                {
-                    return string.Empty;
-                }
-
-                return Environment.NewLine + result;
+                return result.ToString();
             }
 
             string GetBranchesWhichContainsThisCommit(IEnumerable<string> branches, bool showBranchesAsLinks)
@@ -575,10 +551,10 @@ namespace GitUI.CommitInfo
 
                 if (links.Any())
                 {
-                    return Environment.NewLine + WebUtility.HtmlEncode(_containedInBranches.Text) + " " + links.Join(", ");
+                    return WebUtility.HtmlEncode(_containedInBranches.Text) + " " + links.Join(", ");
                 }
 
-                return Environment.NewLine + WebUtility.HtmlEncode(_containedInNoBranch.Text);
+                return WebUtility.HtmlEncode(_containedInNoBranch.Text);
             }
 
             string GetTagsWhichContainsThisCommit(IEnumerable<string> tags, bool showBranchesAsLinks)
@@ -588,10 +564,10 @@ namespace GitUI.CommitInfo
 
                 if (!string.IsNullOrEmpty(tagString))
                 {
-                    return Environment.NewLine + WebUtility.HtmlEncode(_containedInTags.Text) + " " + tagString;
+                    return WebUtility.HtmlEncode(_containedInTags.Text) + " " + tagString;
                 }
 
-                return Environment.NewLine + WebUtility.HtmlEncode(_containedInNoTag.Text);
+                return WebUtility.HtmlEncode(_containedInNoTag.Text);
             }
         }
 
@@ -660,9 +636,55 @@ namespace GitUI.CommitInfo
             }
         }
 
-        private void RichTextBox_ContentsResized(object sender, ContentsResizedEventArgs e)
+        private void RevisionInfo_ContentsResized(ContentsResizedEventArgs e)
         {
-            ((RichTextBox)sender).ClientSize = e.NewRectangle.Size;
+            _revisionInfoHeight = e.NewRectangle.Height;
+            PerformLayout();
+        }
+
+        private void CommitMessage_ContentsResized(ContentsResizedEventArgs e)
+        {
+            _commitMessageHeight = e.NewRectangle.Height;
+            PerformLayout();
+        }
+
+        protected override void OnLayout(LayoutEventArgs e)
+        {
+            tableLayout.SuspendLayout();
+
+            int[] heights =
+            {
+                commitInfoHeader.Height + commitInfoHeader.Margin.Vertical,
+                _commitMessageHeight + rtbxCommitMessage.Margin.Vertical + pnlCommitMessage.Margin.Vertical,
+                _revisionInfoHeight + RevisionInfo.Margin.Vertical
+            };
+
+            // leave 1st row SizeType = AutoWidth to let CommitInfoHeader.AutoSize be correctly applied
+            for (int i = 1; i < tableLayout.RowStyles.Count; i++)
+            {
+                tableLayout.RowStyles[i].SizeType = SizeType.Absolute;
+                tableLayout.RowStyles[i].Height = heights[i];
+            }
+
+            int height = heights.Sum();
+
+            int clientWidth = Width;
+            if (height > Height)
+            {
+                clientWidth -= SystemInformation.VerticalScrollBarWidth;
+            }
+
+            int width = Math.Max(clientWidth, commitInfoHeader.Width + commitInfoHeader.Margin.Horizontal);
+
+            tableLayout.ColumnStyles[0].SizeType = SizeType.Absolute;
+            tableLayout.ColumnStyles[0].Width = width;
+
+            tableLayout.Size = new Size(width, height);
+
+            tableLayout.ResumeLayout(false);
+            tableLayout.PerformLayout();
+
+            base.OnLayout(e);
         }
 
         private void RichTextBox_KeyDown(object sender, KeyEventArgs e)

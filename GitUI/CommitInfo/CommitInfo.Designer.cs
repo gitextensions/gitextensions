@@ -31,7 +31,7 @@ namespace GitUI.CommitInfo
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.tableLayout = new GitUI.UserControls.DoubleBufferedTableLayoutPanel();
+            this.tableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.pnlCommitMessage = new System.Windows.Forms.Panel();
             this.rtbxCommitMessage = new System.Windows.Forms.RichTextBox();
             this.commitInfoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -54,8 +54,6 @@ namespace GitUI.CommitInfo
             // 
             // tableLayout
             // 
-            this.tableLayout.AutoSize = true;
-            this.tableLayout.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayout.BackColor = System.Drawing.SystemColors.Window;
             this.tableLayout.ColumnCount = 1;
             this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
@@ -63,41 +61,43 @@ namespace GitUI.CommitInfo
             this.tableLayout.Controls.Add(this.pnlCommitMessage, 0, 1);
             this.tableLayout.Controls.Add(this.RevisionInfo, 0, 2);
             this.tableLayout.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-            this.tableLayout.Location = new System.Drawing.Point(8, 8);
+            this.tableLayout.Location = new System.Drawing.Point(0, 0);
             this.tableLayout.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayout.Name = "tableLayout";
-            this.tableLayout.Padding = new System.Windows.Forms.Padding(4);
             this.tableLayout.RowCount = 3;
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayout.Size = new System.Drawing.Size(435, 282);
+            this.tableLayout.Size = new System.Drawing.Size(472, 262);
             this.tableLayout.TabIndex = 0;
             this.tableLayout.Visible = false;
             // 
             // pnlCommitMessage
             // 
-            this.pnlCommitMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlCommitMessage.AutoSize = true;
-            this.pnlCommitMessage.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.pnlCommitMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                | System.Windows.Forms.AnchorStyles.Left)
+                | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlCommitMessage.BackColor = System.Drawing.SystemColors.Control;
             this.pnlCommitMessage.Controls.Add(this.rtbxCommitMessage);
-            this.pnlCommitMessage.Location = new System.Drawing.Point(4, 108);
-            this.pnlCommitMessage.Margin = new System.Windows.Forms.Padding(0);
+            this.pnlCommitMessage.Location = new System.Drawing.Point(8, 112);
+            this.pnlCommitMessage.Margin = new System.Windows.Forms.Padding(8, 0, 8, 0);
             this.pnlCommitMessage.Name = "pnlCommitMessage";
-            this.pnlCommitMessage.Size = new System.Drawing.Size(427, 36);
+            this.pnlCommitMessage.Size = new System.Drawing.Size(456, 36);
             this.pnlCommitMessage.TabIndex = 0;
             // 
             // rtbxCommitMessage
             // 
-            this.rtbxCommitMessage.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.rtbxCommitMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbxCommitMessage.BackColor = System.Drawing.SystemColors.Control;
             this.rtbxCommitMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.rtbxCommitMessage.ContextMenuStrip = this.commitInfoContextMenuStrip;
             this.rtbxCommitMessage.Location = new System.Drawing.Point(8, 8);
             this.rtbxCommitMessage.Margin = new System.Windows.Forms.Padding(8);
             this.rtbxCommitMessage.Name = "rtbxCommitMessage";
             this.rtbxCommitMessage.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.rtbxCommitMessage.Size = new System.Drawing.Size(411, 20);
+            this.rtbxCommitMessage.Size = new System.Drawing.Size(440, 20);
             this.rtbxCommitMessage.TabIndex = 1;
             this.rtbxCommitMessage.Text = "";
             // 
@@ -187,25 +187,27 @@ namespace GitUI.CommitInfo
             // 
             this.commitInfoHeader.AutoSize = true;
             this.commitInfoHeader.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.commitInfoHeader.Location = new System.Drawing.Point(4, 4);
-            this.commitInfoHeader.Margin = new System.Windows.Forms.Padding(0);
+            this.commitInfoHeader.BackColor = System.Drawing.SystemColors.Window;
+            this.commitInfoHeader.Location = new System.Drawing.Point(8, 8);
+            this.commitInfoHeader.Margin = new System.Windows.Forms.Padding(8, 8, 16, 8);
             this.commitInfoHeader.Name = "commitInfoHeader";
-            this.commitInfoHeader.Padding = new System.Windows.Forms.Padding(0, 0, 0, 8);
-            this.commitInfoHeader.Size = new System.Drawing.Size(118, 104);
+            this.commitInfoHeader.Size = new System.Drawing.Size(260, 96);
             this.commitInfoHeader.TabIndex = 0;
             // 
             // RevisionInfo
             // 
-            this.RevisionInfo.Anchor = (System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left);
+            this.RevisionInfo.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                | System.Windows.Forms.AnchorStyles.Left)
+                | System.Windows.Forms.AnchorStyles.Right)));
             this.RevisionInfo.BackColor = System.Drawing.SystemColors.Window;
             this.RevisionInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.RevisionInfo.ContextMenuStrip = this.commitInfoContextMenuStrip;
-            this.RevisionInfo.Location = new System.Drawing.Point(4, 144);
-            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(0);
+            this.RevisionInfo.Location = new System.Drawing.Point(8, 156);
+            this.RevisionInfo.Margin = new System.Windows.Forms.Padding(8, 8, 16, 8);
             this.RevisionInfo.Name = "RevisionInfo";
             this.RevisionInfo.ReadOnly = true;
             this.RevisionInfo.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.RevisionInfo.Size = new System.Drawing.Size(427, 134);
+            this.RevisionInfo.Size = new System.Drawing.Size(448, 98);
             this.RevisionInfo.TabIndex = 2;
             this.RevisionInfo.Text = "";
             this.RevisionInfo.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.RevisionInfoLinkClicked);
@@ -219,10 +221,9 @@ namespace GitUI.CommitInfo
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.Controls.Add(this.tableLayout);
-            this.DoubleBuffered = true;
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "CommitInfo";
-            this.Padding = new System.Windows.Forms.Padding(8);
-            this.Size = new System.Drawing.Size(451, 298);
+            this.Size = new System.Drawing.Size(472, 262);
             this.tableLayout.ResumeLayout(false);
             this.tableLayout.PerformLayout();
             this.pnlCommitMessage.ResumeLayout(false);
@@ -250,6 +251,6 @@ namespace GitUI.CommitInfo
         private CommitInfoHeader commitInfoHeader;
         private System.Windows.Forms.Panel pnlCommitMessage;
         private System.Windows.Forms.RichTextBox rtbxCommitMessage;
-        private GitUI.UserControls.DoubleBufferedTableLayoutPanel tableLayout;
+        private System.Windows.Forms.TableLayoutPanel tableLayout;
     }
 }
