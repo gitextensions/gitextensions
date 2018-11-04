@@ -213,7 +213,10 @@ namespace GitUI.CommitInfo
                 }
 
                 var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent != null);
-                rtbxCommitMessage.SetXHTMLText(commitMessage);
+
+                // workaround the problem that with some DPI RichTextBox size height
+                // passed to ContentResized event is ~1 line less than needed
+                rtbxCommitMessage.SetXHTMLText(commitMessage + Environment.NewLine);
             }
 
             void StartAsyncDataLoad()
