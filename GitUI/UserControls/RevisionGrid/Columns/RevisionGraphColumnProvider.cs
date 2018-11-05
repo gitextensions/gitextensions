@@ -296,7 +296,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             // StartLane
                             if (endLane >= 0 && centerLane >= 0 && (endLane <= MaxLanes || centerLane <= MaxLanes))
                             {
-                                DrawSegment(g, brush, centerX, centerY - 1, endX, endY);
+                                DrawSegment(g, brush, centerX, centerY, endX, endY);
                             }
                         }
 
@@ -316,8 +316,6 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                             }
                             else //// Circle
                             {
-                                nodeRect.Width = nodeRect.Height = NodeDimension - 1;
-
                                 g.SmoothingMode = SmoothingMode.AntiAlias;
                                 g.FillEllipse(brush, nodeRect);
                             }
@@ -394,18 +392,16 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 }
                 else
                 {
-                    // Anti-aliasing seems to introduce an offset of two thirds
-                    // of a pixel to the right - compensate it.
+                    // Anti-aliasing with bezier & PixelOffsetMode.HighQuality
+                    // introduces an offset of ~1/8 px - compensate it.
                     g.SmoothingMode = SmoothingMode.AntiAlias;
-                    float offset = -0.667F;
+                    const float offset = -1f / 8f;
 
-                    // Left shifting int is fast equivalent of dividing by two,
-                    // thus computing the average of y0 and y1.
-                    var yMid = (y0 + y1) >> 1;
-                    var c0 = new PointF(offset + x0, yMid);
-                    var c1 = new PointF(offset + x1, yMid);
-                    var e0 = new PointF(offset + p0.X, p0.Y);
-                    var e1 = new PointF(offset + p1.X, p1.Y);
+                    var yMid = (y0 + y1) / 2f;
+                    var c0 = new PointF(offset + p0.X, offset + yMid);
+                    var c1 = new PointF(offset + p1.X, offset + yMid);
+                    var e0 = new PointF(offset + p0.X, offset + p0.Y);
+                    var e1 = new PointF(offset + p1.X, offset + p1.Y);
                     g.DrawBezier(lanePen, e0, c0, c1, e1);
                 }
             }
@@ -592,6 +588,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 PixelFormat.Format32bppPArgb);
             _graphBitmapGraphics = Graphics.FromImage(_graphBitmap);
             _graphBitmapGraphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // With SmoothingMode != None it is better to use PixelOffsetMode.HighQuality
+            // e.g. to avoid shrinking rectangles, ellipses and etc. by 1 px from right bottom
+            _graphBitmapGraphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
             Head = 0;
             Count = 0;
         }
