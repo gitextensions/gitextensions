@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using GitCommands;
@@ -13,6 +14,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             Text = "General";
             InitializeComplete();
+
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime || GitModuleForm.IsUnitTestActive)
+            {
+                return;
+            }
 
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {

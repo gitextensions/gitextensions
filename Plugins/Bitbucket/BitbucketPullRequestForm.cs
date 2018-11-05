@@ -22,7 +22,7 @@ namespace Bitbucket
         [CanBeNull] private readonly Settings _settings;
         private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
 
-        public BitbucketPullRequestForm(Settings settings)
+        public BitbucketPullRequestForm([CanBeNull] Settings settings)
         {
             InitializeComponent();
 
@@ -30,7 +30,7 @@ namespace Bitbucket
             ddlRepositorySource.DisplayMember = nameof(Repository.DisplayName);
             ddlRepositoryTarget.DisplayMember = nameof(Repository.DisplayName);
 
-            _settings = settings;
+            _settings = settings ?? new Settings();
 
             Load += delegate
             {
