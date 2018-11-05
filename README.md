@@ -9,12 +9,6 @@ It also integrates with Windows Explorer and Microsoft Visual Studio (2015/2017)
 
 <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a> <img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-### Supporting Git Extensions
-
-We have a dedicated team of collaborators that spend a lot of time in this fixing bugs and adding features. You can support the project by making a financial contribution to the project. Donations will be used to cover the costs and to get the resources needed to keep the project running. We will also use donations to thank collaborators for their effort.
-
-* [Become a backer or sponsor on Open Collective.](https://opencollective.com/gitextensions)
-
 ### Current Status
 
 The work has been split into two streams:
@@ -115,10 +109,6 @@ title="See more information on Transifex.com"><img src="https://ds0k0en9abmn1.cl
 </table>
 
 
-## Shoutouts
-* Special thanks to JetBRAINS for [ReSharper](https://www.jetbrains.com/resharper/) licenses.
-* Some icons by [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/) ([Creative Commons Attribution 3.0](http://creativecommons.org/licenses/by/3.0/)).
-
 ## Links
 
 * Website: [gitextensions.github.io](https://gitextensions.github.io/)
@@ -129,10 +119,11 @@ title="See more information on Transifex.com"><img src="https://ds0k0en9abmn1.cl
 * Gitter chat: [gitter.im/gitextensions/gitextensions](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 * Mailing list: [groups.google.com/group/gitextensions](https://groups.google.com/group/gitextensions)
 
+# Shoutouts
 
-## Contributors
-
-This project exists thanks to all the people who contribute. 
+* We thank JetBRAINS for [ReSharper](https://www.jetbrains.com/resharper/) licenses.
+* We thank [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/) for the icons ([CCA/3.0](http://creativecommons.org/licenses/by/3.0/)).
+* We thank all the people who contribute, the project exists because of you
 <a href="https://github.com/gitextensions/gitextensions/contributors"><img src="https://opencollective.com/gitextensions/contributors.svg?width=890&button=false" /></a>
 
 
