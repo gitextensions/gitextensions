@@ -43,7 +43,7 @@ namespace GitUI
         /// <summary>
         /// flag to prevent recursion ClientSizeChanged -> UpdateColumnWidth -> ScrollBar visibility changed -> ClientSizeChanged
         /// </summary>
-        private bool _updatingColumnWidth;
+        private bool _handlingClientSizeChange;
 
         public event EventHandler SelectedIndexChanged;
         public event EventHandler DataSourceChanged;
@@ -798,8 +798,6 @@ namespace GitUI
                     FileStatusListView.Groups.Add(group);
                 }
 
-                var pathFormatter = new PathFormatter(FileStatusListView.CreateGraphics(), FileStatusListView.Font);
-
                 foreach (var item in statuses)
                 {
                     if (!IsFilterMatch(item))
@@ -940,13 +938,8 @@ namespace GitUI
             }
         }
 
-        private void UpdateColumnWidth()
+        private void UpdateColumnWidth(Action onComplete = null)
         {
-            if (_updatingColumnWidth)
-            {
-                return;
-            }
-
             var pathFormatter = new PathFormatter(FileStatusListView.CreateGraphics(), FileStatusListView.Font);
             var minWidth = FileStatusListView.ClientSize.Width;
 
@@ -964,15 +957,9 @@ namespace GitUI
 
             if (width == columnHeader.Width)
             {
+                onComplete?.Invoke();
                 return;
             }
-
-            if (_updatingColumnWidth)
-            {
-                return;
-            }
-
-            _updatingColumnWidth = true;
 
             FileStatusListView.BeginUpdate();
             columnHeader.Width = width;
@@ -988,7 +975,7 @@ namespace GitUI
                 await this.SwitchToMainThreadAsync();
                 FileStatusListView.EndUpdate();
 
-                _updatingColumnWidth = false;
+                onComplete?.Invoke();
             }).FileAndForget();
         }
 
@@ -1005,19 +992,16 @@ namespace GitUI
 
         private void FileStatusListView_ClientSizeChanged(object sender, EventArgs e)
         {
-            if (!FileStatusListView.IsHandleCreated || !FileStatusListView.Created || DesignMode)
+            if (!IsHandleCreated || !FileStatusListView.IsHandleCreated || !FileStatusListView.Created || DesignMode)
             {
                 return;
             }
 
-            if (!FileStatusListView.Created)
+            if (!_handlingClientSizeChange)
             {
-                // The parent form gets closed, it destroys children controls.
-                // While processing WmDestroy ExListView.OnClientSize change fires
-                return;
+                _handlingClientSizeChange = true;
+                UpdateColumnWidth(onComplete: () => _handlingClientSizeChange = false);
             }
-
-            UpdateColumnWidth();
         }
 
         private void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
