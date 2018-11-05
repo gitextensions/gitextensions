@@ -136,9 +136,11 @@ namespace GitUI.CommandsDialogs
             if (disposing)
             {
                 _asyncLoader.Dispose();
-                _filterRevisionsHelper.Dispose();
-                _filterBranchHelper.Dispose();
-                _formBrowseMenus.Dispose();
+
+                // if the form was instantiated by the translation app, all of the following would be null
+                _filterRevisionsHelper?.Dispose();
+                _filterBranchHelper?.Dispose();
+                _formBrowseMenus?.Dispose();
 
                 components?.Dispose();
             }

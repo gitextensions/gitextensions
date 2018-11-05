@@ -33,7 +33,7 @@
             this._NO_TRANSLATE_labelProductName = new System.Windows.Forms.LinkLabel();
             this.linkLabelIcons = new System.Windows.Forms.LinkLabel();
             this._NO_TRANSLATE_labelCopyright = new System.Windows.Forms.Label();
-            this.thanksTo = new System.Windows.Forms.LinkLabel();
+            this._NO_TRANSLATE_ThanksTo = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.environmentInfo = new GitUI.CommandsDialogs.EnvironmentInfo();
             this.thanksTimer = new System.Windows.Forms.Timer(this.components);
@@ -61,7 +61,7 @@
             tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_labelProductName, 0, 0);
             tableLayoutPanel1.Controls.Add(this.linkLabelIcons, 0, 5);
             tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_labelCopyright, 0, 3);
-            tableLayoutPanel1.Controls.Add(this.thanksTo, 0, 4);
+            tableLayoutPanel1.Controls.Add(this._NO_TRANSLATE_ThanksTo, 0, 4);
             tableLayoutPanel1.Controls.Add(this.label1, 0, 8);
             tableLayoutPanel1.Controls.Add(this.environmentInfo, 0, 6);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -138,18 +138,18 @@
             // 
             // thanksTo
             // 
-            this.thanksTo.AutoSize = true;
-            this.thanksTo.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.thanksTo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.thanksTo.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.thanksTo.Location = new System.Drawing.Point(12, 79);
-            this.thanksTo.Margin = new System.Windows.Forms.Padding(0);
-            this.thanksTo.Name = "thanksTo";
-            this.thanksTo.Size = new System.Drawing.Size(420, 13);
-            this.thanksTo.TabIndex = 3;
-            this.thanksTo.TabStop = true;
-            this.thanksTo.Text = "Thanks to over {0} contributors: {1}";
-            this.thanksTo.UseMnemonic = false;
+            this._NO_TRANSLATE_ThanksTo.AutoSize = true;
+            this._NO_TRANSLATE_ThanksTo.Cursor = System.Windows.Forms.Cursors.Hand;
+            this._NO_TRANSLATE_ThanksTo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_ThanksTo.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this._NO_TRANSLATE_ThanksTo.Location = new System.Drawing.Point(12, 79);
+            this._NO_TRANSLATE_ThanksTo.Margin = new System.Windows.Forms.Padding(0);
+            this._NO_TRANSLATE_ThanksTo.Name = "_NO_TRANSLATE_ThanksTo";
+            this._NO_TRANSLATE_ThanksTo.Size = new System.Drawing.Size(420, 13);
+            this._NO_TRANSLATE_ThanksTo.TabIndex = 3;
+            this._NO_TRANSLATE_ThanksTo.TabStop = true;
+            this._NO_TRANSLATE_ThanksTo.Text = "Thanks to over {0} contributors: {1}";
+            this._NO_TRANSLATE_ThanksTo.UseMnemonic = false;
             // 
             // label1
             // 
@@ -207,7 +207,7 @@
             // 
             // label2
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.Location = new System.Drawing.Point(12, 156);
             this.label2.Margin = new System.Windows.Forms.Padding(12, 4, 12, 4);
@@ -273,7 +273,7 @@
         private System.Windows.Forms.Label _NO_TRANSLATE_labelCopyright;
         private System.Windows.Forms.PictureBox pictureDonate;
         private System.Windows.Forms.Timer thanksTimer;
-        private System.Windows.Forms.LinkLabel thanksTo;
+        private System.Windows.Forms.LinkLabel _NO_TRANSLATE_ThanksTo;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.LinkLabel linkLabelIcons;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;

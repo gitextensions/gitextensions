@@ -15,6 +15,9 @@ namespace GitUI
         /// <inheritdoc />
         public event EventHandler<GitUICommandsChangedEventArgs> UICommandsChanged;
 
+        /// <summary>
+        /// Indicates that the process is run by unit tests runner.
+        /// </summary>
         internal static bool IsUnitTestActive { get; set; }
 
         [CanBeNull] private GitUICommands _uiCommands;

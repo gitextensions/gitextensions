@@ -69,6 +69,11 @@ namespace TranslationApp
         {
             using (new WaitCursorScope())
             {
+                // we will be instantiating a number of forms using their default .ctors
+                // this would lead to InvalidOperationException thrown in GitModuleForm()
+                // set the flag that will stop this from happening
+                GitModuleForm.IsUnitTestActive = true;
+
                 var neutralItems = TranslationHelpers.LoadNeutralItems();
                 string filename = Path.Combine(Translator.GetTranslationDir(), "English.xlf");
                 TranslationHelpers.SaveTranslation(null, neutralItems, filename);

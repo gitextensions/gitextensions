@@ -8,7 +8,7 @@ namespace GitUI.CommandsDialogs
     {
         public EnvironmentInfo()
         {
-            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
+            if (LicenseManager.UsageMode == LicenseUsageMode.Designtime || GitModuleForm.IsUnitTestActive)
             {
                 UserEnvironmentInformation.Initialise(
                 "9999999999999999999999999999999999abcdef", true);
