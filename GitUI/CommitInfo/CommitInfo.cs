@@ -591,7 +591,7 @@ namespace GitUI.CommitInfo
 
         private void copyCommitInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var commitInfo = $"{commitInfoHeader.GetPlainText()}{Environment.NewLine}{RevisionInfo.GetPlainText()}";
+            var commitInfo = $"{commitInfoHeader.GetPlainText()}{Environment.NewLine}{Environment.NewLine}{rtbxCommitMessage.GetPlainText()}{Environment.NewLine}{RevisionInfo.GetPlainText()}";
             Clipboard.SetText(commitInfo);
         }
 
