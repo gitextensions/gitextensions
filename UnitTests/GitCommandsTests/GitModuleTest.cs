@@ -488,12 +488,12 @@ namespace GitCommandsTests
                 root.Module.RunGitCmd(@"submodule update --init --recursive");
 
                 var paths = root.Module.GetSubmodulesLocalPaths(recursive: true);
-                Assert.AreEqual(paths.Count, 3);
-                Assert.AreEqual(paths, new string[] { "repo1", "repo1/repo2", "repo1/repo2/repo3" });
+                Assert.AreEqual(3, paths.Count);
+                Assert.AreEqual(new string[] { "repo1", "repo1/repo2", "repo1/repo2/repo3" }, paths);
 
                 paths = root.Module.GetSubmodulesLocalPaths(recursive: false);
-                Assert.AreEqual(paths.Count, 1);
-                Assert.AreEqual(paths, new string[] { "repo1" });
+                Assert.AreEqual(1, paths.Count);
+                Assert.AreEqual(new string[] { "repo1" }, paths);
             }
             finally
             {
