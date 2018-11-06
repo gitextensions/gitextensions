@@ -75,9 +75,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </param>
         public void CacheTo(int currentRowIndex, int lastToCacheRowIndex)
         {
-            BuildOrderedNodesCache(currentRowIndex);
+            List<RevisionGraphRevision> orderedNodesCache = BuildOrderedNodesCache(currentRowIndex);
 
-            BuildOrderedRowCache(currentRowIndex, lastToCacheRowIndex);
+            BuildOrderedRowCache(orderedNodesCache, currentRowIndex, lastToCacheRowIndex);
         }
 
         public bool IsRowRelative(int row)
@@ -207,7 +207,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             MarkCacheAsInvalidIfNeeded(revisionGraphRevision);
         }
 
-        private void BuildOrderedRowCache(int currentRowIndex, int lastToCacheRowIndex)
+        private void BuildOrderedRowCache(List<RevisionGraphRevision> orderedNodesCache, int currentRowIndex, int lastToCacheRowIndex)
         {
             if (_orderedRowCache == null || _rebuild)
             {
@@ -221,12 +221,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
-            int cacheCount = _orderedNodesCache.Count;
+            int cacheCount = orderedNodesCache.Count;
             while (nextIndex <= lastToCacheRowIndex && cacheCount > nextIndex)
             {
                 bool startSegmentsAdded = false;
 
-                RevisionGraphRevision revision = _orderedNodesCache[nextIndex];
+                RevisionGraphRevision revision = orderedNodesCache[nextIndex];
 
                 // The list containing the segments is created later. We can set the correct capacity then, to prevent resizing
                 List<RevisionGraphSegment> segments;
@@ -239,7 +239,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     // Create segments list with te correct capacity
                     segments = new List<RevisionGraphSegment>(previousRevisionGraphRow.Segments.Count + revision.StartSegments.Count);
 
-                    // Loop through all segments that do not end in this row
+                    // Loop through all segments that do not end in the previous row
                     foreach (var segment in previousRevisionGraphRow.Segments.Where(s => s.Parent != previousRevisionGraphRow.Revision))
                     {
                         segments.Add(segment);
