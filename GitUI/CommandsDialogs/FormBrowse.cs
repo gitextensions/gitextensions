@@ -95,7 +95,7 @@ namespace GitUI.CommandsDialogs
         private readonly ICommitDataManager _commitDataManager;
         private readonly IAppTitleGenerator _appTitleGenerator;
         private readonly WindowsJumpListManager _windowsJumpListManager;
-        private readonly SubmoduleStatusProvider _submoduleStatusProvider;
+        private readonly ISubmoduleStatusProvider _submoduleStatusProvider;
         private readonly bool _startWithDashboard;
 
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
@@ -313,7 +313,20 @@ namespace GitUI.CommandsDialogs
             UICommands.BrowseRepo = this;
             _controller = new FormBrowseController(new GitGpgController(() => Module));
             _commitDataManager = new CommitDataManager(() => Module);
+
+            toolStripButtonLevelUp.Visible = false;
             _submoduleStatusProvider = new SubmoduleStatusProvider();
+            _submoduleStatusProvider.SubmodulesChanged += (sender, e) =>
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await this.SwitchToMainThreadAsync();
+
+                    toolStripButtonLevelUp.Visible = e.HasSubmodules || e.HasSupermodule;
+                    toolStripButtonLevelUp.Image = e.HasSupermodule ? Images.NavigateUp : Images.SubmodulesManage;
+                }).FileAndForget();
+            };
+            _submoduleStatusProvider.Refresh(Module);
 
             var repositoryDescriptionProvider = new RepositoryDescriptionProvider(new GitDirectoryResolver());
             _appTitleGenerator = new AppTitleGenerator(repositoryDescriptionProvider);
@@ -1872,6 +1885,9 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.InvalidateCount();
 
             UICommands = new GitUICommands(module);
+
+            _submoduleStatusProvider.Refresh(module);
+
             if (Module.IsValidGitWorkingDir())
             {
                 var path = Module.WorkingDir;

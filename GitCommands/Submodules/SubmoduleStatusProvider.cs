@@ -16,19 +16,54 @@ namespace GitCommands.Submodules
     {
         bool HasSubmodulesStatusChanged([CanBeNull] IReadOnlyList<GitItemStatus> allChangedFiles);
         void UpdateSubmodulesStatus(string workingDirectory, string noBranchText, Action onUpdateBegin, Func<SubmoduleInfoResult, CancellationToken, Task> onUpdateCompleteAsync);
+        void Refresh(GitModule module);
+        event EventHandler<SubmoduleStatusEventArgs> SubmodulesChanged;
+    }
+
+    public sealed class SubmoduleStatusEventArgs : EventArgs
+    {
+        public bool HasSubmodules { get; }
+        public bool HasSupermodule { get; }
+
+        public SubmoduleStatusEventArgs(bool hasSubmodules, bool hasSupermodule)
+        {
+            HasSubmodules = hasSubmodules;
+            HasSupermodule = hasSupermodule;
+        }
     }
 
     public sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     {
+        public event EventHandler<SubmoduleStatusEventArgs> SubmodulesChanged;
+
         private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
         private DateTime _previousSubmoduleUpdateTime;
+
+        [CanBeNull] private SubmoduleStatusEventArgs _lastArgs;
+
+        public void Refresh(GitModule module)
+        {
+            var hasSubmodules = module.HasSubmodules();
+            var hasSupermodule = module.SubmodulePath != null;
+
+            if (_lastArgs != null &&
+                _lastArgs.HasSubmodules == hasSubmodules &&
+                _lastArgs.HasSupermodule == hasSupermodule)
+            {
+                return;
+            }
+
+            _lastArgs = new SubmoduleStatusEventArgs(hasSubmodules, hasSupermodule);
+
+            SubmodulesChanged?.Invoke(this, _lastArgs);
+        }
 
         public void Dispose()
         {
             _submodulesStatusSequence.Dispose();
         }
 
-        public bool HasSubmodulesStatusChanged([CanBeNull] IReadOnlyList<GitItemStatus> allChangedFiles)
+        public bool HasSubmodulesStatusChanged(IReadOnlyList<GitItemStatus> allChangedFiles)
         {
             TimeSpan elapsed = DateTime.Now - _previousSubmoduleUpdateTime;
 
@@ -44,7 +79,8 @@ namespace GitCommands.Submodules
             return allChangedFiles.Any(i => i.IsSubmodule && (i.IsChanged || !i.IsTracked));
         }
 
-        public void UpdateSubmodulesStatus(string workingDirectory,
+        public void UpdateSubmodulesStatus(
+            string workingDirectory,
             string noBranchText,
             Action onUpdateBegin,
             Func<SubmoduleInfoResult, CancellationToken, Task> onUpdateCompleteAsync)
@@ -64,6 +100,8 @@ namespace GitCommands.Submodules
                 // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
                 var threadModule = new GitModule(workingDirectory);
                 var result = new SubmoduleInfoResult();
+
+                Refresh(threadModule);
 
                 // Add all submodules inside the current repository:
                 var submodulesTask = GetRepositorySubmodulesStatusAsync(result, threadModule, cancelToken, noBranchText);
