@@ -90,6 +90,7 @@
     <Compile Include="UserControls\RepoStateVisualiserTests.cs" />
     <Compile Include="UserControls\RevisionGrid\CopyContextMenuItemTests.cs" />
     <Compile Include="UserControls\RevisionGrid\GitRefListsForRevisionTests.cs" />
+    <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphMultiThreadingTests.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphTests.cs" />
     <Compile Include="UserManual\SingleHtmlUserManualFixture.cs" />
     <Compile Include="UserManual\StandardHtmlUserManualFixture.cs" />
