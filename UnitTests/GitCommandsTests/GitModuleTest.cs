@@ -469,10 +469,6 @@ namespace GitCommandsTests
 
                 foreach (var helper in moduleTestHelpers)
                 {
-                    // TODO: move to GitModuleTestHelper constructor (can't assume all users have global user.name/email configured)
-                    helper.Module.RunGitCmd(@"config user.name ""author""");
-                    helper.Module.RunGitCmd(@"config user.email ""<author@mail.com>""");
-
                     // Submodules require at least one commit
                     helper.Module.RunGitCmd(@"commit --allow-empty -m ""Initial commit""");
                 }
@@ -484,7 +480,6 @@ namespace GitCommandsTests
 
                     // Add child as submodule of parent
                     parent.Module.RunGitCmd(GitCommandHelpers.AddSubmoduleCmd(child.Module.WorkingDir.ToPosixPath(), $"repo{i}", null, true));
-
                     parent.Module.RunGitCmd(@"commit -am ""Add submodule""");
                 }
 

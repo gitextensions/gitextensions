@@ -25,6 +25,10 @@ namespace CommonTestUtils
             module.Init(bare: false, shared: false);
             Module = module;
 
+            // Don't assume global user/email
+            Module.RunGitCmd(@"config user.name ""author""");
+            Module.RunGitCmd(@"config user.email ""<author@mail.com>""");
+
             return;
 
             string GetTemporaryPath()
