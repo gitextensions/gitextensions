@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GitCommands.Utils;
+using JetBrains.Annotations;
 
 namespace GitUI.UserControls
 {
@@ -354,11 +355,10 @@ namespace GitUI.UserControls
         protected override void WndProc(ref Message m)
         {
             var message = m;
-            var groupHitInfo = new Lazy<ListViewGroupHitInfo>(() => GetGroupHitInfo(message));
 
             switch (m.Msg)
             {
-                case NativeMethods.WM_LBUTTONUP when groupHitInfo.Value?.IsCollapseButton == true:
+                case NativeMethods.WM_LBUTTONUP when GetGroupHitInfo(message)?.IsCollapseButton == true:
                     DefWndProc(ref m); // collapse / expand by clicking button in group header
                     break;
 
@@ -374,10 +374,10 @@ namespace GitUI.UserControls
                     break;
 
                 case NativeMethods.WM_REFLECT_NOTIFY when IsCustomDraw(m) && !_isInWmPaintMsg:
-                case NativeMethods.WM_RBUTTONUP when IsGroupMouseEventHandled(groupHitInfo.Value, MouseButtons.Right, isDown: false):
-                case NativeMethods.WM_RBUTTONDOWN when IsGroupMouseEventHandled(groupHitInfo.Value, MouseButtons.Right, isDown: true):
-                case NativeMethods.WM_LBUTTONUP when IsGroupMouseEventHandled(groupHitInfo.Value, MouseButtons.Left, isDown: false):
-                case NativeMethods.WM_LBUTTONDOWN when IsGroupMouseEventHandled(groupHitInfo.Value, MouseButtons.Left, isDown: true):
+                case NativeMethods.WM_RBUTTONUP when IsGroupMouseEventHandled(MouseButtons.Right, isDown: false):
+                case NativeMethods.WM_RBUTTONDOWN when IsGroupMouseEventHandled(MouseButtons.Right, isDown: true):
+                case NativeMethods.WM_LBUTTONUP when IsGroupMouseEventHandled(MouseButtons.Left, isDown: false):
+                case NativeMethods.WM_LBUTTONDOWN when IsGroupMouseEventHandled(MouseButtons.Left, isDown: true):
                     break;
 
                 default:
@@ -488,8 +488,10 @@ namespace GitUI.UserControls
                 }
             }
 
-            bool IsGroupMouseEventHandled(ListViewGroupHitInfo hitInfo, MouseButtons button, bool isDown)
+            bool IsGroupMouseEventHandled(MouseButtons button, bool isDown)
             {
+                var hitInfo = GetGroupHitInfo(message);
+
                 if (hitInfo == null)
                 {
                     return false;
@@ -515,15 +517,18 @@ namespace GitUI.UserControls
             }
         }
 
+        [CanBeNull]
         public ListViewGroupHitInfo GetGroupHitInfo(Point location) =>
             GetGroupHitInfo((NativeMethods.POINT)location);
 
+        [CanBeNull]
         private ListViewGroupHitInfo GetGroupHitInfo(Message msg)
         {
             var point = NativeMethods.LParamToPOINT((uint)msg.LParam);
             return GetGroupHitInfo(point);
         }
 
+        [CanBeNull]
         private ListViewGroupHitInfo GetGroupHitInfo(NativeMethods.POINT location)
         {
             var info = new NativeMethods.LVHITTESTINFO
