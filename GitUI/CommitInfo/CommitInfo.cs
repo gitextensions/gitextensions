@@ -101,10 +101,11 @@ namespace GitUI.CommitInfo
             _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
             _gitDescribeProvider = new GitDescribeProvider(() => Module);
 
-            RevisionInfo.Font = AppSettings.Font;
             var color = SystemColors.Window.MakeColorDarker(0.04);
             pnlCommitMessage.BackColor = color;
             rtbxCommitMessage.BackColor = color;
+            rtbxCommitMessage.Font = AppSettings.CommitFont;
+            RevisionInfo.Font = AppSettings.Font;
 
             Hotkeys = HotkeySettingsManager.LoadHotkeys(FormBrowse.HotkeySettingsName);
             addNoteToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys((int)FormBrowse.Command.AddNotes).ToShortcutKeyDisplayString();
