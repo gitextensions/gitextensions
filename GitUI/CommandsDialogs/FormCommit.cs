@@ -264,6 +264,8 @@ namespace GitUI.CommandsDialogs
             splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
             splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
 
+            SelectedDiff.EscapePressed += () => DialogResult = DialogResult.Cancel;
+
             InitializeComplete();
 
             // By calling this in the constructor, we prevent flickering caused by resizing the
