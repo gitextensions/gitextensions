@@ -405,10 +405,10 @@ namespace GitUI.CommandsDialogs
             switch (_commitKind)
             {
                 case CommitKind.Fixup:
-                    message = $"fixup! {_editedCommit.Subject}";
+                    message = TryAddPrefix("fixup!", _editedCommit.Subject);
                     break;
                 case CommitKind.Squash:
-                    message = $"squash! {_editedCommit.Subject}";
+                    message = TryAddPrefix("squash!", _editedCommit.Subject);
                     break;
                 default:
                     message = Module.GetMergeMessage();
@@ -434,6 +434,11 @@ namespace GitUI.CommandsDialogs
             base.OnShown(e);
 
             return;
+
+            string TryAddPrefix(string prefix, string suffix)
+            {
+                return suffix.StartsWith(prefix) ? suffix : $"{prefix} {suffix}";
+            }
 
             void AssignCommitMessageFromTemplate()
             {
