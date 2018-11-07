@@ -53,7 +53,7 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
 
         private void Initialize()
         {
-            var lines = new Executable("git").GetOutput("worktree list --porcelain").Split('\n').GetEnumerator();
+            var lines = Module.RunGitCmd("worktree list --porcelain").Split('\n').GetEnumerator();
 
             _worktrees = new List<WorkTree>();
             WorkTree currentWorktree = null;
