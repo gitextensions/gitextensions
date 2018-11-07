@@ -102,10 +102,6 @@ namespace GitUI
         private JoinableTask<SuperProjectInfo> _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
 
-        /// <summary>
-        /// Same as <see cref="CurrentCheckout"/> except <c>null</c> until the associated revision is loaded.
-        /// </summary>
-        [CanBeNull] private ObjectId _filteredCurrentCheckout;
         private bool _settingsLoaded;
 
         // NOTE internal properties aren't serialised by the WinForms designer
@@ -757,7 +753,6 @@ namespace GitUI
                 }
 
                 CurrentCheckout = newCurrentCheckout;
-                _filteredCurrentCheckout = null;
                 _isRefreshingRevisions = true;
                 base.Refresh();
 
@@ -890,22 +885,14 @@ namespace GitUI
                     this.InvokeAsync(() => { ShowLoading(false); }).FileAndForget();
                 }
 
-                if (_filteredCurrentCheckout == null)
-                {
-                    if (revision.ObjectId == CurrentCheckout)
-                    {
-                        _filteredCurrentCheckout = CurrentCheckout;
-                    }
-                }
-
-                var isCurrentCheckout = revision.ObjectId == _filteredCurrentCheckout;
+                var isCurrentCheckout = revision.ObjectId == CurrentCheckout;
 
                 if (isCurrentCheckout &&
                     ShowUncommittedChangesIfPossible &&
                     AppSettings.RevisionGraphShowWorkingDirChanges &&
                     !Module.IsBareRepository())
                 {
-                    CheckUncommittedChanged(_filteredCurrentCheckout);
+                    CheckUncommittedChanged(revision.ObjectId);
                 }
 
                 var flags = RevisionNodeFlags.None;
@@ -1078,17 +1065,11 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            var filteredCurrentCheckout = _filteredCurrentCheckout;
             var selectedObjectIds = _selectedObjectIds ?? Array.Empty<ObjectId>();
 
             if (selectedObjectIds.Count == 0 && InitialObjectId != null)
             {
                 selectedObjectIds = new ObjectId[] { InitialObjectId };
-            }
-
-            if (selectedObjectIds.Count == 0 && filteredCurrentCheckout != null)
-            {
-                selectedObjectIds = new ObjectId[] { filteredCurrentCheckout };
             }
 
             if (selectedObjectIds.Count == 0)
@@ -1098,11 +1079,6 @@ namespace GitUI
 
             _gridView.ToBeSelectedObjectIds = selectedObjectIds.ToHashSet();
             _selectedObjectIds = null;
-
-            if (filteredCurrentCheckout != null && !_gridView.IsRevisionRelative(filteredCurrentCheckout))
-            {
-                HighlightBranch(filteredCurrentCheckout);
-            }
         }
 
         private void CheckAndRepairInitialRevision()
@@ -2305,7 +2281,6 @@ namespace GitUI
                 if (_isReadingRevisions || !SetSelectedRevision(revisionGuid))
                 {
                     InitialObjectId = revisionGuid;
-                    _gridView.SelectedObjectIds = null;
                     _selectedObjectIds = null;
                 }
             }

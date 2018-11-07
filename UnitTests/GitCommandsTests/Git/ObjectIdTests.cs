@@ -288,5 +288,15 @@ namespace GitCommandsTests.Git
             Assert.False(ObjectId.Parse("0123456789012345678901234567890123456789").Equals(" 0123456789012345678901234567890123456789 "));
             Assert.False(ObjectId.Parse("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").Equals("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
         }
+
+        [Test]
+        public void Equals_using_operator()
+        {
+            string objectIdString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+            Assert.IsTrue(ObjectId.Parse(objectIdString) == ObjectId.Parse(objectIdString));
+            Assert.IsFalse(ObjectId.Parse(objectIdString) != ObjectId.Parse(objectIdString));
+            Assert.IsFalse(ObjectId.Parse(objectIdString) == ObjectId.Random());
+            Assert.IsTrue(ObjectId.Parse(objectIdString) != ObjectId.Random());
+        }
     }
 }
