@@ -35,7 +35,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </summary>
         /// <remarks>This cache is very expensive to build.</remarks>
         private IList<RevisionGraphRow> _orderedRowCache;
-        private bool _rebuild = true;
 
         // When the cache is updated, this action can be used to invalidate the UI
         public event Action Updated;
@@ -206,15 +205,27 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _nodes.Add(revisionGraphRevision);
         }
 
-        private void BuildOrderedRowCache(List<RevisionGraphRevision> orderedNodesCache, int currentRowIndex, int lastToCacheRowIndex)
+        /// <summary>
+        /// It is very easy to check if the rowcache is dirty or not. If the last revision added to the rowcache
+        /// is not in the same index in the orderednodecache, the order has been changed. Only then rebuilding is
+        /// required. If the order is changed after this revision, we do not care since it wasn't processed yet.
+        /// </summary>
+        private bool CheckRowCacheIsDirty(IList<RevisionGraphRow> orderedRowCache, IList<RevisionGraphRevision> orderedNodesCache)
+        {
+            int indexToCompare = orderedRowCache.Count - 1;
+
+            // We do not need bounds checking on orderedNodesCache. It is always larger then the rowcache.
+            return orderedRowCache[indexToCompare].Revision != orderedNodesCache[indexToCompare];
+        }
+
+        private void BuildOrderedRowCache(IList<RevisionGraphRevision> orderedNodesCache, int currentRowIndex, int lastToCacheRowIndex)
         {
             // Ensure we keep using the same instance of the rowcache from here on
             var localOrderedRowCache = _orderedRowCache;
 
-            if (localOrderedRowCache == null || _rebuild)
+            if (localOrderedRowCache == null || CheckRowCacheIsDirty(localOrderedRowCache, orderedNodesCache))
             {
                 localOrderedRowCache = new List<RevisionGraphRow>(currentRowIndex);
-                _rebuild = false;
             }
 
             int nextIndex = localOrderedRowCache.Count;
@@ -284,14 +295,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             if (_orderedNodesCache != null && !_reorder && _orderedNodesCache.Count >= Math.Min(Count, currentRowIndex))
             {
                 return _orderedNodesCache;
-            }
-
-            if (_reorder)
-            {
-                // Always rebuild the row cache if we need to reorder. It costs performance, but it is the only way to make sure
-                // it isn't dirty. It is possible another thread is currently building a chuck of the row-cache. Since we cannot
-                // stop this other thread, just rebuild the whole graph.
-                _rebuild = true;
             }
 
             // Reset the reorder flag and the orderedUntilScore. This makes sure it isn't marked dirty before we even got to
