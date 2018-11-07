@@ -209,6 +209,7 @@ namespace GitUI.SpellChecker
             _customUnderlines = new SpellCheckEditControl(TextBox);
             TextBox.SelectionChanged += TextBox_SelectionChanged;
             TextBox.TextChanged += TextBoxTextChanged;
+            TextBox.DoubleClick += TextBox_DoubleClick;
 
             EnabledChanged += EditNetSpellEnabledChanged;
 
@@ -704,6 +705,13 @@ namespace GitUI.SpellChecker
 
             var handler = SelectionChanged;
             handler?.Invoke(sender, e);
+        }
+
+        private void TextBox_DoubleClick(object sender, EventArgs e)
+        {
+            int charIndexAtMousePosition = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
+            (int start, int length) = _wordAtCursorExtractor.GetWordBounds(TextBox.Text, charIndexAtMousePosition);
+            TextBox.Select(start, length);
         }
 
         private void ShowWatermark()
