@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -218,8 +219,37 @@ namespace GitUI.BranchTreePanel
                 return ToString();
             }
 
+            protected void SetNodeFont(FontStyle style)
+            {
+                if (style == FontStyle.Regular)
+                {
+                    // For regular, set to null to use the NativeTreeView font
+                    if (TreeViewNode.NodeFont != null)
+                    {
+                        TreeViewNode.NodeFont.Dispose();
+                        TreeViewNode.NodeFont = null;
+                    }
+                }
+                else
+                {
+                    // If current font doesn't have the input style, get rid of it
+                    if (TreeViewNode.NodeFont != null && !TreeViewNode.NodeFont.Style.HasFlag(style))
+                    {
+                        TreeViewNode.NodeFont.Dispose();
+                        TreeViewNode.NodeFont = null;
+                    }
+
+                    // If non-null, our font is already valid, otherwise create a new one
+                    if (TreeViewNode.NodeFont == null)
+                    {
+                        TreeViewNode.NodeFont = new Font(AppSettings.Font, style);
+                    }
+                }
+            }
+
             protected virtual void ApplyStyle()
             {
+                SetNodeFont(FontStyle.Regular);
             }
 
             internal virtual void OnSelected()

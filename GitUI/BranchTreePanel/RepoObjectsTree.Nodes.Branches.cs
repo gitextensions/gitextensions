@@ -109,10 +109,7 @@ namespace GitUI.BranchTreePanel
             {
                 base.ApplyStyle();
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.BranchDocument);
-                if (IsActive)
-                {
-                    TreeViewNode.NodeFont = new Font(AppSettings.Font, FontStyle.Bold);
-                }
+                SetNodeFont(IsActive ? FontStyle.Bold : FontStyle.Regular);
             }
 
             public override bool Equals(object obj)
