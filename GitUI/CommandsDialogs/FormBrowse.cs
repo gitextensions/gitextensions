@@ -442,6 +442,7 @@ namespace GitUI.CommandsDialogs
             if (_startWithDashboard || !Module.IsValidGitWorkingDir())
             {
                 base.OnLoad(e);
+                ShowDashboard();
                 return;
             }
 
