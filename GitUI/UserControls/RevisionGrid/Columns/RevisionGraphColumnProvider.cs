@@ -505,7 +505,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     if (segmentsForLane.Count() == 1)
                     {
                         // Crossing lange
-                        laneInfoText.Append(segmentsForLane.First().Parent.GitRevision.Body ?? segmentsForLane.First().Parent.GitRevision.Subject);
+                        laneInfoText.Append(segmentsForLane.First().Parent.GitRevision?.Body ?? segmentsForLane.First().Parent.GitRevision?.Subject);
                     }
                     else
                     if (segmentsForLane.Count() > 1)
@@ -515,7 +515,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         {
                             laneInfoText.AppendLine(row.Revision.Objectid.ToString());
                             laneInfoText.AppendLine();
-                            laneInfoText.Append(row.Revision.GitRevision.Body ?? row.Revision.GitRevision.Subject);
+                            laneInfoText.Append(row.Revision.GitRevision?.Body ?? row.Revision.GitRevision?.Subject);
                         }
                     }
                 }
