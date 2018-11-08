@@ -28,6 +28,27 @@ namespace GitCommands
 
     public sealed class RevisionReader : IDisposable
     {
+        private const string FullFormat =
+
+              // These header entries can all be decoded from the bytes directly.
+              // Each hash is 20 bytes long.
+
+              /* Object ID       */ "%H" +
+              /* Tree ID         */ "%T" +
+              /* Parent IDs      */ "%P%n" +
+              /* Author date     */ "%at%n" +
+              /* Commit date     */ "%ct%n" +
+              /* Encoding        */ "%e%n" +
+              /*
+               Items below here must be decoded as strings to support non-ASCII.
+               */
+              /* Author name     */ "%aN%n" +
+              /* Author email    */ "%aE%n" +
+              /* Committer name  */ "%cN%n" +
+              /* Committer email */ "%cE%n" +
+              /* Commit subject  */ "%s%n%n" +
+              /* Commit body     */ "%b";
+
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
 
         public void Execute(
@@ -81,28 +102,7 @@ namespace GitCommands
 
             token.ThrowIfCancellationRequested();
 
-            const string fullFormat =
-
-                // These header entries can all be decoded from the bytes directly.
-                // Each hash is 20 bytes long.
-
-                /* Object ID       */ "%H" +
-                /* Tree ID         */ "%T" +
-                /* Parent IDs      */ "%P%n" +
-                /* Author date     */ "%at%n" +
-                /* Commit date     */ "%ct%n" +
-                /* Encoding        */ "%e%n" +
-
-                // Items below here must be decoded as strings to support non-ASCII.
-
-                /* Author name     */ "%aN%n" +
-                /* Author email    */ "%aE%n" +
-                /* Committer name  */ "%cN%n" +
-                /* Committer email */ "%cE%n" +
-                /* Commit subject  */ "%s%n%n" +
-                /* Commit body     */ "%b";
-
-            var arguments = BuildArguments();
+            var arguments = BuildArguments(refFilterOptions, branchFilter, revisionFilter, pathFilter);
 
             var sw = Stopwatch.StartNew();
 
@@ -155,45 +155,48 @@ namespace GitCommands
             {
                 subject.OnCompleted();
             }
+        }
 
-            ArgumentBuilder BuildArguments()
+        private ArgumentBuilder BuildArguments(RefFilterOptions refFilterOptions,
+            string branchFilter,
+            string revisionFilter,
+            string pathFilter)
+        {
+            return new GitArgumentBuilder("log")
             {
-                return new GitArgumentBuilder("log")
+                "-z",
+                $"--pretty=format:\"{FullFormat}\"",
+                { AppSettings.ShowReflogReferences, "--reflog" },
                 {
-                    "-z",
-                    $"--pretty=format:\"{fullFormat}\"",
-                    { AppSettings.ShowReflogReferences, "--reflog" },
+                    refFilterOptions.HasFlag(RefFilterOptions.FirstParent),
+                    "--first-parent",
+                    new ArgumentBuilder
                     {
-                        refFilterOptions.HasFlag(RefFilterOptions.FirstParent),
-                        "--first-parent",
-                        new ArgumentBuilder
                         {
+                            refFilterOptions.HasFlag(RefFilterOptions.All),
+                            "--all",
+                            new ArgumentBuilder
                             {
-                                refFilterOptions.HasFlag(RefFilterOptions.All),
-                                "--all",
-                                new ArgumentBuilder
                                 {
-                                    {
-                                        refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
-                                        !branchFilter.IsNullOrWhiteSpace() &&
-                                        branchFilter.IndexOfAny(new[] { '?', '*', '[' }) != -1,
-                                        "--branches=" + branchFilter
-                                    },
-                                    { refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
-                                    { refFilterOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
-                                }.ToString()
-                            },
-                            { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
-                            { refFilterOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
-                            { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
-                            { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" }
-                        }.ToString()
-                    },
-                    revisionFilter,
-                    "--",
-                    pathFilter
-                };
-            }
+                                    refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
+                                    !branchFilter.IsNullOrWhiteSpace() &&
+                                    branchFilter.IndexOfAny(new[] { '?', '*', '[' }) != -1,
+                                    "--branches=" + branchFilter
+                                },
+                                { refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
+                                { refFilterOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
+                            }.ToString()
+                        },
+                        { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
+                        { refFilterOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
+                        { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
+                        { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" }
+                    }.ToString()
+                },
+                revisionFilter,
+                "--",
+                pathFilter
+            };
         }
 
         private static void UpdateSelectedRef(GitModule module, IReadOnlyList<IGitRef> refs, string branchName)
@@ -498,5 +501,22 @@ namespace GitCommands
         }
 
         #endregion
+
+        internal TestAccessor GetTestAccessor()
+            => new TestAccessor(this);
+
+        public readonly struct TestAccessor
+        {
+            private readonly RevisionReader _revisionReader;
+
+            public TestAccessor(RevisionReader revisionReader)
+            {
+                _revisionReader = revisionReader;
+            }
+
+            public ArgumentBuilder BuildArgumentsBuildArguments(RefFilterOptions refFilterOptions,
+                string branchFilter, string revisionFilter, string pathFilter) =>
+                _revisionReader.BuildArguments(refFilterOptions, branchFilter, revisionFilter, pathFilter);
+        }
     }
 }
