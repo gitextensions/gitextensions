@@ -161,6 +161,7 @@ namespace GitUI.BranchTreePanel
             try
             {
                 treeMain.BeginUpdate();
+                _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = true);
                 var tasks = _rootNodes.Select(r => r.ReloadAsync(token)).ToArray();
                 await Task.WhenAll(tasks).ConfigureAwait(false);
             }
@@ -173,12 +174,11 @@ namespace GitUI.BranchTreePanel
                     _rootNodes.Any(rn => $"{rn.TreeViewNode.FullPath}{treeMain.PathSeparator}{currentBranch}" == n.FullPath));
                 if (selectedNode != null)
                 {
-                    _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = true);
                     treeMain.SelectedNode = selectedNode;
-                    _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = false);
                     treeMain.SelectedNode.EnsureVisible();
                 }
 
+                _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = false);
                 treeMain.EndUpdate();
             }
         }
