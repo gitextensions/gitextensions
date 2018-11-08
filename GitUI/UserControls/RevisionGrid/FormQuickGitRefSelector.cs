@@ -10,6 +10,7 @@ namespace GitUI.UserControls.RevisionGrid
     {
         private readonly TranslationString _actionRename = new TranslationString("Rename");
         private readonly TranslationString _actionDelete = new TranslationString("Delete");
+        private readonly TranslationString _actionSelect = new TranslationString("Select");
         private readonly TranslationString _tag = new TranslationString("tag");
 
         /// <summary>
@@ -46,13 +47,20 @@ namespace GitUI.UserControls.RevisionGrid
                     }
 
                     break;
+                case Action.Select:
+                    {
+                        Init(items, _actionSelect.Text);
+                    }
+
+                    break;
             }
         }
 
         public enum Action
         {
             Rename = 0,
-            Delete
+            Delete,
+            Select,
         }
     }
 }
