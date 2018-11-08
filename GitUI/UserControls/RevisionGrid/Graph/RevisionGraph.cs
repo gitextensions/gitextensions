@@ -201,6 +201,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     // Store the newly created segment (connection between 2 revisions)
                     revisionGraphRevision.AddParent(parentRevisionGraphRevision, out int newMaxScore);
                     _maxScore = Math.Max(_maxScore, newMaxScore);
+
+                    if (types.HasFlag(RevisionNodeFlags.OnlyFirstParent))
+                    {
+                        break;
+                    }
                 }
             }
 

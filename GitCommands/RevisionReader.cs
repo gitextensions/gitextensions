@@ -164,25 +164,31 @@ namespace GitCommands
                     $"--pretty=format:\"{fullFormat}\"",
                     { AppSettings.ShowReflogReferences, "--reflog" },
                     {
-                        refFilterOptions.HasFlag(RefFilterOptions.All),
-                        "--all",
+                        refFilterOptions.HasFlag(RefFilterOptions.FirstParent),
+                        "--first-parent",
                         new ArgumentBuilder
                         {
                             {
-                                refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
-                                !branchFilter.IsNullOrWhiteSpace() &&
-                                branchFilter.IndexOfAny(new[] { '?', '*', '[' }) != -1,
-                                "--branches=" + branchFilter
+                                refFilterOptions.HasFlag(RefFilterOptions.All),
+                                "--all",
+                                new ArgumentBuilder
+                                {
+                                    {
+                                        refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
+                                        !branchFilter.IsNullOrWhiteSpace() &&
+                                        branchFilter.IndexOfAny(new[] { '?', '*', '[' }) != -1,
+                                        "--branches=" + branchFilter
+                                    },
+                                    { refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
+                                    { refFilterOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
+                                }.ToString()
                             },
-                            { refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
-                            { refFilterOptions.HasFlag(RefFilterOptions.Tags), "--tags" },
+                            { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
+                            { refFilterOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
+                            { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
+                            { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" }
                         }.ToString()
                     },
-                    { refFilterOptions.HasFlag(RefFilterOptions.Boundary), "--boundary" },
-                    { refFilterOptions.HasFlag(RefFilterOptions.ShowGitNotes), "--not --glob=notes --not" },
-                    { refFilterOptions.HasFlag(RefFilterOptions.NoMerges), "--no-merges" },
-                    { refFilterOptions.HasFlag(RefFilterOptions.FirstParent), "--first-parent" },
-                    { refFilterOptions.HasFlag(RefFilterOptions.SimplifyByDecoration), "--simplify-by-decoration" },
                     revisionFilter,
                     "--",
                     pathFilter
