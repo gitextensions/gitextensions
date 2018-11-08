@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using GitCommands;
@@ -451,6 +452,56 @@ namespace GitCommandsTests
 
             Assert.AreEqual("Please enter a name.", _gitModule.AddRemote("", path));
             Assert.AreEqual("Please enter a name.", _gitModule.AddRemote(null, path));
+        }
+
+        [Test]
+        public void GetSubmodulesLocalPaths()
+        {
+            var moduleTestHelpers = new List<CommonTestUtils.GitModuleTestHelper>();
+            try
+            {
+                const int numModules = 4;
+
+                for (int i = 0; i < numModules; ++i)
+                {
+                    moduleTestHelpers.Add(new CommonTestUtils.GitModuleTestHelper($"repo{i}"));
+                }
+
+                foreach (var helper in moduleTestHelpers)
+                {
+                    // Submodules require at least one commit
+                    helper.Module.RunGitCmd(@"commit --allow-empty -m ""Initial commit""");
+                }
+
+                for (int i = numModules - 1; i > 0; --i)
+                {
+                    var parent = moduleTestHelpers[i - 1];
+                    var child = moduleTestHelpers[i];
+
+                    // Add child as submodule of parent
+                    parent.Module.RunGitCmd(GitCommandHelpers.AddSubmoduleCmd(child.Module.WorkingDir.ToPosixPath(), $"repo{i}", null, true));
+                    parent.Module.RunGitCmd(@"commit -am ""Add submodule""");
+                }
+
+                // Init all modules of root
+                var root = moduleTestHelpers[0];
+                root.Module.RunGitCmd(@"submodule update --init --recursive");
+
+                var paths = root.Module.GetSubmodulesLocalPaths(recursive: true);
+                Assert.AreEqual(3, paths.Count);
+                Assert.AreEqual(new string[] { "repo1", "repo1/repo2", "repo1/repo2/repo3" }, paths);
+
+                paths = root.Module.GetSubmodulesLocalPaths(recursive: false);
+                Assert.AreEqual(1, paths.Count);
+                Assert.AreEqual(new string[] { "repo1" }, paths);
+            }
+            finally
+            {
+                foreach (var helper in moduleTestHelpers)
+                {
+                    helper.Dispose();
+                }
+            }
         }
     }
 }
