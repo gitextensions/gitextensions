@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using GitCommands;
 using ResourceManager;
+using ResourceManager.CommitDataRenders;
 
 namespace GitUI.UserControls
 {
@@ -14,6 +15,7 @@ namespace GitUI.UserControls
     {
         private readonly TranslationString _noRevision = new TranslationString("No revision");
         private readonly TranslationString _notAvailable = new TranslationString("n/a");
+        private readonly IDateFormatter _dateFormatter = new DateFormatter();
         private readonly string _tagsCaption;
         private readonly string _branchesCaption;
         private readonly Color _tagsBackColor = Color.LightSteelBlue;
@@ -61,7 +63,7 @@ namespace GitUI.UserControls
                 {
                     groupBox1.Text = Revision.ObjectId.ToShortString();
                     labelAuthor.Text = Revision.Author;
-                    labelDate.Text = Revision.CommitDate.ToLongDateString();
+                    labelDate.Text = _dateFormatter.FormatDateAsRelativeLocal(Revision.CommitDate);
                     labelMessage.Text = Revision.Subject;
 
                     var tagList = Revision.Refs.Where(r => r.IsTag).ToList();
