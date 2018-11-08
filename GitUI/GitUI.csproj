@@ -397,6 +397,9 @@
     <Compile Include="UserControls\RevisionGrid\Columns\RevisionGraphColumnProvider.cs" />
     <Compile Include="UserControls\RevisionGrid\Columns\MultilineIndicator.cs" />
     <Compile Include="UserControls\HslColor.cs" />
+    <Compile Include="UserControls\RevisionGrid\FormQuickStringSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UserControls\RevisionGrid\FormQuickItemSelector.cs">
       <SubType>Form</SubType>
     </Compile>
