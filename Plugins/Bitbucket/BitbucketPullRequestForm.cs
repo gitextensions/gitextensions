@@ -18,6 +18,8 @@ namespace Bitbucket
         private readonly TranslationString _success = new TranslationString("Success");
         private readonly TranslationString _error = new TranslationString("Error");
         private readonly TranslationString _linkLabelToolTip = new TranslationString("Right-click to copy link");
+        private readonly string _NO_TRANSLATE_LinkCreatePull = "{0}/projects/{1}/repos/{2}/pull-requests?create";
+        private readonly string _NO_TRANSLATE_LinkViewPull = "{0}/projects/{1}/repos/{2}/pull-requests";
 
         [CanBeNull] private readonly Settings _settings;
         private readonly BindingList<BitbucketUser> _reviewers = new BindingList<BitbucketUser>();
@@ -38,11 +40,11 @@ namespace Bitbucket
                 ReloadRepositories();
             };
 
-            lblLinkCreatePull.Text = string.Format("{0}/projects/{1}/repos/{2}/pull-requests?create",
+            lblLinkCreatePull.Text = string.Format(_NO_TRANSLATE_LinkCreatePull,
                                       _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
             toolTipLink.SetToolTip(lblLinkCreatePull, _linkLabelToolTip.Text);
 
-            lblLinkViewPull.Text = string.Format("{0}/projects/{1}/repos/{2}/pull-requests",
+            lblLinkViewPull.Text = string.Format(_NO_TRANSLATE_LinkViewPull,
                 _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
             toolTipLink.SetToolTip(lblLinkViewPull, _linkLabelToolTip.Text);
 

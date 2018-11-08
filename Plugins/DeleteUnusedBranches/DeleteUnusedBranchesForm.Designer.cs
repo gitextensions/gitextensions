@@ -37,7 +37,7 @@
             this.pnlBranchesArea = new System.Windows.Forms.Panel();
             this.imgLoading = new System.Windows.Forms.PictureBox();
             this.BranchesGrid = new System.Windows.Forms.DataGridView();
-            this.deleteDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this._NO_TRANSLATE_deleteDataGridViewCheckBoxColumn = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.checkBoxHeaderCell = new DataGridViewCheckBoxHeaderCell();
@@ -119,7 +119,7 @@
             this.BranchesGrid.AutoGenerateColumns = false;
             this.BranchesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.BranchesGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.deleteDataGridViewCheckBoxColumn,
+            this._NO_TRANSLATE_deleteDataGridViewCheckBoxColumn,
             this.nameDataGridViewTextBoxColumn,
             this.dateDataGridViewTextBoxColumn,
             this.Author,
@@ -133,12 +133,12 @@
             this.BranchesGrid.TabIndex = 0;
             this.BranchesGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.BranchesGrid_CellContentClick);
             // 
-            // deleteDataGridViewCheckBoxColumn
+            // _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn
             // 
-            this.deleteDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.deleteDataGridViewCheckBoxColumn.FillWeight = 20F;
-            this.deleteDataGridViewCheckBoxColumn.Name = "deleteDataGridViewCheckBoxColumn";
-            this.deleteDataGridViewCheckBoxColumn.HeaderCell = checkBoxHeaderCell;
+            this._NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this._NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.FillWeight = 20F;
+            this._NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.Name = "_NO_TRANSLATE_deleteDataGridViewCheckBoxColumn";
+            this._NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderCell = checkBoxHeaderCell;
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -468,7 +468,7 @@
         private System.Windows.Forms.PictureBox imgLoading;
         private System.Windows.Forms.Panel pnlBranchesArea;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn deleteDataGridViewCheckBoxColumn;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn;
         private DeleteUnusedBranches.DataGridViewCheckBoxHeaderCell checkBoxHeaderCell;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn dateDataGridViewTextBoxColumn;
