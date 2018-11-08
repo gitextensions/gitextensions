@@ -96,7 +96,6 @@ namespace GitUI.CommandsDialogs
         private readonly IAppTitleGenerator _appTitleGenerator;
         private readonly WindowsJumpListManager _windowsJumpListManager;
         private readonly SubmoduleStatusProvider _submoduleStatusProvider;
-        private readonly bool _startWithDashboard;
 
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
         private ConEmuControl _terminal;
@@ -126,11 +125,9 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
         }
 
-        public FormBrowse([NotNull] GitUICommands commands, string filter, ObjectId selectCommit = null, bool startWithDashboard = false)
+        public FormBrowse([NotNull] GitUICommands commands, string filter, ObjectId selectCommit = null)
             : base(commands)
         {
-            _startWithDashboard = startWithDashboard;
-
             InitializeComponent();
 
             commandsToolStripMenuItem.DropDownOpening += CommandsToolStripMenuItem_DropDownOpening;
@@ -439,7 +436,7 @@ namespace GitUI.CommandsDialogs
             LayoutRevisionInfo();
             InternalInitialize(false);
 
-            if (_startWithDashboard || !Module.IsValidGitWorkingDir())
+            if (!Module.IsValidGitWorkingDir())
             {
                 base.OnLoad(e);
                 return;

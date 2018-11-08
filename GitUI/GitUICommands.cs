@@ -1060,9 +1060,9 @@ namespace GitUI
             return StartSettingsDialog(owner, CommandsDialogs.SettingsDialog.Pages.GitConfigSettingsPage.GetPageReference());
         }
 
-        public bool StartBrowseDialog(IWin32Window owner = null, string filter = "", ObjectId selectedCommit = null, bool startWithDashboard = false)
+        public bool StartBrowseDialog(IWin32Window owner = null, string filter = "", ObjectId selectedCommit = null)
         {
-            var form = new FormBrowse(this, filter, selectedCommit, startWithDashboard);
+            var form = new FormBrowse(this, filter, selectedCommit);
 
             if (Application.MessageLoop)
             {
