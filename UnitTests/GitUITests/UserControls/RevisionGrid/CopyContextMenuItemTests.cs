@@ -64,25 +64,6 @@ namespace GitUITests.UserControls.RevisionGrid
         }
 
         [Test]
-        public void Should_show_add_required_shortcuts()
-        {
-            var revisions = new[] { new GitRevision(ObjectId.Random()) };
-            _copyContextMenuItem.SetRevisionFunc(() => revisions);
-
-            _copyContextMenuItem.ShowDropDown();
-
-            _copyContextMenuItem.DropDownItems.Count.Should().Be(4);
-
-            var withShortCuts = _copyContextMenuItem.DropDownItems.OfType<ToolStripMenuItem>()
-                                            .Where(mi => mi.ShortcutKeys != Keys.None)
-                                            .ToArray();
-            withShortCuts.Length.Should().Be(1);
-
-            withShortCuts[0].Text.Should().StartWith(AddHotKey(Strings.GetCommitHash(1), 'C'));
-            withShortCuts[0].ShortcutKeys.Should().Be(Keys.Control | Keys.C);
-        }
-
-        [Test]
         public void Should_show_info_if_commit_has_defined_branches()
         {
             var revision = new GitRevision(ObjectId.Random());
