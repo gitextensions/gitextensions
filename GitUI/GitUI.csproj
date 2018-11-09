@@ -679,12 +679,6 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormFixHome.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="HelperDialogs\FormRunScriptSpecify.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="HelperDialogs\FormRunScriptSpecify.Designer.cs">
-      <DependentUpon>FormRunScriptSpecify.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormStatus.cs">
       <SubType>Form</SubType>
     </Compile>
