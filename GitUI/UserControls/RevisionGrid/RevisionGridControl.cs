@@ -326,11 +326,10 @@ namespace GitUI
                 return;
             }
 
-            var rect = _gridView.GetCellDisplayRectangle(0, _latestSelectedRowIndex, true);
             using (var dlg = new FormQuickGitRefSelector())
             {
                 dlg.Init(actionLabel, refs);
-                dlg.Location = PointToScreen(new Point(rect.Right, rect.Bottom));
+                dlg.Location = GetQuickItemSelectorLocation();
                 if (dlg.ShowDialog(this) != DialogResult.OK || dlg.SelectedRef == null)
                 {
                     return;
@@ -338,6 +337,12 @@ namespace GitUI
 
                 action(dlg.SelectedRef);
             }
+        }
+
+        public Point GetQuickItemSelectorLocation()
+        {
+            var rect = _gridView.GetCellDisplayRectangle(0, _latestSelectedRowIndex, true);
+            return PointToScreen(new Point(rect.Right, rect.Bottom));
         }
 
         #region Navigation

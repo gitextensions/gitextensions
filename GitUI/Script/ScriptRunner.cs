@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
-using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 
 namespace GitUI.Script
@@ -188,15 +186,6 @@ namespace GitUI.Script
             }
 
             return originalCommand;
-        }
-
-        private static string AskToSpecify(IEnumerable<IGitRef> options, string title)
-        {
-            using (var f = new FormRunScriptSpecify(options, title))
-            {
-                f.ShowDialog();
-                return f.Ret;
-            }
         }
     }
 }
