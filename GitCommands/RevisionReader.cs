@@ -166,12 +166,12 @@ namespace GitCommands
             {
                 "-z",
                 $"--pretty=format:\"{FullFormat}\"",
-                { AppSettings.ShowReflogReferences, "--reflog" },
                 {
                     refFilterOptions.HasFlag(RefFilterOptions.FirstParent),
                     "--first-parent",
                     new ArgumentBuilder
                     {
+                        { AppSettings.ShowReflogReferences, "--reflog" },
                         {
                             refFilterOptions.HasFlag(RefFilterOptions.All),
                             "--all",
