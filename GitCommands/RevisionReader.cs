@@ -179,8 +179,7 @@ namespace GitCommands
                             {
                                 {
                                     refFilterOptions.HasFlag(RefFilterOptions.Branches) &&
-                                    !branchFilter.IsNullOrWhiteSpace() &&
-                                    branchFilter.IndexOfAny(new[] { '?', '*', '[' }) != -1,
+                                    !branchFilter.IsNullOrWhiteSpace() && branchFilter.IndexOfAny(new[] { '?', '*', '[' }) != -1,
                                     "--branches=" + branchFilter
                                 },
                                 { refFilterOptions.HasFlag(RefFilterOptions.Remotes), "--remotes" },
