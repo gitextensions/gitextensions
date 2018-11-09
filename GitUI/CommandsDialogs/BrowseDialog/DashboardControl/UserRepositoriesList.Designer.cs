@@ -304,7 +304,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             this.menuStripRecentMenu.Name = "menuStripRecentMenu";
             this.menuStripRecentMenu.Size = new System.Drawing.Size(451, 24);
             this.menuStripRecentMenu.TabIndex = 3;
-            this.menuStripRecentMenu.Text = "menuStripRecentMenu";
             this.menuStripRecentMenu.Visible = false;
             // 
             // mnuTop
@@ -313,7 +312,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             this.mnuConfigure});
             this.mnuTop.Name = "mnuTop";
             this.mnuTop.Size = new System.Drawing.Size(71, 20);
-            this.mnuTop.Text = "MenuTop";
             // 
             // mnuConfigure
             // 

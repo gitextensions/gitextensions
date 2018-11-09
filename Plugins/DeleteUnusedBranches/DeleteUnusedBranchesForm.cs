@@ -45,13 +45,13 @@ namespace DeleteUnusedBranches
 
             InitializeComponent();
 
-            deleteDataGridViewCheckBoxColumn.Width = DpiUtil.Scale(50);
+            _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.Width = DpiUtil.Scale(50);
             dateDataGridViewTextBoxColumn.Width = DpiUtil.Scale(175);
             Author.Width = DpiUtil.Scale(91);
 
             imgLoading.Image = Resources.loadingpanel;
 
-            deleteDataGridViewCheckBoxColumn.DataPropertyName = nameof(Branch.Delete);
+            _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.DataPropertyName = nameof(Branch.Delete);
             nameDataGridViewTextBoxColumn.DataPropertyName = nameof(Branch.Name);
             dateDataGridViewTextBoxColumn.DataPropertyName = nameof(Branch.Date);
             Author.DataPropertyName = nameof(Branch.Author);
@@ -77,7 +77,7 @@ namespace DeleteUnusedBranches
             includeUnmergedBranches.Checked = _settings.IncludeUnmergedBranchesFlag;
 
             checkBoxHeaderCell.CheckBoxClicked += CheckBoxHeader_OnCheckBoxClicked;
-            deleteDataGridViewCheckBoxColumn.HeaderText = string.Empty;
+            _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText = string.Empty;
 
             BranchesGrid.DataSource = _branches;
         }
@@ -142,7 +142,7 @@ namespace DeleteUnusedBranches
             var selectedBranches = _branches.Where(branch => branch.Delete).ToList();
             if (selectedBranches.Count == 0)
             {
-                MessageBox.Show(string.Format(_selectBranchesToDelete.Text, deleteDataGridViewCheckBoxColumn.HeaderText), _deleteCaption.Text);
+                MessageBox.Show(string.Format(_selectBranchesToDelete.Text, _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText), _deleteCaption.Text);
                 return;
             }
 
@@ -245,7 +245,7 @@ namespace DeleteUnusedBranches
             {
                 DataGridViewRow row = BranchesGrid.Rows[i];
                 DataGridViewCheckBoxCell cell =
-                    (DataGridViewCheckBoxCell)row.Cells[nameof(deleteDataGridViewCheckBoxColumn)];
+                    (DataGridViewCheckBoxCell)row.Cells[nameof(_NO_TRANSLATE_deleteDataGridViewCheckBoxColumn)];
                 cell.Value = e.Checked;
             }
 
