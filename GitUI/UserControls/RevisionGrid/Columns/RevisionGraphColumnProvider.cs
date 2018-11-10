@@ -462,17 +462,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                                  .DefaultIfEmpty()
                                  .Max();
 
-            // When 'git log --first-parent' filtration is enabled and when only current
-            // branch needed to be rendered (and this filter actually works),
-            // it is much more readable to limit max lanes to 1.
-            int maxLanes =
-                (AppSettings.ShowFirstParent &&
-                 AppSettings.ShowCurrentBranchOnly &&
-                 AppSettings.BranchFilterEnabled)
-                    ? 1
-                    : MaxLanes;
-
-            laneCount = Math.Min(laneCount, maxLanes);
+            laneCount = Math.Min(laneCount, MaxLanes);
             var columnWidth = (LaneWidth * laneCount) + ColumnLeftMargin;
             if (columnWidth > minimumWidth)
             {

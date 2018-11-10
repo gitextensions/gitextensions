@@ -907,6 +907,11 @@ namespace GitUI
                     flags |= RevisionNodeFlags.HasRef;
                 }
 
+                if (_refFilterOptions.HasFlag(RefFilterOptions.FirstParent))
+                {
+                    flags |= RevisionNodeFlags.OnlyFirstParent;
+                }
+
                 _gridView.Add(revision, flags);
 
                 return;

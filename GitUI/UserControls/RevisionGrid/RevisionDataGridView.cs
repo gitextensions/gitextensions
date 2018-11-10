@@ -21,7 +21,8 @@ namespace GitUI.UserControls.RevisionGrid
     {
         None = 0,
         CheckedOut = 1,
-        HasRef = 2
+        HasRef = 2,
+        OnlyFirstParent = 4
     }
 
     public sealed class RevisionDataGridView : DataGridView
