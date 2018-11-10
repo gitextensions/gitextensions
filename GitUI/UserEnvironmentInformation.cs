@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 
 namespace GitUI
 {
@@ -38,7 +39,8 @@ namespace GitUI
             sb.Append($"- {_sha} {(_dirty ? " (Dirty)" : "")}{Environment.NewLine}");
             sb.Append($"- Git {gitVer}{Environment.NewLine}");
             sb.Append($"- {Environment.OSVersion}{Environment.NewLine}");
-            sb.Append($"- {RuntimeInformation.FrameworkDescription}");
+            sb.Append($"- {RuntimeInformation.FrameworkDescription}{Environment.NewLine}");
+            sb.Append($"- DPI X:{DpiUtil.ScaleX:P} Y:{DpiUtil.ScaleY:P}");
             return sb.ToString();
         }
 
