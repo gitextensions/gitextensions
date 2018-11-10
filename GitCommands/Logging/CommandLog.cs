@@ -61,11 +61,11 @@ namespace GitCommands.Logging
         public int? ExitCode { get; set; }
         [CanBeNull] public StackTrace CallStack { get; set; }
 
-        internal CommandLogEntry(string fileName, string arguments, string workDir, DateTime startedAt, bool isOnMainThread)
+        internal CommandLogEntry(string fileName, string arguments, string workingDir, DateTime startedAt, bool isOnMainThread)
         {
             FileName = fileName;
             Arguments = arguments;
-            WorkingDir = workDir;
+            WorkingDir = workingDir;
             StartedAt = startedAt;
             IsOnMainThread = isOnMainThread;
         }
@@ -89,6 +89,30 @@ namespace GitCommands.Logging
                 var exit = ExitCode == null ? "  " : $"{ExitCode,2}";
 
                 return $"{StartedAt:HH:mm:ss.fff} {duration,7} {pid} {(IsOnMainThread ? "UI" : "  ")} {exit} {fileName} {Arguments}";
+            }
+        }
+
+        public string FullLine
+        {
+            get
+            {
+                var duration = Duration == null
+                    ? "running"
+                    : $"{((TimeSpan)Duration).TotalMilliseconds:0}ms";
+
+                var fileName = FileName;
+
+                if (fileName.EndsWith("git.exe"))
+                {
+                    fileName = "git";
+                }
+
+                var pid = ProcessId == null ? "     " : $"{ProcessId}";
+                var exit = ExitCode == null ? "  " : $"{ExitCode}";
+                var callStack = CallStack == null ? "" : $"{Environment.NewLine}{CallStack}";
+                var sep = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+
+                return $"{StartedAt:HH:mm:ss.fff}{sep}{duration}{sep}{pid}{sep}{(IsOnMainThread ? "UI" : "")}{sep}{exit}{sep}{fileName}{sep}{Arguments}{sep}{WorkingDir}{callStack}";
             }
         }
 

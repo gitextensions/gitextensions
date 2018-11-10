@@ -177,7 +177,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 {
                     File.WriteAllLines(
                         fileDialog.FileName,
-                        CommandLog.Commands.Select(cle => cle.ColumnLine));
+                        CommandLog.Commands.Select(cle => cle.FullLine));
                 }
             }
         }
