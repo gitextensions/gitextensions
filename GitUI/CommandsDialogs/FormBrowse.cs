@@ -1281,10 +1281,16 @@ namespace GitUI.CommandsDialogs
             UICommands.StartPushDialog(this, pushOnShow: ModifierKeys.HasFlag(Keys.Shift));
         }
 
-        private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
+        private void RefreshStatus()
         {
+            _gitStatusMonitor?.RequestRefresh();
             _submoduleStatusUpdateNeeded = true;
             _stashCountUpdateNeeded = true;
+        }
+
+        private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            RefreshStatus();
             RefreshRevisions();
         }
 
@@ -1420,7 +1426,7 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshButtonClick(object sender, EventArgs e)
         {
-            _gitStatusMonitor?.RequestRefresh();
+            RefreshStatus();
             RefreshRevisions();
         }
 
