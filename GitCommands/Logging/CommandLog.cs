@@ -53,6 +53,7 @@ namespace GitCommands.Logging
     {
         public string FileName { get; }
         public string Arguments { get; }
+        public string WorkingDir { get; }
         private DateTime StartedAt { get; }
         public bool IsOnMainThread { get; }
         public TimeSpan? Duration { get; internal set; }
@@ -60,10 +61,11 @@ namespace GitCommands.Logging
         public int? ExitCode { get; set; }
         [CanBeNull] public StackTrace CallStack { get; set; }
 
-        internal CommandLogEntry(string fileName, string arguments, DateTime startedAt, bool isOnMainThread)
+        internal CommandLogEntry(string fileName, string arguments, string workDir, DateTime startedAt, bool isOnMainThread)
         {
             FileName = fileName;
             Arguments = arguments;
+            WorkingDir = workDir;
             StartedAt = startedAt;
             IsOnMainThread = isOnMainThread;
         }
@@ -96,13 +98,14 @@ namespace GitCommands.Logging
             {
                 var s = new StringBuilder();
 
-                s.Append("File name:  ").AppendLine(FileName);
-                s.Append("Arguments:  ").AppendLine(Arguments);
-                s.Append("Process ID: ").Append(ProcessId == null ? "unknown" : ProcessId.ToString()).AppendLine();
-                s.Append("Started at: ").Append(StartedAt.ToString("O")).AppendLine();
-                s.Append("UI Thread?: ").Append(IsOnMainThread).AppendLine();
-                s.Append("Duration:   ").Append(Duration == null ? "still running" : $"{Duration.Value.TotalMilliseconds:0.###} ms").AppendLine();
-                s.Append("Exit code:  ").Append(ExitCode == null ? "unknown" : ExitCode.ToString()).AppendLine();
+                s.Append("File name:   ").AppendLine(FileName);
+                s.Append("Arguments:   ").AppendLine(Arguments);
+                s.Append("Working dir: ").AppendLine(WorkingDir);
+                s.Append("Process ID:  ").Append(ProcessId == null ? "unknown" : ProcessId.ToString()).AppendLine();
+                s.Append("Started at:  ").Append(StartedAt.ToString("O")).AppendLine();
+                s.Append("UI Thread?:  ").Append(IsOnMainThread).AppendLine();
+                s.Append("Duration:    ").Append(Duration == null ? "still running" : $"{Duration.Value.TotalMilliseconds:0.###} ms").AppendLine();
+                s.Append("Exit code:   ").Append(ExitCode == null ? "unknown" : ExitCode.ToString()).AppendLine();
 
                 if (CallStack != null)
                 {
@@ -128,11 +131,11 @@ namespace GitCommands.Logging
 
         public static IEnumerable<CommandLogEntry> Commands => _queue;
 
-        public static ProcessOperation LogProcessStart(string fileName, string arguments = "")
+        public static ProcessOperation LogProcessStart(string fileName, string arguments = "", string workDir = "")
         {
             const int MaxEntryCount = 500;
 
-            var entry = new CommandLogEntry(fileName, arguments, DateTime.Now, ThreadHelper.JoinableTaskContext.IsOnMainThread);
+            var entry = new CommandLogEntry(fileName, arguments, workDir, DateTime.Now, ThreadHelper.JoinableTaskContext.IsOnMainThread);
 
             if (CaptureCallStacks)
             {

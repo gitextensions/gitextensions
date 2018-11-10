@@ -129,7 +129,7 @@ namespace GitUI.UserControls
 
                 var process = new Process { StartInfo = startInfo, EnableRaisingEvents = true };
 
-                var operation = CommandLog.LogProcessStart(command, arguments);
+                var operation = CommandLog.LogProcessStart(command, arguments, workDir);
 
                 process.OutputDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
                 process.ErrorDataReceived += (sender, args) => FireDataReceived(new TextEventArgs((args.Data ?? "") + '\n'));
