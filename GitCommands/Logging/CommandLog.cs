@@ -75,7 +75,7 @@ namespace GitCommands.Logging
             {
                 var duration = Duration == null
                     ? "running"
-                    : $"{((TimeSpan)Duration).TotalMilliseconds:0}ms";
+                    : $"{((TimeSpan)Duration).TotalMilliseconds:0,0} ms";
 
                 var fileName = FileName;
 
@@ -87,7 +87,7 @@ namespace GitCommands.Logging
                 var pid = ProcessId == null ? "" : $"{ProcessId}";
                 var exit = ExitCode == null ? "" : $"{ExitCode}";
 
-                return $"{StartedAt:HH:mm:ss.fff} {duration,7} {pid,5} {(IsOnMainThread ? "UI" : "  ")} {exit,2} {fileName} {Arguments}";
+                return $"{StartedAt:HH:mm:ss.fff} {duration,9} {pid,5} {(IsOnMainThread ? "UI" : "  ")} {exit,2} {fileName} {Arguments}";
             }
         }
 
