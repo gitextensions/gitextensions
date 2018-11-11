@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
@@ -580,7 +581,7 @@ namespace GitUI.UserControls.RevisionGrid
                     var selectedRevisions = SelectedObjectIds;
                     if (selectedRevisions != null && selectedRevisions.Count != 0)
                     {
-                        Clipboard.SetText(string.Join(Environment.NewLine, selectedRevisions));
+                        ClipboardUtil.TrySetText(string.Join(Environment.NewLine, selectedRevisions));
                     }
 
                     break;

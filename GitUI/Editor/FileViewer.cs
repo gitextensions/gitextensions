@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Patches;
 using GitCommands.Settings;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -960,7 +961,7 @@ namespace GitUI.Editor
                 }
             }
 
-            Clipboard.SetText(DoAutoCRLF(code));
+            ClipboardUtil.TrySetText(DoAutoCRLF(code));
 
             return;
 
@@ -990,7 +991,7 @@ namespace GitUI.Editor
 
             if (!string.IsNullOrEmpty(selectedText))
             {
-                Clipboard.SetText(selectedText);
+                ClipboardUtil.TrySetText(selectedText);
                 return;
             }
 
@@ -998,7 +999,7 @@ namespace GitUI.Editor
 
             if (!text.IsNullOrEmpty())
             {
-                Clipboard.SetText(text);
+                ClipboardUtil.TrySetText(text);
             }
         }
 
@@ -1286,7 +1287,7 @@ namespace GitUI.Editor
                 code = string.Join("\n", lines);
             }
 
-            Clipboard.SetText(DoAutoCRLF(code));
+            ClipboardUtil.TrySetText(DoAutoCRLF(code));
         }
 
         private string DoAutoCRLF(string text)

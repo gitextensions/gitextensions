@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
@@ -148,7 +149,7 @@ namespace GitUI.CommandsDialogs
 
         private void copySha1ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(GetShaOfRefLine().ToString());
+            ClipboardUtil.TrySetText(GetShaOfRefLine().ToString());
         }
 
         private void linkCurrentBranch_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

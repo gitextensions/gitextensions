@@ -13,6 +13,7 @@ using GitCommands;
 using GitCommands.ExternalLinks;
 using GitCommands.Git;
 using GitCommands.Remotes;
+using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.Hotkey;
@@ -593,7 +594,7 @@ namespace GitUI.CommitInfo
         private void copyCommitInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var commitInfo = $"{commitInfoHeader.GetPlainText()}{Environment.NewLine}{Environment.NewLine}{rtbxCommitMessage.GetPlainText()}{Environment.NewLine}{RevisionInfo.GetPlainText()}";
-            Clipboard.SetText(commitInfo);
+            ClipboardUtil.TrySetText(commitInfo);
         }
 
         private void showContainedInBranchesRemoteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -697,7 +698,7 @@ namespace GitUI.CommitInfo
             }
 
             // Override RichTextBox Ctrl-c handling to copy plain text
-            Clipboard.SetText(rtb.GetSelectionPlainText());
+            ClipboardUtil.TrySetText(rtb.GetSelectionPlainText());
             e.Handled = true;
         }
 

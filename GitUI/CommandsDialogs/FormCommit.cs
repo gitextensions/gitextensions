@@ -16,6 +16,7 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Patches;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs.CommitDialog;
@@ -2426,7 +2427,7 @@ namespace GitUI.CommandsDialogs
                 fileNames.Append(_fullPathResolver.Resolve(item.Name).ToNativePath());
             }
 
-            Clipboard.SetText(fileNames.ToString());
+            ClipboardUtil.TrySetText(fileNames.ToString());
         }
 
         private void OpenFilesWithDiffTool(IEnumerable<GitItemStatus> items, string firstRevision, string secondRevision)

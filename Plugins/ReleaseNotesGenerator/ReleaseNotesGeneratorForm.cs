@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -92,19 +93,19 @@ namespace ReleaseNotesGenerator
 
         private void buttonCopyOrigOutput_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(textBoxResult.Text);
+            ClipboardUtil.TrySetText(textBoxResult.Text);
         }
 
         private void buttonCopyAsPlainText_Click(object sender, EventArgs e)
         {
             string result = CreateTextTable(_lastGeneratedLogLines, true, true);
-            Clipboard.SetText(result);
+            ClipboardUtil.TrySetText(result);
         }
 
         private void buttonCopyAsTextTableSpace_Click(object sender, EventArgs e)
         {
             string result = CreateTextTable(_lastGeneratedLogLines, true, false);
-            Clipboard.SetText(result);
+            ClipboardUtil.TrySetText(result);
         }
 
         private void buttonCopyAsHtml_Click(object sender, EventArgs e)

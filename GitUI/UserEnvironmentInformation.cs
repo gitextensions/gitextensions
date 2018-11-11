@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 
 namespace GitUI
@@ -13,7 +13,7 @@ namespace GitUI
         private static bool _dirty;
         private static string _sha;
 
-        public static void CopyInformation() => Clipboard.SetText(GetInformation());
+        public static void CopyInformation() => ClipboardUtil.TrySetText(GetInformation());
 
         public static string GetInformation()
         {

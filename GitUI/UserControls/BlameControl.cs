@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitUI.CommitInfo;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
@@ -366,7 +367,7 @@ namespace GitUI.Blame
                 return;
             }
 
-            Clipboard.SetText(commit.Summary);
+            ClipboardUtil.TrySetText(commit.Summary);
         }
 
         private void blamePreviousRevisionToolStripMenuItem_Click(object sender, EventArgs e)
