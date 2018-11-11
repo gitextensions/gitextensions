@@ -40,7 +40,7 @@ namespace GitUI
             sb.AppendLine($"- Git {gitVer}");
             sb.AppendLine($"- {Environment.OSVersion}");
             sb.AppendLine($"- {RuntimeInformation.FrameworkDescription}");
-            sb.AppendLine($"- DPI X:{DpiUtil.ScaleX:P} Y:{DpiUtil.ScaleY:P}");
+            sb.AppendLine($"- DPI {DpiUtil.DpiX}dpi ({(DpiUtil.ScaleX == 1 ? "no" : $"{Math.Round(DpiUtil.ScaleX * 100)}%")} scaling)");
 
             return sb.ToString();
         }
