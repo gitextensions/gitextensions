@@ -721,7 +721,7 @@ namespace GitUI
 
             ShowLoading();
 
-            var revisionCount = 0;
+            var firstRevisionReceived = false;
 
             try
             {
@@ -878,14 +878,14 @@ namespace GitUI
 
             void OnRevisionRead(GitRevision revision)
             {
-                revisionCount++;
-
-                if (revisionCount < 2)
+                if (!firstRevisionReceived)
                 {
+                    firstRevisionReceived = true;
+
                     this.InvokeAsync(() => { ShowLoading(false); }).FileAndForget();
                 }
 
-                var isCurrentCheckout = revision.ObjectId == CurrentCheckout;
+                var isCurrentCheckout = revision.ObjectId.Equals(CurrentCheckout);
 
                 if (isCurrentCheckout &&
                     ShowUncommittedChangesIfPossible &&
@@ -973,7 +973,7 @@ namespace GitUI
             {
                 _isReadingRevisions = false;
 
-                if (revisionCount == 0 && !FilterIsApplied(inclBranchFilter: true))
+                if (!firstRevisionReceived && !FilterIsApplied(inclBranchFilter: true))
                 {
                     // This has to happen on the UI thread
                     this.InvokeAsync(

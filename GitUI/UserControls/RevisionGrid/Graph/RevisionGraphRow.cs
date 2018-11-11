@@ -64,7 +64,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         }
 
                         // All segments that connect to the current revision are in the same lane.
-                        newSegmentLanes.Add(segment, currentRevisionLane);
+                        newSegmentLanes[segment] = currentRevisionLane;
                     }
                     else
                     {
@@ -93,7 +93,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                             // If there is another segment with the same parent, and its not this row's revision, merge into 1 lane.
                             if (searchParent.Value != currentRevisionLane && searchParent.Key.Parent == segment.Parent)
                             {
-                                newSegmentLanes.Add(segment, searchParent.Value);
+                                // Use indexer to overwrite if segments was already added. This shouldn't happen, but it does.
+                                newSegmentLanes[segment] = searchParent.Value;
                                 added = true;
                                 break;
                             }
@@ -102,7 +103,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                         // Segment has not been assigned a lane yet
                         if (!added)
                         {
-                            newSegmentLanes.Add(segment, laneIndex);
+                            newSegmentLanes[segment] = laneIndex;
                             laneIndex++;
                         }
                     }
