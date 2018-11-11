@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GitExtensions")]
 [assembly: AssemblyProduct("GitExtensions")]
-[assembly: AssemblyCopyright("Copyright © 2008-2018 GitExt Team")]
+[assembly: AssemblyCopyright("Copyright © 2008-2018 GitExtensions Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
