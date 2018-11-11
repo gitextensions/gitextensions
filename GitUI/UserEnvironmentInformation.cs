@@ -7,7 +7,7 @@ using GitExtUtils.GitUI;
 
 namespace GitUI
 {
-    public sealed class UserEnvironmentInformation
+    public static class UserEnvironmentInformation
     {
         private static bool _alreadySet;
         private static bool _dirty;
