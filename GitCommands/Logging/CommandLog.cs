@@ -8,7 +8,6 @@ using JetBrains.Annotations;
 
 namespace GitCommands.Logging
 {
-    // TODO capture process working directory
     // TODO capture number of input bytes
     // TODO capture number of standard output bytes
     // TODO capture number of standard error bytes
@@ -85,18 +84,16 @@ namespace GitCommands.Logging
                     fileName = "git";
                 }
 
-                var pid = ProcessId == null ? "     " : $"{ProcessId,5}";
-                var exit = ExitCode == null ? "  " : $"{ExitCode,2}";
+                var pid = ProcessId == null ? "" : $"{ProcessId}";
+                var exit = ExitCode == null ? "" : $"{ExitCode}";
 
-                return $"{StartedAt:HH:mm:ss.fff} {duration,7} {pid} {(IsOnMainThread ? "UI" : "  ")} {exit} {fileName} {Arguments}";
+                return $"{StartedAt:HH:mm:ss.fff} {duration,7} {pid,5} {(IsOnMainThread ? "UI" : "  ")} {exit,2} {fileName} {Arguments}";
             }
         }
 
         public string FullLine(string sep)
         {
-            var duration = Duration == null
-                ? "running"
-                : $"{((TimeSpan)Duration).TotalMilliseconds:0}ms";
+            var duration = Duration == null ? "" : $"{((TimeSpan)Duration).TotalMilliseconds:0}";
 
             var fileName = FileName;
 
@@ -105,12 +102,12 @@ namespace GitCommands.Logging
                 fileName = "git";
             }
 
-            var pid = ProcessId == null ? "     " : $"{ProcessId}";
-            var exit = ExitCode == null ? "  " : $"{ExitCode}";
+            var pid = ProcessId == null ? "" : $"{ProcessId}";
+            var exit = ExitCode == null ? "" : $"{ExitCode}";
             var callStack = CallStack == null ? "" : $"{Environment.NewLine}{CallStack}";
 
             return
-                $"{StartedAt:HH:mm:ss.fff}{sep}{duration}{sep}{pid}{sep}{(IsOnMainThread ? "UI" : "")}{sep}{exit}{sep}{fileName}{sep}{Arguments}{sep}{WorkingDir}{callStack}";
+                $"{StartedAt:O}{sep}{duration}{sep}{pid}{sep}{(IsOnMainThread ? "UI" : "")}{sep}{exit}{sep}{fileName}{sep}{Arguments}{sep}{WorkingDir}{callStack}";
         }
 
         public string Detail
