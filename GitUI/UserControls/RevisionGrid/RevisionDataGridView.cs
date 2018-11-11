@@ -576,6 +576,14 @@ namespace GitUI.UserControls.RevisionGrid
                     }
 
                     break;
+                case Keys.Control | Keys.C:
+                    var selectedRevisions = SelectedObjectIds;
+                    if (selectedRevisions != null && selectedRevisions.Count != 0)
+                    {
+                        Clipboard.SetText(string.Join(Environment.NewLine, selectedRevisions));
+                    }
+
+                    break;
                 default:
                     base.OnKeyDown(e);
                     break;
