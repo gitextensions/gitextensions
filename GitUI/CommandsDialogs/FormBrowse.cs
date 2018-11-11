@@ -1016,6 +1016,8 @@ namespace GitUI.CommandsDialogs
                 {
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
+                        // Add a delay to not interfere with GUI updates when switching repository
+                        await Task.Delay(500);
                         await TaskScheduler.Default;
 
                         var result = Module.GetStashes().Count;
