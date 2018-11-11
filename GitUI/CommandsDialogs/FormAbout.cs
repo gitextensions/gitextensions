@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs
             void ThankNextContributor()
             {
                 // Select a contributor at random
-                var contributorName = contributorsList[random.Next(contributorsList.Count - 1)].Trim();
+                var contributorName = contributorsList[random.Next(contributorsList.Count)].Trim();
 
                 _NO_TRANSLATE_ThanksTo.Text = thanksToContributorsText + contributorName;
             }
