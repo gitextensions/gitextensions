@@ -92,28 +92,25 @@ namespace GitCommands.Logging
             }
         }
 
-        public string FullLine
+        public string FullLine(string sep)
         {
-            get
+            var duration = Duration == null
+                ? "running"
+                : $"{((TimeSpan)Duration).TotalMilliseconds:0}ms";
+
+            var fileName = FileName;
+
+            if (fileName.EndsWith("git.exe"))
             {
-                var duration = Duration == null
-                    ? "running"
-                    : $"{((TimeSpan)Duration).TotalMilliseconds:0}ms";
-
-                var fileName = FileName;
-
-                if (fileName.EndsWith("git.exe"))
-                {
-                    fileName = "git";
-                }
-
-                var pid = ProcessId == null ? "     " : $"{ProcessId}";
-                var exit = ExitCode == null ? "  " : $"{ExitCode}";
-                var callStack = CallStack == null ? "" : $"{Environment.NewLine}{CallStack}";
-                var sep = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator;
-
-                return $"{StartedAt:HH:mm:ss.fff}{sep}{duration}{sep}{pid}{sep}{(IsOnMainThread ? "UI" : "")}{sep}{exit}{sep}{fileName}{sep}{Arguments}{sep}{WorkingDir}{callStack}";
+                fileName = "git";
             }
+
+            var pid = ProcessId == null ? "     " : $"{ProcessId}";
+            var exit = ExitCode == null ? "  " : $"{ExitCode}";
+            var callStack = CallStack == null ? "" : $"{Environment.NewLine}{CallStack}";
+
+            return
+                $"{StartedAt:HH:mm:ss.fff}{sep}{duration}{sep}{pid}{sep}{(IsOnMainThread ? "UI" : "")}{sep}{exit}{sep}{fileName}{sep}{Arguments}{sep}{WorkingDir}{callStack}";
         }
 
         public string Detail
