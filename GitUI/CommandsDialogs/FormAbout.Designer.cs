@@ -172,7 +172,7 @@
             this.environmentInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.environmentInfo.Location = new System.Drawing.Point(15, 108);
             this.environmentInfo.Name = "environmentInfo";
-            this.environmentInfo.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.environmentInfo.Padding = new System.Windows.Forms.Padding(0, 12, 0, 4);
             this.environmentInfo.Size = new System.Drawing.Size(414, 101);
             this.environmentInfo.TabIndex = 5;
             this.environmentInfo.ToolTip = this.toolTip;
