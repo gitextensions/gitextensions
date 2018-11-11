@@ -60,6 +60,8 @@ namespace GitCommands.Submodules
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 // First task: Gather list of submodules on a background thread.
+                // Add a short delay to prio log first
+                await Task.Delay(100, cancelToken);
 
                 // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
                 var threadModule = new GitModule(workingDirectory);
