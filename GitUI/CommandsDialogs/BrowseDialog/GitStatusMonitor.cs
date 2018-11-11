@@ -42,7 +42,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private string _submodulesPath;
 
         // Timestamps to schedule status updates, limit the update interval dynamically
-        private int _nextUpdateTime;
+        private int _nextUpdateTime = int.MaxValue;
         private int _previousUpdateTime;
         private int _currentUpdateInterval = MinUpdateInterval;
         private GitStatusMonitorState _currentStatus;
@@ -96,7 +96,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             void WorkTreeWatcherError(object sender, ErrorEventArgs e)
             {
                 // Called for instance at buffer overflow
-                CalculateNextUpdateTime();
+                ScheduleNextUpdateTime(FileChangedUpdateDelay);
             }
 
             void GitDirChanged(object sender, FileSystemEventArgs e)
@@ -119,7 +119,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     return;
                 }
 
-                CalculateNextUpdateTime(isInteractive: true);
+                ScheduleNextInteractiveTime();
             }
 
             void WorkTreeChanged(object sender, FileSystemEventArgs e)
@@ -142,14 +142,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     return;
                 }
 
-                CalculateNextUpdateTime();
+                ScheduleNextUpdateTime(FileChangedUpdateDelay);
                 _workTreeWatcher.EnableRaisingEvents = false;
             }
         }
 
         public void RequestRefresh()
         {
-            CalculateNextUpdateTime(isInteractive: true);
+            ScheduleNextInteractiveTime();
         }
 
         public void Dispose()
@@ -190,7 +190,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                             _timerRefresh.Start();
                             _workTreeWatcher.EnableRaisingEvents = true;
                             _gitDirWatcher.EnableRaisingEvents = !_gitDirWatcher.Path.StartsWith(_workTreeWatcher.Path);
-                            CalculateNextUpdateTime(isInteractive: true);
+                            ScheduleNextInteractiveTime();
                         }
 
                         break;
@@ -267,8 +267,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     _gitDirWatcher.Path = gitDirPath;
                     _gitPath = Path.GetDirectoryName(gitDirPath);
                     _submodulesPath = Path.Combine(_gitPath, "modules");
-                    _currentUpdateInterval = MinUpdateInterval;
-                    _previousUpdateTime = 0;
+
                     _commandIsRunning = false;
                     CurrentStatus = GitStatusMonitorState.Running;
                 }
@@ -294,7 +293,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            if (Environment.TickCount < _nextUpdateTime && (Environment.TickCount >= 0 || _nextUpdateTime <= 0))
+            if (Environment.TickCount < _nextUpdateTime)
             {
                 return;
             }
@@ -318,7 +317,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             _previousUpdateTime = Environment.TickCount;
 
             // Schedule update every 5 min, even if we don't know that anything changed
-            CalculateNextUpdateTime(PeriodicUpdateInterval);
+            ScheduleNextUpdateTime(PeriodicUpdateInterval);
 
             // capture a consistent state in the main thread
             IGitModule module = Module;
@@ -384,21 +383,20 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 if (!_statusIsUpToDate)
                 {
                     // Command was requested when this command was running
-                    // Will always be scheduled as background update (even if requested interactively orignally)
-                    CalculateNextUpdateTime();
+                    // Will always be scheduled as background update (even if requested interactively originally)
+                    ScheduleNextUpdateTime(FileChangedUpdateDelay);
                 }
             }
         }
 
-        private void CalculateNextUpdateTime(int delay = FileChangedUpdateDelay, bool isInteractive = false)
+        /// <summary>
+        /// Schedule a status update after the specified delay
+        /// Do not change if a value is already set at a earlier time,
+        /// but respect the minimal (dynamic) update times between updates
+        /// </summary>
+        /// <param name="delay">delay in milli seconds</param>
+        private void ScheduleNextUpdateTime(int delay)
         {
-            int currentUpdateInterval = _currentUpdateInterval;
-            if (isInteractive)
-            {
-                delay = InteractiveUpdateDelay;
-                currentUpdateInterval = InteractiveUpdateDelay;
-            }
-
             var next = Environment.TickCount + delay;
             if (_nextUpdateTime > Environment.TickCount)
             {
@@ -406,8 +404,23 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 next = Math.Min(_nextUpdateTime, next);
             }
 
+            // timer wraps after 25 days uptime
+            if (_nextUpdateTime < 0 && _previousUpdateTime > 0)
+            {
+                _previousUpdateTime = next;
+            }
+
             // Enforce a minimal time between updates, to not update too frequently
-            _nextUpdateTime = Math.Max(next, _previousUpdateTime + currentUpdateInterval);
+            _nextUpdateTime = Math.Max(next, _previousUpdateTime + _currentUpdateInterval);
+        }
+
+        /// <summary>
+        /// Schedule a status update from interactive changes (repo changed or refreshed)
+        /// A short delay is added
+        /// </summary>
+        private void ScheduleNextInteractiveTime()
+        {
+            _nextUpdateTime = Environment.TickCount + InteractiveUpdateDelay;
         }
     }
 }
