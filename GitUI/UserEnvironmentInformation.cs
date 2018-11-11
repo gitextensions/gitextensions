@@ -35,12 +35,13 @@ namespace GitUI
             // Build and open FormAbout design to make sure info still looks good if you change this code.
             StringBuilder sb = new StringBuilder();
 
-            sb.Append($"- Git Extensions {AppSettings.ProductVersion}{Environment.NewLine}");
-            sb.Append($"- {_sha}{(_dirty ? " (Dirty)" : "")}{Environment.NewLine}");
-            sb.Append($"- Git {gitVer}{Environment.NewLine}");
-            sb.Append($"- {Environment.OSVersion}{Environment.NewLine}");
-            sb.Append($"- {RuntimeInformation.FrameworkDescription}{Environment.NewLine}");
-            sb.Append($"- DPI X:{DpiUtil.ScaleX:P} Y:{DpiUtil.ScaleY:P}");
+            sb.AppendLine($"- Git Extensions {AppSettings.ProductVersion}");
+            sb.AppendLine($"- {_sha}{(_dirty ? " (Dirty)" : "")}");
+            sb.AppendLine($"- Git {gitVer}");
+            sb.AppendLine($"- {Environment.OSVersion}");
+            sb.AppendLine($"- {RuntimeInformation.FrameworkDescription}");
+            sb.AppendLine($"- DPI X:{DpiUtil.ScaleX:P} Y:{DpiUtil.ScaleY:P}");
+
             return sb.ToString();
         }
 
