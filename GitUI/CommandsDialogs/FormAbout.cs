@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs
             void ThankNextContributor()
             {
                 // Select a contributor at random
-                var contributorName = contributorsList[random.Next(contributorsList.Count - 1)].Trim();
+                var contributorName = contributorsList[random.Next(contributorsList.Count)].Trim();
 
                 _NO_TRANSLATE_ThanksTo.Text = thanksToContributorsText + contributorName;
             }
@@ -60,8 +60,9 @@ namespace GitUI.CommandsDialogs
             IReadOnlyList<string> GetContributorList()
             {
                 return new[] { Resources.Team, Resources.Coders, Resources.Translators, Resources.Designers }
-                    .Select(c => c.Replace(Environment.NewLine, " "))
-                    .SelectMany(line => line.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries))
+                    .Select(c => c.Replace(Environment.NewLine, ""))
+                    .SelectMany(line => line.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries))
+                    .Select(contributor => contributor.Trim())
                     .ToList();
             }
         }
