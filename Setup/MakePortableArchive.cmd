@@ -58,6 +58,8 @@ xcopy /y ..\GitExtensions\bin\%Configuration%\Microsoft.VisualStudio.Threading.d
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\Microsoft.VisualStudio.Validation.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitExtensions\bin\%Configuration%\System.Runtime.InteropServices.RuntimeInformation.dll GitExtensions\
+IF ERRORLEVEL 1 EXIT /B 1
 
 xcopy /y ..\Plugins\AutoCompileSubmodules\bin\%Configuration%\AutoCompileSubmodules.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
