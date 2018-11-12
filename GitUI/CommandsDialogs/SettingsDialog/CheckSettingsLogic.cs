@@ -104,7 +104,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return false;
         }
 
-        private IEnumerable<string> GetGitLocations()
+        private static IEnumerable<string> GetGitLocations()
         {
             string envVariable = Environment.GetEnvironmentVariable("GITEXT_GIT");
             if (!string.IsNullOrEmpty(envVariable))
@@ -156,26 +156,45 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             return false;
         }
 
-        public bool SolveGitCommand(string possibleNewPath = null)
+        public static bool SolveGitCommand(string possibleNewPath = null)
         {
             if (EnvUtils.RunningOnWindows())
             {
-                var command = (from cmd in GetWindowsCommandLocations()
-                               let output = new Executable(cmd).GetOutput()
-                               where !string.IsNullOrEmpty(output)
-                               select cmd).FirstOrDefault();
-
-                if (command != null)
+                foreach (var command in GetWindowsCommandLocations())
                 {
-                    AppSettings.GitCommandValue = command;
-                    return true;
+                    if (TestGitCommand(command))
+                    {
+                        return true;
+                    }
                 }
 
                 return false;
             }
 
             AppSettings.GitCommandValue = "git";
-            return !string.IsNullOrEmpty(Module.RunGitCmd(""));
+            return TestGitCommand(AppSettings.GitCommandValue);
+
+            bool TestGitCommand(string command)
+            {
+                try
+                {
+                    string output = new Executable(command).GetOutput();
+                    if (!string.IsNullOrEmpty(output))
+                    {
+                        if (command != null)
+                        {
+                            AppSettings.GitCommandValue = command;
+                            return true;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    // Ignore expection, we are trying to find a way to execute git.exe
+                }
+
+                return false;
+            }
 
             IEnumerable<string> GetWindowsCommandLocations()
             {
