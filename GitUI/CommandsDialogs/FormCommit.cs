@@ -2495,7 +2495,7 @@ namespace GitUI.CommandsDialogs
             }
             finally
             {
-                _bypassActivatedEventHandler = true;
+                _bypassActivatedEventHandler = false;
             }
         }
 
