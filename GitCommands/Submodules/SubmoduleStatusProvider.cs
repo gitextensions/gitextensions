@@ -119,6 +119,11 @@ namespace GitCommands.Submodules
 
         private async Task GetSubmoduleStatusAsync(SubmoduleInfo info, CancellationToken cancelToken)
         {
+            if (!AppSettings.ShowSubmoduleStatus)
+            {
+                return;
+            }
+
             await TaskScheduler.Default;
             cancelToken.ThrowIfCancellationRequested();
 
