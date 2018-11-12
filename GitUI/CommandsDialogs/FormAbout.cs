@@ -60,8 +60,9 @@ namespace GitUI.CommandsDialogs
             IReadOnlyList<string> GetContributorList()
             {
                 return new[] { Resources.Team, Resources.Coders, Resources.Translators, Resources.Designers }
-                    .Select(c => c.Replace(Environment.NewLine, " "))
-                    .SelectMany(line => line.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries))
+                    .Select(c => c.Replace(Environment.NewLine, ""))
+                    .SelectMany(line => line.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries))
+                    .Select(contributor => contributor.Trim())
                     .ToList();
             }
         }
