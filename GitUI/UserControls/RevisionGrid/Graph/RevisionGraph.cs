@@ -8,8 +8,13 @@ using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
+    internal interface IRevisionGraphRowProvider
+    {
+        IRevisionGraphRow GetSegmentsForRow(int row);
+    }
+
     // The RevisionGraph contains all the basic structures needed to render the graph.
-    public class RevisionGraph
+    public class RevisionGraph : IRevisionGraphRowProvider
     {
         // Some unordered collections with raw data
         private ConcurrentDictionary<ObjectId, RevisionGraphRevision> _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
@@ -123,7 +128,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return localOrderedNodesCache.ElementAt(row);
         }
 
-        public RevisionGraphRow GetSegmentsForRow(int row)
+        public IRevisionGraphRow GetSegmentsForRow(int row)
         {
             // Use a local variable, because the cached list can be reset
             var localOrderedRowCache = _orderedRowCache;

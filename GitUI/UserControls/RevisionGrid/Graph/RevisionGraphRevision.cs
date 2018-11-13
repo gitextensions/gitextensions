@@ -8,9 +8,9 @@ using GitUIPluginInterfaces;
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
     // This class represents a revision, or node.
-    //     *  <- revision
+    //     *  <- child revision
     //     |
-    //     *  <- revision
+    //     *  <- parent revision
     public class RevisionGraphRevision
     {
         public RevisionGraphRevision(ObjectId objectId, int guessScore)
