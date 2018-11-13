@@ -39,12 +39,12 @@ namespace GitUI.UserControls
             void AppendMessage(string text)
             {
                 Debug.Assert(text != null, "text != null");
-                Debug.Assert(!InvokeRequired, "!InvokeRequired");
-
                 if (IsDisposed)
                 {
                     return;
                 }
+
+                Debug.Assert(!InvokeRequired, "!InvokeRequired");
 
                 _editbox.Visible = true;
                 _editbox.Text += text;
