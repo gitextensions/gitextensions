@@ -160,8 +160,9 @@ namespace GitUI.UserControls
 
                             _exitcode = _process.ExitCode;
                             _process = null;
-                            _outputThrottle?.Stop(flush: true);
+                            _outputThrottle?.FlushOutput();
                             FireProcessExited();
+                            _outputThrottle?.Stop(flush: true);
                         }).FileAndForget();
                 };
 
@@ -227,7 +228,7 @@ namespace GitUI.UserControls
                 }
             }
 
-            private void FlushOutput()
+            public void FlushOutput()
             {
                 lock (_textToAdd)
                 {
