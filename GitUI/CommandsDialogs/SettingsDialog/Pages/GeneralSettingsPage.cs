@@ -52,6 +52,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkStashUntrackedFiles.Checked = AppSettings.IncludeUntrackedFilesInAutoStash;
             chkShowCurrentChangesInRevisionGraph.Checked = AppSettings.RevisionGraphShowWorkingDirChanges;
             chkShowStashCountInBrowseWindow.Checked = AppSettings.ShowStashCount;
+            chkShowSubmoduleStatusInBrowse.Checked = AppSettings.ShowSubmoduleStatus;
             chkShowGitStatusInToolbar.Checked = AppSettings.ShowGitStatusInBrowseToolbar;
             chkShowGitStatusForArtificialCommits.Checked = AppSettings.ShowGitStatusForArtificialCommits;
             SmtpServer.Text = AppSettings.SmtpServer;
@@ -88,6 +89,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
             AppSettings.RevisionGraphShowWorkingDirChanges = chkShowCurrentChangesInRevisionGraph.Checked;
             AppSettings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
+            AppSettings.ShowSubmoduleStatus = chkShowSubmoduleStatusInBrowse.Checked;
             AppSettings.DefaultCloneDestinationPath = cbDefaultCloneDestination.Text;
             AppSettings.FollowRenamesInFileHistoryExactOnly = chkFollowRenamesInFileHistoryExact.Checked;
         }
