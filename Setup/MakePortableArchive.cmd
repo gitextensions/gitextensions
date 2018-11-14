@@ -105,6 +105,8 @@ xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\JiraCommitHintPlugi
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\NString.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\System.Collections.Immutable.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\ProxySwitcher\bin\%Configuration%\ProxySwitcher.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\ReleaseNotesGenerator\bin\%Configuration%\ReleaseNotesGenerator.dll GitExtensions\Plugins\
