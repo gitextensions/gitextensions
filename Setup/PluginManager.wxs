@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="PluginsDir">
+            <Component Id="cmp94CDDBC4517C64BBE29AA495BEE71701" Guid="*">
+                <File Id="fil5A1F49842E462A71257B235C341A47D0" KeyPath="yes" Source="$(var.PluginManagerSourceDir)\GitExtensions.PluginManager.dll" />
+            </Component>
+            <Component Id="cmp758E70D5170854A7E3D58759118F411C" Guid="*">
+                <File Id="fil9418D15B38CB04ACA6359D68FD3B4233" KeyPath="yes" Source="$(var.PluginManagerSourceDir)\Neptuo.dll" />
+            </Component>
+            <Component Id="cmp6967EC4BBF939736C385BD7E9C14455A" Guid="*">
+                <File Id="fil49B3175A42B30F52F7E81802DCED4B52" KeyPath="yes" Source="$(var.PluginManagerSourceDir)\NuGet.config" />
+            </Component>
+            <Directory Id="dir24D4204D9E00AE581312FB73FE758C22" Name="PackageManager">
+                <Component Id="cmp9D8F26B567E391E660CC6A35ACB5D94C" Guid="*">
+                    <File Id="fil04BF9952F70979845606C493533B8068" KeyPath="yes" Source="$(var.PluginManagerSourceDir)\PackageManager\PackageManager.UI.exe" />
+                </Component>
+            </Directory>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="PluginMananger">
+            <ComponentRef Id="cmp94CDDBC4517C64BBE29AA495BEE71701" />
+            <ComponentRef Id="cmp758E70D5170854A7E3D58759118F411C" />
+            <ComponentRef Id="cmp6967EC4BBF939736C385BD7E9C14455A" />
+            <ComponentRef Id="cmp9D8F26B567E391E660CC6A35ACB5D94C" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>
