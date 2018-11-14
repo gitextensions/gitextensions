@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using GitUI;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
@@ -15,30 +14,28 @@ namespace VstsAndTfsIntegration
     /// <summary>
     /// For VSTS and TFS >=2015
     /// </summary>
-    public class TfsApiHelper
+    public class TfsApiHelper : IDisposable
     {
-        private const string BuildDefinitionsUrl = "_apis/build/definitions?api-version=2.0";
+        private const string BuildDefinitionsUrl = "build/definitions?api-version=2.0";
         private readonly HttpClient _httpClient;
-        private string _buildDefinitionsToQuery;
 
-        public TfsApiHelper(HttpClient httpClient)
+        private string _buildDefinitionsToQuery;
+        private string _lastBuildDefinitionFilter;
+
+        public TfsApiHelper(string projectUrl, string apiToken)
         {
-            _httpClient = httpClient;
+            _httpClient = new HttpClient();
+            InitializeHttpClient(projectUrl, apiToken);
         }
 
-        private void InitializeHttpClient(string serverUrl, string projectName, string personalAccessToken)
+        private void InitializeHttpClient(string projectUrl, string apiToken)
         {
-            _httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
-                Convert.ToBase64String(
-                    System.Text.Encoding.ASCII.GetBytes($":{personalAccessToken}")));
+            var apiTokenHeaderValue = Convert.ToBase64String(Encoding.ASCII.GetBytes($":{apiToken}"));
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", apiTokenHeaderValue);
 
-            var hostUri = new Uri(serverUrl);
-
-            // Uri constructor takes care of ensuring there's a slash after serverUrl, as well as path encoding projectName.
-            _httpClient.BaseAddress = new Uri(hostUri, projectName + "/");
+            _httpClient.BaseAddress = new Uri(projectUrl.EndsWith("/") ? projectUrl + "_apis/" : projectUrl + "/_apis/");
         }
 
         private async Task<T> HttpGetAsync<T>(string url)
@@ -85,34 +82,31 @@ namespace VstsAndTfsIntegration
             return null;
         }
 
-        public void ConnectToTfsServer(string serverUrl, string teamCollection, string projectName, string restApiToken, string buildDefinitionNameFilter)
+        public async Task<IEnumerable<Build>> QueryBuildsAsync(string buildDefinitionFilter, DateTime? sinceDate, bool? running)
         {
-            try
+            if (_buildDefinitionsToQuery == null || !string.Equals(_lastBuildDefinitionFilter, buildDefinitionFilter, StringComparison.OrdinalIgnoreCase))
             {
-                InitializeHttpClient(serverUrl, projectName, restApiToken);
-
-                var taskServerInit = ThreadHelper.JoinableTaskFactory.RunAsync(async () => await GetBuildDefinitionsAsync(buildDefinitionNameFilter));
-                _buildDefinitionsToQuery = taskServerInit.Join();
+                _buildDefinitionsToQuery = await GetBuildDefinitionsAsync(buildDefinitionFilter);
+                _lastBuildDefinitionFilter = buildDefinitionFilter;
             }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
-        }
 
-        public async Task<IEnumerable<Build>> QueryBuildsAsync(DateTime? sinceDate, bool? running)
-        {
             if (_buildDefinitionsToQuery == null)
             {
                 return Enumerable.Empty<Build>();
             }
 
-            var builds = (await HttpGetAsync<ListWrapper<Build>>($"_apis/build/builds?api-version=2.0&definitions={_buildDefinitionsToQuery}")).Value;
+            var builds = (await HttpGetAsync<ListWrapper<Build>>($"build/builds?api-version=2.0&definitions={_buildDefinitionsToQuery}")).Value;
 
             return builds
                 .Where(b => !running.HasValue || running.Value == b.IsInProgress)
                 .Where(b => !sinceDate.HasValue || b.StartTime >= sinceDate.Value)
                 .ToList();
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 

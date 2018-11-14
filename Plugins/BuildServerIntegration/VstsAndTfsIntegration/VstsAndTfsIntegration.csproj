@@ -59,8 +59,10 @@
     <Compile Include="Settings\VstsAndTfsSettingsUserControl.Designer.cs">
       <DependentUpon>VstsAndTfsSettingsUserControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings\VstsProjectUrlHelper.cs" />
     <Compile Include="VstsAndTfsAdapter.cs" />
     <Compile Include="TfsApiHelper.cs" />
+    <Compile Include="Settings\VstsIntegrationSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\GitCommands\GitCommands.csproj">
