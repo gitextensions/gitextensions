@@ -39,12 +39,12 @@ namespace GitUI.UserControls
             void AppendMessage(string text)
             {
                 Debug.Assert(text != null, "text != null");
-                Debug.Assert(!InvokeRequired, "!InvokeRequired");
-
                 if (IsDisposed)
                 {
                     return;
                 }
+
+                Debug.Assert(!InvokeRequired, "!InvokeRequired");
 
                 _editbox.Visible = true;
                 _editbox.Text += text;
@@ -160,8 +160,9 @@ namespace GitUI.UserControls
 
                             _exitcode = _process.ExitCode;
                             _process = null;
-                            _outputThrottle?.Stop(flush: true);
+                            _outputThrottle?.FlushOutput();
                             FireProcessExited();
+                            _outputThrottle?.Stop(flush: true);
                         }).FileAndForget();
                 };
 
@@ -227,7 +228,7 @@ namespace GitUI.UserControls
                 }
             }
 
-            private void FlushOutput()
+            public void FlushOutput()
             {
                 lock (_textToAdd)
                 {
