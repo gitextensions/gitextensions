@@ -303,6 +303,57 @@ namespace GitUI
             return DoActionOnRepo(null, false, true, null, null, action);
         }
 
+        #region Plugins
+
+        private IDisposable RegisterPlugins(IWin32Window owner)
+        {
+            if (PluginRegistry.ArePluginsRegistered)
+            {
+                return EmptyDiposable.Instance;
+            }
+
+            return new RegisterDisposable(owner, this);
+        }
+
+        private class RegisterDisposable : IDisposable
+        {
+            private readonly GitUICommands _commands;
+
+            public RegisterDisposable(IWin32Window owner, GitUICommands commands)
+            {
+                _commands = commands;
+
+                foreach (IGitPlugin plugin in PluginRegistry.Plugins)
+                {
+                    plugin.Register(_commands);
+                }
+
+                PluginRegistry.ArePluginsRegistered = true;
+                commands.RaisePostRegisterPlugin(owner);
+            }
+
+            public void Dispose()
+            {
+                foreach (IGitPlugin plugin in PluginRegistry.Plugins)
+                {
+                    plugin.Unregister(_commands);
+                }
+
+                PluginRegistry.ArePluginsRegistered = false;
+            }
+        }
+
+        private class EmptyDiposable : IDisposable
+        {
+            public static readonly EmptyDiposable Instance = new EmptyDiposable();
+
+            public void Dispose()
+            {
+            }
+        }
+
+        #endregion
+
         #region Checkout
 
         public bool StartCheckoutBranch([CanBeNull] IWin32Window owner, string branch = "", bool remote = false, IReadOnlyList<ObjectId> containRevisions = null)
@@ -441,6 +492,7 @@ namespace GitUI
             bool Action()
             {
                 using (var form = new FormCommit(this))
+                using (RegisterPlugins(owner))
                 {
                     if (showOnlyWhenChanges)
                     {

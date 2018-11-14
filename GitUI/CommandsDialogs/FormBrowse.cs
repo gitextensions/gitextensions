@@ -690,6 +690,7 @@ namespace GitUI.CommandsDialogs
             }
 
             UpdatePluginMenu(Module.IsValidGitWorkingDir());
+            PluginRegistry.ArePluginsRegistered = true;
         }
 
         private void UnregisterPlugins()
@@ -698,6 +699,8 @@ namespace GitUI.CommandsDialogs
             {
                 plugin.Unregister(UICommands);
             }
+
+            PluginRegistry.ArePluginsRegistered = false;
         }
 
         /// <summary>

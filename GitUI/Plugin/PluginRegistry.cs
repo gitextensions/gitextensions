@@ -13,6 +13,8 @@ namespace GitUI
 
         public static List<IRepositoryHostPlugin> GitHosters { get; } = new List<IRepositoryHostPlugin>();
 
+        public static bool ArePluginsRegistered { get; set; }
+
         public static void Initialize()
         {
             lock (Plugins)
