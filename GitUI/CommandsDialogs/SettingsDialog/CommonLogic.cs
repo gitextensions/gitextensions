@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 {
     public sealed class CommonLogic : Translate
     {
-        private readonly TranslationString _cantReadRegistry =
+        private static readonly TranslationString _cantReadRegistry =
             new TranslationString("GitExtensions has insufficient permissions to check the registry.");
 
         private readonly TranslationString _selectFile =
@@ -88,7 +88,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 StringComparison.CurrentCultureIgnoreCase);
         }
 
-        public string GetRegistryValue(RegistryKey root, string subkey, string key)
+        public static string GetRegistryValue(RegistryKey root, string subkey, string key)
         {
             string value = null;
             try

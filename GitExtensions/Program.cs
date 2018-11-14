@@ -10,6 +10,7 @@ using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
+using ResourceManager;
 
 namespace GitExtensions
 {
@@ -94,22 +95,31 @@ namespace GitExtensions
                 // Ensure we can find the git command to execute,
                 // unless we are being instructed to uninstall,
                 // or AppSettings.CheckSettings is set to false.
-                if (!(args.Length >= 2 && args[1] == "uninstall")
-                    && (AppSettings.CheckSettings
-                    || string.IsNullOrEmpty(AppSettings.GitCommandValue)
-                    || !File.Exists(AppSettings.GitCommandValue)))
+                if (!(args.Length >= 2 && args[1] == "uninstall"))
                 {
-                    var uiCommands = new GitUICommands("");
-                    var commonLogic = new CommonLogic(uiCommands.Module);
-                    var checkSettingsLogic = new CheckSettingsLogic(commonLogic);
-                    var fakePageHost = new SettingsPageHostMock(checkSettingsLogic);
-                    using (var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost))
+                    if (!CheckSettingsLogic.SolveGitCommand())
                     {
-                        if (!checklistSettingsPage.CheckSettings())
+                        if (!LocateMissingGit())
                         {
-                            if (!checkSettingsLogic.AutoSolveAllSettings())
+                            Environment.Exit(-1);
+                            return;
+                        }
+                    }
+
+                    if (AppSettings.CheckSettings)
+                    {
+                        var uiCommands = new GitUICommands("");
+                        var commonLogic = new CommonLogic(uiCommands.Module);
+                        var checkSettingsLogic = new CheckSettingsLogic(commonLogic);
+                        var fakePageHost = new SettingsPageHostMock(checkSettingsLogic);
+                        using (var checklistSettingsPage = SettingsPageBase.Create<ChecklistSettingsPage>(fakePageHost))
+                        {
+                            if (!checklistSettingsPage.CheckSettings())
                             {
-                                uiCommands.StartSettingsDialog();
+                                if (!checkSettingsLogic.AutoSolveAllSettings())
+                                {
+                                    uiCommands.StartSettingsDialog();
+                                }
                             }
                         }
                     }
@@ -256,6 +266,54 @@ namespace GitExtensions
                 }
 
                 Environment.Exit(1);
+            }
+        }
+
+        private static bool LocateMissingGit()
+        {
+            int dialogResult = PSTaskDialog.cTaskDialog.ShowCommandBox(Title: "Error",
+                                                                        MainInstruction: Strings.GitExecutableNotFound,
+                                                                        Content: null,
+                                                                        ExpandedInfo: null,
+                                                                        Footer: null,
+                                                                        VerificationText: null,
+                                                                        CommandButtons: $"{Strings.FindGitExecutable}|{Strings.InstallGitInstructions}",
+                                                                        ShowCancelButton: true,
+                                                                        MainIcon: PSTaskDialog.eSysIcons.Error,
+                                                                        FooterIcon: PSTaskDialog.eSysIcons.Warning);
+            switch (dialogResult)
+            {
+                case 0:
+                    {
+                        using (var dialog = new OpenFileDialog
+                        {
+                            Filter = @"git.exe|git.exe|git.cmd|git.cmd",
+                        })
+                        {
+                            if (dialog.ShowDialog(null) == DialogResult.OK)
+                            {
+                                AppSettings.GitCommandValue = dialog.FileName;
+                            }
+
+                            if (CheckSettingsLogic.SolveGitCommand())
+                            {
+                                return true;
+                            }
+                        }
+
+                        return false;
+                    }
+
+                case 1:
+                    {
+                        Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Git");
+                        return false;
+                    }
+
+                default:
+                    {
+                        return false;
+                    }
             }
         }
     }
