@@ -26,13 +26,12 @@ namespace VstsAndTfsIntegration
     [PartCreationPolicy(CreationPolicy.NonShared)]
     internal class VstsAndTfsAdapter : IBuildServerAdapter
     {
-        public const string PluginName = "VSTS and Team Foundation Server (since TFS2015)";
-
         public const string VstsTfsServerUrlSettingKey = "VstsTfsServerUrl";
         public const string VstsTfsCollectionNameSettingKey = "VstsTfsCollectionName";
         public const string VstsTfsProjectNameSettingKey = "VstsTfsProjectName";
         public const string VstsTfsBuildDefinitionNameFilterSettingKey = "VstsTfsBuildDefinitionNameFilter";
         public const string VstsTfsRestApiTokenSettingKey = "VstsTfsRestApiToken";
+        public const string PluginName = "Azure DevOps / VSTS and Team Foundation Server (since TFS2015)";
 
         private IBuildServerWatcher _buildServerWatcher;
         private TfsApiHelper _tfsHelper;
