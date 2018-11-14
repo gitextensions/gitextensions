@@ -92,8 +92,8 @@ title="See more information on Transifex.com"><img src="https://ds0k0en9abmn1.cl
   </tr>
   <tr>
     <td><strong>v3.00 RC1</strong></td>
-    <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00-rc1">[ Download ]</a><br />
-        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00-rc1" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/v3.00.00-rc1/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
+    <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00-rc2">[ Download ]</a><br />
+        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00-rc2" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/v3.00.00-rc2/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
   </tr>
   <tr>
     <td><strong>v3.00 (canary)</strong></td>
