@@ -117,10 +117,10 @@
             this.tlpnlPerformance.Controls.Add(this.chkCheckForUncommittedChangesInCheckoutBranch, 0, 6);
             this.tlpnlPerformance.Controls.Add(this.chkShowGitStatusInToolbar, 0, 0);
             this.tlpnlPerformance.Controls.Add(this.chkShowGitStatusForArtificialCommits, 0, 1);
-            this.tlpnlPerformance.Controls.Add(this.chkShowStashCountInBrowseWindow, 0, 4);
-            this.tlpnlPerformance.Controls.Add(this.chkShowSubmoduleStatusInBrowse, 0, 5);
-            this.tlpnlPerformance.Controls.Add(this.chkUseFastChecks, 0, 3);
-            this.tlpnlPerformance.Controls.Add(this.chkShowCurrentChangesInRevisionGraph, 0, 2);
+            this.tlpnlPerformance.Controls.Add(this.chkShowStashCountInBrowseWindow, 0, 5);
+            this.tlpnlPerformance.Controls.Add(this.chkShowSubmoduleStatusInBrowse, 0, 2);
+            this.tlpnlPerformance.Controls.Add(this.chkUseFastChecks, 0, 4);
+            this.tlpnlPerformance.Controls.Add(this.chkShowCurrentChangesInRevisionGraph, 0, 3);
             this.tlpnlPerformance.Controls.Add(this.lblCommitsLimit, 0, 7);
             this.tlpnlPerformance.Controls.Add(this._NO_TRANSLATE_MaxCommits, 1, 7);
             this.tlpnlPerformance.Dock = System.Windows.Forms.DockStyle.Top;
@@ -161,6 +161,7 @@
             this.chkShowGitStatusInToolbar.TabIndex = 0;
             this.chkShowGitStatusInToolbar.Text = "Show number of changed files on commit button (restart required)";
             this.chkShowGitStatusInToolbar.UseVisualStyleBackColor = true;
+            this.chkShowGitStatusInToolbar.CheckedChanged += new System.EventHandler(this.ShowGitStatus_CheckedChanged);
             // 
             // chkShowGitStatusForArtificialCommits
             // 
@@ -173,15 +174,16 @@
             this.chkShowGitStatusForArtificialCommits.TabIndex = 1;
             this.chkShowGitStatusForArtificialCommits.Text = "Show number of changed files for artificial commits (restart required)";
             this.chkShowGitStatusForArtificialCommits.UseVisualStyleBackColor = true;
+            this.chkShowGitStatusForArtificialCommits.CheckedChanged += new System.EventHandler(this.ShowGitStatus_CheckedChanged);
             // 
             // chkShowStashCountInBrowseWindow
             // 
             this.chkShowStashCountInBrowseWindow.AutoSize = true;
             this.chkShowStashCountInBrowseWindow.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkShowStashCountInBrowseWindow.Location = new System.Drawing.Point(3, 95);
+            this.chkShowStashCountInBrowseWindow.Location = new System.Drawing.Point(3, 118);
             this.chkShowStashCountInBrowseWindow.Name = "chkShowStashCountInBrowseWindow";
             this.chkShowStashCountInBrowseWindow.Size = new System.Drawing.Size(324, 17);
-            this.chkShowStashCountInBrowseWindow.TabIndex = 4;
+            this.chkShowStashCountInBrowseWindow.TabIndex = 5;
             this.chkShowStashCountInBrowseWindow.Text = "Show stash count on status bar in browse window";
             this.chkShowStashCountInBrowseWindow.UseVisualStyleBackColor = true;
             // 
@@ -189,10 +191,10 @@
             // 
             this.chkShowSubmoduleStatusInBrowse.AutoSize = true;
             this.chkShowSubmoduleStatusInBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkShowSubmoduleStatusInBrowse.Location = new System.Drawing.Point(3, 118);
+            this.chkShowSubmoduleStatusInBrowse.Location = new System.Drawing.Point(3, 49);
             this.chkShowSubmoduleStatusInBrowse.Name = "chkShowSubmoduleStatusInBrowse";
             this.chkShowSubmoduleStatusInBrowse.Size = new System.Drawing.Size(324, 17);
-            this.chkShowSubmoduleStatusInBrowse.TabIndex = 5;
+            this.chkShowSubmoduleStatusInBrowse.TabIndex = 2;
             this.chkShowSubmoduleStatusInBrowse.Text = "Show submodule status in browse menu";
             this.chkShowSubmoduleStatusInBrowse.UseVisualStyleBackColor = true;
             // 
@@ -200,10 +202,10 @@
             // 
             this.chkUseFastChecks.AutoSize = true;
             this.chkUseFastChecks.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkUseFastChecks.Location = new System.Drawing.Point(3, 72);
+            this.chkUseFastChecks.Location = new System.Drawing.Point(3, 95);
             this.chkUseFastChecks.Name = "chkUseFastChecks";
             this.chkUseFastChecks.Size = new System.Drawing.Size(324, 17);
-            this.chkUseFastChecks.TabIndex = 3;
+            this.chkUseFastChecks.TabIndex = 4;
             this.chkUseFastChecks.Text = "Use FileSystemWatcher to check if index is changed";
             this.chkUseFastChecks.UseVisualStyleBackColor = true;
             // 
@@ -211,10 +213,10 @@
             // 
             this.chkShowCurrentChangesInRevisionGraph.AutoSize = true;
             this.chkShowCurrentChangesInRevisionGraph.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkShowCurrentChangesInRevisionGraph.Location = new System.Drawing.Point(3, 49);
+            this.chkShowCurrentChangesInRevisionGraph.Location = new System.Drawing.Point(3, 72);
             this.chkShowCurrentChangesInRevisionGraph.Name = "chkShowCurrentChangesInRevisionGraph";
             this.chkShowCurrentChangesInRevisionGraph.Size = new System.Drawing.Size(324, 17);
-            this.chkShowCurrentChangesInRevisionGraph.TabIndex = 2;
+            this.chkShowCurrentChangesInRevisionGraph.TabIndex = 3;
             this.chkShowCurrentChangesInRevisionGraph.Text = "Show current working directory changes as an artificial commit";
             this.chkShowCurrentChangesInRevisionGraph.UseVisualStyleBackColor = true;
             // 

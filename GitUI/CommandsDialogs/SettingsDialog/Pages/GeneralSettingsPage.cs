@@ -42,6 +42,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             tlpnlEmailSettings.AdjustWidthToSize(0, lblCommitsLimit, lblDefaultCloneDestination);
         }
 
+        private void SetSubmoduleStatus()
+        {
+            chkShowSubmoduleStatusInBrowse.Enabled = chkShowGitStatusInToolbar.Checked || chkShowGitStatusForArtificialCommits.Checked;
+            chkShowSubmoduleStatusInBrowse.Checked = chkShowSubmoduleStatusInBrowse.Enabled && chkShowSubmoduleStatusInBrowse.Checked;
+        }
+
         protected override void SettingsToPage()
         {
             chkCheckForUncommittedChangesInCheckoutBranch.Checked = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
@@ -52,9 +58,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkStashUntrackedFiles.Checked = AppSettings.IncludeUntrackedFilesInAutoStash;
             chkShowCurrentChangesInRevisionGraph.Checked = AppSettings.RevisionGraphShowWorkingDirChanges;
             chkShowStashCountInBrowseWindow.Checked = AppSettings.ShowStashCount;
-            chkShowSubmoduleStatusInBrowse.Checked = AppSettings.ShowSubmoduleStatus;
             chkShowGitStatusInToolbar.Checked = AppSettings.ShowGitStatusInBrowseToolbar;
             chkShowGitStatusForArtificialCommits.Checked = AppSettings.ShowGitStatusForArtificialCommits;
+            chkShowSubmoduleStatusInBrowse.Checked = AppSettings.ShowSubmoduleStatus;
             SmtpServer.Text = AppSettings.SmtpServer;
             SmtpServerPort.Text = AppSettings.SmtpPort.ToString();
             chkUseSSL.Checked = AppSettings.SmtpUseSsl;
@@ -64,6 +70,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkUseFastChecks.Checked = AppSettings.UseFastChecks;
             cbDefaultCloneDestination.Text = AppSettings.DefaultCloneDestinationPath;
             chkFollowRenamesInFileHistoryExact.Checked = AppSettings.FollowRenamesInFileHistoryExactOnly;
+            SetSubmoduleStatus();
         }
 
         protected override void PageToSettings()
@@ -90,6 +97,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RevisionGraphShowWorkingDirChanges = chkShowCurrentChangesInRevisionGraph.Checked;
             AppSettings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
             AppSettings.ShowSubmoduleStatus = chkShowSubmoduleStatusInBrowse.Checked;
+
             AppSettings.DefaultCloneDestinationPath = cbDefaultCloneDestination.Text;
             AppSettings.FollowRenamesInFileHistoryExactOnly = chkFollowRenamesInFileHistoryExact.Checked;
         }
@@ -139,6 +147,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             {
                 cbDefaultCloneDestination.Text = userSelectedPath;
             }
+        }
+
+        private void ShowGitStatus_CheckedChanged(object sender, System.EventArgs e)
+        {
+            SetSubmoduleStatus();
         }
     }
 }
