@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Utils;
 using GitUI;
@@ -49,7 +50,8 @@ namespace TranslationApp
             }
 
             // required for translation
-            PluginRegistry.Initialize();
+            ThreadHelper.JoinableTaskFactory.Run(() => PluginRegistry.InitializeAsync(() => Task.CompletedTask));
+
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length == 1)
             {

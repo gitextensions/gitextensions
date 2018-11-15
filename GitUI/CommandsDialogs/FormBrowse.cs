@@ -163,16 +163,11 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default;
-
-                try
-                {
-                    PluginRegistry.Initialize();
-                }
-                finally
+                await PluginRegistry.InitializeAsync(async () =>
                 {
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                     RegisterPlugins();
-                }
+                });
             }).FileAndForget();
 
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
@@ -690,7 +685,6 @@ namespace GitUI.CommandsDialogs
             }
 
             UpdatePluginMenu(Module.IsValidGitWorkingDir());
-            PluginRegistry.ArePluginsRegistered = true;
         }
 
         private void UnregisterPlugins()
@@ -699,8 +693,6 @@ namespace GitUI.CommandsDialogs
             {
                 plugin.Unregister(UICommands);
             }
-
-            PluginRegistry.ArePluginsRegistered = false;
         }
 
         /// <summary>

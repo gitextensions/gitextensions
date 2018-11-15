@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
@@ -303,57 +304,6 @@ namespace GitUI
             return DoActionOnRepo(null, false, true, null, null, action);
         }
 
-        #region Plugins
-
-        private IDisposable RegisterPlugins(IWin32Window owner)
-        {
-            if (PluginRegistry.ArePluginsRegistered)
-            {
-                return EmptyDiposable.Instance;
-            }
-
-            return new RegisterDisposable(owner, this);
-        }
-
-        private class RegisterDisposable : IDisposable
-        {
-            private readonly GitUICommands _commands;
-
-            public RegisterDisposable(IWin32Window owner, GitUICommands commands)
-            {
-                _commands = commands;
-
-                foreach (IGitPlugin plugin in PluginRegistry.Plugins)
-                {
-                    plugin.Register(_commands);
-                }
-
-                PluginRegistry.ArePluginsRegistered = true;
-                commands.RaisePostRegisterPlugin(owner);
-            }
-
-            public void Dispose()
-            {
-                foreach (IGitPlugin plugin in PluginRegistry.Plugins)
-                {
-                    plugin.Unregister(_commands);
-                }
-
-                PluginRegistry.ArePluginsRegistered = false;
-            }
-        }
-
-        private class EmptyDiposable : IDisposable
-        {
-            public static readonly EmptyDiposable Instance = new EmptyDiposable();
-
-            public void Dispose()
-            {
-            }
-        }
-
-        #endregion
-
         #region Checkout
 
         public bool StartCheckoutBranch([CanBeNull] IWin32Window owner, string branch = "", bool remote = false, IReadOnlyList<ObjectId> containRevisions = null)
@@ -491,16 +441,43 @@ namespace GitUI
 
             bool Action()
             {
-                using (var form = new FormCommit(this))
-                using (RegisterPlugins(owner))
+                // Commit dialog can be opened on its own without the main form
+                // If it is opened by itself, we need to ensure plugins are loaded because some of them
+                // may have hooks into the commit flow
+                bool pluginsRegistered = PluginRegistry.PluginsRegistered;
+
+                try
                 {
-                    if (showOnlyWhenChanges)
+                    // Load plugins synchronously
+                    // if the commit dialog is opened from the main form, all plugins are already loaded and we return instantly,
+                    // if the dialog is loaded on its own, plugins need to be loaded before we load the form
+                    ThreadHelper.JoinableTaskFactory.Run(async () =>
                     {
-                        form.ShowDialogWhenChanges(owner);
+                        await PluginRegistry.InitializeAsync(() =>
+                        {
+                            // this will only execute, if start without the main form
+                            PluginRegistry.Plugins.ForEach(p => p.Register(this));
+                            return Task.CompletedTask;
+                        });
+                    });
+
+                    using (var form = new FormCommit(this))
+                    {
+                        if (showOnlyWhenChanges)
+                        {
+                            form.ShowDialogWhenChanges(owner);
+                        }
+                        else
+                        {
+                            form.ShowDialog(owner);
+                        }
                     }
-                    else
+                }
+                finally
+                {
+                    if (!pluginsRegistered)
                     {
-                        form.ShowDialog(owner);
+                        PluginRegistry.Plugins.ForEach(p => p.Unregister(this));
                     }
                 }
 
