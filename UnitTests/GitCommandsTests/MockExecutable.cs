@@ -57,6 +57,11 @@ namespace GitCommandsTests
                 });
         }
 
+        public bool Exists()
+        {
+            return true;
+        }
+
         public void Verify()
         {
             Assert.IsEmpty(_outputStackByArguments, "All staged output should have been consumed.");

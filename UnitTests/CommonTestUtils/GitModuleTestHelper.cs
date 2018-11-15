@@ -25,6 +25,10 @@ namespace CommonTestUtils
             module.Init(bare: false, shared: false);
             Module = module;
 
+            // Don't assume global user/email
+            Module.RunGitCmd(@"config user.name ""author""");
+            Module.RunGitCmd(@"config user.email ""<author@mail.com>""");
+
             return;
 
             string GetTemporaryPath()
@@ -114,10 +118,29 @@ namespace CommonTestUtils
                 // Directory.Delete seems to intermittently fail, so delete the files first before deleting folders
                 foreach (var file in Directory.GetFiles(TemporaryPath, "*", SearchOption.AllDirectories))
                 {
+                    if (File.GetAttributes(file).HasFlag(FileAttributes.ReparsePoint))
+                    {
+                        continue;
+                    }
+
+                    File.SetAttributes(file, FileAttributes.Normal);
                     File.Delete(file);
                 }
 
-                Directory.Delete(TemporaryPath, true);
+                // Delete tends to fail on the first try, so give it a few tries as a best effort.
+                // By this point, all files have been deleted anyway, so this is mainly about removing
+                // empty directories.
+                for (int tries = 0; tries < 10; ++tries)
+                {
+                    try
+                    {
+                        Directory.Delete(TemporaryPath, true);
+                        break;
+                    }
+                    catch
+                    {
+                    }
+                }
             }
             catch
             {

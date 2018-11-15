@@ -102,10 +102,6 @@ namespace GitUI
         private JoinableTask<SuperProjectInfo> _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
 
-        /// <summary>
-        /// Same as <see cref="CurrentCheckout"/> except <c>null</c> until the associated revision is loaded.
-        /// </summary>
-        [CanBeNull] private ObjectId _filteredCurrentCheckout;
         private bool _settingsLoaded;
 
         // NOTE internal properties aren't serialised by the WinForms designer
@@ -725,7 +721,7 @@ namespace GitUI
 
             ShowLoading();
 
-            var revisionCount = 0;
+            var firstRevisionReceived = false;
 
             try
             {
@@ -757,7 +753,6 @@ namespace GitUI
                 }
 
                 CurrentCheckout = newCurrentCheckout;
-                _filteredCurrentCheckout = null;
                 _isRefreshingRevisions = true;
                 base.Refresh();
 
@@ -883,29 +878,21 @@ namespace GitUI
 
             void OnRevisionRead(GitRevision revision)
             {
-                revisionCount++;
-
-                if (revisionCount < 2)
+                if (!firstRevisionReceived)
                 {
+                    firstRevisionReceived = true;
+
                     this.InvokeAsync(() => { ShowLoading(false); }).FileAndForget();
                 }
 
-                if (_filteredCurrentCheckout == null)
-                {
-                    if (revision.ObjectId == CurrentCheckout)
-                    {
-                        _filteredCurrentCheckout = CurrentCheckout;
-                    }
-                }
-
-                var isCurrentCheckout = revision.ObjectId == _filteredCurrentCheckout;
+                var isCurrentCheckout = revision.ObjectId.Equals(CurrentCheckout);
 
                 if (isCurrentCheckout &&
                     ShowUncommittedChangesIfPossible &&
                     AppSettings.RevisionGraphShowWorkingDirChanges &&
                     !Module.IsBareRepository())
                 {
-                    CheckUncommittedChanged(_filteredCurrentCheckout);
+                    CheckUncommittedChanged(revision.ObjectId);
                 }
 
                 var flags = RevisionNodeFlags.None;
@@ -918,6 +905,11 @@ namespace GitUI
                 if (revision.Refs.Count != 0)
                 {
                     flags |= RevisionNodeFlags.HasRef;
+                }
+
+                if (_refFilterOptions.HasFlag(RefFilterOptions.FirstParent))
+                {
+                    flags |= RevisionNodeFlags.OnlyFirstParent;
                 }
 
                 _gridView.Add(revision, flags);
@@ -981,7 +973,7 @@ namespace GitUI
             {
                 _isReadingRevisions = false;
 
-                if (revisionCount == 0 && !FilterIsApplied(inclBranchFilter: true))
+                if (!firstRevisionReceived && !FilterIsApplied(inclBranchFilter: true))
                 {
                     // This has to happen on the UI thread
                     this.InvokeAsync(
@@ -1078,17 +1070,11 @@ namespace GitUI
 
         private void SelectInitialRevision()
         {
-            var filteredCurrentCheckout = _filteredCurrentCheckout;
             var selectedObjectIds = _selectedObjectIds ?? Array.Empty<ObjectId>();
 
             if (selectedObjectIds.Count == 0 && InitialObjectId != null)
             {
                 selectedObjectIds = new ObjectId[] { InitialObjectId };
-            }
-
-            if (selectedObjectIds.Count == 0 && filteredCurrentCheckout != null)
-            {
-                selectedObjectIds = new ObjectId[] { filteredCurrentCheckout };
             }
 
             if (selectedObjectIds.Count == 0)
@@ -1098,11 +1084,6 @@ namespace GitUI
 
             _gridView.ToBeSelectedObjectIds = selectedObjectIds.ToHashSet();
             _selectedObjectIds = null;
-
-            if (filteredCurrentCheckout != null && !_gridView.IsRevisionRelative(filteredCurrentCheckout))
-            {
-                HighlightBranch(filteredCurrentCheckout);
-            }
         }
 
         private void CheckAndRepairInitialRevision()
@@ -2305,7 +2286,6 @@ namespace GitUI
                 if (_isReadingRevisions || !SetSelectedRevision(revisionGuid))
                 {
                     InitialObjectId = revisionGuid;
-                    _gridView.SelectedObjectIds = null;
                     _selectedObjectIds = null;
                 }
             }

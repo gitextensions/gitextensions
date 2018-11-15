@@ -161,22 +161,25 @@ namespace GitUI.BranchTreePanel
             try
             {
                 treeMain.BeginUpdate();
+                _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = true);
                 var tasks = _rootNodes.Select(r => r.ReloadAsync(token)).ToArray();
                 await Task.WhenAll(tasks).ConfigureAwait(false);
             }
             finally
             {
-                await this.SwitchToMainThreadAsync(token);
-                Enabled = true;
-
-                var selectedNode = treeMain.AllNodes().FirstOrDefault(n =>
-                    _rootNodes.Any(rn => $"{rn.TreeViewNode.FullPath}{treeMain.PathSeparator}{currentBranch}" == n.FullPath));
-                if (selectedNode != null)
+                await this.SwitchToMainThreadAsync();
+                if (!token.IsCancellationRequested)
                 {
-                    _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = true);
-                    treeMain.SelectedNode = selectedNode;
+                    Enabled = true;
+                    var selectedNode = treeMain.AllNodes().FirstOrDefault(n =>
+                        _rootNodes.Any(rn => $"{rn.TreeViewNode.FullPath}{treeMain.PathSeparator}{currentBranch}" == n.FullPath));
+                    if (selectedNode != null)
+                    {
+                        treeMain.SelectedNode = selectedNode;
+                        treeMain.SelectedNode.EnsureVisible();
+                    }
+
                     _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = false);
-                    treeMain.SelectedNode.EnsureVisible();
                 }
 
                 treeMain.EndUpdate();

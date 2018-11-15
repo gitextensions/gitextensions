@@ -90,7 +90,7 @@ namespace GitCommands
                     }
                 };
 
-                _logOperation = CommandLog.LogProcessStart(fileName, arguments);
+                _logOperation = CommandLog.LogProcessStart(fileName, arguments, workDir);
 
                 _process.Exited += OnProcessExit;
 

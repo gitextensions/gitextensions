@@ -20,7 +20,7 @@ namespace GitUI.Script
                 UseShellExecute = false
             };
 
-            var operation = CommandLog.LogProcessStart(filename, arguments);
+            var operation = CommandLog.LogProcessStart(filename, arguments, workingDir);
             var process = Process.Start(startInfo);
             operation.SetProcessId(process.Id);
             process.Exited += (s, e) => operation.LogProcessEnd();

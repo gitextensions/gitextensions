@@ -58,6 +58,8 @@ xcopy /y ..\GitExtensions\bin\%Configuration%\Microsoft.VisualStudio.Threading.d
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\Microsoft.VisualStudio.Validation.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\GitExtensions\bin\%Configuration%\System.Runtime.InteropServices.RuntimeInformation.dll GitExtensions\
+IF ERRORLEVEL 1 EXIT /B 1
 
 xcopy /y ..\Plugins\AutoCompileSubmodules\bin\%Configuration%\AutoCompileSubmodules.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
@@ -102,6 +104,8 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\JiraCommitHintPlugin.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\NString.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\System.Collections.Immutable.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\ProxySwitcher\bin\%Configuration%\ProxySwitcher.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1

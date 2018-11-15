@@ -25,6 +25,9 @@ namespace ResourceManager
             }
         }
 
+        public static string FindGitExecutable => _instance.Value._findGitExecutable.Text;
+        public static string InstallGitInstructions => _instance.Value._installGitInstructions.Text;
+        public static string GitExecutableNotFound => _instance.Value._gitExecutableNotFoundText.Text;
         public static string Date => _instance.Value._dateText.Text;
         public static string Author => GetAuthor(1);
         public static string AuthorDate => GetAuthorDate(1);
@@ -37,27 +40,36 @@ namespace ResourceManager
         public static string LoadingData => _instance.Value._loadingDataText.Text;
         public static string UninterestingDiffOmitted => _instance.Value._uninterestingDiffOmitted.Text;
 
+        public static string Branch => _instance.Value._branchText.Text;
         public static string Branches => _instance.Value._branchesText.Text;
         public static string Remotes => _instance.Value._remotesText.Text;
         public static string Tags => _instance.Value._tagsText.Text;
 
-        private readonly TranslationString _dateText       = new TranslationString("Date");
-        private readonly TranslationString _authorText     = new TranslationString("{0:Author|Authors}");
+        public static string BodyNotLoaded => _instance.Value._bodyNotLoaded.Text;
+
+        private readonly TranslationString _dateText = new TranslationString("Date");
+        private readonly TranslationString _authorText = new TranslationString("{0:Author|Authors}");
+        private readonly TranslationString _installGitInstructions = new TranslationString("Install git...");
+        private readonly TranslationString _findGitExecutable = new TranslationString("Find git...");
+        private readonly TranslationString _gitExecutableNotFoundText =
+            new TranslationString("The Git executable could not be located on your system.");
         private readonly TranslationString _authorDateText = new TranslationString("{0:Author date|Author dates}");
-        private readonly TranslationString _committerText  = new TranslationString("Committer");
+        private readonly TranslationString _committerText = new TranslationString("Committer");
         private readonly TranslationString _commitDateText = new TranslationString("{0:Commit date|Commits dates}");
         private readonly TranslationString _commitHashText = new TranslationString("{0:Commit hash|Commits hashes}");
-        private readonly TranslationString _messageText    = new TranslationString("{0:Message|Messages}");
-        private readonly TranslationString _workspaceText  = new TranslationString("Working directory");
-        private readonly TranslationString _indexText      = new TranslationString("Commit index");
+        private readonly TranslationString _messageText = new TranslationString("{0:Message|Messages}");
+        private readonly TranslationString _workspaceText = new TranslationString("Working directory");
+        private readonly TranslationString _indexText = new TranslationString("Commit index");
         private readonly TranslationString _loadingDataText = new TranslationString("Loading data...");
         private readonly TranslationString _uninterestingDiffOmitted = new TranslationString("Uninteresting diff hunks are omitted.");
-        private readonly TranslationString _branchesText   = new TranslationString("Branches");
-        private readonly TranslationString _remotesText    = new TranslationString("Remotes");
-        private readonly TranslationString _tagsText       = new TranslationString("Tags");
+        private readonly TranslationString _branchText     = new TranslationString("Branch");
+        private readonly TranslationString _branchesText = new TranslationString("Branches");
+        private readonly TranslationString _remotesText = new TranslationString("Remotes");
+        private readonly TranslationString _tagsText = new TranslationString("Tags");
+        private readonly TranslationString _bodyNotLoaded  = new TranslationString("\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.");
 
-        private readonly TranslationString _parentsText    = new TranslationString("{0:Parent|Parents}");
-        private readonly TranslationString _childrenText   = new TranslationString("{0:Child|Children}");
+        private readonly TranslationString _parentsText = new TranslationString("{0:Parent|Parents}");
+        private readonly TranslationString _childrenText = new TranslationString("{0:Child|Children}");
 
         public static string GetParents(int value)
         {
@@ -132,10 +144,10 @@ namespace ResourceManager
 
         private readonly TranslationString _secondsAgo = new TranslationString("{0} {1:second|seconds} ago");
         private readonly TranslationString _minutesAgo = new TranslationString("{0} {1:minute|minutes} ago");
-        private readonly TranslationString _hoursAgo   = new TranslationString("{0} {1:hour|hours} ago");
-        private readonly TranslationString _daysAgo    = new TranslationString("{0} {1:day|days} ago");
-        private readonly TranslationString _weeksAgo   = new TranslationString("{0} {1:week|weeks} ago");
-        private readonly TranslationString _monthsAgo  = new TranslationString("{0} {1:month|months} ago");
-        private readonly TranslationString _yearsAgo   = new TranslationString("{0} {1:year|years} ago");
+        private readonly TranslationString _hoursAgo = new TranslationString("{0} {1:hour|hours} ago");
+        private readonly TranslationString _daysAgo = new TranslationString("{0} {1:day|days} ago");
+        private readonly TranslationString _weeksAgo = new TranslationString("{0} {1:week|weeks} ago");
+        private readonly TranslationString _monthsAgo = new TranslationString("{0} {1:month|months} ago");
+        private readonly TranslationString _yearsAgo = new TranslationString("{0} {1:year|years} ago");
     }
 }

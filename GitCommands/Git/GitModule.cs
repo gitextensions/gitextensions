@@ -399,6 +399,7 @@ namespace GitCommands
         }
 
         private string _gitCommonDirectory;
+        private readonly object _gitCommonLock = new object();
 
         /// <summary>
         /// Returns git common directory
@@ -408,19 +409,29 @@ namespace GitCommands
         {
             get
             {
-                if (_gitCommonDirectory == null)
+                // Get a cache of the common dir
+                // Lock needed as the command is called rapidly when creating the module
+                if (_gitCommonDirectory != null)
                 {
-                    var args = new GitArgumentBuilder("rev-parse") { "--git-common-dir" };
-                    var result = _gitExecutable.Execute(args);
+                    return _gitCommonDirectory;
+                }
 
-                    var dir = result.StandardOutput.Trim().ToNativePath();
-
-                    if (!result.ExitedSuccessfully || dir == ".git" || dir == "." || !Directory.Exists(dir))
+                lock (_gitCommonLock)
+                {
+                    if (_gitCommonDirectory == null)
                     {
-                        dir = GetGitDirectory();
-                    }
+                        var args = new GitArgumentBuilder("rev-parse") { "--git-common-dir" };
+                        var result = _gitExecutable.Execute(args);
 
-                    _gitCommonDirectory = dir;
+                        var dir = result.StandardOutput.Trim().ToNativePath();
+
+                        if (!result.ExitedSuccessfully || dir == ".git" || dir == "." || !Directory.Exists(dir))
+                        {
+                            dir = GetGitDirectory();
+                        }
+
+                        _gitCommonDirectory = dir;
+                    }
                 }
 
                 return _gitCommonDirectory;
@@ -471,24 +482,26 @@ namespace GitCommands
         /// <inheritdoc />
         public IReadOnlyList<string> GetSubmodulesLocalPaths(bool recursive = true)
         {
-            var submodules = GetSubmodulePaths(this);
+            var localPaths = new List<string>();
+            DoGetSubmodulesLocalPaths(this, "", ref localPaths, recursive);
+            return localPaths;
 
-            if (recursive)
+            void DoGetSubmodulesLocalPaths(GitModule module, string parentPath, ref List<string> paths, bool recurse)
             {
-                for (int i = 0; i < submodules.Count; i++)
+                var submodulePaths = GetSubmodulePaths(module)
+                    .Select(p => Path.Combine(parentPath, p).ToPosixPath())
+                    .ToList();
+
+                paths.AddRange(submodulePaths);
+
+                if (recurse)
                 {
-                    var submodule = GetSubmodule(submodules[i]);
-
-                    var subSubmodules = GetSubmodulePaths(submodule)
-                        .Select(p => Path.Combine(submodules[i], p).ToPosixPath())
-                        .ToList();
-
-                    submodules.InsertRange(i + 1, subSubmodules);
-                    i += subSubmodules.Count;
+                    foreach (var submodulePath in submodulePaths)
+                    {
+                        DoGetSubmodulesLocalPaths(GetSubmodule(submodulePath), submodulePath, ref paths, recurse);
+                    }
                 }
             }
-
-            return submodules;
 
             List<string> GetSubmodulePaths(GitModule module)
             {

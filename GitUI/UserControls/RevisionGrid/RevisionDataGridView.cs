@@ -21,7 +21,8 @@ namespace GitUI.UserControls.RevisionGrid
     {
         None = 0,
         CheckedOut = 1,
-        HasRef = 2
+        HasRef = 2,
+        OnlyFirstParent = 4
     }
 
     public sealed class RevisionDataGridView : DataGridView
@@ -212,50 +213,6 @@ namespace GitUI.UserControls.RevisionGrid
                 }
 
                 return data;
-            }
-            set
-            {
-                if (value != null &&
-                    SelectedRows.Count == value.Count &&
-                    SelectedObjectIds?.SequenceEqual(value) == true)
-                {
-                    return;
-                }
-
-                if (value == null)
-                {
-                    // Setting CurrentCell to null internally calls ClearSelection
-                    CurrentCell = null;
-                    return;
-                }
-
-                DataGridViewCell currentCell = null;
-
-                foreach (var guid in value)
-                {
-                    if (TryGetRevisionIndex(guid) is int index &&
-                        index >= 0 &&
-                        index < Rows.Count)
-                    {
-                        Rows[index].Selected = true;
-
-                        if (currentCell == null)
-                        {
-                            // Set the current cell to the first item. We use cell
-                            // 1 because cell 0 could be hidden if they've chosen to
-                            // not see the graph
-                            currentCell = Rows[index].Cells[1];
-                        }
-                    }
-                }
-
-                // Only clear selection if we have a current cell
-                if (currentCell != null)
-                {
-                    ClearSelection();
-                }
-
-                CurrentCell = currentCell;
             }
         }
 
@@ -616,6 +573,14 @@ namespace GitUI.UserControls.RevisionGrid
                         ClearSelection();
                         Rows[RowCount - 1].Selected = true;
                         CurrentCell = Rows[RowCount - 1].Cells[1];
+                    }
+
+                    break;
+                case Keys.Control | Keys.C:
+                    var selectedRevisions = SelectedObjectIds;
+                    if (selectedRevisions != null && selectedRevisions.Count != 0)
+                    {
+                        Clipboard.SetText(string.Join(Environment.NewLine, selectedRevisions));
                     }
 
                     break;

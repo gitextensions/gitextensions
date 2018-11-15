@@ -916,7 +916,12 @@ namespace GitUI
 
                 if (gitItemStatus.IsRenamed)
                 {
-                    return 3;
+                    if (gitItemStatus.RenameCopyPercentage == "100")
+                    {
+                        return 3; // Rename icon
+                    }
+
+                    return 2; // Modified icon
                 }
 
                 if (gitItemStatus.IsCopied)

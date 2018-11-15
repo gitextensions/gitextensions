@@ -294,8 +294,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 var s = new StringBuilder();
 
-                s.Append(revision.Body?.TrimEnd()
-                    ?? revision.Subject + "\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.");
+                s.Append(revision.Body?.TrimEnd() ?? revision.Subject + Strings.BodyNotLoaded);
 
                 if (revision.Refs.Count != 0)
                 {

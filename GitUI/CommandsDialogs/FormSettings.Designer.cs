@@ -216,7 +216,7 @@ namespace GitUI.CommandsDialogs
             this.Controls.Add(this.tableLayoutPanel3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(966, 680);
+            this.MinimumSize = new System.Drawing.Size(966, 785);
             this.Name = "FormSettings";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

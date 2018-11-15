@@ -1,20 +1,20 @@
 ﻿namespace GitUI.UserControls.RevisionGrid.Graph
 {
     // This class represents the connection between 2 revisions.
-    //     *
-    //     |   <- segment connects two commits
-    //     *
+    //     *    <- Child
+    //     |    <- segment connects two commits
+    //     *    <- Parent
     // A segment can span multiple rows when rendered as a graph.
     // Example: This graph has 6 segements.
-    //     *
-    //   / | \
+    //     *    <- Child
+    //   / | \  <- Child.StartSegments ("start" although they are merged here)
     //  |  *  |
     //  |  |  |
     //  |  *  |
     //   \ |  |
     //     *  |
     //     | /
-    //     *
+    //     *    <- Parent
     public class RevisionGraphSegment
     {
         public RevisionGraphSegment(RevisionGraphRevision parent, RevisionGraphRevision child)

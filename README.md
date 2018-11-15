@@ -3,19 +3,20 @@
 # Git Extensions
 
 Git Extensions is a standalone UI tool for managing git repositories.
-
 It also integrates with Windows Explorer and Microsoft Visual Studio (2015/2017).
 
+Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-<a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a> <img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+## Current Status
 
-### Current Status
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/gitextensions/gitextensions.svg?columns=all)](https://waffle.io/gitextensions/gitextensions)<br />
+<a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a> 
 
 The work has been split into two streams:
- * version 3.0x
+ * version 3.0x - **[RC1 is available](https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00-rc1)**!
  * version 2.5x
 
-#### Version 3.0x
+### Version 3.0x
 
 This stream contains the code for the new major version with a number of significant changes&mdash;both to the app and the codebase.
 For more details please refer to [versions comparison](https://github.com/gitextensions/gitextensions/wiki/Compare-versions).
@@ -23,35 +24,31 @@ For more details please refer to [versions comparison](https://github.com/gitext
 <table>
   <tr>
     <th>&nbsp;</th>
-    <th>Windows</th>
-    <th>Linux/Mac</th>
+    <th>Windows only</th>
   </tr>
   <tr>
     <td>Runtime environment</td>
     <td>MS Windows 7SP1+ <br/>MS .NET Framework 4.6.1+</td>
-    <td>No official support</td>
   </tr>
   <tr>
     <td>Development</td>
     <td>MS VS 2017 v15.7+, C#7.3<br/>
-        (C++ including Visual C++ ATL for x86 and x64 for installer)
+        VC++ (inc. ATL for x86/x64 for installer)
     </td>
-    <td>No official support</td>
   </tr>
   <tr>
     <td>Current dev status</td>
-    <td><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a> <a href="https://codecov.io/gh/gitextensions/gitextensions"><img alt="codecov.io" src="https://codecov.io/gh/gitextensions/gitextensions/branch/master/graph/badge.svg" style="max-width:100%;"></a><br /><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master/artifacts">[ Download ]</a></td>
-    <td>&nbsp;</td>
+    <td><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a> <a href="https://codecov.io/gh/gitextensions/gitextensions"><img alt="codecov.io" src="https://codecov.io/gh/gitextensions/gitextensions/branch/master/graph/badge.svg" style="max-width:100%;"></a></td>
   </tr>
   <tr>
     <td>Translations</td>
-    <td colspan=2><a target="_blank" style="text-decoration:none; color:black; font-size:66%" href="https://www.transifex.com/projects/p/git-extensions"
+    <td><a target="_blank" style="text-decoration:none; color:black; font-size:66%" href="https://www.transifex.com/projects/p/git-extensions"
 title="See more information on Transifex.com"><img src="https://ds0k0en9abmn1.cloudfront.net/static/charts/images/tx-logo-micro.646b0065fce6.png" ></a></td>
   </tr>
 </table>
 
 
-#### Version 2.5x
+### Version 2.5x
 
 This stream contains the last cross-platform version running both on Windows (MS .NET Framework) and on Linux/Mac (Mono).
 The code is in maintenance mode with no significant active development planned. Only certain bug fixes are currently ported across, however there may be consideration given for certain features to be ported across from the v3.0x stream.
@@ -74,25 +71,35 @@ The code is in maintenance mode with no significant active development planned. 
   </tr>
   <tr>
     <td>Current dev status</td>
-    <td><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/release/2.51"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/release/2.51?svg=true" style="max-width:100%;"></a></td>
-    <td><a href="https://travis-ci.org/gitextensions/gitextensions"><img alt="Build status" src="https://travis-ci.org/gitextensions/gitextensions.svg?branch=release/2.51" style="max-width:100%;"></a></td>
+    <td colspan=2><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/release/2.51"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/release/2.51?svg=true" style="max-width:100%;"></a> <a href="https://codecov.io/gh/gitextensions/gitextensions"><img alt="codecov.io" src="https://codecov.io/gh/gitextensions/gitextensions/branch/release/2.51/graph/badge.svg" style="max-width:100%;"></a></td>
   </tr>
   <tr>
     <td>Translations</td>
     <td colspan=2><a target="_blank" style="text-decoration:none; color:black; font-size:66%" href="https://www.transifex.com/projects/p/git-extensions"
 title="See more information on Transifex.com"><img src="https://ds0k0en9abmn1.cloudfront.net/static/charts/images/tx-logo-micro.646b0065fce6.png" ></a></td>
   </tr>
-  <tr>
-    <td><strong>Latest Release (v2.51.05)</strong></td>
-    <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/tag/v2.51.05">[ Download ]</a> / <a href="https://github.com/gitextensions/gitextensions/blob/release/2.51/GitUI/Resources/ChangeLog.md#version-25105-2-september-2018">Changelog</a><br />
-        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
-  </tr>
 </table>
 
 
-## Download
+## Downloads 
+<img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> 
 
 <table>
+  <tr>
+    <td><strong>v2.51.05 (stable)</strong></td>
+    <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/tag/v2.51.05">[ Download ]</a> / <a href="https://github.com/gitextensions/gitextensions/blob/release/2.51/GitUI/Resources/ChangeLog.md#version-25105-2-september-2018">Changelog</a><br />
+        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
+  </tr>
+  <tr>
+    <td><strong>v3.00 RC2</strong></td>
+    <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00-rc2">[ Download ]</a><br />
+        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00-rc2" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/v3.00.00-rc2/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
+  </tr>
+  <tr>
+    <td><strong>v3.00 (canary)</strong></td>
+    <td><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a> <a href="https://codecov.io/gh/gitextensions/gitextensions"><img alt="codecov.io" src="https://codecov.io/gh/gitextensions/gitextensions/branch/master/graph/badge.svg" style="max-width:100%;"></a>
+    <br /><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master/artifacts">[ Download ]</a> NB: expect :unicorn: :unicorn: :dragon: :dragon: and :bug: :bug:</td>
+  </tr>
   <tr>
     <td><strong>Visual Studio VSIX (2015/2017)</strong></td>
     <td><a href="https://marketplace.visualstudio.com/items?itemName=HenkWesthuis.GitExtensions">[ Download ]</a> or install via Visual Studio</td>
@@ -109,22 +116,12 @@ title="See more information on Transifex.com"><img src="https://ds0k0en9abmn1.cl
 </table>
 
 
-## Links
-
-* Website: [gitextensions.github.io](https://gitextensions.github.io/)
-* Source code: [github.com/gitextensions/gitextensions](https://github.com/gitextensions/gitextensions)
-* Online manual: [git-extensions-documentation.readthedocs.org](https://git-extensions-documentation.readthedocs.org/en/latest/)
-* Issue tracker: [github.com/gitextensions/gitextensions/issues](https://github.com/gitextensions/gitextensions/issues)
-* Wiki: [github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
-* Gitter chat: [gitter.im/gitextensions/gitextensions](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-* Mailing list: [groups.google.com/group/gitextensions](https://groups.google.com/group/gitextensions)
-
 # Shoutouts
 
-* We thank JetBRAINS for [ReSharper](https://www.jetbrains.com/resharper/) licenses.
-* We thank [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/) for the icons ([CCA/3.0](http://creativecommons.org/licenses/by/3.0/)).
 * We thank all the people who contribute, the project exists because of you
 <a href="https://github.com/gitextensions/gitextensions/contributors"><img src="https://opencollective.com/gitextensions/contributors.svg?width=890&button=false" /></a>
+* We thank JetBRAINS for [ReSharper](https://www.jetbrains.com/resharper/) licenses.<br /><a href="https://www.jetbrains.com/?from=gitextensions" target="_blank"><img src="./GitUI/Resources/Icons/originals/jetbrains-variant-4.png"></a>
+* We thank [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/) for the icons ([CCA/3.0](http://creativecommons.org/licenses/by/3.0/)).
 
 
 ## Backers
@@ -150,3 +147,11 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/gitextensions/sponsor/9/website" target="_blank"><img src="https://opencollective.com/gitextensions/sponsor/9/avatar.svg"></a>
 
 
+# Useful Links
+
+* Website: [gitextensions.github.io](https://gitextensions.github.io/)
+* Source code: [github.com/gitextensions/gitextensions](https://github.com/gitextensions/gitextensions)
+* Online manual: [git-extensions-documentation.readthedocs.org](https://git-extensions-documentation.readthedocs.org/en/latest/)
+* Issue tracker: [github.com/gitextensions/gitextensions/issues](https://github.com/gitextensions/gitextensions/issues)
+* Wiki: [github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
+* Gitter chat: [gitter.im/gitextensions/gitextensions](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)

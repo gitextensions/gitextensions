@@ -4,7 +4,7 @@
     {
         public static bool IsSeparator(this char c)
         {
-            return !char.IsLetterOrDigit(c);
+            return !char.IsLetterOrDigit(c) && c != '_';
         }
     }
 }

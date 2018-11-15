@@ -8,8 +8,13 @@ using JetBrains.Annotations;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
+    internal interface IRevisionGraphRowProvider
+    {
+        IRevisionGraphRow GetSegmentsForRow(int row);
+    }
+
     // The RevisionGraph contains all the basic structures needed to render the graph.
-    public class RevisionGraph
+    public class RevisionGraph : IRevisionGraphRowProvider
     {
         // Some unordered collections with raw data
         private ConcurrentDictionary<ObjectId, RevisionGraphRevision> _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
@@ -34,9 +39,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// The ordered row cache contains rows with segments stored in lanes.
         /// </summary>
         /// <remarks>This cache is very expensive to build.</remarks>
-        private List<RevisionGraphRow> _orderedRowCache;
-        private bool _rebuild = true;
-        private int _buildUntilScore = -1;
+        private IList<RevisionGraphRow> _orderedRowCache;
 
         // When the cache is updated, this action can be used to invalidate the UI
         public event Action Updated;
@@ -125,7 +128,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return localOrderedNodesCache.ElementAt(row);
         }
 
-        public RevisionGraphRow GetSegmentsForRow(int row)
+        public IRevisionGraphRow GetSegmentsForRow(int row)
         {
             // Use a local variable, because the cached list can be reset
             var localOrderedRowCache = _orderedRowCache;
@@ -176,7 +179,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // This revision may have been added as a parent before. Probably only the ObjectId is known. Set all the other properties.
             revisionGraphRevision.GitRevision = revision;
             revisionGraphRevision.ApplyFlags(types);
-            _nodes.Add(revisionGraphRevision);
 
             // No build the revisions parent/child structure. The parents need to added here. The child structure is kept in synch in
             // the RevisionGraphRevision class.
@@ -201,21 +203,42 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     // Store the newly created segment (connection between 2 revisions)
                     revisionGraphRevision.AddParent(parentRevisionGraphRevision, out int newMaxScore);
                     _maxScore = Math.Max(_maxScore, newMaxScore);
+
+                    if (types.HasFlag(RevisionNodeFlags.OnlyFirstParent))
+                    {
+                        break;
+                    }
                 }
             }
 
-            MarkCacheAsInvalidIfNeeded(revisionGraphRevision);
+            // Ensure all parents are loaded before adding it to the _nodes list. This is important for ordering.
+            _nodes.Add(revisionGraphRevision);
         }
 
-        private void BuildOrderedRowCache(List<RevisionGraphRevision> orderedNodesCache, int currentRowIndex, int lastToCacheRowIndex)
+        /// <summary>
+        /// It is very easy to check if the rowcache is dirty or not. If the last revision added to the rowcache
+        /// is not in the same index in the orderednodecache, the order has been changed. Only then rebuilding is
+        /// required. If the order is changed after this revision, we do not care since it wasn't processed yet.
+        /// </summary>
+        private bool CheckRowCacheIsDirty(IList<RevisionGraphRow> orderedRowCache, IList<RevisionGraphRevision> orderedNodesCache)
         {
-            if (_orderedRowCache == null || _rebuild)
+            int indexToCompare = orderedRowCache.Count - 1;
+
+            // We do not need bounds checking on orderedNodesCache. It is always larger then the rowcache.
+            return orderedRowCache[indexToCompare].Revision != orderedNodesCache[indexToCompare];
+        }
+
+        private void BuildOrderedRowCache(IList<RevisionGraphRevision> orderedNodesCache, int currentRowIndex, int lastToCacheRowIndex)
+        {
+            // Ensure we keep using the same instance of the rowcache from here on
+            var localOrderedRowCache = _orderedRowCache;
+
+            if (localOrderedRowCache == null || CheckRowCacheIsDirty(localOrderedRowCache, orderedNodesCache))
             {
-                _orderedRowCache = new List<RevisionGraphRow>(currentRowIndex);
-                _rebuild = false;
+                localOrderedRowCache = new List<RevisionGraphRow>(currentRowIndex);
             }
 
-            int nextIndex = _orderedRowCache.Count;
+            int nextIndex = localOrderedRowCache.Count;
             if (nextIndex > lastToCacheRowIndex)
             {
                 return;
@@ -231,10 +254,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 // The list containing the segments is created later. We can set the correct capacity then, to prevent resizing
                 List<RevisionGraphSegment> segments;
 
-                if (nextIndex > 0)
+                if (nextIndex == 0)
+                {
+                    // This is the first row. Start with only the startsegments of this row
+                    segments = new List<RevisionGraphSegment>(revision.StartSegments);
+                }
+                else
                 {
                     // Copy lanes from last row
-                    RevisionGraphRow previousRevisionGraphRow = _orderedRowCache[nextIndex - 1];
+                    RevisionGraphRow previousRevisionGraphRow = localOrderedRowCache[nextIndex - 1];
 
                     // Create segments list with te correct capacity
                     segments = new List<RevisionGraphSegment>(previousRevisionGraphRow.Segments.Count + revision.StartSegments.Count);
@@ -244,30 +272,29 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                     {
                         segments.Add(segment);
 
-                        // This segments continues in the next row. Copy all other segments that start from this revision to this lane.
+                        // This segment that is copied from the previous row, connects to the node in this row.
+                        // Copy all new segments that start from this node (revision) to this lane.
                         if (revision == segment.Parent && !startSegmentsAdded)
                         {
                             startSegmentsAdded = true;
                             segments.AddRange(revision.StartSegments);
                         }
                     }
-                }
-                else
-                {
-                    // Create segments list with te correct capacity
-                    segments = new List<RevisionGraphSegment>(revision.StartSegments.Count);
+
+                    // The startsegments do not connect to any previous row. This means that this is a new branch.
+                    if (!startSegmentsAdded)
+                    {
+                        // Add new segments started by this revision to the end
+                        segments.AddRange(revision.StartSegments);
+                    }
                 }
 
-                if (!startSegmentsAdded)
-                {
-                    // Add new segments started by this revision to the end
-                    segments.AddRange(revision.StartSegments);
-                }
-
-                _orderedRowCache.Add(new RevisionGraphRow(revision, segments));
-                _buildUntilScore = revision.Score;
+                localOrderedRowCache.Add(new RevisionGraphRow(revision, segments));
                 nextIndex++;
             }
+
+            // Overwrite the global instance at the end, to prevent flickering
+            _orderedRowCache = localOrderedRowCache;
 
             Updated?.Invoke();
         }
@@ -275,10 +302,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         [NotNull]
         private List<RevisionGraphRevision> BuildOrderedNodesCache(int currentRowIndex)
         {
-            if (_orderedNodesCache != null && !_reorder && _orderedNodesCache.Count >= currentRowIndex)
+            if (_orderedNodesCache != null && !_reorder && _orderedNodesCache.Count >= Math.Min(Count, currentRowIndex))
             {
                 return _orderedNodesCache;
             }
+
+            // Reset the reorder flag and the orderedUntilScore. This makes sure it isn't marked dirty before we even got to
+            // rebuilding it.
+            _orderedUntilScore = 0;
+            _reorder = false;
 
             // Use a local variable, because the cached list can be reset
             var localOrderedNodesCache = _nodes.OrderBy(n => n.Score).ToList();
@@ -288,8 +320,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 _orderedUntilScore = localOrderedNodesCache.Last().Score;
             }
 
-            _reorder = false;
-
             return localOrderedNodesCache;
         }
 
@@ -298,11 +328,6 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             if (revisionGraphRevision.Score <= _orderedUntilScore)
             {
                 _reorder = true;
-            }
-
-            if (revisionGraphRevision.Score <= _buildUntilScore)
-            {
-                _rebuild = true;
             }
         }
 
@@ -321,12 +346,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             // Only used for unit testing.
             public bool ValidateTopoOrder()
             {
-                int currentIndex = 0;
-                foreach (var node in _revisionGraph._orderedNodesCache)
+                foreach (var node in _revisionGraph._nodes)
                 {
                     foreach (var parent in node.Parents)
                     {
-                        if (!_revisionGraph.TryGetRowIndex(parent.Objectid, out int parentIndex) || parentIndex < currentIndex)
+                        if (parent.Score <= node.Score)
                         {
                             return false;
                         }
@@ -334,13 +358,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                     foreach (var child in node.Children)
                     {
-                        if (!_revisionGraph.TryGetRowIndex(child.Objectid, out int childIndex) || childIndex > currentIndex)
+                        if (node.Score <= child.Score)
                         {
                             return false;
                         }
                     }
-
-                    currentIndex++;
                 }
 
                 return true;

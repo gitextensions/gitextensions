@@ -170,14 +170,17 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 Title = Name,
                 DefaultExt = ".txt",
                 AddExtension = true,
-                Filter = "All files (*.*)|*.*"
+                Filter = "Text files (*.txt)|*.txt|CSV files|*.csv|All files *.*|*.*"
             })
             {
                 if (fileDialog.ShowDialog(this) == DialogResult.OK)
                 {
+                    var separator = fileDialog.FileName.EndsWith("csv") ?
+                        System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator :
+                        "\t";
                     File.WriteAllLines(
                         fileDialog.FileName,
-                        CommandLog.Commands.Select(cle => cle.ColumnLine));
+                        CommandLog.Commands.Select(cle => cle.FullLine(separator)));
                 }
             }
         }

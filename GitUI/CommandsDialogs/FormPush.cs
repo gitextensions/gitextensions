@@ -68,7 +68,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pullRepository =
             new TranslationString("The push was rejected because the tip of your current branch is behind its remote counterpart. " +
                 "Merge the remote changes before pushing again.");
-        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with last pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel");
+        private readonly TranslationString _pullRepositoryButtons = new TranslationString("Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel");
         private readonly TranslationString _pullActionNone = new TranslationString("none");
         private readonly TranslationString _pullActionFetch = new TranslationString("fetch");
         private readonly TranslationString _pullActionRebase = new TranslationString("rebase");
@@ -505,86 +505,8 @@ namespace GitUI.CommandsDialogs
             var isRejected = new Regex(Regex.Escape("! [rejected] ") + ".*" + Regex.Escape(_currentBranchName) + ".*", RegexOptions.Compiled);
             if (isRejected.IsMatch(form.GetOutputString()) && !Module.IsBareRepository())
             {
-                bool forcePush = false;
                 IWin32Window owner = form.Owner;
-                if (AppSettings.AutoPullOnPushRejectedAction == null)
-                {
-                    bool cancel = false;
-                    string destination = _NO_TRANSLATE_Remotes.Text;
-                    string buttons = _pullRepositoryButtons.Text;
-                    switch (AppSettings.DefaultPullAction)
-                    {
-                        case AppSettings.PullAction.Fetch:
-                        case AppSettings.PullAction.FetchAll:
-                        case AppSettings.PullAction.FetchPruneAll:
-                            buttons = string.Format(buttons, _pullActionFetch.Text);
-                            break;
-                        case AppSettings.PullAction.Merge:
-                            buttons = string.Format(buttons, _pullActionMerge.Text);
-                            break;
-                        case AppSettings.PullAction.Rebase:
-                            buttons = string.Format(buttons, _pullActionRebase.Text);
-                            break;
-                        default:
-                            buttons = string.Format(buttons, _pullActionNone.Text);
-                            break;
-                    }
-
-                    int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
-                                    string.Format(_pullRepositoryCaption.Text, destination),
-                                    _pullRepositoryMainInstruction.Text,
-                                    _pullRepository.Text,
-                                    "",
-                                    "",
-                                    _dontShowAgain.Text,
-                                    buttons,
-                                    true,
-                                    0,
-                                    0);
-                    bool rememberDecision = PSTaskDialog.cTaskDialog.VerificationChecked;
-                    switch (idx)
-                    {
-                        case 0:
-                            if (rememberDecision)
-                            {
-                                AppSettings.AutoPullOnPushRejectedAction = AppSettings.PullAction.Default;
-                            }
-
-                            break;
-                        case 1:
-                            AppSettings.DefaultPullAction = AppSettings.PullAction.Rebase;
-                            if (rememberDecision)
-                            {
-                                AppSettings.AutoPullOnPushRejectedAction = AppSettings.DefaultPullAction;
-                            }
-
-                            break;
-                        case 2:
-                            AppSettings.DefaultPullAction = AppSettings.PullAction.Merge;
-                            if (rememberDecision)
-                            {
-                                AppSettings.AutoPullOnPushRejectedAction = AppSettings.DefaultPullAction;
-                            }
-
-                            break;
-                        case 3:
-                            forcePush = true;
-                            break;
-                        default:
-                            cancel = true;
-                            if (rememberDecision)
-                            {
-                                AppSettings.AutoPullOnPushRejectedAction = AppSettings.PullAction.None;
-                            }
-
-                            break;
-                    }
-
-                    if (cancel)
-                    {
-                        return false;
-                    }
-                }
+                (var onRejectedPullAction, var forcePush) = AskForAutoPullOnPushRejectedAction(owner);
 
                 if (forcePush)
                 {
@@ -600,33 +522,39 @@ namespace GitUI.CommandsDialogs
                     return true;
                 }
 
-                if (AppSettings.AutoPullOnPushRejectedAction == AppSettings.PullAction.None)
+                if (onRejectedPullAction == AppSettings.PullAction.Default)
+                {
+                    onRejectedPullAction = AppSettings.DefaultPullAction;
+                }
+
+                if (onRejectedPullAction == AppSettings.PullAction.None)
                 {
                     return false;
                 }
 
-                if (AppSettings.AutoPullOnPushRejectedAction == AppSettings.PullAction.Default &&
-                    AppSettings.DefaultPullAction == AppSettings.PullAction.None)
-                {
-                    return false;
-                }
-
-                if (AppSettings.DefaultPullAction == AppSettings.PullAction.Fetch)
+                if (onRejectedPullAction != AppSettings.PullAction.Merge && onRejectedPullAction != AppSettings.PullAction.Rebase)
                 {
                     form.AppendOutput(Environment.NewLine +
-                        "Can not perform auto pull, when merge option is set to fetch.");
+                        "Automatical pull can only be performed, when the default pull action is either set to Merge or Rebase." +
+                        Environment.NewLine + Environment.NewLine);
                     return false;
                 }
 
                 if (IsRebasingMergeCommit())
                 {
                     form.AppendOutput(Environment.NewLine +
-                        "Can not perform auto pull, when merge option is set to rebase " + Environment.NewLine +
-                        "and one of the commits that are about to be rebased is a merge.");
+                        "Can not perform automatical pull, when the pull action is set to Rebase " + Environment.NewLine +
+                        "and one of the commits that are about to be rebased is a merge commit." +
+                        Environment.NewLine + Environment.NewLine);
                     return false;
                 }
 
-                UICommands.StartPullDialogAndPullImmediately(out var pullCompleted, owner, _selectedRemoteBranchName, _selectedRemote.Name);
+                UICommands.StartPullDialogAndPullImmediately(
+                    out var pullCompleted,
+                    owner,
+                    _selectedRemoteBranchName,
+                    _selectedRemote.Name,
+                    onRejectedPullAction);
 
                 if (pullCompleted)
                 {
@@ -636,6 +564,72 @@ namespace GitUI.CommandsDialogs
             }
 
             return false;
+        }
+
+        private (AppSettings.PullAction pullAction, bool forcePush) AskForAutoPullOnPushRejectedAction(IWin32Window owner)
+        {
+            bool forcePush = false;
+            AppSettings.PullAction? onRejectedPullAction = AppSettings.AutoPullOnPushRejectedAction;
+            if (onRejectedPullAction == null)
+            {
+                string destination = _NO_TRANSLATE_Remotes.Text;
+                string buttons = _pullRepositoryButtons.Text;
+                switch (AppSettings.DefaultPullAction)
+                {
+                    case AppSettings.PullAction.Fetch:
+                    case AppSettings.PullAction.FetchAll:
+                    case AppSettings.PullAction.FetchPruneAll:
+                        buttons = string.Format(buttons, _pullActionFetch.Text);
+                        break;
+                    case AppSettings.PullAction.Merge:
+                        buttons = string.Format(buttons, _pullActionMerge.Text);
+                        break;
+                    case AppSettings.PullAction.Rebase:
+                        buttons = string.Format(buttons, _pullActionRebase.Text);
+                        break;
+                    default:
+                        buttons = string.Format(buttons, _pullActionNone.Text);
+                        break;
+                }
+
+                int idx = PSTaskDialog.cTaskDialog.ShowCommandBox(owner,
+                                string.Format(_pullRepositoryCaption.Text, destination),
+                                _pullRepositoryMainInstruction.Text,
+                                _pullRepository.Text,
+                                "",
+                                "",
+                                _dontShowAgain.Text,
+                                buttons,
+                                true,
+                                0,
+                                0);
+                bool rememberDecision = PSTaskDialog.cTaskDialog.VerificationChecked;
+                switch (idx)
+                {
+                    case 0:
+                        onRejectedPullAction = AppSettings.PullAction.Default;
+                        break;
+                    case 1:
+                        onRejectedPullAction = AppSettings.PullAction.Rebase;
+                        break;
+                    case 2:
+                        onRejectedPullAction = AppSettings.PullAction.Merge;
+                        break;
+                    case 3:
+                        forcePush = true;
+                        break;
+                    default:
+                        onRejectedPullAction = AppSettings.PullAction.None;
+                        break;
+                }
+
+                if (rememberDecision)
+                {
+                    AppSettings.AutoPullOnPushRejectedAction = onRejectedPullAction;
+                }
+            }
+
+            return (onRejectedPullAction ?? AppSettings.PullAction.None, forcePush);
         }
 
         private void UpdateBranchDropDown()

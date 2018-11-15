@@ -35,6 +35,7 @@
             this.chkShowGitStatusInToolbar = new System.Windows.Forms.CheckBox();
             this.chkShowGitStatusForArtificialCommits = new System.Windows.Forms.CheckBox();
             this.chkShowStashCountInBrowseWindow = new System.Windows.Forms.CheckBox();
+            this.chkShowSubmoduleStatusInBrowse = new System.Windows.Forms.CheckBox();
             this.chkUseFastChecks = new System.Windows.Forms.CheckBox();
             this.chkShowCurrentChangesInRevisionGraph = new System.Windows.Forms.CheckBox();
             this.lblCommitsLimit = new System.Windows.Forms.Label();
@@ -113,18 +114,20 @@
             this.tlpnlPerformance.ColumnCount = 2;
             this.tlpnlPerformance.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlPerformance.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tlpnlPerformance.Controls.Add(this.chkCheckForUncommittedChangesInCheckoutBranch, 0, 5);
+            this.tlpnlPerformance.Controls.Add(this.chkCheckForUncommittedChangesInCheckoutBranch, 0, 6);
             this.tlpnlPerformance.Controls.Add(this.chkShowGitStatusInToolbar, 0, 0);
             this.tlpnlPerformance.Controls.Add(this.chkShowGitStatusForArtificialCommits, 0, 1);
             this.tlpnlPerformance.Controls.Add(this.chkShowStashCountInBrowseWindow, 0, 4);
+            this.tlpnlPerformance.Controls.Add(this.chkShowSubmoduleStatusInBrowse, 0, 5);
             this.tlpnlPerformance.Controls.Add(this.chkUseFastChecks, 0, 3);
             this.tlpnlPerformance.Controls.Add(this.chkShowCurrentChangesInRevisionGraph, 0, 2);
-            this.tlpnlPerformance.Controls.Add(this.lblCommitsLimit, 0, 6);
-            this.tlpnlPerformance.Controls.Add(this._NO_TRANSLATE_MaxCommits, 1, 6);
+            this.tlpnlPerformance.Controls.Add(this.lblCommitsLimit, 0, 7);
+            this.tlpnlPerformance.Controls.Add(this._NO_TRANSLATE_MaxCommits, 1, 7);
             this.tlpnlPerformance.Dock = System.Windows.Forms.DockStyle.Top;
             this.tlpnlPerformance.Location = new System.Drawing.Point(8, 22);
             this.tlpnlPerformance.Name = "tlpnlPerformance";
             this.tlpnlPerformance.RowCount = 6;
+            this.tlpnlPerformance.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlPerformance.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlPerformance.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlPerformance.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -140,10 +143,10 @@
             // 
             this.chkCheckForUncommittedChangesInCheckoutBranch.AutoSize = true;
             this.chkCheckForUncommittedChangesInCheckoutBranch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chkCheckForUncommittedChangesInCheckoutBranch.Location = new System.Drawing.Point(3, 118);
+            this.chkCheckForUncommittedChangesInCheckoutBranch.Location = new System.Drawing.Point(3, 141);
             this.chkCheckForUncommittedChangesInCheckoutBranch.Name = "chkCheckForUncommittedChangesInCheckoutBranch";
             this.chkCheckForUncommittedChangesInCheckoutBranch.Size = new System.Drawing.Size(324, 17);
-            this.chkCheckForUncommittedChangesInCheckoutBranch.TabIndex = 5;
+            this.chkCheckForUncommittedChangesInCheckoutBranch.TabIndex = 6;
             this.chkCheckForUncommittedChangesInCheckoutBranch.Text = "Check for uncommitted changes in checkout branch dialog";
             this.chkCheckForUncommittedChangesInCheckoutBranch.UseVisualStyleBackColor = true;
             // 
@@ -182,6 +185,17 @@
             this.chkShowStashCountInBrowseWindow.Text = "Show stash count on status bar in browse window";
             this.chkShowStashCountInBrowseWindow.UseVisualStyleBackColor = true;
             // 
+            // chkShowSubmoduleStatusInBrowse
+            // 
+            this.chkShowSubmoduleStatusInBrowse.AutoSize = true;
+            this.chkShowSubmoduleStatusInBrowse.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chkShowSubmoduleStatusInBrowse.Location = new System.Drawing.Point(3, 118);
+            this.chkShowSubmoduleStatusInBrowse.Name = "chkShowSubmoduleStatusInBrowse";
+            this.chkShowSubmoduleStatusInBrowse.Size = new System.Drawing.Size(324, 17);
+            this.chkShowSubmoduleStatusInBrowse.TabIndex = 5;
+            this.chkShowSubmoduleStatusInBrowse.Text = "Show submodule status in browse menu";
+            this.chkShowSubmoduleStatusInBrowse.UseVisualStyleBackColor = true;
+            // 
             // chkUseFastChecks
             // 
             this.chkUseFastChecks.AutoSize = true;
@@ -208,10 +222,10 @@
             // 
             this.lblCommitsLimit.AutoSize = true;
             this.lblCommitsLimit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCommitsLimit.Location = new System.Drawing.Point(3, 138);
+            this.lblCommitsLimit.Location = new System.Drawing.Point(3, 161);
             this.lblCommitsLimit.Name = "lblCommitsLimit";
             this.lblCommitsLimit.Size = new System.Drawing.Size(324, 27);
-            this.lblCommitsLimit.TabIndex = 6;
+            this.lblCommitsLimit.TabIndex = 7;
             this.lblCommitsLimit.Text = "Limit number of commits that will be loaded at startup";
             this.lblCommitsLimit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -222,7 +236,7 @@
             0,
             0,
             0});
-            this._NO_TRANSLATE_MaxCommits.Location = new System.Drawing.Point(333, 141);
+            this._NO_TRANSLATE_MaxCommits.Location = new System.Drawing.Point(333, 164);
             this._NO_TRANSLATE_MaxCommits.Maximum = new decimal(new int[] {
             1000000,
             0,
@@ -230,7 +244,7 @@
             0});
             this._NO_TRANSLATE_MaxCommits.Name = "_NO_TRANSLATE_MaxCommits";
             this._NO_TRANSLATE_MaxCommits.Size = new System.Drawing.Size(85, 21);
-            this._NO_TRANSLATE_MaxCommits.TabIndex = 7;
+            this._NO_TRANSLATE_MaxCommits.TabIndex = 8;
             this._NO_TRANSLATE_MaxCommits.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this._NO_TRANSLATE_MaxCommits.ThousandsSeparator = true;
             this._NO_TRANSLATE_MaxCommits.Value = new decimal(new int[] {
@@ -571,6 +585,7 @@
         private System.Windows.Forms.CheckBox chkShowCurrentChangesInRevisionGraph;
         private System.Windows.Forms.CheckBox chkUseFastChecks;
         private System.Windows.Forms.CheckBox chkShowStashCountInBrowseWindow;
+        private System.Windows.Forms.CheckBox chkShowSubmoduleStatusInBrowse;
         private System.Windows.Forms.Label lblCommitsLimit;
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_MaxCommits;
         private System.Windows.Forms.GroupBox groupBoxEmailSettings;

@@ -32,7 +32,7 @@ namespace GitUI.UserControls.RevisionGrid
             _revisionFunc = revisionFunc;
         }
 
-        private void AddItem(string displayText, Func<GitRevision, string> extractRevisionText, Image image, char? hotkey, Keys shortcutKeys = Keys.None)
+        private void AddItem(string displayText, Func<GitRevision, string> extractRevisionText, Image image, char? hotkey)
         {
             var textToCopy = ExtractRevisionTexts(extractRevisionText);
             if (textToCopy == null)
@@ -41,10 +41,10 @@ namespace GitUI.UserControls.RevisionGrid
             }
 
             displayText += ":   " + textToCopy.Select(t => t.SubstringUntil('\n')).Join(", ").ShortenTo(40);
-            AddItem(displayText, textToCopy.Join("\n"), image, hotkey, shortcutKeys);
+            AddItem(displayText, textToCopy.Join("\n"), image, hotkey);
         }
 
-        private void AddItem([NotNull] string displayText, [NotNull] string textToCopy, Image image, char? hotkey, Keys shortcutKeys = Keys.None)
+        private void AddItem([NotNull] string displayText, [NotNull] string textToCopy, Image image, char? hotkey)
         {
             if (hotkey.HasValue)
             {
@@ -62,7 +62,6 @@ namespace GitUI.UserControls.RevisionGrid
             var item = new ToolStripMenuItem
             {
                 Text = displayText,
-                ShortcutKeys = shortcutKeys,
                 ShowShortcutKeys = true,
                 Image = image
             };
@@ -153,7 +152,7 @@ namespace GitUI.UserControls.RevisionGrid
 
             // Add other items
             int count = revisions.Count();
-            AddItem(Strings.GetCommitHash(count), r => r.Guid, Images.CommitId, 'C', Keys.Control | Keys.C);
+            AddItem(Strings.GetCommitHash(count), r => r.Guid, Images.CommitId, 'C');
             AddItem(Strings.GetMessage(count), r => r.Body ?? r.Subject, Images.Message, 'M');
             AddItem(Strings.GetAuthor(count), r => $"{r.Author} <{r.AuthorEmail}>", Images.Author, 'A');
 

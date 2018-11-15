@@ -104,7 +104,7 @@ namespace GitUI.UserControls
                 startInfo.SetEnv(name, value);
             }
 
-            var operation = CommandLog.LogProcessStart(command, arguments);
+            var operation = CommandLog.LogProcessStart(command, arguments, workDir);
 
             startInfo.ConsoleProcessExitedEventSink = (_, args) =>
             {
