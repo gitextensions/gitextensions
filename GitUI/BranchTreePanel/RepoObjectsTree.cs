@@ -167,18 +167,21 @@ namespace GitUI.BranchTreePanel
             }
             finally
             {
-                await this.SwitchToMainThreadAsync(token);
-                Enabled = true;
-
-                var selectedNode = treeMain.AllNodes().FirstOrDefault(n =>
-                    _rootNodes.Any(rn => $"{rn.TreeViewNode.FullPath}{treeMain.PathSeparator}{currentBranch}" == n.FullPath));
-                if (selectedNode != null)
+                await this.SwitchToMainThreadAsync();
+                if (!token.IsCancellationRequested)
                 {
-                    treeMain.SelectedNode = selectedNode;
-                    treeMain.SelectedNode.EnsureVisible();
+                    Enabled = true;
+                    var selectedNode = treeMain.AllNodes().FirstOrDefault(n =>
+                        _rootNodes.Any(rn => $"{rn.TreeViewNode.FullPath}{treeMain.PathSeparator}{currentBranch}" == n.FullPath));
+                    if (selectedNode != null)
+                    {
+                        treeMain.SelectedNode = selectedNode;
+                        treeMain.SelectedNode.EnsureVisible();
+                    }
+
+                    _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = false);
                 }
 
-                _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = false);
                 treeMain.EndUpdate();
             }
         }
