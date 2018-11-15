@@ -14,6 +14,14 @@ namespace VstsAndTfsIntegration.Settings
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public partial class VstsAndTfsSettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
     {
+        private readonly TranslationString _failToExtractDataFromClipboardMessage = new TranslationString("The clipboard doesn't contain a valid build url." + Environment.NewLine + Environment.NewLine +
+                "Please copy the url of the build into the clipboard before retrying." + Environment.NewLine +
+                "(Should contain at least the \"buildId\" parameter)");
+        private readonly TranslationString _failToLoadBuildDefinitionInfoMessage = new TranslationString("Error while trying to retrieve build definition information from url." + Environment.NewLine + Environment.NewLine +
+                "Please ensure that the url is valid and that the API token has access to build and project information.");
+        private readonly TranslationString _infoNoApiTokenMessage = new TranslationString("Unable to retrieve build definition information without API token. Field will be left blank.");
+        private readonly TranslationString _failToExtractDataFromClipboardCaption = new TranslationString("Could not extract data");
+
         private string _defaultProjectName;
         private IEnumerable<string> _remotes;
 
@@ -111,6 +119,44 @@ namespace VstsAndTfsIntegration.Settings
         private void RestApiTokenLink_Click(object sender, EventArgs e)
         {
             Process.Start(TokenManagementUrl);
+        }
+
+        private async void ExtractLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var buildUrl = Clipboard.ContainsText() ? Clipboard.GetText() : "";
+            var (success, projectUrl, buildId) = VstsProjectUrlHelper.TryParseBuildUrl(buildUrl);
+            if (success)
+            {
+                string buildDefinitionName;
+                if (!string.IsNullOrWhiteSpace(_currentSettings.ApiToken))
+                {
+                    using (var tfsApiHelper = new TfsApiHelper(projectUrl, _currentSettings.ApiToken))
+                    {
+                        try
+                        {
+                            buildDefinitionName = await tfsApiHelper.GetBuildDefinitionNameFromIdAsync(buildId) ?? "";
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show(_failToLoadBuildDefinitionInfoMessage.Text, _failToExtractDataFromClipboardCaption.Text);
+                            return;
+                        }
+                    }
+                }
+                else
+                {
+                    buildDefinitionName = "";
+                    MessageBox.Show(_infoNoApiTokenMessage.Text, _failToExtractDataFromClipboardCaption.Text);
+                }
+
+                _currentSettings.ProjectUrl = projectUrl;
+                _currentSettings.BuildDefinitionFilter = buildDefinitionName;
+                UpdateView();
+            }
+            else
+            {
+                MessageBox.Show(_failToExtractDataFromClipboardMessage.Text, _failToExtractDataFromClipboardCaption.Text);
+            }
         }
     }
 }

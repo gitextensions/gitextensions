@@ -51,6 +51,8 @@ namespace VstsAndTfsIntegration.Settings
             },
         };
 
+        private static readonly Regex BuildUrlInfoRegex = new Regex(@"^(?<projecturl>.+://[^/]+(?::\d*)?(?:/[^/]+)+)/_build.*(?:&|\?)buildId=(?<buildid>\d+)");
+
         private static (bool success, string result) TryConvert(string value, Dictionary<Regex, Func<Match, string>> lookupDictionary)
         {
             foreach (var kv in lookupDictionary)
@@ -88,6 +90,21 @@ namespace VstsAndTfsIntegration.Settings
         public static (bool success, string tokenManagementUrl) TryConvertProjectToTokenManagementUrl(string projectUrl)
         {
             return TryConvert(projectUrl, ProjectToTokenManagementUrlLookup);
+        }
+
+        public static (bool success, string projectUrl, int buildId) TryParseBuildUrl(string buildUrl)
+        {
+            var match = BuildUrlInfoRegex.Match(buildUrl);
+            if (match.Success)
+            {
+                var projectUrl = match.Groups["projecturl"].Value;
+                if (int.TryParse(match.Groups["buildid"].Value, out var buildId))
+                {
+                    return (true, projectUrl, buildId);
+                }
+            }
+
+            return (false, "", -1);
         }
     }
 }

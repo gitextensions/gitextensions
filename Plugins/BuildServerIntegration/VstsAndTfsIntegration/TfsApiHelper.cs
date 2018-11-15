@@ -108,6 +108,12 @@ namespace VstsAndTfsIntegration
             _httpClient?.Dispose();
             GC.SuppressFinalize(this);
         }
+
+        public async Task<string> GetBuildDefinitionNameFromIdAsync(int buildId)
+        {
+            var build = await HttpGetAsync<Build>($"build/builds/{buildId}?api-version=2.0");
+            return build.Definition.Name;
+        }
     }
 
     internal class ListWrapper<T>
@@ -123,7 +129,7 @@ namespace VstsAndTfsIntegration
         public string Url { get; set; }
     }
 
-    internal class BuildDefinition
+    public class BuildDefinition
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -139,6 +145,7 @@ namespace VstsAndTfsIntegration
         public string Status { get; set; }
         public string BuildNumber { get; set; }
         public string Result { get; set; }
+        public BuildDefinition Definition { get; set; }
         public BuildLinks _links { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? FinishTime { get; set; }
