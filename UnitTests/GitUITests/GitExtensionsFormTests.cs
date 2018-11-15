@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using FluentAssertions;
+using GitExtUtils.GitUI;
 using GitUI;
 using NSubstitute;
 using NUnit.Framework;
@@ -118,6 +119,11 @@ namespace GitUITests
         [TestCase(192, 250, 250)]
         public void RestorePosition_should_scale_sizable_window_if_different_dpi(int savedDpi, int expectedWidthAt96dpi, int expectedHeightAt96dpi)
         {
+            if (DpiUtil.IsNonStandard)
+            {
+                Assert.Inconclusive("The test must be run at 96dpi");
+            }
+
             var form = new MockForm(true)
             {
                 Location = new Point(-100, -100),
@@ -147,6 +153,11 @@ namespace GitUITests
         [TestCase(1000, -400, /* 1000 + (800 - 300)/2 */ 1250, /* -400 + (600-200)/2 */ -200)]
         public void RestorePosition_should_position_window_with_Owner_set_and_CenterParent(int ownerFormTop, int ownerFormLeft, int expectFormTop, int expectedFormLeft)
         {
+            if (DpiUtil.IsNonStandard)
+            {
+                Assert.Inconclusive("The test must be run at 96dpi");
+            }
+
             var owner = new Form
             {
                 Location = new Point(ownerFormTop, ownerFormLeft),
