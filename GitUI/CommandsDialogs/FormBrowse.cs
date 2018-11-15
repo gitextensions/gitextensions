@@ -17,6 +17,7 @@ using GitCommands.Gpg;
 using GitCommands.Submodules;
 using GitCommands.UserRepositoryHistory;
 using GitCommands.Utils;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
@@ -1961,7 +1962,7 @@ namespace GitUI.CommandsDialogs
                 fileNames.Append(Path.Combine(module.WorkingDir, item.Name).ToNativePath());
             }
 
-            Clipboard.SetText(fileNames.ToString());
+            ClipboardUtil.TrySetText(fileNames.ToString());
         }
 
         private void deleteIndexLockToolStripMenuItem_Click(object sender, EventArgs e)

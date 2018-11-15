@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils;
 using GitUI.Editor.RichTextBoxExtension;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -109,7 +110,7 @@ namespace GitUI.CommitInfo
             }
 
             // Override RichTextBox Ctrl-c handling to copy plain text
-            Clipboard.SetText(rtb.GetSelectionPlainText());
+            ClipboardUtil.TrySetText(rtb.GetSelectionPlainText());
             e.Handled = true;
         }
 

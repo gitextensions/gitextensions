@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GitExtUtils;
 using GitUI;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -390,7 +391,7 @@ namespace Bitbucket
                 if (e.Button == MouseButtons.Right)
                 {
                     // Just copy the text
-                    Clipboard.SetText(link);
+                    ClipboardUtil.TrySetText(link);
                 }
                 else
                 {

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Hotkey;
@@ -447,7 +448,7 @@ See the changes in the commit form.");
             if (tvGitTree.SelectedNode?.Tag is GitItem gitItem)
             {
                 var fileName = _fullPathResolver.Resolve(gitItem.FileName);
-                Clipboard.SetText(fileName.ToNativePath());
+                ClipboardUtil.TrySetText(fileName.ToNativePath());
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Git.Tag;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
@@ -388,7 +389,7 @@ namespace GitUI.CommandsDialogs
             if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
-                Clipboard.SetText(lostObject.ObjectId.ToString());
+                ClipboardUtil.TrySetText(lostObject.ObjectId.ToString());
             }
         }
 
@@ -397,7 +398,7 @@ namespace GitUI.CommandsDialogs
             if (Warnings != null && Warnings.SelectedRows.Count != 0 && Warnings.SelectedRows[0].DataBoundItem != null)
             {
                 var lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
-                Clipboard.SetText(lostObject.Parent?.ToString());
+                ClipboardUtil.TrySetText(lostObject.Parent?.ToString());
             }
         }
 
