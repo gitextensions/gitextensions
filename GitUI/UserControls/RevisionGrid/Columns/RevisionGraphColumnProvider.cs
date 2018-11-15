@@ -245,33 +245,35 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         int centerY = top + (rowHeight / 2);
                         int endY = top + rowHeight + (rowHeight / 2);
 
-                        foreach (RevisionGraphSegment revisionGraphRevision in currentRow.Segments.Reverse().OrderBy(s => s.Child.IsRelative))
+                        foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments.Reverse().OrderBy(s => s.Child.IsRelative))
                         {
                             int startLane = -10;
                             int centerLane = -10;
                             int endLane = -10;
 
-                            if (revisionGraphRevision.Parent == currentRow.Revision)
+                            if (revisionGraphSegment.Parent == currentRow.Revision)
                             {
                                 // This lane ends here
-                                startLane = GetLaneForRow(previousRow, revisionGraphRevision);
-                                centerLane = GetLaneForRow(currentRow, revisionGraphRevision);
+                                startLane = GetLaneForRow(previousRow, revisionGraphSegment);
+                                centerLane = GetLaneForRow(currentRow, revisionGraphSegment);
                             }
                             else
                             {
-                                if (revisionGraphRevision.Child == currentRow.Revision)
+                                if (revisionGraphSegment.Child == currentRow.Revision)
                                 {
                                     // This lane starts here
-                                    centerLane = GetLaneForRow(currentRow, revisionGraphRevision);
-                                    endLane = GetLaneForRow(nextRow, revisionGraphRevision);
+                                    centerLane = GetLaneForRow(currentRow, revisionGraphSegment);
+                                    endLane = GetLaneForRow(nextRow, revisionGraphSegment);
                                 }
                                 else
                                 {
                                     // this lane crosses
-                                    startLane = GetLaneForRow(previousRow, revisionGraphRevision);
-                                    centerLane = GetLaneForRow(currentRow, revisionGraphRevision);
-                                    endLane = GetLaneForRow(nextRow, revisionGraphRevision);
+                                    startLane = GetLaneForRow(previousRow, revisionGraphSegment);
+                                    centerLane = GetLaneForRow(currentRow, revisionGraphSegment);
+                                    endLane = GetLaneForRow(nextRow, revisionGraphSegment);
                                 }
+
+                                endLane = StraightenSegment(index, nextRow, revisionGraphSegment, centerLane, endLane);
                             }
 
                             int startX = g.RenderingOrigin.X + (int)((startLane + 0.5) * LaneWidth);
@@ -280,13 +282,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                             Brush brush;
 
-                            if (revisionGraphRevision.Parent.Children.Count > 1)
+                            if (revisionGraphSegment.Parent.Children.Count > 1)
                             {
-                                brush = GetBrushForRevision(revisionGraphRevision.Child, revisionGraphRevision.Child.IsRelative);
+                                brush = GetBrushForRevision(revisionGraphSegment.Child, revisionGraphSegment.Child.IsRelative);
                             }
                             else
                             {
-                                brush = GetBrushForRevision(revisionGraphRevision.Parent, revisionGraphRevision.Child.IsRelative);
+                                brush = GetBrushForRevision(revisionGraphSegment.Parent, revisionGraphSegment.Child.IsRelative);
                             }
 
                             // EndLane
@@ -353,6 +355,37 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     return true;
                 }
             }
+        }
+
+        private int StraightenSegment(int index, IRevisionGraphRow nextRow, RevisionGraphSegment revisionGraphSegment, int centerLane, int endLane)
+        {
+            // Try to detect this:
+            // | |  |
+            // |/  /
+            // *  |
+            // |\  \
+            // | |  |
+            //
+            // And change it into this:
+            // | |  |
+            // |/   |
+            // *    |
+            // |\   |
+            // | |  |
+            if (centerLane > endLane)
+            {
+                var nextNextRow = _revisionGraph.GetSegmentsForRow(index + 2);
+
+                int nextNextLane = GetLaneForRow(nextNextRow, revisionGraphSegment);
+
+                if (centerLane == nextNextLane)
+                {
+                    nextRow.MoveLaneRightToStraigten(revisionGraphSegment);
+                    endLane++;
+                }
+            }
+
+            return endLane;
         }
 
         private Brush GetBrushForRevision(RevisionGraphRevision revisionGraphRevision, bool isRelative)

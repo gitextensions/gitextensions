@@ -11,6 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         int GetLaneCount();
         IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index);
         int GetLaneIndexForSegment(RevisionGraphSegment revisionGraphRevision);
+        void MoveLaneRightToStraigten(RevisionGraphSegment revisionGraphRevision);
     }
 
     // The RevisionGraphRow contains an ordered list of Segments that crosses the row or connects to the revision in the row.
@@ -29,13 +30,18 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public IReadOnlyList<RevisionGraphSegment> Segments { get; private set; }
 
         // This dictonary contains a cached list of all segments and the lane index the segment is in for this row.
-        private IReadOnlyDictionary<RevisionGraphSegment, int> _segmentLanes;
+        private IDictionary<RevisionGraphSegment, int> _segmentLanes;
 
         // The cached lanecount
         private int _laneCount;
 
         // The cached revisionlane
         private int _revisionLane;
+
+        public void MoveLaneRightToStraigten(RevisionGraphSegment revisionGraphRevision)
+        {
+            _segmentLanes[revisionGraphRevision] = _segmentLanes[revisionGraphRevision] + 1;
+        }
 
         // The row contains ordered segments. This method sorts the segments per lane.
         // Segments that cross this row (start above and end below) get there own private lane.
