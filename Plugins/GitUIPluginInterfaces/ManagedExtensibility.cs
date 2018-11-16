@@ -13,9 +13,22 @@ namespace GitUIPluginInterfaces
 {
     public static class ManagedExtensibility
     {
-        private static readonly Lazy<ExportProvider> _exportProvider = new Lazy<ExportProvider>(CreateExportProvider, LazyThreadSafetyMode.ExecutionAndPublication);
+        private static Lazy<ExportProvider> _exportProvider;
 
-        private static ExportProvider CreateExportProvider()
+        private static Lazy<ExportProvider> GetOrCreateLazyExportProvider(string applicationDataFolder)
+        {
+            var lazyExportProvider = Volatile.Read(ref _exportProvider);
+            if (lazyExportProvider is null)
+            {
+                var capturedApplicationDataFolder = applicationDataFolder;
+                var newLazyExportProvider = new Lazy<ExportProvider>(() => CreateExportProvider(capturedApplicationDataFolder), LazyThreadSafetyMode.ExecutionAndPublication);
+                lazyExportProvider = Interlocked.CompareExchange(ref _exportProvider, newLazyExportProvider, null) ?? newLazyExportProvider;
+            }
+
+            return lazyExportProvider;
+        }
+
+        private static ExportProvider CreateExportProvider(string applicationDataFolder)
         {
             var stopwatch = Stopwatch.StartNew();
 
@@ -28,9 +41,9 @@ namespace GitUIPluginInterfaces
 
             var pluginFiles = plugins;
 
-            var cacheFile = @"Plugins\GitUIPluginInterfaces\composition.cache";
+            var cacheFile = Path.Combine(applicationDataFolder ?? "ignored", "Plugins", "composition.cache");
             IExportProviderFactory exportProviderFactory;
-            if (File.Exists(cacheFile))
+            if (applicationDataFolder != null && File.Exists(cacheFile))
             {
                 using (var cacheStream = File.OpenRead(cacheFile))
                 {
@@ -49,9 +62,13 @@ namespace GitUIPluginInterfaces
 
                 var configuration = CompositionConfiguration.Create(catalog.WithCompositionService());
                 var runtimeComposition = RuntimeComposition.CreateRuntimeComposition(configuration);
-                using (var cacheStream = File.OpenWrite(cacheFile))
+                if (applicationDataFolder != null)
                 {
-                    ThreadHelper.JoinableTaskFactory.Run(() => new CachedComposition().SaveAsync(runtimeComposition, cacheStream));
+                    Directory.CreateDirectory(Path.Combine(applicationDataFolder, "Plugins"));
+                    using (var cacheStream = File.OpenWrite(cacheFile))
+                    {
+                        ThreadHelper.JoinableTaskFactory.Run(() => new CachedComposition().SaveAsync(runtimeComposition, cacheStream));
+                    }
                 }
 
                 exportProviderFactory = runtimeComposition.CreateExportProviderFactory();
@@ -78,14 +95,19 @@ namespace GitUIPluginInterfaces
             }
         }
 
+        public static void SetApplicationDataFolder(string applicationDataFolder)
+        {
+            GetOrCreateLazyExportProvider(applicationDataFolder);
+        }
+
         public static IEnumerable<Lazy<T>> GetExports<T>()
         {
-            return _exportProvider.Value.GetExports<T>();
+            return GetOrCreateLazyExportProvider(null).Value.GetExports<T>();
         }
 
         public static IEnumerable<Lazy<T, TMetadataView>> GetExports<T, TMetadataView>()
         {
-            return _exportProvider.Value.GetExports<T, TMetadataView>();
+            return GetOrCreateLazyExportProvider(null).Value.GetExports<T, TMetadataView>();
         }
     }
 }
