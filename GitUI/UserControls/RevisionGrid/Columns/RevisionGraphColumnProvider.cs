@@ -291,15 +291,20 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                                 brush = GetBrushForRevision(revisionGraphSegment.Parent, revisionGraphSegment.Child.IsRelative);
                             }
 
-                            // EndLane
+                            if (startLane >= 0 && endLane >= 0)
+                            {
+                                DrawSegment(g, brush, startX, startY, centerX, centerY, endX, endY);
+                            }
+                            else
                             if (startLane >= 0 && centerLane >= 0 && (startLane <= MaxLanes || centerLane <= MaxLanes))
                             {
+                                // EndLane
                                 DrawSegment(g, brush, startX, startY, centerX, centerY);
                             }
-
-                            // StartLane
+                            else
                             if (endLane >= 0 && centerLane >= 0 && (endLane <= MaxLanes || centerLane <= MaxLanes))
                             {
+                                // StartLane
                                 DrawSegment(g, brush, centerX, centerY, endX, endY);
                             }
                         }
@@ -415,30 +420,33 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private void DrawSegment(Graphics g, Brush laneBrush, int x0, int y0, int x1, int y1)
         {
-            var p0 = new Point(x0, y0);
-            var p1 = new Point(x1, y1);
+            var p0 = new PointF(x0, y0);
+            var p1 = new PointF(x1, y1);
 
             using (var lanePen = new Pen(laneBrush, LaneLineWidth))
             {
-                if (x0 == x1)
-                {
-                    g.SmoothingMode = SmoothingMode.None;
-                    g.DrawLine(lanePen, p0, p1);
-                }
-                else
-                {
-                    // Anti-aliasing with bezier & PixelOffsetMode.HighQuality
-                    // introduces an offset of ~1/8 px - compensate it.
-                    g.SmoothingMode = SmoothingMode.AntiAlias;
-                    const float offset = -1f / 8f;
+                // Anti-aliasing with bezier & PixelOffsetMode.HighQuality
+                // introduces an offset of ~1/8 px - compensate it.
+                g.SmoothingMode = SmoothingMode.AntiAlias;
 
-                    var yMid = (y0 + y1) / 2f;
-                    var c0 = new PointF(offset + p0.X, offset + yMid);
-                    var c1 = new PointF(offset + p1.X, offset + yMid);
-                    var e0 = new PointF(offset + p0.X, offset + p0.Y);
-                    var e1 = new PointF(offset + p1.X, offset + p1.Y);
-                    g.DrawBezier(lanePen, e0, c0, c1, e1);
-                }
+                g.DrawCurve(lanePen, new PointF[] { p0, p1 });
+            }
+        }
+
+        private void DrawSegment(Graphics g, Brush laneBrush, int x0, int y0, int x1, int y1, int x2, int y2)
+        {
+            float uncurlyFactor = 7.5f;
+            var p0 = new PointF(x0, y0); // Start
+            var p1 = new PointF((x0 + (x1 * uncurlyFactor) + x2) / (uncurlyFactor + 2f), (y0 + (y1 * uncurlyFactor) + y2) / (uncurlyFactor + 2f)); // Center
+            var p2 = new PointF(x2, y2); // End
+
+            using (var lanePen = new Pen(laneBrush, LaneLineWidth))
+            {
+                // Anti-aliasing with bezier & PixelOffsetMode.HighQuality
+                // introduces an offset of ~1/8 px - compensate it.
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+
+                g.DrawCurve(lanePen, new PointF[] { p0, p1, p2 });
             }
         }
 
