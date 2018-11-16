@@ -306,7 +306,7 @@ namespace GitExtensions
 
                 case 1:
                     {
-                        Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Git");
+                        Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Application-Dependencies#git");
                         return false;
                     }
 
