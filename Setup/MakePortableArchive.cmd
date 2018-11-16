@@ -1,4 +1,8 @@
 @echo off
+REM Run Prepare-Release.ps1 instead to make a portable build.  This script is called by that script
+REM To make a portable build run either of these commands and then this script
+REM .\Set-Portable.ps1 -IsPortable
+REM .\Set-Portable.ps Debug -IsPortable
 
 cd /d "%~p0"
 

@@ -152,11 +152,20 @@ try {
     Write-Host Compile and package
     Write-Host ----------------------------------------------------------------------
     # preparing the build artifacts
-	python set_version_to.py -v $newVersion -t $newVersion-beta1
-	
+    python set_version_to.py -v $newVersion -t $newVersion-beta1
+
     $env:SKIP_PAUSE=1
     .\BuildInstallers.cmd
-	.\MakePortableArchive.cmd Release $newVersion-beta1
+
+    # Set IsPortable in config to true
+    .\Set-Portable.ps1 -IsPortable
+    Write-Host ----------------------------------------------------------------------
+    Write-Host Make Portable Archive
+    Write-Host -------------------------------------------------------------------
+    .\MakePortableArchive.cmd Release $newVersion-beta1
+    
+    # Restore IsPortable in config
+    .\Set-Portable.ps1
 
     Write-Host ----------------------------------------------------------------------
     Write-Host Package PDBs
