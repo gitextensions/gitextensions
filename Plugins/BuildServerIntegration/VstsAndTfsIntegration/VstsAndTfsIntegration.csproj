@@ -60,8 +60,8 @@
       <DependentUpon>VstsAndTfsSettingsUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings\VstsProjectUrlHelper.cs" />
+    <Compile Include="TfsApiClient.cs" />
     <Compile Include="VstsAndTfsAdapter.cs" />
-    <Compile Include="TfsApiHelper.cs" />
     <Compile Include="Settings\VstsIntegrationSettings.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -21,6 +21,9 @@ namespace VstsAndTfsIntegration
         }
     }
 
+    /// <summary>
+    /// Provides build server integration for Azure DevOps / VSTS and Team Foundation Server (since TFS2015) into GitExtensions
+    /// </summary>
     [Export(typeof(IBuildServerAdapter))]
     [VstsAndTfsIntegrationMetadata(PluginName)]
     [PartCreationPolicy(CreationPolicy.NonShared)]
@@ -30,7 +33,7 @@ namespace VstsAndTfsIntegration
 
         private IBuildServerWatcher _buildServerWatcher;
         private VstsIntegrationSettings _settings;
-        private TfsApiHelper _tfsHelper;
+        private TfsApiClient _tfsHelper;
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
@@ -48,7 +51,7 @@ namespace VstsAndTfsIntegration
             }
 
             var projectUrl = _buildServerWatcher.ReplaceVariables(_settings.ProjectUrl);
-            _tfsHelper = new TfsApiHelper(projectUrl, _settings.ApiToken);
+            _tfsHelper = new TfsApiClient(projectUrl, _settings.ApiToken);
         }
 
         /// <summary>

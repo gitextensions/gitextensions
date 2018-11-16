@@ -37,7 +37,7 @@ namespace VstsAndTfsIntegration.Settings
             UpdateView();
         }
 
-        private string TokenManagementUrl => VstsProjectUrlHelper.TryConvertProjectToTokenManagementUrl(_currentSettings.ProjectUrl).tokenManagementUrl;
+        private string TokenManagementUrl => VstsProjectUrlHelper.TryGetTokenManagementUrlFromProject(_currentSettings.ProjectUrl).tokenManagementUrl;
 
         public void Initialize(string defaultProjectName, IEnumerable<string> remotes)
         {
@@ -61,7 +61,7 @@ namespace VstsAndTfsIntegration.Settings
                 labelRegexError.Visible = !BuildServerSettingsHelper.IsRegexValid(TfsBuildDefinitionNameFilter.Text);
 
                 RestApiToken.Text = _currentSettings.ApiToken;
-                RestApiTokenLink.Enabled = BuildServerSettingsHelper.IsUrlValid(TokenManagementUrl);
+                TokenManagementLink.Enabled = BuildServerSettingsHelper.IsUrlValid(TokenManagementUrl);
             }
             finally
             {
@@ -93,9 +93,13 @@ namespace VstsAndTfsIntegration.Settings
         {
             var settings = VstsIntegrationSettings.ReadFrom(buildServerConfig);
 
-            if (string.IsNullOrWhiteSpace(settings.ProjectUrl) && VstsProjectUrlHelper.TryDetectProjectUrlFromRemotesList(_remotes, out var autoDetectedProjectUrl))
+            if (string.IsNullOrWhiteSpace(settings.ProjectUrl))
             {
-                settings.ProjectUrl = autoDetectedProjectUrl;
+                var (vstsOrTfsProjectFound, autoDetectedProjectUrl) = VstsProjectUrlHelper.TryDetectProjectFromRemoteUrls(_remotes);
+                if (vstsOrTfsProjectFound)
+                {
+                    settings.ProjectUrl = autoDetectedProjectUrl;
+                }
             }
 
             _currentSettings = settings;
@@ -130,17 +134,17 @@ namespace VstsAndTfsIntegration.Settings
                 string buildDefinitionName;
                 if (!string.IsNullOrWhiteSpace(_currentSettings.ApiToken))
                 {
-                    using (var tfsApiHelper = new TfsApiHelper(projectUrl, _currentSettings.ApiToken))
+                    try
                     {
-                        try
+                        using (var tfsApiHelper = new TfsApiClient(projectUrl, _currentSettings.ApiToken))
                         {
                             buildDefinitionName = await tfsApiHelper.GetBuildDefinitionNameFromIdAsync(buildId) ?? "";
                         }
-                        catch (Exception)
-                        {
-                            MessageBox.Show(_failToLoadBuildDefinitionInfoMessage.Text, _failToExtractDataFromClipboardCaption.Text);
-                            return;
-                        }
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show(_failToLoadBuildDefinitionInfoMessage.Text, _failToExtractDataFromClipboardCaption.Text);
+                        return;
                     }
                 }
                 else

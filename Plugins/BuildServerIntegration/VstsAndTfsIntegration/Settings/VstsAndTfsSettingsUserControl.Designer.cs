@@ -36,18 +36,16 @@ namespace VstsAndTfsIntegration.Settings
             this.TfsServer = new System.Windows.Forms.TextBox();
             this.TfsBuildDefinitionNameFilter = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.label4 = new System.Windows.Forms.Label();
             this.ExtractLink = new System.Windows.Forms.LinkLabel();
             this.RestApiToken = new System.Windows.Forms.TextBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label4 = new System.Windows.Forms.Label();
-            this.RestApiTokenLink = new System.Windows.Forms.LinkLabel();
+            this.TokenManagementLink = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             label13 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             labelBuildIdFilter = new System.Windows.Forms.Label();
             RestApiTokenLabel = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label13
@@ -72,12 +70,11 @@ namespace VstsAndTfsIntegration.Settings
             // 
             // labelBuildIdFilter
             // 
-            labelBuildIdFilter.Anchor = System.Windows.Forms.AnchorStyles.Left;
             labelBuildIdFilter.AutoSize = true;
-            labelBuildIdFilter.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
+            labelBuildIdFilter.Dock = System.Windows.Forms.DockStyle.Fill;
             labelBuildIdFilter.Location = new System.Drawing.Point(126, 120);
             labelBuildIdFilter.Name = "labelBuildIdFilter";
-            labelBuildIdFilter.Size = new System.Drawing.Size(316, 15);
+            labelBuildIdFilter.Size = new System.Drawing.Size(1163, 13);
             labelBuildIdFilter.TabIndex = 8;
             labelBuildIdFilter.Text = "If needed, use the \'*\' wildcard or enter a Regular Expression";
             // 
@@ -85,7 +82,7 @@ namespace VstsAndTfsIntegration.Settings
             // 
             RestApiTokenLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             RestApiTokenLabel.AutoSize = true;
-            RestApiTokenLabel.Location = new System.Drawing.Point(3, 165);
+            RestApiTokenLabel.Location = new System.Drawing.Point(3, 161);
             RestApiTokenLabel.Name = "RestApiTokenLabel";
             RestApiTokenLabel.Size = new System.Drawing.Size(81, 13);
             RestApiTokenLabel.TabIndex = 12;
@@ -94,12 +91,12 @@ namespace VstsAndTfsIntegration.Settings
             // labelRegexError
             // 
             this.labelRegexError.AutoSize = true;
-            this.labelRegexError.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
+            this.labelRegexError.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelRegexError.ForeColor = System.Drawing.Color.Red;
-            this.labelRegexError.Location = new System.Drawing.Point(126, 140);
+            this.labelRegexError.Location = new System.Drawing.Point(126, 138);
             this.labelRegexError.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.labelRegexError.Name = "labelRegexError";
-            this.labelRegexError.Size = new System.Drawing.Size(416, 15);
+            this.labelRegexError.Size = new System.Drawing.Size(1163, 13);
             this.labelRegexError.TabIndex = 9;
             this.labelRegexError.Text = "The \'Build definition name\' regular expression is not valid and won\'t be saved!";
             this.labelRegexError.Visible = false;
@@ -126,9 +123,12 @@ namespace VstsAndTfsIntegration.Settings
             // 
             // tableLayoutPanel1
             // 
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.label4, 1, 8);
             this.tableLayoutPanel1.Controls.Add(this.ExtractLink, 1, 0);
             this.tableLayoutPanel1.Controls.Add(RestApiTokenLabel, 0, 6);
             this.tableLayoutPanel1.Controls.Add(this.RestApiToken, 1, 6);
@@ -138,11 +138,12 @@ namespace VstsAndTfsIntegration.Settings
             this.tableLayoutPanel1.Controls.Add(this.TfsBuildDefinitionNameFilter, 1, 3);
             this.tableLayoutPanel1.Controls.Add(label3, 0, 3);
             this.tableLayoutPanel1.Controls.Add(this.labelRegexError, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 7);
+            this.tableLayoutPanel1.Controls.Add(this.TokenManagementLink, 1, 7);
             this.tableLayoutPanel1.Controls.Add(this.label1, 1, 2);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 8;
+            this.tableLayoutPanel1.RowCount = 9;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -150,16 +151,29 @@ namespace VstsAndTfsIntegration.Settings
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1292, 398);
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1292, 232);
             this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label4.Location = new System.Drawing.Point(126, 193);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(1163, 39);
+            this.label4.TabIndex = 14;
+            this.label4.Text = "You need to create a token with the following scopes:\r\n - \'Build (read)\'\r\n - \'Pro" +
+    "ject and team (read)\'";
             // 
             // ExtractLink
             // 
             this.ExtractLink.AutoSize = true;
+            this.ExtractLink.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ExtractLink.Location = new System.Drawing.Point(126, 0);
             this.ExtractLink.Name = "ExtractLink";
-            this.ExtractLink.Size = new System.Drawing.Size(254, 13);
+            this.ExtractLink.Size = new System.Drawing.Size(1163, 13);
             this.ExtractLink.TabIndex = 15;
             this.ExtractLink.TabStop = true;
             this.ExtractLink.Text = "Extract data from the build url copied in the clipboard";
@@ -168,43 +182,24 @@ namespace VstsAndTfsIntegration.Settings
             // RestApiToken
             // 
             this.RestApiToken.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RestApiToken.Location = new System.Drawing.Point(126, 162);
+            this.RestApiToken.Location = new System.Drawing.Point(126, 158);
             this.RestApiToken.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RestApiToken.Name = "RestApiToken";
             this.RestApiToken.Size = new System.Drawing.Size(1163, 20);
             this.RestApiToken.TabIndex = 4;
             this.RestApiToken.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
-            // panel1
+            // TokenManagementLink
             // 
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.RestApiTokenLink);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(126, 187);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1163, 208);
-            this.panel1.TabIndex = 5;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(0, 25);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(261, 39);
-            this.label4.TabIndex = 14;
-            this.label4.Text = "You need to create a token with the following scopes:\r\n - \'Build (read)\'\r\n - \'Pro" +
-    "ject and team (read)\'";
-            // 
-            // RestApiTokenLink
-            // 
-            this.RestApiTokenLink.AutoSize = true;
-            this.RestApiTokenLink.Location = new System.Drawing.Point(0, 0);
-            this.RestApiTokenLink.Name = "RestApiTokenLink";
-            this.RestApiTokenLink.Size = new System.Drawing.Size(154, 13);
-            this.RestApiTokenLink.TabIndex = 1;
-            this.RestApiTokenLink.TabStop = true;
-            this.RestApiTokenLink.Text = "Go to token management page";
-            this.RestApiTokenLink.Click += new System.EventHandler(this.RestApiTokenLink_Click);
+            this.TokenManagementLink.AutoSize = true;
+            this.TokenManagementLink.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TokenManagementLink.Location = new System.Drawing.Point(126, 180);
+            this.TokenManagementLink.Name = "TokenManagementLink";
+            this.TokenManagementLink.Size = new System.Drawing.Size(1163, 13);
+            this.TokenManagementLink.TabIndex = 1;
+            this.TokenManagementLink.TabStop = true;
+            this.TokenManagementLink.Text = "Go to token management page";
+            this.TokenManagementLink.Click += new System.EventHandler(this.RestApiTokenLink_Click);
             // 
             // label1
             // 
@@ -221,18 +216,18 @@ namespace VstsAndTfsIntegration.Settings
             // 
             // VstsAndTfsSettingsUserControl
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "VstsAndTfsSettingsUserControl";
-            this.Size = new System.Drawing.Size(1295, 401);
+            this.Size = new System.Drawing.Size(1292, 232);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -243,8 +238,7 @@ namespace VstsAndTfsIntegration.Settings
         private System.Windows.Forms.Label labelRegexError;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TextBox RestApiToken;
-        private System.Windows.Forms.LinkLabel RestApiTokenLink;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.LinkLabel TokenManagementLink;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel ExtractLink;

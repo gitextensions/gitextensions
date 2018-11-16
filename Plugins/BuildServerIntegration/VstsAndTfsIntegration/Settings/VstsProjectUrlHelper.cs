@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace VstsAndTfsIntegration.Settings
 {
+    /// <summary>
+    /// Provides several operations that parse or convert urls in VSTS/TFS projects
+    /// </summary>
     public class VstsProjectUrlHelper
     {
         private static readonly Dictionary<Regex, Func<Match, string>> RemoteToProjectUrlLookup = new Dictionary<Regex, Func<Match, string>>()
         {
             { // VS Team Services via HTTPS
-                new Regex(@"^(?<prot>.+)://(?<user>[^.@]+)(?:@[^.]*)?\.visualstudio\.com(?<port>:\d*)?(?:/DefaultCollection)?(?<project>(/[^/]+)?/[^/]+)/_(git|ssh)/(.+)$"),
+                new Regex(@"^(?<prot>(?:http|https))://(?<user>[^.@]+)(?:@[^.]*)?\.visualstudio\.com(?<port>:\d*)?(?:/DefaultCollection)?(?<project>(/[^/]+)?/[^/]+)/_(git|ssh)/(.+)$"),
                 (match) => $"{match.Groups["prot"].Value}://{match.Groups["user"].Value}.visualstudio.com{match.Groups["port"].Value}{match.Groups["project"].Value}"
             },
             { // VS Team Services via SSH
@@ -18,7 +22,7 @@ namespace VstsAndTfsIntegration.Settings
                 (match) => $"https://{match.Groups["user"].Value}.visualstudio.com{match.Groups["project"].Value}"
             },
             { // Azure DevOps via HTTPS
-                new Regex(@"^(?<prot>.+)://(?:[^.@]+@)?dev\.azure\.com(?<port>:\d*)?(?<project>(?:/[^/]+)?/[^/]+)/_(?:git|ssh)/(?:.+)$"),
+                new Regex(@"^(?<prot>(?:http|https))://(?:[^.@]+@)?dev\.azure\.com(?<port>:\d*)?(?<project>(?:/[^/]+)?/[^/]+)/_(?:git|ssh)/(?:.+)$"),
                 (match) => $"{match.Groups["prot"].Value}://dev.azure.com{match.Groups["port"].Value}{match.Groups["project"].Value}"
             },
             { // Azure DevOps via SSH
@@ -26,11 +30,11 @@ namespace VstsAndTfsIntegration.Settings
                 (match) => $"https://dev.azure.com{match.Groups["project"].Value}"
             },
             { // Secondary Project-Repo in TFS on premise with DefaultCollection (need at least something to detect)
-                new Regex(@"^(?<instanceurl>.+://[^/]+(?::\d*)?(?:/[^/]+)+/DefaultCollection)(?<project>/[^/]+)/_(?:git|ssh)"),
+                new Regex(@"^(?<instanceurl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+/DefaultCollection)(?<project>/[^/]+)/_(?:git|ssh)"),
                 (match) => $"{match.Groups["instanceurl"].Value}{match.Groups["project"].Value}"
             },
             { // Main Project-Repo in TFS on premise with DefaultCollection (need at least something to detect)
-                new Regex(@"^(?<instanceurl>.+://[^/]+(?::\d*)?(?:/[^/]+)+/DefaultCollection)/_(?:git|ssh)(?<project>/[^/]+)"),
+                new Regex(@"^(?<instanceurl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+/DefaultCollection)/_(?:git|ssh)(?<project>/[^/]+)"),
                 (match) => $"{match.Groups["instanceurl"].Value}{match.Groups["project"].Value}"
             },
         };
@@ -38,23 +42,41 @@ namespace VstsAndTfsIntegration.Settings
         private static readonly Dictionary<Regex, Func<Match, string>> ProjectToTokenManagementUrlLookup = new Dictionary<Regex, Func<Match, string>>()
         {
             { // VS Team Services
-                new Regex(@"^(?<instanceurl>.+://[^.@]+(?:@[^.]*)?\.visualstudio\.com(?::\d*)?)"),
+                new Regex(@"^(?<instanceurl>(?:http|https)://[^.@]+(?:@[^.]*)?\.visualstudio\.com(?::\d*)?)"),
                 (match) => $"{match.Groups["instanceurl"].Value}/_details/security/tokens"
             },
             { // Azure DevOps
-                new Regex(@"^(?<instanceurl>.+://dev\.azure\.com(?::\d*)?/[^/]+)"),
+                new Regex(@"^(?<instanceurl>(?:http|https)://dev\.azure\.com(?::\d*)?/[^/]+)"),
                 (match) => $"{match.Groups["instanceurl"].Value}/_details/security/tokens"
             },
             { // Generic TFS on premise instance
-                new Regex(@"^(?<instanceurl>.+://[^/]+(?::\d*)?(?:/[^/]+)+)/[^/]+"),
+                new Regex(@"^(?<instanceurl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+)/[^/]+"),
                 (match) => $"{match.Groups["instanceurl"].Value}/_details/security/tokens"
             },
         };
 
-        private static readonly Regex BuildUrlInfoRegex = new Regex(@"^(?<projecturl>.+://[^/]+(?::\d*)?(?:/[^/]+)+)/_build.*(?:&|\?)buildId=(?<buildid>\d+)");
+        private static readonly Regex BuildUrlInfoRegex = new Regex(@"^(?<projecturl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+)/_build.*(?:&|\?)buildId=(?<buildid>\d+)");
 
-        private static (bool success, string result) TryConvert(string value, Dictionary<Regex, Func<Match, string>> lookupDictionary)
+        /// <summary>
+        /// Tries to transform a supplied string into a different one using a number of regular expressions to check against.
+        /// </summary>
+        /// <param name="value">
+        /// The string that should be transformed.
+        /// </param>
+        /// <param name="lookupDictionary">
+        /// A dictionary of regular expressions the input string should be checked against and corresponding functions,
+        /// that should be used to transform the found pattern into the desired result.
+        /// </param>
+        /// <returns>
+        /// A tuple that contains whether a matching pattern could be found and the string that resulted from the transformation.
+        /// </returns>
+        private static (bool success, string result) TryTransformString(string value, Dictionary<Regex, Func<Match, string>> lookupDictionary)
         {
+            if (value == null)
+            {
+                return (false, null);
+            }
+
             foreach (var kv in lookupDictionary)
             {
                 var regex = kv.Key;
@@ -70,30 +92,79 @@ namespace VstsAndTfsIntegration.Settings
             return (false, "");
         }
 
-        public static (bool success, string projectUrl) TryConvertRemoteToProjectUrl(string remoteUrl)
+        /// <summary>
+        /// Tries to detect the VSTS/TFS project home page url from a repository url of the same project.
+        /// </summary>
+        /// <param name="remoteUrl">
+        /// The url of the repository to find the VSTS/TFS project url for.
+        /// </param>
+        /// <returns>
+        /// A tuple that contains whether a VSTS/TFS project could be recognized from the given url and the resulting home page url of the project.
+        /// </returns>
+        public static (bool success, string projectUrl) TryDetectProjectFromRemoteUrl(string remoteUrl)
         {
-            return TryConvert(remoteUrl, RemoteToProjectUrlLookup);
+            if (remoteUrl == null && !BuildServerSettingsHelper.IsUrlValid(remoteUrl))
+            {
+                return (false, null);
+            }
+
+            return TryTransformString(remoteUrl, RemoteToProjectUrlLookup);
         }
 
-        public static (bool success, string projectUrl) TryDetectProjectUrlFromRemotesList(IEnumerable<string> remoteUrls)
+        /// <summary>
+        /// Tries to detect a VSTS/TFS project home page url from a list of repository urls.
+        /// </summary>
+        /// <param name="remoteUrls">
+        /// A list of repository urls to find a VSTS/TFS project url for.
+        /// </param>
+        /// <returns>
+        /// A tuple that contains whether a VSTS/TFS project could be recognized from the given list and the resulting home page url of the project.
+        /// </returns>
+        public static (bool success, string projectUrl) TryDetectProjectFromRemoteUrls(IEnumerable<string> remoteUrls)
         {
-            return remoteUrls.Select(TryConvertRemoteToProjectUrl).FirstOrDefault(r => r.success);
+            return remoteUrls.Select(TryDetectProjectFromRemoteUrl).FirstOrDefault(r => r.success);
         }
 
-        public static bool TryDetectProjectUrlFromRemotesList(IEnumerable<string> remoteUrls, out string projectUrl)
+        /// <summary>
+        /// Tries to get the token management url of the VSTS/TFS instance for a given project url, without testing
+        /// whether <paramref name="projectUrl"/> actually points to a VSTS/TFS instance.
+        /// </summary>
+        /// <remarks>
+        /// TryGetTokenManagementUrlFromProject will happlily convert anything that somewhat looks like a project url
+        /// in favor of better availability for on premise installations of TFS
+        /// </remarks>
+        /// <param name="projectUrl">
+        /// The url to the home page of a VSTS/TFS project.
+        /// </param>
+        /// <returns>
+        /// A tuple that contains whether the token management url could be recognized from the given project url and the resulting url.
+        /// </returns>
+        public static (bool success, string tokenManagementUrl) TryGetTokenManagementUrlFromProject(string projectUrl)
         {
-            var result = TryDetectProjectUrlFromRemotesList(remoteUrls);
-            projectUrl = result.projectUrl;
-            return result.success;
+            if (projectUrl == null && !BuildServerSettingsHelper.IsUrlValid(projectUrl))
+            {
+                return (false, null);
+            }
+
+            return TryTransformString(projectUrl, ProjectToTokenManagementUrlLookup);
         }
 
-        public static (bool success, string tokenManagementUrl) TryConvertProjectToTokenManagementUrl(string projectUrl)
-        {
-            return TryConvert(projectUrl, ProjectToTokenManagementUrlLookup);
-        }
-
+        /// <summary>
+        /// Tries to parse a url to a VSTS/TFS build result and get the corresponding project and build id from.
+        /// </summary>
+        /// <param name="buildUrl">
+        /// A url that points to the build status / build results page of a build in a VSTS/TFS project
+        /// </param>
+        /// <returns>
+        /// A tuple that contains whether the project and build id could be detected from the given url, as well as both informations.
+        /// </returns>
         public static (bool success, string projectUrl, int buildId) TryParseBuildUrl(string buildUrl)
         {
+            if (buildUrl == null && !BuildServerSettingsHelper.IsUrlValid(buildUrl))
+            {
+                return (false, null, -1);
+            }
+
             var match = BuildUrlInfoRegex.Match(buildUrl);
             if (match.Success)
             {

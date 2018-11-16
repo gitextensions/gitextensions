@@ -12,9 +12,9 @@ using Newtonsoft.Json;
 namespace VstsAndTfsIntegration
 {
     /// <summary>
-    /// For VSTS and TFS >=2015
+    /// Provides access to the REST API of a TFS>=2015, VSTS or Azure DevOps instance
     /// </summary>
-    public class TfsApiHelper : IDisposable
+    public class TfsApiClient : IDisposable
     {
         private const string BuildDefinitionsUrl = "build/definitions?api-version=2.0";
         private readonly HttpClient _httpClient;
@@ -22,12 +22,30 @@ namespace VstsAndTfsIntegration
         private string _buildDefinitionsToQuery;
         private string _lastBuildDefinitionFilter;
 
-        public TfsApiHelper(string projectUrl, string apiToken)
+        /// <summary>
+        /// Creates a new API client instance for the given VSTS/TFS project, that uses the given authentication token.
+        /// </summary>
+        /// <param name="projectUrl">
+        /// The home page url of the VSTS/TFS project the API client shoud provide access to.
+        /// </param>
+        /// <param name="apiToken">
+        /// The authentication token that is required and used to access the REST API of the VSTS/TFS instance.
+        /// </param>
+        public TfsApiClient(string projectUrl, string apiToken)
         {
             _httpClient = new HttpClient();
             InitializeHttpClient(projectUrl, apiToken);
         }
 
+        /// <summary>
+        /// Configures the <see cref="HttpClient"/> of the API client instance, so that API requests can be made with it.
+        /// </summary>
+        /// <param name="projectUrl">
+        /// The home page url of the VSTS/TFS project the API client shoud provide access to.
+        /// </param>
+        /// <param name="apiToken">
+        /// The authentication token that is required and used to access the REST API of the VSTS/TFS instance.
+        /// </param>
         private void InitializeHttpClient(string projectUrl, string apiToken)
         {
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -82,6 +100,18 @@ namespace VstsAndTfsIntegration
             return null;
         }
 
+        /// <summary>
+        /// Gets the name of the build definition a given build has been built with.
+        /// </summary>
+        /// <param name="buildId">
+        /// The id of the build to get the build definition name for.
+        /// </param>
+        public async Task<string> GetBuildDefinitionNameFromIdAsync(int buildId)
+        {
+            var build = await HttpGetAsync<Build>($"build/builds/{buildId}?api-version=2.0");
+            return build.Definition.Name;
+        }
+
         public async Task<IEnumerable<Build>> QueryBuildsAsync(string buildDefinitionFilter, DateTime? sinceDate, bool? running)
         {
             if (_buildDefinitionsToQuery == null || !string.Equals(_lastBuildDefinitionFilter, buildDefinitionFilter, StringComparison.OrdinalIgnoreCase))
@@ -107,12 +137,6 @@ namespace VstsAndTfsIntegration
         {
             _httpClient?.Dispose();
             GC.SuppressFinalize(this);
-        }
-
-        public async Task<string> GetBuildDefinitionNameFromIdAsync(int buildId)
-        {
-            var build = await HttpGetAsync<Build>($"build/builds/{buildId}?api-version=2.0");
-            return build.Definition.Name;
         }
     }
 
