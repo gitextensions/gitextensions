@@ -86,7 +86,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void downloadGitForWindows_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Git");
+            Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Application-Dependencies#git");
         }
 
         private void ChangeHomeButton_Click(object sender, EventArgs e)
