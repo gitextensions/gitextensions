@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
@@ -11,7 +12,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         int GetLaneCount();
         IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index);
         int GetLaneIndexForSegment(RevisionGraphSegment revisionGraphRevision);
-        void MoveLaneRightToStraigten(RevisionGraphSegment revisionGraphRevision);
+        bool Straightened { get; set; }
+        void MoveLaneRightToStraighten(RevisionGraphSegment revisionGraphRevision, int indexToMove);
     }
 
     // The RevisionGraphRow contains an ordered list of Segments that crosses the row or connects to the revision in the row.
@@ -38,9 +40,22 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         // The cached revisionlane
         private int _revisionLane;
 
-        public void MoveLaneRightToStraigten(RevisionGraphSegment revisionGraphRevision)
+        public bool Straightened { get; set; }
+
+        public void MoveLaneRightToStraighten(RevisionGraphSegment revisionGraphRevision, int indexToMove)
         {
-            _segmentLanes[revisionGraphRevision] = _segmentLanes[revisionGraphRevision] + 1;
+            foreach (var segmentLane in _segmentLanes.ToArray())
+            {
+                if (segmentLane.Value >= indexToMove)
+                {
+                    _segmentLanes[segmentLane.Key] = _segmentLanes[segmentLane.Key] + 1;
+                }
+            }
+
+            if (_revisionLane >= indexToMove)
+            {
+                _revisionLane++;
+            }
         }
 
         // The row contains ordered segments. This method sorts the segments per lane.
