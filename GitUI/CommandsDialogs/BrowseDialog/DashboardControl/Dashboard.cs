@@ -230,7 +230,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private static void TranslateItem_Click(object sender, EventArgs e)
         {
-            Process.Start("https://www.transifex.com/git-extensions/git-extensions/translate/");
+            Process.Start("https://github.com/gitextensions/gitextensions/wiki/Translations");
         }
 
         private static void GitHubItem_Click(object sender, EventArgs e)

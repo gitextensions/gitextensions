@@ -1912,7 +1912,7 @@ namespace GitUI.CommandsDialogs
 
         private void TranslateToolStripMenuItemClick(object sender, EventArgs e)
         {
-            Process.Start("https://www.transifex.com/git-extensions/git-extensions/translate/");
+            Process.Start("https://github.com/gitextensions/gitextensions/wiki/Translations");
         }
 
         private void FileExplorerToolStripMenuItemClick(object sender, EventArgs e)
