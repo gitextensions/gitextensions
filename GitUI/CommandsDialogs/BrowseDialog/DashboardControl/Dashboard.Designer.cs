@@ -112,14 +112,14 @@
             // pbLogo
             // 
             this.pbLogo.Image = global::GitUI.Properties.Images.GitExtensionsLogoWide;
-            this.pbLogo.Location = new System.Drawing.Point(23, 19);
+            this.pbLogo.Location = new System.Drawing.Point(14, 15);
             this.pbLogo.Name = "pbLogo";
-            this.pbLogo.Size = new System.Drawing.Size(167, 32);
+            this.pbLogo.Size = new System.Drawing.Size(185, 44);
             this.pbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbLogo.TabIndex = 0;
             this.pbLogo.TabStop = false;
             // 
-            // recentRepositoriesList1
+            // userRepositoriesList
             // 
             this.userRepositoriesList.BranchNameColor = System.Drawing.SystemColors.HotTrack;
             this.userRepositoriesList.Dock = System.Windows.Forms.DockStyle.Fill;

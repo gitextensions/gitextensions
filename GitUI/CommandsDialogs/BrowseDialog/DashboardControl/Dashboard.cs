@@ -75,7 +75,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 flpnlStart.BackColor = _selectedTheme.PrimaryLight;
                 flpnlContribute.BackColor = _selectedTheme.PrimaryVeryLight;
                 lblContribute.ForeColor = _selectedTheme.SecondaryHeadingText;
-                userRepositoriesList.BranchNameColor = AppSettings.BranchColor; // _selectedTheme.SecondaryText;
+                userRepositoriesList.BranchNameColor = _selectedTheme.SecondaryText;
                 userRepositoriesList.FavouriteColor = _selectedTheme.AccentedText;
                 userRepositoriesList.ForeColor = _selectedTheme.PrimaryText;
                 userRepositoriesList.HeaderColor = _selectedTheme.SecondaryHeadingText;

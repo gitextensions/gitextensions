@@ -12,12 +12,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
         {
             // Palette URL: http://paletton.com/#uid=13I0u0k7UUa3cZA5wXlaiQ5cFL3
             Light = new DashboardTheme(primary: Color.FromArgb(248, 248, 255), // 238, 243, 253), // Color.FromArgb(184, 203, 237),
-                                       primaryLight: Color.FromArgb(207, 221, 245),
-                                       primaryVeryLight: Color.FromArgb(229, 237, 251),
-                                       primaryDark: Color.FromArgb(160, 183, 226),
-                                       primaryVeryDark: Color.FromArgb(137, 163, 212),
+                                       primaryLight: Color.FromArgb(219, 235, 248),
+                                       primaryVeryLight: Color.FromArgb(230, 241, 250),
+                                       primaryDark: Color.FromArgb(172, 208, 239),
+                                       primaryVeryDark: Color.FromArgb(19, 122, 212),
                                        primaryText: Color.FromArgb(30, 30, 30),
-                                       secondaryText: Color.DodgerBlue,
+                                       secondaryText: Color.FromArgb(100, 127, 210),
                                        accentedText: Color.DarkGoldenrod,
                                        primaryHeadingText: Color.FromArgb(24, 29, 35),
                                        secondaryHeadingText: Color.DimGray,
