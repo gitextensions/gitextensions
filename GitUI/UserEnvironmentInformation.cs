@@ -7,7 +7,7 @@ using GitExtUtils.GitUI;
 
 namespace GitUI
 {
-    public sealed class UserEnvironmentInformation
+    public static class UserEnvironmentInformation
     {
         private static bool _alreadySet;
         private static bool _dirty;
@@ -35,12 +35,14 @@ namespace GitUI
             // Build and open FormAbout design to make sure info still looks good if you change this code.
             StringBuilder sb = new StringBuilder();
 
-            sb.Append($"- Git Extensions {AppSettings.ProductVersion}{Environment.NewLine}");
-            sb.Append($"- {_sha} {(_dirty ? " (Dirty)" : "")}{Environment.NewLine}");
-            sb.Append($"- Git {gitVer}{Environment.NewLine}");
-            sb.Append($"- {Environment.OSVersion}{Environment.NewLine}");
-            sb.Append($"- {RuntimeInformation.FrameworkDescription}{Environment.NewLine}");
-            sb.Append($"- DPI X:{DpiUtil.ScaleX:P} Y:{DpiUtil.ScaleY:P}");
+            sb.AppendLine($"- Git Extensions {AppSettings.ProductVersion}");
+            sb.AppendLine($"- Build {_sha}{(_dirty ? " (Dirty)" : "")}");
+            sb.AppendLine($"- Git {gitVer}");
+            sb.AppendLine($"- {Environment.OSVersion}");
+            sb.AppendLine($"- {RuntimeInformation.FrameworkDescription}");
+            sb.AppendLine($"- DPI {DpiUtil.DpiX}dpi ({(DpiUtil.ScaleX == 1 ? "no" : $"{Math.Round(DpiUtil.ScaleX * 100)}%")} scaling)");
+            sb.AppendLine($"- Primary screen resolution {Screen.PrimaryScreen.Bounds.Width} x {Screen.PrimaryScreen.Bounds.Height}");
+
             return sb.ToString();
         }
 

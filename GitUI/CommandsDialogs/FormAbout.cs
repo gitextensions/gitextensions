@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs
             environmentInfo.SetCopyButtonTooltip(_copyTooltip.Text);
 
             // Click handlers
-            _NO_TRANSLATE_labelProductName.LinkClicked += (s, e) => { Process.Start(@"http://github.com/gitextensions/gitextensions"); };
+            _NO_TRANSLATE_labelProductName.LinkClicked += delegate { Process.Start("https://github.com/gitextensions/gitextensions"); };
             _NO_TRANSLATE_ThanksTo.LinkClicked += delegate { ShowContributorsForm(); };
             pictureDonate.Click += delegate { Process.Start(FormDonate.DonationUrl); };
             linkLabelIcons.LinkClicked += delegate { Process.Start("http://p.yusukekamiyamane.com/"); };

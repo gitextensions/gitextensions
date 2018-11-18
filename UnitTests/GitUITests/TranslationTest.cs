@@ -28,7 +28,8 @@ namespace GitUITests
         [Apartment(ApartmentState.STA)]
         public void CreateInstanceOfClass()
         {
-            UserEnvironmentInformation.Initialise("", false);
+            UserEnvironmentInformation.Initialise("0123456789012345678901234567890123456789", isDirty: false);
+
             var translatableTypes = TranslationUtil.GetTranslatableTypes();
 
             var problems = new List<(string typeName, Exception exception)>();

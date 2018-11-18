@@ -50,8 +50,9 @@
             tableLayoutPanel1.Controls.Add(this.copyButton, 1, 0);
             tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             tableLayoutPanel1.Location = new System.Drawing.Point(0, 4);
+            tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(8);
+            tableLayoutPanel1.Padding = new System.Windows.Forms.Padding(0, 8, 0, 8);
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             tableLayoutPanel1.Size = new System.Drawing.Size(165, 68);
@@ -62,6 +63,7 @@
             this.environmentIssueInfo.AutoSize = true;
             this.environmentIssueInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.environmentIssueInfo.Location = new System.Drawing.Point(11, 8);
+            this.environmentIssueInfo.Margin = new System.Windows.Forms.Padding(0, 0, 8, 0);
             this.environmentIssueInfo.Name = "environmentIssueInfo";
             this.environmentIssueInfo.Size = new System.Drawing.Size(112, 52);
             this.environmentIssueInfo.TabIndex = 0;
@@ -72,6 +74,7 @@
             this.copyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.copyButton.Image = global::GitUI.Properties.Images.CopyToClipboard;
             this.copyButton.Location = new System.Drawing.Point(129, 11);
+            this.copyButton.Margin = new System.Windows.Forms.Padding(0);
             this.copyButton.Name = "copyButton";
             this.copyButton.Size = new System.Drawing.Size(25, 26);
             this.copyButton.TabIndex = 1;
@@ -83,6 +86,7 @@
             lblSeparatorBottom.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             lblSeparatorBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             lblSeparatorBottom.Location = new System.Drawing.Point(0, 72);
+            lblSeparatorBottom.Margin = new System.Windows.Forms.Padding(0);
             lblSeparatorBottom.Name = "lblSeparatorBottom";
             lblSeparatorBottom.Size = new System.Drawing.Size(165, 2);
             lblSeparatorBottom.TabIndex = 1;
@@ -92,6 +96,7 @@
             lblSeparatorTop.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             lblSeparatorTop.Dock = System.Windows.Forms.DockStyle.Top;
             lblSeparatorTop.Location = new System.Drawing.Point(0, 4);
+            lblSeparatorTop.Margin = new System.Windows.Forms.Padding(0);
             lblSeparatorTop.Name = "lblSeparatorTop";
             lblSeparatorTop.Size = new System.Drawing.Size(165, 2);
             lblSeparatorTop.TabIndex = 0;
@@ -105,8 +110,9 @@
             this.Controls.Add(lblSeparatorTop);
             this.Controls.Add(tableLayoutPanel1);
             this.Controls.Add(lblSeparatorBottom);
+            this.Margin = new System.Windows.Forms.Padding(0);
             this.Name = "EnvironmentInfo";
-            this.Padding = new System.Windows.Forms.Padding(0, 4, 0, 4);
+            this.Padding = new System.Windows.Forms.Padding(0);
             this.Size = new System.Drawing.Size(165, 78);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
@@ -116,6 +122,7 @@
         }
 
         #endregion
+
         private System.Windows.Forms.Button copyButton;
         private System.Windows.Forms.Label environmentIssueInfo;
     }

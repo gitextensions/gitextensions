@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs
 
             InitializeComponent();
 
-            environmentIssueInfo.Text = UserEnvironmentInformation.GetInformation().Replace("-", "");
+            environmentIssueInfo.Text = UserEnvironmentInformation.GetInformation().Replace("- ", "");
         }
 
         public ToolTip ToolTip { get; set; }
