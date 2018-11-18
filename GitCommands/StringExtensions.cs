@@ -11,6 +11,7 @@ namespace System
     {
         private static readonly char[] _newLine = { '\n' };
         private static readonly char[] _space = { ' ' };
+        private static readonly char[] _whiteSpaceChars = { ' ', '\r', '\n', '\t' };
 
         // NOTE ordinal string comparison is the default as most string comparison in GE is against static ASCII output from git.exe
 
@@ -208,6 +209,38 @@ namespace System
         public static string QuoteNE([CanBeNull] this string s)
         {
             return s.IsNullOrEmpty() ? s : s.Quote();
+        }
+
+        /// <summary>
+        /// Quotes this string if it contains whitespace
+        /// </summary>
+        [Pure]
+        [ContractAnnotation("s:null=>null")]
+        public static string QuoteIfContainsWhiteSpace([CanBeNull] this string s)
+        {
+            return s.IsNullOrEmpty() ? s : NeedsEscaping() ? s.Quote() : s;
+            bool NeedsEscaping()
+            {
+                if (string.IsNullOrWhiteSpace(s))
+                {
+                    // Quote empty or white space strings
+                    return true;
+                }
+
+                if (s.IndexOfAny(_whiteSpaceChars) == -1)
+                {
+                    // Doesn't contain any white space
+                    return false;
+                }
+
+                if (s.Length > 1 && s[0] == '"' && s[s.Length - 1] == '"')
+                {
+                    // String is already quoted
+                    return false;
+                }
+
+                return true;
+            }
         }
 
         /// <summary>
