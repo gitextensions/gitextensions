@@ -37,14 +37,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private readonly FileSystemWatcher _gitDirWatcher = new FileSystemWatcher();
         private readonly Timer _timerRefresh;
         private bool _commandIsRunning;
-        private bool _statusIsUpToDate = true;
         private string _gitPath;
         private string _submodulesPath;
 
         // Timestamps to schedule status updates, limit the update interval dynamically
-        private int _nextUpdateTime = int.MaxValue;
-        private int _previousUpdateTime;
-        private int _currentUpdateInterval = MinUpdateInterval;
+        private int _nextUpdateTime;
+        private int _nextEarliestTime;
+        private bool _nextIsInteractive;
         private GitStatusMonitorState _currentStatus;
 
         /// <summary>
@@ -268,7 +267,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                     _gitPath = Path.GetDirectoryName(gitDirPath);
                     _submodulesPath = Path.Combine(_gitPath, "modules");
 
-                    _commandIsRunning = false;
                     CurrentStatus = GitStatusMonitorState.Running;
                 }
                 else
@@ -298,23 +296,27 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 return;
             }
 
-            // If the previous status call hasn't exited yet, we'll wait until it is
-            // so we don't queue up a bunch of commands
-            if (_commandIsRunning ||
-
-                // don't update status while repository is being modified by GitExt,
-                // repository status will change after these actions.
-                UICommandsSource.UICommands.RepoChangedNotifier.IsLocked ||
-                (GitVersion.Current.RaceConditionWhenGitStatusIsUpdatingIndex && Module.IsRunningGitProcess()))
+            // If the previous status call hasn't exited yet,
+            // schedule new update when command is finished
+            if (_commandIsRunning)
             {
-                _statusIsUpToDate = false; // schedule new update when command is finished
+                ScheduleNextUpdateTime(0);
                 return;
             }
 
-            _workTreeWatcher.EnableRaisingEvents = true;
+            // don't update status while repository is being modified by GitExt,
+            // repository status will change after these actions.
+            if (UICommandsSource.UICommands.RepoChangedNotifier.IsLocked ||
+                (GitVersion.Current.RaceConditionWhenGitStatusIsUpdatingIndex && Module.IsRunningGitProcess()))
+            {
+                ScheduleNextUpdateTime(0);
+                return;
+            }
+
             _commandIsRunning = true;
-            _statusIsUpToDate = true;
-            _previousUpdateTime = Environment.TickCount;
+            _nextIsInteractive = false;
+            var commandStartTime = Environment.TickCount;
+            _workTreeWatcher.EnableRaisingEvents = true;
 
             // Schedule update every 5 min, even if we don't know that anything changed
             ScheduleNextUpdateTime(PeriodicUpdateInterval);
@@ -323,15 +325,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             IGitModule module = Module;
 
             ThreadHelper.JoinableTaskFactory.RunAsync(
-                async () =>
-                {
-                    try
+                    async () =>
                     {
                         try
                         {
                             await TaskScheduler.Default;
 
-                            var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
+                            var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default,
+                                noLocks: true);
                             var output = module.RunGitCmd(cmd);
                             var changedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(module, output);
 
@@ -358,12 +359,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                             throw;
                         }
-                    }
-                    finally
-                    {
-                        _commandIsRunning = false;
-                    }
-                })
+                        finally
+                        {
+                            _commandIsRunning = false;
+                        }
+                    })
                 .FileAndForget();
 
             return;
@@ -375,17 +375,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void UpdatedStatusReceived(IEnumerable<GitItemStatus> changedFiles)
             {
-                // Adjust the interval between updates. (This does not affect an update already scheduled).
-                _currentUpdateInterval = Math.Max(MinUpdateInterval, 3 * (Environment.TickCount - _previousUpdateTime));
+                // Adjust the interval between updates, schedule new to recalculate
+                _nextEarliestTime = commandStartTime +
+                                    Math.Max(MinUpdateInterval, 3 * (Environment.TickCount - commandStartTime));
+                ScheduleNextUpdateTime(PeriodicUpdateInterval);
 
                 GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs(changedFiles));
-
-                if (!_statusIsUpToDate)
-                {
-                    // Command was requested when this command was running
-                    // Will always be scheduled as background update (even if requested interactively originally)
-                    ScheduleNextUpdateTime(FileChangedUpdateDelay);
-                }
             }
         }
 
@@ -405,13 +400,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
 
             // timer wraps after 25 days uptime
-            if (_nextUpdateTime < 0 && _previousUpdateTime > 0)
+            if (_nextUpdateTime < 0 && _nextEarliestTime > 0)
             {
-                _previousUpdateTime = next;
+                _nextEarliestTime = next;
             }
 
-            // Enforce a minimal time between updates, to not update too frequently
-            _nextUpdateTime = Math.Max(next, _previousUpdateTime + _currentUpdateInterval);
+            if (!_nextIsInteractive)
+            {
+                // Enforce a minimal time between updates, to not update too frequently
+                _nextUpdateTime = Math.Max(next, _nextEarliestTime);
+            }
         }
 
         /// <summary>
@@ -420,6 +418,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// </summary>
         private void ScheduleNextInteractiveTime()
         {
+            // Start commands, also if running already
+            _commandIsRunning = false;
+            _nextIsInteractive = true;
             _nextUpdateTime = Environment.TickCount + InteractiveUpdateDelay;
         }
     }
