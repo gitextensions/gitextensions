@@ -13,7 +13,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         IEnumerable<RevisionGraphSegment> GetSegmentsForIndex(int index);
         int GetLaneIndexForSegment(RevisionGraphSegment revisionGraphRevision);
         bool Straightened { get; set; }
-        void MoveLaneRightToStraighten(RevisionGraphSegment revisionGraphRevision, int indexToMove);
+        void MoveLaneRightToStraighten(RevisionGraphSegment revisionGraphRevision, int indexToMove, bool moveOthers);
     }
 
     // The RevisionGraphRow contains an ordered list of Segments that crosses the row or connects to the revision in the row.
@@ -42,17 +42,17 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public bool Straightened { get; set; }
 
-        public void MoveLaneRightToStraighten(RevisionGraphSegment revisionGraphRevision, int indexToMove)
+        public void MoveLaneRightToStraighten(RevisionGraphSegment revisionGraphRevision, int indexToMove, bool moveOthers)
         {
             foreach (var segmentLane in _segmentLanes.ToArray())
             {
-                if (segmentLane.Value >= indexToMove)
+                if (segmentLane.Value == indexToMove || (moveOthers && segmentLane.Value >= indexToMove))
                 {
                     _segmentLanes[segmentLane.Key] = _segmentLanes[segmentLane.Key] + 1;
                 }
             }
 
-            if (_revisionLane >= indexToMove)
+            if (_revisionLane == indexToMove || (moveOthers && _revisionLane >= indexToMove))
             {
                 _revisionLane++;
             }

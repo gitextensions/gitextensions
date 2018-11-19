@@ -272,6 +272,8 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                                     centerLane = GetLaneForRow(currentRow, revisionGraphSegment);
                                     endLane = GetLaneForRow(nextRow, revisionGraphSegment);
                                 }
+
+                                endLane = StraightenSegment(index, nextRow, revisionGraphSegment, centerLane, endLane);
                             }
 
                             int startX = g.RenderingOrigin.X + (int)((startLane + 0.5) * LaneWidth);
@@ -358,6 +360,37 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     return true;
                 }
             }
+        }
+
+        private int StraightenSegment(int index, IRevisionGraphRow nextRow, RevisionGraphSegment revisionGraphSegment, int centerLane, int endLane)
+        {
+            // Try to detect this:
+            // | |  |
+            // |/  /
+            // *  |
+            // |\  \
+            // | |  |
+            //
+            // And change it into this:
+            // | |  |
+            // |/   |
+            // *    |
+            // |\   |
+            // | |  |
+            if (centerLane > endLane)
+            {
+                var nextNextRow = _revisionGraph.GetSegmentsForRow(index + 2);
+
+                int nextNextLane = GetLaneForRow(nextNextRow, revisionGraphSegment);
+
+                if (centerLane == nextNextLane)
+                {
+                    nextRow.MoveLaneRightToStraighten(revisionGraphSegment, endLane, false);
+                    endLane++;
+                }
+            }
+
+            return endLane;
         }
 
         private Brush GetBrushForRevision(RevisionGraphRevision revisionGraphRevision, bool isRelative)
@@ -484,6 +517,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                 laneCount = Math.Max(laneCount, laneRow.GetLaneCount());
 
+                /*
                 if (laneRow.Straightened)
                 {
                     continue;
@@ -504,7 +538,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 // *    |
                 // |\   |
                 // | |  |
-                foreach (var segment in laneRow.Segments)
+                foreach (var segment in laneRow.Segments.Reverse())
                 {
                     int segmentLaneCurrentRow = GetLaneForRow(laneRow, segment);
 
@@ -540,7 +574,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                                 {
                                     var laneRowToMove = _revisionGraph.GetSegmentsForRow(k);
 
-                                    laneRowToMove.MoveLaneRightToStraighten(segment, smallestIndex);
+                                    laneRowToMove.MoveLaneRightToStraighten(segment, smallestIndex, lookAhead > 2);
                                 }
                             }
 
@@ -548,6 +582,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         }
                     }
                 }
+                */
             }
 
             laneCount = Math.Min(laneCount, MaxLanes);
