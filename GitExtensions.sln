@@ -139,7 +139,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraCommitHintPlugin", "Plu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTestUtils", "UnitTests\CommonTestUtils\CommonTestUtils.csproj", "{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VstsAndTfsIntegration", "Plugins\BuildServerIntegration\VstsAndTfsIntegration\VstsAndTfsIntegration.csproj", "{92615565-CF33-4539-A0E6-610CE0734B8C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDevOpsIntegration", "Plugins\BuildServerIntegration\AzureDevOpsIntegration\AzureDevOpsIntegration.csproj", "{92615565-CF33-4539-A0E6-610CE0734B8C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C5855184-8571-4AD0-A373-B98215BA56CA}"
 	ProjectSection(SolutionItems) = preProject
@@ -186,7 +186,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUIPluginInterfacesTests"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildServerIntegration", "BuildServerIntegration", "{BC90FFE0-7770-4979-884E-9F9F294C58C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VstsAndTfsIntegrationTests", "UnitTests\Plugins\BuildServerIntegration\VstsAndTfsIntegrationTests\VstsAndTfsIntegrationTests.csproj", "{6E2BE70D-0B5C-45D6-9D42-4497A46C370D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDevOpsIntegrationTests", "UnitTests\Plugins\BuildServerIntegration\AzureDevOpsIntegrationTests\AzureDevOpsIntegrationTests.csproj", "{6E2BE70D-0B5C-45D6-9D42-4497A46C370D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

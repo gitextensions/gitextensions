@@ -7,8 +7,8 @@
     <ProjectGuid>{6E2BE70D-0B5C-45D6-9D42-4497A46C370D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VstsAndTfsIntegrationTests</RootNamespace>
-    <AssemblyName>VstsAndTfsIntegrationTests</AssemblyName>
+    <RootNamespace>AzureDevOpsIntegrationTests</RootNamespace>
+    <AssemblyName>AzureDevOpsIntegrationTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -23,7 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\VstsAndTfsIntegrationTests.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\AzureDevOpsIntegrationTests.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,7 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\..\..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Release\VstsAndTfsIntegrationTests.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\AzureDevOpsIntegrationTests.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -45,13 +45,13 @@
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="VstsProjectUrlHelperTests.cs" />
+    <Compile Include="ProjectUrlHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Plugins\BuildServerIntegration\VstsAndTfsIntegration\VstsAndTfsIntegration.csproj">
+    <ProjectReference Include="..\..\..\..\Plugins\BuildServerIntegration\AzureDevOpsIntegration\AzureDevOpsIntegration.csproj">
       <Project>{92615565-cf33-4539-a0e6-610ce0734b8c}</Project>
-      <Name>VstsAndTfsIntegration</Name>
+      <Name>AzureDevOpsIntegration</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

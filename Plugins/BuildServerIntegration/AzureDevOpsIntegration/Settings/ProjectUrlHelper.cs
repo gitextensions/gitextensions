@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
-namespace VstsAndTfsIntegration.Settings
+namespace AzureDevOpsIntegration.Settings
 {
     /// <summary>
-    /// Provides several operations that parse or convert urls in VSTS/TFS projects
+    /// Provides several operations that parse or convert urls in Azure DevOps (or TFS>=2015) projects
     /// </summary>
-    public class VstsProjectUrlHelper
+    public class ProjectUrlHelper
     {
         private static readonly Dictionary<Regex, Func<Match, string>> RemoteToProjectUrlLookup = new Dictionary<Regex, Func<Match, string>>()
         {
@@ -93,13 +93,13 @@ namespace VstsAndTfsIntegration.Settings
         }
 
         /// <summary>
-        /// Tries to detect the VSTS/TFS project home page url from a repository url of the same project.
+        /// Tries to detect the Azure DevOps / TFS project home page url from a repository url of the same project.
         /// </summary>
         /// <param name="remoteUrl">
-        /// The url of the repository to find the VSTS/TFS project url for.
+        /// The url of the repository to find the Azure DevOps / TFS project url for.
         /// </param>
         /// <returns>
-        /// A tuple that contains whether a VSTS/TFS project could be recognized from the given url and the resulting home page url of the project.
+        /// A tuple that contains whether a Azure DevOps / TFS project could be recognized from the given url and the resulting home page url of the project.
         /// </returns>
         public static (bool success, string projectUrl) TryDetectProjectFromRemoteUrl(string remoteUrl)
         {
@@ -112,13 +112,13 @@ namespace VstsAndTfsIntegration.Settings
         }
 
         /// <summary>
-        /// Tries to detect a VSTS/TFS project home page url from a list of repository urls.
+        /// Tries to detect a Azure DevOps / TFS project home page url from a list of repository urls.
         /// </summary>
         /// <param name="remoteUrls">
-        /// A list of repository urls to find a VSTS/TFS project url for.
+        /// A list of repository urls to find a Azure DevOps / TFS project url for.
         /// </param>
         /// <returns>
-        /// A tuple that contains whether a VSTS/TFS project could be recognized from the given list and the resulting home page url of the project.
+        /// A tuple that contains whether a Azure DevOps / TFS project could be recognized from the given list and the resulting home page url of the project.
         /// </returns>
         public static (bool success, string projectUrl) TryDetectProjectFromRemoteUrls(IEnumerable<string> remoteUrls)
         {
@@ -126,15 +126,15 @@ namespace VstsAndTfsIntegration.Settings
         }
 
         /// <summary>
-        /// Tries to get the token management url of the VSTS/TFS instance for a given project url, without testing
-        /// whether <paramref name="projectUrl"/> actually points to a VSTS/TFS instance.
+        /// Tries to get the token management url of the Azure DevOps / TFS instance for a given project url, without testing
+        /// whether <paramref name="projectUrl"/> actually points to a Azure DevOps / TFS instance.
         /// </summary>
         /// <remarks>
         /// TryGetTokenManagementUrlFromProject will happlily convert anything that somewhat looks like a project url
         /// in favor of better availability for on premise installations of TFS
         /// </remarks>
         /// <param name="projectUrl">
-        /// The url to the home page of a VSTS/TFS project.
+        /// The url to the home page of a Azure DevOps / TFS project.
         /// </param>
         /// <returns>
         /// A tuple that contains whether the token management url could be recognized from the given project url and the resulting url.
@@ -150,10 +150,10 @@ namespace VstsAndTfsIntegration.Settings
         }
 
         /// <summary>
-        /// Tries to parse a url to a VSTS/TFS build result and get the corresponding project and build id from.
+        /// Tries to parse a url to a Azure DevOps / TFS build result and get the corresponding project and build id from.
         /// </summary>
         /// <param name="buildUrl">
-        /// A url that points to the build status / build results page of a build in a VSTS/TFS project
+        /// A url that points to the build status / build results page of a build in a Azure DevOps / TFS project
         /// </param>
         /// <returns>
         /// A tuple that contains whether the project and build id could be detected from the given url, as well as both informations.

@@ -87,6 +87,8 @@ xcopy /y ..\Plugins\BuildServerIntegration\JenkinsIntegration\bin\%Configuration
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\%Configuration%\TeamCityIntegration.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\BuildServerIntegration\AzureDevOpsIntegration\bin\%Configuration%\AzureDevOpsIntegration.dll GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\CreateLocalBranches\bin\%Configuration%\CreateLocalBranches.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\DeleteUnusedBranches\bin\%Configuration%\DeleteUnusedBranches.dll GitExtensions\Plugins\
@@ -250,6 +252,8 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BuildServerIntegration\JenkinsIntegration\bin\%Configuration%\JenkinsIntegration.pdb GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\%Configuration%\TeamCityIntegration.pdb GitExtensions\Plugins\
+IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y ..\Plugins\BuildServerIntegration\AzureDevOpsIntegration\bin\%Configuration%\AzureDevOpsIntegration.pdb GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\CreateLocalBranches\bin\%Configuration%\CreateLocalBranches.pdb GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1

@@ -1,11 +1,10 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using VstsAndTfsIntegration.Settings;
 
-namespace VstsAndTfsIntegrationTests
+namespace AzureDevOpsIntegrationTests
 {
     [TestFixture]
-    public class VstsProjectUrlHelperTests
+    public class ProjectUrlHelperTests
     {
         [TestCase("https://user.visualstudio.com/DefaultCollection/MyProject/_git/MyProject", "https://user.visualstudio.com/MyProject")]
         [TestCase("http://user.visualstudio.com/DefaultCollection/MyProject/_git/MyProject", "http://user.visualstudio.com/MyProject")]
@@ -21,7 +20,7 @@ namespace VstsAndTfsIntegrationTests
         [TestCase("http://somehost:8080/tfs/DefaultCollection/MyProject/_git/SecondaryRepo", "http://somehost:8080/tfs/DefaultCollection/MyProject")]
         public void TryDetectProjectFromRemoteUrl_should_succeed_with_expected_url_from_valid_remote(string remoteUrl, string expectedProjectUrl)
         {
-            var (success, projectUrl) = VstsProjectUrlHelper.TryDetectProjectFromRemoteUrl(remoteUrl);
+            var (success, projectUrl) = AzureDevOpsIntegration.Settings.ProjectUrlHelper.TryDetectProjectFromRemoteUrl(remoteUrl);
             success.Should().Be(true);
             projectUrl.Should().BeEquivalentTo(expectedProjectUrl);
         }
@@ -37,7 +36,7 @@ namespace VstsAndTfsIntegrationTests
         [TestCase(@"[TestCase(""http://somehost:8080/tfs/DefaultCollection/MyProject/_git/SecondaryRepo"", ""http://somehost:8080/tfs/DefaultCollection/MyProject"")]")]
         public void TryDetectProjectFromRemoteUrl_should_fail_with_invalid_remote(string remoteUrl)
         {
-            var (success, projectUrl) = VstsProjectUrlHelper.TryDetectProjectFromRemoteUrl(remoteUrl);
+            var (success, projectUrl) = AzureDevOpsIntegration.Settings.ProjectUrlHelper.TryDetectProjectFromRemoteUrl(remoteUrl);
             success.Should().Be(false);
             projectUrl.Should().BeNullOrEmpty();
         }
@@ -50,7 +49,7 @@ namespace VstsAndTfsIntegrationTests
         [TestCase("http://somehost:8080/tfs/DefaultCollection/MyProject", "http://somehost:8080/tfs/DefaultCollection/_details/security/tokens")]
         public void TryGetTokenManagementUrlFromProject_should_succeed_with_expected_url_from_valid_projecturl(string projectUrl, string expectedTokenManagementUrl)
         {
-            var (success, tokenManagementUrl) = VstsProjectUrlHelper.TryGetTokenManagementUrlFromProject(projectUrl);
+            var (success, tokenManagementUrl) = AzureDevOpsIntegration.Settings.ProjectUrlHelper.TryGetTokenManagementUrlFromProject(projectUrl);
             success.Should().Be(true);
             tokenManagementUrl.Should().BeEquivalentTo(expectedTokenManagementUrl);
         }
@@ -66,7 +65,7 @@ namespace VstsAndTfsIntegrationTests
         [TestCase(@"[TestCase(""http://somehost:8080/tfs/DefaultCollection/MyProject"", ""http://somehost:8080/tfs/DefaultCollection/_details/security/tokens"")]")]
         public void TryGetTokenManagementUrlFromProject_should_fail_with_url_that_does_not_look_like_a_project_url(string projectUrl)
         {
-            var (success, tokenManagementUrl) = VstsProjectUrlHelper.TryGetTokenManagementUrlFromProject(projectUrl);
+            var (success, tokenManagementUrl) = AzureDevOpsIntegration.Settings.ProjectUrlHelper.TryGetTokenManagementUrlFromProject(projectUrl);
             success.Should().Be(false);
             tokenManagementUrl.Should().BeNullOrEmpty();
         }
@@ -79,7 +78,7 @@ namespace VstsAndTfsIntegrationTests
         [TestCase("http://somehost:8080/tfs/DefaultCollection/MyProject/_build/index?buildId=987&view=summary", "http://somehost:8080/tfs/DefaultCollection/MyProject", 987)]
         public void TryParseBuildUrl_should_succeed_with_expected_build_info_from_valid_buildurl(string buildUrl, string expectedProjectUrl, int expectedBuildId)
         {
-            var (success, projectUrl, buildId) = VstsProjectUrlHelper.TryParseBuildUrl(buildUrl);
+            var (success, projectUrl, buildId) = AzureDevOpsIntegration.Settings.ProjectUrlHelper.TryParseBuildUrl(buildUrl);
             success.Should().Be(true);
             projectUrl.Should().BeEquivalentTo(expectedProjectUrl);
             buildId.Should().Be(expectedBuildId);
@@ -92,7 +91,7 @@ namespace VstsAndTfsIntegrationTests
         [TestCase(@"[TestCase(""https://somehost:8080/tfs/DefaultCollection/MyProject/_build/index?buildId=42&view=summary"", ""https://somehost:8080/tfs/DefaultCollection/MyProject"", 42)]")]
         public void TryParseBuildUrl_should_fail_with_invalid_buildurl(string buildUrl)
         {
-            var (success, projectUrl, buildId) = VstsProjectUrlHelper.TryParseBuildUrl(buildUrl);
+            var (success, projectUrl, buildId) = AzureDevOpsIntegration.Settings.ProjectUrlHelper.TryParseBuildUrl(buildUrl);
             success.Should().Be(false);
             projectUrl.Should().BeNullOrEmpty();
             buildId.Should().BeLessThan(0);

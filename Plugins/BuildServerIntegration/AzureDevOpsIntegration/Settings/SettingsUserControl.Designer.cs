@@ -1,6 +1,6 @@
-namespace VstsAndTfsIntegration.Settings
+namespace AzureDevOpsIntegration.Settings
 {
-    partial class VstsAndTfsSettingsUserControl
+    partial class SettingsUserControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -62,7 +62,7 @@ namespace VstsAndTfsIntegration.Settings
             // 
             label3.Anchor = System.Windows.Forms.AnchorStyles.Left;
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(3, 94);
+            label3.Location = new System.Drawing.Point(3, 114);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(117, 26);
             label3.TabIndex = 2;
@@ -72,9 +72,9 @@ namespace VstsAndTfsIntegration.Settings
             // 
             labelBuildIdFilter.AutoSize = true;
             labelBuildIdFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            labelBuildIdFilter.Location = new System.Drawing.Point(126, 120);
+            labelBuildIdFilter.Location = new System.Drawing.Point(126, 140);
             labelBuildIdFilter.Name = "labelBuildIdFilter";
-            labelBuildIdFilter.Size = new System.Drawing.Size(1163, 13);
+            labelBuildIdFilter.Size = new System.Drawing.Size(1100, 13);
             labelBuildIdFilter.TabIndex = 8;
             labelBuildIdFilter.Text = "If needed, use the \'*\' wildcard or enter a Regular Expression";
             // 
@@ -82,7 +82,7 @@ namespace VstsAndTfsIntegration.Settings
             // 
             RestApiTokenLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             RestApiTokenLabel.AutoSize = true;
-            RestApiTokenLabel.Location = new System.Drawing.Point(3, 161);
+            RestApiTokenLabel.Location = new System.Drawing.Point(3, 201);
             RestApiTokenLabel.Name = "RestApiTokenLabel";
             RestApiTokenLabel.Size = new System.Drawing.Size(81, 13);
             RestApiTokenLabel.TabIndex = 12;
@@ -93,10 +93,10 @@ namespace VstsAndTfsIntegration.Settings
             this.labelRegexError.AutoSize = true;
             this.labelRegexError.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelRegexError.ForeColor = System.Drawing.Color.Red;
-            this.labelRegexError.Location = new System.Drawing.Point(126, 138);
+            this.labelRegexError.Location = new System.Drawing.Point(126, 158);
             this.labelRegexError.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.labelRegexError.Name = "labelRegexError";
-            this.labelRegexError.Size = new System.Drawing.Size(1163, 13);
+            this.labelRegexError.Size = new System.Drawing.Size(1100, 13);
             this.labelRegexError.TabIndex = 9;
             this.labelRegexError.Text = "The \'Build definition name\' regular expression is not valid and won\'t be saved!";
             this.labelRegexError.Visible = false;
@@ -107,17 +107,17 @@ namespace VstsAndTfsIntegration.Settings
             this.TfsServer.Location = new System.Drawing.Point(126, 15);
             this.TfsServer.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TfsServer.Name = "TfsServer";
-            this.TfsServer.Size = new System.Drawing.Size(1163, 20);
+            this.TfsServer.Size = new System.Drawing.Size(1100, 20);
             this.TfsServer.TabIndex = 0;
             this.TfsServer.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
             // TfsBuildDefinitionNameFilter
             // 
             this.TfsBuildDefinitionNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TfsBuildDefinitionNameFilter.Location = new System.Drawing.Point(126, 96);
+            this.TfsBuildDefinitionNameFilter.Location = new System.Drawing.Point(126, 116);
             this.TfsBuildDefinitionNameFilter.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TfsBuildDefinitionNameFilter.Name = "TfsBuildDefinitionNameFilter";
-            this.TfsBuildDefinitionNameFilter.Size = new System.Drawing.Size(1163, 20);
+            this.TfsBuildDefinitionNameFilter.Size = new System.Drawing.Size(1100, 20);
             this.TfsBuildDefinitionNameFilter.TabIndex = 3;
             this.TfsBuildDefinitionNameFilter.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
@@ -128,41 +128,43 @@ namespace VstsAndTfsIntegration.Settings
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.label4, 1, 8);
+            this.tableLayoutPanel1.Controls.Add(this.label4, 1, 10);
             this.tableLayoutPanel1.Controls.Add(this.ExtractLink, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(RestApiTokenLabel, 0, 6);
-            this.tableLayoutPanel1.Controls.Add(this.RestApiToken, 1, 6);
+            this.tableLayoutPanel1.Controls.Add(RestApiTokenLabel, 0, 8);
+            this.tableLayoutPanel1.Controls.Add(this.RestApiToken, 1, 8);
             this.tableLayoutPanel1.Controls.Add(label13, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.TfsServer, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(labelBuildIdFilter, 1, 4);
-            this.tableLayoutPanel1.Controls.Add(this.TfsBuildDefinitionNameFilter, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(label3, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.labelRegexError, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.TokenManagementLink, 1, 7);
+            this.tableLayoutPanel1.Controls.Add(labelBuildIdFilter, 1, 5);
+            this.tableLayoutPanel1.Controls.Add(this.TfsBuildDefinitionNameFilter, 1, 4);
+            this.tableLayoutPanel1.Controls.Add(label3, 0, 4);
+            this.tableLayoutPanel1.Controls.Add(this.labelRegexError, 1, 6);
+            this.tableLayoutPanel1.Controls.Add(this.TokenManagementLink, 1, 9);
             this.tableLayoutPanel1.Controls.Add(this.label1, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 9;
+            this.tableLayoutPanel1.RowCount = 11;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1292, 232);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1229, 272);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Location = new System.Drawing.Point(126, 193);
+            this.label4.Location = new System.Drawing.Point(126, 233);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(1163, 39);
+            this.label4.Size = new System.Drawing.Size(1100, 39);
             this.label4.TabIndex = 14;
             this.label4.Text = "You need to create a token with the following scopes:\r\n - \'Build (read)\'\r\n - \'Pro" +
     "ject and team (read)\'";
@@ -173,19 +175,19 @@ namespace VstsAndTfsIntegration.Settings
             this.ExtractLink.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ExtractLink.Location = new System.Drawing.Point(126, 0);
             this.ExtractLink.Name = "ExtractLink";
-            this.ExtractLink.Size = new System.Drawing.Size(1163, 13);
+            this.ExtractLink.Size = new System.Drawing.Size(1100, 13);
             this.ExtractLink.TabIndex = 15;
             this.ExtractLink.TabStop = true;
-            this.ExtractLink.Text = "Extract data from the build url copied in the clipboard";
+            this.ExtractLink.Text = "Extract data from a build result url copied in the clipboard";
             this.ExtractLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ExtractLink_LinkClicked);
             // 
             // RestApiToken
             // 
             this.RestApiToken.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RestApiToken.Location = new System.Drawing.Point(126, 158);
+            this.RestApiToken.Location = new System.Drawing.Point(126, 198);
             this.RestApiToken.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.RestApiToken.Name = "RestApiToken";
-            this.RestApiToken.Size = new System.Drawing.Size(1163, 20);
+            this.RestApiToken.Size = new System.Drawing.Size(1100, 20);
             this.RestApiToken.TabIndex = 4;
             this.RestApiToken.TextChanged += new System.EventHandler(this.TextBox_TextChanged);
             // 
@@ -193,9 +195,9 @@ namespace VstsAndTfsIntegration.Settings
             // 
             this.TokenManagementLink.AutoSize = true;
             this.TokenManagementLink.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TokenManagementLink.Location = new System.Drawing.Point(126, 180);
+            this.TokenManagementLink.Location = new System.Drawing.Point(126, 220);
             this.TokenManagementLink.Name = "TokenManagementLink";
-            this.TokenManagementLink.Size = new System.Drawing.Size(1163, 13);
+            this.TokenManagementLink.Size = new System.Drawing.Size(1100, 13);
             this.TokenManagementLink.TabIndex = 1;
             this.TokenManagementLink.TabStop = true;
             this.TokenManagementLink.Text = "Go to token management page";
@@ -208,13 +210,13 @@ namespace VstsAndTfsIntegration.Settings
             this.label1.Location = new System.Drawing.Point(126, 37);
             this.label1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(1163, 52);
+            this.label1.Size = new System.Drawing.Size(1100, 52);
             this.label1.TabIndex = 13;
-            this.label1.Text = "Examples:\r\n - https://example.visualstudio.com/projectname/\r\n - https://dev.azure" +
-    ".com/example/projectname/\r\n - https://yourhost:8080/tfs/collectionname/projectna" +
-    "me/\r\n";
+            this.label1.Text = "Examples:\r\n - https://dev.azure.com/yourorganization/projectname/\r\n - https://you" +
+    "rhost:8080/tfs/collectionname/projectname/\r\n - https://yourorganization.visualst" +
+    "udio.com/projectname/";
             // 
-            // VstsAndTfsSettingsUserControl
+            // SettingsUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
@@ -222,8 +224,8 @@ namespace VstsAndTfsIntegration.Settings
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "VstsAndTfsSettingsUserControl";
-            this.Size = new System.Drawing.Size(1292, 232);
+            this.Name = "SettingsUserControl";
+            this.Size = new System.Drawing.Size(1229, 272);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);

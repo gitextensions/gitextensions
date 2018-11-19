@@ -1,27 +1,27 @@
 ﻿using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
-namespace VstsAndTfsIntegration.Settings
+namespace AzureDevOpsIntegration.Settings
 {
     /// <summary>
-    /// Describes available settings of the Azure DevOps / VSTS and Team Foundation Build integration plugin
+    /// Describes available settings of the Azure DevOps (or TFS>=2015) Build integration plugin
     /// </summary>
-    public class VstsIntegrationSettings
+    public class IntegrationSettings
     {
-        private const string ProjectUrlKey = "VstsTfsProjectUrl";
-        private const string BuildDefinitionFilterKey = "VstsTfsBuildDefinitionNameFilter";
-        private const string ApiTokenKey = "VstsTfsRestApiToken";
+        private const string ProjectUrlKey = "ProjectUrl";
+        private const string BuildDefinitionFilterKey = "BuildDefinitionNameFilter";
+        private const string ApiTokenKey = "RestApiToken";
 
         /// <summary>
         /// Reads these settings from the given <see cref="ISettingsSource"/>
         /// </summary>
-        public static VstsIntegrationSettings ReadFrom(ISettingsSource config)
+        public static IntegrationSettings ReadFrom(ISettingsSource config)
         {
             var projectUrl = config?.GetString(ProjectUrlKey, "") ?? "";
             var buildDefinitionFilter = config?.GetString(BuildDefinitionFilterKey, "") ?? "";
             var apiToken = config?.GetString(ApiTokenKey, "") ?? "";
 
-            return new VstsIntegrationSettings()
+            return new IntegrationSettings()
             {
                 ProjectUrl = projectUrl,
                 BuildDefinitionFilter = buildDefinitionFilter,
@@ -30,7 +30,7 @@ namespace VstsAndTfsIntegration.Settings
         }
 
         /// <summary>
-        /// Contains the url to the home page of a VSTS/TFS project the build server to integrate belongs to
+        /// Contains the url to the home page of a Azure DevOps / TFS project the build server to integrate belongs to
         /// </summary>
         public string ProjectUrl { get; set; } = "";
 
@@ -40,7 +40,7 @@ namespace VstsAndTfsIntegration.Settings
         public string BuildDefinitionFilter { get; set; } = "";
 
         /// <summary>
-        /// Contains a authentication token which is required and used to request build result information from the VSTS/TFS instance.
+        /// Contains a authentication token which is required and used to request build result information from the Azure DevOps / TFS instance.
         /// </summary>
         public string ApiToken { get; set; } = "";
 

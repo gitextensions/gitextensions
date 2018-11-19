@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
-namespace VstsAndTfsIntegration
+namespace AzureDevOpsIntegration
 {
     /// <summary>
-    /// Provides access to the REST API of a TFS>=2015, VSTS or Azure DevOps instance
+    /// Provides access to the REST API of a Azure DevOps (or TFS>=2015) instance
     /// </summary>
-    public class TfsApiClient : IDisposable
+    public class ApiClient : IDisposable
     {
         private const string BuildDefinitionsUrl = "build/definitions?api-version=2.0";
         private readonly HttpClient _httpClient;
@@ -23,15 +23,15 @@ namespace VstsAndTfsIntegration
         private string _lastBuildDefinitionFilter;
 
         /// <summary>
-        /// Creates a new API client instance for the given VSTS/TFS project, that uses the given authentication token.
+        /// Creates a new API client instance for the given Azure DevOps / TFS project, that uses the given authentication token.
         /// </summary>
         /// <param name="projectUrl">
-        /// The home page url of the VSTS/TFS project the API client shoud provide access to.
+        /// The home page url of the project the API client should provide access to.
         /// </param>
         /// <param name="apiToken">
-        /// The authentication token that is required and used to access the REST API of the VSTS/TFS instance.
+        /// The authentication token that is required and used to access the REST API of the Azure DevOps / TFS instance.
         /// </param>
-        public TfsApiClient(string projectUrl, string apiToken)
+        public ApiClient(string projectUrl, string apiToken)
         {
             _httpClient = new HttpClient();
             InitializeHttpClient(projectUrl, apiToken);
@@ -41,10 +41,10 @@ namespace VstsAndTfsIntegration
         /// Configures the <see cref="HttpClient"/> of the API client instance, so that API requests can be made with it.
         /// </summary>
         /// <param name="projectUrl">
-        /// The home page url of the VSTS/TFS project the API client shoud provide access to.
+        /// The home page url of the Azure DevOps / TFS project the API client should provide access to.
         /// </param>
         /// <param name="apiToken">
-        /// The authentication token that is required and used to access the REST API of the VSTS/TFS instance.
+        /// The authentication token that is required and used to access the REST API of the Azure DevOps / TFS instance.
         /// </param>
         private void InitializeHttpClient(string projectUrl, string apiToken)
         {

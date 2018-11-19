@@ -7,12 +7,12 @@ using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using ResourceManager;
 
-namespace VstsAndTfsIntegration.Settings
+namespace AzureDevOpsIntegration.Settings
 {
     [Export(typeof(IBuildServerSettingsUserControl))]
-    [BuildServerSettingsUserControlMetadata(VstsAndTfsAdapter.PluginName)]
+    [BuildServerSettingsUserControlMetadata(AzureDevOpsAdapter.PluginName)]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public partial class VstsAndTfsSettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
+    public partial class SettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
     {
         private readonly TranslationString _failToExtractDataFromClipboardMessage = new TranslationString("The clipboard doesn't contain a valid build url." + Environment.NewLine + Environment.NewLine +
                 "Please copy the url of the build into the clipboard before retrying." + Environment.NewLine +
@@ -26,9 +26,9 @@ namespace VstsAndTfsIntegration.Settings
         private IEnumerable<string> _remotes;
 
         private bool _isUpdating;
-        private VstsIntegrationSettings _currentSettings = new VstsIntegrationSettings();
+        private IntegrationSettings _currentSettings = new IntegrationSettings();
 
-        public VstsAndTfsSettingsUserControl()
+        public SettingsUserControl()
         {
             InitializeComponent();
             InitializeComplete();
@@ -37,7 +37,7 @@ namespace VstsAndTfsIntegration.Settings
             UpdateView();
         }
 
-        private string TokenManagementUrl => VstsProjectUrlHelper.TryGetTokenManagementUrlFromProject(_currentSettings.ProjectUrl).tokenManagementUrl;
+        private string TokenManagementUrl => ProjectUrlHelper.TryGetTokenManagementUrlFromProject(_currentSettings.ProjectUrl).tokenManagementUrl;
 
         public void Initialize(string defaultProjectName, IEnumerable<string> remotes)
         {
@@ -91,11 +91,11 @@ namespace VstsAndTfsIntegration.Settings
 
         public void LoadSettings(ISettingsSource buildServerConfig)
         {
-            var settings = VstsIntegrationSettings.ReadFrom(buildServerConfig);
+            var settings = IntegrationSettings.ReadFrom(buildServerConfig);
 
             if (string.IsNullOrWhiteSpace(settings.ProjectUrl))
             {
-                var (vstsOrTfsProjectFound, autoDetectedProjectUrl) = VstsProjectUrlHelper.TryDetectProjectFromRemoteUrls(_remotes);
+                var (vstsOrTfsProjectFound, autoDetectedProjectUrl) = ProjectUrlHelper.TryDetectProjectFromRemoteUrls(_remotes);
                 if (vstsOrTfsProjectFound)
                 {
                     settings.ProjectUrl = autoDetectedProjectUrl;
@@ -128,7 +128,7 @@ namespace VstsAndTfsIntegration.Settings
         private async void ExtractLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             var buildUrl = Clipboard.ContainsText() ? Clipboard.GetText() : "";
-            var (success, projectUrl, buildId) = VstsProjectUrlHelper.TryParseBuildUrl(buildUrl);
+            var (success, projectUrl, buildId) = ProjectUrlHelper.TryParseBuildUrl(buildUrl);
             if (success)
             {
                 string buildDefinitionName;
@@ -136,9 +136,9 @@ namespace VstsAndTfsIntegration.Settings
                 {
                     try
                     {
-                        using (var tfsApiHelper = new TfsApiClient(projectUrl, _currentSettings.ApiToken))
+                        using (var apiClient = new ApiClient(projectUrl, _currentSettings.ApiToken))
                         {
-                            buildDefinitionName = await tfsApiHelper.GetBuildDefinitionNameFromIdAsync(buildId) ?? "";
+                            buildDefinitionName = await apiClient.GetBuildDefinitionNameFromIdAsync(buildId) ?? "";
                         }
                     }
                     catch (Exception)
