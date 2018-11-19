@@ -229,7 +229,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
                 if (_hoveredItem != null)
                 {
-                    listView1.Invalidate(listView1.GetItemRect(_hoveredItem.Index));
+                    // The previously hovered item may be already removed from the view, example:
+                    // user locates mouse pointer over an item and triggers data refresh by pressing F5
+                    if (listView1.Items.Contains(_hoveredItem))
+                    {
+                        listView1.Invalidate(listView1.GetItemRect(_hoveredItem.Index));
+                    }
                 }
 
                 if (value != null)
