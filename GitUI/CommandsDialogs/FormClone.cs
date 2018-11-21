@@ -84,6 +84,11 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
+                if (!string.IsNullOrEmpty(_url) && Directory.Exists(_url))
+                {
+                    _NO_TRANSLATE_To.Text = _url;
+                }
+
                 // Try to be more helpful to the user.
                 // Use the clipboard text as a potential source URL.
                 try
