@@ -3012,7 +3012,7 @@ namespace GitUI.CommandsDialogs
                 if (commitInfoPosition == CommitInfoPosition.RightwardFromList)
                 {
                     RevisionsSplitContainer.FixedPanel = FixedPanel.Panel2;
-                    RevisionsSplitContainer.SplitterDistance = RevisionsSplitContainer.Width - width;
+                    RevisionsSplitContainer.SplitterDistance = Math.Max(0, RevisionsSplitContainer.Width - width);
                     RevisionInfo.Parent = RevisionsSplitContainer.Panel2;
                     RevisionGrid.Parent = RevisionsSplitContainer.Panel1;
                 }
