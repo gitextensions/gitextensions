@@ -78,7 +78,7 @@ namespace GitUI.CommitInfo
         private List<string> _branches;
         private string _branchInfo;
         private string _gitDescribeInfo;
-        [CanBeNull] private IList<string> _sortedRefs;
+        [CanBeNull] private IDictionary<string, int> _refsOrderDict;
         private int _revisionInfoHeight;
         private int _commitMessageHeight;
 
@@ -227,7 +227,7 @@ namespace GitUI.CommitInfo
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadLinksForRevisionAsync(_revision)).FileAndForget();
 
-                if (_sortedRefs == null)
+                if (_refsOrderDict == null)
                 {
                     ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadSortedRefsAsync()).FileAndForget();
                 }
@@ -295,10 +295,21 @@ namespace GitUI.CommitInfo
                 async Task LoadSortedRefsAsync()
                 {
                     await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                    _sortedRefs = Module.GetSortedRefs().ToList();
+                    _refsOrderDict = ToDictionary(Module.GetSortedRefs());
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
                     UpdateRevisionInfo();
+
+                    IDictionary<string, int> ToDictionary(IReadOnlyList<string> list)
+                    {
+                        var dict = new Dictionary<string, int>();
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            dict.Add(list[i], i);
+                        }
+
+                        return dict;
+                    }
                 }
 
                 async Task LoadAnnotatedTagInfoAsync(IReadOnlyList<IGitRef> refs)
@@ -429,7 +440,7 @@ namespace GitUI.CommitInfo
 
         private void UpdateRevisionInfo()
         {
-            if (_sortedRefs != null)
+            if (_refsOrderDict != null)
             {
                 if (_annotatedTagsMessages != null &&
                     _annotatedTagsMessages.Count > 0 &&
@@ -445,13 +456,13 @@ namespace GitUI.CommitInfo
                         .Select(r => r.LocalName)
                         .ToList();
 
-                    thisRevisionTagNames.Sort(new ItemTpComparer(_sortedRefs, "refs/tags/"));
+                    thisRevisionTagNames.Sort(new ItemTpComparer(_refsOrderDict, "refs/tags/"));
                     _annotatedTagsInfo = GetAnnotatedTagsInfo(thisRevisionTagNames, _annotatedTagsMessages);
                 }
 
                 if (_tags != null && string.IsNullOrEmpty(_tagInfo))
                 {
-                    _tags.Sort(new ItemTpComparer(_sortedRefs, "refs/tags/"));
+                    _tags.Sort(new ItemTpComparer(_refsOrderDict, "refs/tags/"));
                     if (_tags.Count > MaximumDisplayedRefs)
                     {
                         _tags[MaximumDisplayedRefs - 2] = "…";
@@ -464,7 +475,7 @@ namespace GitUI.CommitInfo
 
                 if (_branches != null && string.IsNullOrEmpty(_branchInfo))
                 {
-                    _branches.Sort(new ItemTpComparer(_sortedRefs, "refs/heads/"));
+                    _branches.Sort(new ItemTpComparer(_refsOrderDict, "refs/heads/"));
                     if (_branches.Count > MaximumDisplayedRefs)
                     {
                         _branches[MaximumDisplayedRefs - 2] = "…";
@@ -711,12 +722,12 @@ namespace GitUI.CommitInfo
 
         private sealed class ItemTpComparer : IComparer<string>
         {
-            private readonly IList<string> _otherList;
+            private readonly IDictionary<string, int> _orderDict;
             private readonly string _prefix;
 
-            public ItemTpComparer(IList<string> otherList, string prefix)
+            public ItemTpComparer(IDictionary<string, int> orderDict, string prefix)
             {
-                _otherList = otherList;
+                _orderDict = orderDict;
                 _prefix = prefix;
             }
 
@@ -726,21 +737,18 @@ namespace GitUI.CommitInfo
 
                 int IndexOf(string s)
                 {
-                    var head = s.StartsWith("remotes/") ? "refs/" : _prefix;
-                    var tail = s;
-                    var headLength = head.Length;
-                    var length = headLength + s.Length;
-
-                    for (var i = 0; i < _otherList.Count; i++)
+                    if (s.StartsWith("remotes/"))
                     {
-                        var other = _otherList[i];
+                        s = "refs/" + s;
+                    }
+                    else
+                    {
+                        s = _prefix + s;
+                    }
 
-                        if (other.Length == length &&
-                            other.StartsWith(head) &&
-                            other.IndexOf(tail, headLength) == headLength)
-                        {
-                            return i;
-                        }
+                    if (_orderDict.TryGetValue(s, out var index))
+                    {
+                        return index;
                     }
 
                     return -1;
