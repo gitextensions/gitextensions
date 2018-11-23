@@ -155,6 +155,14 @@ try {
     python set_version_to.py -v $newVersion -t $newVersion-beta1
 
     $env:SKIP_PAUSE=1
+    
+    # restore packages and rebuild everything
+    ..\.nuget\nuget install -OutputDirectory ..\packages
+    pushd ..\
+    msbuild /t:Restore
+    msbuild /t:Rebuild /p:Configuration=Release
+    popd
+
     .\BuildInstallers.cmd
 
     # Set IsPortable in config to true
