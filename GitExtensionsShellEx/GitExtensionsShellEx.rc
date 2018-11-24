@@ -67,12 +67,12 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "FileDescription", "Git Extensions"
+            VALUE "FileDescription", "Shell extensions for Windows Explorer"
             VALUE "FileVersion", "2.99.90"
-            VALUE "InternalName", "Git Extensions"
+            VALUE "InternalName", "GitExtensions"
             VALUE "LegalCopyright", "Copyright 2008-2018"
             VALUE "OriginalFilename", "GitExtensionsShellEx.dll"
-            VALUE "ProductName", "Git Extensions"
+            VALUE "ProductName", "GitExtensions"
             VALUE "ProductVersion", "3.00.a1"
         END
     END

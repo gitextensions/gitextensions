@@ -47,8 +47,11 @@
     <PackageReference Include="Microsoft.TeamFoundation.Client" Version="11.0.51106.2" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\TfsInterop.Common\Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\TfsInterop.Common\TfsHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TfsIntegration\TfsIntegration.csproj">

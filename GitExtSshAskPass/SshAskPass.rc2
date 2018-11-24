@@ -29,13 +29,13 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "FileDescription", "Git Extensions"
             VALUE "FileVersion", "2.99.90"
-            VALUE "InternalName", "Git Extensions"
+            VALUE "FileDescription", "Interactively ask for SSH password"
+            VALUE "InternalName", "GitExtensions"
             VALUE "LegalCopyright", "Copyright 2013-2018"
             VALUE "OriginalFilename", "GitExtSshAskPass.exe"
-            VALUE "ProductName", "Git Extensions"
             VALUE "ProductVersion", "3.00.a1"
+            VALUE "ProductName", "GitExtensions"
         END
     END
     BLOCK "VarFileInfo"
