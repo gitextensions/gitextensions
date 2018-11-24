@@ -24,7 +24,7 @@
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <SuppressIces>ICE61;ICE80;ICE91;ICE38</SuppressIces>
-    <DefineConstants>Version=$(Version);NumericVersion=$(NumericVersion)</DefineConstants>
+    <DefineConstants>Version=$(Version);NumericVersion=$(NumericVersion);PluginManagerSourceDir=..\Plugins\GitExtensions.PluginManager\Output</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -40,6 +40,7 @@
     <DefineConstants>Version=$(Version);NumericVersion=$(NumericVersion)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="PluginManager.wxs" />
     <Compile Include="Product.wxs" />
     <Compile Include="UI\CancelDlg.wxs" />
     <Compile Include="UI\CustomizeDlg.wxs" />
@@ -91,5 +92,11 @@
     <Exec Command="
 	call BuildGitExtNative.cmd $(Configuration) build">
     </Exec>
+  </Target>
+  <Target Name="HeatPluginMananger" BeforeTargets="BeforeBuild">
+    <HeatDirectory Directory="..\Plugins\GitExtensions.PluginManager\Output" OutputFile="PluginManager.wxs" ComponentGroupName="PluginMananger" DirectoryRefId="PluginsDir" PreprocessorVariable="var.PluginManagerSourceDir" AutogenerateGuids="true" ToolPath="$(WixToolPath)" SuppressFragments="true" SuppressRegistry="true" SuppressRootDirectory="true" />
+  </Target>
+  <Target Name="DownloadPluginMananger" BeforeTargets="HeatPluginMananger">
+    <Exec Command="powershell.exe .\Download-PluginManager.ps1 -ExtractRootPath '..\Plugins\GitExtensions.PluginManager'" />
   </Target>
 </Project>
