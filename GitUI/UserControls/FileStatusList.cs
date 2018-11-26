@@ -949,7 +949,7 @@ namespace GitUI
             var minWidth = FileStatusListView.ClientSize.Width;
 
             var contentWidth = FileStatusListView.Items()
-                .Where(item => item.Bounds.IntersectsWith(FileStatusListView.ClientRectangle))
+                .Where(item => item.BoundsOrEmpty().IntersectsWith(FileStatusListView.ClientRectangle))
                 .Select(item =>
                 {
                     var (_, _, textStart, textWidth, _) = FormatListViewItem(item, pathFormatter, FileStatusListView.ClientSize.Width);
