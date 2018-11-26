@@ -1180,7 +1180,7 @@ namespace GitUI
             }
 
             compareToWorkingDirectoryMenuItem.Enabled = firstSelectedRevision != null && firstSelectedRevision.ObjectId != ObjectId.WorkTreeId;
-            compareWithCurrentBranchToolStripMenuItem.Enabled = Module.GetSelectedBranch().IsNotNullOrWhitespace();
+            compareWithCurrentBranchToolStripMenuItem.Enabled = Module.GetSelectedBranch(setDefaultIfEmpty: false).IsNotNullOrWhitespace();
             compareSelectedCommitsMenuItem.Enabled = firstSelectedRevision != null && secondSelectedRevision != null;
 
             if (Parent != null &&
@@ -2338,7 +2338,7 @@ namespace GitUI
 
         private void CompareWithCurrentBranchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var headBranch = Module.GetSelectedBranch();
+            var headBranch = Module.GetSelectedBranch(setDefaultIfEmpty: false);
             if (headBranch.IsNullOrWhiteSpace())
             {
                 MessageBox.Show(this, "No branch is currently selected");

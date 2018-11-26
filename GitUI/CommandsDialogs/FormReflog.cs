@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
@@ -50,7 +51,7 @@ namespace GitUI.CommandsDialogs
         {
             _isDirtyDir = UICommands.Module.IsDirtyDir();
             _currentBranch = UICommands.Module.GetSelectedBranch();
-            _isBranchCheckedOut = _currentBranch != "(no branch)";
+            _isBranchCheckedOut = _currentBranch != DetachedHeadParser.DetachedBranch;
             linkCurrentBranch.Text = "current branch (" + _currentBranch + ")";
             linkCurrentBranch.Visible = _isBranchCheckedOut;
             _lastHitRowIndex = 0;

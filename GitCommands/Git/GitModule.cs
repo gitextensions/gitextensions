@@ -2782,7 +2782,7 @@ namespace GitCommands
         }
 
         /// <summary>Dirty but fast. This sometimes fails.</summary>
-        public static string GetSelectedBranchFast([CanBeNull] string repositoryPath)
+        public static string GetSelectedBranchFast([CanBeNull] string repositoryPath, bool setDefaultIfEmpty = true)
         {
             if (string.IsNullOrEmpty(repositoryPath))
             {
@@ -2804,7 +2804,7 @@ namespace GitCommands
 
             if (!headFileContents.StartsWith("ref: "))
             {
-                return DetachedHeadParser.DetachedBranch;
+                return setDefaultIfEmpty ? DetachedHeadParser.DetachedBranch : string.Empty;
             }
 
             const string prefix = "ref: refs/heads/";
@@ -2817,10 +2817,14 @@ namespace GitCommands
             return headFileContents.Substring(prefix.Length).TrimEnd();
         }
 
-        /// <summary>Gets the current branch; or "(no branch)" if HEAD is detached.</summary>
-        public string GetSelectedBranch(string repositoryPath)
+        /// <summary>
+        /// Gets the current branch
+        /// </summary>
+        /// <param name="setDefaultIfEmpty">Return "(no branch)" if detached</param>
+        /// <returns>Current branchname</returns>
+        public string GetSelectedBranch(bool setDefaultIfEmpty)
         {
-            string head = GetSelectedBranchFast(repositoryPath);
+            string head = GetSelectedBranchFast(WorkingDir, setDefaultIfEmpty);
 
             if (!string.IsNullOrEmpty(head))
             {
@@ -2832,12 +2836,12 @@ namespace GitCommands
 
             return result.ExitCode == 0
                 ? result.StandardOutput
-                : DetachedHeadParser.DetachedBranch;
+                : setDefaultIfEmpty ? DetachedHeadParser.DetachedBranch : string.Empty;
         }
 
         public string GetSelectedBranch()
         {
-            return GetSelectedBranch(WorkingDir);
+            return GetSelectedBranch(true);
         }
 
         public bool IsDetachedHead()
