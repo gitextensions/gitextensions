@@ -2268,7 +2268,7 @@ namespace GitUI.CommandsDialogs
                     var module = new GitModule(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
                     args = new GitArgumentBuilder("log")
                     {
-                        "--pretty = format:\"    %m %h - %s\"",
+                        "--pretty=format:\"    %m %h - %s\"",
                         "--no-merges",
                         $"{from}...{to}"
                     };
