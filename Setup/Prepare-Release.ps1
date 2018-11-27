@@ -124,7 +124,6 @@ function Update-Contributors {
     }
 }
 
-
 pushd $PSScriptRoot
 
 try {
@@ -149,12 +148,25 @@ try {
     Generate-Changelog -milestones $milestoneNumbers
 
     Write-Host ----------------------------------------------------------------------
+    Write-Host Download PluginManager
+    Write-Host ----------------------------------------------------------------------
+    .\Download-PluginManager.ps1 -ExtractRootPath '..\Plugins\GitExtensions.PluginManager'
+
+    Write-Host ----------------------------------------------------------------------
     Write-Host Compile and package
     Write-Host ----------------------------------------------------------------------
     # preparing the build artifacts
     python set_version_to.py -v $newVersion -t $newVersion-beta1
 
     $env:SKIP_PAUSE=1
+    
+    # restore packages and rebuild everything
+    ..\.nuget\nuget install -OutputDirectory ..\packages
+    pushd ..\
+    msbuild /t:Restore
+    msbuild /t:Rebuild /p:Configuration=Release
+    popd
+
     .\BuildInstallers.cmd
 
     # Set IsPortable in config to true

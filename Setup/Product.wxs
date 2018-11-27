@@ -304,8 +304,8 @@
       <Component Id="TfsInterop.Vs2015.dll" Guid="*">
         <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\$(var.Configuration)\TfsInterop.Vs2015.dll" />
       </Component>
-      <Component Id="VstsAndTfsIntegration.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\VstsAndTfsIntegration\bin\$(var.Configuration)\VstsAndTfsIntegration.dll" />
+      <Component Id="AzureDevOpsIntegration.dll" Guid="*">
+        <File Source="..\Plugins\BuildServerIntegration\AzureDevOpsIntegration\bin\$(var.Configuration)\AzureDevOpsIntegration.dll" />
       </Component>
       <Component Id="Microsoft.VisualStudio.Services.WebApi.dll" Guid="*">
         <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\$(var.Configuration)\Microsoft.VisualStudio.Services.WebApi.dll" />
@@ -680,8 +680,8 @@
           <ComponentRef Id="System.Net.Http.Formatting.dll" />
           <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
-        <Feature Id="VstsAndTfsIntegration" Title="Vsts and Tfs >= 2015 integration" Level="1">
-          <ComponentRef Id="VstsAndTfsIntegration.dll" />
+        <Feature Id="AzureDevOpsIntegration" Title="Azure DevOps and TFS >= 2015 integration" Level="1">
+          <ComponentRef Id="AzureDevOpsIntegration.dll" />
           <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
         <Feature Id="JiraCommitHintPlugin" Title="Jira Commit Hint Plugin" Level="1">
@@ -692,6 +692,7 @@
           <ComponentRef Id="NString.dll" />
           <ComponentRef Id="System.Collections.Immutable.dll" />
         </Feature>
+        <ComponentGroupRef Id="PluginMananger" />
       </Feature>
       <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
         <ComponentRef Id="GitExtensions.desktop" />

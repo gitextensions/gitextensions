@@ -1,3 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+
+[assembly: AssemblyDescription("GitExtensions shared resource manager")]
 
 [assembly: InternalsVisibleTo("ResourceManagerTests")]

@@ -1,44 +1,59 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using GitUI;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
-namespace VstsAndTfsIntegration
+namespace AzureDevOpsIntegration
 {
     /// <summary>
-    /// For VSTS and TFS >=2015
+    /// Provides access to the REST API of a Azure DevOps (or TFS>=2015) instance
     /// </summary>
-    public class TfsApiHelper
+    public class ApiClient : IDisposable
     {
-        private const string BuildDefinitionsUrl = "_apis/build/definitions?api-version=2.0";
+        private const string BuildDefinitionsUrl = "build/definitions?api-version=2.0";
         private readonly HttpClient _httpClient;
-        private string _buildDefinitionsToQuery;
 
-        public TfsApiHelper(HttpClient httpClient)
+        private string _buildDefinitionsToQuery;
+        private string _lastBuildDefinitionFilter;
+
+        /// <summary>
+        /// Creates a new API client instance for the given Azure DevOps / TFS project, that uses the given authentication token.
+        /// </summary>
+        /// <param name="projectUrl">
+        /// The home page url of the project the API client should provide access to.
+        /// </param>
+        /// <param name="apiToken">
+        /// The authentication token that is required and used to access the REST API of the Azure DevOps / TFS instance.
+        /// </param>
+        public ApiClient(string projectUrl, string apiToken)
         {
-            _httpClient = httpClient;
+            _httpClient = new HttpClient();
+            InitializeHttpClient(projectUrl, apiToken);
         }
 
-        private void InitializeHttpClient(string serverUrl, string projectName, string personalAccessToken)
+        /// <summary>
+        /// Configures the <see cref="HttpClient"/> of the API client instance, so that API requests can be made with it.
+        /// </summary>
+        /// <param name="projectUrl">
+        /// The home page url of the Azure DevOps / TFS project the API client should provide access to.
+        /// </param>
+        /// <param name="apiToken">
+        /// The authentication token that is required and used to access the REST API of the Azure DevOps / TFS instance.
+        /// </param>
+        private void InitializeHttpClient(string projectUrl, string apiToken)
         {
-            _httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
-                Convert.ToBase64String(
-                    System.Text.Encoding.ASCII.GetBytes($":{personalAccessToken}")));
+            var apiTokenHeaderValue = Convert.ToBase64String(Encoding.ASCII.GetBytes($":{apiToken}"));
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", apiTokenHeaderValue);
 
-            var hostUri = new Uri(serverUrl);
-
-            // Uri constructor takes care of ensuring there's a slash after serverUrl, as well as path encoding projectName.
-            _httpClient.BaseAddress = new Uri(hostUri, projectName + "/");
+            _httpClient.BaseAddress = new Uri(projectUrl.EndsWith("/") ? projectUrl + "_apis/" : projectUrl + "/_apis/");
         }
 
         private async Task<T> HttpGetAsync<T>(string url)
@@ -85,34 +100,43 @@ namespace VstsAndTfsIntegration
             return null;
         }
 
-        public void ConnectToTfsServer(string serverUrl, string teamCollection, string projectName, string restApiToken, string buildDefinitionNameFilter)
+        /// <summary>
+        /// Gets the name of the build definition a given build has been built with.
+        /// </summary>
+        /// <param name="buildId">
+        /// The id of the build to get the build definition name for.
+        /// </param>
+        public async Task<string> GetBuildDefinitionNameFromIdAsync(int buildId)
         {
-            try
-            {
-                InitializeHttpClient(serverUrl, projectName, restApiToken);
-
-                var taskServerInit = ThreadHelper.JoinableTaskFactory.RunAsync(async () => await GetBuildDefinitionsAsync(buildDefinitionNameFilter));
-                _buildDefinitionsToQuery = taskServerInit.Join();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
+            var build = await HttpGetAsync<Build>($"build/builds/{buildId}?api-version=2.0");
+            return build.Definition.Name;
         }
 
-        public async Task<IEnumerable<Build>> QueryBuildsAsync(DateTime? sinceDate, bool? running)
+        public async Task<IEnumerable<Build>> QueryBuildsAsync(string buildDefinitionFilter, DateTime? sinceDate, bool? running)
         {
+            if (_buildDefinitionsToQuery == null || !string.Equals(_lastBuildDefinitionFilter, buildDefinitionFilter, StringComparison.OrdinalIgnoreCase))
+            {
+                _buildDefinitionsToQuery = await GetBuildDefinitionsAsync(buildDefinitionFilter);
+                _lastBuildDefinitionFilter = buildDefinitionFilter;
+            }
+
             if (_buildDefinitionsToQuery == null)
             {
                 return Enumerable.Empty<Build>();
             }
 
-            var builds = (await HttpGetAsync<ListWrapper<Build>>($"_apis/build/builds?api-version=2.0&definitions={_buildDefinitionsToQuery}")).Value;
+            var builds = (await HttpGetAsync<ListWrapper<Build>>($"build/builds?api-version=2.0&definitions={_buildDefinitionsToQuery}")).Value;
 
             return builds
                 .Where(b => !running.HasValue || running.Value == b.IsInProgress)
                 .Where(b => !sinceDate.HasValue || b.StartTime >= sinceDate.Value)
                 .ToList();
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 
@@ -129,7 +153,7 @@ namespace VstsAndTfsIntegration
         public string Url { get; set; }
     }
 
-    internal class BuildDefinition
+    public class BuildDefinition
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -145,6 +169,7 @@ namespace VstsAndTfsIntegration
         public string Status { get; set; }
         public string BuildNumber { get; set; }
         public string Result { get; set; }
+        public BuildDefinition Definition { get; set; }
         public BuildLinks _links { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? FinishTime { get; set; }

@@ -58,6 +58,7 @@
     <Compile Include="ImpactControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -1,51 +1,39 @@
 using System;
 using System.ComponentModel.Composition;
-using System.Net.Http;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using AzureDevOpsIntegration.Settings;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
-namespace VstsAndTfsIntegration
+namespace AzureDevOpsIntegration
 {
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class)]
-    public class VstsAndTfsIntegrationMetadata : BuildServerAdapterMetadataAttribute
+    public class AzureDevOpsIntegrationMetadata : BuildServerAdapterMetadataAttribute
     {
-        public VstsAndTfsIntegrationMetadata(string buildServerType)
+        public AzureDevOpsIntegrationMetadata(string buildServerType)
             : base(buildServerType)
         {
         }
     }
 
+    /// <summary>
+    /// Provides build server integration for Azure DevOps (or TFS>=2015) into GitExtensions
+    /// </summary>
     [Export(typeof(IBuildServerAdapter))]
-    [VstsAndTfsIntegrationMetadata(PluginName)]
+    [AzureDevOpsIntegrationMetadata(PluginName)]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    internal class VstsAndTfsAdapter : IBuildServerAdapter
+    internal class AzureDevOpsAdapter : IBuildServerAdapter
     {
-        public const string PluginName = "VSTS and Team Foundation Server (since TFS2015)";
-
-        public const string VstsTfsServerUrlSettingKey = "VstsTfsServerUrl";
-        public const string VstsTfsCollectionNameSettingKey = "VstsTfsCollectionName";
-        public const string VstsTfsProjectNameSettingKey = "VstsTfsProjectName";
-        public const string VstsTfsBuildDefinitionNameFilterSettingKey = "VstsTfsBuildDefinitionNameFilter";
-        public const string VstsTfsRestApiTokenSettingKey = "VstsTfsRestApiToken";
+        public const string PluginName = "Azure DevOps and Team Foundation Server (since TFS2015)";
 
         private IBuildServerWatcher _buildServerWatcher;
-        private TfsApiHelper _tfsHelper;
-        private string _tfsServer;
-        private string _tfsTeamCollectionName;
-        private string _projectName;
-        private string _restApiToken;
-        private readonly HttpClient _httpClient;
-
-        public VstsAndTfsAdapter()
-        {
-            _httpClient = new HttpClient();
-        }
+        private IntegrationSettings _settings;
+        private ApiClient _apiClient;
 
         public void Initialize(IBuildServerWatcher buildServerWatcher, ISettingsSource config, Func<ObjectId, bool> isCommitInRevisionGrid = null)
         {
@@ -55,29 +43,21 @@ namespace VstsAndTfsIntegration
             }
 
             _buildServerWatcher = buildServerWatcher;
+            _settings = IntegrationSettings.ReadFrom(config);
 
-            _tfsServer = config.GetString(VstsTfsServerUrlSettingKey, null);
-            _tfsTeamCollectionName = config.GetString(VstsTfsCollectionNameSettingKey, null);
-            _projectName = _buildServerWatcher.ReplaceVariables(config.GetString(VstsTfsProjectNameSettingKey, null));
-            _restApiToken = config.GetString(VstsTfsRestApiTokenSettingKey, null);
-            var tfsBuildDefinitionNameFilterSetting = config.GetString(VstsTfsBuildDefinitionNameFilterSettingKey, "");
-            if (string.IsNullOrWhiteSpace(_tfsServer)
-                || string.IsNullOrWhiteSpace(_tfsTeamCollectionName)
-                || string.IsNullOrWhiteSpace(_projectName)
-                || string.IsNullOrWhiteSpace(_restApiToken)
-                || !BuildServerSettingsHelper.IsRegexValid(tfsBuildDefinitionNameFilterSetting))
+            if (!_settings.IsValid())
             {
                 return;
             }
 
-            _tfsHelper = new TfsApiHelper(_httpClient);
-            _tfsHelper.ConnectToTfsServer(_tfsServer, _tfsTeamCollectionName, _projectName, _restApiToken, tfsBuildDefinitionNameFilterSetting);
+            var projectUrl = _buildServerWatcher.ReplaceVariables(_settings.ProjectUrl);
+            _apiClient = new ApiClient(projectUrl, _settings.ApiToken);
         }
 
         /// <summary>
         /// Gets a unique key which identifies this build server.
         /// </summary>
-        public string UniqueKey => _tfsServer + "/" + _tfsTeamCollectionName + "/" + _projectName;
+        public string UniqueKey => _settings?.ProjectUrl ?? throw new InvalidOperationException($"{nameof(AzureDevOpsAdapter)} is not yet initialized");
 
         public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
         {
@@ -98,7 +78,7 @@ namespace VstsAndTfsIntegration
         {
             try
             {
-                var builds = await _tfsHelper.QueryBuildsAsync(sinceDate, running);
+                var builds = await _apiClient.QueryBuildsAsync(_settings.BuildDefinitionFilter, sinceDate, running);
 
                 Parallel.ForEach(builds, detail => { observer.OnNext(CreateBuildInfo(detail)); });
             }
@@ -189,7 +169,7 @@ namespace VstsAndTfsIntegration
 
         public void Dispose()
         {
-            _httpClient?.Dispose();
+            _apiClient?.Dispose();
             GC.SuppressFinalize(this);
         }
     }

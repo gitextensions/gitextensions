@@ -1,4 +1,7 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Reflection;
+using System.Runtime.CompilerServices;
+
+[assembly: AssemblyDescription("GitExtensions common")]
 
 [assembly: InternalsVisibleTo("GitExtensions")]
 [assembly: InternalsVisibleTo("CommonTestUtils")]
