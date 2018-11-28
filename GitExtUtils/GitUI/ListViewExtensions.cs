@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using GitCommands;
 
@@ -57,5 +59,17 @@ namespace GitUI
 
             return listView.SelectedItems[listView.SelectedItems.Count - 1];
         }
+
+        /// <summary>
+        /// A workaround for <see cref="ListViewItem.Bounds"/> which throws <see cref="ArgumentException"/>
+        /// on item from a collapsed <see cref="ListViewGroup"/>
+        /// </summary>
+        public static Rectangle BoundsOrEmpty(this ListViewItem item) =>
+            (Rectangle)_getItemRectOrEmptyMethod.Value.Invoke(item.ListView, new object[] { item.Index });
+
+        private static readonly Lazy<MethodInfo> _getItemRectOrEmptyMethod =
+            new Lazy<MethodInfo>(() => typeof(ListView).GetMethod(
+                "GetItemRectOrEmpty",
+                BindingFlags.Instance | BindingFlags.NonPublic));
     }
 }
