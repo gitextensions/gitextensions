@@ -62,32 +62,83 @@ test_script:
     $codecov = "packages\Codecov.$codecov_version\tools\codecov.exe"
     &$codecov -f ".\OpenCover.GitExtensions.xml"
 
-# scripts to run after tests
-after_test:
-- ps: |
-    & Setup\BuildInstallers.cmd
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    & Setup\Set-Portable.ps1 -IsPortable
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    & Setup\MakePortableArchive.cmd Release $env:APPVEYOR_BUILD_VERSION
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    & Setup\Set-Portable.ps1
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-
-artifacts:
-    # upload the generated portable archive only
-  - path: 'Setup/GitExtensions-Portable-*.zip'
 
 # here we are going to override common configuration
 for:
 
-# configuration for all branches starting from "dev-"
-# build in Debug mode and deploy locally for testing
+# configuration for all branches except release/*
+-
+  branches:
+    except:
+      - /release\/.*/
+
+  # scripts to run after tests
+  after_test:
+  - ps: |
+      & Setup\BuildInstallers.cmd
+      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+      & Setup\Set-Portable.ps1
+      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+      & Setup\MakePortableArchive.cmd Release $env:APPVEYOR_BUILD_VERSION
+      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+
+  artifacts:
+    # upload the generated portable archive only
+    - path: 'Setup/GitExtensions-Portable-*.zip'
+
+# configuration for release branches ONLY
 -
   branches:
     only:
       - /release\/.*/
 
-  artifacts:
-    # upload the generated installer
-    - path: 'Setup/GitExtensions-*.msi'
+  environment:
+    spciuser:
+      secure: 4QXP0320t58i/t7YdtrdLYxV86fBFEd81QVGC2RN1yAKb3o5/F/xG39uKOJniyli
+
+  # scripts to run after tests
+  after_test:
+  - ps: |
+      # -------------------------------
+      # build artifacts
+      # -------------------------------
+      & Setup\BuildInstallers.cmd
+      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+      & Setup\Set-Portable.ps1 -IsPortable
+      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+      & Setup\MakePortableArchive.cmd Release $env:APPVEYOR_BUILD_VERSION
+      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+      & Setup\Set-Portable.ps1
+      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+      # -------------------------------
+      # sign artifacts
+      # -------------------------------
+      pushd .\Setup
+      [Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+      Invoke-WebRequest -Uri https://app.signpath.io/API/v1/Tools/SignPath.psm1 -OutFile .\SignPath.psm1
+      if (!(Test-Path .\SignPath.psm1)) {
+          throw 'Unable to download https://app.signpath.io/API/v1/Tools/SignPath.psm1'
+      }
+      Import-Module .\SignPath.psm1 -Force;
+      # get files
+      $msi = (Resolve-Path GitExtensions-*.msi)[0].Path;
+      $zip = (Resolve-Path GitExtensions-Portable-*.zip)[0].Path;
+      # archive files so we send them all in one go
+      Compress-Archive -LiteralPath $msi, $zip -CompressionLevel NoCompression -DestinationPath .\combined.zip -Force
+      Submit-SigningRequest `
+          -InputArtifactPath .\combined.zip `
+          -CIUserToken $env:spciuser `
+          -OrganizationId '7c19b2cf-90f7-4d15-9b12-1b615f7c18c4' `
+          -SigningPolicyId '8efd636e-c408-4406-a14a-1d481f6163bf' `
+          -WaitForCompletion `
+          -WaitForCompletionTimeoutInSeconds 180 `
+          -Force
+      # extract signed artifacts to Signed folder
+      if (($LastExitCode -ne 0) -or !(Test-Path .\combined.signed.zip)) {
+          $host.SetShouldExit(-1)
+      }
+      Expand-Archive  -LiteralPath .\combined.signed.zip -DestinationPath .\Signed
+      # -------------------------------
+      # publish artifacts
+      # -------------------------------
+      Get-ChildItem .\Signed\*.* | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
