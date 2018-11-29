@@ -71,7 +71,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void linkGitRevParse_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(@"https://www.kernel.org/pub/software/scm/git/docs/git-rev-parse.html#_specifying_revisions");
+            Process.Start(@"https://git-scm.com/docs/git-rev-parse#_specifying_revisions");
         }
 
         private void LoadTagsAsync()
