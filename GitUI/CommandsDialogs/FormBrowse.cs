@@ -1729,7 +1729,7 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                Process.Start("http://git-extensions-documentation.readthedocs.org/en/release-2.51/");
+                Process.Start("http://git-extensions-documentation.readthedocs.org/en/release-3.00/");
             }
             catch (Win32Exception)
             {
