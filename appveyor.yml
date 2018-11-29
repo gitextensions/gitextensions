@@ -94,7 +94,7 @@ for:
 
   environment:
     spciuser:
-      secure: 4QXP0320t58i/t7YdtrdLYxV86fBFEd81QVGC2RN1yAKb3o5/F/xG39uKOJniyli
+      secure: d/ak/yIuPjpVeWl+gDR0Yl1s8L4AGP+sn46jqGl7EvVZMq0bhzZBFwBCm9JTy0P9
 
   # scripts to run after tests
   after_test:
@@ -124,20 +124,25 @@ for:
       $msi = (Resolve-Path GitExtensions-*.msi)[0].Path;
       $zip = (Resolve-Path GitExtensions-Portable-*.zip)[0].Path;
       # archive files so we send them all in one go
-      Compress-Archive -LiteralPath $msi, $zip -CompressionLevel NoCompression -DestinationPath .\combined.zip -Force
+      $combined = ".\combined.$($env:APPVEYOR_BUILD_VERSION).zip"
+      $combinedSigned = ".\combined.$($env:APPVEYOR_BUILD_VERSION).signed.zip"
+      Compress-Archive -LiteralPath $msi, $zip -CompressionLevel NoCompression -DestinationPath $combined -Force
+      # sign
+      $description = "https://ci.appveyor.com/project/gitextensions/gitextensions/builds/$env:APPVEYOR_BUILD_ID\n$env:APPVEYOR_REPO_COMMIT_MESSAGE\n$env:APPVEYOR_REPO_BRANCH from $env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH";
       Submit-SigningRequest `
-          -InputArtifactPath .\combined.zip `
+          -InputArtifactPath $combined `
+          -Description $description `
           -CIUserToken $env:spciuser `
           -OrganizationId '7c19b2cf-90f7-4d15-9b12-1b615f7c18c4' `
-          -SigningPolicyId '8efd636e-c408-4406-a14a-1d481f6163bf' `
+          -SigningPolicyId '5c9879c7-0dea-4303-8e5b-fc4192a7b0de' `
           -WaitForCompletion `
           -WaitForCompletionTimeoutInSeconds 180 `
           -Force
       # extract signed artifacts to Signed folder
-      if (($LastExitCode -ne 0) -or !(Test-Path .\combined.signed.zip)) {
+      if (($LastExitCode -ne 0) -or !(Test-Path $combinedSigned)) {
           $host.SetShouldExit(-1)
       }
-      Expand-Archive  -LiteralPath .\combined.signed.zip -DestinationPath .\Signed
+      Expand-Archive  -LiteralPath $combinedSigned -DestinationPath .\Signed
       # -------------------------------
       # publish artifacts
       # -------------------------------
