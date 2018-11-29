@@ -13,7 +13,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a> 
 
 The work has been split into two streams:
- * version 3.0x - **[RC1 is available](https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00-rc1)**!
+ * version 3.0x - **[RC2 is available](https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00-rc2)**!
  * version 2.5x
 
 ### Version 3.0x
