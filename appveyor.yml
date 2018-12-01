@@ -99,6 +99,17 @@ for:
   # scripts to run after tests
   after_test:
   - ps: |
+      # we have injected version number in several files, rendering the repo "dirty"
+      # assume all these files unchanged, so we don't get "is dirty" flag for our release builds
+      pushd GitExtensionsDoc
+      git reset --hard
+      popd
+      git update-index --assume-unchanged -- CommonAssemblyInfo.cs CommonAssemblyInfoExternals.cs GitExtSshAskPass/SshAskPass.rc2 GitExtensionsShellEx/GitExtensionsShellEx.rc Setup/MakeInstallers.cmd GitExtensionsVSIX/source.extension.vsixmanifest
+      git diff-index --quiet HEAD
+      if ($LASTEXITCODE -ne 0) {
+          git diff-index HEAD
+          throw "The repo is dirty!"
+      }
       # -------------------------------
       # build artifacts
       # -------------------------------

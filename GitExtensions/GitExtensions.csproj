@@ -128,4 +128,10 @@
       </None>
     </ItemGroup>
   </Target>
+  <PropertyGroup>
+    <PreBuildEvent>git config log.showSignature false</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>git config log.showSignature true</PostBuildEvent>
+  </PropertyGroup>
 </Project>
