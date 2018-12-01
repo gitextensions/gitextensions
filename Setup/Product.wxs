@@ -48,8 +48,8 @@
       <Component Id="gitex.cmd" Guid="*">
         <File Source="..\bin\gitex.cmd" />
       </Component>
-      <Component Id="GitExtensions.exe" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\GitExtensions.exe">
+      <Component Id="GitExtensions.exe" Guid="5530254F-DCAC-4C82-BD4B-F54D76024929">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\GitExtensions.exe" KeyPath="yes">
           <netfx:NativeImage Id="ngen_GitExtensions.exe" Platform="all" Priority="1" />
         </File>
         <ProgId Id="GitExtensions" Description="Git Extentions Shortcut" Advertise="no">
@@ -57,6 +57,7 @@
             <Verb Id="open" Command="Open Git Extentions Repository" TargetFile="GitExtensions.exe" Argument="openrepo &quot;%1&quot;" />
           </Extension>
         </ProgId>
+        <File Id="ICSharpCode.TextEditor.dll" Name="ICSharpCode.TextEditor.dll" Source="..\GitExtensions\bin\$(var.Configuration)\ICSharpCode.TextEditor.dll" />
       </Component>
       <Component Id="GitExtensions.exe.config" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\GitExtensions.exe.config" />
@@ -84,9 +85,6 @@
       </Component>
       <Component Id="GitUIPluginInterfaces.dll" Guid="*">
         <File Source="..\Plugins\GitUIPluginInterfaces\bin\$(var.Configuration)\GitUIPluginInterfaces.dll" />
-      </Component>
-      <Component Id="ICSharpCode.TextEditor.dll" Guid="*">
-        <File Source="..\GitExtensions\bin\$(var.Configuration)\ICSharpCode.TextEditor.dll" />
       </Component>
       <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
         <File Source="..\bin\ICSharpCode.SharpZipLib.dll" />
@@ -576,7 +574,6 @@
       <ComponentRef Id="GitExtUtils.dll" />
       <ComponentRef Id="GitUI.dll" />
       <ComponentRef Id="ConEmu.WinForms.dll" />
-      <ComponentRef Id="ICSharpCode.TextEditor.dll" />
       <ComponentRef Id="PSTaskDialog.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll" />
