@@ -83,6 +83,12 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
+            if (!Parents.Any())
+            {
+                IsRelative = true;
+                return;
+            }
+
             var stack = new Stack<RevisionGraphRevision>();
             stack.Push(this);
 
