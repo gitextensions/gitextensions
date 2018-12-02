@@ -64,15 +64,8 @@ namespace GitCommands.UserRepositoryHistory.Legacy
 
             await TaskScheduler.Default;
             var categorised = _repositoryStorage.Load();
-            if (categorised?.Count < 1)
-            {
-                return (history, false);
-            }
 
             var changed = MigrateSettings(history, categorised);
-
-            // settings have been migrated, clear the old setting
-            _repositoryStorage.Save();
 
             return (history, changed);
         }

@@ -47,10 +47,13 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         public IReadOnlyList<RepositoryCategory> Load()
         {
             string legacySetting = AppSettings.GetString(KeyHistory, null);
-            if (legacySetting == null)
+            if (string.IsNullOrEmpty(legacySetting))
             {
                 return Array.Empty<RepositoryCategory>();
             }
+
+            // remove the legacy setting
+            AppSettings.SetString(KeyHistory, string.Empty);
 
             // backup the original setting
             AppSettings.SetString(KeyHistoryBackup, legacySetting);
@@ -69,8 +72,7 @@ namespace GitCommands.UserRepositoryHistory.Legacy
         /// </summary>
         public void Save()
         {
-            // remove the legacy setting
-            AppSettings.SetString(KeyHistory, "");
+            // Never save again. We removed the content during the load.
         }
     }
 }
