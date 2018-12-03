@@ -41,12 +41,16 @@ build_script:
     gci env:APPVEYOR* | sort-object name
     if (!$env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT -and $env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
     #    Rename-Item -Path .\.git -newName .\.git1
+        Write-Host "Committing stuff"
+        git config core.autocrlf true
         git config user.email "gitext@appveryor.example.com"
         git config user.name "GitExtensions AppVeyor"
-        Write-Host "Committing stuff"
         pushd GitExtensionsDoc
         git commit -am "preparing a release"
         popd
+        git config core.autocrlf true
+        git config user.email "gitext@appveryor.example.com"
+        git config user.name "GitExtensions AppVeyor"
         git commit -am "preparing a release"
         if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
     }
