@@ -36,7 +36,11 @@ namespace GitUI
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine($"- Git Extensions {AppSettings.ProductVersion}");
-            sb.AppendLine($"- Build {_sha}{(_dirty ? " (Dirty)" : "")}");
+            if (!string.IsNullOrWhiteSpace(_sha))
+            {
+                sb.AppendLine($"- Build {_sha}{(_dirty ? " (Dirty)" : "")}");
+            }
+
             sb.AppendLine($"- Git {gitVer}");
             sb.AppendLine($"- {Environment.OSVersion}");
             sb.AppendLine($"- {RuntimeInformation.FrameworkDescription}");

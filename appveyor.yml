@@ -99,6 +99,10 @@ for:
   # scripts to run after tests
   after_test:
   - ps: |
+      # rename .git folder, so we don't get "is dirty" flag for our release builds
+      Rename-Item -Path .\.git -newName .\.git1
+      Remove-Item -Path .\GitExtensions\bin -Force -Recurse
+      Remove-Item -Path .\GitExtensions\obj -Force -Recurse
       # -------------------------------
       # build artifacts
       # -------------------------------
