@@ -46,7 +46,7 @@ namespace GitUIPluginInterfaces
                     : Setting[settings];
 
                 control.Text = control.Multiline
-                    ? settingVal.Replace("\n", Environment.NewLine)
+                    ? settingVal?.Replace("\n", Environment.NewLine)
                     : settingVal;
             }
 
