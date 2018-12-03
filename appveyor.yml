@@ -38,7 +38,7 @@ build_script:
 - ps: |
     Write-Output "Platform: $env:IdeVersion"
     # for release branch rename .git folder, so we don't get "is dirty" flag for our release builds
-    if (!$env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT -and env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
+    if (!$env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT -and $env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
         Rename-Item -Path .\.git -newName .\.git1
     }
     & Setup\Build.cmd
