@@ -45,10 +45,10 @@ build_script:
         pushd GitExtensionsDoc
         git reset --hard
         popd
-        git config core.autocrlf auto
+        git config core.autocrlf false
         git config user.email "gitext@appveryor.example.com"
         git config user.name "GitExtensions AppVeyor"
-        git checkout -b test
+        git checkout -b 'test'
         git commit -am "preparing a release"
         if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
     }
