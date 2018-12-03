@@ -98,6 +98,13 @@ namespace GitStatistics
                 {
                     commentLineCount++;
                 }
+                else if ((extension.Equals(".asm", StringComparison.OrdinalIgnoreCase) ||
+                          extension.Equals(".s", StringComparison.OrdinalIgnoreCase) ||
+                          extension.Equals(".inc", StringComparison.OrdinalIgnoreCase)) &&
+                          line.StartsWith(";"))
+                {
+                    commentLineCount++;
+                }
 
                 if (!skipResetFlag)
                 {
