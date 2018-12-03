@@ -2390,8 +2390,16 @@ namespace GitUI.CommandsDialogs
             }
 
             var fileName = list.SelectedItem.Name;
+            var path = _fullPathResolver.Resolve(fileName).ToNativePath();
 
-            Process.Start(_fullPathResolver.Resolve(fileName).ToNativePath());
+            try
+            {
+                Process.Start(path);
+            }
+            catch (System.ComponentModel.Win32Exception)
+            {
+                OsShellUtil.OpenAs(path);
+            }
         }
 
         private void OpenWithToolStripMenuItemClick(object sender, EventArgs e)
