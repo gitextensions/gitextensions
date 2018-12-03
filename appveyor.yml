@@ -38,9 +38,19 @@ build_script:
 - ps: |
     Write-Output "Platform: $env:IdeVersion"
     # for release branch rename .git folder, so we don't get "is dirty" flag for our release builds
+    gci env:APPVEYOR* | sort-object name
     if (!$env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT -and $env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
-        Rename-Item -Path .\.git -newName .\.git1
+    #    Rename-Item -Path .\.git -newName .\.git1
+        Write-Info "Committing stuff"
+        pushd GitExtensionsDoc
+        git commit -am "preparing a release"
+        popd
+        git commit -am "preparing a release"
     }
+    else {
+          Write-Host "Do not commit non-release branches"
+    }
+    #
     & Setup\Build.cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
@@ -117,8 +127,8 @@ for:
       # -------------------------------
       # sign artifacts
       # -------------------------------
-      if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT) {
-          Write-Host "Building a PR, do not sign"
+      if (!$env:APPVEYOR_REPO_BRANCH.StartsWith("release/") {
+          Write-Host "Do not sign non-release branches"
           Get-ChildItem .\Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
           exit 0
       }
