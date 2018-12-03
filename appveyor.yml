@@ -42,11 +42,8 @@ build_script:
     if (!$env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT -and $env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
     #    Rename-Item -Path .\.git -newName .\.git1
         Write-Host "Committing stuff"
-        git config core.autocrlf true
-        git config user.email "gitext@appveryor.example.com"
-        git config user.name "GitExtensions AppVeyor"
         pushd GitExtensionsDoc
-        git commit -am "preparing a release"
+        git reset --hard
         popd
         git config core.autocrlf true
         git config user.email "gitext@appveryor.example.com"
@@ -55,7 +52,7 @@ build_script:
         if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
     }
     else {
-          Write-Host "Do not commit non-release branches"
+        Write-Host "Do not commit non-release branches"
     }
     #
     & Setup\Build.cmd
@@ -134,7 +131,7 @@ for:
       # -------------------------------
       # sign artifacts
       # -------------------------------
-      if (!$env:APPVEYOR_REPO_BRANCH.StartsWith("release/") {
+      if (!$env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
           Write-Host "Do not sign non-release branches"
           Get-ChildItem .\Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
           exit 0
