@@ -37,6 +37,10 @@ install:
 build_script:
 - ps: |
     Write-Output "Platform: $env:IdeVersion"
+    # for release branch rename .git folder, so we don't get "is dirty" flag for our release builds
+    if (!$env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT -and env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
+        Rename-Item -Path .\.git -newName .\.git1
+    }
     & Setup\Build.cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
@@ -99,10 +103,6 @@ for:
   # scripts to run after tests
   after_test:
   - ps: |
-      # rename .git folder, so we don't get "is dirty" flag for our release builds
-      Rename-Item -Path .\.git -newName .\.git1
-      Remove-Item -Path .\GitExtensions\bin -Force -Recurse
-      Remove-Item -Path .\GitExtensions\obj -Force -Recurse
       # -------------------------------
       # build artifacts
       # -------------------------------
@@ -117,6 +117,11 @@ for:
       # -------------------------------
       # sign artifacts
       # -------------------------------
+      if ($env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT) {
+          Write-Host "Building a PR, do not sign"
+          Get-ChildItem .\Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+          exit 0
+      }
       pushd .\Setup
       [Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest -Uri https://app.signpath.io/API/v1/Tools/SignPath.psm1 -OutFile .\SignPath.psm1
