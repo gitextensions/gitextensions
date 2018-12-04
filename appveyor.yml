@@ -30,7 +30,7 @@ install:
 - cmd: echo /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll">> Directory.Build.rsp
 - cmd: |-
     cd Setup
-    python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%Dev@%APPVEYOR_REPO_COMMIT:~0,5%
+    python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
     cd ..
 
 # to run your custom scripts instead of automatic MSBuild
@@ -38,7 +38,6 @@ build_script:
 - ps: |
     Write-Output "Platform: $env:IdeVersion"
     gci env:APPVEYOR* | sort-object name
-    
     & git update-index --skip-worktree CommonAssemblyInfo.cs
     & git update-index --skip-worktree CommonAssemblyInfoExternals.cs
     & git update-index --skip-worktree GitExtSshAskPass/SshAskPass.rc2
@@ -52,7 +51,7 @@ build_script:
     & git submodule foreach --recursive git status
     & Setup\Build.cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-
+   
 # to run your custom scripts instead of automatic tests
 test_script:
 - ps: |
