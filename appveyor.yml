@@ -38,6 +38,16 @@ build_script:
 - ps: |
     Write-Output "Platform: $env:IdeVersion"
     gci env:APPVEYOR* | sort-object name
+    
+    & git update-index --skip-worktree CommonAssemblyInfo.cs
+    & git update-index --skip-worktree CommonAssemblyInfoExternals.cs
+    & git update-index --skip-worktree GitExtSshAskPass/SshAskPass.rc2
+    & git update-index --skip-worktree GitExtensionsShellEx/GitExtensionsShellEx.rc
+    & git update-index --skip-worktree GitExtensionsVSIX/source.extension.vsixmanifest
+    & git update-index --skip-worktree Setup/MakeInstallers.cmd
+    & cd GitExtensionsDoc
+    & git update-index --skip-worktree source/conf.py
+    & cd ..\
     & git status
     & git submodule foreach --recursive git status
     & Setup\Build.cmd
