@@ -113,6 +113,14 @@ for:
       # -------------------------------
       # sign artifacts
       # -------------------------------
+      # do sign artifacts for non-release branches
+      if (!$env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
+          Write-Host "[INFO]: Do not sign non-release branches"
+          Get-ChildItem .\Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+          Exit-AppVeyorBuild
+          return
+      }
+      # continue on with signing
       pushd .\Setup
       [Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
       Invoke-WebRequest -Uri https://app.signpath.io/API/v1/Tools/SignPath.psm1 -OutFile .\SignPath.psm1
