@@ -282,7 +282,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                     foreach (var startSegment in revision.StartSegments)
                     {
-                        startSegment.LaneInfo = new LaneInfo(startSegment);
+                        startSegment.LaneInfo = new LaneInfo(startSegment, derivedFrom: null);
                     }
                 }
                 else
@@ -321,7 +321,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                                 {
                                     if (startSegment.LaneInfo is null)
                                     {
-                                        startSegment.LaneInfo = new LaneInfo(startSegment);
+                                        startSegment.LaneInfo = new LaneInfo(startSegment, derivedFrom: segment.LaneInfo);
                                     }
                                 }
                             }
@@ -336,7 +336,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                         foreach (var startSegment in revision.StartSegments)
                         {
-                            startSegment.LaneInfo = new LaneInfo(startSegment);
+                            startSegment.LaneInfo = new LaneInfo(startSegment, derivedFrom: null);
                         }
                     }
                 }
