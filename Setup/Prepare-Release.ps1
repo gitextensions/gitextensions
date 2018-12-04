@@ -9,7 +9,8 @@ Param(
     [Parameter(Mandatory=$True, Position=2)]
     [string] $newVersion,
     #[Parameter(Mandatory=$True, Position=3)]
-    [string] $milestones
+    [string] $milestones,
+    [switch] $CommitChanges = $false
 )
 
 function Generate-Changelog {
@@ -125,7 +126,7 @@ function Update-Contributors {
 }
 
 pushd $PSScriptRoot
-
+$doReset=$false
 try {
 
     # TODO: verify versions are in X.Y.Z format
@@ -156,7 +157,25 @@ try {
     Write-Host Compile and package
     Write-Host ----------------------------------------------------------------------
     # preparing the build artifacts
-    python set_version_to.py -v $newVersion -t $newVersion-beta1
+    
+    if($CommitChanges){
+        python set_version_to.py -v $newVersion -t $newVersion-beta1
+        git status
+        git submodule foreach --recursive git status
+
+        pushd ..\GitExtensionsDoc
+        git add .
+        git checkout master
+        git commit -m "Bump version to $newVersion from $oldVersion"
+        popd
+
+        git add ..\.
+        git commit -m "Bump version to $newVersion from $oldVersion"
+        $doReset=$true
+    }
+    else{
+        python set_version_to.py -v $newVersion -t $newVersion-beta1
+    }
 
     $env:SKIP_PAUSE=1
     
@@ -196,6 +215,9 @@ try {
 
 }
 catch {
+    if($doReset){
+        git reset --mixed HEAD~1
+    }
     Write-Error $_;
     Exit -1;
 }
