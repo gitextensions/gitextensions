@@ -162,9 +162,10 @@ try {
         python set_version_to.py -v $newVersion -t $newVersion-beta1
         git status
         git submodule foreach --recursive git status
-
+        $mainSha = git rev-parse HEAD
         pushd ..\GitExtensionsDoc
         git add .
+        $docnSha = git rev-parse HEAD
         git checkout master
         git commit -m "Bump version to $newVersion from $oldVersion"
         popd
@@ -216,7 +217,10 @@ try {
 }
 catch {
     if($doReset){
-        git reset --mixed HEAD~1
+        git reset --mixed $mainSha
+        pushd ..\GitExtensionsDoc
+        git reset --mixed $docnSha
+        popd
     }
     Write-Error $_;
     Exit -1;
