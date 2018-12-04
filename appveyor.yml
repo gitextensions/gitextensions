@@ -38,6 +38,8 @@ build_script:
 - ps: |
     Write-Output "Platform: $env:IdeVersion"
     gci env:APPVEYOR* | sort-object name
+    & git status
+    & git submodule foreach --recursive git status
     & Setup\Build.cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
