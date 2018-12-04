@@ -173,6 +173,7 @@ try {
         git add ..\.
         git commit -m "Bump version to $newVersion from $oldVersion"
         $doReset=$true
+        # throw "test resets"
     }
     else{
         python set_version_to.py -v $newVersion -t $newVersion-beta1
