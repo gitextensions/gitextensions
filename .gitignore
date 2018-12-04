@@ -66,3 +66,4 @@ GitExtensions.settings.backup
 /Setup/*.zip
 /Setup/Changelog.md
 *.received.*
+Directory.Build.rsp
