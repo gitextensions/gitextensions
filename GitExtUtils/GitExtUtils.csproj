@@ -63,6 +63,7 @@
     <Compile Include="GitUI\TableLayoutPanelExtensions.cs" />
     <Compile Include="GitUI\ThreadHelper.cs" />
     <Compile Include="GitUI\UIExtensions.cs" />
+    <Compile Include="GitUI\Win32ApiUtil.cs" />
     <Compile Include="Linq\LinqExtensions.cs" />
     <Compile Include="MruCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
