@@ -57,10 +57,25 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             Score = minimalScore;
 
-            int maxScore = Score;
-            foreach (RevisionGraphRevision parent in Parents)
+            if (!Parents.Any())
             {
-                maxScore = Math.Max(parent.EnsureScoreIsAbove(Score + 1), maxScore);
+                return Score;
+            }
+
+            int maxScore = Score;
+
+            var stack = new Stack<RevisionGraphRevision>();
+            stack.Push(this);
+            while (stack.Count > 0)
+            {
+                var revision = stack.Pop();
+
+                foreach (var parent in revision.Parents.Where(r => r.Score < maxScore + 1))
+                {
+                    parent.Score = maxScore + 1;
+                    maxScore = parent.Score;
+                    stack.Push(parent);
+                }
             }
 
             return maxScore;
