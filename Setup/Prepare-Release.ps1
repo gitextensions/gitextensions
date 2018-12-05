@@ -147,10 +147,10 @@ try {
     Write-Host ----------------------------------------------------------------------
     Generate-Changelog -milestones $milestoneNumbers
 
-    Write-Host ----------------------------------------------------------------------
-    Write-Host Download PluginManager
-    Write-Host ----------------------------------------------------------------------
-    .\Download-PluginManager.ps1 -ExtractRootPath '..\Plugins\GitExtensions.PluginManager'
+    #Write-Host ----------------------------------------------------------------------
+    #Write-Host Download PluginManager
+    #Write-Host ----------------------------------------------------------------------
+    #.\Download-PluginManager.ps1 -ExtractRootPath '..\Plugins\GitExtensions.PluginManager'
 
     Write-Host ----------------------------------------------------------------------
     Write-Host Compile and package

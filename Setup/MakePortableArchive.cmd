@@ -65,8 +65,8 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\GitExtensions\bin\%Configuration%\System.Runtime.InteropServices.RuntimeInformation.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 
-xcopy /y /e ..\Plugins\GitExtensions.PluginManager\Output GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1
+REM xcopy /y /e ..\Plugins\GitExtensions.PluginManager\Output GitExtensions\Plugins\
+REM IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\AutoCompileSubmodules\bin\%Configuration%\AutoCompileSubmodules.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y ..\Plugins\BackgroundFetch\bin\%Configuration%\BackgroundFetch.dll GitExtensions\Plugins\
