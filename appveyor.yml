@@ -12,6 +12,7 @@ environment:
   - IdeVersion: VS2017
   SKIP_PAUSE: TRUE
   ARCHIVE_WITH_PDB: TRUE
+  spciuser: ""
 
 # Build settings, not to be confused with "before_build" and "after_build".
 # "project" is relative to the original build directory and not influenced by directory changes in "before_build".
@@ -38,7 +39,7 @@ build_script:
 - ps: |
     Write-Output "Platform: $env:IdeVersion"
     # for release branches mark the repo as clean
-    if ($env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
+    if (!$env:APPVEYOR_PULL_REQUEST_TITLE -and $env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
         & git update-index --skip-worktree CommonAssemblyInfo.cs
         & git update-index --skip-worktree CommonAssemblyInfoExternals.cs
         & git update-index --skip-worktree GitExtSshAskPass/SshAskPass.rc2
@@ -129,7 +130,7 @@ for:
       # sign artifacts
       # -------------------------------
       # do sign artifacts for non-release branches
-      if (!$env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
+      if ($env:APPVEYOR_PULL_REQUEST_TITLE -or !$env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
           Write-Host "[INFO]: Do not sign non-release branches"
           Get-ChildItem .\Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
           Exit-AppVeyorBuild
