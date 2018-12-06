@@ -131,15 +131,12 @@ namespace GitUI.Editor
                 _lineNumbersControl.DisplayLineNumFor(text);
             }
 
-            TextEditor.BeginUpdate();
-
             TextEditor.Text = text;
 
             // important to set after the text was changed
             // otherwise the may be rendering artifacts as noted in #5568
             TextEditor.ShowLineNumbers = !isDiff;
-
-            TextEditor.EndUpdate();
+            TextEditor.Refresh();
 
             _currentViewPositionCache.Restore(isDiff);
         }
