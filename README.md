@@ -13,7 +13,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a> 
 
 The work has been split into two streams:
- * version 3.0x - **[RC2 is available](https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00-rc2)**!
+ * version 3.0x - **[NOW available](https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00)**!
  * version 2.5x
 
 ### Version 3.0x
@@ -38,7 +38,7 @@ For more details please refer to [versions comparison](https://github.com/gitext
   </tr>
   <tr>
     <td>Current dev status</td>
-    <td><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a> <a href="https://codecov.io/gh/gitextensions/gitextensions"><img alt="codecov.io" src="https://codecov.io/gh/gitextensions/gitextensions/branch/master/graph/badge.svg" style="max-width:100%;"></a></td>
+    <td><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/release/3.00"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a> <a href="https://codecov.io/gh/gitextensions/gitextensions"><img alt="codecov.io" src="https://codecov.io/gh/gitextensions/gitextensions/branch/master/graph/badge.svg" style="max-width:100%;"></a></td>
   </tr>
   <tr>
     <td>Translations</td>
@@ -86,17 +86,12 @@ title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.
 
 <table>
   <tr>
-    <td><strong>v2.51.05 (stable)</strong></td>
-    <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/tag/v2.51.05">[ Download ]</a> / <a href="https://github.com/gitextensions/gitextensions/blob/release/2.51/GitUI/Resources/ChangeLog.md#version-25105-2-september-2018">Changelog</a><br />
-        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
+    <td><strong>v3.00</strong></td>
+    <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00">[ Download ]</a><br />
+        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/v3.00.00/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
   </tr>
   <tr>
-    <td><strong>v3.00 RC2</strong></td>
-    <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00-rc2">[ Download ]</a><br />
-        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00-rc2" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/v3.00.00-rc2/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
-  </tr>
-  <tr>
-    <td><strong>v3.00 (canary)</strong></td>
+    <td><strong>canary</strong></td>
     <td><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a> <a href="https://codecov.io/gh/gitextensions/gitextensions"><img alt="codecov.io" src="https://codecov.io/gh/gitextensions/gitextensions/branch/master/graph/badge.svg" style="max-width:100%;"></a>
     <br /><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master/artifacts">[ Download ]</a> NB: expect :unicorn: :unicorn: :dragon: :dragon: and :bug: :bug:</td>
   </tr>
