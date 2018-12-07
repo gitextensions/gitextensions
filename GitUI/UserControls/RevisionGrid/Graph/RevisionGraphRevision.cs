@@ -64,16 +64,20 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             int maxScore = Score;
 
+            var processed = new HashSet<RevisionGraphRevision>();
+
             var stack = new Stack<RevisionGraphRevision>();
             stack.Push(this);
+            processed.Add(this);
             while (stack.Count > 0)
             {
                 var revision = stack.Pop();
 
-                foreach (var parent in revision.Parents.Where(r => r.Score < maxScore + 1))
+                foreach (var parent in revision.Parents.Where(r => r.Score < maxScore + 1 && !processed.Contains(r)))
                 {
                     parent.Score = maxScore + 1;
                     maxScore = parent.Score;
+                    processed.Add(parent);
                     stack.Push(parent);
                 }
             }
