@@ -97,7 +97,6 @@ namespace GitUI.CommandsDialogs
             listBoxSearchResult.Width = width;
             listBoxSearchResult.Height = Math.Min(800, listBoxSearchResult.Font.Height * (listBoxSearchResult.Items.Count + 1));
 
-            Width = listBoxSearchResult.Width;
             _onSizeChanged(new Size(width + Margin.Right + Margin.Left,
                 listBoxSearchResult.Height + txtSearchBox.Height));
             var txtBoxOnScreen = PointToScreen(txtSearchBox.Location + new Size(0, txtSearchBox.Height));
