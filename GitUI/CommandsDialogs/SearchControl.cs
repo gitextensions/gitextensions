@@ -83,6 +83,14 @@ namespace GitUI.CommandsDialogs
 
             listBoxSearchResult.Visible = true;
 
+            var txtBoxOnScreen = PointToScreen(txtSearchBox.Location + new Size(0, txtSearchBox.Height));
+            if (ParentForm != null && !ParentForm.Controls.Contains(listBoxSearchResult))
+            {
+                ParentForm.Controls.Add(listBoxSearchResult);
+                var listBoxLocationOnScreen = txtBoxOnScreen;
+                listBoxSearchResult.Location = ParentForm.PointToClient(listBoxLocationOnScreen);
+            }
+
             int width = 300;
 
             using (Graphics g = listBoxSearchResult.CreateGraphics())
@@ -99,14 +107,6 @@ namespace GitUI.CommandsDialogs
 
             _onSizeChanged(new Size(width + Margin.Right + Margin.Left,
                 listBoxSearchResult.Height + txtSearchBox.Height));
-            var txtBoxOnScreen = PointToScreen(txtSearchBox.Location + new Size(0, txtSearchBox.Height));
-
-            if (ParentForm != null && !ParentForm.Controls.Contains(listBoxSearchResult))
-            {
-                ParentForm.Controls.Add(listBoxSearchResult);
-                var listBoxLocationOnScreen = txtBoxOnScreen;
-                listBoxSearchResult.Location = ParentForm.PointToClient(listBoxLocationOnScreen);
-            }
 
             listBoxSearchResult.BringToFront();
         }
