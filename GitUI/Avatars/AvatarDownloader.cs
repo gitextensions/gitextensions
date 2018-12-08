@@ -152,7 +152,11 @@ namespace GitUI.Avatars
                         {
                             webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
 
-                            using (var imageStream = await webClient.OpenReadTaskAsync(imageUrl))
+                            // actually, due to a .Net FX bug, WebClient.OpenReadTaskAsync *can* block before returning a Task
+                            // let's make sure this doesn't happen on the current thread (likely the UI thread)
+                            var readTask = Task.Run(() => webClient.OpenReadTaskAsync(imageUrl));
+
+                            using (var imageStream = await readTask)
                             {
                                 return Image.FromStream(imageStream);
                             }
