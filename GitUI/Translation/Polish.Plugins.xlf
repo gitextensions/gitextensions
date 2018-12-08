@@ -1,10 +1,6 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.00.rc2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="pl">
     <body>
-      <trans-unit id="cbGitHubPullRequest.Text">
-        <source>display github pull requests builds. GithubToken:</source>
-        
-      </trans-unit>
       <trans-unit id="cbLoadTestResults.Text">
         <source>display tests results in build status summary for each build result (network intensive!)</source>
         
@@ -16,21 +12,6 @@
       <trans-unit id="Description.Text">
         <source>Auto compile SubModules</source>
         <target>Automatycznie kompiluj moduły zależne</target>
-        
-      </trans-unit>
-      <trans-unit id="MsBuildArguments.Caption">
-        <source>msbuild.exe arguments</source>
-        <target>Argumenty msbuild.exe</target>
-        
-      </trans-unit>
-      <trans-unit id="MsBuildEnabled.Caption">
-        <source>Enabled</source>
-        <target>Włączone</target>
-        
-      </trans-unit>
-      <trans-unit id="MsBuildPath.Caption">
-        <source>Path to msbuild.exe</source>
-        <target>Ścieżka do msbuild.exe</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -47,31 +28,46 @@
         <target>Proszę podać poprawną ścieżkę MSBuild w oknie ustawień wtyczki i spróbuj ponownie.</target>
         
       </trans-unit>
+      <trans-unit id="_msBuildArguments.Caption">
+        <source>msbuild.exe arguments</source>
+        <target>Argumenty msbuild.exe</target>
+        
+      </trans-unit>
+      <trans-unit id="_msBuildEnabled.Caption">
+        <source>Enabled</source>
+        <target>Włączone</target>
+        
+      </trans-unit>
+      <trans-unit id="_msBuildPath.Caption">
+        <source>Path to msbuild.exe</source>
+        <target>Ścieżka do msbuild.exe</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="pl">
     <body>
-      <trans-unit id="AutoRefresh.Caption">
-        <source>Refresh view after fetch</source>
-        <target>Odśwież widok po pobraniu</target>
-        
-      </trans-unit>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
         <target>Okresowe pobieranie w tle</target>
         
       </trans-unit>
-      <trans-unit id="FetchAllSubmodules.Caption">
+      <trans-unit id="_autoRefresh.Caption">
+        <source>Refresh view after fetch</source>
+        <target>Odśwież widok po pobraniu</target>
+        
+      </trans-unit>
+      <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
         <target>Pobierz wszystkie moduły zależne</target>
         
       </trans-unit>
-      <trans-unit id="FetchInterval.Caption">
+      <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
         <target>Pobierz co (sekundy) - ustaw na 0, aby wyłączyć</target>
         
       </trans-unit>
-      <trans-unit id="GitCommand.Caption">
+      <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
         <target>Argumenty komendy git przy uruchomieniu</target>
         
@@ -105,21 +101,21 @@
         <target>Serwer Bitbucket</target>
         
       </trans-unit>
+      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
+        <source>Your repository is not hosted in BitBucket Server.</source>
+        <target>Twoje repozytorium nie jest umieszczone na serwerze Bitbucket.</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="pl">
     <body>
       <trans-unit id="$this.Text">
-        <source>Create Pull Request</source>
-        <target>Stwórz prośbę połączenia</target>
+        <source>Bitbucket Server</source>
+        <target>Serwer Bitbucket</target>
         
       </trans-unit>
-      <trans-unit id="GridColumnName.HeaderText">
-        <source>Name</source>
-        <target>Nazwa</target>
-        
-      </trans-unit>
-      <trans-unit id="_commited.Text">
+      <trans-unit id="_committed.Text">
         <source>{0} committed
 {1}</source>
         <target>{1}
@@ -131,14 +127,14 @@ zatwierdzono przez {0}</target>
         <target>Błąd</target>
         
       </trans-unit>
+      <trans-unit id="_linkLabelToolTip.Text">
+        <source>Right-click to copy link</source>
+        <target>Skopiuj odnośnik prawym klawiszem</target>
+        
+      </trans-unit>
       <trans-unit id="_success.Text">
         <source>Success</source>
         <target>Sukces</target>
-        
-      </trans-unit>
-      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
-        <source>Your repository is not hosted in Bitbucket.</source>
-        <target>Twoje repozytorium nie jest umieszczone w Bitbucket.</target>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
@@ -156,119 +152,124 @@ zatwierdzono przez {0}</target>
         <target>Scal</target>
         
       </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Source</source>
-        <target>Źródło</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox2.Text">
-        <source>Target</source>
-        <target>Docelowo</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox3.Text">
+      <trans-unit id="groupBoxCreatePullRequest.Text">
         <source>Pull Request Info</source>
         <target>Informacja o prośbie połączenia</target>
         
       </trans-unit>
-      <trans-unit id="groupBox4.Text">
-        <source>Source</source>
-        <target>Źródło</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox5.Text">
-        <source>Target</source>
-        <target>Docelowo</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox6.Text">
-        <source>Pull Request Info</source>
-        <target>Informacja o prośbie połączenia</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox9.Text">
+      <trans-unit id="groupBoxInformation.Text">
         <source>Information</source>
         <target>Informacja</target>
         
       </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Branch</source>
-        <target>Gałąź</target>
+      <trans-unit id="groupBoxPullRequestInfo.Text">
+        <source>Pull Request Info</source>
+        <target>Informacja o prośbie połączenia</target>
         
       </trans-unit>
-      <trans-unit id="label10.Text">
-        <source>Reviewer (approved)</source>
-        <target>Przeglądający (zatwierdzony)</target>
+      <trans-unit id="groupBoxSource.Text">
+        <source>Source</source>
+        <target>Źródło</target>
         
       </trans-unit>
-      <trans-unit id="label12.Text">
+      <trans-unit id="groupBoxSourceRepoView.Text">
+        <source>Source</source>
+        <target>Źródło</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxTarget.Text">
+        <source>Target</source>
+        <target>Docelowo</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxTargetRepoView.Text">
+        <source>Target</source>
+        <target>Docelowo</target>
+        
+      </trans-unit>
+      <trans-unit id="lblAuthor.Text">
         <source>Author</source>
         <target>Autor</target>
         
       </trans-unit>
-      <trans-unit id="label13.Text">
+      <trans-unit id="lblBranchView.Text">
+        <source>Branch</source>
+        <target>Gałąź</target>
+        
+      </trans-unit>
+      <trans-unit id="lblDescription.Text">
         <source>Description</source>
         <target>Opis</target>
         
       </trans-unit>
-      <trans-unit id="label14.Text">
-        <source>Title</source>
-        <target>Nazwa</target>
+      <trans-unit id="lblDescriptionView.Text">
+        <source>Description</source>
+        <target>Opis</target>
         
       </trans-unit>
-      <trans-unit id="label16.Text">
+      <trans-unit id="lblLinkCreatePull.Text">
+        <source>/projects//repos//pull-requests?create</source>
+        <target>/projects//repos//pull-requests?create</target>
+        
+      </trans-unit>
+      <trans-unit id="lblLinkViewPull.Text">
+        <source>/projects//repos//pull-requests</source>
+        <target>/projects//repos//pull-requests</target>
+        
+      </trans-unit>
+      <trans-unit id="lblRepositoryView.Text">
+        <source>Repository</source>
+        <target>Repozytorium</target>
+        
+      </trans-unit>
+      <trans-unit id="lblReviewerView.Text">
+        <source>Reviewer (approved)</source>
+        <target>Przeglądający (zatwierdzony)</target>
+        
+      </trans-unit>
+      <trans-unit id="lblSourceBranch.Text">
+        <source>Branch</source>
+        <target>Gałąź</target>
+        
+      </trans-unit>
+      <trans-unit id="lblSourceRepoView.Text">
+        <source>Repository</source>
+        <target>Repozytorium</target>
+        
+      </trans-unit>
+      <trans-unit id="lblSourceRepository.Text">
+        <source>Repository</source>
+        <target>Repozytorium</target>
+        
+      </trans-unit>
+      <trans-unit id="lblState.Text">
         <source>State</source>
         <target>Stan</target>
         
       </trans-unit>
-      <trans-unit id="label17.Text">
+      <trans-unit id="lblTargetBranch.Text">
+        <source>Branch</source>
+        <target>Gałąź</target>
+        
+      </trans-unit>
+      <trans-unit id="lblTargetRepoView.Text">
+        <source>Branch</source>
+        <target>Gałąź</target>
+        
+      </trans-unit>
+      <trans-unit id="lblTargetRepository.Text">
         <source>Repository</source>
         <target>Repozytorium</target>
         
       </trans-unit>
-      <trans-unit id="label18.Text">
-        <source>Branch</source>
-        <target>Gałąź</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Branch</source>
-        <target>Gałąź</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>Description</source>
-        <target>Opis</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
+      <trans-unit id="lblTitle.Text">
         <source>Title</source>
         <target>Nazwa</target>
         
       </trans-unit>
-      <trans-unit id="label5.Text">
-        <source>Repository</source>
-        <target>Repozytorium</target>
-        
-      </trans-unit>
-      <trans-unit id="label6.Text">
-        <source>Repository</source>
-        <target>Repozytorium</target>
-        
-      </trans-unit>
-      <trans-unit id="label8.Text">
-        <source>Repository</source>
-        <target>Repozytorium</target>
-        
-      </trans-unit>
-      <trans-unit id="label9.Text">
-        <source>Branch</source>
-        <target>Gałąź</target>
-        
-      </trans-unit>
-      <trans-unit id="lblReviewers.Text">
-        <source>Reviewer(s)</source>
-        <target>Przeglądający</target>
+      <trans-unit id="lblTitleView.Text">
+        <source>Title</source>
+        <target>Nazwa</target>
         
       </trans-unit>
       <trans-unit id="tabCreate.Text">
@@ -344,8 +345,8 @@ zatwierdzono przez {0}</target>
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
-        <source>Search branches</source>
-        <target>Szukaj gałęzi</target>
+        <source>Cancel</source>
+        <target>Anuluj</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -363,7 +364,7 @@ zatwierdzono przez {0}</target>
         <target>Anuluj</target>
         
       </trans-unit>
-      <trans-unit id="_chooseBrancesToDelete.Text">
+      <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
         <target>Wybierz gałęzie do usunięcia. Tylko gałęzie całkowicie scalone do '{0}' mogą zostać usunięte.</target>
         
@@ -423,8 +424,8 @@ Na pewno chcesz kontynuować?</target>
         
       </trans-unit>
       <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
-        <source>Delete</source>
-        <target>Usuń</target>
+        <source>deleteDataGridViewCheckBoxColumn</source>
+        <target>deleteDataGridViewCheckBoxColumn</target>
         
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
@@ -440,6 +441,11 @@ Na pewno chcesz kontynuować?</target>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
         <target>Usuń gałęzie w pełni scalone do gałęzi</target>
+        
+      </trans-unit>
+      <trans-unit id="lblStatus.Text">
+        <source>Loading...</source>
+        <target>Ładowanie...</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -471,19 +477,54 @@ Na pewno chcesz kontynuować?</target>
   </file>
   <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="pl">
     <body>
-      <trans-unit id="DaysOlderThan.Caption">
-        <source>Delete obsolete branches older than (days)</source>
-        <target>Usuń przestarzałe gałęzie, starsze niż (dni)</target>
-        
-      </trans-unit>
       <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
         <target>Usuwanie przestarzałych gałęzi</target>
         
       </trans-unit>
-      <trans-unit id="MergedInBranch.Caption">
+      <trans-unit id="_daysOlderThan.Caption">
+        <source>Delete obsolete branches older than (days)</source>
+        <target>Usuń przestarzałe gałęzie, starsze niż (dni)</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
+        <source>Delete obsolete branches from remote</source>
+        <target>Usuń przestarzałe gałęzie ze zdalnego</target>
+        
+      </trans-unit>
+      <trans-unit id="_includeUnmergedBranchesFlag.Caption">
+        <source>Delete unmerged branches</source>
+        <target>Usuń niescalone gałęzie</target>
+        
+      </trans-unit>
+      <trans-unit id="_mergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
         <target>Gałąź, do której powinny zostać scalone inne</target>
+        
+      </trans-unit>
+      <trans-unit id="_regexCaseInsensitiveFlag.Caption">
+        <source>Is regex filter case insensitive?</source>
+        <target>Rozróżnianie wielkości liter w filtrze regex</target>
+        
+      </trans-unit>
+      <trans-unit id="_regexFilter.Caption">
+        <source>Regex to filter branches to delete</source>
+        <target>Regex filtrowania gałęzi do usunięcia</target>
+        
+      </trans-unit>
+      <trans-unit id="_regexInvertedFlag.Caption">
+        <source>Search branches that does not match regex</source>
+        <target>Znajdź gałęzie, które nie pasują do filtru regex</target>
+        
+      </trans-unit>
+      <trans-unit id="_remoteName.Caption">
+        <source>Remote name obsoleted branches should be deleted from</source>
+        <target>Usuń zdalne nazwy przestarzałych gałęzi z</target>
+        
+      </trans-unit>
+      <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
+        <source>Use regex to filter branches to delete</source>
+        <target>Użyj regex do filtrowania gałęzi do usunięcia</target>
         
       </trans-unit>
     </body>
@@ -564,7 +605,7 @@ Na pewno chcesz kontynuować?</target>
         <target>Znajdź duże pliki</target>
         
       </trans-unit>
-      <trans-unit id="SizeLargeFile.Caption">
+      <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
         <target>Znajdź duże pliki, większe niż (Mb)</target>
         
@@ -706,6 +747,11 @@ Na pewno chcesz kontynuować?</target>
         <target>Zdalne:</target>
         
       </trans-unit>
+      <trans-unit id="labelReviewers.Text">
+        <source>Reviewer(s):</source>
+        <target>Przeglądający:</target>
+        
+      </trans-unit>
       <trans-unit id="labelTopic.Text">
         <source>Topic:</source>
         <target>Temat:</target>
@@ -845,57 +891,57 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0:N0} Blank lines ({1:P1})</source>
-        <target>({1}) Puste linie: {0}</target>
+        <target>({1:P1}) Puste linie: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>({1}) Linie komentarzy: {0}</target>
+        <target>({1:P1}) Linie komentarzy: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0:N0} Commits</source>
-        <target>Zatwierdzenia: {0}</target>
+        <target>Zatwierdzenia: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
-        <target>Zatwierdzenia autorstwa {1}: {0}</target>
+        <target>Zatwierdzenia autorstwa {1}: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
-        <target>Linie kodu: {0}</target>
+        <target>Linie kodu: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
-        <target>({2}) Linie kodu w plikach {1}: {0}</target>
+        <target>({2:P1}) Linie kodu w {1} plikach: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
-        <target>({1}) Linie kodu: {0}</target>
+        <target>({1:P1}) Linie kodu: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
-        <target>({1}) Linie w plikach projektowych: {0}</target>
+        <target>({1:P1}) Linie w plikach projektowych: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
-        <target>({1}) Linie kodu produkcyjnego: {0}</target>
+        <target>({1:P1}) Linie kodu produkcyjnego: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
-        <target>Linie kodu próbnego: {0}</target>
+        <target>Linie kodu próbnego: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
-        <target>({1}) Linie kodu próbnego: {0}</target>
+        <target>({1:P1}) Linie kodu próbnego: {0:N0}</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
@@ -989,9 +1035,13 @@ Aby aktywować Gerrit dla repozytorium, należy stworzyć plik .gitreview. Możn
         <target>Zainstaluj hook</target>
         
       </trans-unit>
-      <trans-unit id="_installCommitMsgHookFailed.Text">
+      <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
         <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
         <target>Nie można pobrać pliku wiadomości zatwierdzenia. Proszę zainstalować ten hook ręcznie.</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
+        <source>Could not create the hooks folder. Please create the folder manually and try again.</source>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookMessage.Text">
@@ -1102,6 +1152,11 @@ Aby aktywować Gerrit dla repozytorium, należy stworzyć plik .gitreview. Możn
         <target>Na podstawie:</target>
         
       </trans-unit>
+      <trans-unit id="cbPushAfterFinish.Text">
+        <source>Push after finish</source>
+        <target>Wyślij po zakończeniu</target>
+        
+      </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
         <target>Zarządzaj istniejącymi gałęziami:</target>
@@ -1168,15 +1223,16 @@ Aby aktywować Gerrit dla repozytorium, należy stworzyć plik .gitreview. Możn
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="Github3Plugin" source-language="en" target-language="pl">
+  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="pl">
     <body>
       <trans-unit id="Description.Text">
-        <source>Github</source>
-        <target>Github</target>
+        <source>GitHub</source>
+        <target>GitHub</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
         <source>OAuth Token</source>
+        <target>Token OAuth</target>
         
       </trans-unit>
     </body>
@@ -1192,22 +1248,22 @@ Aby aktywować Gerrit dla repozytorium, należy stworzyć plik .gitreview. Możn
   </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="pl">
     <body>
-      <trans-unit id="CodeFiles.Caption">
-        <source>Code files</source>
-        <target>Pliki z kodem</target>
-        
-      </trans-unit>
       <trans-unit id="Description.Text">
         <source>Statistics</source>
         <target>Statystyki</target>
         
       </trans-unit>
-      <trans-unit id="IgnoreDirectories.Caption">
+      <trans-unit id="_codeFiles.Caption">
+        <source>Code files</source>
+        <target>Pliki z kodem</target>
+        
+      </trans-unit>
+      <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
         <target>Ignorowane katalogi (kończące się na:)</target>
         
       </trans-unit>
-      <trans-unit id="IgnoreSubmodules.Caption">
+      <trans-unit id="_ignoreSubmodules.Caption">
         <source>Ignore submodules</source>
         <target>Ignoruj moduły zależne</target>
         
@@ -1219,16 +1275,6 @@ Aby aktywować Gerrit dla repozytorium, należy stworzyć plik .gitreview. Możn
       <trans-unit id="Description.Text">
         <source>Gource</source>
         <target>Gource</target>
-        
-      </trans-unit>
-      <trans-unit id="GourceArguments.Caption">
-        <source>Arguments</source>
-        <target>Argumenty</target>
-        
-      </trans-unit>
-      <trans-unit id="GourcePath.Caption">
-        <source>Path to Gource</source>
-        <target>Ścieżka do Gource</target>
         
       </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
@@ -1278,9 +1324,19 @@ Proszę pobrać Gource i ustawić ścieżkę do niego w oknie ustawień wtyczek.
         <target>Gource</target>
         
       </trans-unit>
+      <trans-unit id="_gourceArguments.Caption">
+        <source>Arguments</source>
+        <target>Argumenty</target>
+        
+      </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
         <source>Gource has been downloaded and unzipped.</source>
         <target>Gource zostało pobrane i wypakowane z archiwum.</target>
+        
+      </trans-unit>
+      <trans-unit id="_gourcePath.Caption">
+        <source>Path to Gource</source>
+        <target>Ścieżka do Gource</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
@@ -1345,6 +1401,11 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
   </file>
   <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="pl">
     <body>
+      <trans-unit id="lblIgnoreBuildBranch.Text">
+        <source>Ignore build for branch</source>
+        <target>Ignoruj tworzenie dla gałęzi</target>
+        
+      </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
         <target>URL serwera Jenkins</target>
@@ -1363,36 +1424,35 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
         <source>Jira Commit Hint</source>
         
       </trans-unit>
-      <trans-unit id="enabledSettings.Caption">
+      <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
         
       </trans-unit>
-      <trans-unit id="jdlQuerySettings.Caption">
-        <source>JDL Query</source>
-        <target>Zapytanie JDL</target>
-        
-      </trans-unit>
-      <trans-unit id="jiraFields.Caption">
+      <trans-unit id="_jiraFields.Caption">
         <source>Jira fields</source>
         <target>Pola Jira</target>
         
       </trans-unit>
-      <trans-unit id="passwordSettings.Caption">
+      <trans-unit id="_jqlQuerySettings.Caption">
+        <source>JQL Query</source>
+        
+      </trans-unit>
+      <trans-unit id="_passwordSettings.Caption">
         <source>Jira password</source>
         <target>Hasło Jira</target>
         
       </trans-unit>
-      <trans-unit id="stringTemplateSetting.Caption">
+      <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         <target>Szablon wiadomości</target>
         
       </trans-unit>
-      <trans-unit id="urlSettings.Caption">
+      <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
         <target>Adres URL Jira</target>
         
       </trans-unit>
-      <trans-unit id="userSettings.Caption">
+      <trans-unit id="_userSettings.Caption">
         <source>Jira user</source>
         <target>Użytkownik Jira</target>
         
@@ -1403,7 +1463,7 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Proxy Switcher</source>
-        <target>Przełącznik proxy</target>
+        <target>Zmiana proxy</target>
         
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
@@ -1438,7 +1498,7 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
       </trans-unit>
       <trans-unit id="_pluginDescription.Text">
         <source>Proxy Switcher</source>
-        <target>Przełącznik proxy</target>
+        <target>Zmiana proxy</target>
         
       </trans-unit>
     </body>
@@ -1447,7 +1507,7 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
     <body>
       <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
-        <target>Przełącznik proxy</target>
+        <target>Zmiana proxy</target>
         
       </trans-unit>
       <trans-unit id="HttpProxy.Caption">
@@ -1491,10 +1551,12 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>'From' commit must be specified</source>
+        <target>Zatwierdzenie 'Od' musi zostać określone</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>'To' commit must be specified</source>
+        <target>Zatwierdzenie 'Do' musi zostać określone</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1534,7 +1596,7 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
-        <target>Formuła zatwierdzenia &quot;Do&quot; (dołączanie):</target>
+        <target>Formuła zatwierdzenia &quot;Do&quot; (dołączona):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
@@ -1545,23 +1607,23 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
-        <target>Do schowka zostanie skopiowany kod HTML (zwykły tekst) oraz formatowanie HTML,
+        <target>Kopiuje do schowka kod HTML (zwykły tekst) oraz formatowanie,
 które mogą zostać wklejone do programów takich jak MS Word lub LibreOffice Writer.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>Formuła zatwierdzenia &quot;Z&quot; (wykluczanie):</target>
+        <target>Formuła zatwierdzenia &quot;Od&quot; (wykluczona):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
-        <target>Argumenty dziennika git:</target>
+        <target>Polecenia dziennika git:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
-        <target>{0} = z; {1} = do</target>
+        <target>{0} = od; {1} = do</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
@@ -1607,210 +1669,6 @@ zatwierdzeń, nazwami gałęzi lub tagów)</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="StashPlugin" source-language="en" target-language="pl">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Create Bitbucket Pull Request</source>
-        
-      </trans-unit>
-      <trans-unit id="StashBaseUrl.Caption">
-        <source>Specify the base URL to Bitbucket</source>
-        <target>Podaj bazowy adres URL do Bitbucket</target>
-        
-      </trans-unit>
-      <trans-unit id="StashDisableSsl.Caption">
-        <source>Disable SSL verification</source>
-        <target>Wyłącz weryfikację SSL</target>
-        
-      </trans-unit>
-      <trans-unit id="StashPassword.Caption">
-        <source>Bitbucket Password</source>
-        <target>Hasło Bitbucket</target>
-        
-      </trans-unit>
-      <trans-unit id="StashUsername.Caption">
-        <source>Bitbucket Username</source>
-        <target>Nazwa użytkownika Bitbucket</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="StashPullRequestForm" source-language="en" target-language="pl">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Create Pull Request</source>
-        <target>Stwórz prośbę połączenia</target>
-        
-      </trans-unit>
-      <trans-unit id="GridColumnName.HeaderText">
-        <source>Name</source>
-        <target>Nazwa</target>
-        
-      </trans-unit>
-      <trans-unit id="_commited.Text">
-        <source>{0} committed
-{1}</source>
-        <target>{1}
-zatwierdzono przez {0}</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Błąd</target>
-        
-      </trans-unit>
-      <trans-unit id="_success.Text">
-        <source>Success</source>
-        <target>Sukces</target>
-        
-      </trans-unit>
-      <trans-unit id="_yourRepositoryIsNotInStash.Text">
-        <source>Your repository is not hosted in Bitbucket.</source>
-        <target>Twoje repozytorium nie jest umieszczone w Bitbucket.</target>
-        
-      </trans-unit>
-      <trans-unit id="btnApprove.Text">
-        <source>Approve</source>
-        <target>Zatwierdź</target>
-        
-      </trans-unit>
-      <trans-unit id="btnCreate.Text">
-        <source>Create</source>
-        <target>Utwórz</target>
-        
-      </trans-unit>
-      <trans-unit id="btnMerge.Text">
-        <source>Merge</source>
-        <target>Scal</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Source</source>
-        <target>Źródło</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox2.Text">
-        <source>Target</source>
-        <target>Docelowo</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox3.Text">
-        <source>Pull Request Info</source>
-        <target>Informacja o prośbie połączenia</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox4.Text">
-        <source>Source</source>
-        <target>Źródło</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox5.Text">
-        <source>Target</source>
-        <target>Docelowo</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox6.Text">
-        <source>Pull Request Info</source>
-        <target>Informacja o prośbie połączenia</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox9.Text">
-        <source>Information</source>
-        <target>Informacja</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Branch</source>
-        <target>Gałąź</target>
-        
-      </trans-unit>
-      <trans-unit id="label10.Text">
-        <source>Reviewer (approved)</source>
-        <target>Przeglądający (zatwierdzony)</target>
-        
-      </trans-unit>
-      <trans-unit id="label12.Text">
-        <source>Author</source>
-        <target>Autor</target>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>Description</source>
-        <target>Opis</target>
-        
-      </trans-unit>
-      <trans-unit id="label14.Text">
-        <source>Title</source>
-        <target>Nazwa</target>
-        
-      </trans-unit>
-      <trans-unit id="label16.Text">
-        <source>State</source>
-        <target>Stan</target>
-        
-      </trans-unit>
-      <trans-unit id="label17.Text">
-        <source>Repository</source>
-        <target>Repozytorium</target>
-        
-      </trans-unit>
-      <trans-unit id="label18.Text">
-        <source>Branch</source>
-        <target>Gałąź</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Branch</source>
-        <target>Gałąź</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>Description</source>
-        <target>Opis</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>Title</source>
-        <target>Nazwa</target>
-        
-      </trans-unit>
-      <trans-unit id="label5.Text">
-        <source>Repository</source>
-        <target>Repozytorium</target>
-        
-      </trans-unit>
-      <trans-unit id="label6.Text">
-        <source>Repository</source>
-        <target>Repozytorium</target>
-        
-      </trans-unit>
-      <trans-unit id="label8.Text">
-        <source>Repository</source>
-        <target>Repozytorium</target>
-        
-      </trans-unit>
-      <trans-unit id="label9.Text">
-        <source>Branch</source>
-        <target>Gałąź</target>
-        
-      </trans-unit>
-      <trans-unit id="lblReviewers.Text">
-        <source>Reviewer(s)</source>
-        <target>Przeglądający</target>
-        
-      </trans-unit>
-      <trans-unit id="tabCreate.Text">
-        <source>Create Pull Request</source>
-        <target>Stwórz prośbę połączenia</target>
-        
-      </trans-unit>
-      <trans-unit id="tabView.Text">
-        <source>View Pull Requests</source>
-        <target>Zobacz prośby połączenia</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="pl">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
@@ -1830,11 +1688,14 @@ Please copy in the clipboard the url of the build before retrying.
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
+        <target>Błąd podczas ładowania projektu i listy tworzenia</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
+        <target>Nie udało się załadować projektu i listy tworzenia.
+Proszę sprawdzić adres URL serwera.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
@@ -1849,6 +1710,25 @@ Please verify the server url.</source>
   </file>
   <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="pl">
     <body>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="VstsAndTfsSettingsUserControl" source-language="en" target-language="pl">
+    <body>
+      <trans-unit id="RestApiTokenLink.Text">
+        <source>Go to token management page</source>
+        <target>Przejdź do strony zarządzania tokenami</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>You need to create a token with the following scopes:
+ - 'Build (read)'
+ - 'Project and team (read)'</source>
+        
+      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
         

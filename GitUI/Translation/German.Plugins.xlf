@@ -1,11 +1,6 @@
-<?xml version="1.0" ?><xliff GitExVersion="2.51.RC1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.00.rc2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="de">
     <body>
-      <trans-unit id="cbGitHubPullRequest.Text">
-        <source>display github pull requests builds. GithubToken:</source>
-        <target>Zeige die Builds der Pull Request auf GitHub. GitHub Token:</target>
-        
-      </trans-unit>
       <trans-unit id="cbLoadTestResults.Text">
         <source>display tests results in build status summary for each build result (network intensive!)</source>
         <target>Zeige Testergebnisse in der Buildstatus Übersicht für jedes Buildergebnis (viel Netzwerkverkehr!)</target>
@@ -18,21 +13,6 @@
       <trans-unit id="Description.Text">
         <source>Auto compile SubModules</source>
         <target>Untermodule automatisch kompilieren</target>
-        
-      </trans-unit>
-      <trans-unit id="MsBuildArguments.Caption">
-        <source>msbuild.exe arguments</source>
-        <target>msbuild.exe Argumente</target>
-        
-      </trans-unit>
-      <trans-unit id="MsBuildEnabled.Caption">
-        <source>Enabled</source>
-        <target>Aktiviert</target>
-        
-      </trans-unit>
-      <trans-unit id="MsBuildPath.Caption">
-        <source>Path to msbuild.exe</source>
-        <target>Pfad zu msbuild.exe</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantBuild.Text">
@@ -49,31 +29,46 @@
         <target>Bitte geben Sie den korrekten MSBuild Pfad in den Einstellungen des Plugin Dialogs ein und probieren Sie es erneut.</target>
         
       </trans-unit>
+      <trans-unit id="_msBuildArguments.Caption">
+        <source>msbuild.exe arguments</source>
+        <target>msbuild.exe Argumente</target>
+        
+      </trans-unit>
+      <trans-unit id="_msBuildEnabled.Caption">
+        <source>Enabled</source>
+        <target>Aktiviert</target>
+        
+      </trans-unit>
+      <trans-unit id="_msBuildPath.Caption">
+        <source>Path to msbuild.exe</source>
+        <target>Pfad zu msbuild.exe</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="AutoRefresh.Caption">
-        <source>Refresh view after fetch</source>
-        <target>Ansicht neu laden nach Fetch</target>
-        
-      </trans-unit>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
         <target>Periodischer fetch im Hintergrund</target>
         
       </trans-unit>
-      <trans-unit id="FetchAllSubmodules.Caption">
+      <trans-unit id="_autoRefresh.Caption">
+        <source>Refresh view after fetch</source>
+        <target>Ansicht neu laden nach Fetch</target>
+        
+      </trans-unit>
+      <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
         <target>Alle Untermodule holen</target>
         
       </trans-unit>
-      <trans-unit id="FetchInterval.Caption">
+      <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
         <target>Fetch alle x (Sekunden) ausführen - 0 zum abschalten</target>
         
       </trans-unit>
-      <trans-unit id="GitCommand.Caption">
+      <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
         <target>Parameter des Git Befehls zum Ausführen</target>
         
@@ -107,21 +102,21 @@
         <target>Bitbucket Server</target>
         
       </trans-unit>
+      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
+        <source>Your repository is not hosted in BitBucket Server.</source>
+        <target>Ihr Repository ist nicht in Bitbucket Server gehostet.</target>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="de">
     <body>
       <trans-unit id="$this.Text">
-        <source>Create Pull Request</source>
-        <target>Pull Request erzeugen</target>
+        <source>Bitbucket Server</source>
+        <target>Bitbucket Server</target>
         
       </trans-unit>
-      <trans-unit id="GridColumnName.HeaderText">
-        <source>Name</source>
-        <target>Name</target>
-        
-      </trans-unit>
-      <trans-unit id="_commited.Text">
+      <trans-unit id="_committed.Text">
         <source>{0} committed
 {1}</source>
         <target>{0} committed
@@ -133,14 +128,14 @@
         <target>Fehler</target>
         
       </trans-unit>
+      <trans-unit id="_linkLabelToolTip.Text">
+        <source>Right-click to copy link</source>
+        <target>Rechtsklick, um Link zu kopieren</target>
+        
+      </trans-unit>
       <trans-unit id="_success.Text">
         <source>Success</source>
         <target>Erfolg</target>
-        
-      </trans-unit>
-      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
-        <source>Your repository is not hosted in Bitbucket.</source>
-        <target>Ihr Repository ist nicht auf Bitbucket gehostet.</target>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
@@ -158,119 +153,124 @@
         <target>Mergen</target>
         
       </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Source</source>
-        <target>Quelle</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox2.Text">
-        <source>Target</source>
-        <target>Ziel</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox3.Text">
+      <trans-unit id="groupBoxCreatePullRequest.Text">
         <source>Pull Request Info</source>
         <target>Pull Request Information</target>
         
       </trans-unit>
-      <trans-unit id="groupBox4.Text">
-        <source>Source</source>
-        <target>Quelle</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox5.Text">
-        <source>Target</source>
-        <target>Ziel</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox6.Text">
-        <source>Pull Request Info</source>
-        <target>Pull Request Information</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox9.Text">
+      <trans-unit id="groupBoxInformation.Text">
         <source>Information</source>
         <target>Information</target>
         
       </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Branch</source>
-        <target>Branch</target>
+      <trans-unit id="groupBoxPullRequestInfo.Text">
+        <source>Pull Request Info</source>
+        <target>Pull Request Information</target>
         
       </trans-unit>
-      <trans-unit id="label10.Text">
-        <source>Reviewer (approved)</source>
-        <target>Reviewer (genehmigt)</target>
+      <trans-unit id="groupBoxSource.Text">
+        <source>Source</source>
+        <target>Quelle</target>
         
       </trans-unit>
-      <trans-unit id="label12.Text">
+      <trans-unit id="groupBoxSourceRepoView.Text">
+        <source>Source</source>
+        <target>Quelle</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxTarget.Text">
+        <source>Target</source>
+        <target>Ziel</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxTargetRepoView.Text">
+        <source>Target</source>
+        <target>Ziel</target>
+        
+      </trans-unit>
+      <trans-unit id="lblAuthor.Text">
         <source>Author</source>
         <target>Autor</target>
         
       </trans-unit>
-      <trans-unit id="label13.Text">
+      <trans-unit id="lblBranchView.Text">
+        <source>Branch</source>
+        <target>Branch</target>
+        
+      </trans-unit>
+      <trans-unit id="lblDescription.Text">
         <source>Description</source>
         <target>Beschreibung</target>
         
       </trans-unit>
-      <trans-unit id="label14.Text">
-        <source>Title</source>
-        <target>Titel</target>
+      <trans-unit id="lblDescriptionView.Text">
+        <source>Description</source>
+        <target>Beschreibung</target>
         
       </trans-unit>
-      <trans-unit id="label16.Text">
+      <trans-unit id="lblLinkCreatePull.Text">
+        <source>/projects//repos//pull-requests?create</source>
+        <target>/projects//repos//pull-requests?create</target>
+        
+      </trans-unit>
+      <trans-unit id="lblLinkViewPull.Text">
+        <source>/projects//repos//pull-requests</source>
+        <target>/projects//repos//pull-requests</target>
+        
+      </trans-unit>
+      <trans-unit id="lblRepositoryView.Text">
+        <source>Repository</source>
+        <target>Repository</target>
+        
+      </trans-unit>
+      <trans-unit id="lblReviewerView.Text">
+        <source>Reviewer (approved)</source>
+        <target>Reviewer (genehmigt)</target>
+        
+      </trans-unit>
+      <trans-unit id="lblSourceBranch.Text">
+        <source>Branch</source>
+        <target>Branch</target>
+        
+      </trans-unit>
+      <trans-unit id="lblSourceRepoView.Text">
+        <source>Repository</source>
+        <target>Repository</target>
+        
+      </trans-unit>
+      <trans-unit id="lblSourceRepository.Text">
+        <source>Repository</source>
+        <target>Repository</target>
+        
+      </trans-unit>
+      <trans-unit id="lblState.Text">
         <source>State</source>
         <target>Status</target>
         
       </trans-unit>
-      <trans-unit id="label17.Text">
+      <trans-unit id="lblTargetBranch.Text">
+        <source>Branch</source>
+        <target>Branch</target>
+        
+      </trans-unit>
+      <trans-unit id="lblTargetRepoView.Text">
+        <source>Branch</source>
+        <target>Branch</target>
+        
+      </trans-unit>
+      <trans-unit id="lblTargetRepository.Text">
         <source>Repository</source>
         <target>Repository</target>
         
       </trans-unit>
-      <trans-unit id="label18.Text">
-        <source>Branch</source>
-        <target>Branch</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Branch</source>
-        <target>Branch</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>Description</source>
-        <target>Beschreibung</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
+      <trans-unit id="lblTitle.Text">
         <source>Title</source>
         <target>Titel</target>
         
       </trans-unit>
-      <trans-unit id="label5.Text">
-        <source>Repository</source>
-        <target>Repository</target>
-        
-      </trans-unit>
-      <trans-unit id="label6.Text">
-        <source>Repository</source>
-        <target>Repository</target>
-        
-      </trans-unit>
-      <trans-unit id="label8.Text">
-        <source>Repository</source>
-        <target>Repository</target>
-        
-      </trans-unit>
-      <trans-unit id="label9.Text">
-        <source>Branch</source>
-        <target>Branch</target>
-        
-      </trans-unit>
-      <trans-unit id="lblReviewers.Text">
-        <source>Reviewer(s)</source>
-        <target>Reviewer</target>
+      <trans-unit id="lblTitleView.Text">
+        <source>Title</source>
+        <target>Titel</target>
         
       </trans-unit>
       <trans-unit id="tabCreate.Text">
@@ -346,8 +346,8 @@
         
       </trans-unit>
       <trans-unit id="RefreshBtn.Text">
-        <source>Search branches</source>
-        <target>Suche Branches</target>
+        <source>Cancel</source>
+        <target>Abbrechen</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -365,7 +365,7 @@
         <target>Abbrechen</target>
         
       </trans-unit>
-      <trans-unit id="_chooseBrancesToDelete.Text">
+      <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
         <target>Wählen Sie die Branches zur Löschung aus. Nur Branches die vollständig in '{0}' gemerged wurden, werden gelöscht.</target>
         
@@ -425,8 +425,8 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
         
       </trans-unit>
       <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
-        <source>Delete</source>
-        <target>Löschen</target>
+        <source>deleteDataGridViewCheckBoxColumn</source>
+        <target>Ungenützte Branches Checkbox Spalte</target>
         
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
@@ -442,6 +442,11 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
         <target>Lösche Branches die vollständig in den Branch gemerged wurden</target>
+        
+      </trans-unit>
+      <trans-unit id="lblStatus.Text">
+        <source>Loading...</source>
+        <target>Lade...</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -473,19 +478,54 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
   </file>
   <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="DaysOlderThan.Caption">
-        <source>Delete obsolete branches older than (days)</source>
-        <target>Lösche obsolete Branches älter als x (Tage)</target>
-        
-      </trans-unit>
       <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
         <target>Obsolete Branches löschen</target>
         
       </trans-unit>
-      <trans-unit id="MergedInBranch.Caption">
+      <trans-unit id="_daysOlderThan.Caption">
+        <source>Delete obsolete branches older than (days)</source>
+        <target>Lösche obsolete Branches älter als x (Tage)</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
+        <source>Delete obsolete branches from remote</source>
+        <target>Veraltete Branches von der Remote löschen</target>
+        
+      </trans-unit>
+      <trans-unit id="_includeUnmergedBranchesFlag.Caption">
+        <source>Delete unmerged branches</source>
+        <target>Lösche nicht gemergte Branches</target>
+        
+      </trans-unit>
+      <trans-unit id="_mergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
         <target>Branch in dem alle Branches gemerged werden sollen</target>
+        
+      </trans-unit>
+      <trans-unit id="_regexCaseInsensitiveFlag.Caption">
+        <source>Is regex filter case insensitive?</source>
+        <target>Berücksichtigt der Regex Filter Groß-/Kleinschreibung?</target>
+        
+      </trans-unit>
+      <trans-unit id="_regexFilter.Caption">
+        <source>Regex to filter branches to delete</source>
+        <target>Regex Filter zum Löschen von Branches</target>
+        
+      </trans-unit>
+      <trans-unit id="_regexInvertedFlag.Caption">
+        <source>Search branches that does not match regex</source>
+        <target>Suche Branches die nicht auf den Regex passen</target>
+        
+      </trans-unit>
+      <trans-unit id="_remoteName.Caption">
+        <source>Remote name obsoleted branches should be deleted from</source>
+        <target>Veraltete Remote Name Branches sollten gelöscht werden von</target>
+        
+      </trans-unit>
+      <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
+        <source>Use regex to filter branches to delete</source>
+        <target>Verwende Regex, um Branches für Löschung zu filtern</target>
         
       </trans-unit>
     </body>
@@ -566,7 +606,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
         <target>Finde große Dateien</target>
         
       </trans-unit>
-      <trans-unit id="SizeLargeFile.Caption">
+      <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
         <target>Finde Dateien größer als (MB)</target>
         
@@ -706,6 +746,11 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       <trans-unit id="labelRemote.Text">
         <source>Remote:</source>
         <target>Remote:</target>
+        
+      </trans-unit>
+      <trans-unit id="labelReviewers.Text">
+        <source>Reviewer(s):</source>
+        <target>Reviewer:</target>
         
       </trans-unit>
       <trans-unit id="labelTopic.Text">
@@ -848,12 +893,12 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0:N0} Blank lines ({1:P1})</source>
-        <target>{0} Leerzeilen ({1})</target>
+        <target>{0:N0} Leerzeilen ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>{0} Kommentarzeilen ({1})</target>
+        <target>{0:N0} Kommentarzeilen ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
@@ -868,37 +913,37 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
-        <target>{0} Codezeilen</target>
+        <target>{0:N0} Codezeilen</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
-        <target>{0} Codezeilen in {1} Dateien ({2})</target>
+        <target>{0:N0} Codezeilen {1} Dateien ({2:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
-        <target>{0} Codezeilen ({1})</target>
+        <target>{0:N0} Codezeilen ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
-        <target>{0} Zeilen in Designerdateien ({1})</target>
+        <target>{0:N0} Zeilen in Designer Dateien ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
-        <target>{0} produktiver Code ({1})</target>
+        <target>{0:N0} Zeilen Produktionscode ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
-        <target>{0} Zeilen Testcode</target>
+        <target>{0:N0} Zeilen Testcode</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
-        <target>{0} Zeilen Testcode ({1})</target>
+        <target>{0:N0} Zeilen Testcode ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
@@ -993,9 +1038,14 @@ Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und
         <target>Hook installieren</target>
         
       </trans-unit>
-      <trans-unit id="_installCommitMsgHookFailed.Text">
+      <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
         <source>Could not download the commit-msg file. Please install the commit-msg hook manually.</source>
         <target>Konnte die commit-msg Datei nicht herunterladen. Bitte installieren Sie den commit-msg Hook manuell.</target>
+        
+      </trans-unit>
+      <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
+        <source>Could not create the hooks folder. Please create the folder manually and try again.</source>
+        <target>Konnte den hooks Ordner nicht erstellen. Bitte erstellen sie den Ordner manuell und versuchen Sie es erneut.</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookMessage.Text">
@@ -1106,6 +1156,11 @@ Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und
         <target>basiert auf:</target>
         
       </trans-unit>
+      <trans-unit id="cbPushAfterFinish.Text">
+        <source>Push after finish</source>
+        <target>Push nach Beendigung</target>
+        
+      </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
         <target>Verwalte vorhandene Branches:</target>
@@ -1172,11 +1227,11 @@ Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="Github3Plugin" source-language="en" target-language="de">
+  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="de">
     <body>
       <trans-unit id="Description.Text">
-        <source>Github</source>
-        <target>Github</target>
+        <source>GitHub</source>
+        <target>GitHub</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
@@ -1197,22 +1252,22 @@ Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und
   </file>
   <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="de">
     <body>
-      <trans-unit id="CodeFiles.Caption">
-        <source>Code files</source>
-        <target>Code Dateien</target>
-        
-      </trans-unit>
       <trans-unit id="Description.Text">
         <source>Statistics</source>
         <target>Statistiken</target>
         
       </trans-unit>
-      <trans-unit id="IgnoreDirectories.Caption">
+      <trans-unit id="_codeFiles.Caption">
+        <source>Code files</source>
+        <target>Code Dateien</target>
+        
+      </trans-unit>
+      <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
         <target>Zu ignorierende Verzeichnisse (EndsWith)</target>
         
       </trans-unit>
-      <trans-unit id="IgnoreSubmodules.Caption">
+      <trans-unit id="_ignoreSubmodules.Caption">
         <source>Ignore submodules</source>
         <target>Ignoriere Untermodule</target>
         
@@ -1226,16 +1281,6 @@ Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und
         <target>Gource</target>
         
       </trans-unit>
-      <trans-unit id="GourceArguments.Caption">
-        <source>Arguments</source>
-        <target>Parameter</target>
-        
-      </trans-unit>
-      <trans-unit id="GourcePath.Caption">
-        <source>Path to Gource</source>
-        <target>Pfad zu Gource</target>
-        
-      </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
         <source>{0} bytes downloaded.</source>
         <target>{0} Bytes heruntergeladen.</target>
@@ -1245,7 +1290,7 @@ Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>Gource wurde nicht gefunden.
-Bitte laden Sie Gource herunter und konfigurieren Sie den Pfad in den Plugin-Einstellungen.</target>
+Bitte laden Sie Gource herunter und konfigurieren Sie den Pfad im Dialog mit den Plugin Einstellungen.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
@@ -1274,7 +1319,7 @@ Soll Gource automatisch heruntergeladen werden?</target>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Download fehlgeschlagen.
+        <target>Herunterladen fehlgeschlagen.
 Bitte laden Sie Gource und setzen den Pfad im Dialog mit den Plugin Einstellungen.</target>
         
       </trans-unit>
@@ -1283,9 +1328,19 @@ Bitte laden Sie Gource und setzen den Pfad im Dialog mit den Plugin Einstellunge
         <target>Gource</target>
         
       </trans-unit>
+      <trans-unit id="_gourceArguments.Caption">
+        <source>Arguments</source>
+        <target>Parameter</target>
+        
+      </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
         <source>Gource has been downloaded and unzipped.</source>
         <target>Gource wurde heruntergeladen und entpackt.</target>
+        
+      </trans-unit>
+      <trans-unit id="_gourcePath.Caption">
+        <source>Path to Gource</source>
+        <target>Pfad zu Gource</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
@@ -1350,6 +1405,11 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
   </file>
   <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="de">
     <body>
+      <trans-unit id="lblIgnoreBuildBranch.Text">
+        <source>Ignore build for branch</source>
+        <target>Build für Branch ignorieren</target>
+        
+      </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
         <target>Jenkins Server-URL</target>
@@ -1369,37 +1429,37 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
         <target>JIRA Commit Hinweis</target>
         
       </trans-unit>
-      <trans-unit id="enabledSettings.Caption">
+      <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
-        <target>JIRA HInweis Plugin aktiviert</target>
+        <target>JIRA Hinweis Plugin aktiviert</target>
         
       </trans-unit>
-      <trans-unit id="jdlQuerySettings.Caption">
-        <source>JDL Query</source>
-        <target>JQL Query</target>
-        
-      </trans-unit>
-      <trans-unit id="jiraFields.Caption">
+      <trans-unit id="_jiraFields.Caption">
         <source>Jira fields</source>
         <target>JIRA Felder</target>
         
       </trans-unit>
-      <trans-unit id="passwordSettings.Caption">
+      <trans-unit id="_jqlQuerySettings.Caption">
+        <source>JQL Query</source>
+        <target>JQL Abfrage</target>
+        
+      </trans-unit>
+      <trans-unit id="_passwordSettings.Caption">
         <source>Jira password</source>
         <target>JIRA Passwort</target>
         
       </trans-unit>
-      <trans-unit id="stringTemplateSetting.Caption">
+      <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         <target>Vorlage für Commit Nachricht</target>
         
       </trans-unit>
-      <trans-unit id="urlSettings.Caption">
+      <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
         <target>JIRA URL</target>
         
       </trans-unit>
-      <trans-unit id="userSettings.Caption">
+      <trans-unit id="_userSettings.Caption">
         <source>Jira user</source>
         <target>JIRA Benutzer</target>
         
@@ -1498,10 +1558,12 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>'From' commit must be specified</source>
+        <target>'Von' Commit muss angegeben werden</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>'To' commit must be specified</source>
+        <target>'Zu' Commit muss angegeben werden</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1614,211 +1676,6 @@ Branchnamen oder Tag-Namen sein.)</target>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="StashPlugin" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Create Bitbucket Pull Request</source>
-        <target>Erzeuge einen Pull Request auf Bitbucket</target>
-        
-      </trans-unit>
-      <trans-unit id="StashBaseUrl.Caption">
-        <source>Specify the base URL to Bitbucket</source>
-        <target>Geben Sie die Bitbucket Basis-URL an</target>
-        
-      </trans-unit>
-      <trans-unit id="StashDisableSsl.Caption">
-        <source>Disable SSL verification</source>
-        <target>SSL Verifikation abschalten</target>
-        
-      </trans-unit>
-      <trans-unit id="StashPassword.Caption">
-        <source>Bitbucket Password</source>
-        <target>Bitbucket Passwort</target>
-        
-      </trans-unit>
-      <trans-unit id="StashUsername.Caption">
-        <source>Bitbucket Username</source>
-        <target>Bitbucket Benutzername</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="StashPullRequestForm" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Create Pull Request</source>
-        <target>Pull Request erzeugen</target>
-        
-      </trans-unit>
-      <trans-unit id="GridColumnName.HeaderText">
-        <source>Name</source>
-        <target>Name</target>
-        
-      </trans-unit>
-      <trans-unit id="_commited.Text">
-        <source>{0} committed
-{1}</source>
-        <target>{0} committed
-{1}</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Fehler</target>
-        
-      </trans-unit>
-      <trans-unit id="_success.Text">
-        <source>Success</source>
-        <target>Erfolg</target>
-        
-      </trans-unit>
-      <trans-unit id="_yourRepositoryIsNotInStash.Text">
-        <source>Your repository is not hosted in Bitbucket.</source>
-        <target>Ihr Repository ist nicht auf Bitbucket gehostet.</target>
-        
-      </trans-unit>
-      <trans-unit id="btnApprove.Text">
-        <source>Approve</source>
-        <target>Genehmigen</target>
-        
-      </trans-unit>
-      <trans-unit id="btnCreate.Text">
-        <source>Create</source>
-        <target>Erzeugen</target>
-        
-      </trans-unit>
-      <trans-unit id="btnMerge.Text">
-        <source>Merge</source>
-        <target>Mergen</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Source</source>
-        <target>Quelle</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox2.Text">
-        <source>Target</source>
-        <target>Ziel</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox3.Text">
-        <source>Pull Request Info</source>
-        <target>Pull Request Information</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox4.Text">
-        <source>Source</source>
-        <target>Quelle</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox5.Text">
-        <source>Target</source>
-        <target>Ziel</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox6.Text">
-        <source>Pull Request Info</source>
-        <target>Pull Request Information</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox9.Text">
-        <source>Information</source>
-        <target>Information</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Branch</source>
-        <target>Branch</target>
-        
-      </trans-unit>
-      <trans-unit id="label10.Text">
-        <source>Reviewer (approved)</source>
-        <target>Reviewer (genehmigt)</target>
-        
-      </trans-unit>
-      <trans-unit id="label12.Text">
-        <source>Author</source>
-        <target>Autor</target>
-        
-      </trans-unit>
-      <trans-unit id="label13.Text">
-        <source>Description</source>
-        <target>Beschreibung</target>
-        
-      </trans-unit>
-      <trans-unit id="label14.Text">
-        <source>Title</source>
-        <target>Titel</target>
-        
-      </trans-unit>
-      <trans-unit id="label16.Text">
-        <source>State</source>
-        <target>Status</target>
-        
-      </trans-unit>
-      <trans-unit id="label17.Text">
-        <source>Repository</source>
-        <target>Repository</target>
-        
-      </trans-unit>
-      <trans-unit id="label18.Text">
-        <source>Branch</source>
-        <target>Branch</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Branch</source>
-        <target>Branch</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>Description</source>
-        <target>Beschreibung</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>Title</source>
-        <target>Titel</target>
-        
-      </trans-unit>
-      <trans-unit id="label5.Text">
-        <source>Repository</source>
-        <target>Repository</target>
-        
-      </trans-unit>
-      <trans-unit id="label6.Text">
-        <source>Repository</source>
-        <target>Repository</target>
-        
-      </trans-unit>
-      <trans-unit id="label8.Text">
-        <source>Repository</source>
-        <target>Repository</target>
-        
-      </trans-unit>
-      <trans-unit id="label9.Text">
-        <source>Branch</source>
-        <target>Branch</target>
-        
-      </trans-unit>
-      <trans-unit id="lblReviewers.Text">
-        <source>Reviewer(s)</source>
-        <target>Reviewer</target>
-        
-      </trans-unit>
-      <trans-unit id="tabCreate.Text">
-        <source>Create Pull Request</source>
-        <target>Pull Request erzeugen</target>
-        
-      </trans-unit>
-      <trans-unit id="tabView.Text">
-        <source>View Pull Requests</source>
-        <target>Pull Requests anzeigen</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="de">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
@@ -1868,6 +1725,29 @@ Bitte die Server-URL überprüfen.</target>
   </file>
   <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="de">
     <body>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>Der reguläre Ausdruck &quot;Build definition name&quot; validiert nicht und wird nicht gespeichert!</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="VstsAndTfsSettingsUserControl" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="RestApiTokenLink.Text">
+        <source>Go to token management page</source>
+        <target>Zur Token Management Seite gehen</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>You need to create a token with the following scopes:
+ - 'Build (read)'
+ - 'Project and team (read)'</source>
+        <target>Sie müssen einen Token mit den folgenden Scopes erstellen:
+- 'Build (read)'
+- 'Project and team (read)'</target>
+        
+      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
         <target>Der reguläre Ausdruck &quot;Build definition name&quot; validiert nicht und wird nicht gespeichert!</target>

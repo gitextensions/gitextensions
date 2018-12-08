@@ -292,31 +292,39 @@ namespace GitCommands
             {
                 if (_systemEncoding == null)
                 {
-                    // check whether GitExtensions works with standard msysgit or msysgit-unicode
-
-                    // invoke a git command that returns an invalid argument in its response, and
-                    // check if a unicode-only character is reported back. If so assume msysgit-unicode
-
-                    // git config --get with a malformed key (no section) returns:
-                    // "error: key does not contain a section: <key>"
-                    const string controlStr = "ą"; // "a caudata"
-                    var arguments = new GitArgumentBuilder("config")
+                    try
                     {
-                        "--get",
-                        controlStr
-                    };
+                        // check whether GitExtensions works with standard msysgit or msysgit-unicode
 
-                    string s = new GitModule("").RunGitCmd(arguments, Encoding.UTF8);
-                    if (s != null && s.IndexOf(controlStr) != -1)
-                    {
-                        _systemEncoding = new UTF8Encoding(false);
+                        // invoke a git command that returns an invalid argument in its response, and
+                        // check if a unicode-only character is reported back. If so assume msysgit-unicode
+
+                        // git config --get with a malformed key (no section) returns:
+                        // "error: key does not contain a section: <key>"
+                        const string controlStr = "ą"; // "a caudata"
+                        var arguments = new GitArgumentBuilder("config")
+                        {
+                            "--get",
+                            controlStr
+                        };
+
+                        string s = new GitModule("").RunGitCmd(arguments, Encoding.UTF8);
+                        if (s != null && s.IndexOf(controlStr) != -1)
+                        {
+                            _systemEncoding = new UTF8Encoding(false);
+                        }
+                        else
+                        {
+                            _systemEncoding = Encoding.Default;
+                        }
+
+                        Debug.WriteLine("System encoding: " + _systemEncoding.EncodingName);
                     }
-                    else
+                    catch (Exception)
                     {
-                        _systemEncoding = Encoding.Default;
+                        // Ignore exception. If the git location itself is not configured correctly yet, we could never execute it.
+                        return Encoding.Default;
                     }
-
-                    Debug.WriteLine("System encoding: " + _systemEncoding.EncodingName);
                 }
 
                 return _systemEncoding;

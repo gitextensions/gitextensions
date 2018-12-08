@@ -75,7 +75,6 @@ namespace GitUI
         private readonly RevisionGraphColumnProvider _revisionGraphColumnProvider;
         private readonly List<DataGridViewColumn> _resizableColumns;
         private readonly DataGridViewColumn _maximizedColumn;
-        private DataGridViewColumn _lastVisibleResizableColumn = null;
 
         private RefFilterOptions _refFilterOptions = RefFilterOptions.All | RefFilterOptions.Boundary;
 
@@ -491,10 +490,10 @@ namespace GitUI
                 _resizableColumns.ForEach(column => column.Resizable = DataGridViewTriState.True);
 
                 // suppress the manual resizing of the last visible column because it will be resized when the maximized column is resized
-                _lastVisibleResizableColumn = _gridView.Columns.GetLastColumn(DataGridViewElementStates.Visible | DataGridViewElementStates.Resizable, DataGridViewElementStates.None);
-                if (_lastVisibleResizableColumn != null)
+                var lastVisibleResizableColumn = _gridView.Columns.GetLastColumn(DataGridViewElementStates.Visible | DataGridViewElementStates.Resizable, DataGridViewElementStates.None);
+                if (lastVisibleResizableColumn != null)
                 {
-                    _lastVisibleResizableColumn.Resizable = DataGridViewTriState.False;
+                    lastVisibleResizableColumn.Resizable = DataGridViewTriState.False;
                 }
             }
         }
@@ -1263,18 +1262,26 @@ namespace GitUI
             {
                 case MouseButtons.XButton1: NavigateBackward(); break;
                 case MouseButtons.XButton2: NavigateForward(); break;
-                case MouseButtons.Left when _maximizedColumn != null && _lastVisibleResizableColumn != null:
-                    // make resizing of the maximized column work and restore the settings afterwards
-                    void OnGridViewMouseCaptureChanged(object ignoredSender, EventArgs ignoredArgs)
+                case MouseButtons.Left when _maximizedColumn != null:
+                    // suppress the manual resizing of the last visible column because it will be resized when the maximized column is resized
+                    var lastVisibleResizableColumn = _gridView.Columns.GetLastColumn(DataGridViewElementStates.Visible | DataGridViewElementStates.Resizable, DataGridViewElementStates.None);
+                    if (lastVisibleResizableColumn != null)
                     {
-                        _gridView.MouseCaptureChanged -= OnGridViewMouseCaptureChanged;
-                        _lastVisibleResizableColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                        _maximizedColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                        lastVisibleResizableColumn.Resizable = DataGridViewTriState.False;
+
+                        // make resizing of the maximized column work and restore the settings afterwards
+                        void OnGridViewMouseCaptureChanged(object ignoredSender, EventArgs ignoredArgs)
+                        {
+                            _gridView.MouseCaptureChanged -= OnGridViewMouseCaptureChanged;
+                            lastVisibleResizableColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                            _maximizedColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                        }
+
+                        _gridView.MouseCaptureChanged += OnGridViewMouseCaptureChanged;
+                        _maximizedColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                        lastVisibleResizableColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                     }
 
-                    _gridView.MouseCaptureChanged += OnGridViewMouseCaptureChanged;
-                    _maximizedColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                    _lastVisibleResizableColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                     break;
             }
         }

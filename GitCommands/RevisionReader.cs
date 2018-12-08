@@ -165,6 +165,7 @@ namespace GitCommands
             return new GitArgumentBuilder("log")
             {
                 "-z",
+                branchFilter,
                 $"--pretty=format:\"{FullFormat}\"",
                 {
                     refFilterOptions.HasFlag(RefFilterOptions.FirstParent),
