@@ -96,6 +96,7 @@ namespace GitUI.CommitInfo
             this.rtbxCommitMessage.Location = new System.Drawing.Point(8, 8);
             this.rtbxCommitMessage.Margin = new System.Windows.Forms.Padding(8);
             this.rtbxCommitMessage.Name = "rtbxCommitMessage";
+            this.rtbxCommitMessage.ReadOnly = true;
             this.rtbxCommitMessage.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.rtbxCommitMessage.Size = new System.Drawing.Size(440, 20);
             this.rtbxCommitMessage.TabIndex = 1;
