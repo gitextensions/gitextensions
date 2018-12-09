@@ -51,8 +51,8 @@ IDI_ICONPATCHAPPLY          ICON    "Resources\\IconPatchApply.ico"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,99,90,0
- PRODUCTVERSION 2,99,90,0
+ FILEVERSION 3,00,00,4433
+ PRODUCTVERSION 3,00,00,4433
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BLOCK "040904B0"
         BEGIN
             VALUE "FileDescription", "Shell extensions for Windows Explorer"
-            VALUE "FileVersion", "2.99.90"
+            VALUE "FileVersion", "3.00.00.4433"
             VALUE "InternalName", "GitExtensions"
             VALUE "LegalCopyright", "Copyright 2008-2018"
             VALUE "OriginalFilename", "GitExtensionsShellEx.dll"
             VALUE "ProductName", "GitExtensions"
-            VALUE "ProductVersion", "3.00.a1"
+            VALUE "ProductVersion", "3.00.00.4433"
         END
     END
     BLOCK "VarFileInfo"
