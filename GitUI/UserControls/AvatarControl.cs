@@ -104,6 +104,8 @@ namespace GitUI
 
             if (!token.IsCancellationRequested)
             {
+                await this.SwitchToMainThreadAsync();
+
                 RefreshImage(image);
             }
         }
