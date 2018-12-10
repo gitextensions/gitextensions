@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GitExtensions")]
 [assembly: AssemblyProduct("GitExtensions")]
-[assembly: AssemblyCopyright("Copyright © 2008-2018 GitExtensions Team")]
+[assembly: AssemblyCopyright("Copyright ? 2008-2018 GitExtensions Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,9 +20,9 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("3.00.00.4433")]
-[assembly: AssemblyFileVersion("3.00.00.4433")]
-[assembly: AssemblyInformationalVersion("3.00.00.4433")]
+[assembly: AssemblyVersion("3.01.00.0")]
+[assembly: AssemblyFileVersion("3.01.00.0")]
+[assembly: AssemblyInformationalVersion("3.01.00.0")]
 
 // Disable CLS compliance. See https://github.com/gitextensions/gitextensions/issues/4710
 [assembly: CLSCompliant(isCompliant: false)]
