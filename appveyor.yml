@@ -1,4 +1,4 @@
-version: 2.49.91.{build}
+version: 3.00.00.{build}
 
 os: Visual Studio 2015
 
@@ -14,20 +14,12 @@ environment:
   SKIP_PAUSE: TRUE
   ARCHIVE_WITH_PDB: TRUE
 
-build:
-  verbosity: minimal
-
-cache:
-  #- packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
-  - packages\WiX.3.10.3 -> Setup\packages.config
-  - Setup\cache -> Setup\DownloadExternals.cmd
-
-install:
-- cmd: git submodule update --init --recursive
+build: off
 
 build_script:
 - ps: |
-    Write-Output "Platform: $env:IdeVersion"
-    & Setup\BuildInstallers.$env:IdeVersion.cmd
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    Get-ChildItem Setup\GitExtensions-*-Mono.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+    Write-Host "Not building"
+
+test_script:
+- ps: |
+    Write-Host "Not testing"
