@@ -16,7 +16,7 @@ namespace GitUI.SpellChecker
             int start = Math.Min(FindStartOfWord(text, index), index);
             if (start < 0)
             {
-                return (-1, 0);
+                return (0, 0);
             }
 
             int end = FindEndOfWord(text, index);
