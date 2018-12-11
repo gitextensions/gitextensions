@@ -78,7 +78,10 @@ namespace GitUITests.UserControls.RevisionGrid
                 GitRevision revision = new GitRevision(ObjectId.Random());
                 if (randomRevisions.Count > 1)
                 {
-                    revision.ParentIds = new ObjectId[] { randomRevisions[_random.Next(randomRevisions.Count - 1)].ObjectId };
+                    var randomRevision1 = randomRevisions[_random.Next(randomRevisions.Count - 1)];
+                    var randomRevision2 = randomRevisions[_random.Next(randomRevisions.Count - 1)];
+
+                    revision.ParentIds = new ObjectId[] { randomRevision1.ObjectId, randomRevision2.ObjectId };
                 }
 
                 _revisionGraph.Add(revision, RevisionNodeFlags.None);
@@ -86,7 +89,7 @@ namespace GitUITests.UserControls.RevisionGrid
                 randomRevisions.Add(revision);
             }
 
-            Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
+            Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder(), "Revisions not reordered to topo order");
         }
 
         private void BuildCache()
