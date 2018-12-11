@@ -234,11 +234,6 @@ namespace GitCommands
 
             var comparison = EnvUtils.RunningOnWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
-            if (TryGetExactPath(path, out var exactPath))
-            {
-                path = exactPath;
-            }
-
             if (path.StartsWith(userProfile, comparison))
             {
                 var length = path.Length - userProfile.Length;
