@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
@@ -64,20 +65,19 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             int maxScore = Score;
 
-            var processed = new HashSet<RevisionGraphRevision>();
-
             var stack = new Stack<RevisionGraphRevision>();
             stack.Push(this);
-            processed.Add(this);
             while (stack.Count > 0)
             {
                 var revision = stack.Pop();
 
-                foreach (var parent in revision.Parents.Where(r => r.Score < maxScore + 1 && !processed.Contains(r)))
+                foreach (var parent in revision.Parents.Where(r => r.Score <= revision.Score))
                 {
-                    parent.Score = maxScore + 1;
-                    maxScore = parent.Score;
-                    processed.Add(parent);
+                    parent.Score = revision.Score + 1;
+
+                    Debug.Assert(parent.Score > revision.Score, "Reorder score failed.");
+
+                    maxScore = Math.Max(parent.Score, maxScore);
                     stack.Push(parent);
                 }
             }
