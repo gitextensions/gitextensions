@@ -290,7 +290,7 @@ namespace GitFlow
                 { cbPushAfterFinish.Checked, "-p" },
                 cbBranches.SelectedValue.ToString()
             };
-            RunCommand($"flow ");
+            RunCommand(args);
         }
 
         private bool RunCommand(ArgumentString commandText)
