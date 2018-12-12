@@ -18,9 +18,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             Objectid = objectId;
 
-            Parents = new ConcurrentBag<RevisionGraphRevision>();
-            Children = new ConcurrentBag<RevisionGraphRevision>();
-            StartSegments = new SynchronizedCollection<RevisionGraphSegment>();
+            Parents = new ThreadSafeGrowingList<RevisionGraphRevision>();
+            Children = new ThreadSafeGrowingList<RevisionGraphRevision>();
+            StartSegments = new ThreadSafeGrowingList<RevisionGraphSegment>();
 
             Score = guessScore;
 
@@ -89,9 +89,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public ObjectId Objectid { get; set; }
 
-        public ConcurrentBag<RevisionGraphRevision> Parents { get; }
-        public ConcurrentBag<RevisionGraphRevision> Children { get; }
-        public SynchronizedCollection<RevisionGraphSegment> StartSegments { get; }
+        public ThreadSafeGrowingList<RevisionGraphRevision> Parents { get; }
+        public ThreadSafeGrowingList<RevisionGraphRevision> Children { get; }
+        public ThreadSafeGrowingList<RevisionGraphSegment> StartSegments { get; }
 
         // Mark this commit, and all its parents, as relative. Used for branch highlighting.
         // By default, the current checkout will be marked relative.
