@@ -9,23 +9,20 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     // are reading, this can be used.
     public class ThreadSafeGrowingList<T> : IReadOnlyList<T>
     {
-        private int _capacity;
         private T[] _internalArray;
 
         public ThreadSafeGrowingList(int capacity = 2)
         {
             _internalArray = new T[capacity];
-            _capacity = capacity;
         }
 
         public void Add(T item)
         {
-            if (Count == _capacity)
+            if (Count == _internalArray.Length)
             {
-                T[] newArray = new T[_capacity * 2];
+                T[] newArray = new T[_internalArray.Length * 2];
                 _internalArray.CopyTo(newArray, 0);
                 _internalArray = newArray;
-                _capacity = _capacity * 2;
             }
 
             _internalArray[Count] = item;
