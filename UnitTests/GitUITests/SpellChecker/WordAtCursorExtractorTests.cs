@@ -32,12 +32,12 @@ namespace GitUITests.SpellChecker
             return _wordAtCursorExtractor.Extract(text, text.Length - 1);
         }
 
-        [TestCase("", -2, -1, 0, ExpectedResult = true)]
-        [TestCase("", -1, -1, 0, ExpectedResult = true)]
-        [TestCase("", 0, -1, 0, ExpectedResult = true)]
-        [TestCase("", 1, -1, 0, ExpectedResult = true)]
-        [TestCase("_obj.f", -2, -1, 0, ExpectedResult = true)]
-        [TestCase("_obj.f", -1, -1, 0, ExpectedResult = true)]
+        [TestCase("", -2, 0, 0, ExpectedResult = true)]
+        [TestCase("", -1, 0, 0, ExpectedResult = true)]
+        [TestCase("", 0, 0, 0, ExpectedResult = true)]
+        [TestCase("", 1, 0, 0, ExpectedResult = true)]
+        [TestCase("_obj.f", -2, 0, 0, ExpectedResult = true)]
+        [TestCase("_obj.f", -1, 0, 0, ExpectedResult = true)]
         [TestCase("_obj.f", 0, 0, 4, ExpectedResult = true)]
         [TestCase("_obj.f", 1, 0, 4, ExpectedResult = true)]
         [TestCase("_obj.f", 2, 0, 4, ExpectedResult = true)]
