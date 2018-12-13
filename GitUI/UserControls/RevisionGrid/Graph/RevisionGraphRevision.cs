@@ -18,9 +18,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             Objectid = objectId;
 
-            Parents = new ThreadSafeGrowingList<RevisionGraphRevision>();
-            Children = new ThreadSafeGrowingList<RevisionGraphRevision>();
-            StartSegments = new ThreadSafeGrowingList<RevisionGraphSegment>();
+            Parents = new GrowingList<RevisionGraphRevision>();
+            Children = new GrowingList<RevisionGraphRevision>();
+            StartSegments = new GrowingList<RevisionGraphSegment>();
 
             Score = guessScore;
 
@@ -58,7 +58,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             Score = minimalScore;
 
-            if (!Parents.Any())
+            if (Parents.Count == 0)
             {
                 return Score;
             }
@@ -71,8 +71,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             {
                 var revision = stack.Pop();
 
-                foreach (var parent in revision.Parents.Where(r => r.Score <= revision.Score))
+                for (int i = 0; i < revision.Parents.Count; i++)
                 {
+                    var parent = revision.Parents[i];
+
+                    if (parent.Score > revision.Score)
+                    {
+                        continue;
+                    }
+
                     parent.Score = revision.Score + 1;
 
                     Debug.Assert(parent.Score > revision.Score, "Reorder score failed.");
@@ -89,9 +96,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public ObjectId Objectid { get; set; }
 
-        public ThreadSafeGrowingList<RevisionGraphRevision> Parents { get; }
-        public ThreadSafeGrowingList<RevisionGraphRevision> Children { get; }
-        public ThreadSafeGrowingList<RevisionGraphSegment> StartSegments { get; }
+        public GrowingList<RevisionGraphRevision> Parents { get; }
+        public GrowingList<RevisionGraphRevision> Children { get; }
+        public GrowingList<RevisionGraphSegment> StartSegments { get; }
 
         // Mark this commit, and all its parents, as relative. Used for branch highlighting.
         // By default, the current checkout will be marked relative.
@@ -102,7 +109,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
-            if (!Parents.Any())
+            if (Parents.Count == 0)
             {
                 IsRelative = true;
                 return;
@@ -127,7 +134,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public void AddParent(RevisionGraphRevision parent, out int maxScore)
         {
             // Generate a LaneColor used for rendering
-            if (Parents.Any())
+            if (Parents.Count != 0)
             {
                 parent.LaneColor = parent.Score;
             }

@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GitUI.UserControls.RevisionGrid.Graph
 {
@@ -7,12 +9,17 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     // Writing to this list is not thread safe. However, for the usecase
     // where only one thread is adding items to the list, and multiple threads
     // are reading, this can be used.
-    public class ThreadSafeGrowingList<T> : IReadOnlyList<T>
+    public class GrowingList<T> : IReadOnlyList<T>
     {
         private T[] _internalArray;
 
-        public ThreadSafeGrowingList(int capacity = 2)
+        public GrowingList(int capacity = 2)
         {
+            if (capacity <= 0)
+            {
+                throw new ArgumentException("capacity must be > 0");
+            }
+
             _internalArray = new T[capacity];
         }
 
@@ -29,13 +36,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             Count = Count + 1;
         }
 
-        public T this[int index] => _internalArray[Count];
+        public T this[int index] => _internalArray[index];
 
         public int Count { get; private set; } = 0;
 
         public IEnumerator<T> GetEnumerator()
         {
-            return new ThreadSafeGrowingListEnumerator<T>(_internalArray, Count);
+            return _internalArray.Take(Count).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

@@ -21,7 +21,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         // Some unordered collections with raw data
         private ConcurrentDictionary<ObjectId, RevisionGraphRevision> _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>(DEFAULT_CONCURRENCYLEVEL, DEFAULT_CAPACITY);
-        private ThreadSafeGrowingList<RevisionGraphRevision> _nodes = new ThreadSafeGrowingList<RevisionGraphRevision>(DEFAULT_CAPACITY);
+        private GrowingList<RevisionGraphRevision> _nodes = new GrowingList<RevisionGraphRevision>(DEFAULT_CAPACITY);
 
         /// <summary>
         /// The max score is used to keep a chronological order during the graph building.
@@ -34,7 +34,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// This is used so we can draw commits before the graph building is complete.
         /// </summary>
         /// <remarks>This cache is very cheap to build.</remarks>
-        private RevisionGraphRevision[] _orderedNodesCache;
+        private List<RevisionGraphRevision> _orderedNodesCache;
         private bool _reorder = true;
         private int _orderedUntilScore = -1;
 
@@ -51,7 +51,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             _maxScore = 0;
             _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>(DEFAULT_CONCURRENCYLEVEL, DEFAULT_CAPACITY);
-            _nodes = new ThreadSafeGrowingList<RevisionGraphRevision>(DEFAULT_CAPACITY);
+            _nodes = new GrowingList<RevisionGraphRevision>(DEFAULT_CAPACITY);
             _orderedNodesCache = null;
             _orderedRowCache = null;
         }
@@ -81,7 +81,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </param>
         public void CacheTo(int currentRowIndex, int lastToCacheRowIndex)
         {
-            RevisionGraphRevision[] orderedNodesCache = BuildOrderedNodesCache(currentRowIndex);
+            List<RevisionGraphRevision> orderedNodesCache = BuildOrderedNodesCache(currentRowIndex);
 
             BuildOrderedRowCache(orderedNodesCache, currentRowIndex, lastToCacheRowIndex);
         }
@@ -115,7 +115,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return false;
             }
 
-            index = Array.IndexOf(BuildOrderedNodesCache(Count), revision);
+            index = BuildOrderedNodesCache(Count).IndexOf(revision);
             return index >= 0;
         }
 
@@ -123,7 +123,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             // Use a local variable, because the cached list can be reset
             var localOrderedNodesCache = BuildOrderedNodesCache(row);
-            if (row >= localOrderedNodesCache.Length)
+            if (row >= localOrderedNodesCache.Count)
             {
                 return null;
             }
@@ -231,7 +231,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return orderedRowCache[indexToCompare].Revision != orderedNodesCache[indexToCompare];
         }
 
-        private void BuildOrderedRowCache(RevisionGraphRevision[] orderedNodesCache, int currentRowIndex, int lastToCacheRowIndex)
+        private void BuildOrderedRowCache(List<RevisionGraphRevision> orderedNodesCache, int currentRowIndex, int lastToCacheRowIndex)
         {
             // Ensure we keep using the same instance of the rowcache from here on
             var localOrderedRowCache = _orderedRowCache;
@@ -247,7 +247,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
-            int cacheCount = orderedNodesCache.Length;
+            int cacheCount = orderedNodesCache.Count;
             while (nextIndex <= lastToCacheRowIndex && cacheCount > nextIndex)
             {
                 bool startSegmentsAdded = false;
@@ -303,9 +303,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         }
 
         [NotNull]
-        private RevisionGraphRevision[] BuildOrderedNodesCache(int currentRowIndex)
+        private List<RevisionGraphRevision> BuildOrderedNodesCache(int currentRowIndex)
         {
-            if (_orderedNodesCache != null && !_reorder && _orderedNodesCache.Length >= Math.Min(Count, currentRowIndex))
+            if (_orderedNodesCache != null && !_reorder && _orderedNodesCache.Count >= Math.Min(Count, currentRowIndex))
             {
                 return _orderedNodesCache;
             }
@@ -316,9 +316,9 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _reorder = false;
 
             // Use a local variable, because the cached list can be reset
-            var localOrderedNodesCache = _nodes.OrderBy(n => n.Score).ToArray();
+            var localOrderedNodesCache = _nodes.OrderBy(n => n.Score).ToList();
             _orderedNodesCache = localOrderedNodesCache;
-            if (localOrderedNodesCache.Length > 0)
+            if (localOrderedNodesCache.Count > 0)
             {
                 _orderedUntilScore = localOrderedNodesCache.Last().Score;
             }
