@@ -73,6 +73,9 @@ namespace Gource
                     GitWorkingDir = WorkingDir.Text;
 
                     RunRealCmdDetached(GourcePath.Text, arguments);
+
+                    await this.SwitchToMainThreadAsync();
+
                     Close();
                 });
         }

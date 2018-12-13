@@ -6,13 +6,17 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using GitCommands;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.Avatars
 {
     public sealed class AvatarDownloader : IAvatarProvider
     {
+        private const int MaxConcurrentDownloads = 10;
+
         /* A brief skim through the GitExtensions repo history shows GitHub emails with the following user names:
          *
          * 25421792+mserfli
@@ -24,6 +28,8 @@ namespace GitUI.Avatars
          * SamuelLongchamps
          */
         private static readonly Regex _gitHubEmailRegex = new Regex(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private static readonly SemaphoreSlim _downloadSemaphore = new SemaphoreSlim(initialCount: MaxConcurrentDownloads);
 
         private static readonly ConcurrentDictionary<Uri, (DateTime, Task<Image>)> _downloads = new ConcurrentDictionary<Uri, (DateTime, Task<Image>)>();
 
@@ -146,6 +152,15 @@ namespace GitUI.Avatars
 
                 async Task<Image> Download()
                 {
+                    // WebClient.OpenReadTaskAsync can block before returning a task, so make sure we
+                    // make such calls on the thread pool, and limit the number of concurrent requests.
+
+                    // Get onto background thread
+                    await TaskScheduler.Default;
+
+                    // Limit the number of concurrent download requests
+                    await _downloadSemaphore.WaitAsync();
+
                     try
                     {
                         using (var webClient = new WebClient { Proxy = WebRequest.DefaultWebProxy })
@@ -162,6 +177,10 @@ namespace GitUI.Avatars
                     {
                         // catch IO errors
                         Trace.WriteLine(ex.Message);
+                    }
+                    finally
+                    {
+                        _downloadSemaphore.Release();
                     }
 
                     return null;
