@@ -68,6 +68,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this._browseForCloneToDirbtn = new System.Windows.Forms.Button();
             this._destinationTB = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.ProtocolLabel = new System.Windows.Forms.Label();
+            this.ProtocolDropdownList = new System.Windows.Forms.ComboBox();
             columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -409,6 +411,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // _cloneSetupGB
             // 
+            this._cloneSetupGB.Controls.Add(this.ProtocolDropdownList);
+            this._cloneSetupGB.Controls.Add(this.ProtocolLabel);
             this._cloneSetupGB.Controls.Add(this._cloneInfoText);
             this._cloneSetupGB.Controls.Add(this._addRemoteAsTB);
             this._cloneSetupGB.Controls.Add(this.label3);
@@ -439,7 +443,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this._addRemoteAsTB.Location = new System.Drawing.Point(212, 71);
             this._addRemoteAsTB.Name = "_addRemoteAsTB";
             this._addRemoteAsTB.Size = new System.Drawing.Size(200, 23);
-            this._addRemoteAsTB.TabIndex = 3;
+            this._addRemoteAsTB.TabIndex = 4;
             this._addRemoteAsTB.TextChanged += new System.EventHandler(this._addRemoteAsTB_TextChanged);
             // 
             // label3
@@ -456,7 +460,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this._createDirTB.Location = new System.Drawing.Point(11, 71);
             this._createDirTB.Name = "_createDirTB";
             this._createDirTB.Size = new System.Drawing.Size(183, 23);
-            this._createDirTB.TabIndex = 2;
+            this._createDirTB.TabIndex = 3;
             this._createDirTB.TextChanged += new System.EventHandler(this._createDirTB_TextChanged);
             this._createDirTB.Validating += new System.ComponentModel.CancelEventHandler(this._createDirTB_Validating);
             // 
@@ -507,6 +511,25 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(738, 34);
             this.flowLayoutPanel1.TabIndex = 24;
+            // 
+            // ProtocolLabel
+            // 
+            this.ProtocolLabel.AutoSize = true;
+            this.ProtocolLabel.Location = new System.Drawing.Point(418, 36);
+            this.ProtocolLabel.Name = "ProtocolLabel";
+            this.ProtocolLabel.Size = new System.Drawing.Size(49, 13);
+            this.ProtocolLabel.TabIndex = 25;
+            this.ProtocolLabel.Text = "Protocol:";
+            // 
+            // ProtocolDropdownList
+            // 
+            this.ProtocolDropdownList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ProtocolDropdownList.FormattingEnabled = true;
+            this.ProtocolDropdownList.Location = new System.Drawing.Point(470, 32);
+            this.ProtocolDropdownList.Name = "ProtocolDropdownList";
+            this.ProtocolDropdownList.Size = new System.Drawing.Size(121, 21);
+            this.ProtocolDropdownList.TabIndex = 2;
+            this.ProtocolDropdownList.SelectedIndexChanged += new System.EventHandler(this.ProtocolSelectionChanged);
             // 
             // ForkAndCloneForm
             // 
@@ -572,5 +595,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Label _cloneInfoText;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+        private System.Windows.Forms.ComboBox ProtocolDropdownList;
+        private System.Windows.Forms.Label ProtocolLabel;
     }
 }

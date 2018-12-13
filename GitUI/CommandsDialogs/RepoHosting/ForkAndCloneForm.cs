@@ -338,17 +338,17 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void _createDirTB_TextChanged(object sender, EventArgs e)
         {
-            UpdateCloneInfo(false);
+            UpdateCloneInfo(false, false);
         }
 
         private void _destinationTB_TextChanged(object sender, EventArgs e)
         {
-            UpdateCloneInfo(false);
+            UpdateCloneInfo(false, false);
         }
 
         private void _addRemoteAsTB_TextChanged(object sender, EventArgs e)
         {
-            UpdateCloneInfo(false);
+            UpdateCloneInfo(false, false);
         }
         #endregion
 
@@ -415,12 +415,28 @@ namespace GitUI.CommandsDialogs.RepoHosting
             }
         }
 
-        private void UpdateCloneInfo(bool updateCreateDirTB = true)
+        private void UpdateCloneInfo(bool updateCreateDirTB = true, bool updateProtocols = true)
         {
             var repo = CurrentySelectedGitRepo;
 
             if (repo != null)
             {
+                bool multipleProtocols = repo.SupportedCloneProtocols.Length > 0;
+
+                if (multipleProtocols && updateProtocols)
+                {
+                    var currentSelection = (string)ProtocolDropdownList.SelectedItem;
+                    ProtocolDropdownList.DataSource = CurrentySelectedGitRepo.SupportedCloneProtocols;
+                    if (CurrentySelectedGitRepo.SupportedCloneProtocols.Contains(currentSelection))
+                    {
+                        CurrentySelectedGitRepo.CloneProtocol = currentSelection;
+                    }
+
+                    ProtocolDropdownList.SelectedItem = CurrentySelectedGitRepo.CloneProtocol;
+                }
+
+                SetProtocolSelectionVisibility(multipleProtocols);
+
                 if (updateCreateDirTB)
                 {
                     _createDirTB.Text = repo.Name;
@@ -429,23 +445,35 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 }
 
                 _cloneBtn.Enabled = true;
-                var moreInfo = !string.IsNullOrEmpty(_addRemoteAsTB.Text) ? string.Format(_strWillBeAddedAsARemote.Text, _addRemoteAsTB.Text.Trim()) : "";
-
-                if (_tabControl.SelectedTab == _searchReposPage)
-                {
-                    _cloneInfoText.Text = string.Format(_strWillCloneInfo.Text, repo.CloneReadWriteUrl, GetTargetDir(), moreInfo);
-                }
-                else if (_tabControl.SelectedTab == _myReposPage)
-                {
-                    _cloneInfoText.Text = string.Format(_strWillCloneWithPushAccess.Text, repo.CloneReadWriteUrl, GetTargetDir(), moreInfo);
-                }
+                SetCloneInfoText(repo);
             }
             else
             {
+                SetProtocolSelectionVisibility(false);
                 _cloneBtn.Enabled = false;
                 _cloneInfoText.Text = "";
                 _createDirTB.Text = "";
             }
+        }
+
+        private void SetCloneInfoText(IHostedRepository repo)
+        {
+            var moreInfo = !string.IsNullOrEmpty(_addRemoteAsTB.Text) ? string.Format(_strWillBeAddedAsARemote.Text, _addRemoteAsTB.Text.Trim()) : "";
+
+            if (_tabControl.SelectedTab == _searchReposPage)
+            {
+                _cloneInfoText.Text = string.Format(_strWillCloneInfo.Text, repo.CloneReadWriteUrl, GetTargetDir(), moreInfo);
+            }
+            else if (_tabControl.SelectedTab == _myReposPage)
+            {
+                _cloneInfoText.Text = string.Format(_strWillCloneWithPushAccess.Text, repo.CloneReadWriteUrl, GetTargetDir(), moreInfo);
+            }
+        }
+
+        private void SetProtocolSelectionVisibility(bool multipleProtocols)
+        {
+            ProtocolLabel.Visible = multipleProtocols;
+            ProtocolDropdownList.Visible = multipleProtocols;
         }
 
         [CanBeNull]
@@ -476,6 +504,12 @@ namespace GitUI.CommandsDialogs.RepoHosting
             {
                 e.Cancel = true;
             }
+        }
+
+        private void ProtocolSelectionChanged(object sender, EventArgs e)
+        {
+            CurrentySelectedGitRepo.CloneProtocol = (string)ProtocolDropdownList.SelectedItem;
+            SetCloneInfoText(CurrentySelectedGitRepo);
         }
     }
 }
