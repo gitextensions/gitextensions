@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GitExtensions")]
 [assembly: AssemblyProduct("GitExtensions")]
-[assembly: AssemblyCopyright("Copyright ? 2008-2018 GitExtensions Team")]
+[assembly: AssemblyCopyright("Copyright © 2008-2018 GitExtensions Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
