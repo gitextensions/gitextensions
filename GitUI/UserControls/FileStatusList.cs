@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -32,6 +33,7 @@ namespace GitUI
         public readonly TranslationString CombinedDiff = new TranslationString("Combined Diff");
         private readonly IGitRevisionTester _revisionTester;
         private readonly IFullPathResolver _fullPathResolver;
+        private readonly SortDiffListContextMenuItem _sortByContextMenu;
         private int _nextIndexToSelect = -1;
         private bool _groupByRevision;
         private bool _enableSelectedIndexChangeEvent = true;
@@ -39,6 +41,7 @@ namespace GitUI
         private Rectangle _dragBoxFromMouseDown;
         private IReadOnlyList<(GitRevision revision, IReadOnlyList<GitItemStatus> statuses)> _itemsWithParent = Array.Empty<(GitRevision, IReadOnlyList<GitItemStatus>)>();
         [CanBeNull] private IDisposable _selectedIndexChangeSubscription;
+        [CanBeNull] private IDisposable _diffListSortSubscription;
 
         private bool _updatingColumnWidth;
 
@@ -53,6 +56,8 @@ namespace GitUI
             InitializeComponent();
             InitialiseFiltering();
             CreateOpenSubmoduleMenuItem();
+            _sortByContextMenu = CreateSortByContextMenuItem();
+            SetupUnifiedDiffListSorting();
             lblSplitter.Height = DpiUtil.Scale(1);
             InitializeComplete();
             FilterVisible = false;
@@ -110,6 +115,48 @@ namespace GitUI
                     return scaled;
                 }
             }
+        }
+
+        private void SetupUnifiedDiffListSorting()
+        {
+            // cleanup the previous subscription if it exists.
+            _diffListSortSubscription?.Dispose();
+
+            _diffListSortSubscription = DiffListSortService.Instance.CurrentAndFutureSorting()
+                .Do(sortingMethod =>
+                {
+                    switch (sortingMethod)
+                    {
+                        case DiffListSortType.FilePath:
+                            SortByFilePath();
+                            break;
+
+                        case DiffListSortType.FileExtension:
+                            SortByFileExtension();
+                            break;
+
+                        case DiffListSortType.FileStatus:
+                            SortByFileStatus();
+                            break;
+
+                        default:
+                            throw new NotSupportedException(sortingMethod.ToString() + " is not a supported sorting method.");
+                    }
+                })
+                .Catch<DiffListSortType, NotSupportedException>(e =>
+                {
+                    // TODO log the error can we display it to the user somehow?
+                    return Observable.Empty<DiffListSortType>();
+                })
+                .Subscribe();
+        }
+
+        private static SortDiffListContextMenuItem CreateSortByContextMenuItem()
+        {
+            return new SortDiffListContextMenuItem(DiffListSortService.Instance)
+            {
+                Name = "sortListByContextMenuItem"
+            };
         }
 
         // Properties
@@ -717,6 +764,7 @@ namespace GitUI
         protected override void DisposeCustomResources()
         {
             _selectedIndexChangeSubscription?.Dispose();
+            _diffListSortSubscription?.Dispose();
         }
 
         // Private methods
@@ -1022,6 +1070,12 @@ namespace GitUI
                 _openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow ?
                     new Font(_openSubmoduleMenuItem.Font, FontStyle.Bold) :
                     new Font(_openSubmoduleMenuItem.Font, FontStyle.Regular);
+            }
+
+            if (!cm.Items.Find(_sortByContextMenu.Name, true).Any())
+            {
+                cm.Items.Add(new ToolStripSeparator());
+                cm.Items.Add(_sortByContextMenu);
             }
         }
 
@@ -1393,6 +1447,72 @@ namespace GitUI
         {
             // strangely it does not invalidate itself on resize so its look becomes distorted
             FilterComboBox.Invalidate();
+        }
+
+        private void SortByFilePath()
+        {
+            FileStatusListView.ListViewItemSorter = new GitStatusListSorter(Comparer<GitItemStatus>.Default);
+            FileStatusListView.Sort();
+        }
+
+        private void SortByFileExtension()
+        {
+            FileStatusListView.ListViewItemSorter = new GitStatusListSorter(new GitItemStatusFileExtensionComparer());
+            FileStatusListView.Sort();
+        }
+
+        private void SortByFileStatus()
+        {
+            FileStatusListView.ListViewItemSorter = new ImageIndexListSorter();
+            FileStatusListView.Sort();
+        }
+
+        private class GitStatusListSorter : Comparer<ListViewItem>
+        {
+            public IComparer<GitItemStatus> StatusComparer { get; }
+
+            public GitStatusListSorter(IComparer<GitItemStatus> gitStatusItemSorter = null)
+            {
+                StatusComparer = gitStatusItemSorter ?? Comparer<GitItemStatus>.Default;
+            }
+
+            public override int Compare(ListViewItem x, ListViewItem y)
+            {
+                return StatusComparer.Compare(x.Tag as GitItemStatus, y.Tag as GitItemStatus);
+            }
+        }
+
+        private class ImageIndexListSorter : Comparer<ListViewItem>
+        {
+            /// <summary>
+            /// Secondary sort should be by file path.
+            /// </summary>
+            private static readonly GitStatusListSorter ThenBy = new GitStatusListSorter(Comparer<GitItemStatus>.Default);
+
+            public override int Compare(ListViewItem x, ListViewItem y)
+            {
+                if (ReferenceEquals(x, y))
+                {
+                    return 0;
+                }
+                else if (x == null)
+                {
+                    return -1;
+                }
+                else if (y == null)
+                {
+                    return 1;
+                }
+
+                var statusResult = x.ImageIndex.CompareTo(y.ImageIndex);
+
+                if (statusResult == 0)
+                {
+                    return ThenBy.Compare(x, y);
+                }
+
+                return statusResult;
+            }
         }
 
         #endregion

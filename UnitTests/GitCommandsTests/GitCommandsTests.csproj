@@ -60,6 +60,7 @@
     <Compile Include="ExternalLinks\ExternalLinksStorageIntegrationTests.cs" />
     <Compile Include="FileAssociatedIconProviderTests.cs" />
     <Compile Include="FullPathResolverTests.cs" />
+    <Compile Include="GitItemStatusFileExtensionComparerTests.cs" />
     <Compile Include="Git\AheadBehindDataProviderTests.cs" />
     <Compile Include="Git\ExecutableExtensionsTests.cs" />
     <Compile Include="Git\GitDescribeProviderTests.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remote\GitRemoteManagerTests.cs" />
     <Compile Include="Submodules\SubmoduleStatusProviderTests.cs" />
+    <Compile Include="DiffListSortServiceTests.cs" />
     <Compile Include="UserRepositoryHistory\Legacy\RepositoryCategoryXmlSerialiserTests.cs" />
     <Compile Include="UserRepositoryHistory\Legacy\RepositoryHistoryMigratorTests.cs" />
     <Compile Include="UserRepositoryHistory\Legacy\RepositoryStorageTests.cs" />

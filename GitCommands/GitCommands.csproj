@@ -72,6 +72,7 @@
     <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="DateTimeUtils.cs" />
     <Compile Include="DeconstructionExtensions.cs" />
+    <Compile Include="DiffListSortService.cs" />
     <Compile Include="EnvironmentAbstraction.cs" />
     <Compile Include="EnvironmentPathsProvider.cs" />
     <Compile Include="ExceptionUtils.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Git\GitBranchNameOptions.cs" />
     <Compile Include="Git\Extensions\GitRevisionExtensions.cs" />
     <Compile Include="Git\Executable.cs" />
+    <Compile Include="Git\GitItemStatusFileExtensionComparer.cs" />
     <Compile Include="Git\GitModuleEventArgs.cs" />
     <Compile Include="Git\GitRevisionTester.cs" />
     <Compile Include="Git\GitRefName.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="Git\Tag\GitTagController.cs" />
     <Compile Include="Git\Tag\TagOperation.cs" />
     <Compile Include="Git\Tag\TagOperationExtensions.cs" />
+    <Compile Include="IDiffListSortService.cs" />
     <Compile Include="Plink.cs" />
     <Compile Include="Remotes\GitRemoteManager.cs" />
     <Compile Include="Remotes\RepoNameExtractor.cs" />
