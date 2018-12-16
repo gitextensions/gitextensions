@@ -52,7 +52,8 @@ namespace JiraCommitHintPlugin
 
         public JiraCommitHintPlugin()
         {
-            Description = description;
+            SetNameAndDescription(description);
+            Translate();
             Icon = Resources.IconJira;
         }
 

@@ -618,8 +618,10 @@ namespace GitUI.CommandsDialogs
         private void RegisterPlugins()
         {
             var existingPluginMenus = pluginsToolStripMenuItem.DropDownItems.OfType<ToolStripMenuItem>().ToLookup(c => c.Tag);
+            var pluginEntries = PluginRegistry.Plugins
+                .OrderBy(entry => entry.Name, StringComparer.CurrentCultureIgnoreCase);
 
-            foreach (var plugin in PluginRegistry.Plugins)
+            foreach (var plugin in pluginEntries)
             {
                 // Add the plugin to the Plugins menu, if not already added
                 if (!existingPluginMenus.Contains(plugin))
