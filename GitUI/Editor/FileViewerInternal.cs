@@ -62,8 +62,6 @@ namespace GitUI.Editor
             TextEditor.ActiveTextAreaControl.TextEditorProperties.EnableFolding = false;
 
             _lineNumbersControl = new DiffViewerLineNumberControl(TextEditor.ActiveTextAreaControl.TextArea);
-
-            VRulerPosition = AppSettings.DiffVerticalRulerPosition;
         }
 
         public new Font Font
@@ -248,6 +246,7 @@ namespace GitUI.Editor
             set => TextEditor.ShowTabs = value;
         }
 
+        // Unused
         public int VRulerPosition
         {
             get => TextEditor.VRulerRow;

@@ -37,11 +37,8 @@
             this.chkRememberShowEntireFilePreference = new System.Windows.Forms.CheckBox();
             this.chkRememberNumberOfContextLines = new System.Windows.Forms.CheckBox();
             this.chkOmitUninterestingDiff = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.VerticalRulerPosition = new System.Windows.Forms.NumericUpDown();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             this.tableLayoutPanelForDiffViewer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.VerticalRulerPosition)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanelForDiffViewer
@@ -57,8 +54,6 @@
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberShowEntireFilePreference, 0, 2);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberNumberOfContextLines, 0, 3);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOmitUninterestingDiff, 0, 4);
-            this.tableLayoutPanelForDiffViewer.Controls.Add(this.label1, 0, 7);
-            this.tableLayoutPanelForDiffViewer.Controls.Add(this.VerticalRulerPosition, 1, 7);
             this.tableLayoutPanelForDiffViewer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelForDiffViewer.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelForDiffViewer.Name = "tableLayoutPanelForDiffViewer";
@@ -145,33 +140,6 @@
             this.chkOmitUninterestingDiff.Text = "Omit uninteresting changes from combined diff";
             this.chkOmitUninterestingDiff.UseVisualStyleBackColor = true;
             // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 168);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(144, 13);
-            this.label1.TabIndex = 12;
-            this.label1.Text = "Vertical ruler position [chars]";
-            // 
-            // VerticalRulerPosition
-            // 
-            this.VerticalRulerPosition.Location = new System.Drawing.Point(305, 164);
-            this.VerticalRulerPosition.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.VerticalRulerPosition.Name = "VerticalRulerPosition";
-            this.VerticalRulerPosition.Size = new System.Drawing.Size(120, 21);
-            this.VerticalRulerPosition.TabIndex = 11;
-            this.VerticalRulerPosition.Value = new decimal(new int[] {
-            80,
-            0,
-            0,
-            0});
-            // 
             // tooltip
             // 
             this.tooltip.AutoPopDelay = 30000;
@@ -186,7 +154,6 @@
             this.Size = new System.Drawing.Size(1132, 821);
             this.tableLayoutPanelForDiffViewer.ResumeLayout(false);
             this.tableLayoutPanelForDiffViewer.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.VerticalRulerPosition)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -203,7 +170,5 @@
         private System.Windows.Forms.ToolTip tooltip;
         private System.Windows.Forms.CheckBox chkOpenSubmoduleDiffInSeparateWindow;
         private System.Windows.Forms.CheckBox chkShowDiffForAllParents;
-        private System.Windows.Forms.NumericUpDown VerticalRulerPosition;
-        private System.Windows.Forms.Label label1;
     }
 }
