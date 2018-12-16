@@ -40,6 +40,7 @@ build_script:
     Write-Output "Platform: $env:IdeVersion"
     # for release branches mark the repo as clean
     if (!$env:APPVEYOR_PULL_REQUEST_TITLE -and $env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
+        & git update-index --skip-worktree GitUI\CommandsDialogs\FormBrowse.cs
         & git update-index --skip-worktree CommonAssemblyInfo.cs
         & git update-index --skip-worktree CommonAssemblyInfoExternals.cs
         & git update-index --skip-worktree GitExtSshAskPass/SshAskPass.rc2
