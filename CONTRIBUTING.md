@@ -55,3 +55,8 @@ Specifically:
 
 When filing a pull request, you should be prepared to answer questions about your changes
 and to perform additional work on the changes in response to review feedback.
+
+## Conduct
+
+Please review our [code of conduct](CODE_OF_CONDUCT.md).
+

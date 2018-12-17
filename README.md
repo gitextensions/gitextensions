@@ -110,6 +110,12 @@ title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.
   </tr>
 </table>
 
+# Conduct
+
+Project maintainers pledge to foster an open and welcoming environment, and ask contributors to do the same.
+
+For more information see our [code of conduct](CODE_OF_CONDUCT.md).
+
 
 # Shoutouts
 
