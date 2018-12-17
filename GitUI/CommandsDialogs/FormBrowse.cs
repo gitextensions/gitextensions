@@ -2388,8 +2388,9 @@ namespace GitUI.CommandsDialogs
 
         private void DoPull(AppSettings.PullAction pullAction, bool isSilent)
         {
-            // Special case for FetchPruneAll to make sure user confirms the action
-            if (pullAction == AppSettings.PullAction.FetchPruneAll)
+            // Special case for FetchPruneAll to make sure user confirms the action.
+            // Notice, if action is not silent, we just show a regular Pull dialog without any confirmations.
+            if (isSilent && pullAction == AppSettings.PullAction.FetchPruneAll)
             {
                 bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
                                          || MessageBox.Show(
@@ -2397,12 +2398,11 @@ namespace GitUI.CommandsDialogs
                                              _pullFetchPruneAllConfirmation.Text,
                                              _pullFetchPruneAll.Text,
                                              MessageBoxButtons.YesNo) == DialogResult.Yes;
-                if (isActionConfirmed)
-                {
-                    UICommands.StartPullDialogAndPullImmediately(this, pullAction: AppSettings.PullAction.FetchPruneAll);
-                }
 
-                return;
+                if (!isActionConfirmed)
+                {
+                    return;
+                }
             }
 
             if (isSilent)
