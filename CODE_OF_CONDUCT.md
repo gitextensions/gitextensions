@@ -55,7 +55,9 @@ further defined and clarified by project maintainers.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported by contacting the project team at gitextensions@outlook.com. All
+reported by contacting the project team at gitextensions@outlook.com.
+Alternatively you may reach out to individual maintainers via their profile email,
+Twitter handle or LinkedIn messaging, as available and convenient. All
 complaints will be reviewed and investigated and will result in a response that
 is deemed necessary and appropriate to the circumstances. The project team is
 obligated to maintain confidentiality with regard to the reporter of an incident.
