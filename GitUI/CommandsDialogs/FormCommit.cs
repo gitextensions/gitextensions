@@ -256,6 +256,7 @@ namespace GitUI.CommandsDialogs
 
             _splitterManager.AddSplitter(splitMain, "splitMain");
             _splitterManager.AddSplitter(splitRight, "splitRight");
+            _splitterManager.AddSplitter(splitLeft, "splitLeft");
             _splitterManager.RestoreSplitters();
 
             SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
