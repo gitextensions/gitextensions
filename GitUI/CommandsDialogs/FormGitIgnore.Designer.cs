@@ -193,7 +193,6 @@
             this.label1.Size = new System.Drawing.Size(270, 383);
             this.label1.TabIndex = 4;
             this.label1.Text = resources.GetString("label1.Text");
-            this.label1.WordWrap = false;
             // 
             // flowLayoutPanel1
             // 
