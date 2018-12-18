@@ -3,7 +3,7 @@
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
-        <source>display tests results in build status summary for each build result (network intensive!)</source>
+        <source>Display test results in build status summary for each build result (network intensive!)</source>
         <target />
       </trans-unit>
     </body>

@@ -136,9 +136,9 @@ namespace AppVeyorIntegration.Settings
             this.cbLoadTestResults.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbLoadTestResults.Name = "cbLoadTestResults";
             this.cbLoadTestResults.Size = new System.Drawing.Size(472, 19);
-            this.cbLoadTestResults.Text = "display tests results in build status summary for each build result (network inte" +
-    "nsive!)";
             this.cbLoadTestResults.TabIndex = 4;
+            this.cbLoadTestResults.Text = "Display test results in build status summary for each build result (network inten" +
+    "sive!)";
             this.cbLoadTestResults.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel1

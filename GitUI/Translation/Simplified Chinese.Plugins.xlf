@@ -2,7 +2,7 @@
   <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="zh-Hans">
     <body>
       <trans-unit id="cbLoadTestResults.Text">
-        <source>display tests results in build status summary for each build result (network intensive!)</source>
+        <source>Display test results in build status summary for each build result (network intensive!)</source>
         <target>显示测试结果为每个生成结果生成状态摘要 (网络密集型!)</target>
         
       </trans-unit>
