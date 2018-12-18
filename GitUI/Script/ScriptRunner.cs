@@ -84,7 +84,7 @@ namespace GitUI.Script
             if (Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
                 Uri.TryCreate("ssh://" + url.Replace(":", "/"), UriKind.Absolute, out uri))
             {
-                return uri.LocalPath.SubstringAfterLast('.');
+                return uri.LocalPath.SubstringUntilLast('.');
             }
 
             return "";
