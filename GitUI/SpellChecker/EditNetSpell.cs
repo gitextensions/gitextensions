@@ -43,7 +43,7 @@ namespace GitUI.SpellChecker
         private readonly List<IAutoCompleteProvider> _autoCompleteProviders = new List<IAutoCompleteProvider>();
         private AsyncLazy<IEnumerable<AutoCompleteWord>> _autoCompleteListTask;
         private bool _autoCompleteWasUserActivated;
-        private bool _disableAutoCompleteTriggerOnTextUpdate;
+        private bool _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
         private readonly Dictionary<Keys, string> _keysToSendToAutoComplete = new Dictionary<Keys, string>
                                                                      {
                                                                              { Keys.Down, "{DOWN}" },
@@ -581,6 +581,8 @@ namespace GitUI.SpellChecker
 
             if (!_disableAutoCompleteTriggerOnTextUpdate)
             {
+                _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
+
                 // Reset when timer is already running
                 if (AutoCompleteTimer.Enabled)
                 {
@@ -696,15 +698,14 @@ namespace GitUI.SpellChecker
 
         private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
+            _disableAutoCompleteTriggerOnTextUpdate = e.KeyChar.IsSeparator();
+
             OnKeyPress(e);
         }
 
         private void TextBox_SelectionChanged(object sender, EventArgs e)
         {
-            UpdateOrShowAutoComplete(false);
-
-            var handler = SelectionChanged;
-            handler?.Invoke(sender, e);
+            SelectionChanged?.Invoke(sender, e);
         }
 
         private void TextBox_DoubleClick(object sender, EventArgs e)
@@ -891,11 +892,6 @@ namespace GitUI.SpellChecker
 
         private string GetWordAtCursor()
         {
-            if (TextBox.Text.Length > TextBox.SelectionStart && TextBox.Text[TextBox.SelectionStart].IsSeparator())
-            {
-                return null;
-            }
-
             return _wordAtCursorExtractor.Extract(TextBox.Text, TextBox.SelectionStart - 1);
         }
 
@@ -908,16 +904,9 @@ namespace GitUI.SpellChecker
         private void AcceptAutoComplete(AutoCompleteWord completionWord = null)
         {
             completionWord = completionWord ?? (AutoCompleteWord)AutoComplete.SelectedItem;
-
             var word = GetWordAtCursor();
-
-            var pos = TextBox.SelectionStart;
-
-            _disableAutoCompleteTriggerOnTextUpdate = true;
-            Text = Text.Remove(pos - word.Length, word.Length);
-            Text = Text.Insert(pos - word.Length, completionWord.Word);
-            _disableAutoCompleteTriggerOnTextUpdate = false;
-            TextBox.SelectionStart = pos + completionWord.Word.Length - word.Length;
+            TextBox.Select(TextBox.SelectionStart - word.Length, word.Length);
+            TextBox.SelectedText = completionWord.Word;
             CloseAutoComplete();
         }
 
