@@ -64,7 +64,7 @@ namespace AppVeyorIntegration.Settings
             lblAccountName.Location = new System.Drawing.Point(3, 6);
             lblAccountName.Name = "lblAccountName";
             lblAccountName.Size = new System.Drawing.Size(85, 15);
-            lblAccountName.TabIndex = 2;
+            lblAccountName.TabIndex = 0;
             lblAccountName.Text = "Account name";
             // 
             // lblProjects
@@ -74,7 +74,7 @@ namespace AppVeyorIntegration.Settings
             lblProjects.Location = new System.Drawing.Point(3, 85);
             lblProjects.Name = "lblProjects";
             lblProjects.Size = new System.Drawing.Size(105, 15);
-            lblProjects.TabIndex = 4;
+            lblProjects.TabIndex = 0;
             lblProjects.Text = "Project(s) Name(s)";
             // 
             // label1
@@ -85,7 +85,7 @@ namespace AppVeyorIntegration.Settings
             label1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 10);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(508, 15);
-            label1.TabIndex = 4;
+            label1.TabIndex = 0;
             label1.Text = "If you want to use the result of different projects, separate your different proj" +
     "ects names by a \'|\'.";
             // 
@@ -97,7 +97,7 @@ namespace AppVeyorIntegration.Settings
             label2.Margin = new System.Windows.Forms.Padding(3, 0, 3, 10);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(499, 15);
-            label2.TabIndex = 4;
+            label2.TabIndex = 0;
             label2.Text = "Token used to be able to query AppVeyor rest Api. You will find out in the user a" +
     "ccount menu.";
             // 
@@ -108,7 +108,7 @@ namespace AppVeyorIntegration.Settings
             this.AppVeyorAccountToken.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.AppVeyorAccountToken.Name = "AppVeyorAccountToken";
             this.AppVeyorAccountToken.Size = new System.Drawing.Size(508, 23);
-            this.AppVeyorAccountToken.TabIndex = 1;
+            this.AppVeyorAccountToken.TabIndex = 2;
             // 
             // AppVeyorProjectName
             // 
@@ -126,7 +126,7 @@ namespace AppVeyorIntegration.Settings
             this.AppVeyorAccountName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.AppVeyorAccountName.Name = "AppVeyorAccountName";
             this.AppVeyorAccountName.Size = new System.Drawing.Size(508, 23);
-            this.AppVeyorAccountName.TabIndex = 5;
+            this.AppVeyorAccountName.TabIndex = 1;
             // 
             // cbLoadTestResults
             // 
@@ -136,9 +136,9 @@ namespace AppVeyorIntegration.Settings
             this.cbLoadTestResults.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbLoadTestResults.Name = "cbLoadTestResults";
             this.cbLoadTestResults.Size = new System.Drawing.Size(472, 19);
-            this.cbLoadTestResults.TabIndex = 6;
-            this.cbLoadTestResults.Text = "display tests results in build status summary for each build result (network inte" +
-    "nsive!)";
+            this.cbLoadTestResults.TabIndex = 4;
+            this.cbLoadTestResults.Text = "Display test results in build status summary for each build result (network inten" +
+    "sive!)";
             this.cbLoadTestResults.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel1
