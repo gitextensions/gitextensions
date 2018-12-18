@@ -74,6 +74,7 @@
     <Compile Include="Helpers\DiffKindRevisionTests.cs" />
     <Compile Include="ControlUtilTests.cs" />
     <Compile Include="LinqExtensionsTests.cs" />
+    <Compile Include="Script\ScriptOptionsParserTests.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractorTests.cs" />
     <Compile Include="SplitterManagerTest.cs" />
     <Compile Include="StringBuilderExtensionsTests.cs" />
@@ -92,7 +93,7 @@
     <Compile Include="UserControls\RevisionGrid\GitRefListsForRevisionTests.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\LaneNodeLocatorTests.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\LaneInfoProviderTests.cs" />
-    <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphMultiThreadingTests.cs" />	
+    <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphMultiThreadingTests.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphTests.cs" />
     <Compile Include="UserManual\SingleHtmlUserManualFixture.cs" />
     <Compile Include="UserManual\StandardHtmlUserManualFixture.cs" />

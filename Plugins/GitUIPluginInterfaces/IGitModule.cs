@@ -105,6 +105,13 @@ namespace GitUIPluginInterfaces
         /// <returns>Registered remotes.</returns>
         IReadOnlyList<string> GetRemoteNames();
 
+        /// <summary>
+        /// Gets the commit ID of the currently checked out commit.
+        /// If the repo is bare or has no commits, <c>null</c> is returned.
+        /// </summary>
+        [CanBeNull]
+        ObjectId GetCurrentCheckout();
+
         /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
         string GetCurrentRemote();
 
