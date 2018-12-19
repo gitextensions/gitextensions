@@ -2,21 +2,35 @@
 
 Fixes #
 
-Changes proposed in this pull request:
-- 
-- 
-- 
- 
-Screenshots before and after (if PR changes UI):
--
--
--
 
-What did I do to test the code and ensure quality:
+## Proposed changes
+
 - 
 - 
 - 
 
-Has been tested on (remove any that don't apply):
-- GIT 2.11 and above
-- Windows 7 and above
+
+## Screenshots <!-- Remove this section if PR does not change UI -->
+
+### Before
+
+<!-- TODO -->
+
+### After
+
+<!-- TODO -->
+
+
+## Test methodology <!-- How did you ensure quality? -->
+
+- 
+- 
+- 
+
+
+## Test environment(s) <!-- Remove any that don't apply -->
+
+- GIT <!-- Add version 2.11 or above -->
+- Windows <!-- Add version 7 or above -->
+
+<!-- Mention language, UI scaling, or anything else that might be relevant -->
