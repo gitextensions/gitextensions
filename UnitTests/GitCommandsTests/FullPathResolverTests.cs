@@ -44,5 +44,20 @@ namespace GitCommandsTests
         {
             _resolver.Resolve(path).Should().Be($"{_workingDir}\\{path}");
         }
+
+        [TestCase("drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c")]
+        public void Resolve_handles_system_filenames(string path)
+        {
+            _resolver.Resolve(path).Should().Be($"{_workingDir}\\{path.Replace("/", "\\")}");
+        }
+
+        [TestCase(@"C:\dev\repo")]
+        [TestCase(@"C:\dev\repo\")]
+        [TestCase(@"C:\dev\repo/")]
+        public void Resolve_combines_paths(string workingDir)
+        {
+            var resolver = new FullPathResolver(() => workingDir);
+            resolver.Resolve("file.txt").Should().Be(Path.Combine(workingDir, "file.txt").Replace("/", "\\"));
+        }
     }
 }
