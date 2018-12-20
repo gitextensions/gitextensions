@@ -1069,7 +1069,7 @@ namespace GitCommands
 
         public static int DiffVerticalRulerPosition
         {
-            get => GetInt("diffverticalrulerposition", 80);
+            get => GetInt("diffverticalrulerposition", 0);
             set => SetInt("diffverticalrulerposition", value);
         }
 

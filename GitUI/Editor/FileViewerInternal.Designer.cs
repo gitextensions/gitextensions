@@ -40,7 +40,6 @@
             this.TextEditor.Name = "TextEditor";
             this.TextEditor.Size = new System.Drawing.Size(757, 519);
             this.TextEditor.TabIndex = 3;
-            this.TextEditor.ShowVRuler = false;
             // 
             // FileViewerInternal
             // 
