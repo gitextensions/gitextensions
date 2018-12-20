@@ -56,8 +56,13 @@
     <Compile Include="MruCacheTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TableLayoutPanelExtensionsTests.cs" />
+    <Compile Include="Win32ApiTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Externals\ICSharpCode.TextEditor\Project\ICSharpCode.TextEditor.csproj">
+      <Project>{2d18be89-d210-49eb-a9dd-2246fbb3df6d}</Project>
+      <Name>ICSharpCode.TextEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj">
       <Project>{0F1F1168-A4B2-4FA2-B17B-735140D17F39}</Project>
       <Name>GitExtUtils</Name>

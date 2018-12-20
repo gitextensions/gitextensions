@@ -246,14 +246,6 @@ namespace GitUI.UserControls
                 public static implicit operator POINT(System.Drawing.Point p) => new POINT(p.X, p.Y);
             }
 
-            public static POINT LParamToPOINT(uint lParam)
-            {
-                uint ulParam = lParam;
-                return new POINT(
-                    (int)(ulParam & 0x0000ffff),
-                    (int)((ulParam & 0xffff0000) >> 16));
-            }
-
             [StructLayout(LayoutKind.Sequential)]
             public struct NMHDR
             {
@@ -358,7 +350,7 @@ namespace GitUI.UserControls
 
             switch (m.Msg)
             {
-                case NativeMethods.WM_LBUTTONUP when GetGroupHitInfo(message)?.IsCollapseButton == true:
+                case NativeMethods.WM_LBUTTONUP when GetGroupHitInfo(message.LParam.ToPoint())?.IsCollapseButton == true:
                     DefWndProc(ref m); // collapse / expand by clicking button in group header
                     break;
 
@@ -490,7 +482,7 @@ namespace GitUI.UserControls
 
             bool IsGroupMouseEventHandled(MouseButtons button, bool isDown)
             {
-                var hitInfo = GetGroupHitInfo(message);
+                var hitInfo = GetGroupHitInfo(message.LParam.ToPoint());
 
                 if (hitInfo == null)
                 {
@@ -518,18 +510,7 @@ namespace GitUI.UserControls
         }
 
         [CanBeNull]
-        public ListViewGroupHitInfo GetGroupHitInfo(Point location) =>
-            GetGroupHitInfo((NativeMethods.POINT)location);
-
-        [CanBeNull]
-        private ListViewGroupHitInfo GetGroupHitInfo(Message msg)
-        {
-            var point = NativeMethods.LParamToPOINT((uint)msg.LParam);
-            return GetGroupHitInfo(point);
-        }
-
-        [CanBeNull]
-        private ListViewGroupHitInfo GetGroupHitInfo(NativeMethods.POINT location)
+        public ListViewGroupHitInfo GetGroupHitInfo(Point location)
         {
             var info = new NativeMethods.LVHITTESTINFO
             {
@@ -553,7 +534,7 @@ namespace GitUI.UserControls
                 if (info.iItem == groupId)
                 {
                     bool isCollapseButton = (info.flags & NativeMethods.LVHITTESTFLAGS.LVHT_EX_GROUP_COLLAPSE) > 0;
-                    return new ListViewGroupHitInfo(group, isCollapseButton, new Point(location.X, location.Y));
+                    return new ListViewGroupHitInfo(group, isCollapseButton, location);
                 }
             }
 
