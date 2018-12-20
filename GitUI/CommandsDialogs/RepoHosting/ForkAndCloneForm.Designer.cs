@@ -34,40 +34,42 @@ namespace GitUI.CommandsDialogs.RepoHosting
             System.Windows.Forms.ColumnHeader columnHeader5;
             System.Windows.Forms.ColumnHeader columnHeader8;
             System.Windows.Forms.ColumnHeader columnHeader7;
-            this._cloneBtn = new System.Windows.Forms.Button();
-            this._closeBtn = new System.Windows.Forms.Button();
+            this.cloneBtn = new System.Windows.Forms.Button();
+            this.closeBtn = new System.Windows.Forms.Button();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this._tabControl = new System.Windows.Forms.TabControl();
-            this._myReposPage = new System.Windows.Forms.TabPage();
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.myReposPage = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this._helpTextLbl = new System.Windows.Forms.Label();
-            this._myReposLV = new UserControls.NativeListView();
+            this.helpTextLbl = new System.Windows.Forms.Label();
+            this.myReposLV = new UserControls.NativeListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this._searchReposPage = new System.Windows.Forms.TabPage();
+            this.searchReposPage = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this._searchTB = new System.Windows.Forms.TextBox();
-            this._searchBtn = new System.Windows.Forms.Button();
-            this._orLbl = new System.Windows.Forms.Label();
-            this._getFromUserBtn = new System.Windows.Forms.Button();
-            this._forkBtn = new System.Windows.Forms.Button();
+            this.searchTB = new System.Windows.Forms.TextBox();
+            this.searchBtn = new System.Windows.Forms.Button();
+            this.orLbl = new System.Windows.Forms.Label();
+            this.getFromUserBtn = new System.Windows.Forms.Button();
+            this.forkBtn = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this._searchResultsLV = new UserControls.NativeListView();
+            this.searchResultsLV = new UserControls.NativeListView();
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this._openGitupPageBtn = new System.Windows.Forms.Button();
-            this._searchResultItemDescription = new System.Windows.Forms.TextBox();
-            this._descriptionLbl = new System.Windows.Forms.Label();
-            this._cloneSetupGB = new System.Windows.Forms.GroupBox();
-            this._cloneInfoText = new System.Windows.Forms.Label();
-            this._addRemoteAsTB = new System.Windows.Forms.TextBox();
+            this.openGitupPageBtn = new System.Windows.Forms.Button();
+            this.searchResultItemDescription = new System.Windows.Forms.TextBox();
+            this.descriptionLbl = new System.Windows.Forms.Label();
+            this.cloneSetupGB = new System.Windows.Forms.GroupBox();
+            this.cloneInfoText = new System.Windows.Forms.Label();
+            this.addRemoteAsTB = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this._createDirTB = new System.Windows.Forms.TextBox();
-            this._createDirectoryLbl = new System.Windows.Forms.Label();
+            this.createDirTB = new System.Windows.Forms.TextBox();
+            this.createDirectoryLbl = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this._browseForCloneToDirbtn = new System.Windows.Forms.Button();
-            this._destinationTB = new System.Windows.Forms.TextBox();
+            this.browseForCloneToDirbtn = new System.Windows.Forms.Button();
+            this.destinationTB = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.ProtocolLabel = new System.Windows.Forms.Label();
+            this.ProtocolDropdownList = new System.Windows.Forms.ComboBox();
             columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -75,15 +77,15 @@ namespace GitUI.CommandsDialogs.RepoHosting
             columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel2.SuspendLayout();
-            this._tabControl.SuspendLayout();
-            this._myReposPage.SuspendLayout();
+            this.tabControl.SuspendLayout();
+            this.myReposPage.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
-            this._searchReposPage.SuspendLayout();
+            this.searchReposPage.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
-            this._cloneSetupGB.SuspendLayout();
+            this.cloneSetupGB.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -119,32 +121,32 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // _cloneBtn
             // 
-            this._cloneBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this._cloneBtn.Location = new System.Drawing.Point(489, 3);
-            this._cloneBtn.Name = "_cloneBtn";
-            this._cloneBtn.Size = new System.Drawing.Size(120, 30);
-            this._cloneBtn.TabIndex = 4;
-            this._cloneBtn.Text = "Clone";
-            this._cloneBtn.UseVisualStyleBackColor = true;
-            this._cloneBtn.Click += new System.EventHandler(this._cloneBtn_Click);
+            this.cloneBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.cloneBtn.Location = new System.Drawing.Point(489, 3);
+            this.cloneBtn.Name = "cloneBtn";
+            this.cloneBtn.Size = new System.Drawing.Size(120, 30);
+            this.cloneBtn.TabIndex = 4;
+            this.cloneBtn.Text = "Clone";
+            this.cloneBtn.UseVisualStyleBackColor = true;
+            this.cloneBtn.Click += new System.EventHandler(this._cloneBtn_Click);
             // 
-            // _closeBtn
+            // closeBtn
             // 
-            this._closeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._closeBtn.Location = new System.Drawing.Point(615, 3);
-            this._closeBtn.Name = "_closeBtn";
-            this._closeBtn.Size = new System.Drawing.Size(120, 30);
-            this._closeBtn.TabIndex = 5;
-            this._closeBtn.Text = "Close";
-            this._closeBtn.UseVisualStyleBackColor = true;
-            this._closeBtn.Click += new System.EventHandler(this._closeBtn_Click);
+            this.closeBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.closeBtn.Location = new System.Drawing.Point(615, 3);
+            this.closeBtn.Name = "closeBtn";
+            this.closeBtn.Size = new System.Drawing.Size(120, 30);
+            this.closeBtn.TabIndex = 5;
+            this.closeBtn.Text = "Close";
+            this.closeBtn.UseVisualStyleBackColor = true;
+            this.closeBtn.Click += new System.EventHandler(this._closeBtn_Click);
             // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this._tabControl, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this._cloneSetupGB, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.tabControl, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.cloneSetupGB, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 0, 2);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
@@ -158,34 +160,34 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // _tabControl
             // 
-            this._tabControl.Controls.Add(this._myReposPage);
-            this._tabControl.Controls.Add(this._searchReposPage);
-            this._tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._tabControl.Location = new System.Drawing.Point(3, 3);
-            this._tabControl.Name = "_tabControl";
-            this._tabControl.SelectedIndex = 0;
-            this._tabControl.Size = new System.Drawing.Size(738, 360);
-            this._tabControl.TabIndex = 22;
-            this._tabControl.SelectedIndexChanged += new System.EventHandler(this._tabControl_SelectedIndexChanged);
+            this.tabControl.Controls.Add(this.myReposPage);
+            this.tabControl.Controls.Add(this.searchReposPage);
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl.Location = new System.Drawing.Point(3, 3);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(738, 360);
+            this.tabControl.TabIndex = 22;
+            this.tabControl.SelectedIndexChanged += new System.EventHandler(this._tabControl_SelectedIndexChanged);
             // 
             // _myReposPage
             // 
-            this._myReposPage.Controls.Add(this.tableLayoutPanel5);
-            this._myReposPage.Location = new System.Drawing.Point(4, 24);
-            this._myReposPage.Name = "_myReposPage";
-            this._myReposPage.Padding = new System.Windows.Forms.Padding(3);
-            this._myReposPage.Size = new System.Drawing.Size(730, 332);
-            this._myReposPage.TabIndex = 0;
-            this._myReposPage.Text = "My repositories";
-            this._myReposPage.UseVisualStyleBackColor = true;
+            this.myReposPage.Controls.Add(this.tableLayoutPanel5);
+            this.myReposPage.Location = new System.Drawing.Point(4, 24);
+            this.myReposPage.Name = "myReposPage";
+            this.myReposPage.Padding = new System.Windows.Forms.Padding(3);
+            this.myReposPage.Size = new System.Drawing.Size(730, 332);
+            this.myReposPage.TabIndex = 0;
+            this.myReposPage.Text = "My repositories";
+            this.myReposPage.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel5
             // 
             this.tableLayoutPanel5.ColumnCount = 2;
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70F));
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tableLayoutPanel5.Controls.Add(this._helpTextLbl, 1, 0);
-            this.tableLayoutPanel5.Controls.Add(this._myReposLV, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.helpTextLbl, 1, 0);
+            this.tableLayoutPanel5.Controls.Add(this.myReposLV, 0, 0);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
@@ -196,34 +198,34 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // _helpTextLbl
             // 
-            this._helpTextLbl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._helpTextLbl.Location = new System.Drawing.Point(509, 0);
-            this._helpTextLbl.Name = "_helpTextLbl";
-            this._helpTextLbl.Size = new System.Drawing.Size(212, 326);
-            this._helpTextLbl.TabIndex = 10;
-            this._helpTextLbl.Text = "If you want to fork a repository owned by somebody else, go to the Search for rep" +
+            this.helpTextLbl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.helpTextLbl.Location = new System.Drawing.Point(509, 0);
+            this.helpTextLbl.Name = "helpTextLbl";
+            this.helpTextLbl.Size = new System.Drawing.Size(212, 326);
+            this.helpTextLbl.TabIndex = 10;
+            this.helpTextLbl.Text = "If you want to fork a repository owned by somebody else, go to the Search for rep" +
     "ositories tab.";
-            this._helpTextLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.helpTextLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // _myReposLV
             // 
-            this._myReposLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.myReposLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             columnHeader1,
             columnHeader3,
             columnHeader4,
             this.columnHeader2});
-            this._myReposLV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._myReposLV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this._myReposLV.HideSelection = false;
-            this._myReposLV.Location = new System.Drawing.Point(3, 3);
-            this._myReposLV.MultiSelect = false;
-            this._myReposLV.Name = "_myReposLV";
-            this._myReposLV.ShowGroups = false;
-            this._myReposLV.Size = new System.Drawing.Size(500, 320);
-            this._myReposLV.TabIndex = 7;
-            this._myReposLV.UseCompatibleStateImageBehavior = false;
-            this._myReposLV.View = System.Windows.Forms.View.Details;
-            this._myReposLV.SelectedIndexChanged += new System.EventHandler(this._myReposLV_SelectedIndexChanged);
+            this.myReposLV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.myReposLV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.myReposLV.HideSelection = false;
+            this.myReposLV.Location = new System.Drawing.Point(3, 3);
+            this.myReposLV.MultiSelect = false;
+            this.myReposLV.Name = "myReposLV";
+            this.myReposLV.ShowGroups = false;
+            this.myReposLV.Size = new System.Drawing.Size(500, 320);
+            this.myReposLV.TabIndex = 7;
+            this.myReposLV.UseCompatibleStateImageBehavior = false;
+            this.myReposLV.View = System.Windows.Forms.View.Details;
+            this.myReposLV.SelectedIndexChanged += new System.EventHandler(this._myReposLV_SelectedIndexChanged);
             // 
             // columnHeader2
             // 
@@ -232,21 +234,21 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // _searchReposPage
             // 
-            this._searchReposPage.Controls.Add(this.tableLayoutPanel1);
-            this._searchReposPage.Location = new System.Drawing.Point(4, 24);
-            this._searchReposPage.Name = "_searchReposPage";
-            this._searchReposPage.Padding = new System.Windows.Forms.Padding(3);
-            this._searchReposPage.Size = new System.Drawing.Size(730, 332);
-            this._searchReposPage.TabIndex = 1;
-            this._searchReposPage.Text = "Search for repositories";
-            this._searchReposPage.UseVisualStyleBackColor = true;
+            this.searchReposPage.Controls.Add(this.tableLayoutPanel1);
+            this.searchReposPage.Location = new System.Drawing.Point(4, 24);
+            this.searchReposPage.Name = "searchReposPage";
+            this.searchReposPage.Padding = new System.Windows.Forms.Padding(3);
+            this.searchReposPage.Size = new System.Drawing.Size(730, 332);
+            this.searchReposPage.TabIndex = 1;
+            this.searchReposPage.Text = "Search for repositories";
+            this.searchReposPage.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this._forkBtn, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.forkBtn, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
@@ -260,10 +262,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // flowLayoutPanel2
             // 
-            this.flowLayoutPanel2.Controls.Add(this._searchTB);
-            this.flowLayoutPanel2.Controls.Add(this._searchBtn);
-            this.flowLayoutPanel2.Controls.Add(this._orLbl);
-            this.flowLayoutPanel2.Controls.Add(this._getFromUserBtn);
+            this.flowLayoutPanel2.Controls.Add(this.searchTB);
+            this.flowLayoutPanel2.Controls.Add(this.searchBtn);
+            this.flowLayoutPanel2.Controls.Add(this.orLbl);
+            this.flowLayoutPanel2.Controls.Add(this.getFromUserBtn);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
@@ -272,60 +274,60 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // _searchTB
             // 
-            this._searchTB.Location = new System.Drawing.Point(3, 3);
-            this._searchTB.Name = "_searchTB";
-            this._searchTB.Size = new System.Drawing.Size(198, 23);
-            this._searchTB.TabIndex = 0;
-            this._searchTB.Enter += new System.EventHandler(this._searchTB_Enter);
-            this._searchTB.Leave += new System.EventHandler(this._searchTB_Leave);
+            this.searchTB.Location = new System.Drawing.Point(3, 3);
+            this.searchTB.Name = "searchTB";
+            this.searchTB.Size = new System.Drawing.Size(198, 23);
+            this.searchTB.TabIndex = 0;
+            this.searchTB.Enter += new System.EventHandler(this._searchTB_Enter);
+            this.searchTB.Leave += new System.EventHandler(this._searchTB_Leave);
             // 
             // _searchBtn
             // 
-            this._searchBtn.Location = new System.Drawing.Point(207, 3);
-            this._searchBtn.Name = "_searchBtn";
-            this._searchBtn.Size = new System.Drawing.Size(93, 23);
-            this._searchBtn.TabIndex = 1;
-            this._searchBtn.Text = "Search";
-            this._searchBtn.UseVisualStyleBackColor = true;
-            this._searchBtn.Click += new System.EventHandler(this._searchBtn_Click);
+            this.searchBtn.Location = new System.Drawing.Point(207, 3);
+            this.searchBtn.Name = "searchBtn";
+            this.searchBtn.Size = new System.Drawing.Size(93, 23);
+            this.searchBtn.TabIndex = 1;
+            this.searchBtn.Text = "Search";
+            this.searchBtn.UseVisualStyleBackColor = true;
+            this.searchBtn.Click += new System.EventHandler(this._searchBtn_Click);
             // 
             // _orLbl
             // 
-            this._orLbl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.orLbl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._orLbl.AutoSize = true;
-            this._orLbl.Location = new System.Drawing.Point(306, 0);
-            this._orLbl.Name = "_orLbl";
-            this._orLbl.Size = new System.Drawing.Size(18, 15);
-            this._orLbl.TabIndex = 22;
-            this._orLbl.Text = "or";
+            this.orLbl.AutoSize = true;
+            this.orLbl.Location = new System.Drawing.Point(306, 0);
+            this.orLbl.Name = "orLbl";
+            this.orLbl.Size = new System.Drawing.Size(18, 15);
+            this.orLbl.TabIndex = 22;
+            this.orLbl.Text = "or";
             // 
             // _getFromUserBtn
             // 
-            this._getFromUserBtn.Location = new System.Drawing.Point(330, 3);
-            this._getFromUserBtn.Name = "_getFromUserBtn";
-            this._getFromUserBtn.Size = new System.Drawing.Size(124, 23);
-            this._getFromUserBtn.TabIndex = 2;
-            this._getFromUserBtn.Text = "Get from user";
-            this._getFromUserBtn.UseVisualStyleBackColor = true;
-            this._getFromUserBtn.Click += new System.EventHandler(this._getFromUserBtn_Click);
+            this.getFromUserBtn.Location = new System.Drawing.Point(330, 3);
+            this.getFromUserBtn.Name = "getFromUserBtn";
+            this.getFromUserBtn.Size = new System.Drawing.Size(124, 23);
+            this.getFromUserBtn.TabIndex = 2;
+            this.getFromUserBtn.Text = "Get from user";
+            this.getFromUserBtn.UseVisualStyleBackColor = true;
+            this.getFromUserBtn.Click += new System.EventHandler(this._getFromUserBtn_Click);
             // 
             // _forkBtn
             // 
-            this._forkBtn.Location = new System.Drawing.Point(3, 300);
-            this._forkBtn.Name = "_forkBtn";
-            this._forkBtn.Size = new System.Drawing.Size(150, 23);
-            this._forkBtn.TabIndex = 4;
-            this._forkBtn.Text = "Fork!";
-            this._forkBtn.UseVisualStyleBackColor = true;
-            this._forkBtn.Click += new System.EventHandler(this._forkBtn_Click);
+            this.forkBtn.Location = new System.Drawing.Point(3, 300);
+            this.forkBtn.Name = "forkBtn";
+            this.forkBtn.Size = new System.Drawing.Size(150, 23);
+            this.forkBtn.TabIndex = 4;
+            this.forkBtn.Text = "Fork!";
+            this.forkBtn.UseVisualStyleBackColor = true;
+            this.forkBtn.Click += new System.EventHandler(this._forkBtn_Click);
             // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel3.Controls.Add(this._searchResultsLV, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.searchResultsLV, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 44);
@@ -337,23 +339,23 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // _searchResultsLV
             // 
-            this._searchResultsLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.searchResultsLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             columnHeader5,
             columnHeader8,
             columnHeader7,
             this.columnHeader6});
-            this._searchResultsLV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._searchResultsLV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this._searchResultsLV.HideSelection = false;
-            this._searchResultsLV.Location = new System.Drawing.Point(3, 3);
-            this._searchResultsLV.MultiSelect = false;
-            this._searchResultsLV.Name = "_searchResultsLV";
-            this._searchResultsLV.ShowGroups = false;
-            this._searchResultsLV.Size = new System.Drawing.Size(424, 244);
-            this._searchResultsLV.TabIndex = 3;
-            this._searchResultsLV.UseCompatibleStateImageBehavior = false;
-            this._searchResultsLV.View = System.Windows.Forms.View.Details;
-            this._searchResultsLV.SelectedIndexChanged += new System.EventHandler(this._searchResultsLV_SelectedIndexChanged);
+            this.searchResultsLV.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.searchResultsLV.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.searchResultsLV.HideSelection = false;
+            this.searchResultsLV.Location = new System.Drawing.Point(3, 3);
+            this.searchResultsLV.MultiSelect = false;
+            this.searchResultsLV.Name = "searchResultsLV";
+            this.searchResultsLV.ShowGroups = false;
+            this.searchResultsLV.Size = new System.Drawing.Size(424, 244);
+            this.searchResultsLV.TabIndex = 3;
+            this.searchResultsLV.UseCompatibleStateImageBehavior = false;
+            this.searchResultsLV.View = System.Windows.Forms.View.Details;
+            this.searchResultsLV.SelectedIndexChanged += new System.EventHandler(this._searchResultsLV_SelectedIndexChanged);
             // 
             // columnHeader6
             // 
@@ -364,9 +366,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             this.tableLayoutPanel4.ColumnCount = 1;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this._openGitupPageBtn, 0, 2);
-            this.tableLayoutPanel4.Controls.Add(this._searchResultItemDescription, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this._descriptionLbl, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.openGitupPageBtn, 0, 2);
+            this.tableLayoutPanel4.Controls.Add(this.searchResultItemDescription, 0, 1);
+            this.tableLayoutPanel4.Controls.Add(this.descriptionLbl, 0, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(433, 3);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
@@ -379,68 +381,70 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // _openGitupPageBtn
             // 
-            this._openGitupPageBtn.Location = new System.Drawing.Point(3, 218);
-            this._openGitupPageBtn.Name = "_openGitupPageBtn";
-            this._openGitupPageBtn.Size = new System.Drawing.Size(116, 23);
-            this._openGitupPageBtn.TabIndex = 5;
-            this._openGitupPageBtn.Text = "Open github page";
-            this._openGitupPageBtn.UseVisualStyleBackColor = true;
-            this._openGitupPageBtn.Click += new System.EventHandler(this._openGitupPageBtn_Click);
+            this.openGitupPageBtn.Location = new System.Drawing.Point(3, 218);
+            this.openGitupPageBtn.Name = "openGitupPageBtn";
+            this.openGitupPageBtn.Size = new System.Drawing.Size(116, 23);
+            this.openGitupPageBtn.TabIndex = 5;
+            this.openGitupPageBtn.Text = "Open github page";
+            this.openGitupPageBtn.UseVisualStyleBackColor = true;
+            this.openGitupPageBtn.Click += new System.EventHandler(this._openGitupPageBtn_Click);
             // 
             // _searchResultItemDescription
             // 
-            this._searchResultItemDescription.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this._searchResultItemDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._searchResultItemDescription.Location = new System.Drawing.Point(3, 18);
-            this._searchResultItemDescription.Multiline = true;
-            this._searchResultItemDescription.Name = "_searchResultItemDescription";
-            this._searchResultItemDescription.ReadOnly = true;
-            this._searchResultItemDescription.Size = new System.Drawing.Size(276, 194);
-            this._searchResultItemDescription.TabIndex = 18;
+            this.searchResultItemDescription.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.searchResultItemDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.searchResultItemDescription.Location = new System.Drawing.Point(3, 18);
+            this.searchResultItemDescription.Multiline = true;
+            this.searchResultItemDescription.Name = "searchResultItemDescription";
+            this.searchResultItemDescription.ReadOnly = true;
+            this.searchResultItemDescription.Size = new System.Drawing.Size(276, 194);
+            this.searchResultItemDescription.TabIndex = 18;
             // 
             // _descriptionLbl
             // 
-            this._descriptionLbl.AutoSize = true;
-            this._descriptionLbl.Location = new System.Drawing.Point(3, 0);
-            this._descriptionLbl.Name = "_descriptionLbl";
-            this._descriptionLbl.Size = new System.Drawing.Size(70, 15);
-            this._descriptionLbl.TabIndex = 17;
-            this._descriptionLbl.Text = "Description:";
+            this.descriptionLbl.AutoSize = true;
+            this.descriptionLbl.Location = new System.Drawing.Point(3, 0);
+            this.descriptionLbl.Name = "descriptionLbl";
+            this.descriptionLbl.Size = new System.Drawing.Size(70, 15);
+            this.descriptionLbl.TabIndex = 17;
+            this.descriptionLbl.Text = "Description:";
             // 
             // _cloneSetupGB
             // 
-            this._cloneSetupGB.Controls.Add(this._cloneInfoText);
-            this._cloneSetupGB.Controls.Add(this._addRemoteAsTB);
-            this._cloneSetupGB.Controls.Add(this.label3);
-            this._cloneSetupGB.Controls.Add(this._createDirTB);
-            this._cloneSetupGB.Controls.Add(this._createDirectoryLbl);
-            this._cloneSetupGB.Controls.Add(this.label1);
-            this._cloneSetupGB.Controls.Add(this._browseForCloneToDirbtn);
-            this._cloneSetupGB.Controls.Add(this._destinationTB);
-            this._cloneSetupGB.Dock = System.Windows.Forms.DockStyle.Fill;
-            this._cloneSetupGB.Location = new System.Drawing.Point(3, 369);
-            this._cloneSetupGB.Name = "_cloneSetupGB";
-            this._cloneSetupGB.Size = new System.Drawing.Size(738, 140);
-            this._cloneSetupGB.TabIndex = 23;
-            this._cloneSetupGB.TabStop = false;
-            this._cloneSetupGB.Text = "Clone";
+            this.cloneSetupGB.Controls.Add(this.ProtocolDropdownList);
+            this.cloneSetupGB.Controls.Add(this.ProtocolLabel);
+            this.cloneSetupGB.Controls.Add(this.cloneInfoText);
+            this.cloneSetupGB.Controls.Add(this.addRemoteAsTB);
+            this.cloneSetupGB.Controls.Add(this.label3);
+            this.cloneSetupGB.Controls.Add(this.createDirTB);
+            this.cloneSetupGB.Controls.Add(this.createDirectoryLbl);
+            this.cloneSetupGB.Controls.Add(this.label1);
+            this.cloneSetupGB.Controls.Add(this.browseForCloneToDirbtn);
+            this.cloneSetupGB.Controls.Add(this.destinationTB);
+            this.cloneSetupGB.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cloneSetupGB.Location = new System.Drawing.Point(3, 369);
+            this.cloneSetupGB.Name = "cloneSetupGB";
+            this.cloneSetupGB.Size = new System.Drawing.Size(738, 140);
+            this.cloneSetupGB.TabIndex = 23;
+            this.cloneSetupGB.TabStop = false;
+            this.cloneSetupGB.Text = "Clone";
             // 
             // _cloneInfoText
             // 
-            this._cloneInfoText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.cloneInfoText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this._cloneInfoText.Location = new System.Drawing.Point(10, 97);
-            this._cloneInfoText.Name = "_cloneInfoText";
-            this._cloneInfoText.Size = new System.Drawing.Size(719, 35);
-            this._cloneInfoText.TabIndex = 24;
+            this.cloneInfoText.Location = new System.Drawing.Point(10, 97);
+            this.cloneInfoText.Name = "cloneInfoText";
+            this.cloneInfoText.Size = new System.Drawing.Size(719, 35);
+            this.cloneInfoText.TabIndex = 24;
             // 
             // _addRemoteAsTB
             // 
-            this._addRemoteAsTB.Location = new System.Drawing.Point(212, 71);
-            this._addRemoteAsTB.Name = "_addRemoteAsTB";
-            this._addRemoteAsTB.Size = new System.Drawing.Size(200, 23);
-            this._addRemoteAsTB.TabIndex = 3;
-            this._addRemoteAsTB.TextChanged += new System.EventHandler(this._addRemoteAsTB_TextChanged);
+            this.addRemoteAsTB.Location = new System.Drawing.Point(212, 71);
+            this.addRemoteAsTB.Name = "addRemoteAsTB";
+            this.addRemoteAsTB.Size = new System.Drawing.Size(200, 23);
+            this.addRemoteAsTB.TabIndex = 4;
+            this.addRemoteAsTB.TextChanged += new System.EventHandler(this._addRemoteAsTB_TextChanged);
             // 
             // label3
             // 
@@ -453,21 +457,21 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // _createDirTB
             // 
-            this._createDirTB.Location = new System.Drawing.Point(11, 71);
-            this._createDirTB.Name = "_createDirTB";
-            this._createDirTB.Size = new System.Drawing.Size(183, 23);
-            this._createDirTB.TabIndex = 2;
-            this._createDirTB.TextChanged += new System.EventHandler(this._createDirTB_TextChanged);
-            this._createDirTB.Validating += new System.ComponentModel.CancelEventHandler(this._createDirTB_Validating);
+            this.createDirTB.Location = new System.Drawing.Point(11, 71);
+            this.createDirTB.Name = "createDirTB";
+            this.createDirTB.Size = new System.Drawing.Size(183, 23);
+            this.createDirTB.TabIndex = 3;
+            this.createDirTB.TextChanged += new System.EventHandler(this._createDirTB_TextChanged);
+            this.createDirTB.Validating += new System.ComponentModel.CancelEventHandler(this._createDirTB_Validating);
             // 
             // _createDirectoryLbl
             // 
-            this._createDirectoryLbl.AutoSize = true;
-            this._createDirectoryLbl.Location = new System.Drawing.Point(9, 55);
-            this._createDirectoryLbl.Name = "_createDirectoryLbl";
-            this._createDirectoryLbl.Size = new System.Drawing.Size(94, 15);
-            this._createDirectoryLbl.TabIndex = 13;
-            this._createDirectoryLbl.Text = "Create directory:";
+            this.createDirectoryLbl.AutoSize = true;
+            this.createDirectoryLbl.Location = new System.Drawing.Point(9, 55);
+            this.createDirectoryLbl.Name = "createDirectoryLbl";
+            this.createDirectoryLbl.Size = new System.Drawing.Size(94, 15);
+            this.createDirectoryLbl.TabIndex = 13;
+            this.createDirectoryLbl.Text = "Create directory:";
             // 
             // label1
             // 
@@ -480,33 +484,52 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             // _browseForCloneToDirbtn
             // 
-            this._browseForCloneToDirbtn.Location = new System.Drawing.Point(310, 32);
-            this._browseForCloneToDirbtn.Name = "_browseForCloneToDirbtn";
-            this._browseForCloneToDirbtn.Size = new System.Drawing.Size(102, 23);
-            this._browseForCloneToDirbtn.TabIndex = 1;
-            this._browseForCloneToDirbtn.Text = "Browse...";
-            this._browseForCloneToDirbtn.UseVisualStyleBackColor = true;
-            this._browseForCloneToDirbtn.Click += new System.EventHandler(this._browseForCloneToDirbtn_Click);
+            this.browseForCloneToDirbtn.Location = new System.Drawing.Point(310, 32);
+            this.browseForCloneToDirbtn.Name = "browseForCloneToDirbtn";
+            this.browseForCloneToDirbtn.Size = new System.Drawing.Size(102, 23);
+            this.browseForCloneToDirbtn.TabIndex = 1;
+            this.browseForCloneToDirbtn.Text = "Browse...";
+            this.browseForCloneToDirbtn.UseVisualStyleBackColor = true;
+            this.browseForCloneToDirbtn.Click += new System.EventHandler(this._browseForCloneToDirbtn_Click);
             // 
             // _destinationTB
             // 
-            this._destinationTB.Location = new System.Drawing.Point(10, 32);
-            this._destinationTB.Name = "_destinationTB";
-            this._destinationTB.Size = new System.Drawing.Size(294, 23);
-            this._destinationTB.TabIndex = 0;
-            this._destinationTB.TextChanged += new System.EventHandler(this._destinationTB_TextChanged);
-            this._destinationTB.Validating += new System.ComponentModel.CancelEventHandler(this._destinationTB_Validating);
+            this.destinationTB.Location = new System.Drawing.Point(10, 32);
+            this.destinationTB.Name = "destinationTB";
+            this.destinationTB.Size = new System.Drawing.Size(294, 23);
+            this.destinationTB.TabIndex = 0;
+            this.destinationTB.TextChanged += new System.EventHandler(this._destinationTB_TextChanged);
+            this.destinationTB.Validating += new System.ComponentModel.CancelEventHandler(this._destinationTB_Validating);
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this._closeBtn);
-            this.flowLayoutPanel1.Controls.Add(this._cloneBtn);
+            this.flowLayoutPanel1.Controls.Add(this.closeBtn);
+            this.flowLayoutPanel1.Controls.Add(this.cloneBtn);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 515);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(738, 34);
             this.flowLayoutPanel1.TabIndex = 24;
+            // 
+            // ProtocolLabel
+            // 
+            this.ProtocolLabel.AutoSize = true;
+            this.ProtocolLabel.Location = new System.Drawing.Point(418, 36);
+            this.ProtocolLabel.Name = "ProtocolLabel";
+            this.ProtocolLabel.Size = new System.Drawing.Size(49, 13);
+            this.ProtocolLabel.TabIndex = 25;
+            this.ProtocolLabel.Text = "Protocol:";
+            // 
+            // ProtocolDropdownList
+            // 
+            this.ProtocolDropdownList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ProtocolDropdownList.FormattingEnabled = true;
+            this.ProtocolDropdownList.Location = new System.Drawing.Point(470, 32);
+            this.ProtocolDropdownList.Name = "ProtocolDropdownList";
+            this.ProtocolDropdownList.Size = new System.Drawing.Size(121, 21);
+            this.ProtocolDropdownList.TabIndex = 2;
+            this.ProtocolDropdownList.SelectedIndexChanged += new System.EventHandler(this.ProtocolSelectionChanged);
             // 
             // ForkAndCloneForm
             // 
@@ -519,18 +542,18 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.Text = "Remote repository fork and clone";
             this.Load += new System.EventHandler(this.ForkAndCloneForm_Load);
             this.tableLayoutPanel2.ResumeLayout(false);
-            this._tabControl.ResumeLayout(false);
-            this._myReposPage.ResumeLayout(false);
+            this.tabControl.ResumeLayout(false);
+            this.myReposPage.ResumeLayout(false);
             this.tableLayoutPanel5.ResumeLayout(false);
-            this._searchReposPage.ResumeLayout(false);
+            this.searchReposPage.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
-            this._cloneSetupGB.ResumeLayout(false);
-            this._cloneSetupGB.PerformLayout();
+            this.cloneSetupGB.ResumeLayout(false);
+            this.cloneSetupGB.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -538,39 +561,41 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         #endregion
 
-        private System.Windows.Forms.Button _cloneBtn;
-        private System.Windows.Forms.Button _closeBtn;
+        private System.Windows.Forms.Button cloneBtn;
+        private System.Windows.Forms.Button closeBtn;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-        private System.Windows.Forms.TabControl _tabControl;
-        private System.Windows.Forms.TabPage _myReposPage;
-        private System.Windows.Forms.Label _helpTextLbl;
-        private UserControls.NativeListView _myReposLV;
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabPage myReposPage;
+        private System.Windows.Forms.Label helpTextLbl;
+        private UserControls.NativeListView myReposLV;
         private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.TabPage _searchReposPage;
+        private System.Windows.Forms.TabPage searchReposPage;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
-        private System.Windows.Forms.TextBox _searchTB;
-        private System.Windows.Forms.Button _searchBtn;
-        private System.Windows.Forms.Label _orLbl;
-        private System.Windows.Forms.Button _getFromUserBtn;
-        private System.Windows.Forms.Button _forkBtn;
+        private System.Windows.Forms.TextBox searchTB;
+        private System.Windows.Forms.Button searchBtn;
+        private System.Windows.Forms.Label orLbl;
+        private System.Windows.Forms.Button getFromUserBtn;
+        private System.Windows.Forms.Button forkBtn;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private UserControls.NativeListView _searchResultsLV;
+        private UserControls.NativeListView searchResultsLV;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
-        private System.Windows.Forms.Button _openGitupPageBtn;
-        private System.Windows.Forms.TextBox _searchResultItemDescription;
-        private System.Windows.Forms.Label _descriptionLbl;
-        private System.Windows.Forms.GroupBox _cloneSetupGB;
-        private System.Windows.Forms.TextBox _addRemoteAsTB;
+        private System.Windows.Forms.Button openGitupPageBtn;
+        private System.Windows.Forms.TextBox searchResultItemDescription;
+        private System.Windows.Forms.Label descriptionLbl;
+        private System.Windows.Forms.GroupBox cloneSetupGB;
+        private System.Windows.Forms.TextBox addRemoteAsTB;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox _createDirTB;
-        private System.Windows.Forms.Label _createDirectoryLbl;
+        private System.Windows.Forms.TextBox createDirTB;
+        private System.Windows.Forms.Label createDirectoryLbl;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button _browseForCloneToDirbtn;
-        private System.Windows.Forms.TextBox _destinationTB;
+        private System.Windows.Forms.Button browseForCloneToDirbtn;
+        private System.Windows.Forms.TextBox destinationTB;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
-        private System.Windows.Forms.Label _cloneInfoText;
+        private System.Windows.Forms.Label cloneInfoText;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+        private System.Windows.Forms.ComboBox ProtocolDropdownList;
+        private System.Windows.Forms.Label ProtocolLabel;
     }
 }
