@@ -18,6 +18,11 @@ namespace GitUI.Blame
     {
         public event EventHandler<CommandEventArgs> CommandClick;
 
+        /// <summary>
+        /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
+        /// </summary>
+        public event Action EscapePressed;
+
         private readonly AsyncLoader _blameLoader = new AsyncLoader();
 
         [CanBeNull] private GitBlameLine _lastBlameLine;
@@ -46,12 +51,14 @@ namespace GitUI.Blame
             BlameCommitter.MouseLeave += BlameCommitter_MouseLeave;
             BlameCommitter.SelectedLineChanged += SelectedLineChanged;
             BlameCommitter.RequestDiffView += ActiveTextAreaControlDoubleClick;
+            BlameCommitter.EscapePressed += () => EscapePressed?.Invoke();
 
             BlameFile.IsReadOnly = true;
             BlameFile.ScrollPosChanged += BlameFile_ScrollPosChanged;
             BlameFile.SelectedLineChanged += SelectedLineChanged;
             BlameFile.RequestDiffView += ActiveTextAreaControlDoubleClick;
             BlameFile.MouseMove += BlameFile_MouseMove;
+            BlameFile.EscapePressed += () => EscapePressed?.Invoke();
 
             CommitInfo.CommandClicked += commitInfo_CommandClicked;
         }

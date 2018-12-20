@@ -56,6 +56,11 @@ namespace GitUI.CommandsDialogs
             _commitDataManager = new CommitDataManager(() => Module);
             _fullPathResolver = new FullPathResolver(() => Module.WorkingDir);
 
+            CommitDiff.EscapePressed += Close;
+            View.EscapePressed += Close;
+            Diff.EscapePressed += Close;
+            Blame.EscapePressed += Close;
+
             copyToClipboardToolStripMenuItem.SetRevisionFunc(() => FileChanges.GetSelectedRevisions());
 
             InitializeComplete();
