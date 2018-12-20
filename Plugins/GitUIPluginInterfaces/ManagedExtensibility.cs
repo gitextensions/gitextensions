@@ -64,11 +64,13 @@ namespace GitUIPluginInterfaces
                 var runtimeComposition = RuntimeComposition.CreateRuntimeComposition(configuration);
                 if (applicationDataFolder != null)
                 {
+#if false // Composition caching currently disabled
                     Directory.CreateDirectory(Path.Combine(applicationDataFolder, "Plugins"));
                     using (var cacheStream = File.OpenWrite(cacheFile))
                     {
                         ThreadHelper.JoinableTaskFactory.Run(() => new CachedComposition().SaveAsync(runtimeComposition, cacheStream));
                     }
+#endif
                 }
 
                 exportProviderFactory = runtimeComposition.CreateExportProviderFactory();
