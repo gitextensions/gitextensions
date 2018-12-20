@@ -84,6 +84,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _undoLastCommitText = new TranslationString("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
         private readonly TranslationString _undoLastCommitCaption = new TranslationString("Undo last commit");
+
         #endregion
 
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
@@ -104,6 +105,8 @@ namespace GitUI.CommandsDialogs
         private ToolStripItem _rebase;
         private ToolStripItem _bisect;
         private ToolStripItem _warning;
+
+        [CanBeNull] private TabPage _consoleTabPage;
 
         private bool _submoduleStatusUpdateNeeded = true;
         private bool _stashCountUpdateNeeded = true;
@@ -146,7 +149,8 @@ namespace GitUI.CommandsDialogs
                     { nameof(Images.CommitSummary), Images.CommitSummary },
                     { nameof(Images.FileTree), Images.FileTree },
                     { nameof(Images.Diff), Images.Diff },
-                    { nameof(Images.Key), Images.Key }
+                    { nameof(Images.Key), Images.Key },
+                    { nameof(Images.Console), Images.Console }
                 }
             };
 
@@ -324,7 +328,6 @@ namespace GitUI.CommandsDialogs
             RevisionGrid.MenuCommands.MenuChanged += (sender, e) => _formBrowseMenus.OnMenuCommandsPropertyChanged();
             SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
 
-            FillTerminalTab();
             ManageWorktreeSupport();
 
             var toolBackColor = Color.FromArgb(218, 218, 218);
@@ -350,6 +353,9 @@ namespace GitUI.CommandsDialogs
 
             InitializeComplete();
             RestorePosition();
+
+            // Populate terminal tab after translation within InitializeComplete
+            FillTerminalTab();
 
             return;
 
@@ -2232,10 +2238,9 @@ namespace GitUI.CommandsDialogs
             void FocusGitConsole()
             {
                 FillTerminalTab();
-                var tabPageCaption = _consoleTabCaption.Text;
-                if (CommitInfoTabControl.TabPages.ContainsKey(tabPageCaption))
+                if (_consoleTabPage != null && CommitInfoTabControl.TabPages.Contains(_consoleTabPage))
                 {
-                    CommitInfoTabControl.SelectedTab = CommitInfoTabControl.TabPages[tabPageCaption];
+                    CommitInfoTabControl.SelectedTab = _consoleTabPage;
                 }
             }
 
@@ -2736,36 +2741,37 @@ namespace GitUI.CommandsDialogs
         {
             if (!EnvUtils.RunningOnWindows() || !AppSettings.ShowConEmuTab.ValueOrDefault)
             {
-                return; // ConEmu only works on WinNT
+                // ConEmu only works on WinNT
+                return;
             }
 
             if (_terminal != null)
             {
-                // if terminal is already created, then give it focus
+                // Terminal already created; give it focus
                 _terminal.Focus();
                 return;
             }
 
-            var tabPageCaption = _consoleTabCaption.Text;
-            var tabPageCreated = CommitInfoTabControl.TabPages.ContainsKey(tabPageCaption);
-            TabPage tabPage;
-            if (tabPageCreated)
+            if (_consoleTabPage != null)
             {
-                tabPage = CommitInfoTabControl.TabPages[tabPageCaption];
+                // Tab page already created
+                return;
             }
-            else
+
+            _consoleTabPage = new TabPage
             {
-                const string imageKey = "Resources.IconConsole";
-                CommitInfoTabControl.ImageList.Images.Add(imageKey, Images.Console);
-                CommitInfoTabControl.Controls.Add(tabPage = new TabPage(tabPageCaption));
-                tabPage.Name = tabPageCaption;
-                tabPage.ImageKey = imageKey;
-            }
+                Text = _consoleTabCaption.Text,
+                Name = _consoleTabCaption.Text
+            };
+            CommitInfoTabControl.Controls.Add(_consoleTabPage);
+
+            // We have to set ImageKey after it's added to the tab control
+            _consoleTabPage.ImageKey = nameof(Images.Console);
 
             // Delay-create the terminal window when the tab is first selected
             CommitInfoTabControl.Selecting += (sender, args) =>
             {
-                if (args.TabPage != tabPage)
+                if (args.TabPage != _consoleTabPage)
                 {
                     return;
                 }
@@ -2773,8 +2779,8 @@ namespace GitUI.CommandsDialogs
                 if (_terminal == null)
                 {
                     // Lazy-create on first opening the tab
-                    tabPage.Controls.Clear();
-                    tabPage.Controls.Add(
+                    _consoleTabPage.Controls.Clear();
+                    _consoleTabPage.Controls.Add(
                         _terminal = new ConEmuControl
                         {
                             Dock = DockStyle.Fill,
