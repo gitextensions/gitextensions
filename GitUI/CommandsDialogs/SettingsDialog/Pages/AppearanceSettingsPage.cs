@@ -170,7 +170,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "TranslationApp.exe"));
+            Process.Start(@"https://github.com/gitextensions/gitextensions/wiki/Translations");
         }
 
         private void downloadDictionary_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
