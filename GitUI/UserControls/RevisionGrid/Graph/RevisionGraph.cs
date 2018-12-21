@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using GitCommands;
 using GitUIPluginInterfaces;
@@ -18,7 +19,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     {
         // Some unordered collections with raw data
         private ConcurrentDictionary<ObjectId, RevisionGraphRevision> _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
-        private ConcurrentBag<RevisionGraphRevision> _nodes = new ConcurrentBag<RevisionGraphRevision>();
+        private ImmutableList<RevisionGraphRevision> _nodes = ImmutableList<RevisionGraphRevision>.Empty;
 
         /// <summary>
         /// The max score is used to keep a chronological order during the graph building.
@@ -48,7 +49,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         {
             _maxScore = 0;
             _nodeByObjectId = new ConcurrentDictionary<ObjectId, RevisionGraphRevision>();
-            _nodes = new ConcurrentBag<RevisionGraphRevision>();
+            _nodes = ImmutableList<RevisionGraphRevision>.Empty;
             _orderedNodesCache = null;
             _orderedRowCache = null;
         }
@@ -212,7 +213,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             }
 
             // Ensure all parents are loaded before adding it to the _nodes list. This is important for ordering.
-            _nodes.Add(revisionGraphRevision);
+            ImmutableInterlocked.Update(ref _nodes, list => list.Add(revisionGraphRevision));
         }
 
         /// <summary>
@@ -313,7 +314,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             _reorder = false;
 
             // Use a local variable, because the cached list can be reset
-            var localOrderedNodesCache = _nodes.OrderBy(n => n.Score).ToList();
+            var localOrderedNodesCache = _nodes.ToList();
+            localOrderedNodesCache.Sort((x, y) => x.Score.CompareTo(y.Score));
             _orderedNodesCache = localOrderedNodesCache;
             if (localOrderedNodesCache.Count > 0)
             {

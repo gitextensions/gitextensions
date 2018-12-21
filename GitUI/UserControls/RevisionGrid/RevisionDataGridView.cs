@@ -549,7 +549,9 @@ namespace GitUI.UserControls.RevisionGrid
             // With lock, loading the commit info slows down terribly.
             if (_revisionGraph.TryGetNode(objectId, out var node))
             {
-                return node.Children.Select(d => d.GitRevision.ObjectId).ToList();
+                var children = node.Children.Select(d => d.GitRevision.ObjectId).ToList();
+                children.Reverse();
+                return children;
             }
 
             return Array.Empty<ObjectId>();
