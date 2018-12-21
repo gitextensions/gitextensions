@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils.GitUI;
@@ -280,8 +278,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                             Brush brush;
 
-                            if (revisionGraphRevision.Parent.Children.Count > 1)
+                            if (!revisionGraphRevision.Parent.Children.IsEmpty
+                                && !revisionGraphRevision.Parent.Children.Pop().IsEmpty)
                             {
+                                // revisionGraphRevision.Parent.Children has more than one element
                                 brush = GetBrushForRevision(revisionGraphRevision.Child, revisionGraphRevision.Child.IsRelative);
                             }
                             else
