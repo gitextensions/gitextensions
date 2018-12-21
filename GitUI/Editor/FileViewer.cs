@@ -343,7 +343,7 @@ namespace GitUI.Editor
             };
         }
 
-        public Task ViewFileAsync(string fileName)
+        public Task ViewFileAsync(string fileName, [CanBeNull] Action openWithDifftool = null)
         {
             return ShowOrDeferAsync(
                 fileName,
@@ -352,7 +352,7 @@ namespace GitUI.Editor
                     getImage: GetImage,
                     getFileText: GetFileText,
                     getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""),
-                    openWithDifftool: null /* not implemented */));
+                    openWithDifftool));
 
             Image GetImage()
             {
@@ -770,7 +770,7 @@ namespace GitUI.Editor
                                 }
 
                                 PictureBox.Image = image == null ? null : DpiUtil.Scale(image);
-                                internalFileViewer.SetText("", () => { });
+                                internalFileViewer.SetText("", openWithDifftool);
                             });
             }
 
