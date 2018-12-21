@@ -176,13 +176,20 @@ namespace GitUI.BranchTreePanel
                     if (selectedNode != null)
                     {
                         treeMain.SelectedNode = selectedNode;
-                        treeMain.SelectedNode.EnsureVisible();
+                        ExpandPathToSelectedNode();
                     }
 
                     _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = false);
                 }
 
                 treeMain.EndUpdate();
+            }
+
+            void ExpandPathToSelectedNode()
+            {
+                treeMain.Scrollable = false; // disable scrolling, so the next call does not horizontally (nor vertically) scroll
+                treeMain.SelectedNode.EnsureVisible();
+                treeMain.Scrollable = true;
             }
         }
 
