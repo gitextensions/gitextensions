@@ -47,7 +47,7 @@
             this.lblCommitInfoTarget = new System.Windows.Forms.Label();
             this.lblTargetRepository = new System.Windows.Forms.Label();
             this.groupBoxCreatePullRequest = new System.Windows.Forms.GroupBox();
-            this.lblLinkCreatePull = new System.Windows.Forms.LinkLabel();
+            this._NO_TRANSLATE_lblLinkCreatePull = new System.Windows.Forms.LinkLabel();
             this.splitContainerCreate = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabView = new System.Windows.Forms.TabPage();
@@ -61,7 +61,7 @@
             this.btnMerge = new System.Windows.Forms.Button();
             this.btnApprove = new System.Windows.Forms.Button();
             this.groupBoxPullRequestInfo = new System.Windows.Forms.GroupBox();
-            this.lblLinkViewPull = new System.Windows.Forms.LinkLabel();
+            this._NO_TRANSLATE_lblLinkViewPull = new System.Windows.Forms.LinkLabel();
             this.txtPRDescription = new System.Windows.Forms.TextBox();
             this.txtPRTitle = new System.Windows.Forms.TextBox();
             this.txtPRReviewers = new System.Windows.Forms.TextBox();
@@ -293,7 +293,7 @@
             // 
             // groupBoxCreatePullRequest
             // 
-            this.groupBoxCreatePullRequest.Controls.Add(this.lblLinkCreatePull);
+            this.groupBoxCreatePullRequest.Controls.Add(this._NO_TRANSLATE_lblLinkCreatePull);
             this.groupBoxCreatePullRequest.Controls.Add(this.lblDescription);
             this.groupBoxCreatePullRequest.Controls.Add(this.txtDescription);
             this.groupBoxCreatePullRequest.Controls.Add(this.txtTitle);
@@ -305,16 +305,16 @@
             this.groupBoxCreatePullRequest.TabStop = false;
             this.groupBoxCreatePullRequest.Text = "Pull Request Info";
             // 
-            // lblLinkCreatePull
+            // _NO_TRANSLATE_lblLinkCreatePull
             // 
-            this.lblLinkCreatePull.AutoSize = true;
-            this.lblLinkCreatePull.Location = new System.Drawing.Point(128, 382);
-            this.lblLinkCreatePull.Name = "lblLinkCreatePull";
-            this.lblLinkCreatePull.Size = new System.Drawing.Size(53, 13);
-            this.lblLinkCreatePull.TabIndex = 12;
-            this.lblLinkCreatePull.TabStop = true;
-            this.lblLinkCreatePull.Text = "";
-            this.lblLinkCreatePull.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
+            this._NO_TRANSLATE_lblLinkCreatePull.AutoSize = true;
+            this._NO_TRANSLATE_lblLinkCreatePull.Location = new System.Drawing.Point(128, 382);
+            this._NO_TRANSLATE_lblLinkCreatePull.Name = "_NO_TRANSLATE_lblLinkCreatePull";
+            this._NO_TRANSLATE_lblLinkCreatePull.Size = new System.Drawing.Size(53, 13);
+            this._NO_TRANSLATE_lblLinkCreatePull.TabIndex = 12;
+            this._NO_TRANSLATE_lblLinkCreatePull.TabStop = true;
+            this._NO_TRANSLATE_lblLinkCreatePull.Text = "";
+            this._NO_TRANSLATE_lblLinkCreatePull.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
             // 
             // splitContainerCreate
             // 
@@ -456,7 +456,7 @@
             // 
             // groupBoxPullRequestInfo
             // 
-            this.groupBoxPullRequestInfo.Controls.Add(this.lblLinkViewPull);
+            this.groupBoxPullRequestInfo.Controls.Add(this._NO_TRANSLATE_lblLinkViewPull);
             this.groupBoxPullRequestInfo.Controls.Add(this.txtPRDescription);
             this.groupBoxPullRequestInfo.Controls.Add(this.txtPRTitle);
             this.groupBoxPullRequestInfo.Controls.Add(this.txtPRReviewers);
@@ -470,16 +470,16 @@
             this.groupBoxPullRequestInfo.TabStop = false;
             this.groupBoxPullRequestInfo.Text = "Pull Request Info";
             // 
-            // lblLinkViewPull
+            // _NO_TRANSLATE_lblLinkViewPull
             // 
-            this.lblLinkViewPull.AutoSize = true;
-            this.lblLinkViewPull.Location = new System.Drawing.Point(17, 382);
-            this.lblLinkViewPull.Name = "viewPullLinkLabel";
-            this.lblLinkViewPull.Size = new System.Drawing.Size(53, 13);
-            this.lblLinkViewPull.TabIndex = 15;
-            this.lblLinkViewPull.TabStop = true;
-            this.lblLinkViewPull.Text = "linkLabel1";
-            this.lblLinkViewPull.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
+            this._NO_TRANSLATE_lblLinkViewPull.AutoSize = true;
+            this._NO_TRANSLATE_lblLinkViewPull.Location = new System.Drawing.Point(17, 382);
+            this._NO_TRANSLATE_lblLinkViewPull.Name = "viewPullLinkLabel";
+            this._NO_TRANSLATE_lblLinkViewPull.Size = new System.Drawing.Size(53, 13);
+            this._NO_TRANSLATE_lblLinkViewPull.TabIndex = 15;
+            this._NO_TRANSLATE_lblLinkViewPull.TabStop = true;
+            this._NO_TRANSLATE_lblLinkViewPull.Text = "linkLabel1";
+            this._NO_TRANSLATE_lblLinkViewPull.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
             // 
             // txtPRDescription
             // 
@@ -760,8 +760,8 @@
         private System.Windows.Forms.Label lblPRState;
         private System.Windows.Forms.Label lblAuthor;
         private System.Windows.Forms.Label lblState;
-        private System.Windows.Forms.LinkLabel lblLinkCreatePull;
-        private System.Windows.Forms.LinkLabel lblLinkViewPull;
+        private System.Windows.Forms.LinkLabel _NO_TRANSLATE_lblLinkCreatePull;
+        private System.Windows.Forms.LinkLabel _NO_TRANSLATE_lblLinkViewPull;
         private System.Windows.Forms.ToolTip toolTipLink;
     }
 }
