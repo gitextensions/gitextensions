@@ -41,13 +41,13 @@ namespace Bitbucket
                 ReloadRepositories();
             };
 
-            lblLinkCreatePull.Text = string.Format(_NO_TRANSLATE_LinkCreatePull,
+            _NO_TRANSLATE_lblLinkCreatePull.Text = string.Format(_NO_TRANSLATE_LinkCreatePull,
                                       _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
-            toolTipLink.SetToolTip(lblLinkCreatePull, _linkLabelToolTip.Text);
+            toolTipLink.SetToolTip(_NO_TRANSLATE_lblLinkCreatePull, _linkLabelToolTip.Text);
 
-            lblLinkViewPull.Text = string.Format(_NO_TRANSLATE_LinkViewPull,
+            _NO_TRANSLATE_lblLinkViewPull.Text = string.Format(_NO_TRANSLATE_LinkViewPull,
                 _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
-            toolTipLink.SetToolTip(lblLinkViewPull, _linkLabelToolTip.Text);
+            toolTipLink.SetToolTip(_NO_TRANSLATE_lblLinkViewPull, _linkLabelToolTip.Text);
 
             InitializeComplete();
         }
@@ -321,7 +321,7 @@ namespace Bitbucket
             lblPRDestRepo.Text = curItem.DestDisplayName;
             lblPRDestBranch.Text = curItem.DestBranch;
 
-            lblLinkViewPull.Text = string.Format("{0}/projects/{1}/repos/{2}/pull-requests/{3}/overview",
+            _NO_TRANSLATE_lblLinkViewPull.Text = string.Format("{0}/projects/{1}/repos/{2}/pull-requests/{3}/overview",
                 _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug, curItem.Id);
         }
 
