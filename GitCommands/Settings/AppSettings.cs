@@ -894,6 +894,12 @@ namespace GitCommands
             set => SetBool("showstashcount", value);
         }
 
+        public static bool ShowAheadBehindData
+        {
+            get => GetBool("showaheadbehinddata", true);
+            set => SetBool("showaheadbehinddata", value);
+        }
+
         public static bool ShowSubmoduleStatus
         {
             get => GetBool("showsubmodulestatus", false);

@@ -85,6 +85,8 @@
     <Compile Include="FileHelper.cs" />
     <Compile Include="FullPathResolver.cs" />
     <Compile Include="GitRevisionInfoProvider.cs" />
+    <Compile Include="Git\AheadBehindData.cs" />
+    <Compile Include="Git\AheadBehindDataProvider.cs" />
     <Compile Include="Git\ExecutableExtensions.cs" />
     <Compile Include="Git\GitDescribeProvider.cs" />
     <Compile Include="Git\DetachedHeadParser.cs" />
@@ -96,8 +98,6 @@
     <Compile Include="Git\Executable.cs" />
     <Compile Include="Git\GitRevisionTester.cs" />
     <Compile Include="Git\GitRefName.cs" />
-    <Compile Include="Git\IExecutable.cs" />
-    <Compile Include="Git\IProcess.cs" />
     <Compile Include="Git\Tag\GitCreateTagArgs.cs" />
     <Compile Include="Git\Tag\GitCreateTagCmd.cs" />
     <Compile Include="Git\GitDeleteRemoteBranchesCmd.cs" />

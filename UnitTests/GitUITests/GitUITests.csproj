@@ -98,6 +98,7 @@
     <Compile Include="UserControls\RevisionGrid\Graph\LaneInfoProviderTests.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphMultiThreadingTests.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphTests.cs" />
+    <Compile Include="UserControls\ToolStripPushButtonTests.cs" />
     <Compile Include="UserManual\SingleHtmlUserManualFixture.cs" />
     <Compile Include="UserManual\StandardHtmlUserManualFixture.cs" />
     <Compile Include="WindowPositionManagerTests.cs" />

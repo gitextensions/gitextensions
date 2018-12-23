@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace GitCommands
+namespace GitUIPluginInterfaces
 {
     /// <summary>
     /// Defines a process instance.

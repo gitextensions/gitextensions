@@ -60,6 +60,11 @@ namespace GitUIPluginInterfaces
         string WorkingDir { get; }
 
         /// <summary>
+        /// Gets the access to the current git executable associated with this module.
+        /// </summary>
+        IExecutable GitExecutable { get; }
+
+        /// <summary>
         /// Gets the location of .git directory for the current working folder.
         /// </summary>
         string WorkingDirGitDir { get; }

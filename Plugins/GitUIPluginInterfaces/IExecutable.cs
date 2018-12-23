@@ -1,8 +1,8 @@
 using System.Text;
-using GitUIPluginInterfaces;
+using GitCommands;
 using JetBrains.Annotations;
 
-namespace GitCommands
+namespace GitUIPluginInterfaces
 {
     /// <summary>
     /// Defines an executable that can be launched to create processes.
@@ -14,7 +14,7 @@ namespace GitCommands
         /// </summary>
         /// <remarks>
         /// This is a low level means of starting a process. Most code will want to use one of the extension methods
-        /// provided by <see cref="ExecutableExtensions"/>.
+        /// provided by <c>ExecutableExtensions</c>.
         /// </remarks>
         /// <param name="arguments">Any command line arguments to be passed to the executable when it is started.</param>
         /// <param name="createWindow">Whether to create a window for the process or not.</param>
