@@ -124,7 +124,7 @@ namespace AzureDevOpsIntegration
                 Id = buildDetail.BuildNumber,
                 StartDate = buildDetail.StartTime ?? DateTime.Now.AddHours(1),
                 Status = buildDetail.IsInProgress ? BuildInfo.BuildStatus.InProgress : MapResult(buildDetail.Result),
-                Description = buildDetail.BuildNumber + " (" + (buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result) + " " + duration + ")",
+                Description = (buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result) + " " + duration + " (" + buildDetail.BuildNumber + ")",
                 CommitHashList = new[] { ObjectId.Parse(buildDetail.SourceVersion) },
                 Url = buildDetail._links.Web.Href,
                 ShowInBuildReportTab = false
