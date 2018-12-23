@@ -456,17 +456,17 @@ namespace GitCommands
         }
 
         [CanBeNull]
-        public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged)
+        public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged, bool noLocks = false)
         {
-            Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding);
+            Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding, noLocks: noLocks);
             string text = patch != null ? patch.Text : "";
             return ParseSubmoduleStatus(text, module, fileName);
         }
 
         [CanBeNull]
-        public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string submodule)
+        public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string submodule, bool noLocks = false)
         {
-            return GetCurrentSubmoduleChanges(module, submodule, submodule, false);
+            return GetCurrentSubmoduleChanges(module, submodule, submodule, false, noLocks: noLocks);
         }
 
         [CanBeNull]

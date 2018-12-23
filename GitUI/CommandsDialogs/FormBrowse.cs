@@ -1035,7 +1035,7 @@ namespace GitUI.CommandsDialogs
                     await Task.Delay(500);
                     await TaskScheduler.Default;
 
-                    var result = Module.GetStashes().Count;
+                    var result = Module.GetStashes(noLocks: true).Count;
 
                     await this.SwitchToMainThreadAsync();
 

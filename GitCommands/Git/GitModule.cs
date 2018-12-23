@@ -858,9 +858,9 @@ namespace GitCommands
             return tree.Split();
         }
 
-        public Dictionary<IGitRef, IGitItem> GetSubmoduleItemsForEachRef(string filename, Func<IGitRef, bool> showRemoteRef)
+        public Dictionary<IGitRef, IGitItem> GetSubmoduleItemsForEachRef(string filename, Func<IGitRef, bool> showRemoteRef, bool noLocks = false)
         {
-            string command = GetSortedRefsCommand();
+            string command = GetSortedRefsCommand(noLocks: noLocks);
 
             if (command == null)
             {
@@ -876,11 +876,14 @@ namespace GitCommands
             return refs.Where(showRemoteRef).ToDictionary(r => r, r => GetSubmoduleCommitHash(filename, r.Name));
         }
 
-        private static ArgumentString GetSortedRefsCommand()
+        private static ArgumentString GetSortedRefsCommand(bool noLocks = false)
         {
             if (AppSettings.ShowSuperprojectRemoteBranches)
             {
-                return new GitArgumentBuilder("for-each-ref")
+                return new GitArgumentBuilder("for-each-ref", gitOptions:
+                    noLocks && GitVersion.Current.SupportNoOptionalLocks
+                        ? (ArgumentString)"--no-optional-locks"
+                        : default)
                 {
                     "--sort=-committerdate",
                     "--format=\"%(objectname) %(refname)\"",
@@ -890,7 +893,10 @@ namespace GitCommands
 
             if (AppSettings.ShowSuperprojectBranches || AppSettings.ShowSuperprojectTags)
             {
-                return new GitArgumentBuilder("for-each-ref")
+                return new GitArgumentBuilder("for-each-ref", gitOptions:
+                    noLocks && GitVersion.Current.SupportNoOptionalLocks
+                        ? (ArgumentString)"--no-optional-locks"
+                        : default)
                 {
                     "--sort=-committerdate",
                     "--format=\"%(objectname) %(refname)\"",
@@ -2367,9 +2373,13 @@ namespace GitCommands
             LocalConfigFile.SetPathValue(setting, value);
         }
 
-        public IReadOnlyList<GitStash> GetStashes()
+        public IReadOnlyList<GitStash> GetStashes(bool noLocks = false)
         {
-            var args = new GitArgumentBuilder("stash") { "list" };
+            var args = new GitArgumentBuilder("stash", gitOptions:
+                noLocks && GitVersion.Current.SupportNoOptionalLocks
+                    ? (ArgumentString)"--no-optional-locks"
+                    : default)
+                { "list" };
             var lines = _gitExecutable.GetOutput(args).Split('\n');
 
             var stashes = new List<GitStash>(lines.Length);
@@ -2706,10 +2716,13 @@ namespace GitCommands
         }
 
         [CanBeNull]
-        public Patch GetCurrentChanges(string fileName, [CanBeNull] string oldFileName, bool staged, string extraDiffArguments, Encoding encoding)
+        public Patch GetCurrentChanges(string fileName, [CanBeNull] string oldFileName, bool staged, string extraDiffArguments, Encoding encoding, bool noLocks = false)
         {
             var output = _gitExecutable.GetOutput(
-                new GitArgumentBuilder("diff")
+                new GitArgumentBuilder("diff", gitOptions:
+                    noLocks && GitVersion.Current.SupportNoOptionalLocks
+                        ? (ArgumentString)"--no-optional-locks"
+                        : default)
                 {
                     "--no-color",
                     { staged, "-M -C --cached" },
