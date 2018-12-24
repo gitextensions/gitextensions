@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace GitUITests.UserControls
 {
     [TestFixture]
-    internal class AuthorRevisionHighlightingFixture
+    internal class AuthorRevisionHighlightingTests
     {
         private const string ExpectedAuthorEmail1 = "doe1@example.org";
         private const string ExpectedAuthorEmail2 = "doe2@example.org";
