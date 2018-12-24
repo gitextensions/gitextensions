@@ -43,7 +43,7 @@ namespace GitUI.UserControls
                 return false;
             }
 
-            return string.Equals(revision?.AuthorEmail, AuthorEmailToHighlight, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(revision.AuthorEmail, AuthorEmailToHighlight, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
