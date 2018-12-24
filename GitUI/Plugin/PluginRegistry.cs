@@ -22,6 +22,8 @@ namespace GitUI
                     return;
                 }
 
+                ManagedExtensibility.SetApplicationDataFolder(AppSettings.ApplicationDataPath.Value);
+
                 foreach (var plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
                 {
                     plugin.SettingsContainer = new GitPluginSettingsContainer(plugin.Name);
