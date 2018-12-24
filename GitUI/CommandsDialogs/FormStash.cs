@@ -32,6 +32,7 @@ namespace GitUI.CommandsDialogs
         private FormStash()
         {
             InitializeComponent();
+            CompleteTheInitialization();
         }
 
         public FormStash(GitUICommands commands)
@@ -39,8 +40,58 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(null, null); };
+            CompleteTheInitialization();
+        }
+
+        private void CompleteTheInitialization()
+        {
+            KeyPreview = true;
+            View.EscapePressed += () => DialogResult = DialogResult.Cancel;
             splitContainer1.SplitterDistance = DpiUtil.Scale(280);
             InitializeComplete();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape && e.Modifiers == Keys.None)
+            {
+                var focusedControl = this.FindFocusedControl();
+                var comboBox = focusedControl as ComboBox;
+                if (comboBox != null && comboBox.DroppedDown)
+                {
+                    comboBox.DroppedDown = false;
+                }
+                else
+                {
+                    var textBox = focusedControl as TextBoxBase;
+                    if (textBox != null && textBox.SelectionLength > 0)
+                    {
+                        textBox.SelectionLength = 0;
+                    }
+                    else
+                    {
+                        DialogResult = DialogResult.Cancel;
+                    }
+                }
+
+                // do not let the modal form react itself on this preview of the Escape key press
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+            }
+
+            base.OnKeyDown(e);
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape && e.Modifiers == Keys.None)
+            {
+                // do not let the modal form react itself on this preview of the Escape key press
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+            }
+
+            base.OnKeyUp(e);
         }
 
         private void FormStashFormClosing(object sender, FormClosingEventArgs e)
