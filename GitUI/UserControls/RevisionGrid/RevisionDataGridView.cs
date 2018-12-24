@@ -119,7 +119,7 @@ namespace GitUI.UserControls.RevisionGrid
                     e.RowBounds.Height > 0)
                 {
                     // Draw row background
-                    var backBrush = GetBackground(e.State, e.RowIndex);
+                    var backBrush = GetBackground(e.State, e.RowIndex, null);
                     e.Graphics.FillRectangle(backBrush, e.RowBounds);
                 }
             }
@@ -175,6 +175,8 @@ namespace GitUI.UserControls.RevisionGrid
                 _boldFont = new Font(value, FontStyle.Bold);
             }
         }
+
+        internal AuthorRevisionHighlighting AuthorHighlighting { get; set; }
 
         // Contains the object Id's that will be selected as soon as they are loaded.
         public HashSet<ObjectId> ToBeSelectedObjectIds { get; set; } = new HashSet<ObjectId>();
@@ -238,11 +240,16 @@ namespace GitUI.UserControls.RevisionGrid
                 : Color.Black;
         }
 
-        private static Brush GetBackground(DataGridViewElementStates state, int rowIndex)
+        private Brush GetBackground(DataGridViewElementStates state, int rowIndex, GitRevision revision)
         {
             if (state.HasFlag(DataGridViewElementStates.Selected))
             {
                 return SystemBrushes.Highlight;
+            }
+
+            if (revision != null && !revision.IsArtificial && AuthorHighlighting.IsHighlighted(revision))
+            {
+                return Brushes.LightYellow;
             }
 
             if (rowIndex % 2 == 0 && AppSettings.RevisionGraphDrawAlternateBackColor)
@@ -250,7 +257,7 @@ namespace GitUI.UserControls.RevisionGrid
                 return _alternatingRowBackgroundBrush;
             }
 
-            return Brushes.White;
+            return SystemBrushes.Window;
         }
 
         private void OnCellPainting(object sender, DataGridViewCellPaintingEventArgs e)
@@ -269,9 +276,10 @@ namespace GitUI.UserControls.RevisionGrid
 
             if (Columns[e.ColumnIndex].Tag is ColumnProvider provider)
             {
-                var backBrush = GetBackground(e.State, e.RowIndex);
+                var backBrush = GetBackground(e.State, e.RowIndex, revision);
                 var foreColor = GetForeground(e.State, e.RowIndex);
 
+                e.Graphics.FillRectangle(backBrush, e.CellBounds);
                 provider.OnCellPainting(e, revision, _rowHeight, new CellStyle(backBrush, foreColor, _normalFont, _boldFont, _monospaceFont));
 
                 e.Handled = true;

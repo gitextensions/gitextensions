@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
 using GitCommands.Config;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.UserControls
@@ -14,7 +15,7 @@ namespace GitUI.UserControls
 
         /// <returns><c>true</c> if the UI should be refreshed in response to this change.</returns>
         [MustUseReturnValue]
-        public bool ProcessRevisionSelectionChange(GitModule currentModule, IReadOnlyCollection<GitRevision> selectedRevisions)
+        public bool ProcessRevisionSelectionChange(IGitModule currentModule, IReadOnlyCollection<GitRevision> selectedRevisions)
         {
             if (selectedRevisions.Count > 1)
             {
@@ -24,7 +25,6 @@ namespace GitUI.UserControls
             var revision = selectedRevisions.FirstOrDefault();
 
             var changed = !string.Equals(revision?.AuthorEmail, AuthorEmailToHighlight, StringComparison.OrdinalIgnoreCase);
-
             if (changed)
             {
                 AuthorEmailToHighlight = revision != null
@@ -38,6 +38,11 @@ namespace GitUI.UserControls
 
         public bool IsHighlighted([CanBeNull] GitRevision revision)
         {
+            if (string.IsNullOrWhiteSpace(revision?.AuthorEmail))
+            {
+                return false;
+            }
+
             return string.Equals(revision?.AuthorEmail, AuthorEmailToHighlight, StringComparison.OrdinalIgnoreCase);
         }
     }
