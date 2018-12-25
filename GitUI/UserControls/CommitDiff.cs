@@ -10,11 +10,17 @@ namespace GitUI.UserControls
 {
     public partial class CommitDiff : GitModuleControl
     {
+        /// <summary>
+        /// Raised when the Escape key is pressed (and only when no selection exists, as the default behaviour of escape is to clear the selection).
+        /// </summary>
+        public event Action EscapePressed;
+
         public CommitDiff()
         {
             InitializeComponent();
             InitializeComplete();
 
+            DiffText.EscapePressed += () => EscapePressed?.Invoke();
             DiffText.ExtraDiffArgumentsChanged += DiffText_ExtraDiffArgumentsChanged;
             DiffFiles.Focus();
             DiffFiles.SetDiffs();
