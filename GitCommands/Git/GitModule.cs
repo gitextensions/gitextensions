@@ -2926,25 +2926,40 @@ namespace GitCommands
 
         public IReadOnlyList<IGitRef> GetRefs(bool tags = true, bool branches = true)
         {
+            return GetRefs(tags, branches, false);
+        }
+
+        public IReadOnlyList<IGitRef> GetRefs(bool tags, bool branches, bool noLocks)
+        {
             var refList = GetRefList();
 
             return ParseRefs(refList);
 
             string GetRefList()
             {
-                if (tags && branches)
-                {
-                    return _gitExecutable.GetOutput("show-ref --dereference");
-                }
-
                 if (tags)
                 {
-                    return _gitExecutable.GetOutput("show-ref --tags");
+                    var cmd = new GitArgumentBuilder("show-ref", gitOptions:
+                        noLocks && GitVersion.Current.SupportNoOptionalLocks
+                            ? (ArgumentString)"--no-optional-locks"
+                            : default)
+                    {
+                        { branches, "--dereference", "--tags" },
+                    };
+                    return _gitExecutable.GetOutput(cmd);
                 }
-
-                if (branches)
+                else if (branches)
                 {
-                    return _gitExecutable.GetOutput(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""");
+                    var cmd = new GitArgumentBuilder("for-each-ref", gitOptions:
+                        noLocks && GitVersion.Current.SupportNoOptionalLocks
+                            ? (ArgumentString)"--no-optional-locks"
+                            : default)
+                    {
+                        "--sort=-committerdate",
+                        @"refs/heads/",
+                        @"--format=""%(objectname) %(refname)"""
+                    };
+                    return _gitExecutable.GetOutput(cmd);
                 }
 
                 return "";
