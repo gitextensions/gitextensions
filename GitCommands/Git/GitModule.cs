@@ -876,7 +876,7 @@ namespace GitCommands
             return refs.Where(showRemoteRef).ToDictionary(r => r, r => GetSubmoduleCommitHash(filename, r.Name));
         }
 
-        private static ArgumentString GetSortedRefsCommand(bool noLocks = false)
+        internal ArgumentString GetSortedRefsCommand(bool noLocks = false)
         {
             if (AppSettings.ShowSuperprojectRemoteBranches)
             {
@@ -2373,13 +2373,18 @@ namespace GitCommands
             LocalConfigFile.SetPathValue(setting, value);
         }
 
+        internal GitArgumentBuilder GetStashesCmd(bool noLocks)
+        {
+            return new GitArgumentBuilder("stash", gitOptions:
+                    noLocks && GitVersion.Current.SupportNoOptionalLocks
+                        ? (ArgumentString)"--no-optional-locks"
+                        : default)
+                { "list" };
+        }
+
         public IReadOnlyList<GitStash> GetStashes(bool noLocks = false)
         {
-            var args = new GitArgumentBuilder("stash", gitOptions:
-                noLocks && GitVersion.Current.SupportNoOptionalLocks
-                    ? (ArgumentString)"--no-optional-locks"
-                    : default)
-                { "list" };
+            var args = GetStashesCmd(noLocks);
             var lines = _gitExecutable.GetOutput(args).Split('\n');
 
             var stashes = new List<GitStash>(lines.Length);
@@ -2715,11 +2720,10 @@ namespace GitCommands
             return GitStatus(UntrackedFilesMode.All, IgnoreSubmodulesMode.All).Count > 0;
         }
 
-        [CanBeNull]
-        public Patch GetCurrentChanges(string fileName, [CanBeNull] string oldFileName, bool staged, string extraDiffArguments, Encoding encoding, bool noLocks = false)
+        internal GitArgumentBuilder GetCurrentChangesCmd(string fileName, [CanBeNull] string oldFileName, bool staged,
+            string extraDiffArguments, Encoding encoding, bool noLocks)
         {
-            var output = _gitExecutable.GetOutput(
-                new GitArgumentBuilder("diff", gitOptions:
+            return new GitArgumentBuilder("diff", gitOptions:
                     noLocks && GitVersion.Current.SupportNoOptionalLocks
                         ? (ArgumentString)"--no-optional-locks"
                         : default)
@@ -2731,7 +2735,13 @@ namespace GitCommands
                     "--",
                     fileName.ToPosixPath().Quote(),
                     { staged, oldFileName?.ToPosixPath().Quote() }
-                },
+                };
+        }
+
+        [CanBeNull]
+        public Patch GetCurrentChanges(string fileName, [CanBeNull] string oldFileName, bool staged, string extraDiffArguments, Encoding encoding, bool noLocks = false)
+        {
+            var output = _gitExecutable.GetOutput(GetCurrentChangesCmd(fileName, oldFileName, staged, extraDiffArguments, encoding, noLocks),
                 outputEncoding: LosslessEncoding);
 
             var patches = PatchProcessor.CreatePatchesFromString(output, encoding).ToList();
@@ -2931,39 +2941,44 @@ namespace GitCommands
 
         public IReadOnlyList<IGitRef> GetRefs(bool tags, bool branches, bool noLocks)
         {
-            var refList = GetRefList();
+            var refList = _gitExecutable.GetOutput(GetRefsCmd(tags: tags, branches: branches, noLocks: noLocks));
 
             return ParseRefs(refList);
+        }
 
-            string GetRefList()
+        internal GitArgumentBuilder GetRefsCmd(bool tags, bool branches, bool noLocks)
+        {
+            GitArgumentBuilder cmd;
+
+            if (tags)
             {
-                if (tags)
+                cmd = new GitArgumentBuilder("show-ref", gitOptions:
+                    noLocks && GitVersion.Current.SupportNoOptionalLocks
+                        ? (ArgumentString)"--no-optional-locks"
+                        : default)
                 {
-                    var cmd = new GitArgumentBuilder("show-ref", gitOptions:
-                        noLocks && GitVersion.Current.SupportNoOptionalLocks
-                            ? (ArgumentString)"--no-optional-locks"
-                            : default)
-                    {
-                        { branches, "--dereference", "--tags" },
-                    };
-                    return _gitExecutable.GetOutput(cmd);
-                }
-                else if (branches)
-                {
-                    var cmd = new GitArgumentBuilder("for-each-ref", gitOptions:
-                        noLocks && GitVersion.Current.SupportNoOptionalLocks
-                            ? (ArgumentString)"--no-optional-locks"
-                            : default)
-                    {
-                        "--sort=-committerdate",
-                        @"refs/heads/",
-                        @"--format=""%(objectname) %(refname)"""
-                    };
-                    return _gitExecutable.GetOutput(cmd);
-                }
-
-                return "";
+                    { branches, "--dereference", "--tags" },
+                };
             }
+            else if (branches)
+            {
+                // branches only
+                cmd = new GitArgumentBuilder("for-each-ref", gitOptions:
+                    noLocks && GitVersion.Current.SupportNoOptionalLocks
+                        ? (ArgumentString)"--no-optional-locks"
+                        : default)
+                {
+                    "--sort=-committerdate",
+                    @"refs/heads/",
+                    @"--format=""%(objectname) %(refname)"""
+                };
+            }
+            else
+            {
+                throw new ArgumentException("GetRefs: Neither branches nor tags requested");
+            }
+
+            return cmd;
         }
 
         /// <param name="option">Order by date is slower.</param>
