@@ -43,7 +43,6 @@
             this.DrawNonRelativesTextGray = new System.Windows.Forms.CheckBox();
             this._NO_TRANSLATE_ColorGraphLabel = new System.Windows.Forms.Label();
             this.DrawNonRelativesGray = new System.Windows.Forms.CheckBox();
-            this.StripedBanchChange = new System.Windows.Forms.CheckBox();
             this.lblColorBranchLocal = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorBranchLabel = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_ColorTagLabel = new System.Windows.Forms.Label();
@@ -108,28 +107,26 @@
             this.tlpnlRevisionGraph.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlRevisionGraph.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlRevisionGraph.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorHighlightAuthoredLabel, 1, 7);
-            this.tlpnlRevisionGraph.Controls.Add(this.lblColorHighlightAuthored, 0, 7);
-            this.tlpnlRevisionGraph.Controls.Add(this.chkHighlightAuthored, 0, 6);
+            this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorHighlightAuthoredLabel, 1, 6);
+            this.tlpnlRevisionGraph.Controls.Add(this.lblColorHighlightAuthored, 0, 6);
+            this.tlpnlRevisionGraph.Controls.Add(this.chkHighlightAuthored, 0, 5);
             this.tlpnlRevisionGraph.Controls.Add(this.MulticolorBranches, 0, 0);
-            this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorRemoteBranchLabel, 1, 10);
-            this.tlpnlRevisionGraph.Controls.Add(this.lblColorBranchRemote, 0, 10);
-            this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorOtherLabel, 1, 11);
-            this.tlpnlRevisionGraph.Controls.Add(this.lblColorLabel, 0, 11);
-            this.tlpnlRevisionGraph.Controls.Add(this.chkDrawAlternateBackColor, 0, 2);
-            this.tlpnlRevisionGraph.Controls.Add(this.DrawNonRelativesTextGray, 0, 5);
+            this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorRemoteBranchLabel, 1, 9);
+            this.tlpnlRevisionGraph.Controls.Add(this.lblColorBranchRemote, 0, 9);
+            this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorOtherLabel, 1, 10);
+            this.tlpnlRevisionGraph.Controls.Add(this.lblColorLabel, 0, 10);
+            this.tlpnlRevisionGraph.Controls.Add(this.chkDrawAlternateBackColor, 0, 1);
+            this.tlpnlRevisionGraph.Controls.Add(this.DrawNonRelativesTextGray, 0, 4);
             this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorGraphLabel, 1, 0);
-            this.tlpnlRevisionGraph.Controls.Add(this.DrawNonRelativesGray, 0, 4);
-            this.tlpnlRevisionGraph.Controls.Add(this.StripedBanchChange, 0, 1);
-            this.tlpnlRevisionGraph.Controls.Add(this.lblColorBranchLocal, 0, 9);
-            this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorBranchLabel, 1, 9);
-            this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorTagLabel, 1, 8);
-            this.tlpnlRevisionGraph.Controls.Add(this.lblColorTag, 0, 8);
+            this.tlpnlRevisionGraph.Controls.Add(this.DrawNonRelativesGray, 0, 3);
+            this.tlpnlRevisionGraph.Controls.Add(this.lblColorBranchLocal, 0, 8);
+            this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorBranchLabel, 1, 8);
+            this.tlpnlRevisionGraph.Controls.Add(this._NO_TRANSLATE_ColorTagLabel, 1, 7);
+            this.tlpnlRevisionGraph.Controls.Add(this.lblColorTag, 0, 7);
             this.tlpnlRevisionGraph.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpnlRevisionGraph.Location = new System.Drawing.Point(8, 21);
             this.tlpnlRevisionGraph.Name = "tlpnlRevisionGraph";
-            this.tlpnlRevisionGraph.RowCount = 13;
-            this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tlpnlRevisionGraph.RowCount = 12;
             this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tlpnlRevisionGraph.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -292,17 +289,6 @@
             this.DrawNonRelativesGray.TabIndex = 4;
             this.DrawNonRelativesGray.Text = "Draw non relatives graph gray";
             this.DrawNonRelativesGray.UseVisualStyleBackColor = true;
-            // 
-            // StripedBanchChange
-            // 
-            this.StripedBanchChange.AutoSize = true;
-            this.StripedBanchChange.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.StripedBanchChange.Location = new System.Drawing.Point(3, 26);
-            this.StripedBanchChange.Name = "StripedBanchChange";
-            this.StripedBanchChange.Size = new System.Drawing.Size(167, 17);
-            this.StripedBanchChange.TabIndex = 2;
-            this.StripedBanchChange.Text = "Striped branch change";
-            this.StripedBanchChange.UseVisualStyleBackColor = true;
             // 
             // lblColorBranchLocal
             // 
@@ -551,7 +537,6 @@
         private System.Windows.Forms.CheckBox DrawNonRelativesTextGray;
         private System.Windows.Forms.CheckBox DrawNonRelativesGray;
         private System.Windows.Forms.Label _NO_TRANSLATE_ColorGraphLabel;
-        private System.Windows.Forms.CheckBox StripedBanchChange;
         private System.Windows.Forms.CheckBox MulticolorBranches;
         private System.Windows.Forms.Label lblColorBranchRemote;
         private System.Windows.Forms.Label _NO_TRANSLATE_ColorRemoteBranchLabel;

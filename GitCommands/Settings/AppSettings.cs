@@ -1238,12 +1238,6 @@ namespace GitCommands
             set => SetBool("multicolorbranches", value);
         }
 
-        public static bool StripedBranchChange
-        {
-            get => GetBool("stripedbranchchange", true);
-            set => SetBool("stripedbranchchange", value);
-        }
-
         public static bool HighlightAuthoredRevisions
         {
             get { return GetBool("highlightauthoredrevisions", true); }
