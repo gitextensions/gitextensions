@@ -186,7 +186,7 @@ namespace GitUI.BranchTreePanel
                 }
                 else
                 {
-                    using (var form = new FormResetCurrentBranch(UICommands, new GitRevision(objectId)))
+                    using (var form = new FormResetCurrentBranch(UICommands, Module.GetRevision(objectId)))
                     {
                         form.ShowDialog(TreeViewNode.TreeView);
                     }
