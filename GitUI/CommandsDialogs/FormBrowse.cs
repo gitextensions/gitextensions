@@ -1781,7 +1781,7 @@ namespace GitUI.CommandsDialogs
                 splitter.SplitRecentRepos(repositoryHistory, mostRecentRepos, lessRecentRepos);
             }
 
-            foreach (var repo in mostRecentRepos.Union(lessRecentRepos).GroupBy(k => k.Repo.Category))
+            foreach (var repo in mostRecentRepos.Union(lessRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
             {
                 AddFavouriteRepositories(repo.Key, repo.ToList());
             }
