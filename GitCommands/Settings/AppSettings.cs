@@ -1142,6 +1142,12 @@ namespace GitCommands
             set => SetColor("othertagcolor", value);
         }
 
+        public static Color AuthoredRevisionsHighlightColor
+        {
+            get => GetColor("authoredhighlightcolor", Color.LightYellow);
+            set => SetColor("authoredhighlightcolor", value);
+        }
+
         public static Color TagColor
         {
             get => GetColor("tagcolor", Color.DarkBlue);
@@ -1236,6 +1242,12 @@ namespace GitCommands
         {
             get => GetBool("stripedbranchchange", true);
             set => SetBool("stripedbranchchange", value);
+        }
+
+        public static bool HighlightAuthoredRevisions
+        {
+            get { return GetBool("highlightauthoredrevisions", true); }
+            set { SetBool("highlightauthoredrevisions", value); }
         }
 
         public static string LastFormatPatchDir
