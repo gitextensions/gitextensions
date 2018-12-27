@@ -1761,14 +1761,19 @@ namespace GitUI.CommandsDialogs
 
         private void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container)
         {
-            var mostRecentRepos = new List<RecentRepoInfo>();
-            var lessRecentRepos = new List<RecentRepoInfo>();
-
             var repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync());
             if (repositoryHistory.Count < 1)
             {
                 return;
             }
+
+            PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
+        }
+
+        private void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
+        {
+            var mostRecentRepos = new List<RecentRepoInfo>();
+            var lessRecentRepos = new List<RecentRepoInfo>();
 
             using (var graphics = CreateGraphics())
             {
@@ -3094,6 +3099,24 @@ namespace GitUI.CommandsDialogs
                 var args = GitCommandHelpers.ResetCmd(ResetMode.Soft, "HEAD~1");
                 Module.RunGitCmd(args);
                 RefreshRevisions();
+            }
+        }
+
+        internal TestAccessor GetTestAccessor()
+            => new TestAccessor(this);
+
+        public readonly struct TestAccessor
+        {
+            private readonly FormBrowse _form;
+
+            public TestAccessor(FormBrowse form)
+            {
+                _form = form;
+            }
+
+            public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
+            {
+                _form.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
             }
         }
     }
