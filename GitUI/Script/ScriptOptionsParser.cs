@@ -14,37 +14,49 @@ namespace GitUI.Script
     {
         public static readonly IReadOnlyList<string> Options = new[]
         {
-            "{sHashes}",
-            "{sTag}",
-            "{sBranch}",
-            "{sLocalBranch}",
-            "{sRemoteBranch}",
-            "{sRemote}",
-            "{sRemoteUrl}",
-            "{sRemotePathFromUrl}",
-            "{sHash}",
-            "{sMessage}",
-            "{sAuthor}",
-            "{sCommitter}",
-            "{sAuthorDate}",
-            "{sCommitDate}",
-            "{cTag}",
-            "{cBranch}",
-            "{cLocalBranch}",
-            "{cRemoteBranch}",
-            "{cHash}",
-            "{cMessage}",
-            "{cAuthor}",
-            "{cCommitter}",
-            "{cAuthorDate}",
-            "{cCommitDate}",
-            "{cDefaultRemote}",
-            "{cDefaultRemoteUrl}",
-            "{cDefaultRemotePathFromUrl}",
-            "{UserInput}",
-            "{UserFiles}",
-            "{WorkingDir}"
+            "sHashes",
+            "sTag",
+            "sBranch",
+            "sLocalBranch",
+            "sRemoteBranch",
+            "sRemote",
+            "sRemoteUrl",
+            "sRemotePathFromUrl",
+            "sHash",
+            "sMessage",
+            "sAuthor",
+            "sCommitter",
+            "sAuthorDate",
+            "sCommitDate",
+            "cTag",
+            "cBranch",
+            "cLocalBranch",
+            "cRemoteBranch",
+            "cHash",
+            "cMessage",
+            "cAuthor",
+            "cCommitter",
+            "cAuthorDate",
+            "cCommitDate",
+            "cDefaultRemote",
+            "cDefaultRemoteUrl",
+            "cDefaultRemotePathFromUrl",
+            "UserInput",
+            "UserFiles",
+            "WorkingDir"
         };
+
+        private static string CreateOption(string option, bool quoted)
+        {
+            var result = "{" + option + "}";
+
+            if (quoted)
+            {
+                result = "{" + result + "}";
+            }
+
+            return result;
+        }
 
         public static (string argument, bool abort) Parse(string argument, IGitModule module, IWin32Window owner, RevisionGridControl revisionGrid)
         {
@@ -65,12 +77,20 @@ namespace GitUI.Script
 
             foreach (string option in Options)
             {
-                if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
+                if (string.IsNullOrEmpty(argument))
                 {
                     continue;
                 }
 
-                if (option.StartsWith("{c") && currentRevision == null)
+                string regularOption = CreateOption(option, false);
+                string quotedOption = CreateOption(option, true);
+
+                if (!argument.Contains(regularOption) && (!argument.Contains(quotedOption)))
+                {
+                    continue;
+                }
+
+                if (option.StartsWith("c") && currentRevision == null)
                 {
                     currentRevision = GetCurrentRevision(module, revisionGrid, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, currentRevision);
 
@@ -88,7 +108,7 @@ namespace GitUI.Script
                         }
                     }
                 }
-                else if (option.StartsWith("{s") && selectedRevision == null && revisionGrid != null)
+                else if (option.StartsWith("s") && selectedRevision == null && revisionGrid != null)
                 {
                     allSelectedRevisions = revisionGrid.GetSelectedRevisions();
                     selectedRevision = CalculateSelectedRevision(revisionGrid, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
@@ -215,251 +235,281 @@ namespace GitUI.Script
 
         private static string ParseScriptArguments(string argument, string option, IWin32Window owner, RevisionGridControl revisionGrid, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, in IList<IGitRef> selectedTags, in IList<IGitRef> selectedBranches, in IList<IGitRef> selectedLocalBranches, in IList<IGitRef> selectedRemoteBranches, in IList<string> selectedRemotes, GitRevision selectedRevision, in IList<IGitRef> currentTags, in IList<IGitRef> currentBranches, in IList<IGitRef> currentLocalBranches, in IList<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote)
         {
+            string newString = null;
             string remote;
             string url;
             switch (option)
             {
-                case "{sHashes}":
-                    argument = argument.Replace(option,
-                        string.Join(" ", allSelectedRevisions.Select(revision => revision.Guid).ToArray()));
+                case "sHashes":
+                    newString = string.Join(" ", allSelectedRevisions.Select(revision => revision.Guid).ToArray());
                     break;
 
-                case "{sTag}":
+                case "sTag":
                     if (selectedTags.Count == 1)
                     {
-                        argument = argument.Replace(option, selectedTags[0].Name);
+                        newString = selectedTags[0].Name;
                     }
                     else if (selectedTags.Count != 0)
                     {
-                        argument = argument.Replace(option, AskToSpecify(selectedTags, revisionGrid));
+                        newString = AskToSpecify(selectedTags, revisionGrid);
                     }
                     else
                     {
-                        argument = argument.Replace(option, "");
+                        newString = "";
                     }
 
                     break;
-                case "{sBranch}":
+
+                case "sBranch":
                     if (selectedBranches.Count == 1)
                     {
-                        argument = argument.Replace(option, selectedBranches[0].Name);
+                        newString = selectedBranches[0].Name;
                     }
                     else if (selectedBranches.Count != 0)
                     {
-                        argument = argument.Replace(option,
-                            AskToSpecify(selectedBranches, revisionGrid));
+                        newString = AskToSpecify(selectedBranches, revisionGrid);
                     }
                     else
                     {
-                        argument = argument.Replace(option, "");
+                        newString = "";
                     }
 
                     break;
-                case "{sLocalBranch}":
+
+                case "sLocalBranch":
                     if (selectedLocalBranches.Count == 1)
                     {
-                        argument = argument.Replace(option, selectedLocalBranches[0].Name);
+                        newString = selectedLocalBranches[0].Name;
                     }
                     else if (selectedLocalBranches.Count != 0)
                     {
-                        argument = argument.Replace(option, AskToSpecify(selectedLocalBranches, revisionGrid));
+                        newString = AskToSpecify(selectedLocalBranches, revisionGrid);
                     }
                     else
                     {
-                        argument = argument.Replace(option, "");
+                        newString = "";
                     }
 
                     break;
-                case "{sRemoteBranch}":
+
+                case "sRemoteBranch":
                     if (selectedRemoteBranches.Count == 1)
                     {
-                        argument = argument.Replace(option, selectedRemoteBranches[0].Name);
+                        newString = selectedRemoteBranches[0].Name;
                     }
                     else if (selectedRemoteBranches.Count != 0)
                     {
-                        argument = argument.Replace(option, AskToSpecify(selectedRemoteBranches, revisionGrid));
+                        newString = AskToSpecify(selectedRemoteBranches, revisionGrid);
                     }
                     else
                     {
-                        argument = argument.Replace(option, "");
+                        newString = "";
                     }
 
                     break;
-                case "{sRemote}":
+
+                case "sRemote":
                     if (selectedRemotes.Count == 0)
                     {
-                        argument = argument.Replace(option, "");
-                        break;
+                        newString = "";
+                    }
+                    else
+                    {
+                        newString = selectedRemotes.Count == 1
+                            ? selectedRemotes[0]
+                            : AskToSpecify(selectedRemotes, revisionGrid);
                     }
 
-                    remote = selectedRemotes.Count == 1
-                        ? selectedRemotes[0]
-                        : AskToSpecify(selectedRemotes, revisionGrid);
-
-                    argument = argument.Replace(option, remote);
                     break;
-                case "{sRemoteUrl}":
+
+                case "sRemoteUrl":
                     if (selectedRemotes.Count == 0)
                     {
-                        argument = argument.Replace(option, "");
-                        break;
+                        newString = "";
+                    }
+                    else
+                    {
+                        remote = selectedRemotes.Count == 1
+                            ? selectedRemotes[0]
+                            : AskToSpecify(selectedRemotes, revisionGrid);
+                        newString = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                     }
 
-                    remote = selectedRemotes.Count == 1
-                        ? selectedRemotes[0]
-                        : AskToSpecify(selectedRemotes, revisionGrid);
-
-                    url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
-                    argument = argument.Replace(option, url);
                     break;
-                case "{sRemotePathFromUrl}":
+
+                case "sRemotePathFromUrl":
                     if (selectedRemotes.Count == 0)
                     {
-                        argument = argument.Replace(option, "");
-                        break;
+                        newString = "";
+                    }
+                    else
+                    {
+                        remote = selectedRemotes.Count == 1
+                            ? selectedRemotes[0]
+                            : AskToSpecify(selectedRemotes, revisionGrid);
+                        newString = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
                     }
 
-                    remote = selectedRemotes.Count == 1
-                        ? selectedRemotes[0]
-                        : AskToSpecify(selectedRemotes, revisionGrid);
+                    break;
 
-                    url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
-                    argument = argument.Replace(option, GetRemotePath(url));
+                case "sHash":
+                    newString = selectedRevision.Guid;
                     break;
-                case "{sHash}":
-                    argument = argument.Replace(option, selectedRevision.Guid);
+
+                case "sMessage":
+                    newString = selectedRevision.Subject;
                     break;
-                case "{sMessage}":
-                    argument = argument.Replace(option, selectedRevision.Subject);
+
+                case "sAuthor":
+                    newString = selectedRevision.Author;
                     break;
-                case "{sAuthor}":
-                    argument = argument.Replace(option, selectedRevision.Author);
+
+                case "sCommitter":
+                    newString = selectedRevision.Committer;
                     break;
-                case "{sCommitter}":
-                    argument = argument.Replace(option, selectedRevision.Committer);
+
+                case "sAuthorDate":
+                    newString = selectedRevision.AuthorDate.ToString();
                     break;
-                case "{sAuthorDate}":
-                    argument = argument.Replace(option, selectedRevision.AuthorDate.ToString());
+
+                case "sCommitDate":
+                    newString = selectedRevision.CommitDate.ToString();
                     break;
-                case "{sCommitDate}":
-                    argument = argument.Replace(option, selectedRevision.CommitDate.ToString());
-                    break;
-                case "{cTag}":
+
+                case "cTag":
                     if (currentTags.Count == 1)
                     {
-                        argument = argument.Replace(option, currentTags[0].Name);
+                        newString = currentTags[0].Name;
                     }
                     else if (currentTags.Count != 0)
                     {
-                        argument = argument.Replace(option, AskToSpecify(currentTags, revisionGrid));
+                        newString = AskToSpecify(currentTags, revisionGrid);
                     }
                     else
                     {
-                        argument = argument.Replace(option, "");
+                        newString = "";
                     }
 
                     break;
-                case "{cBranch}":
+
+                case "cBranch":
                     if (currentBranches.Count == 1)
                     {
-                        argument = argument.Replace(option, currentBranches[0].Name);
+                        newString = currentBranches[0].Name;
                     }
                     else if (currentBranches.Count != 0)
                     {
-                        argument = argument.Replace(option, AskToSpecify(currentBranches, revisionGrid));
+                        newString = AskToSpecify(currentBranches, revisionGrid);
                     }
                     else
                     {
-                        argument = argument.Replace(option, "");
+                        newString = "";
                     }
 
                     break;
-                case "{cLocalBranch}":
+
+                case "cLocalBranch":
                     if (currentLocalBranches.Count == 1)
                     {
-                        argument = argument.Replace(option, currentLocalBranches[0].Name);
+                        newString = currentLocalBranches[0].Name;
                     }
                     else if (currentLocalBranches.Count != 0)
                     {
-                        argument = argument.Replace(option, AskToSpecify(currentLocalBranches, revisionGrid));
+                        newString = AskToSpecify(currentLocalBranches, revisionGrid);
                     }
                     else
                     {
-                        argument = argument.Replace(option, "");
+                        newString = "";
                     }
 
                     break;
-                case "{cRemoteBranch}":
+
+                case "cRemoteBranch":
                     if (currentRemoteBranches.Count == 1)
                     {
-                        argument = argument.Replace(option, currentRemoteBranches[0].Name);
+                        newString = currentRemoteBranches[0].Name;
                     }
                     else if (currentRemoteBranches.Count != 0)
                     {
-                        argument = argument.Replace(option, AskToSpecify(currentRemoteBranches, revisionGrid));
+                        newString = AskToSpecify(currentRemoteBranches, revisionGrid);
                     }
                     else
                     {
-                        argument = argument.Replace(option, "");
+                        newString = "";
                     }
 
                     break;
-                case "{cHash}":
-                    argument = argument.Replace(option, currentRevision.Guid);
+                case "cHash":
+                    newString = currentRevision.Guid;
                     break;
-                case "{cMessage}":
-                    argument = argument.Replace(option, currentRevision.Subject);
+
+                case "cMessage":
+                    newString = currentRevision.Subject;
                     break;
-                case "{cAuthor}":
-                    argument = argument.Replace(option, currentRevision.Author);
+
+                case "cAuthor":
+                    newString = currentRevision.Author;
                     break;
-                case "{cCommitter}":
-                    argument = argument.Replace(option, currentRevision.Committer);
+
+                case "cCommitter":
+                    newString = currentRevision.Committer;
                     break;
-                case "{cAuthorDate}":
-                    argument = argument.Replace(option, currentRevision.AuthorDate.ToString());
+
+                case "cAuthorDate":
+                    newString = currentRevision.AuthorDate.ToString();
                     break;
-                case "{cCommitDate}":
-                    argument = argument.Replace(option, currentRevision.CommitDate.ToString());
+
+                case "cCommitDate":
+                    newString = currentRevision.CommitDate.ToString();
                     break;
-                case "{cDefaultRemote}":
+
+                case "cDefaultRemote":
                     if (string.IsNullOrEmpty(currentRemote))
                     {
-                        argument = argument.Replace(option, "");
-                        break;
+                        newString = "";
+                    }
+                    else
+                    {
+                        newString = currentRemote;
                     }
 
-                    argument = argument.Replace(option, currentRemote);
                     break;
-                case "{cDefaultRemoteUrl}":
+
+                case "cDefaultRemoteUrl":
                     if (string.IsNullOrEmpty(currentRemote))
                     {
-                        argument = argument.Replace(option, "");
-                        break;
+                        newString = "";
+                    }
+                    else
+                    {
+                        newString = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
                     }
 
-                    url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
-                    argument = argument.Replace(option, url);
                     break;
-                case "{cDefaultRemotePathFromUrl}":
+
+                case "cDefaultRemotePathFromUrl":
                     if (string.IsNullOrEmpty(currentRemote))
                     {
-                        argument = argument.Replace(option, "");
-                        break;
+                        newString = "";
+                    }
+                    else
+                    {
+                        url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
+                        newString = GetRemotePath(url);
                     }
 
-                    url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
-                    argument = argument.Replace(option, GetRemotePath(url));
                     break;
-                case "{UserInput}":
+
+                case "UserInput":
                     using (var prompt = new SimplePrompt())
                     {
                         prompt.ShowDialog();
-                        argument = argument.Replace(option, prompt.UserInput);
+                        newString = prompt.UserInput;
                     }
 
                     break;
-                case "{UserFiles}":
+
+                case "UserFiles":
                     using (FormFilePrompt prompt = new FormFilePrompt())
                     {
                         if (prompt.ShowDialog(owner) != DialogResult.OK)
@@ -468,13 +518,29 @@ namespace GitUI.Script
                             return null;
                         }
 
-                        argument = argument.Replace(option, prompt.FileInput);
+                        newString = prompt.FileInput;
                         break;
                     }
 
-                case "{WorkingDir}":
-                    argument = argument.Replace(option, module.WorkingDir);
+                case "WorkingDir":
+                    newString = module.WorkingDir;
                     break;
+            }
+
+            if (newString != null)
+            {
+                string newStringQuoted;
+                if (newString.EndsWith("\\"))
+                {
+                    newStringQuoted = "\"" + newString + "\\\"";
+                }
+                else
+                {
+                    newStringQuoted = "\"" + newString + "\"";
+                }
+
+                argument = argument.Replace(CreateOption(option, true), newStringQuoted);
+                argument = argument.Replace(CreateOption(option, false), newString);
             }
 
             return argument;
