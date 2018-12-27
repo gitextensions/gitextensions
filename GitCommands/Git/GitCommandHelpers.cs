@@ -54,6 +54,19 @@ namespace GitCommands
         All = 5
     }
 
+    /// <summary>Mode for 'git clean'</summary>
+    public enum CleanMode
+    {
+        /// <summary>Only untracked files not in .gitignore, the default. Git clean without either -x or -X option.</summary>
+        OnlyNonIgnored = 1,
+
+        /// <summary>Only files included in any ignore list (.gitignore, $GIT_DIR/info/exclude). Git clean with -X option.</summary>
+        OnlyIgnored = 2,
+
+        /// <summary>All files not tracked by Git. Git clean with  -x option.</summary>
+        All = 3
+    }
+
     public static class GitCommandHelpers
     {
         #region SSH / Plink
@@ -428,15 +441,20 @@ namespace GitCommands
             };
         }
 
-        public static ArgumentString CleanUpCmd(bool dryRun, bool directories, bool nonIgnored, bool ignored, string paths = null)
+        /// <summary>
+        /// Arguments for git-clean
+        /// </summary>
+        /// <param name="mode">The cleanup mode what to delete</param>
+        /// <param name="dryRun">Only show what would be deleted</param>
+        /// <param name="directories">Delete untracked directories too</param>
+        /// <param name="paths">Limit to specific paths</param>
+        public static ArgumentString CleanCmd(CleanMode mode, bool dryRun, bool directories, string paths = null)
         {
             return new GitArgumentBuilder("clean")
             {
+                mode,
                 { directories, "-d" },
-                { !nonIgnored && !ignored, "-x" },
-                { ignored, "-X" },
-                { dryRun, "--dry-run" },
-                { !dryRun, "-f" },
+                { dryRun, "--dry-run", "-f" },
                 paths
             };
         }

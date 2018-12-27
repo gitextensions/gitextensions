@@ -579,10 +579,10 @@ namespace GitCommands
 
         #endregion
 
-        public ExecutionResult Clean(bool dryRun, bool directories = false, bool nonIgnored = false, bool ignored = false, string paths = null)
+        public ExecutionResult Clean(CleanMode mode, bool dryRun = false, bool directories = false, string paths = null)
         {
             return _gitExecutable.Execute(
-                GitCommandHelpers.CleanUpCmd(dryRun, directories, nonIgnored, ignored, paths));
+                GitCommandHelpers.CleanCmd(mode, dryRun, directories, paths));
         }
 
         public bool EditNotes(ObjectId commitId)
