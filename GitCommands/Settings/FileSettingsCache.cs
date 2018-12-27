@@ -173,10 +173,10 @@ namespace GitCommands.Settings
                     _lastFileRead = DateTime.UtcNow;
                     _fileWatcher.EnableRaisingEvents = _canEnableFileWatcher;
                 }
-                catch (IOException e)
+                catch (Exception e)
                 {
+                    // TODO: should we report it to the user somehow?
                     Debug.WriteLine(e.Message);
-                    throw;
                 }
             }
             else
