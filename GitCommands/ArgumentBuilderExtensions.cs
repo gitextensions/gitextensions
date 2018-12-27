@@ -179,6 +179,31 @@ namespace GitCommands
         }
 
         /// <summary>
+        /// Adds the git argument syntax for members of the <see cref="CleanMode"/> enum.
+        /// </summary>
+        /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
+        /// <param name="mode">The enum member to add to the builder.</param>
+        public static void Add(this ArgumentBuilder builder, CleanMode mode)
+        {
+            builder.Add(GetArgument());
+
+            string GetArgument()
+            {
+                switch (mode)
+                {
+                    case CleanMode.OnlyNonIgnored:
+                        return "";
+                    case CleanMode.OnlyIgnored:
+                        return "-X";
+                    case CleanMode.All:
+                        return "-x";
+                    default:
+                        throw new InvalidEnumArgumentException(nameof(mode), (int)mode, typeof(CleanMode));
+                }
+            }
+        }
+
+        /// <summary>
         /// Adds the git argument syntax for members of the <see cref="GitBisectOption"/> enum.
         /// </summary>
         /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
