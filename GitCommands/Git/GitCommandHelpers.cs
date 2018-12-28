@@ -58,13 +58,31 @@ namespace GitCommands
     public enum CleanMode
     {
         /// <summary>Only untracked files not in .gitignore, the default. Git clean without either -x or -X option.</summary>
-        OnlyNonIgnored = 1,
+        OnlyNonIgnored = 0,
 
         /// <summary>Only files included in any ignore list (.gitignore, $GIT_DIR/info/exclude). Git clean with -X option.</summary>
-        OnlyIgnored = 2,
+        OnlyIgnored,
 
         /// <summary>All files not tracked by Git. Git clean with  -x option.</summary>
-        All = 3
+        All
+    }
+
+    /// <summary>Arguments to 'git reset'.</summary>
+    public enum ResetMode
+    {
+        /// <summary>(no option)</summary>
+        ResetIndex = 0,
+
+        /// <summary>--soft</summary>
+        Soft,
+
+        /// <summary>--mixed</summary>
+        Mixed,
+
+        /// <summary>--hard</summary>
+        Hard
+
+        // All options are not implemented, like --merge, --keep, --patch
     }
 
     public static class GitCommandHelpers
@@ -179,30 +197,26 @@ namespace GitCommands
             };
         }
 
-        public static ArgumentString ResetSoftCmd(string commit)
+        /// <summary>
+        /// The Git command line for reset
+        /// </summary>
+        /// <param name="mode">Reset mode</param>
+        /// <param name="commit">Optional commit-ish (for reset-index this is tree-ish and mandatory)</param>
+        /// <param name="file">Optional file to reset</param>
+        /// <returns>Argument string</returns>
+        public static ArgumentString ResetCmd(ResetMode mode, string commit = null, string file = null)
         {
-            return new GitArgumentBuilder("reset")
+            if (mode == ResetMode.ResetIndex && commit.IsNullOrWhiteSpace())
             {
-                "--soft",
-                commit.QuoteNE()
-            };
-        }
+                throw new ArgumentException("reset to index requires a tree-ish parameter");
+            }
 
-        public static ArgumentString ResetMixedCmd(string commit)
-        {
             return new GitArgumentBuilder("reset")
             {
-                "--mixed",
-                commit.QuoteNE()
-            };
-        }
-
-        public static ArgumentString ResetHardCmd(string commit)
-        {
-            return new GitArgumentBuilder("reset")
-            {
-                "--hard",
-                commit.QuoteNE()
+                mode,
+                commit.QuoteNE(),
+                "--",
+                file?.ToPosixPath().QuoteNE()
             };
         }
 

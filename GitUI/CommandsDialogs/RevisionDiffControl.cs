@@ -812,7 +812,7 @@ namespace GitUI.CommandsDialogs
                 GitModule module = Module.GetSubmodule(name);
 
                 // Reset all changes.
-                module.ResetHard("");
+                module.Reset(ResetMode.Hard);
 
                 // Also delete new files, if requested.
                 if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)

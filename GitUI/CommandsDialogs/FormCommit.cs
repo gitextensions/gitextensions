@@ -1451,7 +1451,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                Module.ResetMixed("HEAD");
+                Module.Reset(ResetMode.Mixed);
             }
 
             Initialize();
@@ -2888,7 +2888,7 @@ namespace GitUI.CommandsDialogs
                 GitModule module = Module.GetSubmodule(item.Name);
 
                 // Reset all changes.
-                module.ResetHard("");
+                module.Reset(ResetMode.Hard);
 
                 // Also delete new files, if requested.
                 if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)

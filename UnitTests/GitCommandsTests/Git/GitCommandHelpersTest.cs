@@ -634,7 +634,7 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void CleanUpCmd()
+        public void CleanCmd()
         {
             Assert.AreEqual(
                 "clean --dry-run",
@@ -655,6 +655,26 @@ namespace GitCommandsTests.Git
             Assert.AreEqual(
                 "clean -X -f",
                 GitCommandHelpers.CleanCmd(CleanMode.OnlyIgnored, dryRun: false, directories: false).Arguments);
+        }
+
+        [Test]
+        public void ResetCmd()
+        {
+            Assert.Throws<ArgumentException>(
+                () => GitCommandHelpers.ResetCmd(ResetMode.ResetIndex, file: "file.txt"));
+            Assert.AreEqual(
+                @"reset ""tree-ish"" -- ""file.txt""",
+                GitCommandHelpers.ResetCmd(ResetMode.ResetIndex, commit: "tree-ish", file: "file.txt").Arguments);
+
+            Assert.AreEqual(
+                @"reset --soft --",
+                GitCommandHelpers.ResetCmd(ResetMode.Soft).Arguments);
+            Assert.AreEqual(
+                @"reset --mixed --",
+                GitCommandHelpers.ResetCmd(ResetMode.Mixed).Arguments);
+            Assert.AreEqual(
+                @"reset --hard --",
+                GitCommandHelpers.ResetCmd(ResetMode.Hard).Arguments);
         }
 
         [Test]
