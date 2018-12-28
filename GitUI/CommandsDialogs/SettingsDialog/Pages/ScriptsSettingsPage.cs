@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private readonly TranslationString _scriptSettingsPageHelpDisplayArgumentsHelp = new TranslationString("Arguments help");
         private readonly TranslationString _scriptSettingsPageHelpDisplayContent = new TranslationString(@"Use {option} for normal replacement.
-Use {{option}} for qouted replacement.
+Use {{option}} for quoted replacement.
 
 User Input:
 {UserInput}
