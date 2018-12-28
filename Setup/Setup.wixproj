@@ -66,6 +66,7 @@
     <Content Include="AddRemove.wxi" />
     <Content Include="Config.wxi" />
     <Content Include="EnableUpgrades.wxi" />
+    <None Include="MakePortableArchive.cmd" />
     <Content Include="packages.config" />
     <Content Include="RegisterShellExtension.wxi" />
   </ItemGroup>
