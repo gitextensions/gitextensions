@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
@@ -529,15 +530,14 @@ namespace GitUI.Script
 
             if (newString != null)
             {
-                string newStringQuoted;
-                if (newString.EndsWith("\\"))
+                string newStringQuoted = Regex.Replace(newString, @"(?<!\\)""", "\\\"");
+                newStringQuoted = "\"" + newStringQuoted;
+                if (newStringQuoted.EndsWith("\\"))
                 {
-                    newStringQuoted = "\"" + newString + "\\\"";
+                    newStringQuoted = newStringQuoted + "\\";
                 }
-                else
-                {
-                    newStringQuoted = "\"" + newString + "\"";
-                }
+
+                newStringQuoted = newStringQuoted + "\"";
 
                 argument = argument.Replace(CreateOption(option, true), newStringQuoted);
                 argument = argument.Replace(CreateOption(option, false), newString);

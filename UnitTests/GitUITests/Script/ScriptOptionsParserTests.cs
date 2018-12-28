@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using GitCommands;
 using GitCommands.Config;
 using GitUI.Script;
 using GitUIPluginInterfaces;
@@ -45,6 +46,19 @@ namespace GitUITests.Script
             var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{{WorkingDir}} \"{WorkingDir}\"", "WorkingDir", null, null, _module, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
             result.Should().Be("\"C:\\test path with whitespaces\\\\\" \"C:\\test path with whitespaces\\\"");
+        }
+
+        [Test]
+        public void ScriptOptionsParser_resolve_StringWithDoubleQuotes()
+        {
+            GitRevision gitRevision = new GitRevision(ObjectId.Random());
+            gitRevision.Subject = "test string with \"double qoutes\" and escaped \\\"double qoutes\\\"";
+
+            var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{{sMessage}}", "sMessage", null, null, null, null, null, null, null, null, null, gitRevision, null, null, null, null, null, null);
+            result.Should().Be("\"test string with \\\"double qoutes\\\" and escaped \\\"double qoutes\\\"\"");
+
+            result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{sMessage}", "sMessage", null, null, null, null, null, null, null, null, null, gitRevision, null, null, null, null, null, null);
+            result.Should().Be("test string with \"double qoutes\" and escaped \\\"double qoutes\\\"");
         }
     }
 }
