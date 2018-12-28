@@ -633,7 +633,7 @@ namespace GitUI
                 else
                 {
                     // Reset all changes.
-                    Module.ResetHard("");
+                    Module.Reset(ResetMode.Hard);
                 }
 
                 if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)

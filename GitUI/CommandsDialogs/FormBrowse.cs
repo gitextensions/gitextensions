@@ -3075,11 +3075,7 @@ namespace GitUI.CommandsDialogs
         {
             if (AppSettings.DontConfirmUndoLastCommit || MessageBox.Show(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                var args = new GitArgumentBuilder("reset")
-                {
-                    "--soft",
-                    "HEAD~1"
-                };
+                var args = GitCommandHelpers.ResetCmd(ResetMode.Soft, "HEAD~1");
                 Module.RunGitCmd(args);
                 RefreshRevisions();
             }

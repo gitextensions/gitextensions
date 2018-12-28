@@ -119,7 +119,7 @@ namespace Gerrit
 
                         var resetCommand = UICommands.CreateRemoteCommand();
 
-                        resetCommand.CommandText = GitCommandHelpers.ResetHardCmd("FETCH_HEAD");
+                        resetCommand.CommandText = GitCommandHelpers.ResetCmd(ResetMode.Hard, "FETCH_HEAD");
 
                         if (!RunCommand(resetCommand, change))
                         {
