@@ -817,28 +817,7 @@ namespace GitUI.CommandsDialogs
                 // Also delete new files, if requested.
                 if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
                 {
-                    var workTreeFiles = module.GetWorkTreeFiles();
-                    foreach (var file in workTreeFiles.Where(file => file.IsNew))
-                    {
-                        try
-                        {
-                            string path = _fullPathResolver.Resolve(file.Name);
-                            if (File.Exists(path))
-                            {
-                                File.Delete(path);
-                            }
-                            else
-                            {
-                                Directory.Delete(path, true);
-                            }
-                        }
-                        catch (IOException)
-                        {
-                        }
-                        catch (UnauthorizedAccessException)
-                        {
-                        }
-                    }
+                    module.Clean(CleanMode.OnlyNonIgnored, directories: true);
                 }
             }
 
