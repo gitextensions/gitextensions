@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace GitUITests.UserControls
 {
     [TestFixture]
-    internal class AuthorRevisionHighlightingFixture
+    internal class AuthorRevisionHighlightingTests
     {
         private const string ExpectedAuthorEmail1 = "doe1@example.org";
         private const string ExpectedAuthorEmail2 = "doe2@example.org";
@@ -151,6 +151,40 @@ namespace GitUITests.UserControls
             sut.ProcessRevisionSelectionChange(currentModule, Array.Empty<GitRevision>());
 
             sut.AuthorEmailToHighlight.Should().Be(ExpectedAuthorEmail2);
+        }
+
+        [Test]
+        public void IsHighlighted_should_return_false_if_revision_is_null()
+        {
+            var sut = new AuthorRevisionHighlighting();
+
+            sut.IsHighlighted(null).Should().BeFalse();
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("\t")]
+        public void IsHighlighted_should_return_false_if_revision_AuthorEmail_is_null_or_whitespace(string authorEmail)
+        {
+            var sut = new AuthorRevisionHighlighting();
+
+            sut.IsHighlighted(new GitRevision(ObjectId.Random()) { AuthorEmail = authorEmail }).Should().BeFalse();
+        }
+
+        [TestCase("a@a.aaa", "a@a.aaa", true)]
+        [TestCase("A@A.aaa", "a@a.aaa", true)]
+        [TestCase("b@A.aaa", "a@a.aaa", false)]
+        [TestCase("a@a.aaa", null, false)]
+        [TestCase("a@a.aaa", "", false)]
+        [TestCase("a@a.aaa", "\t", false)]
+        public void IsHighlighted_should_return_true_if_revision_AuthorEmail_matches_AuthorEmailToHighlight(string authorEmail, string highlightEmail, bool expected)
+        {
+            var currentModule = NewModule();
+            var sut = new AuthorRevisionHighlighting();
+            sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(highlightEmail) });
+            sut.AuthorEmailToHighlight.Should().Be(highlightEmail);
+
+            sut.IsHighlighted(new GitRevision(ObjectId.Random()) { AuthorEmail = authorEmail }).Should().Be(expected);
         }
 
         private static GitModule NewModule()

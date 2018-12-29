@@ -81,7 +81,7 @@
     <Compile Include="ThreadHelperTests.cs" />
     <Compile Include="TranslationTest.cs" />
     <Compile Include="UITest.cs" />
-    <Compile Include="UserControls\AuthorRevisionHighlightingFixture.cs" />
+    <Compile Include="UserControls\AuthorRevisionHighlightingTests.cs" />
     <Compile Include="UserControls\ConsoleEmulatorOutputControlFixture.cs" />
     <Compile Include="Editor\Diff\DiffLineNumAnalyzerTests.cs" />
     <Compile Include="Editor\Diff\LinePrefixHelperFixture.cs" />

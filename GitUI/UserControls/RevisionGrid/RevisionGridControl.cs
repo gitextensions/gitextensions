@@ -185,6 +185,7 @@ namespace GitUI
             HotkeysEnabled = true;
 
             _gridView.ShowCellToolTips = false;
+            _gridView.AuthorHighlighting = _authorHighlighting;
 
             _gridView.KeyPress += (_, e) => _quickSearchProvider.OnKeyPress(e);
             _gridView.KeyUp += OnGridViewKeyUp;
@@ -994,9 +995,12 @@ namespace GitUI
                     ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
                         await this.SwitchToMainThreadAsync();
+
                         SetPage(_gridView);
                         _isRefreshingRevisions = false;
                         CheckAndRepairInitialRevision();
+                        HighlightRevisionsByAuthor(GetSelectedRevisions());
+
                         if (ShowBuildServerInfo)
                         {
                             await _buildServerWatcher.LaunchBuildServerInfoFetchOperationAsync();
@@ -1188,6 +1192,11 @@ namespace GitUI
             compareWithCurrentBranchToolStripMenuItem.Enabled = Module.GetSelectedBranch(setDefaultIfEmpty: false).IsNotNullOrWhitespace();
             compareSelectedCommitsMenuItem.Enabled = firstSelectedRevision != null && secondSelectedRevision != null;
 
+            HighlightRevisionsByAuthor(selectedRevisions);
+        }
+
+        private void HighlightRevisionsByAuthor(in IReadOnlyList<GitRevision> selectedRevisions)
+        {
             if (Parent != null &&
                 !_gridView.UpdatingVisibleRows &&
                 _authorHighlighting.ProcessRevisionSelectionChange(Module, selectedRevisions))

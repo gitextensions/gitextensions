@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -43,7 +44,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             DrawNonRelativesGray.Checked = AppSettings.RevisionGraphDrawNonRelativesGray;
             DrawNonRelativesTextGray.Checked = AppSettings.RevisionGraphDrawNonRelativesTextGray;
             StripedBanchChange.Checked = AppSettings.StripedBranchChange;
+            chkHighlightAuthored.Checked = AppSettings.HighlightAuthoredRevisions;
 
+            _NO_TRANSLATE_ColorHighlightAuthoredLabel.BackColor = AppSettings.HighlightAuthoredRevisions ? AppSettings.AuthoredRevisionsHighlightColor : Color.LightYellow;
+            _NO_TRANSLATE_ColorHighlightAuthoredLabel.Text = AppSettings.AuthoredRevisionsHighlightColor.Name;
+            _NO_TRANSLATE_ColorHighlightAuthoredLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorHighlightAuthoredLabel.BackColor);
             _NO_TRANSLATE_ColorGraphLabel.BackColor = AppSettings.GraphColor;
             _NO_TRANSLATE_ColorGraphLabel.Text = AppSettings.GraphColor.Name;
             _NO_TRANSLATE_ColorGraphLabel.ForeColor = ColorHelper.GetForeColorForBackColor(_NO_TRANSLATE_ColorGraphLabel.BackColor);
@@ -85,6 +90,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
             AppSettings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
             AppSettings.StripedBranchChange = StripedBanchChange.Checked;
+            AppSettings.HighlightAuthoredRevisions = chkHighlightAuthored.Checked;
+            AppSettings.AuthoredRevisionsHighlightColor = chkHighlightAuthored.Checked ? _NO_TRANSLATE_ColorHighlightAuthoredLabel.BackColor : Color.LightYellow;
 
             AppSettings.GraphColor = _NO_TRANSLATE_ColorGraphLabel.BackColor;
             AppSettings.TagColor = _NO_TRANSLATE_ColorTagLabel.BackColor;
@@ -124,6 +131,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 label.Text = colorDialog.Color.Name;
                 label.ForeColor = ColorHelper.GetForeColorForBackColor(label.BackColor);
             }
+        }
+
+        private void chkHighlightAuthored_CheckedChanged(object sender, EventArgs e)
+        {
+            lblColorHighlightAuthored.Enabled = chkHighlightAuthored.Checked;
+            _NO_TRANSLATE_ColorHighlightAuthoredLabel.Enabled = chkHighlightAuthored.Checked;
         }
     }
 }
