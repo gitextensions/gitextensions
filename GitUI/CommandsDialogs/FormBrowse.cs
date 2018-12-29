@@ -1917,6 +1917,7 @@ namespace GitUI.CommandsDialogs
             UICommands = new GitUICommands(module);
             if (Module.IsValidGitWorkingDir())
             {
+                repoObjectsTree.InitializeAheadBehindProvider();
                 var path = Module.WorkingDir;
                 ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
                 AppSettings.RecentWorkingDir = path;
