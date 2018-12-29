@@ -98,6 +98,9 @@
       <Component Id="RestSharp.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\RestSharp.dll" />
       </Component>
+      <Component Id="Microsoft.VisualStudio.Composition.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.VisualStudio.Composition.dll" />
+      </Component>
       <Component Id="Microsoft.VisualStudio.Threading.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.VisualStudio.Threading.dll" />
       </Component>
@@ -607,6 +610,7 @@
       <ComponentRef Id="English.Plugins.xlf" />
       <ComponentRef Id="Git.hub.dll" />
       <ComponentRef Id="RestSharp.dll" />
+      <ComponentRef Id="Microsoft.VisualStudio.Composition.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Threading.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Validation.dll" />
       <ComponentRef Id="System.Runtime.InteropServices.RuntimeInformation.dll" />
