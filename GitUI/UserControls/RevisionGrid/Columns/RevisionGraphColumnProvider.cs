@@ -245,33 +245,35 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                         int centerY = top + (rowHeight / 2);
                         int endY = top + rowHeight + (rowHeight / 2);
 
-                        foreach (RevisionGraphSegment revisionGraphRevision in currentRow.Segments.Reverse().OrderBy(s => s.Child.IsRelative))
+                        foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments.Reverse().OrderBy(s => s.Child.IsRelative))
                         {
                             int startLane = -10;
                             int centerLane = -10;
                             int endLane = -10;
 
-                            if (revisionGraphRevision.Parent == currentRow.Revision)
+                            if (revisionGraphSegment.Parent == currentRow.Revision)
                             {
                                 // This lane ends here
-                                startLane = GetLaneForRow(previousRow, revisionGraphRevision);
-                                centerLane = GetLaneForRow(currentRow, revisionGraphRevision);
+                                startLane = GetLaneForRow(previousRow, revisionGraphSegment);
+                                centerLane = GetLaneForRow(currentRow, revisionGraphSegment);
                             }
                             else
                             {
-                                if (revisionGraphRevision.Child == currentRow.Revision)
+                                if (revisionGraphSegment.Child == currentRow.Revision)
                                 {
                                     // This lane starts here
-                                    centerLane = GetLaneForRow(currentRow, revisionGraphRevision);
-                                    endLane = GetLaneForRow(nextRow, revisionGraphRevision);
+                                    centerLane = GetLaneForRow(currentRow, revisionGraphSegment);
+                                    endLane = GetLaneForRow(nextRow, revisionGraphSegment);
                                 }
                                 else
                                 {
                                     // this lane crosses
-                                    startLane = GetLaneForRow(previousRow, revisionGraphRevision);
-                                    centerLane = GetLaneForRow(currentRow, revisionGraphRevision);
-                                    endLane = GetLaneForRow(nextRow, revisionGraphRevision);
+                                    startLane = GetLaneForRow(previousRow, revisionGraphSegment);
+                                    centerLane = GetLaneForRow(currentRow, revisionGraphSegment);
+                                    endLane = GetLaneForRow(nextRow, revisionGraphSegment);
                                 }
+
+                                endLane = StraightenSegment(index, nextRow, revisionGraphSegment, centerLane, endLane);
                             }
 
                             int startX = g.RenderingOrigin.X + (int)((startLane + 0.5) * LaneWidth);
@@ -280,24 +282,29 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                             Brush brush;
 
-                            if (revisionGraphRevision.Parent.Children.Count > 1)
+                            if (revisionGraphSegment.Parent.Children.Count > 1)
                             {
-                                brush = GetBrushForRevision(revisionGraphRevision.Child, revisionGraphRevision.Child.IsRelative);
+                                brush = GetBrushForRevision(revisionGraphSegment.Child, revisionGraphSegment.Child.IsRelative);
                             }
                             else
                             {
-                                brush = GetBrushForRevision(revisionGraphRevision.Parent, revisionGraphRevision.Child.IsRelative);
+                                brush = GetBrushForRevision(revisionGraphSegment.Parent, revisionGraphSegment.Child.IsRelative);
                             }
 
-                            // EndLane
+                            if (startLane >= 0 && endLane >= 0)
+                            {
+                                DrawSegment(g, brush, startX, startY, centerX, centerY, endX, endY);
+                            }
+                            else
                             if (startLane >= 0 && centerLane >= 0 && (startLane <= MaxLanes || centerLane <= MaxLanes))
                             {
+                                // EndLane
                                 DrawSegment(g, brush, startX, startY, centerX, centerY);
                             }
-
-                            // StartLane
+                            else
                             if (endLane >= 0 && centerLane >= 0 && (endLane <= MaxLanes || centerLane <= MaxLanes))
                             {
+                                // StartLane
                                 DrawSegment(g, brush, centerX, centerY, endX, endY);
                             }
                         }
@@ -355,6 +362,37 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             }
         }
 
+        private int StraightenSegment(int index, IRevisionGraphRow nextRow, RevisionGraphSegment revisionGraphSegment, int centerLane, int endLane)
+        {
+            // Try to detect this:
+            // | |  |
+            // |/  /
+            // *  |
+            // |\  \
+            // | |  |
+            //
+            // And change it into this:
+            // | |  |
+            // |/   |
+            // *    |
+            // |\   |
+            // | |  |
+            if (centerLane > endLane)
+            {
+                var nextNextRow = _revisionGraph.GetSegmentsForRow(index + 2);
+
+                int nextNextLane = GetLaneForRow(nextNextRow, revisionGraphSegment);
+
+                if (centerLane == nextNextLane)
+                {
+                    nextRow.MoveLaneRightToStraighten(revisionGraphSegment, endLane, false);
+                    endLane++;
+                }
+            }
+
+            return endLane;
+        }
+
         private Brush GetBrushForRevision(RevisionGraphRevision revisionGraphRevision, bool isRelative)
         {
             Brush brush;
@@ -370,11 +408,11 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             return brush;
         }
 
-        private static int GetLaneForRow(IRevisionGraphRow row, RevisionGraphSegment revisionGraphRevision)
+        private static int GetLaneForRow(IRevisionGraphRow row, RevisionGraphSegment revisionGraphSegment)
         {
             if (row != null)
             {
-                return row.GetLaneIndexForSegment(revisionGraphRevision);
+                return row.GetLaneIndexForSegment(revisionGraphSegment);
             }
 
             return -1;
@@ -382,30 +420,33 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private void DrawSegment(Graphics g, Brush laneBrush, int x0, int y0, int x1, int y1)
         {
-            var p0 = new Point(x0, y0);
-            var p1 = new Point(x1, y1);
+            var p0 = new PointF(x0, y0);
+            var p1 = new PointF(x1, y1);
 
             using (var lanePen = new Pen(laneBrush, LaneLineWidth))
             {
-                if (x0 == x1)
-                {
-                    g.SmoothingMode = SmoothingMode.None;
-                    g.DrawLine(lanePen, p0, p1);
-                }
-                else
-                {
-                    // Anti-aliasing with bezier & PixelOffsetMode.HighQuality
-                    // introduces an offset of ~1/8 px - compensate it.
-                    g.SmoothingMode = SmoothingMode.AntiAlias;
-                    const float offset = -1f / 8f;
+                // Anti-aliasing with bezier & PixelOffsetMode.HighQuality
+                // introduces an offset of ~1/8 px - compensate it.
+                g.SmoothingMode = SmoothingMode.AntiAlias;
 
-                    var yMid = (y0 + y1) / 2f;
-                    var c0 = new PointF(offset + p0.X, offset + yMid);
-                    var c1 = new PointF(offset + p1.X, offset + yMid);
-                    var e0 = new PointF(offset + p0.X, offset + p0.Y);
-                    var e1 = new PointF(offset + p1.X, offset + p1.Y);
-                    g.DrawBezier(lanePen, e0, c0, c1, e1);
-                }
+                g.DrawCurve(lanePen, new PointF[] { p0, p1 });
+            }
+        }
+
+        private void DrawSegment(Graphics g, Brush laneBrush, int x0, int y0, int x1, int y1, int x2, int y2)
+        {
+            float uncurlyFactor = 7.5f;
+            var p0 = new PointF(x0, y0); // Start
+            var p1 = new PointF((x0 + (x1 * uncurlyFactor) + x2) / (uncurlyFactor + 2f), (y0 + (y1 * uncurlyFactor) + y2) / (uncurlyFactor + 2f)); // Center
+            var p2 = new PointF(x2, y2); // End
+
+            using (var lanePen = new Pen(laneBrush, LaneLineWidth))
+            {
+                // Anti-aliasing with bezier & PixelOffsetMode.HighQuality
+                // introduces an offset of ~1/8 px - compensate it.
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+
+                g.DrawCurve(lanePen, new PointF[] { p0, p1, p2 });
             }
         }
 
@@ -458,11 +499,91 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
         private int CalculateGraphColumnWidth(in VisibleRowRange range, int currentWidth, int minimumWidth)
         {
-            int laneCount = range.Select(index => _revisionGraph.GetSegmentsForRow(index))
-                                 .Where(laneRow => laneRow != null)
-                                 .Select(laneRow => laneRow.GetLaneCount())
-                                 .DefaultIfEmpty()
-                                 .Max();
+            const int lookAhead = 2;
+            int laneCount = 0;
+            for (int i = range.FromIndex - lookAhead; i < (range.FromIndex + range.Count); i++)
+            {
+                if (i < 0)
+                {
+                    continue;
+                }
+
+                var laneRow = _revisionGraph.GetSegmentsForRow(i);
+
+                if (laneRow == null)
+                {
+                    continue;
+                }
+
+                laneCount = Math.Max(laneCount, laneRow.GetLaneCount());
+
+                /*
+                if (laneRow.Straightened)
+                {
+                    continue;
+                }
+
+                laneRow.Straightened = true;
+
+                // Try to detect this:
+                // | |  |
+                // |/  /
+                // *  |
+                // |\  \
+                // | |  |
+                //
+                // And change it into this:
+                // | |  |
+                // |/   |
+                // *    |
+                // |\   |
+                // | |  |
+                foreach (var segment in laneRow.Segments.Reverse())
+                {
+                    int segmentLaneCurrentRow = GetLaneForRow(laneRow, segment);
+
+                    int smallestIndex = segmentLaneCurrentRow;
+                    for (int j = i + 1; j < i + lookAhead + 1; j++)
+                    {
+                        var laneRowNext = _revisionGraph.GetSegmentsForRow(j);
+
+                        if (laneRowNext == null)
+                        {
+                            // Reset Straightened flag. Not all rows are loaded.
+                            laneRow.Straightened = false;
+                            break;
+                        }
+
+                        int segmentLaneNextRow = GetLaneForRow(laneRowNext, segment);
+
+                        if (segmentLaneCurrentRow > segmentLaneNextRow)
+                        {
+                            smallestIndex = Math.Min(segmentLaneNextRow, smallestIndex);
+                        }
+
+                        if (segmentLaneCurrentRow < segmentLaneNextRow)
+                        {
+                            break;
+                        }
+
+                        if (segmentLaneCurrentRow == segmentLaneNextRow)
+                        {
+                            if (smallestIndex < segmentLaneCurrentRow)
+                            {
+                                for (int k = i + 1; k < j; k++)
+                                {
+                                    var laneRowToMove = _revisionGraph.GetSegmentsForRow(k);
+
+                                    laneRowToMove.MoveLaneRightToStraighten(segment, smallestIndex, lookAhead > 2);
+                                }
+                            }
+
+                            break;
+                        }
+                    }
+                }
+                */
+            }
 
             laneCount = Math.Min(laneCount, MaxLanes);
             var columnWidth = (LaneWidth * laneCount) + ColumnLeftMargin;
