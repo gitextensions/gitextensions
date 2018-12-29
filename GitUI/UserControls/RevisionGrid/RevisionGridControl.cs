@@ -870,6 +870,8 @@ namespace GitUI
                     await TaskScheduler.Default;
                     return GetSuperprojectCheckout(ShowRemoteRef, capturedModule);
                 });
+                _superprojectCurrentCheckout.Task.ContinueWith((task) => Refresh(),
+                    TaskScheduler.FromCurrentSynchronizationContext());
 
                 ResetNavigationHistory();
             }
