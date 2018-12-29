@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Utils;
 using JetBrains.Annotations;
@@ -15,6 +17,12 @@ namespace GitCommands
 
         public static readonly char PosixDirectorySeparatorChar = '/';
         public static readonly char NativeDirectorySeparatorChar = Path.DirectorySeparatorChar;
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern uint GetShortPathName(string lpszLongPath, StringBuilder lpszShortPath, int cchBuffer);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern int GetLongPathName(string lpszShortPath, StringBuilder lpszLongPath, int cchBuffer);
 
         /// <summary>Replaces native path separator with posix path separator.</summary>
         [NotNull]
@@ -269,27 +277,26 @@ namespace GitCommands
                 return false;
             }
 
-            var directory = new DirectoryInfo(path);
-
-            var parts = new List<string>();
-
-            var parentDirectory = directory.Parent;
-            while (parentDirectory != null)
+            // The section below contains native windows (kernel32) calls
+            // and breaks on Linux. Only use it on Windows. Casing is only
+            // a Windows problem anyway.
+            if (EnvUtils.RunningOnWindows())
             {
-                var entry = parentDirectory.EnumerateFileSystemInfos(directory.Name).First();
-                parts.Add(entry.Name);
-
-                directory = parentDirectory;
-                parentDirectory = directory.Parent;
+                // grab the 8.3 file path
+                var shortPath = new StringBuilder(4096);
+                if (GetShortPathName(path, shortPath, shortPath.Capacity) > 0)
+                {
+                    // use 8.3 file path to get properly cased full file path
+                    var longPath = new StringBuilder(4096);
+                    if (GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity) > 0)
+                    {
+                        exactPath = longPath.ToString();
+                        return true;
+                    }
+                }
             }
 
-            // Handle the root part (i.e., drive letter or UNC \\server\share).
-            var root = directory.FullName;
-
-            parts.Add(root.Contains(':') ? root.ToUpper() : root.ToLower());
-            parts.Reverse();
-
-            exactPath = Path.Combine(parts.ToArray());
+            exactPath = path;
             return true;
         }
 

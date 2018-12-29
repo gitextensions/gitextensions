@@ -232,14 +232,8 @@ namespace GitCommandsTests.Helpers
                 @"C:\Program Files (x86)",
                 @"Does not exist",
                 @"\\" + Environment.MachineName.ToLower() + @"\c$\Windows\System32",
-                @"..",
                 "",
                 " "
-            };
-
-            var expectedExactPaths = new Dictionary<string, string>()
-            {
-                { @"..", Path.GetDirectoryName(Environment.CurrentDirectory) },
             };
 
             foreach (var path in paths)
@@ -252,8 +246,7 @@ namespace GitCommandsTests.Helpers
 
                 if (actual)
                 {
-                    var expectedPath = expectedExactPaths.TryGetValue(path, out string expectedExactPath) ? expectedExactPath : path;
-                    Assert.AreEqual(expectedPath.ToLower(), exactPath.ToLower());
+                    Assert.AreEqual(path.ToLower(), exactPath.ToLower());
                 }
                 else
                 {

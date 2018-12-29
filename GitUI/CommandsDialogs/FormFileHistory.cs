@@ -195,37 +195,18 @@ namespace GitUI.CommandsDialogs
             {
                 var fileName = FileName;
 
-                // Replace windows path separator to Linux path separator.
-                // This is needed to keep the file history working when started from file tree in
-                // browse dialog.
-                fileName = fileName.ToPosixPath();
-
                 // we will need this later to look up proper casing for the file
                 var fullFilePath = _fullPathResolver.Resolve(fileName);
 
-                // The section below contains native windows (kernel32) calls
-                // and breaks on Linux. Only use it on Windows. Casing is only
-                // a Windows problem anyway.
-                if (EnvUtils.RunningOnWindows() && File.Exists(fullFilePath))
-                {
-                    // grab the 8.3 file path
-                    var shortPath = new StringBuilder(4096);
-                    NativeMethods.GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
-
-                    // use 8.3 file path to get properly cased full file path
-                    var longPath = new StringBuilder(4096);
-                    NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
-
-                    // remove the working directory and now we have a properly cased file name.
-                    fileName = longPath.ToString().Substring(Module.WorkingDir.Length).ToPosixPath();
-                }
-
-                if (fileName.StartsWith(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                if (PathUtil.TryGetExactPath(fullFilePath, out fileName))
                 {
                     fileName = fileName.Substring(Module.WorkingDir.Length);
                 }
 
-                FileName = fileName;
+                // Replace windows path separator to Linux path separator.
+                // This is needed to keep the file history working when started from file tree in
+                // browse dialog.
+                FileName = fileName.ToPosixPath();
 
                 var res = (revision: (string)null, path: $" \"{fileName}\"");
 
