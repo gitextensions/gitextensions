@@ -47,7 +47,7 @@
             this.lblCommitInfoTarget = new System.Windows.Forms.Label();
             this.lblTargetRepository = new System.Windows.Forms.Label();
             this.groupBoxCreatePullRequest = new System.Windows.Forms.GroupBox();
-            this.lblLinkCreatePull = new System.Windows.Forms.LinkLabel();
+            this._NO_TRANSLATE_lblLinkCreatePull = new System.Windows.Forms.LinkLabel();
             this.splitContainerCreate = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabView = new System.Windows.Forms.TabPage();
@@ -61,7 +61,7 @@
             this.btnMerge = new System.Windows.Forms.Button();
             this.btnApprove = new System.Windows.Forms.Button();
             this.groupBoxPullRequestInfo = new System.Windows.Forms.GroupBox();
-            this.lblLinkViewPull = new System.Windows.Forms.LinkLabel();
+            this._NO_TRANSLATE_lblLinkViewPull = new System.Windows.Forms.LinkLabel();
             this.txtPRDescription = new System.Windows.Forms.TextBox();
             this.txtPRTitle = new System.Windows.Forms.TextBox();
             this.txtPRReviewers = new System.Windows.Forms.TextBox();
@@ -105,12 +105,12 @@
             this.tabCreate.SuspendLayout();
             this.SuspendLayout();
             // 
-            // lblBranch
+            // lblSourceBranch
             // 
             this.lblSourceBranch.AutoSize = true;
             this.lblSourceBranch.Location = new System.Drawing.Point(14, 59);
             this.lblSourceBranch.Name = "lblSourceBranch";
-            this.lblSourceBranch.Size = new System.Drawing.Size(40, 13);
+            this.lblSourceBranch.Size = new System.Drawing.Size(41, 13);
             this.lblSourceBranch.TabIndex = 0;
             this.lblSourceBranch.Text = "Branch";
             // 
@@ -119,7 +119,7 @@
             this.lblTargetBranch.AutoSize = true;
             this.lblTargetBranch.Location = new System.Drawing.Point(14, 59);
             this.lblTargetBranch.Name = "lblTargetBranch";
-            this.lblTargetBranch.Size = new System.Drawing.Size(40, 13);
+            this.lblTargetBranch.Size = new System.Drawing.Size(41, 13);
             this.lblTargetBranch.TabIndex = 1;
             this.lblTargetBranch.Text = "Branch";
             // 
@@ -145,7 +145,7 @@
             // btnCreate
             // 
             this.btnCreate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCreate.Location = new System.Drawing.Point(648, 588);
+            this.btnCreate.Location = new System.Drawing.Point(641, 592);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(134, 23);
             this.btnCreate.TabIndex = 2;
@@ -161,7 +161,7 @@
             this.txtTitle.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
             this.txtTitle.Location = new System.Drawing.Point(129, 189);
             this.txtTitle.Name = "txtTitle";
-            this.txtTitle.Size = new System.Drawing.Size(593, 21);
+            this.txtTitle.Size = new System.Drawing.Size(593, 20);
             this.txtTitle.TabIndex = 1;
             // 
             // lblTitle
@@ -178,7 +178,7 @@
             this.lblSourceRepository.AutoSize = true;
             this.lblSourceRepository.Location = new System.Drawing.Point(14, 29);
             this.lblSourceRepository.Name = "lblSourceRepository";
-            this.lblSourceRepository.Size = new System.Drawing.Size(59, 13);
+            this.lblSourceRepository.Size = new System.Drawing.Size(57, 13);
             this.lblSourceRepository.TabIndex = 0;
             this.lblSourceRepository.Text = "Repository";
             // 
@@ -287,13 +287,13 @@
             this.lblTargetRepository.AutoSize = true;
             this.lblTargetRepository.Location = new System.Drawing.Point(14, 29);
             this.lblTargetRepository.Name = "lblTargetRepository";
-            this.lblTargetRepository.Size = new System.Drawing.Size(59, 13);
+            this.lblTargetRepository.Size = new System.Drawing.Size(57, 13);
             this.lblTargetRepository.TabIndex = 12;
             this.lblTargetRepository.Text = "Repository";
             // 
             // groupBoxCreatePullRequest
             // 
-            this.groupBoxCreatePullRequest.Controls.Add(this.lblLinkCreatePull);
+            this.groupBoxCreatePullRequest.Controls.Add(this._NO_TRANSLATE_lblLinkCreatePull);
             this.groupBoxCreatePullRequest.Controls.Add(this.lblDescription);
             this.groupBoxCreatePullRequest.Controls.Add(this.txtDescription);
             this.groupBoxCreatePullRequest.Controls.Add(this.txtTitle);
@@ -305,16 +305,15 @@
             this.groupBoxCreatePullRequest.TabStop = false;
             this.groupBoxCreatePullRequest.Text = "Pull Request Info";
             // 
-            // lblLinkCreatePull
+            // _NO_TRANSLATE_lblLinkCreatePull
             // 
-            this.lblLinkCreatePull.AutoSize = true;
-            this.lblLinkCreatePull.Location = new System.Drawing.Point(128, 382);
-            this.lblLinkCreatePull.Name = "lblLinkCreatePull";
-            this.lblLinkCreatePull.Size = new System.Drawing.Size(53, 13);
-            this.lblLinkCreatePull.TabIndex = 12;
-            this.lblLinkCreatePull.TabStop = true;
-            this.lblLinkCreatePull.Text = "";
-            this.lblLinkCreatePull.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
+            this._NO_TRANSLATE_lblLinkCreatePull.AutoSize = true;
+            this._NO_TRANSLATE_lblLinkCreatePull.Location = new System.Drawing.Point(128, 382);
+            this._NO_TRANSLATE_lblLinkCreatePull.Name = "_NO_TRANSLATE_lblLinkCreatePull";
+            this._NO_TRANSLATE_lblLinkCreatePull.Size = new System.Drawing.Size(0, 13);
+            this._NO_TRANSLATE_lblLinkCreatePull.TabIndex = 12;
+            this._NO_TRANSLATE_lblLinkCreatePull.TabStop = true;
+            this._NO_TRANSLATE_lblLinkCreatePull.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
             // 
             // splitContainerCreate
             // 
@@ -340,9 +339,11 @@
             this.tabControl1.Controls.Add(this.tabView);
             this.tabControl1.Controls.Add(this.tabCreate);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl1.Name = "tabControl1";
+            this.tabControl1.Padding = new System.Drawing.Point(0, 0);
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(803, 643);
+            this.tabControl1.Size = new System.Drawing.Size(796, 644);
             this.tabControl1.TabIndex = 3;
             // 
             // tabView
@@ -355,7 +356,7 @@
             this.tabView.Location = new System.Drawing.Point(4, 22);
             this.tabView.Name = "tabView";
             this.tabView.Padding = new System.Windows.Forms.Padding(3);
-            this.tabView.Size = new System.Drawing.Size(795, 617);
+            this.tabView.Size = new System.Drawing.Size(788, 618);
             this.tabView.TabIndex = 1;
             this.tabView.Text = "View Pull Requests";
             this.tabView.UseVisualStyleBackColor = true;
@@ -413,7 +414,7 @@
             this.lblAuthor.AutoSize = true;
             this.lblAuthor.Location = new System.Drawing.Point(16, 23);
             this.lblAuthor.Name = "lblAuthor";
-            this.lblAuthor.Size = new System.Drawing.Size(40, 13);
+            this.lblAuthor.Size = new System.Drawing.Size(38, 13);
             this.lblAuthor.TabIndex = 7;
             this.lblAuthor.Text = "Author";
             // 
@@ -422,7 +423,7 @@
             this.lblState.AutoSize = true;
             this.lblState.Location = new System.Drawing.Point(16, 53);
             this.lblState.Name = "lblState";
-            this.lblState.Size = new System.Drawing.Size(33, 13);
+            this.lblState.Size = new System.Drawing.Size(32, 13);
             this.lblState.TabIndex = 8;
             this.lblState.Text = "State";
             // 
@@ -436,7 +437,7 @@
             // 
             // btnMerge
             // 
-            this.btnMerge.Location = new System.Drawing.Point(648, 588);
+            this.btnMerge.Location = new System.Drawing.Point(648, 584);
             this.btnMerge.Name = "btnMerge";
             this.btnMerge.Size = new System.Drawing.Size(134, 23);
             this.btnMerge.TabIndex = 7;
@@ -446,7 +447,7 @@
             // 
             // btnApprove
             // 
-            this.btnApprove.Location = new System.Drawing.Point(508, 588);
+            this.btnApprove.Location = new System.Drawing.Point(508, 584);
             this.btnApprove.Name = "btnApprove";
             this.btnApprove.Size = new System.Drawing.Size(134, 23);
             this.btnApprove.TabIndex = 7;
@@ -456,7 +457,7 @@
             // 
             // groupBoxPullRequestInfo
             // 
-            this.groupBoxPullRequestInfo.Controls.Add(this.lblLinkViewPull);
+            this.groupBoxPullRequestInfo.Controls.Add(this._NO_TRANSLATE_lblLinkViewPull);
             this.groupBoxPullRequestInfo.Controls.Add(this.txtPRDescription);
             this.groupBoxPullRequestInfo.Controls.Add(this.txtPRTitle);
             this.groupBoxPullRequestInfo.Controls.Add(this.txtPRReviewers);
@@ -470,16 +471,16 @@
             this.groupBoxPullRequestInfo.TabStop = false;
             this.groupBoxPullRequestInfo.Text = "Pull Request Info";
             // 
-            // lblLinkViewPull
+            // _NO_TRANSLATE_lblLinkViewPull
             // 
-            this.lblLinkViewPull.AutoSize = true;
-            this.lblLinkViewPull.Location = new System.Drawing.Point(17, 382);
-            this.lblLinkViewPull.Name = "viewPullLinkLabel";
-            this.lblLinkViewPull.Size = new System.Drawing.Size(53, 13);
-            this.lblLinkViewPull.TabIndex = 15;
-            this.lblLinkViewPull.TabStop = true;
-            this.lblLinkViewPull.Text = "linkLabel1";
-            this.lblLinkViewPull.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
+            this._NO_TRANSLATE_lblLinkViewPull.AutoSize = true;
+            this._NO_TRANSLATE_lblLinkViewPull.Location = new System.Drawing.Point(17, 382);
+            this._NO_TRANSLATE_lblLinkViewPull.Name = "_NO_TRANSLATE_lblLinkViewPull";
+            this._NO_TRANSLATE_lblLinkViewPull.Size = new System.Drawing.Size(55, 13);
+            this._NO_TRANSLATE_lblLinkViewPull.TabIndex = 15;
+            this._NO_TRANSLATE_lblLinkViewPull.TabStop = true;
+            this._NO_TRANSLATE_lblLinkViewPull.Text = "linkLabel1";
+            this._NO_TRANSLATE_lblLinkViewPull.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.textLinkLabel_LinkClicked);
             // 
             // txtPRDescription
             // 
@@ -499,7 +500,7 @@
             this.txtPRTitle.Location = new System.Drawing.Point(131, 192);
             this.txtPRTitle.Name = "txtPRTitle";
             this.txtPRTitle.ReadOnly = true;
-            this.txtPRTitle.Size = new System.Drawing.Size(593, 21);
+            this.txtPRTitle.Size = new System.Drawing.Size(593, 20);
             this.txtPRTitle.TabIndex = 13;
             // 
             // txtPRReviewers
@@ -520,7 +521,7 @@
             this.lblReviewerView.AutoSize = true;
             this.lblReviewerView.Location = new System.Drawing.Point(15, 38);
             this.lblReviewerView.Name = "lblReviewerView";
-            this.lblReviewerView.Size = new System.Drawing.Size(109, 13);
+            this.lblReviewerView.Size = new System.Drawing.Size(106, 13);
             this.lblReviewerView.TabIndex = 4;
             this.lblReviewerView.Text = "Reviewer (approved)";
             // 
@@ -593,7 +594,7 @@
             this.lblSourceRepoView.AutoSize = true;
             this.lblSourceRepoView.Location = new System.Drawing.Point(14, 25);
             this.lblSourceRepoView.Name = "lblSourceRepoView";
-            this.lblSourceRepoView.Size = new System.Drawing.Size(59, 13);
+            this.lblSourceRepoView.Size = new System.Drawing.Size(57, 13);
             this.lblSourceRepoView.TabIndex = 0;
             this.lblSourceRepoView.Text = "Repository";
             // 
@@ -602,7 +603,7 @@
             this.lblTargetRepoView.AutoSize = true;
             this.lblTargetRepoView.Location = new System.Drawing.Point(14, 55);
             this.lblTargetRepoView.Name = "lblTargetRepoView";
-            this.lblTargetRepoView.Size = new System.Drawing.Size(40, 13);
+            this.lblTargetRepoView.Size = new System.Drawing.Size(41, 13);
             this.lblTargetRepoView.TabIndex = 0;
             this.lblTargetRepoView.Text = "Branch";
             // 
@@ -633,7 +634,7 @@
             this.lblRepositoryView.AutoSize = true;
             this.lblRepositoryView.Location = new System.Drawing.Point(16, 25);
             this.lblRepositoryView.Name = "lblRepositoryView";
-            this.lblRepositoryView.Size = new System.Drawing.Size(59, 13);
+            this.lblRepositoryView.Size = new System.Drawing.Size(57, 13);
             this.lblRepositoryView.TabIndex = 3;
             this.lblRepositoryView.Text = "Repository";
             // 
@@ -650,7 +651,7 @@
             this.lblBranchView.AutoSize = true;
             this.lblBranchView.Location = new System.Drawing.Point(16, 55);
             this.lblBranchView.Name = "lblBranchView";
-            this.lblBranchView.Size = new System.Drawing.Size(40, 13);
+            this.lblBranchView.Size = new System.Drawing.Size(41, 13);
             this.lblBranchView.TabIndex = 4;
             this.lblBranchView.Text = "Branch";
             // 
@@ -662,7 +663,7 @@
             this.tabCreate.Location = new System.Drawing.Point(4, 22);
             this.tabCreate.Name = "tabCreate";
             this.tabCreate.Padding = new System.Windows.Forms.Padding(3);
-            this.tabCreate.Size = new System.Drawing.Size(795, 617);
+            this.tabCreate.Size = new System.Drawing.Size(788, 618);
             this.tabCreate.TabIndex = 0;
             this.tabCreate.Text = "Create Pull Request";
             this.tabCreate.UseVisualStyleBackColor = true;
@@ -672,7 +673,7 @@
             this.AcceptButton = this.btnCreate;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(827, 667);
+            this.ClientSize = new System.Drawing.Size(820, 668);
             this.Controls.Add(this.tabControl1);
             this.Name = "BitbucketPullRequestForm";
             this.Text = "Bitbucket Server";
@@ -760,8 +761,8 @@
         private System.Windows.Forms.Label lblPRState;
         private System.Windows.Forms.Label lblAuthor;
         private System.Windows.Forms.Label lblState;
-        private System.Windows.Forms.LinkLabel lblLinkCreatePull;
-        private System.Windows.Forms.LinkLabel lblLinkViewPull;
+        private System.Windows.Forms.LinkLabel _NO_TRANSLATE_lblLinkCreatePull;
+        private System.Windows.Forms.LinkLabel _NO_TRANSLATE_lblLinkViewPull;
         private System.Windows.Forms.ToolTip toolTipLink;
     }
 }

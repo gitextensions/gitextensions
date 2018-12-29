@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="3.00.rc2">
+<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="3.00.00.4433">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -761,7 +761,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Branch(es):</source>
         <target />
       </trans-unit>
-      <trans-unit id="labelDate.Text">
+      <trans-unit id="labelDateCaption.Text">
         <source>Commit date:</source>
         <target />
       </trans-unit>
@@ -5203,7 +5203,7 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullRepositoryButtons.Text">
-        <source>Pull with last pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</source>
+        <source>Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullRepositoryCaption.Text">
@@ -5873,10 +5873,6 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="_resetHardWarning.Text">
         <source>You are about to discard ALL local changes, are you sure?</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Reset type</source>
         <target />
       </trans-unit>
     </body>
@@ -6911,6 +6907,10 @@ Context menu for additional operations</source>
         <source>Show stash count on status bar in browse window</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkShowSubmoduleStatusInBrowse.Text">
+        <source>Show submodule status in browse menu</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkStartWithRecentWorkingDir.Text">
         <source>Open last working directory on startup</source>
         <target />
@@ -7545,16 +7545,8 @@ Do you want to remove it from the recent repositories list?</source>
         <source>Recent Repositories</source>
         <target />
       </trans-unit>
-      <trans-unit id="menuStripRecentMenu.Text">
-        <source>menuStripRecentMenu</source>
-        <target />
-      </trans-unit>
       <trans-unit id="mnuConfigure.Text">
         <source>&amp;Recent repositories settings</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="mnuTop.Text">
-        <source>MenuTop</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiCategories.Text">
@@ -8802,6 +8794,17 @@ When OpenSSH is used, command line dialogs are shown!
         <source>{0:Author|Authors}</source>
         <target />
       </trans-unit>
+      <trans-unit id="_bodyNotLoaded.Text">
+        <source>
+
+Full message text is not present in older commits.
+Select this commit to populate the full message.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_branchText.Text">
+        <source>Branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_branchesText.Text">
         <source>Branches</source>
         <target />
@@ -8830,12 +8833,24 @@ When OpenSSH is used, command line dialogs are shown!
         <source>{0} {1:day|days} ago</source>
         <target />
       </trans-unit>
+      <trans-unit id="_findGitExecutable.Text">
+        <source>Find git...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitExecutableNotFoundText.Text">
+        <source>The Git executable could not be located on your system.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_hoursAgo.Text">
         <source>{0} {1:hour|hours} ago</source>
         <target />
       </trans-unit>
       <trans-unit id="_indexText.Text">
         <source>Commit index</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_installGitInstructions.Text">
+        <source>Install git...</source>
         <target />
       </trans-unit>
       <trans-unit id="_loadingDataText.Text">
