@@ -65,6 +65,8 @@ namespace GitUI
 
         internal const int WM_USER = 0x0400;
         internal const int EM_FORMATRANGE = WM_USER + 57;
+        internal const int WM_HSCROLL = 276;
+        internal const int SB_LEFT = 6;
 
         // from vsstyle.h
         internal const int TEXT_MAININSTRUCTION = 1;
