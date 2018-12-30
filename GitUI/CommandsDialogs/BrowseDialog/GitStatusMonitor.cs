@@ -146,6 +146,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             }
         }
 
+        public void InvalidateGitWorkingDirectoryStatus()
+        {
+            GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs());
+        }
+
         public void RequestRefresh()
         {
             ScheduleNextInteractiveTime();
@@ -254,9 +259,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void StartWatchingChanges(string workTreePath, string gitDirPath)
         {
-            // reset status info, it was outdated
-            GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs());
-
             try
             {
                 if (!string.IsNullOrEmpty(workTreePath) && Directory.Exists(workTreePath) &&
@@ -278,8 +280,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 // no-op
             }
-
-            return;
         }
 
         private void Update()

@@ -34,7 +34,7 @@ namespace GitUITests.UserControls
         {
             var commitIcon = _repoStateVisualiser.Invoke(Array.Empty<GitItemStatus>());
 
-            Assert.AreEqual((RepoStateVisualiser.IconClean, RepoStateVisualiser.BrushClean), commitIcon);
+            Assert.AreEqual(RepoStateVisualiser.Clean, commitIcon);
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace GitUITests.UserControls
                 CreateGitItemStatus(isSubmodule: true)
             });
 
-            Assert.AreEqual((RepoStateVisualiser.IconDirtySubmodules, RepoStateVisualiser.BrushDirtySubmodules), commitIcon);
+            Assert.AreEqual(RepoStateVisualiser.DirtySubmodules, commitIcon);
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace GitUITests.UserControls
                 CreateGitItemStatus()
             });
 
-            Assert.AreEqual((RepoStateVisualiser.IconDirty, RepoStateVisualiser.BrushDirty), commitIcon);
+            Assert.AreEqual(RepoStateVisualiser.Dirty, commitIcon);
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace GitUITests.UserControls
                 CreateGitItemStatus()
             });
 
-            Assert.AreEqual((RepoStateVisualiser.IconMixed, RepoStateVisualiser.BrushMixed), commitIcon);
+            Assert.AreEqual(RepoStateVisualiser.Mixed, commitIcon);
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace GitUITests.UserControls
                 CreateGitItemStatus(isStaged: true)
             });
 
-            Assert.AreEqual((RepoStateVisualiser.IconStaged, RepoStateVisualiser.BrushStaged), commitIcon);
+            Assert.AreEqual(RepoStateVisualiser.Staged, commitIcon);
         }
 
         [Test]
@@ -94,7 +94,15 @@ namespace GitUITests.UserControls
                 CreateGitItemStatus(isTracked: false)
             });
 
-            Assert.AreEqual((RepoStateVisualiser.IconUntrackedOnly, RepoStateVisualiser.BrushUntrackedOnly), commitIcon);
+            Assert.AreEqual(RepoStateVisualiser.UntrackedOnly, commitIcon);
+        }
+
+        [Test]
+        public void ReturnsIconUnknownWhenNull()
+        {
+            var commitIcon = _repoStateVisualiser.Invoke(null);
+
+            Assert.AreEqual(RepoStateVisualiser.Unknown, commitIcon);
         }
     }
 }

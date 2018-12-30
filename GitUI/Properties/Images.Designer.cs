@@ -1683,6 +1683,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap RepoStateUnknown {
+            get {
+                object obj = ResourceManager.GetObject("RepoStateUnknown", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap RepoStateUntrackedOnly {
             get {
                 object obj = ResourceManager.GetObject("RepoStateUntrackedOnly", resourceCulture);
