@@ -31,15 +31,6 @@
           <Directory Id="DiffScriptsDir" Name="Diff-Scripts" />
           <Directory Id="DirConEmu" Name="ConEmu" />
         </Directory>
-      </Directory>
-      <Directory Id="ProgramMenuFolder">
-        <Directory Id="StartMenuDir" Name="$(var.ProductName)" />
-      </Directory>
-      <Directory Id="DesktopFolder" />
-      <Component Id="Path" Guid="{DAC97FD8-A869-4458-AABD-C27D2C892643}">
-        <Environment Id="PATH" Name="PATH" Value="[INSTALLDIR]" Permanent="no" Part="last" Action="set" System="yes" />
-      </Component>
-    </Directory>
     <PropertyRef Id="VS2015DEVENV" />
     <DirectoryRef Id="INSTALLDIR">
       <Component Id="gitextensions.ico" Guid="*">
@@ -135,6 +126,294 @@
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.InteropServices.RuntimeInformation.dll" />
       </Component>
 
+            <Component Id="Microsoft.Win32.Primitives.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.Win32.Primitives.dll" />
+            </Component>
+            <Component Id="netstandard.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\netstandard.dll" />
+            </Component>
+            <Component Id="System.AppContext.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.AppContext.dll" />
+            </Component>
+            <Component Id="System.Collections.Concurrent.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Collections.Concurrent.dll" />
+            </Component>
+            <Component Id="System.Collections.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Collections.dll" />
+            </Component>
+            <Component Id="System.Collections.Immutable.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Collections.Immutable.dll" />
+            </Component>
+            <Component Id="System.Collections.NonGeneric.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Collections.NonGeneric.dll" />
+            </Component>
+            <Component Id="System.Collections.Specialized.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Collections.Specialized.dll" />
+            </Component>
+            <Component Id="System.ComponentModel.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ComponentModel.dll" />
+            </Component>
+            <Component Id="System.ComponentModel.EventBasedAsync.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ComponentModel.EventBasedAsync.dll" />
+            </Component>
+            <Component Id="System.ComponentModel.Primitives.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ComponentModel.Primitives.dll" />
+            </Component>
+            <Component Id="System.ComponentModel.TypeConverter.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ComponentModel.TypeConverter.dll" />
+            </Component>
+            <Component Id="System.Console.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Console.dll" />
+            </Component>
+            <Component Id="System.Data.Common.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Data.Common.dll" />
+            </Component>
+            <Component Id="System.Diagnostics.Contracts.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.Contracts.dll" />
+            </Component>
+            <Component Id="System.Diagnostics.Debug.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.Debug.dll" />
+            </Component>
+            <Component Id="System.Diagnostics.FileVersionInfo.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.FileVersionInfo.dll" />
+            </Component>
+            <Component Id="System.Diagnostics.Process.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.Process.dll" />
+            </Component>
+            <Component Id="System.Diagnostics.StackTrace.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.StackTrace.dll" />
+            </Component>
+            <Component Id="System.Diagnostics.TextWriterTraceListener.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.TextWriterTraceListener.dll" />
+            </Component>
+            <Component Id="System.Diagnostics.Tools.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.Tools.dll" />
+            </Component>
+            <Component Id="System.Diagnostics.TraceSource.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.TraceSource.dll" />
+            </Component>
+            <Component Id="System.Diagnostics.Tracing.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Diagnostics.Tracing.dll" />
+            </Component>
+            <Component Id="System.Drawing.Primitives.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Drawing.Primitives.dll" />
+            </Component>
+            <Component Id="System.Dynamic.Runtime.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Dynamic.Runtime.dll" />
+            </Component>
+            <Component Id="System.Globalization.Calendars.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Globalization.Calendars.dll" />
+            </Component>
+            <Component Id="System.Globalization.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Globalization.dll" />
+            </Component>
+            <Component Id="System.Globalization.Extensions.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Globalization.Extensions.dll" />
+            </Component>
+            <Component Id="System.IO.Compression.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.Compression.dll" />
+            </Component>
+            <Component Id="System.IO.Compression.ZipFile.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.Compression.ZipFile.dll" />
+            </Component>
+            <Component Id="System.IO.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.dll" />
+            </Component>
+            <Component Id="System.IO.FileSystem.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.FileSystem.dll" />
+            </Component>
+            <Component Id="System.IO.FileSystem.DriveInfo.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.FileSystem.DriveInfo.dll" />
+            </Component>
+            <Component Id="System.IO.FileSystem.Primitives.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.FileSystem.Primitives.dll" />
+            </Component>
+            <Component Id="System.IO.FileSystem.Watcher.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.FileSystem.Watcher.dll" />
+            </Component>
+            <Component Id="System.IO.IsolatedStorage.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.IsolatedStorage.dll" />
+            </Component>
+            <Component Id="System.IO.MemoryMappedFiles.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.MemoryMappedFiles.dll" />
+            </Component>
+            <Component Id="System.IO.Pipes.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.Pipes.dll" />
+            </Component>
+            <Component Id="System.IO.UnmanagedMemoryStream.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.IO.UnmanagedMemoryStream.dll" />
+            </Component>
+            <Component Id="System.Linq.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Linq.dll" />
+            </Component>
+            <Component Id="System.Linq.Expressions.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Linq.Expressions.dll" />
+            </Component>
+            <Component Id="System.Linq.Parallel.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Linq.Parallel.dll" />
+            </Component>
+            <Component Id="System.Linq.Queryable.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Linq.Queryable.dll" />
+            </Component>
+            <Component Id="System.Net.Http.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.Http.dll" />
+            </Component>
+            <Component Id="System.Net.NameResolution.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.NameResolution.dll" />
+            </Component>
+            <Component Id="System.Net.NetworkInformation.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.NetworkInformation.dll" />
+            </Component>
+            <Component Id="System.Net.Ping.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.Ping.dll" />
+            </Component>
+            <Component Id="System.Net.Primitives.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.Primitives.dll" />
+            </Component>
+            <Component Id="System.Net.Requests.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.Requests.dll" />
+            </Component>
+            <Component Id="System.Net.Security.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.Security.dll" />
+            </Component>
+            <Component Id="System.Net.Sockets.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.Sockets.dll" />
+            </Component>
+            <Component Id="System.Net.WebHeaderCollection.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.WebHeaderCollection.dll" />
+            </Component>
+            <Component Id="System.Net.WebSockets.Client.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.WebSockets.Client.dll" />
+            </Component>
+            <Component Id="System.Net.WebSockets.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Net.WebSockets.dll" />
+            </Component>
+            <Component Id="System.ObjectModel.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ObjectModel.dll" />
+            </Component>
+            <Component Id="System.Reactive.Windows.Threading.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reactive.Windows.Threading.dll" />
+            </Component>
+            <Component Id="System.Reflection.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reflection.dll" />
+            </Component>
+            <Component Id="System.Reflection.Extensions.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reflection.Extensions.dll" />
+            </Component>
+            <Component Id="System.Reflection.Primitives.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reflection.Primitives.dll" />
+            </Component>
+            <Component Id="System.Resources.Reader.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Resources.Reader.dll" />
+            </Component>
+            <Component Id="System.Resources.ResourceManager.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Resources.ResourceManager.dll" />
+            </Component>
+            <Component Id="System.Resources.Writer.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Resources.Writer.dll" />
+            </Component>
+            <Component Id="System.Runtime.CompilerServices.VisualC.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.CompilerServices.VisualC.dll" />
+            </Component>
+            <Component Id="System.Runtime.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.dll" />
+            </Component>
+            <Component Id="System.Runtime.Extensions.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Extensions.dll" />
+            </Component>
+            <Component Id="System.Runtime.Handles.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Handles.dll" />
+            </Component>
+            <Component Id="System.Runtime.InteropServices.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.InteropServices.dll" />
+            </Component>
+            <Component Id="System.Runtime.Numerics.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Numerics.dll" />
+            </Component>
+            <Component Id="System.Runtime.Serialization.Formatters.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Serialization.Formatters.dll" />
+            </Component>
+            <Component Id="System.Runtime.Serialization.Json.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Serialization.Json.dll" />
+            </Component>
+            <Component Id="System.Runtime.Serialization.Primitives.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Serialization.Primitives.dll" />
+            </Component>
+            <Component Id="System.Runtime.Serialization.Xml.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Runtime.Serialization.Xml.dll" />
+            </Component>
+            <Component Id="System.Security.Claims.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Claims.dll" />
+            </Component>
+            <Component Id="System.Security.Cryptography.Algorithms.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Cryptography.Algorithms.dll" />
+            </Component>
+            <Component Id="System.Security.Cryptography.Csp.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Cryptography.Csp.dll" />
+            </Component>
+            <Component Id="System.Security.Cryptography.Encoding.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Cryptography.Encoding.dll" />
+            </Component>
+            <Component Id="System.Security.Cryptography.Primitives.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Cryptography.Primitives.dll" />
+            </Component>
+            <Component Id="System.Security.Cryptography.X509Certificates.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Cryptography.X509Certificates.dll" />
+            </Component>
+            <Component Id="System.Security.Principal.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.Principal.dll" />
+            </Component>
+            <Component Id="System.Security.SecureString.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Security.SecureString.dll" />
+            </Component>
+            <Component Id="System.Text.Encoding.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Text.Encoding.dll" />
+            </Component>
+            <Component Id="System.Text.Encoding.Extensions.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Text.Encoding.Extensions.dll" />
+            </Component>
+            <Component Id="System.Text.RegularExpressions.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Text.RegularExpressions.dll" />
+            </Component>
+            <Component Id="System.Threading.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.dll" />
+            </Component>
+            <Component Id="System.Threading.Overlapped.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Overlapped.dll" />
+            </Component>
+            <Component Id="System.Threading.Tasks.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Tasks.dll" />
+            </Component>
+            <Component Id="System.Threading.Tasks.Parallel.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Tasks.Parallel.dll" />
+            </Component>
+            <Component Id="System.Threading.Thread.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Thread.dll" />
+            </Component>
+            <Component Id="System.Threading.ThreadPool.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.ThreadPool.dll" />
+            </Component>
+            <Component Id="System.Threading.Timer.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Timer.dll" />
+            </Component>
+            <Component Id="System.Xml.ReaderWriter.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Xml.ReaderWriter.dll" />
+            </Component>
+            <Component Id="System.Xml.XDocument.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Xml.XDocument.dll" />
+            </Component>
+            <Component Id="System.Xml.XmlDocument.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Xml.XmlDocument.dll" />
+            </Component>
+            <Component Id="System.Xml.XmlSerializer.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Xml.XmlSerializer.dll" />
+            </Component>
+            <Component Id="System.Xml.XPath.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Xml.XPath.dll" />
+            </Component>
+            <Component Id="System.Xml.XPath.XDocument.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Xml.XPath.XDocument.dll" />
+            </Component>
         <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="GithubSharp.Core.dll" Guid="08F2D539-54CE-4895-ACA5-A7FBA73CA172">
         <RemoveFile Name="GithubSharp.Core.dll" Id="GithubSharp.Core.dll" On="both" />
@@ -255,9 +534,7 @@
       <Component Id="NString.dll" Guid="*">
         <File Source="..\Plugins\JiraCommitHintPlugin\bin\$(var.Configuration)\NString.dll" />
       </Component>
-      <Component Id="System.Collections.Immutable.dll" Guid="*">
-        <File Source="..\Plugins\JiraCommitHintPlugin\bin\$(var.Configuration)\System.Collections.Immutable.dll" />
-      </Component>
+     
       <!--Remove unused dll, installed in versions <= 2.31-->
       <Component Id="Github.dll" Guid="0DA13691-140A-4490-8B4C-8AF537DAEB67">
         <RemoveFile Name="Github.dll" Id="Github.dll" On="both" />
@@ -545,6 +822,104 @@
     <ComponentGroup Id="Component.ConEmuFiles">
           <ComponentRef Id="File.CER00" /><ComponentRef Id="File.CER01" /><ComponentRef Id="File.CER03" /><ComponentRef Id="File.CER04" /><ComponentRef Id="File.CER05" /><ComponentRef Id="File.CER06" /><ComponentRef Id="File.CER07" /><ComponentRef Id="File.CER08" /><ComponentRef Id="File.CER09" /><ComponentRef Id="File.CER10" />
     </ComponentGroup>
+        <ComponentGroup Id="Component.NetStandard">
+            <ComponentRef Id="Microsoft.Win32.Primitives.dll" />
+            <ComponentRef Id="netstandard.dll" />
+            <ComponentRef Id="System.AppContext.dll" />
+            <ComponentRef Id="System.Collections.Concurrent.dll" />
+            <ComponentRef Id="System.Collections.dll" />
+            <ComponentRef Id="System.Collections.Immutable.dll" />
+            <ComponentRef Id="System.Collections.NonGeneric.dll" />
+            <ComponentRef Id="System.Collections.Specialized.dll" />
+            <ComponentRef Id="System.ComponentModel.dll" />
+            <ComponentRef Id="System.ComponentModel.EventBasedAsync.dll" />
+            <ComponentRef Id="System.ComponentModel.Primitives.dll" />
+            <ComponentRef Id="System.ComponentModel.TypeConverter.dll" />
+            <ComponentRef Id="System.Console.dll" />
+            <ComponentRef Id="System.Data.Common.dll" />
+            <ComponentRef Id="System.Diagnostics.Contracts.dll" />
+            <ComponentRef Id="System.Diagnostics.Debug.dll" />
+            <ComponentRef Id="System.Diagnostics.FileVersionInfo.dll" />
+            <ComponentRef Id="System.Diagnostics.Process.dll" />
+            <ComponentRef Id="System.Diagnostics.StackTrace.dll" />
+            <ComponentRef Id="System.Diagnostics.TextWriterTraceListener.dll" />
+            <ComponentRef Id="System.Diagnostics.Tools.dll" />
+            <ComponentRef Id="System.Diagnostics.TraceSource.dll" />
+            <ComponentRef Id="System.Diagnostics.Tracing.dll" />
+            <ComponentRef Id="System.Drawing.Primitives.dll" />
+            <ComponentRef Id="System.Dynamic.Runtime.dll" />
+            <ComponentRef Id="System.Globalization.Calendars.dll" />
+            <ComponentRef Id="System.Globalization.dll" />
+            <ComponentRef Id="System.Globalization.Extensions.dll" />
+            <ComponentRef Id="System.IO.Compression.dll" />
+            <ComponentRef Id="System.IO.Compression.ZipFile.dll" />
+            <ComponentRef Id="System.IO.dll" />
+            <ComponentRef Id="System.IO.FileSystem.dll" />
+            <ComponentRef Id="System.IO.FileSystem.DriveInfo.dll" />
+            <ComponentRef Id="System.IO.FileSystem.Primitives.dll" />
+            <ComponentRef Id="System.IO.FileSystem.Watcher.dll" />
+            <ComponentRef Id="System.IO.IsolatedStorage.dll" />
+            <ComponentRef Id="System.IO.MemoryMappedFiles.dll" />
+            <ComponentRef Id="System.IO.Pipes.dll" />
+            <ComponentRef Id="System.IO.UnmanagedMemoryStream.dll" />
+            <ComponentRef Id="System.Linq.dll" />
+            <ComponentRef Id="System.Linq.Expressions.dll" />
+            <ComponentRef Id="System.Linq.Parallel.dll" />
+            <ComponentRef Id="System.Linq.Queryable.dll" />
+            <ComponentRef Id="System.Net.Http.dll" />
+            <ComponentRef Id="System.Net.NameResolution.dll" />
+            <ComponentRef Id="System.Net.NetworkInformation.dll" />
+            <ComponentRef Id="System.Net.Ping.dll" />
+            <ComponentRef Id="System.Net.Primitives.dll" />
+            <ComponentRef Id="System.Net.Requests.dll" />
+            <ComponentRef Id="System.Net.Security.dll" />
+            <ComponentRef Id="System.Net.Sockets.dll" />
+            <ComponentRef Id="System.Net.WebHeaderCollection.dll" />
+            <ComponentRef Id="System.Net.WebSockets.Client.dll" />
+            <ComponentRef Id="System.Net.WebSockets.dll" />
+            <ComponentRef Id="System.ObjectModel.dll" />
+            <ComponentRef Id="System.Reactive.Windows.Threading.dll" />
+            <ComponentRef Id="System.Reflection.dll" />
+            <ComponentRef Id="System.Reflection.Extensions.dll" />
+            <ComponentRef Id="System.Reflection.Primitives.dll" />
+            <ComponentRef Id="System.Resources.Reader.dll" />
+            <ComponentRef Id="System.Resources.ResourceManager.dll" />
+            <ComponentRef Id="System.Resources.Writer.dll" />
+            <ComponentRef Id="System.Runtime.CompilerServices.VisualC.dll" />
+            <ComponentRef Id="System.Runtime.dll" />
+            <ComponentRef Id="System.Runtime.Extensions.dll" />
+            <ComponentRef Id="System.Runtime.Handles.dll" />
+            <ComponentRef Id="System.Runtime.InteropServices.dll" />
+            <ComponentRef Id="System.Runtime.Numerics.dll" />
+            <ComponentRef Id="System.Runtime.Serialization.Formatters.dll" />
+            <ComponentRef Id="System.Runtime.Serialization.Json.dll" />
+            <ComponentRef Id="System.Runtime.Serialization.Primitives.dll" />
+            <ComponentRef Id="System.Runtime.Serialization.Xml.dll" />
+            <ComponentRef Id="System.Security.Claims.dll" />
+            <ComponentRef Id="System.Security.Cryptography.Algorithms.dll" />
+            <ComponentRef Id="System.Security.Cryptography.Csp.dll" />
+            <ComponentRef Id="System.Security.Cryptography.Encoding.dll" />
+            <ComponentRef Id="System.Security.Cryptography.Primitives.dll" />
+            <ComponentRef Id="System.Security.Cryptography.X509Certificates.dll" />
+            <ComponentRef Id="System.Security.Principal.dll" />
+            <ComponentRef Id="System.Security.SecureString.dll" />
+            <ComponentRef Id="System.Text.Encoding.dll" />
+            <ComponentRef Id="System.Text.Encoding.Extensions.dll" />
+            <ComponentRef Id="System.Text.RegularExpressions.dll" />
+            <ComponentRef Id="System.Threading.dll" />
+            <ComponentRef Id="System.Threading.Overlapped.dll" />
+            <ComponentRef Id="System.Threading.Tasks.dll" />
+            <ComponentRef Id="System.Threading.Tasks.Parallel.dll" />
+            <ComponentRef Id="System.Threading.Thread.dll" />
+            <ComponentRef Id="System.Threading.ThreadPool.dll" />
+            <ComponentRef Id="System.Threading.Timer.dll" />
+            <ComponentRef Id="System.Xml.ReaderWriter.dll" />
+            <ComponentRef Id="System.Xml.XDocument.dll" />
+            <ComponentRef Id="System.Xml.XmlDocument.dll" />
+            <ComponentRef Id="System.Xml.XmlSerializer.dll" />
+            <ComponentRef Id="System.Xml.XPath.dll" />
+            <ComponentRef Id="System.Xml.XPath.XDocument.dll" />
+    </ComponentGroup>
 
     <DirectoryRef Id="ProgramMenuFolder">
       <Component Id="GitExtensions.newstartmenu" Guid="*">
@@ -599,6 +974,7 @@
       <ComponentRef Id="puttygen.exe" />
       <ComponentRef Id="puttygen.reg" />
       <ComponentGroupRef Id="Component.ConEmuFiles" />
+            <ComponentGroupRef Id="Component.NetStandard" />
       <ComponentRef Id="GitExtSshAskPass.exe" />
       <ComponentRef Id="GitExtensions.newstartmenu" />
       <ComponentRef Id="GitExtensions.startmenu" />
