@@ -314,16 +314,22 @@ namespace GitCommands
 
         public static ArgumentString StashSaveCmd(bool untracked, bool keepIndex, string message, IReadOnlyList<string> selectedFiles)
         {
-            var isPartialStash = selectedFiles != null && selectedFiles.Any();
+            if (selectedFiles == null)
+            {
+                selectedFiles = Array.Empty<string>();
+            }
+
+            var isPartialStash = selectedFiles.Any();
 
             return new GitArgumentBuilder("stash")
             {
                 { isPartialStash, "push", "save" },
                 { untracked && GitVersion.Current.StashUntrackedFilesSupported, "-u" },
                 { keepIndex, "--keep-index" },
-                message.QuoteNE(),
+                { isPartialStash && !string.IsNullOrWhiteSpace(message), "-m" },
+                { !string.IsNullOrWhiteSpace(message), message.Quote() },
                 { isPartialStash, "--" },
-                { isPartialStash, selectedFiles }
+                { isPartialStash, string.Join(" ", selectedFiles.Where(path => !string.IsNullOrWhiteSpace(path)).Select(path => path.QuoteNE())) }
             };
         }
 
