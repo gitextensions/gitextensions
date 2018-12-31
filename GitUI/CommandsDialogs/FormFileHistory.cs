@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 using JetBrains.Annotations;
@@ -27,6 +26,7 @@ namespace GitUI.CommandsDialogs
         private readonly FilterBranchHelper _filterBranchHelper;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
+        private readonly FormFileHistoryController _controller = new FormFileHistoryController();
 
         private BuildReportTabPageExtension _buildReportTabPageExtension;
 
@@ -198,7 +198,7 @@ namespace GitUI.CommandsDialogs
                 // we will need this later to look up proper casing for the file
                 var fullFilePath = _fullPathResolver.Resolve(fileName);
 
-                if (PathUtil.TryGetExactPath(fullFilePath, out fileName))
+                if (_controller.TryGetExactPath(fullFilePath, out fileName))
                 {
                     fileName = fileName.Substring(Module.WorkingDir.Length);
                 }

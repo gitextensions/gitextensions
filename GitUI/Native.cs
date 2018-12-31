@@ -93,6 +93,12 @@ namespace GitUI
         internal static extern bool ShowCaretAPI(
             IntPtr hwnd);
 
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern uint GetShortPathName(string lpszLongPath, StringBuilder lpszShortPath, int cchBuffer);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern int GetLongPathName(string lpszShortPath, StringBuilder lpszLongPath, int cchBuffer);
+
         [DllImport("uxtheme.dll", CharSet = CharSet.Unicode)]
         internal static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
 
