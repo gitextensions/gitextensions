@@ -84,7 +84,6 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _undoLastCommitText = new TranslationString("You will still be able to find all the commit's changes in the staging area\n\nDo you want to continue?");
         private readonly TranslationString _undoLastCommitCaption = new TranslationString("Undo last commit");
-
         #endregion
 
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
@@ -107,9 +106,6 @@ namespace GitUI.CommandsDialogs
         private ToolStripItem _warning;
 
         [CanBeNull] private TabPage _consoleTabPage;
-
-        private bool _submoduleStatusUpdateNeeded = true;
-        private bool _stashCountUpdateNeeded = true;
 
         [Flags]
         private enum UpdateTargets
@@ -185,91 +181,7 @@ namespace GitUI.CommandsDialogs
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
             revisionDiff.Bind(RevisionGrid, fileTree);
 
-            // Activation of the control requires restart of Browse, limit also deactivation for consistency
-            bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
-            bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges;
-
-            if (countToolbar || countArtificial)
-            {
-                _toolStripGitStatus = new ToolStripMenuItem
-                {
-                    ImageTransparentColor = Color.Magenta,
-                    ImageScaling = ToolStripItemImageScaling.SizeToFit,
-                    Margin = new Padding(0, 1, 0, 2)
-                };
-
-                var repoStateVisualiser = new RepoStateVisualiser();
-
-                _gitStatusMonitor = new GitStatusMonitor(this);
-
-                _gitStatusMonitor.GitStatusMonitorStateChanged += (s, e) =>
-                {
-                    var status = e.State;
-                    if (status == GitStatusMonitorState.Stopped)
-                    {
-                        _toolStripGitStatus.Visible = false;
-                        _toolStripGitStatus.Text = "";
-                        TaskbarManager.Instance.SetOverlayIcon(null, "");
-                    }
-                    else if (status == GitStatusMonitorState.Running)
-                    {
-                        _toolStripGitStatus.Visible = true;
-                    }
-                };
-
-                Brush lastBrush = null;
-
-                _gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) =>
-                {
-                    var status = e.ItemStatuses.ToList();
-
-                    var (image, brush) = repoStateVisualiser.Invoke(status);
-
-                    _toolStripGitStatus.Image = image;
-
-                    _toolStripGitStatus.Text = countToolbar && status.Count != 0
-                        ? string.Format(_commitButtonText + " ({0})", status.Count.ToString())
-                        : _commitButtonText.Text;
-
-                    if (countArtificial)
-                    {
-                        RevisionGrid.UpdateArtificialCommitCount(status);
-                    }
-
-                    // The diff filelist is not updated, as the selected diff is unset
-                    ////_revisionDiff.RefreshArtificial();
-
-                    if (!ReferenceEquals(brush, lastBrush))
-                    {
-                        lastBrush = brush;
-
-                        const int imgDim = 32;
-                        const int dotDim = 9;
-                        const int pad = 2;
-                        using (var bmp = new Bitmap(imgDim, imgDim))
-                        {
-                            using (var g = Graphics.FromImage(bmp))
-                            {
-                                g.SmoothingMode = SmoothingMode.AntiAlias;
-                                g.Clear(Color.Transparent);
-                                g.FillEllipse(brush, new Rectangle(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
-                            }
-
-                            using (var overlay = Icon.FromHandle(bmp.GetHicon()))
-                            {
-                                TaskbarManager.Instance.SetOverlayIcon(overlay, "");
-                            }
-                        }
-                    }
-
-                    _submoduleStatusUpdateNeeded = _submoduleStatusUpdateNeeded || _submoduleStatusProvider.HasSubmodulesStatusChanged(status);
-                };
-
-                // TODO: Replace with a status page?
-                _toolStripGitStatus.Click += CommitToolStripMenuItemClick;
-                ToolStrip.Items.Insert(ToolStrip.Items.IndexOf(toolStripButtonCommit), _toolStripGitStatus);
-                ToolStrip.Items.Remove(toolStripButtonCommit);
-            }
+            InitCountArtificial(out _toolStripGitStatus, out _gitStatusMonitor);
 
             if (!EnvUtils.RunningOnWindows())
             {
@@ -371,6 +283,110 @@ namespace GitUI.CommandsDialogs
                     manageWorktreeToolStripMenuItem.Enabled = false;
                 }
             }
+
+            void InitCountArtificial(out ToolStripMenuItem toolStripGitStatus, out GitStatusMonitor gitStatusMonitor)
+            {
+                // Activation of the control requires restart of Browse, limit also deactivation for consistency
+                bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
+                bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges;
+
+                if (countToolbar || countArtificial)
+                {
+                    toolStripGitStatus = new ToolStripMenuItem
+                    {
+                        ImageTransparentColor = Color.Magenta,
+                        ImageScaling = ToolStripItemImageScaling.SizeToFit,
+                        Margin = new Padding(0, 1, 0, 2)
+                    };
+
+                    var repoStateVisualiser = new RepoStateVisualiser();
+
+                    gitStatusMonitor = new GitStatusMonitor(this);
+
+                    gitStatusMonitor.GitStatusMonitorStateChanged += (s, e) =>
+                    {
+                        var status = e.State;
+                        if (status == GitStatusMonitorState.Stopped)
+                        {
+                            _toolStripGitStatus.Visible = false;
+                            _toolStripGitStatus.Text = "";
+                            TaskbarManager.Instance.SetOverlayIcon(null, "");
+                        }
+                        else if (status == GitStatusMonitorState.Running)
+                        {
+                            _toolStripGitStatus.Visible = true;
+                        }
+                    };
+
+                    Brush lastBrush = null;
+
+                    gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) =>
+                    {
+                        var status = e.ItemStatuses.ToList();
+
+                        var (image, brush) = repoStateVisualiser.Invoke(status);
+
+                        _toolStripGitStatus.Image = image;
+
+                        _toolStripGitStatus.Text = countToolbar && status.Count != 0
+                            ? string.Format(_commitButtonText + " ({0})", status.Count.ToString())
+                            : _commitButtonText.Text;
+
+                        if (countArtificial)
+                        {
+                            RevisionGrid.UpdateArtificialCommitCount(status);
+                        }
+
+                        // The diff filelist is not updated, as the selected diff is unset
+                        ////_revisionDiff.RefreshArtificial();
+
+                        if (!ReferenceEquals(brush, lastBrush))
+                        {
+                            lastBrush = brush;
+
+                            const int imgDim = 32;
+                            const int dotDim = 9;
+                            const int pad = 2;
+                            using (var bmp = new Bitmap(imgDim, imgDim))
+                            {
+                                using (var g = Graphics.FromImage(bmp))
+                                {
+                                    g.SmoothingMode = SmoothingMode.AntiAlias;
+                                    g.Clear(Color.Transparent);
+                                    g.FillEllipse(brush, new Rectangle(imgDim - dotDim - pad, imgDim - dotDim - pad, dotDim, dotDim));
+                                }
+
+                                using (var overlay = Icon.FromHandle(bmp.GetHicon()))
+                                {
+                                    TaskbarManager.Instance.SetOverlayIcon(overlay, "");
+                                }
+                            }
+                        }
+
+                        if (AppSettings.ShowSubmoduleStatus)
+                        {
+                            if (_submoduleStatusProvider.HasChangedToNone(status))
+                            {
+                                UpdateSubmodulesStructure(updateStatus: false);
+                            }
+                            else if (_submoduleStatusProvider.HasStatusChanges(status))
+                            {
+                                UpdateSubmodulesStructure(updateStatus: true);
+                            }
+                        }
+                    };
+
+                    // TODO: Replace with a status page?
+                    _toolStripGitStatus.Click += CommitToolStripMenuItemClick;
+                    ToolStrip.Items.Insert(ToolStrip.Items.IndexOf(toolStripButtonCommit), _toolStripGitStatus);
+                    ToolStrip.Items.Remove(toolStripButtonCommit);
+                }
+                else
+                {
+                    toolStripGitStatus = null;
+                    gitStatusMonitor = null;
+                }
+            }
         }
 
         private void FillNextPullActionAsDefaultToolStripMenuItems()
@@ -464,7 +480,6 @@ namespace GitUI.CommandsDialogs
 
             RevisionGrid.IndexWatcher.Changed += (_, args) =>
             {
-                _stashCountUpdateNeeded = true;
                 bool indexChanged = args.IsIndexChanged;
                 this.InvokeAsync(
                         () =>
@@ -475,6 +490,8 @@ namespace GitUI.CommandsDialogs
                         })
                     .FileAndForget();
             };
+            UpdateSubmodulesStructure();
+            UpdateStashCount();
 
             base.OnLoad(e);
         }
@@ -539,9 +556,9 @@ namespace GitUI.CommandsDialogs
 
         private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
         {
-            _submoduleStatusUpdateNeeded = true;
-            _stashCountUpdateNeeded = true;
             this.InvokeAsync(RefreshRevisions).FileAndForget();
+            UpdateSubmodulesStructure();
+            UpdateStashCount();
         }
 
         private void RefreshRevisions()
@@ -911,13 +928,6 @@ namespace GitUI.CommandsDialogs
         private void OnActivate()
         {
             CheckForMergeConflicts();
-            InitiateSubmodulesUpdate();
-
-            if (_stashCountUpdateNeeded)
-            {
-                _stashCountUpdateNeeded = false;
-                UpdateStashCount();
-            }
 
             return;
 
@@ -1013,30 +1023,28 @@ namespace GitUI.CommandsDialogs
                     }
                 }).FileAndForget();
             }
+        }
 
-            void UpdateStashCount()
+        private void UpdateStashCount()
+        {
+            if (AppSettings.ShowStashCount)
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
-
-                if (AppSettings.ShowStashCount)
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        // Add a delay to not interfere with GUI updates when switching repository
-                        await Task.Delay(500);
-                        await TaskScheduler.Default;
+                    // Add a delay to not interfere with GUI updates when switching repository
+                    await Task.Delay(500);
+                    await TaskScheduler.Default;
 
-                        var result = Module.GetStashes().Count;
+                    var result = Module.GetStashes().Count;
 
-                        await this.SwitchToMainThreadAsync();
+                    await this.SwitchToMainThreadAsync();
 
-                        toolStripSplitStash.Text = $"({result})";
-                    }).FileAndForget();
-                }
-                else
-                {
-                    toolStripSplitStash.Text = string.Empty;
-                }
+                    toolStripSplitStash.Text = $"({result})";
+                }).FileAndForget();
+            }
+            else
+            {
+                toolStripSplitStash.Text = string.Empty;
             }
         }
 
@@ -1295,14 +1303,14 @@ namespace GitUI.CommandsDialogs
         private void RefreshStatus()
         {
             _gitStatusMonitor?.RequestRefresh();
-            _submoduleStatusUpdateNeeded = true;
-            _stashCountUpdateNeeded = true;
+            UpdateSubmodulesStructure();
+            UpdateStashCount();
         }
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
         {
-            RefreshStatus();
             RefreshRevisions();
+            RefreshStatus();
         }
 
         private void RefreshDashboardToolStripMenuItemClick(object sender, EventArgs e)
@@ -1355,8 +1363,8 @@ namespace GitUI.CommandsDialogs
 
         private void StashToolStripMenuItemClick(object sender, EventArgs e)
         {
-            _stashCountUpdateNeeded = true;
             UICommands.StartStashDialog(this);
+            UpdateStashCount();
         }
 
         private void ResetToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1585,8 +1593,8 @@ namespace GitUI.CommandsDialogs
 
         private void ManageSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            _submoduleStatusUpdateNeeded = true;
             UICommands.StartSubmodulesDialog(this);
+            UpdateSubmodulesStructure();
         }
 
         private void UpdateSubmoduleToolStripMenuItemClick(object sender, EventArgs e)
@@ -1602,44 +1610,44 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            _submoduleStatusUpdateNeeded = true;
             UICommands.StartUpdateSubmodulesDialog(this);
+            UpdateSubmodulesStructure();
         }
 
         private void SynchronizeAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            _submoduleStatusUpdateNeeded = true;
             UICommands.StartSyncSubmodulesDialog(this);
+            UpdateSubmodulesStructure();
         }
 
         private void ToolStripSplitStashButtonClick(object sender, EventArgs e)
         {
-            _stashCountUpdateNeeded = true;
             UICommands.StartStashDialog(this);
+            UpdateStashCount();
         }
 
         private void StashChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            _stashCountUpdateNeeded = true;
             UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash);
+            UpdateStashCount();
         }
 
         private void StashPopToolStripMenuItemClick(object sender, EventArgs e)
         {
-            _stashCountUpdateNeeded = true;
             UICommands.StashPop(this);
+            UpdateStashCount();
         }
 
         private void ManageStashesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            _stashCountUpdateNeeded = true;
             UICommands.StartStashDialog(this);
+            UpdateStashCount();
         }
 
         private void CreateStashToolStripMenuItemClick(object sender, EventArgs e)
         {
-            _stashCountUpdateNeeded = true;
             UICommands.StartStashDialog(this, false);
+            UpdateStashCount();
         }
 
         private void ExitToolStripMenuItemClick(object sender, EventArgs e)
@@ -1884,6 +1892,7 @@ namespace GitUI.CommandsDialogs
             HideVariableMainMenuItems();
             UnregisterPlugins();
             RevisionGrid.InvalidateCount();
+            _submoduleStatusProvider.Init();
 
             UICommands = new GitUICommands(module);
             if (Module.IsValidGitWorkingDir())
@@ -2552,7 +2561,6 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripButtonLevelUp_DropDownOpening(object sender, EventArgs e)
         {
-            InitiateSubmodulesUpdate();
             PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
@@ -2623,16 +2631,14 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void InitiateSubmodulesUpdate()
+        private void UpdateSubmodulesStructure(bool updateStatus = false)
         {
-            if (!_submoduleStatusUpdateNeeded)
-            {
-                return;
-            }
+            // Submodule status is updated on git-status updates. To make sure supermodule status is updated, update immediately
+            updateStatus = updateStatus || (AppSettings.ShowSubmoduleStatus && (_gitStatusMonitor != null) && (Module.SuperprojectModule != null));
 
             toolStripButtonLevelUp.ToolTipText = "";
-            _submoduleStatusUpdateNeeded = false;
             _submoduleStatusProvider.UpdateSubmodulesStatus(
+                updateStatus,
                 Module.WorkingDir, _noBranchTitle.Text,
                 () =>
                 {
