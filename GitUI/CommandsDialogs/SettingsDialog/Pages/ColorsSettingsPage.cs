@@ -43,7 +43,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkDrawAlternateBackColor.Checked = AppSettings.RevisionGraphDrawAlternateBackColor;
             DrawNonRelativesGray.Checked = AppSettings.RevisionGraphDrawNonRelativesGray;
             DrawNonRelativesTextGray.Checked = AppSettings.RevisionGraphDrawNonRelativesTextGray;
-            StripedBanchChange.Checked = AppSettings.StripedBranchChange;
             chkHighlightAuthored.Checked = AppSettings.HighlightAuthoredRevisions;
 
             _NO_TRANSLATE_ColorHighlightAuthoredLabel.BackColor = AppSettings.HighlightAuthoredRevisions ? AppSettings.AuthoredRevisionsHighlightColor : Color.LightYellow;
@@ -89,7 +88,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.RevisionGraphDrawAlternateBackColor = chkDrawAlternateBackColor.Checked;
             AppSettings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
             AppSettings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
-            AppSettings.StripedBranchChange = StripedBanchChange.Checked;
             AppSettings.HighlightAuthoredRevisions = chkHighlightAuthored.Checked;
             AppSettings.AuthoredRevisionsHighlightColor = chkHighlightAuthored.Checked ? _NO_TRANSLATE_ColorHighlightAuthoredLabel.BackColor : Color.LightYellow;
 
@@ -111,12 +109,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (MulticolorBranches.Checked)
             {
                 _NO_TRANSLATE_ColorGraphLabel.Visible = false;
-                StripedBanchChange.Enabled = true;
             }
             else
             {
                 _NO_TRANSLATE_ColorGraphLabel.Visible = true;
-                StripedBanchChange.Enabled = false;
             }
         }
 
