@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using GitCommands;
 using GitUIPluginInterfaces;
+using JetBrains.Annotations;
 using NUnit.Framework;
 
 namespace GitCommandsTests
@@ -502,6 +503,39 @@ namespace GitCommandsTests
                     helper.Dispose();
                 }
             }
+        }
+
+        [TestCase(false, @"stash list")]
+        [TestCase(true, @"--no-optional-locks stash list")]
+        public void GetStashesCmd(bool noLocks, string expected)
+        {
+            Assert.AreEqual(expected, _gitModule.GetStashesCmd(noLocks).ToString());
+        }
+
+        [TestCase(@"-c diff.submodule=short -c diff.noprefix=false diff --no-color -M -C --cached extra -- ""new"" ""old""", "new", "old", true, "extra", null, false)]
+        [TestCase(@"-c diff.submodule=short -c diff.noprefix=false diff --no-color extra -- ""new""", "new", "old", false, "extra", null, false)]
+        [TestCase(@"--no-optional-locks -c diff.submodule=short -c diff.noprefix=false diff --no-color -M -C --cached extra -- ""new"" ""old""", "new", "old", true, "extra", null, true)]
+        public void GetCurrentChangesCmd(string expected, string fileName, [CanBeNull] string oldFileName, bool staged,
+            string extraDiffArguments, Encoding encoding, bool noLocks)
+        {
+            Assert.AreEqual(expected, _gitModule.GetCurrentChangesCmd(fileName, oldFileName, staged,
+                extraDiffArguments, encoding, noLocks).ToString());
+        }
+
+        [TestCase(@"for-each-ref --sort=-committerdate --format=""%(objectname) %(refname)"" refs/heads/", false)]
+        [TestCase(@"--no-optional-locks for-each-ref --sort=-committerdate --format=""%(objectname) %(refname)"" refs/heads/", true)]
+        public void GetSortedRefsCommand(string expected, bool noLocks)
+        {
+            Assert.AreEqual(expected, _gitModule.GetSortedRefsCommand(noLocks).ToString());
+        }
+
+        [TestCase(@"show-ref --dereference", true, true, false)]
+        [TestCase(@"show-ref --tags", true, false, false)]
+        [TestCase(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", false, true, false)]
+        [TestCase(@"--no-optional-locks for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", false, true, true)]
+        public void GetRefsCmd(string expected, bool tags, bool branches, bool noLocks)
+        {
+            Assert.AreEqual(expected, _gitModule.GetRefsCmd(tags, branches, noLocks).ToString());
         }
     }
 }

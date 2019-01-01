@@ -1035,7 +1035,7 @@ namespace GitUI.CommandsDialogs
                     await Task.Delay(500);
                     await TaskScheduler.Default;
 
-                    var result = Module.GetStashes().Count;
+                    var result = Module.GetStashes(noLocks: true).Count;
 
                     await this.SwitchToMainThreadAsync();
 
@@ -2047,7 +2047,7 @@ namespace GitUI.CommandsDialogs
                     // Make sure there are never more than a 100 branches added to the menu
                     // GitExtensions will hang when the drop down is too large...
                     return Module
-                        .GetRefs(tags: false)
+                        .GetRefs(tags: false, branches: true, noLocks: true)
                         .Select(b => b.Name)
                         .Take(100);
                 }
