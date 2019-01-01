@@ -525,8 +525,54 @@ namespace GitCommandsTests.Git
                 GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, "message", null).Arguments);
 
             Assert.AreEqual(
-                "stash push -- a b",
+                "stash push -- \"a\" \"b\"",
                 GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, null, new[] { "a", "b" }).Arguments);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase("\t")]
+        public void StashSaveCmd_should_not_add_empty_message_full_stash(string theMessage)
+        {
+            Assert.AreEqual(
+               "stash save",
+               GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, theMessage, Array.Empty<string>()).Arguments);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase("\t")]
+        public void StashPushCmd_should_not_add_empty_message_partial_stash(string theMessage)
+        {
+            Assert.AreEqual(
+               "stash push -- \"a\" \"b\"",
+               GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, theMessage, new[] { "a", "b" }).Arguments);
+        }
+
+        [Test]
+        public void StashSaveCmd_should_add_message_if_provided_full_stash()
+        {
+            Assert.AreEqual(
+               "stash save \"test message\"",
+               GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, "test message", Array.Empty<string>()).Arguments);
+        }
+
+        [Test]
+        public void StashPushCmd_should_add_message_if_provided_partial_stash()
+        {
+            Assert.AreEqual(
+               "stash push -m \"test message\" -- \"a\" \"b\"",
+               GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, "test message", new[] { "a", "b" }).Arguments);
+        }
+
+        [Test]
+        public void StashPushCmd_should_not_add_null_or_empty_filenames()
+        {
+            Assert.AreEqual(
+               "stash push -- \"a\"",
+               GitCommandHelpers.StashSaveCmd(untracked: false, keepIndex: false, null, new[] { null, "", "a" }).Arguments);
         }
 
         [Test]
