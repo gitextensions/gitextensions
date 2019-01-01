@@ -633,48 +633,33 @@ namespace GitCommandsTests.Git
                 () => GitCommandHelpers.RebaseCmd("branch", false, false, false, false, from: "from", onto: null));
         }
 
-        [Test]
-        public void CleanCmd()
+        [TestCase("clean --dry-run", CleanMode.OnlyNonIgnored, true, false)]
+        [TestCase("clean -f", CleanMode.OnlyNonIgnored, false, false)]
+        [TestCase("clean -d -f", CleanMode.OnlyNonIgnored, false, true)]
+        [TestCase("clean -f paths", CleanMode.OnlyNonIgnored, false, false, "paths")]
+        [TestCase("clean -x -f", CleanMode.All, false, false)]
+        [TestCase("clean -X -f", CleanMode.OnlyIgnored, false, false)]
+        public void CleanCmd(string expected, CleanMode mode, bool dryRun, bool directories, string paths = null)
         {
-            Assert.AreEqual(
-                "clean --dry-run",
-                GitCommandHelpers.CleanCmd(CleanMode.OnlyNonIgnored, dryRun: true, directories: false).Arguments);
-            Assert.AreEqual(
-                "clean -f",
-                GitCommandHelpers.CleanCmd(CleanMode.OnlyNonIgnored, dryRun: false, directories: false).Arguments);
-            Assert.AreEqual(
-                "clean -d -f",
-                GitCommandHelpers.CleanCmd(CleanMode.OnlyNonIgnored, dryRun: false, directories: true).Arguments);
-            Assert.AreEqual(
-                "clean -f paths",
-                GitCommandHelpers.CleanCmd(CleanMode.OnlyNonIgnored, dryRun: false, directories: false, "paths").Arguments);
-
-            Assert.AreEqual(
-                "clean -x -f",
-                GitCommandHelpers.CleanCmd(CleanMode.All, dryRun: false, directories: false).Arguments);
-            Assert.AreEqual(
-                "clean -X -f",
-                GitCommandHelpers.CleanCmd(CleanMode.OnlyIgnored, dryRun: false, directories: false).Arguments);
+            Assert.AreEqual(expected,
+                GitCommandHelpers.CleanCmd(mode, dryRun, directories, paths).Arguments);
         }
 
         [Test]
-        public void ResetCmd()
+        public void ResetCmd_index_requires_treeish()
         {
             Assert.Throws<ArgumentException>(
                 () => GitCommandHelpers.ResetCmd(ResetMode.ResetIndex, file: "file.txt"));
-            Assert.AreEqual(
-                @"reset ""tree-ish"" -- ""file.txt""",
-                GitCommandHelpers.ResetCmd(ResetMode.ResetIndex, commit: "tree-ish", file: "file.txt").Arguments);
+        }
 
-            Assert.AreEqual(
-                @"reset --soft --",
-                GitCommandHelpers.ResetCmd(ResetMode.Soft).Arguments);
-            Assert.AreEqual(
-                @"reset --mixed --",
-                GitCommandHelpers.ResetCmd(ResetMode.Mixed).Arguments);
-            Assert.AreEqual(
-                @"reset --hard --",
-                GitCommandHelpers.ResetCmd(ResetMode.Hard).Arguments);
+        [TestCase(@"reset ""tree-ish"" -- ""file.txt""", ResetMode.ResetIndex, "tree-ish", "file.txt")]
+        [TestCase(@"reset --soft --", ResetMode.Soft)]
+        [TestCase(@"reset --mixed --", ResetMode.Mixed)]
+        [TestCase(@"reset --hard --", ResetMode.Hard)]
+        public void ResetCmd(string expected, ResetMode mode, string commit = null, string file = null)
+        {
+            Assert.AreEqual(expected,
+                GitCommandHelpers.ResetCmd(mode, commit, file).Arguments);
         }
 
         [Test]
