@@ -87,6 +87,7 @@ namespace GitCommands
         [CanBeNull]
         public string Body { get; set; }
         public bool HasMultiLineMessage { get; set; }
+        public bool HasNotes { get; set; }
 
         // UTF-8 when is null or empty
         public string MessageEncoding { get; set; }

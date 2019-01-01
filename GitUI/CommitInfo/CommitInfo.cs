@@ -208,10 +208,11 @@ namespace GitUI.CommitInfo
             {
                 var data = _commitDataManager.CreateFromRevision(_revision, _children);
 
-                if (_revision != null && _revision.Body == null)
+                if (_revision != null && (_revision.Body == null || (AppSettings.ShowGitNotes && !_revision.HasNotes)))
                 {
                     _commitDataManager.UpdateBody(data, out _);
                     _revision.Body = data.Body;
+                    _revision.HasNotes = true;
                 }
 
                 var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent != null);
