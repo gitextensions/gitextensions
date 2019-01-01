@@ -140,7 +140,7 @@ namespace GitCommands
             var treeGuid = ObjectId.Parse(lines[1]);
 
             // TODO: we can use this to add more relationship info like gitk does if wanted
-            var parentGuids = lines[2].Split(' ').Select(id => ObjectId.Parse(id)).ToList();
+            var parentGuids = lines[2].Split(' ').Where(id => id.IsNotNullOrWhitespace()).Select(id => ObjectId.Parse(id)).ToList();
             var author = module.ReEncodeStringFromLossless(lines[3]);
             var authorDate = DateTimeUtils.ParseUnixTime(lines[4]);
             var committer = module.ReEncodeStringFromLossless(lines[5]);
