@@ -2644,7 +2644,13 @@ namespace GitUI
                 case Commands.ShowFilteredBranches: ShowFilteredBranches(); break;
                 case Commands.ShowRemoteBranches: ToggleShowRemoteBranches(); break;
                 case Commands.ShowFirstParent: ShowFirstParent(); break;
-                case Commands.SelectCurrentRevision: SetSelectedRevision(new GitRevision(CurrentCheckout)); break;
+                case Commands.SelectCurrentRevision:
+                    if (CurrentCheckout != null)
+                    {
+                        SetSelectedRevision(new GitRevision(CurrentCheckout));
+                    }
+
+                    break;
                 case Commands.GoToCommit: MenuCommands.GotoCommitExecute(); break;
                 case Commands.GoToParent: goToParentToolStripMenuItem_Click(); break;
                 case Commands.GoToMergeBaseCommit: goToMergeBaseCommitToolStripMenuItem_Click(null, null); break;
