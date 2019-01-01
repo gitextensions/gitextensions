@@ -45,7 +45,7 @@ namespace GitUI.CommandsDialogs
 
         private void Preview_Click(object sender, EventArgs e)
         {
-            var cleanUpCmd = GitCommandHelpers.CleanUpCmd(true, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked, GetPathArgumentFromGui());
+            var cleanUpCmd = GitCommandHelpers.CleanCmd(GetCleanMode(), dryRun: true, directories: RemoveDirectories.Checked, paths: GetPathArgumentFromGui());
             string cmdOutput = FormProcess.ReadDialog(this, cleanUpCmd);
             PreviewOutput.Text = EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
         }
@@ -54,10 +54,30 @@ namespace GitUI.CommandsDialogs
         {
             if (MessageBox.Show(this, _reallyCleanupQuestion.Text, _reallyCleanupQuestionCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                var cleanUpCmd = GitCommandHelpers.CleanUpCmd(false, RemoveDirectories.Checked, RemoveNonIgnored.Checked, RemoveIngnored.Checked, GetPathArgumentFromGui());
+                var cleanUpCmd = GitCommandHelpers.CleanCmd(GetCleanMode(), dryRun: false, directories: RemoveDirectories.Checked, paths: GetPathArgumentFromGui());
                 string cmdOutput = FormProcess.ReadDialog(this, cleanUpCmd);
                 PreviewOutput.Text = EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
             }
+        }
+
+        private CleanMode GetCleanMode()
+        {
+            if (RemoveAll.Checked)
+            {
+                return CleanMode.All;
+            }
+
+            if (RemoveNonIgnored.Checked)
+            {
+                return CleanMode.OnlyNonIgnored;
+            }
+
+            if (RemoveIgnored.Checked)
+            {
+                return CleanMode.OnlyIgnored;
+            }
+
+            throw new NotSupportedException($"Unknown value for {nameof(CleanMode)}.");
         }
 
         [CanBeNull]

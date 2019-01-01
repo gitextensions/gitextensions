@@ -633,12 +633,12 @@ namespace GitUI
                 else
                 {
                     // Reset all changes.
-                    Module.ResetHard("");
+                    Module.Reset(ResetMode.Hard);
                 }
 
                 if (resetAction == FormResetChanges.ActionEnum.ResetAndDelete)
                 {
-                    Module.Clean(dryRun: false, directories: true);
+                    Module.Clean(CleanMode.OnlyNonIgnored, directories: true);
                 }
 
                 return true;

@@ -63,18 +63,18 @@ namespace GitUI.HelperDialogs
         {
             if (Soft.Checked)
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.ResetSoftCmd(Revision.Guid));
+                FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Soft, Revision.Guid));
             }
             else if (Mixed.Checked)
             {
-                FormProcess.ShowDialog(this, GitCommandHelpers.ResetMixedCmd(Revision.Guid));
+                FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Mixed, Revision.Guid));
             }
             else if (Hard.Checked)
             {
                 if (MessageBox.Show(this, _resetHardWarning.Text, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     var currentCheckout = Module.GetCurrentCheckout();
-                    if (FormProcess.ShowDialog(this, GitCommandHelpers.ResetHardCmd(Revision.Guid)))
+                    if (FormProcess.ShowDialog(this, GitCommandHelpers.ResetCmd(ResetMode.Hard, Revision.Guid)))
                     {
                         if (currentCheckout != Revision.ObjectId)
                         {
