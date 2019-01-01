@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using GitCommands;
@@ -14,12 +14,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
     //     *  <- parent revision
     public class RevisionGraphRevision
     {
+        private ImmutableStack<RevisionGraphRevision> _parents = ImmutableStack<RevisionGraphRevision>.Empty;
+        private ImmutableStack<RevisionGraphRevision> _children = ImmutableStack<RevisionGraphRevision>.Empty;
+
         public RevisionGraphRevision(ObjectId objectId, int guessScore)
         {
             Objectid = objectId;
 
-            Parents = new ConcurrentBag<RevisionGraphRevision>();
-            Children = new ConcurrentBag<RevisionGraphRevision>();
             StartSegments = new SynchronizedCollection<RevisionGraphSegment>();
 
             Score = guessScore;
@@ -58,7 +59,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             Score = minimalScore;
 
-            if (!Parents.Any())
+            if (Parents.IsEmpty)
             {
                 return Score;
             }
@@ -71,8 +72,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             {
                 var revision = stack.Pop();
 
-                foreach (var parent in revision.Parents.Where(r => r.Score <= revision.Score))
+                foreach (var parent in revision.Parents)
                 {
+                    if (parent.Score > revision.Score)
+                    {
+                        continue;
+                    }
+
                     parent.Score = revision.Score + 1;
 
                     Debug.Assert(parent.Score > revision.Score, "Reorder score failed.");
@@ -89,8 +95,8 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         public ObjectId Objectid { get; set; }
 
-        public ConcurrentBag<RevisionGraphRevision> Parents { get; }
-        public ConcurrentBag<RevisionGraphRevision> Children { get; }
+        public ImmutableStack<RevisionGraphRevision> Parents => _parents;
+        public ImmutableStack<RevisionGraphRevision> Children => _children;
         public SynchronizedCollection<RevisionGraphSegment> StartSegments { get; }
 
         // Mark this commit, and all its parents, as relative. Used for branch highlighting.
@@ -102,7 +108,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return;
             }
 
-            if (!Parents.Any())
+            if (Parents.IsEmpty)
             {
                 IsRelative = true;
                 return;
@@ -117,8 +123,13 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                 revision.IsRelative = true;
 
-                foreach (var parent in revision.Parents.Where(r => !r.IsRelative))
+                foreach (var parent in revision.Parents)
                 {
+                    if (parent.IsRelative)
+                    {
+                        continue;
+                    }
+
                     stack.Push(parent);
                 }
             }
@@ -127,7 +138,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         public void AddParent(RevisionGraphRevision parent, out int maxScore)
         {
             // Generate a LaneColor used for rendering
-            if (Parents.Any())
+            if (!Parents.IsEmpty)
             {
                 parent.LaneColor = parent.Score;
             }
@@ -144,7 +155,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 parent.MakeRelative();
             }
 
-            Parents.Add(parent);
+            ImmutableInterlocked.Push(ref _parents, parent);
             parent.AddChild(this);
 
             maxScore = parent.EnsureScoreIsAbove(Score + 1);
@@ -154,7 +165,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
         private void AddChild(RevisionGraphRevision child)
         {
-            Children.Add(child);
+            ImmutableInterlocked.Push(ref _children, child);
         }
     }
 }
