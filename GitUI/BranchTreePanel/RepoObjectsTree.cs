@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -163,34 +164,45 @@ namespace GitUI.BranchTreePanel
                 treeMain.BeginUpdate();
                 _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = true);
                 var tasks = _rootNodes.Select(r => r.ReloadAsync(token)).ToArray();
-                await Task.WhenAll(tasks).ConfigureAwait(false);
+
+                // We ConfigureAwait(true) so that we're back on the UI thread when tasks are complete
+                await Task.WhenAll(tasks).ConfigureAwait(true);
+                ThreadHelper.AssertOnUIThread();
             }
             finally
             {
-                await this.SwitchToMainThreadAsync();
                 if (!token.IsCancellationRequested)
                 {
                     Enabled = true;
+                }
+
+                // Need to end the update for the selected node to scroll into view below under certain conditions
+                // (e.g. when the treeview gets larger, trying to make the selected node visible doesn't work).
+                treeMain.EndUpdate();
+
+                if (!token.IsCancellationRequested)
+                {
                     var selectedNode = treeMain.AllNodes().FirstOrDefault(n =>
                         _rootNodes.Any(rn => $"{rn.TreeViewNode.FullPath}{treeMain.PathSeparator}{currentBranch}" == n.FullPath));
                     if (selectedNode != null)
                     {
-                        treeMain.SelectedNode = selectedNode;
-                        ExpandPathToSelectedNode();
+                        SetSelectedNode(selectedNode);
                     }
 
                     _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = false);
                 }
-
-                treeMain.EndUpdate();
             }
+        }
 
-            void ExpandPathToSelectedNode()
-            {
-                treeMain.Scrollable = false; // disable scrolling, so the next call does not horizontally (nor vertically) scroll
-                treeMain.SelectedNode.EnsureVisible();
-                treeMain.Scrollable = true;
-            }
+        private void SetSelectedNode(TreeNode node)
+        {
+            treeMain.SelectedNode = node;
+            treeMain.SelectedNode.EnsureVisible();
+
+            // EnsureVisible leads to horizontal scrolling in some cases. We make sure to force horizontal
+            // scroll back to 0. Note that we use SendMessage rather than SetScrollPos as the former works
+            // outside of Begin/EndUpdate.
+            NativeMethods.SendMessageInt((IntPtr)treeMain.Handle, NativeMethods.WM_HSCROLL, (IntPtr)NativeMethods.SB_LEFT, IntPtr.Zero);
         }
 
         protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
