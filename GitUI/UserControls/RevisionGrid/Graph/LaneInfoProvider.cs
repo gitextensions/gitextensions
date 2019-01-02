@@ -92,7 +92,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             {
                 // try the first child and its children
                 parent = node;
-                node = node.Children.First();
+                node = node.Children.Last(); // note: Children are stored in reverse order
             }
         }
 
@@ -128,7 +128,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </param>
         private bool CheckForMerge([NotNull] RevisionGraphRevision node, [CanBeNull] RevisionGraphRevision parent)
         {
-            bool isTheFirstBranch = parent == null || node.Parents.IsEmpty || node.Parents.First() == parent;
+            bool isTheFirstBranch = parent == null || node.Parents.IsEmpty || node.Parents.Last() == parent; // note: Parents are stored in reverse order
             string mergedInto;
             string mergedWith;
             (mergedInto, mergedWith) = ParseMergeMessage(node.GitRevision.Subject, appendPullRequest: isTheFirstBranch);
