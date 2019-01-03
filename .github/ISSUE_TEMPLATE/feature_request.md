@@ -18,6 +18,14 @@ about: Propose a new feature
 -->
 
 
+## Environment
+
+<!-- Use Help/About in Git Extensions to copy this information to the clipboard automatically. -->
+
+- GitExtensions version:
+- GIT version: 
+- OS version: 
+- .NET version: 
 
 
 <!--
