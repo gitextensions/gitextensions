@@ -54,13 +54,13 @@
         <File Source="..\GitExtensions\bin\$(var.Configuration)\GitExtensions.exe.config" />
       </Component>
       <Component Id="System.IO.Abstractions.dll" Guid="*">
-        <File Source="..\GitUI\bin\$(var.Configuration)\System.IO.Abstractions.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\System.IO.Abstractions.dll" />
       </Component>
       <Component Id="GitCommands.dll" Guid="*">
-        <File Source="..\GitCommands\bin\$(var.Configuration)\GitCommands.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\GitCommands.dll" />
       </Component>
       <Component Id="GitExtUtils.dll" Guid="*">
-        <File Source="..\GitExtUtils\bin\$(var.Configuration)\GitExtUtils.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\GitExtUtils.dll" />
       </Component>
       <Component Id="GitUI.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\GitUI.dll" />
@@ -69,22 +69,22 @@
         <File Source="..\GitExtensions\bin\$(var.Configuration)\ConEmu.WinForms.dll" />
       </Component>
       <Component Id="NetSpell.SpellChecker.dll" Guid="*">
-        <File Source="..\NetSpell.SpellChecker\bin\$(var.Configuration)\NetSpell.SpellChecker.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\NetSpell.SpellChecker.dll" />
       </Component>
       <Component Id="ResourceManager.dll" Guid="*">
-        <File Source="..\ResourceManager\bin\$(var.Configuration)\ResourceManager.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\ResourceManager.dll" />
       </Component>
       <Component Id="GitUIPluginInterfaces.dll" Guid="*">
-        <File Source="..\Plugins\GitUIPluginInterfaces\bin\$(var.Configuration)\GitUIPluginInterfaces.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\GitUIPluginInterfaces.dll" />
       </Component>
       <Component Id="ICSharpCode.SharpZipLib.dll" Guid="*">
-        <File Source="..\bin\ICSharpCode.SharpZipLib.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\ICSharpCode.SharpZipLib.dll" />
       </Component>
       <Component Id="Git.hub.dll" Guid="*">
-        <File Source="..\Externals\Git.hub\Git.hub\bin\$(var.Configuration)\Git.hub.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Git.hub.dll" />
       </Component>
       <Component Id="PSTaskDialog.dll" Guid="*">
-        <File Source="..\bin\PSTaskDialog.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\PSTaskDialog.dll" />
       </Component>
       <Component Id="RestSharp.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\RestSharp.dll" />
@@ -102,7 +102,7 @@
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.WindowsAPICodePack.Shell.dll" />
       </Component>
       <Component Id="NBug.dll" Guid="*">
-        <File Source="..\Externals\NBug\NBug\bin\$(var.Configuration)\NBug.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\NBug.dll" />
       </Component>
       <Component Id="SmartFormat.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\SmartFormat.dll" />
@@ -490,49 +490,49 @@
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
       <Component Id="DeleteUnusedBranches.dll" Guid="*">
-        <File Source="..\Plugins\DeleteUnusedBranches\bin\$(var.Configuration)\DeleteUnusedBranches.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\DeleteUnusedBranches.dll" />
       </Component>
       <Component Id="AutoCompileSubmodules.dll" Guid="*">
-        <File Source="..\Plugins\AutoCompileSubmodules\bin\$(var.Configuration)\AutoCompileSubmodules.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\AutoCompileSubmodules.dll" />
       </Component>
       <Component Id="BackgroundFetch.dll" Guid="*">
-        <File Source="..\Plugins\BackgroundFetch\bin\$(var.Configuration)\BackgroundFetch.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\BackgroundFetch.dll" />
       </Component>
       <Component Id="CreateLocalBranches.dll" Guid="*">
-        <File Source="..\Plugins\CreateLocalBranches\bin\$(var.Configuration)\CreateLocalBranches.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\CreateLocalBranches.dll" />
       </Component>
       <Component Id="GitStatistics.dll" Guid="*">
-        <File Source="..\Plugins\Statistics\GitStatistics\bin\$(var.Configuration)\GitStatistics.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\GitStatistics.dll" />
       </Component>
       <Component Id="GitImpact.dll" Guid="*">
-        <File Source="..\Plugins\Statistics\GitImpact\bin\$(var.Configuration)\GitImpact.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\GitImpact.dll" />
       </Component>
       <Component Id="Gource.dll" Guid="*">
-        <File Source="..\Plugins\Gource\bin\$(var.Configuration)\Gource.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\Gource.dll" />
       </Component>
       <Component Id="Github3.dll" Guid="*">
-        <File Source="..\Plugins\Github3\bin\$(var.Configuration)\Github3.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\GitHub3.dll" />
       </Component>
       <Component Id="GitFlow.dll" Guid="*">
-        <File Source="..\Plugins\GitFlow\bin\$(var.Configuration)\GitFlow.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\GitFlow.dll" />
       </Component>
       <Component Id="Gerrit.dll" Guid="*">
-        <File Source="..\Plugins\Gerrit\bin\$(var.Configuration)\Gerrit.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\Gerrit.dll" />
       </Component>
       <Component Id="ReleaseNotesGenerator.dll" Guid="*">
-        <File Source="..\Plugins\ReleaseNotesGenerator\bin\$(var.Configuration)\ReleaseNotesGenerator.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\ReleaseNotesGenerator.dll" />
       </Component>
       <Component Id="Newtonsoft.Json.dll" Guid="*">
         <File Source="..\Plugins\Gerrit\bin\$(var.Configuration)\Newtonsoft.Json.dll" />
       </Component>
       <Component Id="JiraCommitHintPlugin.dll" Guid="*">
-        <File Source="..\Plugins\JiraCommitHintPlugin\bin\$(var.Configuration)\JiraCommitHintPlugin.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\JiraCommitHintPlugin.dll" />
       </Component>
       <Component Id="Atlassian.Jira.dll" Guid="*">
-        <File Source="..\Plugins\JiraCommitHintPlugin\bin\$(var.Configuration)\Atlassian.Jira.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\Atlassian.Jira.dll" />
       </Component>
       <Component Id="NString.dll" Guid="*">
-        <File Source="..\Plugins\JiraCommitHintPlugin\bin\$(var.Configuration)\NString.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\NString.dll" />
       </Component>
      
       <!--Remove unused dll, installed in versions <= 2.31-->
@@ -548,123 +548,122 @@
         <RemoveRegistryValue Id="GithubAccess" Root="HKCU" Key="$(var.AppRegKey)" Name="Githubpreferred access method" />
       </Component>
       <Component Id="FindLargeFiles.dll" Guid="*">
-        <File Source="..\Plugins\FindLargeFiles\bin\$(var.Configuration)\FindLargeFiles.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\FindLargeFiles.dll" />
       </Component>
       <Component Id="ProxySwitcher.dll" Guid="*">
-        <File Source="..\Plugins\ProxySwitcher\bin\$(var.Configuration)\ProxySwitcher.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\ProxySwitcher.dll" />
       </Component>
       <Component Id="Bitbucket.dll" Guid="*">
-        <File Source="..\Plugins\Bitbucket\bin\$(var.Configuration)\Bitbucket.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\Bitbucket.dll" />
         <!--Renamed dll, installed in versions <= 2.50.02-->
         <RemoveFile Name="Stash.dll" Id="Stash.dll" On="both" />
       </Component>
       <Component Id="TeamCityIntegration.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\$(var.Configuration)\TeamCityIntegration.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\TeamCityIntegration.dll" />
       </Component>
       <Component Id="AppVeyorIntegration.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\AppVeyorIntegration\bin\$(var.Configuration)\AppVeyorIntegration.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\AppVeyorIntegration.dll" />
       </Component>
       <Component Id="JenkinsIntegration.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\JenkinsIntegration\bin\$(var.Configuration)\JenkinsIntegration.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\JenkinsIntegration.dll" />
       </Component>
       <Component Id="TfsIntegration.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TfsIntegration\bin\$(var.Configuration)\TfsIntegration.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\TfsIntegration.dll" />
       </Component>
       <Component Id="TfsInterop.Vs2012.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2012\bin\$(var.Configuration)\TfsInterop.Vs2012.dll" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Plugins\TfsInterop.Vs2012.dll" />
       </Component>
       <!-- Component Id="TfsInterop.Vs2013.dll" Guid="*">
                 <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2013\bin\$(var.Configuration)\TfsInterop.Vs2013.dll" />
             </Component -->
-      <Component Id="TfsInterop.Vs2015.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\$(var.Configuration)\TfsInterop.Vs2015.dll" />
-      </Component>
-      <Component Id="AzureDevOpsIntegration.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\AzureDevOpsIntegration\bin\$(var.Configuration)\AzureDevOpsIntegration.dll" />
-      </Component>
-      <Component Id="Microsoft.VisualStudio.Services.WebApi.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\$(var.Configuration)\Microsoft.VisualStudio.Services.WebApi.dll" />
-      </Component>
-      <Component Id="Microsoft.TeamFoundation.Build2.WebApi.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\$(var.Configuration)\Microsoft.TeamFoundation.Build2.WebApi.dll" />
-      </Component>
-      <Component Id="Microsoft.TeamFoundation.Common.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\$(var.Configuration)\Microsoft.TeamFoundation.Common.dll" />
-      </Component>
-      <Component Id="Microsoft.TeamFoundation.Core.WebApi.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\$(var.Configuration)\Microsoft.TeamFoundation.Core.WebApi.dll" />
-      </Component>
-      <Component Id="Microsoft.VisualStudio.Services.Common.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\$(var.Configuration)\Microsoft.VisualStudio.Services.Common.dll" />
-      </Component>
-      <Component Id="System.Net.Http.Formatting.dll" Guid="*">
-        <File Source="..\Plugins\BuildServerIntegration\TfsInterop.Vs2015\bin\$(var.Configuration)\System.Net.Http.Formatting.dll" />
-      </Component>
-    </DirectoryRef>
-    <DirectoryRef Id="DiffScriptsDir">
-      <Component Id="mergedoc.js" Guid="*">
-        <File Source="..\Bin\Diff-Scripts\merge-doc.js" />
-      </Component>
-      <Component Id="mergeods.vbs" Guid="*">
-        <File Source="..\Bin\Diff-Scripts\merge-ods.vbs" />
-      </Component>
-      <Component Id="License.txt" Guid="*">
-        <File Source="..\Bin\Diff-Scripts\TortoiseSVN License.txt" />
-      </Component>
-    </DirectoryRef>
-    <DirectoryRef Id="DictionariesDir">
-      <Component Id="deDE.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\de-DE.dic" />
-      </Component>
-      <Component Id="enAU.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\en-AU.dic" />
-      </Component>
-      <Component Id="enCA.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\en-CA.dic" />
-      </Component>
-      <Component Id="enGB.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\en-GB.dic" />
-      </Component>
-      <Component Id="enUS.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\en-US.dic" />
-      </Component>
-      <Component Id="esES.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\es-ES.dic" />
-      </Component>
-      <Component Id="esMX.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\es-MX.dic" />
-      </Component>
-      <Component Id="frFR.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\fr-FR.dic" />
-      </Component>
-      <Component Id="itIT.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\it-IT.dic" />
-      </Component>
-      <Component Id="nlNL.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\nl-NL.dic" />
-      </Component>
-      <Component Id="roRO.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\ro-RO.dic" />
-      </Component>
-      <Component Id="ruRU.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\ru-RU.dic" />
-      </Component>
-      <Component Id="plPL.dic" Guid="*">
-        <File Source="..\Bin\Dictionaries\pl-PL.dic" />
-      </Component>
-    </DirectoryRef>
-
-    <DirectoryRef Id="TranslationsDir">
-      <Component Id="English.gif" Guid="*">
-        <File Source="..\GitUI\Translation\English.gif" />
-      </Component>
-      <Component Id="English.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\English.xlf" />
-      </Component>
-      <Component Id="English.Plugins.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\English.Plugins.xlf" />
-      </Component>
-      <!-- 
+            <Component Id="TfsInterop.Vs2015.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\TfsInterop.Vs2015.dll" />
+            </Component>
+            <Component Id="AzureDevOpsIntegration.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\AzureDevOpsIntegration.dll" />
+            </Component>
+            <Component Id="Microsoft.VisualStudio.Services.WebApi.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Microsoft.VisualStudio.Services.WebApi.dll" />
+            </Component>
+            <Component Id="Microsoft.TeamFoundation.Build2.WebApi.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Microsoft.TeamFoundation.Build2.WebApi.dll" />
+            </Component>
+            <Component Id="Microsoft.TeamFoundation.Common.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Microsoft.TeamFoundation.Common.dll" />
+            </Component>
+            <Component Id="Microsoft.TeamFoundation.Core.WebApi.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Microsoft.TeamFoundation.Core.WebApi.dll" />
+            </Component>
+            <Component Id="Microsoft.VisualStudio.Services.Common.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\Microsoft.VisualStudio.Services.Common.dll" />
+            </Component>
+            <Component Id="System.Net.Http.Formatting.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\System.Net.Http.Formatting.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="DiffScriptsDir">
+            <Component Id="mergedoc.js" Guid="*">
+                <File Source="..\Bin\Diff-Scripts\merge-doc.js" />
+            </Component>
+            <Component Id="mergeods.vbs" Guid="*">
+                <File Source="..\Bin\Diff-Scripts\merge-ods.vbs" />
+            </Component>
+            <Component Id="License.txt" Guid="*">
+                <File Source="..\Bin\Diff-Scripts\TortoiseSVN License.txt" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="DictionariesDir">
+            <Component Id="deDE.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\de-DE.dic" />
+            </Component>
+            <Component Id="enAU.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\en-AU.dic" />
+            </Component>
+            <Component Id="enCA.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\en-CA.dic" />
+            </Component>
+            <Component Id="enGB.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\en-GB.dic" />
+            </Component>
+            <Component Id="enUS.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\en-US.dic" />
+            </Component>
+            <Component Id="esES.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\es-ES.dic" />
+            </Component>
+            <Component Id="esMX.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\es-MX.dic" />
+            </Component>
+            <Component Id="frFR.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\fr-FR.dic" />
+            </Component>
+            <Component Id="itIT.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\it-IT.dic" />
+            </Component>
+            <Component Id="nlNL.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\nl-NL.dic" />
+            </Component>
+            <Component Id="roRO.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\ro-RO.dic" />
+            </Component>
+            <Component Id="ruRU.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\ru-RU.dic" />
+            </Component>
+            <Component Id="plPL.dic" Guid="*">
+                <File Source="..\Bin\Dictionaries\pl-PL.dic" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="TranslationsDir">
+            <Component Id="English.gif" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\English.gif" />
+            </Component>
+            <Component Id="English.xlf" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\English.xlf" />
+            </Component>
+            <Component Id="English.Plugins.xlf" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\English.Plugins.xlf" />
+            </Component>
+            <!-- 
       <Component Id="Czech.xlf" Guid="*">
         <File Source="..\GitUI\Translation\Czech.xlf" />
       </Component>
@@ -676,31 +675,31 @@
       </Component>
       -->
       <Component Id="Dutch.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\Dutch.xlf" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\Dutch.xlf" />
       </Component>
       <Component Id="Dutch.Plugins.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\Dutch.Plugins.xlf" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\Dutch.Plugins.xlf" />
       </Component>
       <Component Id="Dutch.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Dutch.gif" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\Dutch.gif" />
       </Component>
       <Component Id="French.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\French.xlf" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\French.xlf" />
       </Component>
       <Component Id="French.Plugins.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\French.Plugins.xlf" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\French.Plugins.xlf" />
       </Component>
       <Component Id="French.gif" Guid="*">
-        <File Source="..\GitUI\Translation\French.gif" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\French.gif" />
       </Component>
       <Component Id="German.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\German.xlf" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\German.xlf" />
       </Component>
       <Component Id="German.Plugins.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\German.Plugins.xlf" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\German.Plugins.xlf" />
       </Component>
       <Component Id="German.gif" Guid="*">
-        <File Source="..\GitUI\Translation\German.gif" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\German.gif" />
       </Component>
       <!--
       <Component Id="Italian.xlf" Guid="*">
@@ -732,31 +731,31 @@
       </Component>
       -->
       <Component Id="Polish.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\Polish.xlf" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\Polish.xlf" />
       </Component>
       <Component Id="Polish.Plugins.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\Polish.Plugins.xlf" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\Polish.Plugins.xlf" />
       </Component>
       <Component Id="Polish.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Polish.gif" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\Polish.gif" />
       </Component>
       <Component Id="Russian.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\Russian.xlf" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\Russian.xlf" />
       </Component>
       <Component Id="Russian.Plugins.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\Russian.Plugins.xlf" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\Russian.Plugins.xlf" />
       </Component>
       <Component Id="Russian.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Russian.gif" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\Russian.gif" />
       </Component>
       <Component Id="SimplifiedChinese.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\Simplified Chinese.xlf" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\Simplified Chinese.xlf" />
       </Component>
       <Component Id="SimplifiedChinese.Plugins.xlf" Guid="*">
-        <File Source="..\GitUI\Translation\Simplified Chinese.Plugins.xlf" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\Simplified Chinese.Plugins.xlf" />
       </Component>
       <Component Id="SimplifiedChinese.gif" Guid="*">
-        <File Source="..\GitUI\Translation\Simplified Chinese.gif" />
+        <File Source="..\gitextensions\bin\$(var.Configuration)\Translation\Simplified Chinese.gif" />
       </Component>
       <!--
       <Component Id="Spanish.xlf" Guid="*">
