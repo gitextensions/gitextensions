@@ -43,7 +43,8 @@ about: Report a bug or other issue
 - OS version: 
 - .NET version: 
 
-
+## Diagnostics
+<!--At your discretion, use tools found  on this [wiki](https://github.com/gitextensions/gitextensions/wiki/Diagnosing-problems) page-->
 
 <!--
     ❤️ Git Extensions? Please consider supporting our collective:
