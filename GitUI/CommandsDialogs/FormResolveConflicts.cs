@@ -633,7 +633,7 @@ namespace GitUI.CommandsDialogs
             {
                 if (ShowAbortMessage())
                 {
-                    Module.ResetHard("");
+                    Module.Reset(ResetMode.Hard);
                     Close();
                 }
             }

@@ -812,33 +812,12 @@ namespace GitUI.CommandsDialogs
                 GitModule module = Module.GetSubmodule(name);
 
                 // Reset all changes.
-                module.ResetHard("");
+                module.Reset(ResetMode.Hard);
 
                 // Also delete new files, if requested.
                 if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
                 {
-                    var workTreeFiles = module.GetWorkTreeFiles();
-                    foreach (var file in workTreeFiles.Where(file => file.IsNew))
-                    {
-                        try
-                        {
-                            string path = _fullPathResolver.Resolve(file.Name);
-                            if (File.Exists(path))
-                            {
-                                File.Delete(path);
-                            }
-                            else
-                            {
-                                Directory.Delete(path, true);
-                            }
-                        }
-                        catch (IOException)
-                        {
-                        }
-                        catch (UnauthorizedAccessException)
-                        {
-                        }
-                    }
+                    module.Clean(CleanMode.OnlyNonIgnored, directories: true);
                 }
             }
 

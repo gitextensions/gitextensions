@@ -634,29 +634,47 @@ namespace GitCommandsTests.Git
         }
 
         [Test]
-        public void CleanUpCmd()
+        public void CleanCmd()
         {
             Assert.AreEqual(
-                "clean -f",
-                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: false).Arguments);
-            Assert.AreEqual(
                 "clean --dry-run",
-                GitCommandHelpers.CleanUpCmd(dryRun: true, directories: false, nonIgnored: true, ignored: false).Arguments);
+                GitCommandHelpers.CleanCmd(CleanMode.OnlyNonIgnored, dryRun: true, directories: false).Arguments);
+            Assert.AreEqual(
+                "clean -f",
+                GitCommandHelpers.CleanCmd(CleanMode.OnlyNonIgnored, dryRun: false, directories: false).Arguments);
             Assert.AreEqual(
                 "clean -d -f",
-                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: true, nonIgnored: true, ignored: false).Arguments);
-            Assert.AreEqual(
-                "clean -x -f",
-                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: false, ignored: false).Arguments);
-            Assert.AreEqual(
-                "clean -X -f",
-                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: true).Arguments);
-            Assert.AreEqual(
-                "clean -X -f",
-                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: false, ignored: true).Arguments);
+                GitCommandHelpers.CleanCmd(CleanMode.OnlyNonIgnored, dryRun: false, directories: true).Arguments);
             Assert.AreEqual(
                 "clean -f paths",
-                GitCommandHelpers.CleanUpCmd(dryRun: false, directories: false, nonIgnored: true, ignored: false, "paths").Arguments);
+                GitCommandHelpers.CleanCmd(CleanMode.OnlyNonIgnored, dryRun: false, directories: false, "paths").Arguments);
+
+            Assert.AreEqual(
+                "clean -x -f",
+                GitCommandHelpers.CleanCmd(CleanMode.All, dryRun: false, directories: false).Arguments);
+            Assert.AreEqual(
+                "clean -X -f",
+                GitCommandHelpers.CleanCmd(CleanMode.OnlyIgnored, dryRun: false, directories: false).Arguments);
+        }
+
+        [Test]
+        public void ResetCmd()
+        {
+            Assert.Throws<ArgumentException>(
+                () => GitCommandHelpers.ResetCmd(ResetMode.ResetIndex, file: "file.txt"));
+            Assert.AreEqual(
+                @"reset ""tree-ish"" -- ""file.txt""",
+                GitCommandHelpers.ResetCmd(ResetMode.ResetIndex, commit: "tree-ish", file: "file.txt").Arguments);
+
+            Assert.AreEqual(
+                @"reset --soft --",
+                GitCommandHelpers.ResetCmd(ResetMode.Soft).Arguments);
+            Assert.AreEqual(
+                @"reset --mixed --",
+                GitCommandHelpers.ResetCmd(ResetMode.Mixed).Arguments);
+            Assert.AreEqual(
+                @"reset --hard --",
+                GitCommandHelpers.ResetCmd(ResetMode.Hard).Arguments);
         }
 
         [Test]

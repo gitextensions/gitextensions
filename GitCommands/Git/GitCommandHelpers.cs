@@ -18,40 +18,71 @@ namespace GitCommands
     public enum UntrackedFilesMode
     {
         /// <summary>Default is <see cref="All"/>; when <see cref="UntrackedFilesMode"/> is NOT used, 'git status' uses <see cref="Normal"/>.</summary>
-        Default = 1,
+        Default = 0,
 
         /// <summary>Show no untracked files.</summary>
-        No = 2,
+        No,
 
         /// <summary>Shows untracked files and directories.</summary>
-        Normal = 3,
+        Normal,
 
         /// <summary>Shows untracked files and directories, and individual files in untracked directories.</summary>
-        All = 4
+        All
     }
 
     /// <summary>Specifies whether to ignore changes to submodules when looking for changes (e.g. via 'git status').</summary>
     public enum IgnoreSubmodulesMode
     {
         /// <summary>Default is <see cref="All"/> (hides all changes to submodules).</summary>
-        Default = 1,
+        Default = 0,
 
         /// <summary>Consider a submodule modified when it either:
         ///  contains untracked or modified files,
         ///  or its HEAD differs from the commit recorded in the superproject.</summary>
-        None = 2,
+        None,
 
         /// <summary>Submodules NOT considered dirty when they only contain <i>untracked</i> content
         ///  (but they are still scanned for modified content).</summary>
-        Untracked = 3,
+        Untracked,
 
         /// <summary>Ignores all changes to the work tree of submodules,
         ///  only changes to the <i>commits</i> stored in the superproject are shown.</summary>
-        Dirty = 4,
+        Dirty,
 
         /// <summary>Hides all changes to submodules
         ///  (and suppresses the output of submodule summaries when the config option status.submodulesummary is set).</summary>
-        All = 5
+        All
+    }
+
+    /// <summary>Mode for 'git clean'</summary>
+    public enum CleanMode
+    {
+        /// <summary>Only untracked files not in .gitignore, the default. Git clean without either -x or -X option.</summary>
+        OnlyNonIgnored = 0,
+
+        /// <summary>Only files included in any ignore list (.gitignore, $GIT_DIR/info/exclude). Git clean with -X option.</summary>
+        OnlyIgnored,
+
+        /// <summary>All files not tracked by Git. Git clean with  -x option.</summary>
+        All
+    }
+
+    /// <summary>Arguments to 'git reset'.</summary>
+    public enum ResetMode
+    {
+        /// <summary>(no option)</summary>
+        ResetIndex = 0,
+
+        /// <summary>--soft</summary>
+        Soft,
+
+        /// <summary>--mixed</summary>
+        Mixed,
+
+        /// <summary>--hard</summary>
+        Hard
+
+        // All options are not implemented, like --merge, --keep, --patch
     }
 
     public static class GitCommandHelpers
@@ -166,30 +197,26 @@ namespace GitCommands
             };
         }
 
-        public static ArgumentString ResetSoftCmd(string commit)
+        /// <summary>
+        /// The Git command line for reset
+        /// </summary>
+        /// <param name="mode">Reset mode</param>
+        /// <param name="commit">Optional commit-ish (for reset-index this is tree-ish and mandatory)</param>
+        /// <param name="file">Optional file to reset</param>
+        /// <returns>Argument string</returns>
+        public static ArgumentString ResetCmd(ResetMode mode, string commit = null, string file = null)
         {
-            return new GitArgumentBuilder("reset")
+            if (mode == ResetMode.ResetIndex && commit.IsNullOrWhiteSpace())
             {
-                "--soft",
-                commit.QuoteNE()
-            };
-        }
+                throw new ArgumentException("reset to index requires a tree-ish parameter");
+            }
 
-        public static ArgumentString ResetMixedCmd(string commit)
-        {
             return new GitArgumentBuilder("reset")
             {
-                "--mixed",
-                commit.QuoteNE()
-            };
-        }
-
-        public static ArgumentString ResetHardCmd(string commit)
-        {
-            return new GitArgumentBuilder("reset")
-            {
-                "--hard",
-                commit.QuoteNE()
+                mode,
+                commit.QuoteNE(),
+                "--",
+                file?.ToPosixPath().QuoteNE()
             };
         }
 
@@ -434,15 +461,20 @@ namespace GitCommands
             };
         }
 
-        public static ArgumentString CleanUpCmd(bool dryRun, bool directories, bool nonIgnored, bool ignored, string paths = null)
+        /// <summary>
+        /// Arguments for git-clean
+        /// </summary>
+        /// <param name="mode">The cleanup mode what to delete</param>
+        /// <param name="dryRun">Only show what would be deleted</param>
+        /// <param name="directories">Delete untracked directories too</param>
+        /// <param name="paths">Limit to specific paths</param>
+        public static ArgumentString CleanCmd(CleanMode mode, bool dryRun, bool directories, string paths = null)
         {
             return new GitArgumentBuilder("clean")
             {
+                mode,
                 { directories, "-d" },
-                { !nonIgnored && !ignored, "-x" },
-                { ignored, "-X" },
-                { dryRun, "--dry-run" },
-                { !dryRun, "-f" },
+                { dryRun, "--dry-run", "-f" },
                 paths
             };
         }

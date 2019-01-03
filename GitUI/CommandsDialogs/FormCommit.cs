@@ -1450,7 +1450,7 @@ namespace GitUI.CommandsDialogs
             }
             else
             {
-                Module.ResetMixed("HEAD");
+                Module.Reset(ResetMode.Mixed);
             }
 
             Initialize();
@@ -2887,33 +2887,12 @@ namespace GitUI.CommandsDialogs
                 GitModule module = Module.GetSubmodule(item.Name);
 
                 // Reset all changes.
-                module.ResetHard("");
+                module.Reset(ResetMode.Hard);
 
                 // Also delete new files, if requested.
                 if (resetType == FormResetChanges.ActionEnum.ResetAndDelete)
                 {
-                    var submoduleUnstagedFiles = module.GetWorkTreeFiles();
-                    foreach (var file in submoduleUnstagedFiles.Where(file => file.IsNew))
-                    {
-                        try
-                        {
-                            string path = _fullPathResolver.Resolve(file.Name);
-                            if (File.Exists(path))
-                            {
-                                File.Delete(path);
-                            }
-                            else
-                            {
-                                Directory.Delete(path, true);
-                            }
-                        }
-                        catch (IOException)
-                        {
-                        }
-                        catch (UnauthorizedAccessException)
-                        {
-                        }
-                    }
+                    module.Clean(CleanMode.OnlyNonIgnored, directories: true);
                 }
             }
 
