@@ -983,11 +983,6 @@ namespace GitUI
 
         private void FileStatusListView_ClientSizeChanged(object sender, EventArgs e)
         {
-            if (!IsHandleCreated || !FileStatusListView.IsHandleCreated || !FileStatusListView.Created || DesignMode)
-            {
-                return;
-            }
-
             UpdateColumnWidth();
         }
 
