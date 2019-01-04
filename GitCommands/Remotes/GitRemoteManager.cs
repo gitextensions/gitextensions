@@ -127,15 +127,51 @@ namespace GitCommands.Remotes
         }
 
         /// <summary>
-        /// Retrieves disabled remotes from the .git/config file.
+        /// Retrieves disabled remotes from .git/config file
         /// </summary>
-        public string[] GetDisabledRemotes()
+        public IReadOnlyList<Remote> GetDisabledRemotes()
+        {
+            var disabledRemotes = GetModule().LocalConfigFile.GetConfigSections()
+                .Where(s => s.SectionName == $"{DisabledSectionPrefix}remote")
+                .Select(s => new Remote(s.SubSection, s.GetValue("pushurl", s.GetValue("url")), s.GetValue("url")))
+                .ToList();
+
+            return disabledRemotes;
+        }
+
+        /// <summary>
+        /// Retrieves disabled remote names from the .git/config file.
+        /// </summary>
+        public IReadOnlyList<string> GetDisabledRemoteNames()
         {
             var module = GetModule();
             return module.LocalConfigFile.GetConfigSections()
-                                         .Where(s => s.SectionName == $"{DisabledSectionPrefix}remote")
-                                         .Select(s => s.SubSection)
-                                         .ToArray();
+                .Where(s => s.SectionName == $"{DisabledSectionPrefix}remote")
+                .Select(s => s.SubSection)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Retrieves enabled remote names
+        /// </summary>
+        public IReadOnlyList<string> GetEnabledRemoteNames()
+        {
+            return GetModule().GetRemoteNames();
+        }
+
+        /// <summary>
+        /// Retrieves enabled remote names of remotes without branches (i.e. that require a fetch)
+        /// </summary>
+        public IReadOnlyList<string> GetEnabledRemotesNameWithoutBranches()
+        {
+            HashSet<string> remotesWithBranches = GetModule().GetRefs()
+                .Where(branch => branch.IsRemote && !branch.IsTag)
+                .Select(branch => branch.Name.SubstringUntil('/'))
+                .ToHashSet();
+
+            HashSet<string> allRemotes = GetEnabledRemoteNames().ToHashSet();
+
+            return allRemotes.Except(remotesWithBranches).ToList();
         }
 
         /// <summary>
@@ -304,7 +340,7 @@ namespace GitCommands.Remotes
             }
             else
             {
-                func = GetDisabledRemotes;
+                func = GetDisabledRemoteNames;
             }
 
             var gitRemotes = func().Where(x => !string.IsNullOrWhiteSpace(x)).ToList();

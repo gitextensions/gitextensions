@@ -7607,7 +7607,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target />
       </trans-unit>
       <trans-unit id="mnuBtnManageRemotesFromRootNode.Text">
-        <source>&amp;Manage remotes</source>
+        <source>&amp;Manage remotes...</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnBranchCheckout.Text">
@@ -7671,7 +7671,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <target />
       </trans-unit>
       <trans-unit id="mnubtnManageRemotes.Text">
-        <source>&amp;Manage remotes</source>
+        <source>&amp;Manage remotes...</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnMergeBranch.Text">

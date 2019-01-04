@@ -51,6 +51,28 @@ namespace GitUI.BranchTreePanel
             mnubtnBranchDelete.Visible = isNotActiveBranch;
         }
 
+        private void ContextMenuRemoteRepoSpecific(ContextMenuStrip contextMenu)
+        {
+            if (contextMenu != menuRemoteRepoNode)
+            {
+                return;
+            }
+
+            var node = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as RemoteRepoNode;
+            if (node == null)
+            {
+                return;
+            }
+
+            // Actions on enabled remotes
+            mnubtnFetchAllBranchesFromARemote.Visible = node.Enabled;
+            mnubtnDisableRemote.Visible = node.Enabled;
+
+            // Actions on disabled remotes
+            mnubtnEnableRemote.Visible = !node.Enabled;
+            mnubtnEnableRemoteAndFetch.Visible = !node.Enabled;
+        }
+
         private void OnNodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             _lastRightClickedNode = e.Button == MouseButtons.Right ? e.Node : null;
@@ -96,8 +118,11 @@ namespace GitUI.BranchTreePanel
             RegisterClick<RemoteBranchNode>(mnubtnFetchRebase, remoteBranch => remoteBranch.FetchAndRebase());
             Node.RegisterContextMenu(typeof(RemoteBranchNode), menuRemote);
 
-            RegisterClick<RemoteRepoNode>(mnubtnFetchAllBranchesFromARemote, remote => remote.Fetch());
             RegisterClick<RemoteRepoNode>(mnubtnManageRemotes, remoteBranch => PopupManageRemotesForm(remoteBranch.FullPath));
+            RegisterClick<RemoteRepoNode>(mnubtnFetchAllBranchesFromARemote, remote => remote.Fetch());
+            RegisterClick<RemoteRepoNode>(mnubtnEnableRemote, remote => remote.Enable(fetch: false));
+            RegisterClick<RemoteRepoNode>(mnubtnEnableRemoteAndFetch, remote => remote.Enable(fetch: true));
+            RegisterClick<RemoteRepoNode>(mnubtnDisableRemote, remote => remote.Disable());
             Node.RegisterContextMenu(typeof(RemoteRepoNode), menuRemoteRepoNode);
 
             RegisterClick<TagNode>(mnubtnCreateBranchForTag, tag => tag.CreateBranch());
@@ -128,6 +153,7 @@ namespace GitUI.BranchTreePanel
 
             ContextMenuAddExpandCollapseTree(contextMenu);
             ContextMenuBranchSpecific(contextMenu);
+            ContextMenuRemoteRepoSpecific(contextMenu);
         }
     }
 }

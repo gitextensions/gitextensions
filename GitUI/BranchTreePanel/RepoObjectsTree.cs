@@ -64,7 +64,7 @@ namespace GitUI.BranchTreePanel
                     {
                         { nameof(Images.BranchDocument), Pad(Images.BranchDocument) },
                         { nameof(Images.Branch), Pad(Images.Branch) },
-                        { nameof(Images.Remote), Pad(Images.RemoteRepo) },
+                        { nameof(Images.Remote), Pad(Images.Remote) },
                         { nameof(Images.BitBucket), Pad(Images.BitBucket) },
                         { nameof(Images.GitHub), Pad(Images.GitHub) },
                         { nameof(Images.VisualStudioTeamServices), Pad(Images.VisualStudioTeamServices) },
@@ -73,6 +73,9 @@ namespace GitUI.BranchTreePanel
                         { nameof(Images.BranchRemote), Pad(Images.BranchRemote) },
                         { nameof(Images.BranchFolder), Pad(Images.BranchFolder) },
                         { nameof(Images.TagHorizontal), Pad(Images.TagHorizontal) },
+                        { nameof(Images.FolderClosed), Pad(Images.FolderClosed) },
+                        { nameof(Images.EyeOpened), Pad(Images.EyeOpened) },
+                        { nameof(Images.EyeClosed), Pad(Images.EyeClosed) },
                     }
                 };
                 treeMain.SelectedImageKey = treeMain.ImageKey;
