@@ -170,8 +170,9 @@ namespace GitUI.CommandsDialogs
 
             FromTextUpdate(null, null);
 
+            cbLfs.Visible = !GitVersion.Current.DepreciatedLfsClone;
             cbLfs.Enabled = Module.HasLfsSupport();
-            if (!cbLfs.Enabled)
+            if (!cbLfs.Enabled || !cbLfs.Visible)
             {
                 cbLfs.Checked = false;
             }
