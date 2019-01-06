@@ -46,6 +46,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private bool _nextIsInteractive;
         private GitStatusMonitorState _currentStatus;
 
+        public bool Active
+        {
+            get => CurrentStatus != GitStatusMonitorState.Stopped;
+            set => CurrentStatus = value ? GitStatusMonitorState.Running : GitStatusMonitorState.Stopped;
+        }
+
         /// <summary>
         /// Occurs whenever git status monitor state changes.
         /// </summary>

@@ -159,7 +159,7 @@
             this.chkShowGitStatusInToolbar.Name = "chkShowGitStatusInToolbar";
             this.chkShowGitStatusInToolbar.Size = new System.Drawing.Size(2104, 17);
             this.chkShowGitStatusInToolbar.TabIndex = 0;
-            this.chkShowGitStatusInToolbar.Text = "Show number of changed files on commit button (restart required)";
+            this.chkShowGitStatusInToolbar.Text = "Show number of changed files on commit button";
             this.chkShowGitStatusInToolbar.UseVisualStyleBackColor = true;
             this.chkShowGitStatusInToolbar.CheckedChanged += new System.EventHandler(this.ShowGitStatus_CheckedChanged);
             // 
@@ -172,7 +172,7 @@
             this.chkShowGitStatusForArtificialCommits.Name = "chkShowGitStatusForArtificialCommits";
             this.chkShowGitStatusForArtificialCommits.Size = new System.Drawing.Size(2104, 17);
             this.chkShowGitStatusForArtificialCommits.TabIndex = 1;
-            this.chkShowGitStatusForArtificialCommits.Text = "Show number of changed files for artificial commits (restart required)";
+            this.chkShowGitStatusForArtificialCommits.Text = "Show number of changed files for artificial commits";
             this.chkShowGitStatusForArtificialCommits.UseVisualStyleBackColor = true;
             this.chkShowGitStatusForArtificialCommits.CheckedChanged += new System.EventHandler(this.ShowGitStatus_CheckedChanged);
             // 

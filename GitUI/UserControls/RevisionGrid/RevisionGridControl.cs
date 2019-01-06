@@ -1923,7 +1923,7 @@ namespace GitUI
         {
             if (status == null)
             {
-                return;
+                status = new List<GitItemStatus>();
             }
 
             workTreeRev = workTreeRev ?? GetRevision(ObjectId.WorkTreeId);
