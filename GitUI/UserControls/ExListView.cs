@@ -391,7 +391,7 @@ namespace GitUI.UserControls
                         break;
 
                     case NativeMethods.WM_MOUSEWHEEL:
-                        type = HighWord(msg.WParam.ToInt32()) > 0
+                        type = HighWord(msg.WParam.ToInt64()) > 0
                             ? ScrollEventType.SmallDecrement
                             : ScrollEventType.SmallIncrement;
                         break;
