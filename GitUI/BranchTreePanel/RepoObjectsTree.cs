@@ -76,6 +76,7 @@ namespace GitUI.BranchTreePanel
                         { nameof(Images.FolderClosed), Pad(Images.FolderClosed) },
                         { nameof(Images.EyeOpened), Pad(Images.EyeOpened) },
                         { nameof(Images.EyeClosed), Pad(Images.EyeClosed) },
+                        { nameof(Images.RemoteEnableAndFetch), Pad(Images.RemoteEnableAndFetch) },
                     }
                 };
                 treeMain.SelectedImageKey = treeMain.ImageKey;

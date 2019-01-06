@@ -432,7 +432,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnEnableRemoteAndFetch
             // 
-            this.mnubtnEnableRemoteAndFetch.Image = global::GitUI.Properties.Images.EyeOpened;
+            this.mnubtnEnableRemoteAndFetch.Image = global::GitUI.Properties.Images.RemoteEnableAndFetch;
             this.mnubtnEnableRemoteAndFetch.Name = "mnubtnEnableRemoteAndFetch";
             this.mnubtnEnableRemoteAndFetch.Size = new System.Drawing.Size(180, 22);
             this.mnubtnEnableRemoteAndFetch.Text = "A&ctivate and fetch";
