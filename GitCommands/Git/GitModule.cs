@@ -1122,7 +1122,7 @@ namespace GitCommands
             var args = new GitArgumentBuilder("log")
             {
                 "-n1",
-                $"--format={format}",
+                $"--pretty=format:{format}",
                 objectId
             };
 
