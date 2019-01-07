@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.UserControls;
 using JetBrains.Annotations;
 
 namespace GitUI.BranchTreePanel
@@ -159,7 +160,9 @@ namespace GitUI.BranchTreePanel
 
             protected virtual void FillTreeViewNode()
             {
+                var expandedNodesState = TreeViewNode.GetExpandedNodesState();
                 Nodes.FillTreeViewNode(TreeViewNode);
+                TreeViewNode.RestoreExpandedNodesState(expandedNodesState);
             }
         }
 

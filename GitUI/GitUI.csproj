@@ -508,6 +508,7 @@
     <Compile Include="UserControls\TextEventArgs.cs" />
     <Compile Include="UserControls\RepoStateVisualiser.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.cs" />
+    <Compile Include="UserControls\TreeViewExtensions.cs" />
     <Compile Include="UserControls\WaitSpinner.cs">
       <SubType>Component</SubType>
     </Compile>
