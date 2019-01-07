@@ -39,14 +39,15 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(203, 439);
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox1.Size = new System.Drawing.Size(299, 439);
             this.textBox1.TabIndex = 0;
             // 
             // SimpleHelpDisplayDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(203, 439);
+            this.ClientSize = new System.Drawing.Size(299, 439);
             this.Controls.Add(this.textBox1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
