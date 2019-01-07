@@ -122,6 +122,8 @@ namespace GitUI.CommitInfo
                     .Throttle(TimeSpan.FromMilliseconds(100))
                     .ObserveOn(MainThreadScheduler.Instance)
                     .Subscribe(_ => handler(_.EventArgs));
+
+            commitInfoHeader.SetContextMenuStrip(commitInfoContextMenuStrip);
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

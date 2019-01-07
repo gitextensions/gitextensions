@@ -1109,7 +1109,6 @@ namespace GitUI.Editor.RichTextBoxExtension
                 return string.Empty;
             }
 
-            ////rtb.HideSelection = true;
             IntPtr oldMask = rtb.BeginUpdate();
 
             int nStart = rtb.SelectionStart;
@@ -1136,15 +1135,12 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
             finally
             {
-                //--------------------------
                 // finish, restore
                 rtb.SelectionStart = nStart;
                 rtb.SelectionLength = nEnd;
 
                 rtb.EndUpdate(oldMask);
-                rtb.HideSelection = false;
-
-                //--------------------------
+                rtb.Invalidate();
             }
 
             return text.ToString();
