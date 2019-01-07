@@ -941,7 +941,8 @@ namespace GitUI
                         CommitDate = DateTime.MaxValue,
                         CommitterEmail = userEmail,
                         Subject = Strings.Workspace,
-                        ParentIds = new[] { ObjectId.IndexId }
+                        ParentIds = new[] { ObjectId.IndexId },
+                        HasNotes = true
                     };
                     _gridView.Add(workTreeRev);
 
@@ -955,7 +956,8 @@ namespace GitUI
                         CommitDate = DateTime.MaxValue,
                         CommitterEmail = userEmail,
                         Subject = Strings.Index,
-                        ParentIds = new[] { filteredCurrentCheckout }
+                        ParentIds = new[] { filteredCurrentCheckout },
+                        HasNotes = true
                     };
                     _gridView.Add(indexRev);
 

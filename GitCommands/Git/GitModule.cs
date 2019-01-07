@@ -1138,6 +1138,7 @@ namespace GitCommands
                 MessageEncoding = lines[9]
             };
 
+            revision.HasNotes = !shortFormat;
             if (shortFormat)
             {
                 revision.Subject = ReEncodeCommitMessage(lines[10], revision.MessageEncoding);
