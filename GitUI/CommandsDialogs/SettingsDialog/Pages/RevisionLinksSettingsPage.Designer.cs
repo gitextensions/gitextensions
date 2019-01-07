@@ -608,7 +608,7 @@
             this.gotoUserManualControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gotoUserManualControl1.Dock = System.Windows.Forms.DockStyle.Right;
             this.gotoUserManualControl1.Location = new System.Drawing.Point(349, 3);
-            this.gotoUserManualControl1.ManualSectionAnchorName = "revision-links";
+            this.gotoUserManualControl1.ManualSectionAnchorName = "git-extensions-revision-links";
             this.gotoUserManualControl1.ManualSectionSubfolder = "settings";
             this.gotoUserManualControl1.MinimumSize = new System.Drawing.Size(70, 20);
             this.gotoUserManualControl1.Name = "gotoUserManualControl1";
