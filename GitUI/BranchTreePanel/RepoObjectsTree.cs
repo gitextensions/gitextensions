@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ using GitCommands;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
+using GitUI.UserControls;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel
@@ -20,6 +23,7 @@ namespace GitUI.BranchTreePanel
         private readonly TranslationString _showBranchOnly =
             new TranslationString("Filter the revision grid to show this branch only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
 
+        private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
         private readonly List<Tree> _rootNodes = new List<Tree>();
         private readonly SearchControl<string> _txtBranchCriterion;
         private readonly CancellationTokenSequence _reloadCancellation = new CancellationTokenSequence();
@@ -50,6 +54,10 @@ namespace GitUI.BranchTreePanel
             treeMain.HideSelection = false;
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
+
+            _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
+            _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
+
             mnubtnFilterRemoteBranchInRevisionGrid.ToolTipText = _showBranchOnly.Text;
             mnubtnFilterLocalBranchInRevisionGrid.ToolTipText = _showBranchOnly.Text;
 
@@ -147,6 +155,26 @@ namespace GitUI.BranchTreePanel
                         }
                     }
                 }
+            }
+        }
+
+        private void BeforeDoubleClickExpandCollapse(object sender, CancelEventArgs e)
+        {
+            var node = treeMain.SelectedNode?.Tag as Node;
+
+            // If node is an inner node, and overrides OnDoubleClick, then disable expand/collapse
+            if (node != null
+                && node.Nodes.Count > 0
+                && IsOverride(node.GetType().GetMethod("OnDoubleClick", BindingFlags.Instance | BindingFlags.NonPublic)))
+            {
+                e.Cancel = true;
+            }
+
+            return;
+
+            bool IsOverride(MethodInfo m)
+            {
+                return m != null && m.GetBaseDefinition().DeclaringType != m.DeclaringType;
             }
         }
 
@@ -425,6 +453,15 @@ namespace GitUI.BranchTreePanel
 
         private void OnNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            // Don't consider-double clicking on the PlusMinus as a double-click event
+            // for nodes in tree. This prevents opening inner submodules, for example,
+            // when quickly collapsing/expanding them.
+            var hitTest = treeMain.HitTest(e.Location);
+            if (hitTest.Location == TreeViewHitTestLocations.PlusMinus)
+            {
+                return;
+            }
+
             // Don't use e.Node, when folding/unfolding a node,
             // e.Node won't be the one you double clicked, but a child node instead
             Node.OnNode<Node>(treeMain.SelectedNode, node => node.OnDoubleClick());

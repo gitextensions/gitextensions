@@ -21,6 +21,13 @@ namespace GitUI.BranchTreePanel
             {
                 components.Dispose();
             }
+
+            if (_doubleClickDecorator != null)
+            {
+                _doubleClickDecorator.BeforeDoubleClickExpandCollapse -= BeforeDoubleClickExpandCollapse;
+                _doubleClickDecorator = null;
+            }
+
             base.Dispose(disposing);
         }
 
