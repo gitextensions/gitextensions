@@ -90,6 +90,7 @@
             // 
             // splitContainer1
             // 
+            this.splitContainer1.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
@@ -98,6 +99,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer1.Panel1.Controls.Add(this.tableLayoutPanel1);
             this.splitContainer1.Panel1.Controls.Add(this._NO_TRANSLATE_Categories);
             this.splitContainer1.Panel1.Controls.Add(this.CategoriesLabel);
@@ -114,6 +116,7 @@
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.BackColor = System.Drawing.SystemColors.Control;
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -147,6 +150,7 @@
             this.Add.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.Add.AutoSize = true;
             this.Add.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.Add.BackColor = System.Drawing.SystemColors.Control;
             this.Add.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Add.Location = new System.Drawing.Point(2, 3);
             this.Add.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -212,6 +216,7 @@
             // 
             this.panel1.AutoSize = true;
             this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel1.BackColor = System.Drawing.SystemColors.Control;
             this.panel1.Controls.Add(this.label6);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 260);
@@ -236,6 +241,7 @@
             // 
             this.detailPanel.AutoSize = true;
             this.detailPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.detailPanel.BackColor = System.Drawing.SystemColors.Control;
             this.detailPanel.Controls.Add(this.tableLayoutPanel3);
             this.detailPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.detailPanel.Location = new System.Drawing.Point(0, 0);
@@ -248,6 +254,7 @@
             // 
             this.tableLayoutPanel3.AutoSize = true;
             this.tableLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel3.BackColor = System.Drawing.SystemColors.Control;
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -284,6 +291,7 @@
             // 
             this.tableLayoutPanel2.AutoSize = true;
             this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel2.BackColor = System.Drawing.SystemColors.Control;
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -387,6 +395,7 @@
             // 
             this.flowLayoutPanel4.AutoSize = true;
             this.flowLayoutPanel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel4.BackColor = System.Drawing.SystemColors.Control;
             this.flowLayoutPanel4.Controls.Add(this._NO_TRANSLATE_UseRemotes);
             this.flowLayoutPanel4.Controls.Add(this.chkOnlyFirstRemote);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -434,6 +443,7 @@
             // 
             this.tableLayoutPanel4.AutoSize = true;
             this.tableLayoutPanel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel4.BackColor = System.Drawing.SystemColors.Control;
             this.tableLayoutPanel4.ColumnCount = 2;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -515,6 +525,7 @@
             // 
             this.flowLayoutPanel3.AutoSize = true;
             this.flowLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel3.BackColor = System.Drawing.SystemColors.Control;
             this.flowLayoutPanel3.Controls.Add(this.MessageChx);
             this.flowLayoutPanel3.Controls.Add(this.LocalBranchChx);
             this.flowLayoutPanel3.Controls.Add(this.RemoteBranchChx);
@@ -572,6 +583,7 @@
             // 
             this.flowLayoutPanel2.AutoSize = true;
             this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel2.BackColor = System.Drawing.SystemColors.Control;
             this.flowLayoutPanel2.Controls.Add(this._NO_TRANSLATE_Name);
             this.flowLayoutPanel2.Controls.Add(this.EnabledChx);
             this.flowLayoutPanel2.Controls.Add(this.gotoUserManualControl1);
@@ -608,7 +620,7 @@
             this.gotoUserManualControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.gotoUserManualControl1.Dock = System.Windows.Forms.DockStyle.Right;
             this.gotoUserManualControl1.Location = new System.Drawing.Point(349, 3);
-            this.gotoUserManualControl1.ManualSectionAnchorName = "revision-links";
+            this.gotoUserManualControl1.ManualSectionAnchorName = "git-extensions-revision-links";
             this.gotoUserManualControl1.ManualSectionSubfolder = "settings";
             this.gotoUserManualControl1.MinimumSize = new System.Drawing.Size(70, 20);
             this.gotoUserManualControl1.Name = "gotoUserManualControl1";
@@ -619,6 +631,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.splitContainer1);
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.Name = "RevisionLinksSettingsPage";
             this.Size = new System.Drawing.Size(974, 452);
             this.splitContainer1.Panel1.ResumeLayout(false);
