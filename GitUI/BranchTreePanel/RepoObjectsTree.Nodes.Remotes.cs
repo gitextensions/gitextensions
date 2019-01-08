@@ -211,12 +211,10 @@ namespace GitUI.BranchTreePanel
 
             public void Fetch()
             {
-                var cmd = Module.FetchCmd(FullPath, null, null, null);
-
-                if (FormRemoteProcess.ShowDialog(TreeViewNode.TreeView, Module, cmd))
-                {
-                    UICommands.RepoChangedNotifier.Notify();
-                }
+                UICommands.StartPullDialogAndPullImmediately(
+                    TreeViewNode.TreeView,
+                    remote: FullPath,
+                    pullAction: AppSettings.PullAction.Fetch);
             }
 
             protected override void ApplyStyle()
