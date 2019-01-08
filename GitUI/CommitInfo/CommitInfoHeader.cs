@@ -51,6 +51,11 @@ namespace GitUI.CommitInfo
                 .Subscribe(_ => rtbRevisionHeader_ContentsResized(_.EventArgs));
         }
 
+        public void SetContextMenuStrip(ContextMenuStrip contextMenuStrip)
+        {
+            rtbRevisionHeader.ContextMenuStrip = contextMenuStrip;
+        }
+
         public void ShowCommitInfo(GitRevision revision, IReadOnlyList<ObjectId> children)
         {
             this.InvokeAsync(() =>
