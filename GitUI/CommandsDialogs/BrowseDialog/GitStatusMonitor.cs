@@ -46,6 +46,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private bool _nextIsInteractive;
         private GitStatusMonitorState _currentStatus;
 
+        public bool Active
+        {
+            get => CurrentStatus != GitStatusMonitorState.Stopped;
+            set => CurrentStatus = value ? GitStatusMonitorState.Running : GitStatusMonitorState.Stopped;
+        }
+
         /// <summary>
         /// Occurs whenever git status monitor state changes.
         /// </summary>
@@ -144,6 +150,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                 ScheduleNextUpdateTime(FileChangedUpdateDelay);
                 _workTreeWatcher.EnableRaisingEvents = false;
             }
+        }
+
+        public void InvalidateGitWorkingDirectoryStatus()
+        {
+            GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs());
         }
 
         public void RequestRefresh()
@@ -254,9 +265,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void StartWatchingChanges(string workTreePath, string gitDirPath)
         {
-            // reset status info, it was outdated
-            GitWorkingDirectoryStatusChanged?.Invoke(this, new GitWorkingDirectoryStatusEventArgs());
-
             try
             {
                 if (!string.IsNullOrEmpty(workTreePath) && Directory.Exists(workTreePath) &&
@@ -278,8 +286,6 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 // no-op
             }
-
-            return;
         }
 
         private void Update()

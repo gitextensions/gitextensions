@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 
 namespace GitUI.CommandsDialogs
 {
@@ -284,7 +285,7 @@ namespace GitUI.CommandsDialogs
             this.RefreshButton.Name = "RefreshButton";
             this.RefreshButton.Size = new System.Drawing.Size(23, 22);
             this.RefreshButton.ToolTipText = "Refresh";
-            this.RefreshButton.Click += new System.EventHandler(this.RefreshButtonClick);
+            this.RefreshButton.Click += new System.EventHandler(this.RefreshToolStripMenuItemClick);
             // 
             // toolStripSeparator0
             // 
@@ -448,10 +449,12 @@ namespace GitUI.CommandsDialogs
             // toolStripButtonCommit
             // 
             this.toolStripButtonCommit.Image = global::GitUI.Properties.Images.RepoStateClean;
+            this.toolStripButtonCommit.ImageAlign = ContentAlignment.MiddleLeft;
             this.toolStripButtonCommit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonCommit.Name = "toolStripButtonCommit";
             this.toolStripButtonCommit.Size = new System.Drawing.Size(71, 22);
             this.toolStripButtonCommit.Text = "Commit";
+            this.toolStripButtonCommit.TextAlign = ContentAlignment.MiddleLeft;
             this.toolStripButtonCommit.Click += new System.EventHandler(this.CommitToolStripMenuItemClick);
             // 
             // toolStripButtonPull

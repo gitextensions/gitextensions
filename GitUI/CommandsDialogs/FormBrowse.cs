@@ -87,7 +87,7 @@ namespace GitUI.CommandsDialogs
         #endregion
 
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("FormBrowse"));
-        private readonly ToolStripMenuItem _toolStripGitStatus;
+        [NotNull]
         private readonly GitStatusMonitor _gitStatusMonitor;
         private readonly FilterRevisionsHelper _filterRevisionsHelper;
         private readonly FilterBranchHelper _filterBranchHelper;
@@ -181,7 +181,7 @@ namespace GitUI.CommandsDialogs
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
             revisionDiff.Bind(RevisionGrid, fileTree);
 
-            InitCountArtificial(out _toolStripGitStatus, out _gitStatusMonitor);
+            InitCountArtificial(out _gitStatusMonitor);
 
             if (!EnvUtils.RunningOnWindows())
             {
@@ -264,6 +264,7 @@ namespace GitUI.CommandsDialogs
             }
 
             InitializeComplete();
+            UpdateCommitButtonAndGetBrush(null, AppSettings.ShowGitStatusInBrowseToolbar);
             RestorePosition();
 
             // Populate terminal tab after translation within InitializeComplete
@@ -284,68 +285,48 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            void InitCountArtificial(out ToolStripMenuItem toolStripGitStatus, out GitStatusMonitor gitStatusMonitor)
+            void InitCountArtificial(out GitStatusMonitor gitStatusMonitor)
             {
-                // Activation of the control requires restart of Browse, limit also deactivation for consistency
-                bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
-                bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges;
+                Brush lastBrush = null;
 
-                if (countToolbar || countArtificial)
+                gitStatusMonitor = new GitStatusMonitor(this);
+                DeActivateGitStatusMonitor();
+
+                gitStatusMonitor.GitStatusMonitorStateChanged += (s, e) =>
                 {
-                    toolStripGitStatus = new ToolStripMenuItem
+                    var status = e.State;
+                    if (status == GitStatusMonitorState.Stopped)
                     {
-                        ImageTransparentColor = Color.Magenta,
-                        ImageScaling = ToolStripItemImageScaling.SizeToFit,
-                        Margin = new Padding(0, 1, 0, 2)
-                    };
+                        // fall back to operation without info in the button
+                        UpdateCommitButtonAndGetBrush(null, showCount: false);
+                        RevisionGrid.UpdateArtificialCommitCount(null);
+                        TaskbarManager.Instance.SetOverlayIcon(null, "");
+                        lastBrush = null;
+                    }
+                };
 
-                    var repoStateVisualiser = new RepoStateVisualiser();
+                gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) =>
+                {
+                    var status = e.ItemStatuses?.ToList();
 
-                    gitStatusMonitor = new GitStatusMonitor(this);
+                    bool countToolbar = AppSettings.ShowGitStatusInBrowseToolbar;
+                    bool countArtificial = AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges;
 
-                    gitStatusMonitor.GitStatusMonitorStateChanged += (s, e) =>
+                    var brush = UpdateCommitButtonAndGetBrush(status, countToolbar);
+
+                    RevisionGrid.UpdateArtificialCommitCount(countArtificial ? status : null);
+
+                    // The diff filelist is not updated, as the selected diff is unset
+                    ////_revisionDiff.RefreshArtificial();
+
+                    if (countToolbar || countArtificial)
                     {
-                        var status = e.State;
-                        if (status == GitStatusMonitorState.Stopped)
-                        {
-                            _toolStripGitStatus.Visible = false;
-                            _toolStripGitStatus.Text = "";
-                            TaskbarManager.Instance.SetOverlayIcon(null, "");
-                        }
-                        else if (status == GitStatusMonitorState.Running)
-                        {
-                            _toolStripGitStatus.Visible = true;
-                        }
-                    };
-
-                    Brush lastBrush = null;
-
-                    gitStatusMonitor.GitWorkingDirectoryStatusChanged += (s, e) =>
-                    {
-                        var status = e.ItemStatuses.ToList();
-
-                        var (image, brush) = repoStateVisualiser.Invoke(status);
-
-                        _toolStripGitStatus.Image = image;
-
-                        _toolStripGitStatus.Text = countToolbar && status.Count != 0
-                            ? string.Format(_commitButtonText + " ({0})", status.Count.ToString())
-                            : _commitButtonText.Text;
-
-                        if (countArtificial)
-                        {
-                            RevisionGrid.UpdateArtificialCommitCount(status);
-                        }
-
-                        // The diff filelist is not updated, as the selected diff is unset
-                        ////_revisionDiff.RefreshArtificial();
-
                         if (!ReferenceEquals(brush, lastBrush))
                         {
                             lastBrush = brush;
 
                             const int imgDim = 32;
-                            const int dotDim = 9;
+                            const int dotDim = 15;
                             const int pad = 2;
                             using (var bmp = new Bitmap(imgDim, imgDim))
                             {
@@ -374,18 +355,44 @@ namespace GitUI.CommandsDialogs
                                 UpdateSubmodulesStructure(updateStatus: true);
                             }
                         }
-                    };
+                    }
+                };
+            }
 
-                    // TODO: Replace with a status page?
-                    _toolStripGitStatus.Click += CommitToolStripMenuItemClick;
-                    ToolStrip.Items.Insert(ToolStrip.Items.IndexOf(toolStripButtonCommit), _toolStripGitStatus);
-                    ToolStrip.Items.Remove(toolStripButtonCommit);
+            Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus> status, bool showCount)
+            {
+                var repoStateVisualiser = new RepoStateVisualiser();
+                var (image, brush) = repoStateVisualiser.Invoke(status);
+
+                if (showCount)
+                {
+                    toolStripButtonCommit.Image = image;
+
+                    if (status != null)
+                    {
+                        toolStripButtonCommit.Text = string.Format("{0} ({1})", _commitButtonText, status.Count);
+                        toolStripButtonCommit.AutoSize = true;
+                    }
+                    else
+                    {
+                        int width = toolStripButtonCommit.Width;
+                        toolStripButtonCommit.Text = _commitButtonText.Text;
+                        if (width > toolStripButtonCommit.Width)
+                        {
+                            toolStripButtonCommit.AutoSize = false;
+                            toolStripButtonCommit.Width = width;
+                        }
+                    }
                 }
                 else
                 {
-                    toolStripGitStatus = null;
-                    gitStatusMonitor = null;
+                    toolStripButtonCommit.Image = repoStateVisualiser.Invoke(new List<GitItemStatus>()).Item1;
+
+                    toolStripButtonCommit.Text = _commitButtonText.Text;
+                    toolStripButtonCommit.AutoSize = true;
                 }
+
+                return brush;
             }
         }
 
@@ -444,7 +451,7 @@ namespace GitUI.CommandsDialogs
                 _filterRevisionsHelper?.Dispose();
                 _filterBranchHelper?.Dispose();
                 components?.Dispose();
-                _gitStatusMonitor?.Dispose();
+                _gitStatusMonitor.Dispose();
                 _windowsJumpListManager?.Dispose();
             }
 
@@ -554,6 +561,11 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private void DeActivateGitStatusMonitor()
+        {
+            _gitStatusMonitor.Active = AppSettings.ShowGitStatusInBrowseToolbar || (AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges);
+        }
+
         private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
         {
             this.InvokeAsync(RefreshRevisions).FileAndForget();
@@ -567,6 +579,9 @@ namespace GitUI.CommandsDialogs
             {
                 return;
             }
+
+            _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
+            _gitStatusMonitor.RequestRefresh();
 
             if (_dashboard == null || !_dashboard.Visible)
             {
@@ -738,10 +753,6 @@ namespace GitUI.CommandsDialogs
                 manageRemoteRepositoriesToolStripMenuItem1.Enabled = validBrowseDir;
                 branchSelect.Enabled = validBrowseDir;
                 toolStripButtonCommit.Enabled = validBrowseDir && !bareRepository;
-                if (_toolStripGitStatus != null)
-                {
-                    _toolStripGitStatus.Enabled = validBrowseDir && !Module.IsBareRepository();
-                }
 
                 toolStripButtonPull.Enabled = validBrowseDir;
                 toolStripButtonPush.Enabled = validBrowseDir;
@@ -1302,7 +1313,6 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshStatus()
         {
-            _gitStatusMonitor?.RequestRefresh();
             UpdateSubmodulesStructure();
             UpdateStashCount();
         }
@@ -1434,6 +1444,8 @@ namespace GitUI.CommandsDialogs
             revisionDiff.ReloadHotkeys();
 
             _dashboard?.RefreshContent();
+
+            DeActivateGitStatusMonitor();
         }
 
         private void TagToolStripMenuItemClick(object sender, EventArgs e)
@@ -1441,12 +1453,6 @@ namespace GitUI.CommandsDialogs
             var revision = RevisionGrid.LatestSelectedRevision;
 
             UICommands.StartCreateTagDialog(this, revision);
-        }
-
-        private void RefreshButtonClick(object sender, EventArgs e)
-        {
-            RefreshStatus();
-            RefreshRevisions();
         }
 
         private void KGitToolStripMenuItemClick(object sender, EventArgs e)
@@ -1897,6 +1903,7 @@ namespace GitUI.CommandsDialogs
             HideVariableMainMenuItems();
             UnregisterPlugins();
             RevisionGrid.InvalidateCount();
+            _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();
 
             UICommands = new GitUICommands(module);
@@ -2639,7 +2646,7 @@ namespace GitUI.CommandsDialogs
         private void UpdateSubmodulesStructure(bool updateStatus = false)
         {
             // Submodule status is updated on git-status updates. To make sure supermodule status is updated, update immediately
-            updateStatus = updateStatus || (AppSettings.ShowSubmoduleStatus && (_gitStatusMonitor != null) && (Module.SuperprojectModule != null));
+            updateStatus = updateStatus || (AppSettings.ShowSubmoduleStatus && _gitStatusMonitor.Active && (Module.SuperprojectModule != null));
 
             toolStripButtonLevelUp.ToolTipText = "";
             _submoduleStatusProvider.UpdateSubmodulesStatus(
@@ -3098,7 +3105,7 @@ namespace GitUI.CommandsDialogs
             {
                 var args = GitCommandHelpers.ResetCmd(ResetMode.Soft, "HEAD~1");
                 Module.RunGitCmd(args);
-                RefreshRevisions();
+                refreshToolStripMenuItem.PerformClick();
             }
         }
 

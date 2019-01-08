@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitCommands;
+using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs.BrowseDialog
 {
@@ -14,9 +15,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         public GitWorkingDirectoryStatusEventArgs()
         {
-            ItemStatuses = Enumerable.Empty<GitItemStatus>();
         }
 
+        /// <summary>
+        /// the status of all modified files/submodules or null if the previous information is invalidated
+        /// </summary>
+        [CanBeNull]
         public IEnumerable<GitItemStatus> ItemStatuses { get; }
     }
 }

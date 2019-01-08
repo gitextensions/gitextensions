@@ -14,21 +14,21 @@ namespace GitUI.UserControls
     {
         // Images properties allocate on each call, so cache our images.
 
-        internal static readonly Bitmap IconClean = Images.RepoStateClean;
-        internal static readonly Bitmap IconDirty = Images.RepoStateDirty;
-        internal static readonly Bitmap IconDirtySubmodules = Images.RepoStateDirtySubmodules;
-        internal static readonly Bitmap IconStaged = Images.RepoStateStaged;
-        internal static readonly Bitmap IconMixed = Images.RepoStateMixed;
-        internal static readonly Bitmap IconUntrackedOnly = Images.RepoStateUntrackedOnly;
-        internal static readonly Brush BrushClean = Brushes.Green;
-        internal static readonly Brush BrushDirty = Brushes.Red;
-        internal static readonly Brush BrushDirtySubmodules = Brushes.Orange;
-        internal static readonly Brush BrushStaged = Brushes.Blue;
-        internal static readonly Brush BrushMixed = Brushes.Yellow;
-        internal static readonly Brush BrushUntrackedOnly = Brushes.Purple;
+        internal static readonly (Bitmap, Brush) Clean = (Images.RepoStateClean, Brushes.Lime);
+        internal static readonly (Bitmap, Brush) Dirty = (Images.RepoStateDirty, Brushes.LightSalmon);
+        internal static readonly (Bitmap, Brush) DirtySubmodules = (Images.RepoStateDirtySubmodules, Brushes.Orange);
+        internal static readonly (Bitmap, Brush) Mixed = (Images.RepoStateMixed, Brushes.Yellow);
+        internal static readonly (Bitmap, Brush) Staged = (Images.RepoStateStaged, Brushes.LightSkyBlue);
+        internal static readonly (Bitmap, Brush) Unknown = (Images.RepoStateUnknown, Brushes.Gray);
+        internal static readonly (Bitmap, Brush) UntrackedOnly = (Images.RepoStateUntrackedOnly, Brushes.BlueViolet);
 
         public (Image, Brush) Invoke(IReadOnlyList<GitItemStatus> allChangedFiles)
         {
+            if (allChangedFiles == null)
+            {
+                return Unknown;
+            }
+
             var indexCount = 0;
             var workTreeSubmodulesCount = 0;
             var notTrackedCount = 0;
@@ -55,24 +55,20 @@ namespace GitUI.UserControls
 
             if (indexCount == 0 && workTreeCount == 0)
             {
-                return (IconClean, BrushClean);
+                return Clean;
             }
 
             if (indexCount == 0)
             {
                 if (notTrackedCount == workTreeCount)
                 {
-                    return (IconUntrackedOnly, BrushUntrackedOnly);
+                    return UntrackedOnly;
                 }
 
-                return workTreeCount != workTreeSubmodulesCount
-                    ? (IconDirty, BrushDirty)
-                    : (IconDirtySubmodules, BrushDirtySubmodules);
+                return workTreeCount != workTreeSubmodulesCount ? Dirty : DirtySubmodules;
             }
 
-            return workTreeCount == 0
-                ? (IconStaged, BrushStaged)
-                : (IconMixed, BrushMixed);
+            return workTreeCount == 0 ? Staged : Mixed;
         }
     }
 }

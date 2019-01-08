@@ -6896,11 +6896,11 @@ Context menu for additional operations</source>
         <target />
       </trans-unit>
       <trans-unit id="chkShowGitStatusForArtificialCommits.Text">
-        <source>Show number of changed files for artificial commits (restart required)</source>
+        <source>Show number of changed files for artificial commits</source>
         <target />
       </trans-unit>
       <trans-unit id="chkShowGitStatusInToolbar.Text">
-        <source>Show number of changed files on commit button (restart required)</source>
+        <source>Show number of changed files on commit button</source>
         <target />
       </trans-unit>
       <trans-unit id="chkShowStashCountInBrowseWindow.Text">
