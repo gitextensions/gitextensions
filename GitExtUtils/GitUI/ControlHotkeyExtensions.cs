@@ -1,5 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using GitExtUtils;
@@ -9,9 +11,11 @@ namespace GitUI
     public static class ControlHotkeyExtensions
     {
         /// <summary>
-        /// Add Ctrl + Backspace hotkey handle for the TextBox controls.
-        /// This hotkey removes the last word before the cursor.
+        /// Properly handle Ctrl + Backspace by removing the last word before the cursor.
         /// </summary>
+        /// <remarks>
+        /// By default .NET TextBox inserts a strange special character instead
+        /// </remarks>
         public static void EnableRemoveWordHotkey(this Control control)
         {
             if (control == null)
@@ -24,31 +28,47 @@ namespace GitUI
                 return;
             }
 
-            foreach (var descendant in control.FindDescendants())
+            foreach (var textBox in control.FindDescendants().OfType<TextBox>())
             {
-                switch (descendant)
-                {
-                    case TextBox textBox:
-                        // Use the secret Windows feature. See original explanation:
-                        //
-                        // A few people in the early days of the Internet Explorer group used the Brief editor,
-                        // which uses Ctrl+Backspace as the shortcut key to delete the previous word,
-                        // and they liked it so much that one of them added it to the autocomplete handler.
-                        // Therefore, any edit control that uses SHAutoComplete will gain this secret Ctrl+Backspace hotkey.
-                        //
-                        // More detail here: https://blogs.msdn.microsoft.com/oldnewthing/20071011-00/?p=24823/
-                        const uint SHACF_AUTOSUGGEST_FORCE_OFF = 0x20000000;
-                        NativeMethods.SHAutoComplete(textBox.Handle, SHACF_AUTOSUGGEST_FORCE_OFF);
-
-                        break;
-                }
+                textBox.KeyDown += HandleKeyDown;
+                textBox.Disposed += HandleDisposed;
             }
         }
 
-        private static class NativeMethods
+        private static void HandleKeyDown(object sender, KeyEventArgs e)
         {
-            [DllImport("shlwapi.dll", ExactSpelling = true, PreserveSig = false)]
-            public static extern int SHAutoComplete(IntPtr hwndEdit, uint flags);
+            if (e.KeyData == (Keys.Control | Keys.Back))
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                // Call begin / end update to prevent flickering transient state,
+                // after the word is selected and before it is erased.
+                _beginUpdateMethod.Invoke(sender, parameters: null);
+
+                // emulate keyboard sequence: Ctrl + Shift + Left, Backspace
+                SendKeys.Send("^+{LEFT} {BACKSPACE}");
+
+                _endUpdateMethod.Invoke(sender, parameters: null);
+            }
         }
+
+        private static void HandleDisposed(object sender, EventArgs e)
+        {
+            ((Control)sender).Disposed -= HandleDisposed;
+            ((Control)sender).KeyDown -= HandleKeyDown;
+        }
+
+        private static readonly MethodInfo _beginUpdateMethod =
+            typeof(Control).GetMethod("BeginUpdateInternal",
+                BindingFlags.Instance | BindingFlags.NonPublic);
+
+        // there are 2 EndUpdateInternal methods, we are looking the one with parameterless signature
+        private static readonly MethodInfo _endUpdateMethod =
+            typeof(Control).GetMethod("EndUpdateInternal",
+                BindingFlags.Instance | BindingFlags.NonPublic,
+                binder: null,
+                types: new Type[0],
+                modifiers: new ParameterModifier[0]);
     }
 }
