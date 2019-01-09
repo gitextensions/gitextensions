@@ -1060,7 +1060,7 @@
           <ComponentRef Id="System.Net.Http.Formatting.dll" />
           <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
-        <Feature Id="AzureDevOpsIntegration" Title="Azure DevOps and TFS >= 2015 integration" Level="1">
+        <Feature Id="AzureDevOpsIntegration" Title="Azure DevOps and TFS &gt;= 2015 integration" Level="1">
           <ComponentRef Id="AzureDevOpsIntegration.dll" />
           <ComponentRef Id="Newtonsoft.Json.dll" />
         </Feature>
