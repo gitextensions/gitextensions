@@ -290,7 +290,10 @@ namespace GitUI.CommandsDialogs
                 Brush lastBrush = null;
 
                 gitStatusMonitor = new GitStatusMonitor(this);
-                DeActivateGitStatusMonitor();
+                if (!NeedsGitStatusMonitor())
+                {
+                    gitStatusMonitor.Active = false;
+                }
 
                 gitStatusMonitor.GitStatusMonitorStateChanged += (s, e) =>
                 {
@@ -561,9 +564,9 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void DeActivateGitStatusMonitor()
+        private bool NeedsGitStatusMonitor()
         {
-            _gitStatusMonitor.Active = AppSettings.ShowGitStatusInBrowseToolbar || (AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges);
+            return AppSettings.ShowGitStatusInBrowseToolbar || (AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges);
         }
 
         private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
@@ -1445,7 +1448,7 @@ namespace GitUI.CommandsDialogs
 
             _dashboard?.RefreshContent();
 
-            DeActivateGitStatusMonitor();
+            _gitStatusMonitor.Active = NeedsGitStatusMonitor();
         }
 
         private void TagToolStripMenuItemClick(object sender, EventArgs e)
