@@ -53,6 +53,7 @@ Setup/GitExtensions-Portable-*.zip
 Setup/GitExtensions-pdbs-*.zip
 Setup/tools/tx.exe
 Plugins/GitExtensions.PluginManager/*
+.sonarqube/
 
 # Backup & report files from converting an old project file to a newer
 # Visual Studio version. Backup files are not needed, because we have git ;-)

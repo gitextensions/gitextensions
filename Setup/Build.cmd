@@ -14,5 +14,10 @@ set msbuildparams=/p:Configuration=%Configuration% /t:Rebuild /nologo /v:m
 call BuildGitExtNative.cmd %Configuration% Rebuild
 IF ERRORLEVEL 1 EXIT /B 1
 
+IF "%enableCodeQualityAnalysis%"=="True" (
+    powershell -File CodeQuality.ps1 -startSonar -version %APPVEYOR_BUILD_VERSION% -authToken %sonarLogin%
+    IF ERRORLEVEL 1 EXIT /B 1
+)
+
 %msbuild% %solution% /p:Platform="Any CPU" %msbuildparams%
 IF ERRORLEVEL 1 EXIT /B 1

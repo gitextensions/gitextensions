@@ -13,6 +13,9 @@ environment:
   SKIP_PAUSE: TRUE
   ARCHIVE_WITH_PDB: TRUE
   spciuser: ""
+  # TODO: substitute your own
+  sonarLogin:
+    secure: TLTw/fHFIX1A7sfXh/trJpXiv5pBiB4GzhlRKIVTsodKA9hl1fsstXsIHyb/M/ZH
 
 # Build settings, not to be confused with "before_build" and "after_build".
 # "project" is relative to the original build directory and not influenced by directory changes in "before_build".
@@ -26,7 +29,11 @@ cache:
   #- packages -> **\packages.config      # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
   - packages\WiX.3.11.0 -> Setup\packages.config
 
+init:
+- ps: $env:enableCodeQualityAnalysis = $env:APPVEYOR_REPO_BRANCH -eq 'master';
+
 install:
+- ps: if ($env:enableCodeQualityAnalysis) { cinst sonarscanner-msbuild-net46 }
 - cmd: git submodule update --init --recursive
 - cmd: echo /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll">> Directory.Build.rsp
 - cmd: |-
@@ -79,6 +86,11 @@ test_script:
     $codecov = "packages\Codecov.$codecov_version\tools\codecov.exe"
     &$codecov -f ".\OpenCover.GitExtensions.xml"
 
+    if ($env:enableCodeQualityAnalysis) {
+        cd Setup 
+        .\CodeQuality.ps1 -publishSonar -authToken $env:sonarLogin
+        cd ..
+    }
 
 # here we are going to override common configuration
 for:
