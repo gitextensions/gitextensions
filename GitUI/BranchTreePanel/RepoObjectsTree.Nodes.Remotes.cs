@@ -91,16 +91,16 @@ namespace GitUI.BranchTreePanel
                 SelectRevision();
             }
 
-            public void Fetch()
+            public bool Fetch()
             {
                 var remoteBranchInfo = GetRemoteBranchInfo();
-                var cmd = Module.FetchCmd(remoteBranchInfo.Remote, remoteBranchInfo.BranchName,
-                    null, null);
-                var ret = FormRemoteProcess.ShowDialog(TreeViewNode.TreeView, Module, cmd);
-                if (ret)
-                {
-                    UICommands.RepoChangedNotifier.Notify();
-                }
+                UICommands.StartPullDialogAndPullImmediately(
+                    out bool pullCompleted,
+                    TreeViewNode.TreeView,
+                    remoteBranch: remoteBranchInfo.BranchName,
+                    remote: remoteBranchInfo.Remote,
+                    pullAction: AppSettings.PullAction.Fetch);
+                return pullCompleted;
             }
 
             private readonly struct RemoteBranchInfo
@@ -122,37 +122,30 @@ namespace GitUI.BranchTreePanel
                 return new RemoteBranchInfo(remote, branch);
             }
 
-            public void CreateBranch()
+            public bool CreateBranch()
             {
                 var objectId = Module.RevParse(FullPath);
 
                 if (objectId == null)
                 {
                     MessageBox.Show($"Branch \"{FullPath}\" could not be resolved.");
+                    return false;
                 }
                 else
                 {
-                    UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, objectId);
+                    return UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, objectId);
                 }
             }
 
-            public void Delete()
+            public bool Delete()
             {
                 var remoteBranchInfo = GetRemoteBranchInfo();
-                var cmd = new GitDeleteRemoteBranchesCmd(remoteBranchInfo.Remote, new[] { remoteBranchInfo.BranchName });
-                if (MessageBoxes.ConfirmDeleteRemoteBranch(TreeViewNode.TreeView,
-                    remoteBranchInfo.BranchName, remoteBranchInfo.Remote))
-                {
-                    UICommands.StartCommandLineProcessDialog(null, cmd);
-                }
+                return UICommands.StartDeleteRemoteBranchDialog(TreeViewNode.TreeView, remoteBranchInfo.Remote + '/' + remoteBranchInfo.BranchName);
             }
 
-            public void Checkout()
+            public bool Checkout()
             {
-                using (var form = new FormCheckoutBranch(UICommands, FullPath, remote: true))
-                {
-                    form.ShowDialog(TreeViewNode.TreeView);
-                }
+                return UICommands.StartCheckoutRemoteBranch(TreeViewNode.TreeView, FullPath);
             }
 
             internal override void OnDoubleClick()
@@ -160,24 +153,20 @@ namespace GitUI.BranchTreePanel
                 Checkout();
             }
 
-            public void Merge()
+            public bool Merge()
             {
-                using (var form = new FormMergeBranch(UICommands, FullPath))
-                {
-                    form.ShowDialog(TreeViewNode.TreeView);
-                }
+                return UICommands.StartMergeBranchDialog(TreeViewNode.TreeView, FullPath);
             }
 
-            public void Rebase()
+            public bool Rebase()
             {
-                using (var form = new FormRebase(UICommands, FullPath))
-                {
-                    form.ShowDialog(TreeViewNode.TreeView);
-                }
+                return UICommands.StartRebaseDialog(TreeViewNode.TreeView, FullPath);
             }
 
             public void Reset()
             {
+                // TODO: Move this into new function UICommands.StartResetCurrentBranchDialog
+
                 var objectId = Module.RevParse(FullPath);
 
                 if (objectId == null)
@@ -191,6 +180,26 @@ namespace GitUI.BranchTreePanel
                         form.ShowDialog(TreeViewNode.TreeView);
                     }
                 }
+            }
+
+            public bool FetchAndMerge()
+            {
+                return Fetch() && Merge();
+            }
+
+            public bool FetchAndCheckout()
+            {
+                return Fetch() && Checkout();
+            }
+
+            public bool FetchAndCreateBranch()
+            {
+                return Fetch() && CreateBranch();
+            }
+
+            public bool FetchAndRebase()
+            {
+                return Fetch() && Rebase();
             }
 
             protected override void ApplyStyle()
@@ -209,14 +218,14 @@ namespace GitUI.BranchTreePanel
                 _remote = remote;
             }
 
-            public void Fetch()
+            public bool Fetch()
             {
-                var cmd = Module.FetchCmd(FullPath, null, null, null);
-
-                if (FormRemoteProcess.ShowDialog(TreeViewNode.TreeView, Module, cmd))
-                {
-                    UICommands.RepoChangedNotifier.Notify();
-                }
+                UICommands.StartPullDialogAndPullImmediately(
+                    out bool pullCompleted,
+                    TreeViewNode.TreeView,
+                    remote: FullPath,
+                    pullAction: AppSettings.PullAction.Fetch);
+                return pullCompleted;
             }
 
             protected override void ApplyStyle()

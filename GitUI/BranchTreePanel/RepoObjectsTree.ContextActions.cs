@@ -85,31 +85,15 @@ namespace GitUI.BranchTreePanel
             RegisterClick<RemoteBranchNode>(mnubtnDeleteRemoteBranch, remoteBranch => remoteBranch.Delete());
             RegisterClick<RemoteBranchNode>(mnubtnBranchCheckout, branch => branch.Checkout());
             RegisterClick<RemoteBranchNode>(mnubtnFetchOneBranch, remoteBranch => remoteBranch.Fetch());
-            RegisterClick<RemoteBranchNode>(mnubtnPullFromRemoteBranch, remoteBranch =>
-            {
-                remoteBranch.Fetch();
-                remoteBranch.Merge();
-            });
+            RegisterClick<RemoteBranchNode>(mnubtnPullFromRemoteBranch, remoteBranch => remoteBranch.FetchAndMerge());
             RegisterClick<RemoteBranchNode>(mnubtnCreateBranchBasedOnRemoteBranch, remoteBranch => remoteBranch.CreateBranch());
             RegisterClick<RemoteBranchNode>(mnubtnMergeBranch, remoteBranch => remoteBranch.Merge());
             RegisterClick<RemoteBranchNode>(mnubtnRebase, remoteBranch => remoteBranch.Rebase());
             RegisterClick<RemoteBranchNode>(mnubtnReset, remoteBranch => remoteBranch.Reset());
             RegisterClick<RemoteBranchNode>(mnubtnFilterRemoteBranchInRevisionGrid, FilterInRevisionGrid);
-            RegisterClick<RemoteBranchNode>(mnubtnRemoteBranchFetchAndCheckout, b =>
-            {
-                b.Fetch();
-                b.Checkout();
-            });
-            RegisterClick<RemoteBranchNode>(mnubtnFetchCreateBranch, b =>
-            {
-                b.Fetch();
-                b.CreateBranch();
-            });
-            RegisterClick<RemoteBranchNode>(mnubtnFetchRebase, b =>
-            {
-                b.Fetch();
-                b.Rebase();
-            });
+            RegisterClick<RemoteBranchNode>(mnubtnRemoteBranchFetchAndCheckout, remoteBranch => remoteBranch.FetchAndCheckout());
+            RegisterClick<RemoteBranchNode>(mnubtnFetchCreateBranch, remoteBranch => remoteBranch.FetchAndCreateBranch());
+            RegisterClick<RemoteBranchNode>(mnubtnFetchRebase, remoteBranch => remoteBranch.FetchAndRebase());
             Node.RegisterContextMenu(typeof(RemoteBranchNode), menuRemote);
 
             RegisterClick<RemoteRepoNode>(mnubtnFetchAllBranchesFromARemote, remote => remote.Fetch());
