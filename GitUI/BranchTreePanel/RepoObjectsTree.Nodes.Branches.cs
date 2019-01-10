@@ -145,10 +145,7 @@ namespace GitUI.BranchTreePanel
 
             public void Delete()
             {
-                UICommands.StartDeleteBranchDialog(ParentWindow(), new[]
-                {
-                    FullPath
-                });
+                UICommands.StartDeleteBranchDialog(ParentWindow(), FullPath);
             }
         }
 
