@@ -235,13 +235,13 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         private static void GitHubItem_Click(object sender, EventArgs e)
         {
-            Process.Start(@"http://github.com/gitextensions/gitextensions");
+            Process.Start(@"https://github.com/gitextensions/gitextensions");
         }
 
         private static void IssuesItem_Click(object sender, EventArgs e)
         {
             UserEnvironmentInformation.CopyInformation();
-            Process.Start(@"http://github.com/gitextensions/gitextensions/issues");
+            Process.Start(@"https://github.com/gitextensions/gitextensions/issues");
         }
 
         private void openItem_Click(object sender, EventArgs e)
