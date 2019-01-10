@@ -20,14 +20,13 @@ namespace GitUI
         /// <summary>
         /// Initialises all available plugins on the background thread.
         /// </summary>
-        /// <param name="postInitialiseAsync">A function to execute once plugins are loaded.</param>
-        public static Task InitializeAsync(Func<Task> postInitialiseAsync)
+        public static void Initialize()
         {
             lock (Plugins)
             {
                 if (Plugins.Count > 0)
                 {
-                    return Task.CompletedTask;
+                    return;
                 }
 
                 try
@@ -48,11 +47,6 @@ namespace GitUI
                 {
                     // no-op
                 }
-
-#pragma warning disable VSTHRD105 // Avoid method overloads that assume TaskScheduler.Current
-                return postInitialiseAsync()
-                    .ContinueWith(t => PluginsRegistered = true);
-#pragma warning restore VSTHRD105 // Avoid method overloads that assume TaskScheduler.Current
             }
         }
 
@@ -65,6 +59,28 @@ namespace GitUI
             }
 
             return GitHosters.FirstOrDefault(gitHoster => gitHoster.GitModuleIsRelevantToMe(module));
+        }
+
+        public static void Register(IGitUICommands gitUiCommands)
+        {
+            if (PluginsRegistered)
+            {
+                return;
+            }
+
+            Plugins.ForEach(p => p.Register(gitUiCommands));
+            PluginsRegistered = true;
+        }
+
+        public static void Unregister(IGitUICommands gitUiCommands)
+        {
+            if (!PluginsRegistered)
+            {
+                return;
+            }
+
+            Plugins.ForEach(p => p.Unregister(gitUiCommands));
+            PluginsRegistered = false;
         }
     }
 }

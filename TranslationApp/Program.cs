@@ -50,7 +50,7 @@ namespace TranslationApp
             }
 
             // required for translation
-            ThreadHelper.JoinableTaskFactory.Run(() => PluginRegistry.InitializeAsync(() => Task.CompletedTask));
+            ThreadHelper.JoinableTaskFactory.Run(() => PluginRegistry.Initialize());
 
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length == 1)

@@ -444,22 +444,22 @@ namespace GitUI
                 // Commit dialog can be opened on its own without the main form
                 // If it is opened by itself, we need to ensure plugins are loaded because some of them
                 // may have hooks into the commit flow
-                bool pluginsRegistered = PluginRegistry.PluginsRegistered;
+                bool werePluginsRegistered = PluginRegistry.PluginsRegistered;
 
                 try
                 {
                     // Load plugins synchronously
                     // if the commit dialog is opened from the main form, all plugins are already loaded and we return instantly,
                     // if the dialog is loaded on its own, plugins need to be loaded before we load the form
-                    ThreadHelper.JoinableTaskFactory.Run(async () =>
+                    if (!werePluginsRegistered)
                     {
-                        await PluginRegistry.InitializeAsync(() =>
+                        ThreadHelper.JoinableTaskFactory.Run(async () =>
                         {
-                            // this will only execute, if start without the main form
-                            PluginRegistry.Plugins.ForEach(p => p.Register(this));
-                            return Task.CompletedTask;
+                            PluginRegistry.Initialize();
+                            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                            PluginRegistry.Register(this);
                         });
-                    });
+                    }
 
                     using (var form = new FormCommit(this))
                     {
@@ -475,9 +475,9 @@ namespace GitUI
                 }
                 finally
                 {
-                    if (!pluginsRegistered)
+                    if (!werePluginsRegistered)
                     {
-                        PluginRegistry.Plugins.ForEach(p => p.Unregister(this));
+                        PluginRegistry.Unregister(this);
                     }
                 }
 
