@@ -2711,7 +2711,7 @@ namespace GitUI.CommandsDialogs
         private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UserEnvironmentInformation.CopyInformation();
-            Process.Start(@"https://github.com/gitextensions/gitextensions/issues/new");
+            Process.Start(@"https://github.com/gitextensions/gitextensions/issues");
         }
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
