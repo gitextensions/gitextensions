@@ -108,6 +108,11 @@ title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.
     <td><a href="https://marketplace.visualstudio.com/items?itemName=pmiossec.vscode-gitextensions">[ Download ]</a> or install via VSCode<br />
       NB: Please direct all discussions about the VSIX to <a href="https://github.com/pmiossec/vscode-gitextensions">its own repo</a>.</td>
   </tr>
+  <tr>
+    <td><strong>IntelliJ platform IDEs</strong><br />Kudos to <a href="/DmitryZhelnin" class="author text-inherit">@DmitryZhelnin</a></td>
+    <td><a href="https://plugins.jetbrains.com/plugin/11511-gitextensions">[ Download ]</a> or install via IDE Plugins settings<br/>
+      NB: Please direct all discussions about this plugin to <a href="https://github.com/DmitryZhelnin/git-extensions-intellij">its own repo</a>.</td>
+  </tr>
 </table>
 
 # Conduct
