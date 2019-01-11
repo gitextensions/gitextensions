@@ -119,6 +119,11 @@ namespace GitUI.BranchTreePanel
                 base.FillTreeViewNode();
                 TreeViewNode.Expand();
             }
+
+            internal void PopupManageRemotesForm(string remoteName)
+            {
+                UICommands.StartRemotesDialog(TreeViewNode.TreeView, remoteName);
+            }
         }
 
         private sealed class RemoteBranchNode : BaseBranchNode
@@ -323,6 +328,16 @@ namespace GitUI.BranchTreePanel
                 }
 
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = imageKey;
+            }
+
+            internal override void OnDoubleClick()
+            {
+                PopupManageRemotesForm();
+            }
+
+            internal void PopupManageRemotesForm()
+            {
+                ((RemoteBranchTree)Tree).PopupManageRemotesForm(FullPath);
             }
 
             private bool DoFetch()
