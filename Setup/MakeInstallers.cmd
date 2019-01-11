@@ -1,5 +1,6 @@
 @echo off
-
+echo "MakeInstallers current path"
+echo %cd%
 rem
 rem Update this version number with every release
 rem
