@@ -91,16 +91,20 @@ for:
   # scripts to run after tests
   after_test:
   - ps: |
+      & pwd
       & Setup\BuildInstallers.cmd
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
       & Setup\Set-Portable.ps1
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
       & Setup\MakePortableArchive.cmd Release $env:APPVEYOR_BUILD_VERSION
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-
+      & tree /F /A > tree.txt
+      Get-ChildItem .\tree.txt | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+      & git status > GitStatus.txt
+      & git submodule foreach --recursive git status >> GitStatus.txt
+      Get-ChildItem .\GitStatus.txt | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+      
   artifacts:
     # upload the generated portable archive only
     - path: 'Setup/GitExtensions-Portable-*.zip'
+    - path: 'Setup/GitExtensions-*.msi'
 
 # configuration for release branches ONLY
 -
@@ -115,6 +119,11 @@ for:
   # scripts to run after tests
   after_test:
   - ps: |
+      Write-Host "[INFO]: GitStatus.txt is to help find dirty status.  File should say repo and submodules are clean."
+      Write-Host "[INFO]: Update the skip-worktree section in this script to fix CI builds."
+      & git status > GitStatus.txt
+      & git submodule foreach --recursive git status >> GitStatus.txt
+      Get-ChildItem .\GitStatus.txt | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
       # -------------------------------
       # build artifacts
       # -------------------------------
