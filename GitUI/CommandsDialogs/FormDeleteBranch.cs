@@ -55,7 +55,7 @@ namespace GitUI.CommandsDialogs
 
             if (_defaultBranches != null)
             {
-                Branches.SetSelectedText(_defaultBranches.Join(", "));
+                Branches.SetSelectedText(_defaultBranches.Join(" "));
             }
         }
 
