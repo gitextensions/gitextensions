@@ -86,22 +86,28 @@ title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.
 
 <table>
   <tr>
-    <td><strong>v3.00</strong></td>
+    <td><strong>v3.0</strong></td>
     <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00">[ Download ]</a><br />
         GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/v3.00.00/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
   </tr>
   <tr>
-    <td><strong>canary</strong></td>
-    <td><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a> <a href="https://codecov.io/gh/gitextensions/gitextensions"><img alt="codecov.io" src="https://codecov.io/gh/gitextensions/gitextensions/branch/master/graph/badge.svg" style="max-width:100%;"></a>
-    <br /><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master/artifacts">[ Download ]</a> NB: expect :unicorn: :unicorn: :dragon: :dragon: and :bug: :bug:</td>
+    <td><strong>Current dev stream</strong><br />NB: expect :unicorn: :unicorn: :dragon: :dragon: and :bug: :bug:</td>
+    <td><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master/artifacts">[ Download ]</a><br />
+        <a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a> <a href="https://codecov.io/gh/gitextensions/gitextensions"><img alt="codecov.io" src="https://codecov.io/gh/gitextensions/gitextensions/branch/master/graph/badge.svg" style="max-width:100%;"></a>
+    </td>
   </tr>
   <tr>
     <td><strong>Visual Studio VSIX (2015/2017)</strong></td>
-    <td><a href="https://marketplace.visualstudio.com/items?itemName=HenkWesthuis.GitExtensions">[ Download ]</a> or install via Visual Studio</td>
+    <td><a href="https://marketplace.visualstudio.com/items?itemName=HenkWesthuis.GitExtensions">[ Download ]</a> or install from Visual Studio via Extensions</td>
   </tr>
   <tr>
     <td><strong>Visual Studio addin (2010/2012/2013)</strong></td>
-    <td>Included with installer for the 2.x branch. <a href="https://github.com/gitextensions/gitextensions/releases/latest">Download and run setup.exe</a></td>
+    <td>Included with installer for the 2.x branch. <a href="https://github.com/gitextensions/gitextensions/releases/latest">Download and run setup.exe</a><br />
+      <ul><li><a href="https://github.com/gitextensions/gitextensions/files/2646204/Visual.Studio.2010.Addin.zip">Visual Studio 2010 Addin.zip</a></li>
+          <li><a href="https://github.com/gitextensions/gitextensions/files/2646205/Visual.Studio.2012.Addin.zip">Visual Studio 2013 Addin.zip</a></li>
+          <li><a href="https://github.com/gitextensions/gitextensions/files/2646203/Visual.Studio.2013.Addin.zip">Visual Studio 2013 Addin.zip</a></li>
+        </ul>
+</td>
   </tr>
   <tr>
     <td><strong>Visual Studio Code VSIX</strong><br />Kudos to <a href="/pmiossec" class="author text-inherit">@pmiossec</a></td>
