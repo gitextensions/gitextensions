@@ -617,6 +617,12 @@ namespace GitCommands
             set => SetBool("fullhistoryinfilehistory", value);
         }
 
+        public static bool SimplifyMergesInFileHistory
+        {
+            get => GetBool("simplifymergesinfileHistory", true);
+            set => SetBool("simplifymergesinfileHistory", value);
+        }
+
         public static bool LoadFileHistoryOnShow
         {
             get => GetBool("LoadFileHistoryOnShow", true);
