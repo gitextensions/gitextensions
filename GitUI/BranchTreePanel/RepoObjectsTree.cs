@@ -26,6 +26,7 @@ namespace GitUI.BranchTreePanel
 
         private readonly Dictionary<Tree, int> _treeToPositionIndex = new Dictionary<Tree, int>();
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
+        private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
         private readonly List<Tree> _rootNodes = new List<Tree>();
         private readonly SearchControl<string> _txtBranchCriterion;
         private TreeNode _branchesTreeRootNode;
@@ -55,8 +56,6 @@ namespace GitUI.BranchTreePanel
 
             treeMain.ShowNodeToolTips = true;
             treeMain.HideSelection = false;
-            treeMain.NodeMouseClick += OnNodeClick;
-            treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
 
             toolTip.SetToolTip(btnCollapseAll, mnubtnCollapseAll.ToolTipText);
             toolTip.SetToolTip(btnSearch, _searchTooltip.Text);
@@ -67,6 +66,12 @@ namespace GitUI.BranchTreePanel
 
             _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
             _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
+
+            _explorerNavigationDecorator = new NativeTreeViewExplorerNavigationDecorator(treeMain);
+            _explorerNavigationDecorator.AfterSelect += OnNodeSelected;
+
+            treeMain.NodeMouseClick += OnNodeClick;
+            treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
 
             mnubtnFilterRemoteBranchInRevisionGrid.ToolTipText = _showBranchOnly.Text;
             mnubtnFilterLocalBranchInRevisionGrid.ToolTipText = _showBranchOnly.Text;
@@ -384,14 +389,6 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            if (e.KeyCode == Keys.F3 || e.KeyCode == Keys.Enter)
-            {
-                OnBtnSearchClicked(null, null);
-            }
-        }
-
         private void OnBtnSettingsClicked(object sender, EventArgs e)
         {
             btnSettings.ContextMenuStrip.Show(btnSettings, 0, btnSettings.Height);
@@ -423,6 +420,14 @@ namespace GitUI.BranchTreePanel
             e.Handled = true;
         }
 
+        private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.F3)
+            {
+                OnBtnSearchClicked(null, null);
+            }
+        }
+
         private void OnNodeSelected(object sender, TreeViewEventArgs e)
         {
             Node.OnNode<Node>(e.Node, node => node.OnSelected());
@@ -430,7 +435,6 @@ namespace GitUI.BranchTreePanel
 
         private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            treeMain.SelectedNode = e.Node;
             Node.OnNode<Node>(e.Node, node => node.OnClick());
         }
 

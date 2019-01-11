@@ -28,6 +28,12 @@ namespace GitUI.BranchTreePanel
                 _doubleClickDecorator = null;
             }
 
+            if (_explorerNavigationDecorator != null)
+            {
+                _explorerNavigationDecorator.AfterSelect -= OnNodeSelected;
+                _explorerNavigationDecorator = null;
+            }
+
             base.Dispose(disposing);
         }
 
@@ -120,7 +126,6 @@ namespace GitUI.BranchTreePanel
             this.treeMain.ShowNodeToolTips = true;
             this.treeMain.Size = new System.Drawing.Size(300, 350);
             this.treeMain.TabIndex = 3;
-            this.treeMain.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnNodeSelected);
             // 
             // menuMain
             // 
