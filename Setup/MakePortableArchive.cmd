@@ -770,7 +770,8 @@ IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\TfsInterop.Vs2015.pdb GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1 
 
-
+powershell.exe -executionpolicy Bypass -File  .\Get-Hashes.ps1 > Hashes.txt
+move Hashes.txt GitExtensions\
 
 :create_archive
 set nuget=..\.nuget\nuget.exe
