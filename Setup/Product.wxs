@@ -24,12 +24,53 @@
       <Directory Id="ProgramFilesFolder">
         <Directory Id="INSTALLDIR" Name="$(var.InstallName)">
           <Directory Id="PuttyDir" Name="PuTTY" />
-          <Directory Id="PluginsDir" Name="Plugins" />
+                    <Directory Id="PluginsDir" Name="Plugins">
+                        <Directory Id="Plugins_de" Name="de" />
+                        <Directory Id="Plugins_es" Name="es" />
+                        <Directory Id="Plugins_fr" Name="fr" />
+                        <Directory Id="Plugins_it" Name="it" />
+                        <Directory Id="Plugins_ja" Name="ja" />
+                        <Directory Id="Plugins_ko" Name="ko" />
+                        <Directory Id="Plugins_pl" Name="pl" />
+                        <Directory Id="Plugins_pt_BR" Name="pt-BR" />
+                        <Directory Id="Plugins_cs" Name="cs" />
+                        <Directory Id="Plugins_tr" Name="tr" />
+                        <Directory Id="Plugins_ru" Name="ru" />
+                        <Directory Id="Plugins_zh_Hans" Name="zh-Hans" />
+                        <Directory Id="Plugins_zh_Hant" Name="zh-Hant" />
+                    </Directory>
           <Directory Id="InstallerDir" Name="Installer" />
           <Directory Id="DictionariesDir" Name="Dictionaries" />
           <Directory Id="TranslationsDir" Name="Translation" />
           <Directory Id="DiffScriptsDir" Name="Diff-Scripts" />
           <Directory Id="DirConEmu" Name="ConEmu" />
+                    <Directory Id="cs" Name="cs" />
+                    <Directory Id="de" Name="de" />
+                    <Directory Id="es" Name="es" />
+                    <Directory Id="es_MX" Name="es-MX" />
+                    <Directory Id="fi_FI" Name="fi-FI" />
+                    <Directory Id="fr" Name="fr" />
+                    <Directory Id="hr" Name="hr" />
+                    <Directory Id="it" Name="it" />
+                    <Directory Id="ja" Name="ja" />
+                    <Directory Id="ko" Name="ko" />
+                    <Directory Id="ko_KR" Name="ko-KR" />
+                    <Directory Id="pl" Name="pl" />
+                    <Directory Id="pt_BR" Name="pt-BR" />
+                    <Directory Id="ru" Name="ru" />
+                    <Directory Id="tr" Name="tr" />
+                    <Directory Id="zh_Hans" Name="zh-Hans" />
+                    <Directory Id="zh_Hant" Name="zh-Hant" />
+                    <Directory Id="ru_RU" Name="ru-RU" />
+                </Directory>
+            </Directory>
+            <Directory Id="ProgramMenuFolder">
+                <Directory Id="StartMenuDir" Name="$(var.ProductName)" />
+            </Directory>
+            <Directory Id="DesktopFolder" />
+            <Component Id="Path" Guid="{DAC97FD8-A869-4458-AABD-C27D2C892643}">
+                <Environment Id="PATH" Name="PATH" Value="[INSTALLDIR]" Permanent="no" Part="last" Action="set" System="yes" />
+            </Component>
         </Directory>
     <PropertyRef Id="VS2015DEVENV" />
     <DirectoryRef Id="INSTALLDIR">
@@ -919,7 +960,457 @@
             <ComponentRef Id="System.Xml.XPath.dll" />
             <ComponentRef Id="System.Xml.XPath.XDocument.dll" />
     </ComponentGroup>
+        <ComponentGroup Id="Component.Resources">
+            <ComponentRef Id="cs_Microsoft.VisualStudio.Threading.resources.dll" />
+            <ComponentRef Id="cs_Microsoft.VisualStudio.Validation.resources.dll" />
+            <ComponentRef Id="de_Microsoft.VisualStudio.Threading.resources.dll" />
+            <ComponentRef Id="de_Microsoft.VisualStudio.Validation.resources.dll" />
+            <ComponentRef Id="de_NBug.resources.dll" />
+            <ComponentRef Id="es_Microsoft.VisualStudio.Threading.resources.dll" />
+            <ComponentRef Id="es_Microsoft.VisualStudio.Validation.resources.dll" />
+            <ComponentRef Id="es_MX_NBug.resources.dll" />
+            <ComponentRef Id="fi_FI_NBug.resources.dll" />
+            <ComponentRef Id="fr_Microsoft.VisualStudio.Threading.resources.dll" />
+            <ComponentRef Id="fr_Microsoft.VisualStudio.Validation.resources.dll" />
+            <ComponentRef Id="hr_NBug.resources.dll" />
+            <ComponentRef Id="it_Microsoft.VisualStudio.Threading.resources.dll" />
+            <ComponentRef Id="it_Microsoft.VisualStudio.Validation.resources.dll" />
+            <ComponentRef Id="ja_Microsoft.VisualStudio.Threading.resources.dll" />
+            <ComponentRef Id="ja_Microsoft.VisualStudio.Validation.resources.dll" />
+            <ComponentRef Id="ja_NBug.resources.dll" />
+            <ComponentRef Id="ko_Microsoft.VisualStudio.Threading.resources.dll" />
+            <ComponentRef Id="ko_Microsoft.VisualStudio.Validation.resources.dll" />
+            <ComponentRef Id="ko_KR_NBug.resources.dll" />
+            <ComponentRef Id="pl_Microsoft.VisualStudio.Threading.resources.dll" />
+            <ComponentRef Id="pl_Microsoft.VisualStudio.Validation.resources.dll" />
+            <ComponentRef Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            <ComponentRef Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            <ComponentRef Id="pt_BR_Microsoft.VisualStudio.Threading.resources.dll" />
+            <ComponentRef Id="pt_BR_Microsoft.VisualStudio.Validation.resources.dll" />
+            <ComponentRef Id="Plugins_ru_Microsoft.TeamFoundation.Common.resources.dll" />
+            <ComponentRef Id="Plugins_ru_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_ru_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_ru_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            <ComponentRef Id="Plugins_ru_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            <ComponentRef Id="ru_Microsoft.VisualStudio.Threading.resources.dll" />
+            <ComponentRef Id="ru_Microsoft.VisualStudio.Validation.resources.dll" />
+            <ComponentRef Id="Plugins_tr_Microsoft.TeamFoundation.Common.resources.dll" />
+            <ComponentRef Id="Plugins_tr_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_tr_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_tr_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            <ComponentRef Id="Plugins_tr_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            <ComponentRef Id="tr_Microsoft.VisualStudio.Threading.resources.dll" />
+            <ComponentRef Id="tr_Microsoft.VisualStudio.Validation.resources.dll" />
+            <ComponentRef Id="zh_Hans_Microsoft.VisualStudio.Threading.resources.dll" />
+            <ComponentRef Id="zh_Hans_Microsoft.VisualStudio.Validation.resources.dll" />
+            <ComponentRef Id="zh_Hant_Microsoft.VisualStudio.Threading.resources.dll" />
+            <ComponentRef Id="zh_Hant_Microsoft.VisualStudio.Validation.resources.dll" />
+            <ComponentRef Id="pt_BR_NBug.resources.dll" />
+            <ComponentRef Id="ru_RU_NBug.resources.dll" />
+        </ComponentGroup>
+        <ComponentGroup Id="Component.PluginResources">
+            <ComponentRef Id="Plugins_cs_Microsoft.TeamFoundation.Common.resources.dll" />
+            <ComponentRef Id="Plugins_cs_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_cs_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            <ComponentRef Id="Plugins_cs_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_de_Microsoft.TeamFoundation.Common.resources.dll" />
+            <ComponentRef Id="Plugins_de_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_de_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_de_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            <ComponentRef Id="Plugins_de_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_es_Microsoft.TeamFoundation.Common.resources.dll" />
+            <ComponentRef Id="Plugins_es_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_es_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_es_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            <ComponentRef Id="Plugins_es_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_fr_Microsoft.TeamFoundation.Common.resources.dll" />
+            <ComponentRef Id="Plugins_fr_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_fr_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_fr_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            <ComponentRef Id="Plugins_fr_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_it_Microsoft.TeamFoundation.Common.resources.dll" />
+            <ComponentRef Id="Plugins_it_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_it_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_it_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            <ComponentRef Id="Plugins_it_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_ja_Microsoft.TeamFoundation.Common.resources.dll" />
+            <ComponentRef Id="Plugins_ja_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_ja_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_ja_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            <ComponentRef Id="Plugins_ja_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_ko_Microsoft.TeamFoundation.Common.resources.dll" />
+            <ComponentRef Id="Plugins_ko_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_ko_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_ko_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            <ComponentRef Id="Plugins_ko_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_pl_Microsoft.TeamFoundation.Common.resources.dll" />
+            <ComponentRef Id="Plugins_pl_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_pl_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            <ComponentRef Id="Plugins_pl_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_pt_BR_Microsoft.TeamFoundation.Common.resources.dll" />
+            <ComponentRef Id="Plugins_pt_BR_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Common.resources.dll" />
+            <ComponentRef Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Common.resources.dll" />
+            <ComponentRef Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_zh_Hans_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            <ComponentRef Id="Plugins_zh_Hans_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            <ComponentRef Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            <ComponentRef Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+        </ComponentGroup>
 
+        <DirectoryRef Id="cs">
+            <Component Id="cs_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\cs\Microsoft.VisualStudio.Threading.resources.dll" Id="cs_Microsoft.VisualStudio.Threading.resources.dll" />
+            </Component>
+            <Component Id="cs_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\cs\Microsoft.VisualStudio.Validation.resources.dll" Id="cs_Microsoft.VisualStudio.Validation.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="de">
+            <Component Id="de_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\de\Microsoft.VisualStudio.Threading.resources.dll" Id="de_Microsoft.VisualStudio.Threading.resources.dll" />
+            </Component>
+            <Component Id="de_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\de\Microsoft.VisualStudio.Validation.resources.dll" Id="de_Microsoft.VisualStudio.Validation.resources.dll" />
+            </Component>
+            <Component Id="de_NBug.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\de\NBug.resources.dll" Id="de_NBug.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="es">
+            <Component Id="es_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\es\Microsoft.VisualStudio.Threading.resources.dll" Id="es_Microsoft.VisualStudio.Threading.resources.dll" />
+            </Component>
+            <Component Id="es_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\es\Microsoft.VisualStudio.Validation.resources.dll" Id="es_Microsoft.VisualStudio.Validation.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="es_MX">
+            <Component Id="es_MX_NBug.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\es-MX\NBug.resources.dll" Id="es_MX_NBug.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="fi_FI">
+            <Component Id="fi_FI_NBug.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\fi-FI\NBug.resources.dll" Id="fi_FI_NBug.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="fr">
+            <Component Id="fr_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\fr\Microsoft.VisualStudio.Threading.resources.dll" Id="fr_Microsoft.VisualStudio.Threading.resources.dll" />
+            </Component>
+            <Component Id="fr_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\fr\Microsoft.VisualStudio.Validation.resources.dll" Id="fr_Microsoft.VisualStudio.Validation.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="hr">
+            <Component Id="hr_NBug.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\hr\NBug.resources.dll" Id="hr_NBug.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="it">
+            <Component Id="it_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\it\Microsoft.VisualStudio.Threading.resources.dll" Id="it_Microsoft.VisualStudio.Threading.resources.dll" />
+            </Component>
+            <Component Id="it_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\it\Microsoft.VisualStudio.Validation.resources.dll" Id="it_Microsoft.VisualStudio.Validation.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="ja">
+            <Component Id="ja_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\ja\Microsoft.VisualStudio.Threading.resources.dll" Id="ja_Microsoft.VisualStudio.Threading.resources.dll" />
+            </Component>
+            <Component Id="ja_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\ja\Microsoft.VisualStudio.Validation.resources.dll" Id="ja_Microsoft.VisualStudio.Validation.resources.dll" />
+            </Component>
+            <Component Id="ja_NBug.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\ja\NBug.resources.dll" Id="ja_NBug.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="ko">
+            <Component Id="ko_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\ko\Microsoft.VisualStudio.Threading.resources.dll" Id="ko_Microsoft.VisualStudio.Threading.resources.dll" />
+            </Component>
+            <Component Id="ko_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\ko\Microsoft.VisualStudio.Validation.resources.dll" Id="ko_Microsoft.VisualStudio.Validation.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="ko_KR">
+            <Component Id="ko_KR_NBug.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\ko-KR\NBug.resources.dll" Id="ko_KR_NBug.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="pl">
+            <Component Id="pl_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\pl\Microsoft.VisualStudio.Threading.resources.dll" Id="pl_Microsoft.VisualStudio.Threading.resources.dll" />
+            </Component>
+            <Component Id="pl_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\pl\Microsoft.VisualStudio.Validation.resources.dll" Id="pl_Microsoft.VisualStudio.Validation.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="Plugins_cs">
+            <Component Id="Plugins_cs_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\cs\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_cs_Microsoft.TeamFoundation.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_cs_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\cs\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_cs_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_cs_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\cs\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_cs_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_cs_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\cs\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_cs_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="Plugins_de">
+            <Component Id="Plugins_de_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\de\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_de_Microsoft.TeamFoundation.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_de_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\de\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_de_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_de_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\de\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_de_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_de_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\de\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_de_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_de_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\de\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_de_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="Plugins_es">
+            <Component Id="Plugins_es_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\es\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_es_Microsoft.TeamFoundation.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_es_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\es\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_es_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_es_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\es\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_es_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_es_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\es\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_es_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_es_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\es\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_es_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="Plugins_fr">
+            <Component Id="Plugins_fr_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\fr\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_fr_Microsoft.TeamFoundation.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_fr_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\fr\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_fr_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_fr_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\fr\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_fr_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_fr_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\fr\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_fr_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_fr_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\fr\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_fr_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="Plugins_it">
+            <Component Id="Plugins_it_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\it\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_it_Microsoft.TeamFoundation.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_it_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\it\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_it_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_it_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\it\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_it_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_it_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\it\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_it_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_it_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\it\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_it_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="Plugins_ja">
+            <Component Id="Plugins_ja_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ja\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_ja_Microsoft.TeamFoundation.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_ja_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ja\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_ja_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_ja_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ja\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_ja_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_ja_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ja\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_ja_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_ja_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ja\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_ja_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="Plugins_ko">
+            <Component Id="Plugins_ko_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ko\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_ko_Microsoft.TeamFoundation.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_ko_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ko\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_ko_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_ko_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ko\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_ko_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_ko_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ko\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_ko_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_ko_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ko\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_ko_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="Plugins_pl">
+            <Component Id="Plugins_pl_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pl\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_pl_Microsoft.TeamFoundation.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_pl_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pl\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_pl_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_pl_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pl\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_pl_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_pl_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pl\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_pl_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="Plugins_pt_BR">
+            <Component Id="Plugins_pt_BR_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pt-BR\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_pt_BR_Microsoft.TeamFoundation.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_pt_BR_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pt-BR\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_pt_BR_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pt-BR\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\pt-BR\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="pt_BR">
+            <Component Id="pt_BR_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\pt-BR\Microsoft.VisualStudio.Threading.resources.dll" Id="pt_BR_Microsoft.VisualStudio.Threading.resources.dll" />
+            </Component>
+            <Component Id="pt_BR_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\pt-BR\Microsoft.VisualStudio.Validation.resources.dll" Id="pt_BR_Microsoft.VisualStudio.Validation.resources.dll" />
+            </Component>
+            <Component Id="pt_BR_NBug.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\pt-BR\NBug.resources.dll" Id="pt_BR_NBug.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="Plugins_ru">
+            <Component Id="Plugins_ru_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ru\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_ru_Microsoft.TeamFoundation.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_ru_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ru\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_ru_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_ru_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ru\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_ru_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_ru_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ru\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_ru_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_ru_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\ru\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_ru_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="ru">
+            <Component Id="ru_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\ru\Microsoft.VisualStudio.Threading.resources.dll" Id="ru_Microsoft.VisualStudio.Threading.resources.dll" />
+            </Component>
+            <Component Id="ru_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\ru\Microsoft.VisualStudio.Validation.resources.dll" Id="ru_Microsoft.VisualStudio.Validation.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="Plugins_tr">
+            <Component Id="Plugins_tr_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\tr\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_tr_Microsoft.TeamFoundation.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_tr_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\tr\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_tr_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_tr_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\tr\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_tr_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_tr_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\tr\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_tr_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_tr_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\tr\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_tr_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="tr">
+            <Component Id="tr_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\tr\Microsoft.VisualStudio.Threading.resources.dll" Id="tr_Microsoft.VisualStudio.Threading.resources.dll" />
+            </Component>
+            <Component Id="tr_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\tr\Microsoft.VisualStudio.Validation.resources.dll" Id="tr_Microsoft.VisualStudio.Validation.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="Plugins_zh_Hans">
+            <Component Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hans\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hans\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hans\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_zh_Hans_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_zh_Hans_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hans\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_zh_Hans_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_zh_Hans_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hans\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_zh_Hans_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="zh_Hans">
+            <Component Id="zh_Hans_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hans\Microsoft.VisualStudio.Threading.resources.dll" Id="zh_Hans_Microsoft.VisualStudio.Threading.resources.dll" />
+            </Component>
+            <Component Id="zh_Hans_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hans\Microsoft.VisualStudio.Validation.resources.dll" Id="zh_Hans_Microsoft.VisualStudio.Validation.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="Plugins_zh_Hant">
+            <Component Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hant\Microsoft.TeamFoundation.Common.resources.dll" Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Core.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hant\Microsoft.TeamFoundation.Core.WebApi.resources.dll" Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hant\Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" Id="Plugins_zh_Hant_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+            </Component>
+            <Component Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.Common.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hant\Microsoft.VisualStudio.Services.Common.resources.dll" Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.Common.resources.dll" />
+            </Component>
+            <Component Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.WebApi.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\Plugins\zh-Hant\Microsoft.VisualStudio.Services.WebApi.resources.dll" Id="Plugins_zh_Hant_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="zh_Hant">
+            <Component Id="zh_Hant_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hant\Microsoft.VisualStudio.Threading.resources.dll" Id="zh_Hant_Microsoft.VisualStudio.Threading.resources.dll" />
+            </Component>
+            <Component Id="zh_Hant_Microsoft.VisualStudio.Validation.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hant\Microsoft.VisualStudio.Validation.resources.dll" Id="zh_Hant_Microsoft.VisualStudio.Validation.resources.dll" />
+            </Component>
+        </DirectoryRef>
+        <DirectoryRef Id="ru_RU">
+            <Component Id="ru_RU_NBug.resources.dll" Guid="*">
+                <File Source="..\GitExtensions\bin\$(var.Configuration)\ru-RU\NBug.resources.dll" Id="ru_RU_NBug.resources.dll" />
+            </Component>
+        </DirectoryRef>
     <DirectoryRef Id="ProgramMenuFolder">
       <Component Id="GitExtensions.newstartmenu" Guid="*">
         <Shortcut Id="GitExtensions.newstartmenu" Name="$(var.ProductName)" Description="$(var.ProductName)" Icon="gitextensions.ico" Target="[INSTALLDIR]GitExtensions.exe" WorkingDirectory="INSTALLDIR" />
@@ -974,6 +1465,7 @@
       <ComponentRef Id="puttygen.reg" />
       <ComponentGroupRef Id="Component.ConEmuFiles" />
             <ComponentGroupRef Id="Component.NetStandard" />
+            <ComponentGroupRef Id="Component.Resources" />
       <ComponentRef Id="GitExtSshAskPass.exe" />
       <ComponentRef Id="GitExtensions.newstartmenu" />
       <ComponentRef Id="GitExtensions.startmenu" />
@@ -990,6 +1482,7 @@
       <!--Remove unused dll, installed in versions <= 2.31-->
       <ComponentRef Id="Github.dll" />
       <Feature Id="Plugins" Title="Plugins" Level="1">
+                <ComponentGroupRef Id="Component.PluginResources" />
         <Feature Id="AutoCompileSubmodules" Title="Auto compile submodules" Level="1">
           <ComponentRef Id="AutoCompileSubmodules.dll" />
         </Feature>
