@@ -12,6 +12,7 @@ namespace GitCommands
         private static readonly GitVersion v1_8_4 = new GitVersion("1.8.4");
         private static readonly GitVersion v1_8_5 = new GitVersion("1.8.5");
         private static readonly GitVersion v2_0_1 = new GitVersion("2.0.1");
+        private static readonly GitVersion v2_5_0 = new GitVersion("2.5.0");
         private static readonly GitVersion v2_5_1 = new GitVersion("2.5.1");
         private static readonly GitVersion v2_7_0 = new GitVersion("2.7.0");
         private static readonly GitVersion v2_9_0 = new GitVersion("2.9.0");
@@ -108,6 +109,8 @@ namespace GitCommands
         public bool SupportPushForceWithLease => this >= v1_8_5;
 
         public bool RaceConditionWhenGitStatusIsUpdatingIndex => this < v2_0_1;
+
+        public bool SupportAheadBehindData => this >= v2_5_0;
 
         public bool SupportWorktree => this >= v2_5_1;
 

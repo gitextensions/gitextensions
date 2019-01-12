@@ -52,7 +52,7 @@ namespace GitUI.CommandsDialogs
             this.fetchAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fetchPruneAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setDefaultPullButtonActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripButtonPush = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonPush = new GitUI.CommandsDialogs.ToolStripPushButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripFileExplorer = new System.Windows.Forms.ToolStripButton();
             this.GitBash = new System.Windows.Forms.ToolStripButton();
@@ -1808,7 +1808,7 @@ namespace GitUI.CommandsDialogs
         private ToolStripButton RefreshButton;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripTextBox toolStripRevisionFilterTextBox;
-        private ToolStripButton toolStripButtonPush;
+        private ToolStripPushButton toolStripButtonPush;
         private ToolStripLabel toolStripRevisionFilterLabel;
         private ToolStripSplitButton toolStripSplitStash;
         private ToolStripMenuItem stashChangesToolStripMenuItem;

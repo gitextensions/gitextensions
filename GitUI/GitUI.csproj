@@ -288,6 +288,9 @@
     <Compile Include="CommandsDialogs\SettingsDialog\Pages\FormBrowseRepoSettingsPage.Designer.cs">
       <DependentUpon>FormBrowseRepoSettingsPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommandsDialogs\ToolStripPushButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CommitInfo\CommitInfoHeader.cs">
       <SubType>UserControl</SubType>
     </Compile>

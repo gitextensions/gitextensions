@@ -16,7 +16,7 @@ namespace GitCommands
     public static class ExecutableExtensions
     {
         private static readonly Regex _ansiCodePattern = new Regex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.Compiled);
-        private static readonly Encoding _defaultOutputEncoding = GitModule.SystemEncoding;
+        private static readonly Lazy<Encoding> _defaultOutputEncoding = new Lazy<Encoding>(() => GitModule.SystemEncoding, false);
 
         /// <summary>
         /// Launches a process for the executable and returns its output.
@@ -68,7 +68,7 @@ namespace GitCommands
         {
             if (outputEncoding == null)
             {
-                outputEncoding = _defaultOutputEncoding;
+                outputEncoding = _defaultOutputEncoding.Value;
             }
 
             if (cache != null && cache.TryGet(arguments, out var output, out var error))
@@ -187,7 +187,7 @@ namespace GitCommands
 
             if (outputEncoding == null)
             {
-                outputEncoding = _defaultOutputEncoding;
+                outputEncoding = _defaultOutputEncoding.Value;
             }
 
             using (var process = executable.Start(arguments, createWindow: false, redirectInput: input != null, redirectOutput: true, outputEncoding))
@@ -270,7 +270,7 @@ namespace GitCommands
         {
             if (outputEncoding == null)
             {
-                outputEncoding = _defaultOutputEncoding;
+                outputEncoding = _defaultOutputEncoding.Value;
             }
 
             using (var process = executable.Start(arguments, createWindow: false, redirectInput: writeInput != null, redirectOutput: true, outputEncoding))

@@ -25,6 +25,7 @@ namespace GitUI.BranchTreePanel
             protected string Name { get; set; }
 
             private string ParentPath { get; }
+            protected string AheadBehind { get; set; }
 
             /// <summary>Full path of the branch. <example>"issues/issue1344"</example></summary>
             public string FullPath => ParentPath.Combine(PathSeparator.ToString(), Name);
@@ -51,6 +52,12 @@ namespace GitUI.BranchTreePanel
                 var dirs = fullPath.Split(PathSeparator);
                 Name = dirs[dirs.Length - 1];
                 ParentPath = dirs.Take(dirs.Length - 1).Join(PathSeparator.ToString());
+            }
+
+            public void UpdateAheadBehind(string aheadBehindData)
+            {
+                AheadBehind = aheadBehindData;
+                TreeViewNode.Text = DisplayText();
             }
 
             [CanBeNull]
@@ -82,7 +89,7 @@ namespace GitUI.BranchTreePanel
 
             public override string DisplayText()
             {
-                return Name;
+                return string.IsNullOrEmpty(AheadBehind) ? Name : $"{Name} ({AheadBehind})";
             }
 
             protected void SelectRevision()

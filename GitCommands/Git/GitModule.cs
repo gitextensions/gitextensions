@@ -184,6 +184,12 @@ namespace GitCommands
         public string WorkingDir { get; }
 
         /// <summary>
+        /// Gets the access to the current git executable associated with this module.
+        /// </summary>
+        [NotNull]
+        public IExecutable GitExecutable => _gitExecutable;
+
+        /// <summary>
         /// Gets the location of .git directory for the current working folder.
         /// </summary>
         [NotNull]

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -503,6 +503,9 @@ namespace GitUI.CommandsDialogs
             UpdateSubmodulesStructure();
             UpdateStashCount();
 
+            toolStripButtonPush.Initialize(new AheadBehindDataProvider(() => Module.GitExecutable), GitVersion.Current.SupportAheadBehindData);
+            toolStripButtonPush.DisplayAheadBehindInformation(Module.GetSelectedBranch());
+
             base.OnLoad(e);
         }
 
@@ -592,6 +595,8 @@ namespace GitUI.CommandsDialogs
                 RevisionGrid.ForceRefreshRevisions();
                 InternalInitialize(true);
             }
+
+            toolStripButtonPush.DisplayAheadBehindInformation(Module.GetSelectedBranch());
         }
 
         #region IBrowseRepo
@@ -1912,6 +1917,7 @@ namespace GitUI.CommandsDialogs
             UICommands = new GitUICommands(module);
             if (Module.IsValidGitWorkingDir())
             {
+                repoObjectsTree.InitializeAheadBehindProvider();
                 var path = Module.WorkingDir;
                 ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
                 AppSettings.RecentWorkingDir = path;
