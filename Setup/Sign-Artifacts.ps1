@@ -38,7 +38,7 @@ if (($LastExitCode -eq 0) -and (Test-Path $combinedSigned)) {
     # -------------------------------
     Get-ChildItem .\Signed\*.* | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
 
-    $pdb = (Resolve-Path GitExtensions-*-pdb.zip)[0].Path;
+    $pdb = (Resolve-Path GitExtensions-pdbs-*.zip)[0].Path;
     Push-AppveyorArtifact $pdb
     return;
 }
@@ -47,5 +47,5 @@ if (($LastExitCode -eq 0) -and (Test-Path $combinedSigned)) {
 # publish unsigned artifacts
 $zip = (Resolve-Path GitExtensions-Portable-*.zip)[0].Path;
 Push-AppveyorArtifact $zip
-$pdb = (Resolve-Path GitExtensions-*-pdb.zip)[0].Path;
+$pdb = (Resolve-Path GitExtensions-pdbs-*.zip)[0].Path;
 Push-AppveyorArtifact $pdb

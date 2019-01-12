@@ -8,16 +8,10 @@ cd /d "%~p0"
 
 SET Configuration=%1
 IF "%Configuration%"=="" SET Configuration=Release
-SET version=%2
-if not "%APPVEYOR_BUILD_VERSION%"=="" set version=%APPVEYOR_BUILD_VERSION%
-set normal=GitExtensions-Portable-%version%.zip
-set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"
 
 rd /q /s GitExtensions\ 2>nul
-del %normal% 2>nul
 
 REM Some plugins are not included, like TeamFoundation/TfsIntegration with related dlls
-
 
 REM .net Standard
 echo ".NET Standard libraries"
@@ -694,88 +688,98 @@ xcopy /y /i ..\Logo\git-extensions-logo.ico GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 
 REM PDB's
-IF "%ARCHIVE_WITH_PDB%"=="" GOTO create_archive
 echo "PDB files"
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\ConEmu.WinForms.pdb GitExtensions\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\ConEmu.WinForms.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\Git.hub.pdb GitExtensions\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\Git.hub.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitCommands.pdb GitExtensions\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitCommands.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitExtUtils.pdb GitExtensions\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitExtUtils.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitExtensions.pdb GitExtensions\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitExtensions.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitUI.pdb GitExtensions\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitUI.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitUIPluginInterfaces.pdb GitExtensions\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitUIPluginInterfaces.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\NBug.pdb GitExtensions\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\NBug.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\NetSpell.SpellChecker.pdb GitExtensions\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\NetSpell.SpellChecker.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\ResourceManager.pdb GitExtensions\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\ResourceManager.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1
 
-xcopy /y /i ..\Plugins\AutoCompileSubmodules\bin\%Configuration%\AutoCompileSubmodules.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\AutoCompileSubmodules\bin\%Configuration%\AutoCompileSubmodules.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\BackgroundFetch\bin\%Configuration%\BackgroundFetch.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\BackgroundFetch\bin\%Configuration%\BackgroundFetch.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\Bitbucket\bin\%Configuration%\Bitbucket.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\Bitbucket\bin\%Configuration%\Bitbucket.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\BuildServerIntegration\AppVeyorIntegration\bin\%Configuration%\AppVeyorIntegration.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\BuildServerIntegration\AppVeyorIntegration\bin\%Configuration%\AppVeyorIntegration.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\BuildServerIntegration\JenkinsIntegration\bin\%Configuration%\JenkinsIntegration.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\BuildServerIntegration\JenkinsIntegration\bin\%Configuration%\JenkinsIntegration.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\%Configuration%\TeamCityIntegration.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\BuildServerIntegration\TeamCityIntegration\bin\%Configuration%\TeamCityIntegration.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\BuildServerIntegration\AzureDevOpsIntegration\bin\%Configuration%\AzureDevOpsIntegration.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\BuildServerIntegration\AzureDevOpsIntegration\bin\%Configuration%\AzureDevOpsIntegration.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\CreateLocalBranches\bin\%Configuration%\CreateLocalBranches.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\CreateLocalBranches\bin\%Configuration%\CreateLocalBranches.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\DeleteUnusedBranches\bin\%Configuration%\DeleteUnusedBranches.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\DeleteUnusedBranches\bin\%Configuration%\DeleteUnusedBranches.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\FindLargeFiles\bin\%Configuration%\FindLargeFiles.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\FindLargeFiles\bin\%Configuration%\FindLargeFiles.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\Gerrit\bin\%Configuration%\Gerrit.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\Gerrit\bin\%Configuration%\Gerrit.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\GitFlow\bin\%Configuration%\GitFlow.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\GitFlow\bin\%Configuration%\GitFlow.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\Github3\bin\%Configuration%\Github3.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\Github3\bin\%Configuration%\Github3.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\Gource\bin\%Configuration%\Gource.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\Gource\bin\%Configuration%\Gource.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\JiraCommitHintPlugin.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\JiraCommitHintPlugin\bin\%Configuration%\JiraCommitHintPlugin.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\ProxySwitcher\bin\%Configuration%\ProxySwitcher.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\ProxySwitcher\bin\%Configuration%\ProxySwitcher.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\ReleaseNotesGenerator\bin\%Configuration%\ReleaseNotesGenerator.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\ReleaseNotesGenerator\bin\%Configuration%\ReleaseNotesGenerator.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\Statistics\GitImpact\bin\%Configuration%\GitImpact.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\Statistics\GitImpact\bin\%Configuration%\GitImpact.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\Plugins\Statistics\GitStatistics\bin\%Configuration%\GitStatistics.pdb GitExtensions\Plugins\
+xcopy /y /i ..\Plugins\Statistics\GitStatistics\bin\%Configuration%\GitStatistics.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\ICSharpCode.TextEditor.pdb GitExtensions\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\ICSharpCode.TextEditor.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\SmartFormat.pdb GitExtensions\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\SmartFormat.pdb GitExtensions-pdbs\
 IF ERRORLEVEL 1 EXIT /B 1
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\GitUIPluginInterfaces.pdb GitExtensions\Plugins\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\GitUIPluginInterfaces.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\TfsIntegration.pdb GitExtensions\Plugins\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\TfsIntegration.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\TfsInterop.Vs2012.pdb GitExtensions\Plugins\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\TfsInterop.Vs2012.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\TfsInterop.Vs2013.pdb GitExtensions\Plugins\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\TfsInterop.Vs2013.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\TfsInterop.Vs2015.pdb GitExtensions\Plugins\
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\TfsInterop.Vs2015.pdb GitExtensions-pdbs\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1 
 
 powershell.exe -executionpolicy Bypass -File  .\Get-Hashes.ps1 > Hashes.txt
 move Hashes.txt GitExtensions\
 
-:create_archive
 set nuget=..\.nuget\nuget.exe
 %nuget% update -self
 %nuget% install ..\.nuget\packages.config -OutputDirectory ..\packages -Verbosity Quiet
-%szip% a -tzip %normal% GitExtensions
+
+SET version=%2
+if not "%APPVEYOR_BUILD_VERSION%"=="" set version=%APPVEYOR_BUILD_VERSION%
+set portable=GitExtensions-Portable-%version%.zip
+set pdbs=GitExtensions-pdbs-%version%.zip
+
+del %portable% 2>nul
+del %pdbs% 2>nul
+
+set szip="..\packages\7-Zip.CommandLine.9.20.0\tools\7za"
+%szip% a -tzip %portable% GitExtensions
+IF ERRORLEVEL 1 EXIT /B 1
+%szip% a -tzip %pdbs% .\GitExtensions-pdbs\*
 IF ERRORLEVEL 1 EXIT /B 1
