@@ -19,18 +19,18 @@ Compress-Archive -LiteralPath $msi, $zip -CompressionLevel NoCompression -Destin
 
 # sign
 $description = "https://ci.appveyor.com/project/gitextensions/gitextensions/builds/$env:APPVEYOR_BUILD_ID\n$env:APPVEYOR_REPO_COMMIT_MESSAGE\n$env:APPVEYOR_REPO_BRANCH from $env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH";
-Submit-SigningRequest `
-    -InputArtifactPath $combined `
-    -Description $description `
-    -CIUserToken $env:spciuser `
-    -OrganizationId '7c19b2cf-90f7-4d15-9b12-1b615f7c18c4' `
-    -SigningPolicyId '5c9879c7-0dea-4303-8e5b-fc4192a7b0de' `
-    -WaitForCompletion `
-    -WaitForCompletionTimeoutInSeconds 180 `
-    -Force
+# Submit-SigningRequest `
+#     -InputArtifactPath $combined `
+#     -Description $description `
+#     -CIUserToken $env:spciuser `
+#     -OrganizationId '7c19b2cf-90f7-4d15-9b12-1b615f7c18c4' `
+#     -SigningPolicyId '5c9879c7-0dea-4303-8e5b-fc4192a7b0de' `
+#     -WaitForCompletion `
+#     -WaitForCompletionTimeoutInSeconds 180 `
+#     -Force
 
 # extract signed artifacts to Signed folder
-if ($LastExitCode -eq 0) -and (Test-Path $combinedSigned)) {
+if (($LastExitCode -eq 0) -and (Test-Path $combinedSigned)) {
     Expand-Archive  -LiteralPath $combinedSigned -DestinationPath .\Signed
 
     # -------------------------------
