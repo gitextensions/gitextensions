@@ -30,7 +30,10 @@ namespace GitUI.AutoCompletion
 
             var autoCompleteWords = new HashSet<string>();
 
-            foreach (var file in _module.GetAllChangedFiles())
+            var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
+            var output = _module.RunGitCmd(cmd);
+            var changedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(_module, output);
+            foreach (var file in changedFiles)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
