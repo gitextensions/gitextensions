@@ -223,9 +223,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
         /// </summary>
         private bool CheckRowCacheIsDirty(IList<RevisionGraphRow> orderedRowCache, IList<RevisionGraphRevision> orderedNodesCache)
         {
-            int indexToCompare = orderedRowCache.Count - 1;
+            // We need bounds checking on orderedNodesCache. It should be always larger then the rowcache,
+            // but another thread could clear the orderedNodesCache while another is building orderedRowCache.
+            // This is not a problem, since all methods use local instances of those caches. We do need to invalidate.
+            if (orderedRowCache.Count > orderedNodesCache.Count)
+            {
+                return true;
+            }
 
-            // We do not need bounds checking on orderedNodesCache. It is always larger then the rowcache.
+            int indexToCompare = orderedRowCache.Count - 1;
             return orderedRowCache[indexToCompare].Revision != orderedNodesCache[indexToCompare];
         }
 
