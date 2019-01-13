@@ -44,14 +44,15 @@ namespace GitUI.CommitInfo
             }
         }
 
-        private readonly TranslationString _containedInBranches = new TranslationString("Contained in branches:");
-        private readonly TranslationString _containedInNoBranch = new TranslationString("Contained in no branch");
-        private readonly TranslationString _containedInTags = new TranslationString("Contained in tags:");
-        private readonly TranslationString _containedInNoTag = new TranslationString("Contained in no tag");
-        private readonly TranslationString _trsLinksRelatedToRevision = new TranslationString("Related links:");
-        private readonly TranslationString _derivesFromTag = new TranslationString("Derives from tag:");
-        private readonly TranslationString _derivesFromNoTag = new TranslationString("Derives from no tag");
-        private readonly TranslationString _plusCommits = new TranslationString("commits");
+        private static readonly TranslationString _copyLink = new TranslationString("Copy &link ({0})");
+        private static readonly TranslationString _containedInBranches = new TranslationString("Contained in branches:");
+        private static readonly TranslationString _containedInNoBranch = new TranslationString("Contained in no branch");
+        private static readonly TranslationString _containedInTags = new TranslationString("Contained in tags:");
+        private static readonly TranslationString _containedInNoTag = new TranslationString("Contained in no tag");
+        private static readonly TranslationString _trsLinksRelatedToRevision = new TranslationString("Related links:");
+        private static readonly TranslationString _derivesFromTag = new TranslationString("Derives from tag:");
+        private static readonly TranslationString _derivesFromNoTag = new TranslationString("Derives from no tag");
+        private static readonly TranslationString _plusCommits = new TranslationString("commits");
 
         private const int MaximumDisplayedRefs = 20;
         private readonly ILinkFactory _linkFactory = new LinkFactory();
@@ -585,6 +586,27 @@ namespace GitUI.CommitInfo
 
                 return WebUtility.HtmlEncode(_containedInNoTag.Text);
             }
+        }
+
+        private void commitInfoContextMenuStrip_Opening(object sender, CancelEventArgs e)
+        {
+            var rtb = (sender as ContextMenuStrip)?.SourceControl as RichTextBox;
+            if (rtb == null)
+            {
+                copyLinkToolStripMenuItem.Visible = false;
+                return;
+            }
+
+            int charIndex = rtb.GetCharIndexFromPosition(rtb.PointToClient(MousePosition));
+            string link = rtb.GetLink(charIndex);
+            copyLinkToolStripMenuItem.Visible = link != null;
+            copyLinkToolStripMenuItem.Text = string.Format(_copyLink.Text, link);
+            copyLinkToolStripMenuItem.Tag = link;
+        }
+
+        private void copyLinkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ClipboardUtil.TrySetText(copyLinkToolStripMenuItem.Tag as string);
         }
 
         private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)

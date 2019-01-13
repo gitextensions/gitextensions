@@ -389,22 +389,6 @@ namespace GitUI.Editor.RichTextBoxExtension
             return (cf.dwEffects & CFE.LINK) == CFE.LINK;
         }
 
-        private static void AddLink(this RichTextBox rtb, string text)
-        {
-            int position = rtb.SelectionStart;
-            if (position < 0 || position > rtb.Text.Length)
-            {
-                throw new InvalidOperationException("SelectionStart has invalid value");
-            }
-
-            rtb.SelectionStart = position;
-            rtb.SelectedText = text;
-            int length = rtb.SelectionStart - position;
-            rtb.Select(position, length);
-            rtb.SetLink(true);
-            rtb.Select(position + length, 0);
-        }
-
         private static void RtbSetSelectedRtf(RichTextBox rtb, string str)
         {
             // Work around bug in DotNet.
@@ -440,35 +424,6 @@ namespace GitUI.Editor.RichTextBoxExtension
                     rtb.SelectedRtf = sb.ToString();
                 }
             }
-        }
-
-        private static void AddLink(this RichTextBox rtb, string text, string hyperlink)
-        {
-            int position = rtb.SelectionStart;
-            if (position < 0 || position > rtb.Text.Length)
-            {
-                throw new InvalidOperationException("SelectionStart has invalid value");
-            }
-
-            rtb.SelectionStart = position;
-            rtb.SelectedText = text;
-            int length = rtb.SelectionStart - position;
-            rtb.Select(position, length);
-            string rtfText = rtb.SelectedRtf;
-            int idx = rtfText.LastIndexOf('}');
-            if (idx != -1)
-            {
-                string head = rtfText.Substring(0, idx);
-                string tail = rtfText.Substring(idx);
-                RtbSetSelectedRtf(rtb, head + @"\v #" + hyperlink + @"\v0" + tail);
-            }
-
-            // What if 'text' or 'hyperlink' contain UTF characters? Shouldn't we either use \urtf or recode the text?
-            // Also, aren't we overwriting what we set above?
-            RtbSetSelectedRtf(rtb, (@"{\rtf1\ansi\ansicpg65001 " + text + @"\v #") + hyperlink + @"\v0}");
-            rtb.Select(position, text.Length + hyperlink.Length + 1);
-            rtb.SetLink(true);
-            rtb.Select(position + text.Length + hyperlink.Length + 1, 0);
         }
 
         private static PARAFORMAT GetParaFormat(HandleRef handleRef)
@@ -1144,6 +1099,83 @@ namespace GitUI.Editor.RichTextBoxExtension
             }
 
             return text.ToString();
+        }
+
+        public static string GetLink(this RichTextBox rtb, int charIndex)
+        {
+            var text = rtb.Text;
+            if (charIndex < 0 || text.Length <= charIndex)
+            {
+                return null;
+            }
+
+            IntPtr oldMask = rtb.BeginUpdate();
+
+            int nStart = rtb.SelectionStart;
+            int nEnd = rtb.SelectionLength;
+
+            try
+            {
+                //--------------------------------
+                // this is an inefficient method to get text format
+                // but RichTextBox doesn't provide another method to
+                // get something like an array of charformat and paraformat
+                //--------------------------------
+                rtb.Select(charIndex, 1);
+                if (!rtb.IsLink())
+                {
+                    return null;
+                }
+
+                int from = charIndex;
+                while (from > 0)
+                {
+                    rtb.Select(from - 1, 1);
+                    if (!rtb.IsLink())
+                    {
+                        break;
+                    }
+
+                    --from;
+                }
+
+                int to = charIndex + 1;
+                while (to < text.Length)
+                {
+                    rtb.Select(to, 1);
+                    if (!rtb.IsLink())
+                    {
+                        break;
+                    }
+
+                    ++to;
+                }
+
+                if (to < text.Length && text[to] == '#')
+                {
+                    ++to;
+                    from = to;
+                    while (to < text.Length && !char.IsWhiteSpace(text[to]) && text[to] != ',')
+                    {
+                        ++to;
+                    }
+                }
+
+                return text.Substring(from, to - from);
+            }
+            catch
+            {
+                return null;
+            }
+            finally
+            {
+                // finish, restore
+                rtb.SelectionStart = nStart;
+                rtb.SelectionLength = nEnd;
+
+                rtb.EndUpdate(oldMask);
+                rtb.Invalidate();
+            }
         }
 
         /// <summary>

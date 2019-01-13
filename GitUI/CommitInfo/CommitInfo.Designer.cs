@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace GitUI.CommitInfo
 {
@@ -35,6 +37,7 @@ namespace GitUI.CommitInfo
             this.pnlCommitMessage = new System.Windows.Forms.Panel();
             this.rtbxCommitMessage = new System.Windows.Forms.RichTextBox();
             this.commitInfoContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyLinkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyCommitInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.showContainedInBranchesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -108,6 +111,7 @@ namespace GitUI.CommitInfo
             // commitInfoContextMenuStrip
             // 
             this.commitInfoContextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyLinkToolStripMenuItem,
             this.copyCommitInfoToolStripMenuItem,
             this.toolStripSeparator1,
             this.showContainedInBranchesToolStripMenuItem,
@@ -120,12 +124,20 @@ namespace GitUI.CommitInfo
             this.addNoteToolStripMenuItem});
             this.commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
             this.commitInfoContextMenuStrip.Size = new System.Drawing.Size(454, 192);
+            this.commitInfoContextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.commitInfoContextMenuStrip_Opening);
+            // 
+            // copyLinkStripMenuItem
+            // 
+            this.copyLinkToolStripMenuItem.Name = "copyLinkStripMenuItem";
+            this.copyLinkToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
+            this.copyLinkToolStripMenuItem.Text = "Copy link";
+            this.copyLinkToolStripMenuItem.Click += new System.EventHandler(this.copyLinkToolStripMenuItem_Click);
             // 
             // copyCommitInfoToolStripMenuItem
             // 
             this.copyCommitInfoToolStripMenuItem.Name = "copyCommitInfoToolStripMenuItem";
             this.copyCommitInfoToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
-            this.copyCommitInfoToolStripMenuItem.Text = "Copy commit info";
+            this.copyCommitInfoToolStripMenuItem.Text = "&Copy commit info";
             this.copyCommitInfoToolStripMenuItem.Click += new System.EventHandler(this.copyCommitInfoToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
@@ -184,7 +196,7 @@ namespace GitUI.CommitInfo
             // 
             this.addNoteToolStripMenuItem.Name = "addNoteToolStripMenuItem";
             this.addNoteToolStripMenuItem.Size = new System.Drawing.Size(453, 22);
-            this.addNoteToolStripMenuItem.Text = "Add notes";
+            this.addNoteToolStripMenuItem.Text = "Add &notes";
             this.addNoteToolStripMenuItem.Click += new System.EventHandler(this.addNoteToolStripMenuItem_Click);
             // 
             // commitInfoHeader
@@ -242,6 +254,7 @@ namespace GitUI.CommitInfo
 
         private System.Windows.Forms.RichTextBox RevisionInfo;
         private System.Windows.Forms.ContextMenuStrip commitInfoContextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem copyLinkToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showContainedInBranchesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showContainedInTagsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyCommitInfoToolStripMenuItem;
