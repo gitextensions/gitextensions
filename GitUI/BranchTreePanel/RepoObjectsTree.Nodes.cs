@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.UserControls;
 using JetBrains.Annotations;
 
 namespace GitUI.BranchTreePanel
@@ -55,6 +56,11 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
+            /// <summary>
+            /// This function is responsible for building the TreeNode structure that matches this Nodes's
+            /// structure, recursively. To avoid needlessly recreating TreeNodes, it recycles existing ones
+            /// if they are considered equal, so it's important to implement Equals on Node classes.
+            /// </summary>
             internal void FillTreeViewNode(TreeNode treeViewNode)
             {
                 var prevNodes = new HashSet<Node>();
@@ -154,7 +160,9 @@ namespace GitUI.BranchTreePanel
 
             protected virtual void FillTreeViewNode()
             {
+                var expandedNodesState = TreeViewNode.GetExpandedNodesState();
                 Nodes.FillTreeViewNode(TreeViewNode);
+                TreeViewNode.RestoreExpandedNodesState(expandedNodesState);
             }
         }
 

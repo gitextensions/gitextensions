@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Remotes;
 using GitUI.CommandsDialogs;
 using GitUI.HelperDialogs;
 using GitUI.Properties;
 using Microsoft.VisualStudio.Threading;
+using ResourceManager;
 
 namespace GitUI.BranchTreePanel
 {
@@ -17,6 +20,8 @@ namespace GitUI.BranchTreePanel
     {
         private sealed class RemoteBranchTree : Tree
         {
+            private readonly TranslationString _inactiveRemoteNodeLabel = new TranslationString("Inactive");
+
             public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
             {
@@ -36,7 +41,13 @@ namespace GitUI.BranchTreePanel
                     .Select(branch => branch.Name);
 
                 token.ThrowIfCancellationRequested();
+
+                var enabledRemoteRepoNodes = new List<RemoteRepoNode>();
                 var remoteByName = Module.GetRemotes().ToDictionary(r => r.Name);
+
+                var gitRemoteManager = new GitRemoteManager(() => Module);
+
+                // Create nodes for enabled remotes with branches
                 foreach (var branchPath in branches)
                 {
                     token.ThrowIfCancellationRequested();
@@ -47,11 +58,47 @@ namespace GitUI.BranchTreePanel
                         var parent = remoteBranchNode.CreateRootNode(
                             nodes,
                             (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
+
                         if (parent != null)
                         {
-                            Nodes.AddNode(parent);
+                            enabledRemoteRepoNodes.Add((RemoteRepoNode)parent);
                         }
                     }
+                }
+
+                // Create nodes for enabled remotes without branches
+                var enabledRemotesNoBranches = gitRemoteManager.GetEnabledRemotesNameWithoutBranches();
+                foreach (var remoteName in enabledRemotesNoBranches)
+                {
+                    if (remoteByName.TryGetValue(remoteName, out var remote))
+                    {
+                        var node = new RemoteRepoNode(this, remoteName, gitRemoteManager, remote, true);
+                        enabledRemoteRepoNodes.Add(node);
+                    }
+                }
+
+                // Add enabled remote nodes in order
+                enabledRemoteRepoNodes
+                    .OrderBy(node => node.FullPath)
+                    .ForEach(node => Nodes.AddNode(node));
+
+                // Add disabled remotes, if any
+                var disabledRemotes = gitRemoteManager.GetDisabledRemotes();
+                if (disabledRemotes.Count > 0)
+                {
+                    var disabledRemoteRepoNodes = new List<RemoteRepoNode>();
+                    foreach (var remote in disabledRemotes.OrderBy(remote => remote.Name))
+                    {
+                        var node = new RemoteRepoNode(this, remote.Name, gitRemoteManager, remote, false);
+                        disabledRemoteRepoNodes.Add(node);
+                    }
+
+                    var disabledFolderNode = new RemoteRepoFolderNode(this, _inactiveRemoteNodeLabel.Text);
+                    disabledRemoteRepoNodes
+                        .OrderBy(node => node.FullPath)
+                        .ForEach(node => disabledFolderNode.Nodes.AddNode(node));
+
+                    Nodes.AddNode(disabledFolderNode);
                 }
 
                 return;
@@ -60,7 +107,7 @@ namespace GitUI.BranchTreePanel
                 {
                     if (parentPath == remote.Name)
                     {
-                        return new RemoteRepoNode(tree, parentPath, remote);
+                        return new RemoteRepoNode(tree, parentPath, gitRemoteManager, remote, true);
                     }
 
                     return new BasePathNode(tree, parentPath);
@@ -71,6 +118,11 @@ namespace GitUI.BranchTreePanel
             {
                 base.FillTreeViewNode();
                 TreeViewNode.Expand();
+            }
+
+            internal void PopupManageRemotesForm(string remoteName)
+            {
+                UICommands.StartRemotesDialog(TreeViewNode.TreeView, remoteName);
             }
         }
 
@@ -212,20 +264,41 @@ namespace GitUI.BranchTreePanel
         private sealed class RemoteRepoNode : BaseBranchNode
         {
             private readonly Remote _remote;
+            private readonly IGitRemoteManager _gitRemoteManager;
 
-            public RemoteRepoNode(Tree tree, string fullPath, Remote remote) : base(tree, fullPath)
+            public RemoteRepoNode(Tree tree, string fullPath, IGitRemoteManager gitRemoteManager, Remote remote, bool isEnabled)
+                : base(tree, fullPath)
             {
                 _remote = remote;
+                Enabled = isEnabled;
+                _gitRemoteManager = gitRemoteManager;
             }
+
+            public bool Enabled { get; private set; }
 
             public bool Fetch()
             {
-                UICommands.StartPullDialogAndPullImmediately(
-                    out bool pullCompleted,
-                    TreeViewNode.TreeView,
-                    remote: FullPath,
-                    pullAction: AppSettings.PullAction.Fetch);
-                return pullCompleted;
+                Trace.Assert(Enabled);
+                return DoFetch();
+            }
+
+            public void Enable(bool fetch)
+            {
+                Trace.Assert(!Enabled);
+                _gitRemoteManager.ToggleRemoteState(Name, disabled: false);
+                if (fetch)
+                {
+                    DoFetch();
+                }
+
+                UICommands.RepoChangedNotifier.Notify();
+            }
+
+            public void Disable()
+            {
+                Trace.Assert(Enabled);
+                _gitRemoteManager.ToggleRemoteState(Name, disabled: true);
+                UICommands.RepoChangedNotifier.Notify();
             }
 
             protected override void ApplyStyle()
@@ -255,6 +328,44 @@ namespace GitUI.BranchTreePanel
                 }
 
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = imageKey;
+            }
+
+            internal override void OnDoubleClick()
+            {
+                PopupManageRemotesForm();
+            }
+
+            internal void PopupManageRemotesForm()
+            {
+                ((RemoteBranchTree)Tree).PopupManageRemotesForm(FullPath);
+            }
+
+            private bool DoFetch()
+            {
+                UICommands.StartPullDialogAndPullImmediately(
+                    out bool pullCompleted,
+                    TreeViewNode.TreeView,
+                    remote: FullPath,
+                    pullAction: AppSettings.PullAction.Fetch);
+                return pullCompleted;
+            }
+        }
+
+        private sealed class RemoteRepoFolderNode : BaseBranchNode
+        {
+            public RemoteRepoFolderNode(Tree tree, string name) : base(tree, name)
+            {
+            }
+
+            protected override void ApplyStyle()
+            {
+                base.ApplyStyle();
+                TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.FolderClosed);
+            }
+
+            public override string DisplayText()
+            {
+                return Name;
             }
         }
     }

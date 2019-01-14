@@ -1583,6 +1583,16 @@ namespace GitUI.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap RemoteEnableAndFetch {
+            get {
+                object obj = ResourceManager.GetObject("RemoteEnableAndFetch", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap RemoteRepo {
             get {
                 object obj = ResourceManager.GetObject("RemoteRepo", resourceCulture);
