@@ -112,8 +112,14 @@ namespace GitUI.CommandsDialogs
             bool blameTabExists = tabControl1.Contains(BlameTab);
 
             UpdateFollowHistoryMenuItems();
+
             fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
-            ShowFullHistory.Checked = AppSettings.FullHistoryInFileHistory;
+            showFullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
+            simplifyMergesToolStripMenuItem.Checked = AppSettings.SimplifyMergesInFileHistory;
+            simplifyMergesToolStripMenuItem.Enabled = AppSettings.FullHistoryInFileHistory;
+            simplifyMergesContextMenuItem.Checked = AppSettings.SimplifyMergesInFileHistory;
+            simplifyMergesContextMenuItem.Enabled = AppSettings.FullHistoryInFileHistory;
+
             loadHistoryOnShowToolStripMenuItem.Checked = AppSettings.LoadFileHistoryOnShow;
             loadBlameOnShowToolStripMenuItem.Checked = AppSettings.LoadBlameOnShow && blameTabExists;
             saveAsToolStripMenuItem.Visible = !isSubmodule;
@@ -284,7 +290,7 @@ namespace GitUI.CommandsDialogs
 
                 if (AppSettings.FullHistoryInFileHistory)
                 {
-                    res.revision = string.Concat(" --full-history --simplify-merges ", res.revision);
+                    res.revision = string.Concat(" --full-history ", AppSettings.SimplifyMergesInFileHistory ? "--simplify-merges " : string.Empty, res.revision);
                 }
 
                 return res;
@@ -467,21 +473,47 @@ namespace GitUI.CommandsDialogs
             followFileHistoryRenamesToolStripMenuItem.Checked = AppSettings.FollowRenamesInFileHistoryExactOnly;
         }
 
+        private void showFullHistoryToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToggleFullHistoryFlag();
+        }
+
         private void fullHistoryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ToggleFullHistoryFlag();
         }
 
-        private void ShowFullHistory_Click(object sender, EventArgs e)
+        private void simplifyMergesContextMenuItem_Click(object sender, EventArgs e)
         {
-            ToggleFullHistoryFlag();
+            ToggleSimplifyMergesFlag();
+        }
+
+        private void simplifyMergesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ToggleSimplifyMergesFlag();
+        }
+
+        private void ToggleSimplifyMergesFlag()
+        {
+            AppSettings.SimplifyMergesInFileHistory = !AppSettings.SimplifyMergesInFileHistory;
+            simplifyMergesToolStripMenuItem.Checked = AppSettings.SimplifyMergesInFileHistory;
+            simplifyMergesContextMenuItem.Checked = AppSettings.SimplifyMergesInFileHistory;
+
+            if (AppSettings.FullHistoryInFileHistory)
+            {
+                LoadFileHistory();
+            }
         }
 
         private void ToggleFullHistoryFlag()
         {
             AppSettings.FullHistoryInFileHistory = !AppSettings.FullHistoryInFileHistory;
             fullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
-            ShowFullHistory.Checked = AppSettings.FullHistoryInFileHistory;
+            showFullHistoryToolStripMenuItem.Checked = AppSettings.FullHistoryInFileHistory;
+
+            simplifyMergesContextMenuItem.Enabled = AppSettings.FullHistoryInFileHistory;
+            simplifyMergesToolStripMenuItem.Enabled = AppSettings.FullHistoryInFileHistory;
+
             LoadFileHistory();
         }
 
