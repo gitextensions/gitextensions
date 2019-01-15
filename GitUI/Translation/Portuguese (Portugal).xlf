@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.00.rc2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.0.1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en" target-language="pt">
     <body>
       <trans-unit id="$this.Text">
