@@ -341,8 +341,22 @@ namespace GitCommands.Remotes
                 module.LocalConfigFile.RemoveConfigSection($"{sectionName}.{remoteName}");
             }
 
+            var newSectionName = (disabled ? DisabledSectionPrefix : "") + SectionRemote;
+
+            // ensure that the section with the same name doesn't already exist
+            // use case:
+            // - a user has added a remote,
+            // - then deactivated the remote via GE
+            // - then added a remote with the same name from a command line or via UI
+            // - then attempted to deactivate the new remote
+            var dupSection = sections.FirstOrDefault(s => s.SectionName == newSectionName && s.SubSection == remoteName);
+            if (dupSection != null)
+            {
+                module.LocalConfigFile.RemoveConfigSection($"{newSectionName}.{remoteName}");
+            }
+
             // rename the remote
-            section.SectionName = (disabled ? DisabledSectionPrefix : "") + SectionRemote;
+            section.SectionName = newSectionName;
 
             module.LocalConfigFile.AddConfigSection(section);
             module.LocalConfigFile.Save();

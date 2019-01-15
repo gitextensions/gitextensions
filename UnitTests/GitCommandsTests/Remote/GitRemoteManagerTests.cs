@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.Config;
 using GitCommands.Remotes;
@@ -408,6 +409,41 @@ namespace GitCommandsTests.Remote
             var enabledRemotesNoBranches = _controller.GetEnabledRemoteNamesWithoutBranches();
             Assert.AreEqual(1, enabledRemotesNoBranches.Count);
             Assert.AreEqual(enabledRemoteNameNoBranches, enabledRemotesNoBranches[0]);
+        }
+
+        public class IntegrationTests
+        {
+            [Test]
+            public void ToggleRemoteState_should_not_fail_if_activate_repeatedly()
+            {
+                using (var helper = new GitModuleTestHelper())
+                {
+                    var manager = new GitRemoteManager(() => helper.Module);
+
+                    const string remoteName = "active";
+                    helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
+                    manager.ToggleRemoteState(remoteName, true);
+
+                    helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
+                    manager.ToggleRemoteState(remoteName, false);
+                }
+            }
+
+            [Test]
+            public void ToggleRemoteState_should_not_fail_if_deactivate_repeatedly()
+            {
+                using (var helper = new GitModuleTestHelper())
+                {
+                    var manager = new GitRemoteManager(() => helper.Module);
+
+                    const string remoteName = "active";
+                    helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
+                    manager.ToggleRemoteState(remoteName, true);
+
+                    helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
+                    manager.ToggleRemoteState(remoteName, true);
+                }
+            }
         }
     }
 }
