@@ -19,6 +19,7 @@ using GitCommands.UserRepositoryHistory;
 using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitUI.BranchTreePanel;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
@@ -3128,7 +3129,10 @@ namespace GitUI.CommandsDialogs
             public TestAccessor(FormBrowse form)
             {
                 _form = form;
+                RepoObjectsTree = _form.repoObjectsTree;
             }
+
+            public RepoObjectsTree RepoObjectsTree { get; }
 
             public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
             {
