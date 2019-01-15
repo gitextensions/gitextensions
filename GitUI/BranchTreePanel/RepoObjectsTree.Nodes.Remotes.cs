@@ -288,10 +288,13 @@ namespace GitUI.BranchTreePanel
                 _gitRemoteManager.ToggleRemoteState(Name, disabled: false);
                 if (fetch)
                 {
+                    // DoFetch invokes UICommands.RepoChangedNotifier.Notify
                     DoFetch();
                 }
-
-                UICommands.RepoChangedNotifier.Notify();
+                else
+                {
+                    UICommands.RepoChangedNotifier.Notify();
+                }
             }
 
             public void Disable()
