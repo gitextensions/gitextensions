@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -472,6 +471,7 @@ namespace GitUI.BranchTreePanel
         }
 
         private AheadBehindDataProvider _aheadBehindDataProvider;
+
         private void DisplayAheadBehindInformationForBranches()
         {
             if (_rootNodes.Count == 0 || _aheadBehindDataProvider == null || !AppSettings.ShowAheadBehindData)
@@ -515,6 +515,22 @@ namespace GitUI.BranchTreePanel
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData
                 ? new AheadBehindDataProvider(() => Module.GitExecutable)
                 : null;
+        }
+
+        internal TestAccessor GetTestAccessor()
+            => new TestAccessor(this);
+
+        public readonly struct TestAccessor
+        {
+            private readonly RepoObjectsTree _repoObjectsTree;
+
+            public TestAccessor(RepoObjectsTree repoObjectsTree)
+            {
+                _repoObjectsTree = repoObjectsTree;
+                TreeView = repoObjectsTree.treeMain;
+            }
+
+            public NativeTreeView TreeView { get; }
         }
     }
 }

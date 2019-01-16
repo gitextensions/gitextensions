@@ -67,7 +67,7 @@ namespace GitUI.BranchTreePanel
                 }
 
                 // Create nodes for enabled remotes without branches
-                var enabledRemotesNoBranches = gitRemoteManager.GetEnabledRemotesNameWithoutBranches();
+                var enabledRemotesNoBranches = gitRemoteManager.GetEnabledRemoteNamesWithoutBranches();
                 foreach (var remoteName in enabledRemotesNoBranches)
                 {
                     if (remoteByName.TryGetValue(remoteName, out var remote))

@@ -349,5 +349,65 @@ namespace GitCommandsTests.Remote
             gitRef.IsTag.Returns(isTag);
             return gitRef;
         }
+
+        [Test]
+        public void GetDisabledRemotes_returns_disabled_remotes_only()
+        {
+            string enabledRemoteName = "enabledRemote";
+            string disabledRemoteName = "disabledRemote";
+
+            _module.GetRemoteNames().Returns(x => new[] { enabledRemoteName, });
+
+            var sections = new List<IConfigSection> { new ConfigSection($"{GitRemoteManager.DisabledSectionPrefix}{GitRemoteManager.SectionRemote}.{disabledRemoteName}", true) };
+            _configFile.GetConfigSections().Returns(x => sections);
+
+            var disabledRemotes = _controller.GetDisabledRemotes();
+            Assert.AreEqual(1, disabledRemotes.Count);
+            Assert.AreEqual(disabledRemoteName, disabledRemotes[0].Name);
+
+            var disabledRemoteNames = _controller.GetDisabledRemoteNames();
+            Assert.AreEqual(1, disabledRemoteNames.Count);
+            Assert.AreEqual(disabledRemoteName, disabledRemoteNames[0]);
+        }
+
+        [Test]
+        public void GetEnabledRemoteNames_returns_enabled_remotes_only()
+        {
+            string enabledRemoteName = "enabledRemote";
+            string disabledRemoteName = "disabledRemote";
+
+            _module.GetRemoteNames().Returns(x => new[] { enabledRemoteName, });
+
+            var sections = new List<IConfigSection> { new ConfigSection($"{GitRemoteManager.DisabledSectionPrefix}{GitRemoteManager.SectionRemote}.{disabledRemoteName}", true) };
+            _configFile.GetConfigSections().Returns(x => sections);
+
+            var enabledRemoteNames = _controller.GetEnabledRemoteNames();
+            Assert.AreEqual(1, enabledRemoteNames.Count);
+            Assert.AreEqual(enabledRemoteName, enabledRemoteNames[0]);
+        }
+
+        [Test]
+        public void GetEnabledRemotesNameWithoutBranches_returns_enabled_remotes_without_branches_only()
+        {
+            string enabledRemoteNameWithBranches = "enabledRemote1";
+            string enabledRemoteNameNoBranches = "enabledRemote2";
+            string disabledRemoteName = "disabledRemote";
+
+            _module.GetRemoteNames().Returns(x => new[] { enabledRemoteNameWithBranches, enabledRemoteNameNoBranches });
+
+            var refs = new[]
+            {
+                CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", $"refs/remotes/{enabledRemoteNameWithBranches}/develop", $"{enabledRemoteNameWithBranches}"),
+            };
+
+            _module.GetRefs().ReturnsForAnyArgs(refs);
+
+            var sections = new List<IConfigSection> { new ConfigSection($"{GitRemoteManager.DisabledSectionPrefix}{GitRemoteManager.SectionRemote}.{disabledRemoteName}", true) };
+            _configFile.GetConfigSections().Returns(x => sections);
+
+            var enabledRemotesNoBranches = _controller.GetEnabledRemoteNamesWithoutBranches();
+            Assert.AreEqual(1, enabledRemotesNoBranches.Count);
+            Assert.AreEqual(enabledRemoteNameNoBranches, enabledRemotesNoBranches[0]);
+        }
     }
 }

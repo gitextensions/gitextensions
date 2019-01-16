@@ -52,6 +52,26 @@ namespace GitCommands.Remotes
         /// </summary>
         /// <param name="remoteName">The name of the remote.</param>
         void ToggleRemoteState(string remoteName, bool disabled);
+
+        /// <summary>
+        /// Retrieves disabled remotes from .git/config file
+        /// </summary>
+        IReadOnlyList<Remote> GetDisabledRemotes();
+
+        /// <summary>
+        /// Retrieves disabled remote names from the .git/config file.
+        /// </summary>
+        IReadOnlyList<string> GetDisabledRemoteNames();
+
+        /// <summary>
+        /// Retrieves enabled remote names
+        /// </summary>
+        IReadOnlyList<string> GetEnabledRemoteNames();
+
+        /// <summary>
+        /// Retrieves enabled remote names of remotes without branches (i.e. that require a fetch)
+        /// </summary>
+        IReadOnlyList<string> GetEnabledRemoteNamesWithoutBranches();
     }
 
     public class GitRemoteManager : IGitRemoteManager
@@ -162,7 +182,7 @@ namespace GitCommands.Remotes
         /// <summary>
         /// Retrieves enabled remote names of remotes without branches (i.e. that require a fetch)
         /// </summary>
-        public IReadOnlyList<string> GetEnabledRemotesNameWithoutBranches()
+        public IReadOnlyList<string> GetEnabledRemoteNamesWithoutBranches()
         {
             HashSet<string> remotesWithBranches = GetModule().GetRefs()
                 .Where(branch => branch.IsRemote && !branch.IsTag)
