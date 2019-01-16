@@ -523,7 +523,7 @@ namespace AppVeyorIntegration
 
         public void UpdateDescription()
         {
-            Description = Id + " " + DisplayStatus + " " + _buildDurationFormatter.Format(Duration) + TestsResultText + PullRequestText;
+            Description = DisplayStatus + " " + _buildDurationFormatter.Format(Duration) + TestsResultText + PullRequestText + " " + Id;
         }
 
         private string DisplayStatus
