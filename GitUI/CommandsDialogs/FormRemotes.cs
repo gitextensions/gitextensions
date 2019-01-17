@@ -159,6 +159,7 @@ Inactive remote is completely invisible to git.");
                     group.Items[0].Selected = true;
                 }
 
+                Remotes.FocusedItem = Remotes.SelectedItems[0];
                 Remotes.Select();
             }
             else
@@ -235,6 +236,11 @@ Inactive remote is completely invisible to git.");
                 finally
                 {
                     Remotes.EndUpdate();
+                    if (Remotes.SelectedIndices.Count > 0)
+                    {
+                        Remotes.EnsureVisible(Remotes.SelectedIndices[0]);
+                    }
+
                     Url.EndUpdate();
                     comboBoxPushUrl.EndUpdate();
                 }
