@@ -329,8 +329,8 @@ Inactive remote is completely invisible to git.");
 
             _selectedRemote.Disabled = !_selectedRemote.Disabled;
             _remoteManager.ToggleRemoteState(_selectedRemote.Name, _selectedRemote.Disabled);
-            BindBtnToggleState(_selectedRemote.Disabled);
-            BindRemotes(_selectedRemote.Name);
+
+            Initialize(_selectedRemote.Name);
         }
 
         private void SaveClick(object sender, EventArgs e)
