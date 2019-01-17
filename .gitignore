@@ -48,7 +48,9 @@ GitCommandsTests/test-results/*
 TestResult.xml
 libgit2sharp
 Setup/GitExtensions/
+Setup/GitExtensions-pdbs/
 Setup/GitExtensions-Portable-*.zip
+Setup/GitExtensions-pdbs-*.zip
 Setup/tools/tx.exe
 Plugins/GitExtensions.PluginManager/*
 
@@ -67,3 +69,6 @@ GitExtensions.settings.backup
 /Setup/Changelog.md
 *.received.*
 Directory.Build.rsp
+GitStatus.txt
+OpenCover.GitExtensions.xml
+tree.txt
