@@ -411,6 +411,36 @@ namespace GitCommandsTests.Remote
             Assert.AreEqual(enabledRemoteNameNoBranches, enabledRemotesNoBranches[0]);
         }
 
+        [Test]
+        public void EnabledRemoteExists_returns_true_for_enabled_remotes_only()
+        {
+            string enabledRemoteName = "enabledRemote";
+            string disabledRemoteName = "disabledRemote";
+
+            _module.GetRemoteNames().Returns(x => new[] { enabledRemoteName, });
+
+            var sections = new List<IConfigSection> { new ConfigSection($"{GitRemoteManager.DisabledSectionPrefix}{GitRemoteManager.SectionRemote}.{disabledRemoteName}", true) };
+            _configFile.GetConfigSections().Returns(x => sections);
+
+            Assert.IsTrue(_controller.EnabledRemoteExists(enabledRemoteName));
+            Assert.IsFalse(_controller.EnabledRemoteExists(disabledRemoteName));
+        }
+
+        [Test]
+        public void DisabledRemoteExists_returns_true_for_disabled_remotes_only()
+        {
+            string enabledRemoteName = "enabledRemote";
+            string disabledRemoteName = "disabledRemote";
+
+            _module.GetRemoteNames().Returns(x => new[] { enabledRemoteName, });
+
+            var sections = new List<IConfigSection> { new ConfigSection($"{GitRemoteManager.DisabledSectionPrefix}{GitRemoteManager.SectionRemote}.{disabledRemoteName}", true) };
+            _configFile.GetConfigSections().Returns(x => sections);
+
+            Assert.IsTrue(_controller.DisabledRemoteExists(disabledRemoteName));
+            Assert.IsFalse(_controller.DisabledRemoteExists(enabledRemoteName));
+        }
+
         public class IntegrationTests
         {
             [Test]
