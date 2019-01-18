@@ -924,13 +924,15 @@ namespace GitUI
         }
 
         /// <param name="preselectRemote">makes the FormRemotes initially select the given remote</param>
-        public bool StartRemotesDialog(IWin32Window owner, string preselectRemote = null)
+        /// <param name="preselectLocal">makes the FormRemotes initially show tab "Default push behavior" and select the given local</param>
+        public bool StartRemotesDialog(IWin32Window owner, string preselectRemote = null, string preselectLocal = null)
         {
             bool Action()
             {
                 using (var form = new FormRemotes(this))
                 {
                     form.PreselectRemoteOnLoad = preselectRemote;
+                    form.PreselectLocalOnLoad = preselectLocal;
                     form.ShowDialog(owner);
                 }
 

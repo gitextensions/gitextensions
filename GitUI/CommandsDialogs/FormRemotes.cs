@@ -119,7 +119,15 @@ Inactive remote is completely invisible to git.");
         /// If this is not null before showing the dialog the given
         /// remote name will be preselected in the listbox
         /// </summary>
+        /// <remarks>exclusive of <see cref="PreselectLocalOnLoad"/></remarks>
         public string PreselectRemoteOnLoad { get; set; }
+
+        /// <summary>
+        /// If this is not null before showing the dialog tab "Default push behvaior" is opened
+        /// and the given local name will be preselected in the listbox
+        /// </summary>
+        /// <remarks>exclusive of <see cref="PreselectRemoteOnLoad"/></remarks>
+        public string PreselectLocalOnLoad { get; set; }
 
         /// <summary>
         /// Gets the list of remotes configured in .git/config file.
@@ -193,13 +201,22 @@ Inactive remote is completely invisible to git.");
             return head;
         }
 
-        private void Initialize(string preselectRemote = null)
+        private void Initialize(string preselectRemote = null, string preselectLocal = null)
         {
             // refresh registered git remotes
             UserGitRemotes = _remoteManager.LoadRemotes(true).ToList();
 
             InitialiseTabRemotes(preselectRemote);
-            InitialiseTabBehaviors();
+            InitialiseTabBehaviors(preselectLocal);
+            if (preselectLocal != null)
+            {
+                ActivateTabBehaviors();
+            }
+        }
+
+        private void ActivateTabBehaviors()
+        {
+                tabControl1.SelectedTab = tabPage2;
         }
 
         private void InitialiseTabRemotes(string preselectRemote = null)
@@ -241,7 +258,7 @@ Inactive remote is completely invisible to git.");
             });
         }
 
-        private void InitialiseTabBehaviors()
+        private void InitialiseTabBehaviors(string preselectLocal = null)
         {
             var heads = Module.GetRefs(false, true);
 
@@ -255,8 +272,13 @@ Inactive remote is completely invisible to git.");
             RemoteBranches.DataSource = heads;
             RemoteBranches.ClearSelection();
             RemoteBranches.SelectionChanged += RemoteBranchesSelectionChanged;
-
-            if (RemoteBranches.Rows.Count > 0)
+            var preselectLocalRow = RemoteBranches.Rows.Cast<DataGridViewRow>().
+                FirstOrDefault(r => r.DataBoundItem is GitRef gitRef ? gitRef.LocalName == preselectLocal : false);
+            if (preselectLocalRow != null)
+            {
+                preselectLocalRow.Selected = true;
+            }
+            else if (RemoteBranches.Rows.Count > 0)
             {
                 RemoteBranches.Rows[0].Selected = true;
             }
@@ -300,6 +322,13 @@ Inactive remote is completely invisible to git.");
             // we need this event only once, so unwire
             Application.Idle -= application_Idle;
 
+            // make sure only single load option is given
+            if (PreselectRemoteOnLoad != null && PreselectLocalOnLoad != null)
+            {
+                throw new ArgumentException($"Only one option allowed:" +
+                    $" Either {nameof(PreselectRemoteOnLoad)} or {nameof(PreselectLocalOnLoad)}");
+            }
+
             pnlMgtPuttySsh.Visible = GitCommandHelpers.Plink();
 
             // if Putty SSH isn't enabled, reduce the minimum height of the form
@@ -316,7 +345,7 @@ Inactive remote is completely invisible to git.");
             _remoteManager = new GitRemoteManager(() => Module);
 
             // load the data for the very first time
-            Initialize(PreselectRemoteOnLoad);
+            Initialize(PreselectRemoteOnLoad, PreselectLocalOnLoad);
         }
 
         private void btnToggleState_Click(object sender, EventArgs e)

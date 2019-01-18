@@ -906,9 +906,20 @@ namespace GitUI.CommandsDialogs
 
             var currentBranchName = Module.GetSelectedBranch();
 
+            var currentBranch = Module.GetRefs(false, true).FirstOrDefault(r => r.LocalName == Module.GetSelectedBranch());
+            var pushTo = $" -> {currentBranch.TrackingRemote}/{currentBranch.MergeWith}";
+            if (string.IsNullOrEmpty(currentBranch.TrackingRemote) || string.IsNullOrEmpty(currentBranch.MergeWith))
+            {
+                pushTo = " (No remote branch configured)";
+            }
+
             await this.SwitchToMainThreadAsync();
 
-            branchNameLabel.Text = currentBranchName;
+            branchNameLabel.Click += (object sender, EventArgs e) =>
+            {
+                UICommands.StartRemotesDialog(this, null, currentBranchName);
+            };
+            branchNameLabel.Text = currentBranchName + pushTo;
             Text = string.Format(_formTitle.Text, currentBranchName, PathUtil.GetDisplayPath(Module.WorkingDir));
         }
 
