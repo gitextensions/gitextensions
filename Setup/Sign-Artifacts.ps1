@@ -19,18 +19,24 @@ Compress-Archive -LiteralPath $msi, $zip -CompressionLevel NoCompression -Destin
 
 # sign
 $description = "https://ci.appveyor.com/project/gitextensions/gitextensions/builds/$env:APPVEYOR_BUILD_ID\n$env:APPVEYOR_REPO_COMMIT_MESSAGE\n$env:APPVEYOR_REPO_BRANCH from $env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH";
-Submit-SigningRequest `
-    -InputArtifactPath $combined `
-    -Description $description `
-    -CIUserToken $env:spciuser `
-    -OrganizationId '7c19b2cf-90f7-4d15-9b12-1b615f7c18c4' `
-    -SigningPolicyId '5c9879c7-0dea-4303-8e5b-fc4192a7b0de' `
-    -WaitForCompletion `
-    -WaitForCompletionTimeoutInSeconds 180 `
-    -Force
+try {
+    Submit-SigningRequest `
+        -InputArtifactPath $combined `
+        -Description $description `
+        -CIUserToken $env:spciuser `
+        -OrganizationId '7c19b2cf-90f7-4d15-9b12-1b615f7c18c4' `
+        -SigningPolicyId '5c9879c7-0dea-4303-8e5b-fc4192a7b0de' `
+        -WaitForCompletion `
+        -WaitForCompletionTimeoutInSeconds 180 `
+        -Force
+}
+catch {
+    # no-op
+}
 
 # extract signed artifacts to Signed folder
-if ($LastExitCode -eq 0) -and (Test-Path $combinedSigned)) {
+if (Test-Path $combinedSigned) {
+    Write-Host "Publishing signed artifacts"
     Expand-Archive  -LiteralPath $combinedSigned -DestinationPath .\Signed
 
     # -------------------------------
@@ -44,6 +50,7 @@ if ($LastExitCode -eq 0) -and (Test-Path $combinedSigned)) {
 }
 
 # signing failed, most likely it wasn't approved
+Write-Host "Publishing non-signed artifacts"
 # publish unsigned artifacts
 $zip = (Resolve-Path GitExtensions-Portable-*.zip)[0].Path;
 Push-AppveyorArtifact $zip
