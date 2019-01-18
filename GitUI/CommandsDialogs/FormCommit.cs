@@ -906,10 +906,36 @@ namespace GitUI.CommandsDialogs
 
             var currentBranchName = Module.GetSelectedBranch();
 
+            var currentBranch = Module.GetRefs(false, true).FirstOrDefault(r => r.LocalName == Module.GetSelectedBranch());
+            var pushTo = $"Push to {currentBranch.TrackingRemote}/{currentBranch.MergeWith}";
+            var trackedRemoteBranch = true;
+            if (string.IsNullOrEmpty(currentBranch.TrackingRemote) || string.IsNullOrEmpty(currentBranch.MergeWith))
+            {
+                // If no tracked remote is configured, it seems that is defaults to "origin".
+                // If no MergeWith configured, it seems that the local name is also used as remote branch name.
+                // Both cases are not intuitive --> warn the user!
+                trackedRemoteBranch = false;
+            }
+
             await this.SwitchToMainThreadAsync();
 
             branchNameLabel.Text = currentBranchName;
             Text = string.Format(_formTitle.Text, currentBranchName, PathUtil.GetDisplayPath(Module.WorkingDir));
+
+            ToolTip pushToToolTip = new ToolTip
+            {
+                InitialDelay = 200,
+                ShowAlways = true
+            };
+            if (!trackedRemoteBranch)
+            {
+                pushToToolTip.AutoPopDelay = 10000;
+                pushToToolTip.ToolTipIcon = ToolTipIcon.Warning;
+                pushToToolTip.ToolTipTitle = "Push destination undefined!";
+                pushTo = "No tracked remote branch configured.";
+            }
+
+            pushToToolTip.SetToolTip(CommitAndPush, pushTo);
         }
 
         private void Initialize(bool loadUnstaged = true)
