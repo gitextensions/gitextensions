@@ -197,7 +197,7 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            (string revision, string path) BuildFilter()
+            (ArgumentString revision, string path) BuildFilter()
             {
                 var fileName = FileName;
 
@@ -233,29 +233,44 @@ namespace GitUI.CommandsDialogs
 
                 FileName = fileName;
 
-                var res = (revision: (string)null, path: $" \"{fileName}\"");
+                var res = (revision: (ArgumentBuilder)new ArgumentBuilder(), path: fileName);
 
                 if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
                 {
                     // here we need --name-only to get the previous filenames in the revision graph
-                    res.path = listOfFileNames.ToString();
-                    res.revision += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();
+                    res.path = fileName.ToPosixPath().QuoteNE();
+                    res.revision.AddRange(new string[]
+                    {
+                        " --name-only",
+                        "--parents",
+                        "--follow",
+                        GitCommandHelpers.FindRenamesAndCopiesOpts()
+                        });
                 }
                 else if (AppSettings.FollowRenamesInFileHistory)
                 {
                     // history of a directory
                     // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                    res.revision = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents";
+                    res.revision.AddRange(new string[]
+                    {
+                        " --follow",
+                        "--parents",
+                        GitCommandHelpers.FindRenamesOpt()
+                    });
                 }
                 else
                 {
                     // rename following disabled
-                    res.revision = " --parents";
+                    res.revision.AddRange(new string[] { " --parents" });
                 }
 
                 if (AppSettings.FullHistoryInFileHistory)
                 {
-                    res.revision = string.Concat(" --full-history ", AppSettings.SimplifyMergesInFileHistory ? "--simplify-merges " : string.Empty, res.revision);
+                    res.revision.AddRange(new string[]
+                    {
+                        "--full-history",
+                        AppSettings.SimplifyMergesInFileHistory ? "--simplify-merges" : string.Empty
+                    });
                 }
 
                 return res;
