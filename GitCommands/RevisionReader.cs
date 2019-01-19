@@ -28,6 +28,7 @@ namespace GitCommands
 
     public sealed class RevisionReader : IDisposable
     {
+        private const string EndOfBody = "\x2"; // STX control char.  Nobody will ever type character 2 in the body.
         private const string FullFormat =
 
               // These header entries can all be decoded from the bytes directly.
@@ -47,7 +48,7 @@ namespace GitCommands
               /* Committer name  */ "%cN%n" +
               /* Committer email */ "%cE%n" +
               /* Commit subject  */ "%s%n%n" +
-              /* Commit body     */ "%b";
+              /* Commit body     */ "%b" + EndOfBody;
 
         private readonly CancellationTokenSequence _cancellationTokenSequence = new CancellationTokenSequence();
 
@@ -415,6 +416,14 @@ namespace GitCommands
                 return false;
             }
 
+            int bodyEnd = body.IndexOf(EndOfBody);
+            string otherOutput = null;
+            if (bodyEnd > -1)
+            {
+                var otherStartIndex = bodyEnd + EndOfBody.Length;
+                otherOutput = body.Length > otherStartIndex ? body.Substring(otherStartIndex) : null;
+                body = body.Substring(0, bodyEnd);
+            }
             #endregion
 
             revision = new GitRevision(objectId)
@@ -431,7 +440,8 @@ namespace GitCommands
                 Subject = subject,
                 Body = body,
                 HasMultiLineMessage = !ReferenceEquals(subject, body),
-                HasNotes = false
+                HasNotes = false,
+                OtherOutput = otherOutput
             };
 
             return true;
