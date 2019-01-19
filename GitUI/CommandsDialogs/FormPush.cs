@@ -197,7 +197,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            _remoteManager.LoadRemotes(false);
+            UserGitRemotes = _remoteManager.LoadRemotes(false).ToList();
             BindRemotesDropDown(selectedRemoteName);
         }
 
