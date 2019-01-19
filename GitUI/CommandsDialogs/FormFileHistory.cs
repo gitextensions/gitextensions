@@ -317,6 +317,9 @@ namespace GitUI.CommandsDialogs
                 fileName = FileName;
             }
 
+            var tree = Module.GetTree(revision.ObjectId, false, fileName).First() as GitCommands.Git.GitItem;
+            bool isDirectory = tree.ObjectType == GitCommands.Git.GitObjectType.Tree;
+
             SetTitle(fileName);
 
             if (revision.IsArtificial)

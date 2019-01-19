@@ -3218,11 +3218,17 @@ namespace GitCommands
 
         public IEnumerable<IGitItem> GetTree(ObjectId commitId, bool full)
         {
+            return GetTree(commitId, full, null);
+        }
+
+        public IEnumerable<IGitItem> GetTree(ObjectId commitId, bool full, [CanBeNull] string relativePath)
+        {
             var args = new GitArgumentBuilder("ls-tree")
             {
                 "-z",
                 { full, "-r" },
-                commitId
+                commitId,
+                { relativePath.IsNotNullOrWhitespace(), relativePath.QuoteNE() }
             };
 
             var tree = _gitExecutable.GetOutput(args, cache: GitCommandCache);
