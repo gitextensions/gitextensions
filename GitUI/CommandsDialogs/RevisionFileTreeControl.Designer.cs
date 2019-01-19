@@ -47,6 +47,7 @@
             this.toolStripSeparatorEditFileActions = new System.Windows.Forms.ToolStripSeparator();
             this.editCheckedOutFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toggleExecutePermissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileWithToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorGitActions = new System.Windows.Forms.ToolStripSeparator();
@@ -121,6 +122,7 @@
             this.toolStripSeparatorEditFileActions,
             this.editCheckedOutFileToolStripMenuItem,
             this.openWithToolStripMenuItem,
+            this.toggleExecutePermissionsToolStripMenuItem,
             this.openFileToolStripMenuItem,
             this.openFileWithToolStripMenuItem,
             this.toolStripSeparatorGitActions,
@@ -132,7 +134,7 @@
             this.expandAllToolStripMenuItem,
             this.collapseAllToolStripMenuItem});
             this.FileTreeContextMenu.Name = "FileTreeContextMenu";
-            this.FileTreeContextMenu.Size = new System.Drawing.Size(326, 474);
+            this.FileTreeContextMenu.Size = new System.Drawing.Size(326, 518);
             this.FileTreeContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.FileTreeContextMenu_Opening);
             // 
             // openWithDifftoolToolStripMenuItem
@@ -247,6 +249,14 @@
             this.openWithToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
             this.openWithToolStripMenuItem.Text = "Open working directory file with...";
             this.openWithToolStripMenuItem.Click += new System.EventHandler(this.openWithToolStripMenuItem_Click);
+            // 
+            // toggleExecutePermissionsToolStripMenuItem
+            // 
+            this.toggleExecutePermissionsToolStripMenuItem.Image = global::GitUI.Properties.Images.EditFile;
+            this.toggleExecutePermissionsToolStripMenuItem.Name = "toggleExecutePermissionsToolStripMenuItem";
+            this.toggleExecutePermissionsToolStripMenuItem.Size = new System.Drawing.Size(325, 22);
+            this.toggleExecutePermissionsToolStripMenuItem.Text = "Toggle execute permission...";
+            this.toggleExecutePermissionsToolStripMenuItem.Click += new System.EventHandler(this.toggleExecutePermissionToolStripMenuItem_Click);
             // 
             // openFileToolStripMenuItem
             // 
@@ -379,5 +389,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorGitActions;
         private System.Windows.Forms.ToolStripMenuItem stopTrackingThisFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem expandSubtreeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toggleExecutePermissionsToolStripMenuItem;
     }
 }

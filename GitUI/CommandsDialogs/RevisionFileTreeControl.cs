@@ -44,6 +44,11 @@ Are you sure to assume this file won't change ?");
 
 See the changes in the commit form.");
 
+        private readonly TranslationString _toggleExecutePermissionMessage = new TranslationString(@"Are you sure you want to set the unix execute permission flag for the file '{0}' to '{1}'?");
+        private readonly TranslationString _toggleExecutePermissionCaption = new TranslationString("Toggle execute permission");
+        private readonly TranslationString _toggleExecutePermissionSuccess = new TranslationString("File execute permission flag was toggled.");
+        private readonly TranslationString _toggleExecutePermissionFail = new TranslationString("File execute permission flag was not toggled.");
+
         private readonly TranslationString _success = new TranslationString("Success");
         private readonly TranslationString _error = new TranslationString("Error");
 
@@ -772,6 +777,39 @@ See the changes in the commit form.");
             else
             {
                 tvGitTree.Focus();
+            }
+        }
+
+        private void toggleExecutePermissionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selectedFile = GetSelectedFile();
+
+            if (selectedFile == null)
+            {
+                return;
+            }
+
+            var itemStatus = new GitItemStatus { Name = selectedFile };
+            itemStatus.IsExecutable = Module.GetFileExecutableStatus(selectedFile);
+
+            var onOff = itemStatus.IsExecutable ? "OFF" : "ON";
+
+            var answer = MessageBox.Show(string.Format(_toggleExecutePermissionMessage.Text, selectedFile, onOff), _toggleExecutePermissionCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (answer == DialogResult.No)
+            {
+                return;
+            }
+
+            Module.SetFileExecutable(new List<GitItemStatus> { itemStatus }, !itemStatus.IsExecutable, out var wereErrors);
+
+            if (wereErrors)
+            {
+                MessageBox.Show(string.Format(_toggleExecutePermissionFail.Text, itemStatus.Name), _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MessageBox.Show(_toggleExecutePermissionSuccess.Text, _success.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }
