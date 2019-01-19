@@ -237,41 +237,6 @@ namespace GitUI.CommandsDialogs
 
                 if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
                 {
-                    // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
-                    //
-                    // But we can take a more complicated path to get reasonable results:
-                    //  1. use git log --follow to get all previous filenames of the file we are interested in
-                    //  2. use git log "list of files names" to get the history graph
-                    //
-                    // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
-                    //
-
-                    var args = new GitArgumentBuilder("log")
-                    {
-                        "--format=\"%n\"",
-                        "--name-only",
-                        GitCommandHelpers.FindRenamesAndCopiesOpts(),
-                        "--",
-                        fileName.Quote()
-                    };
-
-                    var listOfFileNames = new StringBuilder(fileName.Quote());
-
-                    // keep a set of the file names already seen
-                    var setOfFileNames = new HashSet<string> { fileName };
-
-                    var lines = Module.GetGitOutputLines(args, GitModule.LosslessEncoding);
-
-                    foreach (var line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
-                    {
-                        if (!string.IsNullOrEmpty(line) && setOfFileNames.Add(line))
-                        {
-                            listOfFileNames.Append(" \"");
-                            listOfFileNames.Append(line);
-                            listOfFileNames.Append('\"');
-                        }
-                    }
-
                     // here we need --name-only to get the previous filenames in the revision graph
                     res.path = listOfFileNames.ToString();
                     res.revision += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();
