@@ -598,6 +598,8 @@ See the changes in the commit form.");
 
             toolStripSeparatorFileTreeActions.Visible = isFile;
             expandSubtreeToolStripMenuItem.Visible = isFolder;
+
+            toggleExecutePermissionsToolStripMenuItem.Enabled = isExistingFileOrDirectory && isFile;
         }
 
         private void fileTreeOpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
