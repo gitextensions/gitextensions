@@ -44,9 +44,9 @@ Are you sure to assume this file won't change ?");
 
 See the changes in the commit form.");
 
-        private readonly TranslationString _toggleExecutePermissionMessage = new TranslationString(@"Are you sure you want to set the unix execute permission flag for the file '{0}' to '{1}'?");
+        private readonly TranslationString _toggleExecutePermissionMessage = new TranslationString(@"Are you sure you want to set the unix execute permission flag for the file '{0}' in the current working directory to '{1}'?");
         private readonly TranslationString _toggleExecutePermissionCaption = new TranslationString("Toggle execute permission");
-        private readonly TranslationString _toggleExecutePermissionSuccess = new TranslationString("File execute permission flag was toggled.");
+        private readonly TranslationString _toggleExecutePermissionSuccess = new TranslationString("File execute permission flag was toggled in the current working directory.");
         private readonly TranslationString _toggleExecutePermissionFail = new TranslationString("File execute permission flag was not toggled.");
 
         private readonly TranslationString _success = new TranslationString("Success");
