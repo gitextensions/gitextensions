@@ -40,10 +40,7 @@ namespace GitUI
         private IReadOnlyList<(GitRevision revision, IReadOnlyList<GitItemStatus> statuses)> _itemsWithParent = Array.Empty<(GitRevision, IReadOnlyList<GitItemStatus>)>();
         [CanBeNull] private IDisposable _selectedIndexChangeSubscription;
 
-        /// <summary>
-        /// flag to prevent recursion ClientSizeChanged -> UpdateColumnWidth -> ScrollBar visibility changed -> ClientSizeChanged
-        /// </summary>
-        private bool _handlingClientSizeChange;
+        private bool _updatingColumnWidth;
 
         public event EventHandler SelectedIndexChanged;
         public event EventHandler DataSourceChanged;
@@ -943,45 +940,34 @@ namespace GitUI
             }
         }
 
-        private void UpdateColumnWidth(Action onComplete = null)
+        private void UpdateColumnWidth()
         {
-            var pathFormatter = new PathFormatter(FileStatusListView.CreateGraphics(), FileStatusListView.Font);
-            var minWidth = FileStatusListView.ClientSize.Width;
-
-            var contentWidth = FileStatusListView.Items()
-                .Where(item => item.BoundsOrEmpty().IntersectsWith(FileStatusListView.ClientRectangle))
-                .Select(item =>
-                {
-                    var (_, _, textStart, textWidth, _) = FormatListViewItem(item, pathFormatter, FileStatusListView.ClientSize.Width);
-                    return textStart + textWidth;
-                })
-                .DefaultIfEmpty(minWidth)
-                .Max();
-
-            int width = Math.Max(minWidth, contentWidth);
-
-            if (width == columnHeader.Width)
+            // prevent infinite recursions such as
+            // ClientSizeChanged -> UpdateColumnWidth -> ScrollBar visibility changed -> ClientSizeChanged
+            if (!_updatingColumnWidth)
             {
-                onComplete?.Invoke();
-                return;
+                _updatingColumnWidth = true;
+                columnHeader.Width = GetWidth();
+                _updatingColumnWidth = false;
             }
 
-            FileStatusListView.BeginUpdate();
-            columnHeader.Width = width;
-
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            int GetWidth()
             {
-                // by postponing ListView redraw we workaround the bug
-                // that renders ListView unusable if column Width is set within any
-                // event handler like SizeChanged, ClientSizeChanged, Layout and etc.
-                // https://github.com/gitextensions/gitextensions/issues/5437
-                await Task.Delay(TimeSpan.FromMilliseconds(10));
+                var pathFormatter = new PathFormatter(FileStatusListView.CreateGraphics(), FileStatusListView.Font);
+                var controlWidth = FileStatusListView.ClientSize.Width;
 
-                await this.SwitchToMainThreadAsync();
-                FileStatusListView.EndUpdate();
+                var contentWidth = FileStatusListView.Items()
+                    .Where(item => item.BoundsOrEmpty().IntersectsWith(FileStatusListView.ClientRectangle))
+                    .Select(item =>
+                    {
+                        (_, _, int textStart, int textWidth, _) = FormatListViewItem(item, pathFormatter, FileStatusListView.ClientSize.Width);
+                        return textStart + textWidth;
+                    })
+                    .DefaultIfEmpty(controlWidth)
+                    .Max();
 
-                onComplete?.Invoke();
-            }).FileAndForget();
+                return Math.Max(contentWidth, controlWidth);
+            }
         }
 
         private void HandleVisibility_NoFilesLabel_FilterComboBox(bool filesPresent)
@@ -997,16 +983,7 @@ namespace GitUI
 
         private void FileStatusListView_ClientSizeChanged(object sender, EventArgs e)
         {
-            if (!IsHandleCreated || !FileStatusListView.IsHandleCreated || !FileStatusListView.Created || DesignMode)
-            {
-                return;
-            }
-
-            if (!_handlingClientSizeChange)
-            {
-                _handlingClientSizeChange = true;
-                UpdateColumnWidth(onComplete: () => _handlingClientSizeChange = false);
-            }
+            UpdateColumnWidth();
         }
 
         private void FileStatusListView_ContextMenu_Opening(object sender, CancelEventArgs e)
