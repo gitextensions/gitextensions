@@ -185,6 +185,12 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        private bool IsDirectory(string relativePath, GitRevision revision)
+        {
+            var tree = Module.GetTree(revision.ObjectId, false, relativePath).First() as GitCommands.Git.GitItem;
+            return tree.ObjectType == GitCommands.Git.GitObjectType.Tree;
+        }
+
         private void LoadFileHistory()
         {
             FileChanges.Visible = true;
@@ -313,9 +319,6 @@ namespace GitUI.CommandsDialogs
                 fileName = FileName;
             }
 
-            var tree = Module.GetTree(revision.ObjectId, false, fileName).First() as GitCommands.Git.GitItem;
-            bool isDirectory = tree.ObjectType == GitCommands.Git.GitObjectType.Tree;
-
             SetTitle(fileName);
 
             if (revision.IsArtificial)
@@ -365,6 +368,7 @@ namespace GitUI.CommandsDialogs
                     Name = fileName,
                     IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
+
                 Diff.ViewChangesAsync(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)
