@@ -40,10 +40,12 @@
             // 
             // FileStatusListView
             // 
+            this.FileStatusListView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.FileStatusListView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.FileStatusListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader});
-            this.FileStatusListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.FileStatusListView.FullRowSelect = true;
             this.FileStatusListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.FileStatusListView.HideSelection = false;

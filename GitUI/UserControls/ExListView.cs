@@ -381,11 +381,10 @@ namespace GitUI.UserControls
                     break;
 
                 default:
+                    HandleScroll(m);
                     base.WndProc(ref m);
                     break;
             }
-
-            HandleScroll(m);
 
             void HandleScroll(Message msg)
             {
@@ -395,12 +394,14 @@ namespace GitUI.UserControls
                 switch (msg.Msg)
                 {
                     case NativeMethods.WM_VSCROLL:
-                        type = (ScrollEventType)(msg.WParam.ToInt32() & 0xffff);
-                        newValue = msg.WParam.ToInt32() & 0x0000ffff;
+                        type = (ScrollEventType)LowWord(msg.WParam.ToInt64());
+                        newValue = HighWord(msg.WParam.ToInt64());
                         break;
 
                     case NativeMethods.WM_MOUSEWHEEL:
-                        type = ScrollEventType.EndScroll;
+                        type = HighWord(msg.WParam.ToInt64()) > 0
+                            ? ScrollEventType.SmallDecrement
+                            : ScrollEventType.SmallIncrement;
                         break;
 
                     case NativeMethods.WM_KEYDOWN:
@@ -436,6 +437,12 @@ namespace GitUI.UserControls
 
                 newValue = newValue ?? NativeMethods.GetScrollPos(Handle, NativeMethods.SB_VERT);
                 Scroll?.Invoke(this, new ScrollEventArgs(type, newValue.Value));
+
+                short LowWord(long number) =>
+                    unchecked((short)(number & 0x0000ffff));
+
+                short HighWord(long number) =>
+                    unchecked((short)(number >> 16));
             }
 
             void HandleAddedGroup(Message msg)
