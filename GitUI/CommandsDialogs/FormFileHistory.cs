@@ -168,13 +168,20 @@ namespace GitUI.CommandsDialogs
 
             bool autoLoad = (tabControl1.SelectedTab == BlameTab && AppSettings.LoadBlameOnShow) || AppSettings.LoadFileHistoryOnShow;
 
+            if (!autoLoad)
+            {
+                FileChanges.Visible = false;
+            }
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            bool autoLoad = (tabControl1.SelectedTab == BlameTab && AppSettings.LoadBlameOnShow) || AppSettings.LoadFileHistoryOnShow;
             if (autoLoad)
             {
                 LoadFileHistory();
-            }
-            else
-            {
-                FileChanges.Visible = false;
             }
         }
 
