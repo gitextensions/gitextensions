@@ -235,7 +235,7 @@ namespace GitUI.CommandsDialogs
 
                 var res = (revision: (ArgumentBuilder)new ArgumentBuilder(), path: fileName);
 
-                if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
+                if (AppSettings.FollowRenamesInFileHistory)
                 {
                     // here we need --name-only to get the previous filenames in the revision graph
                     res.path = fileName.ToPosixPath().QuoteNE();
@@ -246,17 +246,6 @@ namespace GitUI.CommandsDialogs
                         "--follow",
                         GitCommandHelpers.FindRenamesAndCopiesOpts()
                         });
-                }
-                else if (AppSettings.FollowRenamesInFileHistory)
-                {
-                    // history of a directory
-                    // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                    res.revision.AddRange(new string[]
-                    {
-                        " --follow",
-                        "--parents",
-                        GitCommandHelpers.FindRenamesOpt()
-                    });
                 }
                 else
                 {
