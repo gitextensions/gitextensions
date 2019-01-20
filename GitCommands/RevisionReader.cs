@@ -441,7 +441,7 @@ namespace GitCommands
                 Body = body,
                 HasMultiLineMessage = !ReferenceEquals(subject, body),
                 HasNotes = false,
-                OtherOutput = otherOutput
+                AdditionalOutput = otherOutput
             };
 
             return true;

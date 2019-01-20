@@ -312,7 +312,7 @@ namespace GitUI.CommandsDialogs
             GitRevision revision = selectedRevisions[0];
             var children = FileChanges.GetRevisionChildren(revision.ObjectId);
 
-            var fileName = revision.OtherOutput?.Substring(1); // Ignore newline character at beginning.
+            var fileName = revision.AdditionalOutput?.Substring(1); // Ignore newline character at beginning.
 
             if (string.IsNullOrEmpty(fileName))
             {
