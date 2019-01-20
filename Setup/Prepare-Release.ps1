@@ -179,19 +179,8 @@ try {
     # Restore IsPortable in config
     .\Set-Portable.ps1
 
-    Write-Host ----------------------------------------------------------------------
-    Write-Host Package PDBs
-    Write-Host ----------------------------------------------------------------------
-    # collect pdbs
-    xcopy ..\GitExtensions\bin\Release\*.pdb pdbs\ /Y
-    xcopy ..\GitExtensions\bin\Release\Plugins\*.pdb pdbs\Plugins\ /Y
-
-    pushd pdbs
-    ..\..\packages\7-Zip.CommandLine.9.20.0\tools\7za.exe a -tzip ..\GitExtensions-$newVersion-pdb.zip .
-    popd
-
     # cleanup
-    Remove-Item -Force -Recurse pdbs
+    Remove-Item -Force -Recurse GitExtensions-pdbs
     Remove-Item -Force -Recurse GitExtensions
 
 }

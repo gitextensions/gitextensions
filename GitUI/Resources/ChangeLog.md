@@ -1,6 +1,81 @@
 Changelog
 =========
 
+### Version 3.0.1 (30 Dec 2018)
+
+#### Fixes:
+* Application crashes on repository change - Issue [6094]
+* Broken issue templates - Issue [6075]
+* Commit Template Settings: Commit Template field one line only - Issue [6029]
+* Exception if no current checkout when selecting current revision - PR [6023]
+* [Bug]  Custom stash names not working - Issue [6016]
+* Update nuget.exe 4.7.1 -> 4.9.2 - PR [6006]
+* Empty/exception when reseting to a remote branch, complaining about the Commit Date < min UTC DateTime - Issue [5984]
+* Refresh revision grid when superproject branch/tag is completed - PR [5981]
+* BitBucket Server plugin has garbage links - Issue [5976]
+* New gitignore editor doesn't allow multiple lines - Issue [5975]
+* Replace ConcurrentBag in RevisionGraph - PR [5974]
+* Crash when clicking on "Help translate" in appearance settings - Issue [5960]
+* Crash in patches view - Issue [5959]
+* Can no longer reset submodule changes in the super project's commit window. - Issue [5937]
+* Commit window left side splitter position not remembered - Issue [5935]
+* Script: cDefaultRemotePathFromUrl returns bad information - Issue [5932]
+* Reenable vertical ruler - PR [5930]
+* Diffs are not displayed properly and cannot be scrolled - Issue [5917]
+* Left Panel branches tree view with horizontal scroll defaults to scrolling to center instead of staying on the left - Issue [5907]
+* Autolinks from commits hashes broken in version 3.00.00 - Issue [5904]
+* QuickPull should behave the same as the default toolbar does. - PR [5897]
+* GitFlow plugins Finish button doesn't work fine - Issue [5893]
+* Double click in empty TextBox raises ArgumentOutOfRangeException - Issue [5890]
+* Revision graph starts from the wrong point - Issue [5880]
+* When default Pull button action is set to "Fetch and prune all", the "Open pull dialog..." entry does a fetch and prune all - Issue [5879]
+* System.FormatException in diff of submodule add / update - Issue [5873]
+* VS2019 initial support - PR [5864]
+* UI freeze in 3.0 RC2 while retrieving avatars - Issue [5859]
+* "Reset unstaged files" with "deleted added files" should not delete ignored files by default - Issue [5849]
+* UI performance on Version 3.00.00 RC2 is very slow - Issue [5836]
+* Improve time complexity of IndexOf. - PR [5800]
+* Restore revision grid highlighting of commits by author - Issue [5197]
+* Plugin distribution - Issue [4885]
+* GitExtensions crashes on startup - "There is an error in the XML document" - Issue [3929]
+
+
+[6094]:https://github.com/gitextensions/gitextensions/issues/6094
+[6075]:https://github.com/gitextensions/gitextensions/issues/6075
+[6029]:https://github.com/gitextensions/gitextensions/issues/6029
+[6023]:https://github.com/gitextensions/gitextensions/pull/6023
+[6016]:https://github.com/gitextensions/gitextensions/issues/6016
+[6006]:https://github.com/gitextensions/gitextensions/pull/6006
+[5984]:https://github.com/gitextensions/gitextensions/issues/5984
+[5981]:https://github.com/gitextensions/gitextensions/pull/5981
+[5976]:https://github.com/gitextensions/gitextensions/issues/5976
+[5975]:https://github.com/gitextensions/gitextensions/issues/5975
+[5974]:https://github.com/gitextensions/gitextensions/pull/5974
+[5960]:https://github.com/gitextensions/gitextensions/issues/5960
+[5959]:https://github.com/gitextensions/gitextensions/issues/5959
+[5937]:https://github.com/gitextensions/gitextensions/issues/5937
+[5935]:https://github.com/gitextensions/gitextensions/issues/5935
+[5932]:https://github.com/gitextensions/gitextensions/issues/5932
+[5930]:https://github.com/gitextensions/gitextensions/pull/5930
+[5917]:https://github.com/gitextensions/gitextensions/issues/5917
+[5907]:https://github.com/gitextensions/gitextensions/issues/5907
+[5904]:https://github.com/gitextensions/gitextensions/issues/5904
+[5897]:https://github.com/gitextensions/gitextensions/pull/5897
+[5893]:https://github.com/gitextensions/gitextensions/issues/5893
+[5890]:https://github.com/gitextensions/gitextensions/issues/5890
+[5880]:https://github.com/gitextensions/gitextensions/issues/5880
+[5879]:https://github.com/gitextensions/gitextensions/issues/5879
+[5873]:https://github.com/gitextensions/gitextensions/issues/5873
+[5864]:https://github.com/gitextensions/gitextensions/pull/5864
+[5859]:https://github.com/gitextensions/gitextensions/issues/5859
+[5849]:https://github.com/gitextensions/gitextensions/issues/5849
+[5836]:https://github.com/gitextensions/gitextensions/issues/5836
+[5800]:https://github.com/gitextensions/gitextensions/pull/5800
+[5197]:https://github.com/gitextensions/gitextensions/issues/5197
+[4885]:https://github.com/gitextensions/gitextensions/issues/4885
+[3929]:https://github.com/gitextensions/gitextensions/issues/3929
+
+
 ### [Version 3.00.00] (09 Dec 2018)
 
 #### Features:

@@ -20,7 +20,7 @@ indent_size = 2
 [*.Designer.cs]
 trim_trailing_whitespace = false
 
-[*.{xml,config,nuspec,xslt}]
+[*.{xml,config,nuspec,xslt,wxs}]
 indent_style = space
 indent_size = 2
 trim_trailing_whitespace = true
