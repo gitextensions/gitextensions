@@ -130,6 +130,9 @@
       <Component Id="RestSharp.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\RestSharp.dll" />
       </Component>
+      <Component Id="Microsoft.VisualStudio.Composition.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.VisualStudio.Composition.dll" />
+      </Component>
       <Component Id="Microsoft.VisualStudio.Threading.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Microsoft.VisualStudio.Threading.dll" />
       </Component>
@@ -202,6 +205,21 @@
       </Component>
       <Component Id="System.ComponentModel.TypeConverter.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.ComponentModel.TypeConverter.dll" />
+      </Component>
+      <Component Id="System.Composition.AttributedModel.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Composition.AttributedModel.dll" />
+      </Component>
+      <Component Id="System.Composition.Convention.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Composition.Convention.dll" />
+      </Component>
+      <Component Id="System.Composition.Hosting.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Composition.Hosting.dll" />
+      </Component>
+      <Component Id="System.Composition.Runtime.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Composition.Runtime.dll" />
+      </Component>
+      <Component Id="System.Composition.TypedParts.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Composition.TypedParts.dll" />
       </Component>
       <Component Id="System.Console.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Console.dll" />
@@ -421,6 +439,9 @@
       </Component>
       <Component Id="System.Threading.Overlapped.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Overlapped.dll" />
+      </Component>
+      <Component Id="System.Threading.Tasks.Dataflow.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Tasks.Dataflow.dll" />
       </Component>
       <Component Id="System.Threading.Tasks.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Threading.Tasks.dll" />
@@ -904,6 +925,11 @@
       <ComponentRef Id="System.ComponentModel.EventBasedAsync.dll" />
       <ComponentRef Id="System.ComponentModel.Primitives.dll" />
       <ComponentRef Id="System.ComponentModel.TypeConverter.dll" />
+      <ComponentRef Id="System.Composition.AttributedModel.dll" />
+      <ComponentRef Id="System.Composition.Convention.dll" />
+      <ComponentRef Id="System.Composition.Hosting.dll" />
+      <ComponentRef Id="System.Composition.Runtime.dll" />
+      <ComponentRef Id="System.Composition.TypedParts.dll" />
       <ComponentRef Id="System.Console.dll" />
       <ComponentRef Id="System.Data.Common.dll" />
       <ComponentRef Id="System.Diagnostics.Contracts.dll" />
@@ -977,6 +1003,7 @@
       <ComponentRef Id="System.Text.RegularExpressions.dll" />
       <ComponentRef Id="System.Threading.dll" />
       <ComponentRef Id="System.Threading.Overlapped.dll" />
+      <ComponentRef Id="System.Threading.Tasks.Dataflow.dll" />
       <ComponentRef Id="System.Threading.Tasks.dll" />
       <ComponentRef Id="System.Threading.Tasks.Parallel.dll" />
       <ComponentRef Id="System.Threading.Thread.dll" />
@@ -990,28 +1017,37 @@
       <ComponentRef Id="System.Xml.XPath.XDocument.dll" />
     </ComponentGroup>
     <ComponentGroup Id="Component.Resources">
+      <ComponentRef Id="cs_Microsoft.VisualStudio.Composition.resources.dll" />
       <ComponentRef Id="cs_Microsoft.VisualStudio.Threading.resources.dll" />
       <ComponentRef Id="cs_Microsoft.VisualStudio.Validation.resources.dll" />
+      <ComponentRef Id="de_Microsoft.VisualStudio.Composition.resources.dll" />
       <ComponentRef Id="de_Microsoft.VisualStudio.Threading.resources.dll" />
       <ComponentRef Id="de_Microsoft.VisualStudio.Validation.resources.dll" />
       <ComponentRef Id="de_NBug.resources.dll" />
+      <ComponentRef Id="es_Microsoft.VisualStudio.Composition.resources.dll" />
       <ComponentRef Id="es_Microsoft.VisualStudio.Threading.resources.dll" />
       <ComponentRef Id="es_Microsoft.VisualStudio.Validation.resources.dll" />
       <ComponentRef Id="es_MX_NBug.resources.dll" />
       <ComponentRef Id="fi_FI_NBug.resources.dll" />
+      <ComponentRef Id="fr_Microsoft.VisualStudio.Composition.resources.dll" />
       <ComponentRef Id="fr_Microsoft.VisualStudio.Threading.resources.dll" />
       <ComponentRef Id="fr_Microsoft.VisualStudio.Validation.resources.dll" />
       <ComponentRef Id="hr_NBug.resources.dll" />
+      <ComponentRef Id="it_Microsoft.VisualStudio.Composition.resources.dll" />
       <ComponentRef Id="it_Microsoft.VisualStudio.Threading.resources.dll" />
       <ComponentRef Id="it_Microsoft.VisualStudio.Validation.resources.dll" />
+      <ComponentRef Id="ja_Microsoft.VisualStudio.Composition.resources.dll" />
       <ComponentRef Id="ja_Microsoft.VisualStudio.Threading.resources.dll" />
       <ComponentRef Id="ja_Microsoft.VisualStudio.Validation.resources.dll" />
       <ComponentRef Id="ja_NBug.resources.dll" />
+      <ComponentRef Id="ko_Microsoft.VisualStudio.Composition.resources.dll" />
       <ComponentRef Id="ko_Microsoft.VisualStudio.Threading.resources.dll" />
       <ComponentRef Id="ko_Microsoft.VisualStudio.Validation.resources.dll" />
       <ComponentRef Id="ko_KR_NBug.resources.dll" />
+      <ComponentRef Id="pl_Microsoft.VisualStudio.Composition.resources.dll" />
       <ComponentRef Id="pl_Microsoft.VisualStudio.Threading.resources.dll" />
       <ComponentRef Id="pl_Microsoft.VisualStudio.Validation.resources.dll" />
+      <ComponentRef Id="pt_BR_Microsoft.VisualStudio.Composition.resources.dll" />
       <ComponentRef Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.Common.resources.dll" />
       <ComponentRef Id="Plugins_pt_BR_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       <ComponentRef Id="pt_BR_Microsoft.VisualStudio.Threading.resources.dll" />
@@ -1019,6 +1055,7 @@
       <ComponentRef Id="Plugins_ru_Microsoft.TeamFoundation.Common.resources.dll" />
       <ComponentRef Id="Plugins_ru_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       <ComponentRef Id="Plugins_ru_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+      <ComponentRef Id="ru_Microsoft.VisualStudio.Composition.resources.dll" />
       <ComponentRef Id="Plugins_ru_Microsoft.VisualStudio.Services.Common.resources.dll" />
       <ComponentRef Id="Plugins_ru_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       <ComponentRef Id="ru_Microsoft.VisualStudio.Threading.resources.dll" />
@@ -1026,12 +1063,15 @@
       <ComponentRef Id="Plugins_tr_Microsoft.TeamFoundation.Common.resources.dll" />
       <ComponentRef Id="Plugins_tr_Microsoft.TeamFoundation.Core.WebApi.resources.dll" />
       <ComponentRef Id="Plugins_tr_Microsoft.TeamFoundation.Dashboards.WebApi.resources.dll" />
+      <ComponentRef Id="tr_Microsoft.VisualStudio.Composition.resources.dll" />
       <ComponentRef Id="Plugins_tr_Microsoft.VisualStudio.Services.Common.resources.dll" />
       <ComponentRef Id="Plugins_tr_Microsoft.VisualStudio.Services.WebApi.resources.dll" />
       <ComponentRef Id="tr_Microsoft.VisualStudio.Threading.resources.dll" />
       <ComponentRef Id="tr_Microsoft.VisualStudio.Validation.resources.dll" />
+      <ComponentRef Id="zh_Hans_Microsoft.VisualStudio.Composition.resources.dll" />
       <ComponentRef Id="zh_Hans_Microsoft.VisualStudio.Threading.resources.dll" />
       <ComponentRef Id="zh_Hans_Microsoft.VisualStudio.Validation.resources.dll" />
+      <ComponentRef Id="zh_Hant_Microsoft.VisualStudio.Composition.resources.dll" />
       <ComponentRef Id="zh_Hant_Microsoft.VisualStudio.Threading.resources.dll" />
       <ComponentRef Id="zh_Hant_Microsoft.VisualStudio.Validation.resources.dll" />
       <ComponentRef Id="pt_BR_NBug.resources.dll" />
@@ -1091,6 +1131,9 @@
     </ComponentGroup>
 
     <DirectoryRef Id="cs">
+      <Component Id="cs_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\cs\Microsoft.VisualStudio.Composition.resources.dll" Id="cs_Microsoft.VisualStudio.Composition.resources.dll" />
+      </Component>
       <Component Id="cs_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\cs\Microsoft.VisualStudio.Threading.resources.dll" Id="cs_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
@@ -1099,6 +1142,9 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="de">
+      <Component Id="de_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\de\Microsoft.VisualStudio.Composition.resources.dll" Id="de_Microsoft.VisualStudio.Composition.resources.dll" />
+      </Component>
       <Component Id="de_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\de\Microsoft.VisualStudio.Threading.resources.dll" Id="de_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
@@ -1110,6 +1156,9 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="es">
+      <Component Id="es_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\es\Microsoft.VisualStudio.Composition.resources.dll" Id="es_Microsoft.VisualStudio.Composition.resources.dll" />
+      </Component>
       <Component Id="es_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\es\Microsoft.VisualStudio.Threading.resources.dll" Id="es_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
@@ -1128,6 +1177,9 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="fr">
+      <Component Id="fr_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\fr\Microsoft.VisualStudio.Composition.resources.dll" Id="fr_Microsoft.VisualStudio.Composition.resources.dll" />
+      </Component>
       <Component Id="fr_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\fr\Microsoft.VisualStudio.Threading.resources.dll" Id="fr_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
@@ -1141,6 +1193,9 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="it">
+      <Component Id="it_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\it\Microsoft.VisualStudio.Composition.resources.dll" Id="it_Microsoft.VisualStudio.Composition.resources.dll" />
+      </Component>
       <Component Id="it_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\it\Microsoft.VisualStudio.Threading.resources.dll" Id="it_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
@@ -1149,6 +1204,9 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="ja">
+      <Component Id="ja_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\ja\Microsoft.VisualStudio.Composition.resources.dll" Id="ja_Microsoft.VisualStudio.Composition.resources.dll" />
+      </Component>
       <Component Id="ja_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\ja\Microsoft.VisualStudio.Threading.resources.dll" Id="ja_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
@@ -1160,6 +1218,9 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="ko">
+      <Component Id="ko_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\ko\Microsoft.VisualStudio.Composition.resources.dll" Id="ko_Microsoft.VisualStudio.Composition.resources.dll" />
+      </Component>
       <Component Id="ko_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\ko\Microsoft.VisualStudio.Threading.resources.dll" Id="ko_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
@@ -1173,6 +1234,9 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="pl">
+      <Component Id="pl_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\pl\Microsoft.VisualStudio.Composition.resources.dll" Id="pl_Microsoft.VisualStudio.Composition.resources.dll" />
+      </Component>
       <Component Id="pl_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\pl\Microsoft.VisualStudio.Threading.resources.dll" Id="pl_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
@@ -1325,6 +1389,9 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="pt_BR">
+      <Component Id="pt_BR_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\pt-BR\Microsoft.VisualStudio.Composition.resources.dll" Id="pt_BR_Microsoft.VisualStudio.Composition.resources.dll" />
+      </Component>
       <Component Id="pt_BR_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\pt-BR\Microsoft.VisualStudio.Threading.resources.dll" Id="pt_BR_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
@@ -1353,6 +1420,9 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="ru">
+      <Component Id="ru_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\ru\Microsoft.VisualStudio.Composition.resources.dll" Id="ru_Microsoft.VisualStudio.Composition.resources.dll" />
+      </Component>
       <Component Id="ru_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\ru\Microsoft.VisualStudio.Threading.resources.dll" Id="ru_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
@@ -1378,6 +1448,9 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="tr">
+      <Component Id="tr_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\tr\Microsoft.VisualStudio.Composition.resources.dll" Id="tr_Microsoft.VisualStudio.Composition.resources.dll" />
+      </Component>
       <Component Id="tr_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\tr\Microsoft.VisualStudio.Threading.resources.dll" Id="tr_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
@@ -1403,6 +1476,9 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="zh_Hans">
+      <Component Id="zh_Hans_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hans\Microsoft.VisualStudio.Composition.resources.dll" Id="zh_Hans_Microsoft.VisualStudio.Composition.resources.dll" />
+      </Component>
       <Component Id="zh_Hans_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hans\Microsoft.VisualStudio.Threading.resources.dll" Id="zh_Hans_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
@@ -1428,6 +1504,9 @@
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="zh_Hant">
+      <Component Id="zh_Hant_Microsoft.VisualStudio.Composition.resources.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hant\Microsoft.VisualStudio.Composition.resources.dll" Id="zh_Hant_Microsoft.VisualStudio.Composition.resources.dll" />
+      </Component>
       <Component Id="zh_Hant_Microsoft.VisualStudio.Threading.resources.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\zh-Hant\Microsoft.VisualStudio.Threading.resources.dll" Id="zh_Hant_Microsoft.VisualStudio.Threading.resources.dll" />
       </Component>
@@ -1503,6 +1582,7 @@
       <ComponentRef Id="English.Plugins.xlf" />
       <ComponentRef Id="Git.hub.dll" />
       <ComponentRef Id="RestSharp.dll" />
+      <ComponentRef Id="Microsoft.VisualStudio.Composition.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Threading.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Validation.dll" />
       <ComponentRef Id="System.Runtime.InteropServices.RuntimeInformation.dll" />
