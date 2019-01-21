@@ -126,7 +126,7 @@ namespace GitCommandsTests.Remote
         {
             const string remoteName = "a";
             const string remoteUrl = "b";
-            const string output = "yes!";
+            const string output = "";
             _module.AddRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
             var result = _controller.SaveRemote(null, remoteName, remoteUrl, null, null);
@@ -143,7 +143,7 @@ namespace GitCommandsTests.Remote
             const string remoteUrl = "b";
             const string remotePushUrl = "c";
             const string remotePuttySshKey = "";
-            const string output = "yes!";
+            const string output = "";
             _module.AddRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
             var result = _controller.SaveRemote(null, remoteName, remoteUrl, remotePushUrl, remotePuttySshKey);
