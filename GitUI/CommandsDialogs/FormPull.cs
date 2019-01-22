@@ -897,6 +897,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = true;
             AllTags.Enabled = false;
             Prune.Enabled = true;
+            UpdateFormTitle();
             if (AllTags.Checked)
             {
                 ReachableTags.Checked = true;
@@ -916,6 +917,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.IsOnHoverShowImage2 = false;
             AllTags.Enabled = false;
             Prune.Enabled = false;
+            UpdateFormTitle();
             if (AllTags.Checked)
             {
                 ReachableTags.Checked = true;
