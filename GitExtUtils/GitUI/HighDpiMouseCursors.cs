@@ -27,14 +27,15 @@ namespace GitExtUtils.GitUI
             void SetCursor(string fieldName, IDC idc)
             {
                 var field = typeof(Cursors).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Static);
-                field?.SetValue(null, new Cursor(LoadCursor(IntPtr.Zero, idc)));
+                field?.SetValue(null, new Cursor(NativeMethods.LoadCursor(IntPtr.Zero, idc)));
             }
         }
 
-#pragma warning disable SA1305 // parameter should not use Hungarian notation
-        [DllImport("user32.dll")]
-        private static extern IntPtr LoadCursor(IntPtr hInstance, IDC lpCursorName);
-#pragma warning restore SA1305 // parameter should not use Hungarian notation
+        private static class NativeMethods
+        {
+            [DllImport("user32.dll")]
+            public static extern IntPtr LoadCursor(IntPtr hInstance, IDC lpCursorName);
+        }
 
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         [SuppressMessage("ReSharper", "UnusedMember.Local")]
