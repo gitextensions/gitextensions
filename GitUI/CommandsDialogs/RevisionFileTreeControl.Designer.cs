@@ -255,7 +255,7 @@
             this.toggleExecutePermissionsToolStripMenuItem.Image = global::GitUI.Properties.Images.EditFile;
             this.toggleExecutePermissionsToolStripMenuItem.Name = "toggleExecutePermissionsToolStripMenuItem";
             this.toggleExecutePermissionsToolStripMenuItem.Size = new System.Drawing.Size(346, 22);
-            this.toggleExecutePermissionsToolStripMenuItem.Text = "Toggle execute permission in working directory file...";
+            this.toggleExecutePermissionsToolStripMenuItem.Text = "Toggle execute permission on working directory file...";
             this.toggleExecutePermissionsToolStripMenuItem.Click += new System.EventHandler(this.toggleExecutePermissionToolStripMenuItem_Click);
             // 
             // openFileToolStripMenuItem
