@@ -127,11 +127,13 @@ namespace GitUI.CommandsDialogs
             _branch = Module.GetSelectedBranch();
             BindRemotesDropDown(defaultRemote);
 
+            if (pullAction == AppSettings.PullAction.None)
+            {
+                pullAction = AppSettings.DefaultPullAction;
+            }
+
             switch (pullAction)
             {
-                case AppSettings.PullAction.None:
-                    // Treat None as Fetch
-                    goto case AppSettings.PullAction.Fetch;
                 case AppSettings.PullAction.Merge:
                     Merge.Checked = true;
                     Prune.Enabled = true;
