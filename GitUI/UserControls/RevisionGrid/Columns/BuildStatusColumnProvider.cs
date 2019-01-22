@@ -162,7 +162,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             if (revision.BuildStatus != null)
             {
-                toolTip = revision.BuildStatus.Description;
+                toolTip = revision.BuildStatus.Tooltip ?? revision.BuildStatus.Description;
                 return true;
             }
 
