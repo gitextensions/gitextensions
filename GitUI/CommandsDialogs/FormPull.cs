@@ -151,8 +151,8 @@ namespace GitUI.CommandsDialogs
                     break;
                 case AppSettings.PullAction.FetchPruneAll:
                     Fetch.Checked = true;
-                    _NO_TRANSLATE_Remotes.Text = AllRemotes;
                     Prune.Checked = true;
+                    _NO_TRANSLATE_Remotes.Text = AllRemotes;
                     break;
                 case AppSettings.PullAction.Default:
                     Debug.Assert(false, "pullAction is not a valid action");
@@ -980,6 +980,26 @@ namespace GitUI.CommandsDialogs
             {
                 Branches.Text = localBranch.Text;
             }
+        }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FormPull _form;
+
+            public TestAccessor(FormPull form)
+            {
+                _form = form;
+            }
+
+            public RadioButton Merge => _form.Merge;
+            public RadioButton Rebase => _form.Rebase;
+            public RadioButton Fetch => _form.Fetch;
+            public CheckBox AutoStash => _form.AutoStash;
+            public CheckBox Prune => _form.Prune;
+            public ComboBox Remotes => _form._NO_TRANSLATE_Remotes;
+            public TextBox LocalBranch => _form.localBranch;
         }
     }
 }
