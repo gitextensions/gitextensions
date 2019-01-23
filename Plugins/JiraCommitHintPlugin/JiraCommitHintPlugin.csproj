@@ -43,6 +43,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+  <PackageReference Include="System.Collections.Immutable">
+      <Version>1.5.0</Version>
+    </PackageReference>
     <PackageReference Include="Atlassian.SDK" Version="10.0.2" />
     <PackageReference Include="NString" Version="1.2.0" />
   </ItemGroup>
