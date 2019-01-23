@@ -1,0 +1,55 @@
+Git Extensions Project Contributors Certification of Origin and Rights
+
+All contributors to Git Extensions must formally agree to abide by this
+certificate of origin by signing on the bottom with their github
+userid, full name, email address (you can obscure your e-mail, but it
+must be computable by human), and date.
+
+By signing this agreement, you are warranting and representing that
+you have the right to release code contributions or other content free
+of any obligations to third parties and are granting Henk Westhuis and
+Git Extensions project contributors, henceforth referred to as 
+The Git Extensions Project, a license to incorporate it into 
+The Git Extensions Project or related works under the MIT license. 
+You understand that The Git Extensions Project may or may not incorporate
+your contribution and you warrant and represent the following:
+
+1. I am the creator of all my contributions. I am the author of all
+   contributed work submitted and further warrant and represent that
+   such work is my original creation and I have the right to license
+   it to The Git Extensions Project for release under the MIT and/or GPL
+   license. I hereby grant The Git Extensions Project a nonexclusive,
+   irrevocable, royalty-free, worldwide license to reproduce,
+   distribute, prepare derivative works, and otherwise use my
+   contributions as part of the Git Extensions project, associated
+   documentation, books, and tools at no cost to The Git Extensions Project.
+
+2. I have the right to submit. This submission does not violate the
+   rights of any person or entity and that I have legal authority over
+   this submission and to make this certification.
+
+3. If I violate another's rights, liability lies with me. I agree to
+   defend, indemnify, and hold The Git Extensions Project and Git Extensions 
+   users harmless from any claim or demand, including reasonable attorney
+   fees, made by any third party due to or arising out of my violation
+   of these terms and conditions or my violation of the rights of
+   another person or entity.
+
+4. I understand and agree that this project and the contribution are
+   public and that a record of the contribution (including all
+   personal information I submit with it, including my sign-off) is
+   maintained indefinitely and may be redistributed consistent with
+   this project or the open source license indicated in the file.
+
+I have read this agreement and do so certify by adding my signoff to
+the end of the following contributors list.
+
+CONTRIBUTORS:
+
+YYYY/MM/DD, github id, Full name, email
+2019/01/23, spdr870, Henk Westhuis, henk.westhuis@gmail.com
+2019/01/23, RussKie, Igor Velikorossov, russkie@gmail.com
+2019/01/23, gerhardol, Gerhard Olsson, gerhard.nospam@gmail.com
+2019/01/23, drewnoakes, Drew Noakes, git@drewnoakes.com
+2019/01/23, amaiorano, Antonio Maiorano, amaiorano@gmail.com
+2019/01/23, sharwell, Sam Harwell, sam@tunnelvisionlabs.com

@@ -1,5 +1,7 @@
 ﻿# Contributing to Git Extensions
 
+:exclamation: As of 23 January 2019 all submissions to this project must be done under [The Developer Certificate of Origin](contributors.txt). You must sign it with your pull request, if you've not done so before.
+
 GitExtensions is a project with a long history, made possible by [hundreds of contributors](https://github.com/gitextensions/gitextensions/graphs/contributors).
 
 We welcome contributions including:
