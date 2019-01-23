@@ -905,12 +905,18 @@ namespace GitUI.CommandsDialogs
             await TaskScheduler.Default;
 
             var currentBranchName = Module.GetSelectedBranch();
-
-            var currentBranch = Module.GetRefs(false, true).FirstOrDefault(r => r.LocalName == Module.GetSelectedBranch());
-            var pushTo = $" -> {currentBranch.TrackingRemote}/{currentBranch.MergeWith}";
+            var currentBranch = Module.GetRefs(false, true).FirstOrDefault(r => r.LocalName == currentBranchName);
+            string pushTo;
             if (string.IsNullOrEmpty(currentBranch.TrackingRemote) || string.IsNullOrEmpty(currentBranch.MergeWith))
             {
-                pushTo = " (No remote branch configured)";
+                pushTo = new TranslationString(" -> (No remote branch configured)").Text;
+            }
+            else
+            {
+                var pushToTranslation = new TranslationString(" -> {0}/{1}");
+                pushTo = string.Format(pushToTranslation.Text,
+                                      currentBranch.TrackingRemote,
+                                      currentBranch.MergeWith);
             }
 
             await this.SwitchToMainThreadAsync();

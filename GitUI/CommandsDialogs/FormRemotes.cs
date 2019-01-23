@@ -210,13 +210,13 @@ Inactive remote is completely invisible to git.");
             InitialiseTabBehaviors(preselectLocal);
             if (preselectLocal != null)
             {
-                ActivateTabBehaviors();
+                ActivateTabDefaultPullBehavior();
             }
         }
 
-        private void ActivateTabBehaviors()
+        private void ActivateTabDefaultPullBehavior()
         {
-                tabControl1.SelectedTab = tabPage2;
+            tabControl1.SelectedTab = tabPage2;
         }
 
         private void InitialiseTabRemotes(string preselectRemote = null)
@@ -273,7 +273,7 @@ Inactive remote is completely invisible to git.");
             RemoteBranches.ClearSelection();
             RemoteBranches.SelectionChanged += RemoteBranchesSelectionChanged;
             var preselectLocalRow = RemoteBranches.Rows.Cast<DataGridViewRow>().
-                FirstOrDefault(r => r.DataBoundItem is GitRef gitRef ? gitRef.LocalName == preselectLocal : false);
+                FirstOrDefault(r => r.DataBoundItem is IGitRef gitRef ? gitRef.LocalName == preselectLocal : false);
             if (preselectLocalRow != null)
             {
                 preselectLocalRow.Selected = true;
