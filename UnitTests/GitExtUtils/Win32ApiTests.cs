@@ -31,7 +31,7 @@ namespace GitExtUtilsTests
 
         private static IntPtr ToLParam(short x, short y) =>
             new IntPtr(
-                ((long)x & 0x00000000_0000FFFF) |
-                (((long)y & 0x00000000_0000FFFF) << 16));
+                x & 0x0000_FFFF |
+                (y & 0x0000_FFFF) << 16);
     }
 }
