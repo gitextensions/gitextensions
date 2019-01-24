@@ -1729,7 +1729,7 @@ namespace GitUI
             }
             else
             {
-                StartPullDialog(remoteBranch: remoteBranch);
+                StartPullDialog(remoteBranch: remoteBranch, pullAction: AppSettings.PullAction.Merge);
             }
         }
 
