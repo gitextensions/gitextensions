@@ -520,8 +520,6 @@ xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\Microsoft.TeamFoundatio
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\Microsoft.TeamFoundation.Build2.WebApi.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1 
-xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\Microsoft.TeamFoundation.Chat.WebApi.dll GitExtensions\Plugins\
-IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\Microsoft.TeamFoundation.Client.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\Microsoft.TeamFoundation.Common.dll GitExtensions\Plugins\
