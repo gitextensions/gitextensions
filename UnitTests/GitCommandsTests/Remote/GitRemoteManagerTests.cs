@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.Config;
 using GitCommands.Remotes;
@@ -125,7 +126,7 @@ namespace GitCommandsTests.Remote
         {
             const string remoteName = "a";
             const string remoteUrl = "b";
-            const string output = "yes!";
+            const string output = "";
             _module.AddRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
             var result = _controller.SaveRemote(null, remoteName, remoteUrl, null, null);
@@ -142,7 +143,7 @@ namespace GitCommandsTests.Remote
             const string remoteUrl = "b";
             const string remotePushUrl = "c";
             const string remotePuttySshKey = "";
-            const string output = "yes!";
+            const string output = "";
             _module.AddRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
             var result = _controller.SaveRemote(null, remoteName, remoteUrl, remotePushUrl, remotePuttySshKey);
@@ -408,6 +409,71 @@ namespace GitCommandsTests.Remote
             var enabledRemotesNoBranches = _controller.GetEnabledRemoteNamesWithoutBranches();
             Assert.AreEqual(1, enabledRemotesNoBranches.Count);
             Assert.AreEqual(enabledRemoteNameNoBranches, enabledRemotesNoBranches[0]);
+        }
+
+        [Test]
+        public void EnabledRemoteExists_returns_true_for_enabled_remotes_only()
+        {
+            string enabledRemoteName = "enabledRemote";
+            string disabledRemoteName = "disabledRemote";
+
+            _module.GetRemoteNames().Returns(x => new[] { enabledRemoteName, });
+
+            var sections = new List<IConfigSection> { new ConfigSection($"{GitRemoteManager.DisabledSectionPrefix}{GitRemoteManager.SectionRemote}.{disabledRemoteName}", true) };
+            _configFile.GetConfigSections().Returns(x => sections);
+
+            Assert.IsTrue(_controller.EnabledRemoteExists(enabledRemoteName));
+            Assert.IsFalse(_controller.EnabledRemoteExists(disabledRemoteName));
+        }
+
+        [Test]
+        public void DisabledRemoteExists_returns_true_for_disabled_remotes_only()
+        {
+            string enabledRemoteName = "enabledRemote";
+            string disabledRemoteName = "disabledRemote";
+
+            _module.GetRemoteNames().Returns(x => new[] { enabledRemoteName, });
+
+            var sections = new List<IConfigSection> { new ConfigSection($"{GitRemoteManager.DisabledSectionPrefix}{GitRemoteManager.SectionRemote}.{disabledRemoteName}", true) };
+            _configFile.GetConfigSections().Returns(x => sections);
+
+            Assert.IsTrue(_controller.DisabledRemoteExists(disabledRemoteName));
+            Assert.IsFalse(_controller.DisabledRemoteExists(enabledRemoteName));
+        }
+
+        public class IntegrationTests
+        {
+            [Test]
+            public void ToggleRemoteState_should_not_fail_if_activate_repeatedly()
+            {
+                using (var helper = new GitModuleTestHelper())
+                {
+                    var manager = new GitRemoteManager(() => helper.Module);
+
+                    const string remoteName = "active";
+                    helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
+                    manager.ToggleRemoteState(remoteName, true);
+
+                    helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
+                    manager.ToggleRemoteState(remoteName, false);
+                }
+            }
+
+            [Test]
+            public void ToggleRemoteState_should_not_fail_if_deactivate_repeatedly()
+            {
+                using (var helper = new GitModuleTestHelper())
+                {
+                    var manager = new GitRemoteManager(() => helper.Module);
+
+                    const string remoteName = "active";
+                    helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
+                    manager.ToggleRemoteState(remoteName, true);
+
+                    helper.Module.AddRemote(remoteName, "http://localhost/remote/repo.git");
+                    manager.ToggleRemoteState(remoteName, true);
+                }
+            }
         }
     }
 }
