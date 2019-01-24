@@ -150,9 +150,30 @@ namespace GitUI
             get { return _filterVisible; }
             set
             {
+                if (value == _filterVisible)
+                {
+                    return;
+                }
+
                 _filterVisible = value;
-                FilterComboBox.Visible = _filterVisible;
-                FilterWatermarkLabel.Visible = _filterVisible;
+                FilterVisibleInternal = value;
+            }
+        }
+
+        private bool FilterVisibleInternal
+        {
+            set
+            {
+                FilterComboBox.Visible = value;
+                FilterWatermarkLabel.Visible = value;
+
+                int top = value
+                    ? FileStatusListView.Margin.Top + FilterComboBox.Bottom + FilterComboBox.Margin.Bottom
+                    : FileStatusListView.Margin.Top;
+
+                int height = ClientRectangle.Height - FileStatusListView.Margin.Bottom - top;
+
+                FileStatusListView.SetBounds(0, top, 0, height, BoundsSpecified.Y | BoundsSpecified.Height);
             }
         }
 
@@ -973,10 +994,7 @@ namespace GitUI
         private void HandleVisibility_NoFilesLabel_FilterComboBox(bool filesPresent)
         {
             NoFiles.Visible = !filesPresent;
-            if (_filterVisible)
-            {
-                FilterComboBox.Visible = filesPresent;
-            }
+            FilterVisibleInternal = FilterVisible && filesPresent;
         }
 
         // Event handlers
