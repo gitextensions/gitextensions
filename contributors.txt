@@ -55,6 +55,7 @@ YYYY/MM/DD, github id, Full name, email
 2019/01/23, sharwell, Sam Harwell, sam@tunnelvisionlabs.com
 2019/01/24, KindDragon, Arkadii Shapkin, arkady.shapkin@gmail.com
 2019/01/24, jbialobr, Janusz Białobrzewski, jbialobr@o2.pl
+2019/01/24, SetoKaiba, Jie Situ, 61304189@qq.com
 2019/01/24, mstv, Michael Seibt, mstv@gmx.net
 2019/01/24, DCFerg, Dan Ferguson, dferguson.gh@gmail.com
 2019/01/24, NikolayXHD, Nikolai Idalgo Dias, hidalgo1984@list.ru
