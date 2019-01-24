@@ -320,6 +320,8 @@ namespace GitUI.CommandsDialogs
                         }
                     });
 
+            return;
+
             void ConfigureMessageBox()
             {
                 Message.Enabled = _useFormCommitMessage;
@@ -357,7 +359,7 @@ namespace GitUI.CommandsDialogs
         [DllImport("user32.dll")]
         private static extern IntPtr SendMessage(IntPtr hwnd, int msg, IntPtr wp, IntPtr lp);
 
-        protected override void OnActivated(EventArgs e)
+        protected override void OnApplicationActivated()
         {
             if (!_bypassActivatedEventHandler)
             {
@@ -369,7 +371,7 @@ namespace GitUI.CommandsDialogs
                 UpdateAuthorInfo();
             }
 
-            base.OnActivated(e);
+            base.OnApplicationActivated();
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
