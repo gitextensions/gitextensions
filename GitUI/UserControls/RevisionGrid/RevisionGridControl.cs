@@ -1814,12 +1814,14 @@ namespace GitUI
         internal void ToggleShowAuthorDate()
         {
             AppSettings.ShowAuthorDate = !AppSettings.ShowAuthorDate;
+            MenuCommands.TriggerMenuChanged();
             Refresh();
         }
 
         internal void ToggleShowRemoteBranches()
         {
             AppSettings.ShowRemoteBranches = !AppSettings.ShowRemoteBranches;
+            MenuCommands.TriggerMenuChanged();
             _gridView.Invalidate();
         }
 
@@ -1885,6 +1887,7 @@ namespace GitUI
         internal void ToggleShowRelativeDate(EventArgs e)
         {
             AppSettings.RelativeDate = !AppSettings.RelativeDate;
+            MenuCommands.TriggerMenuChanged();
             Refresh();
         }
 

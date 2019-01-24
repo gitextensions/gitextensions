@@ -8,9 +8,9 @@ must be computable by human), and date.
 By signing this agreement, you are warranting and representing that
 you have the right to release code contributions or other content free
 of any obligations to third parties and are granting Henk Westhuis and
-Git Extensions project contributors, henceforth referred to as 
-The Git Extensions Project, a license to incorporate it into 
-The Git Extensions Project or related works under the MIT license. 
+Git Extensions project contributors, henceforth referred to as
+The Git Extensions Project, a license to incorporate it into
+The Git Extensions Project or related works under the MIT license.
 You understand that The Git Extensions Project may or may not incorporate
 your contribution and you warrant and represent the following:
 
@@ -29,7 +29,7 @@ your contribution and you warrant and represent the following:
    this submission and to make this certification.
 
 3. If I violate another's rights, liability lies with me. I agree to
-   defend, indemnify, and hold The Git Extensions Project and Git Extensions 
+   defend, indemnify, and hold The Git Extensions Project and Git Extensions
    users harmless from any claim or demand, including reasonable attorney
    fees, made by any third party due to or arising out of my violation
    of these terms and conditions or my violation of the rights of
@@ -54,4 +54,7 @@ YYYY/MM/DD, github id, Full name, email
 2019/01/23, amaiorano, Antonio Maiorano, amaiorano@gmail.com
 2019/01/23, sharwell, Sam Harwell, sam@tunnelvisionlabs.com
 2019/01/24, KindDragon, Arkadii Shapkin, arkady.shapkin@gmail.com
+2019/01/24, jbialobr, Janusz Białobrzewski, jbialobr@o2.pl
+2019/01/24, mstv, Michael Seibt, mstv@gmx.net
+2019/01/24, DCFerg, Dan Ferguson, dferguson.gh@gmail.com
 2019/01/24, NikolayXHD, Nikolai Idalgo Dias, hidalgo1984@list.ru
