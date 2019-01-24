@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -77,6 +78,16 @@ namespace ResourceManager
 
         #endregion
 
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == NativeMethods.WM_ACTIVATEAPP && m.WParam != IntPtr.Zero)
+            {
+                OnApplicationActivated();
+            }
+
+            base.WndProc(ref m);
+        }
+
         /// <summary>Performs post-initialisation tasks such as translation and DPI scaling.</summary>
         /// <remarks>
         /// <para>Subclasses must ensure this method is called in their constructor, ideally as the final statement.</para>
@@ -126,5 +137,12 @@ namespace ResourceManager
         }
 
         #endregion
+
+        /// <summary>
+        /// Notifies whenever the application becomes active.
+        /// </summary>
+        protected virtual void OnApplicationActivated()
+        {
+        }
     }
 }

@@ -69,6 +69,7 @@
     <Compile Include="LocalizationHelpers.cs" />
     <Compile Include="CommitDataRenders\IHeaderRenderStyleProvider.cs" />
     <Compile Include="CommitDataRenders\MonospacedHeaderRenderStyleProvider.cs" />
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <DependentUpon>Resources.resx</DependentUpon>
       <AutoGen>True</AutoGen>
