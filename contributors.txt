@@ -54,3 +54,4 @@ YYYY/MM/DD, github id, Full name, email
 2019/01/23, amaiorano, Antonio Maiorano, amaiorano@gmail.com
 2019/01/23, sharwell, Sam Harwell, sam@tunnelvisionlabs.com
 2019/01/24, KindDragon, Arkadii Shapkin, arkady.shapkin@gmail.com
+2019/01/24, pmiossec, Philippe Miossec, pmiossec@gmail.com
