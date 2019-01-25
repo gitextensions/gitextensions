@@ -11,7 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
     internal sealed class BuildStatusColumnProvider : ColumnProvider
     {
         private const int IconColumnWidth = 16;
-        private const int TextColumnWidth = 80;
+        private const int TextColumnWidth = 150;
 
         private readonly RevisionGridControl _grid;
         private readonly RevisionDataGridView _gridView;
@@ -162,7 +162,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
         {
             if (revision.BuildStatus != null)
             {
-                toolTip = revision.BuildStatus.Description;
+                toolTip = revision.BuildStatus.Tooltip ?? revision.BuildStatus.Description;
                 return true;
             }
 

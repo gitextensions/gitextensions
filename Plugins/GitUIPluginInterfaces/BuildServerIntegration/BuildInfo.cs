@@ -23,5 +23,6 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
         public IReadOnlyList<ObjectId> CommitHashList { get; set; }
         public string Url { get; set; }
         public bool ShowInBuildReportTab { get; set; } = true;
+        public string Tooltip { get; set; }
     }
 }
