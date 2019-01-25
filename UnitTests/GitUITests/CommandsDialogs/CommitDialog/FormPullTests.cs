@@ -102,7 +102,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
                 //// select an action different from None/fetch
                 AppSettings.PullAction.Merge);
         }
-        
+
         [TestCase(AppSettings.PullAction.Merge, true, false, false, false, false, true)]
         [TestCase(AppSettings.PullAction.Rebase, false, false, true, false, false, false)]
         [TestCase(AppSettings.PullAction.Fetch, false, false, false, true, false, true)]
