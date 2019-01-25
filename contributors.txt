@@ -58,4 +58,5 @@ YYYY/MM/DD, github id, Full name, email
 2019/01/24, mstv, Michael Seibt, mstv@gmx.net
 2019/01/24, DCFerg, Dan Ferguson, dferguson.gh@gmail.com
 2019/01/24, NikolayXHD, Nikolai Idalgo Dias, hidalgo1984@list.ru
+2019/01/24, mast-eu, Martin Steinisch, martin.steinisch@gmail.com
 2019/01/24, pmiossec, Philippe Miossec, pmiossec@gmail.com
