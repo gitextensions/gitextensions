@@ -18,7 +18,7 @@ $combinedSigned = ".\combined.$($env:APPVEYOR_BUILD_VERSION).signed.zip"
 Compress-Archive -LiteralPath $msi, $zip -CompressionLevel NoCompression -DestinationPath $combined -Force
 
 # sign
-$description = "https://ci.appveyor.com/project/gitextensions/gitextensions/builds/$env:APPVEYOR_BUILD_ID\n$env:APPVEYOR_REPO_COMMIT_MESSAGE\n$env:APPVEYOR_REPO_BRANCH from $env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH";
+$description = "https://ci.appveyor.com/project/gitextensions/gitextensions/builds/$env:APPVEYOR_BUILD_ID`n$env:APPVEYOR_REPO_COMMIT_MESSAGE`n$env:APPVEYOR_REPO_BRANCH from $env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH";
 try {
     Submit-SigningRequest `
         -InputArtifactPath $combined `
