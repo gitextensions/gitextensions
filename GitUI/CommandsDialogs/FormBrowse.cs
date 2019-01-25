@@ -2955,11 +2955,9 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripMenuItemReflog_Click(object sender, EventArgs e)
         {
-            var formReflog = new FormReflog(UICommands);
-            formReflog.ShowDialog();
-            if (formReflog.ShouldRefresh)
+            using (var formReflog = new FormReflog(UICommands))
             {
-                RefreshRevisions();
+                formReflog.ShowDialog();
             }
         }
 
