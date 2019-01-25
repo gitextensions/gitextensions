@@ -146,6 +146,7 @@
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommand.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\MenuCommandsBase.cs" />
     <Compile Include="CommandsDialogs\FormBrowseController.cs" />
+    <Compile Include="CommandsDialogs\FormFileHistoryController.cs" />
     <Compile Include="CommandsDialogs\FullBleedTabControl.cs">
       <SubType>Component</SubType>
     </Compile>
