@@ -60,6 +60,7 @@
     <Compile Include="Avatars\AvatarTestBase.cs" />
     <Compile Include="Avatars\BackupAvatarProviderTests.cs" />
     <Compile Include="CancellationTokenSequenceTests.cs" />
+    <Compile Include="CommandsDialogs\CommitDialog\FormPullTests.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\FormInitTests.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\FormCommitTests.cs" />
     <Compile Include="CommandsDialogs\ReferenceRepository.cs" />
