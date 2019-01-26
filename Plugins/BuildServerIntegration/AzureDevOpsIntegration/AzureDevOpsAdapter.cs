@@ -104,18 +104,11 @@ namespace AzureDevOpsIntegration
             {
                 if (buildDetail.Status == "inProgress")
                 {
-                    duration = " / " + GetDuration(DateTime.UtcNow - buildDetail.StartTime.Value);
+                    duration = GetDuration(DateTime.UtcNow - buildDetail.StartTime.Value);
                 }
                 else
                 {
-                    if (buildDetail.FinishTime.HasValue)
-                    {
-                        duration = " / " + GetDuration(buildDetail.FinishTime.Value - buildDetail.StartTime.Value);
-                    }
-                    else
-                    {
-                        duration = " / ???";
-                    }
+                    duration = buildDetail.FinishTime.HasValue ? GetDuration(buildDetail.FinishTime.Value - buildDetail.StartTime.Value) : "???";
                 }
             }
 
@@ -124,7 +117,8 @@ namespace AzureDevOpsIntegration
                 Id = buildDetail.BuildNumber,
                 StartDate = buildDetail.StartTime ?? DateTime.Now.AddHours(1),
                 Status = buildDetail.IsInProgress ? BuildInfo.BuildStatus.InProgress : MapResult(buildDetail.Result),
-                Description = buildDetail.BuildNumber + " (" + (buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result) + " " + duration + ")",
+                Description = duration + " (" + buildDetail.BuildNumber + ")",
+                Tooltip = (buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result) + Environment.NewLine + duration + Environment.NewLine + buildDetail.BuildNumber,
                 CommitHashList = new[] { ObjectId.Parse(buildDetail.SourceVersion) },
                 Url = buildDetail._links.Web.Href,
                 ShowInBuildReportTab = false

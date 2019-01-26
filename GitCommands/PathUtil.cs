@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using GitCommands.Utils;
 using JetBrains.Annotations;
@@ -246,51 +245,6 @@ namespace GitCommands
             }
 
             return path;
-        }
-
-        /// <summary>
-        /// Gets the exact case used on the file system for an existing file or directory.
-        /// </summary>
-        /// <param name="path">A relative or absolute path.</param>
-        /// <param name="exactPath">The full path using the correct case if the path exists.  Otherwise, null.</param>
-        /// <returns>True if the exact path was found.  False otherwise.</returns>
-        /// <remarks>
-        /// This supports drive-lettered paths and UNC paths, but a UNC root
-        /// will be returned in lowercase (e.g., \\server\share).
-        /// </remarks>
-        [ContractAnnotation("=>false,exactPath:null")]
-        [ContractAnnotation("=>true,exactPath:notnull")]
-        [ContractAnnotation("path:null=>false,exactPath:null")]
-        public static bool TryGetExactPath(string path, out string exactPath)
-        {
-            if (!File.Exists(path) && !Directory.Exists(path))
-            {
-                exactPath = null;
-                return false;
-            }
-
-            var directory = new DirectoryInfo(path);
-
-            var parts = new List<string>();
-
-            var parentDirectory = directory.Parent;
-            while (parentDirectory != null)
-            {
-                var entry = parentDirectory.EnumerateFileSystemInfos(directory.Name).First();
-                parts.Add(entry.Name);
-
-                directory = parentDirectory;
-                parentDirectory = directory.Parent;
-            }
-
-            // Handle the root part (i.e., drive letter or UNC \\server\share).
-            var root = directory.FullName;
-
-            parts.Add(root.Contains(':') ? root.ToUpper() : root.ToLower());
-            parts.Reverse();
-
-            exactPath = Path.Combine(parts.ToArray());
-            return true;
         }
 
         [CanBeNull]

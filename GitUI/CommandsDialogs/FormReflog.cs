@@ -64,8 +64,6 @@ namespace GitUI.CommandsDialogs
             Branches.DataSource = branches;
         }
 
-        public bool ShouldRefresh { get; set; }
-
         private void Branches_SelectedIndexChanged(object sender, EventArgs e)
         {
             ThreadHelper.JoinableTaskFactory.Run(DisplayRefLog);
@@ -106,13 +104,16 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            using (var form = new FormCreateBranch(UICommands, GetShaOfRefLine()))
+            UICommands.DoActionOnRepo(() =>
             {
-                form.CheckoutAfterCreation = false;
-                form.UserAbleToChangeRevision = false;
-                form.CouldBeOrphan = false;
-                ShouldRefresh = form.ShowDialog(this) == DialogResult.OK;
-            }
+                using (var form = new FormCreateBranch(UICommands, GetShaOfRefLine()))
+                {
+                    form.CheckoutAfterCreation = false;
+                    form.UserAbleToChangeRevision = false;
+                    form.CouldBeOrphan = false;
+                    return form.ShowDialog(this) == DialogResult.OK;
+                }
+            });
         }
 
         private ObjectId GetShaOfRefLine()
@@ -143,9 +144,13 @@ namespace GitUI.CommandsDialogs
 
             var gitRevision = UICommands.Module.GetRevision(GetShaOfRefLine());
             var resetType = _isDirtyDir ? FormResetCurrentBranch.ResetType.Soft : FormResetCurrentBranch.ResetType.Hard;
-            var formResetCurrentBranch = new FormResetCurrentBranch(UICommands, gitRevision, resetType);
-            var result = formResetCurrentBranch.ShowDialog(this);
-            ShouldRefresh = result == DialogResult.OK;
+            UICommands.DoActionOnRepo(() =>
+            {
+                using (var form = new FormResetCurrentBranch(UICommands, gitRevision, resetType))
+                {
+                    return form.ShowDialog(this) == DialogResult.OK;
+                }
+            });
         }
 
         private void copySha1ToolStripMenuItem_Click(object sender, EventArgs e)

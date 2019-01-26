@@ -1,4 +1,4 @@
-version: 3.01.00.{build}
+version: 3.1.0.{build}
 
 os: Visual Studio 2017
 
@@ -92,16 +92,32 @@ for:
   # scripts to run after tests
   after_test:
   - ps: |
-      & Setup\BuildInstallers.cmd
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-      & Setup\Set-Portable.ps1
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-      & Setup\MakePortableArchive.cmd Release $env:APPVEYOR_BUILD_VERSION
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-
+      try {
+          & pwd
+          & Setup\BuildInstallers.cmd
+          if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+          & Setup\Set-Portable.ps1
+          if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+          & Setup\MakePortableArchive.cmd Release $env:APPVEYOR_BUILD_VERSION
+          if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+      }
+      finally {
+          # -------------------------------
+          # debugging
+          # -------------------------------
+          #Write-Host "[INFO]: GitStatus.txt is to help find dirty status.  File should say repo and submodules are clean."
+          #Write-Host "[INFO]: Update the skip-worktree section in this script to fix CI builds."
+          #& git status > GitStatus.txt
+          #& git submodule foreach --recursive git status >> GitStatus.txt
+          #Push-AppveyorArtifact .\GitStatus.txt
+          #& tree /F /A > tree.txt
+          #Push-AppveyorArtifact .\tree.txt
+      }
+      
   artifacts:
     # upload the generated portable archive only
     - path: 'Setup/GitExtensions-Portable-*.zip'
+    - path: 'Setup/GitExtensions-pdbs-*.zip'
 
 # configuration for release branches ONLY
 -
@@ -116,6 +132,14 @@ for:
   # scripts to run after tests
   after_test:
   - ps: |
+      # -------------------------------
+      # debugging
+      # -------------------------------
+      #Write-Host "[INFO]: GitStatus.txt is to help find dirty status.  File should say repo and submodules are clean."
+      #Write-Host "[INFO]: Update the skip-worktree section in this script to fix CI builds."
+      #& git status > GitStatus.txt
+      #& git submodule foreach --recursive git status >> GitStatus.txt
+      #Push-AppveyorArtifact .\GitStatus.txt
       # -------------------------------
       # build artifacts
       # -------------------------------
@@ -138,37 +162,5 @@ for:
           return
       }
       # continue on with signing
-      pushd .\Setup
-      [Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
-      Invoke-WebRequest -Uri https://app.signpath.io/API/v1/Tools/SignPath.psm1 -OutFile .\SignPath.psm1
-      if (!(Test-Path .\SignPath.psm1)) {
-          throw 'Unable to download https://app.signpath.io/API/v1/Tools/SignPath.psm1'
-      }
-      Import-Module .\SignPath.psm1 -Force;
-      # get files
-      $msi = (Resolve-Path GitExtensions-*.msi)[0].Path;
-      $zip = (Resolve-Path GitExtensions-Portable-*.zip)[0].Path;
-      # archive files so we send them all in one go
-      $combined = ".\combined.$($env:APPVEYOR_BUILD_VERSION).zip"
-      $combinedSigned = ".\combined.$($env:APPVEYOR_BUILD_VERSION).signed.zip"
-      Compress-Archive -LiteralPath $msi, $zip -CompressionLevel NoCompression -DestinationPath $combined -Force
-      # sign
-      $description = "https://ci.appveyor.com/project/gitextensions/gitextensions/builds/$env:APPVEYOR_BUILD_ID\n$env:APPVEYOR_REPO_COMMIT_MESSAGE\n$env:APPVEYOR_REPO_BRANCH from $env:APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH";
-      Submit-SigningRequest `
-          -InputArtifactPath $combined `
-          -Description $description `
-          -CIUserToken $env:spciuser `
-          -OrganizationId '7c19b2cf-90f7-4d15-9b12-1b615f7c18c4' `
-          -SigningPolicyId '5c9879c7-0dea-4303-8e5b-fc4192a7b0de' `
-          -WaitForCompletion `
-          -WaitForCompletionTimeoutInSeconds 180 `
-          -Force
-      # extract signed artifacts to Signed folder
-      if (($LastExitCode -ne 0) -or !(Test-Path $combinedSigned)) {
-          $host.SetShouldExit(-1)
-      }
-      Expand-Archive  -LiteralPath $combinedSigned -DestinationPath .\Signed
-      # -------------------------------
-      # publish artifacts
-      # -------------------------------
-      Get-ChildItem .\Signed\*.* | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+      & Setup\Sign-Artifacts.ps1
+      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }

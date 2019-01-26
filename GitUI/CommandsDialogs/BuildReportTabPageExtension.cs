@@ -7,7 +7,9 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Settings;
 using GitUI.UserControls;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI.CommandsDialogs
@@ -16,6 +18,7 @@ namespace GitUI.CommandsDialogs
     {
         private readonly TabControl _tabControl;
         private readonly string _caption;
+        private readonly Func<IGitModule> _getModule;
 
         private TabPage _buildReportTabPage;
         private WebBrowserControl _buildReportWebBrowser;
@@ -24,8 +27,9 @@ namespace GitUI.CommandsDialogs
 
         public Control Control { get => _buildReportWebBrowser; } // for focusing
 
-        public BuildReportTabPageExtension(TabControl tabControl, string caption)
+        public BuildReportTabPageExtension(Func<IGitModule> getModule, TabControl tabControl, string caption)
         {
+            _getModule = getModule;
             _tabControl = tabControl;
             _caption = caption;
         }
@@ -48,9 +52,10 @@ namespace GitUI.CommandsDialogs
 
             try
             {
+                var buildResultPageEnabled = IsBuildResultPageEnabled();
                 var buildInfoIsAvailable = !string.IsNullOrEmpty(revision?.BuildStatus?.Url);
 
-                if (buildInfoIsAvailable)
+                if (buildResultPageEnabled && buildInfoIsAvailable)
                 {
                     if (_buildReportTabPage == null)
                     {
@@ -174,6 +179,24 @@ namespace GitUI.CommandsDialogs
             {
                 _buildReportWebBrowser.Document.Write("<HTML><a href=\"" + _url + "\" target=\"_blank\">Open report</a></HTML>");
             }
+        }
+
+        private bool IsBuildResultPageEnabled()
+        {
+            var settings = GetModule().GetEffectiveSettings() as RepoDistSettings;
+            return settings?.BuildServer.ShowBuildResultPage.ValueOrDefault ?? false;
+        }
+
+        private IGitModule GetModule()
+        {
+            var module = _getModule();
+
+            if (module == null)
+            {
+                throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+            }
+
+            return module;
         }
 
         [CanBeNull]

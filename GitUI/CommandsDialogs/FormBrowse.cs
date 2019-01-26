@@ -182,6 +182,16 @@ namespace GitUI.CommandsDialogs
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
             revisionDiff.Bind(RevisionGrid, fileTree);
 
+            var repositoryDescriptionProvider = new RepositoryDescriptionProvider(new GitDirectoryResolver());
+            _appTitleGenerator = new AppTitleGenerator(repositoryDescriptionProvider);
+            _windowsJumpListManager = new WindowsJumpListManager(repositoryDescriptionProvider);
+            _windowsJumpListManager.CreateJumpList(
+                Handle,
+                new WindowsThumbnailToolbarButtons(
+                    new WindowsThumbnailToolbarButton(toolStripButtonCommit.Text, toolStripButtonCommit.Image, CommitToolStripMenuItemClick),
+                    new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
+                    new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
+
             InitCountArtificial(out _gitStatusMonitor);
 
             if (!EnvUtils.RunningOnWindows())
@@ -229,10 +239,6 @@ namespace GitUI.CommandsDialogs
             _controller = new FormBrowseController(new GitGpgController(() => Module));
             _commitDataManager = new CommitDataManager(() => Module);
             _submoduleStatusProvider = new SubmoduleStatusProvider();
-
-            var repositoryDescriptionProvider = new RepositoryDescriptionProvider(new GitDirectoryResolver());
-            _appTitleGenerator = new AppTitleGenerator(repositoryDescriptionProvider);
-            _windowsJumpListManager = new WindowsJumpListManager(repositoryDescriptionProvider);
 
             FillBuildReport(); // Ensure correct page visibility
             RevisionGrid.ShowBuildServerInfo = true;
@@ -475,13 +481,6 @@ namespace GitUI.CommandsDialogs
                 base.OnLoad(e);
                 return;
             }
-
-            _windowsJumpListManager.CreateJumpList(
-                Handle,
-                new WindowsThumbnailToolbarButtons(
-                    new WindowsThumbnailToolbarButton(toolStripButtonCommit.Text, toolStripButtonCommit.Image, CommitToolStripMenuItemClick),
-                    new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
-                    new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick)));
 
             RevisionGrid.Load();
             _filterBranchHelper.InitToolStripBranchFilter();
@@ -1279,7 +1278,7 @@ namespace GitUI.CommandsDialogs
 
             if (_buildReportTabPageExtension == null)
             {
-                _buildReportTabPageExtension = new BuildReportTabPageExtension(CommitInfoTabControl, _buildReportTabCaption.Text);
+                _buildReportTabPageExtension = new BuildReportTabPageExtension(() => Module, CommitInfoTabControl, _buildReportTabCaption.Text);
             }
 
             // Note: FillBuildReport will check if tab is visible and revision is OK
@@ -2955,11 +2954,9 @@ namespace GitUI.CommandsDialogs
 
         private void toolStripMenuItemReflog_Click(object sender, EventArgs e)
         {
-            var formReflog = new FormReflog(UICommands);
-            formReflog.ShowDialog();
-            if (formReflog.ShouldRefresh)
+            using (var formReflog = new FormReflog(UICommands))
             {
-                RefreshRevisions();
+                formReflog.ShowDialog();
             }
         }
 

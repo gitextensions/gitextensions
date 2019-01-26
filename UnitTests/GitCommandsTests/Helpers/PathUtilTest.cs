@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using NUnit.Framework;
@@ -215,69 +214,6 @@ namespace GitCommandsTests.Helpers
 
             Assert.AreEqual(@"~\SomePath", PathUtil.GetDisplayPath(Path.Combine(home, "SomePath")));
             Assert.AreEqual("c:\\SomePath", PathUtil.GetDisplayPath("c:\\SomePath"));
-        }
-
-        [Test]
-        public void TryGetExactPathName()
-        {
-            // TODO: needs rework/refactor
-
-            var paths = new[]
-            {
-                @"C:\Users\Public\desktop.ini",
-                @"C:\pagefile.sys",
-                @"C:\Windows\System32\cmd.exe",
-                @"C:\Users\Default\NTUSER.DAT",
-                @"C:\Program Files (x86)\Microsoft.NET\Primary Interop Assemblies",
-                @"C:\Program Files (x86)",
-                @"Does not exist",
-                @"\\" + Environment.MachineName.ToLower() + @"\c$\Windows\System32",
-                @"..",
-                "",
-                " "
-            };
-
-            var expectedExactPaths = new Dictionary<string, string>()
-            {
-                { @"..", Path.GetDirectoryName(Environment.CurrentDirectory) },
-            };
-
-            foreach (var path in paths)
-            {
-                var lowercasePath = path.ToLower();
-                var expected = File.Exists(lowercasePath) || Directory.Exists(lowercasePath);
-                var actual = PathUtil.TryGetExactPath(lowercasePath, out string exactPath);
-
-                Assert.AreEqual(expected, actual);
-
-                if (actual)
-                {
-                    var expectedPath = expectedExactPaths.TryGetValue(path, out string expectedExactPath) ? expectedExactPath : path;
-                    Assert.AreEqual(expectedPath.ToLower(), exactPath.ToLower());
-                }
-                else
-                {
-                    Assert.IsNull(exactPath);
-                }
-            }
-        }
-
-        [TestCase("Folder1\\file1.txt", true, true)]
-        [TestCase("FOLDER1\\file1.txt", true, false)]
-        [TestCase("fOLDER1\\file1.txt", true, false)]
-        [TestCase("Folder2\\file1.txt", false, false)]
-        public void TryGetExactPathName_should_check_if_path_matches_case(string relativePath, bool isResolved, bool doesMatch)
-        {
-            using (var repo = new GitModuleTestHelper())
-            {
-                // Create a file
-                var notUsed = repo.CreateFile(Path.Combine(repo.TemporaryPath, "Folder1"), "file1.txt", "bla");
-
-                var expected = Path.Combine(repo.TemporaryPath, relativePath);
-
-                Assert.AreEqual(isResolved, PathUtil.TryGetExactPath(expected, out string exactPath));
-                Assert.AreEqual(doesMatch, exactPath == expected);
-            }
         }
 
         [Test]

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -163,7 +163,7 @@ Michael Werle, Mihai Pantea, Mohamed Hamdy, Nikolay Hidalgo Diaz, NikolayHD, Nik
 Ori Ashual, Paul McSweeney, SamuelLongchamps, Szali Szali, Thomas Butz, Thomas Levesque, Vladimir Shimanskiy,
 aivanov-oneinc, chun, oriash93, pmme, szaliszali, Ákos Szabados, Antonio Maiorano, Christian Dreier,
 Lee Richardson, Logan Higinbotham, Marek Fišera, Mark Bell, Peter Hultqvist, anaplian, olegivo, rbares,
-tank09, yiabiten</value>
+tank09, yiabiten, Dzmitry Mikhalap, Matthijs ter Woord, NN, Noah Lerner, Novak Ondrej, RSchwoerer</value>
   </data>
   <data name="Designers" xml:space="preserve">
     <value>Andréj Telle, Oliver Friedrich</value>

@@ -167,3 +167,8 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 * Issue tracker: [github.com/gitextensions/gitextensions/issues](https://github.com/gitextensions/gitextensions/issues)
 * Wiki: [github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
 * Gitter chat: [gitter.im/gitextensions/gitextensions](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+# Latest Release History (3.0.1)
+Watch us work on this project.
+
+[![Click to play](https://img.youtube.com/vi/k6DhHbzkZvM/0.jpg)](https://www.youtube.com/watch?v=k6DhHbzkZvM)

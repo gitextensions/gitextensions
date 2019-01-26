@@ -70,21 +70,24 @@ namespace GitCommandsTests
             content.Should().NotBeEmpty();
         }
 
-        [Test]
-        public void LoadGitCommitTemplate_real_filesystem()
+        public class IntegrationTests
         {
-            using (var helper = new GitModuleTestHelper())
+            [Test]
+            public void LoadGitCommitTemplate_real_filesystem()
             {
-                var manager = new CommitTemplateManager(helper.Module);
+                using (var helper = new GitModuleTestHelper())
+                {
+                    var manager = new CommitTemplateManager(helper.Module);
 
-                const string content = "line1\r\nline2\rline3\nline4";
+                    const string content = "line1\r\nline2\rline3\nline4";
 
-                helper.Module.SetSetting("commit.template", "template.txt");
-                helper.CreateRepoFile("template.txt", content);
+                    helper.Module.SetSetting("commit.template", "template.txt");
+                    helper.CreateRepoFile("template.txt", content);
 
-                var body = manager.LoadGitCommitTemplate();
+                    var body = manager.LoadGitCommitTemplate();
 
-                body.Should().Be(content);
+                    body.Should().Be(content);
+                }
             }
         }
     }

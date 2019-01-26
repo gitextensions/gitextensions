@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
 using JetBrains.Annotations;
@@ -27,6 +26,7 @@ namespace GitUI.CommandsDialogs
         private readonly FilterBranchHelper _filterBranchHelper;
         private readonly FormBrowseMenus _formBrowseMenus;
         private readonly IFullPathResolver _fullPathResolver;
+        private readonly FormFileHistoryController _controller = new FormFileHistoryController();
 
         private BuildReportTabPageExtension _buildReportTabPageExtension;
 
@@ -201,37 +201,18 @@ namespace GitUI.CommandsDialogs
             {
                 var fileName = FileName;
 
-                // Replace windows path separator to Linux path separator.
-                // This is needed to keep the file history working when started from file tree in
-                // browse dialog.
-                fileName = fileName.ToPosixPath();
-
                 // we will need this later to look up proper casing for the file
                 var fullFilePath = _fullPathResolver.Resolve(fileName);
 
-                // The section below contains native windows (kernel32) calls
-                // and breaks on Linux. Only use it on Windows. Casing is only
-                // a Windows problem anyway.
-                if (EnvUtils.RunningOnWindows() && File.Exists(fullFilePath))
-                {
-                    // grab the 8.3 file path
-                    var shortPath = new StringBuilder(4096);
-                    NativeMethods.GetShortPathName(fullFilePath, shortPath, shortPath.Capacity);
-
-                    // use 8.3 file path to get properly cased full file path
-                    var longPath = new StringBuilder(4096);
-                    NativeMethods.GetLongPathName(shortPath.ToString(), longPath, longPath.Capacity);
-
-                    // remove the working directory and now we have a properly cased file name.
-                    fileName = longPath.ToString().Substring(Module.WorkingDir.Length).ToPosixPath();
-                }
-
-                if (fileName.StartsWith(Module.WorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                if (_controller.TryGetExactPath(fullFilePath, out fileName))
                 {
                     fileName = fileName.Substring(Module.WorkingDir.Length);
                 }
 
-                FileName = fileName;
+                // Replace windows path separator to Linux path separator.
+                // This is needed to keep the file history working when started from file tree in
+                // browse dialog.
+                FileName = fileName.ToPosixPath();
 
                 var res = (revision: (string)null, path: $" \"{fileName}\"");
 
@@ -395,7 +376,7 @@ namespace GitUI.CommandsDialogs
 
             if (_buildReportTabPageExtension == null)
             {
-                _buildReportTabPageExtension = new BuildReportTabPageExtension(tabControl1, _buildReportTabCaption.Text);
+                _buildReportTabPageExtension = new BuildReportTabPageExtension(() => Module, tabControl1, _buildReportTabCaption.Text);
             }
 
             _buildReportTabPageExtension.FillBuildReport(selectedRevisions.Count == 1 ? revision : null);

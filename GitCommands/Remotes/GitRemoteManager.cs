@@ -31,6 +31,20 @@ namespace GitCommands.Remotes
         string RemoveRemote(GitRemote remote);
 
         /// <summary>
+        /// Returns true if input remote exists and is enabled.
+        /// </summary>
+        /// <param name="remoteName">Name of remote to check.</param>
+        /// <returns>True if input remote exists and is enabled.</returns>
+        bool EnabledRemoteExists(string remoteName);
+
+        /// <summary>
+        /// Returns true if input remote exists and is disabled.
+        /// </summary>
+        /// <param name="remoteName">Name of remote to check.</param>
+        /// <returns>True if input remote exists and is disabled.</returns>
+        bool DisabledRemoteExists(string remoteName);
+
+        /// <summary>
         ///   Saves the remote details by creating a new or updating an existing remote entry in .git/config file.
         /// </summary>
         /// <param name="remote">An existing remote instance or <see langword="null"/> if creating a new entry.</param>
@@ -240,6 +254,26 @@ namespace GitCommands.Remotes
         }
 
         /// <summary>
+        /// Returns true if input remote exists and is enabled.
+        /// </summary>
+        /// <param name="remoteName">Name of remote to check.</param>
+        /// <returns>True if input remote exists and is enabled.</returns>
+        public bool EnabledRemoteExists(string remoteName)
+        {
+            return GetEnabledRemoteNames().FirstOrDefault(r => r == remoteName) != null;
+        }
+
+        /// <summary>
+        /// Returns true if input remote exists and is disabled.
+        /// </summary>
+        /// <param name="remoteName">Name of remote to check.</param>
+        /// <returns>True if input remote exists and is disabled.</returns>
+        public bool DisabledRemoteExists(string remoteName)
+        {
+            return GetDisabledRemoteNames().FirstOrDefault(r => r == remoteName) != null;
+        }
+
+        /// <summary>
         ///   Saves the remote details by creating a new or updating an existing remote entry in .git/config file.
         /// </summary>
         /// <param name="remote">An existing remote instance or <see langword="null"/> if creating a new entry.</param>
@@ -275,6 +309,13 @@ namespace GitCommands.Remotes
             if (creatingNew)
             {
                 output = module.AddRemote(remoteName, remoteUrl);
+
+                // If output was returned, something went wrong
+                if (!string.IsNullOrWhiteSpace(output))
+                {
+                    return new GitRemoteSaveResult(output, false);
+                }
+
                 updateRemoteRequired = true;
             }
             else
@@ -341,8 +382,22 @@ namespace GitCommands.Remotes
                 module.LocalConfigFile.RemoveConfigSection($"{sectionName}.{remoteName}");
             }
 
+            var newSectionName = (disabled ? DisabledSectionPrefix : "") + SectionRemote;
+
+            // ensure that the section with the same name doesn't already exist
+            // use case:
+            // - a user has added a remote,
+            // - then deactivated the remote via GE
+            // - then added a remote with the same name from a command line or via UI
+            // - then attempted to deactivate the new remote
+            var dupSection = sections.FirstOrDefault(s => s.SectionName == newSectionName && s.SubSection == remoteName);
+            if (dupSection != null)
+            {
+                module.LocalConfigFile.RemoveConfigSection($"{newSectionName}.{remoteName}");
+            }
+
             // rename the remote
-            section.SectionName = (disabled ? DisabledSectionPrefix : "") + SectionRemote;
+            section.SectionName = newSectionName;
 
             module.LocalConfigFile.AddConfigSection(section);
             module.LocalConfigFile.Save();

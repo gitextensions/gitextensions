@@ -226,6 +226,8 @@ namespace AppVeyorIntegration
                                     duration = GetBuildDuration(b);
                                 }
 
+                                var pullRequestTitle = b["pullRequestName"];
+
                                 buildDetails.Add(new AppVeyorBuildInfo
                                 {
                                     Id = version,
@@ -239,7 +241,8 @@ namespace AppVeyorIntegration
                                     Url = WebSiteUrl + "/project/" + project.Id + "/build/" + version,
                                     BaseApiUrl = baseApiUrl,
                                     AppVeyorBuildReportUrl = baseApiUrl + "/build/" + version,
-                                    PullRequestText = pullRequestId != null ? " PR#" + pullRequestId.Value<string>() : string.Empty,
+                                    PullRequestText = pullRequestId != null ? "PR#" + pullRequestId.Value<string>() : string.Empty,
+                                    PullRequestTitle = pullRequestTitle != null ? pullRequestTitle.Value<string>() : string.Empty,
                                     Duration = duration,
                                     TestsResultText = string.Empty
                                 });
@@ -512,6 +515,7 @@ namespace AppVeyorIntegration
         public string BaseApiUrl { get; set; }
         public string BaseWebUrl { get; set; }
         public string PullRequestText { get; set; }
+        public string PullRequestTitle { get; set; }
         public string TestsResultText { get; set; }
 
         public bool IsRunning => Status == BuildStatus.InProgress;
@@ -523,7 +527,12 @@ namespace AppVeyorIntegration
 
         public void UpdateDescription()
         {
-            Description = Id + " " + DisplayStatus + " " + _buildDurationFormatter.Format(Duration) + TestsResultText + PullRequestText;
+            Description = _buildDurationFormatter.Format(Duration) + TestsResultText + (!string.IsNullOrWhiteSpace(PullRequestText) ? " " + PullRequestText : string.Empty) + " " + Id;
+            Tooltip = DisplayStatus + Environment.NewLine
+                      + _buildDurationFormatter.Format(Duration) + Environment.NewLine
+                      + (!string.IsNullOrWhiteSpace(TestsResultText) ? TestsResultText + Environment.NewLine : string.Empty)
+                      + (!string.IsNullOrWhiteSpace(PullRequestText) ? PullRequestText + ": " + PullRequestTitle + Environment.NewLine : string.Empty)
+                      + Id;
         }
 
         private string DisplayStatus
@@ -538,5 +547,5 @@ namespace AppVeyorIntegration
                 return "In progress" + new string('.', _buildProgressCount) + new string(' ', 3 - _buildProgressCount);
             }
         }
-    }
+        }
 }
