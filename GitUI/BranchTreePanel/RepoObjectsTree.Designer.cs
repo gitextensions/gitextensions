@@ -87,9 +87,11 @@ namespace GitUI.BranchTreePanel
             this.branchSearchPanel = new System.Windows.Forms.TableLayoutPanel();
             this.lblSearchBranch = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
+            this.btnCollapseAll = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
             this.menuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.showTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
             this.menuRemotes.SuspendLayout();
@@ -345,7 +347,7 @@ namespace GitUI.BranchTreePanel
             // 
             this.mnubtnFetchAllBranchesFromARemote.Image = global::GitUI.Properties.Images.Stage;
             this.mnubtnFetchAllBranchesFromARemote.Name = "mnubtnFetchAllBranchesFromARemote";
-            this.mnubtnFetchAllBranchesFromARemote.Size = new System.Drawing.Size(180, 22);
+            this.mnubtnFetchAllBranchesFromARemote.Size = new System.Drawing.Size(172, 22);
             this.mnubtnFetchAllBranchesFromARemote.Text = "&Fetch";
             // 
             // menuTag
@@ -415,40 +417,40 @@ namespace GitUI.BranchTreePanel
             this.mnubtnDisableRemote,
             this.mnubtnFetchAllBranchesFromARemote});
             this.menuRemoteRepoNode.Name = "contextmenuRemote";
-            this.menuRemoteRepoNode.Size = new System.Drawing.Size(202, 142);
+            this.menuRemoteRepoNode.Size = new System.Drawing.Size(173, 120);
             this.menuRemoteRepoNode.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
             // mnubtnManageRemotes
             // 
             this.mnubtnManageRemotes.Image = global::GitUI.Properties.Images.Remotes;
             this.mnubtnManageRemotes.Name = "mnubtnManageRemotes";
-            this.mnubtnManageRemotes.Size = new System.Drawing.Size(201, 22);
+            this.mnubtnManageRemotes.Size = new System.Drawing.Size(172, 22);
             this.mnubtnManageRemotes.Text = "&Manage remotes...";
             // 
             // tsmiSpacer3
             // 
             this.tsmiSpacer3.Name = "tsmiSpacer3";
-            this.tsmiSpacer3.Size = new System.Drawing.Size(177, 6);
+            this.tsmiSpacer3.Size = new System.Drawing.Size(169, 6);
             // 
             // mnubtnEnableRemote
             // 
             this.mnubtnEnableRemote.Image = global::GitUI.Properties.Images.EyeOpened;
             this.mnubtnEnableRemote.Name = "mnubtnEnableRemote";
-            this.mnubtnEnableRemote.Size = new System.Drawing.Size(180, 22);
+            this.mnubtnEnableRemote.Size = new System.Drawing.Size(172, 22);
             this.mnubtnEnableRemote.Text = "&Activate";
             // 
             // mnubtnEnableRemoteAndFetch
             // 
             this.mnubtnEnableRemoteAndFetch.Image = global::GitUI.Properties.Images.RemoteEnableAndFetch;
             this.mnubtnEnableRemoteAndFetch.Name = "mnubtnEnableRemoteAndFetch";
-            this.mnubtnEnableRemoteAndFetch.Size = new System.Drawing.Size(180, 22);
+            this.mnubtnEnableRemoteAndFetch.Size = new System.Drawing.Size(172, 22);
             this.mnubtnEnableRemoteAndFetch.Text = "A&ctivate and fetch";
             // 
             // mnubtnDisableRemote
             // 
             this.mnubtnDisableRemote.Image = global::GitUI.Properties.Images.EyeClosed;
             this.mnubtnDisableRemote.Name = "mnubtnDisableRemote";
-            this.mnubtnDisableRemote.Size = new System.Drawing.Size(180, 22);
+            this.mnubtnDisableRemote.Size = new System.Drawing.Size(172, 22);
             this.mnubtnDisableRemote.Text = "&Deactivate";
             // 
             // repoTreePanel
@@ -472,14 +474,16 @@ namespace GitUI.BranchTreePanel
             this.branchSearchPanel.AutoSize = true;
             this.branchSearchPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.branchSearchPanel.BackColor = System.Drawing.SystemColors.Control;
-            this.branchSearchPanel.ColumnCount = 4;
+            this.branchSearchPanel.ColumnCount = 5;
             this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.branchSearchPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.branchSearchPanel.Controls.Add(this.lblSearchBranch, 0, 0);
             this.branchSearchPanel.Controls.Add(this.btnSearch, 2, 0);
-            this.branchSearchPanel.Controls.Add(this.btnSettings, 3, 0);
+            this.branchSearchPanel.Controls.Add(this.btnCollapseAll, 3, 0);
+            this.branchSearchPanel.Controls.Add(this.btnSettings, 4, 0);
             this.branchSearchPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.branchSearchPanel.Location = new System.Drawing.Point(0, 0);
             this.branchSearchPanel.Margin = new System.Windows.Forms.Padding(0);
@@ -506,7 +510,7 @@ namespace GitUI.BranchTreePanel
             this.btnSearch.FlatAppearance.BorderSize = 0;
             this.btnSearch.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSearch.Image = global::GitUI.Properties.Images.Preview;
-            this.btnSearch.Location = new System.Drawing.Point(248, 0);
+            this.btnSearch.Location = new System.Drawing.Point(228, 0);
             this.btnSearch.Margin = new System.Windows.Forms.Padding(0);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Padding = new System.Windows.Forms.Padding(2);
@@ -514,6 +518,23 @@ namespace GitUI.BranchTreePanel
             this.btnSearch.TabIndex = 2;
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.OnBtnSearchClicked);
+            // 
+            // btnCollapseAll
+            // 
+            this.btnCollapseAll.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnCollapseAll.AutoSize = true;
+            this.btnCollapseAll.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnCollapseAll.FlatAppearance.BorderSize = 0;
+            this.btnCollapseAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCollapseAll.Image = global::GitUI.Properties.Images.CollapseAll;
+            this.btnCollapseAll.Location = new System.Drawing.Point(254, 0);
+            this.btnCollapseAll.Margin = new System.Windows.Forms.Padding(0);
+            this.btnCollapseAll.Name = "btnCollapseAll";
+            this.btnCollapseAll.Padding = new System.Windows.Forms.Padding(2);
+            this.btnCollapseAll.Size = new System.Drawing.Size(26, 26);
+            this.btnCollapseAll.TabIndex = 3;
+            this.btnCollapseAll.UseVisualStyleBackColor = true;
+            this.btnCollapseAll.Click += new System.EventHandler(this.btnCollapseAll_Click);
             // 
             // btnSettings
             // 
@@ -524,12 +545,12 @@ namespace GitUI.BranchTreePanel
             this.btnSettings.FlatAppearance.BorderSize = 0;
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettings.Image = global::GitUI.Properties.Images.Settings;
-            this.btnSettings.Location = new System.Drawing.Point(274, 0);
+            this.btnSettings.Location = new System.Drawing.Point(280, 0);
             this.btnSettings.Margin = new System.Windows.Forms.Padding(0);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Padding = new System.Windows.Forms.Padding(2);
-            this.btnSettings.Size = new System.Drawing.Size(26, 26);
-            this.btnSettings.TabIndex = 3;
+            this.btnSettings.Size = new System.Drawing.Size(20, 26);
+            this.btnSettings.TabIndex = 4;
             this.btnSettings.UseVisualStyleBackColor = true;
             this.btnSettings.Click += new System.EventHandler(this.OnBtnSettingsClicked);
             // 
@@ -601,6 +622,7 @@ namespace GitUI.BranchTreePanel
         private TableLayoutPanel branchSearchPanel;
         private Label lblSearchBranch;
         private Button btnSearch;
+        private Button btnCollapseAll;
         private Button btnSettings;
         private ContextMenuStrip menuSettings;
         private ToolStripMenuItem showTagsToolStripMenuItem;
@@ -622,5 +644,6 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem mnubtnEnableRemoteAndFetch;
         private ToolStripMenuItem mnubtnDisableRemote;
         private ToolStripSeparator tsmiSpacer3;
+        private ToolTip toolTip;
     }
 }
