@@ -90,8 +90,10 @@ namespace GitUI.BranchTreePanel
             this.btnCollapseAll = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
             this.menuSettings = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.showTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.tsmiShowBranches = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiShowTags = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiShowRemotes = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
             this.menuRemotes.SuspendLayout();
@@ -544,7 +546,7 @@ namespace GitUI.BranchTreePanel
             this.btnSettings.ContextMenuStrip = this.menuSettings;
             this.btnSettings.FlatAppearance.BorderSize = 0;
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSettings.Image = global::GitUI.Properties.Images.Settings;
+            this.btnSettings.Image = global::GitUI.Properties.Images.DocumentTree;
             this.btnSettings.Location = new System.Drawing.Point(280, 0);
             this.btnSettings.Margin = new System.Windows.Forms.Padding(0);
             this.btnSettings.Name = "btnSettings";
@@ -557,17 +559,38 @@ namespace GitUI.BranchTreePanel
             // menuSettings
             // 
             this.menuSettings.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showTagsToolStripMenuItem});
+            this.tsmiShowBranches,
+            this.tsmiShowRemotes,
+            this.tsmiShowTags});
             this.menuSettings.Name = "menuSettings";
-            this.menuSettings.Size = new System.Drawing.Size(129, 26);
+            this.menuSettings.Size = new System.Drawing.Size(155, 70);
             // 
-            // showTagsToolStripMenuItem
+            // tsmiShowBranches
             // 
-            this.showTagsToolStripMenuItem.CheckOnClick = true;
-            this.showTagsToolStripMenuItem.Name = "showTagsToolStripMenuItem";
-            this.showTagsToolStripMenuItem.Size = new System.Drawing.Size(128, 22);
-            this.showTagsToolStripMenuItem.Text = "Show &tags";
-            this.showTagsToolStripMenuItem.Click += new System.EventHandler(this.ShowTagsToolStripMenuItem_Click);
+            this.tsmiShowBranches.CheckOnClick = true;
+            this.tsmiShowBranches.Image = global::GitUI.Properties.Images.BranchLocalRoot;
+            this.tsmiShowBranches.Name = "tsmiShowBranches";
+            this.tsmiShowBranches.Size = new System.Drawing.Size(154, 22);
+            this.tsmiShowBranches.Text = "Show &branches";
+            this.tsmiShowBranches.Click += new System.EventHandler(this.tsmiShowBranches_Click);
+            // 
+            // tsmiShowTags
+            // 
+            this.tsmiShowTags.CheckOnClick = true;
+            this.tsmiShowTags.Image = global::GitUI.Properties.Images.TagHorizontal;
+            this.tsmiShowTags.Name = "tsmiShowTags";
+            this.tsmiShowTags.Size = new System.Drawing.Size(154, 22);
+            this.tsmiShowTags.Text = "Show &tags";
+            this.tsmiShowTags.Click += new System.EventHandler(this.tsmiShowTags_Click);
+            // 
+            // tsmiShowRemotes
+            // 
+            this.tsmiShowRemotes.CheckOnClick = true;
+            this.tsmiShowRemotes.Image = global::GitUI.Properties.Images.BranchRemoteRoot;
+            this.tsmiShowRemotes.Name = "tsmiShowRemotes";
+            this.tsmiShowRemotes.Size = new System.Drawing.Size(154, 22);
+            this.tsmiShowRemotes.Text = "Show &remotes";
+            this.tsmiShowRemotes.Click += new System.EventHandler(this.tsmiShowRemotes_Click);
             // 
             // RepoObjectsTree
             // 
@@ -625,7 +648,7 @@ namespace GitUI.BranchTreePanel
         private Button btnCollapseAll;
         private Button btnSettings;
         private ContextMenuStrip menuSettings;
-        private ToolStripMenuItem showTagsToolStripMenuItem;
+        private ToolStripMenuItem tsmiShowTags;
         private ToolStripMenuItem mnubtnMergeBranch;
         private ToolStripMenuItem mnubtnRebase;
         private ToolStripSeparator toolStripSeparator1;
@@ -644,6 +667,8 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem mnubtnEnableRemoteAndFetch;
         private ToolStripMenuItem mnubtnDisableRemote;
         private ToolStripSeparator tsmiSpacer3;
+        private ToolStripMenuItem tsmiShowBranches;
+        private ToolStripMenuItem tsmiShowRemotes;
         private ToolTip toolTip;
     }
 }

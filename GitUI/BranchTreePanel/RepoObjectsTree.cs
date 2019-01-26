@@ -27,9 +27,12 @@ namespace GitUI.BranchTreePanel
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
         private readonly List<Tree> _rootNodes = new List<Tree>();
         private readonly SearchControl<string> _txtBranchCriterion;
+        private TreeNode _branchesTreeRootNode;
+        private TreeNode _remotesTreeRootNode;
         private TreeNode _tagTreeRootNode;
+        private BranchTree _branchesTree;
+        private RemoteBranchTree _remotesTree;
         private TagTree _tagTree;
-        private RemoteBranchTree _remoteTree;
         private List<TreeNode> _searchResult;
         private FilterBranchHelper _filterBranchHelper;
         private IAheadBehindDataProvider _aheadBehindDataProvider;
@@ -55,6 +58,10 @@ namespace GitUI.BranchTreePanel
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
 
             toolTip.SetToolTip(btnCollapseAll, mnubtnCollapseAll.ToolTipText);
+
+            tsmiShowBranches.Checked = AppSettings.RepoObjectsTreeShowBranches;
+            tsmiShowRemotes.Checked = AppSettings.RepoObjectsTreeShowRemotes;
+            tsmiShowTags.Checked = AppSettings.RepoObjectsTreeShowTags;
 
             _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
             _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
@@ -201,28 +208,19 @@ namespace GitUI.BranchTreePanel
         {
             base.OnUICommandsSourceSet(source);
 
-            var localBranchesRootNode = new TreeNode(Strings.Branches)
-            {
-                ImageKey = nameof(Images.BranchLocalRoot),
-                SelectedImageKey = nameof(Images.BranchLocalRoot),
-            };
-            AddTree(new BranchTree(localBranchesRootNode, source, _aheadBehindDataProvider));
+            CancelBackgroundTasks();
 
-            var remoteBranchesRootNode = new TreeNode(Strings.Remotes)
+            if (tsmiShowBranches.Checked)
             {
-                ImageKey = nameof(Images.BranchRemoteRoot),
-                SelectedImageKey = nameof(Images.BranchRemoteRoot),
-            };
-            _remoteTree = new RemoteBranchTree(remoteBranchesRootNode, source)
-            {
-                TreeViewNode =
-                {
-                    ContextMenuStrip = menuRemotes
-                }
-            };
-            AddTree(_remoteTree);
+                AddBranches();
+            }
 
-            if (showTagsToolStripMenuItem.Checked)
+            if (tsmiShowRemotes.Checked)
+            {
+                AddRemotes();
+            }
+
+            if (tsmiShowTags.Checked)
             {
                 AddTags();
             }
@@ -234,10 +232,43 @@ namespace GitUI.BranchTreePanel
             ret.Add(node);
         }
 
+        private void AddBranches()
+        {
+            _branchesTreeRootNode = new TreeNode(Strings.Branches)
+            {
+                ImageKey = nameof(Images.BranchLocalRoot),
+                SelectedImageKey = nameof(Images.BranchLocalRoot),
+            };
+            _branchesTree = new BranchTree(_branchesTreeRootNode, UICommandsSource, _aheadBehindDataProvider);
+            AddTree(_branchesTree);
+            _searchResult = null;
+        }
+
+        private void AddRemotes()
+        {
+            _remotesTreeRootNode = new TreeNode(Strings.Remotes)
+            {
+                ImageKey = nameof(Images.BranchRemoteRoot),
+                SelectedImageKey = nameof(Images.BranchRemoteRoot),
+            };
+            _remotesTree = new RemoteBranchTree(_remotesTreeRootNode, UICommandsSource)
+            {
+                TreeViewNode =
+                {
+                    ContextMenuStrip = menuRemotes
+                }
+            };
+            AddTree(_remotesTree);
+            _searchResult = null;
+        }
+
         private void AddTags()
         {
-            _tagTreeRootNode = new TreeNode(Strings.Tags) { ImageKey = nameof(Images.TagHorizontal) };
-            _tagTreeRootNode.SelectedImageKey = _tagTreeRootNode.ImageKey;
+            _tagTreeRootNode = new TreeNode(Strings.Tags)
+            {
+                ImageKey = nameof(Images.TagHorizontal),
+                SelectedImageKey = nameof(Images.TagHorizontal),
+            };
             _tagTree = new TagTree(_tagTreeRootNode, UICommandsSource);
             AddTree(_tagTree);
             _searchResult = null;
@@ -352,20 +383,6 @@ namespace GitUI.BranchTreePanel
         private void OnBtnSettingsClicked(object sender, EventArgs e)
         {
             btnSettings.ContextMenuStrip.Show(btnSettings, 0, btnSettings.Height);
-        }
-
-        private void ShowTagsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _searchResult = null;
-            if (showTagsToolStripMenuItem.Checked)
-            {
-                AddTags();
-            }
-            else
-            {
-                _rootNodes.Remove(_tagTree);
-                treeMain.Nodes.Remove(_tagTreeRootNode);
-            }
         }
 
         private void OnBtnSearchClicked(object sender, EventArgs e)
