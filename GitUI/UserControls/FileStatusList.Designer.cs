@@ -91,6 +91,7 @@
             this.FilterComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.FilterComboBox.FormattingEnabled = true;
             this.FilterComboBox.Location = new System.Drawing.Point(0, 0);
+            this.FilterComboBox.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
             this.FilterComboBox.Name = "FilterComboBox";
             this.FilterComboBox.Size = new System.Drawing.Size(682, 21);
             this.FilterComboBox.TabIndex = 0;
