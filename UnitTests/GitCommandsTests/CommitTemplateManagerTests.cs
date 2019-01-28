@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -68,6 +70,40 @@ namespace GitCommandsTests
             var content = _manager.LoadGitCommitTemplate();
 
             content.Should().NotBeEmpty();
+        }
+
+        [Test]
+        public void Register_should_not_add_duplicates()
+        {
+            const string templateName = "template1";
+            var count = _manager.RegisteredTemplates.Count();
+            _manager.Register(templateName, () => "text1");
+            _manager.Register(templateName, () => "text2");
+            _manager.RegisteredTemplates.Count().Should().Be(count + 1);
+        }
+
+        [Test]
+        public void RegisteredTemplates_should_be_threadsafe()
+        {
+            _manager.Register("template1", () => "text1");
+            _manager.Register("template2", () => "text2");
+            var i = _manager.RegisteredTemplates.Count() + 1;
+            foreach (var managerRegisteredTemplate in _manager.RegisteredTemplates)
+            {
+                _manager.Unregister(managerRegisteredTemplate.Name);
+                _manager.Register($"template{i}", () => "text");
+                i++;
+            }
+        }
+
+        [Test]
+        public void RegisteredTemplates_should_be_immutable()
+        {
+            _manager.Register("template1", () => "text1");
+            var expectedCount = _manager.RegisteredTemplates.Count();
+            expectedCount.Should().BeGreaterThan(0);
+            ((IList)_manager.RegisteredTemplates).Clear();
+            _manager.RegisteredTemplates.Count().Should().Be(expectedCount);
         }
 
         public class IntegrationTests

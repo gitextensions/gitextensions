@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
@@ -43,11 +42,11 @@ namespace GitCommands
 
     public sealed class CommitTemplateManager : ICommitTemplateManager
     {
-        private class RegisteredCommitTemplateItem
+        private struct RegisteredCommitTemplateItem
         {
-            public string Name { get; }
+            public readonly string Name;
 
-            public Func<string> Text { get; }
+            public readonly Func<string> Text;
 
             public RegisteredCommitTemplateItem(string name, Func<string> text)
             {
@@ -82,7 +81,7 @@ namespace GitCommands
             {
                 lock (RegisteredTemplatesStorage)
                 {
-                    return RegisteredTemplatesStorage.Select(item => new CommitTemplateItem(item.Name, item.Text()));
+                    return RegisteredTemplatesStorage.Select(item => new CommitTemplateItem(item.Name, item.Text())).AsReadOnlyList();
                 }
             }
         }
