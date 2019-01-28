@@ -217,8 +217,7 @@ namespace GitUI.BranchTreePanel
 
                 if (!token.IsCancellationRequested)
                 {
-                    var selectedNode = treeMain.AllNodes().FirstOrDefault(n =>
-                        _rootNodes.Any(rn => $"{rn.TreeViewNode.FullPath}{treeMain.PathSeparator}{currentBranch}" == n.FullPath));
+                    var selectedNode = treeMain.AllNodes().FirstOrDefault(n => n.Tag is LocalBranchNode branchNode ? branchNode.IsActive : false);
                     if (selectedNode != null)
                     {
                         SetSelectedNode(selectedNode);
