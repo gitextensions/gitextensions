@@ -13,8 +13,6 @@ environment:
   SKIP_PAUSE: TRUE
   ARCHIVE_WITH_PDB: TRUE
   spciuser: ""
-  APPVEYOR_RDP_PASSWORD:
-    secure: ABeNp7vpRPDTjj+mWowqZUOyUncE7qz/kxCeRxkCNw0=
 
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
