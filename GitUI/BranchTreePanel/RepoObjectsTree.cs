@@ -9,10 +9,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel
@@ -32,6 +34,7 @@ namespace GitUI.BranchTreePanel
         private RemoteBranchTree _remoteTree;
         private List<TreeNode> _searchResult;
         private FilterBranchHelper _filterBranchHelper;
+        private IAheadBehindDataProvider _aheadBehindDataProvider;
         private bool _searchCriteriaChanged;
 
         public RepoObjectsTree()
@@ -177,8 +180,9 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        public void SetBranchFilterer(FilterBranchHelper filterBranchHelper)
+        public void Initialize([CanBeNull]IAheadBehindDataProvider aheadBehindDataProvider, FilterBranchHelper filterBranchHelper)
         {
+            _aheadBehindDataProvider = aheadBehindDataProvider;
             _filterBranchHelper = filterBranchHelper;
         }
 
@@ -246,7 +250,7 @@ namespace GitUI.BranchTreePanel
                 ImageKey = nameof(Images.BranchLocalRoot),
                 SelectedImageKey = nameof(Images.BranchLocalRoot),
             };
-            AddTree(new BranchTree(localBranchesRootNode, source));
+            AddTree(new BranchTree(localBranchesRootNode, source, _aheadBehindDataProvider));
 
             var remoteBranchesRootNode = new TreeNode(Strings.Remotes)
             {

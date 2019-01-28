@@ -190,13 +190,13 @@ namespace GitUI.BranchTreePanel
 
         private class BranchTree : Tree
         {
-            private AheadBehindDataProvider _aheadBehindDataProvider;
+            private readonly IAheadBehindDataProvider _aheadBehindDataProvider;
 
-            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
+            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, [CanBeNull]IAheadBehindDataProvider aheadBehindDataProvider)
                 : base(treeNode, uiCommands)
             {
+                _aheadBehindDataProvider = aheadBehindDataProvider;
                 uiCommands.UICommandsChanged += delegate { TreeViewNode.TreeView.SelectedNode = null; };
-                InitializeAheadBehindProvider();
             }
 
             protected override async Task LoadNodesAsync(CancellationToken token)
@@ -240,16 +240,25 @@ namespace GitUI.BranchTreePanel
 
                 #endregion
 
-                var aheadBehindData = _aheadBehindDataProvider?.GetData();
+                IDictionary<string, AheadBehindData> aheadBehindData = null;
+                if (_aheadBehindDataProvider != null && AppSettings.ShowAheadBehindData)
+                {
+                    aheadBehindData = _aheadBehindDataProvider.GetData();
+                }
+
                 var currentBranch = Module.GetSelectedBranch();
                 var nodes = new Dictionary<string, BaseBranchNode>();
                 foreach (var branch in branches)
                 {
                     token.ThrowIfCancellationRequested();
                     var localBranchNode = new LocalBranchNode(this, branch, branch == currentBranch);
-                    UpdateAheadBehindText(aheadBehindData, localBranchNode);
-                    var parent = localBranchNode.CreateRootNode(nodes,
-                        (tree, parentPath) => new BranchPathNode(tree, parentPath));
+
+                    if (aheadBehindData != null && aheadBehindData.ContainsKey(localBranchNode.FullPath))
+                    {
+                        localBranchNode.UpdateAheadBehind(aheadBehindData[localBranchNode.FullPath].ToDisplay());
+                    }
+
+                    var parent = localBranchNode.CreateRootNode(nodes, (tree, parentPath) => new BranchPathNode(tree, parentPath));
                     if (parent != null)
                     {
                         Nodes.AddNode(parent);
@@ -267,27 +276,6 @@ namespace GitUI.BranchTreePanel
                 if (activeBranch == null)
                 {
                     TreeViewNode.TreeView.SelectedNode = null;
-                }
-            }
-
-            private void InitializeAheadBehindProvider()
-            {
-                _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData
-                    ? new AheadBehindDataProvider(() => Module.GitExecutable)
-                    : null;
-            }
-
-            private static void UpdateAheadBehindText(IDictionary<string, AheadBehindData> aheadBehindData, LocalBranchNode branchNode)
-            {
-                if (aheadBehindData == null)
-                {
-                    // no tracking information
-                    return;
-                }
-
-                if (aheadBehindData.ContainsKey(branchNode.FullPath))
-                {
-                    branchNode.UpdateAheadBehind(aheadBehindData[branchNode.FullPath].ToDisplay());
                 }
             }
         }

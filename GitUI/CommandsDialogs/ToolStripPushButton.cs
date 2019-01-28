@@ -18,18 +18,16 @@ namespace GitUI.CommandsDialogs
             new TranslationString("{0} commit(s) should be integrated (or will be lost if force pushed)");
 
         private IAheadBehindDataProvider _aheadBehindDataProvider;
-        private bool _supportsAheadBehindData;
 
-        public void Initialize(IAheadBehindDataProvider aheadBehindDataProvider, bool supportsAheadBehindData)
+        public void Initialize(IAheadBehindDataProvider aheadBehindDataProvider)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
-            _supportsAheadBehindData = supportsAheadBehindData;
             ResetToDefaultState();
         }
 
         public void DisplayAheadBehindInformation(string branchName)
         {
-            if (!_supportsAheadBehindData || !AppSettings.ShowAheadBehindData)
+            if (_aheadBehindDataProvider == null || !AppSettings.ShowAheadBehindData)
             {
                 return;
             }

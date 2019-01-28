@@ -96,6 +96,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFormBrowseController _controller;
         private readonly ICommitDataManager _commitDataManager;
         private readonly IAppTitleGenerator _appTitleGenerator;
+        private readonly IAheadBehindDataProvider _aheadBehindDataProvider;
         private readonly WindowsJumpListManager _windowsJumpListManager;
         private readonly SubmoduleStatusProvider _submoduleStatusProvider;
 
@@ -178,7 +179,9 @@ namespace GitUI.CommandsDialogs
 
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
-            repoObjectsTree.SetBranchFilterer(_filterBranchHelper);
+            _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
+
+            repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper);
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
             revisionDiff.Bind(RevisionGrid, fileTree);
 
@@ -503,7 +506,7 @@ namespace GitUI.CommandsDialogs
             UpdateSubmodulesStructure();
             UpdateStashCount();
 
-            toolStripButtonPush.Initialize(new AheadBehindDataProvider(() => Module.GitExecutable), GitVersion.Current.SupportAheadBehindData);
+            toolStripButtonPush.Initialize(_aheadBehindDataProvider);
             toolStripButtonPush.DisplayAheadBehindInformation(Module.GetSelectedBranch());
 
             base.OnLoad(e);
