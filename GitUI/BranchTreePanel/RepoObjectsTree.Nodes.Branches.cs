@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands;
 using GitCommands.Git;
 using GitUI.Properties;
 using JetBrains.Annotations;
@@ -240,11 +239,7 @@ namespace GitUI.BranchTreePanel
 
                 #endregion
 
-                IDictionary<string, AheadBehindData> aheadBehindData = null;
-                if (_aheadBehindDataProvider != null && AppSettings.ShowAheadBehindData)
-                {
-                    aheadBehindData = _aheadBehindDataProvider.GetData();
-                }
+                var aheadBehindData = _aheadBehindDataProvider?.GetData();
 
                 var currentBranch = Module.GetSelectedBranch();
                 var nodes = new Dictionary<string, BaseBranchNode>();

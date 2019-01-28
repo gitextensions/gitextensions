@@ -26,8 +26,14 @@ namespace GitCommands.Git
             _getGitExecutable = getGitExecutable;
         }
 
+        [CanBeNull]
         public IDictionary<string, AheadBehindData> GetData(string branchName = "")
         {
+            if (!AppSettings.ShowAheadBehindData)
+            {
+                return null;
+            }
+
             return GetData(null, branchName);
         }
 
