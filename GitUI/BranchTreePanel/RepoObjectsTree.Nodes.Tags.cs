@@ -99,10 +99,14 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            protected override void PostFillTreeViewNode()
+            protected override void PostFillTreeViewNode(bool firstTime)
             {
+                if (firstTime)
+                {
+                    TreeViewNode.Collapse();
+                }
+
                 TreeViewNode.Text = $@"{Strings.Tags} ({Nodes.Count})";
-                TreeViewNode.Collapse();
             }
         }
     }

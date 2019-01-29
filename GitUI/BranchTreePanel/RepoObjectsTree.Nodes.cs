@@ -118,9 +118,17 @@ namespace GitUI.BranchTreePanel
 
                 uiCommands.UICommandsChanged += (a, e) =>
                 {
+                    // When GitModule has changed, clear selected node
                     if (TreeViewNode?.TreeView != null)
                     {
                         TreeViewNode.TreeView.SelectedNode = null;
+                    }
+
+                    // Also clear treeview nodes so that any previous state is flushed
+                    // (e.g. expanded/collapsed state, etc.)
+                    if (TreeViewNode != null)
+                    {
+                        TreeViewNode.Nodes.Clear();
                     }
 
                     e.OldCommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
@@ -187,43 +195,45 @@ namespace GitUI.BranchTreePanel
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
 
+                bool firstTime = TreeViewNode.Nodes.Count == 0;
+
                 var expandedNodesState = TreeViewNode.GetExpandedNodesState();
                 Nodes.FillTreeViewNode(TreeViewNode);
-                PostFillTreeViewNode();
+                PostFillTreeViewNode(firstTime);
                 TreeViewNode.RestoreExpandedNodesState(expandedNodesState);
             }
 
             // Called after the TreeView has been populated from Nodes. A good place to update properties
             // of the TreeViewNode, such as it's name (TreeViewNode.Text), Expand/Collapse state, and
             // to set selected node (TreeViewNode.TreeView.SelectedNode).
-            protected virtual void PostFillTreeViewNode()
+            protected virtual void PostFillTreeViewNode(bool firstTime)
             {
             }
 
             private void ExpandPathToSelectedNode()
             {
-                TreeNode selectedNode = null;
                 if (TreeViewNode.TreeView.SelectedNode != null)
                 {
-                    selectedNode = TreeViewNode.TreeView.SelectedNode;
-                }
-                else if (TreeViewNode.TreeView.Nodes.Count > 0)
-                {
-                    selectedNode = TreeViewNode.TreeView.Nodes[0];
+                    SetSelectedNode(TreeViewNode.TreeView.SelectedNode);
+                    EnsureNodeVisible(TreeViewNode.TreeView.SelectedNode);
                 }
 
-                if (selectedNode == null)
+                if (TreeViewNode.TreeView.Nodes.Count > 0)
                 {
-                    return;
+                    // No selected node, just make sure the first node is visible
+                    EnsureNodeVisible(TreeViewNode.TreeView.Nodes[0]);
                 }
 
-                SetSelectedNode(selectedNode);
                 return;
 
                 void SetSelectedNode(TreeNode node)
                 {
                     TreeViewNode.TreeView.SelectedNode = node;
-                    TreeViewNode.TreeView.SelectedNode.EnsureVisible();
+                }
+
+                void EnsureNodeVisible(TreeNode node)
+                {
+                    node.EnsureVisible();
 
                     // EnsureVisible leads to horizontal scrolling in some cases. We make sure to force horizontal
                     // scroll back to 0. Note that we use SendMessage rather than SetScrollPos as the former works

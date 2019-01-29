@@ -117,9 +117,12 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            protected override void PostFillTreeViewNode()
+            protected override void PostFillTreeViewNode(bool firstTime)
             {
-                TreeViewNode.Expand();
+                if (firstTime)
+                {
+                    TreeViewNode.Expand();
+                }
             }
 
             internal void PopupManageRemotesForm(string remoteName)

@@ -265,10 +265,14 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            protected override void PostFillTreeViewNode()
+            protected override void PostFillTreeViewNode(bool firstTime)
             {
-                TreeViewNode.Text = $@"{Strings.Branches} ({Nodes.Count})";
+                if (firstTime)
+                {
+                    TreeViewNode.Expand();
+                }
 
+                TreeViewNode.Text = $@"{Strings.Branches} ({Nodes.Count})";
                 var activeBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsActive);
                 TreeViewNode.TreeView.SelectedNode = activeBranch?.TreeViewNode;
             }
