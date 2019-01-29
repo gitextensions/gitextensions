@@ -62,3 +62,4 @@ YYYY/MM/DD, github id, Full name, email
 2019/01/24, mast-eu, Martin Steinisch, martin.steinisch@gmail.com
 2019/01/24, pmiossec, Philippe Miossec, pmiossec@gmail.com
 2019/01/24, IEVin, Ivan Vinogradov, i.e.vin@ya.ru
+2019/01/29, maraf, Marek Fišera, mara@neptuo.com
