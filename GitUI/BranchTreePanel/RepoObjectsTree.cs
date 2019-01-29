@@ -14,6 +14,7 @@ using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel
@@ -33,6 +34,7 @@ namespace GitUI.BranchTreePanel
         private RemoteBranchTree _remoteTree;
         private List<TreeNode> _searchResult;
         private FilterBranchHelper _filterBranchHelper;
+        private IAheadBehindDataProvider _aheadBehindDataProvider;
         private bool _searchCriteriaChanged;
 
         public RepoObjectsTree()
@@ -49,8 +51,6 @@ namespace GitUI.BranchTreePanel
             InitializeComplete();
 
             RegisterContextActions();
-
-            InitializeAheadBehindProvider();
 
             treeMain.ShowNodeToolTips = true;
             treeMain.HideSelection = false;
@@ -180,8 +180,9 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        public void SetBranchFilterer(FilterBranchHelper filterBranchHelper)
+        public void Initialize([CanBeNull]IAheadBehindDataProvider aheadBehindDataProvider, FilterBranchHelper filterBranchHelper)
         {
+            _aheadBehindDataProvider = aheadBehindDataProvider;
             _filterBranchHelper = filterBranchHelper;
         }
 
@@ -202,7 +203,6 @@ namespace GitUI.BranchTreePanel
                 // We ConfigureAwait(true) so that we're back on the UI thread when tasks are complete
                 await Task.WhenAll(tasks).ConfigureAwait(true);
                 ThreadHelper.AssertOnUIThread();
-                DisplayAheadBehindInformationForBranches();
             }
             finally
             {
@@ -250,7 +250,7 @@ namespace GitUI.BranchTreePanel
                 ImageKey = nameof(Images.BranchLocalRoot),
                 SelectedImageKey = nameof(Images.BranchLocalRoot),
             };
-            AddTree(new BranchTree(localBranchesRootNode, source));
+            AddTree(new BranchTree(localBranchesRootNode, source, _aheadBehindDataProvider));
 
             var remoteBranchesRootNode = new TreeNode(Strings.Remotes)
             {
@@ -467,53 +467,6 @@ namespace GitUI.BranchTreePanel
             // Don't use e.Node, when folding/unfolding a node,
             // e.Node won't be the one you double clicked, but a child node instead
             Node.OnNode<Node>(treeMain.SelectedNode, node => node.OnDoubleClick());
-        }
-
-        private AheadBehindDataProvider _aheadBehindDataProvider;
-
-        private void DisplayAheadBehindInformationForBranches()
-        {
-            if (_rootNodes.Count == 0 || _aheadBehindDataProvider == null || !AppSettings.ShowAheadBehindData)
-            {
-                return;
-            }
-
-            var aheadBehindData = _aheadBehindDataProvider.GetData();
-            if (aheadBehindData == null)
-            {
-                // no tracking information
-                return;
-            }
-
-            treeMain.LabelEdit = true;
-            TreeNodeCollection nodes = _rootNodes[0].TreeViewNode.Nodes;
-            foreach (TreeNode n in nodes)
-            {
-                UpdateAheadBehindDataOnbranches(n, aheadBehindData);
-            }
-
-            treeMain.LabelEdit = false;
-        }
-
-        private void UpdateAheadBehindDataOnbranches(TreeNode treeNode, IDictionary<string, AheadBehindData> aheadBehindData)
-        {
-            var branchNode = treeNode.Tag as LocalBranchNode;
-            if (branchNode != null && aheadBehindData.ContainsKey(branchNode.FullPath))
-            {
-                branchNode.UpdateAheadBehind(aheadBehindData[branchNode.FullPath].ToDisplay());
-            }
-
-            foreach (TreeNode tn in treeNode.Nodes)
-            {
-                UpdateAheadBehindDataOnbranches(tn, aheadBehindData);
-            }
-        }
-
-        public void InitializeAheadBehindProvider()
-        {
-            _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData
-                ? new AheadBehindDataProvider(() => Module.GitExecutable)
-                : null;
         }
 
         internal TestAccessor GetTestAccessor()

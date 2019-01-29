@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands;
+using GitCommands.Git;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -57,7 +57,6 @@ namespace GitUI.BranchTreePanel
             public void UpdateAheadBehind(string aheadBehindData)
             {
                 AheadBehind = aheadBehindData;
-                TreeViewNode.Text = DisplayText();
             }
 
             [CanBeNull]
@@ -190,9 +189,12 @@ namespace GitUI.BranchTreePanel
 
         private class BranchTree : Tree
         {
-            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
+            private readonly IAheadBehindDataProvider _aheadBehindDataProvider;
+
+            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, [CanBeNull]IAheadBehindDataProvider aheadBehindDataProvider)
                 : base(treeNode, uiCommands)
             {
+                _aheadBehindDataProvider = aheadBehindDataProvider;
                 uiCommands.UICommandsChanged += delegate { TreeViewNode.TreeView.SelectedNode = null; };
             }
 
@@ -237,14 +239,21 @@ namespace GitUI.BranchTreePanel
 
                 #endregion
 
+                var aheadBehindData = _aheadBehindDataProvider?.GetData();
+
                 var currentBranch = Module.GetSelectedBranch();
                 var nodes = new Dictionary<string, BaseBranchNode>();
                 foreach (var branch in branches)
                 {
                     token.ThrowIfCancellationRequested();
                     var localBranchNode = new LocalBranchNode(this, branch, branch == currentBranch);
-                    var parent = localBranchNode.CreateRootNode(nodes,
-                        (tree, parentPath) => new BranchPathNode(tree, parentPath));
+
+                    if (aheadBehindData != null && aheadBehindData.ContainsKey(localBranchNode.FullPath))
+                    {
+                        localBranchNode.UpdateAheadBehind(aheadBehindData[localBranchNode.FullPath].ToDisplay());
+                    }
+
+                    var parent = localBranchNode.CreateRootNode(nodes, (tree, parentPath) => new BranchPathNode(tree, parentPath));
                     if (parent != null)
                     {
                         Nodes.AddNode(parent);
