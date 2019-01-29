@@ -17,7 +17,8 @@ environment:
 init:
   - ps: |
       iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-      Write-Host "Pwd1: $env:APPVEYOR_RDP_PASSWORD"
+      Write-Host "Pwd.u: $env:APPVEYOR_RDP_PASSWORD"
+      Write-Host "Pwd.l: $env:appveyor_rdp_password"
 
 # Build settings, not to be confused with "before_build" and "after_build".
 # "project" is relative to the original build directory and not influenced by directory changes in "before_build".
