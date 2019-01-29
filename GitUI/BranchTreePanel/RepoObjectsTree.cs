@@ -57,6 +57,8 @@ namespace GitUI.BranchTreePanel
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
 
+            toolTip.SetToolTip(btnCollapseAll, mnubtnCollapseAll.ToolTipText);
+
             _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
             _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
 
@@ -424,6 +426,11 @@ namespace GitUI.BranchTreePanel
         private void OnBtnSearchClicked(object sender, EventArgs e)
         {
             DoSearch();
+        }
+
+        private void btnCollapseAll_Click(object sender, EventArgs e)
+        {
+            treeMain.CollapseAll();
         }
 
         private void OnBranchCriterionChanged(object sender, EventArgs e)
