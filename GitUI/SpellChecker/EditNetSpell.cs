@@ -34,6 +34,7 @@ namespace GitUI.SpellChecker
         private readonly TranslationString _removeWordText = new TranslationString("Remove word");
         private readonly TranslationString _dictionaryText = new TranslationString("Dictionary");
         private readonly TranslationString _markIllFormedLinesText = new TranslationString("Mark ill formed lines");
+        private readonly TranslationString _autoCompletionText = new TranslationString("Provide auto completion");
 
         private SpellCheckEditControl _customUnderlines;
         private Spelling _spelling;
@@ -223,19 +224,7 @@ namespace GitUI.SpellChecker
                 IgnoreWordsWithDigits = true
             };
 
-            if (AppSettings.ProvideAutocompletion)
-            {
-                InitializeAutoCompleteWordsTask();
-
-                ThreadHelper.JoinableTaskFactory.RunAsync(
-                    async () =>
-                    {
-                        var words = await _autoCompleteListTask.GetValueAsync();
-                        await this.SwitchToMainThreadAsync(_autoCompleteCancellationTokenSource.Token);
-
-                        _spelling.AddAutoCompleteWords(words.Select(x => x.Word));
-                    });
-            }
+            ToggleAutoCompletion();
 
             //
             // spelling
@@ -272,6 +261,27 @@ namespace GitUI.SpellChecker
             }
 
             _spelling.Dictionary = _wordDictionary;
+        }
+
+        private void ToggleAutoCompletion()
+        {
+            if (!AppSettings.ProvideAutocompletion)
+            {
+                CloseAutoComplete();
+                CancelAutoComplete();
+                return;
+            }
+
+            InitializeAutoCompleteWordsTask();
+
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                async () =>
+                {
+                    var words = await _autoCompleteListTask.GetValueAsync();
+                    await this.SwitchToMainThreadAsync(_autoCompleteCancellationTokenSource.Token);
+
+                    _spelling.AddAutoCompleteWords(words.Select(x => x.Word));
+                });
         }
 
         private void SpellingMisspelledWord(object sender, SpellingEventArgs e)
@@ -396,46 +406,49 @@ namespace GitUI.SpellChecker
 
             SpellCheckContextMenu.Items.Clear();
 
-            try
+            if (AppSettings.ProvideAutocompletion)
             {
-                var pos = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
-
-                if (pos < 0)
+                try
                 {
-                    e.Cancel = true;
-                    return;
-                }
+                    var pos = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
 
-                _spelling.Text = TextBox.Text;
-                _spelling.WordIndex = _spelling.GetWordIndexFromTextIndex(pos);
-
-                if (_spelling.CurrentWord.Length != 0 && !_spelling.TestWord())
-                {
-                    _spelling.ShowDialog = false;
-                    _spelling.MaxSuggestions = 5;
-
-                    // generate suggestions
-                    _spelling.Suggest();
-
-                    foreach (var suggestion in _spelling.Suggestions)
+                    if (pos < 0)
                     {
-                        var si = AddContextMenuItem(suggestion, SuggestionToolStripItemClick, true);
-                        si.Font = new Font(si.Font, FontStyle.Bold);
+                        e.Cancel = true;
+                        return;
                     }
 
-                    AddContextMenuItem(_addToDictionaryText.Text, AddToDictionaryClick, _spelling.CurrentWord.Length > 0);
-                    AddContextMenuItem(_ignoreWordText.Text, IgnoreWordClick, _spelling.CurrentWord.Length > 0);
-                    AddContextMenuItem(_removeWordText.Text, RemoveWordClick, _spelling.CurrentWord.Length > 0);
+                    _spelling.Text = TextBox.Text;
+                    _spelling.WordIndex = _spelling.GetWordIndexFromTextIndex(pos);
 
-                    if (_spelling.Suggestions.Count > 0)
+                    if (_spelling.CurrentWord.Length != 0 && !_spelling.TestWord())
                     {
-                        AddContextMenuSeparator();
+                        _spelling.ShowDialog = false;
+                        _spelling.MaxSuggestions = 5;
+
+                        // generate suggestions
+                        _spelling.Suggest();
+
+                        foreach (var suggestion in _spelling.Suggestions)
+                        {
+                            var si = AddContextMenuItem(suggestion, SuggestionToolStripItemClick, true);
+                            si.Font = new Font(si.Font, FontStyle.Bold);
+                        }
+
+                        AddContextMenuItem(_addToDictionaryText.Text, AddToDictionaryClick, _spelling.CurrentWord.Length > 0);
+                        AddContextMenuItem(_ignoreWordText.Text, IgnoreWordClick, _spelling.CurrentWord.Length > 0);
+                        AddContextMenuItem(_removeWordText.Text, RemoveWordClick, _spelling.CurrentWord.Length > 0);
+
+                        if (_spelling.Suggestions.Count > 0)
+                        {
+                            AddContextMenuSeparator();
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex);
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(ex);
+                }
             }
 
             AddContextMenuItem(_cutMenuItemText.Text, CutMenuItemClick, TextBox.SelectedText.Length > 0);
@@ -501,12 +514,22 @@ namespace GitUI.SpellChecker
 
             AddContextMenuSeparator();
 
-            var mi =
-                new ToolStripMenuItem(_markIllFormedLinesText.Text)
-                {
-                    Checked = AppSettings.MarkIllFormedLinesInCommitMsg
-                };
+            var mi = new ToolStripMenuItem(_markIllFormedLinesText.Text)
+            {
+                Checked = AppSettings.MarkIllFormedLinesInCommitMsg
+            };
             mi.Click += MarkIllFormedLinesInCommitMsgClick;
+            SpellCheckContextMenu.Items.Add(mi);
+
+            mi = new ToolStripMenuItem(_autoCompletionText.Text)
+            {
+                Checked = AppSettings.ProvideAutocompletion
+            };
+            mi.Click += (s, _) =>
+            {
+                AppSettings.ProvideAutocompletion = !AppSettings.ProvideAutocompletion;
+                ToggleAutoCompletion();
+            };
             SpellCheckContextMenu.Items.Add(mi);
 
             return;
