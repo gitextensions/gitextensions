@@ -21,38 +21,6 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
-    public readonly struct ConflictedFileData
-    {
-        public ConflictedFileData(ObjectId objectId, string filename)
-        {
-            ObjectId = objectId;
-            Filename = filename;
-        }
-
-        public ObjectId ObjectId { get; }
-        public string Filename { get; }
-    }
-
-    [DebuggerDisplay("{" + nameof(Filename) + "}")]
-    public readonly struct ConflictData
-    {
-        public ConflictData(
-            ConflictedFileData @base,
-            ConflictedFileData local,
-            ConflictedFileData remote)
-        {
-            Base = @base;
-            Local = local;
-            Remote = remote;
-        }
-
-        public ConflictedFileData Base { get; }
-        public ConflictedFileData Local { get; }
-        public ConflictedFileData Remote { get; }
-
-        public string Filename => Local.Filename ?? Base.Filename ?? Remote.Filename;
-    }
-
     /// <summary>Provides manipulation with git module.
     /// <remarks>Several instances may be created for submodules.</remarks></summary>
     [DebuggerDisplay("GitModule ( {" + nameof(WorkingDir) + "} )")]

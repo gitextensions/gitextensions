@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Utils;
 using GitUI.CommandsDialogs.ResolveConflictsDialog;
 using GitUI.Hotkey;
