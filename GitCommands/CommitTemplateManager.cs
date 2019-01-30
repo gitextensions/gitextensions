@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
@@ -43,7 +42,20 @@ namespace GitCommands
 
     public sealed class CommitTemplateManager : ICommitTemplateManager
     {
-        private static readonly ConcurrentDictionary<string, Func<string>> RegisteredTemplatesDic = new ConcurrentDictionary<string, Func<string>>();
+        private struct RegisteredCommitTemplateItem
+        {
+            public readonly string Name;
+
+            public readonly Func<string> Text;
+
+            public RegisteredCommitTemplateItem(string name, Func<string> text)
+            {
+                Name = name;
+                Text = text;
+            }
+        }
+
+        private static readonly List<RegisteredCommitTemplateItem> RegisteredTemplatesStorage = new List<RegisteredCommitTemplateItem>();
         private readonly IFileSystem _fileSystem;
         private readonly IGitModule _module;
         private readonly IFullPathResolver _fullPathResolver;
@@ -63,7 +75,16 @@ namespace GitCommands
         /// <summary>
         /// Gets the collection of all currently registered commit templates provided by plugins.
         /// </summary>
-        public IEnumerable<CommitTemplateItem> RegisteredTemplates => RegisteredTemplatesDic.Select(item => new CommitTemplateItem(item.Key, item.Value()));
+        public IEnumerable<CommitTemplateItem> RegisteredTemplates
+        {
+            get
+            {
+                lock (RegisteredTemplatesStorage)
+                {
+                    return RegisteredTemplatesStorage.Select(item => new CommitTemplateItem(item.Name, item.Text())).AsReadOnlyList();
+                }
+            }
+        }
 
         /// <summary>
         /// Loads commit template from the file specified in .git/config
@@ -100,7 +121,13 @@ namespace GitCommands
         /// <param name="templateText">The body of the template.</param>
         public void Register(string templateName, Func<string> templateText)
         {
-            RegisteredTemplatesDic.TryAdd(templateName, templateText);
+            lock (RegisteredTemplatesStorage)
+            {
+                if (RegisteredTemplatesStorage.All(item => item.Name != templateName))
+                {
+                    RegisteredTemplatesStorage.Add(new RegisteredCommitTemplateItem(templateName, templateText));
+                }
+            }
         }
 
         /// <summary>
@@ -109,7 +136,10 @@ namespace GitCommands
         /// <param name="templateName">The name of the template.</param>
         public void Unregister(string templateName)
         {
-            RegisteredTemplatesDic.TryRemove(templateName, out _);
+            lock (RegisteredTemplatesStorage)
+            {
+                RegisteredTemplatesStorage.RemoveAll(item => item.Name == templateName);
+            }
         }
     }
 }
