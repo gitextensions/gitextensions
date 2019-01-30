@@ -187,7 +187,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private class BranchTree : Tree
+        private sealed class BranchTree : Tree
         {
             private readonly IAheadBehindDataProvider _aheadBehindDataProvider;
 
@@ -195,10 +195,14 @@ namespace GitUI.BranchTreePanel
                 : base(treeNode, uiCommands)
             {
                 _aheadBehindDataProvider = aheadBehindDataProvider;
-                uiCommands.UICommandsChanged += delegate { TreeViewNode.TreeView.SelectedNode = null; };
             }
 
-            protected override async Task LoadNodesAsync(CancellationToken token)
+            public override void RefreshTree()
+            {
+                ReloadNodes(LoadNodesAsync);
+            }
+
+            private async Task LoadNodesAsync(CancellationToken token)
             {
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
@@ -261,17 +265,16 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            protected override void FillTreeViewNode()
+            protected override void PostFillTreeViewNode(bool firstTime)
             {
-                base.FillTreeViewNode();
+                if (firstTime)
+                {
+                    TreeViewNode.Expand();
+                }
 
                 TreeViewNode.Text = $@"{Strings.Branches} ({Nodes.Count})";
-
                 var activeBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsActive);
-                if (activeBranch == null)
-                {
-                    TreeViewNode.TreeView.SelectedNode = null;
-                }
+                TreeViewNode.TreeView.SelectedNode = activeBranch?.TreeViewNode;
             }
         }
 

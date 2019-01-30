@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -107,12 +108,43 @@ namespace GitUI.BranchTreePanel
             protected readonly Nodes Nodes;
             private readonly IGitUICommandsSource _uiCommandsSource;
 
+            private readonly CancellationTokenSequence _reloadCancellationTokenSequence = new CancellationTokenSequence();
+
             protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
             {
                 Nodes = new Nodes(this);
                 _uiCommandsSource = uiCommands;
                 TreeViewNode = treeNode;
+
+                uiCommands.UICommandsChanged += (a, e) =>
+                {
+                    // When GitModule has changed, clear selected node
+                    if (TreeViewNode?.TreeView != null)
+                    {
+                        TreeViewNode.TreeView.SelectedNode = null;
+                    }
+
+                    // Also clear treeview nodes so that any previous state is flushed
+                    // (e.g. expanded/collapsed state, etc.)
+                    if (TreeViewNode != null)
+                    {
+                        TreeViewNode.Nodes.Clear();
+                    }
+
+                    e.OldCommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
+                    uiCommands.UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+                };
+
+                uiCommands.UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
             }
+
+            private void UICommands_PostRepositoryChanged(object sender, GitUIPluginInterfaces.GitUIEventArgs e)
+            {
+                // Run on UI thread
+                TreeViewNode.TreeView.InvokeAsync(RefreshTree).FileAndForget();
+            }
+
+            public abstract void RefreshTree();
 
             public TreeNode TreeViewNode { get; }
             public GitUICommands UICommands => _uiCommandsSource.UICommands;
@@ -124,45 +156,90 @@ namespace GitUI.BranchTreePanel
             public bool IgnoreSelectionChangedEvent { get; set; }
             protected GitModule Module => UICommands.Module;
 
-            public async Task ReloadAsync(CancellationToken token)
+            // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
+            // input async function that should populate Nodes, then fills the tree view with its contents,
+            // making sure to disable/enable the control.
+            protected void ReloadNodes(Func<CancellationToken, Task> loadNodesTask)
             {
-                await TreeViewNode.TreeView.SwitchToMainThreadAsync(token);
-                ClearNodes();
+                ThreadHelper.ThrowIfNotOnUIThread();
 
-                await LoadNodesAsync(token).ConfigureAwait(false);
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    try
+                    {
+                        var token = _reloadCancellationTokenSequence.Next();
 
-                await TreeViewNode.TreeView.SwitchToMainThreadAsync(token);
-                TreeViewNode.TreeView.BeginUpdate();
-                try
-                {
-                    FillTreeViewNode();
-                    if (TreeViewNode.TreeView.SelectedNode != null)
-                    {
-                        TreeViewNode.TreeView.SelectedNode.EnsureVisible();
+                        TreeViewNode.TreeView.BeginUpdate();
+                        TreeViewNode.TreeView.Enabled = false;
+                        IgnoreSelectionChangedEvent = true;
+                        Nodes.Clear();
+
+                        await loadNodesTask(token);
+
+                        token.ThrowIfCancellationRequested();
+                        await TreeViewNode.TreeView.SwitchToMainThreadAsync();
+
+                        FillTreeViewNode();
                     }
-                    else if (TreeViewNode.TreeView.Nodes.Count > 0)
+                    finally
                     {
-                        TreeViewNode.TreeView.Nodes[0].EnsureVisible();
+                        IgnoreSelectionChangedEvent = false;
+                        TreeViewNode.TreeView.Enabled = true;
+                        TreeViewNode.TreeView.EndUpdate();
+                        ExpandPathToSelectedNode();
                     }
-                }
-                finally
-                {
-                    TreeViewNode.TreeView.EndUpdate();
-                }
+                }).FileAndForget();
             }
 
-            protected abstract Task LoadNodesAsync(CancellationToken token);
-
-            protected virtual void ClearNodes()
+            private void FillTreeViewNode()
             {
-                Nodes.Clear();
-            }
+                ThreadHelper.ThrowIfNotOnUIThread();
 
-            protected virtual void FillTreeViewNode()
-            {
+                bool firstTime = TreeViewNode.Nodes.Count == 0;
+
                 var expandedNodesState = TreeViewNode.GetExpandedNodesState();
                 Nodes.FillTreeViewNode(TreeViewNode);
+                PostFillTreeViewNode(firstTime);
                 TreeViewNode.RestoreExpandedNodesState(expandedNodesState);
+            }
+
+            // Called after the TreeView has been populated from Nodes. A good place to update properties
+            // of the TreeViewNode, such as it's name (TreeViewNode.Text), Expand/Collapse state, and
+            // to set selected node (TreeViewNode.TreeView.SelectedNode).
+            protected virtual void PostFillTreeViewNode(bool firstTime)
+            {
+            }
+
+            private void ExpandPathToSelectedNode()
+            {
+                if (TreeViewNode.TreeView.SelectedNode != null)
+                {
+                    SetSelectedNode(TreeViewNode.TreeView.SelectedNode);
+                    EnsureNodeVisible(TreeViewNode.TreeView.SelectedNode);
+                }
+
+                if (TreeViewNode.TreeView.Nodes.Count > 0)
+                {
+                    // No selected node, just make sure the first node is visible
+                    EnsureNodeVisible(TreeViewNode.TreeView.Nodes[0]);
+                }
+
+                return;
+
+                void SetSelectedNode(TreeNode node)
+                {
+                    TreeViewNode.TreeView.SelectedNode = node;
+                }
+
+                void EnsureNodeVisible(TreeNode node)
+                {
+                    node.EnsureVisible();
+
+                    // EnsureVisible leads to horizontal scrolling in some cases. We make sure to force horizontal
+                    // scroll back to 0. Note that we use SendMessage rather than SetScrollPos as the former works
+                    // outside of Begin/EndUpdate.
+                    NativeMethods.SendMessageInt((IntPtr)TreeViewNode.TreeView.Handle, NativeMethods.WM_HSCROLL, (IntPtr)NativeMethods.SB_LEFT, IntPtr.Zero);
+                }
             }
         }
 
@@ -182,7 +259,7 @@ namespace GitUI.BranchTreePanel
             private TreeNode _treeViewNode;
             public TreeNode TreeViewNode
             {
-                protected get => _treeViewNode;
+                get => _treeViewNode;
                 set
                 {
                     _treeViewNode = value;
