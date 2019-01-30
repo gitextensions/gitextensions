@@ -241,6 +241,105 @@ namespace GitUI.SpellChecker
             SpellCheckTimer.Enabled = true;
         }
 
+        private ToolStripMenuItem AddContextMenuItem(string text, EventHandler eventHandler)
+        {
+            var menuItem = new ToolStripMenuItem(text, null, eventHandler);
+            SpellCheckContextMenu.Items.Add(menuItem);
+            return menuItem;
+        }
+
+        private void AddContextMenuSeparator()
+        {
+            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
+        }
+
+        private void AddDictionaries()
+        {
+            try
+            {
+                var dictionaryToolStripMenuItem = new ToolStripMenuItem(_dictionaryText.Text);
+                SpellCheckContextMenu.Items.Add(dictionaryToolStripMenuItem);
+
+                var toolStripDropDown = new ContextMenuStrip();
+
+                var noDicToolStripMenuItem = new ToolStripMenuItem("None");
+                noDicToolStripMenuItem.Click += DicToolStripMenuItemClick;
+                if (Settings.Dictionary == "None")
+                {
+                    noDicToolStripMenuItem.Checked = true;
+                }
+
+                toolStripDropDown.Items.Add(noDicToolStripMenuItem);
+
+                foreach (var fileName in Directory.GetFiles(AppSettings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
+                {
+                    var file = new FileInfo(fileName);
+
+                    var dic = file.Name.Replace(".dic", "");
+
+                    var dicToolStripMenuItem = new ToolStripMenuItem(dic);
+                    dicToolStripMenuItem.Click += DicToolStripMenuItemClick;
+
+                    if (Settings.Dictionary == dic)
+                    {
+                        dicToolStripMenuItem.Checked = true;
+                    }
+
+                    toolStripDropDown.Items.Add(dicToolStripMenuItem);
+                }
+
+                dictionaryToolStripMenuItem.DropDown = toolStripDropDown;
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex);
+            }
+        }
+
+        private void AddWordSuggestions(int pos)
+        {
+            if (!AppSettings.ProvideAutocompletion)
+            {
+                return;
+            }
+
+            try
+            {
+                _spelling.Text = TextBox.Text;
+                _spelling.WordIndex = _spelling.GetWordIndexFromTextIndex(pos);
+
+                if (_spelling.CurrentWord.Length == 0 || _spelling.TestWord())
+                {
+                    return;
+                }
+
+                _spelling.ShowDialog = false;
+                _spelling.MaxSuggestions = 5;
+
+                // generate suggestions
+                _spelling.Suggest();
+
+                foreach (var suggestion in _spelling.Suggestions)
+                {
+                    var si = AddContextMenuItem(suggestion, SuggestionToolStripItemClick);
+                    si.Font = new Font(si.Font, FontStyle.Bold);
+                }
+
+                AddContextMenuItem(_addToDictionaryText.Text, AddToDictionaryClick);
+                AddContextMenuItem(_ignoreWordText.Text, IgnoreWordClick);
+                AddContextMenuItem(_removeWordText.Text, RemoveWordClick);
+
+                if (_spelling.Suggestions.Count > 0)
+                {
+                    AddContextMenuSeparator();
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex);
+            }
+        }
+
         private void LoadDictionary()
         {
             // Don`t load a dictionary in Design-time
@@ -395,122 +494,28 @@ namespace GitUI.SpellChecker
             TextBox.Select(start, length);
         }
 
-        private void AddContextMenuSeparator()
-        {
-            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
-        }
-
         private void SpellCheckContextMenuOpening(object sender, CancelEventArgs e)
         {
             TextBox.Focus();
+            var pos = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
+            if (pos < 0)
+            {
+                e.Cancel = true;
+                return;
+            }
 
             SpellCheckContextMenu.Items.Clear();
 
-            if (AppSettings.ProvideAutocompletion)
-            {
-                try
-                {
-                    var pos = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
-
-                    if (pos < 0)
-                    {
-                        e.Cancel = true;
-                        return;
-                    }
-
-                    _spelling.Text = TextBox.Text;
-                    _spelling.WordIndex = _spelling.GetWordIndexFromTextIndex(pos);
-
-                    if (_spelling.CurrentWord.Length != 0 && !_spelling.TestWord())
-                    {
-                        _spelling.ShowDialog = false;
-                        _spelling.MaxSuggestions = 5;
-
-                        // generate suggestions
-                        _spelling.Suggest();
-
-                        foreach (var suggestion in _spelling.Suggestions)
-                        {
-                            var si = AddContextMenuItem(suggestion, SuggestionToolStripItemClick, true);
-                            si.Font = new Font(si.Font, FontStyle.Bold);
-                        }
-
-                        AddContextMenuItem(_addToDictionaryText.Text, AddToDictionaryClick, _spelling.CurrentWord.Length > 0);
-                        AddContextMenuItem(_ignoreWordText.Text, IgnoreWordClick, _spelling.CurrentWord.Length > 0);
-                        AddContextMenuItem(_removeWordText.Text, RemoveWordClick, _spelling.CurrentWord.Length > 0);
-
-                        if (_spelling.Suggestions.Count > 0)
-                        {
-                            AddContextMenuSeparator();
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Trace.WriteLine(ex);
-                }
-            }
-
-            AddContextMenuItem(_cutMenuItemText.Text, CutMenuItemClick, TextBox.SelectedText.Length > 0);
-            AddContextMenuItem(_copyMenuItemText.Text, CopyMenuItemdClick, TextBox.SelectedText.Length > 0);
-            AddContextMenuItem(_pasteMenuItemText.Text, PasteMenuItemClick, Clipboard.ContainsText());
-            AddContextMenuItem(_deleteMenuItemText.Text, DeleteMenuItemClick, TextBox.SelectedText.Length > 0);
-            AddContextMenuItem(_selectAllMenuItemText.Text, SelectAllMenuItemClick, true);
-
-            /*AddContextMenuSeparator();
-
-            if (!string.IsNullOrEmpty(_spelling.CurrentWord))
-            {
-                string text = string.Format(translateCurrentWord.Text, _spelling.CurrentWord, CultureCodeToString(Settings.Dictionary));
-                AddContextMenuItem(text, translate_Click);
-            }
-
-            string entireText = string.Format(translateEntireText.Text, CultureCodeToString(Settings.Dictionary));
-            AddContextMenuItem(entireText, translateText_Click);*/
+            AddWordSuggestions(pos);
+            AddContextMenuItem(_cutMenuItemText.Text, CutMenuItemClick);
+            AddContextMenuItem(_copyMenuItemText.Text, CopyMenuItemdClick);
+            AddContextMenuItem(_pasteMenuItemText.Text, PasteMenuItemClick);
+            AddContextMenuItem(_deleteMenuItemText.Text, DeleteMenuItemClick);
+            AddContextMenuItem(_selectAllMenuItemText.Text, SelectAllMenuItemClick);
 
             AddContextMenuSeparator();
 
-            try
-            {
-                var dictionaryToolStripMenuItem = new ToolStripMenuItem(_dictionaryText.Text);
-                SpellCheckContextMenu.Items.Add(dictionaryToolStripMenuItem);
-
-                var toolStripDropDown = new ContextMenuStrip();
-
-                var noDicToolStripMenuItem = new ToolStripMenuItem("None");
-                noDicToolStripMenuItem.Click += DicToolStripMenuItemClick;
-                if (Settings.Dictionary == "None")
-                {
-                    noDicToolStripMenuItem.Checked = true;
-                }
-
-                toolStripDropDown.Items.Add(noDicToolStripMenuItem);
-
-                foreach (
-                    var fileName in
-                        Directory.GetFiles(AppSettings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
-                {
-                    var file = new FileInfo(fileName);
-
-                    var dic = file.Name.Replace(".dic", "");
-
-                    var dicToolStripMenuItem = new ToolStripMenuItem(dic);
-                    dicToolStripMenuItem.Click += DicToolStripMenuItemClick;
-
-                    if (Settings.Dictionary == dic)
-                    {
-                        dicToolStripMenuItem.Checked = true;
-                    }
-
-                    toolStripDropDown.Items.Add(dicToolStripMenuItem);
-                }
-
-                dictionaryToolStripMenuItem.DropDown = toolStripDropDown;
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex);
-            }
+            AddDictionaries();
 
             AddContextMenuSeparator();
 
@@ -531,15 +536,6 @@ namespace GitUI.SpellChecker
                 ToggleAutoCompletion();
             };
             SpellCheckContextMenu.Items.Add(mi);
-
-            return;
-
-            ToolStripMenuItem AddContextMenuItem(string text, EventHandler eventHandler, bool enabled)
-            {
-                var menuItem = new ToolStripMenuItem(text, null, eventHandler);
-                SpellCheckContextMenu.Items.Add(menuItem);
-                return menuItem;
-            }
         }
 
         private void RemoveWordClick(object sender, EventArgs e)
