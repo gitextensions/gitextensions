@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GitCommands;
+using GitCommands.Git;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using NUnit.Framework;

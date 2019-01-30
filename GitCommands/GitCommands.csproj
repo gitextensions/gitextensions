@@ -88,6 +88,7 @@
     <Compile Include="Git\AheadBehindData.cs" />
     <Compile Include="Git\AheadBehindDataProvider.cs" />
     <Compile Include="Git\ExecutableExtensions.cs" />
+    <Compile Include="Git\ForcePushOptions.cs" />
     <Compile Include="Git\GitDescribeProvider.cs" />
     <Compile Include="Git\DetachedHeadParser.cs" />
     <Compile Include="Git\EnvironmentConfiguration.cs" />

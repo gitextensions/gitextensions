@@ -21,13 +21,6 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
-    public enum ForcePushOptions
-    {
-        DoNotForce,
-        Force,
-        ForceWithLease,
-    }
-
     public readonly struct ConflictedFileData
     {
         public ConflictedFileData(ObjectId objectId, string filename)
