@@ -21,17 +21,6 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
-    public enum SubmoduleStatus
-    {
-        Unknown,
-        NewSubmodule,
-        FastForward,
-        Rewind,
-        NewerTime,
-        OlderTime,
-        SameTime
-    }
-
     public enum ForcePushOptions
     {
         DoNotForce,
