@@ -3524,6 +3524,60 @@ namespace GitCommands
 
             try
             {
+                MemoryStream memoryStream = CatFile();
+                if (!IsTrackedByLFS(memoryStream))
+                {
+                    return memoryStream;
+                }
+                else
+                {
+                    return LFSSmudge(memoryStream);
+                }
+            }
+            catch (Win32Exception ex)
+            {
+                Trace.WriteLine(ex);
+                return null;
+            }
+
+            MemoryStream LFSSmudge(MemoryStream cleanStream)
+            {
+                var args = new GitArgumentBuilder("lfs") { "smudge" };
+                using (var process = RunGitCmdDetached(args, redirectInput: true, redirectOutput: true))
+                {
+                    cleanStream.CopyTo(process.StandardInput.BaseStream);
+                    process.StandardInput.Close();
+                    cleanStream.Dispose();
+                    var dirtyStream = new MemoryStream();
+                    process.StandardOutput.BaseStream.CopyTo(dirtyStream);
+                    process.WaitForExit();
+                    dirtyStream.Position = 0;
+                    return dirtyStream;
+                }
+            }
+
+            // This is a heuristic because there's no way to get this information *exactly* without checking
+            // .gitattributes from the relevant commit, and that seems painful
+            bool IsTrackedByLFS(MemoryStream memoryStream)
+            {
+                const int bufferSize = 80 + 100 + 30; // Should be more than enough for 3 lines of the pointer
+                char[] buffer = new char[bufferSize];
+
+                using (var reader = new StreamReader(memoryStream, Encoding.UTF8, false, bufferSize, true))
+                {
+                    reader.Read(buffer, 0, bufferSize);
+                    memoryStream.Position = 0;
+                }
+
+                string possiblePointer = new string(buffer);
+
+                // From git LFS spec (loosely)
+                string regexPattern = @"version .*\noid sha256:[a-fA-F0-9]*\nsize [0-9]*\n";
+                return Regex.IsMatch(possiblePointer, regexPattern);
+            }
+
+            MemoryStream CatFile()
+            {
                 var args = new GitArgumentBuilder("cat-file")
                 {
                     "blob",
@@ -3537,11 +3591,6 @@ namespace GitCommands
                     stream.Position = 0;
                     return stream;
                 }
-            }
-            catch (Win32Exception ex)
-            {
-                Trace.WriteLine(ex);
-                return null;
             }
         }
 
