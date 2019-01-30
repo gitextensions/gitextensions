@@ -21,16 +21,6 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
-    public sealed class GitModuleEventArgs : EventArgs
-    {
-        public GitModuleEventArgs(GitModule gitModule)
-        {
-            GitModule = gitModule;
-        }
-
-        public GitModule GitModule { get; }
-    }
-
     public enum SubmoduleStatus
     {
         Unknown,

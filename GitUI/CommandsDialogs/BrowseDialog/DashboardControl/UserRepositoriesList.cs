@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
@@ -423,7 +424,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             var width = TextRenderer.MeasureText(text, font).Width;
             if (width < maxWidth)
             {
-               return text;
+                return text;
             }
 
             while (text.Length > 1)

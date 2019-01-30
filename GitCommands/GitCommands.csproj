@@ -96,6 +96,7 @@
     <Compile Include="Git\GitBranchNameOptions.cs" />
     <Compile Include="Git\Extensions\GitRevisionExtensions.cs" />
     <Compile Include="Git\Executable.cs" />
+    <Compile Include="Git\GitModuleEventArgs.cs" />
     <Compile Include="Git\GitRevisionTester.cs" />
     <Compile Include="Git\GitRefName.cs" />
     <Compile Include="Git\Tag\GitCreateTagArgs.cs" />
