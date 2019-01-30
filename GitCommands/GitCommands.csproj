@@ -103,6 +103,7 @@
     <Compile Include="Git\GitRevisionTester.cs" />
     <Compile Include="Git\GitRefName.cs" />
     <Compile Include="Git\SubmoduleStatus.cs" />
+    <Compile Include="Git\SystemEncodingReader.cs" />
     <Compile Include="Git\Tag\GitCreateTagArgs.cs" />
     <Compile Include="Git\Tag\GitCreateTagCmd.cs" />
     <Compile Include="Git\GitDeleteRemoteBranchesCmd.cs" />
