@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using GitCommands;
 using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
@@ -39,12 +37,6 @@ namespace GitUIPluginInterfaces
 
         void SetSetting(string setting, string value);
         void UnsetSetting(string setting);
-
-        #region Git process execution
-
-        IEnumerable<string> GetGitOutputLines(ArgumentString arguments, Encoding outputEncoding = null);
-
-        #endregion
 
         /// <summary>Gets the directory which contains the git repository.</summary>
         string WorkingDir { get; }

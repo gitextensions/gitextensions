@@ -1151,7 +1151,7 @@ namespace GitUI
             //
             // "fatal: bad object b897cd39543bd933da30af872a633760e79472c9"
 
-            foreach (var line in Module.GetGitOutputLines(args))
+            foreach (var line in Module.GitExecutable.GetOutputLines(args))
             {
                 if (ObjectId.TryParse(line, out var parentId))
                 {

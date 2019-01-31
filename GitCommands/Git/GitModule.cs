@@ -466,15 +466,6 @@ namespace GitCommands
             return null;
         }
 
-        #region Process execution
-
-        public IEnumerable<string> GetGitOutputLines(ArgumentString arguments, Encoding outputEncoding = null)
-        {
-            return _gitExecutable.GetOutputLines(arguments, outputEncoding: outputEncoding);
-        }
-
-        #endregion
-
         public ExecutionResult Clean(CleanMode mode, bool dryRun = false, bool directories = false, string paths = null)
         {
             return _gitExecutable.Execute(
