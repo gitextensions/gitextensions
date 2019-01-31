@@ -1003,6 +1003,11 @@ namespace GitUI.Editor
             }
         }
 
+        public string GetSelectedText()
+        {
+            return internalFileViewer.GetSelectedText();
+        }
+
         public int GetSelectionPosition()
         {
             return internalFileViewer.GetSelectionPosition();
