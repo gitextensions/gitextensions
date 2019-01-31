@@ -136,6 +136,9 @@ namespace GitUI.CommandsDialogs
             + Environment.NewLine + "Use this feature when a file is big and never change."
             + Environment.NewLine + "Git will never check if the file has changed that will improve status check performance.");
         private readonly TranslationString _stopTrackingFail = new TranslationString("Fail to stop tracking the file '{0}'.");
+
+        private readonly TranslationString _statusBarBranchWithRemote = new TranslationString("{0} -> {1}/{2}");
+        private readonly TranslationString _statusBarBranchWithoutRemote = new TranslationString("{0} -> (No remote branch configured)");
         #endregion
 
         private event Action OnStageAreaLoaded;
@@ -906,17 +909,15 @@ namespace GitUI.CommandsDialogs
 
             var currentBranchName = Module.GetSelectedBranch();
             var currentBranch = Module.GetRefs(false, true).FirstOrDefault(r => r.LocalName == currentBranchName);
-            string pushTo;
+            string statusBarBranchText;
             if (string.IsNullOrEmpty(currentBranch.TrackingRemote) || string.IsNullOrEmpty(currentBranch.MergeWith))
             {
-                pushTo = new TranslationString(" -> (No remote branch configured)").Text;
+                statusBarBranchText = string.Format(_statusBarBranchWithoutRemote.Text, currentBranchName);
             }
             else
             {
-                var pushToTranslation = new TranslationString(" -> {0}/{1}");
-                pushTo = string.Format(pushToTranslation.Text,
-                                      currentBranch.TrackingRemote,
-                                      currentBranch.MergeWith);
+                statusBarBranchText = string.Format(_statusBarBranchWithRemote.Text, currentBranchName,
+                    currentBranch.TrackingRemote, currentBranch.MergeWith);
             }
 
             await this.SwitchToMainThreadAsync();
@@ -925,7 +926,7 @@ namespace GitUI.CommandsDialogs
             {
                 UICommands.StartRemotesDialog(this, null, currentBranchName);
             };
-            branchNameLabel.Text = currentBranchName + pushTo;
+            branchNameLabel.Text = statusBarBranchText;
             Text = string.Format(_formTitle.Text, currentBranchName, PathUtil.GetDisplayPath(Module.WorkingDir));
         }
 
