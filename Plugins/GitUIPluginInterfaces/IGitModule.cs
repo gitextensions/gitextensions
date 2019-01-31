@@ -44,11 +44,6 @@ namespace GitUIPluginInterfaces
 
         IEnumerable<string> GetGitOutputLines(ArgumentString arguments, Encoding outputEncoding = null);
 
-        /// <summary>
-        /// Run git command, console window is hidden, wait for exit, redirect output
-        /// </summary>
-        ExecutionResult RunGitCmdResult(ArgumentString arguments);
-
         #endregion
 
         /// <summary>Gets the directory which contains the git repository.</summary>

@@ -473,11 +473,6 @@ namespace GitCommands
             return _gitExecutable.GetOutputLines(arguments, outputEncoding: outputEncoding);
         }
 
-        public ExecutionResult RunGitCmdResult(ArgumentString arguments)
-        {
-            return _gitExecutable.Execute(arguments);
-        }
-
         #endregion
 
         public ExecutionResult Clean(CleanMode mode, bool dryRun = false, bool directories = false, string paths = null)

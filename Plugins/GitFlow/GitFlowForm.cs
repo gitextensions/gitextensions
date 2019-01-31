@@ -140,7 +140,7 @@ namespace GitFlow
         private IReadOnlyList<string> GetBranches(string typeBranch)
         {
             var args = new GitArgumentBuilder("flow") { typeBranch };
-            var result = _gitUiCommands.GitModule.RunGitCmdResult(args);
+            var result = _gitUiCommands.GitModule.GitExecutable.Execute(args);
 
             if (result.ExitCode != 0 || result.StandardOutput == null)
             {
@@ -303,7 +303,7 @@ namespace GitFlow
             txtResult.Text = "running...";
             ForceRefresh(txtResult);
 
-            var result = _gitUiCommands.GitModule.RunGitCmdResult(commandText);
+            var result = _gitUiCommands.GitModule.GitExecutable.Execute(commandText);
 
             IsRefreshNeeded = true;
 
