@@ -20,7 +20,9 @@ namespace GitCommands.Settings
 
         public static ConfigFileSettings CreateEffective(GitModule module)
         {
-            return CreateLocal(module, CreateGlobal(CreateSystemWide()));
+            var result = CreateLocal(module, CreateGlobal(CreateSystemWide()));
+            result.SettingLevel = SettingLevel.Effective;
+            return result;
         }
 
         public static ConfigFileSettings CreateLocal(GitModule module, bool allowCache = true)
@@ -31,7 +33,10 @@ namespace GitCommands.Settings
         private static ConfigFileSettings CreateLocal(GitModule module, ConfigFileSettings lowerPriority, bool allowCache = true)
         {
             return new ConfigFileSettings(lowerPriority,
-                ConfigFileSettingsCache.Create(Path.Combine(module.GitCommonDirectory, "config"), true, allowCache));
+                ConfigFileSettingsCache.Create(Path.Combine(module.GitCommonDirectory, "config"), true, allowCache))
+            {
+                SettingLevel = SettingLevel.Local
+            };
         }
 
         public static ConfigFileSettings CreateGlobal(bool allowCache = true)
@@ -47,8 +52,10 @@ namespace GitCommands.Settings
                 configPath = Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".gitconfig");
             }
 
-            return new ConfigFileSettings(lowerPriority,
-                ConfigFileSettingsCache.Create(configPath, false, allowCache));
+            return new ConfigFileSettings(lowerPriority, ConfigFileSettingsCache.Create(configPath, false, allowCache))
+            {
+                SettingLevel = SettingLevel.Global
+            };
         }
 
         [CanBeNull]

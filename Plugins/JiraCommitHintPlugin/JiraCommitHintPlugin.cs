@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Atlassian.Jira;
 using GitUI;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using JiraCommitHintPlugin.Properties;
 using NString;
@@ -19,8 +20,7 @@ namespace JiraCommitHintPlugin
     {
         private static readonly string EnablePluginLabel = new TranslationString("Jira hint plugin enabled").Text;
         private static readonly string JiraUrlLabel = new TranslationString("Jira URL").Text;
-        private static readonly string JiraUserLabel = new TranslationString("Jira user").Text;
-        private static readonly string JiraPasswordLabel = new TranslationString("Jira password").Text;
+        private static readonly string JiraCredentialLabel = new TranslationString("Jira credential").Text;
         private static readonly string JiraQueryLabel = new TranslationString("JQL Query").Text;
         private static readonly string MessageTemplateLabel = new TranslationString("Message Template").Text;
         private static readonly string JiraFieldsLabel = new TranslationString("Jira fields").Text;
@@ -39,8 +39,8 @@ namespace JiraCommitHintPlugin
         private string _stringTemplate = defaultFormat;
         private readonly BoolSetting _enabledSettings = new BoolSetting("Jira hint plugin enabled", EnablePluginLabel, false);
         private readonly StringSetting _urlSettings = new StringSetting("Jira URL", JiraUrlLabel, @"https://jira.atlassian.com");
-        private readonly StringSetting _userSettings = new StringSetting("Jira user", JiraUserLabel, string.Empty);
-        private readonly PasswordSetting _passwordSettings = new PasswordSetting("Jira password", JiraPasswordLabel, string.Empty);
+        private readonly CredentialSetting _credentialSettings = new CredentialSetting("JiraCredential", JiraCredentialLabel,
+            (setting, control) => new CredentialsControlBinding((CredentialSetting)setting, (CredentialControl)control));
 
         // For compatibility reason, the setting key is kept to "JDL Query" even if the label is, rightly, "JQL Query" (for "Jira Query Language")
         private readonly StringSetting _jqlQuerySettings = new StringSetting("JDL Query", JiraQueryLabel, "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC");
@@ -87,11 +87,8 @@ namespace JiraCommitHintPlugin
             _urlSettings.CustomControl = new TextBox();
             yield return _urlSettings;
 
-            _userSettings.CustomControl = new TextBox();
-            yield return _userSettings;
-
-            _passwordSettings.CustomControl = new TextBox { UseSystemPasswordChar = true };
-            yield return _passwordSettings;
+            _credentialSettings.CustomControl = new CredentialControl();
+            yield return _credentialSettings;
 
             _jqlQuerySettings.CustomControl = new TextBox();
             yield return _jqlQuerySettings;
@@ -136,7 +133,8 @@ namespace JiraCommitHintPlugin
         {
             try
             {
-                var localJira = Jira.CreateRestClient(_urlSettings.CustomControl.Text, _userSettings.CustomControl.Text, _passwordSettings.CustomControl.Text);
+                var credentialControl = _credentialSettings.CustomControl as CredentialControl;
+                var localJira = Jira.CreateRestClient(_urlSettings.CustomControl.Text, credentialControl.UserName, credentialControl.Password);
                 var localQuery = _jqlQuerySettings.CustomControl.Text;
                 var localStringTemplate = _stringTemplateSetting.CustomControl.Text;
 
@@ -162,10 +160,10 @@ namespace JiraCommitHintPlugin
             gitUiCommands.PreCommit += gitUiCommands_PreCommit;
             gitUiCommands.PostCommit += gitUiCommands_PostRepositoryChanged;
             gitUiCommands.PostRepositoryChanged += gitUiCommands_PostRepositoryChanged;
-            UpdateJiraSettings();
+            UpdateJiraSettings(gitUiCommands.GitModule);
         }
 
-        private void UpdateJiraSettings()
+        private void UpdateJiraSettings(IGitModule gitModule)
         {
             if (!_enabledSettings.ValueOrDefault(Settings))
             {
@@ -173,15 +171,14 @@ namespace JiraCommitHintPlugin
             }
 
             var url = _urlSettings.ValueOrDefault(Settings);
-            var userName = _userSettings.ValueOrDefault(Settings);
-            var password = _passwordSettings.ValueOrDefault(Settings);
+            var credential = _credentialSettings.GetValueOrDefault(Settings, gitModule);
 
-            if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(userName))
+            if (string.IsNullOrWhiteSpace(url) || string.IsNullOrWhiteSpace(credential.UserName))
             {
                 return;
             }
 
-            _jira = Jira.CreateRestClient(url, userName, password);
+            _jira = Jira.CreateRestClient(url, credential.UserName, credential.Password);
             _query = _jqlQuerySettings.ValueOrDefault(Settings);
             _stringTemplate = _stringTemplateSetting.ValueOrDefault(Settings);
             if (_btnPreview == null)
@@ -195,7 +192,7 @@ namespace JiraCommitHintPlugin
 
         private void gitUiCommands_PostSettings(object sender, GitUIPostActionEventArgs e)
         {
-            UpdateJiraSettings();
+            UpdateJiraSettings(e.GitModule);
         }
 
         public override void Unregister(IGitUICommands gitUiCommands)

@@ -13,12 +13,12 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Loads setting value from settings to Control
         /// </summary>
-        void LoadSetting(ISettingsSource settings, bool areSettingsEffective);
+        void LoadSetting(ISettingsSource settings, IGitModule gitModule);
 
         /// <summary>
         /// Saves value from Control to settings
         /// </summary>
-        void SaveSetting(ISettingsSource settings, bool areSettingsEffective);
+        void SaveSetting(ISettingsSource settings, IGitModule gitModule);
 
         /// <summary>
         /// returns caption associated with this control or null if the control layouts

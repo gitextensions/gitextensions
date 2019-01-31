@@ -97,7 +97,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             foreach (var cb in _controlBindings)
             {
-                cb.LoadSetting(GetCurrentSettings(), AreEffectiveSettings);
+                cb.LoadSetting(GetCurrentSettings(), Module);
             }
         }
 
@@ -105,12 +105,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         {
             foreach (var cb in _controlBindings)
             {
-                cb.SaveSetting(GetCurrentSettings(), AreEffectiveSettings);
+                cb.SaveSetting(GetCurrentSettings(), Module);
             }
         }
 
         protected abstract ISettingsSource GetCurrentSettings();
-        protected abstract bool AreEffectiveSettings { get; }
 
         public void AddControlBinding(ISettingControlBinding binding)
         {

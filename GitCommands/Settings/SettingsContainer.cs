@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
@@ -34,6 +37,14 @@ namespace GitCommands.Settings
 
         public void Save()
         {
+            foreach (var networkCredential in Credentials.ToList())
+            {
+                CredentialManager.UpdateCredentials(networkCredential.Key, networkCredential.Value.UserName,
+                    networkCredential.Value.Password);
+            }
+
+            Credentials.Clear();
+
             SettingsCache.Save();
             LowerPriority?.Save();
         }
@@ -72,6 +83,17 @@ namespace GitCommands.Settings
             }
 
             return false;
+        }
+
+        public override NetworkCredential GetCredential(string name, IGitModule gitModule, NetworkCredential defaultValue)
+        {
+            NetworkCredential result = base.GetCredential(name, gitModule, null);
+            if (result == null && LowerPriority != null)
+            {
+                return LowerPriority.GetCredential(name, gitModule, defaultValue);
+            }
+
+            return result ?? defaultValue;
         }
     }
 }

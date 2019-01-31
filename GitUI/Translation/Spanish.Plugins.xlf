@@ -1407,11 +1407,6 @@ Do you want to reset the configured path?</source>
         <source>JQL Query</source>
         
       </trans-unit>
-      <trans-unit id="_passwordSettings.Caption">
-        <source>Jira password</source>
-        <target>Contraseña de Jira</target>
-        
-      </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         
@@ -1421,9 +1416,8 @@ Do you want to reset the configured path?</source>
         <target>URL de Jira</target>
         
       </trans-unit>
-      <trans-unit id="_userSettings.Caption">
-        <source>Jira user</source>
-        <target>Usuario de Jira</target>
+      <trans-unit id="_credentialSettings.Caption">
+        <source>Jira credential</source>
         
       </trans-unit>
     </body>

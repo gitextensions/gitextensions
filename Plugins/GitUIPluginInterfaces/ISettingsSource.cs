@@ -1,12 +1,19 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Drawing;
 using System.Globalization;
+using System.Net;
+using GitExtUtils;
 using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
 {
     public abstract class ISettingsSource
     {
+        protected ConcurrentDictionary<string, NetworkCredential> Credentials { get; } = new ConcurrentDictionary<string, NetworkCredential>();
+
+        public SettingLevel SettingLevel { get; set; } = SettingLevel.Effective;
+
         public abstract T GetValue<T>([NotNull] string name, T defaultValue, [NotNull] Func<string, T> decode);
 
         public abstract void SetValue<T>([NotNull] string name, T value, [NotNull] Func<T, string> encode);
@@ -181,6 +188,32 @@ namespace GitUIPluginInterfaces
         public string GetString([NotNull] string name, string defaultValue)
         {
             return GetValue(name, defaultValue, x => x);
+        }
+
+        public virtual void SetCredential([NotNull] string name, [CanBeNull] NetworkCredential value, IGitModule gitModule)
+        {
+            Credentials.AddOrUpdate(GetWindowsCredentialsTarget(name, gitModule), value, (s, credential) => value);
+        }
+
+        public virtual NetworkCredential GetCredential([NotNull] string name, IGitModule gitModule, NetworkCredential defaultValue)
+        {
+            var targetName = GetWindowsCredentialsTarget(name, gitModule);
+            if (Credentials.TryGetValue(targetName, out var result) || CredentialManager.TryGetCredentials(targetName, out result))
+            {
+                return result;
+            }
+
+            return defaultValue;
+        }
+
+        private string GetWindowsCredentialsTarget(string name, IGitModule gitModule)
+        {
+            if (SettingLevel == SettingLevel.Global)
+            {
+                return $"{name}";
+            }
+
+            return string.IsNullOrWhiteSpace(gitModule?.WorkingDir) ? null : $"{name}_{gitModule.WorkingDir}";
         }
     }
 }

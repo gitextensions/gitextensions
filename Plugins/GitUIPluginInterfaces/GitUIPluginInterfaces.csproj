@@ -89,6 +89,7 @@
     <Compile Include="IProcess.cs" />
     <Compile Include="SettingControlBinding.cs" />
     <Compile Include="ISettingControlBinding.cs" />
+    <Compile Include="SettingLevel.cs" />
     <Compile Include="ISettingsValueGetter.cs" />
     <Compile Include="ObjectId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="RepositoryHosts\IPullRequestInformation.cs" />
     <Compile Include="Settings\NumberSetting.cs" />
     <Compile Include="Settings\ChoiceSetting.cs" />
+    <Compile Include="Settings\CredentialSetting.cs" />
     <Compile Include="Settings\PasswordSetting.cs" />
     <Compile Include="Settings\StringSetting.cs" />
   </ItemGroup>

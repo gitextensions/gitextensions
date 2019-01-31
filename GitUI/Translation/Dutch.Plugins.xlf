@@ -1413,11 +1413,6 @@ Wilt het het pad opnieuw instellen?</target>
         <source>JQL Query</source>
         
       </trans-unit>
-      <trans-unit id="_passwordSettings.Caption">
-        <source>Jira password</source>
-        <target>Jira wachtwoord</target>
-        
-      </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         <target>Beheer Sjabloon</target>
@@ -1428,9 +1423,9 @@ Wilt het het pad opnieuw instellen?</target>
         <target>Jira URL</target>
         
       </trans-unit>
-      <trans-unit id="_userSettings.Caption">
-        <source>Jira user</source>
-        <target>Jira user</target>
+      <trans-unit id="_credentialSettings.Caption">
+        <source>Jira credential</source>
+        <target>Jira credential</target>
         
       </trans-unit>
     </body>

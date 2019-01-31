@@ -1437,11 +1437,6 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
         <source>JQL Query</source>
         
       </trans-unit>
-      <trans-unit id="_passwordSettings.Caption">
-        <source>Jira password</source>
-        <target>Hasło Jira</target>
-        
-      </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         <target>Szablon wiadomości</target>
@@ -1452,9 +1447,8 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
         <target>Adres URL Jira</target>
         
       </trans-unit>
-      <trans-unit id="_userSettings.Caption">
-        <source>Jira user</source>
-        <target>Użytkownik Jira</target>
+      <trans-unit id="_credentialSettings.Caption">
+        <source>Jira credential</source>
         
       </trans-unit>
     </body>

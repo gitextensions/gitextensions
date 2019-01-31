@@ -324,6 +324,20 @@ Při získávání větve bude tato akce provedena bez varování.</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="CredentialControl" source-language="en" target-language="cs">
+    <body>
+      <trans-unit id="userNameLabel.Text">
+        <source>User name</source>
+        <target>Uživatelské jméno</target>
+        
+      </trans-unit>
+      <trans-unit id="passwordLabel.Text">
+        <source>Password</source>
+        <target>Heslo</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="BuildServerIntegrationSettingsPage" source-language="en" target-language="cs">
     <body>
       <trans-unit id="$this.Text">
