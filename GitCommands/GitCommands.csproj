@@ -91,6 +91,7 @@
     <Compile Include="Git\ConflictedFileData.cs" />
     <Compile Include="Git\ExecutableExtensions.cs" />
     <Compile Include="Git\ForcePushOptions.cs" />
+    <Compile Include="Git\GitCommandRunner.cs" />
     <Compile Include="Git\GitDescribeProvider.cs" />
     <Compile Include="Git\DetachedHeadParser.cs" />
     <Compile Include="Git\EnvironmentConfiguration.cs" />

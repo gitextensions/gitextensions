@@ -37,6 +37,7 @@ namespace GitCommands
         private readonly ICommitDataManager _commitDataManager;
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
         private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
+        private readonly IGitCommandRunner _gitCommandRunner;
         private readonly IExecutable _gitExecutable;
 
         public GitModule([CanBeNull] string workingDir, [CanBeNull] IExecutable executable = null)
@@ -46,6 +47,7 @@ namespace GitCommands
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
             _gitExecutable = executable ?? new Executable(() => AppSettings.GitCommand, WorkingDir);
+            _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
 
             // If this is a submodule, populate relevant properties.
             // If this is not a submodule, these will all be null.
@@ -128,6 +130,12 @@ namespace GitCommands
         /// </summary>
         [NotNull]
         public IExecutable GitExecutable => _gitExecutable;
+
+        /// <summary>
+        /// Gets the access to the current git executable associated with this module.
+        /// </summary>
+        [NotNull]
+        public IGitCommandRunner GitCommandRunner => _gitCommandRunner;
 
         /// <summary>
         /// Gets the location of .git directory for the current working folder.
@@ -459,22 +467,6 @@ namespace GitCommands
         }
 
         #region Process execution
-
-        [NotNull]
-        public IProcess RunGitCmdDetached(
-            ArgumentString arguments = default,
-            bool createWindow = false,
-            bool redirectInput = false,
-            bool redirectOutput = false,
-            Encoding outputEncoding = null)
-        {
-            if (outputEncoding == null && redirectOutput)
-            {
-                outputEncoding = SystemEncoding;
-            }
-
-            return _gitExecutable.Start(arguments, createWindow, redirectInput, redirectOutput, outputEncoding);
-        }
 
         public IEnumerable<string> GetGitOutputLines(ArgumentString arguments, Encoding outputEncoding = null)
         {
@@ -3437,7 +3429,7 @@ namespace GitCommands
                     "blob",
                     blob
                 };
-                using (var process = RunGitCmdDetached(args, redirectOutput: true))
+                using (var process = _gitCommandRunner.RunDetached(args, redirectOutput: true))
                 {
                     var stream = new MemoryStream();
                     process.StandardOutput.BaseStream.CopyTo(stream);
@@ -3489,7 +3481,7 @@ namespace GitCommands
 
         public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.WorkTreeGuid, string extraDiffArguments = null, bool isTracked = true)
         {
-            RunGitCmdDetached(new GitArgumentBuilder("difftool")
+            _gitCommandRunner.RunDetached(new GitArgumentBuilder("difftool")
             {
                 "--gui",
                 "--no-prompt",

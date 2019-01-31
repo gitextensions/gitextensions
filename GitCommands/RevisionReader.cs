@@ -112,7 +112,7 @@ namespace GitCommands
             // cache it for the duration of the loop.
             var logOutputEncoding = module.LogOutputEncoding;
 
-            using (var process = module.RunGitCmdDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
+            using (var process = module.GitCommandRunner.RunDetached(arguments, redirectOutput: true, outputEncoding: GitModule.LosslessEncoding))
             {
                 token.ThrowIfCancellationRequested();
 
