@@ -28,6 +28,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // 
             // buildServerSettingsPanel
             // 
+            this.buildServerSettingsPanel.AutoSize = true;
             this.buildServerSettingsPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel1.SetColumnSpan(this.buildServerSettingsPanel, 2);
             this.buildServerSettingsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
