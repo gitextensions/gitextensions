@@ -1,4 +1,4 @@
-version: 3.0.1.{build}
+version: 3.0.2.{build}
 
 os: Visual Studio 2017
 
@@ -34,7 +34,7 @@ install:
 - cmd: echo /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll">> Directory.Build.rsp
 - cmd: |-
     cd Setup
-    python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
+    C:\\Python35\\python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
     cd ..
 
 # to run your custom scripts instead of automatic MSBuild

@@ -5,6 +5,7 @@
 """
 
 import argparse, sys
+import glob
 import re
 
 if __name__ == '__main__':
@@ -22,8 +23,11 @@ if __name__ == '__main__':
     if not args.text:
       args.text = args.version
     
+    submodules = glob.glob("..\Externals\**\AssemblyInfo.cs", recursive=True)
     filenames = [ "..\CommonAssemblyInfo.cs", "..\CommonAssemblyInfoExternals.cs" ]
-    for filename in filenames:
+    combined = filenames + submodules
+    for filename in combined:
+        print (filename)
         commonAssemblyInfo = open(filename, "r").readlines()
         for i in range(len(commonAssemblyInfo)):
             line = commonAssemblyInfo[i]
