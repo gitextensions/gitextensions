@@ -704,6 +704,7 @@ namespace GitUI.CommitInfo
 
         protected override void DisposeCustomResources()
         {
+            _asyncLoadCancellation.Dispose();
             _revisionInfoResizedSubscription.Dispose();
             _commitMessageResizedSubscription.Dispose();
             base.DisposeCustomResources();
