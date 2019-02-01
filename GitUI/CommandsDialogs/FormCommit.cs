@@ -366,17 +366,22 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnApplicationActivated()
         {
-            if (!_bypassActivatedEventHandler)
+            if (!_bypassActivatedEventHandler && AppSettings.RefreshCommitDialogOnFormFocus)
             {
-                if (AppSettings.RefreshCommitDialogOnFormFocus)
-                {
-                    RescanChanges();
-                }
-
-                UpdateAuthorInfo();
+                RescanChanges();
             }
 
             base.OnApplicationActivated();
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            if (!_bypassActivatedEventHandler)
+            {
+                UpdateAuthorInfo();
+            }
+
+            base.OnActivated(e);
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -408,6 +413,8 @@ namespace GitUI.CommandsDialogs
             {
                 Initialize();
             }
+
+            UpdateAuthorInfo();
 
             string message;
 
@@ -3190,6 +3197,8 @@ namespace GitUI.CommandsDialogs
             internal FileViewer SelectedDiff => _formCommit.SelectedDiff;
 
             internal ToolStripDropDownButton CommitMessageToolStripMenuItem => _formCommit.commitMessageToolStripMenuItem;
+
+            internal ToolStripStatusLabel CommitAuthorStatusToolStripStatusLabel => _formCommit.commitAuthorStatus;
 
             internal bool ExecuteCommand(Command command)
             {

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using FluentAssertions;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -44,6 +45,41 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         public void OneTimeTearDown()
         {
             _referenceRepository.Dispose();
+        }
+
+        [Test]
+        public void Should_show_committer_info_on_open()
+        {
+            RunFormTest(form =>
+            {
+                var commitAuthorStatus = form.GetTestAccessor().CommitAuthorStatusToolStripStatusLabel;
+
+                Assert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
+            });
+        }
+
+        [Test]
+        public void Should_update_committer_info_on_form_activated()
+        {
+            RunFormTest(form =>
+            {
+                var commitAuthorStatus = form.GetTestAccessor().CommitAuthorStatusToolStripStatusLabel;
+
+                Assert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
+
+                using (var tempForm = new Form())
+                {
+                    tempForm.Show();
+                    tempForm.Focus();
+
+                    _referenceRepository.Module.RunGitCmd(@"config user.name ""new author""");
+                    _referenceRepository.Module.RunGitCmd(@"config user.email ""new_author@mail.com""");
+                }
+
+                form.Focus();
+
+                Assert.AreEqual("Committer new author <new_author@mail.com>", commitAuthorStatus.Text);
+            });
         }
 
         [Test]
