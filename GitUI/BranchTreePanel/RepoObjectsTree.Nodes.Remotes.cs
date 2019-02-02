@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Remotes;
+using GitUI.BranchTreePanel.Interfaces;
 using GitUI.HelperDialogs;
 using GitUI.Properties;
 using Microsoft.VisualStudio.Threading;
@@ -129,7 +130,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private sealed class RemoteBranchNode : BaseBranchNode
+        private sealed class RemoteBranchNode : BaseBranchNode, IGitRefActions, ICanDelete, ICanRename
         {
             public RemoteBranchNode(Tree tree, string fullPath) : base(tree, fullPath)
             {
@@ -179,17 +180,7 @@ namespace GitUI.BranchTreePanel
 
             public bool CreateBranch()
             {
-                var objectId = Module.RevParse(FullPath);
-
-                if (objectId == null)
-                {
-                    MessageBox.Show($"Branch \"{FullPath}\" could not be resolved.");
-                    return false;
-                }
-                else
-                {
-                    return UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, objectId);
-                }
+                return UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, FullPath);
             }
 
             public bool Delete()
@@ -198,14 +189,14 @@ namespace GitUI.BranchTreePanel
                 return UICommands.StartDeleteRemoteBranchDialog(TreeViewNode.TreeView, remoteBranchInfo.Remote + '/' + remoteBranchInfo.BranchName);
             }
 
+            public bool Rename()
+            {
+                return UICommands.StartRenameDialog(TreeViewNode.TreeView, FullPath);
+            }
+
             public bool Checkout()
             {
                 return UICommands.StartCheckoutRemoteBranch(TreeViewNode.TreeView, FullPath);
-            }
-
-            internal override void OnDoubleClick()
-            {
-                Checkout();
             }
 
             public bool Merge()
@@ -213,28 +204,9 @@ namespace GitUI.BranchTreePanel
                 return UICommands.StartMergeBranchDialog(TreeViewNode.TreeView, FullPath);
             }
 
-            public bool Rebase()
+            internal override void OnDoubleClick()
             {
-                return UICommands.StartRebaseDialog(TreeViewNode.TreeView, FullPath);
-            }
-
-            public void Reset()
-            {
-                // TODO: Move this into new function UICommands.StartResetCurrentBranchDialog
-
-                var objectId = Module.RevParse(FullPath);
-
-                if (objectId == null)
-                {
-                    MessageBox.Show($"Branch \"{FullPath}\" could not be resolved.");
-                }
-                else
-                {
-                    using (var form = new FormResetCurrentBranch(UICommands, Module.GetRevision(objectId)))
-                    {
-                        form.ShowDialog(TreeViewNode.TreeView);
-                    }
-                }
+                Checkout();
             }
 
             public bool FetchAndMerge()

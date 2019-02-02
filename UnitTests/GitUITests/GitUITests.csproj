@@ -61,6 +61,7 @@
     <Compile Include="Avatars\AvatarPersistentCacheTests.cs" />
     <Compile Include="Avatars\AvatarTestBase.cs" />
     <Compile Include="Avatars\BackupAvatarProviderTests.cs" />
+    <Compile Include="BranchTreePanel\GitRefMenuItemsTest.cs" />
     <Compile Include="CancellationTokenSequenceTests.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\FormBrowseTests.LeftPanel.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\FormBrowseTests.cs" />
@@ -156,5 +157,6 @@
     <EmbeddedResource Include="Editor\MockData\UnixLines.bin" />
     <EmbeddedResource Include="Editor\MockData\WindowsLines.bin" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
