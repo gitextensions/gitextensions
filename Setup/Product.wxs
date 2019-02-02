@@ -72,7 +72,6 @@
         <Environment Id="PATH" Name="PATH" Value="[INSTALLDIR]" Permanent="no" Part="last" Action="set" System="yes" />
       </Component>
     </Directory>
-    <PropertyRef Id="VS2015DEVENV" />
     <DirectoryRef Id="INSTALLDIR">
       <Component Id="gitextensions.ico" Guid="*">
         <File Source="..\Logo\git-extensions-logo.ico" />
@@ -544,10 +543,6 @@
         <RegistryKey Root="HKCR" Key="github-mac\shell\open\command">
           <RegistryValue Value="&quot;[INSTALLDIR]GitExtensions.exe&quot; %1" Type="string" />
         </RegistryKey>
-      </Component>
-      <Component Id="VS2015_VSIX" Guid="*">
-        <VSExtension:VsixPackage File="GitExtensionsVSIX.vsix" PackageId="GitExtensions..3166f76a-2b07-410a-a72a-509d6a2d146c" Target="community" TargetVersion="14.0" Vital="no" Permanent="no" />
-        <File Source="..\GitExtensionsVSIX\bin\$(var.Configuration)\GitExtensionsVSIX.vsix" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginsDir">
@@ -1801,12 +1796,6 @@
       </Feature>
       <Feature Id="AddToPath" Title="Add installation directory to PATH" Level="1">
         <ComponentRef Id="Path" />
-      </Feature>
-      <Feature Id="VSExtension" Title="Visual Studio extension" Level="1">
-        <Feature Id="VS2015FeatureId" Title="Visual Studio 2015/2017 integration" Level="1">
-          <Condition Level="2">NOT VS2015DEVENV</Condition>
-          <ComponentRef Id="VS2015_VSIX" />
-        </Feature>
       </Feature>
       <Feature Id="Protocol.git" Title="Assign with git://-links" Level="1">
         <ComponentRef Id="Protocol.git" />
