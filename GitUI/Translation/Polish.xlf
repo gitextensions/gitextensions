@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.0.1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.0.2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en" target-language="pl">
     <body>
       <trans-unit id="$this.Text">
@@ -939,7 +939,7 @@ Upewnij się, czy jest zainstalowany git (Git dla Windows lub cygwin) lub ustal 
         <target>Gałęzie:</target>
         
       </trans-unit>
-      <trans-unit id="labelDate.Text">
+      <trans-unit id="labelDateCaption.Text">
         <source>Commit date:</source>
         <target>Data zatwierdzenia:</target>
         
@@ -6487,8 +6487,7 @@ Would you like to do it now?</source>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryButtons.Text">
-        <source>Pull with last pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</source>
-        <target>Połącz z ostatnią akcją łączenia ({0})|Połącz ze zmianą bazy|Połącz ze scaleniem|Wymuś wysłanie|Anuluj</target>
+        <source>Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</source>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryCaption.Text">
@@ -7322,11 +7321,6 @@ Przywrócono do pustej wartości.</target>
       <trans-unit id="_resetHardWarning.Text">
         <source>You are about to discard ALL local changes, are you sure?</source>
         <target>Na pewno chcesz porzucić WSZYSTKIE lokalne zmiany?</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Reset type</source>
-        <target>Rodzaj resetowania</target>
         
       </trans-unit>
     </body>
@@ -8619,16 +8613,20 @@ Odzyskaj. Użyj menu kontekstowego dla dodatkowych operacji.</target>
         
       </trans-unit>
       <trans-unit id="chkShowGitStatusForArtificialCommits.Text">
-        <source>Show number of changed files for artificial commits (restart required)</source>
+        <source>Show number of changed files for artificial commits</source>
         
       </trans-unit>
       <trans-unit id="chkShowGitStatusInToolbar.Text">
-        <source>Show number of changed files on commit button (restart required)</source>
+        <source>Show number of changed files on commit button</source>
         
       </trans-unit>
       <trans-unit id="chkShowStashCountInBrowseWindow.Text">
         <source>Show stash count on status bar in browse window</source>
         <target>Pokaż ilość odłożonych na pasku stanu w oknie przeglądania</target>
+        
+      </trans-unit>
+      <trans-unit id="chkShowSubmoduleStatusInBrowse.Text">
+        <source>Show submodule status in browse menu</source>
         
       </trans-unit>
       <trans-unit id="chkStartWithRecentWorkingDir.Text">
@@ -9422,17 +9420,9 @@ Chcesz usunąć go z listy ostatnich repozytoriów?</target>
         <target>Ostatnie repozytoria</target>
         
       </trans-unit>
-      <trans-unit id="menuStripRecentMenu.Text">
-        <source>menuStripRecentMenu</source>
-        
-      </trans-unit>
       <trans-unit id="mnuConfigure.Text">
         <source>&amp;Recent repositories settings</source>
         <target>&amp;Ustawienia ostatnich repozytoriów</target>
-        
-      </trans-unit>
-      <trans-unit id="mnuTop.Text">
-        <source>MenuTop</source>
         
       </trans-unit>
       <trans-unit id="tsmiCategories.Text">
@@ -9504,8 +9494,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="mnuBtnManageRemotesFromRootNode.Text">
-        <source>&amp;Manage remotes</source>
-        <target>&amp;Zarządzaj zdalnymi</target>
+        <source>&amp;Manage remotes...</source>
         
       </trans-unit>
       <trans-unit id="mnubtnBranchCheckout.Text">
@@ -9583,8 +9572,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="mnubtnManageRemotes.Text">
-        <source>&amp;Manage remotes</source>
-        <target>&amp;Zarządzaj zdalnymi</target>
+        <source>&amp;Manage remotes...</source>
         
       </trans-unit>
       <trans-unit id="mnubtnMergeBranch.Text">
@@ -10995,6 +10983,18 @@ Gdy jest używane OpenSSH, będą wyświetlane okna wiersza poleceń!
         <source>{0:Author|Authors}</source>
         
       </trans-unit>
+      <trans-unit id="_bodyNotLoaded.Text">
+        <source>
+
+Full message text is not present in older commits.
+Select this commit to populate the full message.</source>
+        
+      </trans-unit>
+      <trans-unit id="_branchText.Text">
+        <source>Branch</source>
+        <target>Gałąź</target>
+        
+      </trans-unit>
       <trans-unit id="_branchesText.Text">
         <source>Branches</source>
         <target>Gałęzie</target>
@@ -11027,6 +11027,14 @@ Gdy jest używane OpenSSH, będą wyświetlane okna wiersza poleceń!
         <target>{0} {1:dzień|dni|dni} temu</target>
         
       </trans-unit>
+      <trans-unit id="_findGitExecutable.Text">
+        <source>Find git...</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitExecutableNotFoundText.Text">
+        <source>The Git executable could not be located on your system.</source>
+        
+      </trans-unit>
       <trans-unit id="_hoursAgo.Text">
         <source>{0} {1:hour|hours} ago</source>
         <target>{0} {1:godzinę|godziny|godzin} temu</target>
@@ -11035,6 +11043,10 @@ Gdy jest używane OpenSSH, będą wyświetlane okna wiersza poleceń!
       <trans-unit id="_indexText.Text">
         <source>Commit index</source>
         <target>Indeks zatwierdzenia</target>
+        
+      </trans-unit>
+      <trans-unit id="_installGitInstructions.Text">
+        <source>Install git...</source>
         
       </trans-unit>
       <trans-unit id="_loadingDataText.Text">

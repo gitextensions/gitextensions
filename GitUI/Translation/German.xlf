@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.0.1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.0.2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en" target-language="de">
     <body>
       <trans-unit id="$this.Text">
@@ -946,7 +946,7 @@ Stellen Sie sicher, dadd git (Git für Windows oder cygwin) installiert wurde od
         <target>Branch(es):</target>
         
       </trans-unit>
-      <trans-unit id="labelDate.Text">
+      <trans-unit id="labelDateCaption.Text">
         <source>Commit date:</source>
         <target>Commit Datum:</target>
         
@@ -6556,8 +6556,7 @@ Wollen Sie das jetzt gleich erledigen?</target>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryButtons.Text">
-        <source>Pull with last pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</source>
-        <target>Pull mit der letzten Pull Aktion ({0})|Pull mit Rebase|Pull mit Merge|Force Push|Abbruch</target>
+        <source>Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</source>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryCaption.Text">
@@ -7392,11 +7391,6 @@ Wert wurde mit leerem Wert ersetzt.</target>
       <trans-unit id="_resetHardWarning.Text">
         <source>You are about to discard ALL local changes, are you sure?</source>
         <target>Ihre lokalen Änderungen werden verworfen, sind Sie sich sicher?</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Reset type</source>
-        <target>Art des Zurücksetzens</target>
         
       </trans-unit>
     </body>
@@ -8708,18 +8702,20 @@ Mehr Optionen im Kontextmenü</target>
         
       </trans-unit>
       <trans-unit id="chkShowGitStatusForArtificialCommits.Text">
-        <source>Show number of changed files for artificial commits (restart required)</source>
-        <target>Zeige Anzahl der geänderten Dateien für künstliche Commits (bedingt Neustart)</target>
+        <source>Show number of changed files for artificial commits</source>
         
       </trans-unit>
       <trans-unit id="chkShowGitStatusInToolbar.Text">
-        <source>Show number of changed files on commit button (restart required)</source>
-        <target>Anzahl der geänderten Dateien auf Commit-Schaltfläche anzeigen (Neustart erforderlich)</target>
+        <source>Show number of changed files on commit button</source>
         
       </trans-unit>
       <trans-unit id="chkShowStashCountInBrowseWindow.Text">
         <source>Show stash count on status bar in browse window</source>
         <target>Anzahl der Stashes in der Statuszeile im Hauptfenster anzeigen</target>
+        
+      </trans-unit>
+      <trans-unit id="chkShowSubmoduleStatusInBrowse.Text">
+        <source>Show submodule status in browse menu</source>
         
       </trans-unit>
       <trans-unit id="chkStartWithRecentWorkingDir.Text">
@@ -9519,19 +9515,9 @@ Wollen Sie ihn aus der Liste der zuletzt verwendeten Repositories entfernen?</ta
         <target>Kürzlich verwendete Repositorys</target>
         
       </trans-unit>
-      <trans-unit id="menuStripRecentMenu.Text">
-        <source>menuStripRecentMenu</source>
-        <target>Zuletzt verwendete Repositories Menu</target>
-        
-      </trans-unit>
       <trans-unit id="mnuConfigure.Text">
         <source>&amp;Recent repositories settings</source>
         <target>Zuletzt verwendete &amp;Repositories Einstellungen</target>
-        
-      </trans-unit>
-      <trans-unit id="mnuTop.Text">
-        <source>MenuTop</source>
-        <target>MenüOben</target>
         
       </trans-unit>
       <trans-unit id="tsmiCategories.Text">
@@ -9606,8 +9592,7 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
         
       </trans-unit>
       <trans-unit id="mnuBtnManageRemotesFromRootNode.Text">
-        <source>&amp;Manage remotes</source>
-        <target>Re&amp;motes verwalten</target>
+        <source>&amp;Manage remotes...</source>
         
       </trans-unit>
       <trans-unit id="mnubtnBranchCheckout.Text">
@@ -9686,8 +9671,7 @@ Um alle Branches anzuzeigen, Rechtsklick in der Revisionsliste, Auswahl 'Anzeige
         
       </trans-unit>
       <trans-unit id="mnubtnManageRemotes.Text">
-        <source>&amp;Manage remotes</source>
-        <target>Re&amp;motes verwalten</target>
+        <source>&amp;Manage remotes...</source>
         
       </trans-unit>
       <trans-unit id="mnubtnMergeBranch.Text">
@@ -11115,6 +11099,18 @@ Bei der Verwendung von OpenSSH werden Kommandozeilendialoge angezeigt!
         <target>{0:Autor|Autoren}</target>
         
       </trans-unit>
+      <trans-unit id="_bodyNotLoaded.Text">
+        <source>
+
+Full message text is not present in older commits.
+Select this commit to populate the full message.</source>
+        
+      </trans-unit>
+      <trans-unit id="_branchText.Text">
+        <source>Branch</source>
+        <target>Branch</target>
+        
+      </trans-unit>
       <trans-unit id="_branchesText.Text">
         <source>Branches</source>
         <target>Branches</target>
@@ -11150,6 +11146,14 @@ Bei der Verwendung von OpenSSH werden Kommandozeilendialoge angezeigt!
         <target>vor {0} {1:Tag|Tagen}</target>
         
       </trans-unit>
+      <trans-unit id="_findGitExecutable.Text">
+        <source>Find git...</source>
+        
+      </trans-unit>
+      <trans-unit id="_gitExecutableNotFoundText.Text">
+        <source>The Git executable could not be located on your system.</source>
+        
+      </trans-unit>
       <trans-unit id="_hoursAgo.Text">
         <source>{0} {1:hour|hours} ago</source>
         <target>vor {0} {1:Stunde|Stunden}</target>
@@ -11158,6 +11162,10 @@ Bei der Verwendung von OpenSSH werden Kommandozeilendialoge angezeigt!
       <trans-unit id="_indexText.Text">
         <source>Commit index</source>
         <target>Commit Index</target>
+        
+      </trans-unit>
+      <trans-unit id="_installGitInstructions.Text">
+        <source>Install git...</source>
         
       </trans-unit>
       <trans-unit id="_loadingDataText.Text">

@@ -1,4 +1,4 @@
-<?xml version="1.0" ?><xliff GitExVersion="3.0.1" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" ?><xliff GitExVersion="3.0.2" version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
@@ -916,6 +916,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="showTagThisCommitDerivesFromMenuItem.Text">
         <source>Show the most recent tag this commit derives from</source>
+        <target>Показать ближайшую метку, от которой наследуется коммит</target>
         
       </trans-unit>
     </body>
@@ -942,7 +943,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target>Ветка(ки):</target>
         
       </trans-unit>
-      <trans-unit id="labelDate.Text">
+      <trans-unit id="labelDateCaption.Text">
         <source>Commit date:</source>
         <target>Дата коммита:</target>
         
@@ -1022,6 +1023,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="chkRebaseOnTopOfSelectedCommit.Text">
         <source>Rebase on top of selected commit</source>
+        <target>Перемещение поверх выбранного коммита</target>
         
       </trans-unit>
       <trans-unit id="chkResolveConflicts.Text">
@@ -1422,6 +1424,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
     <body>
       <trans-unit id="_largeFileSizeWarning.Text">
         <source>This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.</source>
+        <target>Этот файл размером {0:N1} МБ. Отображение больших файлов может быть меделенным. Нажмите, чтобы все равно показать его.</target>
         
       </trans-unit>
       <trans-unit id="cherrypickSelectedLinesToolStripMenuItem.Text">
@@ -1870,6 +1873,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY of FITNESS FOR A PARTICULAR PURPOSE.</source>
+        <target>Эта программа распространяется в надежде, что она будет полезной, но БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ, даже без подразумеваемых гарантий КОММЕРЧЕСКОЙ ПРИГОДНОСТИ ДЛЯ КОНКРЕТНЫХ ЦЕЛЕЙ.</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -2591,14 +2595,17 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="commitInfoBelowMenuItem.Text">
         <source>Commit info below graph</source>
+        <target>Информация о коммите под графом</target>
         
       </trans-unit>
       <trans-unit id="commitInfoLeftwardMenuItem.Text">
         <source>Commit info left of graph</source>
+        <target>Информация о коммите слева от графа</target>
         
       </trans-unit>
       <trans-unit id="commitInfoRightwardMenuItem.Text">
         <source>Commit info right of graph</source>
+        <target>Информация о коммите справа от графа</target>
         
       </trans-unit>
       <trans-unit id="commitToolStripMenuItem.Text">
@@ -2768,6 +2775,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="menuCommitInfoPosition.ToolTipText">
         <source>Commit info position</source>
+        <target>Расположение информации о коммите</target>
         
       </trans-unit>
       <trans-unit id="menuitemSparse.Text">
@@ -3441,7 +3449,7 @@ revision:</source>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Remove untracked files from working directory</source>
-        <target>Удалить не отслеживаемые файлы из рабочего каталога</target>
+        <target>Удалить неотслеживаемые файлы из рабочего каталога</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -4823,6 +4831,7 @@ in order to recover the lost commits.</source>
       </trans-unit>
       <trans-unit id="btnCompareDirectoriesWithDiffTool.Text">
         <source>Open diff using &amp;directory diff tool</source>
+        <target>Открыть в инструменте сравнения директорий</target>
         
       </trans-unit>
       <trans-unit id="copyFilenameToClipboardToolStripMenuItem1.Text">
@@ -5090,6 +5099,7 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="toolStripBlameOptions.Text">
         <source>Blame options</source>
+        <target>Настройки Blame</target>
         
       </trans-unit>
       <trans-unit id="toolStripLabel1.Text">
@@ -5288,6 +5298,7 @@ Change the default behaviour only if you experience problems.</source>
       </trans-unit>
       <trans-unit id="_revisionsNeededText.Text">
         <source>You need to select at least one revision</source>
+        <target>Вам нужно выбрать хотя бы одну ревизию</target>
         
       </trans-unit>
       <trans-unit id="_sendMailResult.Text">
@@ -6528,8 +6539,7 @@ Would you like to do it now?</source>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryButtons.Text">
-        <source>Pull with last pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</source>
-        <target>Получить, используя последнее действие ({0})|Получить и переместить|Получить и объединить|Принудительная отправка|Отмена</target>
+        <source>Pull with the default pull action ({0})|Pull with rebase|Pull with merge|Force push|Cancel</source>
         
       </trans-unit>
       <trans-unit id="_pullRepositoryCaption.Text">
@@ -7362,11 +7372,6 @@ Value has been reset to empty value.</source>
       <trans-unit id="_resetHardWarning.Text">
         <source>You are about to discard ALL local changes, are you sure?</source>
         <target>Сейчас будут отменены ВСЕ локальные изменения. Вы уверены?</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBox1.Text">
-        <source>Reset type</source>
-        <target>Тип сброса изменений</target>
         
       </trans-unit>
     </body>
@@ -8670,12 +8675,12 @@ Context menu for additional operations</source>
         
       </trans-unit>
       <trans-unit id="chkShowGitStatusForArtificialCommits.Text">
-        <source>Show number of changed files for artificial commits (restart required)</source>
+        <source>Show number of changed files for artificial commits</source>
         
       </trans-unit>
       <trans-unit id="chkShowGitStatusInToolbar.Text">
-        <source>Show number of changed files on commit button (restart required)</source>
-        <target>Показать число измененных файлов на кнопке Зафиксировать (требуется перезагрузка)</target>
+        <source>Show number of changed files on commit button</source>
+        <target>Показывать количество изменённых файлов на кнопке &quot;Зафиксировать&quot;</target>
         
       </trans-unit>
       <trans-unit id="chkShowStashCountInBrowseWindow.Text">
@@ -8683,9 +8688,13 @@ Context menu for additional operations</source>
         <target>Показать кол-во спрятанных изменений в строке состояния окна обзора репозитория</target>
         
       </trans-unit>
+      <trans-unit id="chkShowSubmoduleStatusInBrowse.Text">
+        <source>Show submodule status in browse menu</source>
+        
+      </trans-unit>
       <trans-unit id="chkStartWithRecentWorkingDir.Text">
         <source>Open last working directory on startup</source>
-        <target>Отрывать последний рабочий каталог при запуске</target>
+        <target>Открывать последний рабочий каталог при запуске</target>
         
       </trans-unit>
       <trans-unit id="chkStashUntrackedFiles.Text">
@@ -8759,14 +8768,17 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="checkBoxFetchPrune.Text">
         <source>Prune remote branches during fetch</source>
+        <target>Удалить несуществующие ветви во время забирания коммитов</target>
         
       </trans-unit>
       <trans-unit id="checkBoxPullRebase.Text">
         <source>Rebase local branch when pulling (instead of merge)</source>
+        <target>Переместить локальные коммиты во время получения (вместо слияния)</target>
         
       </trans-unit>
       <trans-unit id="checkBoxRebaseAutostash.Text">
         <source>Automatically stash before doing a rebase</source>
+        <target>Автоматически прятать изменения перед перемещением</target>
         
       </trans-unit>
     </body>
@@ -8951,7 +8963,7 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="_gitignoreOnlyInWorkingDirSupported.Text">
         <source>.gitignore is only supported when there is a working directory.</source>
-        <target>.gitignore поддерживается только когда он в рабочем каталоге.</target>
+        <target>.gitignore поддерживается только, когда он в рабочем каталоге.</target>
         
       </trans-unit>
       <trans-unit id="_saveFileQuestion.Text">
@@ -9434,6 +9446,9 @@ The action cannot be undone.</source>
         <source>Do you want to delete category &quot;{0}&quot; with {1} repositories?
 
 The action cannot be undone.</source>
+        <target>Вы хотите удалить категорию &quot;{0}&quot; с {1} репозиториями?
+
+Это действие не может быть отменено.</target>
         
       </trans-unit>
       <trans-unit id="_directoryIsNotAValidRepository.Text">
@@ -9475,17 +9490,9 @@ Do you want to remove it from the recent repositories list?</source>
         <target>Недавние репозитории</target>
         
       </trans-unit>
-      <trans-unit id="menuStripRecentMenu.Text">
-        <source>menuStripRecentMenu</source>
-        
-      </trans-unit>
       <trans-unit id="mnuConfigure.Text">
         <source>&amp;Recent repositories settings</source>
         <target>Настройки последних репозиториев</target>
-        
-      </trans-unit>
-      <trans-unit id="mnuTop.Text">
-        <source>MenuTop</source>
         
       </trans-unit>
       <trans-unit id="tsmiCategories.Text">
@@ -9530,6 +9537,7 @@ Do you want to remove it from the recent repositories list?</source>
       </trans-unit>
       <trans-unit id="tsmiRemoveMissingReposFromList.Text">
         <source>Remove missing projects from the list</source>
+        <target>Удалять отсутствующие проекты из списка</target>
         
       </trans-unit>
     </body>
@@ -9553,14 +9561,16 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnuBtnCheckoutTag.Text">
         <source>&amp;Checkout</source>
+        <target>&amp;Забрать</target>
         
       </trans-unit>
       <trans-unit id="mnuBtnManageRemotesFromRootNode.Text">
-        <source>&amp;Manage remotes</source>
+        <source>&amp;Manage remotes...</source>
         
       </trans-unit>
       <trans-unit id="mnubtnBranchCheckout.Text">
         <source>&amp;Checkout</source>
+        <target>&amp;Забрать</target>
         
       </trans-unit>
       <trans-unit id="mnubtnBranchDelete.Text">
@@ -9570,6 +9580,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnCollapseAll.Text">
         <source>Collapse All</source>
+        <target>Свернуть все</target>
         
       </trans-unit>
       <trans-unit id="mnubtnCreateBranchBasedOnRemoteBranch.Text">
@@ -9619,6 +9630,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnFetchRebase.Text">
         <source>Fetch &amp;&amp; Re&amp;base</source>
+        <target>Забрать и Перебазировать</target>
         
       </trans-unit>
       <trans-unit id="mnubtnFilterLocalBranchInRevisionGrid.Text">
@@ -9632,7 +9644,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
         
       </trans-unit>
       <trans-unit id="mnubtnManageRemotes.Text">
-        <source>&amp;Manage remotes</source>
+        <source>&amp;Manage remotes...</source>
         
       </trans-unit>
       <trans-unit id="mnubtnMergeBranch.Text">
@@ -9642,10 +9654,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnPullFromRemoteBranch.Text">
         <source>Fetch &amp;&amp; Merge (&amp;Pull)</source>
+        <target>Забрать и Слить (&amp;Получить)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnRebase.Text">
         <source>&amp;Rebase</source>
+        <target>&amp;Переместить</target>
         
       </trans-unit>
       <trans-unit id="mnubtnReload.Text">
@@ -9655,6 +9669,7 @@ To show all branches, right click the revision grid, select 'view' and then the 
       </trans-unit>
       <trans-unit id="mnubtnRemoteBranchFetchAndCheckout.Text">
         <source>&amp;Fetch &amp;&amp; Checkout</source>
+        <target>&amp;Забрать и &amp;Переключиться</target>
         
       </trans-unit>
       <trans-unit id="mnubtnReset.Text">
@@ -10072,6 +10087,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="GotoMergeBaseCommit.Text">
         <source>Go to common ancestor (merge base)</source>
+        <target>Перейти к общему предку (базовый коммит)</target>
         
       </trans-unit>
       <trans-unit id="GotoParentCommit.Text">
@@ -10186,10 +10202,12 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="showBuildStatusIconToolStripMenuItem.Text">
         <source>Show build status icon</source>
+        <target>Показать иконку статуса сборки</target>
         
       </trans-unit>
       <trans-unit id="showBuildStatusTextToolStripMenuItem.Text">
         <source>Show build status text</source>
+        <target>Показать текст статуса сборки</target>
         
       </trans-unit>
       <trans-unit id="showDateColumnToolStripMenuItem.Text">
@@ -10238,6 +10256,7 @@ See the changes in the commit form.</source>
     <body>
       <trans-unit id="_areYouSureRebase.Text">
         <source>Are you sure you want to rebase? This action will rewrite commit history.</source>
+        <target>Вы уверены, что хотите перебазировать? Это действие перепишет историю коммитов.</target>
         
       </trans-unit>
       <trans-unit id="_baseForCompareNotSelectedError.Text">
@@ -10272,6 +10291,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="_noMergeBaseCommit.Text">
         <source>There is no common ancestor for the selected commits.</source>
+        <target>Нет общего предка для выделенных коммитов.</target>
         
       </trans-unit>
       <trans-unit id="_noRevisionFoundError.Text">
@@ -10281,14 +10301,17 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="_rebaseBranch.Text">
         <source>Rebase branch.</source>
+        <target>Перемещение ветки.</target>
         
       </trans-unit>
       <trans-unit id="_rebaseBranchInteractive.Text">
         <source>Rebase branch interactively.</source>
+        <target>Выполнить интерактивное перемещение</target>
         
       </trans-unit>
       <trans-unit id="_rebaseConfirmTitle.Text">
         <source>Rebase Confirmation</source>
+        <target>Подтвердите перемещение</target>
         
       </trans-unit>
       <trans-unit id="_revisionFilter.Text">
@@ -11002,10 +11025,24 @@ When OpenSSH is used, command line dialogs are shown!
     <body>
       <trans-unit id="_authorDateText.Text">
         <source>{0:Author date|Author dates}</source>
+        <target>{0:Author date|Author dates}</target>
         
       </trans-unit>
       <trans-unit id="_authorText.Text">
         <source>{0:Author|Authors}</source>
+        <target>{0:Author|Authors}</target>
+        
+      </trans-unit>
+      <trans-unit id="_bodyNotLoaded.Text">
+        <source>
+
+Full message text is not present in older commits.
+Select this commit to populate the full message.</source>
+        
+      </trans-unit>
+      <trans-unit id="_branchText.Text">
+        <source>Branch</source>
+        <target>Ветка</target>
         
       </trans-unit>
       <trans-unit id="_branchesText.Text">
@@ -11015,14 +11052,17 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_childrenText.Text">
         <source>{0:Child|Children}</source>
+        <target>{0:Child|Children}</target>
         
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
         <source>{0:Commit date|Commits dates}</source>
+        <target>{0:Commit date|Commits dates}</target>
         
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
         <source>{0:Commit hash|Commits hashes}</source>
+        <target>{0:Commit hash|Commits hashes}</target>
         
       </trans-unit>
       <trans-unit id="_committerText.Text">
@@ -11040,6 +11080,16 @@ When OpenSSH is used, command line dialogs are shown!
         <target>{0} {1:день|дня|дней} назад</target>
         
       </trans-unit>
+      <trans-unit id="_findGitExecutable.Text">
+        <source>Find git...</source>
+        <target>Найти git...</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitExecutableNotFoundText.Text">
+        <source>The Git executable could not be located on your system.</source>
+        <target>Исполняемый файл Git не найден в системе.</target>
+        
+      </trans-unit>
       <trans-unit id="_hoursAgo.Text">
         <source>{0} {1:hour|hours} ago</source>
         <target>{0} {1:час|часа|часов} назад</target>
@@ -11050,6 +11100,11 @@ When OpenSSH is used, command line dialogs are shown!
         <target>Индекс коммита</target>
         
       </trans-unit>
+      <trans-unit id="_installGitInstructions.Text">
+        <source>Install git...</source>
+        <target>Установить git...</target>
+        
+      </trans-unit>
       <trans-unit id="_loadingDataText.Text">
         <source>Loading data...</source>
         <target>Загрузка данных...</target>
@@ -11057,6 +11112,7 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_messageText.Text">
         <source>{0:Message|Messages}</source>
+        <target>{0:Message|Messages}</target>
         
       </trans-unit>
       <trans-unit id="_minutesAgo.Text">
@@ -11071,10 +11127,12 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_parentsText.Text">
         <source>{0:Parent|Parents}</source>
+        <target>{0:Parent|Parents}</target>
         
       </trans-unit>
       <trans-unit id="_remotesText.Text">
         <source>Remotes</source>
+        <target>Внешние репозитории</target>
         
       </trans-unit>
       <trans-unit id="_secondsAgo.Text">
@@ -11099,7 +11157,7 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="_workspaceText.Text">
         <source>Working directory</source>
-        <target>Рабочий каталок</target>
+        <target>Рабочий каталог</target>
         
       </trans-unit>
       <trans-unit id="_yearsAgo.Text">
