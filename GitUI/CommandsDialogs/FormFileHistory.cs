@@ -168,14 +168,27 @@ namespace GitUI.CommandsDialogs
 
             bool autoLoad = (tabControl1.SelectedTab == BlameTab && AppSettings.LoadBlameOnShow) || AppSettings.LoadFileHistoryOnShow;
 
+            if (!autoLoad)
+            {
+                FileChanges.Visible = false;
+            }
+        }
+
+        protected override void OnShown(EventArgs e)
+        {
+            base.OnShown(e);
+
+            bool autoLoad = (tabControl1.SelectedTab == BlameTab && AppSettings.LoadBlameOnShow) || AppSettings.LoadFileHistoryOnShow;
             if (autoLoad)
             {
                 LoadFileHistory();
             }
-            else
-            {
-                FileChanges.Visible = false;
-            }
+        }
+
+        private bool IsDirectory(string relativePath, GitRevision revision)
+        {
+            var tree = Module.GetTree(revision.ObjectId, false, relativePath).First() as GitCommands.Git.GitItem;
+            return tree.ObjectType == GitCommands.Git.GitObjectType.Tree;
         }
 
         private void LoadFileHistory()
@@ -197,7 +210,7 @@ namespace GitUI.CommandsDialogs
 
             return;
 
-            (string revision, string path) BuildFilter()
+            (ArgumentString revision, string path) BuildFilter()
             {
                 var fileName = FileName;
 
@@ -214,64 +227,33 @@ namespace GitUI.CommandsDialogs
                 // browse dialog.
                 FileName = fileName.ToPosixPath();
 
-                var res = (revision: (string)null, path: $" \"{fileName}\"");
+                var res = (revision: (ArgumentBuilder)new ArgumentBuilder(), path: fileName);
 
-                if (AppSettings.FollowRenamesInFileHistory && !Directory.Exists(fullFilePath))
+                if (AppSettings.FollowRenamesInFileHistory)
                 {
-                    // git log --follow is not working as expected (see  http://kerneltrap.org/mailarchive/git/2009/1/30/4856404/thread)
-                    //
-                    // But we can take a more complicated path to get reasonable results:
-                    //  1. use git log --follow to get all previous filenames of the file we are interested in
-                    //  2. use git log "list of files names" to get the history graph
-                    //
-                    // note: This implementation is quite a quick hack (by someone who does not speak C# fluently).
-                    //
-
-                    var args = new GitArgumentBuilder("log")
-                    {
-                        "--format=\"%n\"",
-                        "--name-only",
-                        GitCommandHelpers.FindRenamesAndCopiesOpts(),
-                        "--",
-                        fileName.Quote()
-                    };
-
-                    var listOfFileNames = new StringBuilder(fileName.Quote());
-
-                    // keep a set of the file names already seen
-                    var setOfFileNames = new HashSet<string> { fileName };
-
-                    var lines = Module.GetGitOutputLines(args, GitModule.LosslessEncoding);
-
-                    foreach (var line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
-                    {
-                        if (!string.IsNullOrEmpty(line) && setOfFileNames.Add(line))
-                        {
-                            listOfFileNames.Append(" \"");
-                            listOfFileNames.Append(line);
-                            listOfFileNames.Append('\"');
-                        }
-                    }
-
                     // here we need --name-only to get the previous filenames in the revision graph
-                    res.path = listOfFileNames.ToString();
-                    res.revision += " --name-only --parents" + GitCommandHelpers.FindRenamesAndCopiesOpts();
-                }
-                else if (AppSettings.FollowRenamesInFileHistory)
-                {
-                    // history of a directory
-                    // --parents doesn't work with --follow enabled, but needed to graph a filtered log
-                    res.revision = " " + GitCommandHelpers.FindRenamesOpt() + " --follow --parents";
+                    res.path = fileName.ToPosixPath().QuoteNE();
+                    res.revision.AddRange(new string[]
+                    {
+                        " --name-only",
+                        "--parents",
+                        "--follow",
+                        GitCommandHelpers.FindRenamesAndCopiesOpts()
+                        });
                 }
                 else
                 {
                     // rename following disabled
-                    res.revision = " --parents";
+                    res.revision.AddRange(new string[] { " --parents" });
                 }
 
                 if (AppSettings.FullHistoryInFileHistory)
                 {
-                    res.revision = string.Concat(" --full-history ", AppSettings.SimplifyMergesInFileHistory ? "--simplify-merges " : string.Empty, res.revision);
+                    res.revision.AddRange(new string[]
+                    {
+                        "--full-history",
+                        AppSettings.SimplifyMergesInFileHistory ? "--simplify-merges" : string.Empty
+                    });
                 }
 
                 return res;
@@ -311,7 +293,7 @@ namespace GitUI.CommandsDialogs
             GitRevision revision = selectedRevisions[0];
             var children = FileChanges.GetRevisionChildren(revision.ObjectId);
 
-            var fileName = revision.Name;
+            var fileName = revision.AdditionalOutput?.Substring(1); // Ignore newline character at beginning.
 
             if (string.IsNullOrEmpty(fileName))
             {
@@ -367,6 +349,7 @@ namespace GitUI.CommandsDialogs
                     Name = fileName,
                     IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
+
                 Diff.ViewChangesAsync(FileChanges.GetSelectedRevisions(), file, "You need to select at least one revision to view diff.");
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)

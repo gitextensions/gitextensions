@@ -94,6 +94,12 @@ namespace GitCommands
 
         public string Name { get; set; }
 
+        /// <summary>
+        /// Used to capture the other output from log calls.  Ex: getting commit history from a file using --follow and --name-only gives us the filename.
+        /// </summary>
+        [CanBeNull]
+        public string AdditionalOutput { get; set; }
+
         public override string ToString() => $"{ObjectId.ToShortString(8)}:{Subject}";
 
         /// <summary>
