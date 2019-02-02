@@ -23,6 +23,8 @@ namespace GitUI.BranchTreePanel
     {
         private readonly TranslationString _showBranchOnly =
             new TranslationString("Filter the revision grid to show this branch only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
+        private readonly TranslationString _searchTooltip = new TranslationString("Search");
+        private readonly TranslationString _showHideRefsTooltip = new TranslationString("Show/hide branches/remotes/tags");
 
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
         private readonly List<Tree> _rootNodes = new List<Tree>();
@@ -58,7 +60,8 @@ namespace GitUI.BranchTreePanel
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
 
             toolTip.SetToolTip(btnCollapseAll, mnubtnCollapseAll.ToolTipText);
-
+            toolTip.SetToolTip(btnSearch, _searchTooltip.Text);
+            toolTip.SetToolTip(btnSettings, _showHideRefsTooltip.Text);
             tsmiShowBranches.Checked = AppSettings.RepoObjectsTreeShowBranches;
             tsmiShowRemotes.Checked = AppSettings.RepoObjectsTreeShowRemotes;
             tsmiShowTags.Checked = AppSettings.RepoObjectsTreeShowTags;

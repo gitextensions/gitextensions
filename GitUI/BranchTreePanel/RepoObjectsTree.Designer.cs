@@ -94,6 +94,7 @@ namespace GitUI.BranchTreePanel
             this.tsmiShowBranches = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiShowTags = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiShowRemotes = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
             this.menuRemotes.SuspendLayout();
@@ -571,7 +572,7 @@ namespace GitUI.BranchTreePanel
             this.tsmiShowBranches.Image = global::GitUI.Properties.Images.BranchLocalRoot;
             this.tsmiShowBranches.Name = "tsmiShowBranches";
             this.tsmiShowBranches.Size = new System.Drawing.Size(154, 22);
-            this.tsmiShowBranches.Text = "Show &branches";
+            this.tsmiShowBranches.Text = "&Branches";
             this.tsmiShowBranches.Click += new System.EventHandler(this.tsmiShowBranches_Click);
             // 
             // tsmiShowTags
@@ -580,7 +581,7 @@ namespace GitUI.BranchTreePanel
             this.tsmiShowTags.Image = global::GitUI.Properties.Images.TagHorizontal;
             this.tsmiShowTags.Name = "tsmiShowTags";
             this.tsmiShowTags.Size = new System.Drawing.Size(154, 22);
-            this.tsmiShowTags.Text = "Show &tags";
+            this.tsmiShowTags.Text = "&Tags";
             this.tsmiShowTags.Click += new System.EventHandler(this.tsmiShowTags_Click);
             // 
             // tsmiShowRemotes
@@ -589,7 +590,7 @@ namespace GitUI.BranchTreePanel
             this.tsmiShowRemotes.Image = global::GitUI.Properties.Images.BranchRemoteRoot;
             this.tsmiShowRemotes.Name = "tsmiShowRemotes";
             this.tsmiShowRemotes.Size = new System.Drawing.Size(154, 22);
-            this.tsmiShowRemotes.Text = "Show &remotes";
+            this.tsmiShowRemotes.Text = "&Remotes";
             this.tsmiShowRemotes.Click += new System.EventHandler(this.tsmiShowRemotes_Click);
             // 
             // RepoObjectsTree
