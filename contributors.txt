@@ -69,6 +69,7 @@ YYYY/MM/DD, github id, Full name, email
 2019/02/09, glen-nicol, Glen Nicol, glen.nicol@live.com
 2019/02/16, mdonatas, Donatas Mačiūnas, mdonatas@gmail.com
 2019/02/16, DmitryZhelnin, Dmitry Zhelnin, mitya_zh@mail.ru
+2019/02/17, monoblaine, Serhan Apaydın, zerhan@gmail.com
 2019/02/18, wachulski, Marcin Wachulski, marcin.wachulski@gmail.com
 2019/02/25, oriash93, Ori Ashual, oriash93@gmail.com
 2019/02/25, coreyasmith, Corey Smith, coreyas@gmail.com
