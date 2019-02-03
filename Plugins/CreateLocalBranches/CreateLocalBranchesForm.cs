@@ -20,7 +20,7 @@ namespace CreateLocalBranches
         private void button1_Click(object sender, EventArgs e)
         {
             var args = new GitArgumentBuilder("branch") { "-a" };
-            string[] references = _gitUiCommands.GitModule.RunGitCmd(args)
+            string[] references = _gitUiCommands.GitModule.GitExecutable.GetOutput(args)
                 .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (references.Length == 0)
@@ -44,7 +44,7 @@ namespace CreateLocalBranches
                             branchName.Replace($"remotes/{_NO_TRANSLATE_Remote.Text}/", ""),
                             branchName
                         };
-                        _gitUiCommands.GitModule.RunGitCmd(args);
+                        _gitUiCommands.GitModule.GitExecutable.GetOutput(args);
                     }
                 }
                 catch

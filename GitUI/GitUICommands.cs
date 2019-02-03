@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Settings;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
@@ -628,7 +629,7 @@ namespace GitUI
                         "--",
                         "."
                     };
-                    Module.RunGitCmd(args);
+                    Module.GitExecutable.GetOutput(args);
                 }
                 else
                 {

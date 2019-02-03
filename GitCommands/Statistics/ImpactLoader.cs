@@ -145,7 +145,7 @@ namespace GitCommands.Statistics
 
         private void LoadModuleInfo(string command, IGitModule module, CancellationToken token)
         {
-            using (var lineEnumerator = module.GetGitOutputLines(command).GetEnumerator())
+            using (var lineEnumerator = module.GitExecutable.GetOutputLines(command).GetEnumerator())
             {
                 // Analyze commit listing
                 while (!token.IsCancellationRequested && lineEnumerator.MoveNext())

@@ -108,7 +108,7 @@ namespace GitCommands.Gpg
                     "-1",
                     revision.Guid
                 };
-                string gpg = module.RunGitCmd(args);
+                string gpg = module.GitExecutable.GetOutput(args);
 
 #pragma warning disable SA1025 // Code should not contain multiple whitespace in a row
                 switch (gpg)
@@ -209,7 +209,7 @@ namespace GitCommands.Gpg
                 "-1",
                 revision.Guid
             };
-            return module.RunGitCmd(args);
+            return module.GitExecutable.GetOutput(args);
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace GitCommands.Gpg
                 { raw, "--raw" },
                 tagName
             };
-            return module.RunGitCmd(args);
+            return module.GitExecutable.GetOutput(args);
         }
 
         private string EvaluateTagVerifyMessage(IReadOnlyList<IGitRef> usefulTagRefs)

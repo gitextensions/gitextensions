@@ -65,7 +65,7 @@ namespace ReleaseNotesGenerator
                 string.Format(_NO_TRANSLATE_textBoxGitLogArguments.Text, textBoxRevFrom.Text, textBoxRevTo.Text)
             };
 
-            string result = _gitUiCommands.GitModule.RunGitCmd(args);
+            string result = _gitUiCommands.GitModule.GitExecutable.GetOutput(args);
 
             if (EnvUtils.RunningOnWindows())
             {

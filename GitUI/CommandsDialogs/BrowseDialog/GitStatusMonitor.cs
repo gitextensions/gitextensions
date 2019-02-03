@@ -339,7 +339,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                             var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default,
                                 noLocks: true);
-                            var output = module.RunGitCmd(cmd);
+                            var output = module.GitExecutable.GetOutput(cmd);
                             var changedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(module, output);
 
                             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();

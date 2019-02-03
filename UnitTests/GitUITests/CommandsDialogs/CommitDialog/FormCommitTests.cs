@@ -72,8 +72,8 @@ namespace GitUITests.CommandsDialogs.CommitDialog
                     tempForm.Show();
                     tempForm.Focus();
 
-                    _referenceRepository.Module.RunGitCmd(@"config user.name ""new author""");
-                    _referenceRepository.Module.RunGitCmd(@"config user.email ""new_author@mail.com""");
+                    _referenceRepository.Module.GitExecutable.GetOutput(@"config user.name ""new author""");
+                    _referenceRepository.Module.GitExecutable.GetOutput(@"config user.email ""new_author@mail.com""");
                 }
 
                 form.Focus();

@@ -95,12 +95,12 @@ namespace BackgroundFetch
                                             "--all"
                                         };
 
-                                        _currentGitUiCommands.GitModule.RunGitCmd(args);
+                                        _currentGitUiCommands.GitModule.GitExecutable.GetOutput(args);
                                       }
 
                                       var gitCmd = _gitCommand.ValueOrDefault(Settings).Trim().SplitBySpace();
                                       args = new GitArgumentBuilder(gitCmd[0]) { gitCmd.Skip(1) };
-                                      var msg = _currentGitUiCommands.GitModule.RunGitCmd(args);
+                                      var msg = _currentGitUiCommands.GitModule.GitExecutable.GetOutput(args);
                                       if (_autoRefresh.ValueOrDefault(Settings))
                                       {
                                           if (gitCmd[0].Equals("fetch", StringComparison.InvariantCultureIgnoreCase))

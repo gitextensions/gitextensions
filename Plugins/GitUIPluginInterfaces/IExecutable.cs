@@ -26,5 +26,14 @@ namespace GitUIPluginInterfaces
         [NotNull]
         [MustUseReturnValue]
         IProcess Start(ArgumentString arguments = default, bool createWindow = false, bool redirectInput = false, bool redirectOutput = false, [CanBeNull] Encoding outputEncoding = null);
+
+        /// <summary>
+        /// Launches a process for the executable and returns its output.
+        /// </summary>
+        /// <param name="arguments">The arguments to pass to the executable</param>
+        /// <returns>The concatenation of standard output and standard error.</returns>
+        [NotNull]
+        [MustUseReturnValue]
+        string GetOutput(ArgumentString arguments);
     }
 }

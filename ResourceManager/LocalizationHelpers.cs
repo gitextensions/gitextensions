@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Patches;
 using JetBrains.Annotations;
 using ResourceManager.CommitDataRenders;
