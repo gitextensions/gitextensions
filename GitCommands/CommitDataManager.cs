@@ -206,7 +206,7 @@ namespace GitCommands
             };
 
             // Do not cache this command, since notes can be added
-            data = GetModule().RunGitCmd(arguments, GitModule.LosslessEncoding);
+            data = GetModule().GitExecutable.GetOutput(arguments, outputEncoding: GitModule.LosslessEncoding);
 
             if (GitModule.IsGitErrorMessage(data))
             {

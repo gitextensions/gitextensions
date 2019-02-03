@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Permissions;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using GitCommands.Logging;
 using GitUI;
@@ -42,6 +41,11 @@ namespace GitCommands
             var fileName = _fileNameProvider();
 
             return new ProcessWrapper(fileName, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding);
+        }
+
+        public string GetOutput(ArgumentString arguments)
+        {
+            return this.GetOutput(arguments, null);
         }
 
         #region ProcessWrapper

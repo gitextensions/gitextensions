@@ -26,8 +26,8 @@ namespace CommonTestUtils
             Module = module;
 
             // Don't assume global user/email
-            Module.RunGitCmd(@"config user.name ""author""");
-            Module.RunGitCmd(@"config user.email ""author@mail.com""");
+            Module.GitExecutable.GetOutput(@"config user.name ""author""");
+            Module.GitExecutable.GetOutput(@"config user.email ""author@mail.com""");
 
             return;
 

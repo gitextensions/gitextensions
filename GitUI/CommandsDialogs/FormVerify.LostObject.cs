@@ -155,7 +155,7 @@ namespace GitUI.CommandsDialogs
 
                 string VerifyHashAndRunCommand(ArgumentString commandFormat)
                 {
-                    return module.RunGitCmd(string.Format(commandFormat, objectId), GitModule.LosslessEncoding);
+                    return module.GitExecutable.GetOutput(string.Format(commandFormat, objectId), outputEncoding: GitModule.LosslessEncoding);
                 }
 
                 LostObjectType GetObjectType(Group matchedGroup)

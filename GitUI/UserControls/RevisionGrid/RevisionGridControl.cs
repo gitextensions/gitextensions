@@ -2273,7 +2273,7 @@ namespace GitUI
                 revisions
             };
 
-            var mergeBaseCommitId = UICommands.GitModule.RunGitCmd(args).TrimEnd('\n');
+            var mergeBaseCommitId = UICommands.GitModule.GitExecutable.GetOutput(args).TrimEnd('\n');
             if (string.IsNullOrWhiteSpace(mergeBaseCommitId))
             {
                 MessageBox.Show(_noMergeBaseCommit.Text);

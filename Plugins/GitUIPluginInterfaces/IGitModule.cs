@@ -47,11 +47,6 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Run git command, console window is hidden, wait for exit, redirect output
         /// </summary>
-        string RunGitCmd(ArgumentString arguments, Encoding outputEncoding = null, byte[] stdInput = null);
-
-        /// <summary>
-        /// Run git command, console window is hidden, wait for exit, redirect output
-        /// </summary>
         ExecutionResult RunGitCmdResult(ArgumentString arguments);
 
         #endregion

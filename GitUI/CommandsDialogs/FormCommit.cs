@@ -857,7 +857,7 @@ namespace GitUI.CommandsDialogs
                     { _currentItemStaged,  "--reverse" }
                 };
 
-                string output = Module.RunGitCmd(args, null, patch);
+                string output = Module.GitExecutable.GetOutput(args, patch);
 
                 ProcessApplyOutput(output, patch);
             }
@@ -928,7 +928,7 @@ namespace GitUI.CommandsDialogs
                     { _currentItemStaged,  "--reverse --index" }
                 };
 
-                string output = Module.RunGitCmd(args, stdInput: patch);
+                string output = Module.GitExecutable.GetOutput(args, patch);
 
                 if (EnvUtils.RunningOnWindows())
                 {
@@ -2310,7 +2310,7 @@ namespace GitUI.CommandsDialogs
                     "--",
                     name.QuoteNE()
                 };
-                string diff = Module.RunGitCmd(args);
+                string diff = Module.GitExecutable.GetOutput(args);
                 var lines = diff.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 const string subprojectCommit = "Subproject commit ";
                 var from = lines.Single(s => s.StartsWith("-" + subprojectCommit)).Substring(subprojectCommit.Length + 1);
@@ -2326,7 +2326,7 @@ namespace GitUI.CommandsDialogs
                         $"{from}...{to}"
                     };
 
-                    string log = module.RunGitCmd(args);
+                    string log = module.GitExecutable.GetOutput(args);
 
                     if (log.Length != 0)
                     {

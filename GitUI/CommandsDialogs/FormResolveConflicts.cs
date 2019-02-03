@@ -901,7 +901,7 @@ namespace GitUI.CommandsDialogs
                         "--",
                         item.Filename.QuoteNE()
                     };
-                    Module.RunGitCmd(args);
+                    Module.GitExecutable.GetOutput(args);
                 }
 
                 if (frm.KeepLocal)
@@ -953,7 +953,7 @@ namespace GitUI.CommandsDialogs
                         "--",
                         item.Filename.QuoteNE()
                     };
-                    Module.RunGitCmd(args);
+                    Module.GitExecutable.GetOutput(args);
                 }
 
                 if (frm.KeepRemote)
@@ -1005,7 +1005,7 @@ namespace GitUI.CommandsDialogs
                         "--",
                         item.Filename.QuoteNE()
                     };
-                    Module.RunGitCmd(args);
+                    Module.GitExecutable.GetOutput(args);
                 }
             }
 
@@ -1205,7 +1205,7 @@ namespace GitUI.CommandsDialogs
                     "--",
                     filename.QuoteNE()
                 };
-                string output = Module.RunGitCmd(args);
+                string output = Module.GitExecutable.GetOutput(args);
                 form.AddMessageLine(output);
                 form.Done(isSuccess: string.IsNullOrWhiteSpace(output));
             }

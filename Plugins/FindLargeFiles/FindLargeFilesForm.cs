@@ -67,7 +67,7 @@ namespace FindLargeFiles
                             commit,
                             "--format=\"%ci\""
                         };
-                        string revDate = _gitCommands.RunGitCmd(args);
+                        string revDate = _gitCommands.GitExecutable.GetOutput(args);
                         DateTime.TryParse(revDate, out date);
                         revData.Add(commit, date);
                     }
@@ -114,7 +114,7 @@ namespace FindLargeFiles
                             pack
                         };
 
-                        string[] objects = _gitCommands.RunGitCmd(args).Split('\n');
+                        string[] objects = _gitCommands.GitExecutable.GetOutput(args).Split('\n');
                         ThreadHelper.JoinableTaskFactory.Run(async () =>
                         {
                             await pbRevisions.SwitchToMainThreadAsync();
@@ -160,7 +160,7 @@ namespace FindLargeFiles
             base.OnLoad(e);
 
             var args = new GitArgumentBuilder("rev-list") { "HEAD" };
-            _revList = _gitCommands.RunGitCmd(args).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            _revList = _gitCommands.GitExecutable.GetOutput(args).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             pbRevisions.Maximum = (int)(_revList.Length * 1.1f);
             BranchesGrid.DataSource = _gitObjects;
             var thread = new Thread(FindLargeFilesFunction);
@@ -183,7 +183,7 @@ namespace FindLargeFiles
                     "-zrl",
                     rev
                 };
-                string[] objects = _gitCommands.RunGitCmd(args).Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] objects = _gitCommands.GitExecutable.GetOutput(args).Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string objData in objects)
                 {
                     // "100644 blob b17a497cdc6140aa3b9a681344522f44768165ac 2120195\tBin/Dictionaries/de-DE.dic"

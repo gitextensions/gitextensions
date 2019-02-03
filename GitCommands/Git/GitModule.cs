@@ -473,11 +473,6 @@ namespace GitCommands
             return _gitExecutable.GetOutputLines(arguments, outputEncoding: outputEncoding);
         }
 
-        public string RunGitCmd(ArgumentString arguments, Encoding outputEncoding = null, byte[] stdInput = null)
-        {
-            return _gitExecutable.GetOutput(arguments, stdInput, outputEncoding);
-        }
-
         public ExecutionResult RunGitCmdResult(ArgumentString arguments)
         {
             return _gitExecutable.Execute(arguments);
@@ -1205,7 +1200,7 @@ namespace GitCommands
                 "--cached",
                 SubmodulePath
             };
-            var lines = SuperprojectModule.RunGitCmd(args).Split('\n');
+            var lines = SuperprojectModule.GitExecutable.GetOutput(args).Split('\n');
 
             if (lines.Length == 0)
             {
@@ -3982,7 +3977,7 @@ namespace GitCommands
                 "--abbrev=40",
                 commitId
             };
-            var output = RunGitCmd(args).TrimEnd();
+            var output = _gitExecutable.GetOutput(args).TrimEnd();
 
             if (IsGitErrorMessage(output))
             {

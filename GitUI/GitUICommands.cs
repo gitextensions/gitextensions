@@ -629,7 +629,7 @@ namespace GitUI
                         "--",
                         "."
                     };
-                    Module.RunGitCmd(args);
+                    Module.GitExecutable.GetOutput(args);
                 }
                 else
                 {
