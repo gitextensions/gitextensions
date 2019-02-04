@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using Adys = AdysTech.CredentialManager;
 
 namespace GitExtUtils
 {
@@ -19,7 +20,7 @@ namespace GitExtUtils
 
         public static bool TryGetCredentials(string target, out NetworkCredential credentials)
         {
-            credentials = AdysTech.CredentialManager.CredentialManager.GetCredentials(GetTarget(target));
+            credentials = Adys.CredentialManager.GetCredentials(GetTarget(target));
             return credentials != null;
         }
 
@@ -30,17 +31,17 @@ namespace GitExtUtils
                 return false;
             }
 
-            return AdysTech.CredentialManager.CredentialManager.SaveCredentials(GetTarget(target), new NetworkCredential(userName.Trim(), password));
+            return Adys.CredentialManager.SaveCredentials(GetTarget(target), new NetworkCredential(userName.Trim(), password));
         }
 
         public static bool RemoveCredentials(string target)
         {
-            if (string.IsNullOrWhiteSpace(target) || AdysTech.CredentialManager.CredentialManager.GetCredentials(GetTarget(target)) == null)
+            if (string.IsNullOrWhiteSpace(target) || Adys.CredentialManager.GetCredentials(GetTarget(target)) == null)
             {
                 return false;
             }
 
-            return AdysTech.CredentialManager.CredentialManager.RemoveCredentials(GetTarget(target));
+            return Adys.CredentialManager.RemoveCredentials(GetTarget(target));
         }
 
         public static bool UpdateCredentials(string target, string userName, string password)
