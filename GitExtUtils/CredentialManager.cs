@@ -11,7 +11,7 @@ namespace GitExtUtils
         {
             if (string.IsNullOrWhiteSpace(rawTarget))
             {
-                return TargetPrefix;
+                throw new ArgumentNullException(nameof(rawTarget));
             }
 
             return $"{TargetPrefix}{rawTarget}";
