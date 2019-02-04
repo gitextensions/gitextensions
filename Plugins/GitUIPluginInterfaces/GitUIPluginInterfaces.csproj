@@ -88,7 +88,6 @@
     <Compile Include="IGitRemoteCommand.cs" />
     <Compile Include="ILockableNotifier.cs" />
     <Compile Include="IProcess.cs" />
-    <Compile Include="SettingControlBinding.cs" />
     <Compile Include="ISettingControlBinding.cs" />
     <Compile Include="SettingLevel.cs" />
     <Compile Include="ISettingsValueGetter.cs" />
