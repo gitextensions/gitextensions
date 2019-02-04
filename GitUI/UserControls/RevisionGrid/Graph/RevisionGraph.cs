@@ -231,6 +231,11 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 return true;
             }
 
+            if (orderedRowCache.Count == 0)
+            {
+                return false;
+            }
+
             int indexToCompare = orderedRowCache.Count - 1;
             return orderedRowCache[indexToCompare].Revision != orderedNodesCache[indexToCompare];
         }

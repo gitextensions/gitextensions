@@ -108,6 +108,14 @@ namespace GitUITests.UserControls.RevisionGrid
             Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
         }
 
+        [Test] // github issue #6193
+        public void CacheEmptyGraph()
+        {
+            _revisionGraph.Clear();
+            _revisionGraph.CacheTo(100, 100);
+            _revisionGraph.CacheTo(100, 100);
+        }
+
         [Test] // github issue #6210
         public void DetachedSingleRevision()
         {
