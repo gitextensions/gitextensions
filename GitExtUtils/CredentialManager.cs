@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 
 namespace GitExtUtils
 {
@@ -8,7 +9,12 @@ namespace GitExtUtils
 
         private static string GetTarget(string rawTarget)
         {
-            return $"{TargetPrefix}{(rawTarget?.StartsWith(TargetPrefix) == true ? rawTarget.Replace(TargetPrefix, string.Empty) : rawTarget)}";
+            if (string.IsNullOrWhiteSpace(rawTarget))
+            {
+                return TargetPrefix;
+            }
+
+            return $"{TargetPrefix}{rawTarget}";
         }
 
         public static bool TryGetCredentials(string target, out NetworkCredential credentials)
