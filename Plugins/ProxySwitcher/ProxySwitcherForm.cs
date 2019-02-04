@@ -60,14 +60,14 @@ namespace ProxySwitcher
                 "--get",
                 "http.proxy"
             };
-            LocalHttpProxy_TextBox.Text = HidePassword(_gitCommands.RunGitCmd(args));
+            LocalHttpProxy_TextBox.Text = HidePassword(_gitCommands.GitExecutable.GetOutput(args));
             args = new GitArgumentBuilder("config")
             {
                 "--global",
                 "--get",
                 "http.proxy"
             };
-            GlobalHttpProxy_TextBox.Text = HidePassword(_gitCommands.RunGitCmd(args));
+            GlobalHttpProxy_TextBox.Text = HidePassword(_gitCommands.GitExecutable.GetOutput(args));
             ApplyGlobally_CheckBox.Checked = string.Equals(LocalHttpProxy_TextBox.Text, GlobalHttpProxy_TextBox.Text);
         }
 
@@ -116,7 +116,7 @@ namespace ProxySwitcher
                 "http.proxy",
                 httpProxy
             };
-            _gitCommands.RunGitCmd(args);
+            _gitCommands.GitExecutable.GetOutput(args);
 
             RefreshProxy();
         }
@@ -127,7 +127,7 @@ namespace ProxySwitcher
                 ? "config --global --unset http.proxy"
                 : "config --unset http.proxy";
 
-            _gitCommands.RunGitCmd(arguments);
+            _gitCommands.GitExecutable.GetOutput(arguments);
 
             RefreshProxy();
         }

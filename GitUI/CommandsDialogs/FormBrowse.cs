@@ -459,13 +459,17 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
+                // ReSharper disable ConstantConditionalAccessQualifier - these can be null if run from under the TranslatioApp
+
                 _submoduleStatusProvider?.Dispose();
                 _formBrowseMenus?.Dispose();
                 _filterRevisionsHelper?.Dispose();
                 _filterBranchHelper?.Dispose();
                 components?.Dispose();
-                _gitStatusMonitor.Dispose();
+                _gitStatusMonitor?.Dispose();
                 _windowsJumpListManager?.Dispose();
+
+                // ReSharper restore ConstantConditionalAccessQualifier
             }
 
             base.Dispose(disposing);
@@ -3101,7 +3105,7 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.DontConfirmUndoLastCommit || MessageBox.Show(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 var args = GitCommandHelpers.ResetCmd(ResetMode.Soft, "HEAD~1");
-                Module.RunGitCmd(args);
+                Module.GitExecutable.GetOutput(args);
                 refreshToolStripMenuItem.PerformClick();
             }
         }

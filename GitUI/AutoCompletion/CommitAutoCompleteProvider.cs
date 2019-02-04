@@ -31,7 +31,7 @@ namespace GitUI.AutoCompletion
             var autoCompleteWords = new HashSet<string>();
 
             var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
-            var output = _module.RunGitCmd(cmd);
+            var output = _module.GitExecutable.GetOutput(cmd);
             var changedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(_module, output);
             foreach (var file in changedFiles)
             {

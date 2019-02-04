@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs
                     "--",
                     _filename.QuoteNE()
                 };
-                string output = Module.RunGitCmd(args);
+                string output = Module.GitExecutable.GetOutput(args);
                 form.AddMessageLine(output);
                 form.Done(isSuccess: string.IsNullOrWhiteSpace(output));
             }

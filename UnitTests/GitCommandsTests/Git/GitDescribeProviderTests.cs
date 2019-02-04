@@ -35,7 +35,7 @@ namespace GitCommandsTests.Git
         public void GitDescribeProvider_returns_nulls_if_no_preceding_tag()
         {
             // 33f0bc7f021210eb4bf49f770b5fc5952dfd41c2 predates tag 0.90 by 1 commit.
-            // RunGitCmd returns "fatal: No tags can describe '33f0bc7f021210eb4bf49f770b5fc5952dfd41c2'.\r\nTry --always, or create some tags."
+            // GitExecutable.GetOutput returns "fatal: No tags can describe '33f0bc7f021210eb4bf49f770b5fc5952dfd41c2'.\r\nTry --always, or create some tags."
             var commitId = ObjectId.Parse("33f0bc7f021210eb4bf49f770b5fc5952dfd41c2");
             _module.GetDescribe(commitId).Returns(x => null);
             var (precedingTag, commitCount) = _provider.Get(commitId);

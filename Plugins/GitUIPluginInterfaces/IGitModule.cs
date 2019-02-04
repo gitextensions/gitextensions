@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using GitCommands;
 using JetBrains.Annotations;
 
 namespace GitUIPluginInterfaces
@@ -40,22 +38,6 @@ namespace GitUIPluginInterfaces
         void SetSetting(string setting, string value);
         void UnsetSetting(string setting);
 
-        #region Git process execution
-
-        IEnumerable<string> GetGitOutputLines(ArgumentString arguments, Encoding outputEncoding = null);
-
-        /// <summary>
-        /// Run git command, console window is hidden, wait for exit, redirect output
-        /// </summary>
-        string RunGitCmd(ArgumentString arguments, Encoding outputEncoding = null, byte[] stdInput = null);
-
-        /// <summary>
-        /// Run git command, console window is hidden, wait for exit, redirect output
-        /// </summary>
-        ExecutionResult RunGitCmdResult(ArgumentString arguments);
-
-        #endregion
-
         /// <summary>Gets the directory which contains the git repository.</summary>
         string WorkingDir { get; }
 
@@ -63,6 +45,12 @@ namespace GitUIPluginInterfaces
         /// Gets the access to the current git executable associated with this module.
         /// </summary>
         IExecutable GitExecutable { get; }
+
+        /// <summary>
+        /// Gets the access to the current git executable associated with this module.
+        /// </summary>
+        [NotNull]
+        IGitCommandRunner GitCommandRunner { get; }
 
         /// <summary>
         /// Gets the location of .git directory for the current working folder.

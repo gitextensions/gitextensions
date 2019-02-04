@@ -98,6 +98,26 @@ namespace GitCommandsTests
             throw new Exception("Unexpected arguments: " + arguments);
         }
 
+        public string GetOutput(ArgumentString arguments)
+        {
+            if (_outputStackByArguments.TryRemove(arguments, out var queue) && queue.TryPop(out var item))
+            {
+                if (queue.Count == 0)
+                {
+                    _outputStackByArguments.TryRemove(arguments, out _);
+                }
+
+                return item.output;
+            }
+
+            if (_commandArgumentsSet.TryRemove(arguments, out _))
+            {
+                return "";
+            }
+
+            throw new Exception("Unexpected arguments: " + arguments);
+        }
+
         private sealed class MockProcess : IProcess
         {
             public MockProcess([CanBeNull] string output, int? exitCode = 0)

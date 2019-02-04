@@ -31,7 +31,7 @@ namespace Gerrit
                 remote.QuoteNE()
             };
 
-            string remotes = module.RunGitCmd(args);
+            string remotes = module.GitExecutable.GetOutput(args);
 
             string fetchUrlLine = remotes.Split('\n').Select(p => p.Trim()).First(p => p.StartsWith("Push"));
 

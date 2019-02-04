@@ -241,7 +241,7 @@ namespace GitUI.CommandsDialogs
                     // keep a set of the file names already seen
                     var setOfFileNames = new HashSet<string> { fileName };
 
-                    var lines = Module.GetGitOutputLines(args, GitModule.LosslessEncoding);
+                    var lines = Module.GitExecutable.GetOutputLines(args, outputEncoding: GitModule.LosslessEncoding);
 
                     foreach (var line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
                     {

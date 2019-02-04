@@ -728,7 +728,7 @@ namespace GitUI.CommandsDialogs
                     "--name-only",
                     remoteBranchName.QuoteNE()
                 };
-                remoteBranchName = Module.RunGitCmd(args).Trim();
+                remoteBranchName = Module.GitExecutable.GetOutput(args).Trim();
             }
 
             return remoteBranchName;
