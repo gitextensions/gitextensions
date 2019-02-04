@@ -121,7 +121,15 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
                 _segmentLanes = newSegmentLanes;
                 _laneCount = laneIndex;
-                _revisionLane = currentRevisionLane;
+                if (currentRevisionLane >= 0)
+                {
+                    _revisionLane = currentRevisionLane;
+                }
+                else
+                {
+                    _revisionLane = _laneCount;
+                    _laneCount++;
+                }
             }
         }
 
