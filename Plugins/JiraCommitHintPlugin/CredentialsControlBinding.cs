@@ -3,26 +3,26 @@ using GitUIPluginInterfaces;
 
 namespace JiraCommitHintPlugin
 {
-    internal class CredentialsControlBinding : SettingControlBinding<CredentialSetting, CredentialControl>
+    internal class CredentialsControlBinding : SettingControlBinding<CredentialsSetting, CredentialsControl>
     {
-        public CredentialsControlBinding(CredentialSetting setting, CredentialControl control)
+        public CredentialsControlBinding(CredentialsSetting setting, CredentialsControl control)
             : base(setting, control)
         {
         }
 
-        public override CredentialControl CreateControl()
+        public override CredentialsControl CreateControl()
         {
-            return new CredentialControl();
+            return new CredentialsControl();
         }
 
-        public override void LoadSetting(ISettingsSource settings, CredentialControl control, IGitModule gitModule)
+        public override void LoadSetting(ISettingsSource settings, CredentialsControl control, IGitModule gitModule)
         {
-            var credential = Setting.GetValueOrDefault(settings, gitModule);
-            control.UserName = credential.UserName;
-            control.Password = credential.Password;
+            var credentials = Setting.GetValueOrDefault(settings, gitModule);
+            control.UserName = credentials.UserName;
+            control.Password = credentials.Password;
         }
 
-        public override void SaveSetting(ISettingsSource settings, CredentialControl control, IGitModule gitModule)
+        public override void SaveSetting(ISettingsSource settings, CredentialsControl control, IGitModule gitModule)
         {
             Setting.SaveValue(control.UserName, control.Password, settings, gitModule);
         }

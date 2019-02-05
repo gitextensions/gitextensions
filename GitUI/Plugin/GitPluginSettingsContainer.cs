@@ -37,14 +37,14 @@ namespace GitUI
             ExternalSettings.SetValue(_pluginName + name, value, encode);
         }
 
-        public override void SetCredential(string name, IGitModule gitModule, NetworkCredential value)
+        public override void SetCredentials(string name, IGitModule gitModule, NetworkCredential value)
         {
-            ExternalSettings.SetCredential(name, gitModule, value);
+            ExternalSettings.SetCredentials(name, gitModule, value);
         }
 
-        public override NetworkCredential GetCredential(string name, IGitModule gitModule, NetworkCredential defaultValue)
+        public override NetworkCredential GetCredentials(string name, IGitModule gitModule, NetworkCredential defaultValue)
         {
-            return ExternalSettings.GetCredential(name, gitModule, defaultValue);
+            return ExternalSettings.GetCredentials(name, gitModule, defaultValue);
         }
     }
 }

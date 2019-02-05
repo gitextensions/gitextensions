@@ -4,9 +4,9 @@ using System.Windows.Forms;
 
 namespace GitUIPluginInterfaces
 {
-    public class CredentialSetting : ISetting
+    public class CredentialsSetting : ISetting
     {
-        public CredentialSetting(string name, string caption, Func<ISetting, Control, ISettingControlBinding> createControlBindingFunc)
+        public CredentialsSetting(string name, string caption, Func<ISetting, Control, ISettingControlBinding> createControlBindingFunc)
         {
             Name = name;
             Caption = caption;
@@ -21,7 +21,7 @@ namespace GitUIPluginInterfaces
 
         public NetworkCredential GetValueOrDefault(ISettingsSource settings, IGitModule gitModule)
         {
-            return settings.GetCredential(Name, gitModule, _defaultValue);
+            return settings.GetCredentials(Name, gitModule, _defaultValue);
         }
 
         public void SaveValue(string userName, string password, ISettingsSource settings, IGitModule gitModule)
@@ -35,7 +35,7 @@ namespace GitUIPluginInterfaces
                 }
             }
 
-            settings.SetCredential(Name, gitModule, new NetworkCredential(userName, password));
+            settings.SetCredentials(Name, gitModule, new NetworkCredential(userName, password));
         }
 
         public ISettingControlBinding CreateControlBinding()

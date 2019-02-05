@@ -1,6 +1,6 @@
 ﻿namespace GitUI.UserControls
 {
-    public partial class CredentialControl
+    public partial class CredentialsControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -100,14 +100,14 @@
             this.passwordLabel.TabIndex = 1;
             this.passwordLabel.Text = "Password";
             // 
-            // CredentialControl
+            // CredentialsControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.mainTableLayoutPanel);
             this.MaximumSize = new System.Drawing.Size(1900, 20);
             this.MinimumSize = new System.Drawing.Size(0, 21);
-            this.Name = "CredentialControl";
+            this.Name = "CredentialsControl";
             this.Size = new System.Drawing.Size(800, 21);
             this.Load += new System.EventHandler(this.CredentialsControl_Load);
             this.mainTableLayoutPanel.ResumeLayout(false);

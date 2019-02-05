@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace GitUI.UserControls
 {
-    public partial class CredentialControl : UserControl
+    public partial class CredentialsControl : UserControl
     {
-        public CredentialControl()
+        public CredentialsControl()
         {
             InitializeComponent();
         }

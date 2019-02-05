@@ -109,7 +109,7 @@
     <Compile Include="RepositoryHosts\IPullRequestInformation.cs" />
     <Compile Include="Settings\NumberSetting.cs" />
     <Compile Include="Settings\ChoiceSetting.cs" />
-    <Compile Include="Settings\CredentialSetting.cs" />
+    <Compile Include="Settings\CredentialsSetting.cs" />
     <Compile Include="Settings\PasswordSetting.cs" />
     <Compile Include="Settings\StringSetting.cs" />
   </ItemGroup>

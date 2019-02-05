@@ -37,10 +37,10 @@ namespace GitCommands.Settings
 
         public void Save()
         {
-            foreach (var networkCredential in Credentials.ToList())
+            foreach (var networkCredentials in Credentials.ToList())
             {
-                CredentialManager.UpdateCredentials(networkCredential.Key, networkCredential.Value.UserName,
-                    networkCredential.Value.Password);
+                CredentialsManager.UpdateCredentials(networkCredentials.Key, networkCredentials.Value.UserName,
+                    networkCredentials.Value.Password);
             }
 
             Credentials.Clear();
@@ -85,12 +85,12 @@ namespace GitCommands.Settings
             return false;
         }
 
-        public override NetworkCredential GetCredential(string name, IGitModule gitModule, NetworkCredential defaultValue)
+        public override NetworkCredential GetCredentials(string name, IGitModule gitModule, NetworkCredential defaultValue)
         {
-            NetworkCredential result = base.GetCredential(name, gitModule, null);
+            NetworkCredential result = base.GetCredentials(name, gitModule, null);
             if (result == null && LowerPriority != null)
             {
-                return LowerPriority.GetCredential(name, gitModule, defaultValue);
+                return LowerPriority.GetCredentials(name, gitModule, defaultValue);
             }
 
             return result ?? defaultValue;
