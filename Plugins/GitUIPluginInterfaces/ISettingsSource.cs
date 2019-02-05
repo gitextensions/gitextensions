@@ -10,9 +10,9 @@ namespace GitUIPluginInterfaces
 {
     public abstract class ISettingsSource
     {
-        protected ConcurrentDictionary<string, NetworkCredential> Credentials { get; } = new ConcurrentDictionary<string, NetworkCredential>();
+        protected static ConcurrentDictionary<string, NetworkCredential> Credentials { get; } = new ConcurrentDictionary<string, NetworkCredential>();
 
-        public SettingLevel SettingLevel { get; set; } = SettingLevel.Effective;
+        public virtual SettingLevel SettingLevel { get; set; } = SettingLevel.Unknown;
 
         public abstract T GetValue<T>([NotNull] string name, T defaultValue, [NotNull] Func<string, T> decode);
 
@@ -191,9 +191,9 @@ namespace GitUIPluginInterfaces
         }
 
         public virtual void SetCredentials([NotNull] string name, IGitModule gitModule, [CanBeNull] NetworkCredential value)
-        {
-            Credentials.AddOrUpdate(GetWindowsCredentialsTarget(name, gitModule), value, (s, credential) => value);
-        }
+            {
+                Credentials.AddOrUpdate(GetWindowsCredentialsTarget(name, gitModule), value, (s, credential) => value);
+            }
 
         public virtual NetworkCredential GetCredentials([NotNull] string name, IGitModule gitModule, NetworkCredential defaultValue)
         {

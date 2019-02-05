@@ -32,7 +32,7 @@ namespace GitCommands.ExternalLinks
         /// </summary>
         public IReadOnlyList<ExternalLinkDefinition> Load(RepoDistSettings settings)
         {
-            var cachedSettings = new RepoDistSettings(null, settings.SettingsCache);
+            var cachedSettings = new RepoDistSettings(null, settings.SettingsCache, settings.SettingLevel);
             var xml = cachedSettings.GetString(SettingName, null);
             return LoadFromXmlString(xml);
         }
@@ -64,7 +64,7 @@ namespace GitCommands.ExternalLinks
                     xml = sw.ToString();
                 }
 
-                var cachedSettings = new RepoDistSettings(null, settings.SettingsCache);
+                var cachedSettings = new RepoDistSettings(null, settings.SettingsCache, settings.SettingLevel);
                 cachedSettings.SetString(SettingName, xml);
             }
             catch (Exception e)

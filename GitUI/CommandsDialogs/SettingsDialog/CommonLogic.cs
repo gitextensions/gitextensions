@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Settings;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using Microsoft.Win32;
 using ResourceManager;
@@ -33,12 +34,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog
                 var repoDistPulledSettings = RepoDistSettings.CreateDistributed(Module, false);
                 var repoDistLocalSettings = RepoDistSettings.CreateLocal(Module, false);
                 var repoDistEffectiveSettings = new RepoDistSettings(
-                    new RepoDistSettings(repoDistGlobalSettings, repoDistPulledSettings.SettingsCache),
-                    repoDistLocalSettings.SettingsCache);
+                    new RepoDistSettings(repoDistGlobalSettings, repoDistPulledSettings.SettingsCache, SettingLevel.Distributed),
+                    repoDistLocalSettings.SettingsCache,
+                    SettingLevel.Effective);
 
                 var configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
                 var configFileLocalSettings = ConfigFileSettings.CreateLocal(Module, false);
-                var configFileEffectiveSettings = new ConfigFileSettings(configFileGlobalSettings, configFileLocalSettings.SettingsCache);
+                var configFileEffectiveSettings = new ConfigFileSettings(
+                    configFileGlobalSettings, configFileLocalSettings.SettingsCache, SettingLevel.Effective);
 
                 RepoDistSettingsSet = new RepoDistSettingsSet(
                     repoDistEffectiveSettings,

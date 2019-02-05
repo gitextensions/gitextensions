@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitCommands.Settings;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.ExternalLinks
 {
@@ -38,7 +39,7 @@ namespace GitCommands.ExternalLinks
                 throw new ArgumentNullException(nameof(settings));
             }
 
-            var cachedSettings = new RepoDistSettings(null, settings.SettingsCache);
+            var cachedSettings = new RepoDistSettings(null, settings.SettingsCache, SettingLevel.Unknown);
             IEnumerable<ExternalLinkDefinition> effective = _externalLinksStorage.Load(cachedSettings);
 
             if (settings.LowerPriority != null)
