@@ -1,23 +1,20 @@
-﻿using System;
-using System.Net;
-using System.Windows.Forms;
+﻿using System.Net;
+using GitUIPluginInterfaces.UserControls;
 
 namespace GitUIPluginInterfaces
 {
     public class CredentialsSetting : ISetting
     {
-        public CredentialsSetting(string name, string caption, Func<ISetting, Control, ISettingControlBinding> createControlBindingFunc)
+        public CredentialsSetting(string name, string caption)
         {
             Name = name;
             Caption = caption;
-            CreateControlBindingFunc = createControlBindingFunc;
         }
 
         private readonly NetworkCredential _defaultValue = new NetworkCredential();
-        private Func<ISetting, Control, ISettingControlBinding> CreateControlBindingFunc { get; }
         public string Name { get; }
         public string Caption { get; }
-        public Control CustomControl { get; set; }
+        public CredentialsControl CustomControl { get; set; }
 
         public NetworkCredential GetValueOrDefault(ISettingsSource settings, IGitModule gitModule)
         {
@@ -40,7 +37,32 @@ namespace GitUIPluginInterfaces
 
         public ISettingControlBinding CreateControlBinding()
         {
-            return CreateControlBindingFunc(this, CustomControl);
+            return new CredentialsControlBinding(this, CustomControl);
+        }
+
+        private class CredentialsControlBinding : SettingControlBinding<CredentialsSetting, CredentialsControl>
+        {
+            public CredentialsControlBinding(CredentialsSetting setting, CredentialsControl control)
+                : base(setting, control)
+            {
+            }
+
+            public override CredentialsControl CreateControl()
+            {
+                return new CredentialsControl();
+            }
+
+            public override void LoadSetting(ISettingsSource settings, CredentialsControl control, IGitModule gitModule)
+            {
+                var credentials = Setting.GetValueOrDefault(settings, gitModule);
+                control.UserName = credentials.UserName;
+                control.Password = credentials.Password;
+            }
+
+            public override void SaveSetting(ISettingsSource settings, CredentialsControl control, IGitModule gitModule)
+            {
+                Setting.SaveValue(control.UserName, control.Password, settings, gitModule);
+            }
         }
     }
 }

@@ -393,12 +393,6 @@
     <Compile Include="SpellChecker\SpellCheckerHelper.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractor.cs" />
     <Compile Include="TaskbarProgress.cs" />
-    <Compile Include="UserControls\CredentialsControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\CredentialsControl.Designer.cs">
-      <DependentUpon>CredentialsControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\GitItemStatusWithParent.cs" />
     <Compile Include="UserControls\NativeTreeViewDoubleClickDecorator.cs" />
     <Compile Include="UserControls\RevisionGrid\CellStyle.cs" />
@@ -1387,9 +1381,6 @@
     <EmbeddedResource Include="CommandsDialogs\BrowseDialog\DashboardControl\Dashboard.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\CredentialsControl.resx">
-      <DependentUpon>CredentialsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\GotoUserManualControl.resx">
       <DependentUpon>GotoUserManualControl.cs</DependentUpon>

@@ -1,4 +1,4 @@
-﻿namespace GitUI.UserControls
+﻿namespace GitUIPluginInterfaces.UserControls
 {
     public partial class CredentialsControl
     {

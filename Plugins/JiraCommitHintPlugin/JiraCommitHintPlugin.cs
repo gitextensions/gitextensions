@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Atlassian.Jira;
 using GitUI;
-using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using GitUIPluginInterfaces.UserControls;
 using JiraCommitHintPlugin.Properties;
 using NString;
 using ResourceManager;
@@ -39,8 +39,7 @@ namespace JiraCommitHintPlugin
         private string _stringTemplate = defaultFormat;
         private readonly BoolSetting _enabledSettings = new BoolSetting("Jira hint plugin enabled", EnablePluginLabel, false);
         private readonly StringSetting _urlSettings = new StringSetting("Jira URL", JiraUrlLabel, @"https://jira.atlassian.com");
-        private readonly CredentialsSetting _credentialsSettings = new CredentialsSetting("JiraCredentials", JiraCredentialsLabel,
-            (setting, control) => new CredentialsControlBinding((CredentialsSetting)setting, (CredentialsControl)control));
+        private readonly CredentialsSetting _credentialsSettings = new CredentialsSetting("JiraCredentials", JiraCredentialsLabel);
 
         // For compatibility reason, the setting key is kept to "JDL Query" even if the label is, rightly, "JQL Query" (for "Jira Query Language")
         private readonly StringSetting _jqlQuerySettings = new StringSetting("JDL Query", JiraQueryLabel, "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC");
@@ -133,8 +132,8 @@ namespace JiraCommitHintPlugin
         {
             try
             {
-                var credentialsControl = _credentialsSettings.CustomControl as CredentialsControl;
-                var localJira = Jira.CreateRestClient(_urlSettings.CustomControl.Text, credentialsControl.UserName, credentialsControl.Password);
+                var localJira = Jira.CreateRestClient(_urlSettings.CustomControl.Text, _credentialsSettings.CustomControl.UserName,
+                    _credentialsSettings.CustomControl.Password);
                 var localQuery = _jqlQuerySettings.CustomControl.Text;
                 var localStringTemplate = _stringTemplateSetting.CustomControl.Text;
 
