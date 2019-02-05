@@ -1442,6 +1442,11 @@ Do you want to reset the configured path?</source>
         <target>JQL查询</target>
         
       </trans-unit>
+      <trans-unit id="_passwordSettings.Caption">
+        <source>Jira password</source>
+        <target>Jira 密码</target>
+        
+      </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         <target>提交注释模板</target>
@@ -1452,8 +1457,9 @@ Do you want to reset the configured path?</source>
         <target>Jira 地址</target>
         
       </trans-unit>
-      <trans-unit id="_credentialSettings.Caption">
-        <source>Jira credential</source>
+      <trans-unit id="_userSettings.Caption">
+        <source>Jira user</source>
+        <target>Jira 用户名</target>
         
       </trans-unit>
     </body>

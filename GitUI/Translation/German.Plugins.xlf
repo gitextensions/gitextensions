@@ -1444,6 +1444,11 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
         <target>JQL Abfrage</target>
         
       </trans-unit>
+      <trans-unit id="_passwordSettings.Caption">
+        <source>Jira password</source>
+        <target>JIRA Passwort</target>
+        
+      </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         <target>Vorlage für Commit Nachricht</target>
@@ -1454,8 +1459,9 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
         <target>JIRA URL</target>
         
       </trans-unit>
-      <trans-unit id="_credentialSettings.Caption">
-        <source>Jira credential</source>
+      <trans-unit id="_userSettings.Caption">
+        <source>Jira user</source>
+        <target>JIRA Benutzer</target>
         
       </trans-unit>
     </body>

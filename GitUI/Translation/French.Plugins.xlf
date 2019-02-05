@@ -1440,6 +1440,11 @@ Voulez-vous réinitialiser le chemin configuré?</target>
         <target>Requête JQL</target>
         
       </trans-unit>
+      <trans-unit id="_passwordSettings.Caption">
+        <source>Jira password</source>
+        <target>Mot de passe Jira</target>
+        
+      </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         <target>Modèle de mesage</target>
@@ -1450,9 +1455,10 @@ Voulez-vous réinitialiser le chemin configuré?</target>
         <target>URL Jira</target>
         
       </trans-unit>
-      <trans-unit id="_credentialSettings.Caption">
-        <source>Jira credential</source>
-          
+      <trans-unit id="_userSettings.Caption">
+        <source>Jira user</source>
+        <target>Identifiant Jira</target>
+        
       </trans-unit>
     </body>
   </file>
