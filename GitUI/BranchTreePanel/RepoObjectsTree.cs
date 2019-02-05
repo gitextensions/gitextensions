@@ -14,6 +14,7 @@ using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.BranchTreePanel
@@ -26,18 +27,16 @@ namespace GitUI.BranchTreePanel
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
         private readonly List<Tree> _rootNodes = new List<Tree>();
         private readonly SearchControl<string> _txtBranchCriterion;
-        private readonly CancellationTokenSequence _reloadCancellation = new CancellationTokenSequence();
-        private CancellationToken _currentToken;
         private TreeNode _tagTreeRootNode;
         private TagTree _tagTree;
         private RemoteBranchTree _remoteTree;
         private List<TreeNode> _searchResult;
         private FilterBranchHelper _filterBranchHelper;
+        private IAheadBehindDataProvider _aheadBehindDataProvider;
         private bool _searchCriteriaChanged;
 
         public RepoObjectsTree()
         {
-            _currentToken = _reloadCancellation.Next();
             InitializeComponent();
             InitImageList();
             _txtBranchCriterion = CreateSearchBox();
@@ -50,12 +49,12 @@ namespace GitUI.BranchTreePanel
 
             RegisterContextActions();
 
-            InitializeAheadBehindProvider();
-
             treeMain.ShowNodeToolTips = true;
             treeMain.HideSelection = false;
             treeMain.NodeMouseClick += OnNodeClick;
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
+
+            toolTip.SetToolTip(btnCollapseAll, mnubtnCollapseAll.ToolTipText);
 
             _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
             _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
@@ -180,78 +179,34 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        public void SetBranchFilterer(FilterBranchHelper filterBranchHelper)
+        public void Initialize([CanBeNull]IAheadBehindDataProvider aheadBehindDataProvider, FilterBranchHelper filterBranchHelper)
         {
+            _aheadBehindDataProvider = aheadBehindDataProvider;
             _filterBranchHelper = filterBranchHelper;
+
+            // This lazily sets the command source, invoking OnUICommandsSourceSet, which is required for setting up
+            // notifications for each Tree.
+            _ = UICommandsSource;
         }
 
-        public async Task ReloadAsync()
+        public void RefreshTree()
         {
-            var currentBranch = Module.GetSelectedBranch();
-            await this.SwitchToMainThreadAsync();
-
-            var token = CancelBackgroundTasks();
-            Enabled = false;
-
-            try
+            foreach (var n in _rootNodes)
             {
-                treeMain.BeginUpdate();
-                _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = true);
-                var tasks = _rootNodes.Select(r => r.ReloadAsync(token)).ToArray();
-
-                // We ConfigureAwait(true) so that we're back on the UI thread when tasks are complete
-                await Task.WhenAll(tasks).ConfigureAwait(true);
-                ThreadHelper.AssertOnUIThread();
-                DisplayAheadBehindInformationForBranches();
+                n.RefreshTree();
             }
-            finally
-            {
-                if (!token.IsCancellationRequested)
-                {
-                    Enabled = true;
-                }
-
-                // Need to end the update for the selected node to scroll into view below under certain conditions
-                // (e.g. when the treeview gets larger, trying to make the selected node visible doesn't work).
-                treeMain.EndUpdate();
-
-                if (!token.IsCancellationRequested)
-                {
-                    var selectedNode = treeMain.AllNodes().FirstOrDefault(n =>
-                        _rootNodes.Any(rn => $"{rn.TreeViewNode.FullPath}{treeMain.PathSeparator}{currentBranch}" == n.FullPath));
-                    if (selectedNode != null)
-                    {
-                        SetSelectedNode(selectedNode);
-                    }
-
-                    _rootNodes.ForEach(t => t.IgnoreSelectionChangedEvent = false);
-                }
-            }
-        }
-
-        private void SetSelectedNode(TreeNode node)
-        {
-            treeMain.SelectedNode = node;
-            treeMain.SelectedNode.EnsureVisible();
-
-            // EnsureVisible leads to horizontal scrolling in some cases. We make sure to force horizontal
-            // scroll back to 0. Note that we use SendMessage rather than SetScrollPos as the former works
-            // outside of Begin/EndUpdate.
-            NativeMethods.SendMessageInt((IntPtr)treeMain.Handle, NativeMethods.WM_HSCROLL, (IntPtr)NativeMethods.SB_LEFT, IntPtr.Zero);
         }
 
         protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
         {
             base.OnUICommandsSourceSet(source);
 
-            CancelBackgroundTasks();
-
             var localBranchesRootNode = new TreeNode(Strings.Branches)
             {
                 ImageKey = nameof(Images.BranchLocalRoot),
                 SelectedImageKey = nameof(Images.BranchLocalRoot),
             };
-            AddTree(new BranchTree(localBranchesRootNode, source));
+            AddTree(new BranchTree(localBranchesRootNode, source, _aheadBehindDataProvider));
 
             var remoteBranchesRootNode = new TreeNode(Strings.Remotes)
             {
@@ -295,15 +250,7 @@ namespace GitUI.BranchTreePanel
             treeMain.Nodes.Add(tree.TreeViewNode);
             treeMain.Font = AppSettings.Font;
             _rootNodes.Add(tree);
-        }
-
-        private CancellationToken CancelBackgroundTasks()
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-
-            _currentToken = _reloadCancellation.Next();
-
-            return _currentToken;
+            tree.RefreshTree();
         }
 
         private void DoSearch()
@@ -413,7 +360,6 @@ namespace GitUI.BranchTreePanel
             if (showTagsToolStripMenuItem.Checked)
             {
                 AddTags();
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => _rootNodes.Last().ReloadAsync(_currentToken)).FileAndForget();
             }
             else
             {
@@ -425,6 +371,11 @@ namespace GitUI.BranchTreePanel
         private void OnBtnSearchClicked(object sender, EventArgs e)
         {
             DoSearch();
+        }
+
+        private void btnCollapseAll_Click(object sender, EventArgs e)
+        {
+            treeMain.CollapseAll();
         }
 
         private void OnBranchCriterionChanged(object sender, EventArgs e)
@@ -468,53 +419,6 @@ namespace GitUI.BranchTreePanel
             // Don't use e.Node, when folding/unfolding a node,
             // e.Node won't be the one you double clicked, but a child node instead
             Node.OnNode<Node>(treeMain.SelectedNode, node => node.OnDoubleClick());
-        }
-
-        private AheadBehindDataProvider _aheadBehindDataProvider;
-
-        private void DisplayAheadBehindInformationForBranches()
-        {
-            if (_rootNodes.Count == 0 || _aheadBehindDataProvider == null || !AppSettings.ShowAheadBehindData)
-            {
-                return;
-            }
-
-            var aheadBehindData = _aheadBehindDataProvider.GetData();
-            if (aheadBehindData == null)
-            {
-                // no tracking information
-                return;
-            }
-
-            treeMain.LabelEdit = true;
-            TreeNodeCollection nodes = _rootNodes[0].TreeViewNode.Nodes;
-            foreach (TreeNode n in nodes)
-            {
-                UpdateAheadBehindDataOnbranches(n, aheadBehindData);
-            }
-
-            treeMain.LabelEdit = false;
-        }
-
-        private void UpdateAheadBehindDataOnbranches(TreeNode treeNode, IDictionary<string, AheadBehindData> aheadBehindData)
-        {
-            var branchNode = treeNode.Tag as LocalBranchNode;
-            if (branchNode != null && aheadBehindData.ContainsKey(branchNode.FullPath))
-            {
-                branchNode.UpdateAheadBehind(aheadBehindData[branchNode.FullPath].ToDisplay());
-            }
-
-            foreach (TreeNode tn in treeNode.Nodes)
-            {
-                UpdateAheadBehindDataOnbranches(tn, aheadBehindData);
-            }
-        }
-
-        public void InitializeAheadBehindProvider()
-        {
-            _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData
-                ? new AheadBehindDataProvider(() => Module.GitExecutable)
-                : null;
         }
 
         internal TestAccessor GetTestAccessor()

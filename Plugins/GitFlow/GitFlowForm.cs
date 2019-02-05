@@ -51,7 +51,7 @@ namespace GitFlow
                     "--get",
                     "gitflow.branch.master"
                 };
-                return !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.RunGitCmd(args));
+                return !string.IsNullOrWhiteSpace(_gitUiCommands.GitModule.GitExecutable.GetOutput(args));
             }
         }
 
@@ -140,7 +140,7 @@ namespace GitFlow
         private IReadOnlyList<string> GetBranches(string typeBranch)
         {
             var args = new GitArgumentBuilder("flow") { typeBranch };
-            var result = _gitUiCommands.GitModule.RunGitCmdResult(args);
+            var result = _gitUiCommands.GitModule.GitExecutable.Execute(args);
 
             if (result.ExitCode != 0 || result.StandardOutput == null)
             {
@@ -190,7 +190,7 @@ namespace GitFlow
             {
                 var args = new GitArgumentBuilder("branch");
                 return _gitUiCommands.GitModule
-                    .RunGitCmd(args)
+                    .GitExecutable.GetOutput(args)
                     .Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(e => e.Trim('*', ' ', '\n', '\r'))
                     .ToList();
             }
@@ -303,7 +303,7 @@ namespace GitFlow
             txtResult.Text = "running...";
             ForceRefresh(txtResult);
 
-            var result = _gitUiCommands.GitModule.RunGitCmdResult(commandText);
+            var result = _gitUiCommands.GitModule.GitExecutable.Execute(commandText);
 
             IsRefreshNeeded = true;
 
@@ -386,7 +386,7 @@ namespace GitFlow
         private void DisplayHead()
         {
             var args = new GitArgumentBuilder("symbolic-ref") { "HEAD" };
-            var head = _gitUiCommands.GitModule.RunGitCmd(args).Trim('*', ' ', '\n', '\r');
+            var head = _gitUiCommands.GitModule.GitExecutable.GetOutput(args).Trim('*', ' ', '\n', '\r');
             lblHead.Text = head;
 
             var currentRef = head.RemovePrefix(GitRefName.RefsHeadsPrefix);

@@ -1003,6 +1003,11 @@ namespace GitUI.Editor
             }
         }
 
+        public string GetSelectedText()
+        {
+            return internalFileViewer.GetSelectedText();
+        }
+
         public int GetSelectionPosition()
         {
             return internalFileViewer.GetSelectionPosition();
@@ -1350,7 +1355,7 @@ namespace GitUI.Editor
 
             if (patch != null && patch.Length > 0)
             {
-                string output = Module.RunGitCmd(args, null, patch);
+                string output = Module.GitExecutable.GetOutput(args, patch);
 
                 if (!string.IsNullOrEmpty(output))
                 {

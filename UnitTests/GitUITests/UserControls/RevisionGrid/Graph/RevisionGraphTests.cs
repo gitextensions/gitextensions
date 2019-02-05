@@ -108,6 +108,35 @@ namespace GitUITests.UserControls.RevisionGrid
             Assert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
         }
 
+        [Test] // github issue #6210
+        public void DetachedSingleRevision()
+        {
+            _revisionGraph.Clear();
+
+            /* Visualization of commit graph:
+             *     Commit1
+             *        |
+             *        |       Commit2 (detached)
+             *        |
+             *     Commit3
+             */
+
+            GitRevision commit1 = new GitRevision(ObjectId.Random());
+
+            GitRevision commit2 = new GitRevision(ObjectId.Random());
+
+            GitRevision commit3 = new GitRevision(ObjectId.Random());
+            commit1.ParentIds = new ObjectId[] { commit3.ObjectId };
+
+            _revisionGraph.Add(commit1, RevisionNodeFlags.None);
+            _revisionGraph.Add(commit2, RevisionNodeFlags.None);
+            _revisionGraph.Add(commit3, RevisionNodeFlags.None);
+
+            _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
+
+            Assert.AreEqual(1, _revisionGraph.GetSegmentsForRow(1).GetCurrentRevisionLane());
+        }
+
         private static IEnumerable<GitRevision> Revisions
         {
             get

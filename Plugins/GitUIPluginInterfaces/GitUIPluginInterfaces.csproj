@@ -80,6 +80,7 @@
     <Compile Include="IConfigSection.cs" />
     <Compile Include="IExecutable.cs" />
     <Compile Include="IGitCommand.cs" />
+    <Compile Include="IGitCommandRunner.cs" />
     <Compile Include="IGitItem.cs" />
     <Compile Include="IGitPluginForRepository.cs" />
     <Compile Include="IGitModule.cs" />

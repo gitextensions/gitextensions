@@ -21,66 +21,6 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
-    public sealed class GitModuleEventArgs : EventArgs
-    {
-        public GitModuleEventArgs(GitModule gitModule)
-        {
-            GitModule = gitModule;
-        }
-
-        public GitModule GitModule { get; }
-    }
-
-    public enum SubmoduleStatus
-    {
-        Unknown,
-        NewSubmodule,
-        FastForward,
-        Rewind,
-        NewerTime,
-        OlderTime,
-        SameTime
-    }
-
-    public enum ForcePushOptions
-    {
-        DoNotForce,
-        Force,
-        ForceWithLease,
-    }
-
-    public readonly struct ConflictedFileData
-    {
-        public ConflictedFileData(ObjectId objectId, string filename)
-        {
-            ObjectId = objectId;
-            Filename = filename;
-        }
-
-        public ObjectId ObjectId { get; }
-        public string Filename { get; }
-    }
-
-    [DebuggerDisplay("{" + nameof(Filename) + "}")]
-    public readonly struct ConflictData
-    {
-        public ConflictData(
-            ConflictedFileData @base,
-            ConflictedFileData local,
-            ConflictedFileData remote)
-        {
-            Base = @base;
-            Local = local;
-            Remote = remote;
-        }
-
-        public ConflictedFileData Base { get; }
-        public ConflictedFileData Local { get; }
-        public ConflictedFileData Remote { get; }
-
-        public string Filename => Local.Filename ?? Base.Filename ?? Remote.Filename;
-    }
-
     /// <summary>Provides manipulation with git module.
     /// <remarks>Several instances may be created for submodules.</remarks></summary>
     [DebuggerDisplay("GitModule ( {" + nameof(WorkingDir) + "} )")]
@@ -97,6 +37,7 @@ namespace GitCommands
         private readonly ICommitDataManager _commitDataManager;
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
         private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
+        private readonly IGitCommandRunner _gitCommandRunner;
         private readonly IExecutable _gitExecutable;
 
         public GitModule([CanBeNull] string workingDir, [CanBeNull] IExecutable executable = null)
@@ -106,6 +47,7 @@ namespace GitCommands
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
             _gitExecutable = executable ?? new Executable(() => AppSettings.GitCommand, WorkingDir);
+            _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
 
             // If this is a submodule, populate relevant properties.
             // If this is not a submodule, these will all be null.
@@ -188,6 +130,12 @@ namespace GitCommands
         /// </summary>
         [NotNull]
         public IExecutable GitExecutable => _gitExecutable;
+
+        /// <summary>
+        /// Gets the access to the current git executable associated with this module.
+        /// </summary>
+        [NotNull]
+        public IGitCommandRunner GitCommandRunner => _gitCommandRunner;
 
         /// <summary>
         /// Gets the location of .git directory for the current working folder.
@@ -298,39 +246,7 @@ namespace GitCommands
             {
                 if (_systemEncoding == null)
                 {
-                    try
-                    {
-                        // check whether GitExtensions works with standard msysgit or msysgit-unicode
-
-                        // invoke a git command that returns an invalid argument in its response, and
-                        // check if a unicode-only character is reported back. If so assume msysgit-unicode
-
-                        // git config --get with a malformed key (no section) returns:
-                        // "error: key does not contain a section: <key>"
-                        const string controlStr = "ą"; // "a caudata"
-                        var arguments = new GitArgumentBuilder("config")
-                        {
-                            "--get",
-                            controlStr
-                        };
-
-                        string s = new GitModule("").RunGitCmd(arguments, Encoding.UTF8);
-                        if (s != null && s.IndexOf(controlStr) != -1)
-                        {
-                            _systemEncoding = new UTF8Encoding(false);
-                        }
-                        else
-                        {
-                            _systemEncoding = Encoding.Default;
-                        }
-
-                        Debug.WriteLine("System encoding: " + _systemEncoding.EncodingName);
-                    }
-                    catch (Exception)
-                    {
-                        // Ignore exception. If the git location itself is not configured correctly yet, we could never execute it.
-                        return Encoding.Default;
-                    }
+                    _systemEncoding = new SystemEncodingReader().Read();
                 }
 
                 return _systemEncoding;
@@ -549,41 +465,6 @@ namespace GitCommands
 
             return null;
         }
-
-        #region Process execution
-
-        [NotNull]
-        public IProcess RunGitCmdDetached(
-            ArgumentString arguments = default,
-            bool createWindow = false,
-            bool redirectInput = false,
-            bool redirectOutput = false,
-            Encoding outputEncoding = null)
-        {
-            if (outputEncoding == null && redirectOutput)
-            {
-                outputEncoding = SystemEncoding;
-            }
-
-            return _gitExecutable.Start(arguments, createWindow, redirectInput, redirectOutput, outputEncoding);
-        }
-
-        public IEnumerable<string> GetGitOutputLines(ArgumentString arguments, Encoding outputEncoding = null)
-        {
-            return _gitExecutable.GetOutputLines(arguments, outputEncoding: outputEncoding);
-        }
-
-        public string RunGitCmd(ArgumentString arguments, Encoding outputEncoding = null, byte[] stdInput = null)
-        {
-            return _gitExecutable.GetOutput(arguments, stdInput, outputEncoding);
-        }
-
-        public ExecutionResult RunGitCmdResult(ArgumentString arguments)
-        {
-            return _gitExecutable.Execute(arguments);
-        }
-
-        #endregion
 
         public ExecutionResult Clean(CleanMode mode, bool dryRun = false, bool directories = false, string paths = null)
         {
@@ -1305,7 +1186,7 @@ namespace GitCommands
                 "--cached",
                 SubmodulePath
             };
-            var lines = SuperprojectModule.RunGitCmd(args).Split('\n');
+            var lines = SuperprojectModule.GitExecutable.GetOutput(args).Split('\n');
 
             if (lines.Length == 0)
             {
@@ -3529,7 +3410,7 @@ namespace GitCommands
                     "blob",
                     blob
                 };
-                using (var process = RunGitCmdDetached(args, redirectOutput: true))
+                using (var process = _gitCommandRunner.RunDetached(args, redirectOutput: true))
                 {
                     var stream = new MemoryStream();
                     process.StandardOutput.BaseStream.CopyTo(stream);
@@ -3581,7 +3462,7 @@ namespace GitCommands
 
         public string OpenWithDifftool(string filename, string oldFileName = "", string firstRevision = GitRevision.IndexGuid, string secondRevision = GitRevision.WorkTreeGuid, string extraDiffArguments = null, bool isTracked = true)
         {
-            RunGitCmdDetached(new GitArgumentBuilder("difftool")
+            _gitCommandRunner.RunDetached(new GitArgumentBuilder("difftool")
             {
                 "--gui",
                 "--no-prompt",
@@ -4082,7 +3963,7 @@ namespace GitCommands
                 "--abbrev=40",
                 commitId
             };
-            var output = RunGitCmd(args).TrimEnd();
+            var output = _gitExecutable.GetOutput(args).TrimEnd();
 
             if (IsGitErrorMessage(output))
             {

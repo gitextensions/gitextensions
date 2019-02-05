@@ -28,7 +28,7 @@ namespace GitUITests.UserControls
             _aheadBehindDataProvider = Substitute.For<IAheadBehindDataProvider>();
 
             _sut = new ToolStripPushButton();
-            _sut.Initialize(_aheadBehindDataProvider, true);
+            _sut.Initialize(_aheadBehindDataProvider);
         }
 
         [TearDown]
@@ -40,7 +40,7 @@ namespace GitUITests.UserControls
         [Test]
         public void DisplayAheadBehindInformation_should_not_display_anything_if_does_not_support_ahead_behind()
         {
-            _sut.Initialize(_aheadBehindDataProvider, false);
+            _sut.Initialize(null);
 
             _sut.DisplayAheadBehindInformation("any-branchName");
 
@@ -157,8 +157,6 @@ namespace GitUITests.UserControls
             _sut.ToolTipText.Should().NotContain("99 new commit(s) will be pushed");
             _sut.ToolTipText.Should().NotContain("3 commit(s) should be integrated");
             _sut.Image.RawFormat.GetHashCode().Should().Be(Images.Unstage.RawFormat.GetHashCode());
-
-            _aheadBehindDataProvider.DidNotReceive().GetData(Arg.Any<string>());
         }
     }
 }

@@ -58,6 +58,21 @@ namespace GitUI
             }
         }
 
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                _cancellationTokenSequence.Dispose();
+                components.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
         [CanBeNull]
         [Browsable(false)]
         public string Email { get; private set; }

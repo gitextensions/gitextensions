@@ -96,6 +96,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFormBrowseController _controller;
         private readonly ICommitDataManager _commitDataManager;
         private readonly IAppTitleGenerator _appTitleGenerator;
+        [CanBeNull] private readonly IAheadBehindDataProvider _aheadBehindDataProvider;
         private readonly WindowsJumpListManager _windowsJumpListManager;
         private readonly SubmoduleStatusProvider _submoduleStatusProvider;
 
@@ -178,7 +179,9 @@ namespace GitUI.CommandsDialogs
 
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
-            repoObjectsTree.SetBranchFilterer(_filterBranchHelper);
+            _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
+
+            repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper);
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
             revisionDiff.Bind(RevisionGrid, fileTree);
 
@@ -456,13 +459,17 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
+                // ReSharper disable ConstantConditionalAccessQualifier - these can be null if run from under the TranslatioApp
+
                 _submoduleStatusProvider?.Dispose();
                 _formBrowseMenus?.Dispose();
                 _filterRevisionsHelper?.Dispose();
                 _filterBranchHelper?.Dispose();
                 components?.Dispose();
-                _gitStatusMonitor.Dispose();
+                _gitStatusMonitor?.Dispose();
                 _windowsJumpListManager?.Dispose();
+
+                // ReSharper restore ConstantConditionalAccessQualifier
             }
 
             base.Dispose(disposing);
@@ -503,7 +510,7 @@ namespace GitUI.CommandsDialogs
             UpdateSubmodulesStructure();
             UpdateStashCount();
 
-            toolStripButtonPush.Initialize(new AheadBehindDataProvider(() => Module.GitExecutable), GitVersion.Current.SupportAheadBehindData);
+            toolStripButtonPush.Initialize(_aheadBehindDataProvider);
             toolStripButtonPush.DisplayAheadBehindInformation(Module.GetSelectedBranch());
 
             base.OnLoad(e);
@@ -833,8 +840,6 @@ namespace GitUI.CommandsDialogs
 
                 if (validBrowseDir)
                 {
-                    ReloadRepoObjectsTree();
-
                     _windowsJumpListManager.AddToRecent(Module.WorkingDir);
 
                     // add Navigate and View menu
@@ -932,16 +937,6 @@ namespace GitUI.CommandsDialogs
 
                 RevisionGrid.IndexWatcher.Reset();
             }
-        }
-
-        private void ReloadRepoObjectsTree()
-        {
-            if (MainSplitContainer.Panel1Collapsed)
-            {
-                return;
-            }
-
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => repoObjectsTree.ReloadAsync()).FileAndForget();
         }
 
         private void OnActivate()
@@ -1329,6 +1324,7 @@ namespace GitUI.CommandsDialogs
         {
             RefreshRevisions();
             RefreshStatus();
+            repoObjectsTree.RefreshTree();
         }
 
         private void RefreshDashboardToolStripMenuItemClick(object sender, EventArgs e)
@@ -1917,7 +1913,6 @@ namespace GitUI.CommandsDialogs
             UICommands = new GitUICommands(module);
             if (Module.IsValidGitWorkingDir())
             {
-                repoObjectsTree.InitializeAheadBehindProvider();
                 var path = Module.WorkingDir;
                 ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
                 AppSettings.RecentWorkingDir = path;
@@ -2971,7 +2966,6 @@ namespace GitUI.CommandsDialogs
         private void toggleBranchTreePanel_Click(object sender, EventArgs e)
         {
             MainSplitContainer.Panel1Collapsed = !MainSplitContainer.Panel1Collapsed;
-            ReloadRepoObjectsTree();
             RefreshLayoutToggleButtonStates();
         }
 
@@ -3111,7 +3105,7 @@ namespace GitUI.CommandsDialogs
             if (AppSettings.DontConfirmUndoLastCommit || MessageBox.Show(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 var args = GitCommandHelpers.ResetCmd(ResetMode.Soft, "HEAD~1");
-                Module.RunGitCmd(args);
+                Module.GitExecutable.GetOutput(args);
                 refreshToolStripMenuItem.PerformClick();
             }
         }

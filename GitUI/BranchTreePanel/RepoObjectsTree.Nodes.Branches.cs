@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GitCommands;
+using GitCommands.Git;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -57,7 +57,6 @@ namespace GitUI.BranchTreePanel
             public void UpdateAheadBehind(string aheadBehindData)
             {
                 AheadBehind = aheadBehindData;
-                TreeViewNode.Text = DisplayText();
             }
 
             [CanBeNull]
@@ -188,15 +187,22 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private class BranchTree : Tree
+        private sealed class BranchTree : Tree
         {
-            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
+            private readonly IAheadBehindDataProvider _aheadBehindDataProvider;
+
+            public BranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands, [CanBeNull]IAheadBehindDataProvider aheadBehindDataProvider)
                 : base(treeNode, uiCommands)
             {
-                uiCommands.UICommandsChanged += delegate { TreeViewNode.TreeView.SelectedNode = null; };
+                _aheadBehindDataProvider = aheadBehindDataProvider;
             }
 
-            protected override async Task LoadNodesAsync(CancellationToken token)
+            public override void RefreshTree()
+            {
+                ReloadNodes(LoadNodesAsync);
+            }
+
+            private async Task LoadNodesAsync(CancellationToken token)
             {
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
@@ -237,14 +243,21 @@ namespace GitUI.BranchTreePanel
 
                 #endregion
 
+                var aheadBehindData = _aheadBehindDataProvider?.GetData();
+
                 var currentBranch = Module.GetSelectedBranch();
                 var nodes = new Dictionary<string, BaseBranchNode>();
                 foreach (var branch in branches)
                 {
                     token.ThrowIfCancellationRequested();
                     var localBranchNode = new LocalBranchNode(this, branch, branch == currentBranch);
-                    var parent = localBranchNode.CreateRootNode(nodes,
-                        (tree, parentPath) => new BranchPathNode(tree, parentPath));
+
+                    if (aheadBehindData != null && aheadBehindData.ContainsKey(localBranchNode.FullPath))
+                    {
+                        localBranchNode.UpdateAheadBehind(aheadBehindData[localBranchNode.FullPath].ToDisplay());
+                    }
+
+                    var parent = localBranchNode.CreateRootNode(nodes, (tree, parentPath) => new BranchPathNode(tree, parentPath));
                     if (parent != null)
                     {
                         Nodes.AddNode(parent);
@@ -252,17 +265,16 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            protected override void FillTreeViewNode()
+            protected override void PostFillTreeViewNode(bool firstTime)
             {
-                base.FillTreeViewNode();
+                if (firstTime)
+                {
+                    TreeViewNode.Expand();
+                }
 
                 TreeViewNode.Text = $@"{Strings.Branches} ({Nodes.Count})";
-
                 var activeBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsActive);
-                if (activeBranch == null)
-                {
-                    TreeViewNode.TreeView.SelectedNode = null;
-                }
+                TreeViewNode.TreeView.SelectedNode = activeBranch?.TreeViewNode;
             }
         }
 

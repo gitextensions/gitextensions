@@ -25,11 +25,14 @@ namespace GitUI.BranchTreePanel
             public RemoteBranchTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
             {
-                // TODO unsubscribe this event as needed
-                uiCommands.UICommandsChanged += delegate { TreeViewNode.TreeView.SelectedNode = null; };
             }
 
-            protected override async Task LoadNodesAsync(CancellationToken token)
+            public override void RefreshTree()
+            {
+                ReloadNodes(LoadNodesAsync);
+            }
+
+            private async Task LoadNodesAsync(CancellationToken token)
             {
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
@@ -114,10 +117,12 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            protected override void FillTreeViewNode()
+            protected override void PostFillTreeViewNode(bool firstTime)
             {
-                base.FillTreeViewNode();
-                TreeViewNode.Expand();
+                if (firstTime)
+                {
+                    TreeViewNode.Expand();
+                }
             }
 
             internal void PopupManageRemotesForm(string remoteName)

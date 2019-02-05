@@ -92,7 +92,7 @@ namespace Gource
             }
 
             var args = new GitArgumentBuilder("log") { "--pretty=format:\"%aE|%aN\"" };
-            var lines = GitUIArgs.GitModule.RunGitCmd(args).Split('\n');
+            var lines = GitUIArgs.GitModule.GitExecutable.GetOutput(args).Split('\n');
 
             var authors = lines.Select(
                 line =>

@@ -14,12 +14,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitCommands.Patches;
 using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs.CommitDialog;
+using GitUI.Editor;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
 using GitUI.Properties;
@@ -98,6 +100,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _stageFiles = new TranslationString("Stage {0} files");
         private readonly TranslationString _selectOnlyOneFile = new TranslationString("You must have only one file selected.");
 
+        private readonly TranslationString _addSelectionToCommitMessage = new TranslationString("Add selection to commit message");
         private readonly TranslationString _stageSelectedLines = new TranslationString("Stage selected line(s)");
         private readonly TranslationString _unstageSelectedLines = new TranslationString("Unstage selected line(s)");
         private readonly TranslationString _resetSelectedLines = new TranslationString("Reset selected line(s)");
@@ -143,6 +146,7 @@ namespace GitUI.CommandsDialogs
         private readonly ICommitTemplateManager _commitTemplateManager;
         private readonly CommitKind _commitKind;
         [CanBeNull] private readonly GitRevision _editedCommit;
+        private readonly ToolStripMenuItem _addSelectionToCommitMessageToolStripMenuItem;
         private readonly ToolStripMenuItem _stageSelectedLinesToolStripMenuItem;
         private readonly ToolStripMenuItem _resetSelectedLinesToolStripMenuItem;
         private readonly AsyncLoader _unstagedLoader = new AsyncLoader();
@@ -222,6 +226,8 @@ namespace GitUI.CommandsDialogs
             _resetSelectedLinesToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_resetSelectedLines.Text, ResetSelectedLinesToolStripMenuItemClick);
             _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ResetSelectedFiles);
             _resetSelectedLinesToolStripMenuItem.Image = Reset.Image;
+            _addSelectionToCommitMessageToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_addSelectionToCommitMessage.Text, (s, e) => AddSelectionToCommitMessage());
+            _addSelectionToCommitMessageToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.AddSelectionToCommitMessage);
             resetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
             stagedResetChanges.ShortcutKeyDisplayString = _resetSelectedLinesToolStripMenuItem.ShortcutKeyDisplayString;
             deleteFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.DeleteSelectedFiles);
@@ -361,17 +367,22 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnApplicationActivated()
         {
-            if (!_bypassActivatedEventHandler)
+            if (!_bypassActivatedEventHandler && AppSettings.RefreshCommitDialogOnFormFocus)
             {
-                if (AppSettings.RefreshCommitDialogOnFormFocus)
-                {
-                    RescanChanges();
-                }
-
-                UpdateAuthorInfo();
+                RescanChanges();
             }
 
             base.OnApplicationActivated();
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            if (!_bypassActivatedEventHandler)
+            {
+                UpdateAuthorInfo();
+            }
+
+            base.OnActivated(e);
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -403,6 +414,8 @@ namespace GitUI.CommandsDialogs
             {
                 Initialize();
             }
+
+            UpdateAuthorInfo();
 
             string message;
 
@@ -555,12 +568,47 @@ namespace GitUI.CommandsDialogs
             OpenWithDifftool = 12,
             OpenFile = 13,
             OpenFileWith = 14,
-            EditFile = 15
+            EditFile = 15,
+            AddSelectionToCommitMessage = 16
         }
 
         private string GetShortcutKeyDisplayString(Command cmd)
         {
             return GetShortcutKeys((int)cmd).ToShortcutKeyDisplayString();
+        }
+
+        private bool AddSelectionToCommitMessage()
+        {
+            if (!SelectedDiff.ContainsFocus)
+            {
+                return false;
+            }
+
+            var selectedText = SelectedDiff.GetSelectedText();
+            if (string.IsNullOrEmpty(selectedText))
+            {
+                return false;
+            }
+
+            if (Message.SelectionLength == 0)
+            {
+                selectedText += '\n';
+            }
+
+            int selectionStart = Message.SelectionStart;
+
+            if (Message.Text.IsNullOrEmpty())
+            {
+                Message.Text = selectedText;
+            }
+            else
+            {
+                Message.SelectedText = selectedText;
+            }
+
+            Message.SelectionStart = selectionStart + selectedText.Length;
+
+            return true;
         }
 
         private bool AddToGitIgnore()
@@ -724,6 +772,7 @@ namespace GitUI.CommandsDialogs
                 case Command.OpenFile: openToolStripMenuItem.PerformClick(); return true;
                 case Command.OpenFileWith: openWithToolStripMenuItem.PerformClick(); return true;
                 case Command.EditFile: editFileToolStripMenuItem.PerformClick(); return true;
+                case Command.AddSelectionToCommitMessage: return AddSelectionToCommitMessage();
                 default: return base.ExecuteCommand(cmd);
             }
         }
@@ -808,7 +857,7 @@ namespace GitUI.CommandsDialogs
                     { _currentItemStaged,  "--reverse" }
                 };
 
-                string output = Module.RunGitCmd(args, null, patch);
+                string output = Module.GitExecutable.GetOutput(args, patch);
 
                 ProcessApplyOutput(output, patch);
             }
@@ -879,7 +928,7 @@ namespace GitUI.CommandsDialogs
                     { _currentItemStaged,  "--reverse --index" }
                 };
 
-                string output = Module.RunGitCmd(args, stdInput: patch);
+                string output = Module.GitExecutable.GetOutput(args, patch);
 
                 if (EnvUtils.RunningOnWindows())
                 {
@@ -2261,7 +2310,7 @@ namespace GitUI.CommandsDialogs
                     "--",
                     name.QuoteNE()
                 };
-                string diff = Module.RunGitCmd(args);
+                string diff = Module.GitExecutable.GetOutput(args);
                 var lines = diff.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 const string subprojectCommit = "Subproject commit ";
                 var from = lines.Single(s => s.StartsWith("-" + subprojectCommit)).Substring(subprojectCommit.Length + 1);
@@ -2277,7 +2326,7 @@ namespace GitUI.CommandsDialogs
                         $"{from}...{to}"
                     };
 
-                    string log = module.RunGitCmd(args);
+                    string log = module.GitExecutable.GetOutput(args);
 
                     if (log.Length != 0)
                     {
@@ -3135,18 +3184,27 @@ namespace GitUI.CommandsDialogs
         internal TestAccessor GetTestAccessor()
             => new TestAccessor(this);
 
-        public readonly struct TestAccessor
+        internal readonly struct TestAccessor
         {
             private readonly FormCommit _formCommit;
 
-            public TestAccessor(FormCommit formCommit)
+            internal TestAccessor(FormCommit formCommit)
             {
                 _formCommit = formCommit;
             }
 
-            public EditNetSpell Message => _formCommit.Message;
+            internal EditNetSpell Message => _formCommit.Message;
 
-            public ToolStripDropDownButton CommitMessageToolStripMenuItem => _formCommit.commitMessageToolStripMenuItem;
+            internal FileViewer SelectedDiff => _formCommit.SelectedDiff;
+
+            internal ToolStripDropDownButton CommitMessageToolStripMenuItem => _formCommit.commitMessageToolStripMenuItem;
+
+            internal ToolStripStatusLabel CommitAuthorStatusToolStripStatusLabel => _formCommit.commitAuthorStatus;
+
+            internal bool ExecuteCommand(Command command)
+            {
+                return _formCommit.ExecuteCommand((int)command);
+            }
         }
 
         private void stopTrackingThisFileToolStripMenuItem_Click(object sender, EventArgs e)

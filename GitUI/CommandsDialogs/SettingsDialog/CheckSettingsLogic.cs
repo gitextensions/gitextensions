@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using GitCommands;
 using GitCommands.Settings;
 using GitCommands.Utils;
@@ -305,7 +304,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
 
         public bool CanFindGitCmd()
         {
-            return !string.IsNullOrEmpty(Module.RunGitCmd(""));
+            return !string.IsNullOrEmpty(Module.GitExecutable.GetOutput(""));
         }
 
         public void AutoConfigMergeToolCmd()

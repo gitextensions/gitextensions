@@ -94,7 +94,7 @@ namespace DeleteUnusedBranches
                     $"{branchName}^1..{branchName}"
                 };
 
-                var commitLog = context.Commands.RunGitCmd(args).Split('\n');
+                var commitLog = context.Commands.GitExecutable.GetOutput(args).Split('\n');
                 DateTime.TryParse(commitLog[0], out var commitDate);
                 var authorName = commitLog.Length > 1 ? commitLog[1] : string.Empty;
                 var message = commitLog.Length > 2 ? commitLog[2] : string.Empty;
@@ -125,7 +125,7 @@ namespace DeleteUnusedBranches
                  context.ReferenceBranch
             };
 
-            string[] branches = context.Commands.RunGitCmd(args)
+            string[] branches = context.Commands.GitExecutable.GetOutput(args)
                 .Split('\n')
                 .Where(branchName => !string.IsNullOrEmpty(branchName))
                 .Select(branchName => branchName.Trim('*', ' ', '\n', '\r'))
@@ -184,7 +184,7 @@ namespace DeleteUnusedBranches
                         remoteName,
                         $":{remoteBranch.Name.Substring(remoteBranchNameOffset)}"
                     };
-                    _gitCommands.RunGitCmd(args);
+                    _gitCommands.GitExecutable.GetOutput(args);
                 }
 
                 foreach (var localBranch in localBranches)
@@ -194,10 +194,10 @@ namespace DeleteUnusedBranches
                         "-d",
                         localBranch.Name
                     };
-                    _gitCommands.RunGitCmd(args);
+                    _gitCommands.GitExecutable.GetOutput(args);
 
                     // Delete branches one by one, because it is possible one fails
-                    _gitCommands.RunGitCmd(args);
+                    _gitCommands.GitExecutable.GetOutput(args);
                 }
 
                 await this.SwitchToMainThreadAsync();

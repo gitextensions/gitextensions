@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GitCommands;
+using GitCommands.Git;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using NUnit.Framework;
@@ -469,7 +470,7 @@ namespace GitCommandsTests
                 foreach (var helper in moduleTestHelpers)
                 {
                     // Submodules require at least one commit
-                    helper.Module.RunGitCmd(@"commit --allow-empty -m ""Initial commit""");
+                    helper.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Initial commit""");
                 }
 
                 for (int i = numModules - 1; i > 0; --i)
@@ -478,13 +479,13 @@ namespace GitCommandsTests
                     var child = moduleTestHelpers[i];
 
                     // Add child as submodule of parent
-                    parent.Module.RunGitCmd(GitCommandHelpers.AddSubmoduleCmd(child.Module.WorkingDir.ToPosixPath(), $"repo{i}", null, true));
-                    parent.Module.RunGitCmd(@"commit -am ""Add submodule""");
+                    parent.Module.GitExecutable.GetOutput(GitCommandHelpers.AddSubmoduleCmd(child.Module.WorkingDir.ToPosixPath(), $"repo{i}", null, true));
+                    parent.Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
                 }
 
                 // Init all modules of root
                 var root = moduleTestHelpers[0];
-                root.Module.RunGitCmd(@"submodule update --init --recursive");
+                root.Module.GitExecutable.GetOutput(@"submodule update --init --recursive");
 
                 var paths = root.Module.GetSubmodulesLocalPaths(recursive: true);
                 Assert.AreEqual(3, paths.Count);

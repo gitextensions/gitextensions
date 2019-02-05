@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.Properties;
+using JetBrains.Annotations;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -17,26 +18,19 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _behindCommitsTointegrateOrForcePush =
             new TranslationString("{0} commit(s) should be integrated (or will be lost if force pushed)");
 
-        private IAheadBehindDataProvider _aheadBehindDataProvider;
-        private bool _supportsAheadBehindData;
+        [CanBeNull] private IAheadBehindDataProvider _aheadBehindDataProvider;
 
-        public void Initialize(IAheadBehindDataProvider aheadBehindDataProvider, bool supportsAheadBehindData)
+        public void Initialize([CanBeNull]IAheadBehindDataProvider aheadBehindDataProvider)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
-            _supportsAheadBehindData = supportsAheadBehindData;
             ResetToDefaultState();
         }
 
         public void DisplayAheadBehindInformation(string branchName)
         {
-            if (!_supportsAheadBehindData || !AppSettings.ShowAheadBehindData)
-            {
-                return;
-            }
-
             ResetToDefaultState();
 
-            var aheadBehindData = _aheadBehindDataProvider.GetData(branchName);
+            var aheadBehindData = _aheadBehindDataProvider?.GetData(branchName);
             if (aheadBehindData == null || aheadBehindData.Count < 1 || !aheadBehindData.ContainsKey(branchName))
             {
                 return;

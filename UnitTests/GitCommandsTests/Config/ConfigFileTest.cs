@@ -63,7 +63,7 @@ namespace GitCommandsTests.Config
                 section,
                 value
             };
-            Module.RunGitCmd(args);
+            Module.GitExecutable.GetOutput(args);
         }
 
         private string GetConfigValue(string cfgFile, string key)
@@ -75,7 +75,7 @@ namespace GitCommandsTests.Config
                 "--get",
                 key.Quote()
             };
-            return Module.RunGitCmd(args).TrimEnd('\n');
+            return Module.GitExecutable.GetOutput(args).TrimEnd('\n');
         }
 
         private void CheckValueIsEqual(ConfigFile configFile, string key, string expectedValue)
