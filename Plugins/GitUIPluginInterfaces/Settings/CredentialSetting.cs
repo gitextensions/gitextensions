@@ -35,7 +35,7 @@ namespace GitUIPluginInterfaces
                 }
             }
 
-            settings.SetCredential(Name, new NetworkCredential(userName, password), gitModule);
+            settings.SetCredential(Name, gitModule, new NetworkCredential(userName, password));
         }
 
         public ISettingControlBinding CreateControlBinding()

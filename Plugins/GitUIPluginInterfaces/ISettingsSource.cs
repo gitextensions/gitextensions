@@ -190,7 +190,7 @@ namespace GitUIPluginInterfaces
             return GetValue(name, defaultValue, x => x);
         }
 
-        public virtual void SetCredential([NotNull] string name, [CanBeNull] NetworkCredential value, IGitModule gitModule)
+        public virtual void SetCredential([NotNull] string name, IGitModule gitModule, [CanBeNull] NetworkCredential value)
         {
             Credentials.AddOrUpdate(GetWindowsCredentialsTarget(name, gitModule), value, (s, credential) => value);
         }

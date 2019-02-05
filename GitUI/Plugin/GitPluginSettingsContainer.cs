@@ -37,9 +37,9 @@ namespace GitUI
             ExternalSettings.SetValue(_pluginName + name, value, encode);
         }
 
-        public override void SetCredential(string name, NetworkCredential value, IGitModule gitModule)
+        public override void SetCredential(string name, IGitModule gitModule, NetworkCredential value)
         {
-            ExternalSettings.SetCredential(name, value, gitModule);
+            ExternalSettings.SetCredential(name, gitModule, value);
         }
 
         public override NetworkCredential GetCredential(string name, IGitModule gitModule, NetworkCredential defaultValue)
