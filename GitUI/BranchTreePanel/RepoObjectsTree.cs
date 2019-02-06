@@ -211,8 +211,6 @@ namespace GitUI.BranchTreePanel
         {
             base.OnUICommandsSourceSet(source);
 
-            CancelBackgroundTasks();
-
             if (tsmiShowBranches.Checked)
             {
                 AddBranches();
