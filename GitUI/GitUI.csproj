@@ -103,6 +103,10 @@
       <SubType>UserControl</SubType>
       <DependentUpon>RepoObjectsTree.Nodes.cs</DependentUpon>
     </Compile>
+    <Compile Include="BranchTreePanel\RepoObjectsTree.SettingsContextMenu.cs">
+      <SubType>UserControl</SubType>
+      <DependentUpon>RepoObjectsTree.cs</DependentUpon>
+    </Compile>
     <Compile Include="BuildServerIntegration\BuildServerWatcher.cs" />
     <Compile Include="CommandsDialogs\EnvironmentInfo.cs">
       <SubType>UserControl</SubType>
@@ -1823,6 +1827,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Icons\DocumentTree.png" />
     <Content Include="Translation\Czech.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

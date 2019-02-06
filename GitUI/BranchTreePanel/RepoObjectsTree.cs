@@ -5,8 +5,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
@@ -23,13 +21,19 @@ namespace GitUI.BranchTreePanel
     {
         private readonly TranslationString _showBranchOnly =
             new TranslationString("Filter the revision grid to show this branch only\nTo show all branches, right click the revision grid, select 'view' and then the 'show all branches'");
+        private readonly TranslationString _searchTooltip = new TranslationString("Search");
+        private readonly TranslationString _showHideRefsTooltip = new TranslationString("Show/hide branches/remotes/tags");
 
+        private readonly Dictionary<Tree, int> _treeToPositionIndex = new Dictionary<Tree, int>();
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
         private readonly List<Tree> _rootNodes = new List<Tree>();
         private readonly SearchControl<string> _txtBranchCriterion;
+        private TreeNode _branchesTreeRootNode;
+        private TreeNode _remotesTreeRootNode;
         private TreeNode _tagTreeRootNode;
+        private BranchTree _branchesTree;
+        private RemoteBranchTree _remotesTree;
         private TagTree _tagTree;
-        private RemoteBranchTree _remoteTree;
         private List<TreeNode> _searchResult;
         private FilterBranchHelper _filterBranchHelper;
         private IAheadBehindDataProvider _aheadBehindDataProvider;
@@ -55,6 +59,11 @@ namespace GitUI.BranchTreePanel
             treeMain.NodeMouseDoubleClick += OnNodeDoubleClick;
 
             toolTip.SetToolTip(btnCollapseAll, mnubtnCollapseAll.ToolTipText);
+            toolTip.SetToolTip(btnSearch, _searchTooltip.Text);
+            toolTip.SetToolTip(btnSettings, _showHideRefsTooltip.Text);
+            tsmiShowBranches.Checked = AppSettings.RepoObjectsTreeShowBranches;
+            tsmiShowRemotes.Checked = AppSettings.RepoObjectsTreeShowRemotes;
+            tsmiShowTags.Checked = AppSettings.RepoObjectsTreeShowTags;
 
             _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
             _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
@@ -201,28 +210,17 @@ namespace GitUI.BranchTreePanel
         {
             base.OnUICommandsSourceSet(source);
 
-            var localBranchesRootNode = new TreeNode(Strings.Branches)
+            if (tsmiShowBranches.Checked)
             {
-                ImageKey = nameof(Images.BranchLocalRoot),
-                SelectedImageKey = nameof(Images.BranchLocalRoot),
-            };
-            AddTree(new BranchTree(localBranchesRootNode, source, _aheadBehindDataProvider));
+                AddBranches();
+            }
 
-            var remoteBranchesRootNode = new TreeNode(Strings.Remotes)
+            if (tsmiShowRemotes.Checked)
             {
-                ImageKey = nameof(Images.BranchRemoteRoot),
-                SelectedImageKey = nameof(Images.BranchRemoteRoot),
-            };
-            _remoteTree = new RemoteBranchTree(remoteBranchesRootNode, source)
-            {
-                TreeViewNode =
-                {
-                    ContextMenuStrip = menuRemotes
-                }
-            };
-            AddTree(_remoteTree);
+                AddRemotes();
+            }
 
-            if (showTagsToolStripMenuItem.Checked)
+            if (tsmiShowTags.Checked)
             {
                 AddTags();
             }
@@ -234,20 +232,65 @@ namespace GitUI.BranchTreePanel
             ret.Add(node);
         }
 
-        private void AddTags()
+        private void AddBranches()
         {
-            _tagTreeRootNode = new TreeNode(Strings.Tags) { ImageKey = nameof(Images.TagHorizontal) };
-            _tagTreeRootNode.SelectedImageKey = _tagTreeRootNode.ImageKey;
-            _tagTree = new TagTree(_tagTreeRootNode, UICommandsSource);
-            AddTree(_tagTree);
+            _branchesTreeRootNode = new TreeNode(Strings.Branches)
+            {
+                ImageKey = nameof(Images.BranchLocalRoot),
+                SelectedImageKey = nameof(Images.BranchLocalRoot),
+            };
+            _branchesTree = new BranchTree(_branchesTreeRootNode, UICommandsSource, _aheadBehindDataProvider);
+            AddTree(_branchesTree, 0);
             _searchResult = null;
         }
 
-        private void AddTree(Tree tree)
+        private void AddRemotes()
+        {
+            _remotesTreeRootNode = new TreeNode(Strings.Remotes)
+            {
+                ImageKey = nameof(Images.BranchRemoteRoot),
+                SelectedImageKey = nameof(Images.BranchRemoteRoot),
+            };
+            _remotesTree = new RemoteBranchTree(_remotesTreeRootNode, UICommandsSource)
+            {
+                TreeViewNode =
+                {
+                    ContextMenuStrip = menuRemotes
+                }
+            };
+            AddTree(_remotesTree, 1);
+            _searchResult = null;
+        }
+
+        private void AddTags()
+        {
+            _tagTreeRootNode = new TreeNode(Strings.Tags)
+            {
+                ImageKey = nameof(Images.TagHorizontal),
+                SelectedImageKey = nameof(Images.TagHorizontal),
+            };
+            _tagTree = new TagTree(_tagTreeRootNode, UICommandsSource);
+            AddTree(_tagTree, 2);
+            _searchResult = null;
+        }
+
+        private void AddTree(Tree tree, int positionIndex)
         {
             tree.TreeViewNode.SelectedImageKey = tree.TreeViewNode.ImageKey;
             tree.TreeViewNode.Tag = tree;
-            treeMain.Nodes.Add(tree.TreeViewNode);
+
+            // Remember current Tree's position index
+            _treeToPositionIndex[tree] = positionIndex;
+
+            // Add Tree's node in position index order. Because TreeNodeCollections cannot be sorted,
+            // we create a list from it, sort it, then clear and re-add the nodes back to the collection.
+            treeMain.BeginUpdate();
+            List<TreeNode> nodeList = treeMain.Nodes.OfType<TreeNode>().ToList();
+            nodeList.Add(tree.TreeViewNode);
+            treeMain.Nodes.Clear();
+            treeMain.Nodes.AddRange(nodeList.OrderBy(treeNode => _treeToPositionIndex[treeNode.Tag as Tree]).ToArray());
+            treeMain.EndUpdate();
+
             treeMain.Font = AppSettings.Font;
             _rootNodes.Add(tree);
             tree.RefreshTree();
@@ -352,20 +395,6 @@ namespace GitUI.BranchTreePanel
         private void OnBtnSettingsClicked(object sender, EventArgs e)
         {
             btnSettings.ContextMenuStrip.Show(btnSettings, 0, btnSettings.Height);
-        }
-
-        private void ShowTagsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            _searchResult = null;
-            if (showTagsToolStripMenuItem.Checked)
-            {
-                AddTags();
-            }
-            else
-            {
-                _rootNodes.Remove(_tagTree);
-                treeMain.Nodes.Remove(_tagTreeRootNode);
-            }
         }
 
         private void OnBtnSearchClicked(object sender, EventArgs e)

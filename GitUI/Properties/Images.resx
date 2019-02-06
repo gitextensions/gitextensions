@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!--
-    Microsoft ResX Schema
-
+  <!-- 
+    Microsoft ResX Schema 
+    
     Version 2.0
-
-    The primary goals of this format is to allow a simple XML format
-    that is mostly human readable. The generation and parsing of the
-    various data types are done through the TypeConverter classes
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
     associated with the data types.
-
+    
     Example:
-
+    
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-
-    There are any number of "resheader" rows that contain simple
+                
+    There are any number of "resheader" rows that contain simple 
     name/value pairs.
-
-    Each data row contains a name, and value. The row also contains a
-    type or mimetype. Type corresponds to a .NET class that support
-    text/value conversion through the TypeConverter architecture.
-    Classes that don't support this are serialized and stored with the
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
     mimetype set.
-
-    The mimetype is used for serialized objects, and tells the
-    ResXResourceReader how to depersist the object. This is currently not
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
     extensible. For a given mimetype the value must be set accordingly:
-
-    Note - application/x-microsoft.net.object.binary.base64 is the format
-    that the ResXResourceWriter will generate, however the reader can
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
     read any of the formats listed below.
-
+    
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-
+    
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with
+    value   : The object must be serialized with 
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array
+    value   : The object must be serialized into a byte array 
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -118,7 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-
   <data name="StatusBadgeWaiting" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\StatusBadgeWaiting.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -128,7 +127,6 @@
   <data name="StatusBadgeSuccess" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\StatusBadgeSuccess.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="HelpPullRebase" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Help\HelpPullRebase.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -150,7 +148,6 @@
   <data name="HelpPullMergeFastForward" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Help\HelpPullMergeFastForward.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="RepoStateClean" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\RepoStateClean.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -172,7 +169,6 @@
   <data name="RepoStateUntrackedOnly" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\RepoStateUntrackedOnly.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="CommitSignatureError" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\CommitSignatureError.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -182,7 +178,6 @@
   <data name="CommitSignatureWarning" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\CommitSignatureWarning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="TagWarning" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\TagWarning.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -204,7 +199,6 @@
   <data name="TagHorizontal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\TagHorizontal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="PuttyGen" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\PuttyGen.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -265,7 +259,6 @@
   <data name="Push" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Push.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="Pull" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Pull.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -281,11 +274,9 @@
   <data name="PullFetchAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\PullFetchAll.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="Delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="Branch" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Branch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -316,14 +307,12 @@
   <data name="BranchDelete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\BranchDelete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="CollapseAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\CollapseAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ExpandAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\ExpandAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="ResetWorkingDirChanges" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\ResetWorkingDirChanges.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -333,7 +322,6 @@
   <data name="ResetFileTo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\ResetFileTo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="Merge" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Merge.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -346,7 +334,6 @@
   <data name="NavigateUp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\NavigateUp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="EditFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\EditFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -362,14 +349,12 @@
   <data name="Save" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="AddToGitIgnore" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\AddToGitIgnore.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="EditGitIgnore" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\EditGitIgnore.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="GotoCommit" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\GotoCommit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -385,21 +370,18 @@
   <data name="StageAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\StageAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="Unstage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Unstage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="UnstageAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\UnstageAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="RepoCreate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\RepoCreate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="RepoOpen" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\RepoOpen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="SubmodulesManage" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\SubmodulesManage.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -436,46 +418,39 @@
   <data name="SubmoduleRevisionSemiUpDirty" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\SubmoduleRevisionSemiUpDirty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="GotoCurrentRevision" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\GotoCurrentRevision.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="ShowFirstParent" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\ShowFirstParent.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="RemoteAdd" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\RemoteAdd.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="RemoteDelete" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\RemoteDelete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="Blank" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Blank.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Key" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Key.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="WhitespaceIgnoreAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\WhitespaceIgnoreAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="WhitespaceIgnore" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\WhitespaceIgnore.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="EyeClosed" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\EyeClosed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="EyeOpened" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\EyeOpened.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="BulletAdd" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\BulletAdd.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="DashboardBackgroundGrey" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Backgrounds\DashboardBackgroundGrey.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -488,14 +463,12 @@
   <data name="DashboardFolderGit" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\DashboardFolderGit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="LayoutSidebarLeft" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\LayoutSidebarLeft.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="LayoutFooter" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\LayoutFooter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="Bisect" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Bisect.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -511,7 +484,6 @@
   <data name="BisectStop" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\BisectStop.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="Bug" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Bug.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -524,7 +496,6 @@
   <data name="CleanupRepo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\CleanupRepo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="Star" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\Star.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -534,7 +505,6 @@
   <data name="StarRemove" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\StarRemove.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="FileNew" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\FileNew.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -565,7 +535,6 @@
   <data name="FixupAndSquashMessageMarker" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\FixupAndSquashMessageMarker.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="FileStatusAdded" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\FileStatusAdded.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -584,7 +553,6 @@
   <data name="FileStatusUnknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\FileStatusUnknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="FileTree" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\FileTree.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -594,7 +562,6 @@
   <data name="ReloadRevisions" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\ReloadRevisions.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="ViewFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\ViewFile.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -766,14 +733,12 @@
   <data name="ClearLog" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\ClearLog.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="NumberOfLinesDecrease" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\NumberOfLinesDecrease.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NumberOfLinesIncrease" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\NumberOfLinesIncrease.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-
   <data name="GitExtensionsLogoWide" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\Logo\GitExtensionsLogoWide.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -830,5 +795,8 @@
   </data>
   <data name="RemoteEnableAndFetch" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\RemoteEnableAndFetch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DocumentTree" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\DocumentTree.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

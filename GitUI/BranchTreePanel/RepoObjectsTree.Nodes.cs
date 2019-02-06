@@ -165,12 +165,15 @@ namespace GitUI.BranchTreePanel
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
+                    var repoObjectTree = TreeViewNode.TreeView.Parent;
+
                     try
                     {
                         var token = _reloadCancellationTokenSequence.Next();
 
+                        repoObjectTree.Enabled = false;
+
                         TreeViewNode.TreeView.BeginUpdate();
-                        TreeViewNode.TreeView.Enabled = false;
                         IgnoreSelectionChangedEvent = true;
                         Nodes.Clear();
 
@@ -184,8 +187,8 @@ namespace GitUI.BranchTreePanel
                     finally
                     {
                         IgnoreSelectionChangedEvent = false;
-                        TreeViewNode.TreeView.Enabled = true;
                         TreeViewNode.TreeView.EndUpdate();
+                        repoObjectTree.Enabled = true;
                         ExpandPathToSelectedNode();
                     }
                 }).FileAndForget();

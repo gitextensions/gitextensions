@@ -1573,6 +1573,24 @@ namespace GitCommands
             }
         }
 
+        public static bool RepoObjectsTreeShowBranches
+        {
+            get => GetBool("RepoObjectsTree.ShowBranches", true);
+            set => SetBool("RepoObjectsTree.ShowBranches", value);
+        }
+
+        public static bool RepoObjectsTreeShowRemotes
+        {
+            get => GetBool("RepoObjectsTree.ShowRemotes", true);
+            set => SetBool("RepoObjectsTree.ShowRemotes", value);
+        }
+
+        public static bool RepoObjectsTreeShowTags
+        {
+            get => GetBool("RepoObjectsTree.ShowTags", false);
+            set => SetBool("RepoObjectsTree.ShowTags", value);
+        }
+
         public static bool IsPortable()
         {
             return Properties.Settings.Default.IsPortable;

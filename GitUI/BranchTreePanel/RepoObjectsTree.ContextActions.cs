@@ -131,7 +131,7 @@ namespace GitUI.BranchTreePanel
             RegisterClick<TagNode>(mnuBtnCheckoutTag, tag => tag.Checkout());
             Node.RegisterContextMenu(typeof(TagNode), menuTag);
 
-            RegisterClick(mnuBtnManageRemotesFromRootNode, () => _remoteTree.PopupManageRemotesForm(remoteName: null));
+            RegisterClick(mnuBtnManageRemotesFromRootNode, () => _remotesTree.PopupManageRemotesForm(remoteName: null));
         }
 
         private void FilterInRevisionGrid(BaseBranchNode branch)
