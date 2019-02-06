@@ -54,14 +54,40 @@ namespace GitUIPluginInterfaces
 
             public override void LoadSetting(ISettingsSource settings, CredentialsControl control, IGitModule gitModule)
             {
-                var credentials = Setting.GetValueOrDefault(settings, gitModule);
-                control.UserName = credentials.UserName;
-                control.Password = credentials.Password;
+                if (SettingLevelSupported(settings.SettingLevel))
+                {
+                    var credentials = Setting.GetValueOrDefault(settings, gitModule);
+                    control.UserName = credentials.UserName;
+                    control.Password = credentials.Password;
+                    control.Enabled = true;
+                }
+                else
+                {
+                    control.UserName = string.Empty;
+                    control.Password = string.Empty;
+                    control.Enabled = false;
+                }
             }
 
             public override void SaveSetting(ISettingsSource settings, CredentialsControl control, IGitModule gitModule)
             {
-                Setting.SaveValue(control.UserName, control.Password, settings, gitModule);
+                if (SettingLevelSupported(settings.SettingLevel))
+                {
+                    Setting.SaveValue(control.UserName, control.Password, settings, gitModule);
+                }
+            }
+
+            private bool SettingLevelSupported(SettingLevel settingLevel)
+            {
+                switch (settingLevel)
+                {
+                    case SettingLevel.Global:
+                    case SettingLevel.Local:
+                    case SettingLevel.Effective:
+                        return true;
+                }
+
+                return false;
             }
         }
     }
