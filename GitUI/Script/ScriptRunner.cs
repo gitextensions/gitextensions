@@ -73,10 +73,10 @@ namespace GitUI.Script
                 return false;
             }
 
-            return RunScript(owner, module, script, revisionGrid);
+            return RunScript(owner, module, script, uiCommands, revisionGrid);
         }
 
-        private static CommandStatus RunScript(IWin32Window owner, GitModule module, ScriptInfo scriptInfo, RevisionGridControl revisionGrid)
+        private static CommandStatus RunScript(IWin32Window owner, GitModule module, ScriptInfo scriptInfo, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
         {
             if (scriptInfo.AskConfirmation && MessageBox.Show(owner, $"Do you want to execute '{scriptInfo.Name}'?", "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
@@ -106,7 +106,7 @@ namespace GitUI.Script
                 {
                     if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        var eventArgs = new GitUIEventArgs(owner, revisionGrid.UICommands);
+                        var eventArgs = new GitUIEventArgs(owner, uiCommands);
                         return new CommandStatus(true, plugin.Execute(eventArgs));
                     }
                 }
@@ -116,6 +116,11 @@ namespace GitUI.Script
 
             if (command.StartsWith(NavigateToPrefix))
             {
+                if (revisionGrid == null)
+                {
+                    return false;
+                }
+
                 command = command.Replace(NavigateToPrefix, string.Empty);
                 if (!command.IsNullOrEmpty())
                 {
