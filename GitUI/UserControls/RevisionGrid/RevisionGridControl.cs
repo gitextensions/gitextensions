@@ -2084,7 +2084,7 @@ namespace GitUI
                         _settingsLoaded = true;
                     }
 
-                    if (ScriptRunner.RunScript(this, Module, sender.ToString(), this))
+                    if (ScriptRunner.RunScript(this, Module, sender.ToString(), this).NeedsGridRefresh)
                     {
                         RefreshRevisions();
                     }
@@ -2195,7 +2195,7 @@ namespace GitUI
             Refresh();
         }
 
-        internal bool ExecuteCommand(Commands cmd)
+        internal CommandStatus ExecuteCommand(Commands cmd)
         {
             return ExecuteCommand((int)cmd);
         }
@@ -2632,7 +2632,7 @@ namespace GitUI
             GoToMergeBaseCommit = 31,
         }
 
-        protected override bool ExecuteCommand(int cmd)
+        protected override CommandStatus ExecuteCommand(int cmd)
         {
             switch ((Commands)cmd)
             {
@@ -2674,8 +2674,12 @@ namespace GitUI
                 case Commands.CompareSelectedCommits: compareSelectedCommitsMenuItem_Click(null, null); break;
                 default:
                     {
-                        bool result = base.ExecuteCommand(cmd);
-                        RefreshRevisions();
+                        var result = base.ExecuteCommand(cmd);
+                        if (result.NeedsGridRefresh)
+                        {
+                            RefreshRevisions();
+                        }
+
                         return result;
                     }
             }

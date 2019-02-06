@@ -141,12 +141,17 @@ namespace GitUI
         {
         }
 
-        protected override bool ExecuteCommand(int command)
+        protected override CommandStatus ExecuteCommand(int command)
         {
-            return ExecuteScriptCommand()
-                || base.ExecuteCommand(command);
+            var result = ExecuteScriptCommand();
+            if (!result.Executed)
+            {
+                result = base.ExecuteCommand(command);
+            }
 
-            bool ExecuteScriptCommand()
+            return result;
+
+            CommandStatus ExecuteScriptCommand()
             {
                 return Script.ScriptRunner.ExecuteScriptCommand(this, Module, command, this as RevisionGridControl);
             }

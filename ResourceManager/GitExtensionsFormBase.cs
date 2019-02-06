@@ -51,7 +51,7 @@ namespace ResourceManager
                 {
                     if (hotkey != null && hotkey.KeyData == keyData)
                     {
-                        return ExecuteCommand(hotkey.CommandCode);
+                        return ExecuteCommand(hotkey.CommandCode).Executed;
                     }
                 }
             }
@@ -71,7 +71,7 @@ namespace ResourceManager
         }
 
         /// <summary>Override this method to handle form-specific Hotkey commands.</summary>
-        protected virtual bool ExecuteCommand(int command)
+        protected virtual CommandStatus ExecuteCommand(int command)
         {
             return false;
         }

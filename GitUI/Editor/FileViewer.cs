@@ -1167,7 +1167,7 @@ namespace GitUI.Editor
             PreviousChange = 7
         }
 
-        protected override bool ExecuteCommand(int cmd)
+        protected override CommandStatus ExecuteCommand(int cmd)
         {
             var command = (Commands)cmd;
 

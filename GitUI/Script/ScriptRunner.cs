@@ -10,25 +10,26 @@ namespace GitUI.Script
     /// <summary>Runs scripts.</summary>
     public static class ScriptRunner
     {
-        /// <summary>Tries to run scripts identified by a <paramref name="command"/>
-        /// and returns true if any executed.</summary>
-        public static bool ExecuteScriptCommand(IWin32Window owner, GitModule module, int command, RevisionGridControl revisionGrid = null)
+        /// <summary>Tries to run scripts identified by a <paramref name="command"/></summary>
+        public static CommandStatus ExecuteScriptCommand(IWin32Window owner, GitModule module, int command, RevisionGridControl revisionGrid = null)
         {
             var anyScriptExecuted = false;
+            var needsGridRefresh = false;
 
             foreach (var script in ScriptManager.GetScripts())
             {
                 if (script.HotkeyCommandIdentifier == command)
                 {
-                    RunScript(owner, module, script.Name, revisionGrid);
+                    var result = RunScript(owner, module, script.Name, revisionGrid);
                     anyScriptExecuted = true;
+                    needsGridRefresh |= result.NeedsGridRefresh;
                 }
             }
 
-            return anyScriptExecuted;
+            return new CommandStatus(anyScriptExecuted, needsGridRefresh);
         }
 
-        public static bool RunScript(IWin32Window owner, GitModule module, string scriptKey, RevisionGridControl revisionGrid)
+        public static CommandStatus RunScript(IWin32Window owner, GitModule module, string scriptKey, RevisionGridControl revisionGrid)
         {
             if (string.IsNullOrEmpty(scriptKey))
             {
@@ -75,7 +76,7 @@ namespace GitUI.Script
             return RunScript(owner, module, script, revisionGrid);
         }
 
-        private static bool RunScript(IWin32Window owner, GitModule module, ScriptInfo scriptInfo, RevisionGridControl revisionGrid)
+        private static CommandStatus RunScript(IWin32Window owner, GitModule module, ScriptInfo scriptInfo, RevisionGridControl revisionGrid)
         {
             if (scriptInfo.AskConfirmation && MessageBox.Show(owner, $"Do you want to execute '{scriptInfo.Name}'?", "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {

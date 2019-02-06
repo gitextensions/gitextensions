@@ -226,12 +226,12 @@ See the changes in the commit form.");
             EditFile = 5
         }
 
-        public bool ExecuteCommand(Command cmd)
+        public CommandStatus ExecuteCommand(Command cmd)
         {
             return ExecuteCommand((int)cmd);
         }
 
-        protected override bool ExecuteCommand(int cmd)
+        protected override CommandStatus ExecuteCommand(int cmd)
         {
             switch ((Command)cmd)
             {
