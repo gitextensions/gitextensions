@@ -241,7 +241,7 @@ namespace GitUI.BranchTreePanel
                 SelectedImageKey = nameof(Images.BranchLocalRoot),
             };
             _branchesTree = new BranchTree(_branchesTreeRootNode, UICommandsSource, _aheadBehindDataProvider);
-            AddTree(_branchesTree);
+            AddTree(_branchesTree, 0);
             _searchResult = null;
         }
 
@@ -259,7 +259,7 @@ namespace GitUI.BranchTreePanel
                     ContextMenuStrip = menuRemotes
                 }
             };
-            AddTree(_remotesTree);
+            AddTree(_remotesTree, 1);
             _searchResult = null;
         }
 
@@ -271,15 +271,29 @@ namespace GitUI.BranchTreePanel
                 SelectedImageKey = nameof(Images.TagHorizontal),
             };
             _tagTree = new TagTree(_tagTreeRootNode, UICommandsSource);
-            AddTree(_tagTree);
+            AddTree(_tagTree, 2);
             _searchResult = null;
         }
 
-        private void AddTree(Tree tree)
+        private Dictionary<Tree, int> _treeToPositionIndex = new Dictionary<Tree, int>();
+
+        private void AddTree(Tree tree, int positionIndex)
         {
             tree.TreeViewNode.SelectedImageKey = tree.TreeViewNode.ImageKey;
             tree.TreeViewNode.Tag = tree;
-            treeMain.Nodes.Add(tree.TreeViewNode);
+
+            // Remember current Tree's position index
+            _treeToPositionIndex[tree] = positionIndex;
+
+            // Add Tree's node in position index order. Because TreeNodeCollections cannot be sorted,
+            // we create a list from it, sort it, then clear and re-add the nodes back to the collection.
+            treeMain.BeginUpdate();
+            List<TreeNode> nodeList = treeMain.Nodes.OfType<TreeNode>().ToList();
+            nodeList.Add(tree.TreeViewNode);
+            treeMain.Nodes.Clear();
+            treeMain.Nodes.AddRange(nodeList.OrderBy(treeNode => _treeToPositionIndex[treeNode.Tag as Tree]).ToArray());
+            treeMain.EndUpdate();
+
             treeMain.Font = AppSettings.Font;
             _rootNodes.Add(tree);
             tree.RefreshTree();
