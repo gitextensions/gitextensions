@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using GitCommands;
 
 namespace GitUI.BranchTreePanel
@@ -13,7 +12,6 @@ namespace GitUI.BranchTreePanel
             if (tsmiShowBranches.Checked)
             {
                 AddBranches();
-                _branchesTree.RefreshTree();
             }
             else
             {
@@ -29,7 +27,6 @@ namespace GitUI.BranchTreePanel
             if (tsmiShowRemotes.Checked)
             {
                 AddRemotes();
-                _remotesTree.RefreshTree();
             }
             else
             {
@@ -45,7 +42,6 @@ namespace GitUI.BranchTreePanel
             if (tsmiShowTags.Checked)
             {
                 AddTags();
-                _tagTree.RefreshTree();
             }
             else
             {

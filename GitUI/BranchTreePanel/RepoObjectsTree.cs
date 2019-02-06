@@ -5,8 +5,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
@@ -26,6 +24,7 @@ namespace GitUI.BranchTreePanel
         private readonly TranslationString _searchTooltip = new TranslationString("Search");
         private readonly TranslationString _showHideRefsTooltip = new TranslationString("Show/hide branches/remotes/tags");
 
+        private readonly Dictionary<Tree, int> _treeToPositionIndex = new Dictionary<Tree, int>();
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
         private readonly List<Tree> _rootNodes = new List<Tree>();
         private readonly SearchControl<string> _txtBranchCriterion;
@@ -274,8 +273,6 @@ namespace GitUI.BranchTreePanel
             AddTree(_tagTree, 2);
             _searchResult = null;
         }
-
-        private Dictionary<Tree, int> _treeToPositionIndex = new Dictionary<Tree, int>();
 
         private void AddTree(Tree tree, int positionIndex)
         {
