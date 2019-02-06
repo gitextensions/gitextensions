@@ -96,7 +96,7 @@ namespace GitUI.Script
             if (scriptInfo.IsPowerShell)
             {
                 PowerShellHelper.RunPowerShell(command, argument, module.WorkingDir, scriptInfo.RunInBackground);
-                return false;
+                return new CommandStatus(true, false);
             }
 
             if (command.StartsWith(PluginPrefix))
@@ -107,7 +107,7 @@ namespace GitUI.Script
                     if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
                     {
                         var eventArgs = new GitUIEventArgs(owner, revisionGrid.UICommands);
-                        return plugin.Execute(eventArgs);
+                        return new CommandStatus(true, plugin.Execute(eventArgs));
                     }
                 }
 
@@ -127,7 +127,7 @@ namespace GitUI.Script
                     }
                 }
 
-                return false;
+                return new CommandStatus(true, false);
             }
 
             if (!scriptInfo.RunInBackground)
@@ -146,7 +146,7 @@ namespace GitUI.Script
                 }
             }
 
-            return !scriptInfo.RunInBackground;
+            return new CommandStatus(true, !scriptInfo.RunInBackground);
         }
 
         private static string ExpandCommandVariables(string originalCommand, GitModule module)
