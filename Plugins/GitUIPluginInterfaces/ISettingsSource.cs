@@ -200,7 +200,7 @@ namespace GitUIPluginInterfaces
             var targetName = GetWindowsCredentialsTarget(name, gitModule);
             if (Credentials.TryGetValue(targetName, out var result) || CredentialsManager.TryGetCredentials(targetName, out result))
             {
-                return result;
+                return result ?? defaultValue;
             }
 
             return defaultValue;

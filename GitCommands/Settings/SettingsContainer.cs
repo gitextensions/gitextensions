@@ -39,8 +39,8 @@ namespace GitCommands.Settings
         {
             foreach (var networkCredentials in Credentials.ToList())
             {
-                CredentialsManager.UpdateCredentials(networkCredentials.Key, networkCredentials.Value.UserName,
-                    networkCredentials.Value.Password);
+                CredentialsManager.UpdateCredentials(networkCredentials.Key, networkCredentials.Value?.UserName,
+                    networkCredentials.Value?.Password);
             }
 
             Credentials.Clear();

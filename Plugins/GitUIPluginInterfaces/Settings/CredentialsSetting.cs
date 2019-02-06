@@ -32,7 +32,10 @@ namespace GitUIPluginInterfaces
                 }
             }
 
-            settings.SetCredentials(Name, gitModule, new NetworkCredential(userName, password));
+            var newCredentials = string.IsNullOrWhiteSpace(userName)
+                ? null
+                : new NetworkCredential(userName, password);
+            settings.SetCredentials(Name, gitModule, newCredentials);
         }
 
         public ISettingControlBinding CreateControlBinding()
@@ -74,6 +77,9 @@ namespace GitUIPluginInterfaces
                 if (SettingLevelSupported(settings.SettingLevel))
                 {
                     Setting.SaveValue(control.UserName, control.Password, settings, gitModule);
+
+                    // Reload actual settings.
+                    LoadSetting(settings, control, gitModule);
                 }
             }
 
