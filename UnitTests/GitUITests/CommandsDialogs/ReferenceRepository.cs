@@ -1,6 +1,8 @@
 ﻿using System;
 using CommonTestUtils;
 using GitCommands;
+using LibGit2Sharp;
+using Remote = LibGit2Sharp.Remote;
 
 namespace GitUITests.CommandsDialogs
 {
@@ -30,6 +32,29 @@ namespace GitUITests.CommandsDialogs
         public GitModule Module => _moduleTestHelper.Module;
 
         public string CommitHash => _commitHash;
+
+        public void CheckoutRevision()
+        {
+            using (var repository = new LibGit2Sharp.Repository(Module.WorkingDir))
+            {
+                Commands.Checkout(repository, CommitHash, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
+            }
+        }
+
+        public void CreateRemoteForMasterBranch()
+        {
+            using (var repository = new LibGit2Sharp.Repository(Module.WorkingDir))
+            {
+                repository.Network.Remotes.Add("origin", "http://useless.url");
+                Remote remote = repository.Network.Remotes["origin"];
+
+                var masterBranch = repository.Branches["master"];
+
+                repository.Branches.Update(masterBranch,
+                    b => b.Remote = remote.Name,
+                    b => b.UpstreamBranch = masterBranch.CanonicalName);
+            }
+        }
 
         public void Reset()
         {
