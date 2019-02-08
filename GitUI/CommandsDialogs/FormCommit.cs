@@ -1180,7 +1180,7 @@ namespace GitUI.CommandsDialogs
 
         private void ClearDiffViewIfNoFilesLeft()
         {
-            if ((Staged.IsEmpty && Unstaged.IsEmpty) || (!Unstaged.SelectedItems.Any() && !Staged.SelectedItems.Any()))
+            if (Staged.IsEmpty && Unstaged.IsEmpty)
             {
                 SelectedDiff.Clear();
             }
@@ -1515,12 +1515,13 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ClearDiffViewIfNoFilesLeft();
-
             if (!Unstaged.SelectedItems.Any())
             {
+                Unstaged.SelectFirstVisibleItem();
                 return;
             }
+
+            ClearDiffViewIfNoFilesLeft();
 
             Staged.ClearSelected();
 
@@ -1775,6 +1776,12 @@ namespace GitUI.CommandsDialogs
         {
             if (_currentFilesList != Staged || _skipUpdate)
             {
+                return;
+            }
+
+            if (!Staged.SelectedItems.Any())
+            {
+                Staged.SelectFirstVisibleItem();
                 return;
             }
 
@@ -2034,13 +2041,14 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                SelectedDiff.Clear();
                 if (Unstaged.SelectedItem == null ||
                     MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
                     DialogResult.Yes)
                 {
                     return;
                 }
+
+                SelectedDiff.Clear();
 
                 Unstaged.StoreNextIndexToSelect();
                 foreach (var item in Unstaged.SelectedItems)
