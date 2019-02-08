@@ -529,7 +529,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             var textOffset = spacing2 + imageList1.ImageSize.Width + spacing2;
             int textWidth = e.Bounds.Width - (int)textOffset;
 
-            if (e.Item == HoveredItem)
+            if (e.Item == HoveredItem || e.Item.Selected)
             {
                 e.Graphics.FillRectangle(_hoverColorBrush, e.Bounds);
             }
@@ -612,6 +612,11 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 // client coordinates within the given ListView
                 Point localPoint = listView1.PointToClient(Cursor.Position);
                 _rightClickedItem = listView1.GetItemAt(localPoint.X, localPoint.Y);
+
+                if (_rightClickedItem != null)
+                {
+                    _rightClickedItem.Selected = true;
+                }
             }
         }
 
