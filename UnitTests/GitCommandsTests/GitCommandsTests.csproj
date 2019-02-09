@@ -98,6 +98,7 @@
     <Compile Include="PathEqualityComparerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remote\GitRemoteManagerTests.cs" />
+    <Compile Include="Submodules\SubmoduleStatusProviderTests.cs" />
     <Compile Include="UserRepositoryHistory\Legacy\RepositoryCategoryXmlSerialiserTests.cs" />
     <Compile Include="UserRepositoryHistory\Legacy\RepositoryHistoryMigratorTests.cs" />
     <Compile Include="UserRepositoryHistory\Legacy\RepositoryStorageTests.cs" />

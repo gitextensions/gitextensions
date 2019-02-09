@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -190,50 +191,71 @@ namespace GitCommands.Submodules
 
         private async Task GetSuperProjectRepositorySubmodulesStatusAsync(bool updateStatus, SubmoduleInfoResult result, GitModule module, CancellationToken cancelToken, string noBranchText)
         {
-            if (module.SuperprojectModule == null)
+            // This function always at least sets result.TopProject
+
+            bool isCurrentTopProject = module.SuperprojectModule == null;
+            if (isCurrentTopProject)
             {
+                string path = module.WorkingDir;
+                string name = Path.GetFileName(Path.GetDirectoryName(module.WorkingDir)) + GetBranchNameSuffix(path, noBranchText);
+                result.TopProject = new SubmoduleInfo { Text = name, Path = module.WorkingDir, Bold = true };
                 return;
             }
 
-            string name, path;
-            GitModule supersuperproject = FindTopProjectModule(module.SuperprojectModule);
-            if (module.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
-            {
-                name = Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
-                path = supersuperproject.WorkingDir;
-                if (AppSettings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                {
-                    name = name + " " + GetModuleBranch(path, noBranchText);
-                }
+            IGitModule topProject = FindTopProjectModule(module.SuperprojectModule);
+            bool isParentTopProject = module.SuperprojectModule.WorkingDir == topProject.WorkingDir;
 
-                result.TopProject = new SubmoduleInfo { Text = name, Path = supersuperproject.WorkingDir };
-                await GetSubmoduleStatusAsync(updateStatus, result.TopProject, cancelToken);
-            }
+            // Set result.SuperProject
+            await SetSuperProjectSubmoduleInfoAsync(updateStatus, result, module, cancelToken, noBranchText, topProject, isParentTopProject);
 
-            if (module.SuperprojectModule.WorkingDir != supersuperproject.WorkingDir)
+            // Set result.TopProject
+            await SetTopProjectSubmoduleInfoAsync(updateStatus, result, module, cancelToken, noBranchText, topProject, isParentTopProject);
+
+            // Set result.CurrentSubmoduleName and populate result.SuperSubmodules
+            await SetSubmoduleDataAsync(updateStatus, result, module, cancelToken, noBranchText, topProject);
+        }
+
+        private async Task SetSuperProjectSubmoduleInfoAsync(bool updateStatus, SubmoduleInfoResult result, GitModule module, CancellationToken cancelToken, string noBranchText, IGitModule topProject, bool isParentTopProject)
+        {
+            string name;
+            if (isParentTopProject)
             {
-                var localPath = module.SuperprojectModule.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
-                localPath = PathUtil.GetDirectoryName(localPath.ToPosixPath());
-                name = localPath;
+                name = Path.GetFileName(Path.GetDirectoryName(topProject.WorkingDir));
             }
             else
             {
-                name = Path.GetFileName(Path.GetDirectoryName(supersuperproject.WorkingDir));
+                var localPath = module.SuperprojectModule.WorkingDir.Substring(topProject.WorkingDir.Length);
+                localPath = PathUtil.GetDirectoryName(localPath.ToPosixPath());
+                name = localPath;
             }
 
-            path = module.SuperprojectModule.WorkingDir;
-            if (AppSettings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-            {
-                name = name + " " + GetModuleBranch(path, noBranchText);
-            }
-
+            string path = module.SuperprojectModule.WorkingDir;
+            name += GetBranchNameSuffix(path, noBranchText);
             result.SuperProject = new SubmoduleInfo { Text = name, Path = module.SuperprojectModule.WorkingDir };
             await GetSubmoduleStatusAsync(updateStatus, result.SuperProject, cancelToken);
+        }
 
-            var submodules = supersuperproject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName).ToArray();
+        private async Task SetTopProjectSubmoduleInfoAsync(bool updateStatus, SubmoduleInfoResult result, GitModule module, CancellationToken cancelToken, string noBranchText, IGitModule topProject, bool isParentTopProject)
+        {
+            if (isParentTopProject)
+            {
+                result.TopProject = result.SuperProject;
+            }
+            else
+            {
+                string path = topProject.WorkingDir;
+                string name = Path.GetFileName(Path.GetDirectoryName(topProject.WorkingDir)) + GetBranchNameSuffix(path, noBranchText);
+                result.TopProject = new SubmoduleInfo { Text = name, Path = topProject.WorkingDir };
+                await GetSubmoduleStatusAsync(updateStatus, result.TopProject, cancelToken);
+            }
+        }
+
+        private async Task SetSubmoduleDataAsync(bool updateStatus, SubmoduleInfoResult result, GitModule module, CancellationToken cancelToken, string noBranchText, IGitModule topProject)
+        {
+            var submodules = topProject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName).ToArray();
             if (submodules.Any())
             {
-                string localPath = module.WorkingDir.Substring(supersuperproject.WorkingDir.Length);
+                string localPath = module.WorkingDir.Substring(topProject.WorkingDir.Length);
                 localPath = PathUtil.GetDirectoryName(localPath.ToPosixPath());
 
                 List<Task> subTasks = new List<Task>();
@@ -241,12 +263,8 @@ namespace GitCommands.Submodules
                 foreach (var submodule in submodules)
                 {
                     cancelToken.ThrowIfCancellationRequested();
-                    name = submodule;
-                    path = supersuperproject.GetSubmoduleFullPath(submodule);
-                    if (AppSettings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(path))
-                    {
-                        name = name + " " + GetModuleBranch(path, noBranchText);
-                    }
+                    string path = topProject.GetSubmoduleFullPath(submodule);
+                    string name = submodule + GetBranchNameSuffix(path, noBranchText);
 
                     bool bold = false;
                     if (submodule == localPath)
@@ -262,6 +280,16 @@ namespace GitCommands.Submodules
 
                 await Task.WhenAll(subTasks);
             }
+        }
+
+        private string GetBranchNameSuffix(string repositoryPath, string noBranchText)
+        {
+            if (AppSettings.DashboardShowCurrentBranch && !GitModule.IsBareRepository(repositoryPath))
+            {
+                return " " + GetModuleBranch(repositoryPath, noBranchText);
+            }
+
+            return string.Empty;
         }
 
         private static string GetModuleBranch(string path, string noBranchText)

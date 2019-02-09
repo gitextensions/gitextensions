@@ -2684,7 +2684,9 @@ namespace GitUI.CommandsDialogs
             if (result.SuperProject != null)
             {
                 newItems.Add(new ToolStripSeparator());
-                if (result.TopProject != null)
+
+                // Show top project only if it's not our super project
+                if (result.TopProject != null && result.TopProject != result.SuperProject)
                 {
                     newItems.Add(CreateSubmoduleMenuItem(cancelToken, result.TopProject, _topProjectModuleFormat.Text));
                 }
