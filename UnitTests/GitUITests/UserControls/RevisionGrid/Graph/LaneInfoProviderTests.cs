@@ -165,7 +165,7 @@ namespace GitUITests.UserControls.RevisionGrid.Graph
         {
             _infoProvider.GetLaneInfo(0, 0).Should()
                 .Be(string.Format(branch == null ? "{0}{1}{2}{2}{6}{7}"
-                                                 : "{0}{1}{2}\n{3}: {4}{5}{2}{6}{7}",
+                                                 : "{0}{1}{2}{2}{3}: {4}{5}{2}{6}{7}",
                     prefix,
                     node.GitRevision.Guid,
                     Environment.NewLine,

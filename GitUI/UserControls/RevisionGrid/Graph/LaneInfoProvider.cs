@@ -44,12 +44,30 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 laneInfoText.AppendLine(node.GitRevision.Guid);
 
                 var branch = new BranchFinder(node);
+                var mergedWith = branch.MergedWith;
                 if (branch.CommittedTo.IsNotNullOrWhitespace())
                 {
-                    laneInfoText.AppendFormat("\n{0}: {1}", Strings.Branch, branch.CommittedTo);
-                    if (branch.MergedWith.IsNotNullOrWhitespace())
+                    while (branch.IsMergedToMaster)
                     {
-                        laneInfoText.AppendFormat(MergedWithText.Text, branch.MergedWith);
+                        var leftmostChild = _nodeLocator.GetLeftmostNonartificialChild(branch.MergeNode);
+                        if (leftmostChild == null)
+                        {
+                            break; // from while
+                        }
+
+                        var childBranch = new BranchFinder(leftmostChild, branch.MergeNode);
+                        if (childBranch.CommittedTo.IsNullOrWhiteSpace())
+                        {
+                            break; // from while
+                        }
+
+                        branch = childBranch;
+                    }
+
+                    laneInfoText.AppendFormat("{0}{1}: {2}", Environment.NewLine, Strings.Branch, branch.CommittedTo);
+                    if (mergedWith.IsNotNullOrWhitespace())
+                    {
+                        laneInfoText.AppendFormat(MergedWithText.Text, mergedWith);
                     }
                 }
 
@@ -82,22 +100,31 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
     internal class BranchFinder
     {
+        private const string Master = "master";
         private static readonly Regex MergeRegex = new Regex("(?i)^merged? (pull request (.*) from )?(.*branch |tag )?'?([^ ']*[^ '.])'?( of [^ ]*[^ .])?( into (.*[^.]))?\\.?$",
                                                              RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-        internal BranchFinder([NotNull] RevisionGraphRevision node)
+        internal BranchFinder([NotNull] RevisionGraphRevision node, [CanBeNull] RevisionGraphRevision parent = null)
         {
-            RevisionGraphRevision parent = null;
             while (!CheckForMerge(node, parent) && !FindBranch(node) && node.Children.Any())
             {
                 // try the first child and its children
                 parent = node;
                 node = node.Children.Last(); // note: Children are stored in reverse order
             }
+
+            // prefer explicit references over implicit master branch
+            if (IsMergedToMaster && FindBranch(node))
+            {
+                // indicate that master is explicit
+                MergeNode = null;
+            }
         }
 
         internal string CommittedTo { get; private set; }
         internal string MergedWith { get; private set; }
+        internal RevisionGraphRevision MergeNode { get; private set; }
+        internal bool IsMergedToMaster => MergeNode != null && CommittedTo == Master;
 
         private bool FindBranch([NotNull] RevisionGraphRevision node)
         {
@@ -135,6 +162,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
 
             if (mergedInto != null)
             {
+                MergeNode = node;
                 CommittedTo = isTheFirstBranch ? mergedInto : mergedWith;
             }
 
@@ -156,7 +184,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 var matchPullRequest = match.Groups[2];
                 var matchWith = match.Groups[4];
                 var matchInto = match.Groups[7];
-                into = matchInto.Success ? matchInto.Value : "master";
+                into = matchInto.Success ? matchInto.Value : Master;
                 with = matchWith.Success ? matchWith.Value : "?";
                 if (appendPullRequest && matchPullRequest.Success)
                 {
