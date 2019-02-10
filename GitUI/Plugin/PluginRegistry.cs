@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GitCommands;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
@@ -13,6 +15,11 @@ namespace GitUI
 
         public static List<IRepositoryHostPlugin> GitHosters { get; } = new List<IRepositoryHostPlugin>();
 
+        public static bool PluginsRegistered { get; private set; }
+
+        /// <summary>
+        /// Initialises all available plugins on the background thread.
+        /// </summary>
         public static void Initialize()
         {
             lock (Plugins)
@@ -22,18 +29,23 @@ namespace GitUI
                     return;
                 }
 
-                ManagedExtensibility.SetApplicationDataFolder(AppSettings.ApplicationDataPath.Value);
-
-                foreach (var plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
+                try
                 {
-                    plugin.SettingsContainer = new GitPluginSettingsContainer(plugin.Name);
-
-                    if (plugin is IRepositoryHostPlugin repositoryHostPlugin)
+                    foreach (var plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
                     {
-                        GitHosters.Add(repositoryHostPlugin);
-                    }
+                        plugin.SettingsContainer = new GitPluginSettingsContainer(plugin.Name);
 
-                    Plugins.Add(plugin);
+                        if (plugin is IRepositoryHostPlugin repositoryHostPlugin)
+                        {
+                            GitHosters.Add(repositoryHostPlugin);
+                        }
+
+                        Plugins.Add(plugin);
+                    }
+                }
+                catch
+                {
+                    // no-op
                 }
             }
         }
@@ -47,6 +59,28 @@ namespace GitUI
             }
 
             return GitHosters.FirstOrDefault(gitHoster => gitHoster.GitModuleIsRelevantToMe(module));
+        }
+
+        public static void Register(IGitUICommands gitUiCommands)
+        {
+            if (PluginsRegistered)
+            {
+                return;
+            }
+
+            Plugins.ForEach(p => p.Register(gitUiCommands));
+            PluginsRegistered = true;
+        }
+
+        public static void Unregister(IGitUICommands gitUiCommands)
+        {
+            if (!PluginsRegistered)
+            {
+                return;
+            }
+
+            Plugins.ForEach(p => p.Unregister(gitUiCommands));
+            PluginsRegistered = false;
         }
     }
 }

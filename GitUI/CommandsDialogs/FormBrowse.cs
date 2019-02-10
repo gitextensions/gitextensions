@@ -165,16 +165,9 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await TaskScheduler.Default;
-
-                try
-                {
-                    PluginRegistry.Initialize();
-                }
-                finally
-                {
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    RegisterPlugins();
-                }
+                PluginRegistry.Initialize();
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                RegisterPlugins();
             }).FileAndForget();
 
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
@@ -536,7 +529,7 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnClosed(EventArgs e)
         {
-            UnregisterPlugins();
+            PluginRegistry.Unregister(UICommands);
             base.OnClosed(e);
         }
 
@@ -690,10 +683,10 @@ namespace GitUI.CommandsDialogs
 
                     pluginsToolStripMenuItem.DropDownItems.Insert(pluginsToolStripMenuItem.DropDownItems.Count - 2, item);
                 }
-
-                // Allow the plugin to perform any self-registration actions
-                plugin.Register(UICommands);
             }
+
+            // Allow the plugin to perform any self-registration actions
+            PluginRegistry.Register(UICommands);
 
             UICommands.RaisePostRegisterPlugin(this);
 
@@ -705,14 +698,6 @@ namespace GitUI.CommandsDialogs
             }
 
             UpdatePluginMenu(Module.IsValidGitWorkingDir());
-        }
-
-        private void UnregisterPlugins()
-        {
-            foreach (var plugin in PluginRegistry.Plugins)
-            {
-                plugin.Unregister(UICommands);
-            }
         }
 
         /// <summary>
@@ -1905,7 +1890,7 @@ namespace GitUI.CommandsDialogs
         {
             var module = e.GitModule;
             HideVariableMainMenuItems();
-            UnregisterPlugins();
+            PluginRegistry.Unregister(UICommands);
             RevisionGrid.InvalidateCount();
             _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
             _submoduleStatusProvider.Init();

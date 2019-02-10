@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
@@ -441,15 +442,43 @@ namespace GitUI
 
             bool Action()
             {
-                using (var form = new FormCommit(this))
+                // Commit dialog can be opened on its own without the main form
+                // If it is opened by itself, we need to ensure plugins are loaded because some of them
+                // may have hooks into the commit flow
+                bool werePluginsRegistered = PluginRegistry.PluginsRegistered;
+
+                try
                 {
-                    if (showOnlyWhenChanges)
+                    // Load plugins synchronously
+                    // if the commit dialog is opened from the main form, all plugins are already loaded and we return instantly,
+                    // if the dialog is loaded on its own, plugins need to be loaded before we load the form
+                    if (!werePluginsRegistered)
                     {
-                        form.ShowDialogWhenChanges(owner);
+                        ThreadHelper.JoinableTaskFactory.Run(async () =>
+                        {
+                            PluginRegistry.Initialize();
+                            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                            PluginRegistry.Register(this);
+                        });
                     }
-                    else
+
+                    using (var form = new FormCommit(this))
                     {
-                        form.ShowDialog(owner);
+                        if (showOnlyWhenChanges)
+                        {
+                            form.ShowDialogWhenChanges(owner);
+                        }
+                        else
+                        {
+                            form.ShowDialog(owner);
+                        }
+                    }
+                }
+                finally
+                {
+                    if (!werePluginsRegistered)
+                    {
+                        PluginRegistry.Unregister(this);
                     }
                 }
 
