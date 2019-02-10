@@ -7641,9 +7641,17 @@ Do you want to remove it from the recent repositories list?</source>
   </file>
   <file datatype="plaintext" original="RepoObjectsTree" source-language="en">
     <body>
+      <trans-unit id="_searchTooltip.Text">
+        <source>Search</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_showBranchOnly.Text">
         <source>Filter the revision grid to show this branch only
 To show all branches, right click the revision grid, select 'view' and then the 'show all branches'</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_showHideRefsTooltip.Text">
+        <source>Show/hide branches/remotes/tags</source>
         <target />
       </trans-unit>
       <trans-unit id="lblSearchBranch.Text">
@@ -7762,8 +7770,16 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Re&amp;set</source>
         <target />
       </trans-unit>
-      <trans-unit id="showTagsToolStripMenuItem.Text">
-        <source>Show &amp;tags</source>
+      <trans-unit id="tsmiShowBranches.Text">
+        <source>&amp;Branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowRemotes.Text">
+        <source>&amp;Remotes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiShowTags.Text">
+        <source>&amp;Tags</source>
         <target />
       </trans-unit>
     </body>
@@ -8285,7 +8301,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="archiveRevisionToolStripMenuItem.Text">
-        <source>Archive revision</source>
+        <source>Archive this commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="bisectSkipRevisionToolStripMenuItem.Text">
@@ -8293,15 +8309,15 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="checkoutBranchToolStripMenuItem.Text">
-        <source>Checkout branch</source>
+        <source>Checkout branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="checkoutRevisionToolStripMenuItem.Text">
-        <source>Checkout revision</source>
+        <source>Checkout this commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="cherryPickCommitToolStripMenuItem.Text">
-        <source>Cherry pick commit</source>
+        <source>Cherry pick this commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="compareSelectedCommitsMenuItem.Text">
@@ -8333,19 +8349,19 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="createNewBranchToolStripMenuItem.Text">
-        <source>Create new branch</source>
+        <source>Create new branch here...</source>
         <target />
       </trans-unit>
       <trans-unit id="createTagToolStripMenuItem.Text">
-        <source>Create new tag</source>
+        <source>Create new tag here...</source>
         <target />
       </trans-unit>
       <trans-unit id="deleteBranchToolStripMenuItem.Text">
-        <source>Delete branch</source>
+        <source>Delete branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="deleteTagToolStripMenuItem.Text">
-        <source>Delete tag</source>
+        <source>Delete tag...</source>
         <target />
       </trans-unit>
       <trans-unit id="editCommitToolStripMenuItem.Text">
@@ -8353,7 +8369,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
-        <source>Create a fixup commit</source>
+        <source>Create a fixup commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text">
@@ -8373,7 +8389,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="mergeBranchToolStripMenuItem.Text">
-        <source>Merge into current branch</source>
+        <source>Merge into current branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="navigateToolStripMenuItem.Text">
@@ -8385,7 +8401,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="rebaseInteractivelyToolStripMenuItem.Text">
-        <source>Selected commit interactively</source>
+        <source>Selected commit interactively...</source>
         <target />
       </trans-unit>
       <trans-unit id="rebaseOnToolStripMenuItem.Text">
@@ -8401,15 +8417,15 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="renameBranchToolStripMenuItem.Text">
-        <source>Rename branch</source>
+        <source>Rename branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="resetCurrentBranchToHereToolStripMenuItem.Text">
-        <source>Reset current branch to here</source>
+        <source>Reset current branch to here...</source>
         <target />
       </trans-unit>
       <trans-unit id="revertCommitToolStripMenuItem.Text">
-        <source>Revert commit</source>
+        <source>Revert this commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="rewordCommitToolStripMenuItem.Text">
@@ -8425,7 +8441,7 @@ See the changes in the commit form.</source>
         <target />
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
-        <source>Create a squash commit</source>
+        <source>Create a squash commit...</source>
         <target />
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
