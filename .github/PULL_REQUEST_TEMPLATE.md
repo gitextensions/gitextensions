@@ -38,4 +38,4 @@ Fixes #
 
 ----
 
-:black_nib: I contribute this code under [The Developer Certificate of Origin](../../blob/master/contributors.txt).
+:black_nib: I contribute this code under [The Developer Certificate of Origin](../blob/master/contributors.txt).
