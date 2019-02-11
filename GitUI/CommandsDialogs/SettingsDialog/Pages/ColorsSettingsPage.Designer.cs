@@ -517,6 +517,7 @@
             this.Name = "ColorsSettingsPage";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(1410, 852);
+            this.Text = "Colors";
             tlpnlMain.ResumeLayout(false);
             tlpnlMain.PerformLayout();
             this.gbRevisionGraph.ResumeLayout(false);
