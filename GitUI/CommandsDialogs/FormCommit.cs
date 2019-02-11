@@ -2034,13 +2034,14 @@ namespace GitUI.CommandsDialogs
         {
             try
             {
-                SelectedDiff.Clear();
                 if (Unstaged.SelectedItem == null ||
                     MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo) !=
                     DialogResult.Yes)
                 {
                     return;
                 }
+
+                SelectedDiff.Clear();
 
                 Unstaged.StoreNextIndexToSelect();
                 foreach (var item in Unstaged.SelectedItems)
