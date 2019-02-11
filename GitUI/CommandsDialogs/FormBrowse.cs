@@ -2170,7 +2170,7 @@ namespace GitUI.CommandsDialogs
                 case Command.FindFileInSelectedCommit: FindFileInSelectedCommit(); break;
                 case Command.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(null, null); break;
                 case Command.QuickFetch: QuickFetch(); break;
-                case Command.QuickPull: ToolStripButtonPullClick(null, null); break;
+                case Command.QuickPull: mergeToolStripMenuItem_Click(null, null); break;
                 case Command.QuickPush: UICommands.StartPushDialog(this, true); break;
                 case Command.CloseRepository: CloseToolStripMenuItemClick(null, null); break;
                 case Command.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
