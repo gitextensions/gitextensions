@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
@@ -26,6 +27,11 @@ namespace GitUI.CommandsDialogs
         /// For file type items it also loads icons associated with these types at the OS level.
         /// </summary>
         void LoadChildren(IGitItem item, TreeNodeCollection nodes, ImageList.ImageCollection imageCollection);
+
+        /// <summary>
+        /// Select the file or directory node corresponding to the sub path provided.
+        /// </summary>
+        bool SelectFileOrFolder(NativeTreeView tree, string fileSubPath);
 
         /// <summary>
         /// Clears the cache of the current revision's loaded children items.
@@ -138,6 +144,42 @@ namespace GitUI.CommandsDialogs
                             break;
                         }
                 }
+            }
+        }
+
+        public bool SelectFileOrFolder(NativeTreeView tree, string fileSubPath)
+        {
+            var pathParts = new Queue<string>(fileSubPath.Split(Path.DirectorySeparatorChar));
+            var foundNode = FindSubNode(tree.Nodes, pathParts);
+            if (foundNode == null)
+            {
+                return false;
+            }
+
+            tree.SelectedNode = foundNode;
+            return true;
+        }
+
+        private TreeNode FindSubNode(TreeNodeCollection nodes, Queue<string> pathParts)
+        {
+            while (true)
+            {
+                var treeToFind = pathParts.Dequeue();
+                if (pathParts.Count == 0)
+                {
+                    return nodes.Cast<TreeNode>().SingleOrDefault(n => n?.Tag is GitItem item && item.Name == treeToFind);
+                }
+
+                var node = nodes.Cast<TreeNode>().SingleOrDefault(n =>
+                    n?.Tag is GitItem item && item.ObjectType == GitObjectType.Tree && item.Name == treeToFind);
+
+                if (node == null)
+                {
+                    return null;
+                }
+
+                node.Expand(); // load the sub nodes (otherwise, the search find nothing)
+                nodes = node.Nodes;
             }
         }
 

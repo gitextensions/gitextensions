@@ -1,10 +1,13 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs;
+using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
@@ -39,7 +42,7 @@ namespace GitUITests.CommandsDialogs
         }
 
         [Test]
-        public void LoadItemsInTreeView_should_not_add_nods_if_no_children()
+        public void LoadItemsInTreeView_should_not_add_nodes_if_no_children()
         {
             var item = new GitItem(0, GitObjectType.Tree, ObjectId.Random(), "folder");
             _revisionInfoProvider.LoadChildren(item).Returns(x => null);
@@ -200,6 +203,82 @@ namespace GitUITests.CommandsDialogs
 
                 _imageList.Images.Count.Should().Be(1);
             }
+        }
+
+        private void PopulateTreeView(NativeTreeView treeView, string filePathToAdd)
+        {
+            var parts = filePathToAdd.Split(Path.DirectorySeparatorChar);
+            var folders = parts.Take(parts.Length - 1);
+            var fileName = parts[parts.Length - 1];
+            var nodes = treeView.Nodes;
+            foreach (var folder in folders)
+            {
+                if (nodes.ContainsKey(folder))
+                {
+                    nodes = nodes[folder].Nodes;
+                }
+                else
+                {
+                    var node = nodes.Add(folder);
+                    var item = new GitItem(666, GitObjectType.Tree, ObjectId.WorkTreeId, folder);
+                    node.Name = folder;
+                    node.Tag = item;
+                    nodes = node.Nodes;
+                }
+            }
+
+            var fileNode = nodes.Add(fileName);
+            var fileItem = new GitItem(666, GitObjectType.Blob, ObjectId.WorkTreeId, fileName);
+            fileNode.Tag = fileItem;
+        }
+
+        [Test]
+        public void SelectFileOrFolder_should_select_a_folder()
+        {
+            var nativeTreeView = new NativeTreeView();
+            PopulateTreeView(nativeTreeView, @"folder1\file1");
+            PopulateTreeView(nativeTreeView, @"folder2\file2");
+            var isNodeFound = _controller.SelectFileOrFolder(nativeTreeView, "folder1");
+
+            Assert.IsTrue(isNodeFound);
+            Assert.AreEqual("folder1", nativeTreeView.SelectedNode.FullPath);
+        }
+
+        [Test]
+        public void SelectFileOrFolder_should_select_a_file()
+        {
+            var nativeTreeView = new NativeTreeView();
+            PopulateTreeView(nativeTreeView, @"folder1\file1");
+            PopulateTreeView(nativeTreeView, @"folder1\file2");
+            var isNodeFound = _controller.SelectFileOrFolder(nativeTreeView, @"folder1\file1");
+
+            Assert.IsTrue(isNodeFound);
+            Assert.AreEqual(@"folder1\file1", nativeTreeView.SelectedNode.FullPath);
+        }
+
+        [Test]
+        public void SelectFileOrFolder_should_not_select_an_inexisting_folder()
+        {
+            var nativeTreeView = new NativeTreeView();
+            PopulateTreeView(nativeTreeView, @"folder1\file1");
+            var isNodeFound = _controller.SelectFileOrFolder(nativeTreeView, "inexisting_folder");
+
+            Assert.IsFalse(isNodeFound);
+            Assert.IsNull(nativeTreeView.SelectedNode);
+        }
+
+        [Test]
+        public void SelectFileOrFolder_should_select_a_file_in_complex_filetree()
+        {
+            var nativeTreeView = new NativeTreeView();
+            PopulateTreeView(nativeTreeView, @"folder1\subfolder1\subfolder2\file1");
+            PopulateTreeView(nativeTreeView, @"folder1\subfolder1\subfolder2\file2");
+            PopulateTreeView(nativeTreeView, @"folder1\subfolder3\file2");
+            PopulateTreeView(nativeTreeView, @"folder1\subfolder4\subfolder5\file2");
+            var isNodeFound = _controller.SelectFileOrFolder(nativeTreeView, @"folder1\subfolder1\subfolder2\file2");
+
+            Assert.IsTrue(isNodeFound);
+            Assert.AreEqual(@"folder1\subfolder1\subfolder2\file2", nativeTreeView.SelectedNode.FullPath);
         }
 
         [SuppressMessage("ReSharper", "UnusedMember.Local")]

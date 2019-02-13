@@ -261,6 +261,13 @@ namespace GitUI.CommandsDialogs
             toolStripBranchFilterComboBox.Size = DpiUtil.Scale(toolStripBranchFilterComboBox.Size);
             toolStripRevisionFilterTextBox.Size = DpiUtil.Scale(toolStripRevisionFilterTextBox.Size);
 
+            foreach (var control in this.FindDescendants())
+            {
+                control.AllowDrop = true;
+                control.DragEnter += FormBrowse_DragEnter;
+                control.DragDrop += FormBrowse_DragDrop;
+            }
+
             if (selectCommit != null)
             {
                 RevisionGrid.InitialObjectId = selectCommit;
@@ -518,6 +525,12 @@ namespace GitUI.CommandsDialogs
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             SaveApplicationSettings();
+            foreach (var control in this.FindDescendants())
+            {
+                control.DragEnter -= FormBrowse_DragEnter;
+                control.DragDrop -= FormBrowse_DragDrop;
+            }
+
             base.OnFormClosing(e);
         }
 
@@ -3115,6 +3128,46 @@ namespace GitUI.CommandsDialogs
             public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
             {
                 _form.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
+            }
+        }
+
+        private void FormBrowse_DragDrop(object sender, DragEventArgs e)
+        {
+            CommitInfoTabControl.SelectedTab = TreeTabPage;
+            HandleDrop(e);
+        }
+
+        private void HandleDrop(DragEventArgs e)
+        {
+            var itemPath = (e.Data.GetData(DataFormats.Text) ?? e.Data.GetData(DataFormats.UnicodeText)) as string;
+            if (itemPath != null && (File.Exists(itemPath) || Directory.Exists(itemPath)))
+            {
+                fileTree.SelectFileOrFolder(itemPath);
+                return;
+            }
+
+            var paths = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (paths == null)
+            {
+                return;
+            }
+
+            foreach (string path in paths)
+            {
+                if (fileTree.SelectFileOrFolder(path))
+                {
+                    return;
+                }
+            }
+        }
+
+        private void FormBrowse_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop)
+                || e.Data.GetDataPresent(DataFormats.Text)
+                || e.Data.GetDataPresent(DataFormats.UnicodeText))
+            {
+                e.Effect = DragDropEffects.Move;
             }
         }
     }
