@@ -1557,6 +1557,17 @@ namespace GitUI.CommandsDialogs
             viewFileHistoryToolStripItem.Enabled = isTrackedSelected;
         }
 
+        private void StagedFileContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Do not show if no item selected
+            e.Cancel = !Staged.SelectedItems.Any() || Module.IsBareRepository();
+
+            var isNewSelected = Staged.SelectedItems.Any(s => s.IsNew);
+
+            stagedFileHistoryToolStripMenuItem6.Enabled = !isNewSelected;
+            stagedOpenDifftoolToolStripMenuItem9.Enabled = !isNewSelected;
+        }
+
         private void Unstaged_Enter(object sender, EventArgs e)
         {
             if (_currentFilesList != Unstaged)
