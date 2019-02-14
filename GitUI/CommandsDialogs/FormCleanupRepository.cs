@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -13,6 +14,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _reallyCleanupQuestion =
             new TranslationString("Are you sure you want to cleanup the repository?");
         private readonly TranslationString _reallyCleanupQuestionCaption = new TranslationString("Cleanup");
+        private readonly TranslationString _directoryToCleanupCaption = new TranslationString("Select a directory to clean up");
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCleanupRepository()
@@ -104,6 +106,29 @@ namespace GitUI.CommandsDialogs
             bool filterByPath = checkBoxPathFilter.Checked;
             textBoxPaths.Enabled = filterByPath;
             labelPathHint.Visible = filterByPath;
+        }
+
+        private void AddPath_Click(object sender, EventArgs e)
+        {
+            var dialog = new FolderBrowserDialog { SelectedPath = Module.WorkingDir, ShowNewFolderButton = false, Description = _directoryToCleanupCaption.Text };
+
+            var result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (!dialog.SelectedPath.StartsWith(Module.WorkingDir) || !Directory.Exists(dialog.SelectedPath))
+                {
+                    return;
+                }
+
+                checkBoxPathFilter.Checked = true;
+                textBoxPaths.Enabled = true;
+                if (textBoxPaths.Text.Length != 0)
+                {
+                    textBoxPaths.Text += Environment.NewLine;
+                }
+
+                textBoxPaths.Text += dialog.SelectedPath;
+            }
         }
     }
 }
