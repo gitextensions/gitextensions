@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -139,6 +139,9 @@ namespace GitUI.CommandsDialogs
             + Environment.NewLine + "Use this feature when a file is big and never change."
             + Environment.NewLine + "Git will never check if the file has changed that will improve status check performance.");
         private readonly TranslationString _stopTrackingFail = new TranslationString("Fail to stop tracking the file '{0}'.");
+
+        private readonly TranslationString _statusBarBranchWithoutRemote = new TranslationString("(remote not configured)");
+        private readonly TranslationString _untrackedRemote = new TranslationString("(untracked)");
         #endregion
 
         private event Action OnStageAreaLoaded;
@@ -171,6 +174,7 @@ namespace GitUI.CommandsDialogs
         private bool _selectedDiffReloaded = true;
         [CanBeNull] private IReadOnlyList<GitItemStatus> _currentSelection;
         private int _alreadyLoadedTemplatesCount = -1;
+        private EventHandler _branchNameLabelOnClick;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCommit()
@@ -956,10 +960,44 @@ namespace GitUI.CommandsDialogs
             await TaskScheduler.Default;
 
             var currentBranchName = Module.GetSelectedBranch();
+            if (_branchNameLabelOnClick != null)
+            {
+                remoteNameLabel.Click -= _branchNameLabelOnClick;
+            }
+
+            var currentBranch = Module.GetRefs(false, true).FirstOrDefault(r => r.LocalName == currentBranchName);
+            if (currentBranch == null)
+            {
+                branchNameLabel.Text = currentBranchName;
+                remoteNameLabel.Text = string.Empty;
+                return;
+            }
+
+            string pushTo;
+            if (string.IsNullOrEmpty(currentBranch.TrackingRemote) || string.IsNullOrEmpty(currentBranch.MergeWith))
+            {
+                string defaultRemote = Module.GetRemoteNames().FirstOrDefault(r => r == "origin") ?? Module.GetRemoteNames().OrderBy(r => r).FirstOrDefault();
+
+                pushTo = defaultRemote != null
+                    ? $"{defaultRemote}/{currentBranchName} {_untrackedRemote.Text}"
+                    : _statusBarBranchWithoutRemote.Text;
+            }
+            else
+            {
+                pushTo = $"{currentBranch.TrackingRemote}/{currentBranch.MergeWith}";
+            }
 
             await this.SwitchToMainThreadAsync();
 
-            branchNameLabel.Text = currentBranchName;
+            branchNameLabel.Text = $"{currentBranchName} {char.ConvertFromUtf32(0x2192)}";
+            remoteNameLabel.Text = pushTo;
+
+            _branchNameLabelOnClick = async (object sender, EventArgs e) =>
+            {
+                UICommands.StartRemotesDialog(this, null, currentBranchName);
+                await UpdateBranchNameDisplayAsync();
+            };
+            remoteNameLabel.Click += _branchNameLabelOnClick;
             Text = string.Format(_formTitle.Text, currentBranchName, PathUtil.GetDisplayPath(Module.WorkingDir));
         }
 
@@ -3212,6 +3250,10 @@ namespace GitUI.CommandsDialogs
             internal ToolStripDropDownButton CommitMessageToolStripMenuItem => _formCommit.commitMessageToolStripMenuItem;
 
             internal ToolStripStatusLabel CommitAuthorStatusToolStripStatusLabel => _formCommit.commitAuthorStatus;
+
+            internal ToolStripStatusLabel CurrentBranchNameLabelStatus => _formCommit.branchNameLabel;
+
+            internal ToolStripStatusLabel RemoteNameLabelStatus => _formCommit.remoteNameLabel;
 
             internal bool ExecuteCommand(Command command)
             {
