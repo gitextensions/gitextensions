@@ -67,3 +67,4 @@ YYYY/MM/DD, github id, Full name, email
 2019/01/30, markonius, Marko Bakšić, markonius@protonmail.ch
 2019/02/07, crypto-rsa, Pavel Kotrč, pkotrc@gmail.com
 2019/02/09, glen-nicol, Glen Nicol, glen.nicol@live.com
+2019/02/16, mdonatas, Donatas Mačiūnas, mdonatas@gmail.com
