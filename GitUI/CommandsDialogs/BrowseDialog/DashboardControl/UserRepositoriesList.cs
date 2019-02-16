@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -32,6 +33,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             "Clear recent repositories");
         private readonly TranslationString _clearRecentCategoryQuestion = new TranslationString(
             "Do you want to clear the list of recent repositories?\n\nThe action cannot be undone.");
+
+        private readonly TranslationString _cannotOpenTheFolder = new TranslationString("Cannot open the folder");
+        private readonly TranslationString _notAValidRepository = new TranslationString("Not a valid git repository");
 
         private readonly Font _secondaryFont;
         private static readonly Color DefaultFavouriteColor = Color.DarkGoldenrod;
@@ -78,6 +82,9 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             imageList1.ImageSize = DpiUtil.Scale(imageList1.ImageSize);
             imageList1.Images.Add(Images.DashboardFolderGit);
             imageList1.Images.Add(Images.DashboardFolderError);
+
+            DragEnter += OnDragEnter;
+            DragDrop += OnDragDrop;
         }
 
         [Category("Appearance")]
@@ -784,6 +791,51 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
             }
 
             ShowRecentRepositories();
+        }
+
+        private void OnDragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
+            {
+                if (fileNameArray.Length != 1)
+                {
+                    return;
+                }
+
+                string dir = fileNameArray[0];
+                if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
+                {
+                    GitModule module = new GitModule(dir);
+
+                    if (!module.IsValidGitWorkingDir())
+                    {
+                        MessageBox.Show(this, _notAValidRepository.Text,
+                            _cannotOpenTheFolder.Text, MessageBoxButtons.OK,
+                            MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+
+                    OnModuleChanged(new GitModuleEventArgs(module));
+                }
+            }
+        }
+
+        private void OnDragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
+            {
+                if (fileNameArray.Length != 1)
+                {
+                    return;
+                }
+
+                string dir = fileNameArray[0];
+                if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
+                {
+                    // Allow drop (copy, not move) folders
+                    e.Effect = DragDropEffects.Copy;
+                }
+            }
         }
     }
 }
