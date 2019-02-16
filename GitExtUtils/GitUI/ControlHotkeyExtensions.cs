@@ -50,10 +50,10 @@ namespace GitUI
                 }
                 else
                 {
-                    int previousWordBreak = FindPreviousWordStart(text, selectionStart);
-                    if (previousWordBreak >= 0)
+                    int previousBreak = FindPreviousBreak(text, selectionStart);
+                    if (previousBreak >= 0)
                     {
-                        RemoveTextRange(previousWordBreak, selectionStart - previousWordBreak);
+                        RemoveTextRange(previousBreak, selectionStart - previousBreak);
                     }
                 }
 
@@ -73,17 +73,40 @@ namespace GitUI
                     (sender as ComboBox)?.Refresh();
                 }
 
-                int FindPreviousWordStart(string value, int position)
+                int FindPreviousBreak(string value, int position)
                 {
                     for (int i = position - 1; i >= 0; i--)
                     {
-                        if (i == 0 || (!char.IsLetterOrDigit(value[i - 1]) && char.IsLetterOrDigit(value[i])))
+                        if (i == 0)
+                        {
+                            return i;
+                        }
+
+                        int previousType = GetCharType(value[i - 1]);
+                        int currentType = GetCharType(value[i]);
+
+                        if (previousType != currentType && currentType != ' ')
                         {
                             return i;
                         }
                     }
 
                     return -1;
+
+                    char GetCharType(char c)
+                    {
+                        if (char.IsLetterOrDigit(c))
+                        {
+                            return 'w';
+                        }
+
+                        if (char.IsWhiteSpace(c))
+                        {
+                            return ' ';
+                        }
+
+                        return c;
+                    }
                 }
 
                 string GetText() =>
