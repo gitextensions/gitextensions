@@ -1,7 +1,26 @@
 Changelog
 =========
 
-### Version 3.0.1 (30 Dec 2018)
+### Version 3.0.2 (16 Feb 2019)
+
+#### Fixes:
+* QuickPull's hotkey is not working - Issue [6200]
+* Can't delete a repository included in the categories of the dashboard - Issue [6192]
+* Fix loading of some plugins that failed - PR [6159]
+* Regression: Pull Dialog Title when changing merge option - Issue [6150]
+* Shell Extension Menu Pull  - Issue [6144]
+* gitexe.cmd pull - always opens dialog window in do not merge, only fetch changes - Issue [6060]
+
+
+[6200]:https://github.com/gitextensions/gitextensions/issues/6200
+[6192]:https://github.com/gitextensions/gitextensions/issues/6192
+[6159]:https://github.com/gitextensions/gitextensions/pull/6159
+[6150]:https://github.com/gitextensions/gitextensions/issues/6150
+[6144]:https://github.com/gitextensions/gitextensions/issues/6144
+[6060]:https://github.com/gitextensions/gitextensions/issues/6060
+
+
+### Version 3.0.1 (20 Jan 2019)
 
 #### Fixes:
 * Application crashes on repository change - Issue [6094]
