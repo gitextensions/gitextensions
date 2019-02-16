@@ -2,9 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using GitExtUtils;
 
 namespace GitUI
 {
@@ -28,10 +26,10 @@ namespace GitUI
                 return;
             }
 
-            foreach (var textBox in control.FindDescendants().OfType<TextBox>())
+            foreach (var textInput in control.FindDescendants().Where(c => c is TextBoxBase || c is ComboBox))
             {
-                textBox.KeyDown += HandleKeyDown;
-                textBox.Disposed += HandleDisposed;
+                textInput.KeyDown += HandleKeyDown;
+                textInput.Disposed += HandleDisposed;
             }
         }
 
@@ -42,14 +40,113 @@ namespace GitUI
                 e.Handled = true;
                 e.SuppressKeyPress = true;
 
-                // Call begin / end update to prevent flickering transient state,
-                // after the word is selected and before it is erased.
-                _beginUpdateMethod.Invoke(sender, parameters: null);
+                int selectionStart = GetSelectionStart();
+                int selectionLength = GetSelectionLength();
+                string text = GetText();
 
-                // emulate keyboard sequence: Ctrl + Shift + Left, Backspace
-                SendKeys.Send("^+{LEFT} {BACKSPACE}");
+                if (selectionLength > 0)
+                {
+                    RemoveTextRange(selectionStart, selectionLength);
+                }
+                else
+                {
+                    int previousWordBreak = FindPreviousWordStart(text, selectionStart);
+                    if (previousWordBreak >= 0)
+                    {
+                        RemoveTextRange(previousWordBreak, selectionStart - previousWordBreak);
+                    }
+                }
 
-                _endUpdateMethod.Invoke(sender, parameters: null);
+                void RemoveTextRange(int from, int length)
+                {
+                    // Call begin / end update to prevent flickering transient state,
+                    // after the word is selected and before it is erased.
+                    _beginUpdateMethod.Invoke(sender, parameters: null);
+
+                    SetText(text.Substring(0, from) + text.Substring(from + length));
+
+                    SetSelectionStart(from);
+                    SetSelectionLength(0);
+
+                    _endUpdateMethod.Invoke(sender, parameters: null);
+
+                    (sender as ComboBox)?.Refresh();
+                }
+
+                int FindPreviousWordStart(string value, int position)
+                {
+                    for (int i = position - 1; i >= 0; i--)
+                    {
+                        if (i == 0 || (!char.IsLetterOrDigit(value[i - 1]) && char.IsLetterOrDigit(value[i])))
+                        {
+                            return i;
+                        }
+                    }
+
+                    return -1;
+                }
+
+                string GetText() =>
+                    ((Control)sender).Text;
+
+                void SetText(string value) =>
+                    ((Control)sender).Text = value;
+
+                int GetSelectionStart()
+                {
+                    switch (sender)
+                    {
+                        case TextBoxBase t:
+                            return t.SelectionStart;
+                        case ComboBox cb:
+                            return cb.SelectionStart;
+                        default:
+                            throw new NotSupportedException();
+                    }
+                }
+
+                void SetSelectionStart(int value)
+                {
+                    switch (sender)
+                    {
+                        case TextBoxBase t:
+                            t.SelectionStart = value;
+                            return;
+                        case ComboBox cb:
+                            cb.SelectionStart = value;
+                            return;
+                        default:
+                            throw new NotSupportedException();
+                    }
+                }
+
+                int GetSelectionLength()
+                {
+                    switch (sender)
+                    {
+                        case TextBoxBase t:
+                            return t.SelectionLength;
+                        case ComboBox cb:
+                            return cb.SelectionLength;
+                        default:
+                            throw new NotSupportedException();
+                    }
+                }
+
+                void SetSelectionLength(int value)
+                {
+                    switch (sender)
+                    {
+                        case TextBoxBase t:
+                            t.SelectionLength = value;
+                            return;
+                        case ComboBox cb:
+                            cb.SelectionLength = value;
+                            return;
+                        default:
+                            throw new NotSupportedException();
+                    }
+                }
             }
         }
 
