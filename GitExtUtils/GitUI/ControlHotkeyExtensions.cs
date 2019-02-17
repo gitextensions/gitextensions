@@ -63,10 +63,9 @@ namespace GitUI
                     // after the word is selected and before it is erased.
                     _beginUpdateMethod.Invoke(sender, parameters: null);
 
-                    SetText(text.Substring(0, from) + text.Substring(from + length));
-
                     SetSelectionStart(from);
-                    SetSelectionLength(0);
+                    SetSelectionLength(length);
+                    ClearSelectedText();
 
                     _endUpdateMethod.Invoke(sender, parameters: null);
 
@@ -111,9 +110,6 @@ namespace GitUI
 
                 string GetText() =>
                     ((Control)sender).Text;
-
-                void SetText(string value) =>
-                    ((Control)sender).Text = value;
 
                 int GetSelectionStart()
                 {
@@ -170,6 +166,22 @@ namespace GitUI
                             throw new NotSupportedException();
                     }
                 }
+
+                void ClearSelectedText()
+                {
+                    switch (sender)
+                    {
+                        case TextBoxBase t:
+                            _setSelectedTextInternalMethod.Invoke(t,
+                                new object[] { string.Empty, /* clear undo */ false });
+                            return;
+                        case ComboBox cb:
+                            cb.SelectedText = string.Empty;
+                            return;
+                        default:
+                            throw new NotSupportedException();
+                    }
+                }
             }
         }
 
@@ -190,5 +202,9 @@ namespace GitUI
                 binder: null,
                 types: new Type[0],
                 modifiers: new ParameterModifier[0]);
+
+        private static readonly MethodInfo _setSelectedTextInternalMethod =
+            typeof(TextBoxBase).GetMethod("SetSelectedTextInternal",
+                BindingFlags.Instance | BindingFlags.NonPublic);
     }
 }
