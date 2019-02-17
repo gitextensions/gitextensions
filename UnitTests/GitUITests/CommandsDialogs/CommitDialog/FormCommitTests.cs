@@ -85,6 +85,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         [Test]
         public void Should_display_branch_and_no_remote_info_in_statusbar()
         {
+            _referenceRepository.CheckoutMaster();
             RunFormTest(form =>
             {
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;

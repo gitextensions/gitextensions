@@ -41,6 +41,14 @@ namespace GitUITests.CommandsDialogs
             }
         }
 
+        public void CheckoutMaster()
+        {
+            using (var repository = new LibGit2Sharp.Repository(Module.WorkingDir))
+            {
+                Commands.Checkout(repository, "master", new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
+            }
+        }
+
         public void CreateRemoteForMasterBranch()
         {
             using (var repository = new LibGit2Sharp.Repository(Module.WorkingDir))
