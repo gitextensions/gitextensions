@@ -11,7 +11,7 @@ namespace GitUI.Script
     public static class ScriptRunner
     {
         /// <summary>Tries to run scripts identified by a <paramref name="command"/></summary>
-        public static CommandStatus ExecuteScriptCommand(IWin32Window owner, GitModule module, int command, RevisionGridControl revisionGrid = null)
+        public static CommandStatus ExecuteScriptCommand(IWin32Window owner, GitModule module, int command, IGitUICommands uiCommands, RevisionGridControl revisionGrid = null)
         {
             var anyScriptExecuted = false;
             var needsGridRefresh = false;
@@ -20,7 +20,7 @@ namespace GitUI.Script
             {
                 if (script.HotkeyCommandIdentifier == command)
                 {
-                    var result = RunScript(owner, module, script.Name, revisionGrid);
+                    var result = RunScript(owner, module, script.Name, uiCommands, revisionGrid);
                     anyScriptExecuted = true;
                     needsGridRefresh |= result.NeedsGridRefresh;
                 }
@@ -29,7 +29,7 @@ namespace GitUI.Script
             return new CommandStatus(anyScriptExecuted, needsGridRefresh);
         }
 
-        public static CommandStatus RunScript(IWin32Window owner, GitModule module, string scriptKey, RevisionGridControl revisionGrid)
+        public static CommandStatus RunScript(IWin32Window owner, GitModule module, string scriptKey, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
         {
             if (string.IsNullOrEmpty(scriptKey))
             {

@@ -898,7 +898,7 @@ namespace GitUI.CommandsDialogs
 
                     button.Click += delegate
                     {
-                        if (ScriptRunner.RunScript(this, Module, script.Name, RevisionGrid).NeedsGridRefresh)
+                        if (ScriptRunner.RunScript(this, Module, script.Name, UICommands, RevisionGrid).NeedsGridRefresh)
                         {
                             RevisionGrid.RefreshRevisions();
                         }

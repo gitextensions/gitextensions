@@ -2084,7 +2084,7 @@ namespace GitUI
                         _settingsLoaded = true;
                     }
 
-                    if (ScriptRunner.RunScript(this, Module, sender.ToString(), this).NeedsGridRefresh)
+                    if (ScriptRunner.RunScript(this, Module, sender.ToString(), UICommands, this).NeedsGridRefresh)
                     {
                         RefreshRevisions();
                     }
