@@ -12,8 +12,8 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 [![Waffle.io - Columns and their card count](https://badge.waffle.io/gitextensions/gitextensions.svg?columns=all)](https://waffle.io/gitextensions/gitextensions)<br />
 <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a>
 
-The work has been split into two streams:
- * version 3.0x - **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description)**. Or [install it with Chocolatey](https://chocolatey.org/packages/gitextensions).
+The work has been [split into two streams](https://github.com/gitextensions/gitextensions/wiki/Compare-versions):
+ * version 3.0x - **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description)** or [install it with Chocolatey](https://chocolatey.org/packages/gitextensions).
  * version 2.5x
 
 ### Version 3.0x
@@ -38,7 +38,7 @@ For more details please refer to [versions comparison](https://github.com/gitext
   </tr>
   <tr>
     <td>Current dev status</td>
-    <td><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/release/3.00"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a> <a href="https://codecov.io/gh/gitextensions/gitextensions"><img alt="codecov.io" src="https://codecov.io/gh/gitextensions/gitextensions/branch/master/graph/badge.svg" style="max-width:100%;"></a></td>
+    <td><a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a> <a href="https://codecov.io/gh/gitextensions/gitextensions"><img alt="codecov.io" src="https://codecov.io/gh/gitextensions/gitextensions/branch/master/graph/badge.svg" style="max-width:100%;"></a></td>
   </tr>
   <tr>
     <td>Translations</td>
@@ -86,7 +86,7 @@ title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.
 
 <table>
   <tr>
-    <td><strong>v3.0</strong></td>
+    <td><strong>v3.0.2</strong></td>
     <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description">[ Download ]</a><br />
         GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
   </tr>
