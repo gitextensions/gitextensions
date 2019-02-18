@@ -3,6 +3,7 @@ using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommonTestUtils;
 using FluentAssertions;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -85,43 +86,64 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         [Test]
         public void Should_display_branch_and_no_remote_info_in_statusbar()
         {
-            _referenceRepository.CheckoutMaster();
-            RunFormTest(form =>
+            using (var repository = new ReferenceRepository(new GitModuleTestHelper("branch_and_no_remote")))
             {
-                var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
-                var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
+                var commands = new GitUICommands(repository.Module);
+                repository.CheckoutMaster();
+                UITest.RunForm<FormCommit>(
+                    () => { Assert.True(commands.StartCommitDialog(owner: null)); },
+                    form =>
+                    {
+                        var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
+                        var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
-                Assert.AreEqual("master →", currentBranchNameLabelStatus.Text);
-                Assert.AreEqual("(remote not configured)", remoteNameLabelStatus.Text);
-            });
+                        Assert.AreEqual("master →", currentBranchNameLabelStatus.Text);
+                        Assert.AreEqual("(remote not configured)", remoteNameLabelStatus.Text);
+                        return Task.CompletedTask;
+                    });
+            }
         }
 
         [Test]
         public void Should_display_detached_head_info_in_statusbar()
         {
-            _referenceRepository.CheckoutRevision();
-            RunFormTest(form =>
+            using (var repository = new ReferenceRepository(new GitModuleTestHelper("detached_head")))
             {
-                var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
-                var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
+                var commands = new GitUICommands(repository.Module);
+                repository.CheckoutRevision();
+                UITest.RunForm<FormCommit>(
+                    () => { Assert.True(commands.StartCommitDialog(owner: null)); },
+                    form =>
+                    {
+                        var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
+                        var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
-                Assert.AreEqual("(no branch)", currentBranchNameLabelStatus.Text);
-                Assert.AreEqual(string.Empty, remoteNameLabelStatus.Text);
-            });
+                        Assert.AreEqual("(no branch)", currentBranchNameLabelStatus.Text);
+                        Assert.AreEqual(string.Empty, remoteNameLabelStatus.Text);
+                        return Task.CompletedTask;
+                    });
+            }
         }
 
         [Test]
         public void Should_display_branch_and_remote_info_in_statusbar()
         {
-            _referenceRepository.CreateRemoteForMasterBranch();
-            RunFormTest(form =>
+            using (var repository = new ReferenceRepository(new GitModuleTestHelper("branch_and_remote")))
             {
-                var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
-                var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
+                var commands = new GitUICommands(repository.Module);
+                repository.CreateRemoteForMasterBranch();
+                UITest.RunForm<FormCommit>(
+                    () => { Assert.True(commands.StartCommitDialog(owner: null)); },
+                    form =>
+                {
+                    var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
+                    var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
-                Assert.AreEqual("master →", currentBranchNameLabelStatus.Text);
-                Assert.AreEqual("origin/master", remoteNameLabelStatus.Text);
-            });
+                    Assert.AreEqual("master →", currentBranchNameLabelStatus.Text);
+                    Assert.AreEqual("origin/master", remoteNameLabelStatus.Text);
+                    return Task.CompletedTask;
+                });
+            }
         }
 
         [Test]
