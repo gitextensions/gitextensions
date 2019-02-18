@@ -10,10 +10,10 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 ## Current Status
 
 [![Waffle.io - Columns and their card count](https://badge.waffle.io/gitextensions/gitextensions.svg?columns=all)](https://waffle.io/gitextensions/gitextensions)<br />
-<a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a> 
+<a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a>
 
 The work has been split into two streams:
- * version 3.0x - **[NOW available](https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00)**!
+ * version 3.0x - **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description)**. Or [install it with Chocolatey](https://chocolatey.org/packages/gitextensions).
  * version 2.5x
 
 ### Version 3.0x
@@ -81,14 +81,14 @@ title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.
 </table>
 
 
-## Downloads 
-<img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> 
+## Downloads
+<img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a>
 
 <table>
   <tr>
     <td><strong>v3.0</strong></td>
-    <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00">[ Download ]</a><br />
-        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/tag/v3.00.00" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/v3.00.00/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
+    <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description">[ Download ]</a><br />
+        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
   </tr>
   <tr>
     <td><strong>Current dev stream</strong><br />NB: expect :unicorn: :unicorn: :dragon: :dragon: and :bug: :bug:</td>
