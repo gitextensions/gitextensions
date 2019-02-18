@@ -9,4 +9,17 @@ coverage:
       default: false
 
 comment:
-  layout: "diff"
+  layout: "diff,flags"
+
+flags:
+  production:
+    paths:
+      - GitCommands/
+      - GitExtUtils/
+      - GitUI/
+      - NetSpell.SpellChecker/
+      - Plugins/
+      - ResourceManager/
+  tests:
+    paths:
+      - UnitTests/

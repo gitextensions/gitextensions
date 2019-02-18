@@ -77,7 +77,8 @@ test_script:
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
     $codecov_version = $packageConfig.SelectSingleNode('/packages/package[@id="Codecov"]').version
     $codecov = "packages\Codecov.$codecov_version\tools\codecov.exe"
-    &$codecov -f ".\OpenCover.GitExtensions.xml"
+    &$codecov -f ".\OpenCover.GitExtensions.xml" --flag production
+    &$codecov -f ".\OpenCover.GitExtensions.xml" --flag tests
 
 
 # here we are going to override common configuration
