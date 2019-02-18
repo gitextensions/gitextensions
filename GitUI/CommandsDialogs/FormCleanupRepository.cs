@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _reallyCleanupQuestion =
             new TranslationString("Are you sure you want to cleanup the repository?");
         private readonly TranslationString _reallyCleanupQuestionCaption = new TranslationString("Cleanup");
-        private readonly TranslationString _directoryToCleanupCaption = new TranslationString("Select a directory to clean up");
+        private readonly TranslationString _directoryToCleanupCaption = new TranslationString("Select a subfolder of your repository to clean up");
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCleanupRepository()
@@ -110,7 +110,24 @@ namespace GitUI.CommandsDialogs
 
         private void AddPath_Click(object sender, EventArgs e)
         {
-            var dialog = new FolderBrowserDialog { SelectedPath = Module.WorkingDir, ShowNewFolderButton = false, Description = _directoryToCleanupCaption.Text };
+            string selectedFolder;
+            try
+            {
+                selectedFolder = Directory.EnumerateDirectories(Module.WorkingDir).OrderBy(d => d)
+                    .FirstOrDefault(d => d != Module.WorkingDirGitDir.TrimEnd(Path.DirectorySeparatorChar)) ?? Module.WorkingDir;
+            }
+            catch
+            {
+                selectedFolder = Module.WorkingDir;
+            }
+
+            var dialog = new FolderBrowserDialog
+            {
+                RootFolder = Environment.SpecialFolder.MyComputer,
+                SelectedPath = selectedFolder,
+                ShowNewFolderButton = false,
+                Description = _directoryToCleanupCaption.Text
+            };
 
             var result = dialog.ShowDialog();
             if (result == DialogResult.OK)

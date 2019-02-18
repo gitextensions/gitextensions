@@ -62,7 +62,7 @@
             // 
             this.AddPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.AddPath.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.AddPath.Location = new System.Drawing.Point(302, 144);
+            this.AddPath.Location = new System.Drawing.Point(302, 139);
             this.AddPath.Name = "AddPath";
             this.AddPath.Size = new System.Drawing.Size(120, 25);
             this.AddPath.TabIndex = 0;
