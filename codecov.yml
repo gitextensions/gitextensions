@@ -9,7 +9,7 @@ coverage:
       default: false
 
 comment:
-  layout: "diff"
+  layout: "diff,flags"
 
 flags:
   production:
