@@ -14,7 +14,7 @@ using ResourceManager;
 namespace GitUITests.CommandsDialogs.CommitDialog
 {
     [Apartment(ApartmentState.STA)]
-    public class FormBrowseLeftPanelTests
+    public class FormBrowseLeftPanelRemotesTests
     {
         // Created once for the fixture
         private ReferenceRepository _referenceRepository;

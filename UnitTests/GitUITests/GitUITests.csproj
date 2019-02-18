@@ -63,7 +63,8 @@
     <Compile Include="Avatars\BackupAvatarProviderTests.cs" />
     <Compile Include="BranchTreePanel\GitRefMenuItemsTest.cs" />
     <Compile Include="CancellationTokenSequenceTests.cs" />
-    <Compile Include="CommandsDialogs\CommitDialog\FormBrowseTests.LeftPanel.cs" />
+    <Compile Include="CommandsDialogs\CommitDialog\FormBrowseTests.LeftPanel.Submodules.cs" />
+    <Compile Include="CommandsDialogs\CommitDialog\FormBrowseTests.LeftPanel.Remotes.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\FormBrowseTests.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\FormPullTests.cs" />
     <Compile Include="CommandsDialogs\CommitDialog\FormInitTests.cs" />
