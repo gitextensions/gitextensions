@@ -63,6 +63,7 @@
     <Compile Include="AppTitleGenerator.cs" />
     <Compile Include="ArgumentBuilderExtensions.cs" />
     <Compile Include="AsyncLoader.cs" />
+    <Compile Include="CommandStatus.cs" />
     <Compile Include="CommitData.cs" />
     <Compile Include="CommitDataManager.cs" />
     <Compile Include="CommitTemplateItem.cs" />

@@ -64,10 +64,16 @@ namespace GitUI
             _uiCommands = commands;
         }
 
-        protected override bool ExecuteCommand(int command)
+        protected override CommandStatus ExecuteCommand(int command)
         {
-            return ScriptRunner.ExecuteScriptCommand(this, Module, command)
-                || base.ExecuteCommand(command);
+            var result = ScriptRunner.ExecuteScriptCommand(this, Module, command, UICommands);
+
+            if (!result.Executed)
+            {
+                result = base.ExecuteCommand(command);
+            }
+
+            return result;
         }
     }
 }

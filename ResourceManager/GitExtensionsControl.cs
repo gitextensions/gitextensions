@@ -82,7 +82,7 @@ namespace ResourceManager
                 {
                     if (hotkey != null && hotkey.KeyData == keyData)
                     {
-                        return ExecuteCommand(hotkey.CommandCode);
+                        return ExecuteCommand(hotkey.CommandCode).Executed;
                     }
                 }
             }
@@ -103,9 +103,10 @@ namespace ResourceManager
 
         /// <summary>
         /// Override this method to handle form-specific Hotkey commands.
-        /// <remarks>This base method does nothing and returns false.</remarks>
+        /// <remarks>This base method does nothing and returns a <see cref="GitCommands.CommandStatus"/>
+        /// with <see cref="GitCommands.CommandStatus.Executed"/> set to <see langword="false"/></remarks>
         /// </summary>
-        protected virtual bool ExecuteCommand(int command)
+        protected virtual GitCommands.CommandStatus ExecuteCommand(int command)
         {
             return false;
         }

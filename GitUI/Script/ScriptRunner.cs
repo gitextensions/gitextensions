@@ -10,25 +10,26 @@ namespace GitUI.Script
     /// <summary>Runs scripts.</summary>
     public static class ScriptRunner
     {
-        /// <summary>Tries to run scripts identified by a <paramref name="command"/>
-        /// and returns true if any executed.</summary>
-        public static bool ExecuteScriptCommand(IWin32Window owner, GitModule module, int command, RevisionGridControl revisionGrid = null)
+        /// <summary>Tries to run scripts identified by a <paramref name="command"/></summary>
+        public static CommandStatus ExecuteScriptCommand(IWin32Window owner, GitModule module, int command, IGitUICommands uiCommands, RevisionGridControl revisionGrid = null)
         {
             var anyScriptExecuted = false;
+            var needsGridRefresh = false;
 
             foreach (var script in ScriptManager.GetScripts())
             {
                 if (script.HotkeyCommandIdentifier == command)
                 {
-                    RunScript(owner, module, script.Name, revisionGrid);
+                    var result = RunScript(owner, module, script.Name, uiCommands, revisionGrid);
                     anyScriptExecuted = true;
+                    needsGridRefresh |= result.NeedsGridRefresh;
                 }
             }
 
-            return anyScriptExecuted;
+            return new CommandStatus(anyScriptExecuted, needsGridRefresh);
         }
 
-        public static bool RunScript(IWin32Window owner, GitModule module, string scriptKey, RevisionGridControl revisionGrid)
+        public static CommandStatus RunScript(IWin32Window owner, GitModule module, string scriptKey, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
         {
             if (string.IsNullOrEmpty(scriptKey))
             {
@@ -72,10 +73,10 @@ namespace GitUI.Script
                 return false;
             }
 
-            return RunScript(owner, module, script, revisionGrid);
+            return RunScript(owner, module, script, uiCommands, revisionGrid);
         }
 
-        private static bool RunScript(IWin32Window owner, GitModule module, ScriptInfo scriptInfo, RevisionGridControl revisionGrid)
+        private static CommandStatus RunScript(IWin32Window owner, GitModule module, ScriptInfo scriptInfo, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
         {
             if (scriptInfo.AskConfirmation && MessageBox.Show(owner, $"Do you want to execute '{scriptInfo.Name}'?", "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
@@ -95,7 +96,7 @@ namespace GitUI.Script
             if (scriptInfo.IsPowerShell)
             {
                 PowerShellHelper.RunPowerShell(command, argument, module.WorkingDir, scriptInfo.RunInBackground);
-                return false;
+                return new CommandStatus(true, false);
             }
 
             if (command.StartsWith(PluginPrefix))
@@ -105,8 +106,8 @@ namespace GitUI.Script
                 {
                     if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        var eventArgs = new GitUIEventArgs(owner, revisionGrid.UICommands);
-                        return plugin.Execute(eventArgs);
+                        var eventArgs = new GitUIEventArgs(owner, uiCommands);
+                        return new CommandStatus(true, plugin.Execute(eventArgs));
                     }
                 }
 
@@ -115,6 +116,11 @@ namespace GitUI.Script
 
             if (command.StartsWith(NavigateToPrefix))
             {
+                if (revisionGrid == null)
+                {
+                    return false;
+                }
+
                 command = command.Replace(NavigateToPrefix, string.Empty);
                 if (!command.IsNullOrEmpty())
                 {
@@ -126,7 +132,7 @@ namespace GitUI.Script
                     }
                 }
 
-                return false;
+                return new CommandStatus(true, false);
             }
 
             if (!scriptInfo.RunInBackground)
@@ -145,7 +151,7 @@ namespace GitUI.Script
                 }
             }
 
-            return !scriptInfo.RunInBackground;
+            return new CommandStatus(true, !scriptInfo.RunInBackground);
         }
 
         private static string ExpandCommandVariables(string originalCommand, GitModule module)

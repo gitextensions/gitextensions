@@ -756,7 +756,7 @@ namespace GitUI.CommandsDialogs
             return true;
         }
 
-        protected override bool ExecuteCommand(int cmd)
+        protected override CommandStatus ExecuteCommand(int cmd)
         {
             switch ((Command)cmd)
             {
@@ -3255,7 +3255,7 @@ namespace GitUI.CommandsDialogs
 
             internal ToolStripStatusLabel RemoteNameLabelStatus => _formCommit.remoteNameLabel;
 
-            internal bool ExecuteCommand(Command command)
+            internal CommandStatus ExecuteCommand(Command command)
             {
                 return _formCommit.ExecuteCommand((int)command);
             }
