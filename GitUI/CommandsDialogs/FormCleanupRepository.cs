@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using JetBrains.Annotations;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -14,7 +15,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _reallyCleanupQuestion =
             new TranslationString("Are you sure you want to cleanup the repository?");
         private readonly TranslationString _reallyCleanupQuestionCaption = new TranslationString("Cleanup");
-        private readonly TranslationString _directoryToCleanupCaption = new TranslationString("Select a subfolder of your repository to clean up");
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCleanupRepository()
@@ -110,29 +110,27 @@ namespace GitUI.CommandsDialogs
 
         private void AddPath_Click(object sender, EventArgs e)
         {
-            string selectedFolder;
-            try
+            var dialog = new CommonOpenFileDialog
             {
-                selectedFolder = Directory.EnumerateDirectories(Module.WorkingDir).OrderBy(d => d)
-                    .FirstOrDefault(d => d != Module.WorkingDirGitDir.TrimEnd(Path.DirectorySeparatorChar)) ?? Module.WorkingDir;
-            }
-            catch
-            {
-                selectedFolder = Module.WorkingDir;
-            }
-
-            var dialog = new FolderBrowserDialog
-            {
-                RootFolder = Environment.SpecialFolder.MyComputer,
-                SelectedPath = selectedFolder,
-                ShowNewFolderButton = false,
-                Description = _directoryToCleanupCaption.Text
+                InitialDirectory = Module.WorkingDir,
+                EnsurePathExists = true,
+                EnsureFileExists = false,
+                IsFolderPicker = true,
+                ShowHiddenItems = false,
+                Multiselect = true,
+                AddToMostRecentlyUsedList = false,
             };
 
             var result = dialog.ShowDialog();
-            if (result == DialogResult.OK)
+            if (result == CommonFileDialogResult.Ok)
             {
-                if (!dialog.SelectedPath.StartsWith(Module.WorkingDir) || !Directory.Exists(dialog.SelectedPath))
+                var subFoldersToClean = dialog.FileNames
+                    .Where(d => d.StartsWith(Module.WorkingDir)
+                                && Directory.Exists(d)
+                                && !d.Equals(Module.WorkingDirGitDir.TrimEnd(Path.DirectorySeparatorChar)))
+                    .ToList();
+
+                if (!subFoldersToClean.Any())
                 {
                     return;
                 }
@@ -144,7 +142,7 @@ namespace GitUI.CommandsDialogs
                     textBoxPaths.Text += Environment.NewLine;
                 }
 
-                textBoxPaths.Text += dialog.SelectedPath;
+                textBoxPaths.Text += string.Join(Environment.NewLine, subFoldersToClean);
             }
         }
     }
