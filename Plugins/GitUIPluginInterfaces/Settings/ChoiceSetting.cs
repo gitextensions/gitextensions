@@ -48,7 +48,7 @@ namespace GitUIPluginInterfaces
                 return comboBox;
             }
 
-            public override void LoadSetting(ISettingsSource settings, ComboBox control, IGitModule gitModule)
+            public override void LoadSetting(ISettingsSource settings, ComboBox control)
             {
                 string settingVal = settings.SettingLevel == SettingLevel.Effective
                     ? Setting.ValueOrDefault(settings)
@@ -62,7 +62,7 @@ namespace GitUIPluginInterfaces
                 }
             }
 
-            public override void SaveSetting(ISettingsSource settings, ComboBox control, IGitModule gitModule)
+            public override void SaveSetting(ISettingsSource settings, ComboBox control)
             {
                 var controlValue = control.SelectedItem?.ToString();
                 if (settings.SettingLevel == SettingLevel.Effective)

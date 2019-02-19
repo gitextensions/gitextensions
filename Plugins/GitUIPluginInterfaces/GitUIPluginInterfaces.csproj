@@ -71,6 +71,7 @@
     <Compile Include="BuildServerIntegration\IBuildServerSettingsUserControl.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerTypeMetadata.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerWatcher.cs" />
+    <Compile Include="CredentialsManager.cs" />
     <Compile Include="ExecutionResult.cs" />
     <Compile Include="FontParser.cs" />
     <Compile Include="GitCmdResult.cs" />

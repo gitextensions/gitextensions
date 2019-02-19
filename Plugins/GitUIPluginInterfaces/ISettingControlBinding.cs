@@ -60,7 +60,7 @@ namespace GitUIPluginInterfaces
 
         public void LoadSetting(ISettingsSource settings, IGitModule gitModule)
         {
-            LoadSetting(settings, Control, gitModule);
+            LoadSetting(settings, Control);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace GitUIPluginInterfaces
         /// </summary>
         public void SaveSetting(ISettingsSource settings, IGitModule gitModule)
         {
-            SaveSetting(settings, Control, gitModule);
+            SaveSetting(settings, Control);
         }
 
         public virtual string Caption()
@@ -90,11 +90,11 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Loads setting value from settings to Control
         /// </summary>
-        public abstract void LoadSetting(ISettingsSource settings, TControl control, IGitModule gitModule);
+        public abstract void LoadSetting(ISettingsSource settings, TControl control);
 
         /// <summary>
         /// Saves value from Control to settings
         /// </summary>
-        public abstract void SaveSetting(ISettingsSource settings, TControl control, IGitModule gitModule);
+        public abstract void SaveSetting(ISettingsSource settings, TControl control);
     }
 }

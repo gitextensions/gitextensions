@@ -1,11 +1,13 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using GitUIPluginInterfaces.UserControls;
 
 namespace GitUIPluginInterfaces
 {
-    public class CredentialsSetting : ISetting
+    public class CredentialsSetting : CredentialsManager, ISetting
     {
-        public CredentialsSetting(string name, string caption)
+        public CredentialsSetting(string name, string caption, Func<string> getWorkingDir)
+            : base(getWorkingDir)
         {
             Name = name;
             Caption = caption;
@@ -16,16 +18,16 @@ namespace GitUIPluginInterfaces
         public string Caption { get; }
         public CredentialsControl CustomControl { get; set; }
 
-        public NetworkCredential GetValueOrDefault(ISettingsSource settings, IGitModule gitModule)
+        public NetworkCredential GetValueOrDefault(ISettingsSource settings)
         {
-            return settings.GetCredentials(Name, gitModule, _defaultValue);
+            return GetCredentialOrDefault(settings.SettingLevel, Name, _defaultValue);
         }
 
-        public void SaveValue(string userName, string password, ISettingsSource settings, IGitModule gitModule)
+        public void SaveValue(ISettingsSource settings, string userName, string password)
         {
             if (settings.SettingLevel == SettingLevel.Effective)
             {
-                var currentCredentials = GetValueOrDefault(settings, gitModule);
+                var currentCredentials = GetValueOrDefault(settings);
                 if (currentCredentials.UserName == userName && currentCredentials.Password == password)
                 {
                     return;
@@ -35,7 +37,7 @@ namespace GitUIPluginInterfaces
             var newCredentials = string.IsNullOrWhiteSpace(userName)
                 ? null
                 : new NetworkCredential(userName, password);
-            settings.SetCredentials(Name, gitModule, newCredentials);
+            SetCredentials(settings.SettingLevel, Name, newCredentials);
         }
 
         public ISettingControlBinding CreateControlBinding()
@@ -55,11 +57,11 @@ namespace GitUIPluginInterfaces
                 return new CredentialsControl();
             }
 
-            public override void LoadSetting(ISettingsSource settings, CredentialsControl control, IGitModule gitModule)
+            public override void LoadSetting(ISettingsSource settings, CredentialsControl control)
             {
                 if (SettingLevelSupported(settings.SettingLevel))
                 {
-                    var credentials = Setting.GetValueOrDefault(settings, gitModule);
+                    var credentials = Setting.GetValueOrDefault(settings);
                     control.UserName = credentials.UserName;
                     control.Password = credentials.Password;
                     control.Enabled = true;
@@ -72,14 +74,14 @@ namespace GitUIPluginInterfaces
                 }
             }
 
-            public override void SaveSetting(ISettingsSource settings, CredentialsControl control, IGitModule gitModule)
+            public override void SaveSetting(ISettingsSource settings, CredentialsControl control)
             {
                 if (SettingLevelSupported(settings.SettingLevel))
                 {
-                    Setting.SaveValue(control.UserName, control.Password, settings, gitModule);
+                    Setting.SaveValue(settings, control.UserName, control.Password);
 
                     // Reload actual settings.
-                    LoadSetting(settings, control, gitModule);
+                    LoadSetting(settings, control);
                 }
             }
 

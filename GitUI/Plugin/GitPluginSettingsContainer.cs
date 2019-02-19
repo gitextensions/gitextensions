@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using GitCommands;
 using GitUIPluginInterfaces;
 
@@ -41,16 +40,6 @@ namespace GitUI
         public override void SetValue<T>(string name, T value, Func<T, string> encode)
         {
             ExternalSettings.SetValue(_pluginName + name, value, encode);
-        }
-
-        public override void SetCredentials(string name, IGitModule gitModule, NetworkCredential value)
-        {
-            ExternalSettings.SetCredentials(name, gitModule, value);
-        }
-
-        public override NetworkCredential GetCredentials(string name, IGitModule gitModule, NetworkCredential defaultValue)
-        {
-            return ExternalSettings.GetCredentials(name, gitModule, defaultValue);
         }
     }
 }

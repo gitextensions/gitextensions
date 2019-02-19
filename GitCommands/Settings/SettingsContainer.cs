@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Net;
-using GitExtUtils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
@@ -9,6 +6,8 @@ namespace GitCommands.Settings
 {
     public class SettingsContainer<TLowerPriority, TCache> : ISettingsSource where TLowerPriority : SettingsContainer<TLowerPriority, TCache> where TCache : SettingsCache
     {
+        private readonly ICredentialsManager _credentialsManager = new CredentialsManager();
+
         [CanBeNull]
         public TLowerPriority LowerPriority { get; }
         [NotNull]
@@ -37,14 +36,7 @@ namespace GitCommands.Settings
 
         public void Save()
         {
-            foreach (var networkCredentials in Credentials.ToList())
-            {
-                CredentialsManager.UpdateCredentials(networkCredentials.Key, networkCredentials.Value?.UserName,
-                    networkCredentials.Value?.Password);
-            }
-
-            Credentials.Clear();
-
+            _credentialsManager.Save();
             SettingsCache.Save();
             LowerPriority?.Save();
         }
@@ -83,17 +75,6 @@ namespace GitCommands.Settings
             }
 
             return false;
-        }
-
-        public override NetworkCredential GetCredentials(string name, IGitModule gitModule, NetworkCredential defaultValue)
-        {
-            NetworkCredential result = base.GetCredentials(name, gitModule, null);
-            if (result == null && LowerPriority != null)
-            {
-                return LowerPriority.GetCredentials(name, gitModule, defaultValue);
-            }
-
-            return result ?? defaultValue;
         }
     }
 }

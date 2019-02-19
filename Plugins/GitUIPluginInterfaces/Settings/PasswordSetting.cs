@@ -38,7 +38,7 @@ namespace GitUIPluginInterfaces
                 return new TextBox { PasswordChar = '\u25CF' };
             }
 
-            public override void LoadSetting(ISettingsSource settings, TextBox control, IGitModule gitModule)
+            public override void LoadSetting(ISettingsSource settings, TextBox control)
             {
                 string settingVal = settings.SettingLevel == SettingLevel.Effective
                     ? Setting.ValueOrDefault(settings)
@@ -47,7 +47,7 @@ namespace GitUIPluginInterfaces
                 control.Text = settingVal;
             }
 
-            public override void SaveSetting(ISettingsSource settings, TextBox control, IGitModule gitModule)
+            public override void SaveSetting(ISettingsSource settings, TextBox control)
             {
                 var controlValue = control.Text;
                 if (settings.SettingLevel == SettingLevel.Effective)

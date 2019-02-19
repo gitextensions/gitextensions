@@ -39,7 +39,7 @@ namespace GitUIPluginInterfaces
                 return new TextBox();
             }
 
-            public override void LoadSetting(ISettingsSource settings, TextBox control, IGitModule gitModule)
+            public override void LoadSetting(ISettingsSource settings, TextBox control)
             {
                 object settingVal = settings.SettingLevel == SettingLevel.Effective
                     ? Setting.ValueOrDefault(settings)
@@ -48,7 +48,7 @@ namespace GitUIPluginInterfaces
                 control.Text = ConvertToString(settingVal);
             }
 
-            public override void SaveSetting(ISettingsSource settings, TextBox control, IGitModule gitModule)
+            public override void SaveSetting(ISettingsSource settings, TextBox control)
             {
                 var controlValue = control.Text;
 

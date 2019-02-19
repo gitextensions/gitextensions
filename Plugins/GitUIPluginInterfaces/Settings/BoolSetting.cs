@@ -51,7 +51,7 @@ namespace GitUIPluginInterfaces
                 return new CheckBox { ThreeState = true };
             }
 
-            public override void LoadSetting(ISettingsSource settings, CheckBox control, IGitModule gitModule)
+            public override void LoadSetting(ISettingsSource settings, CheckBox control)
             {
                 bool? settingVal = settings.SettingLevel == SettingLevel.Effective
                     ? Setting.ValueOrDefault(settings)
@@ -60,7 +60,7 @@ namespace GitUIPluginInterfaces
                 control.SetNullableChecked(settingVal);
             }
 
-            public override void SaveSetting(ISettingsSource settings, CheckBox control, IGitModule gitModule)
+            public override void SaveSetting(ISettingsSource settings, CheckBox control)
             {
                 var controlValue = control.GetNullableChecked();
                 if (settings.SettingLevel == SettingLevel.Effective)
