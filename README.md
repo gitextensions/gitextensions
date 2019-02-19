@@ -172,3 +172,7 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 Watch us work on this project.
 
 [![Click to play](https://img.youtube.com/vi/k6DhHbzkZvM/0.jpg)](https://www.youtube.com/watch?v=k6DhHbzkZvM)
+
+# Code Quality Monitor
+
+[![Code quality status](https://codescene.io/projects/4180/status.svg) Full analysis results at **codescene.io**.](https://codescene.io/projects/4180/jobs/latest-successful/results)
