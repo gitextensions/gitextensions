@@ -1686,6 +1686,70 @@ namespace GitCommands
             return execution.AllOutput;
         }
 
+        /// <summary>
+        /// Returns TRUE if the unix execute permission flag is set on the given file.
+        /// </summary>
+        /// <param name="fileName">Path to the file to check</param>
+        /// <returns>TRUE if execute permission flag is set</returns>
+        public bool GetFileExecutableStatus(string fileName)
+        {
+            var args = new GitArgumentBuilder("ls-files")
+                {
+                    "-s",
+                    fileName.QuoteNE()
+                };
+
+            // index
+            var lines = _gitExecutable.GetOutput(args).Split(' ', '\t');
+
+            if (lines.Length >= 1)
+            {
+                if (lines[0] == "100755")
+                {
+                    // File has the executable bit set
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Sets or unsets the unix execute permission flag on a given list of files.
+        /// </summary>
+        /// <param name="files">List of files to toggle the flag for</param>
+        /// <param name="setExecutable">Set the flag to execute or non-execute</param>
+        /// <param name="wereErrors">Return value if there were errors</param>
+        /// <returns>command output</returns>
+        public string SetFileExecutable(IReadOnlyList<GitItemStatus> files, bool setExecutable, out bool wereErrors)
+        {
+            files = files.Where(file => file.IsExecutable != setExecutable).ToList();
+
+            if (files.Count == 0)
+            {
+                wereErrors = false;
+                return "";
+            }
+
+            var execution = _gitExecutable.Execute(
+                new GitArgumentBuilder("update-index")
+                {
+                    { setExecutable ? "--chmod=+x" : "--chmod=-x" },
+                    "--stdin"
+                },
+                inputWriter =>
+                {
+                    foreach (var file in files)
+                    {
+                        UpdateIndex(inputWriter, file.Name);
+                    }
+                },
+                SystemEncoding);
+
+            wereErrors = !execution.ExitedSuccessfully;
+            return execution.AllOutput;
+        }
+
         public string SkipWorktreeFiles(IReadOnlyList<GitItemStatus> files, bool skipWorktree)
         {
             files = files.Where(file => file.IsSkipWorktree != skipWorktree).ToList();

@@ -32,6 +32,7 @@ namespace GitCommands
             IsAssumeUnchanged = 1 << 9,
             IsSkipWorktree = 1 << 10,
             IsSubmodule = 1 << 11,
+            IsExecutable = 1 << 12,
         }
 
         private JoinableTask<GitSubmoduleStatus> _submoduleStatus;
@@ -124,6 +125,12 @@ namespace GitCommands
         {
             get => _flags.HasFlag(Flags.IsSubmodule);
             set => SetFlag(value, Flags.IsSubmodule);
+        }
+
+        public bool IsExecutable
+        {
+            get => _flags.HasFlag(Flags.IsExecutable);
+            set => SetFlag(value, Flags.IsExecutable);
         }
 
         private void SetFlag(bool isSet, Flags flag)
