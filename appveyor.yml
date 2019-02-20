@@ -14,6 +14,9 @@ environment:
   ARCHIVE_WITH_PDB: TRUE
   spciuser: ""
 
+init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
 # Build settings, not to be confused with "before_build" and "after_build".
 # "project" is relative to the original build directory and not influenced by directory changes in "before_build".
 build:
@@ -31,7 +34,7 @@ install:
 - cmd: echo /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll">> Directory.Build.rsp
 - cmd: |-
     cd Setup
-    python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
+    C:\\Python35\\python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
     cd ..
 
 # to run your custom scripts instead of automatic MSBuild
@@ -40,18 +43,7 @@ build_script:
     Write-Output "Platform: $env:IdeVersion"
     # for release branches mark the repo as clean
     if (!$env:APPVEYOR_PULL_REQUEST_TITLE -and $env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
-        & git update-index --skip-worktree GitUI\CommandsDialogs\FormBrowse.cs
-        & git update-index --skip-worktree CommonAssemblyInfo.cs
-        & git update-index --skip-worktree CommonAssemblyInfoExternals.cs
-        & git update-index --skip-worktree GitExtSshAskPass/SshAskPass.rc2
-        & git update-index --skip-worktree GitExtensionsShellEx/GitExtensionsShellEx.rc
-        & git update-index --skip-worktree GitExtensionsVSIX/source.extension.vsixmanifest
-        & git update-index --skip-worktree Setup/MakeInstallers.cmd
-        & cd GitExtensionsDoc
-        & git update-index --skip-worktree source/conf.py
-        & cd ..\
-        & git status
-        & git submodule foreach --recursive git status
+      & Setup\Mark-RepoClean.ps1
     }
     # build
     & Setup\Build.cmd
