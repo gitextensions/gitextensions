@@ -34,7 +34,7 @@ namespace GitUI.BranchTreePanel
                 _name = name;
             }
 
-            public override string DisplayText()
+            protected override string DisplayText()
             {
                 return string.Format(_name);
             }
@@ -56,6 +56,8 @@ namespace GitUI.BranchTreePanel
             public bool IsCurrent { get; }
             public string LocalPath { get; }
             public string SuperPath { get; }
+            public string SubmoduleName { get; }
+            public string BranchText { get; }
 
             public SubmoduleNode(Tree tree, SubmoduleInfo submoduleInfo, bool isCurrent, string localPath, string superPath)
                 : base(tree)
@@ -64,6 +66,14 @@ namespace GitUI.BranchTreePanel
                 IsCurrent = isCurrent;
                 LocalPath = localPath;
                 SuperPath = superPath;
+
+                // Extract submodule name and branch
+                // e.g. Info.Text = "Externals/conemu-inside [no branch]"
+                // Note that the branch portion won't be there if the user hasn't yet init'd + updated the submodule.
+                var pathAndBranch = Info.Text.Split(new char[] { ' ' }, 2);
+                Trace.Assert(pathAndBranch.Length >= 1);
+                SubmoduleName = pathAndBranch[0].SubstringAfterLast('/'); // Remove path
+                BranchText = pathAndBranch.Length == 2 ? " " + pathAndBranch[1] : "";
             }
 
             public async Task LoadDetailsAsync(CancellationToken token)
@@ -88,21 +98,19 @@ namespace GitUI.BranchTreePanel
 
             public bool CanOpen => !IsCurrent;
 
-            public override string DisplayText()
+            protected override string DisplayText()
             {
                 if (!UseFolderTree)
                 {
                     return Info.Text;
                 }
 
-                // Display the submodule name, not full path, along with active branch (if any)
-                // e.g. Info.Text = "Externals/conemu-inside [no branch]"
-                // Note that the branch portion won't be there if the user hasn't yet init'd + updated the submodule.
-                var pathAndBranch = Info.Text.Split(new char[] { ' ' }, 2);
-                Trace.Assert(pathAndBranch.Length >= 1);
-                var submoduleName = pathAndBranch[0].SubstringAfterLast('/'); // Remove path
-                var branch = pathAndBranch.Length == 2 ? " " + pathAndBranch[1] : "";
-                return submoduleName + branch + _details?.AddedAndRemovedText;
+                return SubmoduleName + BranchText + _details?.AddedAndRemovedText;
+            }
+
+            protected override string NodeName()
+            {
+                return SubmoduleName;
             }
 
             public void Open()

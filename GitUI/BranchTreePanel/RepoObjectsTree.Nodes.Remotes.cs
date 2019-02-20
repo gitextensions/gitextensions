@@ -341,7 +341,7 @@ namespace GitUI.BranchTreePanel
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.FolderClosed);
             }
 
-            public override string DisplayText()
+            protected override string DisplayText()
             {
                 return Name;
             }
