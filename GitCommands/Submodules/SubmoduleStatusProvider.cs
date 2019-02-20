@@ -144,7 +144,10 @@ namespace GitCommands.Submodules
 
                 // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
                 var threadModule = new GitModule(workingDirectory);
-                var result = new SubmoduleInfoResult();
+                var result = new SubmoduleInfoResult
+                {
+                    Module = threadModule
+                };
 
                 // Add all submodules inside the current repository:
                 var submodulesTask = GetRepositorySubmodulesStatusAsync(updateStatus, result, threadModule, cancelToken, noBranchText);
