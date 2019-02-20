@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
 using JetBrains.Annotations;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -104,6 +106,44 @@ namespace GitUI.CommandsDialogs
             bool filterByPath = checkBoxPathFilter.Checked;
             textBoxPaths.Enabled = filterByPath;
             labelPathHint.Visible = filterByPath;
+        }
+
+        private void AddPath_Click(object sender, EventArgs e)
+        {
+            var dialog = new CommonOpenFileDialog
+            {
+                InitialDirectory = Module.WorkingDir,
+                EnsurePathExists = true,
+                EnsureFileExists = false,
+                IsFolderPicker = true,
+                ShowHiddenItems = false,
+                Multiselect = true,
+                AddToMostRecentlyUsedList = false,
+            };
+
+            var result = dialog.ShowDialog();
+            if (result == CommonFileDialogResult.Ok)
+            {
+                var subFoldersToClean = dialog.FileNames
+                    .Where(d => d.StartsWith(Module.WorkingDir)
+                                && Directory.Exists(d)
+                                && !d.Equals(Module.WorkingDirGitDir.TrimEnd(Path.DirectorySeparatorChar)))
+                    .ToList();
+
+                if (!subFoldersToClean.Any())
+                {
+                    return;
+                }
+
+                checkBoxPathFilter.Checked = true;
+                textBoxPaths.Enabled = true;
+                if (textBoxPaths.Text.Length != 0)
+                {
+                    textBoxPaths.Text += Environment.NewLine;
+                }
+
+                textBoxPaths.Text += string.Join(Environment.NewLine, subFoldersToClean);
+            }
         }
     }
 }
