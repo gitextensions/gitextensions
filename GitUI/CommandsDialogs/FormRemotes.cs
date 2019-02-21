@@ -529,16 +529,6 @@ Inactive remote is completely invisible to git.");
                 .FileAndForget();
         }
 
-        private void PruneClick(object sender, EventArgs e)
-        {
-            if (_selectedRemote == null)
-            {
-                return;
-            }
-
-            FormRemoteProcess.ShowDialog(this, "remote prune " + _selectedRemote.Name);
-        }
-
         private void RemoteBranchesDataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             MessageBox.Show(this,

@@ -82,7 +82,6 @@ namespace GitUI.CommandsDialogs
             this.label4 = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.UpdateBranch = new System.Windows.Forms.Button();
-            this.Prune = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.flpnlRemoteManagement.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -730,7 +729,6 @@ namespace GitUI.CommandsDialogs
             // 
             this.flowLayoutPanel1.AutoSize = true;
             this.flowLayoutPanel1.Controls.Add(this.UpdateBranch);
-            this.flowLayoutPanel1.Controls.Add(this.Prune);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 265);
@@ -749,17 +747,6 @@ namespace GitUI.CommandsDialogs
             this.UpdateBranch.Text = "Update all remote branch info";
             this.UpdateBranch.UseVisualStyleBackColor = true;
             this.UpdateBranch.Click += new System.EventHandler(this.UpdateBranchClick);
-            // 
-            // Prune
-            // 
-            this.Prune.AutoSize = true;
-            this.Prune.Location = new System.Drawing.Point(217, 3);
-            this.Prune.Name = "Prune";
-            this.Prune.Size = new System.Drawing.Size(249, 25);
-            this.Prune.TabIndex = 0;
-            this.Prune.Text = "Prune remote branches";
-            this.Prune.UseVisualStyleBackColor = true;
-            this.Prune.Click += new System.EventHandler(this.PruneClick);
             // 
             // FormRemotes
             // 
@@ -817,7 +804,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button UpdateBranch;
-        private System.Windows.Forms.Button Prune;
         private System.Windows.Forms.Button LoadSSHKey;
         private System.Windows.Forms.TextBox PuttySshKey;
         private System.Windows.Forms.Button TestConnection;
