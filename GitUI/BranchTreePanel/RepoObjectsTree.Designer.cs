@@ -103,6 +103,7 @@ namespace GitUI.BranchTreePanel
             this.tsmiShowTags = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiShowRemotes = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.updateAllRemotesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
             this.menuBranch.SuspendLayout();
             this.menuRemotes.SuspendLayout();
@@ -232,6 +233,7 @@ namespace GitUI.BranchTreePanel
             // 
             this.menuRemotes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuBtnManageRemotesFromRootNode,
+            this.updateAllRemotesToolStripMenuItem,
             this.pruneAllRemotesToolStripMenuItem});
             this.menuRemotes.Name = "contextmenuRemotes";
             this.menuRemotes.Size = new System.Drawing.Size(173, 26);
@@ -616,6 +618,13 @@ namespace GitUI.BranchTreePanel
             this.tsmiShowRemotes.Text = "&Remotes";
             this.tsmiShowRemotes.Click += new System.EventHandler(this.tsmiShowRemotes_Click);
             // 
+            // updateAllRemotesToolStripMenuItem
+            // 
+            this.updateAllRemotesToolStripMenuItem.Name = "updateAllRemotesToolStripMenuItem";
+            this.updateAllRemotesToolStripMenuItem.Size = new System.Drawing.Size(428, 38);
+            this.updateAllRemotesToolStripMenuItem.Text = "Update all remotes";
+            this.updateAllRemotesToolStripMenuItem.Click += new System.EventHandler(this.updateAllRemotesToolStripMenuItem_Click);
+            // 
             // RepoObjectsTree
             // 
             this.Controls.Add(this.repoTreePanel);
@@ -696,5 +705,6 @@ namespace GitUI.BranchTreePanel
         private ToolTip toolTip;
         private ToolStripMenuItem pruneAllRemotesToolStripMenuItem;
         private ToolStripMenuItem pruneToolStripMenuItem;
+        private ToolStripMenuItem updateAllRemotesToolStripMenuItem;
     }
 }

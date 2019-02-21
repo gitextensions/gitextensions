@@ -470,6 +470,11 @@ namespace GitUI.BranchTreePanel
             public NativeTreeView TreeView { get; }
         }
 
+        private void updateAllRemotesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormRemoteProcess.ShowDialog((GitModuleForm)ParentForm, "remote update");
+        }
+
         private void pruneAllRemotesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormRemoteProcess.ShowDialog((GitModuleForm)ParentForm, "remote update --prune");
