@@ -774,5 +774,15 @@ See the changes in the commit form.");
                 tvGitTree.Focus();
             }
         }
+
+        public bool SelectFileOrFolder(string filePath)
+        {
+            if (filePath == null || filePath.IndexOf(Module.WorkingDir) != 0)
+            {
+                return false;
+            }
+
+            return _revisionFileTreeController.SelectFileOrFolder(tvGitTree, filePath.Substring(Module.WorkingDir.Length));
+        }
     }
 }
