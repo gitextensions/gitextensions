@@ -80,7 +80,6 @@ namespace GitUI.CommandsDialogs
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.flpnlRemoteManagement.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -102,7 +101,6 @@ namespace GitUI.CommandsDialogs
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RemoteBranches)).BeginInit();
-            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // flpnlRemoteManagement
@@ -575,7 +573,6 @@ namespace GitUI.CommandsDialogs
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Controls.Add(this.splitContainer3, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.flowLayoutPanel1, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -724,17 +721,6 @@ namespace GitUI.CommandsDialogs
             this.label4.TabIndex = 0;
             this.label4.Text = "Local branch name";
             // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 265);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(724, 31);
-            this.flowLayoutPanel1.TabIndex = 1;
-            this.flowLayoutPanel1.WrapContents = false;
-            // 
             // FormRemotes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -778,8 +764,6 @@ namespace GitUI.CommandsDialogs
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.RemoteBranches)).EndInit();
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -816,7 +800,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private UserControls.FolderBrowserButton folderBrowserButtonUrl;
         private UserControls.FolderBrowserButton folderBrowserButtonPushUrl;
         private System.Windows.Forms.FlowLayoutPanel panelButtons;
