@@ -386,13 +386,13 @@ namespace AppVeyorIntegration
             {
                 int failedTestCount = buildDescription["failedTestsCount"].ToObject<int>();
                 int skippedTestCount = testCount - buildDescription["passedTestsCount"].ToObject<int>();
-                var testResults = " : " + testCount + " tests";
+                var testResults = testCount + " tests";
                 if (failedTestCount != 0 || skippedTestCount != 0)
                 {
                     testResults += string.Format(" ( {0} failed, {1} skipped )", failedTestCount, skippedTestCount);
                 }
 
-                buildDetails.TestsResultText = " " + testResults;
+                buildDetails.TestsResultText = testResults;
             }
         }
 
@@ -527,9 +527,9 @@ namespace AppVeyorIntegration
 
         public void UpdateDescription()
         {
-            Description = _buildDurationFormatter.Format(Duration) + TestsResultText + (!string.IsNullOrWhiteSpace(PullRequestText) ? " " + PullRequestText : string.Empty) + " " + Id;
+            Description = _buildDurationFormatter.Format(Duration) + " " + TestsResultText + (!string.IsNullOrWhiteSpace(PullRequestText) ? " " + PullRequestText : string.Empty) + " " + Id;
             Tooltip = DisplayStatus + Environment.NewLine
-                      + _buildDurationFormatter.Format(Duration) + Environment.NewLine
+                      + (Duration.HasValue ? _buildDurationFormatter.Format(Duration) + Environment.NewLine : string.Empty)
                       + (!string.IsNullOrWhiteSpace(TestsResultText) ? TestsResultText + Environment.NewLine : string.Empty)
                       + (!string.IsNullOrWhiteSpace(PullRequestText) ? PullRequestText + ": " + PullRequestTitle + Environment.NewLine : string.Empty)
                       + Id;
