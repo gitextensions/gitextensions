@@ -663,11 +663,6 @@ Inactive remote is completely invisible to git.");
             flpnlRemoteManagement.Enabled = !_selectedRemote.Disabled;
         }
 
-        private void UpdateBranchClick(object sender, EventArgs e)
-        {
-            FormRemoteProcess.ShowDialog(this, "remote update");
-        }
-
         private void checkBoxSepPushUrl_CheckedChanged(object sender, EventArgs e)
         {
             ShowSeparatePushUrl(checkBoxSepPushUrl.Checked);

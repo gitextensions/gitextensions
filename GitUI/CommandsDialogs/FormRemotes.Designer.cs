@@ -81,7 +81,6 @@ namespace GitUI.CommandsDialogs
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.UpdateBranch = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.flpnlRemoteManagement.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -728,7 +727,6 @@ namespace GitUI.CommandsDialogs
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.AutoSize = true;
-            this.flowLayoutPanel1.Controls.Add(this.UpdateBranch);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 265);
@@ -736,17 +734,6 @@ namespace GitUI.CommandsDialogs
             this.flowLayoutPanel1.Size = new System.Drawing.Size(724, 31);
             this.flowLayoutPanel1.TabIndex = 1;
             this.flowLayoutPanel1.WrapContents = false;
-            // 
-            // UpdateBranch
-            // 
-            this.UpdateBranch.AutoSize = true;
-            this.UpdateBranch.Location = new System.Drawing.Point(472, 3);
-            this.UpdateBranch.Name = "UpdateBranch";
-            this.UpdateBranch.Size = new System.Drawing.Size(249, 25);
-            this.UpdateBranch.TabIndex = 1;
-            this.UpdateBranch.Text = "Update all remote branch info";
-            this.UpdateBranch.UseVisualStyleBackColor = true;
-            this.UpdateBranch.Click += new System.EventHandler(this.UpdateBranchClick);
             // 
             // FormRemotes
             // 
@@ -803,7 +790,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.Button UpdateBranch;
         private System.Windows.Forms.Button LoadSSHKey;
         private System.Windows.Forms.TextBox PuttySshKey;
         private System.Windows.Forms.Button TestConnection;
