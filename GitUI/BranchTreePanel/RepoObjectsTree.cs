@@ -469,5 +469,15 @@ namespace GitUI.BranchTreePanel
 
             public NativeTreeView TreeView { get; }
         }
+
+        private void pruneAllRemotesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormRemoteProcess.ShowDialog((GitModuleForm)ParentForm, "remote update --prune");
+        }
+
+        private void pruneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormRemoteProcess.ShowDialog((GitModuleForm)ParentForm, "remote prune " + treeMain.SelectedNode.Name);
+        }
     }
 }
