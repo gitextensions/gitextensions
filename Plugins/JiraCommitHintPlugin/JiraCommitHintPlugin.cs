@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Atlassian.Jira;
@@ -45,7 +46,7 @@ namespace JiraCommitHintPlugin
         // For compatibility reason, the setting key is kept to "JDL Query" even if the label is, rightly, "JQL Query" (for "Jira Query Language")
         private readonly StringSetting _jqlQuerySettings = new StringSetting("JDL Query", JiraQueryLabel, "assignee = currentUser() and resolution is EMPTY ORDER BY updatedDate DESC");
         private readonly StringSetting _stringTemplateSetting = new StringSetting("Jira Message Template", MessageTemplateLabel, defaultFormat);
-        private readonly StringSetting _jiraFields = new StringSetting("Jira fields", JiraFieldsLabel, $"{{{string.Join("} {", typeof(Issue).GetProperties().Where(i => i.CanRead).Select(i => i.Name).OrderBy(i => i).ToArray())}}}");
+        private readonly StringSetting _jiraFields = new StringSetting("Jira fields", JiraFieldsLabel, $"{{{string.Join("} {", typeof(Issue).GetProperties().Where(i => i.CanRead).Select(i => i.Name).OrderBy(i => i).ToArray())}}} {{CustomFieldNames}}");
         private readonly StringSetting _jiraQueryHelpLink = new StringSetting("    ", "");
         private JiraTaskDTO[] _currentMessages;
         private Button _btnPreview;
@@ -253,13 +254,36 @@ namespace JiraCommitHintPlugin
             _currentMessages = null;
         }
 
+        private static IDictionary<string, object> GetFlatIssueTemplateDictionary(Issue issue)
+        {
+            IDictionary<string, object> templateDictionary = PocoToDictionary.ToDictionary(issue);
+
+            List<string> customFields = new List<string>();
+
+            foreach (var customField in issue.CustomFields)
+            {
+                string customFieldFriendlyName = customField.Name.Replace(' ', '_');
+                object customFieldValue = customField.Values.FirstOrDefault();
+
+                templateDictionary[customField.Id] = customFieldValue;
+                templateDictionary[customFieldFriendlyName] = customFieldValue;
+
+                customFields.Add($"{{{customFieldFriendlyName}}}");
+            }
+
+            templateDictionary["CustomFieldNames"] = "Custom fields that can be used for this issue are: " + string.Join(", ", customFields);
+
+            return templateDictionary;
+        }
+
         private static async Task<JiraTaskDTO[]> GetMessageToCommitAsync(Jira jira, string query, string stringTemplate)
         {
             try
             {
                 var results = await jira.Issues.GetIssuesFromJqlAsync(query);
+
                 return results
-                    .Select(issue => new JiraTaskDTO(issue.Key + ": " + issue.Summary, StringTemplate.Format(stringTemplate, issue)))
+                    .Select(issue => new JiraTaskDTO(issue.Key + ": " + issue.Summary, StringTemplate.Format(stringTemplate, GetFlatIssueTemplateDictionary(issue), false)))
                     .ToArray();
             }
             catch (Exception ex)
