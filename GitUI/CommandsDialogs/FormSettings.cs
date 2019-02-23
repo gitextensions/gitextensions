@@ -24,7 +24,7 @@ namespace GitUI.CommandsDialogs
 
         private readonly TranslationString _cantFindGitMessage =
             new TranslationString("The command to run git is not configured correct." + Environment.NewLine +
-                "You need to set the correct path to be able to use GitExtensions." + Environment.NewLine +
+                "You need to set the correct path to be able to use Git Extensions." + Environment.NewLine +
                 Environment.NewLine + "Do you want to set the correct command now? If not Global and Local Settings will not be saved.");
 
         private readonly TranslationString _cantFindGitMessageCaption =

@@ -8,7 +8,7 @@ namespace GitCommands.Git
     public interface ISystemEncodingReader
     {
         /// <summary>
-        /// Checks whether GitExtensions works with standard msysgit or msysgit-unicode.
+        /// Checks whether Git Extensions works with standard msysgit or msysgit-unicode.
         /// </summary>
         /// <returns>System encoding.</returns>
         Encoding Read();

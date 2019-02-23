@@ -25,7 +25,7 @@ namespace GitExtensionsVSIX.Git
             }
             catch (UnauthorizedAccessException)
             {
-                MessageBox.Show("GitExtensions has insufficient permissions to check the registry.");
+                MessageBox.Show("Git Extensions has insufficient permissions to check the registry.");
             }
 
             return "";
