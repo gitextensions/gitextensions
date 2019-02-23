@@ -155,10 +155,13 @@ namespace GitUI.CommandsDialogs
         private readonly AsyncLoader _unstagedLoader = new AsyncLoader();
         private readonly bool _useFormCommitMessage = AppSettings.UseFormCommitMessage;
         private readonly CancellationTokenSequence _interactiveAddSequence = new CancellationTokenSequence();
+        private readonly CancellationTokenSequence _updateBranchNameDisplaySequence = new CancellationTokenSequence();
         private readonly SplitterManager _splitterManager = new SplitterManager(new AppSettingsPath("CommitDialog"));
         private readonly Subject<string> _selectionFilterSubject = new Subject<string>();
         private readonly IFullPathResolver _fullPathResolver;
         private readonly List<string> _formattedLines = new List<string>();
+        private readonly JoinableTaskCollection _joinableTasks;
+        private readonly JoinableTaskFactory _joinableTaskFactory;
 
         private FileStatusList _currentFilesList;
         private bool _skipUpdate;
@@ -186,6 +189,8 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
+            _joinableTasks = ThreadHelper.JoinableTaskContext.CreateCollection();
+            _joinableTaskFactory = ThreadHelper.JoinableTaskContext.CreateFactory(_joinableTasks);
 
             _commitKind = commitKind;
             _editedCommit = editedCommit;
@@ -349,6 +354,7 @@ namespace GitUI.CommandsDialogs
         {
             if (disposing)
             {
+                _updateBranchNameDisplaySequence.Dispose();
                 _unstagedLoader.Dispose();
                 _interactiveAddSequence.Dispose();
                 components?.Dispose();
@@ -419,6 +425,8 @@ namespace GitUI.CommandsDialogs
                 Initialize();
             }
 
+            var token = _updateBranchNameDisplaySequence.Next();
+            _joinableTaskFactory.RunAsync(() => UpdateBranchNameDisplayAsync(token)).FileAndForget();
             UpdateAuthorInfo();
 
             string message;
@@ -955,9 +963,10 @@ namespace GitUI.CommandsDialogs
             ResetUnStaged.Enabled = Unstaged.AllItems.Any();
         }
 
-        private async Task UpdateBranchNameDisplayAsync()
+        private async Task UpdateBranchNameDisplayAsync(CancellationToken cancellationToken)
         {
             await TaskScheduler.Default;
+            cancellationToken.ThrowIfCancellationRequested();
 
             var currentBranchName = Module.GetSelectedBranch();
             if (_branchNameLabelOnClick != null)
@@ -987,7 +996,8 @@ namespace GitUI.CommandsDialogs
                 pushTo = $"{currentBranch.TrackingRemote}/{currentBranch.MergeWith}";
             }
 
-            await this.SwitchToMainThreadAsync();
+            await this.SwitchToMainThreadAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
 
             branchNameLabel.Text = $"{currentBranchName} {char.ConvertFromUtf32(0x2192)}";
             remoteNameLabel.Text = pushTo;
@@ -995,7 +1005,8 @@ namespace GitUI.CommandsDialogs
             _branchNameLabelOnClick = async (object sender, EventArgs e) =>
             {
                 UICommands.StartRemotesDialog(this, null, currentBranchName);
-                await UpdateBranchNameDisplayAsync();
+                var token = _updateBranchNameDisplaySequence.Next();
+                await UpdateBranchNameDisplayAsync(token);
             };
             remoteNameLabel.Click += _branchNameLabelOnClick;
             Text = string.Format(_formTitle.Text, currentBranchName, PathUtil.GetDisplayPath(Module.WorkingDir));
@@ -1004,8 +1015,6 @@ namespace GitUI.CommandsDialogs
         private void Initialize(bool loadUnstaged = true)
         {
             _initialized = true;
-
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateBranchNameDisplayAsync());
 
             using (WaitCursorScope.Enter())
             {
@@ -1185,7 +1194,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            _joinableTaskFactory.RunAsync(async () =>
             {
                 await SetSelectedDiffAsync(item, staged);
                 _selectedDiffReloaded = true;
@@ -3218,7 +3227,8 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateBranchNameDisplayAsync());
+            var token = _updateBranchNameDisplaySequence.Next();
+            _joinableTaskFactory.RunAsync(() => UpdateBranchNameDisplayAsync(token)).FileAndForget();
         }
 
         private void Message_Enter(object sender, EventArgs e)
@@ -3242,6 +3252,8 @@ namespace GitUI.CommandsDialogs
             {
                 _formCommit = formCommit;
             }
+
+            internal JoinableTaskCollection RunningTasks => _formCommit._joinableTasks;
 
             internal EditNetSpell Message => _formCommit.Message;
 

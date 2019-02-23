@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FluentAssertions;
+using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
 using ICSharpCode.TextEditor;
@@ -14,6 +15,8 @@ namespace GitUITests.CommandsDialogs.CommitDialog
     [Apartment(ApartmentState.STA)]
     public class FormCommitTests
     {
+        private bool _originalProvideAutocompletion;
+
         // Created once for the fixture
         private ReferenceRepository _referenceRepository;
 
@@ -23,6 +26,9 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         [SetUp]
         public void SetUp()
         {
+            _originalProvideAutocompletion = AppSettings.ProvideAutocompletion;
+            AppSettings.ProvideAutocompletion = false;
+
             if (_referenceRepository == null)
             {
                 _referenceRepository = new ReferenceRepository();
@@ -39,6 +45,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         public void TearDown()
         {
             _commands = null;
+            AppSettings.ProvideAutocompletion = _originalProvideAutocompletion;
         }
 
         [OneTimeTearDown]
@@ -83,11 +90,13 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         }
 
         [Test]
-        public void Should_display_branch_and_no_remote_info_in_statusbar()
+        public void UpdateBranchNameDisplayAsync_should_display_branch_and_no_remote_info_in_statusbar()
         {
             _referenceRepository.CheckoutMaster();
             RunFormTest(form =>
             {
+                ThreadHelper.JoinableTaskFactory.Run(() => form.GetTestAccessor().RunningTasks.JoinTillEmptyAsync());
+
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
@@ -97,11 +106,13 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         }
 
         [Test]
-        public void Should_display_detached_head_info_in_statusbar()
+        public void UpdateBranchNameDisplayAsync_should_display_detached_head_info_in_statusbar()
         {
             _referenceRepository.CheckoutRevision();
             RunFormTest(form =>
             {
+                ThreadHelper.JoinableTaskFactory.Run(() => form.GetTestAccessor().RunningTasks.JoinTillEmptyAsync());
+
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
@@ -111,11 +122,13 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         }
 
         [Test]
-        public void Should_display_branch_and_remote_info_in_statusbar()
+        public void UpdateBranchNameDisplayAsync_should_display_branch_and_remote_info_in_statusbar()
         {
             _referenceRepository.CreateRemoteForMasterBranch();
             RunFormTest(form =>
             {
+                ThreadHelper.JoinableTaskFactory.Run(() => form.GetTestAccessor().RunningTasks.JoinTillEmptyAsync());
+
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
