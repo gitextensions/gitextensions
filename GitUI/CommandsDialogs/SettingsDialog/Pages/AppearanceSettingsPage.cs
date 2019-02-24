@@ -53,6 +53,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowCurrentBranchInVisualStudio.Checked = AppSettings.ShowCurrentBranchInVisualStudio;
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
             ShowAuthorAvatar.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
+            ShowAuthorAvatarInCommitGraph.Checked = AppSettings.ShowAuthorAvatarColumn;
             NoImageService.Text = AppSettings.GravatarDefaultImageType.ToString();
 
             Language.Items.Clear();
@@ -107,13 +108,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.EnableAutoScale = chkEnableAutoScale.Checked;
             AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
             AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
+            AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.Checked;
+            AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatar.Checked;
+            AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 
             AppSettings.Translation = Language.Text;
             Strings.Reinitialize();
-
-            AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
-
-            AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatar.Checked;
 
             if (Enum.TryParse<DefaultImageType>(NoImageService.Text, ignoreCase: true, out var type))
             {
