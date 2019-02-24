@@ -47,7 +47,7 @@
             this.gbAuthorImages = new System.Windows.Forms.GroupBox();
             this.tlpnlAuthor = new System.Windows.Forms.TableLayoutPanel();
             this.ShowAuthorAvatarInCommitGraph = new System.Windows.Forms.CheckBox();
-            this.ShowAuthorAvatar = new System.Windows.Forms.CheckBox();
+            this.ShowAuthorAvatarInCommitInfo = new System.Windows.Forms.CheckBox();
             this.ClearImageCache = new System.Windows.Forms.Button();
             this.NoImageService = new System.Windows.Forms.ComboBox();
             this.lblCacheDays = new System.Windows.Forms.Label();
@@ -318,7 +318,7 @@
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpnlAuthor.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatarInCommitGraph, 0, 0);
-            this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatar, 0, 1);
+            this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatarInCommitInfo, 0, 1);
             this.tlpnlAuthor.Controls.Add(this.ClearImageCache, 1, 4);
             this.tlpnlAuthor.Controls.Add(this.NoImageService, 1, 3);
             this.tlpnlAuthor.Controls.Add(this.lblCacheDays, 0, 2);
@@ -350,15 +350,15 @@
             // 
             // ShowAuthorAvatar
             // 
-            this.ShowAuthorAvatar.AutoSize = true;
-            this.tlpnlAuthor.SetColumnSpan(this.ShowAuthorAvatar, 2);
-            this.ShowAuthorAvatar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ShowAuthorAvatar.Location = new System.Drawing.Point(3, 26);
-            this.ShowAuthorAvatar.Name = "ShowAuthorAvatar";
-            this.ShowAuthorAvatar.Size = new System.Drawing.Size(294, 17);
-            this.ShowAuthorAvatar.TabIndex = 1;
-            this.ShowAuthorAvatar.Text = "Show author's avatar in the commit info view";
-            this.ShowAuthorAvatar.UseVisualStyleBackColor = true;
+            this.ShowAuthorAvatarInCommitInfo.AutoSize = true;
+            this.tlpnlAuthor.SetColumnSpan(this.ShowAuthorAvatarInCommitInfo, 2);
+            this.ShowAuthorAvatarInCommitInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ShowAuthorAvatarInCommitInfo.Location = new System.Drawing.Point(3, 26);
+            this.ShowAuthorAvatarInCommitInfo.Name = "ShowAuthorAvatarInCommitInfo";
+            this.ShowAuthorAvatarInCommitInfo.Size = new System.Drawing.Size(294, 17);
+            this.ShowAuthorAvatarInCommitInfo.TabIndex = 1;
+            this.ShowAuthorAvatarInCommitInfo.Text = "Show author's avatar in the commit info view";
+            this.ShowAuthorAvatarInCommitInfo.UseVisualStyleBackColor = true;
             // 
             // ClearImageCache
             // 
@@ -483,7 +483,7 @@
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_DaysToCacheImages;
         private System.Windows.Forms.Label lblCacheDays;
         private System.Windows.Forms.Button ClearImageCache;
-        private System.Windows.Forms.CheckBox ShowAuthorAvatar;
+        private System.Windows.Forms.CheckBox ShowAuthorAvatarInCommitInfo;
         private System.Windows.Forms.FontDialog fixedWidthFontDialog;
         private System.Windows.Forms.FontDialog applicationDialog;
         private System.Windows.Forms.FontDialog commitFontDialog;
