@@ -12,6 +12,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private readonly TranslationString _noDictFile = new TranslationString("None");
         private readonly TranslationString _noDictFilesFound = new TranslationString("No dictionary files found in: {0}");
+        private readonly TranslationString _noImageServiceTooltip = new TranslationString("A default image, if an email address has no matching Gravatar image.\r\nSee http://en.gravatar.com/site/implement/images/ for more details.");
 
         public AppearanceSettingsPage()
         {
@@ -24,6 +25,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void OnRuntimeLoad()
         {
             base.OnRuntimeLoad();
+
+            ToolTip.SetToolTip(NoImageService, _noImageServiceTooltip.Text);
 
             // align 1st columns across all tables
             tlpnlGeneral.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
