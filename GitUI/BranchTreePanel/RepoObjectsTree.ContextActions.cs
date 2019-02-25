@@ -67,6 +67,7 @@ namespace GitUI.BranchTreePanel
             // Actions on enabled remotes
             mnubtnFetchAllBranchesFromARemote.Visible = node.Enabled;
             mnubtnDisableRemote.Visible = node.Enabled;
+            mnuBtnPrune.Visible = node.Enabled;
 
             // Actions on disabled remotes
             mnubtnEnableRemote.Visible = !node.Enabled;
