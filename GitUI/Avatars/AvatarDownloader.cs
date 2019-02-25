@@ -44,6 +44,12 @@ namespace GitUI.Avatars
                 throw new ArgumentException(nameof(email));
             }
 
+            // check network connectivity
+            if (!NativeMethods.InternetGetConnectedState(out _, 0))
+            {
+                return null;
+            }
+
             var match = _gitHubEmailRegex.Match(email);
 
             return match.Success

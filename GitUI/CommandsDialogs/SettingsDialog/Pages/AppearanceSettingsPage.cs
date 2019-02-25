@@ -12,6 +12,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private readonly TranslationString _noDictFile = new TranslationString("None");
         private readonly TranslationString _noDictFilesFound = new TranslationString("No dictionary files found in: {0}");
+        private readonly TranslationString _noImageServiceTooltip = new TranslationString("A default image, if an email address has no matching Gravatar image.\r\nSee http://en.gravatar.com/site/implement/images/ for more details.");
 
         public AppearanceSettingsPage()
         {
@@ -24,6 +25,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void OnRuntimeLoad()
         {
             base.OnRuntimeLoad();
+
+            ToolTip.SetToolTip(NoImageService, _noImageServiceTooltip.Text);
 
             // align 1st columns across all tables
             tlpnlGeneral.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
@@ -49,7 +52,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             chkShowCurrentBranchInVisualStudio.Checked = AppSettings.ShowCurrentBranchInVisualStudio;
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
-            ShowAuthorAvatar.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
+            ShowAuthorAvatarInCommitInfo.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
+            ShowAuthorAvatarInCommitGraph.Checked = AppSettings.ShowAuthorAvatarColumn;
             NoImageService.Text = AppSettings.GravatarDefaultImageType.ToString();
 
             Language.Items.Clear();
@@ -104,13 +108,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.EnableAutoScale = chkEnableAutoScale.Checked;
             AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
             AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
+            AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.Checked;
+            AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.Checked;
+            AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
 
             AppSettings.Translation = Language.Text;
             Strings.Reinitialize();
-
-            AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
-
-            AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatar.Checked;
 
             if (Enum.TryParse<DefaultImageType>(NoImageService.Text, ignoreCase: true, out var type))
             {

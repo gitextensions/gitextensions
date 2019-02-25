@@ -13,10 +13,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog
     /// <summary>
     /// set Text property in derived classes to set the title
     /// </summary>
-    public abstract class SettingsPageBase : GitExtensionsControl, ISettingsPage
+    public abstract partial class SettingsPageBase : GitExtensionsControl, ISettingsPage
     {
         private readonly List<ISettingControlBinding> _controlBindings = new List<ISettingControlBinding>();
         private ISettingsPageHost _pageHost;
+
+        protected SettingsPageBase()
+        {
+            InitializeComponent();
+        }
+
         protected ISettingsPageHost PageHost
         {
             get
@@ -31,9 +37,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         }
 
         protected CheckSettingsLogic CheckSettingsLogic => PageHost.CheckSettingsLogic;
+
         protected CommonLogic CommonLogic => CheckSettingsLogic.CommonLogic;
 
         protected GitModule Module => CommonLogic.Module;
+
+        protected ToolTip ToolTip => toolTip1;
 
         protected virtual void Init(ISettingsPageHost pageHost)
         {

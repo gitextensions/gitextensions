@@ -116,6 +116,9 @@ namespace GitUI
         [DllImport("uxtheme", ExactSpelling = true, CharSet = CharSet.Unicode)]
         internal static extern int GetThemeFont(IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, int iPropId, out LOGFONT pFont);
 
+        [DllImport("wininet.dll")]
+        internal static extern bool InternetGetConnectedState(out int description, int reservedValue);
+
         #endregion
     }
 
