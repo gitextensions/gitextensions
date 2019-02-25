@@ -274,7 +274,7 @@ Inactive remote is completely invisible to git.");
 
         private void InitialiseTabDefaultPullBehaviors(string preselectLocal = null)
         {
-            var heads = Module.GetRefs(false, true);
+            var heads = Module.GetRefs(false, true).OrderBy(r => r.LocalName).ToList();
 
             RemoteRepositoryCombo.Sorted = false;
             RemoteRepositoryCombo.DataSource = new[] { new GitRemote() }.Union(UserGitRemotes).ToList();
