@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitUI.UserControls;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -114,6 +115,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                                 }
                             });
                         }
+
+                        ResizeColumnsToFitContent(myReposLV);
                     }
                     catch (Exception ex) when (!(ex is OperationCanceledException))
                     {
@@ -125,6 +128,14 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     }
                 })
                 .FileAndForget();
+        }
+
+        private void ResizeColumnsToFitContent(NativeListView list)
+        {
+            foreach (ColumnHeader column in list.Columns)
+            {
+                column.Width = -1;
+            }
         }
 
         #region GUI Handlers
@@ -232,6 +243,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     }
                 });
             }
+
+            ResizeColumnsToFitContent(searchResultsLV);
 
             searchBtn.Enabled = true;
         }

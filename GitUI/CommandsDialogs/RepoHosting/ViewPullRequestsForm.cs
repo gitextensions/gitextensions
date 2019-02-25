@@ -215,9 +215,19 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 });
             }
 
+            ResizeColumnsToFitContent();
+
             if (_pullRequestsList.Items.Count > 0)
             {
                 _pullRequestsList.Items[0].Selected = true;
+            }
+        }
+
+        private void ResizeColumnsToFitContent()
+        {
+            foreach (ColumnHeader column in _pullRequestsList.Columns)
+            {
+                column.Width = -1;
             }
         }
 
