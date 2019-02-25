@@ -132,9 +132,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void ResizeColumnsToFitContent(NativeListView list)
         {
+            var resizeStrategy = list.Items.Count == 0 ? -2 : -1;
+
             foreach (ColumnHeader column in list.Columns)
             {
-                column.Width = -1;
+                column.Width = resizeStrategy;
             }
         }
 

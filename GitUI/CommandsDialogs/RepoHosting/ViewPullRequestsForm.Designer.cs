@@ -169,22 +169,22 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // columnHeaderId
             // 
             this.columnHeaderId.Text = "#";
-            this.columnHeaderId.Width = 41;
+            this.columnHeaderId.Width = -2;
             // 
             // columnHeaderHeading
             // 
             this.columnHeaderHeading.Text = "Heading";
-            this.columnHeaderHeading.Width = 286;
+            this.columnHeaderHeading.Width = -2;
             // 
             // columnHeaderBy
             // 
             this.columnHeaderBy.Text = "By";
-            this.columnHeaderBy.Width = 121;
+            this.columnHeaderBy.Width = -2;
             // 
             // columnHeaderCreated
             // 
             this.columnHeaderCreated.Text = "Created";
-            this.columnHeaderCreated.Width = 133;
+            this.columnHeaderCreated.Width = -2;
             // 
             // flowLayoutPanel3
             // 
@@ -383,7 +383,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // columnHeaderBranch
             // 
             this.columnHeaderBranch.Text = "Will be fetched to branch";
-            this.columnHeaderBranch.Width = 200;
+            this.columnHeaderBranch.Width = -2;
             // 
             // ViewPullRequestsForm
             // 

@@ -226,9 +226,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void ResizeColumnsToFitContent()
         {
+            var resizeStrategy = _pullRequestsList.Items.Count == 0 ? -2 : -1;
+
             foreach (ColumnHeader column in _pullRequestsList.Columns)
             {
-                column.Width = -1;
+                column.Width = resizeStrategy;
             }
         }
 
