@@ -152,7 +152,7 @@ namespace GitUI.BranchTreePanel
             RegisterClick(mnubtnCollapseAll, () => treeMain.CollapseAll());
             RegisterClick(mnubtnExpandAll, () => treeMain.ExpandAll());
 
-            RegisterClick(mnubtnReload, () => RefreshTree());
+            RegisterClick(mnubtnReload, () => RefreshTreeAsync().FileAndForget());
 
             treeMain.NodeMouseClick += OnNodeMouseClick;
 

@@ -9,6 +9,7 @@ using GitCommands;
 using GitUI.BranchTreePanel.Interfaces;
 using GitUI.UserControls;
 using JetBrains.Annotations;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI.BranchTreePanel
 {
@@ -136,6 +137,7 @@ namespace GitUI.BranchTreePanel
                     // as well as less efficient.
                     _firstReloadNodesSinceModuleChanged = true;
 
+                    // Rebind callbacks
                     e.OldCommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
                     uiCommands.UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
                 };
@@ -146,10 +148,13 @@ namespace GitUI.BranchTreePanel
             private void UICommands_PostRepositoryChanged(object sender, GitUIPluginInterfaces.GitUIEventArgs e)
             {
                 // Run on UI thread
-                TreeViewNode.TreeView?.InvokeAsync(RefreshTree).FileAndForget();
+                TreeViewNode.TreeView?.InvokeAsync(PostRepositoryChanged).FileAndForget();
             }
 
-            public abstract void RefreshTree();
+            protected abstract void PostRepositoryChanged();
+
+            // Refresh tree from cached state (i.e. Branches/Remotes/Tags from Module, Submodules from last submodule status)
+            public abstract Task RefreshTreeAsync();
 
             public TreeNode TreeViewNode { get; }
             public GitUICommands UICommands => _uiCommandsSource.UICommands;
@@ -169,36 +174,31 @@ namespace GitUI.BranchTreePanel
             // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
             // input async function that should populate Nodes, then fills the tree view with its contents,
             // making sure to disable/enable the control.
-            protected void ReloadNodes(Func<CancellationToken, Task> loadNodesTask)
+            protected async Task ReloadNodesAsync(Func<CancellationToken, Task> loadNodesTask)
             {
-                ThreadHelper.ThrowIfNotOnUIThread();
+                await TaskScheduler.Default;
 
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                Nodes.Clear();
+
+                var token = _reloadCancellationTokenSequence.Next();
+                await loadNodesTask(token);
+                token.ThrowIfCancellationRequested();
+
+                await TreeViewNode.TreeView.SwitchToMainThreadAsync();
+
+                try
                 {
-                    Nodes.Clear();
-
-                    var token = _reloadCancellationTokenSequence.Next();
-                    await loadNodesTask(token);
-                    token.ThrowIfCancellationRequested();
-
-                    var repoObjectTree = TreeViewNode.TreeView.Parent;
-
-                    try
-                    {
-                        repoObjectTree.Enabled = false;
-                        TreeViewNode.TreeView.BeginUpdate();
-                        IgnoreSelectionChangedEvent = true;
-                        FillTreeViewNode(token, _firstReloadNodesSinceModuleChanged);
-                    }
-                    finally
-                    {
-                        IgnoreSelectionChangedEvent = false;
-                        TreeViewNode.TreeView.EndUpdate();
-                        repoObjectTree.Enabled = true;
-                        ExpandPathToSelectedNode();
-                        _firstReloadNodesSinceModuleChanged = false;
-                    }
-                }).FileAndForget();
+                    TreeViewNode.TreeView.BeginUpdate();
+                    IgnoreSelectionChangedEvent = true;
+                    FillTreeViewNode(token, _firstReloadNodesSinceModuleChanged);
+                }
+                finally
+                {
+                    IgnoreSelectionChangedEvent = false;
+                    TreeViewNode.TreeView.EndUpdate();
+                    ExpandPathToSelectedNode();
+                    _firstReloadNodesSinceModuleChanged = false;
+                }
             }
 
             private void FillTreeViewNode(CancellationToken token, bool firstTime)

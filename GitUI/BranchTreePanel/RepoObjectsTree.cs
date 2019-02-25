@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
@@ -214,12 +215,15 @@ namespace GitUI.BranchTreePanel
             _ = UICommandsSource;
         }
 
-        public void RefreshTree()
+        private async Task RefreshTreeAsync()
         {
+            var tasks = new List<Task>();
             foreach (var n in _rootNodes)
             {
-                n.RefreshTree();
+                tasks.Add(n.RefreshTreeAsync());
             }
+
+            await Task.WhenAll(tasks);
         }
 
         protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
@@ -305,7 +309,7 @@ namespace GitUI.BranchTreePanel
 
             treeMain.Font = AppSettings.Font;
             _rootNodes.Add(tree);
-            tree.RefreshTree();
+            tree.RefreshTreeAsync().FileAndForget();
         }
 
         private void RemoveTree(Tree tree)

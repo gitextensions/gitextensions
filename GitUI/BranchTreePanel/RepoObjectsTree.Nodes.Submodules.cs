@@ -205,23 +205,28 @@ namespace GitUI.BranchTreePanel
             public SubmoduleTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
             {
-                SubmoduleStatusProvider.Default.StatusUpdating += Provider_StatusUpdating;
                 SubmoduleStatusProvider.Default.StatusUpdated += Provider_StatusUpdated;
             }
 
-            public override void RefreshTree()
+            protected override void PostRepositoryChanged()
             {
-                SubmoduleStatusProvider.Default.ResendCachedStatus();
+                // Do nothing, we don't care about this event.
             }
 
-            private void Provider_StatusUpdating(object sender, EventArgs e)
+            public override async Task RefreshTreeAsync()
             {
-                // TODO: Do we need this? Maybe disable treeview?
+                // Will call LoadNodesAsync with the last cached SubmoduleInfoResult
+                await Task.Run(() => SubmoduleStatusProvider.Default.ResendCachedStatus());
             }
 
             private void Provider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
             {
-                TreeViewNode.TreeView?.InvokeAsync(() => ReloadNodes((token) => LoadNodesAsync(e.Info, token))).FileAndForget();
+                if (TreeViewNode.TreeView == null)
+                {
+                    return;
+                }
+
+                ReloadNodesAsync((token) => LoadNodesAsync(e.Info, token)).FileAndForget();
             }
 
             private async Task LoadNodesAsync(SubmoduleInfoResult info, CancellationToken token)

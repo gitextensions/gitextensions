@@ -111,7 +111,6 @@ namespace GitCommands.Submodules
 
         private void OnStatusUpdated(SubmoduleStatusEventArgs submoduleStatusEventArgs)
         {
-            _lastStatusEventArgs = null;
             StatusUpdated?.Invoke(this, submoduleStatusEventArgs);
         }
 
