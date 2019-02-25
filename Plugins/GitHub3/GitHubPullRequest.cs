@@ -81,6 +81,7 @@ namespace GitHub3
         public string Id => _pullRequest.Number.ToString();
 
         public string DetailedInfo => string.Format("Base repo owner: {0}\nHead repo owner: {1}", BaseRepo.Owner, HeadRepo.Owner);
+        public string FetchBranch => string.Format("pr/n{0}_{1}", Id, HeadRef);
 
         public void Close()
         {

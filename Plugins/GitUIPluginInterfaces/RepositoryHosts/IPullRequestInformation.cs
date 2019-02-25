@@ -23,6 +23,7 @@ namespace GitUIPluginInterfaces.RepositoryHosts
 
         string Id { get; }
         string DetailedInfo { get; }
+        string FetchBranch { get; }
 
         void Close();
 

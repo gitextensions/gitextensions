@@ -210,7 +210,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     {
                         info.Title,
                         info.Owner,
-                        info.Created.ToString()
+                        info.Created.ToString(),
+                        info.FetchBranch,
                     }
                 });
             }
@@ -367,9 +368,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 return;
             }
 
-            var localBranchName = string.Format("pr/n{0}_{1}", _currentPullRequestInfo.Id, _currentPullRequestInfo.Owner);
-
-            var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}", _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, localBranchName);
+            var cmd = string.Format("fetch --no-tags --progress {0} {1}:{2}",
+                _currentPullRequestInfo.HeadRepo.CloneReadOnlyUrl, _currentPullRequestInfo.HeadRef, _currentPullRequestInfo.FetchBranch);
             var errorOccurred = !FormProcess.ShowDialog(this, AppSettings.GitCommand, cmd);
 
             if (errorOccurred)
