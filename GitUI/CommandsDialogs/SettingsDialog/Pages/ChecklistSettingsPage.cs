@@ -61,7 +61,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             new TranslationString("Invalid installation directory stored in [Software\\GitExtensions\\InstallDir].");
 
         private readonly TranslationString _registryKeyGitExtensionsCorrect =
-            new TranslationString("GitExtensions is properly registered.");
+            new TranslationString("Git Extensions is properly registered.");
 
         private readonly TranslationString _plinkputtyGenpageantNotFound =
             new TranslationString("PuTTY is configured as SSH client but cannot find plink.exe, puttygen.exe or pageant.exe.");

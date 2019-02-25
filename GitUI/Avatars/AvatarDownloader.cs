@@ -17,7 +17,7 @@ namespace GitUI.Avatars
     {
         private const int MaxConcurrentDownloads = 10;
 
-        /* A brief skim through the GitExtensions repo history shows GitHub emails with the following user names:
+        /* A brief skim through the Git Extensions repo history shows GitHub emails with the following user names:
          *
          * 25421792+mserfli
          * 33052757+freza-tm

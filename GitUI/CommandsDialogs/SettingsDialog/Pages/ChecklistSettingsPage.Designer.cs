@@ -166,7 +166,7 @@
             this.label11.Padding = new System.Windows.Forms.Padding(0, 0, 0, 8);
             this.label11.Size = new System.Drawing.Size(985, 21);
             this.label11.TabIndex = 0;
-            this.label11.Text = "The checklist below validates the basic settings needed for GitExtensions to work" +
+            this.label11.Text = "The checklist below validates the basic settings needed for Git Extensions to work" +
     " properly.";
             // 
             // translationConfig_Fix

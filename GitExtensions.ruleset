@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Git Extensions Rules" Description="Hand selected set of analyzer rules for use within the GitExtensions project." ToolsVersion="15.0">
+<RuleSet Name="Git Extensions Rules" Description="Hand selected set of analyzer rules for use within the Git Extensions project." ToolsVersion="15.0">
   <Include Path="minimumrecommendedrules.ruleset" Action="Default" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1301" Action="None" />

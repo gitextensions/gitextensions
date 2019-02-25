@@ -2059,7 +2059,7 @@ namespace GitUI.CommandsDialogs
                 IEnumerable<string> GetBranchNames()
                 {
                     // Make sure there are never more than a 100 branches added to the menu
-                    // GitExtensions will hang when the drop down is too large...
+                    // Git Extensions will hang when the drop down is too large...
                     return Module
                         .GetRefs(tags: false, branches: true, noLocks: true)
                         .Select(b => b.Name)
