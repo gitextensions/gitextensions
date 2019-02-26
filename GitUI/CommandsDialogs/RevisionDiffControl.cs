@@ -302,8 +302,8 @@ namespace GitUI.CommandsDialogs
             else
             {
                 // acts as parent
-                // if file is new to the parent, it has to be removed
-                var addedItems = selectedItems.Where(item => item.IsNew);
+                // if file is new to the parent or is copied, it has to be removed
+                var addedItems = selectedItems.Where(item => item.IsNew || item.IsCopied);
                 Module.RemoveFiles(addedItems.Select(item => item.Name).ToList(), false);
 
                 foreach (var parent in DiffFiles.SelectedItemParents)
