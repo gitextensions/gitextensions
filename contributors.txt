@@ -71,3 +71,4 @@ YYYY/MM/DD, github id, Full name, email
 2019/02/16, DmitryZhelnin, Dmitry Zhelnin, mitya_zh@mail.ru
 2019/02/18, wachulski, Marcin Wachulski, marcin.wachulski@gmail.com
 2019/02/25, oriash93, Ori Ashual, oriash93@gmail.com
+2019/02/25, coreyasmith, Corey Smith, coreyas@gmail.com

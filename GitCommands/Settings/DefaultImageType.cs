@@ -38,6 +38,11 @@ namespace GitCommands
         /// <summary>
         /// Return an 8-bit-style face based on the email hash.
         /// </summary>
-        Retro
+        Retro,
+
+        /// <summary>
+        /// Return a generated robot based on the email hash.
+        /// </summary>
+        Robohash
     }
 }
