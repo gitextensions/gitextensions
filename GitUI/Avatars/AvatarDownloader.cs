@@ -102,6 +102,7 @@ namespace GitUI.Avatars
                             case DefaultImageType.MonsterId: return "monsterid";
                             case DefaultImageType.Wavatar: return "wavatar";
                             case DefaultImageType.Retro: return "retro";
+                            case DefaultImageType.Robohash: return "robohash";
                             default: return "404";
                         }
                     }
