@@ -28,6 +28,8 @@ namespace GitHub3
         {
             Entries.Clear();
 
+            Entries.Add(new GitHubDiscussionComment { Author = _pullRequest.User.Login, Created = _pullRequest.CreatedAt, Body = _pullRequest.Body });
+
             foreach (var commit in _pullRequest.GetCommits())
             {
                 Entries.Add(new GitHubDiscussionCommit { Sha = commit.Sha, Author = commit.AuthorName.Replace("<", "&lt;").Replace(">", "&gt;"), Created = commit.Commit.Author.Date, Body = commit.Commit.Message });
