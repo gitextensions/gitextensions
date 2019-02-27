@@ -37,6 +37,14 @@ namespace GitUI.BranchTreePanel
             //    Collapse All
             //    Expand All
 
+            if (contextMenu == menuMain)
+            {
+                contextMenu.Items.Clear();
+                contextMenu.Items.Add(mnubtnCollapseAll);
+                contextMenu.Items.Add(mnubtnExpandAll);
+                return;
+            }
+
             if (!contextMenu.Items.Contains(tsmiSpacer1))
             {
                 contextMenu.Items.Add(tsmiSpacer1);
@@ -152,8 +160,6 @@ namespace GitUI.BranchTreePanel
             RegisterClick(mnubtnCollapseAll, () => treeMain.CollapseAll());
             RegisterClick(mnubtnExpandAll, () => treeMain.ExpandAll());
 
-            RegisterClick(mnubtnReload, () => RefreshTreeAsync().FileAndForget());
-
             treeMain.NodeMouseClick += OnNodeMouseClick;
 
             RegisterClick<LocalBranchNode>(mnubtnFilterLocalBranchInRevisionGrid, FilterInRevisionGrid);
@@ -205,6 +211,10 @@ namespace GitUI.BranchTreePanel
             ContextMenuBranchSpecific(contextMenu);
             ContextMenuRemoteRepoSpecific(contextMenu);
             ContextMenuSubmoduleSpecific(contextMenu);
+
+            // Set Cancel to false.  It is optimized to true based on empty entry.
+            // See https://docs.microsoft.com/en-us/dotnet/framework/winforms/controls/how-to-handle-the-contextmenustrip-opening-event
+            e.Cancel = false;
         }
 
         /// <inheritdoc />

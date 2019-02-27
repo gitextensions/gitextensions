@@ -215,17 +215,6 @@ namespace GitUI.BranchTreePanel
             _ = UICommandsSource;
         }
 
-        private async Task RefreshTreeAsync()
-        {
-            var tasks = new List<Task>();
-            foreach (var n in _rootNodes)
-            {
-                tasks.Add(n.RefreshTreeAsync());
-            }
-
-            await Task.WhenAll(tasks);
-        }
-
         protected override void OnUICommandsSourceSet(IGitUICommandsSource source)
         {
             base.OnUICommandsSourceSet(source);

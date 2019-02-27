@@ -49,7 +49,6 @@ namespace GitUI.BranchTreePanel
             this.components = new System.ComponentModel.Container();
             this.treeMain = new GitUI.UserControls.NativeTreeView();
             this.menuMain = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.mnubtnReload = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiSpacer1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnubtnCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnExpandAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -128,21 +127,11 @@ namespace GitUI.BranchTreePanel
             // menuMain
             // 
             this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnubtnReload,
-            this.tsmiSpacer1,
             this.mnubtnCollapseAll,
             this.mnubtnExpandAll});
             this.menuMain.Name = "menuMain";
             this.menuMain.Size = new System.Drawing.Size(137, 76);
             this.menuMain.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
-            // 
-            // mnubtnReload
-            // 
-            this.mnubtnReload.Image = global::GitUI.Properties.Images.ReloadRevisions;
-            this.mnubtnReload.Name = "mnubtnReload";
-            this.mnubtnReload.Size = new System.Drawing.Size(136, 22);
-            this.mnubtnReload.Text = "Reload";
-            this.mnubtnReload.ToolTipText = "Reload the tree";
             // 
             // tsmiSpacer1
             // 
@@ -607,7 +596,6 @@ namespace GitUI.BranchTreePanel
         private ContextMenuStrip menuMain;
         private ToolStripMenuItem mnubtnCollapseAll;
         private ToolStripMenuItem mnubtnExpandAll;
-        private ToolStripMenuItem mnubtnReload;
         private ContextMenuStrip menuRemoteRepoNode;
         private ToolStripMenuItem mnubtnFetchOneBranch;
         private TableLayoutPanel repoTreePanel;
