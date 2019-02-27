@@ -87,27 +87,30 @@ namespace GitUI.BranchTreePanel
                 await ReloadNodesAsync(LoadNodesAsync);
             }
 
-            private async Task LoadNodesAsync(CancellationToken token)
+            private async Task<Nodes> LoadNodesAsync(CancellationToken token)
             {
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
-                FillTagTree(Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByName), token);
+                return FillTagTree(Module.GetTagRefs(GitModule.GetTagRefsSortOrder.ByName), token);
             }
 
-            private void FillTagTree(IEnumerable<IGitRef> tags, CancellationToken token)
+            private Nodes FillTagTree(IEnumerable<IGitRef> tags, CancellationToken token)
             {
-                var nodes = new Dictionary<string, BaseBranchNode>();
+                var nodes = new Nodes(this);
+                var pathToNodes = new Dictionary<string, BaseBranchNode>();
                 foreach (var tag in tags)
                 {
                     token.ThrowIfCancellationRequested();
                     var branchNode = new TagNode(this, tag.Name, tag);
-                    var parent = branchNode.CreateRootNode(nodes,
+                    var parent = branchNode.CreateRootNode(pathToNodes,
                         (tree, parentPath) => new BasePathNode(tree, parentPath));
                     if (parent != null)
                     {
-                        Nodes.AddNode(parent);
+                        nodes.AddNode(parent);
                     }
                 }
+
+                return nodes;
             }
 
             protected override void PostFillTreeViewNode(CancellationToken token, bool firstTime)

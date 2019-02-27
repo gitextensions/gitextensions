@@ -174,17 +174,18 @@ namespace GitUI.BranchTreePanel
             // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
             // input async function that should populate Nodes, then fills the tree view with its contents,
             // making sure to disable/enable the control.
-            protected async Task ReloadNodesAsync(Func<CancellationToken, Task> loadNodesTask)
+            protected async Task ReloadNodesAsync(Func<CancellationToken, Task<Nodes>> loadNodesTask)
             {
                 await TaskScheduler.Default;
 
-                Nodes.Clear();
-
                 var token = _reloadCancellationTokenSequence.Next();
-                await loadNodesTask(token);
+                var newNodes = await loadNodesTask(token);
+
+                await TreeViewNode.TreeView.SwitchToMainThreadAsync(token);
                 token.ThrowIfCancellationRequested();
 
-                await TreeViewNode.TreeView.SwitchToMainThreadAsync();
+                Nodes.Clear();
+                Nodes.AddNodes(newNodes);
 
                 try
                 {

@@ -216,7 +216,7 @@ namespace GitUI.BranchTreePanel
             public override async Task RefreshTreeAsync()
             {
                 // Will call LoadNodesAsync with the last cached SubmoduleInfoResult
-                await Task.Run(() => SubmoduleStatusProvider.Default.ResendCachedStatus());
+                await TreeViewNode.TreeView?.InvokeAsync(() => SubmoduleStatusProvider.Default.ResendCachedStatus());
             }
 
             private void Provider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
@@ -229,12 +229,12 @@ namespace GitUI.BranchTreePanel
                 ReloadNodesAsync((token) => LoadNodesAsync(e.Info, token)).FileAndForget();
             }
 
-            private async Task LoadNodesAsync(SubmoduleInfoResult info, CancellationToken token)
+            private async Task<Nodes> LoadNodesAsync(SubmoduleInfoResult info, CancellationToken token)
             {
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
 
-                FillSubmoduleTree(info);
+                return FillSubmoduleTree(info);
             }
 
             private async Task LoadNodeDetailsAsync(CancellationToken token)
@@ -256,27 +256,29 @@ namespace GitUI.BranchTreePanel
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () => await LoadNodeDetailsAsync(token)).FileAndForget();
             }
 
-            private void FillSubmoduleTree(SubmoduleInfoResult result)
+            private Nodes FillSubmoduleTree(SubmoduleInfoResult result)
             {
                 _topProjectInfo = result.TopProject;
 
                 var threadModule = (GitModule)result.Module;
 
-                var nodes = new List<SubmoduleNode>();
+                var submoduleNodes = new List<SubmoduleNode>();
 
                 // We always want to display submodules rooted from the top project. If the currently open project is the top project,
                 // OurSubmodules contains all child submodules recursively; otherwise, if we're currently in a submodule, SuperSubmodules
                 // contains all submodule info relative to the top project.
                 if (result.SuperSubmodules?.Count > 0)
                 {
-                    CreateSubmoduleNodes(result.SuperSubmodules, threadModule, ref nodes);
+                    CreateSubmoduleNodes(result.SuperSubmodules, threadModule, ref submoduleNodes);
                 }
                 else
                 {
-                    CreateSubmoduleNodes(result.OurSubmodules, threadModule, ref nodes);
+                    CreateSubmoduleNodes(result.OurSubmodules, threadModule, ref submoduleNodes);
                 }
 
-                AddNodesToTree(nodes, threadModule);
+                var nodes = new Nodes(this);
+                AddNodesToTree(ref nodes, submoduleNodes, threadModule);
+                return nodes;
             }
 
             private void CreateSubmoduleNodes(IEnumerable<SubmoduleInfo> submodules, GitModule threadModule, ref List<SubmoduleNode> nodes)
@@ -320,11 +322,11 @@ namespace GitUI.BranchTreePanel
                 return node.SuperPath.SubstringAfter(topModule.WorkingDir).ToPosixPath() + node.LocalPath;
             }
 
-            private void AddNodesToTree(List<SubmoduleNode> nodes, GitModule threadModule)
+            private void AddNodesToTree(ref Nodes nodes, List<SubmoduleNode> submoduleNodes, GitModule threadModule)
             {
                 if (!UseFolderTree)
                 {
-                    Nodes.AddNodes(nodes);
+                    nodes.AddNodes(submoduleNodes);
                     return;
                 }
 
@@ -361,13 +363,13 @@ namespace GitUI.BranchTreePanel
                 var pathToNodes = new Dictionary<string, Node>();
 
                 // Add existing SubmoduleNodes
-                foreach (var node in nodes)
+                foreach (var node in submoduleNodes)
                 {
                     pathToNodes[GetNodeRelativePath(topModule, node)] = node;
                 }
 
                 // Create and add missing SubmoduleFolderNodes
-                foreach (var node in nodes)
+                foreach (var node in submoduleNodes)
                 {
                     var parts = GetNodeRelativePath(topModule, node).Split('/');
                     for (int i = 0; i < parts.Length - 1; ++i)
@@ -383,7 +385,7 @@ namespace GitUI.BranchTreePanel
                 // Now build the tree
                 var rootNode = new DummyNode();
                 var nodesInTree = new List<Node>();
-                foreach (var node in nodes)
+                foreach (var node in submoduleNodes)
                 {
                     Node parentNode = rootNode;
                     var parts = GetNodeRelativePath(topModule, node).Split('/');
@@ -406,7 +408,7 @@ namespace GitUI.BranchTreePanel
                 // Add top-module node, and move children of root to it
                 var topModuleNode = new SubmoduleNode(this, _topProjectInfo, _topProjectInfo.Bold, "", _topProjectInfo.Path);
                 topModuleNode.Nodes.AddNodes(rootNode.Nodes);
-                Nodes.AddNode(topModuleNode);
+                nodes.AddNode(topModuleNode);
             }
 
             public void UpdateSubmodule(IWin32Window owner, SubmoduleNode node)
