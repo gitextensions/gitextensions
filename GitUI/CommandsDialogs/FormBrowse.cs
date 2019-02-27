@@ -2154,7 +2154,14 @@ namespace GitUI.CommandsDialogs
 
         private void AddNotes()
         {
-            Module.EditNotes(RevisionGrid.GetSelectedRevisions().FirstOrDefault()?.ObjectId);
+            var objectId = RevisionGrid.GetSelectedRevisions().FirstOrDefault()?.ObjectId;
+
+            if (objectId == ObjectId.IndexId || objectId == ObjectId.WorkTreeId)
+            {
+                return;
+            }
+
+            Module.EditNotes(objectId);
             FillCommitInfo();
         }
 
