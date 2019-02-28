@@ -8,15 +8,12 @@ namespace GitUITests.CommandsDialogs
 {
     public class ReferenceRepository : IDisposable
     {
-        private readonly GitModuleTestHelper _moduleTestHelper;
+        private static GitModuleTestHelper _moduleTestHelper;
+        private static string _commitHash;
 
-        public ReferenceRepository() : this(new GitModuleTestHelper())
+        public ReferenceRepository()
         {
-        }
-
-        public ReferenceRepository(GitModuleTestHelper moduleTestHelper)
-        {
-            _moduleTestHelper = moduleTestHelper;
+            _moduleTestHelper = new GitModuleTestHelper();
 
             using (var repository = new LibGit2Sharp.Repository(_moduleTestHelper.Module.WorkingDir))
             {
@@ -28,13 +25,13 @@ namespace GitUITests.CommandsDialogs
                 var committer = author;
                 var options = new LibGit2Sharp.CommitOptions();
                 var commit = repository.Commit(message, author, committer, options);
-                CommitHash = commit.Id.Sha;
+                _commitHash = commit.Id.Sha;
             }
         }
 
         public GitModule Module => _moduleTestHelper.Module;
 
-        public string CommitHash { get; }
+        public string CommitHash => _commitHash;
 
         public void CheckoutRevision()
         {
