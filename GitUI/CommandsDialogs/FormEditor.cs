@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -126,7 +127,23 @@ namespace GitUI.CommandsDialogs
         {
             if (!string.IsNullOrEmpty(_fileName))
             {
-                File.WriteAllText(_fileName, fileViewer.GetText(), Module.FilesEncoding);
+                if (fileViewer.FilePreamble is null || Module.FilesEncoding.GetPreamble().SequenceEqual(fileViewer.FilePreamble))
+                {
+                    File.WriteAllText(_fileName, fileViewer.GetText(), Module.FilesEncoding);
+                }
+                else
+                {
+                    using (var bytes = new MemoryStream())
+                    {
+                        bytes.Write(fileViewer.FilePreamble, 0, fileViewer.FilePreamble.Length);
+                        using (var writer = new StreamWriter(bytes, Module.FilesEncoding))
+                        {
+                            writer.Write(fileViewer.GetText());
+                        }
+
+                        File.WriteAllBytes(_fileName, bytes.ToArray());
+                    }
+                }
 
                 // we've written the changes out to disk now, nothing to save.
                 HasChanges = false;
