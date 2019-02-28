@@ -31,7 +31,10 @@ namespace GitUITests
             Func<T, Task> runAsync)
             where T : Form
         {
-            var test = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            // Avoid using ThreadHelper.JoinableTaskFactory for the outermost operation because we don't want the task
+            // tracked by its collection. Otherwise, test code would not be able to wait for pending operations to
+            // complete.
+            var test = ThreadHelper.JoinableTaskContext.Factory.RunAsync(async () =>
             {
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 await WaitForIdleAsync();

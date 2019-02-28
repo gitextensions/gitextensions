@@ -86,8 +86,10 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         public void Should_display_branch_and_no_remote_info_in_statusbar()
         {
             _referenceRepository.CheckoutMaster();
-            RunFormTest(form =>
+            RunFormTest(async form =>
             {
+                await ThreadHelper.JoinPendingOperationsAsync();
+
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
@@ -100,8 +102,10 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         public void Should_display_detached_head_info_in_statusbar()
         {
             _referenceRepository.CheckoutRevision();
-            RunFormTest(form =>
+            RunFormTest(async form =>
             {
+                await ThreadHelper.JoinPendingOperationsAsync();
+
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
@@ -114,8 +118,10 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         public void Should_display_branch_and_remote_info_in_statusbar()
         {
             _referenceRepository.CreateRemoteForMasterBranch();
-            RunFormTest(form =>
+            RunFormTest(async form =>
             {
+                await ThreadHelper.JoinPendingOperationsAsync();
+
                 var currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 var remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
