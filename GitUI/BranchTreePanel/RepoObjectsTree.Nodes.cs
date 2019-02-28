@@ -152,21 +152,21 @@ namespace GitUI.BranchTreePanel
 
             private void UICommands_PostRepositoryChanged(object sender, GitUIPluginInterfaces.GitUIEventArgs e)
             {
-                // Run on UI thread
-                TreeViewNode.TreeView?.InvokeAsync(PostRepositoryChanged).FileAndForget();
+                if (!IsAttached)
+                {
+                    return;
+                }
+
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await PostRepositoryChangedAsync();
+                }).FileAndForget();
             }
 
-            protected abstract void PostRepositoryChanged();
-
-            public void StartAsyncRefreshTree()
+            protected virtual Task PostRepositoryChangedAsync()
             {
-                ThreadHelper.AssertOnUIThread();
-                var token = _reloadCancellationTokenSequence.Next();
-                RefreshTreeAsync(token).FileAndForget();
+                return Task.CompletedTask;
             }
-
-            // Refresh tree from cached state (i.e. Branches/Remotes/Tags from Module, Submodules from last submodule status)
-            protected abstract Task RefreshTreeAsync(CancellationToken token);
 
             public TreeNode TreeViewNode { get; }
             public GitUICommands UICommands => _uiCommandsSource.UICommands;
@@ -178,37 +178,61 @@ namespace GitUI.BranchTreePanel
             public bool IgnoreSelectionChangedEvent { get; set; }
             protected GitModule Module => UICommands.Module;
 
-            public void CancelReloadNodes()
+            protected bool IsAttached { get; private set; }
+
+            public Task AttachedAsync()
+            {
+                IsAttached = true;
+                return OnAttachedAsync();
+            }
+
+            protected virtual Task OnAttachedAsync()
+            {
+                return PostRepositoryChangedAsync();
+            }
+
+            public void Detached()
             {
                 _reloadCancellationTokenSequence.CancelCurrent();
+                IsAttached = false;
+                OnDetached();
+            }
+
+            protected virtual void OnDetached()
+            {
             }
 
             // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
             // input async function that should populate Nodes, then fills the tree view with its contents,
             // making sure to disable/enable the control.
-            protected async Task ReloadNodesAsync(Func<CancellationToken, Task<Nodes>> loadNodesTask, CancellationToken token)
+            protected async Task ReloadNodesAsync(Func<CancellationToken, Task<Nodes>> loadNodesTask)
             {
                 await TaskScheduler.Default;
-                token.ThrowIfCancellationRequested();
 
+                var treeView = TreeViewNode.TreeView;
+                if (treeView == null)
+                {
+                    return;
+                }
+
+                var token = _reloadCancellationTokenSequence.Next();
                 var newNodes = await loadNodesTask(token);
 
-                await TreeViewNode.TreeView.SwitchToMainThreadAsync(token);
-                token.ThrowIfCancellationRequested();
+                await treeView.SwitchToMainThreadAsync(token);
 
                 Nodes.Clear();
                 Nodes.AddNodes(newNodes);
 
                 try
                 {
-                    TreeViewNode.TreeView.BeginUpdate();
+                    treeView.BeginUpdate();
                     IgnoreSelectionChangedEvent = true;
                     FillTreeViewNode(token, _firstReloadNodesSinceModuleChanged);
                 }
                 finally
                 {
                     IgnoreSelectionChangedEvent = false;
-                    TreeViewNode.TreeView.EndUpdate();
+                    treeView.EndUpdate();
                     ExpandPathToSelectedNode();
                     _firstReloadNodesSinceModuleChanged = false;
                 }

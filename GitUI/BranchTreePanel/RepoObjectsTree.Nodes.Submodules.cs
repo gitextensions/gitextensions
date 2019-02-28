@@ -202,43 +202,38 @@ namespace GitUI.BranchTreePanel
 
         private sealed class SubmoduleTree : Tree
         {
-            private SubmoduleInfo _topProjectInfo;
-            private SubmoduleInfoResult _lastInfoResult = null;
-
             public SubmoduleTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
             {
-                SubmoduleStatusProvider.Default.StatusUpdated += Provider_StatusUpdated;
             }
 
-            protected override void PostRepositoryChanged()
+            protected override Task OnAttachedAsync()
             {
-                // We don't care about this event. For submodule, we wait for SubmoduleStatusProvider.StatusUpdated.
+                SubmoduleStatusProvider.Default.StatusUpdated += Provider_StatusUpdated;
+                return Task.CompletedTask;
+            }
+
+            protected override void OnDetached()
+            {
+                SubmoduleStatusProvider.Default.StatusUpdated -= Provider_StatusUpdated;
             }
 
             private void Provider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
             {
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(e.Token);
-                    _lastInfoResult = e.Info;
-                    StartAsyncRefreshTree();
+                    if (TreeViewNode.TreeView == null)
+                    {
+                        return;
+                    }
+
+                    await TreeViewNode.TreeView.SwitchToMainThreadAsync(e.Token);
+                    await ReloadNodesAsync(token =>
+                    {
+                        var compositeTS = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
+                        return LoadNodesAsync(e.Info, compositeTS.Token);
+                    });
                 });
-            }
-
-            protected override async Task RefreshTreeAsync(CancellationToken token)
-            {
-                if (TreeViewNode.TreeView == null)
-                {
-                    return;
-                }
-
-                if (_lastInfoResult == null)
-                {
-                    return;
-                }
-
-                await ReloadNodesAsync((token2) => LoadNodesAsync(_lastInfoResult, token2), token);
             }
 
             private async Task<Nodes> LoadNodesAsync(SubmoduleInfoResult info, CancellationToken token)
@@ -270,8 +265,6 @@ namespace GitUI.BranchTreePanel
 
             private Nodes FillSubmoduleTree(SubmoduleInfoResult result)
             {
-                _topProjectInfo = result.TopProject;
-
                 var threadModule = (GitModule)result.Module;
 
                 var submoduleNodes = new List<SubmoduleNode>();
@@ -289,7 +282,7 @@ namespace GitUI.BranchTreePanel
                 }
 
                 var nodes = new Nodes(this);
-                AddNodesToTree(ref nodes, submoduleNodes, threadModule);
+                AddNodesToTree(ref nodes, submoduleNodes, threadModule, result.TopProject);
                 return nodes;
             }
 
@@ -334,7 +327,11 @@ namespace GitUI.BranchTreePanel
                 return node.SuperPath.SubstringAfter(topModule.WorkingDir).ToPosixPath() + node.LocalPath;
             }
 
-            private void AddNodesToTree(ref Nodes nodes, List<SubmoduleNode> submoduleNodes, GitModule threadModule)
+            private void AddNodesToTree(
+                ref Nodes nodes,
+                List<SubmoduleNode> submoduleNodes,
+                GitModule threadModule,
+                SubmoduleInfo topProject)
             {
                 if (!UseFolderTree)
                 {
@@ -418,7 +415,7 @@ namespace GitUI.BranchTreePanel
                 }
 
                 // Add top-module node, and move children of root to it
-                var topModuleNode = new SubmoduleNode(this, _topProjectInfo, _topProjectInfo.Bold, "", _topProjectInfo.Path);
+                var topModuleNode = new SubmoduleNode(this, topProject, topProject.Bold, "", topProject.Path);
                 topModuleNode.Nodes.AddNodes(rootNode.Nodes);
                 nodes.AddNode(topModuleNode);
             }
