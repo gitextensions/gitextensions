@@ -992,11 +992,11 @@ namespace GitUI.CommandsDialogs
             branchNameLabel.Text = $"{currentBranchName} {char.ConvertFromUtf32(0x2192)}";
             remoteNameLabel.Text = pushTo;
 
-            _branchNameLabelOnClick = async (object sender, EventArgs e) =>
+            _branchNameLabelOnClick = (object sender, EventArgs e) => ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 UICommands.StartRemotesDialog(this, null, currentBranchName);
                 await UpdateBranchNameDisplayAsync();
-            };
+            });
             remoteNameLabel.Click += _branchNameLabelOnClick;
             Text = string.Format(_formTitle.Text, currentBranchName, PathUtil.GetDisplayPath(Module.WorkingDir));
         }
