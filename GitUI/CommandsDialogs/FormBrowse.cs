@@ -2156,7 +2156,7 @@ namespace GitUI.CommandsDialogs
         {
             var objectId = RevisionGrid.GetSelectedRevisions().FirstOrDefault()?.ObjectId;
 
-            if (objectId == ObjectId.IndexId || objectId == ObjectId.WorkTreeId)
+            if (objectId == null || objectId.IsArtificial)
             {
                 return;
             }
