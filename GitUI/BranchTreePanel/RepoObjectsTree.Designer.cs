@@ -35,6 +35,14 @@ namespace GitUI.BranchTreePanel
                 _explorerNavigationDecorator = null;
             }
 
+            if (disposing)
+            {
+                _branchesTree.Dispose();
+                _remotesTree.Dispose();
+                _tagTree.Dispose();
+                _submoduleTree.Dispose();
+            }
+
             base.Dispose(disposing);
         }
 

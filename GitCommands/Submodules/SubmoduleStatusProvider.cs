@@ -28,7 +28,6 @@ namespace GitCommands.Submodules
         private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
         private DateTime _previousSubmoduleUpdateTime;
         private bool _previousSubmoduleHadChanges;
-        private SubmoduleStatusEventArgs _lastStatusEventArgs = null;
 
         // Singleton accessor
         public static SubmoduleStatusProvider Default { get; } = new SubmoduleStatusProvider();
@@ -87,39 +86,20 @@ namespace GitCommands.Submodules
             DoUpdateSubmodulesStatus(updateStatus, workingDirectory, noBranchText, OnStatusUpdating, OnStatusUpdatedAsync);
         }
 
-        public void ResendCachedStatus()
-        {
-            if (_lastStatusEventArgs == null)
-            {
-                return;
-            }
-
-            OnStatusUpdating();
-
-            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await TaskScheduler.Default;
-                _lastStatusEventArgs.Token.ThrowIfCancellationRequested();
-                OnStatusUpdated(_lastStatusEventArgs);
-            }).FileAndForget();
-        }
-
         private void OnStatusUpdating()
         {
+            ThreadHelper.AssertOnUIThread();
             StatusUpdating?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void OnStatusUpdated(SubmoduleStatusEventArgs submoduleStatusEventArgs)
-        {
-            StatusUpdated?.Invoke(this, submoduleStatusEventArgs);
         }
 
         private async Task OnStatusUpdatedAsync(SubmoduleInfoResult info, CancellationToken token)
         {
+            ThreadHelper.AssertOnUIThread();
+            var statusUpdated = StatusUpdated;
+
             await TaskScheduler.Default;
             token.ThrowIfCancellationRequested();
-            _lastStatusEventArgs = new SubmoduleStatusEventArgs(info, token);
-            StatusUpdated?.Invoke(this, _lastStatusEventArgs);
+            statusUpdated?.Invoke(this, new SubmoduleStatusEventArgs(info, token));
         }
 
         private void DoUpdateSubmodulesStatus(bool updateStatus, string workingDirectory,

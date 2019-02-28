@@ -110,12 +110,17 @@ namespace GitUI.BranchTreePanel
             public int Count => _nodesList.Count;
         }
 
-        private abstract class Tree
+        private abstract class Tree : IDisposable
         {
             protected readonly Nodes Nodes;
             private readonly IGitUICommandsSource _uiCommandsSource;
             private readonly CancellationTokenSequence _reloadCancellationTokenSequence = new CancellationTokenSequence();
             private bool _firstReloadNodesSinceModuleChanged = true;
+
+            public void Dispose()
+            {
+                _reloadCancellationTokenSequence.Dispose();
+            }
 
             protected Tree(TreeNode treeNode, IGitUICommandsSource uiCommands)
             {
@@ -153,8 +158,15 @@ namespace GitUI.BranchTreePanel
 
             protected abstract void PostRepositoryChanged();
 
+            public void StartAsyncRefreshTree()
+            {
+                ThreadHelper.AssertOnUIThread();
+                var token = _reloadCancellationTokenSequence.Next();
+                RefreshTreeAsync(token).FileAndForget();
+            }
+
             // Refresh tree from cached state (i.e. Branches/Remotes/Tags from Module, Submodules from last submodule status)
-            public abstract Task RefreshTreeAsync();
+            protected abstract Task RefreshTreeAsync(CancellationToken token);
 
             public TreeNode TreeViewNode { get; }
             public GitUICommands UICommands => _uiCommandsSource.UICommands;
@@ -174,11 +186,11 @@ namespace GitUI.BranchTreePanel
             // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
             // input async function that should populate Nodes, then fills the tree view with its contents,
             // making sure to disable/enable the control.
-            protected async Task ReloadNodesAsync(Func<CancellationToken, Task<Nodes>> loadNodesTask)
+            protected async Task ReloadNodesAsync(Func<CancellationToken, Task<Nodes>> loadNodesTask, CancellationToken token)
             {
                 await TaskScheduler.Default;
+                token.ThrowIfCancellationRequested();
 
-                var token = _reloadCancellationTokenSequence.Next();
                 var newNodes = await loadNodesTask(token);
 
                 await TreeViewNode.TreeView.SwitchToMainThreadAsync(token);

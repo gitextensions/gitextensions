@@ -18,6 +18,7 @@ namespace GitCommandsTests.Submodules
     [TestFixture]
     internal class SubmoduleStatusProviderTests
     {
+        [Apartment(ApartmentState.STA)]
         public class IntegrationTests
         {
             private GitModuleTestHelper _repo1;

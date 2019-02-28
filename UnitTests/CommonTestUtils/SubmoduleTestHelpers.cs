@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using GitCommands;
 using GitCommands.Submodules;
+using GitUI;
 
 namespace CommonTestUtils
 {
@@ -11,18 +12,23 @@ namespace CommonTestUtils
             SubmoduleInfoResult result = null;
             SemaphoreSlim onUpdateCompleteSignal = new SemaphoreSlim(0, 1);
 
-            provider.StatusUpdating += Provider_StatusUpdating;
-            provider.StatusUpdated += Provider_StatusUpdated;
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            provider.UpdateSubmodulesStatus(
-                updateStatus: updateStatus,
-                workingDirectory: module.WorkingDir,
-                noBranchText: string.Empty);
+                provider.StatusUpdating += Provider_StatusUpdating;
+                provider.StatusUpdated += Provider_StatusUpdated;
 
-            onUpdateCompleteSignal.Wait();
+                provider.UpdateSubmodulesStatus(
+                    updateStatus: updateStatus,
+                    workingDirectory: module.WorkingDir,
+                    noBranchText: string.Empty);
 
-            provider.StatusUpdating -= Provider_StatusUpdating;
-            provider.StatusUpdated -= Provider_StatusUpdated;
+                await onUpdateCompleteSignal.WaitAsync();
+
+                provider.StatusUpdating -= Provider_StatusUpdating;
+                provider.StatusUpdated -= Provider_StatusUpdated;
+            });
 
             return result;
 

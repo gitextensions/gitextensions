@@ -225,12 +225,12 @@ namespace GitUI.BranchTreePanel
 
             protected override void PostRepositoryChanged()
             {
-                RefreshTreeAsync().FileAndForget();
+                StartAsyncRefreshTree();
             }
 
-            public override async Task RefreshTreeAsync()
+            protected override async Task RefreshTreeAsync(CancellationToken token)
             {
-                await ReloadNodesAsync(LoadNodesAsync);
+                await ReloadNodesAsync(LoadNodesAsync, token);
             }
 
             private async Task<Nodes> LoadNodesAsync(CancellationToken token)

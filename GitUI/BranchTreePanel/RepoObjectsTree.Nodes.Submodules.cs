@@ -86,7 +86,9 @@ namespace GitUI.BranchTreePanel
                 }
 
                 _details = await Info.Detailed.GetValueAsync(token);
-                if (_details != null)
+                token.ThrowIfCancellationRequested();
+
+                if (_details != null && Tree.TreeViewNode.TreeView != null)
                 {
                     await Tree.TreeViewNode.TreeView.InvokeAsync(() =>
                     {
@@ -201,6 +203,7 @@ namespace GitUI.BranchTreePanel
         private sealed class SubmoduleTree : Tree
         {
             private SubmoduleInfo _topProjectInfo;
+            private SubmoduleInfoResult _lastInfoResult = null;
 
             public SubmoduleTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
@@ -210,23 +213,32 @@ namespace GitUI.BranchTreePanel
 
             protected override void PostRepositoryChanged()
             {
-                // Do nothing, we don't care about this event.
-            }
-
-            public override async Task RefreshTreeAsync()
-            {
-                // Will call LoadNodesAsync with the last cached SubmoduleInfoResult
-                await TreeViewNode.TreeView?.InvokeAsync(() => SubmoduleStatusProvider.Default.ResendCachedStatus());
+                // We don't care about this event. For submodule, we wait for SubmoduleStatusProvider.StatusUpdated.
             }
 
             private void Provider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(e.Token);
+                    _lastInfoResult = e.Info;
+                    StartAsyncRefreshTree();
+                });
+            }
+
+            protected override async Task RefreshTreeAsync(CancellationToken token)
             {
                 if (TreeViewNode.TreeView == null)
                 {
                     return;
                 }
 
-                ReloadNodesAsync((token) => LoadNodesAsync(e.Info, token)).FileAndForget();
+                if (_lastInfoResult == null)
+                {
+                    return;
+                }
+
+                await ReloadNodesAsync((token2) => LoadNodesAsync(_lastInfoResult, token2), token);
             }
 
             private async Task<Nodes> LoadNodesAsync(SubmoduleInfoResult info, CancellationToken token)
