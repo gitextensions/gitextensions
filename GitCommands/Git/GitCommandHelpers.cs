@@ -486,7 +486,7 @@ namespace GitCommands
                     ? (ArgumentString)"--no-optional-locks"
                     : default)
             {
-                $"--porcelain={(GitVersion.Current.SupportStatusPorcelainV2 ? 2 : 1)} -z",
+                $"--porcelain{(GitVersion.Current.SupportStatusPorcelainV2 ? "=2" : "")} -z",
                 untrackedFiles,
                 ignoreSubmodules,
                 { !excludeIgnoredFiles, "--ignored" }
