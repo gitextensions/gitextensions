@@ -210,10 +210,10 @@ namespace GitUI.BranchTreePanel
             // 
             // pruneAllRemotesToolStripMenuItem
             // 
+            this.mnuBtnPruneAllRemotes.Image = global::GitUI.Properties.Images.PullFetchPruneAll;
             this.mnuBtnPruneAllRemotes.Name = "mnuBtnPruneAllRemotes";
             this.mnuBtnPruneAllRemotes.Size = new System.Drawing.Size(428, 38);
-            this.mnuBtnPruneAllRemotes.Text = "Update and prune all remotes";
-            this.mnuBtnPruneAllRemotes.Click += new System.EventHandler(this.mnuBtnPruneAllRemotes_Click);
+            this.mnuBtnPruneAllRemotes.Text = "Fetch and prune all remotes";
             // 
             // menuRemote
             // 

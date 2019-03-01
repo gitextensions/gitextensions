@@ -480,11 +480,6 @@ namespace GitUI.BranchTreePanel
             public NativeTreeView TreeView => _repoObjectsTree.treeMain;
         }
 
-        private void mnuBtnPruneAllRemotes_Click(object sender, EventArgs e)
-        {
-            FormRemoteProcess.ShowDialog((GitModuleForm)ParentForm, "remote update --prune");
-        }
-
         private void mnuBtnPrune_Click(object sender, EventArgs e)
         {
             FormRemoteProcess.ShowDialog((GitModuleForm)ParentForm, "remote prune " + treeMain.SelectedNode.Name);

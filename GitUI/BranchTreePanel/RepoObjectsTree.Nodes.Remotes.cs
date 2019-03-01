@@ -143,6 +143,15 @@ namespace GitUI.BranchTreePanel
                     pullAction: AppSettings.PullAction.FetchAll);
                 return pullCompleted;
             }
+
+            internal bool FetchPruneAll()
+            {
+                UICommands.StartPullDialogAndPullImmediately(
+                    out bool pullCompleted,
+                    TreeViewNode.TreeView,
+                    pullAction: AppSettings.PullAction.FetchPruneAll);
+                return pullCompleted;
+            }
         }
 
         private sealed class RemoteBranchNode : BaseBranchNode, IGitRefActions, ICanDelete, ICanRename

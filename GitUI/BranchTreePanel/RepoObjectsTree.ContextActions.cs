@@ -187,6 +187,7 @@ namespace GitUI.BranchTreePanel
 
             RegisterClick(mnuBtnManageRemotesFromRootNode, () => _remotesTree.PopupManageRemotesForm(remoteName: null));
             RegisterClick(mnuBtnUpdateAllRemotes, () => _remotesTree.FetchAll());
+            RegisterClick(mnuBtnPruneAllRemotes, () => _remotesTree.FetchPruneAll());
 
             RegisterClick<SubmoduleNode>(mnubtnManageSubmodules, _ => _submoduleTree.ManageSubmodules(this));
             RegisterClick<SubmoduleNode>(mnubtnSynchronizeSubmodules, _ => _submoduleTree.SynchronizeSubmodules(this));
