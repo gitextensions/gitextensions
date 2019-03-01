@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using GitUI.Editor;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -163,6 +164,25 @@ namespace GitUI.CommandsDialogs
                 default:
                     return base.ProcessCmdKey(ref msg, keyData);
             }
+        }
+
+        internal TestAccessor GetTestAccessor()
+            => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FormEditor _formEditor;
+
+            public TestAccessor(FormEditor formEditor)
+            {
+                _formEditor = formEditor;
+            }
+
+            public FileViewer FileViewer => _formEditor.fileViewer;
+
+            public bool HasChanges => _formEditor.HasChanges;
+
+            public void SaveChanges() => _formEditor.SaveChanges();
         }
     }
 }
