@@ -86,15 +86,14 @@ namespace GitUI.BranchTreePanel
                 }
 
                 _details = await Info.Detailed.GetValueAsync(token);
+
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                 token.ThrowIfCancellationRequested();
 
                 if (_details != null && Tree.TreeViewNode.TreeView != null)
                 {
-                    await Tree.TreeViewNode.TreeView.InvokeAsync(() =>
-                    {
-                        ApplyText();
-                        ApplyStyle();
-                    }, token);
+                    ApplyText();
+                    ApplyStyle();
                 }
             }
 
@@ -202,37 +201,55 @@ namespace GitUI.BranchTreePanel
 
         private sealed class SubmoduleTree : Tree
         {
+            private SubmoduleStatusEventArgs _currentSubmoduleInfo;
+
             public SubmoduleTree(TreeNode treeNode, IGitUICommandsSource uiCommands)
                 : base(treeNode, uiCommands)
             {
+                SubmoduleStatusProvider.Default.StatusUpdated += Provider_StatusUpdated;
             }
 
             protected override Task OnAttachedAsync()
             {
-                SubmoduleStatusProvider.Default.StatusUpdated += Provider_StatusUpdated;
-                return Task.CompletedTask;
-            }
+                var e = _currentSubmoduleInfo;
+                if (e != null)
+                {
+                    OnStatusUpdated(e);
+                }
 
-            protected override void OnDetached()
-            {
-                SubmoduleStatusProvider.Default.StatusUpdated -= Provider_StatusUpdated;
+                return Task.CompletedTask;
             }
 
             private void Provider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
             {
+                _currentSubmoduleInfo = e;
+
+                if (IsAttached)
+                {
+                    OnStatusUpdated(e);
+                }
+            }
+
+            private void OnStatusUpdated(SubmoduleStatusEventArgs e)
+            {
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    if (TreeViewNode.TreeView == null)
-                    {
-                        return;
-                    }
-
-                    await TreeViewNode.TreeView.SwitchToMainThreadAsync(e.Token);
+                    CancellationTokenSource cts = null;
+                    Task<Nodes> loadNodesTask = null;
                     await ReloadNodesAsync(token =>
                     {
-                        var compositeTS = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
-                        return LoadNodesAsync(e.Info, compositeTS.Token);
+                        cts = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
+                        loadNodesTask = LoadNodesAsync(e.Info, cts.Token);
+                        return loadNodesTask;
                     });
+
+                    if (cts != null && loadNodesTask != null)
+                    {
+                        var loadedNodes = await loadNodesTask;
+                        await LoadNodeDetailsAsync(cts.Token, loadedNodes);
+                    }
+
+                    Interlocked.CompareExchange(ref _currentSubmoduleInfo, null, e);
                 });
             }
 
@@ -244,14 +261,14 @@ namespace GitUI.BranchTreePanel
                 return FillSubmoduleTree(info);
             }
 
-            private async Task LoadNodeDetailsAsync(CancellationToken token)
+            private async Task LoadNodeDetailsAsync(CancellationToken token, Nodes loadedNodes)
             {
                 token.ThrowIfCancellationRequested();
-                var tasks = Nodes.DepthEnumerator<SubmoduleNode>().Select(node => node.LoadDetailsAsync(token)).ToList();
+                var tasks = loadedNodes.DepthEnumerator<SubmoduleNode>().Select(node => node.LoadDetailsAsync(token)).ToList();
                 await Task.WhenAll(tasks);
             }
 
-            protected override void PostFillTreeViewNode(CancellationToken token, bool firstTime)
+            protected override void PostFillTreeViewNode(bool firstTime)
             {
                 if (firstTime)
                 {
@@ -259,8 +276,6 @@ namespace GitUI.BranchTreePanel
                 }
 
                 TreeViewNode.Text = Strings.Submodules;
-
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () => await LoadNodeDetailsAsync(token)).FileAndForget();
             }
 
             private Nodes FillSubmoduleTree(SubmoduleInfoResult result)

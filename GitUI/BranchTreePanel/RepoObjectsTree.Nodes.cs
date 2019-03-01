@@ -119,6 +119,7 @@ namespace GitUI.BranchTreePanel
 
             public void Dispose()
             {
+                Detached();
                 _reloadCancellationTokenSequence.Dispose();
             }
 
@@ -207,15 +208,14 @@ namespace GitUI.BranchTreePanel
             // making sure to disable/enable the control.
             protected async Task ReloadNodesAsync(Func<CancellationToken, Task<Nodes>> loadNodesTask)
             {
-                await TaskScheduler.Default;
+                var token = _reloadCancellationTokenSequence.Next();
 
                 var treeView = TreeViewNode.TreeView;
-                if (treeView == null)
+                if (treeView == null || !IsAttached)
                 {
                     return;
                 }
 
-                var token = _reloadCancellationTokenSequence.Next();
                 var newNodes = await loadNodesTask(token);
 
                 await treeView.SwitchToMainThreadAsync(token);
@@ -227,7 +227,7 @@ namespace GitUI.BranchTreePanel
                 {
                     treeView.BeginUpdate();
                     IgnoreSelectionChangedEvent = true;
-                    FillTreeViewNode(token, _firstReloadNodesSinceModuleChanged);
+                    FillTreeViewNode(_firstReloadNodesSinceModuleChanged);
                 }
                 finally
                 {
@@ -238,20 +238,20 @@ namespace GitUI.BranchTreePanel
                 }
             }
 
-            private void FillTreeViewNode(CancellationToken token, bool firstTime)
+            private void FillTreeViewNode(bool firstTime)
             {
                 ThreadHelper.ThrowIfNotOnUIThread();
 
                 var expandedNodesState = firstTime ? new HashSet<string>() : TreeViewNode.GetExpandedNodesState();
                 Nodes.FillTreeViewNode(TreeViewNode);
-                PostFillTreeViewNode(token, firstTime);
+                PostFillTreeViewNode(firstTime);
                 TreeViewNode.RestoreExpandedNodesState(expandedNodesState);
             }
 
             // Called after the TreeView has been populated from Nodes. A good place to update properties
             // of the TreeViewNode, such as it's name (TreeViewNode.Text), Expand/Collapse state, and
             // to set selected node (TreeViewNode.TreeView.SelectedNode).
-            protected virtual void PostFillTreeViewNode(CancellationToken token, bool firstTime)
+            protected virtual void PostFillTreeViewNode(bool firstTime)
             {
             }
 

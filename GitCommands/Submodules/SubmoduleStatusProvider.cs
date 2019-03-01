@@ -83,42 +83,20 @@ namespace GitCommands.Submodules
 
         public void UpdateSubmodulesStatus(bool updateStatus, string workingDirectory, string noBranchText)
         {
-            DoUpdateSubmodulesStatus(updateStatus, workingDirectory, noBranchText, OnStatusUpdating, OnStatusUpdatedAsync);
-        }
-
-        private void OnStatusUpdating()
-        {
-            ThreadHelper.AssertOnUIThread();
-            StatusUpdating?.Invoke(this, EventArgs.Empty);
-        }
-
-        private async Task OnStatusUpdatedAsync(SubmoduleInfoResult info, CancellationToken token)
-        {
-            ThreadHelper.AssertOnUIThread();
-            var statusUpdated = StatusUpdated;
-
-            await TaskScheduler.Default;
-            token.ThrowIfCancellationRequested();
-            statusUpdated?.Invoke(this, new SubmoduleStatusEventArgs(info, token));
-        }
-
-        private void DoUpdateSubmodulesStatus(bool updateStatus, string workingDirectory,
-            string noBranchText,
-            Action onUpdateBegin,
-            Func<SubmoduleInfoResult, CancellationToken, Task> onUpdateCompleteAsync)
-        {
-            // Cancel any previous async activities:
-            var cancelToken = _submodulesStatusSequence.Next();
-
-            // If not updating the status, allow a 'quick' update
-            _previousSubmoduleUpdateTime = updateStatus ? DateTime.Now : DateTime.MinValue;
-
-            onUpdateBegin();
-
-            // Start gathering new submodule information asynchronously.  This makes a significant difference in UI
-            // responsiveness if there are numerous submodules (e.g. > 100).
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                // Cancel any previous async activities:
+                var cancelToken = _submodulesStatusSequence.Next();
+
+                // If not updating the status, allow a 'quick' update
+                _previousSubmoduleUpdateTime = updateStatus ? DateTime.Now : DateTime.MinValue;
+
+                OnStatusUpdating();
+
+                await TaskScheduler.Default;
+
+                // Start gathering new submodule information asynchronously.  This makes a significant difference in UI
+                // responsiveness if there are numerous submodules (e.g. > 100).
                 // First task: Gather list of submodules on a background thread.
 
                 // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
@@ -135,10 +113,21 @@ namespace GitCommands.Submodules
 
                 await Task.WhenAll(submodulesTask, superTask);
 
-                await onUpdateCompleteAsync(result, cancelToken);
+                OnStatusUpdated(result, cancelToken);
 
                 _previousSubmoduleUpdateTime = updateStatus ? DateTime.Now : DateTime.MinValue;
             }).FileAndForget();
+        }
+
+        private void OnStatusUpdating()
+        {
+            StatusUpdating?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnStatusUpdated(SubmoduleInfoResult info, CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+            StatusUpdated?.Invoke(this, new SubmoduleStatusEventArgs(info, token));
         }
 
         private async Task GetRepositorySubmodulesStatusAsync(bool updateStatus, SubmoduleInfoResult result, IGitModule module, CancellationToken cancelToken, string noBranchText)

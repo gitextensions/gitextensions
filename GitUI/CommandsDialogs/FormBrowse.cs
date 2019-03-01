@@ -2664,8 +2664,12 @@ namespace GitUI.CommandsDialogs
 
         private void SubmoduleStatusProvider_StatusUpdating(object sender, EventArgs e)
         {
-            RemoveSubmoduleButtons();
-            toolStripButtonLevelUp.DropDownItems.Add(_loading.Text);
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await this.SwitchToMainThreadAsync();
+                RemoveSubmoduleButtons();
+                toolStripButtonLevelUp.DropDownItems.Add(_loading.Text);
+            }).FileAndForget();
         }
 
         private void SubmoduleStatusProvider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
@@ -2673,7 +2677,7 @@ namespace GitUI.CommandsDialogs
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
                 await PopulateToolbarAsync(e.Info, e.Token);
-            });
+            }).FileAndForget();
         }
 
         private async Task PopulateToolbarAsync(SubmoduleInfoResult result, CancellationToken cancelToken)
