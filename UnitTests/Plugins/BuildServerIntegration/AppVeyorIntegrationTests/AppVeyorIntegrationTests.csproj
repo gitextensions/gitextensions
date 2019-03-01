@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2828E531-7EB3-4A52-A71E-DCE73B9907FC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AppVeyorIntegrationTests</RootNamespace>
+    <AssemblyName>AppVeyorIntegrationTests</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <TestProjectType>UnitTest</TestProjectType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Debug\AppVeyorIntegrationTests.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\..\..\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Release\AppVeyorIntegrationTests.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NSubstitute">
+      <HintPath>..\..\..\..\..\..\..\.nuget\packages\nsubstitute\3.1.0\lib\net46\NSubstitute.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ApprovalTests" Version="3.0.13" />
+    <PackageReference Include="FluentAssertions" Version="5.2.0" />
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
+    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="YamlDotNet" Version="5.0.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppVeyorAdapterTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\GitCommands\GitCommands.csproj">
+      <Project>{bd6aa2a2-997d-4aff-acc7-b64f6e51d181}</Project>
+      <Name>GitCommands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Plugins\BuildServerIntegration\AppVeyorIntegration\AppVeyorIntegration.csproj">
+      <Project>{39228D7F-9239-4A2D-8A6F-4D0F7DEB9178}</Project>
+      <Name>AppVeyorIntegration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj">
+      <Project>{27559302-f35e-4b62-a6ec-11ff21a5fa6f}</Project>
+      <Name>GitUIPluginInterfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\CommonTestUtils\CommonTestUtils.csproj">
+      <Project>{7B1F2FA0-E17D-499B-AF86-D49DBEF8C548}</Project>
+      <Name>CommonTestUtils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ApprovedFiles\AppVeyorAdapterTests.Should_return_a_build_Info_When_Json_content_is_the_one_of_a_master_build.approved.txt" />
+    <Content Include="ApprovedFiles\AppVeyorAdapterTests.Should_return_a_build_Info_When_Json_content_is_the_one_of_a_pull_request_build.approved.txt" />
+    <EmbeddedResource Include="MockData\AppVeyorResult_master.json" />
+    <EmbeddedResource Include="MockData\AppVeyorResult_pull_request_build.json" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

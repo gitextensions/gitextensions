@@ -1851,6 +1851,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Icons\DocumentTree.png" />
+    <None Include="Resources\Icons\pullRequest.png" />
     <Content Include="Translation\Czech.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -63,6 +63,7 @@ namespace GitUI
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBuildReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openPullRequestPageStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.getHelpOnHowToUseTheseFeaturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editCommitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -140,7 +141,9 @@ namespace GitUI
             this.navigateToolStripMenuItem,
             this.viewToolStripMenuItem,
             this.runScriptToolStripMenuItem,
-            this.openBuildReportToolStripMenuItem});
+            this.openBuildReportToolStripMenuItem,
+            this.openPullRequestPageStripMenuItem
+            });
             this.mainContextMenu.Name = "CreateTag";
             this.mainContextMenu.Size = new System.Drawing.Size(265, 620);
             this.mainContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuOpening);
@@ -434,8 +437,16 @@ namespace GitUI
             this.openBuildReportToolStripMenuItem.Image = global::GitUI.Properties.Images.Integration;
             this.openBuildReportToolStripMenuItem.Name = "openBuildReportToolStripMenuItem";
             this.openBuildReportToolStripMenuItem.Size = new System.Drawing.Size(301, 26);
-            this.openBuildReportToolStripMenuItem.Text = "Open build report in the browser";
+            this.openBuildReportToolStripMenuItem.Text = "View build report in a browser";
             this.openBuildReportToolStripMenuItem.Click += new System.EventHandler(this.openBuildReportToolStripMenuItem_Click);
+            // 
+            // openBuildReportToolStripMenuItem
+            // 
+            this.openPullRequestPageStripMenuItem.Image = global::GitUI.Properties.Images.PullRequest;
+            this.openPullRequestPageStripMenuItem.Name = "openPullRequestPageStripMenuItem";
+            this.openPullRequestPageStripMenuItem.Size = new System.Drawing.Size(301, 26);
+            this.openPullRequestPageStripMenuItem.Text = "View pull request in a browser";
+            this.openPullRequestPageStripMenuItem.Click += new System.EventHandler(this.openPullRequestPageStripMenuItem_Click);
             // 
             // toolStripSeparator9
             // 
@@ -537,6 +548,7 @@ namespace GitUI
         private System.Windows.Forms.ToolStripMenuItem selectAsBaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem getHelpOnHowToUseTheseFeaturesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openBuildReportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openPullRequestPageStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editCommitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rebaseWithAdvOptionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createTagToolStripMenuItem;

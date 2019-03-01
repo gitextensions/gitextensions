@@ -1656,6 +1656,8 @@ namespace GitUI
 
             SetEnabled(openBuildReportToolStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url));
 
+            SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
+
             RefreshOwnScripts();
 
             UpdateSeparators();
@@ -2424,6 +2426,16 @@ namespace GitUI
             if (!string.IsNullOrWhiteSpace(revision.BuildStatus?.Url))
             {
                 Process.Start(revision.BuildStatus.Url);
+            }
+        }
+
+        private void openPullRequestPageStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var revision = GetSelectedRevisions().First();
+
+            if (!string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl))
+            {
+                Process.Start(revision.BuildStatus.PullRequestUrl);
             }
         }
 

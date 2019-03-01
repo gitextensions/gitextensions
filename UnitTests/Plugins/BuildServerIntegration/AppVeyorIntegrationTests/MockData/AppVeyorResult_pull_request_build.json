@@ -1,0 +1,123 @@
+﻿{
+    "project": {
+        "projectId": 305414,
+        "accountId": 61625,
+        "accountName": "gitextensions",
+        "builds": [],
+        "name": "gitextensions",
+        "slug": "gitextensions",
+        "repositoryType": "gitHub",
+        "repositoryScm": "git",
+        "repositoryName": "gitextensions/gitextensions",
+        "isPrivate": false,
+        "isGitHubApp": false,
+        "skipBranchesWithoutAppveyorYml": false,
+        "enableSecureVariablesInPullRequests": false,
+        "enableSecureVariablesInPullRequestsFromSameRepo": false,
+        "enableDeploymentInPullRequests": false,
+        "saveBuildCacheInPullRequests": false,
+        "rollingBuilds": false,
+        "rollingBuildsDoNotCancelRunningBuilds": false,
+        "rollingBuildsOnlyForPullRequests": false,
+        "alwaysBuildClosedPullRequests": false,
+        "tags": "",
+        "securityDescriptor": {
+            "accessRightDefinitions": [
+                {
+                    "name": "View",
+                    "description": "View"
+                },
+                {
+                    "name": "RunBuild",
+                    "description": "Run build"
+                },
+                {
+                    "name": "Update",
+                    "description": "Update settings"
+                },
+                {
+                    "name": "Delete",
+                    "description": "Delete project"
+                }
+            ],
+            "roleAces": [
+                {
+                    "roleId": 111347,
+                    "name": "Administrator",
+                    "isAdmin": true,
+                    "accessRights": [
+                        {
+                            "name": "View",
+                            "allowed": true
+                        },
+                        {
+                            "name": "RunBuild",
+                            "allowed": true
+                        },
+                        {
+                            "name": "Update",
+                            "allowed": true
+                        },
+                        {
+                            "name": "Delete",
+                            "allowed": true
+                        }
+                    ]
+                },
+                {
+                    "roleId": 111348,
+                    "name": "User",
+                    "isAdmin": false,
+                    "accessRights": [
+                        {
+                            "name": "View"
+                        },
+                        {
+                            "name": "RunBuild"
+                        },
+                        {
+                            "name": "Update"
+                        },
+                        {
+                            "name": "Delete"
+                        }
+                    ]
+                }
+            ]
+        },
+        "disablePushWebhooks": false,
+        "disablePullRequestWebhooks": false,
+        "created": "2017-04-10T18:52:10.8942941+00:00",
+        "updated": "2019-02-20T08:12:22.1064997+00:00"
+    },
+    "builds": [
+        {
+            "buildId": 22800457,
+            "projectId": 0,
+            "jobs": [],
+            "buildNumber": 5444,
+            "version": "3.1.0.5444",
+            "message": "Update GitUI/UserControls/RevisionGrid/RevisionGridControl.Designer.cs",
+            "messageExtended": "Co-Authored-By: pmiossec <pmiossec@gmail.com>",
+            "branch": "master",
+            "isTag": false,
+            "commitId": "9b9e2464633e9668a7d6ae088e0366403288ac72",
+            "authorName": "RussKie",
+            "authorUsername": "RussKie",
+            "committerName": "GitHub",
+            "committerUsername": "web-flow",
+            "committed": "2019-03-04T11:24:09+00:00",
+            "pullRequestId": "6326",
+            "pullRequestName": "Being able to navigate to a PR page of an AppVeyor build",
+            "pullRequestHeadCommitId": "dfc541e7eda18a9eb620a0a352e1d6fe0141b34d",
+            "pullRequestHeadRepository": "pmiossec/gitextensions",
+            "pullRequestHeadBranch": "open_pr_page_from_appveyor_build",
+            "messages": [],
+            "status": "success",
+            "started": "2019-03-04T11:24:24.0204641+00:00",
+            "finished": "2019-03-04T11:34:41.5447813+00:00",
+            "created": "2019-03-04T11:24:13.8200042+00:00",
+            "updated": "2019-03-04T11:34:41.5447813+00:00"
+        }
+    ]
+}

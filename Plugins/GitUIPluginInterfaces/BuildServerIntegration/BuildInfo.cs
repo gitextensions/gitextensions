@@ -24,5 +24,6 @@ namespace GitUIPluginInterfaces.BuildServerIntegration
         public string Url { get; set; }
         public bool ShowInBuildReportTab { get; set; } = true;
         public string Tooltip { get; set; }
+        public string PullRequestUrl { get; set; }
     }
 }
