@@ -94,7 +94,7 @@ namespace GitUI.BranchTreePanel
             // Actions on enabled remotes
             mnubtnFetchAllBranchesFromARemote.Visible = node.Enabled;
             mnubtnDisableRemote.Visible = node.Enabled;
-            mnuBtnPrune.Visible = node.Enabled;
+            mnuBtnPruneAllBranchesFromARemote.Visible = node.Enabled;
 
             // Actions on disabled remotes
             mnubtnEnableRemote.Visible = !node.Enabled;
@@ -178,7 +178,7 @@ namespace GitUI.BranchTreePanel
 
             RegisterClick<RemoteRepoNode>(mnubtnManageRemotes, remoteBranch => remoteBranch.PopupManageRemotesForm());
             RegisterClick<RemoteRepoNode>(mnubtnFetchAllBranchesFromARemote, remote => remote.Fetch());
-            RegisterClick<RemoteRepoNode>(mnuBtnPrune, remote => remote.Prune());
+            RegisterClick<RemoteRepoNode>(mnuBtnPruneAllBranchesFromARemote, remote => remote.Prune());
             RegisterClick<RemoteRepoNode>(mnubtnEnableRemote, remote => remote.Enable(fetch: false));
             RegisterClick<RemoteRepoNode>(mnubtnEnableRemoteAndFetch, remote => remote.Enable(fetch: true));
             RegisterClick<RemoteRepoNode>(mnubtnDisableRemote, remote => remote.Disable());
@@ -187,7 +187,7 @@ namespace GitUI.BranchTreePanel
             Node.RegisterContextMenu(typeof(TagNode), menuTag);
 
             RegisterClick(mnuBtnManageRemotesFromRootNode, () => _remotesTree.PopupManageRemotesForm(remoteName: null));
-            RegisterClick(mnuBtnUpdateAllRemotes, () => _remotesTree.FetchAll());
+            RegisterClick(mnuBtnFetchAllRemotes, () => _remotesTree.FetchAll());
             RegisterClick(mnuBtnPruneAllRemotes, () => _remotesTree.FetchPruneAll());
 
             RegisterClick<SubmoduleNode>(mnubtnManageSubmodules, _ => _submoduleTree.ManageSubmodules(this));
