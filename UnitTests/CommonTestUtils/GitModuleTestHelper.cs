@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using GitCommands;
+using GitCommands.Config;
 
 namespace CommonTestUtils
 {
@@ -28,8 +30,10 @@ namespace CommonTestUtils
             Module = module;
 
             // Don't assume global user/email
-            Module.GitExecutable.GetOutput(@"config user.name ""author""");
-            Module.GitExecutable.GetOutput(@"config user.email ""author@mail.com""");
+            Module.LocalConfigFile.SetString(SettingKeyString.UserName, "author");
+            Module.LocalConfigFile.SetString(SettingKeyString.UserEmail, "author@mail.com");
+            Module.LocalConfigFile.FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+            Module.LocalConfigFile.Save();
 
             return;
 
