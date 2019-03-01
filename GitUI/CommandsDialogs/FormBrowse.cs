@@ -75,7 +75,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _pullMerge = new TranslationString("Pull - merge");
         private readonly TranslationString _pullRebase = new TranslationString("Pull - rebase");
         private readonly TranslationString _pullOpenDialog = new TranslationString("Open pull dialog");
-        private readonly TranslationString _pullFetchPruneAllConfirmation = new TranslationString("Warning! The fetch with prune will remove all the remote-tracking references which no longer exist on remotes. Do you want to proceed?");
 
         private readonly TranslationString _buildReportTabCaption = new TranslationString("Build Report");
         private readonly TranslationString _consoleTabCaption = new TranslationString("Console");
@@ -2428,23 +2427,6 @@ namespace GitUI.CommandsDialogs
 
         private void DoPull(AppSettings.PullAction pullAction, bool isSilent)
         {
-            // Special case for FetchPruneAll to make sure user confirms the action.
-            // Notice, if action is not silent, we just show a regular Pull dialog without any confirmations.
-            if (isSilent && pullAction == AppSettings.PullAction.FetchPruneAll)
-            {
-                bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
-                                         || MessageBox.Show(
-                                             this,
-                                             _pullFetchPruneAllConfirmation.Text,
-                                             _pullFetchPruneAll.Text,
-                                             MessageBoxButtons.YesNo) == DialogResult.Yes;
-
-                if (!isActionConfirmed)
-                {
-                    return;
-                }
-            }
-
             if (isSilent)
             {
                 UICommands.StartPullDialogAndPullImmediately(this, pullAction: pullAction);

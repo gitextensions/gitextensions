@@ -562,7 +562,7 @@ namespace GitUI
                 using (var formPull = new FormPull(this, remoteBranch, remote, pullAction))
                 {
                     var dlgResult = pullOnShow
-                        ? formPull.PullAndShowDialogWhenFailed(owner)
+                        ? formPull.PullAndShowDialogWhenFailed(owner, pullAction)
                         : formPull.ShowDialog(owner);
 
                     if (dlgResult == DialogResult.OK)

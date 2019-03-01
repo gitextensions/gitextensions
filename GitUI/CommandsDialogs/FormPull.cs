@@ -97,6 +97,9 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _formTitleFetch = new TranslationString("Fetch ({0})");
         private readonly TranslationString _buttonPull = new TranslationString("&Pull");
         private readonly TranslationString _buttonFetch = new TranslationString("&Fetch");
+
+        private readonly TranslationString _pullFetchPruneAllConfirmation = new TranslationString("Warning! The fetch with prune will remove all the remote-tracking references which no longer exist on remotes. Do you want to proceed?");
+        private readonly TranslationString _pullFetchPruneAll = new TranslationString("Fetch and prune all");
         #endregion
 
         private const string AllRemotes = "[ All ]";
@@ -216,8 +219,24 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner)
+        public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner, AppSettings.PullAction pullAction)
         {
+            // Special case for FetchPruneAll to make sure user confirms the action.
+            if (pullAction == AppSettings.PullAction.FetchPruneAll)
+            {
+                bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
+                                         || MessageBox.Show(
+                                             this,
+                                             _pullFetchPruneAllConfirmation.Text,
+                                             _pullFetchPruneAll.Text,
+                                             MessageBoxButtons.YesNo) == DialogResult.Yes;
+
+                if (!isActionConfirmed)
+                {
+                    return DialogResult.Cancel;
+                }
+            }
+
             DialogResult result = PullChanges(owner);
 
             if (result == DialogResult.No)
