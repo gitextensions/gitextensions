@@ -3120,12 +3120,11 @@ namespace GitUI.CommandsDialogs
             public TestAccessor(FormBrowse form)
             {
                 _form = form;
-                RepoObjectsTree = _form.repoObjectsTree;
             }
 
-            public RepoObjectsTree RepoObjectsTree { get; }
+            public RepoObjectsTree RepoObjectsTree => _form.repoObjectsTree;
 
-            public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
+            public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, IList<Repository> repositoryHistory)
             {
                 _form.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
             }

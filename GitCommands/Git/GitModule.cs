@@ -413,10 +413,10 @@ namespace GitCommands
         public IReadOnlyList<string> GetSubmodulesLocalPaths(bool recursive = true)
         {
             var localPaths = new List<string>();
-            DoGetSubmodulesLocalPaths(this, "", ref localPaths, recursive);
+            DoGetSubmodulesLocalPaths(this, "", localPaths, recursive);
             return localPaths;
 
-            void DoGetSubmodulesLocalPaths(GitModule module, string parentPath, ref List<string> paths, bool recurse)
+            void DoGetSubmodulesLocalPaths(GitModule module, string parentPath, List<string> paths, bool recurse)
             {
                 var submodulePaths = GetSubmodulePaths(module)
                     .Select(p => Path.Combine(parentPath, p).ToPosixPath())
@@ -428,7 +428,7 @@ namespace GitCommands
                 {
                     foreach (var submodulePath in submodulePaths)
                     {
-                        DoGetSubmodulesLocalPaths(GetSubmodule(submodulePath), submodulePath, ref paths, recurse);
+                        DoGetSubmodulesLocalPaths(GetSubmodule(submodulePath), submodulePath, paths, recurse);
                     }
                 }
             }
