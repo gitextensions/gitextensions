@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 
 namespace GitUI
@@ -46,7 +46,7 @@ namespace GitUI
         /// <para>This method is thread-safe.</para>
         /// </remarks>
         /// <returns>A <see cref="CancellationToken"/> to be used by the commencing asynchronous operation.</returns>
-        /// <exception cref="ObjectDisposedException">This object is disposed.</exception>
+        /// <exception cref="OperationCanceledException">This object is disposed.</exception>
         public CancellationToken Next()
         {
             var next = new CancellationTokenSource();
@@ -76,8 +76,9 @@ namespace GitUI
             // Detect and handle the case where the sequence was already disposed
             if (prior is null)
             {
+                next.Cancel();
                 next.Dispose();
-                throw new ObjectDisposedException(nameof(CancellationTokenSequence));
+                nextToken.ThrowIfCancellationRequested();
             }
 
             prior.Cancel();

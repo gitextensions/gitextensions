@@ -33,7 +33,7 @@ namespace GitUITests
 
             sequence.Dispose();
 
-            Assert.Throws<ObjectDisposedException>(() => sequence.Next());
+            Assert.Throws<OperationCanceledException>(() => sequence.Next());
         }
 
         [Test]
