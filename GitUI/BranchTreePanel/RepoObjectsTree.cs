@@ -464,10 +464,9 @@ namespace GitUI.BranchTreePanel
             public TestAccessor(RepoObjectsTree repoObjectsTree)
             {
                 _repoObjectsTree = repoObjectsTree;
-                TreeView = repoObjectsTree.treeMain;
             }
 
-            public NativeTreeView TreeView { get; }
+            public NativeTreeView TreeView => _repoObjectsTree.treeMain;
         }
 
         private void mnuBtnUpdateAllRemotes_Click(object sender, EventArgs e)
