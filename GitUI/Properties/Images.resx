@@ -265,6 +265,9 @@
   <data name="PullFetch" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\PullFetch.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="PullFetchPrune" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Icons\PullFetchPrune.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="PullMerge" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Icons\PullMerge.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

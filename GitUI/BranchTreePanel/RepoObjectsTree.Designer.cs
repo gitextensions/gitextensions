@@ -354,10 +354,10 @@ namespace GitUI.BranchTreePanel
             // 
             // pruneToolStripMenuItem
             // 
+            this.mnuBtnPrune.Image = global::GitUI.Properties.Images.PullFetchPrune;
             this.mnuBtnPrune.Name = "mnuBtnPrune";
             this.mnuBtnPrune.Size = new System.Drawing.Size(302, 38);
-            this.mnuBtnPrune.Text = "Prune remote";
-            this.mnuBtnPrune.Click += new System.EventHandler(this.mnuBtnPrune_Click);
+            this.mnuBtnPrune.Text = "Fetch and prune";
             // 
             // repoTreePanel
             // 

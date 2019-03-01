@@ -99,7 +99,6 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _buttonFetch = new TranslationString("&Fetch");
 
         private readonly TranslationString _pullFetchPruneAllConfirmation = new TranslationString("Warning! The fetch with prune will remove all the remote-tracking references which no longer exist on remotes. Do you want to proceed?");
-        private readonly TranslationString _pullFetchPruneAll = new TranslationString("Fetch and prune all");
         #endregion
 
         private const string AllRemotes = "[ All ]";
@@ -157,7 +156,15 @@ namespace GitUI.CommandsDialogs
                 case AppSettings.PullAction.FetchPruneAll:
                     Fetch.Checked = true;
                     Prune.Checked = true;
-                    _NO_TRANSLATE_Remotes.Text = AllRemotes;
+                    if (defaultRemote.IsNullOrEmpty())
+                    {
+                        _NO_TRANSLATE_Remotes.Text = AllRemotes;
+                    }
+                    else
+                    {
+                        _NO_TRANSLATE_Remotes.Text = defaultRemote;
+                    }
+
                     break;
                 case AppSettings.PullAction.Default:
                     Debug.Assert(false, "pullAction is not a valid action");
@@ -219,16 +226,26 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner, AppSettings.PullAction pullAction)
+        public DialogResult PullAndShowDialogWhenFailed(IWin32Window owner, string remote, AppSettings.PullAction pullAction)
         {
-            // Special case for FetchPruneAll to make sure user confirms the action.
+            // Special case for "Fetch and prune" and "Fetch and prune all" to make sure user confirms the action.
             if (pullAction == AppSettings.PullAction.FetchPruneAll)
             {
+                string messageBoxTitle = null;
+                if (remote.IsNullOrEmpty())
+                {
+                    messageBoxTitle = string.Format(_pruneFromCaption.Text, AllRemotes);
+                }
+                else
+                {
+                    messageBoxTitle = string.Format(_pruneFromCaption.Text, remote);
+                }
+
                 bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
                                          || MessageBox.Show(
                                              this,
                                              _pullFetchPruneAllConfirmation.Text,
-                                             _pullFetchPruneAll.Text,
+                                             messageBoxTitle,
                                              MessageBoxButtons.YesNo) == DialogResult.Yes;
 
                 if (!isActionConfirmed)

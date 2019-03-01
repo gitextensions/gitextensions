@@ -127,7 +127,7 @@
             this.chkFetchAndPruneAllConfirmation.Name = "chkFetchAndPruneAllConfirmation";
             this.chkFetchAndPruneAllConfirmation.Size = new System.Drawing.Size(127, 19);
             this.chkFetchAndPruneAllConfirmation.TabIndex = 14;
-            this.chkFetchAndPruneAllConfirmation.Text = "Fetch and prune all";
+            this.chkFetchAndPruneAllConfirmation.Text = "Fetch and prune branches";
             this.chkFetchAndPruneAllConfirmation.UseVisualStyleBackColor = true;
             // 
             // chkUndoLastCommitConfirmation

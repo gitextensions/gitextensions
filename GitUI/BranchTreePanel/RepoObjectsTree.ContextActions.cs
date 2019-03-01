@@ -178,6 +178,7 @@ namespace GitUI.BranchTreePanel
 
             RegisterClick<RemoteRepoNode>(mnubtnManageRemotes, remoteBranch => remoteBranch.PopupManageRemotesForm());
             RegisterClick<RemoteRepoNode>(mnubtnFetchAllBranchesFromARemote, remote => remote.Fetch());
+            RegisterClick<RemoteRepoNode>(mnuBtnPrune, remote => remote.Prune());
             RegisterClick<RemoteRepoNode>(mnubtnEnableRemote, remote => remote.Enable(fetch: false));
             RegisterClick<RemoteRepoNode>(mnubtnEnableRemoteAndFetch, remote => remote.Enable(fetch: true));
             RegisterClick<RemoteRepoNode>(mnubtnDisableRemote, remote => remote.Disable());

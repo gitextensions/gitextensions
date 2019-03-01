@@ -281,6 +281,12 @@ namespace GitUI.BranchTreePanel
                 return DoFetch();
             }
 
+            public bool Prune()
+            {
+                Trace.Assert(Enabled);
+                return DoPrune();
+            }
+
             public void Enable(bool fetch)
             {
                 Trace.Assert(!Enabled);
@@ -349,6 +355,16 @@ namespace GitUI.BranchTreePanel
                     TreeViewNode.TreeView,
                     remote: FullPath,
                     pullAction: AppSettings.PullAction.Fetch);
+                return pullCompleted;
+            }
+
+            private bool DoPrune()
+            {
+                UICommands.StartPullDialogAndPullImmediately(
+                    out bool pullCompleted,
+                    TreeViewNode.TreeView,
+                    remote: FullPath,
+                    pullAction: AppSettings.PullAction.FetchPruneAll);
                 return pullCompleted;
             }
         }
