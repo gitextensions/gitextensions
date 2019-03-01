@@ -3125,7 +3125,7 @@ namespace GitUI.CommandsDialogs
 
             public RepoObjectsTree RepoObjectsTree { get; }
 
-            public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
+            public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, IList<Repository> repositoryHistory)
             {
                 _form.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
             }
