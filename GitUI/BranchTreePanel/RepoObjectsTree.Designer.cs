@@ -499,10 +499,10 @@ namespace GitUI.BranchTreePanel
             // 
             // updateAllRemotesToolStripMenuItem
             // 
+            this.mnuBtnUpdateAllRemotes.Image = global::GitUI.Properties.Images.PullFetchAll;
             this.mnuBtnUpdateAllRemotes.Name = "mnuBtnUpdateAllRemotes";
             this.mnuBtnUpdateAllRemotes.Size = new System.Drawing.Size(428, 38);
-            this.mnuBtnUpdateAllRemotes.Text = "Update all remotes";
-            this.mnuBtnUpdateAllRemotes.Click += new System.EventHandler(this.mnuBtnUpdateAllRemotes_Click);
+            this.mnuBtnUpdateAllRemotes.Text = "Fetch all remotes";
             // 
             // tsmiShowRemotes
             // 
