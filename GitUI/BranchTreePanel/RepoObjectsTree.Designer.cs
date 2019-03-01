@@ -276,7 +276,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnFetchAllBranchesFromARemote
             // 
-            this.mnubtnFetchAllBranchesFromARemote.Image = global::GitUI.Properties.Images.Stage;
+            this.mnubtnFetchAllBranchesFromARemote.Image = global::GitUI.Properties.Images.PullFetch;
             this.mnubtnFetchAllBranchesFromARemote.Name = "mnubtnFetchAllBranchesFromARemote";
             this.mnubtnFetchAllBranchesFromARemote.Size = new System.Drawing.Size(172, 22);
             this.mnubtnFetchAllBranchesFromARemote.Text = "&Fetch";
