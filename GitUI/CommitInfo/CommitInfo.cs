@@ -274,29 +274,40 @@ namespace GitUI.CommitInfo
             {
                 var cancellationToken = _asyncLoadCancellation.Next();
 
-                ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadLinksForRevisionAsync(_revision)).FileAndForget();
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () => { await LoadLinksForRevisionAsync(_revision); }).FileAndForget();
 
-                // No branch/tag data for artificial commands
-
-                if (AppSettings.CommitInfoShowContainedInBranches)
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadBranchInfoAsync(_revision.ObjectId)).FileAndForget();
-                }
+                    if (_refsOrderDict == null)
+                    {
+                        await LoadSortedRefsAsync();
+                    }
 
-                if (AppSettings.ShowAnnotatedTagsMessages)
-                {
-                    ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadAnnotatedTagInfoAsync(_revision.Refs)).FileAndForget();
-                }
+                    // No branch/tag data for artificial commands
+                    if (AppSettings.CommitInfoShowContainedInBranches)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        await LoadBranchInfoAsync(_revision.ObjectId);
+                    }
 
-                if (AppSettings.CommitInfoShowContainedInTags)
-                {
-                    ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadTagInfoAsync(_revision.ObjectId)).FileAndForget();
-                }
+                    if (AppSettings.ShowAnnotatedTagsMessages)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        await LoadAnnotatedTagInfoAsync(_revision.Refs);
+                    }
 
-                if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom)
-                {
-                    ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadDescribeInfoAsync(_revision.ObjectId)).FileAndForget();
-                }
+                    if (AppSettings.CommitInfoShowContainedInTags)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        await LoadTagInfoAsync(_revision.ObjectId);
+                    }
+
+                    if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();
+                        await LoadDescribeInfoAsync(_revision.ObjectId);
+                    }
+                }).FileAndForget();
 
                 return;
 
@@ -336,9 +347,30 @@ namespace GitUI.CommitInfo
                     }
                 }
 
+                async Task LoadSortedRefsAsync()
+                {
+                    await TaskScheduler.Default;
+                    _refsOrderDict = ToDictionary(Module.GetSortedRefs());
+
+                    await this.SwitchToMainThreadAsync(cancellationToken);
+                    UpdateRevisionInfo();
+
+                    IDictionary<string, int> ToDictionary(IReadOnlyList<string> list)
+                    {
+                        var dict = new Dictionary<string, int>();
+                        for (int i = 0; i < list.Count; i++)
+                        {
+                            dict.Add(list[i], i);
+                        }
+
+                        return dict;
+                    }
+                }
+
                 async Task LoadAnnotatedTagInfoAsync(IReadOnlyList<IGitRef> refs)
                 {
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    await TaskScheduler.Default;
+
                     var annotatedTagsMessages = GetAnnotatedTagsMessages();
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
@@ -400,7 +432,8 @@ namespace GitUI.CommitInfo
 
                 async Task LoadTagInfoAsync(ObjectId objectId)
                 {
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    await TaskScheduler.Default;
+
                     var tags = Module.GetAllTagsWhichContainGivenCommit(objectId).ToList();
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
@@ -410,7 +443,7 @@ namespace GitUI.CommitInfo
 
                 async Task LoadBranchInfoAsync(ObjectId revision)
                 {
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+                    await TaskScheduler.Default;
 
                     // Include local branches if explicitly requested or when needed to decide whether to show remotes
                     bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
@@ -429,6 +462,7 @@ namespace GitUI.CommitInfo
                 async Task LoadDescribeInfoAsync(ObjectId commitId)
                 {
                     await TaskScheduler.Default;
+
                     var info = GetDescribeInfoForRevision();
 
                     await this.SwitchToMainThreadAsync(cancellationToken);
