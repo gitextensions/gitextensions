@@ -41,7 +41,9 @@ namespace GitUITests.Editor
         {
             using (var testHelper = new GitModuleTestHelper())
             {
-                testHelper.CreateRepoFile(@".git\config", $"[core]\n\tautocrlf = {autoCRLFType}");
+                testHelper.Module.LocalConfigFile.SetEnum("core.autocrlf", autoCRLFType);
+                testHelper.Module.LocalConfigFile.Save();
+
                 var content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.{file}.bin");
 
                 var uiCommands = new GitUICommands(testHelper.Module);
