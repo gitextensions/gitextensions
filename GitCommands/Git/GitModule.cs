@@ -1201,7 +1201,7 @@ namespace GitCommands
             {
                 "status",
                 "--cached",
-                SubmodulePath
+                SubmodulePath.Quote()
             };
             var lines = SuperprojectModule.GitExecutable.GetOutput(args).Split('\n');
 
