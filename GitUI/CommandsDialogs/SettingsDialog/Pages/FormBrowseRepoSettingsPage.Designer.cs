@@ -70,7 +70,7 @@
             this.chkShowGpgInformation.Name = "chkShowGpgInformation";
             this.chkShowGpgInformation.Size = new System.Drawing.Size(132, 17);
             this.chkShowGpgInformation.TabIndex = 7;
-            this.chkShowGpgInformation.Text = "Show GPG information";
+            this.chkShowGpgInformation.Text = "Show GPG information (a restart is needed to take effect)";
             this.chkShowGpgInformation.UseVisualStyleBackColor = true;
             // 
             // ConEmuGB
