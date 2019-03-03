@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.BranchTreePanel.Interfaces;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
@@ -13,7 +14,7 @@ namespace GitUI.BranchTreePanel
 {
     partial class RepoObjectsTree
     {
-        private class TagNode : BaseBranchNode
+        private class TagNode : BaseBranchNode, IGitRefActions, ICanDelete
         {
             private readonly IGitRef _tagInfo;
 
@@ -38,14 +39,19 @@ namespace GitUI.BranchTreePanel
                 CreateBranch();
             }
 
-            public void CreateBranch()
+            public bool CreateBranch()
             {
-                UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, _tagInfo.ObjectId);
+                return UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, _tagInfo.ObjectId);
             }
 
-            public void Delete()
+            public bool Delete()
             {
-                UICommands.StartDeleteTagDialog(TreeViewNode.TreeView, _tagInfo.Name);
+                return UICommands.StartDeleteTagDialog(TreeViewNode.TreeView, _tagInfo.Name);
+            }
+
+            public bool Merge()
+            {
+                return UICommands.StartMergeBranchDialog(TreeViewNode.TreeView, FullPath);
             }
 
             protected override void ApplyStyle()
@@ -54,12 +60,12 @@ namespace GitUI.BranchTreePanel
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.TagHorizontal);
             }
 
-            public void Checkout()
+            public bool Checkout()
             {
                 using (var form = new FormCheckoutRevision(UICommands))
                 {
                     form.SetRevision(FullPath);
-                    form.ShowDialog(TreeViewNode.TreeView);
+                    return form.ShowDialog(TreeViewNode.TreeView) != DialogResult.Cancel;
                 }
             }
         }

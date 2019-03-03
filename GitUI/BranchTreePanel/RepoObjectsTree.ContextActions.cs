@@ -1,12 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+using GitUI.BranchTreePanel.ContextMenu;
+using GitUI.BranchTreePanel.Interfaces;
+using ResourceManager;
 
 namespace GitUI.BranchTreePanel
 {
-    partial class RepoObjectsTree
+    partial class RepoObjectsTree : IMenuItemFactory
     {
         private TreeNode _lastRightClickedNode;
+
+        /// <summary>
+        /// Local branch context menu [git ref / rename / delete] actions
+        /// </summary>
+        private LocalBranchMenuItems<LocalBranchNode> _localBranchMenuItems;
+
+        /// <summary>
+        /// Remote branch context menu [git ref / rename / delete] actions
+        /// </summary>
+        private MenuItemsGenerator<RemoteBranchNode> _remoteBranchMenuItems;
+
+        /// <summary>
+        /// Tags context menu [git ref] actions
+        /// </summary>
+        private MenuItemsGenerator<TagNode> _tagNodeMenuItems;
 
         private void ContextMenuAddExpandCollapseTree(ContextMenuStrip contextMenu)
         {
@@ -46,9 +67,7 @@ namespace GitUI.BranchTreePanel
             }
 
             var isNotActiveBranch = !((node.Tag as LocalBranchNode)?.IsActive ?? false);
-            mnuBtnCheckoutLocal.Visible = isNotActiveBranch;
-            tsmiSpacer2.Visible = isNotActiveBranch;
-            mnubtnBranchDelete.Visible = isNotActiveBranch;
+            _localBranchMenuItems.GetInactiveBranchItems().ForEach(t => t.Item.Visible = isNotActiveBranch);
         }
 
         private void ContextMenuRemoteRepoSpecific(ContextMenuStrip contextMenu)
@@ -84,13 +103,22 @@ namespace GitUI.BranchTreePanel
             item.Click += (o, e) => onClick();
         }
 
-        private void RegisterClick<T>(ToolStripItem item, Action<T> onClick) where T : Node
+        private void RegisterClick<T>(ToolStripItem item, Action<T> onClick) where T : class, INode
         {
             item.Click += (o, e) => Node.OnNode(_lastRightClickedNode, onClick);
         }
 
         private void RegisterContextActions()
         {
+            _localBranchMenuItems = new LocalBranchMenuItems<LocalBranchNode>(this);
+            AddContextMenuItems(menuBranch, _localBranchMenuItems.Select(s => s.Item));
+
+            _remoteBranchMenuItems = new RemoteBranchMenuItems<RemoteBranchNode>(this);
+            AddContextMenuItems(menuRemote, _remoteBranchMenuItems.Select(s => s.Item), toolStripSeparator1);
+
+            _tagNodeMenuItems = new TagMenuItems<TagNode>(this);
+            AddContextMenuItems(menuTag, _tagNodeMenuItems.Select(s => s.Item));
+
             RegisterClick(mnubtnCollapseAll, () => treeMain.CollapseAll());
             RegisterClick(mnubtnExpandAll, () => treeMain.ExpandAll());
 
@@ -98,22 +126,14 @@ namespace GitUI.BranchTreePanel
 
             treeMain.NodeMouseClick += OnNodeMouseClick;
 
-            RegisterClick<LocalBranchNode>(mnuBtnCheckoutLocal, branch => branch.Checkout());
-            RegisterClick<LocalBranchNode>(mnubtnBranchDelete, branch => branch.Delete());
             RegisterClick<LocalBranchNode>(mnubtnFilterLocalBranchInRevisionGrid, FilterInRevisionGrid);
             Node.RegisterContextMenu(typeof(LocalBranchNode), menuBranch);
 
             RegisterClick<BranchPathNode>(mnubtnDeleteAllBranches, branchPath => branchPath.DeleteAll());
             Node.RegisterContextMenu(typeof(BranchPathNode), menuBranchPath);
 
-            RegisterClick<RemoteBranchNode>(mnubtnDeleteRemoteBranch, remoteBranch => remoteBranch.Delete());
-            RegisterClick<RemoteBranchNode>(mnubtnBranchCheckout, branch => branch.Checkout());
             RegisterClick<RemoteBranchNode>(mnubtnFetchOneBranch, remoteBranch => remoteBranch.Fetch());
             RegisterClick<RemoteBranchNode>(mnubtnPullFromRemoteBranch, remoteBranch => remoteBranch.FetchAndMerge());
-            RegisterClick<RemoteBranchNode>(mnubtnCreateBranchBasedOnRemoteBranch, remoteBranch => remoteBranch.CreateBranch());
-            RegisterClick<RemoteBranchNode>(mnubtnMergeBranch, remoteBranch => remoteBranch.Merge());
-            RegisterClick<RemoteBranchNode>(mnubtnRebase, remoteBranch => remoteBranch.Rebase());
-            RegisterClick<RemoteBranchNode>(mnubtnReset, remoteBranch => remoteBranch.Reset());
             RegisterClick<RemoteBranchNode>(mnubtnFilterRemoteBranchInRevisionGrid, FilterInRevisionGrid);
             RegisterClick<RemoteBranchNode>(mnubtnRemoteBranchFetchAndCheckout, remoteBranch => remoteBranch.FetchAndCheckout());
             RegisterClick<RemoteBranchNode>(mnubtnFetchCreateBranch, remoteBranch => remoteBranch.FetchAndCreateBranch());
@@ -127,9 +147,6 @@ namespace GitUI.BranchTreePanel
             RegisterClick<RemoteRepoNode>(mnubtnDisableRemote, remote => remote.Disable());
             Node.RegisterContextMenu(typeof(RemoteRepoNode), menuRemoteRepoNode);
 
-            RegisterClick<TagNode>(mnubtnCreateBranchForTag, tag => tag.CreateBranch());
-            RegisterClick<TagNode>(mnubtnDeleteTag, tag => tag.Delete());
-            RegisterClick<TagNode>(mnuBtnCheckoutTag, tag => tag.Checkout());
             Node.RegisterContextMenu(typeof(TagNode), menuTag);
 
             RegisterClick(mnuBtnManageRemotesFromRootNode, () => _remotesTree.PopupManageRemotesForm(remoteName: null));
@@ -151,6 +168,27 @@ namespace GitUI.BranchTreePanel
             ContextMenuAddExpandCollapseTree(contextMenu);
             ContextMenuBranchSpecific(contextMenu);
             ContextMenuRemoteRepoSpecific(contextMenu);
+        }
+
+        /// <inheritdoc />
+        public TMenuItem CreateMenuItem<TMenuItem, TNode>(Action<TNode> onClick, TranslationString text, TranslationString toolTip, Bitmap icon = null)
+            where TMenuItem : ToolStripItem, new()
+            where TNode : class, INode
+        {
+            var result = new TMenuItem();
+            result.Image = icon;
+            result.Text = text.Text;
+            result.ToolTipText = toolTip.Text;
+            RegisterClick(result, onClick);
+            return result;
+        }
+
+        private void AddContextMenuItems(ContextMenuStrip menu, IEnumerable<ToolStripItem> items, ToolStripItem insertAfter = null)
+        {
+            menu.SuspendLayout();
+            int index = insertAfter == null ? 0 : Math.Max(0, menu.Items.IndexOf(insertAfter) + 1);
+            items.ForEach(item => menu.Items.Insert(index++, item));
+            menu.ResumeLayout();
         }
     }
 }

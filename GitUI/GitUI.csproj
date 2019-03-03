@@ -84,6 +84,18 @@
     <Compile Include="Avatars\AvatarService.cs" />
     <Compile Include="Avatars\BackupAvatarProvider.cs" />
     <Compile Include="Avatars\IAvatarProvider.cs" />
+    <Compile Include="BranchTreePanel\ContextMenu\LocalBranchMenuItems.cs" />
+    <Compile Include="BranchTreePanel\ContextMenu\MenuItemsStrings.cs" />
+    <Compile Include="BranchTreePanel\ContextMenu\RemoteBranchMenuItems.cs" />
+    <Compile Include="BranchTreePanel\ContextMenu\TagMenuItems.cs" />
+    <Compile Include="BranchTreePanel\Interfaces\ICanDelete.cs" />
+    <Compile Include="BranchTreePanel\Interfaces\ICanRename.cs" />
+    <Compile Include="BranchTreePanel\Interfaces\IGitRefActions.cs" />
+    <Compile Include="BranchTreePanel\ContextMenu\IMenuItemFactory.cs" />
+    <Compile Include="BranchTreePanel\ContextMenu\IMenuItemsGenerator.cs" />
+    <Compile Include="BranchTreePanel\Interfaces\INode.cs" />
+    <Compile Include="BranchTreePanel\ContextMenu\MenuItemKey.cs" />
+    <Compile Include="BranchTreePanel\ContextMenu\MenuItemsGenerator.cs" />
     <Compile Include="BranchTreePanel\RepoObjectsTree.ContextActions.cs">
       <SubType>UserControl</SubType>
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>

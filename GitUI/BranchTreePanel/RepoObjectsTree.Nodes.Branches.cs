@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands.Git;
+using GitUI.BranchTreePanel.Interfaces;
 using GitUI.Properties;
 using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
@@ -59,6 +60,16 @@ namespace GitUI.BranchTreePanel
                 AheadBehind = aheadBehindData;
             }
 
+            public bool Rebase()
+            {
+                return UICommands.StartRebaseDialog(TreeViewNode.TreeView, FullPath);
+            }
+
+            public bool Reset()
+            {
+                return UICommands.StartResetCurrentBranchDialog(TreeViewNode.TreeView, FullPath);
+            }
+
             [CanBeNull]
             internal BaseBranchNode CreateRootNode(IDictionary<string, BaseBranchNode> nodes,
                 Func<Tree, string, BaseBranchNode> createPathNode)
@@ -101,7 +112,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private sealed class LocalBranchNode : BaseBranchNode
+        private sealed class LocalBranchNode : BaseBranchNode, IGitRefActions, ICanRename, ICanDelete
         {
             public LocalBranchNode(Tree tree, string fullPath, bool isCurrent)
                 : base(tree, fullPath)
@@ -144,14 +155,29 @@ namespace GitUI.BranchTreePanel
                 SelectRevision();
             }
 
-            public void Checkout()
+            public bool Checkout()
             {
-                UICommands.StartCheckoutBranch(FullPath, false);
+                return UICommands.StartCheckoutBranch(FullPath, false);
             }
 
-            public void Delete()
+            public bool CreateBranch()
             {
-                UICommands.StartDeleteBranchDialog(ParentWindow(), FullPath);
+                return UICommands.StartCreateBranchDialog(TreeViewNode.TreeView, FullPath);
+            }
+
+            public bool Merge()
+            {
+                return UICommands.StartMergeBranchDialog(TreeViewNode.TreeView, FullPath);
+            }
+
+            public bool Delete()
+            {
+                return UICommands.StartDeleteBranchDialog(ParentWindow(), FullPath);
+            }
+
+            public bool Rename()
+            {
+                return UICommands.StartRenameDialog(TreeViewNode.TreeView, FullPath);
             }
         }
 

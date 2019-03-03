@@ -10,6 +10,7 @@ using GitCommands.Settings;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
@@ -171,6 +172,21 @@ namespace GitUI
                         return form.ShowDialog(owner) == DialogResult.OK;
                     }
                 });
+        }
+
+        public bool StartResetCurrentBranchDialog(IWin32Window owner, string branch)
+        {
+            var objectId = Module.RevParse(branch);
+            if (objectId == null)
+            {
+                MessageBox.Show($"Branch \"{branch}\" could not be resolved.");
+                return false;
+            }
+
+            using (var form = new FormResetCurrentBranch(this, Module.GetRevision(objectId)))
+            {
+                return form.ShowDialog(owner) == DialogResult.OK;
+            }
         }
 
         public bool StashSave(IWin32Window owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "", IReadOnlyList<string> selectedFiles = null)
@@ -359,6 +375,18 @@ namespace GitUI
 
                 return true;
             });
+        }
+
+        public bool StartCreateBranchDialog(IWin32Window owner, string branch)
+        {
+            var objectId = Module.RevParse(branch);
+            if (objectId == null)
+            {
+                MessageBox.Show($"Branch \"{branch}\" could not be resolved.");
+                return false;
+            }
+
+            return StartCreateBranchDialog(owner, objectId);
         }
 
         public bool StartCreateBranchDialog(IWin32Window owner = null, ObjectId objectId = null)

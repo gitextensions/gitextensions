@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.BranchTreePanel.Interfaces;
 using GitUI.UserControls;
 using JetBrains.Annotations;
 
@@ -246,7 +247,7 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        private abstract class Node
+        private abstract class Node : INode
         {
             public readonly Nodes Nodes;
             protected Tree Tree => Nodes.Tree;
@@ -358,12 +359,12 @@ namespace GitUI.BranchTreePanel
             }
 
             [CanBeNull]
-            private static T GetNodeSafe<T>([CanBeNull] TreeNode treeNode) where T : Node
+            private static T GetNodeSafe<T>([CanBeNull] TreeNode treeNode) where T : class, INode
             {
                 return treeNode?.Tag as T;
             }
 
-            public static void OnNode<T>(TreeNode treeNode, Action<T> action) where T : Node
+            public static void OnNode<T>(TreeNode treeNode, Action<T> action) where T : class, INode
             {
                 var node = GetNodeSafe<T>(treeNode);
 
