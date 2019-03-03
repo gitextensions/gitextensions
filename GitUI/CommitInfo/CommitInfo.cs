@@ -91,7 +91,15 @@ namespace GitUI.CommitInfo
             InitializeComponent();
             InitializeComplete();
 
-            UICommandsSourceSet += delegate { this.InvokeAsync(() => ReloadCommitInfo()).FileAndForget(); };
+            UICommandsSourceSet += delegate
+            {
+                this.InvokeAsync(() =>
+                {
+                    UICommandsSource.UICommandsChanged += UICommandsSource_UICommandsChanged;
+                    RefreshSortedRefs();
+                    ReloadCommitInfo();
+                }).FileAndForget();
+            };
 
             _commitDataManager = new CommitDataManager(() => Module);
 
@@ -125,6 +133,19 @@ namespace GitUI.CommitInfo
                     .Subscribe(_ => handler(_.EventArgs));
 
             commitInfoHeader.SetContextMenuStrip(commitInfoContextMenuStrip);
+        }
+
+        private void UICommandsSource_UICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
+        {
+            RefreshSortedRefs();
+        }
+
+        private void RefreshSortedRefs()
+        {
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await LoadSortedRefsAsync();
+            }).FileAndForget();
         }
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -179,6 +200,30 @@ namespace GitUI.CommitInfo
             ReloadCommitInfo();
         }
 
+        private async Task LoadSortedRefsAsync()
+        {
+            ThreadHelper.AssertOnUIThread();
+            _refsOrderDict = null;
+
+            await TaskScheduler.Default.SwitchTo();
+            var refsOrderDict = ToDictionary(Module.GetSortedRefs());
+
+            await this.SwitchToMainThreadAsync();
+            _refsOrderDict = refsOrderDict;
+            UpdateRevisionInfo();
+
+            IDictionary<string, int> ToDictionary(IReadOnlyList<string> list)
+            {
+                var dict = new Dictionary<string, int>();
+                for (int i = 0; i < list.Count; i++)
+                {
+                    dict.Add(list[i], i);
+                }
+
+                return dict;
+            }
+        }
+
         private void ReloadCommitInfo()
         {
             showContainedInBranchesToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesLocal;
@@ -230,11 +275,6 @@ namespace GitUI.CommitInfo
                 var cancellationToken = _asyncLoadCancellation.Next();
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadLinksForRevisionAsync(_revision)).FileAndForget();
-
-                if (_refsOrderDict == null)
-                {
-                    ThreadHelper.JoinableTaskFactory.RunAsync(() => LoadSortedRefsAsync()).FileAndForget();
-                }
 
                 // No branch/tag data for artificial commands
 
@@ -293,26 +333,6 @@ namespace GitUI.CommitInfo
                         }
 
                         return $"{WebUtility.HtmlEncode(_trsLinksRelatedToRevision.Text)} {result}";
-                    }
-                }
-
-                async Task LoadSortedRefsAsync()
-                {
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                    _refsOrderDict = ToDictionary(Module.GetSortedRefs());
-
-                    await this.SwitchToMainThreadAsync(cancellationToken);
-                    UpdateRevisionInfo();
-
-                    IDictionary<string, int> ToDictionary(IReadOnlyList<string> list)
-                    {
-                        var dict = new Dictionary<string, int>();
-                        for (int i = 0; i < list.Count; i++)
-                        {
-                            dict.Add(list[i], i);
-                        }
-
-                        return dict;
                     }
                 }
 
