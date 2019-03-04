@@ -408,7 +408,7 @@ namespace GitUI.BranchTreePanel
 
                 // Now build the tree
                 var rootNode = new DummyNode();
-                var nodesInTree = new List<Node>();
+                var nodesInTree = new HashSet<Node>();
                 foreach (var node in submoduleNodes)
                 {
                     Node parentNode = rootNode;
@@ -419,7 +419,7 @@ namespace GitUI.BranchTreePanel
                         var nodeToAdd = pathToNodes[path];
 
                         // If node is not already in the tree, add it
-                        if (nodesInTree.FirstOrDefault(n => n == nodeToAdd) == default(Node))
+                        if (!nodesInTree.Contains(nodeToAdd))
                         {
                             parentNode.Nodes.AddNode(nodeToAdd);
                             nodesInTree.Add(nodeToAdd);
