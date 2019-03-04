@@ -504,6 +504,42 @@ namespace GitCommandsTests
             }
         }
 
+        [Test]
+        public void GetSuperprojectCurrentCheckout()
+        {
+            // Create super and sub repo
+            using (CommonTestUtils.GitModuleTestHelper moduleTestHelperSuper = new CommonTestUtils.GitModuleTestHelper("super repo"),
+                                                       moduleTestHelperSub = new CommonTestUtils.GitModuleTestHelper("sub repo"))
+            {
+                // Inital commit in super project
+                moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Initial commit""");
+
+                // Submodules require at least one commit
+                moduleTestHelperSub.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Empty commit""");
+
+                // Add submodule
+                moduleTestHelperSuper.Module.GitExecutable.GetOutput(GitCommandHelpers.AddSubmoduleCmd(moduleTestHelperSub.Module.WorkingDir.ToPosixPath(), "sub repo", null, true));
+                moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
+                GitModule moduleSub = new GitModule(Path.Combine(moduleTestHelperSuper.Module.WorkingDir, "sub repo").ToPosixPath());
+
+                // Init submodule
+                moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"submodule update --init --recursive");
+
+                // Commit in submodule
+                moduleSub.GitExecutable.GetOutput(@"commit --allow-empty -am ""First commit""");
+                string commitRef = moduleSub.GitExecutable.GetOutput("show HEAD").Split('\n')[0].Split(' ')[1];
+
+                // Update ref in superproject
+                moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"add ""sub repo""");
+                moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"commit -am ""Update submodule ref""");
+
+                // Assert
+                (char code, ObjectId commitId) = moduleSub.GetSuperprojectCurrentCheckout();
+                Assert.AreEqual(32, code);
+                Assert.AreEqual(commitRef, commitId.ToString());
+            }
+        }
+
         [TestCase(false, @"stash list")]
         [TestCase(true, @"--no-optional-locks stash list")]
         public void GetStashesCmd(bool noLocks, string expected)
