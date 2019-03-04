@@ -223,6 +223,11 @@ namespace GitUI.BranchTreePanel
                 _aheadBehindDataProvider = aheadBehindDataProvider;
             }
 
+            protected override Task OnAttachedAsync()
+            {
+                return ReloadNodesAsync(LoadNodesAsync);
+            }
+
             protected override Task PostRepositoryChangedAsync()
             {
                 return ReloadNodesAsync(LoadNodesAsync);

@@ -26,6 +26,11 @@ namespace GitUI.BranchTreePanel
             {
             }
 
+            protected override Task OnAttachedAsync()
+            {
+                return ReloadNodesAsync(LoadNodesAsync);
+            }
+
             protected override Task PostRepositoryChangedAsync()
             {
                 return ReloadNodesAsync(LoadNodesAsync);

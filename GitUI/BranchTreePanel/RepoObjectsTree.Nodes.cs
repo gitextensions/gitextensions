@@ -189,7 +189,7 @@ namespace GitUI.BranchTreePanel
 
             protected virtual Task OnAttachedAsync()
             {
-                return PostRepositoryChangedAsync();
+                return Task.CompletedTask;
             }
 
             public void Detached()
