@@ -234,7 +234,10 @@ namespace GitUI.CommandsDialogs
             UICommands.BrowseRepo = this;
             _controller = new FormBrowseController(new GitGpgController(() => Module));
             _commitDataManager = new CommitDataManager(() => Module);
-            _submoduleStatusProvider = new SubmoduleStatusProvider();
+
+            _submoduleStatusProvider = SubmoduleStatusProvider.Default;
+            _submoduleStatusProvider.StatusUpdating += SubmoduleStatusProvider_StatusUpdating;
+            _submoduleStatusProvider.StatusUpdated += SubmoduleStatusProvider_StatusUpdated;
 
             FillBuildReport(); // Ensure correct page visibility
             RevisionGrid.ShowBuildServerInfo = true;
@@ -461,7 +464,6 @@ namespace GitUI.CommandsDialogs
             {
                 // ReSharper disable ConstantConditionalAccessQualifier - these can be null if run from under the TranslatioApp
 
-                _submoduleStatusProvider?.Dispose();
                 _formBrowseMenus?.Dispose();
                 _filterRevisionsHelper?.Dispose();
                 _filterBranchHelper?.Dispose();
@@ -1320,9 +1322,8 @@ namespace GitUI.CommandsDialogs
 
         private void RefreshToolStripMenuItemClick(object sender, EventArgs e)
         {
-            RefreshRevisions();
-            RefreshStatus();
-            repoObjectsTree.RefreshTree();
+            // Broadcast RepoChanged in case repo was changed outside of GE
+            UICommands.RepoChangedNotifier.Notify();
         }
 
         private void RefreshDashboardToolStripMenuItemClick(object sender, EventArgs e)
@@ -2658,15 +2659,25 @@ namespace GitUI.CommandsDialogs
             updateStatus = updateStatus || (AppSettings.ShowSubmoduleStatus && _gitStatusMonitor.Active && (Module.SuperprojectModule != null));
 
             toolStripButtonLevelUp.ToolTipText = "";
-            _submoduleStatusProvider.UpdateSubmodulesStatus(
-                updateStatus,
-                Module.WorkingDir, _noBranchTitle.Text,
-                () =>
-                {
-                    RemoveSubmoduleButtons();
-                    toolStripButtonLevelUp.DropDownItems.Add(_loading.Text);
-                },
-                PopulateToolbarAsync);
+            _submoduleStatusProvider.UpdateSubmodulesStatus(updateStatus, Module.WorkingDir, _noBranchTitle.Text);
+        }
+
+        private void SubmoduleStatusProvider_StatusUpdating(object sender, EventArgs e)
+        {
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await this.SwitchToMainThreadAsync();
+                RemoveSubmoduleButtons();
+                toolStripButtonLevelUp.DropDownItems.Add(_loading.Text);
+            }).FileAndForget();
+        }
+
+        private void SubmoduleStatusProvider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
+        {
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await PopulateToolbarAsync(e.Info, e.Token);
+            }).FileAndForget();
         }
 
         private async Task PopulateToolbarAsync(SubmoduleInfoResult result, CancellationToken cancelToken)

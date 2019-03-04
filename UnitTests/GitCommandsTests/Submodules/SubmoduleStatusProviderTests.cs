@@ -18,6 +18,7 @@ namespace GitCommandsTests.Submodules
     [TestFixture]
     internal class SubmoduleStatusProviderTests
     {
+        [Apartment(ApartmentState.STA)]
         public class IntegrationTests
         {
             private GitModuleTestHelper _repo1;
@@ -63,7 +64,7 @@ namespace GitCommandsTests.Submodules
             [Test]
             public void UpdateSubmoduleStatus_valid_result_for_top_module()
             {
-                var result = UpdateSubmoduleStatusAndWaitForResult(_provider, _repo1Module);
+                var result = SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, _repo1Module);
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
                 result.SuperProject.Should().Be(null);
@@ -75,7 +76,7 @@ namespace GitCommandsTests.Submodules
             [Test]
             public void UpdateSubmoduleStatus_valid_result_for_first_nested_submodule()
             {
-                var result = UpdateSubmoduleStatusAndWaitForResult(_provider, _repo2Module);
+                var result = SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, _repo2Module);
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
                 result.SuperProject.Should().Be(result.TopProject);
@@ -87,7 +88,7 @@ namespace GitCommandsTests.Submodules
             [Test]
             public void UpdateSubmoduleStatus_valid_result_for_second_nested_submodule()
             {
-                var result = UpdateSubmoduleStatusAndWaitForResult(_provider, _repo3Module);
+                var result = SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, _repo3Module);
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
                 result.SuperProject.Path.Should().Be(_repo2Module.WorkingDir);
@@ -99,7 +100,7 @@ namespace GitCommandsTests.Submodules
             [Test]
             public void HasChangedToNone_valid_result()
             {
-                UpdateSubmoduleStatusAndWaitForResult(_provider, _repo3Module);
+                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, _repo3Module);
 
                 // No changes in repo
                 var changedFiles = GetStatusChangedFiles(_repo1Module);
@@ -122,7 +123,7 @@ namespace GitCommandsTests.Submodules
             [Test]
             public void HasStatusChanges_valid_result()
             {
-                UpdateSubmoduleStatusAndWaitForResult(_provider, _repo3Module);
+                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, _repo3Module);
 
                 // No changes in repo
                 var changedFiles = GetStatusChangedFiles(_repo1Module);
@@ -140,27 +141,6 @@ namespace GitCommandsTests.Submodules
                 changedFiles = GetStatusChangedFiles(_repo1Module);
                 changedFiles.Should().HaveCount(0);
                 _provider.HasStatusChanges(changedFiles).Should().BeFalse();
-            }
-
-            private static SubmoduleInfoResult UpdateSubmoduleStatusAndWaitForResult(ISubmoduleStatusProvider provider, GitModule module)
-            {
-                SubmoduleInfoResult result = null;
-                SemaphoreSlim onUpdateCompleteSignal = new SemaphoreSlim(0, 1);
-
-                provider.UpdateSubmodulesStatus(
-                    updateStatus: false,
-                    workingDirectory: module.WorkingDir,
-                    noBranchText: string.Empty,
-                    onUpdateBegin: () => { },
-                    onUpdateCompleteAsync: async (SubmoduleInfoResult submoduleInfoResult, CancellationToken token) =>
-                    {
-                        await TaskScheduler.Default;
-                        result = submoduleInfoResult;
-                        onUpdateCompleteSignal.Release();
-                    });
-
-                onUpdateCompleteSignal.Wait();
-                return result;
             }
 
             private static IReadOnlyList<GitItemStatus> GetStatusChangedFiles(IGitModule module)

@@ -5,18 +5,41 @@ namespace GitUI.BranchTreePanel
 {
     public partial class RepoObjectsTree
     {
+        private void ShowEnabledTrees()
+        {
+            if (tsmiShowBranches.Checked)
+            {
+                AddTree(_branchesTree, 0);
+            }
+
+            if (tsmiShowRemotes.Checked)
+            {
+                AddTree(_remotesTree, 1);
+            }
+
+            if (tsmiShowTags.Checked)
+            {
+                AddTree(_tagTree, 2);
+            }
+
+            if (tsmiShowSubmodules.Checked)
+            {
+                AddTree(_submoduleTree, 3);
+            }
+        }
+
         private void tsmiShowBranches_Click(object sender, EventArgs e)
         {
             AppSettings.RepoObjectsTreeShowBranches = tsmiShowBranches.Checked;
             _searchResult = null;
             if (tsmiShowBranches.Checked)
             {
-                AddBranches();
+                AddTree(_branchesTree, 0);
+                _searchResult = null;
             }
             else
             {
-                _rootNodes.Remove(_branchesTree);
-                treeMain.Nodes.Remove(_branchesTreeRootNode);
+                RemoveTree(_branchesTree);
             }
         }
 
@@ -26,12 +49,12 @@ namespace GitUI.BranchTreePanel
             _searchResult = null;
             if (tsmiShowRemotes.Checked)
             {
-                AddRemotes();
+                AddTree(_remotesTree, 1);
+                _searchResult = null;
             }
             else
             {
-                _rootNodes.Remove(_remotesTree);
-                treeMain.Nodes.Remove(_remotesTreeRootNode);
+                RemoveTree(_remotesTree);
             }
         }
 
@@ -41,12 +64,27 @@ namespace GitUI.BranchTreePanel
             _searchResult = null;
             if (tsmiShowTags.Checked)
             {
-                AddTags();
+                AddTree(_tagTree, 2);
+                _searchResult = null;
             }
             else
             {
-                _rootNodes.Remove(_tagTree);
-                treeMain.Nodes.Remove(_tagTreeRootNode);
+                RemoveTree(_tagTree);
+            }
+        }
+
+        private void tsmiShowSubmodules_Click(object sender, EventArgs e)
+        {
+            AppSettings.RepoObjectsTreeShowSubmodules = tsmiShowSubmodules.Checked;
+            _searchResult = null;
+            if (tsmiShowSubmodules.Checked)
+            {
+                AddTree(_submoduleTree, 3);
+                _searchResult = null;
+            }
+            else
+            {
+                RemoveTree(_submoduleTree);
             }
         }
     }

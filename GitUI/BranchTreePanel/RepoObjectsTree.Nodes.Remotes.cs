@@ -26,16 +26,22 @@ namespace GitUI.BranchTreePanel
             {
             }
 
-            public override void RefreshTree()
+            protected override Task OnAttachedAsync()
             {
-                ReloadNodes(LoadNodesAsync);
+                return ReloadNodesAsync(LoadNodesAsync);
             }
 
-            private async Task LoadNodesAsync(CancellationToken token)
+            protected override Task PostRepositoryChangedAsync()
+            {
+                return ReloadNodesAsync(LoadNodesAsync);
+            }
+
+            private async Task<Nodes> LoadNodesAsync(CancellationToken token)
             {
                 await TaskScheduler.Default;
                 token.ThrowIfCancellationRequested();
-                var nodes = new Dictionary<string, BaseBranchNode>();
+                var nodes = new Nodes(this);
+                var pathToNodes = new Dictionary<string, BaseBranchNode>();
 
                 var branches = Module.GetRefs(tags: true, branches: true, noLocks: true)
                     .Where(branch => branch.IsRemote && !branch.IsTag)
@@ -58,7 +64,7 @@ namespace GitUI.BranchTreePanel
                     {
                         var remoteBranchNode = new RemoteBranchNode(this, branchPath);
                         var parent = remoteBranchNode.CreateRootNode(
-                            nodes,
+                            pathToNodes,
                             (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
 
                         if (parent != null)
@@ -82,7 +88,7 @@ namespace GitUI.BranchTreePanel
                 // Add enabled remote nodes in order
                 enabledRemoteRepoNodes
                     .OrderBy(node => node.FullPath)
-                    .ForEach(node => Nodes.AddNode(node));
+                    .ForEach(node => nodes.AddNode(node));
 
                 // Add disabled remotes, if any
                 var disabledRemotes = gitRemoteManager.GetDisabledRemotes();
@@ -100,10 +106,10 @@ namespace GitUI.BranchTreePanel
                         .OrderBy(node => node.FullPath)
                         .ForEach(node => disabledFolderNode.Nodes.AddNode(node));
 
-                    Nodes.AddNode(disabledFolderNode);
+                    nodes.AddNode(disabledFolderNode);
                 }
 
-                return;
+                return nodes;
 
                 BaseBranchNode CreateRemoteBranchPathNode(Tree tree, string parentPath, Remote remote)
                 {
@@ -341,7 +347,7 @@ namespace GitUI.BranchTreePanel
                 TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.FolderClosed);
             }
 
-            public override string DisplayText()
+            protected override string DisplayText()
             {
                 return Name;
             }

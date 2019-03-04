@@ -1591,6 +1591,12 @@ namespace GitCommands
             set => SetBool("RepoObjectsTree.ShowTags", value);
         }
 
+        public static bool RepoObjectsTreeShowSubmodules
+        {
+            get => GetBool("RepoObjectsTree.ShowSubmodules", true);
+            set => SetBool("RepoObjectsTree.ShowSubmodules", value);
+        }
+
         public static bool IsPortable()
         {
             return Properties.Settings.Default.IsPortable;

@@ -15,10 +15,12 @@ namespace GitCommands.Submodules
 {
     public interface ISubmoduleStatusProvider : IDisposable
     {
+        event EventHandler StatusUpdating;
+        event EventHandler<SubmoduleStatusEventArgs> StatusUpdated;
         void Init();
         bool HasChangedToNone([CanBeNull] IReadOnlyList<GitItemStatus> allChangedFiles);
         bool HasStatusChanges([CanBeNull] IReadOnlyList<GitItemStatus> allChangedFiles);
-        void UpdateSubmodulesStatus(bool updateStatus, string workingDirectory, string noBranchText, Action onUpdateBegin, Func<SubmoduleInfoResult, CancellationToken, Task> onUpdateCompleteAsync);
+        void UpdateSubmodulesStatus(bool updateStatus, string workingDirectory, string noBranchText);
     }
 
     public sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
@@ -26,6 +28,15 @@ namespace GitCommands.Submodules
         private readonly CancellationTokenSequence _submodulesStatusSequence = new CancellationTokenSequence();
         private DateTime _previousSubmoduleUpdateTime;
         private bool _previousSubmoduleHadChanges;
+
+        // Singleton accessor
+        public static SubmoduleStatusProvider Default { get; } = new SubmoduleStatusProvider();
+
+        // Invoked when status update is requested (use to clear/lock UI)
+        public event EventHandler StatusUpdating;
+
+        // Invoked when status update is complete
+        public event EventHandler<SubmoduleStatusEventArgs> StatusUpdated;
 
         public void Dispose()
         {
@@ -70,28 +81,30 @@ namespace GitCommands.Submodules
             return allChangedFiles.Any(i => i.IsSubmodule && (i.IsChanged || !i.IsTracked));
         }
 
-        public void UpdateSubmodulesStatus(bool updateStatus, string workingDirectory,
-            string noBranchText,
-            Action onUpdateBegin,
-            Func<SubmoduleInfoResult, CancellationToken, Task> onUpdateCompleteAsync)
+        public void UpdateSubmodulesStatus(bool updateStatus, string workingDirectory, string noBranchText)
         {
-            // Cancel any previous async activities:
-            var cancelToken = _submodulesStatusSequence.Next();
-
-            // If not updating the status, allow a 'quick' update
-            _previousSubmoduleUpdateTime = updateStatus ? DateTime.Now : DateTime.MinValue;
-
-            onUpdateBegin();
-
-            // Start gathering new submodule information asynchronously.  This makes a significant difference in UI
-            // responsiveness if there are numerous submodules (e.g. > 100).
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
+                // Cancel any previous async activities:
+                var cancelToken = _submodulesStatusSequence.Next();
+
+                // If not updating the status, allow a 'quick' update
+                _previousSubmoduleUpdateTime = updateStatus ? DateTime.Now : DateTime.MinValue;
+
+                OnStatusUpdating();
+
+                await TaskScheduler.Default;
+
+                // Start gathering new submodule information asynchronously.  This makes a significant difference in UI
+                // responsiveness if there are numerous submodules (e.g. > 100).
                 // First task: Gather list of submodules on a background thread.
 
                 // Don't access Module directly because it's not thread-safe.  Use a thread-local version:
                 var threadModule = new GitModule(workingDirectory);
-                var result = new SubmoduleInfoResult();
+                var result = new SubmoduleInfoResult
+                {
+                    Module = threadModule
+                };
 
                 // Add all submodules inside the current repository:
                 var submodulesTask = GetRepositorySubmodulesStatusAsync(updateStatus, result, threadModule, cancelToken, noBranchText);
@@ -100,28 +113,21 @@ namespace GitCommands.Submodules
 
                 await Task.WhenAll(submodulesTask, superTask);
 
-                await onUpdateCompleteAsync(result, cancelToken);
+                OnStatusUpdated(result, cancelToken);
 
                 _previousSubmoduleUpdateTime = updateStatus ? DateTime.Now : DateTime.MinValue;
             }).FileAndForget();
         }
 
-        [NotNull]
-        private static GitModule FindTopProjectModule(GitModule superModule)
+        private void OnStatusUpdating()
         {
-            GitModule topSuperModule = superModule;
-            do
-            {
-                if (topSuperModule.SuperprojectModule == null)
-                {
-                    break;
-                }
+            StatusUpdating?.Invoke(this, EventArgs.Empty);
+        }
 
-                topSuperModule = topSuperModule.SuperprojectModule;
-            }
-            while (topSuperModule != null);
-
-            return topSuperModule;
+        private void OnStatusUpdated(SubmoduleInfoResult info, CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+            StatusUpdated?.Invoke(this, new SubmoduleStatusEventArgs(info, token));
         }
 
         private async Task GetRepositorySubmodulesStatusAsync(bool updateStatus, SubmoduleInfoResult result, IGitModule module, CancellationToken cancelToken, string noBranchText)
@@ -202,7 +208,8 @@ namespace GitCommands.Submodules
                 return;
             }
 
-            IGitModule topProject = FindTopProjectModule(module.SuperprojectModule);
+            IGitModule topProject = module.SuperprojectModule.GetTopModule();
+
             bool isParentTopProject = module.SuperprojectModule.WorkingDir == topProject.WorkingDir;
 
             // Set result.SuperProject

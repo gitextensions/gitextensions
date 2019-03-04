@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitCommands.Submodules
@@ -8,6 +9,9 @@ namespace GitCommands.Submodules
     /// </summary>
     public class SubmoduleInfoResult
     {
+        // Module that was used to gather submodule info
+        public IGitModule Module { get; internal set; }
+
         // List of SubmoduleInfo for all submodules (recursively) under current module.
         public IList<SubmoduleInfo> OurSubmodules { get; } = new List<SubmoduleInfo>();
 

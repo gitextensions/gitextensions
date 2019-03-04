@@ -93,14 +93,14 @@ namespace GitUITests.UserControls
         {
             var expandedNodes = new HashSet<string>
             {
-                $"{_root.FullPath}",
-                $"{_a.FullPath}",
-                $"{_b.FullPath}",
-                $"{_b1.FullPath}",
-                $"{_b2.FullPath}",
-                $"{_b2_1.FullPath}",
-                $"{_b3.FullPath}",
-                $"{_c.FullPath}",
+                $"{_root.GetFullNamePath()}",
+                $"{_a.GetFullNamePath()}",
+                $"{_b.GetFullNamePath()}",
+                $"{_b1.GetFullNamePath()}",
+                $"{_b2.GetFullNamePath()}",
+                $"{_b2_1.GetFullNamePath()}",
+                $"{_b3.GetFullNamePath()}",
+                $"{_c.GetFullNamePath()}",
             };
 
             _root.RestoreExpandedNodesState(expandedNodes);
@@ -108,6 +108,15 @@ namespace GitUITests.UserControls
             var expandedNodesPost = _root.GetExpandedNodesState();
             Assert.AreEqual(8, expandedNodesPost.Count);
             Assert.AreEqual(expandedNodes, expandedNodesPost);
+        }
+
+        [Test]
+        public void GetFullNamePath_should_return_node_names_if_set()
+        {
+            // Only override the names for 2 of the 4 nodes
+            _b.Name = "B_Name";
+            _b2_1.Name = "B_2_1_Name";
+            _b2_1.GetFullNamePath().Should().Be(@"Root\B_Name\B_2\B_2_1_Name");
         }
     }
 }

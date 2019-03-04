@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -202,22 +203,22 @@ namespace GitUI
             }
         }
 
-        public static async Task InvokeAsync(this Control control, Action action)
+        public static async Task InvokeAsync(this Control control, Action action, CancellationToken token = default)
         {
-            await control.SwitchToMainThreadAsync();
+            await control.SwitchToMainThreadAsync(token);
             action();
         }
 
-        public static async Task InvokeAsync<T>(this Control control, Action<T> action, T state)
+        public static async Task InvokeAsync<T>(this Control control, Action<T> action, T state, CancellationToken token = default)
         {
-            await control.SwitchToMainThreadAsync();
+            await control.SwitchToMainThreadAsync(token);
             action(state);
         }
 
 #pragma warning disable VSTHRD100 // Avoid async void methods
         /// <summary>
-        /// Use <see cref="InvokeAsync(Control, Action)"/> instead. If the result of
-        /// <see cref="InvokeAsync(Control, Action)"/> is not awaited, use
+        /// Use <see cref="InvokeAsync(Control, Action, CancellationToken)"/> instead. If the result of
+        /// <see cref="InvokeAsync(Control, Action, CancellationToken)"/> is not awaited, use
         /// <see cref="ThreadHelper.FileAndForget(Task, Func{Exception, bool})"/> to ignore it.
         /// </summary>
         public static async void InvokeAsyncDoNotUseInNewCode(this Control control, Action action)

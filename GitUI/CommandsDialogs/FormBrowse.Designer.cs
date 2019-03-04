@@ -1031,7 +1031,7 @@ namespace GitUI.CommandsDialogs
             this.manageSubmodulesToolStripMenuItem.Image = global::GitUI.Properties.Images.SubmodulesManage;
             this.manageSubmodulesToolStripMenuItem.Name = "manageSubmodulesToolStripMenuItem";
             this.manageSubmodulesToolStripMenuItem.Size = new System.Drawing.Size(221, 22);
-            this.manageSubmodulesToolStripMenuItem.Text = "Submodules...";
+            this.manageSubmodulesToolStripMenuItem.Text = "Manage submodules...";
             this.manageSubmodulesToolStripMenuItem.Click += new System.EventHandler(this.ManageSubmodulesToolStripMenuItemClick);
             // 
             // updateAllSubmodulesToolStripMenuItem
