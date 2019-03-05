@@ -834,7 +834,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="chkFetchAndPruneAllConfirmation.Text">
-        <source>Fetch and prune all</source>
+        <source>Fetch and prune branches</source>
         <target />
       </trans-unit>
       <trans-unit id="chkPushNewBranch.Text">
@@ -2004,10 +2004,6 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_pullFetchPruneAll.Text">
         <source>Fetch and prune all</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_pullFetchPruneAllConfirmation.Text">
-        <source>Warning! The fetch with prune will remove all the remote-tracking references which no longer exist on remotes. Do you want to proceed?</source>
         <target />
       </trans-unit>
       <trans-unit id="_pullMerge.Text">
@@ -5078,6 +5074,10 @@ Do you want to continue?</source>
         <source>Prune remote branches from {0}</source>
         <target />
       </trans-unit>
+      <trans-unit id="_pullFetchPruneAllConfirmation.Text">
+        <source>Warning! The fetch with prune will remove all the remote-tracking references which no longer exist on remotes. Do you want to proceed?</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_questionInitSubmodules.Text">
         <source>The pulled has submodules configured.
 Do you want to initialize the submodules?
@@ -7701,9 +7701,21 @@ To show all branches, right click the revision grid, select 'view' and then the 
       <trans-unit id="mnuBtnCheckoutTag.Text">
         <source>&amp;Checkout</source>
         <target />
+      </trans-unit> 
+      <trans-unit id="mnuBtnFetchAllRemotes.Text">
+        <source>Fetch all remotes</source>
+        <target />
       </trans-unit>
       <trans-unit id="mnuBtnManageRemotesFromRootNode.Text">
         <source>&amp;Manage...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
+        <source>Fetch and prune</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnuBtnPruneAllRemotes.Text">
+        <source>Fetch and prune all remotes</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnBranchCheckout.Text">
