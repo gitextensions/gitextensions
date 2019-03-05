@@ -93,7 +93,7 @@ namespace GitCommands
                     }
                 }
 
-                if (!string.IsNullOrEmpty(superprojectPath) && currentPath.StartsWith(superprojectPath))
+                if (!string.IsNullOrEmpty(superprojectPath) && currentPath.ToPosixPath().StartsWith(superprojectPath.ToPosixPath()))
                 {
                     var submodulePath = currentPath.Substring(superprojectPath.Length).ToPosixPath();
                     var configFile = new ConfigFile(Path.Combine(superprojectPath, ".gitmodules"), local: true);
@@ -1201,7 +1201,7 @@ namespace GitCommands
             {
                 "status",
                 "--cached",
-                SubmodulePath
+                SubmodulePath.Quote()
             };
             var lines = SuperprojectModule.GitExecutable.GetOutput(args).Split('\n');
 
