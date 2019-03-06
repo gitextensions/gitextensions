@@ -165,7 +165,7 @@ namespace GitUI
             set
             {
                 FilterComboBox.Visible = value;
-                FilterWatermarkLabel.Visible = value;
+                SetFilterWatermarkLabelVisibility();
 
                 int top = value
                     ? FileStatusListView.Margin.Top + FilterComboBox.Bottom + FilterComboBox.Margin.Bottom
@@ -763,6 +763,11 @@ namespace GitUI
             };
 
             process.Start();
+        }
+
+        private void SetFilterWatermarkLabelVisibility()
+        {
+            FilterWatermarkLabel.Visible = FilterVisible && !FilterComboBox.Focused && string.IsNullOrEmpty(FilterComboBox.Text);
         }
 
         private void UpdateFileStatusListView(bool updateCausedByFilter = false)
@@ -1373,15 +1378,12 @@ namespace GitUI
 
         private void FilterComboBox_GotFocus(object sender, EventArgs e)
         {
-            FilterWatermarkLabel.Visible = false;
+            SetFilterWatermarkLabelVisibility();
         }
 
         private void FilterComboBox_LostFocus(object sender, EventArgs e)
         {
-            if (!FilterWatermarkLabel.Visible && string.IsNullOrEmpty(FilterComboBox.Text))
-            {
-                FilterWatermarkLabel.Visible = true;
-            }
+            SetFilterWatermarkLabelVisibility();
         }
 
         private void FilterWatermarkLabel_Click(object sender, EventArgs e)
@@ -1396,5 +1398,21 @@ namespace GitUI
         }
 
         #endregion
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly FileStatusList _fileStatusList;
+
+            internal TestAccessor(FileStatusList fileStatusList)
+            {
+                _fileStatusList = fileStatusList;
+            }
+
+            internal ListView FileStatusListView => _fileStatusList.FileStatusListView;
+            internal ComboBox FilterComboBox => _fileStatusList.FilterComboBox;
+            internal bool FilterWatermarkLabelVisible => _fileStatusList.FilterWatermarkLabel.Visible;
+        }
     }
 }
