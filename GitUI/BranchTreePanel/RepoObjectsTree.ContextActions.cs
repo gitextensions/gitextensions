@@ -37,17 +37,24 @@ namespace GitUI.BranchTreePanel
             //    Collapse All
             //    Expand All
 
+            Tree treeNode = (contextMenu.SourceControl as TreeView)?.SelectedNode?.Tag as Tree;
+
             if (contextMenu == menuMain)
             {
                 contextMenu.Items.Clear();
                 contextMenu.Items.Add(mnubtnCollapseAll);
                 contextMenu.Items.Add(mnubtnExpandAll);
+                if (treeNode != null)
+                {
+                    AddMoveUpDownMenuItems();
+                }
+
                 return;
             }
 
-            if (!contextMenu.Items.Contains(tsmiSpacer1))
+            if (!contextMenu.Items.Contains(tsmiMainMenuSpacer1))
             {
-                contextMenu.Items.Add(tsmiSpacer1);
+                contextMenu.Items.Add(tsmiMainMenuSpacer1);
             }
 
             if (!contextMenu.Items.Contains(mnubtnCollapseAll))
@@ -58,6 +65,34 @@ namespace GitUI.BranchTreePanel
             if (!contextMenu.Items.Contains(mnubtnExpandAll))
             {
                 contextMenu.Items.Add(mnubtnExpandAll);
+            }
+
+            if (treeNode != null)
+            {
+                AddMoveUpDownMenuItems();
+            }
+
+            return;
+
+            void AddMoveUpDownMenuItems()
+            {
+                if (!contextMenu.Items.Contains(tsmiMainMenuSpacer2))
+                {
+                    contextMenu.Items.Add(tsmiMainMenuSpacer2);
+                }
+
+                if (!contextMenu.Items.Contains(mnubtnMoveUp))
+                {
+                    contextMenu.Items.Add(mnubtnMoveUp);
+                }
+
+                if (!contextMenu.Items.Contains(mnubtnMoveDown))
+                {
+                    contextMenu.Items.Add(mnubtnMoveDown);
+                }
+
+                mnubtnMoveUp.Enabled = treeNode.TreeViewNode.PrevNode != null;
+                mnubtnMoveDown.Enabled = treeNode.TreeViewNode.NextNode != null;
             }
         }
 
@@ -159,6 +194,8 @@ namespace GitUI.BranchTreePanel
 
             RegisterClick(mnubtnCollapseAll, () => treeMain.CollapseAll());
             RegisterClick(mnubtnExpandAll, () => treeMain.ExpandAll());
+            RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode, up: true));
+            RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode, up: false));
 
             treeMain.NodeMouseClick += OnNodeMouseClick;
 

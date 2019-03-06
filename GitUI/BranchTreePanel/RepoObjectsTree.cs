@@ -25,7 +25,6 @@ namespace GitUI.BranchTreePanel
         private readonly TranslationString _searchTooltip = new TranslationString("Search");
         private readonly TranslationString _showHideRefsTooltip = new TranslationString("Show/hide branches/remotes/tags");
 
-        private readonly Dictionary<Tree, int> _treeToPositionIndex = new Dictionary<Tree, int>();
         private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
         private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
         private readonly List<Tree> _rootNodes = new List<Tree>();
@@ -76,6 +75,8 @@ namespace GitUI.BranchTreePanel
             mnubtnFilterRemoteBranchInRevisionGrid.ToolTipText = _showBranchOnly.Text;
             mnubtnFilterLocalBranchInRevisionGrid.ToolTipText = _showBranchOnly.Text;
 
+            return;
+
             void InitImageList()
             {
                 const int rowPadding = 1; // added to top and bottom, so doubled -- this value is scaled *after*, so consider 96dpi here
@@ -85,6 +86,8 @@ namespace GitUI.BranchTreePanel
                     ImageSize = DpiUtil.Scale(new Size(16, 16 + rowPadding + rowPadding)), // Scale ImageSize and images scale automatically
                     Images =
                     {
+                        { nameof(Images.ArrowUp), Pad(Images.ArrowUp) },
+                        { nameof(Images.ArrowDown), Pad(Images.ArrowDown) },
                         { nameof(Images.FolderClosed), Pad(Images.FolderClosed) },
                         { nameof(Images.BranchDocument), Pad(Images.BranchDocument) },
                         { nameof(Images.Branch), Pad(Images.Branch) },
@@ -97,7 +100,6 @@ namespace GitUI.BranchTreePanel
                         { nameof(Images.BranchRemote), Pad(Images.BranchRemote) },
                         { nameof(Images.BranchFolder), Pad(Images.BranchFolder) },
                         { nameof(Images.TagHorizontal), Pad(Images.TagHorizontal) },
-                        { nameof(Images.FolderClosed), Pad(Images.FolderClosed) },
                         { nameof(Images.EyeOpened), Pad(Images.EyeOpened) },
                         { nameof(Images.EyeClosed), Pad(Images.EyeClosed) },
                         { nameof(Images.RemoteEnableAndFetch), Pad(Images.RemoteEnableAndFetch) },
@@ -225,6 +227,7 @@ namespace GitUI.BranchTreePanel
             CreateSubmodules();
 
             ShowEnabledTrees();
+            RebuildMenuSettings();
         }
 
         private static void AddTreeNodeToSearchResult(ICollection<TreeNode> ret, TreeNode node)
@@ -279,13 +282,10 @@ namespace GitUI.BranchTreePanel
             _submoduleTree = new SubmoduleTree(rootNode, UICommandsSource);
         }
 
-        private void AddTree(Tree tree, int positionIndex)
+        private void AddTree(Tree tree)
         {
             tree.TreeViewNode.SelectedImageKey = tree.TreeViewNode.ImageKey;
             tree.TreeViewNode.Tag = tree;
-
-            // Remember current Tree's position index
-            _treeToPositionIndex[tree] = positionIndex;
 
             // Add Tree's node in position index order. Because TreeNodeCollections cannot be sorted,
             // we create a list from it, sort it, then clear and re-add the nodes back to the collection.
@@ -293,7 +293,8 @@ namespace GitUI.BranchTreePanel
             List<TreeNode> nodeList = treeMain.Nodes.OfType<TreeNode>().ToList();
             nodeList.Add(tree.TreeViewNode);
             treeMain.Nodes.Clear();
-            treeMain.Nodes.AddRange(nodeList.OrderBy(treeNode => _treeToPositionIndex[treeNode.Tag as Tree]).ToArray());
+            var treeToPositionIndex = GetTreeToPositionIndex();
+            treeMain.Nodes.AddRange(nodeList.OrderBy(treeNode => treeToPositionIndex[treeNode.Tag as Tree]).ToArray());
             treeMain.EndUpdate();
 
             treeMain.Font = AppSettings.Font;
