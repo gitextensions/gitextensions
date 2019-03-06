@@ -111,6 +111,8 @@ namespace GitUI.BranchTreePanel
 
             var isNotActiveBranch = !((node.Tag as LocalBranchNode)?.IsActive ?? false);
             _localBranchMenuItems.GetInactiveBranchItems().ForEach(t => t.Item.Visible = isNotActiveBranch);
+
+            _userScriptMenuBuilder.Build(contextMenu);
         }
 
         private void ContextMenuRemoteRepoSpecific(ContextMenuStrip contextMenu)

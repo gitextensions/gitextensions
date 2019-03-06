@@ -36,6 +36,7 @@ namespace GitUI.BranchTreePanel
         private FilterBranchHelper _filterBranchHelper;
         private IAheadBehindDataProvider _aheadBehindDataProvider;
         private bool _searchCriteriaChanged;
+        private IUserScriptMenuBuilder _userScriptMenuBuilder;
 
         public RepoObjectsTree()
         {
@@ -206,10 +207,11 @@ namespace GitUI.BranchTreePanel
             }
         }
 
-        public void Initialize([CanBeNull]IAheadBehindDataProvider aheadBehindDataProvider, FilterBranchHelper filterBranchHelper)
+        public void Initialize([CanBeNull]IAheadBehindDataProvider aheadBehindDataProvider, FilterBranchHelper filterBranchHelper, IUserScriptMenuBuilder userScriptMenuBuilder)
         {
             _aheadBehindDataProvider = aheadBehindDataProvider;
             _filterBranchHelper = filterBranchHelper;
+            _userScriptMenuBuilder = userScriptMenuBuilder;
 
             // This lazily sets the command source, invoking OnUICommandsSourceSet, which is required for setting up
             // notifications for each Tree.
