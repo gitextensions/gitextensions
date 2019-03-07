@@ -386,6 +386,8 @@ Inactive remote is completely invisible to git.");
             var remote = RemoteName.Text.Trim();
             var remoteUrl = Url.Text.Trim();
             var remotePushUrl = comboBoxPushUrl.Text.Trim();
+            bool creatingNew = _selectedRemote == null;
+
             try
             {
                 // disable the control while saving
@@ -397,16 +399,19 @@ Inactive remote is completely invisible to git.");
                     checkBoxSepPushUrl.Checked = false;
                 }
 
-                if (_remoteManager.EnabledRemoteExists(remote))
+                if (creatingNew)
                 {
-                    MessageBox.Show(this, string.Format(_enabledRemoteAlreadyExists.Text, remote), _gitMessage.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
-                }
+                    if (_remoteManager.EnabledRemoteExists(remote))
+                    {
+                        MessageBox.Show(this, string.Format(_enabledRemoteAlreadyExists.Text, remote), _gitMessage.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
 
-                if (_remoteManager.DisabledRemoteExists(remote))
-                {
-                    MessageBox.Show(this, string.Format(_disabledRemoteAlreadyExists.Text, remote), _gitMessage.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return;
+                    if (_remoteManager.DisabledRemoteExists(remote))
+                    {
+                        MessageBox.Show(this, string.Format(_disabledRemoteAlreadyExists.Text, remote), _gitMessage.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
                 }
 
                 // update all other remote properties
