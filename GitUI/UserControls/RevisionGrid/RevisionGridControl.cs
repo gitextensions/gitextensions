@@ -2664,53 +2664,44 @@ namespace GitUI
                     contextMenu.Items.RemoveByKey(item.Name);
                 }
 
-                if (contextMenu.Items[contextMenu.Items.Count - 1] is ToolStripSeparator)
-                {
-                    contextMenu.Items.RemoveAt(contextMenu.Items.Count - 1);
-                }
-
                 runScriptToolStripMenuItem.Visible = false;
             }
 
             void AddOwnScripts()
             {
-                var scripts = ScriptManager.GetScripts();
                 var lastIndex = contextMenu.Items.Count;
+                var scripts = ScriptManager.GetScripts();
+                var toRunScriptMenu = scripts.Where(x => x.Enabled)
+                    .Where(x => !x.AddToRevisionGridContextMenu)
+                    .Select(x => CreateToolStripMenuItem(x.Name, x.GetIcon()))
+                    .Cast<ToolStripItem>()
+                    .ToArray();
 
-                foreach (var script in scripts)
-                {
-                    if (!script.Enabled)
-                    {
-                        continue;
-                    }
+                runScriptToolStripMenuItem.DropDown.Items.AddRange(toRunScriptMenu);
+                runScriptToolStripMenuItem.Visible = toRunScriptMenu.Any();
 
-                    var item = new ToolStripMenuItem
-                    {
-                        Text = script.Name,
-                        Name = $"{script.Name}_ownScript",
-                        Image = script.GetIcon()
-                    };
+                var toMainContextMenu = scripts.Where(x => x.Enabled)
+                    .Where(x => x.AddToRevisionGridContextMenu)
+                    .Select(x => CreateToolStripMenuItem(x.Name, x.GetIcon()))
+                    .Cast<ToolStripItem>()
+                    .ToArray();
 
-                    item.Click += RunScript;
+                contextMenu.Items.AddRange(toMainContextMenu);
 
-                    if (script.AddToRevisionGridContextMenu)
-                    {
-                        contextMenu.Items.Add(item);
-                    }
-                    else
-                    {
-                        runScriptToolStripMenuItem.DropDown.Items.Add(item);
-                    }
-
-                    runScriptToolStripMenuItem.Visible = true;
-                }
-
-                if (lastIndex != contextMenu.Items.Count)
+                if (toMainContextMenu.Any())
                 {
                     contextMenu.Items.Insert(lastIndex, new ToolStripSeparator { Name = "ownScriptsSeparator" });
                 }
 
                 return;
+
+                ToolStripMenuItem CreateToolStripMenuItem(string name, Image image)
+                {
+                    return new ToolStripMenuItem(name, image, RunScript)
+                    {
+                        Name = $"{name}_ownScript"
+                    };
+                }
 
                 void RunScript(object sender, EventArgs e)
                 {
