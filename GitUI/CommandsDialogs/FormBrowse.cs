@@ -20,6 +20,7 @@ using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.BranchTreePanel;
+using GitUI.Browsing;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
@@ -183,7 +184,10 @@ namespace GitUI.CommandsDialogs
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
 
-            repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper, RevisionGrid);
+            var scriptRunner = new ScriptRunner(RevisionGrid, Module, UICommands, RevisionGrid);
+            var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptRunner, RevisionGrid, UICommands);
+
+            repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper, userScriptMenuBuilder);
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
             revisionDiff.Bind(RevisionGrid, fileTree);
 
@@ -853,7 +857,10 @@ namespace GitUI.CommandsDialogs
 
                 OnActivate();
 
-                LoadUserMenu();
+                var scriptRunner = new ScriptRunner(this, Module, UICommands, RevisionGrid);
+                var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptRunner, RevisionGrid, UICommands);
+
+                userScriptMenuBuilder.Build(ToolStrip);
 
                 if (validBrowseDir)
                 {
@@ -892,53 +899,6 @@ namespace GitUI.CommandsDialogs
                 settingsToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.OpenSettings).ToShortcutKeyDisplayString();
 
                 // TODO: add more
-            }
-
-            void LoadUserMenu()
-            {
-                var scripts = ScriptManager.GetScripts()
-                    .Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)
-                    .ToList();
-
-                for (int i = ToolStrip.Items.Count - 1; i >= 0; i--)
-                {
-                    if (ToolStrip.Items[i].Tag as string == "userscript")
-                    {
-                        ToolStrip.Items.RemoveAt(i);
-                    }
-                }
-
-                if (scripts.Count == 0)
-                {
-                    return;
-                }
-
-                ToolStrip.Items.Add(new ToolStripSeparator { Tag = "userscript" });
-
-                foreach (var script in scripts)
-                {
-                    var button = new ToolStripButton
-                    {
-                        // store scriptname
-                        Text = script.Name,
-                        Tag = "userscript",
-                        Enabled = true,
-                        Visible = true,
-                        Image = script.GetIcon(),
-                        DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
-                    };
-
-                    button.Click += delegate
-                    {
-                        if (ScriptRunner.RunScript(this, Module, script.Name, UICommands, RevisionGrid).NeedsGridRefresh)
-                        {
-                            RevisionGrid.RefreshRevisions();
-                        }
-                    };
-
-                    // add to toolstrip
-                    ToolStrip.Items.Add(button);
-                }
             }
 
             void ShowRevisions()

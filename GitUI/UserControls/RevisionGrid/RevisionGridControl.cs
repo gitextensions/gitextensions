@@ -16,6 +16,7 @@ using GitCommands.Config;
 using GitCommands.Git;
 using GitExtUtils.GitUI;
 using GitUI.Avatars;
+using GitUI.Browsing;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -40,13 +41,8 @@ namespace GitUI
         HighlightSelected
     }
 
-    public interface IUserScriptMenuBuilder
-    {
-        void Build(ContextMenuStrip contextMenu);
-    }
-
     [DefaultEvent("DoubleClick")]
-    public sealed partial class RevisionGridControl : GitModuleControl, IUserScriptMenuBuilder
+    public sealed partial class RevisionGridControl : GitModuleControl, ICanRefreshRevisions
     {
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
         public event EventHandler<EventArgs> ShowFirstParentsToggled;
@@ -106,8 +102,6 @@ namespace GitUI
         private string _branchFilter = "";
         private SuperProjectInfo _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
-
-        private bool _settingsLoaded;
 
         // NOTE internal properties aren't serialised by the WinForms designer
 
@@ -1660,7 +1654,10 @@ namespace GitUI
 
             SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
 
-            (this as IUserScriptMenuBuilder).Build(mainContextMenu);
+            var scriptRunner = new ScriptRunner(this, Module, UICommands, this);
+            var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptRunner, this, UICommands);
+
+            userScriptMenuBuilder.Build(mainContextMenu);
 
 
             UpdateSeparators();
@@ -2634,90 +2631,5 @@ namespace GitUI
         }
 
         #endregion
-
-        /// <summary>
-        /// Build and insert 'Run script' menu
-        /// </summary>
-        /// <param name="contextMenu">Main menu container</param>
-        void IUserScriptMenuBuilder.Build(ContextMenuStrip contextMenu)
-        {
-            var runScriptToolStripMenuItem = contextMenu.Items
-                .OfType<ToolStripMenuItem>()
-                .First(x => x.Name == "runScriptToolStripMenuItem");
-
-            RemoveOwnScripts();
-            AddOwnScripts();
-
-            return;
-
-            void RemoveOwnScripts()
-            {
-                runScriptToolStripMenuItem.DropDown.Items.Clear();
-
-                var list = contextMenu.Items
-                    .OfType<ToolStripItem>()
-                    .Where(x => x.Name.EndsWith("_ownScript") || x.Name == "ownScriptsSeparator")
-                    .ToList();
-
-                foreach (var item in list)
-                {
-                    contextMenu.Items.RemoveByKey(item.Name);
-                }
-
-                runScriptToolStripMenuItem.Visible = false;
-            }
-
-            void AddOwnScripts()
-            {
-                var lastIndex = contextMenu.Items.Count;
-                var scripts = ScriptManager.GetScripts();
-                var toRunScriptMenu = scripts.Where(x => x.Enabled)
-                    .Where(x => !x.AddToRevisionGridContextMenu)
-                    .Select(x => CreateToolStripMenuItem(x.Name, x.GetIcon()))
-                    .Cast<ToolStripItem>()
-                    .ToArray();
-
-                runScriptToolStripMenuItem.DropDown.Items.AddRange(toRunScriptMenu);
-                runScriptToolStripMenuItem.Visible = toRunScriptMenu.Any();
-
-                var toMainContextMenu = scripts.Where(x => x.Enabled)
-                    .Where(x => x.AddToRevisionGridContextMenu)
-                    .Select(x => CreateToolStripMenuItem(x.Name, x.GetIcon()))
-                    .Cast<ToolStripItem>()
-                    .ToArray();
-
-                contextMenu.Items.AddRange(toMainContextMenu);
-
-                if (toMainContextMenu.Any())
-                {
-                    contextMenu.Items.Insert(lastIndex, new ToolStripSeparator { Name = "ownScriptsSeparator" });
-                }
-
-                return;
-
-                ToolStripMenuItem CreateToolStripMenuItem(string name, Image image)
-                {
-                    return new ToolStripMenuItem(name, image, RunScript)
-                    {
-                        Name = $"{name}_ownScript"
-                    };
-                }
-
-                void RunScript(object sender, EventArgs e)
-                {
-                    if (_settingsLoaded == false)
-                    {
-                        new FormSettings(UICommands).LoadSettings();
-
-                        _settingsLoaded = true;
-                    }
-
-                    if (ScriptRunner.RunScript(this, Module, sender.ToString(), UICommands, this).NeedsGridRefresh)
-                    {
-                        RefreshRevisions();
-                    }
-                }
-            }
-        }
     }
 }

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitExtUtils.GitUI;
+using GitUI.Browsing;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.UserControls;

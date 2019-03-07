@@ -59,7 +59,9 @@ namespace GitUI.Script
         {
             foreach (var script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
             {
-                ScriptRunner.RunScript(form, form.Module, script.Name, form.UICommands, revisionGrid: null);
+                var scriptRunner = new ScriptRunner(form, form.Module, form.UICommands);
+
+                scriptRunner.RunScript(script.Name);
             }
         }
 

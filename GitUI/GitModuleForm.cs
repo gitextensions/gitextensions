@@ -68,7 +68,8 @@ namespace GitUI
 
         protected override CommandStatus ExecuteCommand(int command)
         {
-            var result = ScriptRunner.ExecuteScriptCommand(this, Module, command, UICommands);
+            var scriptRunner = new ScriptRunner(this, Module, UICommands);
+            var result = scriptRunner.ExecuteScriptCommand(command);
 
             if (!result.Executed)
             {
