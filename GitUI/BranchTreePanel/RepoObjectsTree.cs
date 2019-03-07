@@ -237,6 +237,7 @@ namespace GitUI.BranchTreePanel
         {
             var rootNode = new TreeNode(Strings.Branches)
             {
+                Name = Strings.Branches,
                 ImageKey = nameof(Images.BranchLocalRoot),
                 SelectedImageKey = nameof(Images.BranchLocalRoot),
             };
@@ -247,6 +248,7 @@ namespace GitUI.BranchTreePanel
         {
             var rootNode = new TreeNode(Strings.Remotes)
             {
+                Name = Strings.Remotes,
                 ImageKey = nameof(Images.BranchRemoteRoot),
                 SelectedImageKey = nameof(Images.BranchRemoteRoot),
             };
@@ -263,6 +265,7 @@ namespace GitUI.BranchTreePanel
         {
             var rootNode = new TreeNode(Strings.Tags)
             {
+                Name = Strings.Tags,
                 ImageKey = nameof(Images.TagHorizontal),
                 SelectedImageKey = nameof(Images.TagHorizontal),
             };
@@ -273,6 +276,7 @@ namespace GitUI.BranchTreePanel
         {
             var rootNode = new TreeNode(Strings.Submodules)
             {
+                Name = Strings.Submodules,
                 ImageKey = nameof(Images.FolderSubmodule),
                 SelectedImageKey = nameof(Images.FolderSubmodule),
             };

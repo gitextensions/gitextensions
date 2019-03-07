@@ -274,8 +274,6 @@ namespace GitUI.BranchTreePanel
                 {
                     TreeViewNode.ExpandAll();
                 }
-
-                TreeViewNode.Text = Strings.Submodules;
             }
 
             private Nodes FillSubmoduleTree(SubmoduleInfoResult result)
