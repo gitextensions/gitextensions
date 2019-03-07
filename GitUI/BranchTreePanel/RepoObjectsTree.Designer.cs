@@ -516,7 +516,7 @@ namespace GitUI.BranchTreePanel
             // tsmiShowRemotes
             // 
             this.tsmiShowSubmodules.CheckOnClick = true;
-            this.tsmiShowSubmodules.Image = global::GitUI.Properties.Images.BranchRemoteRoot;
+            this.tsmiShowSubmodules.Image = global::GitUI.Properties.Images.FolderSubmodule;
             this.tsmiShowSubmodules.Name = "tsmiShowSubmodules";
             this.tsmiShowSubmodules.Size = new System.Drawing.Size(154, 22);
             this.tsmiShowSubmodules.Text = "&Submodules";
