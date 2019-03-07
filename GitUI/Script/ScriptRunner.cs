@@ -7,11 +7,26 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.Script
 {
-    /// <summary>Runs scripts.</summary>
-    public static class ScriptRunner
+    internal sealed class ScriptRunner : IScriptRunner
     {
-        /// <summary>Tries to run scripts identified by a <paramref name="command"/></summary>
-        public static CommandStatus ExecuteScriptCommand(IWin32Window owner, GitModule module, int command, IGitUICommands uiCommands, RevisionGridControl revisionGrid = null)
+        private const string PluginPrefix = "plugin:";
+        private const string NavigateToPrefix = "navigateTo:";
+
+        private readonly IWin32Window _owner;
+        private readonly IGitModule _module;
+        private readonly IGitUICommands _uiCommands;
+        private readonly RevisionGridControl _revisionGrid;
+
+        public ScriptRunner(IWin32Window owner, IGitModule module, IGitUICommands uiCommands, RevisionGridControl revisionGrid = null)
+        {
+            _owner = owner;
+            _module = module;
+            _uiCommands = uiCommands;
+            _revisionGrid = revisionGrid;
+        }
+
+        /// <inheritdoc />
+        public CommandStatus ExecuteScriptCommand(int command)
         {
             var anyScriptExecuted = false;
             var needsGridRefresh = false;
@@ -20,7 +35,8 @@ namespace GitUI.Script
             {
                 if (script.HotkeyCommandIdentifier == command)
                 {
-                    var result = RunScript(owner, module, script.Name, uiCommands, revisionGrid);
+                    var result = RunScript(script.Name);
+
                     anyScriptExecuted = true;
                     needsGridRefresh |= result.NeedsGridRefresh;
                 }
@@ -29,7 +45,7 @@ namespace GitUI.Script
             return new CommandStatus(anyScriptExecuted, needsGridRefresh);
         }
 
-        public static CommandStatus RunScript(IWin32Window owner, GitModule module, string scriptKey, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
+        public CommandStatus RunScript(string scriptKey)
         {
             if (string.IsNullOrEmpty(scriptKey))
             {
@@ -40,7 +56,7 @@ namespace GitUI.Script
 
             if (script == null)
             {
-                MessageBox.Show(owner, "Cannot find script: " + scriptKey, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_owner, "Cannot find script: " + scriptKey, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -49,8 +65,9 @@ namespace GitUI.Script
                 return false;
             }
 
-            string argument = script.Arguments;
-            foreach (string option in ScriptOptionsParser.Options)
+            var argument = script.Arguments;
+
+            foreach (var option in ScriptOptionsParser.Options)
             {
                 if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
                 {
@@ -62,21 +79,20 @@ namespace GitUI.Script
                     continue;
                 }
 
-                if (revisionGrid != null)
+                if (_revisionGrid != null)
                 {
                     continue;
                 }
 
-                MessageBox.Show(owner,
-                    $"Option {option} is only supported when started from revision grid.",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(_owner, $"Option {option} is only supported when started from revision grid.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
                 return false;
             }
 
-            return RunScript(owner, module, script, uiCommands, revisionGrid);
+            return RunScript(_owner, _module, script, _uiCommands, _revisionGrid);
         }
 
-        private static CommandStatus RunScript(IWin32Window owner, GitModule module, ScriptInfo scriptInfo, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
+        private static CommandStatus RunScript(IWin32Window owner, IGitModule module, ScriptInfo scriptInfo, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
         {
             if (scriptInfo.AskConfirmation && MessageBox.Show(owner, $"Do you want to execute '{scriptInfo.Name}'?", "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
@@ -154,13 +170,10 @@ namespace GitUI.Script
             return new CommandStatus(true, !scriptInfo.RunInBackground);
         }
 
-        private static string ExpandCommandVariables(string originalCommand, GitModule module)
+        private static string ExpandCommandVariables(string originalCommand, IGitModule module)
         {
             return originalCommand.Replace("{WorkingDir}", module.WorkingDir);
         }
-
-        private const string PluginPrefix = "plugin:";
-        private const string NavigateToPrefix = "navigateTo:";
 
         private static string OverrideCommandWhenNecessary(string originalCommand)
         {
