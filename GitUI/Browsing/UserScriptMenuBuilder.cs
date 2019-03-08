@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using GitUI.CommandsDialogs;
 using GitUI.Script;
 
 namespace GitUI.Browsing
@@ -17,20 +16,20 @@ namespace GitUI.Browsing
         private const string OwnScriptPostfix = "_ownScript";
         private const string UserScript = "userscript";
 
-        private bool _settingsLoaded;
+        private static bool _settingsLoaded;
 
         private readonly IScriptRunner _scriptRunner;
         private readonly ICanRefreshRevisions _canRefreshRevisions;
-        private readonly GitUICommands _uiCommands;
+        private readonly ICanLoadSettings _canLoadSettings;
 
         public UserScriptMenuBuilder(
             IScriptRunner scriptRunner,
             ICanRefreshRevisions canRefreshRevisions,
-            GitUICommands uiCommands)
+            ICanLoadSettings canLoadSettings)
         {
             _scriptRunner = scriptRunner;
             _canRefreshRevisions = canRefreshRevisions;
-            _uiCommands = uiCommands;
+            _canLoadSettings = canLoadSettings;
         }
 
         public void Build(ToolStrip tool)
@@ -140,10 +139,9 @@ namespace GitUI.Browsing
 
         private void RunScript(object sender, EventArgs e)
         {
-            //// Why here?
             if (_settingsLoaded == false)
             {
-                new FormSettings(_uiCommands).LoadSettings();
+                _canLoadSettings.LoadSettings();
 
                 _settingsLoaded = true;
             }

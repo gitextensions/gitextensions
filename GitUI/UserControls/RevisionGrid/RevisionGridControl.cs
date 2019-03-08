@@ -1655,7 +1655,7 @@ namespace GitUI
             SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
 
             var scriptRunner = new ScriptRunner(this, Module, UICommands, this);
-            var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptRunner, this, UICommands);
+            var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptRunner, this, new FormSettings(UICommands));
 
             userScriptMenuBuilder.Build(mainContextMenu);
 

@@ -185,7 +185,7 @@ namespace GitUI.CommandsDialogs
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
 
             var scriptRunner = new ScriptRunner(RevisionGrid, Module, UICommands, RevisionGrid);
-            var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptRunner, RevisionGrid, UICommands);
+            var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptRunner, RevisionGrid, new FormSettings(UICommands));
 
             repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper, userScriptMenuBuilder);
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
@@ -858,7 +858,7 @@ namespace GitUI.CommandsDialogs
                 OnActivate();
 
                 var scriptRunner = new ScriptRunner(this, Module, UICommands, RevisionGrid);
-                var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptRunner, RevisionGrid, UICommands);
+                var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptRunner, RevisionGrid, new FormSettings(UICommands));
 
                 userScriptMenuBuilder.Build(ToolStrip);
 

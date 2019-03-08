@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Utils;
+using GitUI.Browsing;
 using GitUI.CommandsDialogs.SettingsDialog;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.CommandsDialogs.SettingsDialog.Plugins;
@@ -14,7 +15,7 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs
 {
-    public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
+    public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost, ICanLoadSettings
     {
         public static readonly string HotkeySettingsName = "Scripts";
 
