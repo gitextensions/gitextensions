@@ -52,6 +52,8 @@ namespace GitUI.CommandsDialogs
         private IReadOnlyList<IGitRef> _localBranches;
         private IReadOnlyList<IGitRef> _remoteBranches;
 
+        private IScriptManager _scriptManager;
+
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCheckoutBranch()
         {
@@ -68,6 +70,8 @@ namespace GitUI.CommandsDialogs
 
             ApplyLayout();
             Shown += FormCheckoutBranch_Shown;
+
+            _scriptManager = new ScriptManager();
 
             return;
 
@@ -372,7 +376,7 @@ namespace GitUI.CommandsDialogs
 
             Debug.Assert(originalId != null, "originalId != null");
 
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
+            _scriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
 
             if (UICommands.StartCommandLineProcessDialog(owner, new GitCheckoutBranchCmd(branchName, isRemote, localChanges, newBranchMode, newBranchName)))
             {
@@ -412,7 +416,7 @@ namespace GitUI.CommandsDialogs
                     UICommands.UpdateSubmodules(this);
                 }
 
-                ScriptManager.RunEventScripts(this, ScriptEvent.AfterCheckout);
+                _scriptManager.RunEventScripts(this, ScriptEvent.AfterCheckout);
 
                 return DialogResult.OK;
             }

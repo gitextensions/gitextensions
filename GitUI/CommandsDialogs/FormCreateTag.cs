@@ -20,6 +20,8 @@ namespace GitUI.CommandsDialogs
         private static readonly TranslationString _trsSignDefault = new TranslationString("Sign with default GPG");
         private static readonly TranslationString _trsSignSpecificKey = new TranslationString("Sign with specific GPG");
 
+        private readonly IScriptManager _scriptManager;
+
         private readonly IGitTagController _gitTagController;
         private string _currentRemote = "";
 
@@ -34,6 +36,8 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             InitializeComplete();
+
+            _scriptManager = new ScriptManager();
 
             annotate.Items.AddRange(new object[] { _trsLightweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text });
             annotate.SelectedIndex = 0;
@@ -113,7 +117,7 @@ namespace GitUI.CommandsDialogs
         {
             var pushCmd = GitCommandHelpers.PushTagCmd(_currentRemote, tagName, false);
 
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+            _scriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
             using (var form = new FormRemoteProcess(Module, pushCmd)
             {
@@ -125,7 +129,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
                 {
-                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
+                    _scriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
                 }
             }
         }

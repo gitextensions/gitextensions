@@ -159,6 +159,7 @@ namespace GitUI.CommandsDialogs
         private readonly Subject<string> _selectionFilterSubject = new Subject<string>();
         private readonly IFullPathResolver _fullPathResolver;
         private readonly List<string> _formattedLines = new List<string>();
+        private readonly IScriptManager _scriptManager;
 
         private FileStatusList _currentFilesList;
         private bool _skipUpdate;
@@ -192,6 +193,8 @@ namespace GitUI.CommandsDialogs
             _editedCommit = editedCommit;
 
             InitializeComponent();
+
+            _scriptManager = new ScriptManager();
 
             splitRight.Panel2MinSize = DpiUtil.Scale(100);
 
@@ -1362,7 +1365,7 @@ namespace GitUI.CommandsDialogs
                         SetCommitMessageFromTextBox(Message.Text);
                     }
 
-                    ScriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
+                    _scriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
 
                     var commitCmd = Module.CommitCmd(
                         amend,
@@ -1384,7 +1387,7 @@ namespace GitUI.CommandsDialogs
                     Amend.Checked = false;
                     noVerifyToolStripMenuItem.Checked = false;
 
-                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
+                    _scriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
                     Message.Text = string.Empty; // Message.Text has been used and stored
                     _commitMessageManager.ResetCommitMessage();

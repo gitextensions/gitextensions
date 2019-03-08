@@ -21,6 +21,8 @@ namespace GitUI.CommandsDialogs
         private readonly HashSet<string> _mergedBranches = new HashSet<string>();
         private readonly string _defaultRemoteBranch;
 
+        private readonly IScriptManager _scriptManager;
+
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormDeleteRemoteBranch()
         {
@@ -33,6 +35,8 @@ namespace GitUI.CommandsDialogs
             _defaultRemoteBranch = defaultRemoteBranch;
             InitializeComponent();
             InitializeComplete();
+
+            _scriptManager = new ScriptManager();
         }
 
         private void FormDeleteRemoteBranchLoad(object sender, EventArgs e)
@@ -76,7 +80,7 @@ namespace GitUI.CommandsDialogs
 
                     var cmd = new GitDeleteRemoteBranchesCmd(remote, branches.Select(x => x.LocalName));
 
-                    ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+                    _scriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
                     using (var form = new FormRemoteProcess(Module, cmd.Arguments)
                     {
@@ -87,7 +91,7 @@ namespace GitUI.CommandsDialogs
 
                         if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
                         {
-                            ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
+                            _scriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
                         }
                     }
                 }

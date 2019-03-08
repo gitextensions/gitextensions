@@ -38,6 +38,7 @@ namespace GitUI.CommandsDialogs
         private string _selectedRemoteBranchName;
         private IReadOnlyList<IGitRef> _gitRefs;
         private readonly IConfigFileRemoteSettingsManager _remotesManager;
+        private readonly IScriptManager _scriptManager;
 
         public bool ErrorOccurred { get; private set; }
 
@@ -100,6 +101,8 @@ namespace GitUI.CommandsDialogs
             DeleteColumn.Width = DpiUtil.Scale(108);
 
             InitializeComplete();
+
+            _scriptManager = new ScriptManager();
 
             if (!GitVersion.Current.SupportPushForceWithLease)
             {
@@ -422,7 +425,7 @@ namespace GitUI.CommandsDialogs
                 pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
             }
 
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+            _scriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
 
             // controls can be accessed only from UI thread
             _selectedBranch = _NO_TRANSLATE_Branch.Text;
@@ -441,7 +444,7 @@ namespace GitUI.CommandsDialogs
 
                 if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
                 {
-                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
+                    _scriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
                     if (_createPullRequestCB.Checked)
                     {
                         UICommands.StartCreatePullRequest(owner);

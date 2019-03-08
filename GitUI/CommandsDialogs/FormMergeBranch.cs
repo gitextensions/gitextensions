@@ -14,6 +14,8 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _formMergeBranchHoverShowImageLabelText = new TranslationString("Hover to see scenario when fast forward is possible.");
         private readonly string _defaultBranch;
 
+        private readonly IScriptManager _scriptManager;
+
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormMergeBranch()
         {
@@ -27,6 +29,8 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             InitializeComplete();
+
+            _scriptManager = new ScriptManager();
 
             currentBranchLabel.Font = new Font(currentBranchLabel.Font, FontStyle.Bold);
             noCommit.Checked = AppSettings.DontCommitMerge;
@@ -78,7 +82,7 @@ namespace GitUI.CommandsDialogs
         {
             Module.EffectiveSettings.NoFastForwardMerge = noFastForward.Checked;
             AppSettings.DontCommitMerge = noCommit.Checked;
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforeMerge);
+            _scriptManager.RunEventScripts(this, ScriptEvent.BeforeMerge);
 
             var successfullyMerged = FormProcess.ShowDialog(this, GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(),
                                                                                                    fastForward.Checked,
@@ -93,7 +97,7 @@ namespace GitUI.CommandsDialogs
 
             if (successfullyMerged || wasConflict)
             {
-                ScriptManager.RunEventScripts(this, ScriptEvent.AfterMerge);
+                _scriptManager.RunEventScripts(this, ScriptEvent.AfterMerge);
                 UICommands.RepoChangedNotifier.Notify();
                 Close();
             }

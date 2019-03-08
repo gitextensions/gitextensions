@@ -107,6 +107,8 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
         private readonly string _branch;
 
+        private readonly IScriptManager _scriptManager;
+
         [CanBeNull] private List<IGitRef> _heads;
         private bool _bInternalUpdate;
 
@@ -123,6 +125,8 @@ namespace GitUI.CommandsDialogs
         {
             InitializeComponent();
             InitializeComplete();
+
+            _scriptManager = new ScriptManager();
 
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
@@ -398,7 +402,7 @@ namespace GitUI.CommandsDialogs
                 return DialogResult.No;
             }
 
-            ScriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
+            _scriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
 
             var stashed = CalculateStashedValue(owner);
 
@@ -437,7 +441,7 @@ namespace GitUI.CommandsDialogs
                         PopStash();
                     }
 
-                    ScriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
+                    _scriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
                 }
             }
 

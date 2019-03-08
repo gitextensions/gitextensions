@@ -376,7 +376,9 @@ namespace GitUI.Hotkey
                  * these integers are never matched in the 'switch' routine on a form and
                  * therefore execute the 'default' action
                  */
-                return ScriptManager
+                var scriptManager = new ScriptManager();
+
+                return scriptManager
                     .GetScripts()
                     .Where(s => !s.Name.IsNullOrEmpty())
                     .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.Name) { KeyData = Keys.None })

@@ -17,6 +17,7 @@ namespace GitUI.Script
         private readonly IGitModule _module;
         private readonly IGitUICommands _uiCommands;
         private readonly ISimpleDialog _simpleDialog;
+        private readonly IScriptManager _scriptManager;
         private readonly RevisionGridControl _revisionGrid;
 
         public ScriptRunner(
@@ -24,12 +25,14 @@ namespace GitUI.Script
             IGitModule module,
             IGitUICommands uiCommands,
             ISimpleDialog simpleDialog,
+            IScriptManager scriptManager,
             RevisionGridControl revisionGrid = null)
         {
             _windowContainer = windowContainer ?? throw new ArgumentNullException(nameof(windowContainer));
             _module = module ?? throw new ArgumentNullException(nameof(module));
             _uiCommands = uiCommands ?? throw new ArgumentNullException(nameof(uiCommands));
             _simpleDialog = simpleDialog ?? throw new ArgumentNullException(nameof(simpleDialog));
+            _scriptManager = scriptManager;
             _revisionGrid = revisionGrid;
         }
 
@@ -39,7 +42,7 @@ namespace GitUI.Script
             var anyScriptExecuted = false;
             var needsGridRefresh = false;
 
-            foreach (var script in ScriptManager.GetScripts())
+            foreach (var script in _scriptManager.GetScripts())
             {
                 if (script.HotkeyCommandIdentifier == command)
                 {
@@ -60,7 +63,7 @@ namespace GitUI.Script
                 return false;
             }
 
-            var script = ScriptManager.GetScript(scriptKey);
+            var script = _scriptManager.GetScript(scriptKey);
 
             if (script == null)
             {

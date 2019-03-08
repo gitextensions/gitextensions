@@ -155,7 +155,7 @@ namespace GitUI
 
             CommandStatus ExecuteScriptCommand()
             {
-                var scriptRunner = new ScriptRunner(new WindowContainer(this), Module, UICommands, new SimpleDialog(this), this as RevisionGridControl);
+                var scriptRunner = new ScriptRunner(new WindowContainer(this), Module, UICommands, new SimpleDialog(this), new ScriptManager(), this as RevisionGridControl);
 
                 return scriptRunner.ExecuteScriptCommand(command);
             }

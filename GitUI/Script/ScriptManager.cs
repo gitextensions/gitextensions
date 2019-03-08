@@ -12,13 +12,13 @@ using JetBrains.Annotations;
 
 namespace GitUI.Script
 {
-    public static class ScriptManager
+    internal sealed class ScriptManager : IScriptManager
     {
         private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(BindingList<ScriptInfo>));
         private static BindingList<ScriptInfo> _scripts;
 
         [NotNull]
-        public static BindingList<ScriptInfo> GetScripts()
+        public BindingList<ScriptInfo> GetScripts()
         {
             if (_scripts == null)
             {
@@ -36,14 +36,14 @@ namespace GitUI.Script
                 {
                     if (!ids.Add(script.HotkeyCommandIdentifier))
                     {
-                        script.HotkeyCommandIdentifier = NextHotkeyCommandIdentifier();
+                        script.HotkeyCommandIdentifier = NextHotKeyCommandIdentifier();
                     }
                 }
             }
         }
 
         [CanBeNull]
-        public static ScriptInfo GetScript(string key)
+        public ScriptInfo GetScript(string key)
         {
             foreach (var script in GetScripts())
             {
@@ -56,18 +56,18 @@ namespace GitUI.Script
             return null;
         }
 
-        public static void RunEventScripts(GitModuleForm form, ScriptEvent scriptEvent)
+        public void RunEventScripts(GitModuleForm form, ScriptEvent scriptEvent)
         {
             foreach (var script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
             {
-                var scriptRunner = new ScriptRunner(new WindowContainer(form), form.Module, form.UICommands, new SimpleDialog(form));
+                var scriptRunner = new ScriptRunner(new WindowContainer(form), form.Module, form.UICommands, new SimpleDialog(form), new ScriptManager());
 
                 scriptRunner.RunScript(script.Name);
             }
         }
 
         [CanBeNull]
-        public static string SerializeIntoXml()
+        public string SerializeIntoXml()
         {
             try
             {
@@ -197,7 +197,7 @@ namespace GitUI.Script
             }
         }
 
-        internal static int NextHotkeyCommandIdentifier()
+        public int NextHotKeyCommandIdentifier()
         {
             return GetScripts().Select(s => s.HotkeyCommandIdentifier).Max() + 1;
         }

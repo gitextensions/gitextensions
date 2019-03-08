@@ -67,6 +67,8 @@ Current Branch:
 
         #endregion
 
+        private readonly IScriptManager _scriptManager;
+
         private string _iconName = "bug";
 
         public ScriptsSettingsPage()
@@ -80,6 +82,8 @@ Current Branch:
             EnabledColumn.DataPropertyName = nameof(ScriptInfo.Enabled);
             OnEvent.DataPropertyName = nameof(ScriptInfo.OnEvent);
             AskConfirmation.DataPropertyName = nameof(ScriptInfo.AskConfirmation);
+
+            _scriptManager = new ScriptManager();
         }
 
         public override bool IsInstantSavePage => true;
@@ -131,14 +135,14 @@ Current Branch:
             SaveScripts();
         }
 
-        private static void SaveScripts()
+        private void SaveScripts()
         {
-            AppSettings.OwnScripts = ScriptManager.SerializeIntoXml();
+            AppSettings.OwnScripts = _scriptManager.SerializeIntoXml();
         }
 
         private void LoadScripts()
         {
-            ScriptList.DataSource = ScriptManager.GetScripts();
+            ScriptList.DataSource = _scriptManager.GetScripts();
         }
 
         private void ClearScriptDetails()
@@ -182,8 +186,8 @@ Current Branch:
         private void addScriptButton_Click(object sender, EventArgs e)
         {
             ScriptList.ClearSelection();
-            ScriptInfo script = ScriptManager.GetScripts().AddNew();
-            script.HotkeyCommandIdentifier = ScriptManager.NextHotkeyCommandIdentifier();
+            ScriptInfo script = _scriptManager.GetScripts().AddNew();
+            script.HotkeyCommandIdentifier = _scriptManager.NextHotKeyCommandIdentifier();
             ScriptList.Rows[ScriptList.RowCount - 1].Selected = true;
             ScriptList_SelectionChanged(null, null); // needed for linux
         }
@@ -192,7 +196,7 @@ Current Branch:
         {
             if (ScriptList.SelectedRows.Count > 0)
             {
-                ScriptManager.GetScripts().Remove(ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo);
+                _scriptManager.GetScripts().Remove(ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo);
 
                 ClearScriptDetails();
             }
@@ -222,9 +226,9 @@ Current Branch:
             if (ScriptList.SelectedRows.Count > 0)
             {
                 ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
-                int index = ScriptManager.GetScripts().IndexOf(scriptInfo);
-                ScriptManager.GetScripts().Remove(scriptInfo);
-                ScriptManager.GetScripts().Insert(Math.Max(index - 1, 0), scriptInfo);
+                int index = _scriptManager.GetScripts().IndexOf(scriptInfo);
+                _scriptManager.GetScripts().Remove(scriptInfo);
+                _scriptManager.GetScripts().Insert(Math.Max(index - 1, 0), scriptInfo);
 
                 ScriptList.ClearSelection();
                 ScriptList.Rows[Math.Max(index - 1, 0)].Selected = true;
@@ -237,9 +241,9 @@ Current Branch:
             if (ScriptList.SelectedRows.Count > 0)
             {
                 ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
-                int index = ScriptManager.GetScripts().IndexOf(scriptInfo);
-                ScriptManager.GetScripts().Remove(scriptInfo);
-                ScriptManager.GetScripts().Insert(Math.Min(index + 1, ScriptManager.GetScripts().Count), scriptInfo);
+                int index = _scriptManager.GetScripts().IndexOf(scriptInfo);
+                _scriptManager.GetScripts().Remove(scriptInfo);
+                _scriptManager.GetScripts().Insert(Math.Min(index + 1, _scriptManager.GetScripts().Count), scriptInfo);
 
                 ScriptList.ClearSelection();
                 ScriptList.Rows[Math.Max(index + 1, 0)].Selected = true;

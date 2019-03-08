@@ -18,15 +18,18 @@ namespace GitUI.Browsing
 
         private static bool _settingsLoaded;
 
+        private readonly IScriptManager _scriptManager;
         private readonly IScriptRunner _scriptRunner;
         private readonly ICanRefreshRevisions _canRefreshRevisions;
         private readonly ICanLoadSettings _canLoadSettings;
 
         public UserScriptMenuBuilder(
+            IScriptManager scriptManager,
             IScriptRunner scriptRunner,
             ICanRefreshRevisions canRefreshRevisions,
             ICanLoadSettings canLoadSettings)
         {
+            _scriptManager = scriptManager ?? throw new ArgumentNullException(nameof(scriptManager));
             _scriptRunner = scriptRunner ?? throw new ArgumentNullException(nameof(scriptRunner));
             _canRefreshRevisions = canRefreshRevisions ?? throw new ArgumentNullException(nameof(canRefreshRevisions));
             _canLoadSettings = canLoadSettings ?? throw new ArgumentNullException(nameof(canLoadSettings));
@@ -44,7 +47,7 @@ namespace GitUI.Browsing
                 tool.Items.RemoveByKey(item.Name);
             }
 
-            var scripts = ScriptManager.GetScripts()
+            var scripts = _scriptManager.GetScripts()
                 .Where(x => x.Enabled)
                 .Where(x => x.OnEvent == ScriptEvent.ShowInUserMenuBar)
                 .ToList();
@@ -105,7 +108,7 @@ namespace GitUI.Browsing
         private void AddOwnScripts(ContextMenuStrip contextMenu, ToolStripMenuItem runScriptToolStripMenuItem)
         {
             var lastIndex = contextMenu.Items.Count;
-            var scripts = ScriptManager.GetScripts();
+            var scripts = _scriptManager.GetScripts();
             var toRunScriptMenu = scripts.Where(x => x.Enabled)
                 .Where(x => !x.AddToRevisionGridContextMenu)
                 .Select(x => CreateToolStripMenuItem(x.Name, x.GetIcon()))
