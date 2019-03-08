@@ -226,6 +226,7 @@ namespace GitUI.BranchTreePanel
             CreateTags();
             CreateSubmodules();
 
+            FixInvalidTreeToPositionIndices();
             ShowEnabledTrees();
             RebuildMenuSettings();
         }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
@@ -9,6 +8,26 @@ namespace GitUI.BranchTreePanel
 {
     public partial class RepoObjectsTree
     {
+        /// <summary>
+        /// We assume tree to position indices are 0-based and sequential. In case this
+        /// is no longer true, because for e.g. user has reverted to an earlier version,
+        /// this function will fix the indices, attempting to maintain the existing order.
+        /// </summary>
+        private void FixInvalidTreeToPositionIndices()
+        {
+            // Sort by index, then force assign 0-based sequential indices
+            var treeToIndex = GetTreeToPositionIndex();
+
+            int i = 0;
+            foreach (var kvp in treeToIndex.OrderBy(kvp => kvp.Value))
+            {
+                treeToIndex[kvp.Key] = i;
+                ++i;
+            }
+
+            SaveTreeToPositionIndex(treeToIndex);
+        }
+
         private Dictionary<Tree, int> GetTreeToPositionIndex()
         {
             return new Dictionary<Tree, int>
