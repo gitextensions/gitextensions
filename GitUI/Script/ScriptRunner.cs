@@ -26,10 +26,10 @@ namespace GitUI.Script
             ISimpleDialog simpleDialog,
             RevisionGridControl revisionGrid = null)
         {
-            _windowContainer = windowContainer;
-            _module = module;
-            _uiCommands = uiCommands;
-            _simpleDialog = simpleDialog;
+            _windowContainer = windowContainer ?? throw new ArgumentNullException(nameof(windowContainer));
+            _module = module ?? throw new ArgumentNullException(nameof(module));
+            _uiCommands = uiCommands ?? throw new ArgumentNullException(nameof(uiCommands));
+            _simpleDialog = simpleDialog ?? throw new ArgumentNullException(nameof(simpleDialog));
             _revisionGrid = revisionGrid;
         }
 

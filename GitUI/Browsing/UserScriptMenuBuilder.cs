@@ -27,9 +27,9 @@ namespace GitUI.Browsing
             ICanRefreshRevisions canRefreshRevisions,
             ICanLoadSettings canLoadSettings)
         {
-            _scriptRunner = scriptRunner;
-            _canRefreshRevisions = canRefreshRevisions;
-            _canLoadSettings = canLoadSettings;
+            _scriptRunner = scriptRunner ?? throw new ArgumentNullException(nameof(scriptRunner));
+            _canRefreshRevisions = canRefreshRevisions ?? throw new ArgumentNullException(nameof(canRefreshRevisions));
+            _canLoadSettings = canLoadSettings ?? throw new ArgumentNullException(nameof(canLoadSettings));
         }
 
         public void Build(ToolStrip tool)

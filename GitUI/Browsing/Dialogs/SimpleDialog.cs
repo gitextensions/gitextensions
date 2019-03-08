@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using GitUI.Script;
 
 namespace GitUI.Browsing.Dialogs
@@ -9,7 +10,7 @@ namespace GitUI.Browsing.Dialogs
 
         public SimpleDialog(IWin32Window owner)
         {
-            _owner = owner;
+            _owner = owner ?? throw new ArgumentNullException(nameof(owner));
         }
 
         public DialogResult ShowOkDialog(string text, string caption, MessageBoxIcon icon)

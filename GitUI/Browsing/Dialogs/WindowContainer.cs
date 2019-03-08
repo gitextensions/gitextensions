@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace GitUI.Browsing.Dialogs
 {
@@ -6,7 +7,7 @@ namespace GitUI.Browsing.Dialogs
     {
         public WindowContainer(IWin32Window window)
         {
-            Window = window;
+            Window = window ?? throw new ArgumentNullException(nameof(window));
         }
 
         public IWin32Window Window { get; }
