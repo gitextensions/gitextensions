@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Browsing.Dialogs;
 using GitUI.Script;
 using JetBrains.Annotations;
 using ResourceManager;
@@ -154,7 +155,7 @@ namespace GitUI
 
             CommandStatus ExecuteScriptCommand()
             {
-                var scriptRunner = new ScriptRunner(this, Module, UICommands, this as RevisionGridControl);
+                var scriptRunner = new ScriptRunner(new WindowContainer(this), Module, UICommands, new SimpleDialog(this), this as RevisionGridControl);
 
                 return scriptRunner.ExecuteScriptCommand(command);
             }

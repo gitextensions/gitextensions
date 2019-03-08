@@ -17,6 +17,7 @@ using GitCommands.Git;
 using GitExtUtils.GitUI;
 using GitUI.Avatars;
 using GitUI.Browsing;
+using GitUI.Browsing.Dialogs;
 using GitUI.BuildServerIntegration;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -1654,7 +1655,7 @@ namespace GitUI
 
             SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
 
-            var scriptRunner = new ScriptRunner(this, Module, UICommands, this);
+            var scriptRunner = new ScriptRunner(new WindowContainer(this), Module, UICommands, new SimpleDialog(this), this);
             var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptRunner, this, new FormSettings(UICommands));
 
             userScriptMenuBuilder.Build(mainContextMenu);

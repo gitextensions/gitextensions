@@ -7,6 +7,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
+using GitUI.Browsing.Dialogs;
 using JetBrains.Annotations;
 
 namespace GitUI.Script
@@ -59,7 +60,7 @@ namespace GitUI.Script
         {
             foreach (var script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
             {
-                var scriptRunner = new ScriptRunner(form, form.Module, form.UICommands);
+                var scriptRunner = new ScriptRunner(new WindowContainer(form), form.Module, form.UICommands, new SimpleDialog(form));
 
                 scriptRunner.RunScript(script.Name);
             }

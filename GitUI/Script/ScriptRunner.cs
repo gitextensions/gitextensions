@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Browsing.Dialogs;
 using GitUIPluginInterfaces;
 
 namespace GitUI.Script
@@ -12,16 +13,23 @@ namespace GitUI.Script
         private const string PluginPrefix = "plugin:";
         private const string NavigateToPrefix = "navigateTo:";
 
-        private readonly IWin32Window _owner;
+        private readonly IWindowContainer _windowContainer;
         private readonly IGitModule _module;
         private readonly IGitUICommands _uiCommands;
+        private readonly ISimpleDialog _simpleDialog;
         private readonly RevisionGridControl _revisionGrid;
 
-        public ScriptRunner(IWin32Window owner, IGitModule module, IGitUICommands uiCommands, RevisionGridControl revisionGrid = null)
+        public ScriptRunner(
+            IWindowContainer windowContainer,
+            IGitModule module,
+            IGitUICommands uiCommands,
+            ISimpleDialog simpleDialog,
+            RevisionGridControl revisionGrid = null)
         {
-            _owner = owner;
+            _windowContainer = windowContainer;
             _module = module;
             _uiCommands = uiCommands;
+            _simpleDialog = simpleDialog;
             _revisionGrid = revisionGrid;
         }
 
@@ -56,7 +64,8 @@ namespace GitUI.Script
 
             if (script == null)
             {
-                MessageBox.Show(_owner, "Cannot find script: " + scriptKey, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _simpleDialog.ShowOkDialog($"Cannot find script: {scriptKey}", "Error", MessageBoxIcon.Error);
+
                 return false;
             }
 
@@ -84,29 +93,37 @@ namespace GitUI.Script
                     continue;
                 }
 
-                MessageBox.Show(_owner, $"Option {option} is only supported when started from revision grid.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _simpleDialog.ShowOkDialog($"Option {option} is only supported when started from revision grid.", "Error", MessageBoxIcon.Error);
 
                 return false;
             }
 
-            return RunScript(_owner, _module, script, _uiCommands, _revisionGrid);
+            return RunScript(_module, script, _uiCommands, _revisionGrid);
         }
 
-        private static CommandStatus RunScript(IWin32Window owner, IGitModule module, ScriptInfo scriptInfo, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
+        private CommandStatus RunScript(IGitModule module, ScriptInfo scriptInfo, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
         {
-            if (scriptInfo.AskConfirmation && MessageBox.Show(owner, $"Do you want to execute '{scriptInfo.Name}'?", "Script", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (scriptInfo.AskConfirmation)
             {
-                return false;
+                var dialogResult = _simpleDialog
+                    .ShowYesNoDialog($"Do you want to execute '{scriptInfo.Name}'?", "Script", MessageBoxIcon.Question);
+
+                if (dialogResult == DialogResult.No)
+                {
+                    return false;
+                }
             }
 
-            string originalCommand = scriptInfo.Command;
-            (string argument, bool abort) = ScriptOptionsParser.Parse(scriptInfo.Arguments, module, owner, revisionGrid);
+            var originalCommand = scriptInfo.Command;
+            (string argument, bool abort) = ScriptOptionsParser.Parse(scriptInfo.Arguments, module, _windowContainer.Window, revisionGrid);
+
             if (abort)
             {
                 return false;
             }
 
-            string command = OverrideCommandWhenNecessary(originalCommand);
+            var command = OverrideCommandWhenNecessary(originalCommand);
+
             command = ExpandCommandVariables(command, module);
 
             if (scriptInfo.IsPowerShell)
@@ -122,7 +139,7 @@ namespace GitUI.Script
                 {
                     if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        var eventArgs = new GitUIEventArgs(owner, uiCommands);
+                        var eventArgs = new GitUIEventArgs(_windowContainer.Window, uiCommands);
                         return new CommandStatus(true, plugin.Execute(eventArgs));
                     }
                 }
@@ -153,7 +170,7 @@ namespace GitUI.Script
 
             if (!scriptInfo.RunInBackground)
             {
-                FormProcess.ShowStandardProcessDialog(owner, command, argument, module.WorkingDir, null, true);
+                FormProcess.ShowStandardProcessDialog(_windowContainer.Window, command, argument, module.WorkingDir, null, true);
             }
             else
             {

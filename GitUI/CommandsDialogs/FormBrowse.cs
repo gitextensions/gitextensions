@@ -21,6 +21,7 @@ using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.BranchTreePanel;
 using GitUI.Browsing;
+using GitUI.Browsing.Dialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
@@ -184,7 +185,7 @@ namespace GitUI.CommandsDialogs
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
 
-            var scriptRunner = new ScriptRunner(RevisionGrid, Module, UICommands, RevisionGrid);
+            var scriptRunner = new ScriptRunner(new WindowContainer(RevisionGrid), Module, UICommands, new SimpleDialog(RevisionGrid), RevisionGrid);
             var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptRunner, RevisionGrid, new FormSettings(UICommands));
 
             repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper, userScriptMenuBuilder);
@@ -857,7 +858,7 @@ namespace GitUI.CommandsDialogs
 
                 OnActivate();
 
-                var scriptRunner = new ScriptRunner(this, Module, UICommands, RevisionGrid);
+                var scriptRunner = new ScriptRunner(new WindowContainer(this), Module, UICommands, new SimpleDialog(this), RevisionGrid);
                 var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptRunner, RevisionGrid, new FormSettings(UICommands));
 
                 userScriptMenuBuilder.Build(ToolStrip);
