@@ -47,6 +47,9 @@
     <PackageReference Include="ApprovalTests" Version="3.0.13" />
     <PackageReference Include="FluentAssertions" Version="5.2.0" />
     <PackageReference Include="LibGit2Sharp" Version="0.25.0" />
+    <PackageReference Include="Moq">
+      <Version>4.10.1</Version>
+    </PackageReference>
     <PackageReference Include="NSubstitute" Version="3.1.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
     <PackageReference Include="System.IO.Abstractions">
@@ -65,6 +68,7 @@
     <Compile Include="Avatars\BackupAvatarProviderTests.cs" />
     <Compile Include="BranchTreePanel\GitRefMenuItemsTest.cs" />
     <Compile Include="NBugReports\BugReportFormTests.cs" />
+    <Compile Include="Browsing\UserScriptMenuBuilderTests.cs" />
     <Compile Include="CancellationTokenSequenceTests.cs" />
     <Compile Include="CommandsDialogs\FormBrowseTests.LeftPanel.ReorderNodes.cs" />
     <Compile Include="CommandsDialogs\FormBrowseTests.LeftPanel.Submodules.cs" />
