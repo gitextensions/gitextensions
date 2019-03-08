@@ -131,6 +131,8 @@
       <SubType>UserControl</SubType>
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>
     </Compile>
+    <Compile Include="Browsing\Dialogs\ISimpleDialog.cs" />
+    <Compile Include="Browsing\Dialogs\SimpleDialog.cs" />
     <Compile Include="Browsing\ICanLoadSettings.cs" />
     <Compile Include="Browsing\ICanRefreshRevisions.cs" />
     <Compile Include="Browsing\IUserScriptMenuBuilder.cs" />
