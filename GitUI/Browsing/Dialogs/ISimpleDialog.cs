@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using GitCommands;
 
 namespace GitUI.Browsing.Dialogs
 {
@@ -13,5 +14,7 @@ namespace GitUI.Browsing.Dialogs
         /// </summary>
         /// <returns>Selected file name</returns>
         string ShowFilePromptDialog();
+
+        bool ShowStandardProcessDialog(string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using GitCommands;
 using GitUI.Script;
+using GitUI.UserControls;
 
 namespace GitUI.Browsing.Dialogs
 {
@@ -39,6 +41,16 @@ namespace GitUI.Browsing.Dialogs
                 return filePromptForm.FileInput;
             }
         }
+
+        public bool ShowStandardProcessDialog(string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
+        {
+            var outputCtrl = new EditboxBasedConsoleOutputControl();
+
+            using (var formProcess = new FormProcess(outputCtrl, process, arguments, workingDirectory, input, useDialogSettings))
+            {
+                formProcess.ShowDialog(_owner);
+
+                return !formProcess.ErrorOccurred();
             }
         }
     }

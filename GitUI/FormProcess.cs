@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using GitCommands;
 using GitUI.UserControls;
-using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI
@@ -87,16 +86,6 @@ namespace GitUI
         public static bool ShowDialog([CanBeNull] IWin32Window owner, string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
         {
             using (var formProcess = new FormProcess(process, arguments, workingDirectory, input, useDialogSettings))
-            {
-                formProcess.ShowDialog(owner);
-                return !formProcess.ErrorOccurred();
-            }
-        }
-
-        public static bool ShowStandardProcessDialog([CanBeNull] IWin32Window owner, string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
-        {
-            var outputCtrl = new EditboxBasedConsoleOutputControl();
-            using (var formProcess = new FormProcess(outputCtrl, process, arguments, workingDirectory, input, useDialogSettings))
             {
                 formProcess.ShowDialog(owner);
                 return !formProcess.ErrorOccurred();
