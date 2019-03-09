@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitUI.Browsing.Dialogs;
 using GitCommands.UserRepositoryHistory;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -13,58 +13,19 @@ using JetBrains.Annotations;
 
 namespace GitUI.Script
 {
-    public sealed class ScriptOptionsParser
+    internal sealed class ScriptOptionsParser : IScriptOptionsParser
     {
-        public static readonly IReadOnlyList<string> Options = new[]
-        {
-            "sHashes",
-            "sTag",
-            "sBranch",
-            "sLocalBranch",
-            "sRemoteBranch",
+        private readonly ISimpleDialog _simpleDialog;
             "sRemoteBranchName",
-            "sRemote",
-            "sRemoteUrl",
-            "sRemotePathFromUrl",
-            "sHash",
-            "sMessage",
-            "sAuthor",
-            "sCommitter",
-            "sAuthorDate",
-            "sCommitDate",
-            "cTag",
-            "cBranch",
-            "cLocalBranch",
-            "cRemoteBranch",
             "cRemoteBranchName",
-            "cHash",
-            "cMessage",
-            "cAuthor",
-            "cCommitter",
-            "cAuthorDate",
-            "cCommitDate",
-            "cDefaultRemote",
-            "cDefaultRemoteUrl",
-            "cDefaultRemotePathFromUrl",
             "RepoName",
-            "UserInput",
-            "UserFiles",
-            "WorkingDir"
-        };
 
-        private static string CreateOption(string option, bool quoted)
+        public ScriptOptionsParser(ISimpleDialog simpleDialog)
         {
-            var result = "{" + option + "}";
-
-            if (quoted)
-            {
-                result = "{" + result + "}";
-            }
-
-            return result;
+            _simpleDialog = simpleDialog;
         }
 
-        public static (string argument, bool abort) Parse(string argument, IGitModule module, IWin32Window owner, RevisionGridControl revisionGrid)
+        public (string argument, bool abort) Parse(string argument, IGitModule module, RevisionGridControl revisionGrid)
         {
             GitRevision selectedRevision = null;
             GitRevision currentRevision = null;
@@ -77,11 +38,11 @@ namespace GitUI.Script
             var selectedTags = new List<IGitRef>();
             var currentLocalBranches = new List<IGitRef>();
             var currentRemoteBranches = new List<IGitRef>();
-            var currentRemote = "";
+            var currentRemote = string.Empty;
             var currentBranches = new List<IGitRef>();
             var currentTags = new List<IGitRef>();
 
-            foreach (string option in Options)
+            foreach (var option in ScriptOptions.List)
             {
                 if (string.IsNullOrEmpty(argument))
                 {
@@ -120,7 +81,7 @@ namespace GitUI.Script
                     selectedRevision = CalculateSelectedRevision(revisionGrid, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
                 }
 
-                argument = ParseScriptArguments(argument, option, owner, revisionGrid, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
+                argument = ParseScriptArguments(argument, option, _simpleDialog, revisionGrid, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
                 if (argument == null)
                 {
                     return (argument: null, abort: true);
@@ -128,6 +89,18 @@ namespace GitUI.Script
             }
 
             return (argument, abort: false);
+        }
+
+        private static string CreateOption(string option, bool quoted)
+        {
+            var result = "{" + option + "}";
+
+            if (quoted)
+            {
+                result = "{" + result + "}";
+            }
+
+            return result;
         }
 
         private static string AskToSpecify(IEnumerable<IGitRef> options, RevisionGridControl revisionGrid)
@@ -237,45 +210,45 @@ namespace GitUI.Script
                 return uri.LocalPath.SubstringUntilLast('.');
             }
 
-            return "";
+            return string.Empty;
         }
 
-        private static string ParseScriptArguments(string argument, string option, IWin32Window owner, RevisionGridControl revisionGrid, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, in IList<IGitRef> selectedTags, in IList<IGitRef> selectedBranches, in IList<IGitRef> selectedLocalBranches, in IList<IGitRef> selectedRemoteBranches, in IList<string> selectedRemotes, GitRevision selectedRevision, in IList<IGitRef> currentTags, in IList<IGitRef> currentBranches, in IList<IGitRef> currentLocalBranches, in IList<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote)
+        private static string ParseScriptArguments(string argument, string option, ISimpleDialog simpleDialog, RevisionGridControl revisionGrid, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, in IList<IGitRef> selectedTags, in IList<IGitRef> selectedBranches, in IList<IGitRef> selectedLocalBranches, in IList<IGitRef> selectedRemoteBranches, in IList<string> selectedRemotes, GitRevision selectedRevision, in IList<IGitRef> currentTags, in IList<IGitRef> currentBranches, in IList<IGitRef> currentLocalBranches, in IList<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote)
         {
             string newString = null;
             string remote;
             string url;
             switch (option)
             {
-                case "sHashes":
+                case ScriptOptions.SHashes:
                     newString = string.Join(" ", allSelectedRevisions.Select(revision => revision.Guid).ToArray());
                     break;
 
-                case "sTag":
+                case ScriptOptions.STag:
                     newString = SelectOneRef(selectedTags);
                     break;
 
-                case "sBranch":
+                case ScriptOptions.SBranch:
                     newString = SelectOneRef(selectedBranches);
                     break;
 
-                case "sLocalBranch":
+                case ScriptOptions.SLocalBranch:
                     newString = SelectOneRef(selectedLocalBranches);
                     break;
 
-                case "sRemoteBranch":
+                case ScriptOptions.SRemoteBranch:
                     newString = SelectOneRef(selectedRemoteBranches);
                     break;
 
-                case "sRemoteBranchName":
+                case ScriptOptions.SRemoteBranchName:
                     newString = StripRemoteName(SelectOneRef(selectedRemoteBranches));
                     break;
 
-                case "sRemote":
+                case ScriptOptions.SRemote:
                     newString = SelectOneString(selectedRemotes);
                     break;
 
-                case "sRemoteUrl":
+                case ScriptOptions.SRemoteUrl:
                     newString = SelectOneString(selectedRemotes);
                     if (!string.IsNullOrEmpty(newString))
                     {
@@ -285,7 +258,7 @@ namespace GitUI.Script
 
                     break;
 
-                case "sRemotePathFromUrl":
+                case ScriptOptions.SRemotePathFromUrl:
                     newString = SelectOneString(selectedRemotes);
                     if (!string.IsNullOrEmpty(newString))
                     {
@@ -297,78 +270,78 @@ namespace GitUI.Script
 
                     break;
 
-                case "sHash":
+                case ScriptOptions.SHash:
                     newString = selectedRevision.Guid;
                     break;
 
-                case "sMessage":
+                case ScriptOptions.SMessage:
                     newString = selectedRevision.Subject;
                     break;
 
-                case "sAuthor":
+                case ScriptOptions.SAuthor:
                     newString = selectedRevision.Author;
                     break;
 
-                case "sCommitter":
+                case ScriptOptions.SCommitter:
                     newString = selectedRevision.Committer;
                     break;
 
-                case "sAuthorDate":
+                case ScriptOptions.SAuthorDate:
                     newString = selectedRevision.AuthorDate.ToString();
                     break;
 
-                case "sCommitDate":
+                case ScriptOptions.SCommitDate:
                     newString = selectedRevision.CommitDate.ToString();
                     break;
 
-                case "cTag":
+                case ScriptOptions.CTag:
                     newString = SelectOneRef(currentTags);
                     break;
 
-                case "cBranch":
+                case ScriptOptions.CBranch:
                     newString = SelectOneRef(currentBranches);
                     break;
 
-                case "cLocalBranch":
+                case ScriptOptions.CLocalBranch:
                     newString = SelectOneRef(currentLocalBranches);
                     break;
 
-                case "cRemoteBranch":
+                case ScriptOptions.CRemoteBranch:
                     newString = SelectOneRef(currentRemoteBranches);
                     break;
 
-                case "cRemoteBranchName":
+                case ScriptOptions.CRemoteBranchName:
                     newString = StripRemoteName(SelectOneRef(currentRemoteBranches));
                     break;
 
-                case "cHash":
+                case ScriptOptions.CHash:
                     newString = currentRevision.Guid;
                     break;
 
-                case "cMessage":
+                case ScriptOptions.CMessage:
                     newString = currentRevision.Subject;
                     break;
 
-                case "cAuthor":
+                case ScriptOptions.CAuthor:
                     newString = currentRevision.Author;
                     break;
 
-                case "cCommitter":
+                case ScriptOptions.CCommitter:
                     newString = currentRevision.Committer;
                     break;
 
-                case "cAuthorDate":
+                case ScriptOptions.CAuthorDate:
                     newString = currentRevision.AuthorDate.ToString();
                     break;
 
-                case "cCommitDate":
+                case ScriptOptions.CCommitDate:
                     newString = currentRevision.CommitDate.ToString();
                     break;
 
-                case "cDefaultRemote":
+                case ScriptOptions.CDefaultRemote:
                     if (string.IsNullOrEmpty(currentRemote))
                     {
-                        newString = "";
+                        newString = string.Empty;
                     }
                     else
                     {
@@ -377,10 +350,10 @@ namespace GitUI.Script
 
                     break;
 
-                case "cDefaultRemoteUrl":
+                case ScriptOptions.CDefaultRemoteUrl:
                     if (string.IsNullOrEmpty(currentRemote))
                     {
-                        newString = "";
+                        newString = string.Empty;
                     }
                     else
                     {
@@ -389,10 +362,10 @@ namespace GitUI.Script
 
                     break;
 
-                case "cDefaultRemotePathFromUrl":
+                case ScriptOptions.CDefaultRemotePathFromUrl:
                     if (string.IsNullOrEmpty(currentRemote))
                     {
-                        newString = "";
+                        newString = string.Empty;
                     }
                     else
                     {
@@ -402,11 +375,11 @@ namespace GitUI.Script
 
                     break;
 
-                case "RepoName":
+                case ScriptOptions.RepoName:
                     newString = module == null ? string.Empty : new RepositoryDescriptionProvider(new GitDirectoryResolver()).Get(module.WorkingDir);
                     break;
 
-                case "UserInput":
+                case ScriptOptions.UserInput:
                     using (var prompt = new SimplePrompt())
                     {
                         prompt.ShowDialog();
@@ -415,20 +388,20 @@ namespace GitUI.Script
 
                     break;
 
-                case "UserFiles":
-                    using (FormFilePrompt prompt = new FormFilePrompt())
-                    {
-                        if (prompt.ShowDialog(owner) != DialogResult.OK)
-                        {
-                            // abort parsing as the user chose to abort
-                            return null;
-                        }
+                case ScriptOptions.UserFiles:
+                    var filePath = simpleDialog
+                        .ShowFilePromptDialog();
 
-                        newString = prompt.FileInput;
-                        break;
+                    if (filePath == null)
+                    {
+                        // abort parsing as the user chose to abort
+                        return null;
                     }
 
-                case "WorkingDir":
+                    newString = filePath;
+                    break;
+
+                case ScriptOptions.WorkingDir:
                     newString = module == null ? string.Empty : module.WorkingDir;
                     break;
             }
@@ -494,8 +467,8 @@ namespace GitUI.Script
 
         public readonly struct TestAccessor
         {
-            public string ParseScriptArguments(string argument, string option, IWin32Window owner, RevisionGridControl revisionGrid, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches, List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision, List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote) =>
-                ScriptOptionsParser.ParseScriptArguments(argument, option, owner, revisionGrid, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
+            public string ParseScriptArguments(string argument, string option, ISimpleDialog simpleDialog, RevisionGridControl revisionGrid, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches, List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision, List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote) =>
+                ScriptOptionsParser.ParseScriptArguments(argument, option, simpleDialog, revisionGrid, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
         }
     }
 }

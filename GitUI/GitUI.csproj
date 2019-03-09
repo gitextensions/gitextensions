@@ -455,6 +455,7 @@
     </Compile>
     <Compile Include="Hotkey\KeysExtensions.cs" />
     <Compile Include="Script\IScriptManager.cs" />
+    <Compile Include="Script\IScriptOptionsParser.cs" />
     <Compile Include="Script\IScriptRunner.cs" />
     <Compile Include="Script\PowerShellHelper.cs" />
     <Compile Include="Script\ScriptOptions.cs" />
