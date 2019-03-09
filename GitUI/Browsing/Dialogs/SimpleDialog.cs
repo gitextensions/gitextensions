@@ -23,11 +23,22 @@ namespace GitUI.Browsing.Dialogs
             return MessageBox.Show(_owner, text, caption, MessageBoxButtons.YesNo, icon);
         }
 
-        public DialogResult ShowFilePromptDialog()
+        /// <inheritdoc />
+        public string ShowFilePromptDialog()
         {
             using (var filePromptForm = new FormFilePrompt())
             {
-                return filePromptForm.ShowDialog(_owner);
+                var dialogResult = filePromptForm
+                    .ShowDialog(_owner);
+
+                if (dialogResult != DialogResult.OK)
+                {
+                    return null;
+                }
+
+                return filePromptForm.FileInput;
+            }
+        }
             }
         }
     }

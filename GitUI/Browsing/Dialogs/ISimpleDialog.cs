@@ -8,6 +8,10 @@ namespace GitUI.Browsing.Dialogs
 
         DialogResult ShowYesNoDialog(string text, string caption, MessageBoxIcon icon);
 
-        DialogResult ShowFilePromptDialog();
+        /// <summary>
+        /// Show dialog for file selection
+        /// </summary>
+        /// <returns>Selected file name</returns>
+        string ShowFilePromptDialog();
     }
 }
