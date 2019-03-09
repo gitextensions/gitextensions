@@ -185,8 +185,10 @@ namespace GitUI.CommandsDialogs
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
 
+            var gitUIEventArgs = new GitUIEventArgs(RevisionGrid, UICommands);
+            var simpleDialog = new SimpleDialog(RevisionGrid);
             var scriptManager = new ScriptManager();
-            var scriptRunner = new ScriptRunner(new WindowContainer(RevisionGrid), Module, UICommands, new SimpleDialog(RevisionGrid), scriptManager, RevisionGrid);
+            var scriptRunner = new ScriptRunner(Module, gitUIEventArgs, new ScriptOptionsParser(simpleDialog, RevisionGrid, RevisionGrid, RevisionGrid, RevisionGrid), simpleDialog, scriptManager, RevisionGrid);
             var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptManager, scriptRunner, RevisionGrid, new FormSettings(UICommands));
 
             repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper, userScriptMenuBuilder);
@@ -859,8 +861,10 @@ namespace GitUI.CommandsDialogs
 
                 OnActivate();
 
+                var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
+                var simpleDialog = new SimpleDialog(this);
                 var scriptManager = new ScriptManager();
-                var scriptRunner = new ScriptRunner(new WindowContainer(this), Module, UICommands, new SimpleDialog(this), scriptManager, RevisionGrid);
+                var scriptRunner = new ScriptRunner(Module, gitUIEventArgs, new ScriptOptionsParser(simpleDialog, RevisionGrid, RevisionGrid, RevisionGrid, RevisionGrid), simpleDialog, scriptManager, RevisionGrid);
                 var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptManager, scriptRunner, RevisionGrid, new FormSettings(UICommands));
 
                 userScriptMenuBuilder.Build(ToolStrip);

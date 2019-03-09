@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitUI.Browsing.Dialogs;
 using GitUI.Script;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using ResourceManager;
 
@@ -155,7 +156,10 @@ namespace GitUI
 
             CommandStatus ExecuteScriptCommand()
             {
-                var scriptRunner = new ScriptRunner(new WindowContainer(this), Module, UICommands, new SimpleDialog(this), new ScriptManager(), this as RevisionGridControl);
+                var revisionGridControl = this as RevisionGridControl;
+                var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
+                var simpleDialog = new SimpleDialog(this);
+                var scriptRunner = new ScriptRunner(Module, gitUIEventArgs, new ScriptOptionsParser(simpleDialog, revisionGridControl, revisionGridControl, revisionGridControl, revisionGridControl), simpleDialog, new ScriptManager(), revisionGridControl);
 
                 return scriptRunner.ExecuteScriptCommand(command);
             }

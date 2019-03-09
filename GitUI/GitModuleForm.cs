@@ -5,6 +5,7 @@ using GitCommands;
 using GitUI.Browsing.Dialogs;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.Script;
+using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 
 namespace GitUI
@@ -69,7 +70,9 @@ namespace GitUI
 
         protected override CommandStatus ExecuteCommand(int command)
         {
-            var scriptRunner = new ScriptRunner(new WindowContainer(this), Module, UICommands, new SimpleDialog(this), new ScriptManager());
+            var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
+            var simpleDialog = new SimpleDialog(this);
+            var scriptRunner = new ScriptRunner(Module, gitUIEventArgs, new ScriptOptionsParser(simpleDialog), simpleDialog, new ScriptManager());
             var result = scriptRunner.ExecuteScriptCommand(command);
 
             if (!result.Executed)

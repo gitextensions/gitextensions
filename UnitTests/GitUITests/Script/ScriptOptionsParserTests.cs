@@ -194,7 +194,7 @@ namespace GitUITests.Script
         {
             _module.WorkingDir.Returns("C:\\test path with whitespaces\\");
 
-            var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{{WorkingDir}} \"{WorkingDir}\"", "WorkingDir", null, null, _module, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{{WorkingDir}} \"{WorkingDir}\"", "WorkingDir", null, _module, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
             result.Should().Be("\"C:\\test path with whitespaces\\\\\" \"C:\\test path with whitespaces\\\"");
         }
@@ -205,10 +205,10 @@ namespace GitUITests.Script
             GitRevision gitRevision = new GitRevision(ObjectId.Random());
             gitRevision.Subject = "test string with \"double qoutes\" and escaped \\\"double qoutes\\\"";
 
-            var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{{sMessage}}", "sMessage", null, null, null, null, null, null, null, null, null, gitRevision, null, null, null, null, null, null);
+            var result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{{sMessage}}", "sMessage", null, null, null, null, null, null, null, null, gitRevision, null, null, null, null, null, null, null);
             result.Should().Be("\"test string with \\\"double qoutes\\\" and escaped \\\"double qoutes\\\"\"");
 
-            result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{sMessage}", "sMessage", null, null, null, null, null, null, null, null, null, gitRevision, null, null, null, null, null, null);
+            result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments("{sMessage}", "sMessage", null, null, null, null, null, null, null, null, gitRevision, null, null, null, null, null, null, null);
             result.Should().Be("test string with \"double qoutes\" and escaped \\\"double qoutes\\\"");
         }
     }

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Browsing;
 using GitUI.Browsing.Dialogs;
 using GitUIPluginInterfaces;
 
@@ -13,27 +14,27 @@ namespace GitUI.Script
         private const string PluginPrefix = "plugin:";
         private const string NavigateToPrefix = "navigateTo:";
 
-        private readonly IWindowContainer _windowContainer;
         private readonly IGitModule _module;
-        private readonly IGitUICommands _uiCommands;
+        private readonly GitUIEventArgs _gitUIEventArgs;
+        private readonly IScriptOptionsParser _scriptOptionsParser;
         private readonly ISimpleDialog _simpleDialog;
         private readonly IScriptManager _scriptManager;
-        private readonly RevisionGridControl _revisionGrid;
+        private readonly ICanGoToRef _canGoToRef;
 
         public ScriptRunner(
-            IWindowContainer windowContainer,
             IGitModule module,
-            IGitUICommands uiCommands,
+            GitUIEventArgs gitUIEventArgs,
+            IScriptOptionsParser scriptOptionsParser,
             ISimpleDialog simpleDialog,
             IScriptManager scriptManager,
-            RevisionGridControl revisionGrid = null)
+            ICanGoToRef canGoToRef = null)
         {
-            _windowContainer = windowContainer ?? throw new ArgumentNullException(nameof(windowContainer));
             _module = module ?? throw new ArgumentNullException(nameof(module));
-            _uiCommands = uiCommands ?? throw new ArgumentNullException(nameof(uiCommands));
+            _gitUIEventArgs = gitUIEventArgs ?? throw new ArgumentNullException(nameof(gitUIEventArgs));
+            _scriptOptionsParser = scriptOptionsParser ?? throw new ArgumentNullException(nameof(scriptOptionsParser));
             _simpleDialog = simpleDialog ?? throw new ArgumentNullException(nameof(simpleDialog));
-            _scriptManager = scriptManager;
-            _revisionGrid = revisionGrid;
+            _scriptManager = scriptManager ?? throw new ArgumentNullException(nameof(scriptManager));
+            _canGoToRef = canGoToRef;
         }
 
         /// <inheritdoc />
@@ -79,7 +80,7 @@ namespace GitUI.Script
 
             var argument = script.Arguments;
 
-            foreach (var option in ScriptOptionsParser.Options)
+            foreach (var option in ScriptOptions.List)
             {
                 if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
                 {
@@ -91,7 +92,7 @@ namespace GitUI.Script
                     continue;
                 }
 
-                if (_revisionGrid != null)
+                if (_canGoToRef != null)
                 {
                     continue;
                 }
@@ -101,10 +102,10 @@ namespace GitUI.Script
                 return false;
             }
 
-            return RunScript(_module, script, _uiCommands, _revisionGrid);
+            return RunScript(_module, script);
         }
 
-        private CommandStatus RunScript(IGitModule module, ScriptInfo scriptInfo, IGitUICommands uiCommands, RevisionGridControl revisionGrid)
+        private CommandStatus RunScript(IGitModule module, ScriptInfo scriptInfo)
         {
             if (scriptInfo.AskConfirmation)
             {
@@ -118,7 +119,7 @@ namespace GitUI.Script
             }
 
             var originalCommand = scriptInfo.Command;
-            (string argument, bool abort) = ScriptOptionsParser.Parse(scriptInfo.Arguments, module, _windowContainer.Window, revisionGrid);
+            (string argument, bool abort) = _scriptOptionsParser.Parse(scriptInfo.Arguments, module);
 
             if (abort)
             {
@@ -142,8 +143,7 @@ namespace GitUI.Script
                 {
                     if (plugin.Description.ToLower().Equals(command, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        var eventArgs = new GitUIEventArgs(_windowContainer.Window, uiCommands);
-                        return new CommandStatus(true, plugin.Execute(eventArgs));
+                        return new CommandStatus(true, plugin.Execute(_gitUIEventArgs));
                     }
                 }
 
@@ -152,7 +152,7 @@ namespace GitUI.Script
 
             if (command.StartsWith(NavigateToPrefix))
             {
-                if (revisionGrid == null)
+                if (_canGoToRef == null)
                 {
                     return false;
                 }
@@ -164,7 +164,7 @@ namespace GitUI.Script
 
                     if (revisionRef != null)
                     {
-                        revisionGrid.GoToRef(revisionRef, true);
+                        _canGoToRef.GoToRef(revisionRef, true);
                     }
                 }
 
@@ -173,7 +173,7 @@ namespace GitUI.Script
 
             if (!scriptInfo.RunInBackground)
             {
-                FormProcess.ShowStandardProcessDialog(_windowContainer.Window, command, argument, module.WorkingDir, null, true);
+                _simpleDialog.ShowStandardProcessDialog(command, argument, module.WorkingDir, null, true);
             }
             else
             {

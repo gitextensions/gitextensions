@@ -43,7 +43,7 @@ namespace GitUI
     }
 
     [DefaultEvent("DoubleClick")]
-    public sealed partial class RevisionGridControl : GitModuleControl, ICanRefreshRevisions
+    public sealed partial class RevisionGridControl : GitModuleControl, ICanRefreshRevisions, ICanGoToRef, ICanGetCurrentRevision, ICanGetQuickItemSelectorLocation, ICanGetSelectedRevisions, ICanLatestSelectedRevision
     {
         public event EventHandler<DoubleClickRevisionEventArgs> DoubleClickRevision;
         public event EventHandler<EventArgs> ShowFirstParentsToggled;
@@ -284,8 +284,7 @@ namespace GitUI
 
         internal IndexWatcher IndexWatcher => _indexWatcher.Value;
 
-        [CanBeNull]
-        internal GitRevision LatestSelectedRevision => IsValidRevisionIndex(_latestSelectedRowIndex) ? GetRevision(_latestSelectedRowIndex) : null;
+        [CanBeNull] public GitRevision LatestSelectedRevision => IsValidRevisionIndex(_latestSelectedRowIndex) ? GetRevision(_latestSelectedRowIndex) : null;
 
         internal bool MultiSelect
         {
@@ -1655,8 +1654,10 @@ namespace GitUI
 
             SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
 
+            var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
+            var simpleDialog = new SimpleDialog(this);
             var scriptManager = new ScriptManager();
-            var scriptRunner = new ScriptRunner(new WindowContainer(this), Module, UICommands, new SimpleDialog(this), scriptManager, this);
+            var scriptRunner = new ScriptRunner(Module, gitUIEventArgs, new ScriptOptionsParser(simpleDialog, this, this, this, this), simpleDialog, scriptManager, this);
             var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptManager, scriptRunner, this, new FormSettings(UICommands));
 
             userScriptMenuBuilder.Build(mainContextMenu);

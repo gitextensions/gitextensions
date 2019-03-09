@@ -135,6 +135,11 @@
     <Compile Include="Browsing\Dialogs\IWindowContainer.cs" />
     <Compile Include="Browsing\Dialogs\SimpleDialog.cs" />
     <Compile Include="Browsing\Dialogs\WindowContainer.cs" />
+    <Compile Include="Browsing\ICanLatestSelectedRevision.cs" />
+    <Compile Include="Browsing\ICanGetSelectedRevisions.cs" />
+    <Compile Include="Browsing\ICanGetQuickItemSelectorLocation.cs" />
+    <Compile Include="Browsing\ICanGetCurrentRevision.cs" />
+    <Compile Include="Browsing\ICanGoToRef.cs" />
     <Compile Include="Browsing\ICanLoadSettings.cs" />
     <Compile Include="Browsing\ICanRefreshRevisions.cs" />
     <Compile Include="Browsing\IUserScriptMenuBuilder.cs" />
