@@ -101,6 +101,7 @@
     <Compile Include="ControlUtilTests.cs" />
     <Compile Include="LinqExtensionsTests.cs" />
     <Compile Include="Script\ScriptOptionsParserTests.cs" />
+    <Compile Include="Script\ScriptRunnerTests.cs" />
     <Compile Include="SpellChecker\WordAtCursorExtractorTests.cs" />
     <Compile Include="SplitterManagerTest.cs" />
     <Compile Include="StringBuilderExtensionsTests.cs" />
