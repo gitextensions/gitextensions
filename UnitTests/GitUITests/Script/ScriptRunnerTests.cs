@@ -33,7 +33,7 @@ namespace GitUITests.Script
         }
 
         [Test]
-        public void Build_tool_should_work()
+        public void RunScript_should_work()
         {
             // Arrange
             var scriptKey = Guid.NewGuid().ToString();
