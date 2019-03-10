@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -33,7 +34,7 @@ namespace GitCommandsTests.Patches
         {
             TestPatch expectedPatch = CreateSmallPatchExample();
 
-            var patches = PatchProcessor.CreatePatchesFromString(expectedPatch.PatchOutput, Encoding.UTF8);
+            var patches = PatchProcessor.CreatePatchesFromString(expectedPatch.PatchOutput, new Lazy<Encoding>(() => Encoding.UTF8));
 
             Patch createdPatch = patches.First();
 
@@ -49,7 +50,7 @@ namespace GitCommandsTests.Patches
         {
             TestPatch expectedPatch = CreateSmallPatchExample(reverse: true);
 
-            var patches = PatchProcessor.CreatePatchesFromString(expectedPatch.PatchOutput, Encoding.UTF8);
+            var patches = PatchProcessor.CreatePatchesFromString(expectedPatch.PatchOutput, new Lazy<Encoding>(() => Encoding.UTF8));
 
             Patch createdPatch = patches.First();
 
@@ -63,7 +64,7 @@ namespace GitCommandsTests.Patches
         [Test]
         public void TestCorrectlyLoadsTheRightNumberOfDiffsInAPatchFile()
         {
-            var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, Encoding.UTF8);
+            var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
 
             Assert.AreEqual(17, patches.Count());
         }
@@ -71,7 +72,7 @@ namespace GitCommandsTests.Patches
         [Test]
         public void TestCorrectlyLoadsTheRightFileNamesInAPatchFile()
         {
-            var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, Encoding.UTF8).ToList();
+            var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
             Assert.AreEqual(17, patches.Select(p => p.FileNameA).Distinct().Count());
             Assert.AreEqual(17, patches.Select(p => p.FileNameB).Distinct().Count());
@@ -80,7 +81,7 @@ namespace GitCommandsTests.Patches
         [Test]
         public void TestCorrectlyLoadsBinaryPatch()
         {
-            var patches = PatchProcessor.CreatePatchesFromString(_bigBinPatch, Encoding.UTF8);
+            var patches = PatchProcessor.CreatePatchesFromString(_bigBinPatch, new Lazy<Encoding>(() => Encoding.UTF8));
 
             Assert.AreEqual(248, patches.Count(p => p.FileType == PatchFileType.Binary));
         }
@@ -88,7 +89,7 @@ namespace GitCommandsTests.Patches
         [Test]
         public void TestCorrectlyLoadsOneNewFile()
         {
-            var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, Encoding.UTF8);
+            var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
 
             Assert.AreEqual(1, patches.Count(p => p.ChangeType == PatchChangeType.NewFile));
         }
@@ -96,7 +97,7 @@ namespace GitCommandsTests.Patches
         [Test]
         public void TestCorrectlyLoadsOneDeleteFile()
         {
-            var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, Encoding.UTF8);
+            var patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
 
             Assert.AreEqual(1, patches.Count(p => p.ChangeType == PatchChangeType.DeleteFile));
         }
@@ -104,17 +105,17 @@ namespace GitCommandsTests.Patches
         [Test]
         public void TestCorrectlyLoadsChangeFiles()
         {
-            var bigPatches = PatchProcessor.CreatePatchesFromString(_bigPatch, Encoding.UTF8);
+            var bigPatches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8));
             Assert.AreEqual(15, bigPatches.Count(p => p.ChangeType == PatchChangeType.ChangeFile));
 
-            var smallPatches = PatchProcessor.CreatePatchesFromString(CreateSmallPatchExample().PatchOutput, Encoding.UTF8);
+            var smallPatches = PatchProcessor.CreatePatchesFromString(CreateSmallPatchExample().PatchOutput, new Lazy<Encoding>(() => Encoding.UTF8));
             Assert.AreEqual(1, smallPatches.Count(p => p.ChangeType == PatchChangeType.ChangeFile));
         }
 
         [Test]
         public void TestCorrectlyLoadsRebaseDiff()
         {
-            var patches = PatchProcessor.CreatePatchesFromString(_rebaseDiff, Encoding.UTF8).ToList();
+            var patches = PatchProcessor.CreatePatchesFromString(_rebaseDiff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
             Assert.AreEqual(13, patches.Count);
             Assert.AreEqual(3, patches.Count(p => p.IsCombinedDiff));
@@ -133,7 +134,7 @@ index cdf8bebba,55ff37bb9..000000000
 +++ b/UnitTests/GitCommandsTests/Patches/PatchProcessorTest.cs
 ";
 
-            var patches = PatchProcessor.CreatePatchesFromString(diff, Encoding.UTF8).ToList();
+            var patches = PatchProcessor.CreatePatchesFromString(diff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
 
             Assert.AreEqual(2, patches.Count);
             Assert.IsTrue(patches.All(p => p.IsCombinedDiff));
