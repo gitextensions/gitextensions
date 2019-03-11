@@ -132,9 +132,7 @@
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>
     </Compile>
     <Compile Include="Browsing\Dialogs\ISimpleDialog.cs" />
-    <Compile Include="Browsing\Dialogs\IWindowContainer.cs" />
     <Compile Include="Browsing\Dialogs\SimpleDialog.cs" />
-    <Compile Include="Browsing\Dialogs\WindowContainer.cs" />
     <Compile Include="Browsing\ICanLatestSelectedRevision.cs" />
     <Compile Include="Browsing\ICanGetSelectedRevisions.cs" />
     <Compile Include="Browsing\ICanGetQuickItemSelectorLocation.cs" />
