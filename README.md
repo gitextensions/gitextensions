@@ -119,6 +119,15 @@ title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.
     <td><a href="https://plugins.jetbrains.com/plugin/11511-gitextensions">[ Download ]</a> or install via IDE Plugins settings<br/>
       NB: Please direct all discussions about this plugin to <a href="https://github.com/DmitryZhelnin/git-extensions-intellij">its own repo</a>.</td>
   </tr>
+    
+  <tr>
+    <td><strong>Git Extensions for VS Code</strong><br />Kudos to <a href="https://github.com/Carl-Hugo" class="author text-inherit">@Carl-Hugo</a></td>
+    <td>
+        <p>This extension allows users to <strong>Browse with Git Extensions</strong> from the <em>Explorer</em> and the <em>Editor</em>. It supports a single folder and workspaces. Nothing fancier.</p>
+        <p><a href="https://marketplace.visualstudio.com/items?itemName=forevolve.git-extensions-for-vs-code">[ Download from the Marketplace ]</a> or install via VS Code<br/>
+      NB: Please direct all discussions about this extension to <a href="https://github.com/ForEvolve/git-extensions-for-vs-code">its own repo</a>.</p>
+    </td>
+  </tr>
 </table>
 
 # Conduct
