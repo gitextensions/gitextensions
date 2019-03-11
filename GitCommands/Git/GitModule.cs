@@ -1747,11 +1747,7 @@ namespace GitCommands
             if (nonDeletedFiles.Count != 0)
             {
                 var execution = _gitExecutable.Execute(
-                    new GitArgumentBuilder("update-index")
-                    {
-                        "--add",
-                        "--stdin"
-                    },
+                    UpdateIndexCmd(AppSettings.ShowErrorsWhenStagingFiles),
                     inputWriter =>
                     {
                         foreach (var file in nonDeletedFiles)
@@ -1889,6 +1885,18 @@ namespace GitCommands
                 $"\"{filename.ToPosixPath()}\"{inputWriter.NewLine}");
 
             inputWriter.BaseStream.Write(bytes, 0, bytes.Length);
+        }
+
+        private GitArgumentBuilder UpdateIndexCmd(bool showErrorsWhenStagingFiles)
+        {
+            return new GitArgumentBuilder("update-index", gitOptions:
+                            showErrorsWhenStagingFiles
+                                ? default
+                                : (ArgumentString)"-c core.safecrlf=false")
+                    {
+                        "--add",
+                        "--stdin"
+                    };
         }
 
         #endregion
@@ -4057,6 +4065,20 @@ namespace GitCommands
                     ? $"{param}=\"{date:yyyy-MM-dd hh:mm:ss}\""
                     : "";
             }
+        }
+
+        internal TestAccessor GetTestAccessor() => new TestAccessor(this);
+
+        internal readonly struct TestAccessor
+        {
+            private readonly GitModule _gitModule;
+
+            public TestAccessor(GitModule gitModule)
+            {
+                _gitModule = gitModule;
+            }
+
+            public GitArgumentBuilder UpdateIndexCmd(bool showErrorsWhenStagingFiles) => _gitModule.UpdateIndexCmd(showErrorsWhenStagingFiles);
         }
     }
 

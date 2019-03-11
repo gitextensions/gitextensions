@@ -579,5 +579,15 @@ namespace GitCommandsTests
         {
             Assert.AreEqual(expected, _gitModule.GetRefsCmd(tags, branches, noLocks).ToString());
         }
+
+        [TestCase(false, @"-c core.safecrlf=false update-index --add --stdin")]
+        [TestCase(true, @"update-index --add --stdin")]
+        public void UpdateIndexCmd_should_add_core_safecrlf(bool showErrorsWhenStagingFiles, string expected)
+        {
+            var accessor = _gitModule.GetTestAccessor();
+
+            var actual = accessor.UpdateIndexCmd(showErrorsWhenStagingFiles).ToString();
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
