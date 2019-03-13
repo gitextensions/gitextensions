@@ -480,6 +480,29 @@ namespace GitUI.BranchTreePanel
             }
 
             public NativeTreeView TreeView => _repoObjectsTree.treeMain;
+
+            public void ReorderTreeNode(TreeNode node, bool up)
+            {
+                _repoObjectsTree.ReorderTreeNode(node, up);
+            }
+
+            public void SetTreeVisibleByIndex(int index, bool visible)
+            {
+                var tree = _repoObjectsTree.GetTreeToPositionIndex().FirstOrDefault(kvp => kvp.Value == index).Key;
+                if (tree.TreeViewNode.IsVisible == visible)
+                {
+                    return;
+                }
+
+                if (visible)
+                {
+                    _repoObjectsTree.AddTree(tree);
+                }
+                else
+                {
+                    _repoObjectsTree.RemoveTree(tree);
+                }
+            }
         }
 
         private void mnuBtnUpdateAllRemotes_Click(object sender, EventArgs e)
