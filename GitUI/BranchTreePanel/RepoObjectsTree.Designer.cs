@@ -57,7 +57,8 @@ namespace GitUI.BranchTreePanel
             this.components = new System.ComponentModel.Container();
             this.treeMain = new GitUI.UserControls.NativeTreeView();
             this.menuMain = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.tsmiSpacer1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiMainMenuSpacer1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsmiMainMenuSpacer2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnubtnCollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnExpandAll = new System.Windows.Forms.ToolStripMenuItem();
             this.menuBranch = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -101,6 +102,8 @@ namespace GitUI.BranchTreePanel
             this.menuSubmodule = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnUpdateSubmodule = new System.Windows.Forms.ToolStripMenuItem();
             this.menuAllSubmodules = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnubtnMoveUp = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnubtnMoveDown = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnManageSubmodules = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnSynchronizeSubmodules = new System.Windows.Forms.ToolStripMenuItem();
             this.menuMain.SuspendLayout();
@@ -136,16 +139,22 @@ namespace GitUI.BranchTreePanel
             // 
             this.menuMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnubtnCollapseAll,
-            this.mnubtnExpandAll});
+            this.mnubtnExpandAll,
+            this.mnubtnMoveUp,
+            this.mnubtnMoveDown});
             this.menuMain.Name = "menuMain";
             this.menuMain.Size = new System.Drawing.Size(137, 76);
             this.menuMain.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
             // 
-            // tsmiSpacer1
+            // tsmiMainMenuSpacer1
             // 
-            this.tsmiSpacer1.Name = "tsmiSpacer1";
-            this.tsmiSpacer1.Size = new System.Drawing.Size(133, 6);
+            this.tsmiMainMenuSpacer1.Name = "tsmiMainMenuSpacer1";
+            this.tsmiMainMenuSpacer1.Size = new System.Drawing.Size(133, 6);
             // 
+            // tsmiMainMenuSpacer2
+            // 
+            this.tsmiMainMenuSpacer2.Name = "tsmiMainMenuSpacer2";
+            this.tsmiMainMenuSpacer2.Size = new System.Drawing.Size(133, 6);
             // mnubtnCollapseAll
             // 
             this.mnubtnCollapseAll.Image = global::GitUI.Properties.Images.CollapseAll;
@@ -507,7 +516,7 @@ namespace GitUI.BranchTreePanel
             // tsmiShowRemotes
             // 
             this.tsmiShowSubmodules.CheckOnClick = true;
-            this.tsmiShowSubmodules.Image = global::GitUI.Properties.Images.BranchRemoteRoot;
+            this.tsmiShowSubmodules.Image = global::GitUI.Properties.Images.FolderSubmodule;
             this.tsmiShowSubmodules.Name = "tsmiShowSubmodules";
             this.tsmiShowSubmodules.Size = new System.Drawing.Size(154, 22);
             this.tsmiShowSubmodules.Text = "&Submodules";
@@ -546,6 +555,22 @@ namespace GitUI.BranchTreePanel
             this.menuAllSubmodules.Name = "contextmenuSubmodules";
             this.menuAllSubmodules.Size = new System.Drawing.Size(196, 26);
             this.menuAllSubmodules.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
+            // 
+            // mnubtnMoveUp
+            // 
+            this.mnubtnMoveUp.Image = global::GitUI.Properties.Images.ArrowUp;
+            this.mnubtnMoveUp.Name = "mnubtnMoveUp";
+            this.mnubtnMoveUp.Size = new System.Drawing.Size(138, 22);
+            this.mnubtnMoveUp.Text = "Move Up";
+            this.mnubtnMoveUp.ToolTipText = "Move node up";
+            // 
+            // mnubtnMoveDown
+            // 
+            this.mnubtnMoveDown.Image = global::GitUI.Properties.Images.ArrowDown;
+            this.mnubtnMoveDown.Name = "mnubtnMoveDown";
+            this.mnubtnMoveDown.Size = new System.Drawing.Size(138, 22);
+            this.mnubtnMoveDown.Text = "Move Down";
+            this.mnubtnMoveDown.ToolTipText = "Move node down";
             // 
             // mnubtnManageSubmodules
             // 
@@ -620,7 +645,8 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem mnubtnRemoteBranchFetchAndCheckout;
         private ToolStripMenuItem mnubtnFetchRebase;
         private ToolStripMenuItem mnubtnFetchCreateBranch;
-        private ToolStripSeparator tsmiSpacer1;
+        private ToolStripSeparator tsmiMainMenuSpacer1;
+        private ToolStripSeparator tsmiMainMenuSpacer2;
         private ToolStripMenuItem mnubtnEnableRemote;
         private ToolStripMenuItem mnubtnEnableRemoteAndFetch;
         private ToolStripMenuItem mnubtnDisableRemote;
@@ -638,5 +664,7 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem mnubtnSynchronizeSubmodules;
         private ToolStripMenuItem mnubtnUpdateSubmodule;
         private ToolStripMenuItem mnubtnOpenSubmodule;
+        private ToolStripMenuItem mnubtnMoveUp;
+        private ToolStripMenuItem mnubtnMoveDown;
     }
 }

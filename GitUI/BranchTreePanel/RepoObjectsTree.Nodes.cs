@@ -128,6 +128,7 @@ namespace GitUI.BranchTreePanel
                 Nodes = new Nodes(this);
                 _uiCommandsSource = uiCommands;
                 TreeViewNode = treeNode;
+                treeNode.Tag = this;
 
                 uiCommands.UICommandsChanged += (a, e) =>
                 {
