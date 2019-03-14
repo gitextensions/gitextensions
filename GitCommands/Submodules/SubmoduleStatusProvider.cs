@@ -132,7 +132,8 @@ namespace GitCommands.Submodules
 
         private async Task GetRepositorySubmodulesStatusAsync(bool updateStatus, SubmoduleInfoResult result, IGitModule module, CancellationToken cancelToken, string noBranchText)
         {
-            List<Task> tasks = new List<Task>();
+            await TaskScheduler.Default;
+
             foreach (var submodule in module.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName))
             {
                 cancelToken.ThrowIfCancellationRequested();
@@ -145,20 +146,17 @@ namespace GitCommands.Submodules
 
                 var smi = new SubmoduleInfo { Text = name, Path = path };
                 result.OurSubmodules.Add(smi);
-                tasks.Add(GetSubmoduleStatusAsync(updateStatus, smi, cancelToken));
+                GetSubmoduleStatus(updateStatus, smi, cancelToken);
             }
-
-            await Task.WhenAll(tasks);
         }
 
-        private async Task GetSubmoduleStatusAsync(bool updateStatus, SubmoduleInfo info, CancellationToken cancelToken)
+        private void GetSubmoduleStatus(bool updateStatus, SubmoduleInfo info, CancellationToken cancelToken)
         {
             if (!updateStatus)
             {
                 return;
             }
 
-            await TaskScheduler.Default;
             cancelToken.ThrowIfCancellationRequested();
 
             var submodule = new GitModule(info.Path);
@@ -174,8 +172,7 @@ namespace GitCommands.Submodules
             {
                 cancelToken.ThrowIfCancellationRequested();
 
-                var submoduleStatus = await GitCommandHelpers.GetCurrentSubmoduleChangesAsync(supermodule, submoduleName, noLocks: true)
-                .ConfigureAwait(false);
+                var submoduleStatus = await GitCommandHelpers.GetCurrentSubmoduleChangesAsync(supermodule, submoduleName, noLocks: true).ConfigureAwait(false);
                 if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                 {
                     submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(supermodule));
@@ -213,7 +210,7 @@ namespace GitCommands.Submodules
             bool isParentTopProject = module.SuperprojectModule.WorkingDir == topProject.WorkingDir;
 
             // Set result.SuperProject
-            await SetSuperProjectSubmoduleInfoAsync(updateStatus, result, module, cancelToken, noBranchText, topProject, isParentTopProject);
+            SetSuperProjectSubmoduleInfo(updateStatus, result, module, cancelToken, noBranchText, topProject, isParentTopProject);
 
             // Set result.TopProject
             await SetTopProjectSubmoduleInfoAsync(updateStatus, result, module, cancelToken, noBranchText, topProject, isParentTopProject);
@@ -222,7 +219,7 @@ namespace GitCommands.Submodules
             await SetSubmoduleDataAsync(updateStatus, result, module, cancelToken, noBranchText, topProject);
         }
 
-        private async Task SetSuperProjectSubmoduleInfoAsync(bool updateStatus, SubmoduleInfoResult result, GitModule module, CancellationToken cancelToken, string noBranchText, IGitModule topProject, bool isParentTopProject)
+        private void SetSuperProjectSubmoduleInfo(bool updateStatus, SubmoduleInfoResult result, GitModule module, CancellationToken cancelToken, string noBranchText, IGitModule topProject, bool isParentTopProject)
         {
             string name;
             if (isParentTopProject)
@@ -239,11 +236,13 @@ namespace GitCommands.Submodules
             string path = module.SuperprojectModule.WorkingDir;
             name += GetBranchNameSuffix(path, noBranchText);
             result.SuperProject = new SubmoduleInfo { Text = name, Path = module.SuperprojectModule.WorkingDir };
-            await GetSubmoduleStatusAsync(updateStatus, result.SuperProject, cancelToken);
+            GetSubmoduleStatus(updateStatus, result.SuperProject, cancelToken);
         }
 
         private async Task SetTopProjectSubmoduleInfoAsync(bool updateStatus, SubmoduleInfoResult result, GitModule module, CancellationToken cancelToken, string noBranchText, IGitModule topProject, bool isParentTopProject)
         {
+            await TaskScheduler.Default;
+
             if (isParentTopProject)
             {
                 result.TopProject = result.SuperProject;
@@ -253,19 +252,19 @@ namespace GitCommands.Submodules
                 string path = topProject.WorkingDir;
                 string name = Path.GetFileName(Path.GetDirectoryName(topProject.WorkingDir)) + GetBranchNameSuffix(path, noBranchText);
                 result.TopProject = new SubmoduleInfo { Text = name, Path = topProject.WorkingDir };
-                await GetSubmoduleStatusAsync(updateStatus, result.TopProject, cancelToken);
+                GetSubmoduleStatus(updateStatus, result.TopProject, cancelToken);
             }
         }
 
         private async Task SetSubmoduleDataAsync(bool updateStatus, SubmoduleInfoResult result, GitModule module, CancellationToken cancelToken, string noBranchText, IGitModule topProject)
         {
+            await TaskScheduler.Default;
+
             var submodules = topProject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName).ToArray();
             if (submodules.Any())
             {
                 string localPath = module.WorkingDir.Substring(topProject.WorkingDir.Length);
                 localPath = PathUtil.GetDirectoryName(localPath.ToPosixPath());
-
-                List<Task> subTasks = new List<Task>();
 
                 foreach (var submodule in submodules)
                 {
@@ -282,10 +281,8 @@ namespace GitCommands.Submodules
 
                     var smi = new SubmoduleInfo { Text = name, Path = path, Bold = bold };
                     result.SuperSubmodules.Add(smi);
-                    subTasks.Add(GetSubmoduleStatusAsync(updateStatus, smi, cancelToken));
+                    GetSubmoduleStatus(updateStatus, smi, cancelToken);
                 }
-
-                await Task.WhenAll(subTasks);
             }
         }
 
