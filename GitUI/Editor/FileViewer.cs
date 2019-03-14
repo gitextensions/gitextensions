@@ -18,6 +18,7 @@ using GitUI.Hotkey;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.Editor
@@ -469,38 +470,36 @@ namespace GitUI.Editor
 
             ShowOrDeferAsync(
                 fileName,
-                () =>
+                async () =>
                 {
                     if (!isSubmodule)
                     {
-                        return _async.LoadAsync(
-                            () => (patch: Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding), openWithDifftool),
-                            patch => ViewStagingPatch(patch.patch, patch.openWithDifftool));
-                    }
-                    else if (getStatusAsync() != null)
-                    {
-                        return ViewPatchAsync(
-                            () =>
-                            {
-                                var status = ThreadHelper.JoinableTaskFactory.Run(() => getStatusAsync());
-                                if (status == null)
-                                {
-                                    return (text: $"Submodule \"{fileName}\" has unresolved conflicts",
-                                        openWithDifftool: null /* not applicable */);
-                                }
-
-                                return (text: LocalizationHelpers.ProcessSubmoduleStatus(Module, status),
-                                    openWithDifftool: null /* not implemented */);
-                            });
+                        var patch = await Module.GetCurrentChangesAsync(
+                            fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding);
+                        ViewStagingPatch(patch, openWithDifftool);
                     }
                     else
                     {
-                        return ViewPatchAsync(
-                            () =>
-                                (text: LocalizationHelpers.ProcessSubmodulePatch(
-                                        Module, fileName,
-                                        Module.GetCurrentChanges(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding)),
-                                    openWithDifftool: null /* not implemented */));
+                        var getStatusTask = getStatusAsync();
+                        if (getStatusTask != null)
+                        {
+                            var status = await getStatusTask;
+                            if (status == null)
+                            {
+                                ViewPatch($"Submodule \"{fileName}\" has unresolved conflicts", null);
+                                return;
+                            }
+
+                            ViewPatch(LocalizationHelpers.ProcessSubmoduleStatus(Module, status), null);
+                            return;
+                        }
+                        else
+                        {
+                            var changes = await Module.GetCurrentChangesAsync(fileName, oldFileName, staged, GetExtraDiffArguments(), Encoding);
+                            var text = LocalizationHelpers.ProcessSubmodulePatch(Module, fileName, changes);
+                            ViewPatch(text, null);
+                            return;
+                        }
                     }
                 });
         }

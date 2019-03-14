@@ -172,10 +172,10 @@ namespace GitCommands.Submodules
 
             info.Detailed = new AsyncLazy<DetailedSubmoduleInfo>(async () =>
             {
-                await TaskScheduler.Default;
                 cancelToken.ThrowIfCancellationRequested();
 
-                var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(supermodule, submoduleName, noLocks: true);
+                var submoduleStatus = await GitCommandHelpers.GetCurrentSubmoduleChangesAsync(supermodule, submoduleName, noLocks: true)
+                .ConfigureAwait(false);
                 if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                 {
                     submoduleStatus.CheckSubmoduleStatus(submoduleStatus.GetSubmodule(supermodule));

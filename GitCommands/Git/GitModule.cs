@@ -2494,9 +2494,8 @@ namespace GitCommands
                     var localItem = item;
                     localItem.SetSubmoduleStatus(ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
-                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-
-                        var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, localItem.Name, localItem.OldName, localItem.Staged == StagedStatus.Index);
+                        var submoduleStatus = await GitCommandHelpers.GetCurrentSubmoduleChangesAsync(this, localItem.Name, localItem.OldName, localItem.Staged == StagedStatus.Index)
+                        .ConfigureAwait(false);
                         if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                         {
                             var submodule = submoduleStatus.GetSubmodule(this);
@@ -2611,10 +2610,10 @@ namespace GitCommands
         }
 
         [CanBeNull]
-        public Patch GetCurrentChanges(string fileName, [CanBeNull] string oldFileName, bool staged, string extraDiffArguments, Encoding encoding = null, bool noLocks = false)
+        public async Task<Patch> GetCurrentChangesAsync(string fileName, [CanBeNull] string oldFileName, bool staged, string extraDiffArguments, Encoding encoding = null, bool noLocks = false)
         {
-            var output = _gitExecutable.GetOutput(GetCurrentChangesCmd(fileName, oldFileName, staged, extraDiffArguments, noLocks),
-                outputEncoding: LosslessEncoding);
+            var output = await _gitExecutable.GetOutputAsync(GetCurrentChangesCmd(fileName, oldFileName, staged, extraDiffArguments, noLocks),
+                outputEncoding: LosslessEncoding).ConfigureAwait(false);
 
             IReadOnlyList<Patch> patches = PatchProcessor.CreatePatchesFromString(output, new Lazy<Encoding>(() => encoding ?? FilesEncoding)).ToList();
 
@@ -2622,10 +2621,10 @@ namespace GitCommands
         }
 
         [CanBeNull]
-        private string GetFileContents(string path)
+        private async Task<string> GetFileContentsAsync(string path)
         {
             var args = new GitArgumentBuilder("show") { $"HEAD:{path.ToPosixPath().Quote()}" };
-            var result = _gitExecutable.Execute(args);
+            var result = await _gitExecutable.ExecuteAsync(args).ConfigureAwaitRunInline();
 
             return result.ExitCode == 0
                 ? result.StandardOutput
@@ -2633,11 +2632,11 @@ namespace GitCommands
         }
 
         [CanBeNull]
-        public string GetFileContents(GitItemStatus file)
+        public async Task<string> GetFileContentsAsync(GitItemStatus file)
         {
             var contents = new StringBuilder();
 
-            string currentContents = GetFileContents(file.Name);
+            string currentContents = await GetFileContentsAsync(file.Name).ConfigureAwaitRunInline();
             if (currentContents != null)
             {
                 contents.Append(currentContents);
@@ -2645,7 +2644,7 @@ namespace GitCommands
 
             if (file.OldName != null)
             {
-                string oldContents = GetFileContents(file.OldName);
+                string oldContents = await GetFileContentsAsync(file.OldName).ConfigureAwaitRunInline();
                 if (oldContents != null)
                 {
                     contents.Append(oldContents);

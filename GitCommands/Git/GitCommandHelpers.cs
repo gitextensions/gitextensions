@@ -5,12 +5,14 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using GitCommands.Git;
 using GitCommands.Git.Extensions;
 using GitCommands.Patches;
 using GitCommands.Utils;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands
 {
@@ -494,17 +496,17 @@ namespace GitCommands
         }
 
         [CanBeNull]
-        public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged, bool noLocks = false)
+        public static async Task<GitSubmoduleStatus> GetCurrentSubmoduleChangesAsync(GitModule module, string fileName, string oldFileName, bool staged, bool noLocks = false)
         {
-            Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", noLocks: noLocks);
+            Patch patch = await module.GetCurrentChangesAsync(fileName, oldFileName, staged, "", noLocks: noLocks).ConfigureAwait(false);
             string text = patch != null ? patch.Text : "";
             return ParseSubmoduleStatus(text, module, fileName);
         }
 
         [CanBeNull]
-        public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string submodule, bool noLocks = false)
+        public static Task<GitSubmoduleStatus> GetCurrentSubmoduleChangesAsync(GitModule module, string submodule, bool noLocks = false)
         {
-            return GetCurrentSubmoduleChanges(module, submodule, submodule, false, noLocks: noLocks);
+            return GetCurrentSubmoduleChangesAsync(module, submodule, submodule, false, noLocks: noLocks);
         }
 
         [CanBeNull]

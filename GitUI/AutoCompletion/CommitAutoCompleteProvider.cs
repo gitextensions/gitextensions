@@ -24,14 +24,12 @@ namespace GitUI.AutoCompletion
 
         public async Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWordsAsync(CancellationToken cancellationToken)
         {
-            await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-
             cancellationToken.ThrowIfCancellationRequested();
 
             var autoCompleteWords = new HashSet<string>();
 
             var cmd = GitCommandHelpers.GetAllChangedFilesCmd(true, UntrackedFilesMode.Default, noLocks: true);
-            var output = _module.GitExecutable.GetOutput(cmd);
+            var output = await _module.GitExecutable.GetOutputAsync(cmd).ConfigureAwait(false);
             var changedFiles = GitCommandHelpers.GetStatusChangedFilesFromString(_module, output);
             foreach (var file in changedFiles)
             {
@@ -41,7 +39,7 @@ namespace GitUI.AutoCompletion
 
                 if (regex != null)
                 {
-                    var text = GetChangedFileText(_module, file);
+                    var text = await GetChangedFileTextAsync(_module, file);
                     var matches = regex.Matches(text);
                     foreach (Match match in matches)
                     {
@@ -120,16 +118,17 @@ namespace GitUI.AutoCompletion
         }
 
         [CanBeNull]
-        private static string GetChangedFileText(GitModule module, GitItemStatus file)
+        private static async Task<string> GetChangedFileTextAsync(GitModule module, GitItemStatus file)
         {
-            var changes = module.GetCurrentChanges(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000");
+            var changes = await module.GetCurrentChangesAsync(file.Name, file.OldName, file.Staged == StagedStatus.Index, "-U1000000")
+                .ConfigureAwait(false);
 
             if (changes != null)
             {
                 return changes.Text;
             }
 
-            var content = module.GetFileContents(file);
+            var content = await module.GetFileContentsAsync(file).ConfigureAwaitRunInline();
 
             if (content != null)
             {
@@ -139,7 +138,10 @@ namespace GitUI.AutoCompletion
             // Try to read the contents of the file: if it cannot be read, skip the operation silently.
             try
             {
-                return File.ReadAllText(Path.Combine(module.WorkingDir, file.Name));
+                using (var reader = File.OpenText(Path.Combine(module.WorkingDir, file.Name)))
+                {
+                    return await reader.ReadToEndAsync();
+                }
             }
             catch
             {
