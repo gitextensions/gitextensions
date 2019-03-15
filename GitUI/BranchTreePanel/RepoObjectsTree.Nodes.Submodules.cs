@@ -86,10 +86,10 @@ namespace GitUI.BranchTreePanel
                 }
 
                 _details = await Info.Detailed.GetValueAsync(token);
+            }
 
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                token.ThrowIfCancellationRequested();
-
+            public void RefreshDetails()
+            {
                 if (_details != null && Tree.TreeViewNode.TreeView != null)
                 {
                     ApplyText();
@@ -266,6 +266,22 @@ namespace GitUI.BranchTreePanel
                 token.ThrowIfCancellationRequested();
                 var tasks = loadedNodes.DepthEnumerator<SubmoduleNode>().Select(node => node.LoadDetailsAsync(token)).ToList();
                 await Task.WhenAll(tasks);
+
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                token.ThrowIfCancellationRequested();
+
+                if (TreeViewNode.TreeView != null)
+                {
+                    TreeViewNode.TreeView.BeginUpdate();
+                    try
+                    {
+                        loadedNodes.DepthEnumerator<SubmoduleNode>().ForEach(node => node.RefreshDetails());
+                    }
+                    finally
+                    {
+                        TreeViewNode.TreeView.EndUpdate();
+                    }
+                }
             }
 
             protected override void PostFillTreeViewNode(bool firstTime)
