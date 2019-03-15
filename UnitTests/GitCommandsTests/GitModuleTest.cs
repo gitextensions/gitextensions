@@ -538,9 +538,12 @@ namespace GitCommandsTests
                 moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"commit -am ""Update submodule ref""");
 
                 // Assert
-                (char code, ObjectId commitId) = moduleSub.GetSuperprojectCurrentCheckout();
-                Assert.AreEqual(32, code);
-                Assert.AreEqual(commitRef, commitId.ToString());
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                {
+                    (char code, ObjectId commitId) = await moduleSub.GetSuperprojectCurrentCheckoutAsync();
+                    Assert.AreEqual(32, code);
+                    Assert.AreEqual(commitRef, commitId.ToString());
+                });
             }
         }
 

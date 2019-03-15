@@ -98,7 +98,7 @@ namespace GitUI
         private string _fixedRevisionFilter = "";
         private string _fixedPathFilter = "";
         private string _branchFilter = "";
-        private JoinableTask<SuperProjectInfo> _superprojectCurrentCheckout;
+        private SuperProjectInfo _superprojectCurrentCheckout;
         private int _latestSelectedRowIndex;
 
         private bool _settingsLoaded;
@@ -868,14 +868,14 @@ namespace GitUI
                     _initialLoad = false;
                 }
 
-                _superprojectCurrentCheckout = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                _superprojectCurrentCheckout = null;
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    await TaskScheduler.Default;
-                    return GetSuperprojectCheckout(ShowRemoteRef, capturedModule, noLocks: true);
+                    var scc = await GetSuperprojectCheckoutAsync(ShowRemoteRef, capturedModule, noLocks: true);
+                    await this.SwitchToMainThreadAsync();
+                    _superprojectCurrentCheckout = scc;
+                    Refresh();
                 });
-                _superprojectCurrentCheckout.Task.ContinueWith((task) => Refresh(),
-                    TaskScheduler.FromCurrentSynchronizationContext());
-
                 ResetNavigationHistory();
             }
             catch
@@ -1029,7 +1029,7 @@ namespace GitUI
         }
 
         [CanBeNull]
-        private static SuperProjectInfo GetSuperprojectCheckout(Func<IGitRef, bool> showRemoteRef, GitModule gitModule, bool noLocks = false)
+        private static async Task<SuperProjectInfo> GetSuperprojectCheckoutAsync(Func<IGitRef, bool> showRemoteRef, GitModule gitModule, bool noLocks = false)
         {
             if (gitModule.SuperprojectModule == null)
             {
@@ -1037,11 +1037,12 @@ namespace GitUI
             }
 
             var spi = new SuperProjectInfo();
-            var (code, commit) = gitModule.GetSuperprojectCurrentCheckout();
+            var (code, commit) = await gitModule.GetSuperprojectCurrentCheckoutAsync().ConfigureAwait(false);
             if (code == 'U')
             {
                 // return local and remote hashes
-                var array = gitModule.SuperprojectModule.GetConflict(gitModule.SubmodulePath);
+                var array = await gitModule.SuperprojectModule.GetConflictAsync(gitModule.SubmodulePath)
+                    .ConfigureAwaitRunInline();
                 spi.ConflictBase = array.Base.ObjectId;
                 spi.ConflictLocal = array.Local.ObjectId;
                 spi.ConflictRemote = array.Remote.ObjectId;
@@ -1051,7 +1052,7 @@ namespace GitUI
                 spi.CurrentBranch = commit;
             }
 
-            var refs = gitModule.SuperprojectModule.GetSubmoduleItemsForEachRef(gitModule.SubmodulePath, showRemoteRef, noLocks: noLocks);
+            var refs = await gitModule.SuperprojectModule.GetSubmoduleItemsForEachRefAsync(gitModule.SubmodulePath, showRemoteRef, noLocks: noLocks);
 
             if (refs != null)
             {
@@ -1303,7 +1304,7 @@ namespace GitUI
         [ContractAnnotation("=>true,spi:notnull")]
         internal bool TryGetSuperProjectInfo(out SuperProjectInfo spi)
         {
-            spi = _superprojectCurrentCheckout.Task.CompletedOrDefault();
+            spi = _superprojectCurrentCheckout;
             return spi != null;
         }
 

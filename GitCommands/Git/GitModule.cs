@@ -696,19 +696,19 @@ namespace GitCommands
             }
         }
 
-        public ConflictData GetConflict(string filename)
+        public async Task<ConflictData> GetConflictAsync(string filename)
         {
-            return GetConflicts(filename).SingleOrDefault();
+            return (await GetConflictsAsync(filename)).SingleOrDefault();
         }
 
-        public List<ConflictData> GetConflicts(string filename = "")
+        public async Task<List<ConflictData>> GetConflictsAsync(string filename = "")
         {
             filename = filename.ToPosixPath();
 
             var list = new List<ConflictData>();
 
-            var unmerged = _gitExecutable
-                .GetOutput("ls-files -z --unmerged " + filename.QuoteNE())
+            var unmerged = (await _gitExecutable
+                .GetOutputAsync("ls-files -z --unmerged " + filename.QuoteNE()).ConfigureAwait(false))
                 .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             var item = new ConflictedFileData[3];
@@ -762,7 +762,7 @@ namespace GitCommands
             return tree.Split();
         }
 
-        public Dictionary<IGitRef, IGitItem> GetSubmoduleItemsForEachRef(string filename, Func<IGitRef, bool> showRemoteRef, bool noLocks = false)
+        public async Task<Dictionary<IGitRef, IGitItem>> GetSubmoduleItemsForEachRefAsync(string filename, Func<IGitRef, bool> showRemoteRef, bool noLocks = false)
         {
             string command = GetSortedRefsCommand(noLocks: noLocks);
 
@@ -773,7 +773,7 @@ namespace GitCommands
 
             filename = filename.ToPosixPath();
 
-            var refList = _gitExecutable.GetOutput(command);
+            var refList = await _gitExecutable.GetOutputAsync(command).ConfigureAwait(false);
 
             var refs = ParseRefs(refList);
 
@@ -1190,7 +1190,7 @@ namespace GitCommands
             return false;
         }
 
-        public (char code, ObjectId currentCommitId) GetSuperprojectCurrentCheckout()
+        public async Task<(char code, ObjectId currentCommitId)> GetSuperprojectCurrentCheckoutAsync()
         {
             if (SuperprojectModule == null)
             {
@@ -1203,7 +1203,8 @@ namespace GitCommands
                 "--cached",
                 SubmodulePath.Quote()
             };
-            var lines = SuperprojectModule.GitExecutable.GetOutput(args).Split('\n');
+            var output = await SuperprojectModule.GitExecutable.GetOutputAsync(args).ConfigureAwait(false);
+            var lines = output.Split('\n');
 
             if (lines.Length == 0)
             {
