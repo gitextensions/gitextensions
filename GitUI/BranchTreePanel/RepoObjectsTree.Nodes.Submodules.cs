@@ -241,16 +241,16 @@ namespace GitUI.BranchTreePanel
                         cts = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
                         loadNodesTask = LoadNodesAsync(e.Info, cts.Token);
                         return loadNodesTask;
-                    });
+                    }).ConfigureAwait(false);
 
                     if (cts != null && loadNodesTask != null)
                     {
                         var loadedNodes = await loadNodesTask;
-                        await LoadNodeDetailsAsync(cts.Token, loadedNodes);
+                        await LoadNodeDetailsAsync(cts.Token, loadedNodes).ConfigureAwaitRunInline();
                     }
 
                     Interlocked.CompareExchange(ref _currentSubmoduleInfo, null, e);
-                });
+                }).FileAndForget();
             }
 
             private async Task<Nodes> LoadNodesAsync(SubmoduleInfoResult info, CancellationToken token)
