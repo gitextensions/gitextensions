@@ -2159,9 +2159,9 @@ namespace GitCommands
 
         private static readonly Regex _remoteVerboseLineRegex = new Regex(@"^(?<name>[^	]+)\t(?<url>.+?) \((?<direction>fetch|push)\)$", RegexOptions.Compiled);
 
-        public IReadOnlyList<Remote> GetRemotes()
+        public async Task<IReadOnlyList<Remote>> GetRemotesAsync()
         {
-            return ParseRemotes(_gitExecutable.GetOutputLines("remote -v"));
+            return ParseRemotes(await _gitExecutable.GetOutputLinesAsync("remote -v"));
 
             IReadOnlyList<Remote> ParseRemotes(IEnumerable<string> lines)
             {

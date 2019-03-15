@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using GitCommands;
 using GitCommands.Git;
+using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using NUnit.Framework;
@@ -315,8 +316,10 @@ namespace GitCommandsTests
         [Test]
         public void GetRemotes()
         {
-            var lines = new[]
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
+                var lines = new[]
+                {
                 "RussKie\tgit://github.com/RussKie/gitextensions.git (fetch)",
                 "RussKie\tgit://github.com/RussKie/gitextensions.git (push)",
                 "origin\tgit@github.com:drewnoakes/gitextensions.git (fetch)",
@@ -329,32 +332,33 @@ namespace GitCommandsTests
                 "with-space\tc:\\Bare Repo (push)"
             };
 
-            using (_executable.StageOutput("remote -v", string.Join("\n", lines)))
-            {
-                var remotes = _gitModule.GetRemotes();
+                using (_executable.StageOutput("remote -v", string.Join("\n", lines)))
+                {
+                    var remotes = await _gitModule.GetRemotesAsync();
 
-                Assert.AreEqual(5, remotes.Count);
+                    Assert.AreEqual(5, remotes.Count);
 
-                Assert.AreEqual("RussKie", remotes[0].Name);
-                Assert.AreEqual("git://github.com/RussKie/gitextensions.git", remotes[0].FetchUrl);
-                Assert.AreEqual("git://github.com/RussKie/gitextensions.git", remotes[0].PushUrl);
+                    Assert.AreEqual("RussKie", remotes[0].Name);
+                    Assert.AreEqual("git://github.com/RussKie/gitextensions.git", remotes[0].FetchUrl);
+                    Assert.AreEqual("git://github.com/RussKie/gitextensions.git", remotes[0].PushUrl);
 
-                Assert.AreEqual("origin", remotes[1].Name);
-                Assert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[1].FetchUrl);
-                Assert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[1].PushUrl);
+                    Assert.AreEqual("origin", remotes[1].Name);
+                    Assert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[1].FetchUrl);
+                    Assert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[1].PushUrl);
 
-                Assert.AreEqual("upstream", remotes[2].Name);
-                Assert.AreEqual("git@github.com:gitextensions/gitextensions.git", remotes[2].FetchUrl);
-                Assert.AreEqual("git@github.com:gitextensions/gitextensions.git", remotes[2].PushUrl);
+                    Assert.AreEqual("upstream", remotes[2].Name);
+                    Assert.AreEqual("git@github.com:gitextensions/gitextensions.git", remotes[2].FetchUrl);
+                    Assert.AreEqual("git@github.com:gitextensions/gitextensions.git", remotes[2].PushUrl);
 
-                Assert.AreEqual("asymmetrical", remotes[3].Name);
-                Assert.AreEqual("https://github.com/gitextensions/fetch.git", remotes[3].FetchUrl);
-                Assert.AreEqual("https://github.com/gitextensions/push.git", remotes[3].PushUrl);
+                    Assert.AreEqual("asymmetrical", remotes[3].Name);
+                    Assert.AreEqual("https://github.com/gitextensions/fetch.git", remotes[3].FetchUrl);
+                    Assert.AreEqual("https://github.com/gitextensions/push.git", remotes[3].PushUrl);
 
-                Assert.AreEqual("with-space", remotes[4].Name);
-                Assert.AreEqual("c:\\Bare Repo", remotes[4].FetchUrl);
-                Assert.AreEqual("c:\\Bare Repo", remotes[4].PushUrl);
-            }
+                    Assert.AreEqual("with-space", remotes[4].Name);
+                    Assert.AreEqual("c:\\Bare Repo", remotes[4].FetchUrl);
+                    Assert.AreEqual("c:\\Bare Repo", remotes[4].PushUrl);
+                }
+            });
         }
 
         [Test]
