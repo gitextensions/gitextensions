@@ -264,9 +264,9 @@ namespace GitUI.BranchTreePanel
             private async Task LoadNodeDetailsAsync(CancellationToken token, Nodes loadedNodes)
             {
                 await TaskScheduler.Default;
-                token.ThrowIfCancellationRequested();
                 foreach (var node in loadedNodes.DepthEnumerator<SubmoduleNode>())
                 {
+                    token.ThrowIfCancellationRequested();
                     await node.LoadDetailsAsync(token).ConfigureAwaitRunInline();
                 }
 
