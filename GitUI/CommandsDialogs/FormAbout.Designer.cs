@@ -216,6 +216,8 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Git Extensions is open source. Get involved!";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label2.AutoSize = true;
+            this.label2.MaximumSize = new System.Drawing.Size(133, 0);
             // 
             // flowLayoutPanel1
             // 
