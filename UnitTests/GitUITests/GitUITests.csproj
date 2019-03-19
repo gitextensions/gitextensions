@@ -107,6 +107,7 @@
     <Compile Include="UserControls\RevisionGrid\Graph\LaneInfoProviderTests.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphMultiThreadingTests.cs" />
     <Compile Include="UserControls\RevisionGrid\Graph\RevisionGraphTests.cs" />
+    <Compile Include="UserControls\SortDiffListContextMenuItemTests.cs" />
     <Compile Include="UserControls\ToolStripPushButtonTests.cs" />
     <Compile Include="UserControls\TreeViewExtensionsTests.cs" />
     <Compile Include="UserManual\SingleHtmlUserManualFixture.cs" />

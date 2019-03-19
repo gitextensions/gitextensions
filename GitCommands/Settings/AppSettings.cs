@@ -1546,6 +1546,12 @@ namespace GitCommands
             set => SetBool("UseConsoleEmulatorForCommands", value);
         }
 
+        public static DiffListSortType DiffListSorting
+        {
+            get => GetEnum("DiffListSortType", DiffListSortType.FilePath);
+            set => SetEnum("DiffListSortType", value);
+        }
+
         public static string GetGitExtensionsFullPath()
         {
             return Application.ExecutablePath;

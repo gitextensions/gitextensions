@@ -531,6 +531,9 @@
     <Compile Include="UserControls\RevisionGrid\RevisionGridRefRenderer.cs" />
     <Compile Include="UserControls\RevisionGrid\SuperProjectInfo.cs" />
     <Compile Include="UserControls\RevisionGrid\VisibleRowRange.cs" />
+    <Compile Include="UserControls\SortDiffListContextMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UserControls\TextEventArgs.cs" />
     <Compile Include="UserControls\RepoStateVisualiser.cs" />
     <Compile Include="CommandsDialogs\BrowseDialog\GitStatusMonitor.cs" />
