@@ -1097,7 +1097,7 @@ namespace GitUI
                 selectedObjectIds = new ObjectId[] { Module.GetCurrentCheckout() };
             }
 
-            _gridView.ToBeSelectedObjectIds = selectedObjectIds.ToHashSet();
+            _gridView.ToBeSelectedObjectIds = selectedObjectIds.ToList();
             _selectedObjectIds = null;
         }
 
