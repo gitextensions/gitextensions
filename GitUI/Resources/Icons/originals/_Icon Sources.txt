@@ -103,3 +103,11 @@ https://www.vecteezy.com/vector-art/136250-rhinestone-abstract-background-vector
     Download to obtain the non-exclusive right to use Eezy files to create new, derivative, unique works, however the original Eezy file or artwork must be largely unrecognizable.
     Download, edit, and remix for personal and commercial use, but give credit back to the author:
         Illustration credit: www.Vecteezy.com
+
+From Octicons
+-------------
+- https://octicons.github.com/
+- Copyright: GitHub, Inc
+- License: MIT
+For icons: PullRequest.png (from 'git-pull-request.svg'), GitHub32.png and github.png (from 'mark-github.svg')
+

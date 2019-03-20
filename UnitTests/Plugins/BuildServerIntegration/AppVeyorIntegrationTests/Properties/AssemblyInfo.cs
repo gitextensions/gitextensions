@@ -1,17 +1,17 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
+using ApprovalTests.Namers;
 using ApprovalTests.Reporters;
-using CommonTestUtils;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GitGuiTests")]
+[assembly: AssemblyTitle("AppVeyorAdapterTests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("GitGuiTests")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyProduct("AppVeyorAdapterTests")]
+[assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -21,7 +21,7 @@ using CommonTestUtils;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1cd494c1-0bba-44c3-bdad-ee241975b223")]
+[assembly: Guid("6e2be70d-0b5c-45d6-9d42-4497a46c370d")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -36,5 +36,5 @@ using CommonTestUtils;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[assembly: ConfigureJoinableTaskFactory]
 [assembly: UseReporter(typeof(NUnitReporter), typeof(AppVeyorReporter), typeof(DiffReporter))]
+[assembly: UseApprovalSubdirectory("ApprovedFiles")]

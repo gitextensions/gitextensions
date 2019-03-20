@@ -37,4 +37,4 @@ using CommonTestUtils;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: ConfigureJoinableTaskFactory]
-[assembly: UseReporter(typeof(DiffReporter))]
+[assembly: UseReporter(typeof(NUnitReporter), typeof(AppVeyorReporter), typeof(DiffReporter))]
