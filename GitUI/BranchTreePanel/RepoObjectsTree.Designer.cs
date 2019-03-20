@@ -85,7 +85,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnEnableRemote = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnEnableRemoteAndFetch = new System.Windows.Forms.ToolStripMenuItem();
             this.mnubtnDisableRemote = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBtnPrune = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBtnPruneAllBranchesFromARemote = new System.Windows.Forms.ToolStripMenuItem();
             this.repoTreePanel = new System.Windows.Forms.TableLayoutPanel();
             this.branchSearchPanel = new System.Windows.Forms.TableLayoutPanel();
             this.lblSearchBranch = new System.Windows.Forms.Label();
@@ -97,7 +97,7 @@ namespace GitUI.BranchTreePanel
             this.tsmiShowBranches = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiShowTags = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiShowRemotes = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuBtnUpdateAllRemotes = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuBtnFetchAllRemotes = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmiShowSubmodules = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSubmodule = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnubtnUpdateSubmodule = new System.Windows.Forms.ToolStripMenuItem();
@@ -203,7 +203,7 @@ namespace GitUI.BranchTreePanel
             // 
             this.menuRemotes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuBtnManageRemotesFromRootNode,
-            this.mnuBtnUpdateAllRemotes,
+            this.mnuBtnFetchAllRemotes,
             this.mnuBtnPruneAllRemotes});
             this.menuRemotes.Name = "contextmenuRemotes";
             this.menuRemotes.Size = new System.Drawing.Size(173, 26);
@@ -219,10 +219,10 @@ namespace GitUI.BranchTreePanel
             // 
             // pruneAllRemotesToolStripMenuItem
             // 
+            this.mnuBtnPruneAllRemotes.Image = global::GitUI.Properties.Images.PullFetchPruneAll;
             this.mnuBtnPruneAllRemotes.Name = "mnuBtnPruneAllRemotes";
             this.mnuBtnPruneAllRemotes.Size = new System.Drawing.Size(428, 38);
-            this.mnuBtnPruneAllRemotes.Text = "Update and prune all remotes";
-            this.mnuBtnPruneAllRemotes.Click += new System.EventHandler(this.mnuBtnPruneAllRemotes_Click);
+            this.mnuBtnPruneAllRemotes.Text = "Fetch and prune all remotes";
             // 
             // menuRemote
             // 
@@ -285,7 +285,7 @@ namespace GitUI.BranchTreePanel
             // 
             // mnubtnFetchAllBranchesFromARemote
             // 
-            this.mnubtnFetchAllBranchesFromARemote.Image = global::GitUI.Properties.Images.Stage;
+            this.mnubtnFetchAllBranchesFromARemote.Image = global::GitUI.Properties.Images.PullFetch;
             this.mnubtnFetchAllBranchesFromARemote.Name = "mnubtnFetchAllBranchesFromARemote";
             this.mnubtnFetchAllBranchesFromARemote.Size = new System.Drawing.Size(172, 22);
             this.mnubtnFetchAllBranchesFromARemote.Text = "&Fetch";
@@ -322,7 +322,7 @@ namespace GitUI.BranchTreePanel
             this.mnubtnEnableRemoteAndFetch,
             this.mnubtnDisableRemote,
             this.mnubtnFetchAllBranchesFromARemote,
-            this.mnuBtnPrune});
+            this.mnuBtnPruneAllBranchesFromARemote});
             this.menuRemoteRepoNode.Name = "contextmenuRemote";
             this.menuRemoteRepoNode.Size = new System.Drawing.Size(173, 120);
             this.menuRemoteRepoNode.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
@@ -361,12 +361,12 @@ namespace GitUI.BranchTreePanel
             this.mnubtnDisableRemote.Size = new System.Drawing.Size(172, 22);
             this.mnubtnDisableRemote.Text = "&Deactivate";
             // 
-            // pruneToolStripMenuItem
+            // mnuBtnPruneAllBranchesFromARemote
             // 
-            this.mnuBtnPrune.Name = "mnuBtnPrune";
-            this.mnuBtnPrune.Size = new System.Drawing.Size(302, 38);
-            this.mnuBtnPrune.Text = "Prune remote";
-            this.mnuBtnPrune.Click += new System.EventHandler(this.mnuBtnPrune_Click);
+            this.mnuBtnPruneAllBranchesFromARemote.Image = global::GitUI.Properties.Images.PullFetchPrune;
+            this.mnuBtnPruneAllBranchesFromARemote.Name = "mnuBtnPruneAllBranchesFromARemote";
+            this.mnuBtnPruneAllBranchesFromARemote.Size = new System.Drawing.Size(302, 38);
+            this.mnuBtnPruneAllBranchesFromARemote.Text = "Fetch and prune";
             // 
             // repoTreePanel
             // 
@@ -506,12 +506,12 @@ namespace GitUI.BranchTreePanel
             this.tsmiShowRemotes.Text = "&Remotes";
             this.tsmiShowRemotes.Click += new System.EventHandler(this.tsmiShowRemotes_Click);
             // 
-            // updateAllRemotesToolStripMenuItem
+            // mnuBtnFetchAllRemotes
             // 
-            this.mnuBtnUpdateAllRemotes.Name = "mnuBtnUpdateAllRemotes";
-            this.mnuBtnUpdateAllRemotes.Size = new System.Drawing.Size(428, 38);
-            this.mnuBtnUpdateAllRemotes.Text = "Update all remotes";
-            this.mnuBtnUpdateAllRemotes.Click += new System.EventHandler(this.mnuBtnUpdateAllRemotes_Click);
+            this.mnuBtnFetchAllRemotes.Image = global::GitUI.Properties.Images.PullFetchAll;
+            this.mnuBtnFetchAllRemotes.Name = "mnuBtnFetchAllRemotes";
+            this.mnuBtnFetchAllRemotes.Size = new System.Drawing.Size(428, 38);
+            this.mnuBtnFetchAllRemotes.Text = "Fetch all remotes";
             // 
             // tsmiShowRemotes
             // 
@@ -655,8 +655,8 @@ namespace GitUI.BranchTreePanel
         private ToolStripMenuItem tsmiShowRemotes;
         private ToolTip toolTip;
         private ToolStripMenuItem mnuBtnPruneAllRemotes;
-        private ToolStripMenuItem mnuBtnPrune;
-        private ToolStripMenuItem mnuBtnUpdateAllRemotes;
+        private ToolStripMenuItem mnuBtnPruneAllBranchesFromARemote;
+        private ToolStripMenuItem mnuBtnFetchAllRemotes;
         private ToolStripMenuItem tsmiShowSubmodules;
         private ContextMenuStrip menuSubmodule;
         private ContextMenuStrip menuAllSubmodules;

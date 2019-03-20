@@ -508,20 +508,5 @@ namespace GitUI.BranchTreePanel
                 }
             }
         }
-
-        private void mnuBtnUpdateAllRemotes_Click(object sender, EventArgs e)
-        {
-            FormRemoteProcess.ShowDialog((GitModuleForm)ParentForm, "remote update");
-        }
-
-        private void mnuBtnPruneAllRemotes_Click(object sender, EventArgs e)
-        {
-            FormRemoteProcess.ShowDialog((GitModuleForm)ParentForm, "remote update --prune");
-        }
-
-        private void mnuBtnPrune_Click(object sender, EventArgs e)
-        {
-            FormRemoteProcess.ShowDialog((GitModuleForm)ParentForm, "remote prune " + treeMain.SelectedNode.Name);
-        }
     }
 }

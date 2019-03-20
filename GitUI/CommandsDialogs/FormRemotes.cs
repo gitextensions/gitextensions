@@ -461,7 +461,9 @@ Inactive remote is completely invisible to git.");
                         _questionAutoPullBehaviourCaption.Text,
                         MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    FormRemoteProcess.ShowDialog(this, "remote update");
+                    UICommands.StartPullDialogAndPullImmediately(
+                        remote: remote,
+                        pullAction: AppSettings.PullAction.Fetch);
                     _remoteManager.ConfigureRemotes(remote);
                     UICommands.RepoChangedNotifier.Notify();
                 }

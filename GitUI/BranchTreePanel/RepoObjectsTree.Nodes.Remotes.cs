@@ -134,6 +134,24 @@ namespace GitUI.BranchTreePanel
             {
                 UICommands.StartRemotesDialog(TreeViewNode.TreeView, remoteName);
             }
+
+            internal bool FetchAll()
+            {
+                UICommands.StartPullDialogAndPullImmediately(
+                    out bool pullCompleted,
+                    TreeViewNode.TreeView,
+                    pullAction: AppSettings.PullAction.FetchAll);
+                return pullCompleted;
+            }
+
+            internal bool FetchPruneAll()
+            {
+                UICommands.StartPullDialogAndPullImmediately(
+                    out bool pullCompleted,
+                    TreeViewNode.TreeView,
+                    pullAction: AppSettings.PullAction.FetchPruneAll);
+                return pullCompleted;
+            }
         }
 
         private sealed class RemoteBranchNode : BaseBranchNode, IGitRefActions, ICanDelete, ICanRename
@@ -263,6 +281,12 @@ namespace GitUI.BranchTreePanel
                 return DoFetch();
             }
 
+            public bool Prune()
+            {
+                Trace.Assert(Enabled);
+                return DoPrune();
+            }
+
             public void Enable(bool fetch)
             {
                 Trace.Assert(!Enabled);
@@ -331,6 +355,16 @@ namespace GitUI.BranchTreePanel
                     TreeViewNode.TreeView,
                     remote: FullPath,
                     pullAction: AppSettings.PullAction.Fetch);
+                return pullCompleted;
+            }
+
+            private bool DoPrune()
+            {
+                UICommands.StartPullDialogAndPullImmediately(
+                    out bool pullCompleted,
+                    TreeViewNode.TreeView,
+                    remote: FullPath,
+                    pullAction: AppSettings.PullAction.FetchPruneAll);
                 return pullCompleted;
             }
         }
