@@ -275,13 +275,17 @@ namespace GitUI.Blame
                     gutter.Append(line.Commit.Author);
                     gutter.Append(" - ");
                     gutter.Append(line.Commit.AuthorTime.ToString(CultureInfo.CurrentCulture));
+                    var authorLength = line.Commit.Author?.Length ?? 0;
                     if (filename != line.Commit.FileName)
                     {
                         gutter.Append(" - ");
                         gutter.Append(line.Commit.FileName);
+                        gutter.Append(' ', Math.Max(0, 175 - authorLength - line.Commit.FileName.Length)).AppendLine();
                     }
-
-                    gutter.Append(' ', 100).AppendLine();
+                    else
+                    {
+                        gutter.Append(' ', Math.Max(0, 178 - authorLength)).AppendLine();
+                    }
                 }
 
                 body.AppendLine(line.Text);
