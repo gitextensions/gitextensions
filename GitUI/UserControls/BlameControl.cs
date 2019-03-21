@@ -268,7 +268,7 @@ namespace GitUI.Blame
             {
                 if (line.Commit == lastCommit)
                 {
-                    gutter.Append(' ', 200).AppendLine();
+                    gutter.Append(' ', 120).AppendLine();
                 }
                 else
                 {
@@ -280,11 +280,11 @@ namespace GitUI.Blame
                     {
                         gutter.Append(" - ");
                         gutter.Append(line.Commit.FileName);
-                        gutter.Append(' ', Math.Max(0, 175 - authorLength - line.Commit.FileName.Length)).AppendLine();
+                        gutter.Append(' ', Math.Max(0, 95 - authorLength - line.Commit.FileName.Length)).AppendLine();
                     }
                     else
                     {
-                        gutter.Append(' ', Math.Max(0, 178 - authorLength)).AppendLine();
+                        gutter.Append(' ', Math.Max(0, 98 - authorLength)).AppendLine();
                     }
                 }
 
