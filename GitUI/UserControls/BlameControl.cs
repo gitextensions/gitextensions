@@ -274,7 +274,7 @@ namespace GitUI.Blame
                 {
                     gutter.Append(line.Commit.Author);
                     gutter.Append(" - ");
-                    gutter.Append(line.Commit.AuthorTime.ToString(CultureInfo.CurrentUICulture));
+                    gutter.Append(line.Commit.AuthorTime.ToString(CultureInfo.CurrentCulture));
                     gutter.Append(" - ");
                     gutter.Append(line.Commit.FileName);
                     gutter.Append(' ', 100).AppendLine();
