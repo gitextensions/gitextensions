@@ -32,7 +32,7 @@ namespace GitCommands.Patches
         /// File paths can be quoted (see <c>core.quotepath</c>). They are unquoted by <see cref="GitModule.ReEncodeFileNameFromLossless"/>.
         /// </remarks>
         [NotNull, ItemNotNull, Pure]
-        public static IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText, [NotNull] Encoding filesContentEncoding)
+        public static IEnumerable<Patch> CreatePatchesFromString([NotNull] string patchText, [NotNull] Lazy<Encoding> filesContentEncoding)
         {
             // TODO encoding for each file in patch should be obtained separately from .gitattributes
 
@@ -59,7 +59,7 @@ namespace GitCommands.Patches
         }
 
         [CanBeNull]
-        private static Patch CreatePatchFromString([ItemNotNull, NotNull] string[] lines, [NotNull] Encoding filesContentEncoding, ref int lineIndex)
+        private static Patch CreatePatchFromString([ItemNotNull, NotNull] string[] lines, [NotNull] Lazy<Encoding> filesContentEncoding, ref int lineIndex)
         {
             if (lineIndex >= lines.Length)
             {
@@ -270,7 +270,7 @@ namespace GitCommands.Patches
                 if (state == PatchProcessorState.InBody && line.StartsWithAny(new[] { " ", "-", "+", "@" }))
                 {
                     // diff content
-                    line = GitModule.ReEncodeStringFromLossless(line, filesContentEncoding);
+                    line = GitModule.ReEncodeStringFromLossless(line, filesContentEncoding.Value);
                 }
                 else
                 {

@@ -496,7 +496,7 @@ namespace GitCommands
         [CanBeNull]
         public static GitSubmoduleStatus GetCurrentSubmoduleChanges(GitModule module, string fileName, string oldFileName, bool staged, bool noLocks = false)
         {
-            Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", module.FilesEncoding, noLocks: noLocks);
+            Patch patch = module.GetCurrentChanges(fileName, oldFileName, staged, "", noLocks: noLocks);
             string text = patch != null ? patch.Text : "";
             return ParseSubmoduleStatus(text, module, fileName);
         }
