@@ -86,7 +86,7 @@ namespace GitUI.Blame
             _encoding = encoding;
 
             _blameLoader.LoadAsync(() => _blame = Module.Blame(fileName, objectId.ToString(), encoding),
-                () => ProcessBlame(revision, children, controlToMask, line, scrollPos));
+                () => ProcessBlame(fileName, revision, children, controlToMask, line, scrollPos));
         }
 
         private void commitInfo_CommandClicked(object sender, CommandEventArgs e)
@@ -252,7 +252,7 @@ namespace GitUI.Blame
             _changingScrollPosition = false;
         }
 
-        private void ProcessBlame(GitRevision revision, IReadOnlyList<ObjectId> children, Control controlToMask, int lineNumber, int scrollpos)
+        private void ProcessBlame(string filename, GitRevision revision, IReadOnlyList<ObjectId> children, Control controlToMask, int lineNumber, int scrollpos)
         {
             var gutter = new StringBuilder(capacity: 4096);
             var body = new StringBuilder(capacity: 4096);
@@ -275,8 +275,12 @@ namespace GitUI.Blame
                     gutter.Append(line.Commit.Author);
                     gutter.Append(" - ");
                     gutter.Append(line.Commit.AuthorTime.ToString(CultureInfo.CurrentCulture));
-                    gutter.Append(" - ");
-                    gutter.Append(line.Commit.FileName);
+                    if (filename != line.Commit.FileName)
+                    {
+                        gutter.Append(" - ");
+                        gutter.Append(line.Commit.FileName);
+                    }
+
                     gutter.Append(' ', 100).AppendLine();
                 }
 
