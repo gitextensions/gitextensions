@@ -4268,6 +4268,10 @@ If you are not sure just close this window.</source>
         <source>Save as</source>
         <target />
       </trans-unit>
+      <trans-unit id="showAuthorAvatarToolStripMenuItem.Text">
+        <source>Show author avatar</source>
+        <target />
+      </trans-unit>
       <trans-unit id="showAuthorDateToolStripMenuItem.Text">
         <source>Show author date</source>
         <target />

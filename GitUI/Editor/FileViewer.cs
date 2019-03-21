@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
@@ -1666,6 +1667,16 @@ namespace GitUI.Editor
 
             public ToolStripButton IgnoreAllWhitespacesButton => _fileViewer.ignoreAllWhitespaces;
             public ToolStripMenuItem IgnoreAllWhitespacesMenuItem => _fileViewer.ignoreAllWhitespaceChangesToolStripMenuItem;
+        }
+
+        public void SetGitBlameGutter(IEnumerable<GitBlameEntry> gitBlameEntries)
+        {
+            internalFileViewer.ShowGutterAvatars = AppSettings.BlameShowAuthorAvatar;
+
+            if (AppSettings.BlameShowAuthorAvatar)
+            {
+                internalFileViewer.SetGitBlameGutter(gitBlameEntries);
+            }
         }
     }
 }

@@ -37,6 +37,8 @@ namespace GitUI.Editor
         private bool _shouldScrollToBottom = false;
         private readonly int _bottomBlankHeight = DpiUtil.Scale(300);
         private ContinuousScrollEventManager _continuousScrollEventManager;
+        private BlameAuthorMargin _authorsAvatarMargin;
+        private bool _showGutterAvatars;
 
         public FileViewerInternal()
         {
@@ -535,6 +537,39 @@ namespace GitUI.Editor
         }
 
         #endregion
+
+        public void SetGitBlameGutter(IEnumerable<GitBlameEntry> gitBlameEntries)
+        {
+            if (_showGutterAvatars)
+            {
+                _authorsAvatarMargin.Initialize(gitBlameEntries);
+            }
+        }
+
+        public bool ShowGutterAvatars
+        {
+            get => _showGutterAvatars;
+            set
+            {
+                _showGutterAvatars = value;
+                if (!_showGutterAvatars)
+                {
+                    _authorsAvatarMargin?.SetVisiblity(false);
+
+                    return;
+                }
+
+                if (_authorsAvatarMargin == null)
+                {
+                    _authorsAvatarMargin = new BlameAuthorMargin(TextEditor.ActiveTextAreaControl.TextArea);
+                    TextEditor.ActiveTextAreaControl.TextArea.InsertLeftMargin(0, _authorsAvatarMargin);
+                }
+                else
+                {
+                    _authorsAvatarMargin.SetVisiblity(true);
+                }
+            }
+        }
 
         internal sealed class CurrentViewPositionCache
         {

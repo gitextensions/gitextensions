@@ -67,6 +67,7 @@ namespace GitUI.CommandsDialogs
             this.showAuthorTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showLineNumbersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOriginalFilePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAuthorAvatarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -481,6 +482,7 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator5,
             this.displaySettingsToolStripMenuItem,
             this.displayAuthorFirstToolStripMenuItem,
+            this.showAuthorAvatarToolStripMenuItem,
             this.showAuthorToolStripMenuItem,
             this.showAuthorDateToolStripMenuItem,
             this.showAuthorTimeToolStripMenuItem,
@@ -575,6 +577,13 @@ namespace GitUI.CommandsDialogs
             this.showOriginalFilePathToolStripMenuItem.Text = "Show original file path";
             this.showOriginalFilePathToolStripMenuItem.Click += new System.EventHandler(this.showOriginalFilePathToolStripMenuItem_Click);
             // 
+            // showAuthorAvatarToolStripMenuItem
+            // 
+            this.showAuthorAvatarToolStripMenuItem.Name = "showAuthorAvatarToolStripMenuItem";
+            this.showAuthorAvatarToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.showAuthorAvatarToolStripMenuItem.Text = "Show author avatar";
+            this.showAuthorAvatarToolStripMenuItem.Click += new System.EventHandler(this.showAuthorAvatarToolStripMenuItem_Click);
+            // 
             // FormFileHistory
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -661,5 +670,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem displaySettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showAuthorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showOriginalFilePathToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showAuthorAvatarToolStripMenuItem;
     }
 }
