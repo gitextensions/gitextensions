@@ -134,7 +134,7 @@ namespace GitUI.Editor
             // 
             this.ignoreWhitespaceChangesToolStripMenuItem.Name = "ignoreWhitespaceChangesToolStripMenuItem";
             this.ignoreWhitespaceChangesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.ignoreWhitespaceChangesToolStripMenuItem.Text = "Ignore leading and trailing whitespace changes";
+            this.ignoreWhitespaceChangesToolStripMenuItem.Text = "Ignore changes in amount of whitespace";
             this.ignoreWhitespaceChangesToolStripMenuItem.Click += new System.EventHandler(this.IgnoreWhitespaceChangesToolStripMenuItemClick);
             // 
             // ignoreAllWhitespaceChangesToolStripMenuItem
@@ -298,7 +298,7 @@ namespace GitUI.Editor
             this.ignoreWhiteSpaces.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ignoreWhiteSpaces.Name = "ignoreWhiteSpaces";
             this.ignoreWhiteSpaces.Size = new System.Drawing.Size(23, 4);
-            this.ignoreWhiteSpaces.ToolTipText = "Ignore leading and trailing whitespace changes";
+            this.ignoreWhiteSpaces.ToolTipText = "Ignore changes in amount of whitespace";
             this.ignoreWhiteSpaces.Click += new System.EventHandler(this.IgnoreWhitespaceChangesToolStripMenuItemClick);
             // 
             // encodingToolStripComboBox

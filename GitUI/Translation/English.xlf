@@ -1222,11 +1222,11 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="ignoreWhiteSpaces.ToolTipText">
-        <source>Ignore leading and trailing whitespace changes</source>
+        <source>Ignore changes in amount of whitespace</source>
         <target />
       </trans-unit>
       <trans-unit id="ignoreWhitespaceChangesToolStripMenuItem.Text">
-        <source>Ignore leading and trailing whitespace changes</source>
+        <source>Ignore changes in amount of whitespace</source>
         <target />
       </trans-unit>
       <trans-unit id="increaseNumberOfLines.ToolTipText">
