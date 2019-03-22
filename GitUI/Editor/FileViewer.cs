@@ -48,9 +48,9 @@ namespace GitUI.Editor
         private Encoding _encoding;
         private Func<Task> _deferShowFunc;
 
-        [Description("Ignore changes in amount of whitespace. This ignores whitespace at line end, and considers all other sequences of one or more whitespace characters to be equivalent.")]
-        [DefaultValue(false)]
-        public bool IgnoreWhitespaceChanges { get; set; }
+        [Description("Sets what kind of whitespace changes shall be ignored in diffs")]
+        [DefaultValue(IgnoreWhitespaceKind.None)]
+        public IgnoreWhitespaceKind IgnoreWhitespace { get; set; }
         [Description("Show diffs with <n> lines of context.")]
         [DefaultValue(3)]
         public int NumberOfContextLines { get; set; }
@@ -91,15 +91,16 @@ namespace GitUI.Editor
                     }
                 };
 
-            IgnoreWhitespaceChanges = AppSettings.IgnoreWhitespaceChanges;
-            ignoreWhiteSpaces.Checked = IgnoreWhitespaceChanges;
+            IgnoreWhitespace = AppSettings.IgnoreWhitespaceKind;
+            OnIgnoreWhitespaceChanged();
+
+            ignoreWhitespaceAtEol.Image = Images.WhitespaceIgnoreEol;
+            ignoreWhitespaceAtEolToolStripMenuItem.Image = ignoreWhitespaceAtEol.Image;
+
             ignoreWhiteSpaces.Image = Images.WhitespaceIgnore;
-            ignoreWhitespaceChangesToolStripMenuItem.Checked = IgnoreWhitespaceChanges;
             ignoreWhitespaceChangesToolStripMenuItem.Image = ignoreWhiteSpaces.Image;
 
-            ignoreAllWhitespaces.Checked = AppSettings.IgnoreAllWhitespaceChanges;
             ignoreAllWhitespaces.Image = Images.WhitespaceIgnoreAll;
-            ignoreAllWhitespaceChangesToolStripMenuItem.Checked = ignoreAllWhitespaces.Checked;
             ignoreAllWhitespaceChangesToolStripMenuItem.Image = ignoreAllWhitespaces.Image;
 
             ShowEntireFile = AppSettings.ShowEntireFile;
@@ -322,6 +323,7 @@ namespace GitUI.Editor
         public void SetVisibilityDiffContextMenu(bool visible, bool isStagingDiff)
         {
             _currentViewIsPatch = visible;
+            ignoreWhitespaceAtEolToolStripMenuItem.Visible = visible;
             ignoreWhitespaceChangesToolStripMenuItem.Visible = visible;
             increaseNumberOfLinesToolStripMenuItem.Visible = visible;
             decreaseNumberOfLinesToolStripMenuItem.Visible = visible;
@@ -346,8 +348,9 @@ namespace GitUI.Editor
         {
             return new ArgumentBuilder
             {
-                { ignoreAllWhitespaces.Checked, "--ignore-all-space" },
-                { !ignoreAllWhitespaces.Checked && IgnoreWhitespaceChanges, "--ignore-space-change" },
+                { IgnoreWhitespace == IgnoreWhitespaceKind.AllSpace, "--ignore-all-space" },
+                { IgnoreWhitespace == IgnoreWhitespaceKind.Change, "--ignore-space-change" },
+                { IgnoreWhitespace == IgnoreWhitespaceKind.Eol, "--ignore-space-at-eol" },
                 { ShowEntireFile, "--inter-hunk-context=9000 --unified=9000", $"--unified={NumberOfContextLines}" },
                 { TreatAllFilesAsText, "--text" }
             };
@@ -882,12 +885,76 @@ namespace GitUI.Editor
             }
         }
 
+        private void OnIgnoreWhitespaceChanged()
+        {
+            switch (IgnoreWhitespace)
+            {
+                case IgnoreWhitespaceKind.None:
+                    ignoreWhitespaceAtEol.Checked = false;
+                    ignoreWhitespaceAtEolToolStripMenuItem.Checked = ignoreWhitespaceAtEol.Checked;
+                    ignoreWhiteSpaces.Checked = false;
+                    ignoreWhitespaceChangesToolStripMenuItem.Checked = ignoreWhiteSpaces.Checked;
+                    ignoreAllWhitespaces.Checked = false;
+                    ignoreAllWhitespaceChangesToolStripMenuItem.Checked = ignoreAllWhitespaces.Checked;
+                    break;
+                case IgnoreWhitespaceKind.Eol:
+                    ignoreWhitespaceAtEol.Checked = true;
+                    ignoreWhitespaceAtEolToolStripMenuItem.Checked = ignoreWhitespaceAtEol.Checked;
+                    ignoreWhiteSpaces.Checked = false;
+                    ignoreWhitespaceChangesToolStripMenuItem.Checked = ignoreWhiteSpaces.Checked;
+                    ignoreAllWhitespaces.Checked = false;
+                    ignoreAllWhitespaceChangesToolStripMenuItem.Checked = ignoreAllWhitespaces.Checked;
+                    break;
+                case IgnoreWhitespaceKind.Change:
+                    ignoreWhitespaceAtEol.Checked = true;
+                    ignoreWhitespaceAtEolToolStripMenuItem.Checked = ignoreWhitespaceAtEol.Checked;
+                    ignoreWhiteSpaces.Checked = true;
+                    ignoreWhitespaceChangesToolStripMenuItem.Checked = ignoreWhiteSpaces.Checked;
+                    ignoreAllWhitespaces.Checked = false;
+                    ignoreAllWhitespaceChangesToolStripMenuItem.Checked = ignoreAllWhitespaces.Checked;
+                    break;
+                case IgnoreWhitespaceKind.AllSpace:
+                    ignoreWhitespaceAtEol.Checked = true;
+                    ignoreWhitespaceAtEolToolStripMenuItem.Checked = ignoreWhitespaceAtEol.Checked;
+                    ignoreWhiteSpaces.Checked = true;
+                    ignoreWhitespaceChangesToolStripMenuItem.Checked = ignoreWhiteSpaces.Checked;
+                    ignoreAllWhitespaces.Checked = true;
+                    ignoreAllWhitespaceChangesToolStripMenuItem.Checked = ignoreAllWhitespaces.Checked;
+                    break;
+                default:
+                    throw new NotSupportedException("Unsupported value for IgnoreWhitespaceKind: " + IgnoreWhitespace);
+            }
+
+            AppSettings.IgnoreWhitespaceKind = IgnoreWhitespace;
+        }
+
+        private void IgnoreWhitespaceAtEolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (IgnoreWhitespace == IgnoreWhitespaceKind.Eol)
+            {
+                IgnoreWhitespace = IgnoreWhitespaceKind.None;
+            }
+            else
+            {
+                IgnoreWhitespace = IgnoreWhitespaceKind.Eol;
+            }
+
+            OnIgnoreWhitespaceChanged();
+            OnExtraDiffArgumentsChanged();
+        }
+
         private void IgnoreWhitespaceChangesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            IgnoreWhitespaceChanges = !IgnoreWhitespaceChanges;
-            ignoreWhiteSpaces.Checked = IgnoreWhitespaceChanges;
-            ignoreWhitespaceChangesToolStripMenuItem.Checked = IgnoreWhitespaceChanges;
-            AppSettings.IgnoreWhitespaceChanges = IgnoreWhitespaceChanges;
+            if (IgnoreWhitespace == IgnoreWhitespaceKind.Change)
+            {
+                IgnoreWhitespace = IgnoreWhitespaceKind.None;
+            }
+            else
+            {
+                IgnoreWhitespace = IgnoreWhitespaceKind.Change;
+            }
+
+            OnIgnoreWhitespaceChanged();
             OnExtraDiffArgumentsChanged();
         }
 
@@ -1421,12 +1488,18 @@ namespace GitUI.Editor
             applySelectedLines(GetSelectionPosition(), GetSelectionLength(), reverse: true);
         }
 
-        private void ignoreAllWhitespaceChangesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void IgnoreAllWhitespaceChangesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var newIgnoreValue = !ignoreAllWhitespaces.Checked;
-            ignoreAllWhitespaces.Checked = newIgnoreValue;
-            ignoreAllWhitespaceChangesToolStripMenuItem.Checked = newIgnoreValue;
-            AppSettings.IgnoreAllWhitespaceChanges = newIgnoreValue;
+            if (IgnoreWhitespace == IgnoreWhitespaceKind.AllSpace)
+            {
+                IgnoreWhitespace = IgnoreWhitespaceKind.None;
+            }
+            else
+            {
+                IgnoreWhitespace = IgnoreWhitespaceKind.AllSpace;
+            }
+
+            OnIgnoreWhitespaceChanged();
             OnExtraDiffArgumentsChanged();
         }
 
@@ -1444,6 +1517,36 @@ namespace GitUI.Editor
             public ToolStripMenuItem CopyToolStripMenuItem => _fileViewer.copyToolStripMenuItem;
 
             public FileViewerInternal FileViewerInternal => _fileViewer.internalFileViewer;
+
+            public IgnoreWhitespaceKind IgnoreWhitespace
+            {
+                get => _fileViewer.IgnoreWhitespace;
+                set => _fileViewer.IgnoreWhitespace = value;
+            }
+
+            internal void IgnoreWhitespaceAtEolToolStripMenuItem_Click(object sender, EventArgs e)
+            {
+                _fileViewer.IgnoreWhitespaceAtEolToolStripMenuItem_Click(sender, e);
+            }
+
+            internal void IgnoreWhitespaceChangesToolStripMenuItemClick(object sender, EventArgs e)
+            {
+                _fileViewer.IgnoreWhitespaceChangesToolStripMenuItemClick(sender, e);
+            }
+
+            internal void IgnoreAllWhitespaceChangesToolStripMenuItem_Click(object sender, EventArgs e)
+            {
+                _fileViewer.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(sender, e);
+            }
+
+            public ToolStripButton IgnoreWhitespaceAtEolButton => _fileViewer.ignoreWhitespaceAtEol;
+            public ToolStripMenuItem IgnoreWhitespaceAtEolMenuItem => _fileViewer.ignoreWhitespaceAtEolToolStripMenuItem;
+
+            public ToolStripButton IgnoreWhiteSpacesButton => _fileViewer.ignoreWhiteSpaces;
+            public ToolStripMenuItem IgnoreWhiteSpacesMenuItem => _fileViewer.ignoreWhitespaceChangesToolStripMenuItem;
+
+            public ToolStripButton IgnoreAllWhitespacesButton => _fileViewer.ignoreAllWhitespaces;
+            public ToolStripMenuItem IgnoreAllWhitespacesMenuItem => _fileViewer.ignoreAllWhitespaceChangesToolStripMenuItem;
         }
     }
 }

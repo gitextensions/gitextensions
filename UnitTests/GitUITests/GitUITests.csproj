@@ -79,6 +79,7 @@
     <Compile Include="CommandsDialogs\RevisionDiffControllerTests.cs" />
     <Compile Include="ControlThreadingExtensionsTests.cs" />
     <Compile Include="Editor\FileViewerInternal.CurrentViewPositionCacheTests.cs" />
+    <Compile Include="Editor\FileViewerTests.cs" />
     <Compile Include="Editor\FileViewerTextTests.cs" />
     <Compile Include="Editor\RichTextBoxXhtmlSupportExtensionTests.cs" />
     <Compile Include="FindFilePredicateProviderTest.cs" />

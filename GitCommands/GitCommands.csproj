@@ -121,6 +121,7 @@
     <Compile Include="Remotes\GitRemoteManager.cs" />
     <Compile Include="Remotes\RepoNameExtractor.cs" />
     <Compile Include="Settings\DefaultImageType.cs" />
+    <Compile Include="Settings\IgnoreWhitespaceKind.cs" />
     <Compile Include="Submodules\DetailedSubmoduleInfo.cs" />
     <Compile Include="Submodules\SubmoduleInfo.cs" />
     <Compile Include="Submodules\SubmoduleInfoResult.cs" />
