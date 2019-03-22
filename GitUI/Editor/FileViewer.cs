@@ -325,6 +325,7 @@ namespace GitUI.Editor
             _currentViewIsPatch = visible;
             ignoreWhitespaceAtEolToolStripMenuItem.Visible = visible;
             ignoreWhitespaceChangesToolStripMenuItem.Visible = visible;
+            ignoreAllWhitespaceChangesToolStripMenuItem.Visible = visible;
             increaseNumberOfLinesToolStripMenuItem.Visible = visible;
             decreaseNumberOfLinesToolStripMenuItem.Visible = visible;
             showEntireFileToolStripMenuItem.Visible = visible;
