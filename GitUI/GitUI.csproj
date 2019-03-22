@@ -1852,6 +1852,12 @@
   <ItemGroup>
     <None Include="Resources\Icons\DocumentTree.png" />
     <None Include="Resources\Icons\pullRequest.png" />
+    <None Include="Resources\Icons\information.png" />
+    <None Include="Resources\Icons\RecentRepositories.png" />
+    <None Include="Resources\Icons\CopyToClipboard.png" />
+    <None Include="Resources\Icons\CommitId.png" />
+    <None Include="Resources\Icons\CommitSummary.png" />
+    <None Include="Resources\Icons\Message.png" />
     <Content Include="Translation\Czech.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

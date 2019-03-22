@@ -367,6 +367,11 @@ namespace GitUI.Blame
 
         private void copyLogMessageToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            CopyToClipboard(c => c.Summary);
+        }
+
+        private void CopyToClipboard(Func<GitBlameCommit, string> formatter)
+        {
             var commit = GetBlameCommit();
 
             if (commit == null)
@@ -374,7 +379,17 @@ namespace GitUI.Blame
                 return;
             }
 
-            ClipboardUtil.TrySetText(commit.Summary);
+            ClipboardUtil.TrySetText(formatter(commit));
+        }
+
+        private void copyAllCommitInfoToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyToClipboard(c => c.ToString());
+        }
+
+        private void copyCommitHashToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyToClipboard(c => c.ObjectId.ToString());
         }
 
         private void blamePreviousRevisionToolStripMenuItem_Click(object sender, EventArgs e)
