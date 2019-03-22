@@ -278,7 +278,7 @@ namespace GitUI.Blame
                 }
                 else
                 {
-                    gutter.Append(line.Commit.AuthorTime.ToString(CultureInfo.CurrentCulture));
+                    gutter.Append(line.Commit.AuthorTime.ToString(CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern));
                     gutter.Append(" - ");
                     gutter.Append(line.Commit.Author);
                     var authorLength = line.Commit.Author?.Length ?? 0;
@@ -286,11 +286,11 @@ namespace GitUI.Blame
                     {
                         gutter.Append(" - ");
                         gutter.Append(line.Commit.FileName);
-                        gutter.Append(' ', Math.Max(0, 95 - authorLength - line.Commit.FileName.Length)).AppendLine();
+                        gutter.Append(' ', Math.Max(0, 104 - authorLength - line.Commit.FileName.Length)).AppendLine();
                     }
                     else
                     {
-                        gutter.Append(' ', Math.Max(0, 98 - authorLength)).AppendLine();
+                        gutter.Append(' ', Math.Max(0, 107 - authorLength)).AppendLine();
                     }
                 }
 
