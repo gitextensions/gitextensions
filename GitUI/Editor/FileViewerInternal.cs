@@ -44,7 +44,7 @@ namespace GitUI.Editor
             };
 
             TextEditor.TextChanged += (s, e) => TextChanged?.Invoke(s, e);
-            TextEditor.ActiveTextAreaControl.VScrollBar.ValueChanged += (s, e) => ScrollPosChanged?.Invoke(s, e);
+            TextEditor.ActiveTextAreaControl.VScrollBar.ValueChanged += (s, e) => OnVScrollPositionChanged(EventArgs.Empty);
             TextEditor.ActiveTextAreaControl.TextArea.KeyUp += (s, e) => KeyUp?.Invoke(s, e);
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += (s, e) => DoubleClick?.Invoke(s, e);
             TextEditor.ActiveTextAreaControl.TextArea.MouseMove += (s, e) => MouseMove?.Invoke(s, e);
@@ -77,7 +77,7 @@ namespace GitUI.Editor
         public void Find()
         {
             _findAndReplaceForm.ShowFor(TextEditor, false);
-            ScrollPosChanged?.Invoke(this, null);
+            OnVScrollPositionChanged(EventArgs.Empty);
         }
 
         public async Task FindNextAsync(bool searchForwardOrOpenWithDifftool)
@@ -89,12 +89,12 @@ namespace GitUI.Editor
             }
 
             await _findAndReplaceForm.FindNextAsync(viaF3: true, !searchForwardOrOpenWithDifftool, "Text not found");
-            ScrollPosChanged?.Invoke(this, null);
+            OnVScrollPositionChanged(EventArgs.Empty);
         }
 
         #region IFileViewer Members
 
-        public event EventHandler ScrollPosChanged;
+        public event EventHandler VScrollPositionChanged;
         public new event EventHandler TextChanged;
 
         public string GetText()
@@ -213,7 +213,7 @@ namespace GitUI.Editor
             _diffHighlightService.AddPatchHighlighting(TextEditor.Document);
         }
 
-        public int ScrollPos
+        public int VScrollPosition
         {
             get { return TextEditor.ActiveTextAreaControl.VScrollBar?.Value ?? 0; }
             set
@@ -340,6 +340,11 @@ namespace GitUI.Editor
         public void SetFileLoader(GetNextFileFnc fileLoader)
         {
             _findAndReplaceForm.SetFileLoader(fileLoader);
+        }
+
+        private void OnVScrollPositionChanged(EventArgs e)
+        {
+            VScrollPositionChanged?.Invoke(this, e);
         }
 
         #endregion

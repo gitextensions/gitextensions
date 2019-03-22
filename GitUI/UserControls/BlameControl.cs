@@ -46,7 +46,7 @@ namespace GitUI.Blame
             BlameCommitter.IsReadOnly = true;
             BlameCommitter.EnableScrollBars(false);
             BlameCommitter.ShowLineNumbers = false;
-            BlameCommitter.ScrollPosChanged += BlameCommitter_ScrollPosChanged;
+            BlameCommitter.VScrollPositionChanged += BlameCommitter_VScrollPositionChanged;
             BlameCommitter.MouseMove += BlameCommitter_MouseMove;
             BlameCommitter.MouseLeave += BlameCommitter_MouseLeave;
             BlameCommitter.SelectedLineChanged += SelectedLineChanged;
@@ -54,7 +54,7 @@ namespace GitUI.Blame
             BlameCommitter.EscapePressed += () => EscapePressed?.Invoke();
 
             BlameFile.IsReadOnly = true;
-            BlameFile.ScrollPosChanged += BlameFile_ScrollPosChanged;
+            BlameFile.VScrollPositionChanged += BlameFile_VScrollPositionChanged;
             BlameFile.SelectedLineChanged += SelectedLineChanged;
             BlameFile.RequestDiffView += ActiveTextAreaControlDoubleClick;
             BlameFile.MouseMove += BlameFile_MouseMove;
@@ -75,7 +75,7 @@ namespace GitUI.Blame
 
             controlToMask?.Mask();
 
-            var scrollPos = BlameFile.ScrollPos;
+            var scrollPos = BlameFile.VScrollPosition;
 
             var line = _clickedBlameLine != null && _clickedBlameLine.Commit.ObjectId == objectId
                 ? _clickedBlameLine.OriginLineNumber
@@ -221,12 +221,12 @@ namespace GitUI.Blame
             CommitInfo.Revision = Module.GetRevision(_lastBlameLine.Commit.ObjectId);
         }
 
-        private void BlameCommitter_ScrollPosChanged(object sender, EventArgs e)
+        private void BlameCommitter_VScrollPositionChanged(object sender, EventArgs e)
         {
             if (!_changingScrollPosition)
             {
                 _changingScrollPosition = true;
-                BlameFile.ScrollPos = BlameCommitter.ScrollPos;
+                BlameFile.VScrollPosition = BlameCommitter.VScrollPosition;
                 _changingScrollPosition = false;
             }
 
@@ -240,7 +240,7 @@ namespace GitUI.Blame
             }
         }
 
-        private void BlameFile_ScrollPosChanged(object sender, EventArgs e)
+        private void BlameFile_VScrollPositionChanged(object sender, EventArgs e)
         {
             if (_changingScrollPosition)
             {
@@ -248,7 +248,7 @@ namespace GitUI.Blame
             }
 
             _changingScrollPosition = true;
-            BlameCommitter.ScrollPos = BlameFile.ScrollPos;
+            BlameCommitter.VScrollPosition = BlameFile.VScrollPosition;
             _changingScrollPosition = false;
         }
 
@@ -296,7 +296,7 @@ namespace GitUI.Blame
             }
             else
             {
-                BlameFile.ScrollPos = scrollpos;
+                BlameFile.VScrollPosition = scrollpos;
             }
 
             _clickedBlameLine = null;
