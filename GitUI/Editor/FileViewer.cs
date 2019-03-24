@@ -33,6 +33,7 @@ namespace GitUI.Editor
         private readonly TranslationString _largeFileSizeWarning = new TranslationString("This file is {0:N1} MB. Showing large files can be slow. Click to show anyway.");
 
         public event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
+        public event EventHandler HScrollPositionChanged;
         public event EventHandler VScrollPositionChanged;
         public event EventHandler RequestDiffView;
         public new event EventHandler TextChanged;
@@ -138,6 +139,7 @@ namespace GitUI.Editor
 
                 TextChanged?.Invoke(sender, e);
             };
+            internalFileViewer.HScrollPositionChanged += (sender, e) => HScrollPositionChanged?.Invoke(sender, e);
             internalFileViewer.VScrollPositionChanged += (sender, e) => VScrollPositionChanged?.Invoke(sender, e);
             internalFileViewer.SelectedLineChanged += (sender, e) => SelectedLineChanged?.Invoke(sender, e);
             internalFileViewer.DoubleClick += (_, args) => RequestDiffView?.Invoke(this, EventArgs.Empty);
@@ -226,6 +228,14 @@ namespace GitUI.Editor
                     }
                 }).FileAndForget();
             }
+        }
+
+        [DefaultValue(0)]
+        [Browsable(false)]
+        public int HScrollPosition
+        {
+            get => internalFileViewer.HScrollPosition;
+            set => internalFileViewer.HScrollPosition = value;
         }
 
         [DefaultValue(0)]

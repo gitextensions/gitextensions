@@ -44,6 +44,7 @@ namespace GitUI.Editor
             };
 
             TextEditor.TextChanged += (s, e) => TextChanged?.Invoke(s, e);
+            TextEditor.ActiveTextAreaControl.HScrollBar.ValueChanged += (s, e) => OnHScrollPositionChanged(EventArgs.Empty);
             TextEditor.ActiveTextAreaControl.VScrollBar.ValueChanged += (s, e) => OnVScrollPositionChanged(EventArgs.Empty);
             TextEditor.ActiveTextAreaControl.TextArea.KeyUp += (s, e) => KeyUp?.Invoke(s, e);
             TextEditor.ActiveTextAreaControl.TextArea.DoubleClick += (s, e) => DoubleClick?.Invoke(s, e);
@@ -94,6 +95,7 @@ namespace GitUI.Editor
 
         #region IFileViewer Members
 
+        public event EventHandler HScrollPositionChanged;
         public event EventHandler VScrollPositionChanged;
         public new event EventHandler TextChanged;
 
@@ -211,6 +213,23 @@ namespace GitUI.Editor
         public void AddPatchHighlighting()
         {
             _diffHighlightService.AddPatchHighlighting(TextEditor.Document);
+        }
+
+        public int HScrollPosition
+        {
+            get { return TextEditor.ActiveTextAreaControl.HScrollBar?.Value ?? 0; }
+            set
+            {
+                var scrollBar = TextEditor.ActiveTextAreaControl.HScrollBar;
+                if (scrollBar == null)
+                {
+                    return;
+                }
+
+                int max = scrollBar.Maximum - scrollBar.LargeChange;
+                max = Math.Max(max, scrollBar.Minimum);
+                scrollBar.Value = max > value ? value : max;
+            }
         }
 
         public int VScrollPosition
@@ -340,6 +359,11 @@ namespace GitUI.Editor
         public void SetFileLoader(GetNextFileFnc fileLoader)
         {
             _findAndReplaceForm.SetFileLoader(fileLoader);
+        }
+
+        private void OnHScrollPositionChanged(EventArgs e)
+        {
+            HScrollPositionChanged?.Invoke(this, e);
         }
 
         private void OnVScrollPositionChanged(EventArgs e)
