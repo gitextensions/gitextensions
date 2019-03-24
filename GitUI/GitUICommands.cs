@@ -310,7 +310,10 @@ namespace GitUI
             }
             finally
             {
-                RepoChangedNotifier.UnLock(changesRepo && actionDone);
+                // The action may not have required a valid working directory to run, but if there isn't one,
+                // we shouldn't send a "repo changed" notify.
+                bool requestNotify = actionDone && changesRepo && Module.IsValidGitWorkingDir();
+                RepoChangedNotifier.UnLock(requestNotify);
             }
 
             return actionDone;
