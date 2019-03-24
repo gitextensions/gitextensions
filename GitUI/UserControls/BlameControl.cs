@@ -46,6 +46,7 @@ namespace GitUI.Blame
             BlameCommitter.IsReadOnly = true;
             BlameCommitter.EnableScrollBars(false);
             BlameCommitter.ShowLineNumbers = false;
+            BlameCommitter.HScrollPositionChanged += BlameCommitter_HScrollPositionChanged;
             BlameCommitter.VScrollPositionChanged += BlameCommitter_VScrollPositionChanged;
             BlameCommitter.MouseMove += BlameCommitter_MouseMove;
             BlameCommitter.MouseLeave += BlameCommitter_MouseLeave;
@@ -219,6 +220,11 @@ namespace GitUI.Blame
 
             _lastBlameLine = newBlameLine;
             CommitInfo.Revision = Module.GetRevision(_lastBlameLine.Commit.ObjectId);
+        }
+
+        private void BlameCommitter_HScrollPositionChanged(object sender, EventArgs e)
+        {
+            BlameCommitter.HScrollPosition = 0;
         }
 
         private void BlameCommitter_VScrollPositionChanged(object sender, EventArgs e)
