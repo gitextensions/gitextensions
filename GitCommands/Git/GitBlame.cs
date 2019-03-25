@@ -69,9 +69,14 @@ namespace GitCommands
             var s = new StringBuilder();
 
             s.Append("Author: ").AppendLine(Author);
-            s.Append("AuthorTime: ").AppendLine(AuthorTime.ToString(CultureInfo.CurrentCulture));
-            s.Append("Committer: ").AppendLine(Committer);
-            s.Append("CommitterTime: ").AppendLine(CommitterTime.ToString(CultureInfo.CurrentCulture));
+            s.Append("Author date: ").AppendLine(AuthorTime.ToString(CultureInfo.CurrentCulture));
+            if (Author != Committer || AuthorTime != CommitterTime)
+            {
+                s.Append("Committer: ").AppendLine(Committer);
+                s.Append("Commit date: ").AppendLine(CommitterTime.ToString(CultureInfo.CurrentCulture));
+            }
+
+            s.Append("Commit hash: ").AppendLine(ObjectId.ToShortString());
             s.Append("Summary: ").AppendLine(Summary);
             s.AppendLine();
             s.Append("FileName: ").Append(FileName);

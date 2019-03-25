@@ -14,19 +14,21 @@ namespace GitCommandsTests.Git
         {
             var committerTime = DateTime.Now;
             var authorTime = DateTime.Now;
+            var commitHash = ObjectId.Random();
 
             var str = new StringBuilder();
 
             str.AppendLine("Author: Author");
-            str.AppendLine("AuthorTime: " + authorTime);
+            str.AppendLine("Author date: " + authorTime);
             str.AppendLine("Committer: committer");
-            str.AppendLine("CommitterTime: " + committerTime);
+            str.AppendLine("Commit date: " + committerTime);
+            str.AppendLine("Commit hash: " + commitHash.ToShortString());
             str.AppendLine("Summary: test summary");
             str.AppendLine();
             str.Append("FileName: fileName.txt");
 
             var commit = new GitBlameCommit(
-                ObjectId.Random(),
+                commitHash,
                 "Author",
                 "author@authormail.com",
                 authorTime,
