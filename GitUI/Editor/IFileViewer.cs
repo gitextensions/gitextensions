@@ -22,7 +22,8 @@ namespace GitUI.Editor
         event EventHandler MouseEnter;
         event EventHandler MouseLeave;
         event EventHandler TextChanged;
-        event EventHandler ScrollPosChanged;
+        event EventHandler HScrollPositionChanged;
+        event EventHandler VScrollPositionChanged;
         event EventHandler<SelectedLineEventArgs> SelectedLineChanged;
         event KeyEventHandler KeyDown;
         event KeyEventHandler KeyUp;
@@ -44,7 +45,7 @@ namespace GitUI.Editor
         int GetSelectionLength();
         void AddPatchHighlighting();
         Action OpenWithDifftool { get; }
-        int ScrollPos { get; set; }
+        int VScrollPosition { get; set; }
 
         bool ShowLineNumbers { get; set; }
         bool ShowEOLMarkers { get; set; }

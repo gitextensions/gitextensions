@@ -372,7 +372,7 @@ namespace GitUI.Editor
             this.internalFileViewer.Location = new System.Drawing.Point(0, 40);
             this.internalFileViewer.Margin = new System.Windows.Forms.Padding(0);
             this.internalFileViewer.Name = "internalFileViewer";
-            this.internalFileViewer.ScrollPos = 0;
+            this.internalFileViewer.VScrollPosition = 0;
             this.internalFileViewer.ShowEOLMarkers = false;
             this.internalFileViewer.ShowLineNumbers = true;
             this.internalFileViewer.ShowSpaces = false;
