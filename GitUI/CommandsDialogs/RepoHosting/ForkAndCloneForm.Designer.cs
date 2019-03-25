@@ -41,7 +41,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.myReposPage = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.helpTextLbl = new System.Windows.Forms.Label();
-            this.myReposLV = new UserControls.NativeListView();
+            this.myReposLV = new GitUI.UserControls.NativeListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.searchReposPage = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -52,13 +52,16 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.getFromUserBtn = new System.Windows.Forms.Button();
             this.forkBtn = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.searchResultsLV = new UserControls.NativeListView();
+            this.searchResultsLV = new GitUI.UserControls.NativeListView();
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.openGitupPageBtn = new System.Windows.Forms.Button();
             this.searchResultItemDescription = new System.Windows.Forms.TextBox();
             this.descriptionLbl = new System.Windows.Forms.Label();
             this.cloneSetupGB = new System.Windows.Forms.GroupBox();
+            this.depthLabel = new System.Windows.Forms.Label();
+            this.ProtocolDropdownList = new System.Windows.Forms.ComboBox();
+            this.ProtocolLabel = new System.Windows.Forms.Label();
             this.cloneInfoText = new System.Windows.Forms.Label();
             this.addRemoteAsTB = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -67,9 +70,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.label1 = new System.Windows.Forms.Label();
             this.browseForCloneToDirbtn = new System.Windows.Forms.Button();
             this.destinationTB = new System.Windows.Forms.TextBox();
+            this.depthUpDown = new System.Windows.Forms.NumericUpDown();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.ProtocolLabel = new System.Windows.Forms.Label();
-            this.ProtocolDropdownList = new System.Windows.Forms.ComboBox();
             columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -86,6 +88,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
             this.cloneSetupGB.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.depthUpDown)).BeginInit();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -119,13 +122,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
             columnHeader7.Text = "Forks";
             columnHeader7.Width = 40;
             // 
-            // _cloneBtn
+            // cloneBtn
             // 
             this.cloneBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.cloneBtn.Location = new System.Drawing.Point(489, 3);
             this.cloneBtn.Name = "cloneBtn";
             this.cloneBtn.Size = new System.Drawing.Size(120, 30);
-            this.cloneBtn.TabIndex = 4;
+            this.cloneBtn.TabIndex = 0;
             this.cloneBtn.Text = "Clone";
             this.cloneBtn.UseVisualStyleBackColor = true;
             this.cloneBtn.Click += new System.EventHandler(this._cloneBtn_Click);
@@ -136,7 +139,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.closeBtn.Location = new System.Drawing.Point(615, 3);
             this.closeBtn.Name = "closeBtn";
             this.closeBtn.Size = new System.Drawing.Size(120, 30);
-            this.closeBtn.TabIndex = 5;
+            this.closeBtn.TabIndex = 1;
             this.closeBtn.Text = "Close";
             this.closeBtn.UseVisualStyleBackColor = true;
             this.closeBtn.Click += new System.EventHandler(this._closeBtn_Click);
@@ -156,9 +159,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(744, 552);
-            this.tableLayoutPanel2.TabIndex = 22;
+            this.tableLayoutPanel2.TabIndex = 0;
             // 
-            // _tabControl
+            // tabControl
             // 
             this.tabControl.Controls.Add(this.myReposPage);
             this.tabControl.Controls.Add(this.searchReposPage);
@@ -166,17 +169,17 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.tabControl.Location = new System.Drawing.Point(3, 3);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(738, 360);
-            this.tabControl.TabIndex = 22;
+            this.tabControl.Size = new System.Drawing.Size(738, 323);
+            this.tabControl.TabIndex = 0;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this._tabControl_SelectedIndexChanged);
             // 
-            // _myReposPage
+            // myReposPage
             // 
             this.myReposPage.Controls.Add(this.tableLayoutPanel5);
-            this.myReposPage.Location = new System.Drawing.Point(4, 24);
+            this.myReposPage.Location = new System.Drawing.Point(4, 22);
             this.myReposPage.Name = "myReposPage";
-            this.myReposPage.Padding = new System.Windows.Forms.Padding(3);
-            this.myReposPage.Size = new System.Drawing.Size(730, 332);
+            this.myReposPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.myReposPage.Size = new System.Drawing.Size(730, 297);
             this.myReposPage.TabIndex = 0;
             this.myReposPage.Text = "My repositories";
             this.myReposPage.UseVisualStyleBackColor = true;
@@ -193,21 +196,21 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(724, 326);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(724, 291);
             this.tableLayoutPanel5.TabIndex = 0;
             // 
-            // _helpTextLbl
+            // helpTextLbl
             // 
             this.helpTextLbl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.helpTextLbl.Location = new System.Drawing.Point(509, 0);
             this.helpTextLbl.Name = "helpTextLbl";
-            this.helpTextLbl.Size = new System.Drawing.Size(212, 326);
-            this.helpTextLbl.TabIndex = 10;
+            this.helpTextLbl.Size = new System.Drawing.Size(212, 291);
+            this.helpTextLbl.TabIndex = 0;
             this.helpTextLbl.Text = "If you want to fork a repository owned by somebody else, go to the Search for rep" +
     "ositories tab.";
             this.helpTextLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // _myReposLV
+            // myReposLV
             // 
             this.myReposLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             columnHeader1,
@@ -221,8 +224,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.myReposLV.MultiSelect = false;
             this.myReposLV.Name = "myReposLV";
             this.myReposLV.ShowGroups = false;
-            this.myReposLV.Size = new System.Drawing.Size(500, 320);
-            this.myReposLV.TabIndex = 7;
+            this.myReposLV.Size = new System.Drawing.Size(500, 285);
+            this.myReposLV.TabIndex = 0;
             this.myReposLV.UseCompatibleStateImageBehavior = false;
             this.myReposLV.View = System.Windows.Forms.View.Details;
             this.myReposLV.SelectedIndexChanged += new System.EventHandler(this._myReposLV_SelectedIndexChanged);
@@ -232,13 +235,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.columnHeader2.Text = "Private";
             this.columnHeader2.Width = 45;
             // 
-            // _searchReposPage
+            // searchReposPage
             // 
             this.searchReposPage.Controls.Add(this.tableLayoutPanel1);
-            this.searchReposPage.Location = new System.Drawing.Point(4, 24);
+            this.searchReposPage.Location = new System.Drawing.Point(4, 22);
             this.searchReposPage.Name = "searchReposPage";
-            this.searchReposPage.Padding = new System.Windows.Forms.Padding(3);
-            this.searchReposPage.Size = new System.Drawing.Size(730, 332);
+            this.searchReposPage.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.searchReposPage.Size = new System.Drawing.Size(731, 299);
             this.searchReposPage.TabIndex = 1;
             this.searchReposPage.Text = "Search for repositories";
             this.searchReposPage.UseVisualStyleBackColor = true;
@@ -257,7 +260,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(724, 326);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(725, 293);
             this.tableLayoutPanel1.TabIndex = 23;
             // 
             // flowLayoutPanel2
@@ -269,19 +272,19 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(718, 35);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(719, 35);
             this.flowLayoutPanel2.TabIndex = 0;
             // 
-            // _searchTB
+            // searchTB
             // 
             this.searchTB.Location = new System.Drawing.Point(3, 3);
             this.searchTB.Name = "searchTB";
-            this.searchTB.Size = new System.Drawing.Size(198, 23);
+            this.searchTB.Size = new System.Drawing.Size(198, 20);
             this.searchTB.TabIndex = 0;
             this.searchTB.Enter += new System.EventHandler(this._searchTB_Enter);
             this.searchTB.Leave += new System.EventHandler(this._searchTB_Leave);
             // 
-            // _searchBtn
+            // searchBtn
             // 
             this.searchBtn.Location = new System.Drawing.Point(207, 3);
             this.searchBtn.Name = "searchBtn";
@@ -291,20 +294,20 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.searchBtn.UseVisualStyleBackColor = true;
             this.searchBtn.Click += new System.EventHandler(this._searchBtn_Click);
             // 
-            // _orLbl
+            // orLbl
             // 
             this.orLbl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.orLbl.AutoSize = true;
             this.orLbl.Location = new System.Drawing.Point(306, 0);
             this.orLbl.Name = "orLbl";
-            this.orLbl.Size = new System.Drawing.Size(18, 15);
+            this.orLbl.Size = new System.Drawing.Size(16, 13);
             this.orLbl.TabIndex = 22;
             this.orLbl.Text = "or";
             // 
-            // _getFromUserBtn
+            // getFromUserBtn
             // 
-            this.getFromUserBtn.Location = new System.Drawing.Point(330, 3);
+            this.getFromUserBtn.Location = new System.Drawing.Point(328, 3);
             this.getFromUserBtn.Name = "getFromUserBtn";
             this.getFromUserBtn.Size = new System.Drawing.Size(124, 23);
             this.getFromUserBtn.TabIndex = 2;
@@ -312,9 +315,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.getFromUserBtn.UseVisualStyleBackColor = true;
             this.getFromUserBtn.Click += new System.EventHandler(this._getFromUserBtn_Click);
             // 
-            // _forkBtn
+            // forkBtn
             // 
-            this.forkBtn.Location = new System.Drawing.Point(3, 300);
+            this.forkBtn.Location = new System.Drawing.Point(3, 267);
             this.forkBtn.Name = "forkBtn";
             this.forkBtn.Size = new System.Drawing.Size(150, 23);
             this.forkBtn.TabIndex = 4;
@@ -334,10 +337,10 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(718, 250);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(719, 217);
             this.tableLayoutPanel3.TabIndex = 5;
             // 
-            // _searchResultsLV
+            // searchResultsLV
             // 
             this.searchResultsLV.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             columnHeader5,
@@ -351,7 +354,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.searchResultsLV.MultiSelect = false;
             this.searchResultsLV.Name = "searchResultsLV";
             this.searchResultsLV.ShowGroups = false;
-            this.searchResultsLV.Size = new System.Drawing.Size(424, 244);
+            this.searchResultsLV.Size = new System.Drawing.Size(425, 211);
             this.searchResultsLV.TabIndex = 3;
             this.searchResultsLV.UseCompatibleStateImageBehavior = false;
             this.searchResultsLV.View = System.Windows.Forms.View.Details;
@@ -370,18 +373,18 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.tableLayoutPanel4.Controls.Add(this.searchResultItemDescription, 0, 1);
             this.tableLayoutPanel4.Controls.Add(this.descriptionLbl, 0, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(433, 3);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(434, 3);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 3;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(282, 244);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(282, 211);
             this.tableLayoutPanel4.TabIndex = 4;
             // 
-            // _openGitupPageBtn
+            // openGitupPageBtn
             // 
-            this.openGitupPageBtn.Location = new System.Drawing.Point(3, 218);
+            this.openGitupPageBtn.Location = new System.Drawing.Point(3, 185);
             this.openGitupPageBtn.Name = "openGitupPageBtn";
             this.openGitupPageBtn.Size = new System.Drawing.Size(116, 23);
             this.openGitupPageBtn.TabIndex = 5;
@@ -389,28 +392,29 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.openGitupPageBtn.UseVisualStyleBackColor = true;
             this.openGitupPageBtn.Click += new System.EventHandler(this._openGitupPageBtn_Click);
             // 
-            // _searchResultItemDescription
+            // searchResultItemDescription
             // 
             this.searchResultItemDescription.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.searchResultItemDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.searchResultItemDescription.Location = new System.Drawing.Point(3, 18);
+            this.searchResultItemDescription.Location = new System.Drawing.Point(3, 16);
             this.searchResultItemDescription.Multiline = true;
             this.searchResultItemDescription.Name = "searchResultItemDescription";
             this.searchResultItemDescription.ReadOnly = true;
-            this.searchResultItemDescription.Size = new System.Drawing.Size(276, 194);
+            this.searchResultItemDescription.Size = new System.Drawing.Size(276, 163);
             this.searchResultItemDescription.TabIndex = 18;
             // 
-            // _descriptionLbl
+            // descriptionLbl
             // 
             this.descriptionLbl.AutoSize = true;
             this.descriptionLbl.Location = new System.Drawing.Point(3, 0);
             this.descriptionLbl.Name = "descriptionLbl";
-            this.descriptionLbl.Size = new System.Drawing.Size(70, 15);
+            this.descriptionLbl.Size = new System.Drawing.Size(63, 13);
             this.descriptionLbl.TabIndex = 17;
             this.descriptionLbl.Text = "Description:";
             // 
-            // _cloneSetupGB
+            // cloneSetupGB
             // 
+            this.cloneSetupGB.Controls.Add(this.depthLabel);
             this.cloneSetupGB.Controls.Add(this.ProtocolDropdownList);
             this.cloneSetupGB.Controls.Add(this.ProtocolLabel);
             this.cloneSetupGB.Controls.Add(this.cloneInfoText);
@@ -421,29 +425,60 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.cloneSetupGB.Controls.Add(this.label1);
             this.cloneSetupGB.Controls.Add(this.browseForCloneToDirbtn);
             this.cloneSetupGB.Controls.Add(this.destinationTB);
+            this.cloneSetupGB.Controls.Add(this.depthUpDown);
             this.cloneSetupGB.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cloneSetupGB.Location = new System.Drawing.Point(3, 369);
+            this.cloneSetupGB.Location = new System.Drawing.Point(4, 333);
+            this.cloneSetupGB.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.cloneSetupGB.Name = "cloneSetupGB";
-            this.cloneSetupGB.Size = new System.Drawing.Size(738, 140);
-            this.cloneSetupGB.TabIndex = 23;
+            this.cloneSetupGB.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cloneSetupGB.Size = new System.Drawing.Size(736, 175);
+            this.cloneSetupGB.TabIndex = 1;
             this.cloneSetupGB.TabStop = false;
             this.cloneSetupGB.Text = "Clone";
             // 
-            // _cloneInfoText
+            // depthLabel
+            // 
+            this.depthLabel.AutoSize = true;
+            this.depthLabel.Location = new System.Drawing.Point(7, 135);
+            this.depthLabel.Name = "depthLabel";
+            this.depthLabel.Size = new System.Drawing.Size(63, 13);
+            this.depthLabel.TabIndex = 10;
+            this.depthLabel.Text = "Limit Depth:";
+            // 
+            // ProtocolDropdownList
+            // 
+            this.ProtocolDropdownList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ProtocolDropdownList.FormattingEnabled = true;
+            this.ProtocolDropdownList.Location = new System.Drawing.Point(470, 32);
+            this.ProtocolDropdownList.Name = "ProtocolDropdownList";
+            this.ProtocolDropdownList.Size = new System.Drawing.Size(121, 21);
+            this.ProtocolDropdownList.TabIndex = 4;
+            this.ProtocolDropdownList.SelectedIndexChanged += new System.EventHandler(this.ProtocolSelectionChanged);
+            // 
+            // ProtocolLabel
+            // 
+            this.ProtocolLabel.AutoSize = true;
+            this.ProtocolLabel.Location = new System.Drawing.Point(418, 36);
+            this.ProtocolLabel.Name = "ProtocolLabel";
+            this.ProtocolLabel.Size = new System.Drawing.Size(49, 13);
+            this.ProtocolLabel.TabIndex = 3;
+            this.ProtocolLabel.Text = "Protocol:";
+            // 
+            // cloneInfoText
             // 
             this.cloneInfoText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cloneInfoText.Location = new System.Drawing.Point(10, 97);
             this.cloneInfoText.Name = "cloneInfoText";
             this.cloneInfoText.Size = new System.Drawing.Size(719, 35);
-            this.cloneInfoText.TabIndex = 24;
+            this.cloneInfoText.TabIndex = 9;
             // 
-            // _addRemoteAsTB
+            // addRemoteAsTB
             // 
             this.addRemoteAsTB.Location = new System.Drawing.Point(212, 71);
             this.addRemoteAsTB.Name = "addRemoteAsTB";
-            this.addRemoteAsTB.Size = new System.Drawing.Size(200, 23);
-            this.addRemoteAsTB.TabIndex = 4;
+            this.addRemoteAsTB.Size = new System.Drawing.Size(200, 20);
+            this.addRemoteAsTB.TabIndex = 8;
             this.addRemoteAsTB.TextChanged += new System.EventHandler(this._addRemoteAsTB_TextChanged);
             // 
             // label3
@@ -451,26 +486,26 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(211, 55);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(87, 15);
-            this.label3.TabIndex = 23;
+            this.label3.Size = new System.Drawing.Size(78, 13);
+            this.label3.TabIndex = 7;
             this.label3.Text = "Add remote as:";
             // 
-            // _createDirTB
+            // createDirTB
             // 
-            this.createDirTB.Location = new System.Drawing.Point(11, 71);
+            this.createDirTB.Location = new System.Drawing.Point(10, 71);
             this.createDirTB.Name = "createDirTB";
-            this.createDirTB.Size = new System.Drawing.Size(183, 23);
-            this.createDirTB.TabIndex = 3;
+            this.createDirTB.Size = new System.Drawing.Size(183, 20);
+            this.createDirTB.TabIndex = 6;
             this.createDirTB.TextChanged += new System.EventHandler(this._createDirTB_TextChanged);
             this.createDirTB.Validating += new System.ComponentModel.CancelEventHandler(this._createDirTB_Validating);
             // 
-            // _createDirectoryLbl
+            // createDirectoryLbl
             // 
             this.createDirectoryLbl.AutoSize = true;
-            this.createDirectoryLbl.Location = new System.Drawing.Point(9, 55);
+            this.createDirectoryLbl.Location = new System.Drawing.Point(7, 55);
             this.createDirectoryLbl.Name = "createDirectoryLbl";
-            this.createDirectoryLbl.Size = new System.Drawing.Size(94, 15);
-            this.createDirectoryLbl.TabIndex = 13;
+            this.createDirectoryLbl.Size = new System.Drawing.Size(84, 13);
+            this.createDirectoryLbl.TabIndex = 5;
             this.createDirectoryLbl.Text = "Create directory:";
             // 
             // label1
@@ -478,28 +513,40 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(7, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(104, 15);
-            this.label1.TabIndex = 12;
+            this.label1.Size = new System.Drawing.Size(92, 13);
+            this.label1.TabIndex = 0;
             this.label1.Text = "Destination folder:";
             // 
-            // _browseForCloneToDirbtn
+            // browseForCloneToDirbtn
             // 
             this.browseForCloneToDirbtn.Location = new System.Drawing.Point(310, 32);
             this.browseForCloneToDirbtn.Name = "browseForCloneToDirbtn";
             this.browseForCloneToDirbtn.Size = new System.Drawing.Size(102, 23);
-            this.browseForCloneToDirbtn.TabIndex = 1;
+            this.browseForCloneToDirbtn.TabIndex = 2;
             this.browseForCloneToDirbtn.Text = "Browse...";
             this.browseForCloneToDirbtn.UseVisualStyleBackColor = true;
             this.browseForCloneToDirbtn.Click += new System.EventHandler(this._browseForCloneToDirbtn_Click);
             // 
-            // _destinationTB
+            // destinationTB
             // 
             this.destinationTB.Location = new System.Drawing.Point(10, 32);
             this.destinationTB.Name = "destinationTB";
-            this.destinationTB.Size = new System.Drawing.Size(294, 23);
-            this.destinationTB.TabIndex = 0;
+            this.destinationTB.Size = new System.Drawing.Size(294, 20);
+            this.destinationTB.TabIndex = 1;
             this.destinationTB.TextChanged += new System.EventHandler(this._destinationTB_TextChanged);
             this.destinationTB.Validating += new System.ComponentModel.CancelEventHandler(this._destinationTB_Validating);
+            // 
+            // depthUpDown
+            // 
+            this.depthUpDown.Location = new System.Drawing.Point(10, 151);
+            this.depthUpDown.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.depthUpDown.Name = "depthUpDown";
+            this.depthUpDown.Size = new System.Drawing.Size(100, 20);
+            this.depthUpDown.TabIndex = 11;
             // 
             // flowLayoutPanel1
             // 
@@ -510,26 +557,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 515);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(738, 34);
-            this.flowLayoutPanel1.TabIndex = 24;
-            // 
-            // ProtocolLabel
-            // 
-            this.ProtocolLabel.AutoSize = true;
-            this.ProtocolLabel.Location = new System.Drawing.Point(418, 36);
-            this.ProtocolLabel.Name = "ProtocolLabel";
-            this.ProtocolLabel.Size = new System.Drawing.Size(49, 13);
-            this.ProtocolLabel.TabIndex = 25;
-            this.ProtocolLabel.Text = "Protocol:";
-            // 
-            // ProtocolDropdownList
-            // 
-            this.ProtocolDropdownList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ProtocolDropdownList.FormattingEnabled = true;
-            this.ProtocolDropdownList.Location = new System.Drawing.Point(470, 32);
-            this.ProtocolDropdownList.Name = "ProtocolDropdownList";
-            this.ProtocolDropdownList.Size = new System.Drawing.Size(121, 21);
-            this.ProtocolDropdownList.TabIndex = 2;
-            this.ProtocolDropdownList.SelectedIndexChanged += new System.EventHandler(this.ProtocolSelectionChanged);
+            this.flowLayoutPanel1.TabIndex = 2;
             // 
             // ForkAndCloneForm
             // 
@@ -554,6 +582,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             this.tableLayoutPanel4.PerformLayout();
             this.cloneSetupGB.ResumeLayout(false);
             this.cloneSetupGB.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.depthUpDown)).EndInit();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -597,5 +626,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.ComboBox ProtocolDropdownList;
         private System.Windows.Forms.Label ProtocolLabel;
+        private System.Windows.Forms.NumericUpDown depthUpDown;
+        private System.Windows.Forms.Label depthLabel;
     }
 }
