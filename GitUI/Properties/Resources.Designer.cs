@@ -64,21 +64,18 @@ namespace GitUI.Properties {
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///### [Version 2.51.05] (2 September 2018)
+        ///### Version 3.0.2 (16 Feb 2019)
         ///
         ///#### Fixes:
-        ///* Git config log.showSignature breaks revision grid - Issue [5179]
+        ///* QuickPull&apos;s hotkey is not working - Issue [6200]
+        ///* Can&apos;t delete a repository included in the categories of the dashboard - Issue [6192]
+        ///* Fix loading of some plugins that failed - PR [6159]
+        ///* Regression: Pull Dialog Title when changing merge option - Issue [6150]
+        ///* Shell Extension Menu Pull  - Issue [6144]
+        ///* gitexe.cmd pull - always opens dialog window in do not merge, only fetch changes - Issue [6060]
         ///
-        ///#### Fixes (Mono specific):
-        ///* Settings causes crash under linux/mono - Issue [5311]
-        ///* Git Extension crashes when trying to access settings page in Ubuntu 16.04 - Issue [5187]
-        ///* Diff view options are positioned wrong, cannot be selected under linux/mono - Issue [4978]
         ///
-        ///
-        ///### [Version 2.51.04] (8 July 2018)
-        ///
-        ///#### Fixes:
-        ///* A number of changed files on Co [rest of string was truncated]&quot;;.
+        ///[6200]:https://github. [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {
@@ -101,11 +98,71 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CommitId {
+            get {
+                object obj = ResourceManager.GetObject("CommitId", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CommitSummary {
+            get {
+                object obj = ResourceManager.GetObject("CommitSummary", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap CopyToClipboard {
+            get {
+                object obj = ResourceManager.GetObject("CopyToClipboard", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Andréj Telle, Oliver Friedrich.
         /// </summary>
         internal static string Designers {
             get {
                 return ResourceManager.GetString("Designers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap information {
+            get {
+                object obj = ResourceManager.GetObject("information", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Message {
+            get {
+                object obj = ResourceManager.GetObject("Message", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RecentRepositories {
+            get {
+                object obj = ResourceManager.GetObject("RecentRepositories", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

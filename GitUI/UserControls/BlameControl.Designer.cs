@@ -21,10 +21,13 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.BlameCommitter = new GitUI.Editor.FileViewer();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyLogMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.blamePreviousRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.commitHashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.commitMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.allCommitInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.BlameFile = new GitUI.Editor.FileViewer();
             this.blameTooltip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -101,20 +104,13 @@
             // contextMenu
             // 
             this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyLogMessageToolStripMenuItem,
-            this.toolStripSeparator1,
             this.blamePreviousRevisionToolStripMenuItem,
-            this.showChangesToolStripMenuItem});
+            this.showChangesToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.copyToClipboardToolStripMenuItem});
             this.contextMenu.Name = "ContextMenu";
             this.contextMenu.Size = new System.Drawing.Size(239, 76);
             this.contextMenu.Opened += new System.EventHandler(this.contextMenu_Opened);
-            // 
-            // copyLogMessageToolStripMenuItem
-            // 
-            this.copyLogMessageToolStripMenuItem.Name = "copyLogMessageToolStripMenuItem";
-            this.copyLogMessageToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
-            this.copyLogMessageToolStripMenuItem.Text = "Copy log message to clipboard";
-            this.copyLogMessageToolStripMenuItem.Click += new System.EventHandler(this.copyLogMessageToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -123,6 +119,7 @@
             // 
             // blamePreviousRevisionToolStripMenuItem
             // 
+            this.blamePreviousRevisionToolStripMenuItem.Image = global::GitUI.Properties.Resources.RecentRepositories;
             this.blamePreviousRevisionToolStripMenuItem.Name = "blamePreviousRevisionToolStripMenuItem";
             this.blamePreviousRevisionToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.blamePreviousRevisionToolStripMenuItem.Text = "Blame previous revision";
@@ -130,10 +127,46 @@
             // 
             // showChangesToolStripMenuItem
             // 
+            this.showChangesToolStripMenuItem.Image = global::GitUI.Properties.Resources.information;
             this.showChangesToolStripMenuItem.Name = "showChangesToolStripMenuItem";
             this.showChangesToolStripMenuItem.Size = new System.Drawing.Size(238, 22);
             this.showChangesToolStripMenuItem.Text = "Show changes";
             this.showChangesToolStripMenuItem.Click += new System.EventHandler(this.showChangesToolStripMenuItem_Click);
+            // 
+            // copyToClipboardToolStripMenuItem
+            // 
+            this.copyToClipboardToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.commitHashToolStripMenuItem,
+            this.commitMessageToolStripMenuItem,
+            this.allCommitInfoToolStripMenuItem});
+            this.copyToClipboardToolStripMenuItem.Image = global::GitUI.Properties.Resources.CopyToClipboard;
+            this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
+            this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.copyToClipboardToolStripMenuItem.Text = "Copy to clipboard";
+            // 
+            // commitHashToolStripMenuItem
+            // 
+            this.commitHashToolStripMenuItem.Image = global::GitUI.Properties.Resources.CommitId;
+            this.commitHashToolStripMenuItem.Name = "commitHashToolStripMenuItem";
+            this.commitHashToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.commitHashToolStripMenuItem.Text = "Commit hash";
+            this.commitHashToolStripMenuItem.Click += new System.EventHandler(this.copyCommitHashToClipboardToolStripMenuItem_Click);
+            // 
+            // commitMessageToolStripMenuItem
+            // 
+            this.commitMessageToolStripMenuItem.Image = global::GitUI.Properties.Resources.Message;
+            this.commitMessageToolStripMenuItem.Name = "commitMessageToolStripMenuItem";
+            this.commitMessageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.commitMessageToolStripMenuItem.Text = "Commit message";
+            this.commitMessageToolStripMenuItem.Click += new System.EventHandler(this.copyLogMessageToolStripMenuItem_Click);
+            // 
+            // allCommitInfoToolStripMenuItem
+            // 
+            this.allCommitInfoToolStripMenuItem.Image = global::GitUI.Properties.Resources.CommitSummary;
+            this.allCommitInfoToolStripMenuItem.Name = "allCommitInfoToolStripMenuItem";
+            this.allCommitInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.allCommitInfoToolStripMenuItem.Text = "All commit info";
+            this.allCommitInfoToolStripMenuItem.Click += new System.EventHandler(this.copyAllCommitInfoToClipboardToolStripMenuItem_Click);
             // 
             // BlameFile
             // 
@@ -174,9 +207,12 @@
         private GitUI.Editor.FileViewer BlameFile;
         private System.Windows.Forms.ToolTip blameTooltip;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
-        private System.Windows.Forms.ToolStripMenuItem copyLogMessageToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem blamePreviousRevisionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showChangesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem commitHashToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem commitMessageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem allCommitInfoToolStripMenuItem;
     }
 }
