@@ -415,12 +415,7 @@ namespace GitUI.Editor
 
             long GetFileLength()
             {
-                var file = new FileInfo(fileName);
-
-                if (!file.Exists)
-                {
-                    file = new FileInfo(_fullPathResolver.Resolve(fileName));
-                }
+                var file = GetFileInfo(fileName);
 
                 if (file.Exists)
                 {
@@ -575,8 +570,7 @@ namespace GitUI.Editor
 
             async Task<string> SummariseBinaryFileAsync()
             {
-                var fullPath = Path.GetFullPath(_fullPathResolver.Resolve(fileName));
-                var fileInfo = new FileInfo(fullPath);
+                var fileInfo = GetFileInfo(fileName);
 
                 var str = new StringBuilder()
                     .AppendLine("Binary file:")
@@ -593,7 +587,7 @@ namespace GitUI.Editor
                     var displayByteCount = (int)Math.Min(fileInfo.Length, maxLength);
                     var bytes = new byte[displayByteCount];
 
-                    using (var stream = File.OpenRead(fullPath))
+                    using (var stream = File.OpenRead(fileInfo.FullName))
                     {
                         var offset = 0;
                         while (offset < displayByteCount)
@@ -618,6 +612,12 @@ namespace GitUI.Editor
 
                 return str.ToString();
             }
+        }
+
+        private FileInfo GetFileInfo(string fileName)
+        {
+            var resolvedPath = _fullPathResolver.Resolve(fileName);
+            return new FileInfo(resolvedPath);
         }
 
         public static string ToHexDump(byte[] bytes, StringBuilder str, int columnWidth = 8, int columnCount = 2)

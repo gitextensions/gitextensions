@@ -78,3 +78,4 @@ YYYY/MM/DD, github id, Full name, email
 2019/03/04, DeadDuck, Onur Safak, onur.safak@radity.com
 2019/03/12, Carl-Hugo, Carl-Hugo Marcotte, carlhugo@gmail.com
 2019/03/20, ignacioerrico, Ignacio Errico, ignacio.errico@gmail.com
+2019/03/24, fschmied, Fabian Schmied, fabian.schmied(at)gmail.com
