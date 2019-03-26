@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
@@ -265,7 +266,6 @@ namespace GitUI.Blame
 
         private void ProcessBlame(string filename, GitRevision revision, IReadOnlyList<ObjectId> children, Control controlToMask, int lineNumber, int scrollpos)
         {
-            var gutter = new StringBuilder(capacity: 4096);
             var body = new StringBuilder(capacity: 4096);
 
             GitBlameCommit lastCommit = null;
@@ -279,49 +279,55 @@ namespace GitUI.Blame
             // If it could be done with a solid rectangle around the text,
             // the extra spaces added here could be omitted.
 
+            var filePathLengthEstimate = _blame.Lines.Where(l => filename != l.Commit.FileName)
+                .Select(l => l.Commit.FileName.Length)
+                .DefaultIfEmpty(0)
+                .Max();
+            var lineLengthEstimate = 25 + _blame.Lines.Max(l => l.Commit.Author?.Length ?? 0) + filePathLengthEstimate;
+            var lineLength = Math.Max(80, lineLengthEstimate);
+            var lineBuilder = new StringBuilder(lineLength + 2);
+            var gutter = new StringBuilder(capacity: lineBuilder.Capacity * _blame.Lines.Count);
             foreach (var line in _blame.Lines)
             {
                 if (line.Commit == lastCommit)
                 {
-                    gutter.Append(' ', 120).AppendLine();
+                    gutter.Append(' ', lineLength).AppendLine();
                 }
                 else
                 {
                     if (!AppSettings.BlameHideCommitter && AppSettings.BlameDisplayCommitterFirst)
                     {
-                        gutter.Append(line.Commit.Author);
+                        lineBuilder.Append(line.Commit.Author);
                         if (!AppSettings.BlameHideAuthorDate)
                         {
-                            gutter.Append(" - ");
+                            lineBuilder.Append(" - ");
                         }
                     }
 
                     if (!AppSettings.BlameHideAuthorDate)
                     {
-                        gutter.Append(line.Commit.AuthorTime.ToString(dateTimeFormat));
+                        lineBuilder.Append(line.Commit.AuthorTime.ToString(dateTimeFormat));
                     }
 
                     if (!AppSettings.BlameHideCommitter && !AppSettings.BlameDisplayCommitterFirst)
                     {
                         if (!AppSettings.BlameHideAuthorDate)
                         {
-                            gutter.Append(" - ");
+                            lineBuilder.Append(" - ");
                         }
 
-                        gutter.Append(line.Commit.Author);
+                        lineBuilder.Append(line.Commit.Author);
                     }
 
-                    var authorLength = line.Commit.Author?.Length ?? 0;
                     if (filename != line.Commit.FileName)
                     {
-                        gutter.Append(" - ");
-                        gutter.Append(line.Commit.FileName);
-                        gutter.Append(' ', Math.Max(0, 104 - authorLength - line.Commit.FileName.Length)).AppendLine();
+                        lineBuilder.Append(" - ");
+                        lineBuilder.Append(line.Commit.FileName);
                     }
-                    else
-                    {
-                        gutter.Append(' ', Math.Max(0, 107 - authorLength)).AppendLine();
-                    }
+
+                    gutter.Append(lineBuilder);
+                    gutter.Append(' ', lineLength - lineBuilder.Length).AppendLine();
+                    lineBuilder.Clear();
                 }
 
                 body.AppendLine(line.Text);
