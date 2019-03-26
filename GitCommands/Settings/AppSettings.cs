@@ -1610,6 +1610,36 @@ namespace GitCommands
             set => SetInt("RepoObjectsTree.SubmodulesIndex", value);
         }
 
+        public static bool BlameDisplayCommitterFirst
+        {
+            get => GetBool("Blame.DisplayCommitterFirst", false);
+            set => SetBool("Blame.DisplayCommitterFirst", value);
+        }
+
+        public static bool BlameHideCommitter
+        {
+            get => GetBool("Blame.HideCommitter", false);
+            set => SetBool("Blame.HideCommitter", value);
+        }
+
+        public static bool BlameHideAuthorDate
+        {
+            get => GetBool("Blame.HideAuthorDate", false);
+            set => SetBool("Blame.HideAuthorDate", value);
+        }
+
+        public static bool BlameHideAuthorTime
+        {
+            get => GetBool("Blame.HideAuthorTime", false);
+            set => SetBool("Blame.HideAuthorTime", value);
+        }
+
+        public static bool BlameShowLineNumbers
+        {
+            get => GetBool("Blame.ShowLineNumbers", false);
+            set => SetBool("Blame.ShowLineNumbers", value);
+        }
+
         public static bool IsPortable()
         {
             return Properties.Settings.Default.IsPortable;

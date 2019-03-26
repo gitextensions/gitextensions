@@ -55,9 +55,17 @@ namespace GitUI.CommandsDialogs
             this.showFullHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.simplifyMergesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripBlameOptions = new System.Windows.Forms.ToolStripDropDownButton();
+            this.blameSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ignoreWhitespaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.detectMoveAndCopyInThisFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.detectMoveAndCopyInAllFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.displaySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayCommitterFirstToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hideCommitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hideAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hideAuthorTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showLineNumbersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -116,7 +124,7 @@ namespace GitUI.CommandsDialogs
             this.simplifyMergesContextMenuItem,
             this.toolStripSeparator4});
             this.FileHistoryContextMenu.Name = "DiffContextMenu";
-            this.FileHistoryContextMenu.Size = new System.Drawing.Size(340, 248);
+            this.FileHistoryContextMenu.Size = new System.Drawing.Size(340, 226);
             this.FileHistoryContextMenu.Opening += new System.ComponentModel.CancelEventHandler(this.FileHistoryContextMenuOpening);
             // 
             // copyToClipboardToolStripMenuItem
@@ -465,15 +473,30 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolStripBlameOptions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripBlameOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.blameSettingsToolStripMenuItem,
             this.ignoreWhitespaceToolStripMenuItem,
             this.detectMoveAndCopyInThisFileToolStripMenuItem,
-            this.detectMoveAndCopyInAllFilesToolStripMenuItem});
+            this.detectMoveAndCopyInAllFilesToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.displaySettingsToolStripMenuItem,
+            this.displayCommitterFirstToolStripMenuItem,
+            this.hideCommitterToolStripMenuItem,
+            this.hideAuthorDateToolStripMenuItem,
+            this.hideAuthorTimeToolStripMenuItem,
+            this.showLineNumbersToolStripMenuItem});
             this.toolStripBlameOptions.Image = global::GitUI.Properties.Images.Blame;
             this.toolStripBlameOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripBlameOptions.Name = "toolStripBlameOptions";
             this.toolStripBlameOptions.Size = new System.Drawing.Size(29, 22);
             this.toolStripBlameOptions.Text = "Blame options";
             this.toolStripBlameOptions.ToolTipText = "Blame options";
+            // 
+            // blameSettingsToolStripMenuItem
+            // 
+            this.blameSettingsToolStripMenuItem.Enabled = false;
+            this.blameSettingsToolStripMenuItem.Name = "blameSettingsToolStripMenuItem";
+            this.blameSettingsToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.blameSettingsToolStripMenuItem.Text = "Blame settings:";
             // 
             // ignoreWhitespaceToolStripMenuItem
             // 
@@ -495,6 +518,53 @@ namespace GitUI.CommandsDialogs
             this.detectMoveAndCopyInAllFilesToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
             this.detectMoveAndCopyInAllFilesToolStripMenuItem.Text = "Detect move and copy in all files";
             this.detectMoveAndCopyInAllFilesToolStripMenuItem.Click += new System.EventHandler(this.detectMoveAndCopyInAllFilesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(244, 6);
+            // 
+            // displaySettingsToolStripMenuItem
+            // 
+            this.displaySettingsToolStripMenuItem.Enabled = false;
+            this.displaySettingsToolStripMenuItem.Name = "displaySettingsToolStripMenuItem";
+            this.displaySettingsToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.displaySettingsToolStripMenuItem.Text = "Display result settings:";
+            // 
+            // displayCommitterFirstToolStripMenuItem
+            // 
+            this.displayCommitterFirstToolStripMenuItem.Name = "displayCommitterFirstToolStripMenuItem";
+            this.displayCommitterFirstToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.displayCommitterFirstToolStripMenuItem.Text = "Display committer first";
+            this.displayCommitterFirstToolStripMenuItem.Click += new System.EventHandler(this.displayCommitterFirstToolStripMenuItem_Click);
+            // 
+            // hideCommitterToolStripMenuItem
+            // 
+            this.hideCommitterToolStripMenuItem.Name = "hideCommitterToolStripMenuItem";
+            this.hideCommitterToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.hideCommitterToolStripMenuItem.Text = "Hide committer";
+            this.hideCommitterToolStripMenuItem.Click += new System.EventHandler(this.hideCommitterToolStripMenuItem_Click);
+            // 
+            // hideAuthorDateToolStripMenuItem
+            // 
+            this.hideAuthorDateToolStripMenuItem.Name = "hideAuthorDateToolStripMenuItem";
+            this.hideAuthorDateToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.hideAuthorDateToolStripMenuItem.Text = "Hide author date";
+            this.hideAuthorDateToolStripMenuItem.Click += new System.EventHandler(this.hideAuthorDateToolStripMenuItem_Click);
+            // 
+            // hideAuthorTimeToolStripMenuItem
+            // 
+            this.hideAuthorTimeToolStripMenuItem.Name = "hideAuthorTimeToolStripMenuItem";
+            this.hideAuthorTimeToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.hideAuthorTimeToolStripMenuItem.Text = "Hide author time";
+            this.hideAuthorTimeToolStripMenuItem.Click += new System.EventHandler(this.hideAuthorTimeToolStripMenuItem_Click);
+            // 
+            // showLineNumbersToolStripMenuItem
+            // 
+            this.showLineNumbersToolStripMenuItem.Name = "showLineNumbersToolStripMenuItem";
+            this.showLineNumbersToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.showLineNumbersToolStripMenuItem.Text = "Show line numbers";
+            this.showLineNumbersToolStripMenuItem.Click += new System.EventHandler(this.showLineNumbersToolStripMenuItem_Click);
             // 
             // FormFileHistory
             // 
@@ -573,5 +643,13 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem simplifyMergesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem simplifyMergesContextMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem displayCommitterFirstToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hideAuthorDateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hideAuthorTimeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showLineNumbersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem blameSettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem displaySettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hideCommitterToolStripMenuItem;
     }
 }

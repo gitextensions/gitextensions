@@ -45,7 +45,7 @@ namespace GitUI.Blame
 
             BlameCommitter.IsReadOnly = true;
             BlameCommitter.EnableScrollBars(false);
-            BlameCommitter.ShowLineNumbers = false;
+            UpdateShowLineNumbers();
             BlameCommitter.HScrollPositionChanged += BlameCommitter_HScrollPositionChanged;
             BlameCommitter.VScrollPositionChanged += BlameCommitter_VScrollPositionChanged;
             BlameCommitter.MouseMove += BlameCommitter_MouseMove;
@@ -62,6 +62,11 @@ namespace GitUI.Blame
             BlameFile.EscapePressed += () => EscapePressed?.Invoke();
 
             CommitInfo.CommandClicked += commitInfo_CommandClicked;
+        }
+
+        public void UpdateShowLineNumbers()
+        {
+            BlameCommitter.ShowLineNumbers = AppSettings.BlameShowLineNumbers;
         }
 
         public void LoadBlame(GitRevision revision, [CanBeNull] IReadOnlyList<ObjectId> children, string fileName, RevisionGridControl revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
@@ -265,6 +270,10 @@ namespace GitUI.Blame
 
             GitBlameCommit lastCommit = null;
 
+            var dateTimeFormat = AppSettings.BlameHideAuthorTime
+                ? CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern
+                : CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern;
+
             // NOTE EOL white-space supports highlight on mouse-over.
             // Highlighting is done via text background colour.
             // If it could be done with a solid rectangle around the text,
@@ -278,9 +287,30 @@ namespace GitUI.Blame
                 }
                 else
                 {
-                    gutter.Append(line.Commit.AuthorTime.ToString(CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern));
-                    gutter.Append(" - ");
-                    gutter.Append(line.Commit.Author);
+                    if (!AppSettings.BlameHideCommitter && AppSettings.BlameDisplayCommitterFirst)
+                    {
+                        gutter.Append(line.Commit.Author);
+                        if (!AppSettings.BlameHideAuthorDate)
+                        {
+                            gutter.Append(" - ");
+                        }
+                    }
+
+                    if (!AppSettings.BlameHideAuthorDate)
+                    {
+                        gutter.Append(line.Commit.AuthorTime.ToString(dateTimeFormat));
+                    }
+
+                    if (!AppSettings.BlameHideCommitter && !AppSettings.BlameDisplayCommitterFirst)
+                    {
+                        if (!AppSettings.BlameHideAuthorDate)
+                        {
+                            gutter.Append(" - ");
+                        }
+
+                        gutter.Append(line.Commit.Author);
+                    }
+
                     var authorLength = line.Commit.Author?.Length ?? 0;
                     if (filename != line.Commit.FileName)
                     {
