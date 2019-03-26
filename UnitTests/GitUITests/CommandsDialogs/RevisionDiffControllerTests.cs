@@ -110,7 +110,9 @@ namespace GitUITests.CommandsDialogs
             _controller.ShouldShowMenuStage(selectionInfo).Should().BeFalse();
             _controller.ShouldShowMenuUnstage(selectionInfo).Should().BeFalse();
             _controller.ShouldShowSubmoduleMenus(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuEditFile(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuOpenRevision(selectionInfo).Should().BeTrue();
+            _controller.ShouldShowMenuDeleteFile(selectionInfo).Should().BeFalse();
             _controller.ShouldShowMenuCopyFileName(selectionInfo).Should().BeTrue();
             _controller.ShouldShowMenuShowInFileTree(selectionInfo).Should().BeTrue();
             _controller.ShouldShowMenuFileHistory(selectionInfo).Should().BeTrue();
@@ -128,7 +130,9 @@ namespace GitUITests.CommandsDialogs
             _controller.ShouldShowMenuStage(selectionInfo).Should().BeFalse();
             _controller.ShouldShowMenuUnstage(selectionInfo).Should().BeFalse();
             _controller.ShouldShowSubmoduleMenus(selectionInfo).Should().BeFalse();
-            _controller.ShouldShowMenuEditFile(selectionInfo).Should().Be(t);
+            _controller.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo).Should().Be(t);
+            _controller.ShouldShowMenuOpenRevision(selectionInfo).Should().Be(t);
+            _controller.ShouldShowMenuDeleteFile(selectionInfo).Should().BeFalse();
             _controller.ShouldShowMenuCopyFileName(selectionInfo).Should().BeTrue();
             _controller.ShouldShowMenuShowInFileTree(selectionInfo).Should().Be(t);
             _controller.ShouldShowMenuFileHistory(selectionInfo).Should().Be(t);
@@ -151,6 +155,48 @@ namespace GitUITests.CommandsDialogs
             var rev = new GitRevision(ObjectId.WorkTreeId);
             var selectionInfo = new ContextMenuSelectionInfo(rev, isAnyItemWorkTree: t);
             _controller.ShouldShowMenuStage(selectionInfo).Should().Be(t);
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void BrowseDiff_EditOpen_IsAnySubmodule(bool t)
+        {
+            var rev = new GitRevision(ObjectId.Random());
+            var selectionInfo = new ContextMenuSelectionInfo(selectedRevision: rev, isAnySubmodule: t);
+            _controller.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo).Should().Be(!t);
+            _controller.ShouldShowMenuOpenRevision(selectionInfo).Should().Be(!t);
+        }
+
+        [Test]
+        public void BrowseDiff_OpenRevisionFile_WorkTree()
+        {
+            var rev = new GitRevision(ObjectId.WorkTreeId);
+            var selectionInfo = new ContextMenuSelectionInfo(rev);
+            _controller.ShouldShowMenuOpenRevision(selectionInfo).Should().BeFalse();
+        }
+
+        [Test]
+        public void BrowseDiff_OpenRevisionFile_Index()
+        {
+            var rev = new GitRevision(ObjectId.IndexId);
+            var selectionInfo = new ContextMenuSelectionInfo(rev);
+            _controller.ShouldShowMenuOpenRevision(selectionInfo).Should().BeFalse();
+        }
+
+        [Test]
+        public void BrowseDiff_DeleteFile_WorkTree()
+        {
+            var rev = new GitRevision(ObjectId.WorkTreeId);
+            var selectionInfo = new ContextMenuSelectionInfo(rev);
+            _controller.ShouldShowMenuDeleteFile(selectionInfo).Should().BeTrue();
+        }
+
+        [Test]
+        public void BrowseDiff_DeleteFile_Index()
+        {
+            var rev = new GitRevision(ObjectId.IndexId);
+            var selectionInfo = new ContextMenuSelectionInfo(rev);
+            _controller.ShouldShowMenuDeleteFile(selectionInfo).Should().BeTrue();
         }
 
         #endregion

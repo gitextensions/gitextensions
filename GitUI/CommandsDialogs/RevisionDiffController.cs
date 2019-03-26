@@ -7,7 +7,9 @@ namespace GitUI.CommandsDialogs
     {
         bool ShouldShowMenuBlame(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuCherryPick(ContextMenuSelectionInfo selectionInfo);
-        bool ShouldShowMenuEditFile(ContextMenuSelectionInfo selectionInfo);
+        bool ShouldShowMenuEditWorkingDirectoryFile(ContextMenuSelectionInfo selectionInfo);
+        bool ShouldShowMenuOpenRevision(ContextMenuSelectionInfo selectionInfo);
+        bool ShouldShowMenuDeleteFile(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowResetFileMenus(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuFileHistory(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuSaveAs(ContextMenuSelectionInfo selectionInfo);
@@ -112,9 +114,21 @@ namespace GitUI.CommandsDialogs
             return selectionInfo.IsAnySubmodule && selectionInfo.SelectedRevision.Guid == GitRevision.WorkTreeGuid;
         }
 
-        public bool ShouldShowMenuEditFile(ContextMenuSelectionInfo selectionInfo)
+        public bool ShouldShowMenuEditWorkingDirectoryFile(ContextMenuSelectionInfo selectionInfo)
         {
             return selectionInfo.IsSingleGitItemSelected && !selectionInfo.IsAnySubmodule && selectionInfo.SingleFileExists;
+        }
+
+        public bool ShouldShowMenuDeleteFile(ContextMenuSelectionInfo selectionInfo)
+        {
+            return selectionInfo.IsSingleGitItemSelected && !selectionInfo.IsAnySubmodule &&
+                   selectionInfo.SingleFileExists && selectionInfo.SelectedRevision.IsArtificial;
+        }
+
+        public bool ShouldShowMenuOpenRevision(ContextMenuSelectionInfo selectionInfo)
+        {
+            return selectionInfo.IsSingleGitItemSelected && !selectionInfo.IsAnySubmodule &&
+                   !selectionInfo.SelectedRevision.IsArtificial;
         }
 
         public bool ShouldShowMenuCopyFileName(ContextMenuSelectionInfo selectionInfo)
