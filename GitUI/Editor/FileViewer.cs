@@ -257,6 +257,7 @@ namespace GitUI.Editor
             if (commandSource?.UICommands != null)
             {
                 commandSource.UICommands.PostSettings += UICommands_PostSettings;
+                UICommands_PostSettings(commandSource.UICommands, null);
             }
 
             Encoding = null;
@@ -264,7 +265,11 @@ namespace GitUI.Editor
 
         private void UICommands_PostSettings(object sender, GitUIPostActionEventArgs e)
         {
-            internalFileViewer.VRulerPosition = AppSettings.DiffVerticalRulerPosition;
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await internalFileViewer.SwitchToMainThreadAsync();
+                internalFileViewer.VRulerPosition = AppSettings.DiffVerticalRulerPosition;
+            }).FileAndForget();
         }
 
         protected override void OnRuntimeLoad()
