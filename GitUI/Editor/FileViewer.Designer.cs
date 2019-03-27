@@ -379,7 +379,6 @@ namespace GitUI.Editor
             this.internalFileViewer.ShowTabs = false;
             this.internalFileViewer.Size = new System.Drawing.Size(757, 518);
             this.internalFileViewer.TabIndex = 1;
-            this.internalFileViewer.VRulerPosition = 80;
             // 
             // FileViewer
             // 
