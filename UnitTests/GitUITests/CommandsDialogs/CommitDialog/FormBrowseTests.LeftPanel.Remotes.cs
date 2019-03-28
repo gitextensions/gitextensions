@@ -21,7 +21,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
 
         // Created once for each test
         private GitUICommands _commands;
-        private IGitRemoteManager _remotesManager;
+        private IConfigFileRemoteSettingsManager _remotesManager;
         private bool _originalShowAuthorAvatarColumn;
         private static readonly string[] RemoteNames = new[] { "remote1", "remote5", "remote3", "remote4", "remote2" };
 
@@ -55,7 +55,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
             }
 
             _commands = new GitUICommands(_referenceRepository.Module);
-            _remotesManager = new GitRemoteManager(() => _referenceRepository.Module);
+            _remotesManager = new ConfigFileRemoteSettingsManager(() => _referenceRepository.Module);
         }
 
         [TearDown]

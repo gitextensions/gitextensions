@@ -98,7 +98,7 @@
     <Compile Include="Patches\PatchTest.cs" />
     <Compile Include="PathEqualityComparerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Remote\GitRemoteManagerTests.cs" />
+    <Compile Include="Remote\ConfigFileRemoteSettingsManagerTests.cs" />
     <Compile Include="Submodules\SubmoduleStatusProviderTests.cs" />
     <Compile Include="DiffListSortServiceTests.cs" />
     <Compile Include="UserRepositoryHistory\Legacy\RepositoryCategoryXmlSerialiserTests.cs" />

@@ -3,7 +3,7 @@ using GitCommands.Config;
 
 namespace GitCommands.Remotes
 {
-    public class GitRemote
+    public class ConfigFileRemote
     {
         /// <summary>
         /// Gets or sets value indicating whether the remote is enabled or not.

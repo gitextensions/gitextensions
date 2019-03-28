@@ -1,11 +1,11 @@
 namespace GitCommands.Remotes
 {
     /// <summary>
-    /// Represents a result of <see cref="GitRemoteManager.SaveRemote"/> operation.
+    /// Represents a result of <see cref="ConfigFileRemoteSettingsManager.SaveRemote"/> operation.
     /// </summary>
-    public class GitRemoteSaveResult
+    public class ConfigFileRemoteSaveResult
     {
-        public GitRemoteSaveResult(string message, bool shouldUpdateRemote)
+        public ConfigFileRemoteSaveResult(string message, bool shouldUpdateRemote)
         {
             UserMessage = message;
             ShouldUpdateRemote = shouldUpdateRemote;
