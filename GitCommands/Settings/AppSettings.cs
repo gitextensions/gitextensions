@@ -1262,28 +1262,10 @@ namespace GitCommands
             set => SetString("lastformatpatchdir", value);
         }
 
-        public static bool IgnoreWhitespaceChanges
+        public static IgnoreWhitespaceKind IgnoreWhitespaceKind
         {
-            get => RememberIgnoreWhiteSpacePreference && GetBool("IgnoreWhitespaceChanges", false);
-            set
-            {
-                if (RememberIgnoreWhiteSpacePreference)
-                {
-                    SetBool("IgnoreWhitespaceChanges", value);
-                }
-            }
-        }
-
-        public static bool IgnoreAllWhitespaceChanges
-        {
-            get => RememberIgnoreWhiteSpacePreference && GetBool("IgnoreAllWhitespaceChanges", false);
-            set
-            {
-                if (RememberIgnoreWhiteSpacePreference)
-                {
-                    SetBool("IgnoreAllWhitespaceChanges", value);
-                }
-            }
+            get => GetEnum("IgnoreWhitespaceKind", IgnoreWhitespaceKind.None);
+            set => SetEnum("IgnoreWhitespaceKind", value);
         }
 
         public static bool RememberIgnoreWhiteSpacePreference

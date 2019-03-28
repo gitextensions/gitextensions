@@ -26,6 +26,7 @@ namespace GitUI.Editor
             this.copyOldVersionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.ignoreWhitespaceAtEolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ignoreWhitespaceChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ignoreAllWhitespaceChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.increaseNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,6 +45,7 @@ namespace GitUI.Editor
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.showEntireFileButton = new System.Windows.Forms.ToolStripButton();
             this.showNonPrintChars = new System.Windows.Forms.ToolStripButton();
+            this.ignoreWhitespaceAtEol = new System.Windows.Forms.ToolStripButton();
             this.ignoreWhiteSpaces = new System.Windows.Forms.ToolStripButton();
             this.settingsButton = new System.Windows.Forms.ToolStripButton();
             this.encodingToolStripComboBox = new System.Windows.Forms.ToolStripComboBox();
@@ -68,6 +70,7 @@ namespace GitUI.Editor
             this.copyOldVersionToolStripMenuItem,
             this.findToolStripMenuItem,
             this.toolStripSeparator1,
+            this.ignoreWhitespaceAtEolToolStripMenuItem,
             this.ignoreWhitespaceChangesToolStripMenuItem,
             this.ignoreAllWhitespaceChangesToolStripMenuItem,
             this.increaseNumberOfLinesToolStripMenuItem,
@@ -130,11 +133,18 @@ namespace GitUI.Editor
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(240, 6);
             // 
+            // ignoreWhitespaceAtEolToolStripMenuItem
+            // 
+            this.ignoreWhitespaceAtEolToolStripMenuItem.Name = "ignoreWhitespaceAtEolToolStripMenuItem";
+            this.ignoreWhitespaceAtEolToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.ignoreWhitespaceAtEolToolStripMenuItem.Text = "Ignore whitespace changes at end of line";
+            this.ignoreWhitespaceAtEolToolStripMenuItem.Click += new System.EventHandler(this.IgnoreWhitespaceAtEolToolStripMenuItem_Click);
+            // 
             // ignoreWhitespaceChangesToolStripMenuItem
             // 
             this.ignoreWhitespaceChangesToolStripMenuItem.Name = "ignoreWhitespaceChangesToolStripMenuItem";
             this.ignoreWhitespaceChangesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
-            this.ignoreWhitespaceChangesToolStripMenuItem.Text = "Ignore leading and trailing whitespace changes";
+            this.ignoreWhitespaceChangesToolStripMenuItem.Text = "Ignore changes in amount of whitespace";
             this.ignoreWhitespaceChangesToolStripMenuItem.Click += new System.EventHandler(this.IgnoreWhitespaceChangesToolStripMenuItemClick);
             // 
             // ignoreAllWhitespaceChangesToolStripMenuItem
@@ -142,7 +152,7 @@ namespace GitUI.Editor
             this.ignoreAllWhitespaceChangesToolStripMenuItem.Name = "ignoreAllWhitespaceChangesToolStripMenuItem";
             this.ignoreAllWhitespaceChangesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.ignoreAllWhitespaceChangesToolStripMenuItem.Text = "Ignore all whitespace changes";
-            this.ignoreAllWhitespaceChangesToolStripMenuItem.Click += new System.EventHandler(this.ignoreAllWhitespaceChangesToolStripMenuItem_Click);
+            this.ignoreAllWhitespaceChangesToolStripMenuItem.Click += new System.EventHandler(this.IgnoreAllWhitespaceChangesToolStripMenuItem_Click);
             // 
             // increaseNumberOfLinesToolStripMenuItem
             // 
@@ -210,6 +220,7 @@ namespace GitUI.Editor
             this.toolStripSeparator4,
             this.showEntireFileButton,
             this.showNonPrintChars,
+            this.ignoreWhitespaceAtEol,
             this.ignoreWhiteSpaces,
             this.ignoreAllWhitespaces,
             this.encodingToolStripComboBox,
@@ -292,13 +303,22 @@ namespace GitUI.Editor
             this.showNonPrintChars.ToolTipText = "Show nonprinting characters";
             this.showNonPrintChars.Click += new System.EventHandler(this.ShowNonprintableCharactersToolStripMenuItemClick);
             // 
+            // ignoreWhitespaceAtEol
+            // 
+            this.ignoreWhitespaceAtEol.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.ignoreWhitespaceAtEol.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ignoreWhitespaceAtEol.Name = "ignoreWhitespaceAtEol";
+            this.ignoreWhitespaceAtEol.Size = new System.Drawing.Size(23, 4);
+            this.ignoreWhitespaceAtEol.ToolTipText = "Ignore whitespace changes at end of line";
+            this.ignoreWhitespaceAtEol.Click += new System.EventHandler(this.IgnoreWhitespaceAtEolToolStripMenuItem_Click);
+            // 
             // ignoreWhiteSpaces
             // 
             this.ignoreWhiteSpaces.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.ignoreWhiteSpaces.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ignoreWhiteSpaces.Name = "ignoreWhiteSpaces";
             this.ignoreWhiteSpaces.Size = new System.Drawing.Size(23, 4);
-            this.ignoreWhiteSpaces.ToolTipText = "Ignore leading and trailing whitespace changes";
+            this.ignoreWhiteSpaces.ToolTipText = "Ignore changes in amount of whitespace";
             this.ignoreWhiteSpaces.Click += new System.EventHandler(this.IgnoreWhitespaceChangesToolStripMenuItemClick);
             // 
             // encodingToolStripComboBox
@@ -327,7 +347,7 @@ namespace GitUI.Editor
             this.ignoreAllWhitespaces.Name = "ignoreAllWhitespaces";
             this.ignoreAllWhitespaces.Size = new System.Drawing.Size(23, 4);
             this.ignoreAllWhitespaces.ToolTipText = "Ignore all whitespace changes";
-            this.ignoreAllWhitespaces.Click += new System.EventHandler(this.ignoreAllWhitespaceChangesToolStripMenuItem_Click);
+            this.ignoreAllWhitespaces.Click += new System.EventHandler(this.IgnoreAllWhitespaceChangesToolStripMenuItem_Click);
             // 
             // PictureBox
             // 
@@ -405,6 +425,7 @@ namespace GitUI.Editor
         private System.Windows.Forms.ContextMenuStrip contextMenu;
         private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem ignoreWhitespaceAtEolToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ignoreWhitespaceChangesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem increaseNumberOfLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem decreaseNumberOfLinesToolStripMenuItem;
@@ -424,6 +445,7 @@ namespace GitUI.Editor
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripButton showNonPrintChars;
         private System.Windows.Forms.ToolStripMenuItem showNonprintableCharactersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton ignoreWhitespaceAtEol;
         private System.Windows.Forms.ToolStripButton ignoreWhiteSpaces;
         private System.Windows.Forms.ToolStripButton settingsButton;
         private System.Windows.Forms.PictureBox PictureBox;
