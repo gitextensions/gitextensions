@@ -13,7 +13,7 @@ namespace GitUI.Avatars
 
         public Image GetAvatarImage(string email, string name, int imageSize)
         {
-            if (AppSettings.GravatarDefaultImageType != DefaultImageType.AuthorInitials)
+            if (AppSettings.GravatarFallbackAvatarType != GravatarFallbackAvatarType.AuthorInitials)
             {
                 return null;
             }

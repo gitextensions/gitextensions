@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUI.Avatars;
 using GitUI.Properties;
@@ -24,28 +25,56 @@ namespace GitUI
             InitializeComplete();
 
             clearImagecacheToolStripMenuItem.Click += delegate { ClearCache(); };
+            UpdateGravatarOptionDisplayState();
 
-            foreach (DefaultImageType type in Enum.GetValues(typeof(DefaultImageType)))
+            foreach (var avatarProvider in EnumHelper.GetValues<AvatarProvider>())
             {
                 var item = new ToolStripMenuItem
                 {
                     CheckOnClick = true,
-                    Tag = type,
-                    Text = type.ToString()
+                    Tag = avatarProvider,
+                    Checked = avatarProvider == AppSettings.AvatarProvider,
+                    Text = avatarProvider.GetDescription(),
                 };
 
                 item.Click += delegate
                 {
-                    AppSettings.GravatarDefaultImageType = type;
+                    AppSettings.AvatarProvider = avatarProvider;
+                    UpdateGravatarOptionDisplayState();
                     ClearCache();
                 };
 
-                defaultImageToolStripMenuItem.DropDownItems.Add(item);
+                avatarProviderToolStripMenuItem.DropDownItems.Add(item);
             }
 
-            return;
+            foreach (var defaultImageType in EnumHelper.GetValues<GravatarFallbackAvatarType>())
+            {
+                var item = new ToolStripMenuItem
+                {
+                    CheckOnClick = true,
+                    Tag = defaultImageType,
+                    Text = defaultImageType.GetDescription(),
+                };
 
-            void ClearCache()
+                item.Click += delegate
+                {
+                    AppSettings.GravatarFallbackAvatarType = defaultImageType;
+                    ClearCache();
+                };
+
+                fallbackAvatarStyleToolStripMenuItem.DropDownItems.Add(item);
+            }
+        }
+
+        private void UpdateGravatarOptionDisplayState()
+        {
+            var isGravatarOptionsVisible = AppSettings.AvatarProvider == AvatarProvider.Gravatar;
+            fallbackAvatarStyleToolStripMenuItem.Visible = isGravatarOptionsVisible;
+            registerGravatarToolStripMenuItem.Visible = isGravatarOptionsVisible;
+            toolStripSeparator1.Visible = isGravatarOptionsVisible;
+        }
+
+        public void ClearCache()
         {
             ThreadHelper.JoinableTaskFactory
                 .RunAsync(
@@ -55,7 +84,6 @@ namespace GitUI
                         await UpdateAvatarAsync().ConfigureAwait(false);
                     })
                 .FileAndForget();
-        }
         }
 
         /// <summary>
@@ -163,22 +191,22 @@ namespace GitUI
 
         private void OnDefaultImageDropDownOpening(object sender, EventArgs e)
         {
-            var defaultImageType = AppSettings.GravatarDefaultImageType;
+            var defaultImageType = AppSettings.GravatarFallbackAvatarType;
 
             ToolStripMenuItem selectedItem = null;
             ToolStripMenuItem noneItem = null;
-            foreach (ToolStripMenuItem menu in defaultImageToolStripMenuItem.DropDownItems)
+            foreach (ToolStripMenuItem menu in fallbackAvatarStyleToolStripMenuItem.DropDownItems)
             {
                 menu.Checked = false;
 
-                var type = (DefaultImageType)menu.Tag;
+                var type = (GravatarFallbackAvatarType)menu.Tag;
 
                 if (type == defaultImageType)
                 {
                     selectedItem = menu;
                 }
 
-                if (type == DefaultImageType.None)
+                if (type == GravatarFallbackAvatarType.None)
                 {
                     noneItem = menu;
                 }
@@ -188,8 +216,42 @@ namespace GitUI
 
             if (selectedItem == null)
             {
-                AppSettings.GravatarDefaultImageType = DefaultImageType.None;
+                AppSettings.GravatarFallbackAvatarType = GravatarFallbackAvatarType.None;
                 selectedItem = noneItem;
+            }
+
+            selectedItem.Checked = true;
+        }
+
+        private void avatarProviderToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+        {
+            var avatarProvider = AppSettings.AvatarProvider;
+
+            ToolStripMenuItem selectedItem = null;
+            ToolStripMenuItem defaultItem = null;
+            foreach (ToolStripMenuItem menu in avatarProviderToolStripMenuItem.DropDownItems)
+            {
+                menu.Checked = false;
+
+                var type = (AvatarProvider)menu.Tag;
+
+                if (type == avatarProvider)
+                {
+                    selectedItem = menu;
+                }
+
+                if (type == AvatarProvider.Gravatar)
+                {
+                    defaultItem = menu;
+                }
+            }
+
+            Debug.Assert(defaultItem != null && selectedItem != null, "noneItem != null && selectedItem != null");
+
+            if (selectedItem == null)
+            {
+                AppSettings.AvatarProvider = AvatarProvider.Gravatar;
+                selectedItem = defaultItem;
             }
 
             selectedItem.Checked = true;

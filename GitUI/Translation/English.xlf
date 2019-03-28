@@ -181,7 +181,7 @@ See http://en.gravatar.com/site/implement/images/ for more details.</source>
         <target />
       </trans-unit>
       <trans-unit id="lblNoImageService.Text">
-        <source>No image service</source>
+        <source>Fallback generated avatar style</source>
         <target />
       </trans-unit>
       <trans-unit id="lblSpellingDictionary.Text">
@@ -217,7 +217,7 @@ See http://en.gravatar.com/site/implement/images/ for more details.</source>
         <target />
       </trans-unit>
       <trans-unit id="defaultImageToolStripMenuItem.Text">
-        <source>Default image</source>
+        <source>Fallback generated avatar style</source>
         <target />
       </trans-unit>
       <trans-unit id="registerGravatarToolStripMenuItem.Text">

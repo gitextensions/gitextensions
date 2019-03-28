@@ -15,6 +15,7 @@ namespace GitUI.Avatars
 {
     public sealed class AvatarDownloader : IAvatarProvider
     {
+        private readonly IAvatarGenerator _avatarGenerator;
         private const int MaxConcurrentDownloads = 10;
 
         /* A brief skim through the Git Extensions repo history shows GitHub emails with the following user names:
@@ -36,12 +37,22 @@ namespace GitUI.Avatars
         /// <inheritdoc />
         public event Action CacheCleared;
 
+        public AvatarDownloader(IAvatarGenerator avatarGenerator)
+        {
+            _avatarGenerator = avatarGenerator;
+        }
+
         /// <inheritdoc />
         public async Task<Image> GetAvatarAsync(string email, string name, int imageSize)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
                 throw new ArgumentException(nameof(email));
+            }
+
+            if (AppSettings.AvatarProvider == AvatarProvider.AuthorInitials)
+            {
+                return _avatarGenerator.GenerateAvatarImage(email, name, imageSize);
             }
 
             // check network connectivity
@@ -96,14 +107,14 @@ namespace GitUI.Avatars
 
                     string GetDefaultImageString()
                     {
-                        switch (AppSettings.GravatarDefaultImageType)
+                        switch (AppSettings.GravatarFallbackAvatarType)
                         {
-                            case DefaultImageType.Identicon: return "identicon";
-                            case DefaultImageType.MonsterId: return "monsterid";
-                            case DefaultImageType.Wavatar: return "wavatar";
-                            case DefaultImageType.Retro: return "retro";
-                            case DefaultImageType.Robohash: return "robohash";
-                            case DefaultImageType.AuthorInitials: return "404";
+                            case GravatarFallbackAvatarType.Identicon: return "identicon";
+                            case GravatarFallbackAvatarType.MonsterId: return "monsterid";
+                            case GravatarFallbackAvatarType.Wavatar: return "wavatar";
+                            case GravatarFallbackAvatarType.Retro: return "retro";
+                            case GravatarFallbackAvatarType.Robohash: return "robohash";
+                            case GravatarFallbackAvatarType.AuthorInitials: return "404";
                             default: return "404";
                         }
                     }
