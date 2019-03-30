@@ -1657,7 +1657,8 @@ namespace GitUI
             var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
             var simpleDialog = new SimpleDialog(this);
             var scriptManager = new ScriptManager();
-            var scriptRunner = new ScriptRunner(Module, gitUIEventArgs, new ScriptOptionsParser(simpleDialog, this, this, this, this), simpleDialog, scriptManager, this);
+            var scriptOptionsParser = new ScriptOptionsParser(simpleDialog, this);
+            var scriptRunner = new ScriptRunner(Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, scriptManager, this);
             var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptManager, scriptRunner, this, new FormSettings(UICommands));
 
             userScriptMenuBuilder.Build(mainContextMenu);

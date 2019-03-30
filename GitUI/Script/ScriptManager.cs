@@ -63,7 +63,8 @@ namespace GitUI.Script
             {
                 var gitUIEventArgs = new GitUIEventArgs(form, form.UICommands);
                 var simpleDialog = new SimpleDialog(form);
-                var scriptRunner = new ScriptRunner(form.Module, gitUIEventArgs, new ScriptOptionsParser(simpleDialog), simpleDialog, new ScriptManager());
+                var scriptOptionsParser = new ScriptOptionsParser(simpleDialog);
+                var scriptRunner = new ScriptRunner(form.Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, new ScriptManager());
 
                 scriptRunner.RunScript(script.Name);
             }

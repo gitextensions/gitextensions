@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GitCommands;
@@ -31,10 +32,19 @@ namespace GitUI.Script
         {
             _simpleDialog = simpleDialog ?? throw new ArgumentNullException(nameof(simpleDialog));
             _canGetCurrentRevision = canGetCurrentRevision;
-            _canGetCurrentRevision = canGetCurrentRevision;
             _canGetQuickItemSelectorLocation = canGetQuickItemSelectorLocation;
             _canGetSelectedRevisions = canGetSelectedRevisions;
             _canLatestSelectedRevision = canLatestSelectedRevision;
+        }
+
+        public ScriptOptionsParser(ISimpleDialog simpleDialog, IExternalMethods externalMethods = null)
+            : this(simpleDialog, externalMethods, externalMethods, externalMethods, externalMethods)
+        {
+        }
+
+        public ScriptOptionsParser(ISimpleDialog simpleDialog)
+            : this(simpleDialog, null)
+        {
         }
 
         public (string argument, bool abort) Parse(string argument, IGitModule module)
@@ -115,11 +125,11 @@ namespace GitUI.Script
             return result;
         }
 
-        private static string AskToSpecify(IEnumerable<IGitRef> options, ICanGetQuickItemSelectorLocation getQuickItemSelectorLocation)
+        private static string AskToSpecify(IEnumerable<IGitRef> options, ICanGetQuickItemSelectorLocation canGetQuickItemSelectorLocation)
         {
             using (var f = new FormQuickGitRefSelector())
             {
-                f.Location = getQuickItemSelectorLocation?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
+                f.Location = GetQuickItemSelectorLocation(canGetQuickItemSelectorLocation);
                 f.Init(FormQuickGitRefSelector.Action.Select, options.ToList());
                 f.ShowDialog();
                 return f.SelectedRef.Name;
@@ -130,11 +140,16 @@ namespace GitUI.Script
         {
             using (var f = new FormQuickStringSelector())
             {
-                f.Location = canGetQuickItemSelectorLocation?.GetQuickItemSelectorLocation() ?? new System.Drawing.Point();
+                f.Location = GetQuickItemSelectorLocation(canGetQuickItemSelectorLocation);
                 f.Init(options.ToList());
                 f.ShowDialog();
                 return f.SelectedString;
             }
+        }
+
+        private static Point GetQuickItemSelectorLocation(ICanGetQuickItemSelectorLocation canGetQuickItemSelectorLocation)
+        {
+            return canGetQuickItemSelectorLocation?.GetQuickItemSelectorLocation() ?? new Point();
         }
 
         private GitRevision CalculateSelectedRevision(List<IGitRef> selectedRemoteBranches,
@@ -481,6 +496,13 @@ namespace GitUI.Script
         {
             public string ParseScriptArguments(string argument, string option, ISimpleDialog simpleDialog, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches, List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision, List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote, ICanGetQuickItemSelectorLocation canGetQuickItemSelectorLocation) =>
                 ScriptOptionsParser.ParseScriptArguments(argument, option, simpleDialog, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote, canGetQuickItemSelectorLocation);
+        }
+
+        internal interface IExternalMethods : ICanGetCurrentRevision,
+            ICanGetQuickItemSelectorLocation,
+            ICanGetSelectedRevisions,
+            ICanLatestSelectedRevision
+        {
         }
     }
 }
