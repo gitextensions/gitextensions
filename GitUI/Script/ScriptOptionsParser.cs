@@ -54,7 +54,7 @@ namespace GitUI.Script
             var currentBranches = new List<IGitRef>();
             var currentTags = new List<IGitRef>();
 
-            foreach (var option in ScriptOptions.List)
+            foreach (var option in ScriptOptions.All)
             {
                 if (string.IsNullOrEmpty(argument))
                 {

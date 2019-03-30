@@ -80,7 +80,7 @@ namespace GitUI.Script
 
             var argument = script.Arguments;
 
-            foreach (var option in ScriptOptions.List)
+            foreach (var option in ScriptOptions.All)
             {
                 if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
                 {

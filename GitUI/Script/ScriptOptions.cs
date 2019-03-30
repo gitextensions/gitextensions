@@ -35,7 +35,7 @@ namespace GitUI.Script
         public const string UserFiles = "UserFiles";
         public const string WorkingDir = "WorkingDir";
 
-        public static IReadOnlyList<string> List => new[]
+        public static IReadOnlyList<string> All => new[]
         {
             SHashes,
             STag,
