@@ -153,12 +153,15 @@ namespace AppVeyorIntegration
             foreach (var projectName in projectNames)
             {
                 var projectId = accountName.Combine("/", projectName);
-                Projects.Add(projectName, new Project
+                if (!Projects.ContainsKey(projectName))
                 {
-                    Name = projectName,
-                    Id = projectId,
-                    QueryUrl = BuildQueryUrl(projectId)
-                });
+                    Projects.Add(projectName, new Project
+                    {
+                        Name = projectName,
+                        Id = projectId,
+                        QueryUrl = BuildQueryUrl(projectId)
+                    });
+                }
             }
         }
 
