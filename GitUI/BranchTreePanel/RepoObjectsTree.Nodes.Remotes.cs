@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Remotes;
 using GitUI.BranchTreePanel.Interfaces;
-using GitUI.HelperDialogs;
 using GitUI.Properties;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
@@ -53,7 +52,7 @@ namespace GitUI.BranchTreePanel
                 var enabledRemoteRepoNodes = new List<RemoteRepoNode>();
                 var remoteByName = Module.GetRemotes().ToDictionary(r => r.Name);
 
-                var gitRemoteManager = new GitRemoteManager(() => Module);
+                var remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
 
                 // Create nodes for enabled remotes with branches
                 foreach (var branchPath in branches)
@@ -75,12 +74,12 @@ namespace GitUI.BranchTreePanel
                 }
 
                 // Create nodes for enabled remotes without branches
-                var enabledRemotesNoBranches = gitRemoteManager.GetEnabledRemoteNamesWithoutBranches();
+                var enabledRemotesNoBranches = remotesManager.GetEnabledRemoteNamesWithoutBranches();
                 foreach (var remoteName in enabledRemotesNoBranches)
                 {
                     if (remoteByName.TryGetValue(remoteName, out var remote))
                     {
-                        var node = new RemoteRepoNode(this, remoteName, gitRemoteManager, remote, true);
+                        var node = new RemoteRepoNode(this, remoteName, remotesManager, remote, true);
                         enabledRemoteRepoNodes.Add(node);
                     }
                 }
@@ -91,13 +90,13 @@ namespace GitUI.BranchTreePanel
                     .ForEach(node => nodes.AddNode(node));
 
                 // Add disabled remotes, if any
-                var disabledRemotes = gitRemoteManager.GetDisabledRemotes();
+                var disabledRemotes = remotesManager.GetDisabledRemotes();
                 if (disabledRemotes.Count > 0)
                 {
                     var disabledRemoteRepoNodes = new List<RemoteRepoNode>();
                     foreach (var remote in disabledRemotes.OrderBy(remote => remote.Name))
                     {
-                        var node = new RemoteRepoNode(this, remote.Name, gitRemoteManager, remote, false);
+                        var node = new RemoteRepoNode(this, remote.Name, remotesManager, remote, false);
                         disabledRemoteRepoNodes.Add(node);
                     }
 
@@ -115,7 +114,7 @@ namespace GitUI.BranchTreePanel
                 {
                     if (parentPath == remote.Name)
                     {
-                        return new RemoteRepoNode(tree, parentPath, gitRemoteManager, remote, true);
+                        return new RemoteRepoNode(tree, parentPath, remotesManager, remote, true);
                     }
 
                     return new BasePathNode(tree, parentPath);
@@ -263,14 +262,14 @@ namespace GitUI.BranchTreePanel
         private sealed class RemoteRepoNode : BaseBranchNode
         {
             private readonly Remote _remote;
-            private readonly IGitRemoteManager _gitRemoteManager;
+            private readonly IConfigFileRemoteSettingsManager _remotesManager;
 
-            public RemoteRepoNode(Tree tree, string fullPath, IGitRemoteManager gitRemoteManager, Remote remote, bool isEnabled)
+            public RemoteRepoNode(Tree tree, string fullPath, IConfigFileRemoteSettingsManager remotesManager, Remote remote, bool isEnabled)
                 : base(tree, fullPath)
             {
                 _remote = remote;
                 Enabled = isEnabled;
-                _gitRemoteManager = gitRemoteManager;
+                _remotesManager = remotesManager;
             }
 
             public bool Enabled { get; private set; }
@@ -290,7 +289,7 @@ namespace GitUI.BranchTreePanel
             public void Enable(bool fetch)
             {
                 Trace.Assert(!Enabled);
-                _gitRemoteManager.ToggleRemoteState(Name, disabled: false);
+                _remotesManager.ToggleRemoteState(Name, disabled: false);
                 if (fetch)
                 {
                     // DoFetch invokes UICommands.RepoChangedNotifier.Notify
@@ -305,7 +304,7 @@ namespace GitUI.BranchTreePanel
             public void Disable()
             {
                 Trace.Assert(Enabled);
-                _gitRemoteManager.ToggleRemoteState(Name, disabled: true);
+                _remotesManager.ToggleRemoteState(Name, disabled: true);
                 UICommands.RepoChangedNotifier.Notify();
             }
 

@@ -18,7 +18,7 @@ namespace GitCommandsTests.ExternalLinks
     [TestFixture]
     public class ExternalLinkRevisionParserTests
     {
-        private IGitRemoteManager _remoteManager;
+        private IConfigFileRemoteSettingsManager _remotesManager;
         private ExternalLinkRevisionParser _parser;
         private ExternalLinkDefinition _linkDef;
         private GitRevision _revision;
@@ -30,10 +30,10 @@ namespace GitCommandsTests.ExternalLinks
 
             _revision = new GitRevision(ObjectId.Random());
 
-            _remoteManager = Substitute.For<IGitRemoteManager>();
-            _remoteManager.LoadRemotes(false).Returns(GetDefaultRemotes());
+            _remotesManager = Substitute.For<IConfigFileRemoteSettingsManager>();
+            _remotesManager.LoadRemotes(false).Returns(GetDefaultRemotes());
 
-            _parser = new ExternalLinkRevisionParser(_remoteManager);
+            _parser = new ExternalLinkRevisionParser(_remotesManager);
         }
 
         [Test]
@@ -109,22 +109,22 @@ namespace GitCommandsTests.ExternalLinks
             actualLinks.Should().Equal(expectedLinks);
         }
 
-        private static BindingList<GitRemote> GetDefaultRemotes()
+        private static BindingList<ConfigFileRemote> GetDefaultRemotes()
         {
-            var remotes = new BindingList<GitRemote>();
-            remotes.Add(new GitRemote
+            var remotes = new BindingList<ConfigFileRemote>();
+            remotes.Add(new ConfigFileRemote
             {
                 Name = "origin",
                 Url = "https://github.com/jbialobr/gitextensions.git"
             });
 
-            remotes.Add(new GitRemote
+            remotes.Add(new ConfigFileRemote
             {
                 Name = "upstream",
                 Url = "https://github.com/gitextensions/gitextensions.git"
             });
 
-            remotes.Add(new GitRemote
+            remotes.Add(new ConfigFileRemote
             {
                 Name = "RussKie",
                 Url = "https://github.com/russkie/gitextensions.git"

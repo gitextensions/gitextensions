@@ -103,7 +103,7 @@ namespace GitUI.CommandsDialogs
 
         private const string AllRemotes = "[ All ]";
 
-        private readonly IGitRemoteManager _remoteManager;
+        private readonly IConfigFileRemoteSettingsManager _remotesManager;
         private readonly IFullPathResolver _fullPathResolver;
         private readonly string _branch;
 
@@ -127,7 +127,7 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
 
-            _remoteManager = new GitRemoteManager(() => Module);
+            _remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
             _branch = Module.GetSelectedBranch();
             BindRemotesDropDown(defaultRemote);
 
@@ -195,11 +195,11 @@ namespace GitUI.CommandsDialogs
         private void BindRemotesDropDown(string selectedRemoteName)
         {
             // refresh registered git remotes
-            var remotes = _remoteManager.LoadRemotes(false);
+            var remotes = _remotesManager.LoadRemotes(false);
 
             _NO_TRANSLATE_Remotes.Sorted = false;
-            _NO_TRANSLATE_Remotes.DataSource = new[] { new GitRemote { Name = AllRemotes } }.Union(remotes).ToList();
-            _NO_TRANSLATE_Remotes.DisplayMember = nameof(GitRemote.Name);
+            _NO_TRANSLATE_Remotes.DataSource = new[] { new ConfigFileRemote { Name = AllRemotes } }.Union(remotes).ToList();
+            _NO_TRANSLATE_Remotes.DisplayMember = nameof(ConfigFileRemote.Name);
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
             _NO_TRANSLATE_Remotes.ResizeDropDownWidth(AppSettings.BranchDropDownMinWidth, AppSettings.BranchDropDownMaxWidth);
 
@@ -815,7 +815,7 @@ namespace GitUI.CommandsDialogs
 
                 if (IsPullAll())
                 {
-                    foreach (var remote in (IEnumerable<GitRemote>)_NO_TRANSLATE_Remotes.DataSource)
+                    foreach (var remote in (IEnumerable<ConfigFileRemote>)_NO_TRANSLATE_Remotes.DataSource)
                     {
                         if (!remote.Name.IsNullOrWhiteSpace() && remote.Name != AllRemotes)
                         {

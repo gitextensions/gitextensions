@@ -16,7 +16,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
     {
         private readonly TranslationString _noneItem =
             new TranslationString("None");
-        private IGitRemoteManager _gitRemoteManager;
+        private IConfigFileRemoteSettingsManager _remotesManager;
         private JoinableTask<object> _populateBuildServerTypeTask;
 
         public BuildServerIntegrationSettingsPage()
@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             base.Init(pageHost);
 
-            _gitRemoteManager = new GitRemoteManager(() => Module);
+            _remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
             _populateBuildServerTypeTask = ThreadHelper.JoinableTaskFactory.RunAsync(
                 async () =>
                 {
@@ -121,7 +121,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (selectedExport != null)
             {
                 var buildServerSettingsUserControl = selectedExport.Value;
-                var remoteUrls = _gitRemoteManager.LoadRemotes(false).Select(r => string.IsNullOrEmpty(r.PushUrl) ? r.Url : r.PushUrl);
+                var remoteUrls = _remotesManager.LoadRemotes(false).Select(r => string.IsNullOrEmpty(r.PushUrl) ? r.Url : r.PushUrl);
 
                 buildServerSettingsUserControl.Initialize(defaultProjectName, remoteUrls);
                 return buildServerSettingsUserControl;

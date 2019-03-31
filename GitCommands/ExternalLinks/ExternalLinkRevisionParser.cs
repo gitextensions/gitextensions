@@ -13,11 +13,11 @@ namespace GitCommands.ExternalLinks
 
     public sealed class ExternalLinkRevisionParser : IExternalLinkRevisionParser
     {
-        private readonly IGitRemoteManager _gitRemoteManager;
+        private readonly IConfigFileRemoteSettingsManager _remotesManager;
 
-        public ExternalLinkRevisionParser(IGitRemoteManager gitRemoteManager)
+        public ExternalLinkRevisionParser(IConfigFileRemoteSettingsManager remotesManager)
         {
-            _gitRemoteManager = gitRemoteManager;
+            _remotesManager = remotesManager;
         }
 
         public IEnumerable<ExternalLink> Parse(GitRevision revision, ExternalLinkDefinition definition)
@@ -26,14 +26,14 @@ namespace GitCommands.ExternalLinks
             return remoteMatches.SelectMany(remoteMatch => ParseRevision(revision, definition, remoteMatch));
         }
 
-        private static IEnumerable<GitRemote> GetMatchingRemotes(ExternalLinkDefinition definition, IEnumerable<GitRemote> remotes)
+        private static IEnumerable<ConfigFileRemote> GetMatchingRemotes(ExternalLinkDefinition definition, IEnumerable<ConfigFileRemote> remotes)
         {
             if (definition.UseRemotesPattern.IsNullOrWhiteSpace() || definition.UseRemotesRegex.Value == null)
             {
                 return remotes;
             }
 
-            IEnumerable<GitRemote> matchingRemotes = remotes.Where(r => definition.UseRemotesRegex.Value.IsMatch(r.Name))
+            IEnumerable<ConfigFileRemote> matchingRemotes = remotes.Where(r => definition.UseRemotesRegex.Value.IsMatch(r.Name))
                                                             .OrderBy(r => definition.UseRemotesPattern.IndexOf(r.Name, StringComparison.OrdinalIgnoreCase));
             if (definition.UseOnlyFirstRemote)
             {
@@ -55,7 +55,7 @@ namespace GitCommands.ExternalLinks
 
             var remoteUrls = new List<string>();
 
-            var remotes = _gitRemoteManager.LoadRemotes(false);
+            var remotes = _remotesManager.LoadRemotes(false);
             var matchingRemotes = GetMatchingRemotes(definition, remotes);
 
             foreach (var remote in matchingRemotes)

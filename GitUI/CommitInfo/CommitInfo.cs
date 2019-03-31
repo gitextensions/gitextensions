@@ -62,7 +62,7 @@ namespace GitUI.CommitInfo
         private readonly IConfiguredLinkDefinitionsProvider _effectiveLinkDefinitionsProvider;
         private readonly IGitRevisionExternalLinksParser _gitRevisionExternalLinksParser;
         private readonly IExternalLinkRevisionParser _externalLinkRevisionParser;
-        private readonly IGitRemoteManager _gitRemoteManager;
+        private readonly IConfigFileRemoteSettingsManager _remotesManager;
         private readonly GitDescribeProvider _gitDescribeProvider;
         private readonly CancellationTokenSequence _asyncLoadCancellation = new CancellationTokenSequence();
 
@@ -106,8 +106,8 @@ namespace GitUI.CommitInfo
             _commitDataBodyRenderer = new CommitDataBodyRenderer(() => Module, _linkFactory);
             _externalLinksStorage = new ExternalLinksStorage();
             _effectiveLinkDefinitionsProvider = new ConfiguredLinkDefinitionsProvider(_externalLinksStorage);
-            _gitRemoteManager = new GitRemoteManager(() => Module);
-            _externalLinkRevisionParser = new ExternalLinkRevisionParser(_gitRemoteManager);
+            _remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
+            _externalLinkRevisionParser = new ExternalLinkRevisionParser(_remotesManager);
             _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
             _gitDescribeProvider = new GitDescribeProvider(() => Module);
 

@@ -31,13 +31,13 @@ namespace GitUI.CommandsDialogs
         private const string DeleteColumnName = "Delete";
 
         private string _currentBranchName;
-        private GitRemote _currentBranchRemote;
+        private ConfigFileRemote _currentBranchRemote;
         private bool _candidateForRebasingMergeCommit;
         private string _selectedBranch;
-        private GitRemote _selectedRemote;
+        private ConfigFileRemote _selectedRemote;
         private string _selectedRemoteBranchName;
         private IReadOnlyList<IGitRef> _gitRefs;
-        private readonly IGitRemoteManager _remoteManager;
+        private readonly IConfigFileRemoteSettingsManager _remotesManager;
 
         public bool ErrorOccurred { get; private set; }
 
@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs
 
             // can't be set in OnLoad, because after PushAndShowDialogWhenFailed()
             // they are reset to false
-            _remoteManager = new GitRemoteManager(() => Module);
+            _remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
             Init();
 
             void Init()
@@ -140,7 +140,7 @@ namespace GitUI.CommandsDialogs
                 _currentBranchName = Module.GetSelectedBranch();
 
                 // refresh registered git remotes
-                UserGitRemotes = _remoteManager.LoadRemotes(false).ToList();
+                UserGitRemotes = _remotesManager.LoadRemotes(false).ToList();
                 BindRemotesDropDown(null);
 
                 UpdateBranchDropDown();
@@ -158,7 +158,7 @@ namespace GitUI.CommandsDialogs
         /// <summary>
         /// Gets the list of remotes configured in .git/config file.
         /// </summary>
-        private List<GitRemote> UserGitRemotes { get; set; }
+        private List<ConfigFileRemote> UserGitRemotes { get; set; }
 
         public DialogResult PushAndShowDialogWhenFailed(IWin32Window owner = null)
         {
@@ -198,7 +198,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            UserGitRemotes = _remoteManager.LoadRemotes(false).ToList();
+            UserGitRemotes = _remotesManager.LoadRemotes(false).ToList();
             BindRemotesDropDown(selectedRemoteName);
         }
 
@@ -213,7 +213,7 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_Remotes.TextUpdate -= RemotesUpdated;
             _NO_TRANSLATE_Remotes.Sorted = false;
             _NO_TRANSLATE_Remotes.DataSource = UserGitRemotes;
-            _NO_TRANSLATE_Remotes.DisplayMember = nameof(GitRemote.Name);
+            _NO_TRANSLATE_Remotes.DisplayMember = nameof(ConfigFileRemote.Name);
             _NO_TRANSLATE_Remotes.SelectedIndex = -1;
 
             _NO_TRANSLATE_Remotes.SelectedIndexChanged += RemotesUpdated;
@@ -293,7 +293,7 @@ namespace GitUI.CommandsDialogs
                 // If the current branch is not the default push, and not known by the remote
                 // (as far as we know since we are disconnected....)
                 if (_NO_TRANSLATE_Branch.Text != AllRefs &&
-                    RemoteBranch.Text != _remoteManager.GetDefaultPushRemote(_selectedRemote, _NO_TRANSLATE_Branch.Text) &&
+                    RemoteBranch.Text != _remotesManager.GetDefaultPushRemote(_selectedRemote, _NO_TRANSLATE_Branch.Text) &&
                     !IsBranchKnownToRemote(selectedRemoteName, RemoteBranch.Text))
                 {
                     // Ask if this is really what the user wants
@@ -726,7 +726,7 @@ namespace GitUI.CommandsDialogs
                     {
                         if (_selectedRemote != null)
                         {
-                            string defaultRemote = _remoteManager.GetDefaultPushRemote(_selectedRemote,
+                            string defaultRemote = _remotesManager.GetDefaultPushRemote(_selectedRemote,
                                 branch.Name);
                             if (!defaultRemote.IsNullOrEmpty())
                             {
@@ -795,7 +795,7 @@ namespace GitUI.CommandsDialogs
 
         private void RemotesUpdated(object sender, EventArgs e)
         {
-            _selectedRemote = _NO_TRANSLATE_Remotes.SelectedItem as GitRemote;
+            _selectedRemote = _NO_TRANSLATE_Remotes.SelectedItem as ConfigFileRemote;
             if (_selectedRemote == null)
             {
                 return;
