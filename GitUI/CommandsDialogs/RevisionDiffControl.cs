@@ -14,6 +14,7 @@ using GitUI.Hotkey;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -92,7 +93,9 @@ namespace GitUI.CommandsDialogs
             ShowHistory = 1,
             Blame = 2,
             OpenWithDifftool = 3,
-            EditFile = 4
+            EditFile = 4,
+            OpenAsTempFile = 5,
+            OpenAsTempFileWith = 6
         }
 
         public CommandStatus ExecuteCommand(Command cmd)
@@ -113,7 +116,10 @@ namespace GitUI.CommandsDialogs
                 case Command.ShowHistory: fileHistoryDiffToolstripMenuItem.PerformClick(); break;
                 case Command.Blame: blameToolStripMenuItem.PerformClick(); break;
                 case Command.OpenWithDifftool: firstToSelectedToolStripMenuItem.PerformClick(); break;
-                case Command.EditFile: diffEditFileToolStripMenuItem.PerformClick(); break;
+                case Command.EditFile: diffEditWorkingDirectoryFileToolStripMenuItem.PerformClick(); break;
+                case Command.OpenAsTempFile: diffOpenRevisionFileToolStripMenuItem.PerformClick(); break;
+                case Command.OpenAsTempFileWith: diffOpenRevisionFileWithToolStripMenuItem.PerformClick(); break;
+
                 default: return base.ExecuteCommand(cmd);
             }
 
@@ -127,7 +133,10 @@ namespace GitUI.CommandsDialogs
             fileHistoryDiffToolstripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.ShowHistory);
             blameToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.Blame);
             firstToSelectedToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenWithDifftool);
-            diffEditFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
+            diffEditWorkingDirectoryFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.EditFile);
+            diffOpenRevisionFileToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenAsTempFile);
+            diffOpenRevisionFileWithToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.OpenAsTempFileWith);
+
             DiffText.ReloadHotkeys();
         }
 
@@ -436,8 +445,11 @@ namespace GitUI.CommandsDialogs
             blameToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowMenuBlame(selectionInfo);
             resetFileToToolStripMenuItem.Enabled = _revisionDiffController.ShouldShowResetFileMenus(selectionInfo);
 
-            diffEditFileToolStripMenuItem.Visible =
-               diffDeleteFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditFile(selectionInfo);
+            diffDeleteFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo);
+            diffEditWorkingDirectoryFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
+            diffOpenWorkingDirectoryFileWithToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
+            diffOpenRevisionFileToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
+            diffOpenRevisionFileWithToolStripMenuItem.Visible = _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
 
             diffCommitSubmoduleChanges.Visible =
                 diffResetSubmoduleChanges.Visible =
@@ -445,7 +457,10 @@ namespace GitUI.CommandsDialogs
                 diffSubmoduleSummaryMenuItem.Visible =
                 diffUpdateSubmoduleMenuItem.Visible = _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
 
-            diffToolStripSeparator13.Visible = _revisionDiffController.ShouldShowMenuEditFile(selectionInfo) || _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo);
+            diffToolStripSeparator13.Visible = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo) ||
+                                               _revisionDiffController.ShouldShowSubmoduleMenus(selectionInfo) ||
+                                               _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo) ||
+                                               _revisionDiffController.ShouldShowMenuOpenRevision(selectionInfo);
 
             // openContainingFolderToolStripMenuItem.Enabled or not
             {
@@ -591,6 +606,68 @@ namespace GitUI.CommandsDialogs
                 var revs = new[] { DiffFiles.Revision, itemWithParent.ParentRevision };
                 UICommands.OpenWithDifftool(this, revs, itemWithParent.Item.Name, itemWithParent.Item.OldName, diffKind, itemWithParent.Item.IsTracked);
             }
+        }
+
+        private void diffEditWorkingDirectoryFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (DiffFiles.SelectedItem == null)
+            {
+                return;
+            }
+
+            var fileName = _fullPathResolver.Resolve(DiffFiles.SelectedItem.Name);
+            UICommands.StartFileEditorDialog(fileName);
+            RefreshArtificial();
+        }
+
+        private void diffOpenWorkingDirectoryFileWithToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (DiffFiles.SelectedItem == null)
+            {
+                return;
+            }
+
+            var fileName = _fullPathResolver.Resolve(DiffFiles.SelectedItem.Name);
+            OsShellUtil.OpenAs(fileName.ToNativePath());
+        }
+
+        private void diffOpenRevisionFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveSelectedItemToTempFile(fileName => Process.Start(fileName));
+        }
+
+        private void diffOpenRevisionFileWithToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveSelectedItemToTempFile(OsShellUtil.OpenAs);
+        }
+
+        private void SaveSelectedItemToTempFile(Action<string> onSaved)
+        {
+            var gitItemStatus = DiffFiles.SelectedItem;
+            var revisionId = DiffFiles.Revision?.ObjectId;
+
+            if (gitItemStatus?.Name == null || revisionId == null)
+            {
+                return;
+            }
+
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await TaskScheduler.Default;
+
+                var blob = Module.GetFileBlobHash(gitItemStatus.Name, revisionId);
+
+                if (blob == null)
+                {
+                    return;
+                }
+
+                var fileName = PathUtil.GetFileName(gitItemStatus.Name);
+                fileName = (Path.GetTempPath() + fileName).ToNativePath();
+                Module.SaveBlobAs(fileName, blob.ToString());
+
+                onSaved(fileName);
+            }).FileAndForget();
         }
 
         private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
@@ -772,15 +849,6 @@ namespace GitUI.CommandsDialogs
         private void diffDeleteFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DeleteSelectedFiles();
-        }
-
-        private void diffEditFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var item = DiffFiles.SelectedItem;
-            var fileName = _fullPathResolver.Resolve(item.Name);
-
-            UICommands.StartFileEditorDialog(fileName);
-            RefreshArtificial();
         }
 
         private void diffCommitSubmoduleChanges_Click(object sender, EventArgs e)

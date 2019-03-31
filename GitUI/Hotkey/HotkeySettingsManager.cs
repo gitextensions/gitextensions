@@ -346,6 +346,8 @@ namespace GitUI.Hotkey
                     Hk(RevisionDiffControl.Command.Blame, BlameHotkey),
                     Hk(RevisionDiffControl.Command.DeleteSelectedFiles, Keys.Delete),
                     Hk(RevisionDiffControl.Command.EditFile, EditFileHotkey),
+                    Hk(RevisionDiffControl.Command.OpenAsTempFile, OpenAsTempFileHotkey),
+                    Hk(RevisionDiffControl.Command.OpenAsTempFileWith, OpenAsTempFileWithHotkey),
                     Hk(RevisionDiffControl.Command.OpenWithDifftool, OpenWithDifftoolHotkey),
                     Hk(RevisionDiffControl.Command.ShowHistory, ShowHistoryHotkey)),
                 new HotkeySettings(
