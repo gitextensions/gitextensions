@@ -60,7 +60,7 @@ namespace GitUIPluginInterfaces
         /// <summary>
         /// Asks git to resolve the given relativePath
         /// git special folders are located in different directories depending on the kind of repo: submodule, worktree, main
-        /// See https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-pathltpathgt
+        /// See https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-pathltpathgt
         /// </summary>
         /// <param name="relativePath">A path relative to the .git directory</param>
         string ResolveGitInternalPath(string relativePath);

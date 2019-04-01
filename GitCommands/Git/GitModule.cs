@@ -323,7 +323,7 @@ namespace GitCommands
         /// <summary>
         /// Asks git to resolve the given relativePath
         /// git special folders are located in different directories depending on the kind of repo: submodule, worktree, main
-        /// See https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-pathltpathgt
+        /// See https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-pathltpathgt
         /// </summary>
         /// <param name="relativePath">A path relative to the .git directory</param>
         public string ResolveGitInternalPath(string relativePath)
@@ -350,7 +350,7 @@ namespace GitCommands
 
         /// <summary>
         /// Returns git common directory
-        /// https://git-scm.com/docs/git-rev-parse#git-rev-parse---git-common-dir
+        /// https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-common-dir
         /// </summary>
         public string GitCommonDirectory
         {
