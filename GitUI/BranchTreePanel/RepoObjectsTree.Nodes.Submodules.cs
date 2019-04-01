@@ -270,7 +270,7 @@ namespace GitUI.BranchTreePanel
                     await node.LoadDetailsAsync(token).ConfigureAwaitRunInline();
                 }
 
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
                 token.ThrowIfCancellationRequested();
 
                 if (TreeViewNode.TreeView != null)
