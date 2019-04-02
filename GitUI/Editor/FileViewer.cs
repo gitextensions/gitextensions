@@ -191,10 +191,10 @@ namespace GitUI.Editor
             set => internalFileViewer.IsReadOnly = value;
         }
 
-        [DefaultValue(true)]
+        [DefaultValue(null)]
         [Description("If true line numbers are shown in the textarea")]
         [Category("Appearance")]
-        public bool ShowLineNumbers
+        public bool? ShowLineNumbers
         {
             get => internalFileViewer.ShowLineNumbers;
             set => internalFileViewer.ShowLineNumbers = value;

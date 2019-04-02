@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
+using GitExtUtils.GitUI;
 using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
@@ -104,11 +105,7 @@ namespace GitUI.Editor
             return TextEditor.Text;
         }
 
-        public bool ShowLineNumbers
-        {
-            get => TextEditor.ShowLineNumbers;
-            set => TextEditor.ShowLineNumbers = value;
-        }
+        public bool? ShowLineNumbers { get; set; }
 
         public void SetText(string text, Action openWithDifftool, bool isDiff = false)
         {
@@ -137,10 +134,27 @@ namespace GitUI.Editor
 
             // important to set after the text was changed
             // otherwise the may be rendering artifacts as noted in #5568
-            TextEditor.ShowLineNumbers = !isDiff;
+            TextEditor.ShowLineNumbers = ShowLineNumbers ?? !isDiff;
+            if (ShowLineNumbers.HasValue && !ShowLineNumbers.Value)
+            {
+                Padding = new Padding(DpiUtil.Scale(5), Padding.Top, Padding.Right, Padding.Bottom);
+            }
+
             TextEditor.Refresh();
 
             _currentViewPositionCache.Restore(isDiff);
+        }
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            if (ShowLineNumbers.HasValue && !ShowLineNumbers.Value)
+            {
+                e.Graphics.FillRectangle(SystemBrushes.Window, e.ClipRectangle);
+            }
+            else
+            {
+                base.OnPaintBackground(e);
+            }
         }
 
         public void SetHighlighting(string syntax)

@@ -47,7 +47,7 @@ namespace GitUI.Editor
         Action OpenWithDifftool { get; }
         int VScrollPosition { get; set; }
 
-        bool ShowLineNumbers { get; set; }
+        bool? ShowLineNumbers { get; set; }
         bool ShowEOLMarkers { get; set; }
         bool ShowSpaces { get; set; }
         bool ShowTabs { get; set; }
