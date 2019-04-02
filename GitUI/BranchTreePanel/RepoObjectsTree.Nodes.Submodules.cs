@@ -86,10 +86,10 @@ namespace GitUI.BranchTreePanel
                 }
 
                 _details = await Info.Detailed.GetValueAsync(token);
+            }
 
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                token.ThrowIfCancellationRequested();
-
+            public void RefreshDetails()
+            {
                 if (_details != null && Tree.TreeViewNode.TreeView != null)
                 {
                     ApplyText();
@@ -241,16 +241,16 @@ namespace GitUI.BranchTreePanel
                         cts = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
                         loadNodesTask = LoadNodesAsync(e.Info, cts.Token);
                         return loadNodesTask;
-                    });
+                    }).ConfigureAwait(false);
 
                     if (cts != null && loadNodesTask != null)
                     {
                         var loadedNodes = await loadNodesTask;
-                        await LoadNodeDetailsAsync(cts.Token, loadedNodes);
+                        await LoadNodeDetailsAsync(cts.Token, loadedNodes).ConfigureAwaitRunInline();
                     }
 
                     Interlocked.CompareExchange(ref _currentSubmoduleInfo, null, e);
-                });
+                }).FileAndForget();
             }
 
             private async Task<Nodes> LoadNodesAsync(SubmoduleInfoResult info, CancellationToken token)
@@ -263,9 +263,28 @@ namespace GitUI.BranchTreePanel
 
             private async Task LoadNodeDetailsAsync(CancellationToken token, Nodes loadedNodes)
             {
+                await TaskScheduler.Default;
+                foreach (var node in loadedNodes.DepthEnumerator<SubmoduleNode>())
+                {
+                    token.ThrowIfCancellationRequested();
+                    await node.LoadDetailsAsync(token).ConfigureAwaitRunInline();
+                }
+
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
                 token.ThrowIfCancellationRequested();
-                var tasks = loadedNodes.DepthEnumerator<SubmoduleNode>().Select(node => node.LoadDetailsAsync(token)).ToList();
-                await Task.WhenAll(tasks);
+
+                if (TreeViewNode.TreeView != null)
+                {
+                    TreeViewNode.TreeView.BeginUpdate();
+                    try
+                    {
+                        loadedNodes.DepthEnumerator<SubmoduleNode>().ForEach(node => node.RefreshDetails());
+                    }
+                    finally
+                    {
+                        TreeViewNode.TreeView.EndUpdate();
+                    }
+                }
             }
 
             protected override void PostFillTreeViewNode(bool firstTime)

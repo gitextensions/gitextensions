@@ -2570,7 +2570,8 @@ namespace GitUI.CommandsDialogs
 
         #region Submodules
 
-        private ToolStripMenuItem CreateSubmoduleMenuItem(CancellationToken cancelToken, SubmoduleInfo info, string textFormat = "{0}")
+        private (ToolStripItem item, Func<Task<Action>> loadDetails)
+            CreateSubmoduleMenuItem(CancellationToken cancelToken, SubmoduleInfo info, string textFormat = "{0}")
         {
             var item = new ToolStripMenuItem(string.Format(textFormat, info.Text))
             {
@@ -2586,23 +2587,27 @@ namespace GitUI.CommandsDialogs
 
             item.Click += SubmoduleToolStripButtonClick;
 
+            Func<Task<Action>> loadDetails = null;
             if (info.Detailed != null)
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                loadDetails = async () =>
                 {
                     var details = await info.Detailed.GetValueAsync(cancelToken);
-                    if (details == null)
+                    return () =>
                     {
-                        return;
-                    }
+                        if (details == null)
+                        {
+                            return;
+                        }
 
-                    await this.SwitchToMainThreadAsync(cancelToken);
-                    item.Image = GetSubmoduleItemImage(details);
-                    item.Text = string.Format(textFormat, info.Text + details.AddedAndRemovedText);
-                }).FileAndForget();
+                        ThreadHelper.ThrowIfNotOnUIThread();
+                        item.Image = GetSubmoduleItemImage(details);
+                        item.Text = string.Format(textFormat, info.Text + details.AddedAndRemovedText);
+                    };
+                };
             }
 
-            return item;
+            return (item, loadDetails);
 
             Image GetSubmoduleItemImage(DetailedSubmoduleInfo details)
             {
@@ -2672,16 +2677,16 @@ namespace GitUI.CommandsDialogs
 
             var newItems = result.OurSubmodules
                 .Select(submodule => CreateSubmoduleMenuItem(cancelToken, submodule))
-                .ToList<ToolStripItem>();
+                .ToList();
 
             if (result.OurSubmodules.Count == 0)
             {
-                newItems.Add(new ToolStripMenuItem(_noSubmodulesPresent.Text));
+                newItems.Add((new ToolStripMenuItem(_noSubmodulesPresent.Text), null));
             }
 
             if (result.SuperProject != null)
             {
-                newItems.Add(new ToolStripSeparator());
+                newItems.Add((new ToolStripSeparator(), null));
 
                 // Show top project only if it's not our super project
                 if (result.TopProject != null && result.TopProject != result.SuperProject)
@@ -2694,22 +2699,41 @@ namespace GitUI.CommandsDialogs
                 toolStripButtonLevelUp.ToolTipText = _goToSuperProject.Text;
             }
 
-            newItems.Add(new ToolStripSeparator());
+            newItems.Add((new ToolStripSeparator(), null));
 
             var mi = new ToolStripMenuItem(updateAllSubmodulesToolStripMenuItem.Text, Images.SubmodulesUpdate);
             mi.Click += UpdateAllSubmodulesToolStripMenuItemClick;
-            newItems.Add(mi);
+            newItems.Add((mi, null));
 
             if (result.CurrentSubmoduleName != null)
             {
                 var item = new ToolStripMenuItem(_updateCurrentSubmodule.Text) { Tag = result.CurrentSubmoduleName };
                 item.Click += UpdateSubmoduleToolStripMenuItemClick;
-                newItems.Add(item);
+                newItems.Add((item, null));
             }
 
             // Using AddRange is critical: if you used Add to add menu items one at a
             // time, performance would be extremely slow with many submodules (> 100).
-            toolStripButtonLevelUp.DropDownItems.AddRange(newItems.ToArray());
+            toolStripButtonLevelUp.DropDownItems.AddRange(newItems.Select(e => e.item).ToArray());
+
+            // Load details sequentially to not spawn too many background threads
+            // then refresh all items at once with a single switch to the main thread
+            ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                var loadDetalils = newItems.Select(e => e.loadDetails).Where(e => e != null);
+                var refreshActions = new List<Action>();
+                foreach (var loadFunc in loadDetalils)
+                {
+                    cancelToken.ThrowIfCancellationRequested();
+                    var action = await loadFunc();
+                }
+
+                await this.SwitchToMainThreadAsync(cancelToken);
+                foreach (var refreshAction in refreshActions)
+                {
+                    refreshAction();
+                }
+            }).FileAndForget();
         }
 
         private void RemoveSubmoduleButtons()

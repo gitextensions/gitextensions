@@ -696,19 +696,19 @@ namespace GitCommands
             }
         }
 
-        public ConflictData GetConflict(string filename)
+        public async Task<ConflictData> GetConflictAsync(string filename)
         {
-            return GetConflicts(filename).SingleOrDefault();
+            return (await GetConflictsAsync(filename)).SingleOrDefault();
         }
 
-        public List<ConflictData> GetConflicts(string filename = "")
+        public async Task<List<ConflictData>> GetConflictsAsync(string filename = "")
         {
             filename = filename.ToPosixPath();
 
             var list = new List<ConflictData>();
 
-            var unmerged = _gitExecutable
-                .GetOutput("ls-files -z --unmerged " + filename.QuoteNE())
+            var unmerged = (await _gitExecutable
+                .GetOutputAsync("ls-files -z --unmerged " + filename.QuoteNE()).ConfigureAwait(false))
                 .Split(new[] { '\0', '\n' }, StringSplitOptions.RemoveEmptyEntries);
 
             var item = new ConflictedFileData[3];
@@ -762,7 +762,7 @@ namespace GitCommands
             return tree.Split();
         }
 
-        public Dictionary<IGitRef, IGitItem> GetSubmoduleItemsForEachRef(string filename, Func<IGitRef, bool> showRemoteRef, bool noLocks = false)
+        public async Task<Dictionary<IGitRef, IGitItem>> GetSubmoduleItemsForEachRefAsync(string filename, Func<IGitRef, bool> showRemoteRef, bool noLocks = false)
         {
             string command = GetSortedRefsCommand(noLocks: noLocks);
 
@@ -773,7 +773,7 @@ namespace GitCommands
 
             filename = filename.ToPosixPath();
 
-            var refList = _gitExecutable.GetOutput(command);
+            var refList = await _gitExecutable.GetOutputAsync(command).ConfigureAwait(false);
 
             var refs = ParseRefs(refList);
 
@@ -1190,7 +1190,7 @@ namespace GitCommands
             return false;
         }
 
-        public (char code, ObjectId currentCommitId) GetSuperprojectCurrentCheckout()
+        public async Task<(char code, ObjectId currentCommitId)> GetSuperprojectCurrentCheckoutAsync()
         {
             if (SuperprojectModule == null)
             {
@@ -1203,7 +1203,8 @@ namespace GitCommands
                 "--cached",
                 SubmodulePath.Quote()
             };
-            var lines = SuperprojectModule.GitExecutable.GetOutput(args).Split('\n');
+            var output = await SuperprojectModule.GitExecutable.GetOutputAsync(args).ConfigureAwait(false);
+            var lines = output.Split('\n');
 
             if (lines.Length == 0)
             {
@@ -2159,9 +2160,9 @@ namespace GitCommands
 
         private static readonly Regex _remoteVerboseLineRegex = new Regex(@"^(?<name>[^	]+)\t(?<url>.+?) \((?<direction>fetch|push)\)$", RegexOptions.Compiled);
 
-        public IReadOnlyList<Remote> GetRemotes()
+        public async Task<IReadOnlyList<Remote>> GetRemotesAsync()
         {
-            return ParseRemotes(_gitExecutable.GetOutputLines("remote -v"));
+            return ParseRemotes(await _gitExecutable.GetOutputLinesAsync("remote -v"));
 
             IReadOnlyList<Remote> ParseRemotes(IEnumerable<string> lines)
             {
@@ -2500,9 +2501,8 @@ namespace GitCommands
                     var localItem = item;
                     localItem.SetSubmoduleStatus(ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
-                        await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-
-                        var submoduleStatus = GitCommandHelpers.GetCurrentSubmoduleChanges(this, localItem.Name, localItem.OldName, localItem.Staged == StagedStatus.Index);
+                        var submoduleStatus = await GitCommandHelpers.GetCurrentSubmoduleChangesAsync(this, localItem.Name, localItem.OldName, localItem.Staged == StagedStatus.Index)
+                        .ConfigureAwait(false);
                         if (submoduleStatus != null && submoduleStatus.Commit != submoduleStatus.OldCommit)
                         {
                             var submodule = submoduleStatus.GetSubmodule(this);
@@ -2617,10 +2617,10 @@ namespace GitCommands
         }
 
         [CanBeNull]
-        public Patch GetCurrentChanges(string fileName, [CanBeNull] string oldFileName, bool staged, string extraDiffArguments, Encoding encoding = null, bool noLocks = false)
+        public async Task<Patch> GetCurrentChangesAsync(string fileName, [CanBeNull] string oldFileName, bool staged, string extraDiffArguments, Encoding encoding = null, bool noLocks = false)
         {
-            var output = _gitExecutable.GetOutput(GetCurrentChangesCmd(fileName, oldFileName, staged, extraDiffArguments, noLocks),
-                outputEncoding: LosslessEncoding);
+            var output = await _gitExecutable.GetOutputAsync(GetCurrentChangesCmd(fileName, oldFileName, staged, extraDiffArguments, noLocks),
+                outputEncoding: LosslessEncoding).ConfigureAwait(false);
 
             IReadOnlyList<Patch> patches = PatchProcessor.CreatePatchesFromString(output, new Lazy<Encoding>(() => encoding ?? FilesEncoding)).ToList();
 
@@ -2628,10 +2628,10 @@ namespace GitCommands
         }
 
         [CanBeNull]
-        private string GetFileContents(string path)
+        private async Task<string> GetFileContentsAsync(string path)
         {
             var args = new GitArgumentBuilder("show") { $"HEAD:{path.ToPosixPath().Quote()}" };
-            var result = _gitExecutable.Execute(args);
+            var result = await _gitExecutable.ExecuteAsync(args).ConfigureAwaitRunInline();
 
             return result.ExitCode == 0
                 ? result.StandardOutput
@@ -2639,11 +2639,11 @@ namespace GitCommands
         }
 
         [CanBeNull]
-        public string GetFileContents(GitItemStatus file)
+        public async Task<string> GetFileContentsAsync(GitItemStatus file)
         {
             var contents = new StringBuilder();
 
-            string currentContents = GetFileContents(file.Name);
+            string currentContents = await GetFileContentsAsync(file.Name).ConfigureAwaitRunInline();
             if (currentContents != null)
             {
                 contents.Append(currentContents);
@@ -2651,7 +2651,7 @@ namespace GitCommands
 
             if (file.OldName != null)
             {
-                string oldContents = GetFileContents(file.OldName);
+                string oldContents = await GetFileContentsAsync(file.OldName).ConfigureAwaitRunInline();
                 if (oldContents != null)
                 {
                     contents.Append(oldContents);

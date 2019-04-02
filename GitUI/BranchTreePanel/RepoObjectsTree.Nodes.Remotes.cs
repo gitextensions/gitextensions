@@ -50,7 +50,7 @@ namespace GitUI.BranchTreePanel
                 token.ThrowIfCancellationRequested();
 
                 var enabledRemoteRepoNodes = new List<RemoteRepoNode>();
-                var remoteByName = Module.GetRemotes().ToDictionary(r => r.Name);
+                var remoteByName = (await Module.GetRemotesAsync().ConfigureAwaitRunInline()).ToDictionary(r => r.Name);
 
                 var remotesManager = new ConfigFileRemoteSettingsManager(() => Module);
 

@@ -153,7 +153,7 @@ namespace GitUI.CommandsDialogs
                     oldSelectedRow = ConflictedFiles.SelectedRows[0].Index;
                 }
 
-                ConflictedFiles.DataSource = Module.GetConflicts();
+                ConflictedFiles.DataSource = ThreadHelper.JoinableTaskFactory.Run(() => Module.GetConflictsAsync());
                 ConflictedFiles.Columns[0].DataPropertyName = nameof(ConflictData.Filename);
                 if (ConflictedFiles.Rows.Count > oldSelectedRow)
                 {
@@ -1158,7 +1158,8 @@ namespace GitUI.CommandsDialogs
 
         private void DisableInvalidEntriesInConflictedFilesContextMenu(string fileName)
         {
-            var conflictedFileNames = Module.GetConflict(fileName);
+            var conflictedFileNames = ThreadHelper.JoinableTaskFactory.Run(() =>
+                Module.GetConflictAsync(fileName));
             if (conflictedFileNames.Local.Filename.IsNullOrEmpty())
             {
                 ContextSaveLocalAs.Enabled = false;
