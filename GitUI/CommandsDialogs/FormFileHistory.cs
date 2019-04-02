@@ -130,8 +130,8 @@ namespace GitUI.CommandsDialogs
                 ignoreWhitespaceToolStripMenuItem.Checked = AppSettings.IgnoreWhitespaceOnBlame;
                 detectMoveAndCopyInAllFilesToolStripMenuItem.Checked = AppSettings.DetectCopyInAllOnBlame;
                 detectMoveAndCopyInThisFileToolStripMenuItem.Checked = AppSettings.DetectCopyInFileOnBlame;
-                displayCommitterFirstToolStripMenuItem.Checked = AppSettings.BlameDisplayCommitterFirst;
-                hideCommitterToolStripMenuItem.Checked = AppSettings.BlameHideCommitter;
+                displayAuthorFirstToolStripMenuItem.Checked = AppSettings.BlameDisplayAuthorFirst;
+                hideAuthorToolStripMenuItem.Checked = AppSettings.BlameHideAuthor;
                 hideAuthorDateToolStripMenuItem.Checked = AppSettings.BlameHideAuthorDate;
                 hideAuthorTimeToolStripMenuItem.Checked = AppSettings.BlameHideAuthorTime;
                 showLineNumbersToolStripMenuItem.Checked = AppSettings.BlameShowLineNumbers;
@@ -637,19 +637,19 @@ namespace GitUI.CommandsDialogs
 
         #endregion
 
-        private void displayCommitterFirstToolStripMenuItem_Click(object sender, EventArgs e)
+        private void displayAuthorFirstToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AppSettings.BlameDisplayCommitterFirst = !AppSettings.BlameDisplayCommitterFirst;
-            displayCommitterFirstToolStripMenuItem.Checked = AppSettings.BlameDisplayCommitterFirst;
+            AppSettings.BlameDisplayAuthorFirst = !AppSettings.BlameDisplayAuthorFirst;
+            displayAuthorFirstToolStripMenuItem.Checked = AppSettings.BlameDisplayAuthorFirst;
             UpdateSelectedFileViewers(true);
         }
 
-        private void hideCommitterToolStripMenuItem_Click(object sender, EventArgs e)
+        private void hideAuthorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AppSettings.BlameHideCommitter = !AppSettings.BlameHideCommitter;
-            hideCommitterToolStripMenuItem.Checked = AppSettings.BlameHideCommitter;
+            AppSettings.BlameHideAuthor = !AppSettings.BlameHideAuthor;
+            hideAuthorToolStripMenuItem.Checked = AppSettings.BlameHideAuthor;
 
-            if (AppSettings.BlameHideCommitter)
+            if (AppSettings.BlameHideAuthor)
             {
                 hideAuthorDateToolStripMenuItem.Checked = false;
                 AppSettings.BlameHideAuthorDate = false;
@@ -667,8 +667,8 @@ namespace GitUI.CommandsDialogs
 
             if (AppSettings.BlameHideAuthorDate)
             {
-                hideCommitterToolStripMenuItem.Checked = false;
-                AppSettings.BlameHideCommitter = false;
+                hideAuthorToolStripMenuItem.Checked = false;
+                AppSettings.BlameHideAuthor = false;
             }
 
             UpdateSelectedFileViewers(true);

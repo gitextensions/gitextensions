@@ -331,7 +331,7 @@ namespace GitUI.Blame
 
             void BuildAuthorLine(GitBlameLine line)
             {
-                if (!AppSettings.BlameHideCommitter && AppSettings.BlameDisplayCommitterFirst)
+                if (!AppSettings.BlameHideAuthor && AppSettings.BlameDisplayAuthorFirst)
                 {
                     lineBuilder.Append(line.Commit.Author);
                     if (!AppSettings.BlameHideAuthorDate)
@@ -345,7 +345,7 @@ namespace GitUI.Blame
                     lineBuilder.Append(line.Commit.AuthorTime.ToString(dateTimeFormat));
                 }
 
-                if (!AppSettings.BlameHideCommitter && !AppSettings.BlameDisplayCommitterFirst)
+                if (!AppSettings.BlameHideAuthor && !AppSettings.BlameDisplayAuthorFirst)
                 {
                     if (!AppSettings.BlameHideAuthorDate)
                     {

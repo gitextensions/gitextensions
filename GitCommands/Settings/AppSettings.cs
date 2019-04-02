@@ -1610,16 +1610,16 @@ namespace GitCommands
             set => SetInt("RepoObjectsTree.SubmodulesIndex", value);
         }
 
-        public static bool BlameDisplayCommitterFirst
+        public static bool BlameDisplayAuthorFirst
         {
-            get => GetBool("Blame.DisplayCommitterFirst", false);
-            set => SetBool("Blame.DisplayCommitterFirst", value);
+            get => GetBool("Blame.DisplayAuthorFirst", false);
+            set => SetBool("Blame.DisplayAuthorFirst", value);
         }
 
-        public static bool BlameHideCommitter
+        public static bool BlameHideAuthor
         {
-            get => GetBool("Blame.HideCommitter", false);
-            set => SetBool("Blame.HideCommitter", value);
+            get => GetBool("Blame.HideAuthor", false);
+            set => SetBool("Blame.HideAuthor", value);
         }
 
         public static bool BlameHideAuthorDate

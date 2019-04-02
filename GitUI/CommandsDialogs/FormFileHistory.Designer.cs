@@ -61,8 +61,8 @@ namespace GitUI.CommandsDialogs
             this.detectMoveAndCopyInAllFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.displaySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.displayCommitterFirstToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hideCommitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.displayAuthorFirstToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hideAuthorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hideAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hideAuthorTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showLineNumbersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -479,8 +479,8 @@ namespace GitUI.CommandsDialogs
             this.detectMoveAndCopyInAllFilesToolStripMenuItem,
             this.toolStripSeparator5,
             this.displaySettingsToolStripMenuItem,
-            this.displayCommitterFirstToolStripMenuItem,
-            this.hideCommitterToolStripMenuItem,
+            this.displayAuthorFirstToolStripMenuItem,
+            this.hideAuthorToolStripMenuItem,
             this.hideAuthorDateToolStripMenuItem,
             this.hideAuthorTimeToolStripMenuItem,
             this.showLineNumbersToolStripMenuItem});
@@ -531,19 +531,19 @@ namespace GitUI.CommandsDialogs
             this.displaySettingsToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
             this.displaySettingsToolStripMenuItem.Text = "Display result settings:";
             // 
-            // displayCommitterFirstToolStripMenuItem
+            // displayAuthorFirstToolStripMenuItem
             // 
-            this.displayCommitterFirstToolStripMenuItem.Name = "displayCommitterFirstToolStripMenuItem";
-            this.displayCommitterFirstToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
-            this.displayCommitterFirstToolStripMenuItem.Text = "Display committer first";
-            this.displayCommitterFirstToolStripMenuItem.Click += new System.EventHandler(this.displayCommitterFirstToolStripMenuItem_Click);
+            this.displayAuthorFirstToolStripMenuItem.Name = "displayAuthorFirstToolStripMenuItem";
+            this.displayAuthorFirstToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.displayAuthorFirstToolStripMenuItem.Text = "Display author first";
+            this.displayAuthorFirstToolStripMenuItem.Click += new System.EventHandler(this.displayAuthorFirstToolStripMenuItem_Click);
             // 
-            // hideCommitterToolStripMenuItem
+            // hideAuthorToolStripMenuItem
             // 
-            this.hideCommitterToolStripMenuItem.Name = "hideCommitterToolStripMenuItem";
-            this.hideCommitterToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
-            this.hideCommitterToolStripMenuItem.Text = "Hide committer";
-            this.hideCommitterToolStripMenuItem.Click += new System.EventHandler(this.hideCommitterToolStripMenuItem_Click);
+            this.hideAuthorToolStripMenuItem.Name = "hideAuthorToolStripMenuItem";
+            this.hideAuthorToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.hideAuthorToolStripMenuItem.Text = "Hide author";
+            this.hideAuthorToolStripMenuItem.Click += new System.EventHandler(this.hideAuthorToolStripMenuItem_Click);
             // 
             // hideAuthorDateToolStripMenuItem
             // 
@@ -644,12 +644,12 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem simplifyMergesContextMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem displayCommitterFirstToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem displayAuthorFirstToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hideAuthorDateToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hideAuthorTimeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showLineNumbersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem blameSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem displaySettingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem hideCommitterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem hideAuthorToolStripMenuItem;
     }
 }
