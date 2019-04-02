@@ -287,43 +287,16 @@ namespace GitUI.Blame
             var lineLength = Math.Max(80, lineLengthEstimate);
             var lineBuilder = new StringBuilder(lineLength + 2);
             var gutter = new StringBuilder(capacity: lineBuilder.Capacity * _blame.Lines.Count);
+            var emptyLine = new string(' ', lineLength);
             foreach (var line in _blame.Lines)
             {
                 if (line.Commit == lastCommit)
                 {
-                    gutter.Append(' ', lineLength).AppendLine();
+                    gutter.AppendLine(emptyLine);
                 }
                 else
                 {
-                    if (!AppSettings.BlameHideCommitter && AppSettings.BlameDisplayCommitterFirst)
-                    {
-                        lineBuilder.Append(line.Commit.Author);
-                        if (!AppSettings.BlameHideAuthorDate)
-                        {
-                            lineBuilder.Append(" - ");
-                        }
-                    }
-
-                    if (!AppSettings.BlameHideAuthorDate)
-                    {
-                        lineBuilder.Append(line.Commit.AuthorTime.ToString(dateTimeFormat));
-                    }
-
-                    if (!AppSettings.BlameHideCommitter && !AppSettings.BlameDisplayCommitterFirst)
-                    {
-                        if (!AppSettings.BlameHideAuthorDate)
-                        {
-                            lineBuilder.Append(" - ");
-                        }
-
-                        lineBuilder.Append(line.Commit.Author);
-                    }
-
-                    if (filename != line.Commit.FileName)
-                    {
-                        lineBuilder.Append(" - ");
-                        lineBuilder.Append(line.Commit.FileName);
-                    }
+                    BuildAuthorLine(line);
 
                     gutter.Append(lineBuilder);
                     gutter.Append(' ', lineLength - lineBuilder.Length).AppendLine();
@@ -355,6 +328,39 @@ namespace GitUI.Blame
             CommitInfo.SetRevisionWithChildren(revision, children);
 
             controlToMask?.UnMask();
+
+            void BuildAuthorLine(GitBlameLine line)
+            {
+                if (!AppSettings.BlameHideCommitter && AppSettings.BlameDisplayCommitterFirst)
+                {
+                    lineBuilder.Append(line.Commit.Author);
+                    if (!AppSettings.BlameHideAuthorDate)
+                    {
+                        lineBuilder.Append(" - ");
+                    }
+                }
+
+                if (!AppSettings.BlameHideAuthorDate)
+                {
+                    lineBuilder.Append(line.Commit.AuthorTime.ToString(dateTimeFormat));
+                }
+
+                if (!AppSettings.BlameHideCommitter && !AppSettings.BlameDisplayCommitterFirst)
+                {
+                    if (!AppSettings.BlameHideAuthorDate)
+                    {
+                        lineBuilder.Append(" - ");
+                    }
+
+                    lineBuilder.Append(line.Commit.Author);
+                }
+
+                if (filename != line.Commit.FileName)
+                {
+                    lineBuilder.Append(" - ");
+                    lineBuilder.Append(line.Commit.FileName);
+                }
+            }
         }
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
