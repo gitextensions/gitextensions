@@ -296,7 +296,7 @@ namespace GitUI.Blame
                 }
                 else
                 {
-                    BuildAuthorLine(line);
+                    BuildAuthorLine(line, lineBuilder, dateTimeFormat, filename);
 
                     gutter.Append(lineBuilder);
                     gutter.Append(' ', lineLength - lineBuilder.Length).AppendLine();
@@ -328,38 +328,38 @@ namespace GitUI.Blame
             CommitInfo.SetRevisionWithChildren(revision, children);
 
             controlToMask?.UnMask();
+        }
 
-            void BuildAuthorLine(GitBlameLine line)
+        private void BuildAuthorLine(GitBlameLine line, StringBuilder lineBuilder, string dateTimeFormat, string filename)
+        {
+            if (!AppSettings.BlameHideAuthor && AppSettings.BlameDisplayAuthorFirst)
             {
-                if (!AppSettings.BlameHideAuthor && AppSettings.BlameDisplayAuthorFirst)
-                {
-                    lineBuilder.Append(line.Commit.Author);
-                    if (!AppSettings.BlameHideAuthorDate)
-                    {
-                        lineBuilder.Append(" - ");
-                    }
-                }
-
+                lineBuilder.Append(line.Commit.Author);
                 if (!AppSettings.BlameHideAuthorDate)
                 {
-                    lineBuilder.Append(line.Commit.AuthorTime.ToString(dateTimeFormat));
+                    lineBuilder.Append(" - ");
                 }
+            }
 
-                if (!AppSettings.BlameHideAuthor && !AppSettings.BlameDisplayAuthorFirst)
-                {
-                    if (!AppSettings.BlameHideAuthorDate)
-                    {
-                        lineBuilder.Append(" - ");
-                    }
+            if (!AppSettings.BlameHideAuthorDate)
+            {
+                lineBuilder.Append(line.Commit.AuthorTime.ToString(dateTimeFormat));
+            }
 
-                    lineBuilder.Append(line.Commit.Author);
-                }
-
-                if (filename != line.Commit.FileName)
+            if (!AppSettings.BlameHideAuthor && !AppSettings.BlameDisplayAuthorFirst)
+            {
+                if (!AppSettings.BlameHideAuthorDate)
                 {
                     lineBuilder.Append(" - ");
-                    lineBuilder.Append(line.Commit.FileName);
                 }
+
+                lineBuilder.Append(line.Commit.Author);
+            }
+
+            if (filename != line.Commit.FileName)
+            {
+                lineBuilder.Append(" - ");
+                lineBuilder.Append(line.Commit.FileName);
             }
         }
 
