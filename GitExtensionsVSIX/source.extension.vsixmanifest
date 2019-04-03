@@ -13,7 +13,7 @@
     </Metadata>
 
     <Installation>
-        <InstallationTarget Version="[14.0,17.0)" Id="Microsoft.VisualStudio.Community" />
+        <InstallationTarget Version="[14.0,18.0)" Id="Microsoft.VisualStudio.Community" />
     </Installation>
 
     <Dependencies>
