@@ -1529,20 +1529,9 @@ namespace GitUI.Editor
                 set => _fileViewer.IgnoreWhitespace = value;
             }
 
-            internal void IgnoreWhitespaceAtEolToolStripMenuItem_Click(object sender, EventArgs e)
-            {
-                _fileViewer.IgnoreWhitespaceAtEolToolStripMenuItem_Click(sender, e);
-            }
-
-            internal void IgnoreWhitespaceChangesToolStripMenuItemClick(object sender, EventArgs e)
-            {
-                _fileViewer.IgnoreWhitespaceChangesToolStripMenuItemClick(sender, e);
-            }
-
-            internal void IgnoreAllWhitespaceChangesToolStripMenuItem_Click(object sender, EventArgs e)
-            {
-                _fileViewer.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(sender, e);
-            }
+            internal void IgnoreWhitespaceAtEolToolStripMenuItem_Click(object sender, EventArgs e) => _fileViewer.IgnoreWhitespaceAtEolToolStripMenuItem_Click(sender, e);
+            internal void IgnoreWhitespaceChangesToolStripMenuItemClick(object sender, EventArgs e) => _fileViewer.IgnoreWhitespaceChangesToolStripMenuItemClick(sender, e);
+            internal void IgnoreAllWhitespaceChangesToolStripMenuItem_Click(object sender, EventArgs e) => _fileViewer.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(sender, e);
 
             public ToolStripButton IgnoreWhitespaceAtEolButton => _fileViewer.ignoreWhitespaceAtEol;
             public ToolStripMenuItem IgnoreWhitespaceAtEolMenuItem => _fileViewer.ignoreWhitespaceAtEolToolStripMenuItem;
