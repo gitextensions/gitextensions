@@ -589,7 +589,7 @@ namespace GitUI.CommandsDialogs
                 }
                 else
                 {
-                    if (string.IsNullOrWhiteSpace(_mergetoolCmd) || string.IsNullOrWhiteSpace(_mergetoolPath))
+                    if (string.IsNullOrWhiteSpace(_mergetoolCmd) && string.IsNullOrWhiteSpace(_mergetoolPath))
                     {
                         MessageBox.Show(this, _noMergeToolConfigured.Text);
                         return false;
