@@ -361,14 +361,7 @@ namespace GitUI.CommandsDialogs
 
                         if (AppSettings.ShowSubmoduleStatus)
                         {
-                            if (_submoduleStatusProvider.HasChangedToNone(status))
-                            {
-                                UpdateSubmodulesStructure(updateStatus: false);
-                            }
-                            else if (_submoduleStatusProvider.HasStatusChanges(status))
-                            {
-                                UpdateSubmodulesStructure(updateStatus: true);
-                            }
+                            _submoduleStatusProvider.UpdateSubmodulesStatus(Module.WorkingDir, status);
                         }
                     }
                 };
@@ -2590,21 +2583,8 @@ namespace GitUI.CommandsDialogs
             Func<Task<Action>> loadDetails = null;
             if (info.Detailed != null)
             {
-                loadDetails = async () =>
-                {
-                    var details = await info.Detailed.GetValueAsync(cancelToken);
-                    return () =>
-                    {
-                        if (details == null)
-                        {
-                            return;
-                        }
-
-                        ThreadHelper.ThrowIfNotOnUIThread();
-                        item.Image = GetSubmoduleItemImage(details);
-                        item.Text = string.Format(textFormat, info.Text + details.AddedAndRemovedText);
-                    };
-                };
+                item.Image = GetSubmoduleItemImage(info.Detailed);
+                item.Text = string.Format(textFormat, info.Text + info.Detailed.AddedAndRemovedText);
             }
 
             return (item, loadDetails);
@@ -2640,13 +2620,13 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void UpdateSubmodulesStructure(bool updateStatus = false)
+        private void UpdateSubmodulesStructure()
         {
-            // Submodule status is updated on git-status updates. To make sure supermodule status is updated, update immediately
-            updateStatus = updateStatus || (AppSettings.ShowSubmoduleStatus && _gitStatusMonitor.Active && (Module.SuperprojectModule != null));
+            // Submodule status is updated on git-status updates. To make sure supermodule status is updated, update immediately (once)
+            var updateStatus = AppSettings.ShowSubmoduleStatus && _gitStatusMonitor.Active && (Module.SuperprojectModule != null);
 
             toolStripButtonLevelUp.ToolTipText = "";
-            _submoduleStatusProvider.UpdateSubmodulesStatus(updateStatus, Module.WorkingDir, _noBranchTitle.Text);
+            _submoduleStatusProvider.UpdateSubmodulesStructure(Module.WorkingDir, _noBranchTitle.Text, updateStatus);
         }
 
         private void SubmoduleStatusProvider_StatusUpdating(object sender, EventArgs e)
