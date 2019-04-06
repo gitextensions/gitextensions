@@ -8,14 +8,14 @@ namespace CommonTestUtils
 {
     public class SubmoduleTestHelpers
     {
-        public static SubmoduleInfoResult UpdateSubmoduleStatusAndWaitForResult(ISubmoduleStatusProvider provider, GitModule module, bool updateStatus = false)
+        public static SubmoduleInfoResult UpdateSubmoduleStructureAndWaitForResult(ISubmoduleStatusProvider provider, GitModule module, bool updateStatus = false)
         {
             SubmoduleInfoResult result = null;
             provider.StatusUpdated += Provider_StatusUpdated;
 
-            provider.UpdateSubmodulesStatus(
+            provider.UpdateSubmodulesStructure(
                 updateStatus: updateStatus,
-                workingDirectory: module.WorkingDir,
+                gitModule: module,
                 noBranchText: string.Empty);
 
             AsyncTestHelper.WaitForPendingOperations();

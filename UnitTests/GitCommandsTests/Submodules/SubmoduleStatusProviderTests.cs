@@ -62,9 +62,9 @@ namespace GitCommandsTests.Submodules
             }
 
             [Test]
-            public void UpdateSubmoduleStatus_valid_result_for_top_module()
+            public void UpdateSubmoduleStructure_valid_result_for_top_module()
             {
-                var result = SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, _repo1Module);
+                var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo1Module);
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
                 result.SuperProject.Should().Be(null);
@@ -74,9 +74,9 @@ namespace GitCommandsTests.Submodules
             }
 
             [Test]
-            public void UpdateSubmoduleStatus_valid_result_for_first_nested_submodule()
+            public void UpdateSubmoduleStructure_valid_result_for_first_nested_submodule()
             {
-                var result = SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, _repo2Module);
+                var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo2Module);
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
                 result.SuperProject.Should().Be(result.TopProject);
@@ -86,61 +86,15 @@ namespace GitCommandsTests.Submodules
             }
 
             [Test]
-            public void UpdateSubmoduleStatus_valid_result_for_second_nested_submodule()
+            public void UpdateSubmoduleStructure_valid_result_for_second_nested_submodule()
             {
-                var result = SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, _repo3Module);
+                var result = SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo3Module);
 
                 result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
                 result.SuperProject.Path.Should().Be(_repo2Module.WorkingDir);
                 result.CurrentSubmoduleName.Should().Be("repo3");
                 result.OurSubmodules.Select(info => info.Path).Should().BeEmpty();
                 result.SuperSubmodules.Select(info => info.Path).Should().Contain(_repo2Module.WorkingDir, _repo3Module.WorkingDir);
-            }
-
-            [Test]
-            public void HasChangedToNone_valid_result()
-            {
-                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, _repo3Module);
-
-                // No changes in repo
-                var changedFiles = GetStatusChangedFiles(_repo1Module);
-                changedFiles.Should().HaveCount(0);
-                _provider.HasChangedToNone(changedFiles).Should().BeFalse();
-
-                // Make a change in repo2
-                _repo1.CreateFile(_repo2Module.WorkingDir, "test.txt", "test");
-                changedFiles = GetStatusChangedFiles(_repo1Module);
-                changedFiles.Should().HaveCount(1);
-                _provider.HasChangedToNone(changedFiles).Should().BeFalse();
-
-                // Revert the change
-                File.Delete(Path.Combine(_repo2Module.WorkingDir, "test.txt"));
-                changedFiles = GetStatusChangedFiles(_repo1Module);
-                changedFiles.Should().HaveCount(0);
-                _provider.HasChangedToNone(changedFiles).Should().BeTrue();
-            }
-
-            [Test]
-            public void HasStatusChanges_valid_result()
-            {
-                SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, _repo3Module);
-
-                // No changes in repo
-                var changedFiles = GetStatusChangedFiles(_repo1Module);
-                changedFiles.Should().HaveCount(0);
-                _provider.HasStatusChanges(changedFiles).Should().BeFalse();
-
-                // Make a change in repo2
-                _repo1.CreateFile(_repo2Module.WorkingDir, "test.txt", "test");
-                changedFiles = GetStatusChangedFiles(_repo1Module);
-                changedFiles.Should().HaveCount(1);
-                _provider.HasStatusChanges(changedFiles).Should().BeTrue();
-
-                // Revert the change
-                File.Delete(Path.Combine(_repo2Module.WorkingDir, "test.txt"));
-                changedFiles = GetStatusChangedFiles(_repo1Module);
-                changedFiles.Should().HaveCount(0);
-                _provider.HasStatusChanges(changedFiles).Should().BeFalse();
             }
 
             private static IReadOnlyList<GitItemStatus> GetStatusChangedFiles(IGitModule module)

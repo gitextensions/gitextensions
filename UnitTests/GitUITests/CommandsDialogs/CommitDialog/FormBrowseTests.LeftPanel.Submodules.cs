@@ -89,7 +89,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
                 form =>
                 {
                     // act
-                    SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResult(_provider, _repo1Module);
+                    SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResult(_provider, _repo1Module);
 
                     // assert
                     var submodulesNode = GetSubmoduleNode(form);

@@ -10,7 +10,7 @@ namespace GitCommands.Submodules
     public class SubmoduleInfoResult
     {
         // Module that was used to gather submodule info
-        public IGitModule Module { get; internal set; }
+        public GitModule Module { get; internal set; }
 
         // List of SubmoduleInfo for all submodules (recursively) under current module.
         public IList<SubmoduleInfo> OurSubmodules { get; } = new List<SubmoduleInfo>();

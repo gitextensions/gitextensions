@@ -361,14 +361,7 @@ namespace GitUI.CommandsDialogs
 
                         if (AppSettings.ShowSubmoduleStatus)
                         {
-                            if (_submoduleStatusProvider.HasChangedToNone(status))
-                            {
-                                UpdateSubmodulesStructure(updateStatus: false);
-                            }
-                            else if (_submoduleStatusProvider.HasStatusChanges(status))
-                            {
-                                UpdateSubmodulesStructure(updateStatus: true);
-                            }
+                            _submoduleStatusProvider.UpdateSubmodulesStatus(Module, status);
                         }
                     }
                 };
@@ -613,7 +606,7 @@ namespace GitUI.CommandsDialogs
             toolStripButtonPush.DisplayAheadBehindInformation(Module.GetSelectedBranch());
         }
 
-        #region IBrowseRepo
+#region IBrowseRepo
 
         public void GoToRef(string refName, bool showNoRevisionMsg)
         {
@@ -623,7 +616,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        #endregion
+#endregion
 
         private void ShowDashboard()
         {
@@ -1061,7 +1054,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        #region Working directory combo box
+#region Working directory combo box
 
         /// <summary>Updates the text shown on the combo button itself.</summary>
         private void RefreshWorkingDirComboText()
@@ -1155,7 +1148,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        #endregion
+#endregion
 
         private void RebaseClick(object sender, EventArgs e)
         {
@@ -2105,7 +2098,7 @@ namespace GitUI.CommandsDialogs
             UICommands.StartCreatePullRequest(this, repoHost);
         }
 
-        #region Hotkey commands
+#region Hotkey commands
 
         public static readonly string HotkeySettingsName = "Browse";
 
@@ -2311,7 +2304,7 @@ namespace GitUI.CommandsDialogs
             return ExecuteCommand((int)cmd);
         }
 
-        #endregion
+#endregion
 
         public static void OpenContainingFolder(FileStatusList diffFiles, GitModule module)
         {
@@ -2568,7 +2561,7 @@ namespace GitUI.CommandsDialogs
             PreventToolStripSplitButtonClosing(sender as ToolStripSplitButton);
         }
 
-        #region Submodules
+#region Submodules
 
         private (ToolStripItem item, Func<Task<Action>> loadDetails)
             CreateSubmoduleMenuItem(CancellationToken cancelToken, SubmoduleInfo info, string textFormat = "{0}")
@@ -2640,13 +2633,13 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void UpdateSubmodulesStructure(bool updateStatus = false)
+        private void UpdateSubmodulesStructure()
         {
-            // Submodule status is updated on git-status updates. To make sure supermodule status is updated, update immediately
-            updateStatus = updateStatus || (AppSettings.ShowSubmoduleStatus && _gitStatusMonitor.Active && (Module.SuperprojectModule != null));
+            // Submodule status is updated on git-status updates. To make sure supermodule status is updated, update immediately (once)
+            var updateStatus = AppSettings.ShowSubmoduleStatus && _gitStatusMonitor.Active && (Module.SuperprojectModule != null);
 
             toolStripButtonLevelUp.ToolTipText = "";
-            _submoduleStatusProvider.UpdateSubmodulesStatus(updateStatus, Module.WorkingDir, _noBranchTitle.Text);
+            _submoduleStatusProvider.UpdateSubmodulesStructure(Module, _noBranchTitle.Text, updateStatus);
         }
 
         private void SubmoduleStatusProvider_StatusUpdating(object sender, EventArgs e)
@@ -2750,7 +2743,7 @@ namespace GitUI.CommandsDialogs
             toolStripButtonLevelUp.DropDownItems.Clear();
         }
 
-        #endregion
+#endregion
 
         private void toolStripButtonLevelUp_ButtonClick(object sender, EventArgs e)
         {
@@ -2980,7 +2973,7 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        #region Layout management
+#region Layout management
 
         private void toggleSplitViewLayout_Click(object sender, EventArgs e)
         {
@@ -3091,7 +3084,7 @@ namespace GitUI.CommandsDialogs
             RevisionsSplitContainer.ResumeLayout(performLayout: true);
         }
 
-        #endregion
+#endregion
 
         private void manageWorktreeToolStripMenuItem_Click(object sender, EventArgs e)
         {
