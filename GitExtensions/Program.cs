@@ -40,6 +40,13 @@ namespace GitExtensions
                 NBug.Settings.StopReportingAfter = 90;
                 NBug.Settings.SleepBeforeSend = 30;
                 NBug.Settings.StoragePath = NBug.Enums.StoragePath.WindowsTemp;
+                NBug.Settings.GetSystemInfo = () =>
+                {
+                    // if the error happens before we had a chance to init the environment information
+                    // the call to GetInformation() will fail. A double Initialise() call is safe.
+                    UserEnvironmentInformation.Initialise(ThisAssembly.Git.Sha, ThisAssembly.Git.IsDirty);
+                    return UserEnvironmentInformation.GetInformation();
+                };
 
                 if (!Debugger.IsAttached)
                 {
@@ -161,7 +168,7 @@ namespace GitExtensions
             if (args.Length >= 3)
             {
                 // there is bug in .net
-                // while parsing command line arguments, it unescapes " incorectly
+                // while parsing command line arguments, it unescapes " incorrectly
                 // https://github.com/gitextensions/gitextensions/issues/3489
                 string dirArg = args[2].TrimEnd('"');
 
