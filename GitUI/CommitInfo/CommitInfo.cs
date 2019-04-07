@@ -44,6 +44,7 @@ namespace GitUI.CommitInfo
             }
         }
 
+        private static readonly TranslationString _brokenRefs = new TranslationString("The repository refs seem to be broken:");
         private static readonly TranslationString _copyLink = new TranslationString("Copy &link ({0})");
         private static readonly TranslationString _containedInBranches = new TranslationString("Contained in branches:");
         private static readonly TranslationString _containedInNoBranch = new TranslationString("Contained in no branch");
@@ -53,6 +54,7 @@ namespace GitUI.CommitInfo
         private static readonly TranslationString _derivesFromTag = new TranslationString("Derives from tag:");
         private static readonly TranslationString _derivesFromNoTag = new TranslationString("Derives from no tag");
         private static readonly TranslationString _plusCommits = new TranslationString("commits");
+        private static readonly TranslationString _repoFailure = new TranslationString("Repository failure");
 
         private const int MaximumDisplayedRefs = 20;
         private readonly ILinkFactory _linkFactory = new LinkFactory();
@@ -206,11 +208,21 @@ namespace GitUI.CommitInfo
             _refsOrderDict = null;
 
             await TaskScheduler.Default.SwitchTo();
-            var refsOrderDict = ToDictionary(Module.GetSortedRefs());
+            try
+            {
+                var refsOrderDict = ToDictionary(Module.GetSortedRefs());
 
-            await this.SwitchToMainThreadAsync();
-            _refsOrderDict = refsOrderDict;
-            UpdateRevisionInfo();
+                await this.SwitchToMainThreadAsync();
+                _refsOrderDict = refsOrderDict;
+                UpdateRevisionInfo();
+            }
+            catch (RefsWarningException ex)
+            {
+                await this.SwitchToMainThreadAsync();
+                MessageBox.Show(this, string.Format("{0}{1}{1}{2}", _brokenRefs.Text, Environment.NewLine, ex.Message), _repoFailure.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return;
 
             IDictionary<string, int> ToDictionary(IReadOnlyList<string> list)
             {

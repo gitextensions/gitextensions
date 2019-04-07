@@ -757,7 +757,12 @@ namespace GitCommands
                 "refs/"
             };
 
-            var tree = _gitExecutable.GetOutput(args);
+            string tree = _gitExecutable.GetOutput(args);
+            int warningPos = tree.IndexOf("warning:");
+            if (warningPos >= 0)
+            {
+                throw new RefsWarningException(tree.Substring(warningPos).SplitLines()[0]);
+            }
 
             return tree.Split();
         }
