@@ -120,6 +120,18 @@ namespace GitCommands
         }
 
         /// <summary>
+        /// Create a thread-safe copy of this module, copying "expensive" properties
+        /// </summary>
+        /// <returns>Copy of the current module</returns>
+        public GitModule Copy()
+        {
+            GitModule module = new GitModule(WorkingDir);
+            module._gitCommonDirectory = _gitCommonDirectory;
+
+            return module;
+        }
+
+        /// <summary>
         /// Gets the directory which contains the git repository.
         /// </summary>
         [NotNull]

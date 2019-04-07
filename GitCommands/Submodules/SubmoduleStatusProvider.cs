@@ -84,7 +84,7 @@ namespace GitCommands.Submodules
                 // Start gathering new submodule structure asynchronously.
                 var result = new SubmoduleInfoResult
                 {
-                    Module = new GitModule(gitModule.WorkingDir)
+                    Module = gitModule.Copy()
                 };
 
                 // Add all submodules inside the current repository:
