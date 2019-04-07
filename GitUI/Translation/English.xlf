@@ -9169,6 +9169,10 @@ Details: Is {1} expected {2}</source>
         <source>Comments</source>
         <target />
       </trans-unit>
+      <trans-unit id="_searchingFor.Text">
+        <source>Searching for: </source>
+        <target />
+      </trans-unit>
     </body>
   </file>
 </xliff>

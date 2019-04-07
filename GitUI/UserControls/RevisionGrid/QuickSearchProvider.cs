@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.UserControls.RevisionGrid;
+using ResourceManager;
 
 namespace GitUI
 {
@@ -118,7 +119,7 @@ namespace GitUI
         {
             _label.Visible = true;
             _label.BringToFront();
-            _label.Text = _quickSearchString;
+            _label.Text = Strings.SearchingFor + _quickSearchString;
             _label.AutoSize = true;
         }
 
