@@ -2720,12 +2720,13 @@ namespace GitUI.CommandsDialogs
             // then refresh all items at once with a single switch to the main thread
             ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                var loadDetalils = newItems.Select(e => e.loadDetails).Where(e => e != null);
+                var loadDetails = newItems.Select(e => e.loadDetails).Where(e => e != null);
                 var refreshActions = new List<Action>();
-                foreach (var loadFunc in loadDetalils)
+                foreach (var loadFunc in loadDetails)
                 {
                     cancelToken.ThrowIfCancellationRequested();
                     var action = await loadFunc();
+                    refreshActions.Add(action);
                 }
 
                 await this.SwitchToMainThreadAsync(cancelToken);
