@@ -1021,9 +1021,21 @@ namespace GitUI
             if (!_updatingColumnWidth)
             {
                 _updatingColumnWidth = true;
-                columnHeader.Width = GetWidth();
+
+                int width = GetWidth();
+                if (columnHeader.Width != width)
+                {
+                    columnHeader.Width = width;
+
+                    // invalidate the FileStatusListView explicitely and asynchronously
+                    // Else texts will not be redrawn when scrollbars are shown or hidden.
+                    FileStatusListView.BeginInvoke(new Action(() => FileStatusListView.Invalidate()));
+                }
+
                 _updatingColumnWidth = false;
             }
+
+            return;
 
             int GetWidth()
             {
