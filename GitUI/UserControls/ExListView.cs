@@ -211,8 +211,6 @@ namespace GitUI.UserControls
             public const int WM_LBUTTONUP = 0x0202;
             public const int WM_RBUTTONDOWN = 0x0204;
             public const int WM_RBUTTONUP = 0x0205;
-            public const int WM_PAINT = 0x0F;
-            public const int WM_REFLECT_NOTIFY = 0x204E;
 
             public const int WM_VSCROLL = 0x115;
             public const int WM_MOUSEWHEEL = 0x020A;
@@ -224,9 +222,6 @@ namespace GitUI.UserControls
             public const int LVM_SETGROUPINFO = LVM_FIRST + 147;
             public const int LVM_SUBITEMHITTEST = LVM_FIRST + 57;
             public const int LVM_INSERTGROUP = LVM_FIRST + 145;
-
-            public const int NM_FIRST = 0;
-            public const int NM_CUSTOMDRAW = NM_FIRST - 12;
 
             #endregion
 
@@ -342,12 +337,9 @@ namespace GitUI.UserControls
             EndUpdate();
         }
 
-        private bool _isInWmPaintMsg;
-
         protected override void WndProc(ref Message m)
         {
             var message = m;
-
             switch (m.Msg)
             {
                 case NativeMethods.WM_LBUTTONUP when GetGroupHitInfo(message.LParam.ToPoint())?.IsCollapseButton == true:
@@ -359,13 +351,6 @@ namespace GitUI.UserControls
                     HandleAddedGroup(m);
                     break;
 
-                case NativeMethods.WM_PAINT:
-                    _isInWmPaintMsg = true;
-                    base.WndProc(ref m);
-                    _isInWmPaintMsg = false;
-                    break;
-
-                case NativeMethods.WM_REFLECT_NOTIFY when IsCustomDraw(m) && !_isInWmPaintMsg:
                 case NativeMethods.WM_RBUTTONUP when IsGroupMouseEventHandled(MouseButtons.Right, isDown: false):
                 case NativeMethods.WM_RBUTTONDOWN when IsGroupMouseEventHandled(MouseButtons.Right, isDown: true):
                 case NativeMethods.WM_LBUTTONUP when IsGroupMouseEventHandled(MouseButtons.Left, isDown: false):
@@ -507,12 +492,6 @@ namespace GitUI.UserControls
                 }
 
                 return eventArgs.Handled;
-            }
-
-            bool IsCustomDraw(Message msg)
-            {
-                var nmhdr = (NativeMethods.NMHDR)msg.GetLParam(typeof(NativeMethods.NMHDR));
-                return nmhdr.code == NativeMethods.NM_CUSTOMDRAW;
             }
         }
 
