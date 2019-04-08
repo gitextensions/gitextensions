@@ -111,7 +111,7 @@
             this.FilterWatermarkLabel.Name = "FilterWatermarkLabel";
             this.FilterWatermarkLabel.Size = new System.Drawing.Size(65, 13);
             this.FilterWatermarkLabel.TabIndex = 0;
-            this.FilterWatermarkLabel.Text = "Filter files...";
+            this.FilterWatermarkLabel.Text = "Filter files using a regular expression...";
             this.FilterWatermarkLabel.Click += new System.EventHandler(this.FilterWatermarkLabel_Click);
             // 
             // FilterToolTip

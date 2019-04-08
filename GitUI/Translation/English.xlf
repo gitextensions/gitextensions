@@ -1150,7 +1150,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="FilterWatermarkLabel.Text">
-        <source>Filter files...</source>
+        <source>Filter files using a regular expression...</source>
         <target />
       </trans-unit>
       <trans-unit id="NoFiles.Text">
