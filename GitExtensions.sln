@@ -159,9 +159,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.targets = Directory.Build.targets
 		GitExtensions.ruleset = GitExtensions.ruleset
 		GitExtensionsTest.ruleset = GitExtensionsTest.ruleset
-		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
 		LICENSE.md = LICENSE.md
-		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -175,7 +173,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{472B72D9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{17FD2A6B-4005-41DC-BFAC-59F936DF33AA}"
 	ProjectSection(SolutionItems) = preProject
-		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
 		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 	EndProjectSection
 EndProject
@@ -190,6 +187,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureDevOpsIntegrationTests", "UnitTests\Plugins\BuildServerIntegration\AzureDevOpsIntegrationTests\AzureDevOpsIntegrationTests.csproj", "{6E2BE70D-0B5C-45D6-9D42-4497A46C370D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppVeyorIntegrationTests", "UnitTests\Plugins\BuildServerIntegration\AppVeyorIntegrationTests\AppVeyorIntegrationTests.csproj", "{2828E531-7EB3-4A52-A71E-DCE73B9907FC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ISSUE_TEMPLATE", "ISSUE_TEMPLATE", "{95A371C3-77B9-437A-892E-17CA0097106B}"
+	ProjectSection(SolutionItems) = preProject
+		.github\ISSUE_TEMPLATE\bug_report.md = .github\ISSUE_TEMPLATE\bug_report.md
+		.github\ISSUE_TEMPLATE\feature_request.md = .github\ISSUE_TEMPLATE\feature_request.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -428,6 +431,7 @@ Global
 		{BC90FFE0-7770-4979-884E-9F9F294C58C0} = {C2276A26-13DF-485A-8B2C-414CF507798F}
 		{6E2BE70D-0B5C-45D6-9D42-4497A46C370D} = {BC90FFE0-7770-4979-884E-9F9F294C58C0}
 		{2828E531-7EB3-4A52-A71E-DCE73B9907FC} = {BC90FFE0-7770-4979-884E-9F9F294C58C0}
+		{95A371C3-77B9-437A-892E-17CA0097106B} = {17FD2A6B-4005-41DC-BFAC-59F936DF33AA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}
