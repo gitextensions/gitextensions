@@ -12,7 +12,8 @@ environment:
   - IdeVersion: VS2017
   SKIP_PAUSE: TRUE
   ARCHIVE_WITH_PDB: TRUE
-  spciuser: ""
+  spciuser:
+    secure: d/ak/yIuPjpVeWl+gDR0Yl1s8L4AGP+sn46jqGl7EvVZMq0bhzZBFwBCm9JTy0P9
 
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -42,7 +43,7 @@ build_script:
 - ps: |
     Write-Output "Platform: $env:IdeVersion"
     # for release branches mark the repo as clean
-    if (!$env:APPVEYOR_PULL_REQUEST_TITLE -and $env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
+    if (!$env:APPVEYOR_PULL_REQUEST_TITLE) {
       & Setup\Mark-RepoClean.ps1
     }
     # build
@@ -72,90 +73,58 @@ test_script:
     &$codecov -f ".\OpenCover.GitExtensions.xml" --flag production
     &$codecov -f ".\OpenCover.GitExtensions.xml" --flag tests
 
-
-# here we are going to override common configuration
-for:
-
-# configuration for all branches except release/*
--
-  branches:
-    except:
-      - /release\/.*/
-
-  # scripts to run after tests
-  after_test:
-  - ps: |
-      try {
-          & pwd
-          & Setup\BuildInstallers.cmd
-          if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-          & Setup\Set-Portable.ps1
-          if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-          & Setup\MakePortableArchive.cmd Release $env:APPVEYOR_BUILD_VERSION
-          if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-      }
-      finally {
-          # -------------------------------
-          # debugging
-          # -------------------------------
-          #Write-Host "[INFO]: GitStatus.txt is to help find dirty status.  File should say repo and submodules are clean."
-          #Write-Host "[INFO]: Update the skip-worktree section in this script to fix CI builds."
-          #& git status > GitStatus.txt
-          #& git submodule foreach --recursive git status >> GitStatus.txt
-          #Push-AppveyorArtifact .\GitStatus.txt
-          #& tree /F /A > tree.txt
-          #Push-AppveyorArtifact .\tree.txt
-      }
-      
-  artifacts:
-    # upload the generated portable archive only
-    - path: 'Setup/GitExtensions-Portable-*.zip'
-    - path: 'Setup/GitExtensions-pdbs-*.zip'
-    - path: 'GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix'
-
-# configuration for release branches ONLY
--
-  branches:
-    only:
-      - /release\/.*/
-
-  environment:
-    spciuser:
-      secure: d/ak/yIuPjpVeWl+gDR0Yl1s8L4AGP+sn46jqGl7EvVZMq0bhzZBFwBCm9JTy0P9
-
-  # scripts to run after tests
-  after_test:
-  - ps: |
+# scripts to run after tests
+after_test:
+- ps: |
+    if ($env:ARTIFACT_DEBUG_ENABLED -eq $true) {
       # -------------------------------
       # debugging
       # -------------------------------
-      #Write-Host "[INFO]: GitStatus.txt is to help find dirty status.  File should say repo and submodules are clean."
-      #Write-Host "[INFO]: Update the skip-worktree section in this script to fix CI builds."
-      #& git status > GitStatus.txt
-      #& git submodule foreach --recursive git status >> GitStatus.txt
-      #Push-AppveyorArtifact .\GitStatus.txt
-      # -------------------------------
-      # build artifacts
-      # -------------------------------
-      & Setup\BuildInstallers.cmd
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-      & Setup\Set-Portable.ps1 -IsPortable
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-      & Setup\MakePortableArchive.cmd Release $env:APPVEYOR_BUILD_VERSION
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-      & Setup\Set-Portable.ps1
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-      # -------------------------------
-      # sign artifacts
-      # -------------------------------
-      # do sign artifacts for non-release branches
-      if ($env:APPVEYOR_PULL_REQUEST_TITLE -or !$env:APPVEYOR_REPO_BRANCH.StartsWith("release/")) {
-          Write-Host "[INFO]: Do not sign non-release branches"
-          Get-ChildItem .\Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-          Exit-AppVeyorBuild
-          return
-      }
-      Push-AppveyorArtifact .\GitExtensionsVSIX\bin\Release\GitExtensionsVSIX.vsix
-      # continue on with signing
-      & Setup\Sign-Artifacts.ps1
-      if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+      Write-Host "[INFO]: GitStatus.txt is to help find dirty status.  File should say repo and submodules are clean."
+      Write-Host "[INFO]: Update the skip-worktree section in this script to fix CI builds."
+      & git status > GitStatus.txt
+      & git submodule foreach --recursive git status >> GitStatus.txt
+      Push-AppveyorArtifact .\GitStatus.txt
+      & tree /F /A > tree.txt
+      Push-AppveyorArtifact .\tree.txt
+    }
+    # -------------------------------
+    # build artifacts
+    # -------------------------------
+    & Setup\BuildInstallers.cmd
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    & Setup\Set-Portable.ps1 -IsPortable
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    & Setup\MakePortableArchive.cmd Release $env:APPVEYOR_BUILD_VERSION
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    & Setup\Set-Portable.ps1
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+    # -------------------------------
+    # sign artifacts
+    # -------------------------------
+    # do sign artifacts for non-release branches
+    if ($env:APPVEYOR_PULL_REQUEST_TITLE -eq $true) {
+        Write-Host "[INFO]: Do not sign non-release branches"
+        Get-ChildItem .\Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+        Exit-AppVeyorBuild
+        return
+    }
+    # continue on with signing
+    #& Setup\Sign-Artifacts.ps1
+    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
+
+artifacts:
+  # upload the generated portable archive only
+  - path: 'Setup/GitExtensions-Portable-*.zip'
+  - path: 'Setup/GitExtensions-pdbs-*.zip'
+  - path: 'GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix'
+
+deploy:
+- provider: Webhook
+  url: https://app.signpath.io/API/v1/7c19b2cf-90f7-4d15-9b12-1b615f7c18c4/Integrations/AppVeyor?SigningPolicyId=8efd636e-c408-4406-a14a-1d481f6163bf
+  on_build_success: true
+  on_build_failure: false
+  on_build_status_changed: false
+  method: POST
+  authorization:
+     secure: d/ak/yIuPjpVeWl+gDR0Yl1s8L4AGP+sn46jqGl7EvVZMq0bhzZBFwBCm9JTy0P9
