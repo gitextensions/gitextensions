@@ -39,20 +39,20 @@ namespace GitUIPluginInterfaces
                 return new TextBox();
             }
 
-            public override void LoadSetting(ISettingsSource settings, bool areSettingsEffective, TextBox control)
+            public override void LoadSetting(ISettingsSource settings, TextBox control)
             {
-                object settingVal = areSettingsEffective
+                object settingVal = settings.SettingLevel == SettingLevel.Effective
                     ? Setting.ValueOrDefault(settings)
                     : Setting[settings];
 
                 control.Text = ConvertToString(settingVal);
             }
 
-            public override void SaveSetting(ISettingsSource settings, bool areSettingsEffective, TextBox control)
+            public override void SaveSetting(ISettingsSource settings, TextBox control)
             {
                 var controlValue = control.Text;
 
-                if (areSettingsEffective)
+                if (settings.SettingLevel == SettingLevel.Effective)
                 {
                     if (ConvertToString(Setting.ValueOrDefault(settings)) == controlValue)
                     {

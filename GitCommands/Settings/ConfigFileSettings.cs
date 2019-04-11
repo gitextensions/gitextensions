@@ -11,27 +11,31 @@ namespace GitCommands.Settings
 {
     public class ConfigFileSettings : SettingsContainer<ConfigFileSettings, ConfigFileSettingsCache>, IConfigFileSettings
     {
-        public ConfigFileSettings(ConfigFileSettings lowerPriority, ConfigFileSettingsCache settingsCache)
+        public ConfigFileSettings(ConfigFileSettings lowerPriority, ConfigFileSettingsCache settingsCache,
+            SettingLevel settingLevel)
             : base(lowerPriority, settingsCache)
         {
             core = new CorePath(this);
             mergetool = new MergeToolPath(this);
+            SettingLevel = settingLevel;
         }
 
         public static ConfigFileSettings CreateEffective(GitModule module)
         {
-            return CreateLocal(module, CreateGlobal(CreateSystemWide()));
+            return CreateLocal(module, CreateGlobal(CreateSystemWide()), SettingLevel.Effective);
         }
 
         public static ConfigFileSettings CreateLocal(GitModule module, bool allowCache = true)
         {
-            return CreateLocal(module, null, allowCache);
+            return CreateLocal(module, null, SettingLevel.Local, allowCache);
         }
 
-        private static ConfigFileSettings CreateLocal(GitModule module, ConfigFileSettings lowerPriority, bool allowCache = true)
+        private static ConfigFileSettings CreateLocal(GitModule module, ConfigFileSettings lowerPriority,
+            SettingLevel settingLevel, bool allowCache = true)
         {
             return new ConfigFileSettings(lowerPriority,
-                ConfigFileSettingsCache.Create(Path.Combine(module.GitCommonDirectory, "config"), true, allowCache));
+                ConfigFileSettingsCache.Create(Path.Combine(module.GitCommonDirectory, "config"), true, allowCache),
+                settingLevel);
         }
 
         public static ConfigFileSettings CreateGlobal(bool allowCache = true)
@@ -47,8 +51,8 @@ namespace GitCommands.Settings
                 configPath = Path.Combine(EnvironmentConfiguration.GetHomeDir(), ".gitconfig");
             }
 
-            return new ConfigFileSettings(lowerPriority,
-                ConfigFileSettingsCache.Create(configPath, false, allowCache));
+            return new ConfigFileSettings(lowerPriority, ConfigFileSettingsCache.Create(configPath, false, allowCache),
+                SettingLevel.Global);
         }
 
         [CanBeNull]
@@ -67,7 +71,7 @@ namespace GitCommands.Settings
             }
 
             return new ConfigFileSettings(null,
-                ConfigFileSettingsCache.Create(configPath, false, allowCache));
+                ConfigFileSettingsCache.Create(configPath, false, allowCache), SettingLevel.SystemWide);
         }
 
         public readonly CorePath core;

@@ -51,19 +51,19 @@ namespace GitUIPluginInterfaces
                 return new CheckBox { ThreeState = true };
             }
 
-            public override void LoadSetting(ISettingsSource settings, bool areSettingsEffective, CheckBox control)
+            public override void LoadSetting(ISettingsSource settings, CheckBox control)
             {
-                bool? settingVal = areSettingsEffective
+                bool? settingVal = settings.SettingLevel == SettingLevel.Effective
                     ? Setting.ValueOrDefault(settings)
                     : Setting[settings];
 
                 control.SetNullableChecked(settingVal);
             }
 
-            public override void SaveSetting(ISettingsSource settings, bool areSettingsEffective, CheckBox control)
+            public override void SaveSetting(ISettingsSource settings, CheckBox control)
             {
                 var controlValue = control.GetNullableChecked();
-                if (areSettingsEffective)
+                if (settings.SettingLevel == SettingLevel.Effective)
                 {
                     if (Setting.ValueOrDefault(settings) == controlValue)
                     {

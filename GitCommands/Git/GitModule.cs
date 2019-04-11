@@ -218,7 +218,7 @@ namespace GitCommands
                     {
                         if (_localSettings == null)
                         {
-                            _localSettings = new RepoDistSettings(null, EffectiveSettings.SettingsCache);
+                            _localSettings = new RepoDistSettings(null, EffectiveSettings.SettingsCache, SettingLevel.Local);
                         }
                     }
                 }
@@ -249,7 +249,7 @@ namespace GitCommands
             }
         }
 
-        public ConfigFileSettings LocalConfigFile => new ConfigFileSettings(null, EffectiveConfigFile.SettingsCache);
+        public ConfigFileSettings LocalConfigFile => new ConfigFileSettings(null, EffectiveConfigFile.SettingsCache, SettingLevel.Local);
 
         IConfigFileSettings IGitModule.LocalConfigFile => LocalConfigFile;
 

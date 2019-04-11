@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GitCommands.Settings;
+using GitUIPluginInterfaces;
 
 namespace GitCommands.ExternalLinks
 {
@@ -15,7 +16,7 @@ namespace GitCommands.ExternalLinks
 
         public ExternalLinksManager(RepoDistSettings settings)
         {
-            _cachedSettings = new RepoDistSettings(null, settings.SettingsCache);
+            _cachedSettings = new RepoDistSettings(null, settings.SettingsCache, settings.SettingLevel);
             _definitions = _externalLinksStorage.Load(_cachedSettings).ToList();
 
             if (settings.LowerPriority != null)

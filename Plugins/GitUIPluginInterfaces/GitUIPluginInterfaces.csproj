@@ -71,6 +71,7 @@
     <Compile Include="BuildServerIntegration\IBuildServerSettingsUserControl.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerTypeMetadata.cs" />
     <Compile Include="BuildServerIntegration\IBuildServerWatcher.cs" />
+    <Compile Include="CredentialsManager.cs" />
     <Compile Include="ExecutionResult.cs" />
     <Compile Include="FontParser.cs" />
     <Compile Include="GitCmdResult.cs" />
@@ -88,6 +89,8 @@
     <Compile Include="IGitRemoteCommand.cs" />
     <Compile Include="ILockableNotifier.cs" />
     <Compile Include="IProcess.cs" />
+    <Compile Include="ISettingControlBinding.cs" />
+    <Compile Include="SettingLevel.cs" />
     <Compile Include="ISettingsValueGetter.cs" />
     <Compile Include="ObjectId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -107,14 +110,26 @@
     <Compile Include="RepositoryHosts\IPullRequestInformation.cs" />
     <Compile Include="Settings\NumberSetting.cs" />
     <Compile Include="Settings\ChoiceSetting.cs" />
+    <Compile Include="Settings\CredentialsSetting.cs" />
     <Compile Include="Settings\PasswordSetting.cs" />
     <Compile Include="Settings\StringSetting.cs" />
+    <Compile Include="UserControls\CredentialsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\CredentialsControl.Designer.cs">
+      <DependentUpon>CredentialsControl.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\GitExtUtils\GitExtUtils.csproj">
       <Project>{0f1f1168-a4b2-4fa2-b17b-735140d17f39}</Project>
       <Name>GitExtUtils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UserControls\CredentialsControl.resx">
+      <DependentUpon>CredentialsControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
