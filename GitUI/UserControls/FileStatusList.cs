@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -59,6 +58,7 @@ namespace GitUI
             _sortByContextMenu = CreateSortByContextMenuItem();
             SetupUnifiedDiffListSorting();
             lblSplitter.Height = DpiUtil.Scale(1);
+            FilterComboBox.Font = new Font(FilterComboBox.Font, FontStyle.Bold);
             InitializeComplete();
             FilterVisible = false;
 
@@ -1338,9 +1338,8 @@ namespace GitUI
 
         private int FilterFiles(string value)
         {
-            _filter = string.IsNullOrEmpty(value)
-                ? null
-                : new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            StoreFilter(value);
+
             UpdateFileStatusListView(updateCausedByFilter: true);
             return FileStatusListView.Items.Count;
         }
@@ -1468,6 +1467,27 @@ namespace GitUI
             FileStatusListView.Sort();
         }
 
+        private void StoreFilter(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                FilterComboBox.BackColor = SystemColors.Window;
+                _filter = null;
+                return;
+            }
+
+            try
+            {
+                _filter = new Regex(value, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                FilterComboBox.BackColor = _activeInputColor;
+            }
+            catch
+            {
+                FilterComboBox.BackColor = _invalidInputColor;
+                throw;
+            }
+        }
+
         private class GitStatusListSorter : Comparer<ListViewItem>
         {
             public IComparer<GitItemStatus> StatusComparer { get; }
@@ -1518,6 +1538,12 @@ namespace GitUI
 
         #endregion
 
+        #region private Color constants
+        //// Do not declare the colors "static" because Color.FromArgb() will not work at their initialization.
+        private readonly Color _activeInputColor = Color.FromArgb(0xC8, 0xFF, 0xC8);
+        private readonly Color _invalidInputColor = Color.FromArgb(0xFF, 0xC8, 0xC8);
+        #endregion
+
         internal TestAccessor GetTestAccessor() => new TestAccessor(this);
 
         internal readonly struct TestAccessor
@@ -1529,9 +1555,13 @@ namespace GitUI
                 _fileStatusList = fileStatusList;
             }
 
+            internal Color ActiveInputColor => _fileStatusList._activeInputColor;
+            internal Color InvalidInputColor => _fileStatusList._invalidInputColor;
             internal ListView FileStatusListView => _fileStatusList.FileStatusListView;
             internal ComboBox FilterComboBox => _fileStatusList.FilterComboBox;
+            internal Regex Filter => _fileStatusList._filter;
             internal bool FilterWatermarkLabelVisible => _fileStatusList.FilterWatermarkLabel.Visible;
+            internal void StoreFilter(string value) => _fileStatusList.StoreFilter(value);
         }
     }
 }
