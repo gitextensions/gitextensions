@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitUI;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace GitCommandsTests
@@ -571,6 +574,21 @@ namespace GitCommandsTests
             Assert.AreEqual(expected, _gitModule.GetSortedRefsCommand(noLocks).ToString());
         }
 
+        [Test]
+        public void GetSortedRefs_should_throw_on_git_warning()
+        {
+            GitModule module = GetGitModuleWithMockedResultOfGitCommand("refs/heads/master\nwarning: message");
+            ((Action)(() => module.GetSortedRefs())).Should().Throw<RefsWarningException>();
+        }
+
+        [Test]
+        public void GetSortedRefs_should_split_output_if_no_warning()
+        {
+            string output = "refs/remotes/origin/master\nrefs/heads/master\nrefs/heads/warning"; // does not contain "warning:"
+            GitModule module = GetGitModuleWithMockedResultOfGitCommand(output);
+            module.GetSortedRefs().Should().BeEquivalentTo(output.Split());
+        }
+
         [TestCase(@"show-ref --dereference", true, true, false)]
         [TestCase(@"show-ref --tags", true, false, false)]
         [TestCase(@"for-each-ref --sort=-committerdate refs/heads/ --format=""%(objectname) %(refname)""", false, true, false)]
@@ -588,6 +606,13 @@ namespace GitCommandsTests
 
             var actual = accessor.UpdateIndexCmd(showErrorsWhenStagingFiles).ToString();
             Assert.AreEqual(expected, actual);
+        }
+
+        private GitModule GetGitModuleWithMockedResultOfGitCommand(string result)
+        {
+            var executable = Substitute.For<IExecutable>();
+            executable.GetOutput(Arg.Any<ArgumentString>()).Returns(x => result);
+            return new GitModule(null, executable);
         }
     }
 }
