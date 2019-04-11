@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Atlassian.Jira;
+using GitExtUtils.GitUI;
 using GitUI;
 using GitUIPluginInterfaces;
 using JiraCommitHintPlugin.Properties;
@@ -96,18 +97,39 @@ namespace JiraCommitHintPlugin
             _jqlQuerySettings.CustomControl = new TextBox();
             yield return _jqlQuerySettings;
 
-            var queryHelperLink = new LinkLabel { Text = QueryHelperLinkText, Width = 300 };
+            var queryHelperLink = new LinkLabel { Text = QueryHelperLinkText, Width = DpiUtil.Scale(300) };
             queryHelperLink.Click += QueryHelperLink_Click;
-            var txtJiraQueryHelpLink = new TextBox { ReadOnly = true, BorderStyle = BorderStyle.None, Width = 300 };
+            var txtJiraQueryHelpLink = new TextBox { ReadOnly = true, BorderStyle = BorderStyle.None, Width = DpiUtil.Scale(300) };
             txtJiraQueryHelpLink.Controls.Add(queryHelperLink);
             _jiraQueryHelpLink.CustomControl = txtJiraQueryHelpLink;
             yield return _jiraQueryHelpLink;
 
-            _jiraFields.CustomControl = new TextBox { ReadOnly = true, Multiline = true, Height = 55, BorderStyle = BorderStyle.None };
+            _jiraFields.CustomControl = new TextBox
+            {
+                ReadOnly = true,
+                Multiline = true,
+                Height = DpiUtil.Scale(55),
+                BorderStyle = BorderStyle.None
+            };
             yield return _jiraFields;
 
-            var txtTemplate = new TextBox { Height = 75, Multiline = true, ScrollBars = ScrollBars.Horizontal };
-            _btnPreview = new Button { Text = PreviewButtonText, Top = 45, Anchor = AnchorStyles.Right };
+            var txtTemplate = new TextBox
+            {
+                Height = DpiUtil.Scale(75),
+                Multiline = true,
+                ScrollBars = ScrollBars.Horizontal
+            };
+            txtTemplate.SizeChanged += (s, e) =>
+            {
+                _btnPreview.Left = txtTemplate.Width - _btnPreview.Width - DpiUtil.Scale(8);
+            };
+            _btnPreview = new Button
+            {
+                Text = PreviewButtonText,
+                Top = DpiUtil.Scale(45),
+                Anchor = AnchorStyles.Right
+            };
+            _btnPreview.Size = DpiUtil.Scale(_btnPreview.Size);
             _btnPreview.Click += btnPreviewClick;
             txtTemplate.Controls.Add(_btnPreview);
             _stringTemplateSetting.CustomControl = txtTemplate;
