@@ -452,6 +452,8 @@ xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitCommands.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitExtUtils.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\AdysTech.CredentialManager.dll GitExtensions\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitExtensions.exe GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\GitExtensions.exe.config GitExtensions\

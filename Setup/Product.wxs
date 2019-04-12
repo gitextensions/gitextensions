@@ -102,6 +102,9 @@
       <Component Id="GitExtUtils.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\GitExtUtils.dll" />
       </Component>
+      <Component Id="AdysTech.CredentialManager.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\AdysTech.CredentialManager.dll" />
+      </Component>
       <Component Id="GitUI.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\GitUI.dll" />
       </Component>
@@ -1540,6 +1543,7 @@
       <ComponentRef Id="GitExtensions.exe.config" />
       <ComponentRef Id="GitCommands.dll" />
       <ComponentRef Id="GitExtUtils.dll" />
+      <ComponentRef Id="AdysTech.CredentialManager.dll" />
       <ComponentRef Id="GitUI.dll" />
       <ComponentRef Id="ConEmu.WinForms.dll" />
       <ComponentRef Id="PSTaskDialog.dll" />
