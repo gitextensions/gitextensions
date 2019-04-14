@@ -1417,7 +1417,7 @@ namespace GitCommands
                 new GitArgumentBuilder("format-patch")
                 {
                     "-M -C -B",
-                    { start != null, $"-- start-number {start}" },
+                    { start != null, $"--start-number {start}" },
                     $"{from.Quote()}..{to.Quote()}",
                     $"-o {output.ToPosixPath().Quote()}"
                 });
