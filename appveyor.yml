@@ -113,9 +113,16 @@ after_test:
     # continue on with signing
     #& Setup\Sign-Artifacts.ps1
     # get files
+    Get-ChildItem -Path . -Filter *.msi -Recurse
+    Get-ChildItem -Path . -Filter *.zip -Recurse
+    Get-ChildItem -Path . -Filter *.vsix -Recurse
     $msi = (Resolve-Path ./Setup/GitExtensions-*.msi)[0].Path;
     $zip = (Resolve-Path ./Setup/GitExtensions-Portable-*.zip)[0].Path;
     $vsix = (Resolve-Path ./GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix)[0].Path;
+    Write-Host "pwd: $(pwd)"
+    Write-Host "msi: $msi"
+    Write-Host "zip: $zip"
+    Write-Host "vsix: $vsix"
     # archive files so we send them all in one go
     $combined = ".\combined.$($env:APPVEYOR_BUILD_VERSION).zip"
     Compress-Archive -LiteralPath $msi, $zip, $vsix -CompressionLevel NoCompression -DestinationPath $combined -Force
