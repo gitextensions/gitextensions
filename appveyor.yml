@@ -51,9 +51,10 @@ build_script:
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 # to run your custom scripts instead of automatic tests
-test: off
-#test_script:
-#- ps: |
+#test: off
+test_script:
+- ps: |
+    Write-Host "Tests are running..."
 #    $testAssemblies = (Get-ChildItem -Path UnitTests -Filter '*Tests.dll' -Recurse -Exclude 'ApprovalTests.dll').FullName | Where-Object { $_.Contains('\bin\Release') }
 #    $packageConfig = [xml](Get-Content .nuget\packages.config)
 #    $opencover_version = $packageConfig.SelectSingleNode('/packages/package[@id="OpenCover"]').version
