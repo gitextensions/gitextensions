@@ -73,6 +73,7 @@
     <Compile Include="CommandsDialogs\FileStatusListTests.cs" />
     <Compile Include="CommandsDialogs\FormEditorTests.cs" />
     <Compile Include="CommandsDialogs\FormFileHistoryControllerTests.cs" />
+    <Compile Include="CommandsDialogs\PathFormatterTests.cs" />
     <Compile Include="CommandsDialogs\ReferenceRepository.cs" />
     <Compile Include="CommandsDialogs\RevisionDiffContextMenuControllerTests.cs" />
     <Compile Include="CommandsDialogs\RevisionFileTreeControllerTests.cs" />

@@ -28,23 +28,25 @@ namespace GitUI
             _font = font ?? throw new ArgumentNullException(nameof(font));
         }
 
-        public (string Text, int Width) FormatTextForDrawing(int maxWidth, string name, string oldName)
+        public (string Prefix, string Text, string Suffix, int Width) FormatTextForDrawing(int maxWidth, string name, string oldName)
         {
-            string result = string.Empty;
+            string prefix = null;
+            string text = string.Empty;
+            string suffix = null;
             int width = 0;
 
             switch (AppSettings.TruncatePathMethod)
             {
                 case TruncatePathMethod.FileNameOnly:
-                    result = FormatTextForFileNameOnly(name, oldName);
-                    width = MeasureString(result, withPadding: true).Width;
-                    return (result, width);
+                    (text, suffix) = FormatTextForFileNameOnly(name, oldName);
+                    width = MeasureString(prefix, text, suffix).Width;
+                    return (prefix, text, suffix, width);
 
                 case TruncatePathMethod.None:
                 case TruncatePathMethod.Compact when !EnvUtils.RunningOnWindows():
-                    result = FormatString(name, oldName, step: 0, isNameTruncated: false);
-                    width = MeasureString(result, withPadding: true).Width;
-                    return (result, width);
+                    (prefix, text, suffix) = FormatString(name, oldName, step: 0, isNameTruncated: false);
+                    width = MeasureString(prefix, text, suffix).Width;
+                    return (prefix, text, suffix, width);
 
                 default:
                     int maxStep = oldName == null
@@ -53,36 +55,39 @@ namespace GitUI
 
                     BinarySearch.Find(min: 0, count: maxStep + 1, step =>
                     {
-                        var formatted = FormatString(name, oldName, step, isNameTruncated: step % 2 == 0);
-                        int measuredWidth = MeasureString(formatted, withPadding: true).Width;
+                        var (tmpPrefix, tmpText, tmpSuffix) = FormatString(name, oldName, step, isNameTruncated: step % 2 == 0);
+                        int measuredWidth = MeasureString(tmpPrefix, tmpText, tmpSuffix).Width;
                         bool isShortEnough = measuredWidth <= maxWidth;
 
                         if (isShortEnough)
                         {
-                            result = formatted;
+                            prefix = tmpPrefix;
+                            text = tmpText;
+                            suffix = tmpSuffix;
                             width = measuredWidth;
                         }
 
                         return isShortEnough;
                     });
 
-                    return (result, width);
+                    return (prefix, text, suffix, width);
             }
         }
 
         [CanBeNull]
-        public static string FormatTextForFileNameOnly(string name, string oldName)
+        public static (string Text, string Suffix) FormatTextForFileNameOnly(string name, string oldName)
         {
             name = name.TrimEnd(PathUtil.PosixDirectorySeparatorChar);
             var fileName = Path.GetFileName(name);
             var oldFileName = Path.GetFileName(oldName);
+            string suffix = fileName == oldFileName ? null : FormatOldName(oldFileName);
+            return (fileName, suffix);
+        }
 
-            if (fileName == oldFileName)
-            {
-                oldFileName = null;
-            }
-
-            return fileName.Combine(" ", oldFileName.AddParenthesesNE());
+        public Size MeasureString(string prefix, string text, string suffix)
+        {
+            string str = prefix.Combine(string.Empty, text).Combine(string.Empty, suffix);
+            return MeasureString(str, withPadding: true);
         }
 
         public Size MeasureString(string str, bool withPadding = false)
@@ -104,7 +109,7 @@ namespace GitUI
         public void DrawString(string str, Rectangle rect, Color color) =>
             TextRenderer.DrawText(_graphics, str, _font, rect, color, FilePathStringFormat);
 
-        private static string FormatString(string name, string oldName, int step, bool isNameTruncated)
+        private static (string Prefix, string Text, string Suffix) FormatString(string name, string oldName, int step, bool isNameTruncated)
         {
             if (oldName != null)
             {
@@ -112,11 +117,13 @@ namespace GitUI
                 int nameTruncatedChars = isNameTruncated ? step - numberOfTruncatedChars : numberOfTruncatedChars;
                 int oldNameTruncatedChars = step - nameTruncatedChars;
 
-                return string.Concat(TruncatePath(name, name.Length - oldNameTruncatedChars), " (",
-                                     TruncatePath(oldName, oldName.Length - oldNameTruncatedChars), ")");
+                var (path, filename) = SplitPathName(TruncatePath(name, name.Length - oldNameTruncatedChars));
+                string suffix = FormatOldName(TruncatePath(oldName, oldName.Length - oldNameTruncatedChars));
+                return (path, filename, suffix);
             }
 
-            return TruncatePath(name, name.Length - step);
+            var (prefix, text) = SplitPathName(TruncatePath(name, name.Length - step));
+            return (prefix, text, null);
 
             string TruncatePath(string path, int length)
             {
@@ -149,10 +156,39 @@ namespace GitUI
             }
         }
 
+        private static string FormatOldName(string oldName)
+        {
+            return string.IsNullOrEmpty(oldName) ? null : " (" + oldName + ")";
+        }
+
+        private static (string Path, string FileName) SplitPathName(string name)
+        {
+            if (name == null)
+            {
+                return (null, null);
+            }
+
+            int slashIndex = name.LastIndexOf(PathUtil.PosixDirectorySeparatorChar);
+            if (slashIndex >= 0 && slashIndex < name.Length)
+            {
+                string path = name.Substring(0, slashIndex + 1);
+                string fileName = name.Substring(slashIndex + 1);
+                return (path, fileName);
+            }
+
+            return (null, name);
+        }
+
         private const TextFormatFlags FilePathStringFormat =
             TextFormatFlags.NoClipping |
             TextFormatFlags.NoPrefix |
             TextFormatFlags.VerticalCenter |
             TextFormatFlags.TextBoxControl;
+
+        internal class TestAccessor
+        {
+            internal static string FormatOldName(string oldName) => PathFormatter.FormatOldName(oldName);
+            internal static (string Path, string FileName) SplitPathName(string name) => PathFormatter.SplitPathName(name);
+        }
     }
 }
