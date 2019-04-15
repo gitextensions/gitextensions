@@ -608,6 +608,26 @@ namespace GitCommandsTests
             Assert.AreEqual(expected, actual);
         }
 
+        [TestCase(new object[] { "123", "567", "output.file", null })]
+        [TestCase(new object[] { "123", "567", "output.file", 1 })]
+        [TestCase(new object[] { "123", "567", "output.file", 2 })]
+        public void Test_FormatPatch(string from, string to, string outputFile, int? start)
+        {
+            var arguments = new StringBuilder();
+            arguments.Append("format-patch -M -C -B");
+            if (start != null)
+            {
+                arguments.AppendFormat(" --start-number {0}", start);
+            }
+
+            arguments.AppendFormat(" \"{0}\"..\"{1}\" -o \"{2}\"", from, to, outputFile);
+
+            string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
+
+            _executable.StageOutput(arguments.ToString(), dummyCommandOutput);
+            _gitModule.FormatPatch(from, to, outputFile, start).Should().Be(dummyCommandOutput);
+        }
+
         private GitModule GetGitModuleWithMockedResultOfGitCommand(string result)
         {
             var executable = Substitute.For<IExecutable>();
