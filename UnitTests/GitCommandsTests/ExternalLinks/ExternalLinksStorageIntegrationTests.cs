@@ -3,6 +3,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.ExternalLinks;
 using GitCommands.Settings;
+using GitUIPluginInterfaces;
 using NUnit.Framework;
 
 namespace GitCommandsTests.ExternalLinks
@@ -30,7 +31,7 @@ namespace GitCommandsTests.ExternalLinks
                 var settingsFile = testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
                 using (var settingsCache = new GitExtSettingsCache(settingsFile))
                 {
-                    var settings = new RepoDistSettings(null, settingsCache);
+                    var settings = new RepoDistSettings(null, settingsCache, SettingLevel.Unknown);
 
                     var definitions = _externalLinksStorage.Load(settings);
                     definitions.Count.Should().Be(expected);

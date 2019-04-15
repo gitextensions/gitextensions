@@ -26,6 +26,12 @@ namespace GitUI
 
         private ISettingsSource ExternalSettings => _settingsSource ?? AppSettings.SettingsContainer;
 
+        public override SettingLevel SettingLevel
+        {
+            get => ExternalSettings.SettingLevel;
+            set => throw new InvalidOperationException(nameof(SettingLevel));
+        }
+
         public override T GetValue<T>(string name, T defaultValue, Func<string, T> decode)
         {
             return ExternalSettings.GetValue(_pluginName + name, defaultValue, decode);

@@ -5,6 +5,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.ExternalLinks;
 using GitCommands.Settings;
+using GitUIPluginInterfaces;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -35,9 +36,9 @@ namespace GitCommandsTests.ExternalLinks
             content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level3_roaming_GitExtensions.settings.xml");
             _level3 = _testHelper.CreateRepoFile("GitExtensions.settings", content);
 
-            _userRoaming = new RepoDistSettings(null, new GitExtSettingsCache(_level3));
-            _repoDistributed = new RepoDistSettings(_userRoaming, new GitExtSettingsCache(_level2));
-            _repoLocal = new RepoDistSettings(_repoDistributed, new GitExtSettingsCache(_level1));
+            _userRoaming = new RepoDistSettings(null, new GitExtSettingsCache(_level3), SettingLevel.Global);
+            _repoDistributed = new RepoDistSettings(_userRoaming, new GitExtSettingsCache(_level2), SettingLevel.Distributed);
+            _repoLocal = new RepoDistSettings(_repoDistributed, new GitExtSettingsCache(_level1), SettingLevel.Local);
 
             _externalLinksStorage = Substitute.For<IExternalLinksStorage>();
 

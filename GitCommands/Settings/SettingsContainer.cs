@@ -6,6 +6,8 @@ namespace GitCommands.Settings
 {
     public class SettingsContainer<TLowerPriority, TCache> : ISettingsSource where TLowerPriority : SettingsContainer<TLowerPriority, TCache> where TCache : SettingsCache
     {
+        private readonly ICredentialsManager _credentialsManager = new CredentialsManager();
+
         [CanBeNull]
         public TLowerPriority LowerPriority { get; }
         [NotNull]
@@ -34,6 +36,7 @@ namespace GitCommands.Settings
 
         public void Save()
         {
+            _credentialsManager.Save();
             SettingsCache.Save();
             LowerPriority?.Save();
         }

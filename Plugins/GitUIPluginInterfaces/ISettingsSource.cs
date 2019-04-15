@@ -7,6 +7,8 @@ namespace GitUIPluginInterfaces
 {
     public abstract class ISettingsSource
     {
+        public virtual SettingLevel SettingLevel { get; set; } = SettingLevel.Unknown;
+
         public abstract T GetValue<T>([NotNull] string name, T defaultValue, [NotNull] Func<string, T> decode);
 
         public abstract void SetValue<T>([NotNull] string name, T value, [NotNull] Func<T, string> encode);
