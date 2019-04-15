@@ -12,8 +12,6 @@ environment:
   - IdeVersion: VS2017
   SKIP_PAUSE: TRUE
   ARCHIVE_WITH_PDB: TRUE
-  spciuser:
-    secure: d/ak/yIuPjpVeWl+gDR0Yl1s8L4AGP+sn46jqGl7EvVZMq0bhzZBFwBCm9JTy0P9
 
 init:
   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -44,7 +42,7 @@ build_script:
     Write-Output "Platform: $env:IdeVersion"
     # for release branches mark the repo as clean
     if (!$env:APPVEYOR_PULL_REQUEST_TITLE) {
-      & Setup\Mark-RepoClean.ps1
+      & Build\Mark-RepoClean.ps1
     }
     # build
     & Setup\Build.cmd
@@ -55,84 +53,26 @@ build_script:
 test_script:
 - ps: |
     Write-Host "Tests are running..."
-#    $testAssemblies = (Get-ChildItem -Path UnitTests -Filter '*Tests.dll' -Recurse -Exclude 'ApprovalTests.dll').FullName | Where-Object { $_.Contains('\bin\Release') }
-#    $packageConfig = [xml](Get-Content .nuget\packages.config)
-#    $opencover_version = $packageConfig.SelectSingleNode('/packages/package[@id="OpenCover"]').version
-#    $opencover_console = "packages\OpenCover.$opencover_version\tools\OpenCover.Console.exe"
-#    &$opencover_console `
-#        -register:user `
-#        -returntargetcode `
-#        -hideskipped:All `
-#        -filter:"+[*]* -[FluentAssertions*]* -[SmartFormat*]* -[nunit*]*" `
-#        -excludebyattribute:*.ExcludeFromCodeCoverage* `
-#        -excludebyfile:*\*Designer.cs `
-#        -output:"OpenCover.GitExtensions.xml" `
-#        -target:"nunit3-console.exe" `
-#        -targetargs:"$testAssemblies"
-#    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-#    $codecov_version = $packageConfig.SelectSingleNode('/packages/package[@id="Codecov"]').version
-#    $codecov = "packages\Codecov.$codecov_version\tools\codecov.exe"
-#    &$codecov -f ".\OpenCover.GitExtensions.xml" --flag production
-#    &$codecov -f ".\OpenCover.GitExtensions.xml" --flag tests
+    & .\Build\Run-Tests.ps1
 
 # scripts to run after tests
 after_test:
 - ps: |
-    if ($env:ARTIFACT_DEBUG_ENABLED -eq $true) {
-      # -------------------------------
-      # debugging
-      # -------------------------------
-      Write-Host "[INFO]: GitStatus.txt is to help find dirty status.  File should say repo and submodules are clean."
-      Write-Host "[INFO]: Update the skip-worktree section in this script to fix CI builds."
-      & git status > GitStatus.txt
-      & git submodule foreach --recursive git status >> GitStatus.txt
-      Push-AppveyorArtifact .\GitStatus.txt
-      & tree /F /A > tree.txt
-      Push-AppveyorArtifact .\tree.txt
-    }
-    # -------------------------------
-    # build artifacts
-    # -------------------------------
-    & Setup\BuildInstallers.cmd
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    & Setup\Set-Portable.ps1 -IsPortable
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    & Setup\MakePortableArchive.cmd Release $env:APPVEYOR_BUILD_VERSION
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    & Setup\Set-Portable.ps1
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    # -------------------------------
-    # sign artifacts
-    # -------------------------------
-    # do sign artifacts for non-release branches
+    Write-Host "Preparing build artifacts..."
+    & .\Build\Prepare-Artifacts.ps1
+    # do not sign artifacts for non-release branches, publish dev builds
     if ($env:APPVEYOR_PULL_REQUEST_TITLE -eq $true) {
         Write-Host "[INFO]: Do not sign non-release branches"
         Get-ChildItem .\Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+        Get-ChildItem ./GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
         Exit-AppVeyorBuild
         return
     }
-    # continue on with signing
-    #& Setup\Sign-Artifacts.ps1
-    # get files
-    $msi = (Resolve-Path ./Setup/GitExtensions-*.msi)[0].Path;
-    $zip = (Resolve-Path ./Setup/GitExtensions-Portable-*.zip)[0].Path;
-    $vsix = (Resolve-Path ./GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix)[0].Path;
-    Write-Host "pwd: $(pwd)"
-    Write-Host "msi: $msi"
-    Write-Host "zip: $zip"
-    Write-Host "vsix: $vsix"
-    # archive files so we send them all in one go
-    $combined = ".\combined.$($env:APPVEYOR_BUILD_VERSION).zip"
-    Compress-Archive -LiteralPath $msi, $zip, $vsix -CompressionLevel NoCompression -DestinationPath $combined -Force
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 artifacts:
   # upload the generated portable archive only
-  - path: 'combined.*.zip'
-  - path: Setup/GitExtensions-pdbs-*.zip
-    name: GitExtensions-pdbs-*.zip
-  - path: GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix
-    name: GitExtensionsVSIX.vsix
+  - path: 'combined.*-unsigned.zip'
+  - path: GitExtensions-pdbs-*.zip
 
 deploy:
 - provider: Webhook
