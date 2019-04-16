@@ -319,10 +319,43 @@ namespace GitCommandsTests
         [TestCase(null)]
         [TestCase("")]
         [TestCase("\t")]
-        [TestCase("012345678abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789")]
         public void RevParse_should_return_null_if_invalid(string revisionExpression)
         {
             _gitModule.RevParse(revisionExpression).Should().BeNull();
+        }
+
+        [Test]
+        public void RevParse_should_return_null_if_revisionExpression_exceeds_260_symbols()
+        {
+            var revisionExpression = new string('a', 261);
+            _gitModule.RevParse(revisionExpression).Should().BeNull();
+        }
+
+        [Test]
+        public void RevParse_should_return_ObjectId_if_revisionExpression_is_valid_hash()
+        {
+            var revisionExpression = new string('1', ObjectId.Sha1CharCount);
+            _gitModule.RevParse(revisionExpression).Should().Be(ObjectId.WorkTreeId);
+        }
+
+        [Test]
+        public void RevParse_should_query_git_and_return_ObjectId_if_get_valid_hash()
+        {
+            var revisionExpression = "11111";
+            using (_executable.StageOutput($"rev-parse \"{revisionExpression}~0\"", new string('1', ObjectId.Sha1CharCount), 0))
+            {
+                _gitModule.RevParse(revisionExpression).Should().Be(ObjectId.WorkTreeId);
+            }
+        }
+
+        [Test]
+        public void RevParse_should_query_git_and_return_null_if_invalid_response()
+        {
+            var revisionExpression = "11111";
+            using (_executable.StageOutput($"rev-parse \"{revisionExpression}~0\"", "foo bar", 0))
+            {
+                _gitModule.RevParse(revisionExpression).Should().BeNull();
+            }
         }
 
         [Test]
