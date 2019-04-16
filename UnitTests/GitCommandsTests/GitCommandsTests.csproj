@@ -70,7 +70,7 @@
     <Compile Include="StreamExtensionsTests.cs" />
     <Compile Include="MockExecutable.cs" />
     <Compile Include="RepoNameExtractorTest.cs" />
-    <Compile Include="GitModuleTest.cs" />
+    <Compile Include="GitModuleTests.cs" />
     <Compile Include="GitRevisionInfoProviderTests.cs" />
     <Compile Include="GitRevisionTests.cs" />
     <Compile Include="Git\DetachedHeadParserTests.cs" />

@@ -3514,6 +3514,11 @@ namespace GitCommands
         [CanBeNull]
         public ObjectId RevParse(string revisionExpression)
         {
+            if (string.IsNullOrWhiteSpace(revisionExpression) || revisionExpression.Length > 260)
+            {
+                return null;
+            }
+
             if (ObjectId.TryParse(revisionExpression, out var objectId))
             {
                 return objectId;
