@@ -42,5 +42,6 @@ Compress-Archive -LiteralPath $msi, $zip, $vsix -CompressionLevel NoCompression 
 
 # move the pdbs to the root folder, so the published artifact looks nicer
 Move-Item -Path ./Setup/GitExtensions-pdbs-*.zip -Destination . -Force
+Move-Item -Path ./GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix -Destination . -Force
 
 if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }

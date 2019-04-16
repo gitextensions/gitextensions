@@ -63,8 +63,8 @@ after_test:
     # do not sign artifacts for non-release branches, publish dev builds
     if ($env:APPVEYOR_PULL_REQUEST_TITLE -eq $true) {
         Write-Host "[INFO]: Do not sign non-release branches"
-        Get-ChildItem .\Setup\GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
-        Get-ChildItem ./GitExtensionsVSIX/bin/Release/GitExtensionsVSIX.vsix | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+        Get-ChildItem GitExtensions-Portable-*.zip | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+        Get-ChildItem GitExtensionsVSIX.vsix | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
         Exit-AppVeyorBuild
         return
     }
