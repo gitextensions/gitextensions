@@ -123,6 +123,17 @@ namespace GitCommands
             return fileName;
         }
 
+        [NotNull]
+        public static string NormalizePath([NotNull] this string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return string.Empty;
+            }
+
+            return Path.GetFullPath(new Uri(path).LocalPath);
+        }
+
         [ContractAnnotation("=>false,posixPath:null")]
         [ContractAnnotation("=>true,posixPath:notnull")]
         public static bool TryConvertWindowsPathToPosix([NotNull] string path, out string posixPath)
