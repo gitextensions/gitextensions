@@ -82,6 +82,7 @@ namespace GitUI.UserControls
         {
             if (DiffFiles.SelectedItem == null || DiffFiles.Revision == null)
             {
+                DiffText.Clear();
                 return;
             }
 
