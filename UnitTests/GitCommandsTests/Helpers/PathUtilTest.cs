@@ -183,6 +183,28 @@ namespace GitCommandsTests.Helpers
         [TestCase(null)]
         [TestCase("")]
         [TestCase(" ")]
+        public void NormalizePath(string path)
+        {
+            PathUtil.NormalizePath(path).Should().BeEmpty();
+        }
+
+        [Platform(Include = "Win")]
+        [TestCase("a:\\folder\\filename.txt", "a:\\folder\\filename.txt")]
+        [TestCase("a:\\folder\\..\\filename.txt", "a:\\filename.txt")]
+        [TestCase("file:///C:/Test%20Project.exe", "C:\\Test Project.exe")]
+        [TestCase("C:\\Progra~1\\", "C:\\Program Files\\")]
+        [TestCase("C:\\Progra~1", "C:\\Program Files")]
+        [TestCase("\\\\folder\\filename.txt", "\\\\folder\\filename.txt")]
+        [TestCase("a:\\\\folder/filename.txt", "a:\\folder\\filename.txt")]
+        public void NormalizePath(string path, string expected)
+        {
+            PathUtil.NormalizePath(path).Should().Be(expected);
+        }
+
+        [Platform(Include = "Win")]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(" ")]
         [TestCase("a:\\folder\\filename.txt")]
         [TestCase("a:\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\filename.txt")]
         [TestCase("file:////folder/filename.txt")]
