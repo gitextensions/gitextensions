@@ -106,7 +106,7 @@
             // 
             // groupBoxConsoleSettings
             // 
-            this.groupBoxConsoleSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxConsoleSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxConsoleSettings.AutoSize = true;
             this.groupBoxConsoleSettings.Controls.Add(this.label3);
@@ -232,7 +232,7 @@
             this.chkChowConsoleTab.Name = "chkChowConsoleTab";
             this.chkChowConsoleTab.Size = new System.Drawing.Size(131, 17);
             this.chkChowConsoleTab.TabIndex = 0;
-            this.chkChowConsoleTab.Text = "Show the Console tab";
+            this.chkChowConsoleTab.Text = "Show the Console tab (restart required)";
             this.chkChowConsoleTab.UseVisualStyleBackColor = true;
             this.chkChowConsoleTab.CheckedChanged += new System.EventHandler(this.chkChowConsoleTab_CheckedChanged);
             // 
