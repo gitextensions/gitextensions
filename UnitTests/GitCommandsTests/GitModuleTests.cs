@@ -15,7 +15,7 @@ using NUnit.Framework;
 namespace GitCommandsTests
 {
     [TestFixture]
-    public sealed class GitModuleTest
+    public sealed class GitModuleTests
     {
         private static readonly ObjectId Sha1 = ObjectId.Parse("3183d1e95383c44302d4b25a7c647ee169765bd8");
         private static readonly ObjectId Sha2 = ObjectId.Parse("d12782217535ef00f4f84773d5d33691bbf81d00");
@@ -314,6 +314,15 @@ namespace GitCommandsTests
             Assert.IsFalse(refs[3].IsRemote);
             Assert.IsTrue(refs[3].IsTag);
             Assert.AreSame(_gitModule, refs[3].Module);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("\t")]
+        [TestCase("012345678abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz0123456789")]
+        public void RevParse_should_return_null_if_invalid(string revisionExpression)
+        {
+            _gitModule.RevParse(revisionExpression).Should().BeNull();
         }
 
         [Test]
