@@ -229,6 +229,8 @@ namespace GitUI.Hotkey
             HotkeyCommand Hk(object en, Keys k) => new HotkeyCommand((int)en, en.ToString()) { KeyData = k };
 
             const Keys OpenWithDifftoolHotkey = Keys.F3;
+            const Keys OpenWithDifftoolFirstToLocalHotkey = Keys.Alt | Keys.F3;
+            const Keys OpenWithDifftoolSelectedToLocalHotkey = Keys.Shift | Keys.Alt | Keys.F3;
             const Keys OpenAsTempFileHotkey = Keys.Control | Keys.F3;
             const Keys OpenAsTempFileWithHotkey = Keys.Shift | Keys.Control | Keys.F3;
             const Keys EditFileHotkey = Keys.F4;
@@ -286,6 +288,8 @@ namespace GitUI.Hotkey
                     Hk(FormBrowse.Command.OpenAsTempFileWith, OpenAsTempFileWithHotkey),
                     Hk(FormBrowse.Command.OpenSettings, Keys.Control | Keys.Oemcomma),
                     Hk(FormBrowse.Command.OpenWithDifftool, OpenWithDifftoolHotkey),
+                    Hk(FormBrowse.Command.OpenWithDifftoolFirstToLocal, OpenWithDifftoolFirstToLocalHotkey),
+                    Hk(FormBrowse.Command.OpenWithDifftoolSelectedToLocal, OpenWithDifftoolSelectedToLocalHotkey),
                     Hk(FormBrowse.Command.QuickFetch, Keys.Control | Keys.Shift | Keys.Down),
                     Hk(FormBrowse.Command.QuickPull, Keys.Control | Keys.Shift | Keys.P),
                     Hk(FormBrowse.Command.QuickPush, Keys.Control | Keys.Shift | Keys.Up),
@@ -349,6 +353,8 @@ namespace GitUI.Hotkey
                     Hk(RevisionDiffControl.Command.OpenAsTempFile, OpenAsTempFileHotkey),
                     Hk(RevisionDiffControl.Command.OpenAsTempFileWith, OpenAsTempFileWithHotkey),
                     Hk(RevisionDiffControl.Command.OpenWithDifftool, OpenWithDifftoolHotkey),
+                    Hk(RevisionDiffControl.Command.OpenWithDifftoolFirstToLocal, OpenWithDifftoolFirstToLocalHotkey),
+                    Hk(RevisionDiffControl.Command.OpenWithDifftoolSelectedToLocal, OpenWithDifftoolSelectedToLocalHotkey),
                     Hk(RevisionDiffControl.Command.ShowHistory, ShowHistoryHotkey)),
                 new HotkeySettings(
                     RevisionFileTreeControl.HotkeySettingsName,
