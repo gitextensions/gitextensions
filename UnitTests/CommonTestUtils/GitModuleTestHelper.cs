@@ -124,7 +124,7 @@ namespace CommonTestUtils
             Module.GitExecutable.GetOutput(GitCommandHelpers.AddSubmoduleCmd(helper.Module.WorkingDir.ToPosixPath(), path, null, true));
             Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
 
-            return new GitModule(Path.Combine(Module.WorkingDir, path).ToPosixPath(), Module.GitExecutable);
+            return new GitModule(Path.Combine(Module.WorkingDir, path).ToPosixPath());
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace CommonTestUtils
         {
             Module.GitExecutable.GetOutput(@"submodule update --init --recursive");
             var paths = Module.GetSubmodulesLocalPaths(recursive: true);
-            return paths.Select(path => new GitModule(Path.Combine(Module.WorkingDir, path).ToNativePath(), Module.GitExecutable));
+            return paths.Select(path => new GitModule(Path.Combine(Module.WorkingDir, path).ToNativePath()));
         }
 
         public void Dispose()
