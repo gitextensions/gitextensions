@@ -40,13 +40,13 @@ namespace GitCommands
         private readonly IGitCommandRunner _gitCommandRunner;
         private readonly IExecutable _gitExecutable;
 
-        public GitModule([CanBeNull] string workingDir, [CanBeNull] IExecutable executable = null)
+        public GitModule([CanBeNull] string workingDir)
         {
             WorkingDir = (workingDir ?? "").NormalizePath().EnsureTrailingPathSeparator();
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
             _indexLockManager = new IndexLockManager(this);
             _commitDataManager = new CommitDataManager(() => this);
-            _gitExecutable = executable ?? new Executable(() => AppSettings.GitCommand, WorkingDir);
+            _gitExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
             _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
 
             // If this is a submodule, populate relevant properties.
