@@ -111,10 +111,6 @@ This action will be performed without warning while checking out branch.</source
   </file>
   <file datatype="plaintext" original="AppearanceSettingsPage" source-language="en">
     <body>
-      <trans-unit id="$this.Text">
-        <source>Appearance</source>
-        <target />
-      </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
         <target />
@@ -139,7 +135,15 @@ This action will be performed without warning while checking out branch.</source
         <source>Retro</source>
         <target />
       </trans-unit>
-      <trans-unit id="ShowAuthorAvatar.Text">
+      <trans-unit id="NoImageService.Item5">
+        <source>Robohash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ShowAuthorAvatarInCommitGraph.Text">
+        <source>Show author's avatar column in the commit graph</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ShowAuthorAvatarInCommitInfo.Text">
         <source>Show author's avatar in the commit info view</source>
         <target />
       </trans-unit>
@@ -149,6 +153,11 @@ This action will be performed without warning while checking out branch.</source
       </trans-unit>
       <trans-unit id="_noDictFilesFound.Text">
         <source>No dictionary files found in: {0}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_noImageServiceTooltip.Text">
+        <source>A default image, if an email address has no matching Gravatar image.
+See http://en.gravatar.com/site/implement/images/ for more details.</source>
         <target />
       </trans-unit>
       <trans-unit id="chkEnableAutoScale.Text">
@@ -239,12 +248,24 @@ This action will be performed without warning while checking out branch.</source
   </file>
   <file datatype="plaintext" original="BlameControl" source-language="en">
     <body>
+      <trans-unit id="allCommitInfoToolStripMenuItem.Text">
+        <source>All commit info</source>
+        <target />
+      </trans-unit>
       <trans-unit id="blamePreviousRevisionToolStripMenuItem.Text">
         <source>Blame previous revision</source>
         <target />
       </trans-unit>
-      <trans-unit id="copyLogMessageToolStripMenuItem.Text">
-        <source>Copy log message to clipboard</source>
+      <trans-unit id="commitHashToolStripMenuItem.Text">
+        <source>Commit hash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="commitMessageToolStripMenuItem.Text">
+        <source>Commit message</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="copyToClipboardToolStripMenuItem.Text">
+        <source>Copy to clipboard</source>
         <target />
       </trans-unit>
       <trans-unit id="showChangesToolStripMenuItem.Text">
@@ -257,6 +278,34 @@ This action will be performed without warning while checking out branch.</source
     <body>
       <trans-unit id="_branchCheckoutError.Text">
         <source>Branch '{0}' is not selectable, this branch has been removed from the selection.</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BranchMenuItemsStrings" source-language="en">
+    <body>
+      <trans-unit id="CheckoutTooltip.Text">
+        <source>Checkout this branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="CreateTooltip.Text">
+        <source>Create a local branch from this branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="MergeTooltip.Text">
+        <source>Merge this branch into current branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="RebaseTooltip.Text">
+        <source>Rebase current branch to this branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="RenameTooltip.Text">
+        <source>Rename this branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ResetTooltip.Text">
+        <source>Reset current branch to here</source>
         <target />
       </trans-unit>
     </body>
@@ -496,7 +545,7 @@ Select no if you want to configure a different mergetool yourself.</source>
         <target />
       </trans-unit>
       <trans-unit id="_registryKeyGitExtensionsCorrect.Text">
-        <source>GitExtensions is properly registered.</source>
+        <source>Git Extensions is properly registered.</source>
         <target />
       </trans-unit>
       <trans-unit id="_registryKeyGitExtensionsFaulty.Text">
@@ -545,7 +594,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <target />
       </trans-unit>
       <trans-unit id="label11.Text">
-        <source>The checklist below validates the basic settings needed for GitExtensions to work properly.</source>
+        <source>The checklist below validates the basic settings needed for Git Extensions to work properly.</source>
         <target />
       </trans-unit>
       <trans-unit id="translationConfig_Fix.Text">
@@ -685,6 +734,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   </file>
   <file datatype="plaintext" original="CommitInfo" source-language="en">
     <body>
+      <trans-unit id="_brokenRefs.Text">
+        <source>The repository refs seem to be broken:</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_containedInBranches.Text">
         <source>Contained in branches:</source>
         <target />
@@ -715,6 +768,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
       </trans-unit>
       <trans-unit id="_plusCommits.Text">
         <source>commits</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_repoFailure.Text">
+        <source>Repository failure</source>
         <target />
       </trans-unit>
       <trans-unit id="_trsLinksRelatedToRevision.Text">
@@ -790,7 +847,7 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
   <file datatype="plaintext" original="CommonLogic" source-language="en">
     <body>
       <trans-unit id="_cantReadRegistry.Text">
-        <source>GitExtensions has insufficient permissions to check the registry.</source>
+        <source>Git Extensions has insufficient permissions to check the registry.</source>
         <target />
       </trans-unit>
       <trans-unit id="_selectFile.Text">
@@ -1165,6 +1222,10 @@ Please make sure git (Git for Windows or cygwin) is installed or set the correct
         <source>Open with Git Extensions</source>
         <target />
       </trans-unit>
+      <trans-unit id="_sortByContextMenu.Text">
+        <source>&amp;Sort by...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="columnHeader.Text">
         <source>Files</source>
         <target />
@@ -1489,6 +1550,10 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="createDirectoryLbl.Text">
         <source>Create directory:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="depthLabel.Text">
+        <source>Limit Depth:</source>
         <target />
       </trans-unit>
       <trans-unit id="descriptionLbl.Text">
@@ -2501,7 +2566,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="chkChowConsoleTab.Text">
-        <source>Show the Console tab</source>
+        <source>Show the Console tab (restart required)</source>
         <target />
       </trans-unit>
       <trans-unit id="chkShowGpgInformation.Text">
@@ -5699,10 +5764,6 @@ Stash them before if you don't want to lose them.</source>
         <source>Default merge with</source>
         <target />
       </trans-unit>
-      <trans-unit id="Prune.Text">
-        <source>Prune remote branches</source>
-        <target />
-      </trans-unit>
       <trans-unit id="RemoteCombo.HeaderText">
         <source>Remote repository</source>
         <target />
@@ -5721,10 +5782,6 @@ Stash them before if you don't want to lose them.</source>
       </trans-unit>
       <trans-unit id="TestConnection.Text">
         <source>Test connection</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="UpdateBranch.Text">
-        <source>Update all remote branch info</source>
         <target />
       </trans-unit>
       <trans-unit id="_btnDeleteTooltip.Text">
@@ -6430,7 +6487,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="_cantFindGitMessage.Text">
         <source>The command to run git is not configured correct.
-You need to set the correct path to be able to use GitExtensions.
+You need to set the correct path to be able to use Git Extensions.
 
 Do you want to set the correct command now? If not Global and Local Settings will not be saved.</source>
         <target />
@@ -6571,7 +6628,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <source>The fingerprint of this host is not registered by PuTTY.
 This causes this process to hang, and that why it is automatically stopped.
 
-When the connection is opened detached from Git and GitExtensions, the host's fingerprint can be registered.
+When the connection is opened detached from Git and Git Extensions, the host's fingerprint can be registered.
 You could also manually add the host's fingerprint or run Test Connection from the remotes dialog.
 
 Do you want to register the host's fingerprint and restart the process?</source>
@@ -7457,6 +7514,46 @@ help</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="LocalBranchMenuItemsStrings" source-language="en">
+    <body>
+      <trans-unit id="DeleteTooltip.Text">
+        <source>Delete the branch, which must be fully merged in its upstream branch or in HEAD</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="MenuItemsStrings" source-language="en">
+    <body>
+      <trans-unit id="Checkout.Text">
+        <source>Checkout</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="CreateBranch.Text">
+        <source>Create &amp;Branch...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>Delete</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Merge.Text">
+        <source>&amp;Merge</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Rebase.Text">
+        <source>&amp;Rebase</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Rename.Text">
+        <source>Rename</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="Reset.Text">
+        <source>Re&amp;set</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="MessageBoxes" source-language="en">
     <body>
       <trans-unit id="_confirmDeleteRemoteBranch.Text">
@@ -7683,6 +7780,14 @@ Do you want to remove it from the recent repositories list?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="RemoteBranchMenuItemsStrings" source-language="en">
+    <body>
+      <trans-unit id="DeleteTooltip.Text">
+        <source>Delete the branch from the remote</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="RepoObjectsTree" source-language="en">
     <body>
       <trans-unit id="_searchTooltip.Text">
@@ -7702,14 +7807,6 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Search:</source>
         <target />
       </trans-unit>
-      <trans-unit id="mnuBtnCheckoutLocal.Text">
-        <source>Checkout</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="mnuBtnCheckoutTag.Text">
-        <source>&amp;Checkout</source>
-        <target />
-      </trans-unit> 
       <trans-unit id="mnuBtnFetchAllRemotes.Text">
         <source>Fetch all remotes</source>
         <target />
@@ -7726,36 +7823,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Fetch and prune all remotes</source>
         <target />
       </trans-unit>
-      <trans-unit id="mnubtnBranchCheckout.Text">
-        <source>&amp;Checkout</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="mnubtnBranchDelete.Text">
-        <source>Delete</source>
-        <target />
-      </trans-unit>
       <trans-unit id="mnubtnCollapseAll.Text">
         <source>Collapse All</source>
         <target />
       </trans-unit>
-      <trans-unit id="mnubtnCreateBranchBasedOnRemoteBranch.Text">
-        <source>Create &amp;Branch...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="mnubtnCreateBranchForTag.Text">
-        <source>Create &amp;Branch...</source>
-        <target />
-      </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.Text">
         <source>Delete All</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="mnubtnDeleteRemoteBranch.Text">
-        <source>&amp;Delete</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="mnubtnDeleteTag.Text">
-        <source>&amp;Delete</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnDisableRemote.Text">
@@ -7806,8 +7879,12 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>&amp;Manage...</source>
         <target />
       </trans-unit>
-      <trans-unit id="mnubtnMergeBranch.Text">
-        <source>&amp;Merge</source>
+      <trans-unit id="mnubtnMoveDown.Text">
+        <source>Move Down</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnMoveUp.Text">
+        <source>Move Up</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.Text">
@@ -7818,20 +7895,8 @@ To show all branches, right click the revision grid, select 'view' and then the 
         <source>Fetch &amp;&amp; Merge (&amp;Pull)</source>
         <target />
       </trans-unit>
-      <trans-unit id="mnubtnRebase.Text">
-        <source>&amp;Rebase</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="mnubtnReload.Text">
-        <source>Reload</source>
-        <target />
-      </trans-unit>
       <trans-unit id="mnubtnRemoteBranchFetchAndCheckout.Text">
         <source>&amp;Fetch &amp;&amp; Checkout</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="mnubtnReset.Text">
-        <source>Re&amp;set</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnSynchronizeSubmodules.Text">
@@ -8488,6 +8553,10 @@ See the changes in the commit form.</source>
         <source>View build report in a browser</source>
         <target />
       </trans-unit>
+      <trans-unit id="openPullRequestPageStripMenuItem.Text">
+        <source>View pull request in a browser</source>
+        <target />
+      </trans-unit>
       <trans-unit id="rebaseInteractivelyToolStripMenuItem.Text">
         <source>Selected commit interactively...</source>
         <target />
@@ -9048,6 +9117,10 @@ Select this commit to populate the full message.</source>
         <source>Remotes</source>
         <target />
       </trans-unit>
+      <trans-unit id="_searchingFor.Text">
+        <source>Searching for: </source>
+        <target />
+      </trans-unit>
       <trans-unit id="_secondsAgo.Text">
         <source>{0} {1:second|seconds} ago</source>
         <target />
@@ -9074,6 +9147,34 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_yearsAgo.Text">
         <source>{0} {1:year|years} ago</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TagMenuItemsStrings" source-language="en">
+    <body>
+      <trans-unit id="CheckoutTooltip.Text">
+        <source>Checkout this tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="CreateTooltip.Text">
+        <source>Create a local branch from this tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="DeleteTooltip.Text">
+        <source>Delete this tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="MergeTooltip.Text">
+        <source>Merge this tag into current branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="RebaseTooltip.Text">
+        <source>Rebase current branch to this tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ResetTooltip.Text">
+        <source>Reset current branch to here</source>
         <target />
       </trans-unit>
     </body>
@@ -9149,16 +9250,20 @@ Details: Is {1} expected {2}</source>
         <source>Error: Unable to understand patch</source>
         <target />
       </trans-unit>
-      <trans-unit id="columnHeader2.Text">
-        <source>Heading</source>
+      <trans-unit id="columnHeaderBranch.Text">
+        <source>Will be fetched to branch</source>
         <target />
       </trans-unit>
-      <trans-unit id="columnHeader3.Text">
+      <trans-unit id="columnHeaderBy.Text">
         <source>By</source>
         <target />
       </trans-unit>
-      <trans-unit id="columnHeader4.Text">
+      <trans-unit id="columnHeaderCreated.Text">
         <source>Created</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="columnHeaderHeading.Text">
+        <source>Heading</source>
         <target />
       </trans-unit>
       <trans-unit id="tabPage1.Text">
@@ -9167,10 +9272,6 @@ Details: Is {1} expected {2}</source>
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Comments</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_searchingFor.Text">
-        <source>Searching for: </source>
         <target />
       </trans-unit>
     </body>

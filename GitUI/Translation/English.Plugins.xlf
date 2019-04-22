@@ -796,7 +796,7 @@ defaultrebase=0</source>
         <target />
       </trans-unit>
       <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
+        <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
         <target />
@@ -1137,6 +1137,10 @@ Do you want to reset the configured path?</source>
         <source>Jira Commit Hint</source>
         <target />
       </trans-unit>
+      <trans-unit id="_credentialsSettings.Caption">
+        <source>Jira credentials</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
         <target />
@@ -1149,20 +1153,12 @@ Do you want to reset the configured path?</source>
         <source>JQL Query</source>
         <target />
       </trans-unit>
-      <trans-unit id="_passwordSettings.Caption">
-        <source>Jira password</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         <target />
       </trans-unit>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_userSettings.Caption">
-        <source>Jira user</source>
         <target />
       </trans-unit>
     </body>
