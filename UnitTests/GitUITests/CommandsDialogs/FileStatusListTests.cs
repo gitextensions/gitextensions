@@ -1,4 +1,7 @@
-﻿using System.Threading;
+﻿using System;
+using System.Drawing;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 using FluentAssertions;
 using GitUI;
@@ -25,15 +28,10 @@ namespace GitUITests.CommandsDialogs
         [TearDown]
         public void TearDown()
         {
+            _fileStatusList?.Dispose();
             _fileStatusList = null;
+            _form?.Dispose();
             _form = null;
-        }
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            _form.Dispose();
-            _fileStatusList.Dispose();
         }
 
         [Test]
@@ -74,6 +72,43 @@ namespace GitUITests.CommandsDialogs
             accessor.FileStatusListView.Focus();
 
             accessor.FilterWatermarkLabelVisible.Should().BeTrue();
+        }
+
+        [TestCase(null, false)]
+        [TestCase("", false)]
+        [TestCase("\\.cs", true)]
+        public void Test_StoreFilter_valid(string regex, bool active)
+        {
+            var accessor = _fileStatusList.GetTestAccessor();
+
+            var expectedColor = active ? accessor.ActiveInputColor : SystemColors.Window;
+            string expectedRegex = string.IsNullOrEmpty(regex) ? null : regex;
+
+            accessor.StoreFilter(regex);
+
+            CheckStoreFilter(expectedColor, expectedRegex, accessor);
+        }
+
+        [Test]
+        public void Test_StoreFilter_invalid()
+        {
+            const string validRegex = "\\.cs";
+            const string invalidRegex = "(";
+
+            var accessor = _fileStatusList.GetTestAccessor();
+
+            // set a valid Filter that must not change
+            accessor.StoreFilter(validRegex);
+
+            ((Action)(() => accessor.StoreFilter(invalidRegex))).Should().Throw<ArgumentException>();
+
+            CheckStoreFilter(accessor.InvalidInputColor, validRegex, accessor);
+        }
+
+        private static void CheckStoreFilter(Color expectedColor, string expectedRegex, FileStatusList.TestAccessor accessor)
+        {
+            accessor.FilterComboBox.BackColor.Should().Be(expectedColor);
+            accessor.Filter?.ToString().Should().Be(expectedRegex);
         }
     }
 }
