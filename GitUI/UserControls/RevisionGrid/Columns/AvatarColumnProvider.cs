@@ -49,7 +49,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             var imageSize = e.CellBounds.Height - padding - padding;
 
             Image image;
-            var imageTask = _avatarProvider.GetAvatarAsync(revision.AuthorEmail, imageSize);
+            var imageTask = _avatarProvider.GetAvatarAsync(revision.AuthorEmail, revision.Author, imageSize);
 
             if (imageTask.Status == TaskStatus.RanToCompletion)
             {

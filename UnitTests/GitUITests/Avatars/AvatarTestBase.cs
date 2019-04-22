@@ -16,11 +16,19 @@ namespace GitUITests.Avatars
         protected const string _email2 = "b@b.b";
         protected const string _email3 = "c@c.c";
         protected const string _email4 = "d@d.d";
+        protected const string _emailMissing = "missing@avatar.com";
+
+        protected const string _name1 = "John Lennon";
+        protected const string _name2 = "Paul McCartney";
+        protected const string _name3 = "George Harrison";
+        protected const string _name4 = "Ringo Starr";
+        protected const string _nameMissing = "Fifth Beatle";
 
         protected Image _img1;
         protected Image _img2;
         protected Image _img3;
         protected Image _img4;
+        protected Image _imgGenerated;
 
         protected IAvatarProvider _inner;
         protected IAvatarProvider _cache;
@@ -32,6 +40,7 @@ namespace GitUITests.Avatars
             _img2 = new Bitmap(_size, _size);
             _img3 = new Bitmap(_size, _size);
             _img4 = new Bitmap(_size, _size);
+            _imgGenerated = new Bitmap(_size, _size);
         }
 
         [OneTimeTearDown]
@@ -48,21 +57,22 @@ namespace GitUITests.Avatars
         {
             _inner = Substitute.For<IAvatarProvider>();
 
-            _inner.GetAvatarAsync(_email1, _size).Returns(Task.FromResult(_img1));
-            _inner.GetAvatarAsync(_email2, _size).Returns(Task.FromResult(_img2));
-            _inner.GetAvatarAsync(_email3, _size).Returns(Task.FromResult(_img3));
-            _inner.GetAvatarAsync(_email4, _size).Returns(Task.FromResult(_img4));
+            _inner.GetAvatarAsync(_email1, _name1, _size).Returns(Task.FromResult(_img1));
+            _inner.GetAvatarAsync(_email2, _name2, _size).Returns(Task.FromResult(_img2));
+            _inner.GetAvatarAsync(_email3, _name3, _size).Returns(Task.FromResult(_img3));
+            _inner.GetAvatarAsync(_email4, _name4, _size).Returns(Task.FromResult(_img4));
+            _inner.GetAvatarAsync(_emailMissing, _nameMissing, _size).Returns(Task.FromResult((Image)null));
         }
 
 #pragma warning disable 4014
 
-        protected async Task MissAsync(string email, Image expected = null)
+        protected async Task MissAsync(string email, string name,  Image expected = null)
         {
             _inner.ClearReceivedCalls();
 
-            var actual = await _cache.GetAvatarAsync(email, _size);
+            var actual = await _cache.GetAvatarAsync(email, name, _size);
 
-            _inner.Received(1).GetAvatarAsync(email, _size);
+            _inner.Received(1).GetAvatarAsync(email, name, _size);
 
             if (expected != null)
             {
@@ -70,13 +80,13 @@ namespace GitUITests.Avatars
             }
         }
 
-        protected async Task HitAsync(string email, Image expected = null)
+        protected async Task HitAsync(string email, string name, Image expected = null)
         {
             _inner.ClearReceivedCalls();
 
-            var actual = await _cache.GetAvatarAsync(email, _size);
+            var actual = await _cache.GetAvatarAsync(email, name, _size);
 
-            _inner.Received(0).GetAvatarAsync(email, _size);
+            _inner.Received(0).GetAvatarAsync(email, name, _size);
 
             if (expected != null)
             {

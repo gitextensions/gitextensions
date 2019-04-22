@@ -21,6 +21,7 @@ namespace GitUITests.Avatars
         private FileBase _file;
         private FileInfoBase _fileInfo;
         private IFileInfoFactory _fileInfoFactory;
+        private IAvatarGenerator _avatarGenerator;
 
         [SetUp]
         public override void SetUp()
@@ -37,20 +38,22 @@ namespace GitUITests.Avatars
             _fileInfoFactory = Substitute.For<IFileInfoFactory>();
             _fileInfoFactory.FromFileName(Arg.Any<string>()).Returns(_fileInfo);
             _fileSystem.FileInfo.Returns(_fileInfoFactory);
+            _avatarGenerator = Substitute.For<IAvatarGenerator>();
+            _avatarGenerator.GetAvatarImage(_emailMissing, _nameMissing, _size).Returns(_imgGenerated);
 
             _folderPath = AppSettings.AvatarImageCachePath;
 
-            _cache = new AvatarPersistentCache(_inner, _fileSystem);
+            _cache = new AvatarPersistentCache(_inner, _avatarGenerator, _fileSystem);
         }
 
         [Test]
         public async Task GetAvatarAsync_should_create_if_folder_absent()
         {
             var fileSystem = new MockFileSystem();
-            _cache = new AvatarPersistentCache(_inner, fileSystem);
+            _cache = new AvatarPersistentCache(_inner, Substitute.For<IAvatarGenerator>(), fileSystem);
             fileSystem.Directory.Exists(_folderPath).Should().BeFalse();
 
-            Assert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _size));
+            Assert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
 
             fileSystem.Directory.Exists(_folderPath).Should().BeTrue();
         }
@@ -59,13 +62,23 @@ namespace GitUITests.Avatars
         public async Task GetAvatarAsync_should_create_image_from_stream()
         {
             var fileSystem = new MockFileSystem();
-            _cache = new AvatarPersistentCache(_inner, fileSystem);
+            _cache = new AvatarPersistentCache(_inner, Substitute.For<IAvatarGenerator>(), fileSystem);
             fileSystem.Directory.Exists(_folderPath).Should().BeFalse();
 
-            Assert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _size));
+            Assert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
 
             fileSystem.Directory.Exists(_folderPath).Should().BeTrue();
             fileSystem.File.Exists(Path.Combine(_folderPath, $"{_email1}.{_size}px.png")).Should().BeTrue();
+        }
+
+        [Test]
+        public async Task GetAvatarAsync_should_generate_avatar_if_none_found()
+        {
+            var fileSystem = new MockFileSystem();
+            _cache = new AvatarPersistentCache(_inner, _avatarGenerator, fileSystem);
+            fileSystem.Directory.Exists(_folderPath).Should().BeFalse();
+
+            Assert.AreSame(_imgGenerated, await _cache.GetAvatarAsync(_emailMissing, _nameMissing, _size));
         }
 
         [Test]
@@ -76,7 +89,7 @@ namespace GitUITests.Avatars
             _fileSystem.File.OpenWrite(Arg.Any<string>()).Returns(_ => new MemoryStream());
             _fileSystem.File.Delete(Arg.Any<string>());
 
-            await MissAsync(_email1);
+            await MissAsync(_email1, _name1);
 
             _fileSystem.File.Received(1).Delete(Path.Combine(AppSettings.AvatarImageCachePath, $"{_email1}.{_size}px.png"));
 
@@ -86,7 +99,7 @@ namespace GitUITests.Avatars
             _fileInfo.ClearReceivedCalls();
             _file.ClearReceivedCalls();
 
-            var image = await _cache.GetAvatarAsync(_email1, 16);
+            var image = await _cache.GetAvatarAsync(_email1, _name1, 16);
 
             image.Should().NotBeNull();
             _ = _fileInfo.Received(1).LastWriteTime;
@@ -107,7 +120,7 @@ namespace GitUITests.Avatars
         public async Task ClearCacheAsync_should_remove_all()
         {
             var fileSystem = new MockFileSystem();
-            _cache = new AvatarPersistentCache(_inner, fileSystem);
+            _cache = new AvatarPersistentCache(_inner, Substitute.For<IAvatarGenerator>(), fileSystem);
 
             fileSystem.AddFile(Path.Combine(_folderPath, "a@a.com.16px.png"), new MockFileData(""));
             fileSystem.AddFile(Path.Combine(_folderPath, "b@b.com.16px.png"), new MockFileData(""));
