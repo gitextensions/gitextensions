@@ -2144,7 +2144,9 @@ namespace GitUI.CommandsDialogs
             FocusGitConsole = 29,
             FocusBuildServerStatus = 30,
             FocusNextTab = 31,
-            FocusPrevTab = 32
+            FocusPrevTab = 32,
+            OpenWithDifftoolFirstToLocal = 33,
+            OpenWithDifftoolSelectedToLocal = 34
         }
 
         internal Keys GetShortcutKeys(Command cmd)
@@ -2216,6 +2218,8 @@ namespace GitUI.CommandsDialogs
                 case Command.Stash: UICommands.StashSave(this, AppSettings.IncludeUntrackedFilesInManualStash); break;
                 case Command.StashPop: UICommands.StashPop(this); break;
                 case Command.OpenWithDifftool: OpenWithDifftool(); break;
+                case Command.OpenWithDifftoolFirstToLocal: OpenWithDifftoolFirstToLocal(); break;
+                case Command.OpenWithDifftoolSelectedToLocal: OpenWithDifftoolSelectedToLocal(); break;
                 case Command.OpenSettings: OnShowSettingsClick(null, null); break;
                 case Command.ToggleBranchTreePanel: toggleBranchTreePanel_Click(null, null); break;
                 case Command.EditFile: EditFile(); break;
@@ -2290,6 +2294,22 @@ namespace GitUI.CommandsDialogs
                 else if (fileTree.Visible)
                 {
                     fileTree.ExecuteCommand(RevisionFileTreeControl.Command.OpenWithDifftool);
+                }
+            }
+
+            void OpenWithDifftoolFirstToLocal()
+            {
+                if (revisionDiff.Visible)
+                {
+                    revisionDiff.ExecuteCommand(RevisionDiffControl.Command.OpenWithDifftoolFirstToLocal);
+                }
+            }
+
+            void OpenWithDifftoolSelectedToLocal()
+            {
+                if (revisionDiff.Visible)
+                {
+                    revisionDiff.ExecuteCommand(RevisionDiffControl.Command.OpenWithDifftoolSelectedToLocal);
                 }
             }
 
