@@ -57,7 +57,7 @@ namespace GitUI.Script
                     continue;
                 }
 
-                if (!option.StartsWith("{s"))
+                if (!option.StartsWith("s"))
                 {
                     continue;
                 }
