@@ -295,6 +295,11 @@ namespace GitCommands
 
             using (var process = executable.Start(arguments, createWindow: false, redirectInput: writeInput != null, redirectOutput: true, outputEncoding))
             {
+                var outputBuffer = new MemoryStream();
+                var errorBuffer = new MemoryStream();
+                var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
+                var errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer);
+
                 if (writeInput != null)
                 {
                     // TODO do we want to make this async?
@@ -302,10 +307,6 @@ namespace GitCommands
                     process.StandardInput.Close();
                 }
 
-                var outputBuffer = new MemoryStream();
-                var errorBuffer = new MemoryStream();
-                var outputTask = process.StandardOutput.BaseStream.CopyToAsync(outputBuffer);
-                var errorTask = process.StandardError.BaseStream.CopyToAsync(errorBuffer);
                 var exitTask = process.WaitForExitAsync();
 
                 await Task.WhenAll(outputTask, errorTask, exitTask);
