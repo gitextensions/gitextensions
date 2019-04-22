@@ -98,6 +98,11 @@ namespace GitHub3
                 .ToList();
         }
 
+        public string GetDefaultBranch()
+        {
+            return _repo.GetDefaultBranch();
+        }
+
         public IHostedRepository Fork()
         {
             return new GitHubRepo(_repo.CreateFork());

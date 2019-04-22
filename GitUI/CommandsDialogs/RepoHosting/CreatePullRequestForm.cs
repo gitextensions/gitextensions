@@ -133,7 +133,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     {
                         await TaskScheduler.Default;
 
-                        var branches = remote.GetHostedRepository().GetBranches();
+                        IHostedRepository hostedRepository = remote.GetHostedRepository();
+                        var branches = hostedRepository.GetBranches();
 
                         await this.SwitchToMainThreadAsync();
 
@@ -142,7 +143,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                         var selectItem = 0;
                         for (var i = 0; i < branches.Count; i++)
                         {
-                            if (branches[i].Name == _currentBranch)
+                            if (branches[i].Name == hostedRepository.GetDefaultBranch())
                             {
                                 selectItem = i;
                             }

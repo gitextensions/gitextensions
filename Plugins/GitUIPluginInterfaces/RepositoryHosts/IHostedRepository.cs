@@ -31,6 +31,12 @@ namespace GitUIPluginInterfaces.RepositoryHosts
         IReadOnlyList<IHostedBranch> GetBranches();
 
         /// <summary>
+        /// Returns the default branch of the repository.
+        /// </summary>
+        /// <returns>The default branch of the repository.</returns>
+        string GetDefaultBranch();
+
+        /// <summary>
         /// Forks the repo owned by somebody else to "my" repos.
         /// </summary>
         /// <returns>The new repo, owned by me.</returns>
