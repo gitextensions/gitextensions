@@ -1616,22 +1616,22 @@ namespace GitCommands
             set => SetBool("Blame.DisplayAuthorFirst", value);
         }
 
-        public static bool BlameHideAuthor
+        public static bool BlameShowAuthor
         {
-            get => GetBool("Blame.HideAuthor", false);
-            set => SetBool("Blame.HideAuthor", value);
+            get => GetBool("Blame.ShowAuthor", true);
+            set => SetBool("Blame.ShowAuthor", value);
         }
 
-        public static bool BlameHideAuthorDate
+        public static bool BlameShowAuthorDate
         {
-            get => GetBool("Blame.HideAuthorDate", false);
-            set => SetBool("Blame.HideAuthorDate", value);
+            get => GetBool("Blame.ShowAuthorDate", true);
+            set => SetBool("Blame.ShowAuthorDate", value);
         }
 
-        public static bool BlameHideAuthorTime
+        public static bool BlameShowAuthorTime
         {
-            get => GetBool("Blame.HideAuthorTime", false);
-            set => SetBool("Blame.HideAuthorTime", value);
+            get => GetBool("Blame.ShowAuthorTime", true);
+            set => SetBool("Blame.ShowAuthorTime", value);
         }
 
         public static bool BlameShowLineNumbers

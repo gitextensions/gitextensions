@@ -131,9 +131,9 @@ namespace GitUI.CommandsDialogs
                 detectMoveAndCopyInAllFilesToolStripMenuItem.Checked = AppSettings.DetectCopyInAllOnBlame;
                 detectMoveAndCopyInThisFileToolStripMenuItem.Checked = AppSettings.DetectCopyInFileOnBlame;
                 displayAuthorFirstToolStripMenuItem.Checked = AppSettings.BlameDisplayAuthorFirst;
-                hideAuthorToolStripMenuItem.Checked = AppSettings.BlameHideAuthor;
-                hideAuthorDateToolStripMenuItem.Checked = AppSettings.BlameHideAuthorDate;
-                hideAuthorTimeToolStripMenuItem.Checked = AppSettings.BlameHideAuthorTime;
+                showAuthorToolStripMenuItem.Checked = AppSettings.BlameShowAuthor;
+                showAuthorDateToolStripMenuItem.Checked = AppSettings.BlameShowAuthorDate;
+                showAuthorTimeToolStripMenuItem.Checked = AppSettings.BlameShowAuthorTime;
                 showLineNumbersToolStripMenuItem.Checked = AppSettings.BlameShowLineNumbers;
             }
 
@@ -644,40 +644,40 @@ namespace GitUI.CommandsDialogs
             UpdateSelectedFileViewers(true);
         }
 
-        private void hideAuthorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void showAuthorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AppSettings.BlameHideAuthor = !AppSettings.BlameHideAuthor;
-            hideAuthorToolStripMenuItem.Checked = AppSettings.BlameHideAuthor;
+            AppSettings.BlameShowAuthor = !AppSettings.BlameShowAuthor;
+            showAuthorToolStripMenuItem.Checked = AppSettings.BlameShowAuthor;
 
-            if (AppSettings.BlameHideAuthor)
+            if (!AppSettings.BlameShowAuthor)
             {
-                hideAuthorDateToolStripMenuItem.Checked = false;
-                AppSettings.BlameHideAuthorDate = false;
+                showAuthorDateToolStripMenuItem.Checked = true;
+                AppSettings.BlameShowAuthorDate = true;
             }
 
             UpdateSelectedFileViewers(true);
         }
 
-        private void hideAuthorDateToolStripMenuItem_Click(object sender, EventArgs e)
+        private void showAuthorDateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AppSettings.BlameHideAuthorDate = !AppSettings.BlameHideAuthorDate;
-            hideAuthorDateToolStripMenuItem.Checked = AppSettings.BlameHideAuthorDate;
+            AppSettings.BlameShowAuthorDate = !AppSettings.BlameShowAuthorDate;
+            showAuthorDateToolStripMenuItem.Checked = AppSettings.BlameShowAuthorDate;
 
-            hideAuthorTimeToolStripMenuItem.Enabled = !AppSettings.BlameHideAuthorDate;
+            showAuthorTimeToolStripMenuItem.Enabled = AppSettings.BlameShowAuthorDate;
 
-            if (AppSettings.BlameHideAuthorDate)
+            if (!AppSettings.BlameShowAuthorDate)
             {
-                hideAuthorToolStripMenuItem.Checked = false;
-                AppSettings.BlameHideAuthor = false;
+                showAuthorToolStripMenuItem.Checked = true;
+                AppSettings.BlameShowAuthor = true;
             }
 
             UpdateSelectedFileViewers(true);
         }
 
-        private void hideAuthorTimeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void showAuthorTimeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AppSettings.BlameHideAuthorTime = !AppSettings.BlameHideAuthorTime;
-            hideAuthorTimeToolStripMenuItem.Checked = AppSettings.BlameHideAuthorTime;
+            AppSettings.BlameShowAuthorTime = !AppSettings.BlameShowAuthorTime;
+            showAuthorTimeToolStripMenuItem.Checked = AppSettings.BlameShowAuthorTime;
             UpdateSelectedFileViewers(true);
         }
 

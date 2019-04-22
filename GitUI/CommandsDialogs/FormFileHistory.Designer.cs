@@ -62,9 +62,9 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.displaySettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.displayAuthorFirstToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hideAuthorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hideAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hideAuthorTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAuthorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showAuthorTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showLineNumbersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -480,9 +480,9 @@ namespace GitUI.CommandsDialogs
             this.toolStripSeparator5,
             this.displaySettingsToolStripMenuItem,
             this.displayAuthorFirstToolStripMenuItem,
-            this.hideAuthorToolStripMenuItem,
-            this.hideAuthorDateToolStripMenuItem,
-            this.hideAuthorTimeToolStripMenuItem,
+            this.showAuthorToolStripMenuItem,
+            this.showAuthorDateToolStripMenuItem,
+            this.showAuthorTimeToolStripMenuItem,
             this.showLineNumbersToolStripMenuItem});
             this.toolStripBlameOptions.Image = global::GitUI.Properties.Images.Blame;
             this.toolStripBlameOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -538,26 +538,26 @@ namespace GitUI.CommandsDialogs
             this.displayAuthorFirstToolStripMenuItem.Text = "Display author first";
             this.displayAuthorFirstToolStripMenuItem.Click += new System.EventHandler(this.displayAuthorFirstToolStripMenuItem_Click);
             // 
-            // hideAuthorToolStripMenuItem
+            // showAuthorToolStripMenuItem
             // 
-            this.hideAuthorToolStripMenuItem.Name = "hideAuthorToolStripMenuItem";
-            this.hideAuthorToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
-            this.hideAuthorToolStripMenuItem.Text = "Hide author";
-            this.hideAuthorToolStripMenuItem.Click += new System.EventHandler(this.hideAuthorToolStripMenuItem_Click);
+            this.showAuthorToolStripMenuItem.Name = "showAuthorToolStripMenuItem";
+            this.showAuthorToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.showAuthorToolStripMenuItem.Text = "Show author";
+            this.showAuthorToolStripMenuItem.Click += new System.EventHandler(this.showAuthorToolStripMenuItem_Click);
             // 
-            // hideAuthorDateToolStripMenuItem
+            // showAuthorDateToolStripMenuItem
             // 
-            this.hideAuthorDateToolStripMenuItem.Name = "hideAuthorDateToolStripMenuItem";
-            this.hideAuthorDateToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
-            this.hideAuthorDateToolStripMenuItem.Text = "Hide author date";
-            this.hideAuthorDateToolStripMenuItem.Click += new System.EventHandler(this.hideAuthorDateToolStripMenuItem_Click);
+            this.showAuthorDateToolStripMenuItem.Name = "showAuthorDateToolStripMenuItem";
+            this.showAuthorDateToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.showAuthorDateToolStripMenuItem.Text = "Show author date";
+            this.showAuthorDateToolStripMenuItem.Click += new System.EventHandler(this.showAuthorDateToolStripMenuItem_Click);
             // 
-            // hideAuthorTimeToolStripMenuItem
+            // showAuthorTimeToolStripMenuItem
             // 
-            this.hideAuthorTimeToolStripMenuItem.Name = "hideAuthorTimeToolStripMenuItem";
-            this.hideAuthorTimeToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
-            this.hideAuthorTimeToolStripMenuItem.Text = "Hide author time";
-            this.hideAuthorTimeToolStripMenuItem.Click += new System.EventHandler(this.hideAuthorTimeToolStripMenuItem_Click);
+            this.showAuthorTimeToolStripMenuItem.Name = "showAuthorTimeToolStripMenuItem";
+            this.showAuthorTimeToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.showAuthorTimeToolStripMenuItem.Text = "Show author time";
+            this.showAuthorTimeToolStripMenuItem.Click += new System.EventHandler(this.showAuthorTimeToolStripMenuItem_Click);
             // 
             // showLineNumbersToolStripMenuItem
             // 
@@ -645,11 +645,11 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem displayAuthorFirstToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem hideAuthorDateToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem hideAuthorTimeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showAuthorDateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showAuthorTimeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showLineNumbersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem blameSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem displaySettingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem hideAuthorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showAuthorToolStripMenuItem;
     }
 }

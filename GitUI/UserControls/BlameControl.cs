@@ -270,9 +270,9 @@ namespace GitUI.Blame
 
             GitBlameCommit lastCommit = null;
 
-            var dateTimeFormat = AppSettings.BlameHideAuthorTime
-                ? CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern
-                : CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern;
+            var dateTimeFormat = AppSettings.BlameShowAuthorTime
+                ? CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern
+                : CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
 
             // NOTE EOL white-space supports highlight on mouse-over.
             // Highlighting is done via text background colour.
@@ -332,23 +332,23 @@ namespace GitUI.Blame
 
         private void BuildAuthorLine(GitBlameLine line, StringBuilder lineBuilder, string dateTimeFormat, string filename)
         {
-            if (!AppSettings.BlameHideAuthor && AppSettings.BlameDisplayAuthorFirst)
+            if (AppSettings.BlameShowAuthor && AppSettings.BlameDisplayAuthorFirst)
             {
                 lineBuilder.Append(line.Commit.Author);
-                if (!AppSettings.BlameHideAuthorDate)
+                if (AppSettings.BlameShowAuthorDate)
                 {
                     lineBuilder.Append(" - ");
                 }
             }
 
-            if (!AppSettings.BlameHideAuthorDate)
+            if (AppSettings.BlameShowAuthorDate)
             {
                 lineBuilder.Append(line.Commit.AuthorTime.ToString(dateTimeFormat));
             }
 
-            if (!AppSettings.BlameHideAuthor && !AppSettings.BlameDisplayAuthorFirst)
+            if (AppSettings.BlameShowAuthor && !AppSettings.BlameDisplayAuthorFirst)
             {
-                if (!AppSettings.BlameHideAuthorDate)
+                if (AppSettings.BlameShowAuthorDate)
                 {
                     lineBuilder.Append(" - ");
                 }
