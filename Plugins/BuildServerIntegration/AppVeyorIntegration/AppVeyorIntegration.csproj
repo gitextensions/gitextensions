@@ -10,6 +10,7 @@
     <RootNamespace>AppVeyorIntegration</RootNamespace>
     <AssemblyName>AppVeyorIntegration</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>

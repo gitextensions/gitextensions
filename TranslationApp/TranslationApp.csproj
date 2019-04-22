@@ -11,6 +11,7 @@
     <RootNamespace>TranslationApp</RootNamespace>
     <AssemblyName>TranslationApp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>..\Logo\git-extensions-logo.ico</ApplicationIcon>
     <TargetFrameworkProfile>

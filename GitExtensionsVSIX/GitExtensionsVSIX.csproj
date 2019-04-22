@@ -12,6 +12,7 @@
     <RootNamespace>GitExtensionsVSIX</RootNamespace>
     <AssemblyName>GitExtensionsVSIX</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
     <TargetFrameworkProfile />
     <UseCodebase>true</UseCodebase>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>

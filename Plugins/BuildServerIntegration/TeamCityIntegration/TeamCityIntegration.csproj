@@ -10,6 +10,7 @@
     <RootNamespace>TeamCityIntegration</RootNamespace>
     <AssemblyName>TeamCityIntegration</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>

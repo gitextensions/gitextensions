@@ -11,6 +11,7 @@
     <RootNamespace>TfsInterop.Vs2015</RootNamespace>
     <AssemblyName>TfsInterop.Vs2015</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
