@@ -50,8 +50,6 @@ namespace GitUI.BranchTreePanel
         // Node representing a submodule
         private class SubmoduleNode : Node
         {
-            private DetailedSubmoduleInfo _details;
-
             public SubmoduleInfo Info { get; }
             public bool IsCurrent { get; }
             public string LocalPath { get; }
@@ -76,21 +74,9 @@ namespace GitUI.BranchTreePanel
                 BranchText = pathAndBranch.Length == 2 ? " " + pathAndBranch[1] : "";
             }
 
-            public async Task LoadDetailsAsync(CancellationToken token)
-            {
-                token.ThrowIfCancellationRequested();
-
-                if (Info.Detailed == null)
-                {
-                    return;
-                }
-
-                _details = await Info.Detailed.GetValueAsync(token);
-            }
-
             public void RefreshDetails()
             {
-                if (_details != null && Tree.TreeViewNode.TreeView != null)
+                if (Info.Detailed != null && Tree.TreeViewNode.TreeView != null)
                 {
                     ApplyText();
                     ApplyStyle();
@@ -106,7 +92,7 @@ namespace GitUI.BranchTreePanel
                     return Info.Text;
                 }
 
-                return SubmoduleName + BranchText + _details?.AddedAndRemovedText;
+                return SubmoduleName + BranchText + Info.Detailed?.AddedAndRemovedText;
             }
 
             protected override string NodeName()
@@ -145,13 +131,13 @@ namespace GitUI.BranchTreePanel
                     TreeViewNode.NodeFont = new Font(AppSettings.Font, FontStyle.Bold);
                 }
 
-                if (_details == null)
+                if (Info.Detailed == null)
                 {
                     TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.FolderSubmodule);
                 }
                 else
                 {
-                    TreeViewNode.ImageKey = GetSubmoduleItemImage(_details);
+                    TreeViewNode.ImageKey = GetSubmoduleItemImage(Info.Detailed);
                 }
 
                 TreeViewNode.SelectedImageKey = TreeViewNode.ImageKey;
@@ -263,13 +249,6 @@ namespace GitUI.BranchTreePanel
 
             private async Task LoadNodeDetailsAsync(CancellationToken token, Nodes loadedNodes)
             {
-                await TaskScheduler.Default;
-                foreach (var node in loadedNodes.DepthEnumerator<SubmoduleNode>())
-                {
-                    token.ThrowIfCancellationRequested();
-                    await node.LoadDetailsAsync(token).ConfigureAwaitRunInline();
-                }
-
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);
                 token.ThrowIfCancellationRequested();
 

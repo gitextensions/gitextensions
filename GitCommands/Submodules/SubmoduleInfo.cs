@@ -17,7 +17,7 @@ namespace GitCommands.Submodules
         /// </summary>
         public string Path { get; set; }
 
-        public AsyncLazy<DetailedSubmoduleInfo> Detailed { get; set; }
+        public DetailedSubmoduleInfo Detailed { get; set; }
         public bool Bold { get; set; }
     }
 }
