@@ -14,6 +14,7 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>gitcommandkey.snk.pfx</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
   </PropertyGroup>

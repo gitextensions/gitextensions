@@ -11,6 +11,7 @@
     <RootNamespace>TfsInterop.Vs2012</RootNamespace>
     <AssemblyName>TfsInterop.Vs2012</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>

@@ -19,6 +19,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>NetSpell.SpellChecker</RootNamespace>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
   </PropertyGroup>
