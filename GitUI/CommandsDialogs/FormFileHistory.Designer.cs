@@ -66,6 +66,7 @@ namespace GitUI.CommandsDialogs
             this.showAuthorDateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showAuthorTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showLineNumbersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showOriginalFilePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -483,7 +484,8 @@ namespace GitUI.CommandsDialogs
             this.showAuthorToolStripMenuItem,
             this.showAuthorDateToolStripMenuItem,
             this.showAuthorTimeToolStripMenuItem,
-            this.showLineNumbersToolStripMenuItem});
+            this.showLineNumbersToolStripMenuItem,
+            this.showOriginalFilePathToolStripMenuItem});
             this.toolStripBlameOptions.Image = global::GitUI.Properties.Images.Blame;
             this.toolStripBlameOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripBlameOptions.Name = "toolStripBlameOptions";
@@ -565,6 +567,13 @@ namespace GitUI.CommandsDialogs
             this.showLineNumbersToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
             this.showLineNumbersToolStripMenuItem.Text = "Show line numbers";
             this.showLineNumbersToolStripMenuItem.Click += new System.EventHandler(this.showLineNumbersToolStripMenuItem_Click);
+            // 
+            // showOriginalFilePathToolStripMenuItem
+            // 
+            this.showOriginalFilePathToolStripMenuItem.Name = "showOriginalFilePathToolStripMenuItem";
+            this.showOriginalFilePathToolStripMenuItem.Size = new System.Drawing.Size(247, 22);
+            this.showOriginalFilePathToolStripMenuItem.Text = "Show original file path";
+            this.showOriginalFilePathToolStripMenuItem.Click += new System.EventHandler(this.showOriginalFilePathToolStripMenuItem_Click);
             // 
             // FormFileHistory
             // 
@@ -651,5 +660,6 @@ namespace GitUI.CommandsDialogs
         private System.Windows.Forms.ToolStripMenuItem blameSettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem displaySettingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showAuthorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showOriginalFilePathToolStripMenuItem;
     }
 }

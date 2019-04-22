@@ -1640,6 +1640,12 @@ namespace GitCommands
             set => SetBool("Blame.ShowLineNumbers", value);
         }
 
+        public static bool BlameShowOriginalFilePath
+        {
+            get => GetBool("Blame.ShowOriginalFilePath", true);
+            set => SetBool("Blame.ShowOriginalFilePath", value);
+        }
+
         public static bool IsPortable()
         {
             return Properties.Settings.Default.IsPortable;

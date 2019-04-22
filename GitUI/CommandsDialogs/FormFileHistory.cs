@@ -135,6 +135,7 @@ namespace GitUI.CommandsDialogs
                 showAuthorDateToolStripMenuItem.Checked = AppSettings.BlameShowAuthorDate;
                 showAuthorTimeToolStripMenuItem.Checked = AppSettings.BlameShowAuthorTime;
                 showLineNumbersToolStripMenuItem.Checked = AppSettings.BlameShowLineNumbers;
+                showOriginalFilePathToolStripMenuItem.Checked = AppSettings.BlameShowOriginalFilePath;
             }
 
             if (filterByRevision && revision?.Guid != null)
@@ -686,6 +687,13 @@ namespace GitUI.CommandsDialogs
             AppSettings.BlameShowLineNumbers = !AppSettings.BlameShowLineNumbers;
             showLineNumbersToolStripMenuItem.Checked = AppSettings.BlameShowLineNumbers;
             Blame.UpdateShowLineNumbers();
+            UpdateSelectedFileViewers(true);
+        }
+
+        private void showOriginalFilePathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.BlameShowOriginalFilePath = !AppSettings.BlameShowOriginalFilePath;
+            showOriginalFilePathToolStripMenuItem.Checked = AppSettings.BlameShowOriginalFilePath;
             UpdateSelectedFileViewers(true);
         }
     }

@@ -356,7 +356,7 @@ namespace GitUI.Blame
                 lineBuilder.Append(line.Commit.Author);
             }
 
-            if (filename != line.Commit.FileName)
+            if (AppSettings.BlameShowOriginalFilePath && filename != line.Commit.FileName)
             {
                 lineBuilder.Append(" - ");
                 lineBuilder.Append(line.Commit.FileName);
