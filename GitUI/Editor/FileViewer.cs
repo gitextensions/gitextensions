@@ -559,9 +559,22 @@ namespace GitUI.Editor
             {
                 try
                 {
-                    var summary = await SummariseBinaryFileAsync();
+                    var summary = new StringBuilder()
+                        .AppendLine("Binary file:")
+                        .AppendLine()
+                        .AppendLine(fileName)
+                        .AppendLine()
+                        .AppendLine($"{text.Length:N0} bytes:")
+                        .AppendLine();
+                    internalFileViewer.SetText(summary.ToString(), openWithDifftool);
 
-                    internalFileViewer.SetText(summary, openWithDifftool);
+                    await Task.Run(() =>
+                    {
+                        // it is not strictly required to await this,
+                        // but change ViewTextAsync() will require changes to callers too
+                        ToHexDump(Encoding.ASCII.GetBytes(text), summary);
+                    });
+                    internalFileViewer.SetText(summary.ToString(), openWithDifftool);
                 }
                 catch
                 {
@@ -574,51 +587,6 @@ namespace GitUI.Editor
             {
                 internalFileViewer.SetText(text, openWithDifftool);
                 TextLoaded?.Invoke(this, null);
-            }
-
-            async Task<string> SummariseBinaryFileAsync()
-            {
-                var fileInfo = GetFileInfo(fileName);
-
-                var str = new StringBuilder()
-                    .AppendLine("Binary file:")
-                    .AppendLine()
-                    .AppendLine(fileName)
-                    .AppendLine()
-                    .AppendLine($"{fileInfo.Length:N0} bytes:")
-                    .AppendLine();
-
-                try
-                {
-                    const int maxLength = 1024 * 4;
-
-                    var displayByteCount = (int)Math.Min(fileInfo.Length, maxLength);
-                    var bytes = new byte[displayByteCount];
-
-                    using (var stream = File.OpenRead(fileInfo.FullName))
-                    {
-                        var offset = 0;
-                        while (offset < displayByteCount)
-                        {
-                            offset += await stream.ReadAsync(bytes, offset, displayByteCount - offset);
-                        }
-                    }
-
-                    ToHexDump(bytes, str);
-
-                    if (fileInfo.Length > maxLength)
-                    {
-                        str.AppendLine()
-                           .AppendLine()
-                           .Append($"TRUNCATED: Shown first {maxLength:N0} of {fileInfo.Length:N0} bytes");
-                    }
-                }
-                catch
-                {
-                    // oops
-                }
-
-                return str.ToString();
             }
         }
 
