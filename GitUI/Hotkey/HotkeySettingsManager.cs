@@ -35,6 +35,7 @@ namespace GitUI.Hotkey
         #endregion
 
         private static readonly HashSet<Keys> _usedKeys = new HashSet<Keys>();
+        private static readonly IScriptManager ScriptManager = new ScriptManager();
 
         /// <summary>
         /// Returns whether the hotkey is already assigned.
@@ -376,9 +377,7 @@ namespace GitUI.Hotkey
                  * these integers are never matched in the 'switch' routine on a form and
                  * therefore execute the 'default' action
                  */
-                var scriptManager = new ScriptManager();
-
-                return scriptManager
+                return ScriptManager
                     .GetScripts()
                     .Where(s => !s.Name.IsNullOrEmpty())
                     .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.Name) { KeyData = Keys.None })
