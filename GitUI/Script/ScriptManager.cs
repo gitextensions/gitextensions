@@ -13,6 +13,19 @@ using JetBrains.Annotations;
 
 namespace GitUI.Script
 {
+    internal interface IScriptManager
+    {
+        BindingList<ScriptInfo> GetScripts();
+
+        ScriptInfo GetScript(string key);
+
+        void RunEventScripts(GitModuleForm form, ScriptEvent scriptEvent);
+
+        string SerializeIntoXml();
+
+        int NextHotKeyCommandIdentifier();
+    }
+
     internal sealed class ScriptManager : IScriptManager
     {
         private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(BindingList<ScriptInfo>));
