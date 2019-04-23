@@ -59,8 +59,7 @@ namespace GitUI.Browsing.Dialogs
 
         public bool ShowStandardProcessDialog(string process, ArgumentString arguments, string workingDirectory, string input, bool useDialogSettings)
         {
-            var outputCtrl = new EditboxBasedConsoleOutputControl();
-
+            using (var outputCtrl = new EditboxBasedConsoleOutputControl())
             using (var formProcess = new FormProcess(outputCtrl, process, arguments, workingDirectory, input, useDialogSettings))
             {
                 formProcess.ShowDialog(_owner);
