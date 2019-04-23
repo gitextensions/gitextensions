@@ -49,7 +49,7 @@
             this.ShowAuthorAvatarInCommitGraph = new System.Windows.Forms.CheckBox();
             this.ShowAuthorAvatarInCommitInfo = new System.Windows.Forms.CheckBox();
             this.ClearImageCache = new System.Windows.Forms.Button();
-            this.NoImageService = new System.Windows.Forms.ComboBox();
+            this._NO_TRANSLATE_NoImageService = new System.Windows.Forms.ComboBox();
             this.lblCacheDays = new System.Windows.Forms.Label();
             this.lblNoImageService = new System.Windows.Forms.Label();
             this._NO_TRANSLATE_DaysToCacheImages = new System.Windows.Forms.NumericUpDown();
@@ -320,7 +320,7 @@
             this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatarInCommitGraph, 0, 0);
             this.tlpnlAuthor.Controls.Add(this.ShowAuthorAvatarInCommitInfo, 0, 1);
             this.tlpnlAuthor.Controls.Add(this.ClearImageCache, 1, 4);
-            this.tlpnlAuthor.Controls.Add(this.NoImageService, 1, 3);
+            this.tlpnlAuthor.Controls.Add(this._NO_TRANSLATE_NoImageService, 1, 3);
             this.tlpnlAuthor.Controls.Add(this.lblCacheDays, 0, 2);
             this.tlpnlAuthor.Controls.Add(this.lblNoImageService, 0, 3);
             this.tlpnlAuthor.Controls.Add(this._NO_TRANSLATE_DaysToCacheImages, 1, 2);
@@ -373,15 +373,15 @@
             this.ClearImageCache.UseVisualStyleBackColor = true;
             this.ClearImageCache.Click += new System.EventHandler(this.ClearImageCache_Click);
             // 
-            // NoImageService
+            // _NO_TRANSLATE_NoImageService
             // 
-            this.NoImageService.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.NoImageService.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.NoImageService.FormattingEnabled = true;
-            this.NoImageService.Location = new System.Drawing.Point(114, 75);
-            this.NoImageService.Name = "NoImageService";
-            this.NoImageService.Size = new System.Drawing.Size(183, 21);
-            this.NoImageService.TabIndex = 5;
+            this._NO_TRANSLATE_NoImageService.Dock = System.Windows.Forms.DockStyle.Fill;
+            this._NO_TRANSLATE_NoImageService.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._NO_TRANSLATE_NoImageService.FormattingEnabled = true;
+            this._NO_TRANSLATE_NoImageService.Location = new System.Drawing.Point(114, 75);
+            this._NO_TRANSLATE_NoImageService.Name = "_NO_TRANSLATE_NoImageService";
+            this._NO_TRANSLATE_NoImageService.Size = new System.Drawing.Size(183, 21);
+            this._NO_TRANSLATE_NoImageService.TabIndex = 5;
             // 
             // lblCacheDays
             // 
@@ -441,6 +441,7 @@
             this.Controls.Add(tlpnlMain);
             this.MinimumSize = new System.Drawing.Size(258, 255);
             this.Name = "AppearanceSettingsPage";
+            this.Text = "Appearance";
             this.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.Size = new System.Drawing.Size(1138, 769);
             tlpnlMain.ResumeLayout(false);
@@ -478,7 +479,7 @@
         private System.Windows.Forms.Label truncateLongFilenames;
         private System.Windows.Forms.ComboBox truncatePathMethod;
         private System.Windows.Forms.GroupBox gbAuthorImages;
-        private System.Windows.Forms.ComboBox NoImageService;
+        private System.Windows.Forms.ComboBox _NO_TRANSLATE_NoImageService;
         private System.Windows.Forms.Label lblNoImageService;
         private System.Windows.Forms.NumericUpDown _NO_TRANSLATE_DaysToCacheImages;
         private System.Windows.Forms.Label lblCacheDays;
