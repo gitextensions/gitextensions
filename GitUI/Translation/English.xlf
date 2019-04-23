@@ -119,30 +119,6 @@ This action will be performed without warning while checking out branch.</source
         <source>Clear image cache</source>
         <target />
       </trans-unit>
-      <trans-unit id="NoImageService.Item0">
-        <source>None</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="NoImageService.Item1">
-        <source>MonsterId</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="NoImageService.Item2">
-        <source>Wavatar</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="NoImageService.Item3">
-        <source>Identicon</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="NoImageService.Item4">
-        <source>Retro</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="NoImageService.Item5">
-        <source>Robohash</source>
-        <target />
-      </trans-unit>
       <trans-unit id="ShowAuthorAvatarInCommitGraph.Text">
         <source>Show author's avatar column in the commit graph</source>
         <target />

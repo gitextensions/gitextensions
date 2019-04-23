@@ -19,14 +19,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             InitializeComponent();
             InitializeComplete();
 
-            NoImageService.Items.AddRange(Enum.GetNames(typeof(DefaultImageType)));
+            _NO_TRANSLATE_NoImageService.Items.AddRange(Enum.GetNames(typeof(DefaultImageType)));
         }
 
         protected override void OnRuntimeLoad()
         {
             base.OnRuntimeLoad();
 
-            ToolTip.SetToolTip(NoImageService, _noImageServiceTooltip.Text);
+            ToolTip.SetToolTip(_NO_TRANSLATE_NoImageService, _noImageServiceTooltip.Text);
 
             // align 1st columns across all tables
             tlpnlGeneral.AdjustWidthToSize(0, truncateLongFilenames, lblCacheDays, lblNoImageService, lblLanguage, lblSpellingDictionary);
@@ -36,9 +36,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             // align 2nd columns across all tables
             truncatePathMethod.AdjustWidthToFitContent();
             Language.AdjustWidthToFitContent();
-            tlpnlGeneral.AdjustWidthToSize(1, truncatePathMethod, NoImageService, Language);
-            tlpnlAuthor.AdjustWidthToSize(1, truncatePathMethod, NoImageService, Language);
-            tlpnlLanguage.AdjustWidthToSize(1, truncatePathMethod, NoImageService, Language);
+            tlpnlGeneral.AdjustWidthToSize(1, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
+            tlpnlAuthor.AdjustWidthToSize(1, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
+            tlpnlLanguage.AdjustWidthToSize(1, truncatePathMethod, _NO_TRANSLATE_NoImageService, Language);
         }
 
         public static SettingsPageReference GetPageReference()
@@ -54,7 +54,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
             ShowAuthorAvatarInCommitInfo.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
             ShowAuthorAvatarInCommitGraph.Checked = AppSettings.ShowAuthorAvatarColumn;
-            NoImageService.Text = AppSettings.GravatarDefaultImageType.ToString();
+            _NO_TRANSLATE_NoImageService.Text = AppSettings.GravatarDefaultImageType.ToString();
 
             Language.Items.Clear();
             Language.Items.Add("English");
@@ -115,7 +115,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.Translation = Language.Text;
             Strings.Reinitialize();
 
-            if (Enum.TryParse<DefaultImageType>(NoImageService.Text, ignoreCase: true, out var type))
+            if (Enum.TryParse<DefaultImageType>(_NO_TRANSLATE_NoImageService.Text, ignoreCase: true, out var type))
             {
                 AppSettings.GravatarDefaultImageType = type;
             }
