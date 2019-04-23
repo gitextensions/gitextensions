@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Linq;
 using System.Windows.Forms;
 using GitUI.UserControls;
 
@@ -37,10 +36,10 @@ namespace GitUI.BranchTreePanel
 
             if (disposing)
             {
-                _branchesTree.Dispose();
-                _remotesTree.Dispose();
-                _tagTree.Dispose();
-                _submoduleTree.Dispose();
+                _branchesTree?.Dispose();
+                _remotesTree?.Dispose();
+                _tagTree?.Dispose();
+                _submoduleTree?.Dispose();
             }
 
             base.Dispose(disposing);
@@ -178,7 +177,7 @@ namespace GitUI.BranchTreePanel
             this.menuBranch.Name = "contextmenuBranch";
             this.menuBranch.Size = new System.Drawing.Size(192, 76);
             this.menuBranch.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
-            
+
             // 
             // mnubtnFilterLocalBranchInRevisionGrid
             // 
@@ -281,7 +280,7 @@ namespace GitUI.BranchTreePanel
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(190, 6);
-           
+
             // 
             // mnubtnFetchAllBranchesFromARemote
             // 
@@ -551,7 +550,7 @@ namespace GitUI.BranchTreePanel
             // 
             // menuAllSubmodules
             // 
-            this.menuAllSubmodules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {});
+            this.menuAllSubmodules.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { });
             this.menuAllSubmodules.Name = "contextmenuSubmodules";
             this.menuAllSubmodules.Size = new System.Drawing.Size(196, 26);
             this.menuAllSubmodules.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenu_Opening);
