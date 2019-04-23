@@ -139,7 +139,6 @@
     <Compile Include="Browsing\ICanGoToRef.cs" />
     <Compile Include="Browsing\ICanLoadSettings.cs" />
     <Compile Include="Browsing\ICanRefreshRevisions.cs" />
-    <Compile Include="Browsing\IUserScriptMenuBuilder.cs" />
     <Compile Include="Browsing\UserScriptMenuBuilder.cs" />
     <Compile Include="BuildServerIntegration\BuildServerWatcher.cs" />
     <Compile Include="CommandsDialogs\EnvironmentInfo.cs">
