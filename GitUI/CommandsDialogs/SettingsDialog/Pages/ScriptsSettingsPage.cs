@@ -223,32 +223,40 @@ Current Branch:
 
         private void moveUpButton_Click(object sender, EventArgs e)
         {
-            if (ScriptList.SelectedRows.Count > 0)
+            if (ScriptList.SelectedRows.Count <= 0)
             {
-                ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
-                int index = _scriptManager.GetScripts().IndexOf(scriptInfo);
-                _scriptManager.GetScripts().Remove(scriptInfo);
-                _scriptManager.GetScripts().Insert(Math.Max(index - 1, 0), scriptInfo);
-
-                ScriptList.ClearSelection();
-                ScriptList.Rows[Math.Max(index - 1, 0)].Selected = true;
-                ScriptList.Focus();
+                return;
             }
+
+            ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+            var scripts = _scriptManager.GetScripts();
+            int index = scripts.IndexOf(scriptInfo);
+
+            scripts.Remove(scriptInfo);
+            scripts.Insert(Math.Max(index - 1, 0), scriptInfo);
+
+            ScriptList.ClearSelection();
+            ScriptList.Rows[Math.Max(index - 1, 0)].Selected = true;
+            ScriptList.Focus();
         }
 
         private void moveDownButton_Click(object sender, EventArgs e)
         {
-            if (ScriptList.SelectedRows.Count > 0)
+            if (ScriptList.SelectedRows.Count <= 0)
             {
-                ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
-                int index = _scriptManager.GetScripts().IndexOf(scriptInfo);
-                _scriptManager.GetScripts().Remove(scriptInfo);
-                _scriptManager.GetScripts().Insert(Math.Min(index + 1, _scriptManager.GetScripts().Count), scriptInfo);
-
-                ScriptList.ClearSelection();
-                ScriptList.Rows[Math.Max(index + 1, 0)].Selected = true;
-                ScriptList.Focus();
+                return;
             }
+
+            ScriptInfo scriptInfo = ScriptList.SelectedRows[0].DataBoundItem as ScriptInfo;
+            var scripts = _scriptManager.GetScripts();
+            int index = scripts.IndexOf(scriptInfo);
+
+            scripts.Remove(scriptInfo);
+            scripts.Insert(Math.Min(index + 1, scripts.Count), scriptInfo);
+
+            ScriptList.ClearSelection();
+            ScriptList.Rows[Math.Max(index + 1, 0)].Selected = true;
+            ScriptList.Focus();
         }
 
         private void browseScriptButton_Click(object sender, EventArgs e)
