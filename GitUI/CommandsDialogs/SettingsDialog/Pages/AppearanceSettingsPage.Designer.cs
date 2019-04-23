@@ -441,6 +441,7 @@
             this.Controls.Add(tlpnlMain);
             this.MinimumSize = new System.Drawing.Size(258, 255);
             this.Name = "AppearanceSettingsPage";
+            this.Text = "Appearance";
             this.Padding = new System.Windows.Forms.Padding(8, 8, 8, 8);
             this.Size = new System.Drawing.Size(1138, 769);
             tlpnlMain.ResumeLayout(false);

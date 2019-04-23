@@ -111,6 +111,10 @@ This action will be performed without warning while checking out branch.</source
   </file>
   <file datatype="plaintext" original="AppearanceSettingsPage" source-language="en">
     <body>
+      <trans-unit id="$this.Text">
+        <source>Appearance</source>
+        <target />
+      </trans-unit>
       <trans-unit id="ClearImageCache.Text">
         <source>Clear image cache</source>
         <target />
