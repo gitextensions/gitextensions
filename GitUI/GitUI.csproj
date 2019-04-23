@@ -131,7 +131,6 @@
       <SubType>UserControl</SubType>
       <DependentUpon>RepoObjectsTree.cs</DependentUpon>
     </Compile>
-    <Compile Include="Browsing\Dialogs\ISimpleDialog.cs" />
     <Compile Include="Browsing\Dialogs\SimpleDialog.cs" />
     <Compile Include="Browsing\ICanLatestSelectedRevision.cs" />
     <Compile Include="Browsing\ICanGetSelectedRevisions.cs" />
