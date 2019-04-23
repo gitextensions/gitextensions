@@ -32,7 +32,7 @@ namespace GitUI.Avatars
         }
 
         /// <inheritdoc />
-        public async Task<Image> GetAvatarAsync(string email, int imageSize)
+        public async Task<Image> GetAvatarAsync(string email, string name, int imageSize)
         {
             lock (_cache)
             {
@@ -42,7 +42,7 @@ namespace GitUI.Avatars
                 }
             }
 
-            var image = await _inner.GetAvatarAsync(email, imageSize);
+            var image = await _inner.GetAvatarAsync(email, name, imageSize);
 
             lock (_cache)
             {

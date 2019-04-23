@@ -37,7 +37,7 @@ namespace GitUI.Avatars
         public event Action CacheCleared;
 
         /// <inheritdoc />
-        public async Task<Image> GetAvatarAsync(string email, int imageSize)
+        public async Task<Image> GetAvatarAsync(string email, string name, int imageSize)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -103,6 +103,7 @@ namespace GitUI.Avatars
                             case DefaultImageType.Wavatar: return "wavatar";
                             case DefaultImageType.Retro: return "retro";
                             case DefaultImageType.Robohash: return "robohash";
+                            case DefaultImageType.AuthorInitials: return "404";
                             default: return "404";
                         }
                     }

@@ -46,16 +46,16 @@ namespace GitUI
             return;
 
             void ClearCache()
-            {
-                ThreadHelper.JoinableTaskFactory
-                    .RunAsync(
-                        async () =>
-                        {
-                            await _avatarProvider.ClearCacheAsync().ConfigureAwait(true);
-                            await UpdateAvatarAsync().ConfigureAwait(false);
-                        })
-                    .FileAndForget();
-            }
+        {
+            ThreadHelper.JoinableTaskFactory
+                .RunAsync(
+                    async () =>
+                    {
+                        await _avatarProvider.ClearCacheAsync().ConfigureAwait(true);
+                        await UpdateAvatarAsync().ConfigureAwait(false);
+                    })
+                .FileAndForget();
+        }
         }
 
         /// <summary>
@@ -77,7 +77,11 @@ namespace GitUI
         [Browsable(false)]
         public string Email { get; private set; }
 
-        public void LoadImage(string email)
+        [CanBeNull]
+        [Browsable(false)]
+        public string AuthorName { get; private set; }
+
+        public void LoadImage(string email, string name)
         {
             if (string.IsNullOrEmpty(email))
             {
@@ -86,6 +90,7 @@ namespace GitUI
             }
 
             Email = email;
+            AuthorName = name;
             ThreadHelper.JoinableTaskFactory.RunAsync(() => UpdateAvatarAsync()).FileAndForget();
         }
 
@@ -115,7 +120,7 @@ namespace GitUI
             }
 
             var token = _cancellationTokenSequence.Next();
-            var image = await _avatarProvider.GetAvatarAsync(email, Math.Max(size.Width, size.Height));
+            var image = await _avatarProvider.GetAvatarAsync(email, AuthorName, Math.Max(size.Width, size.Height));
 
             if (!token.IsCancellationRequested)
             {

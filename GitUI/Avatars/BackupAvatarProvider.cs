@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
+using GitCommands;
 
 namespace GitUI.Avatars
 {
@@ -23,11 +25,11 @@ namespace GitUI.Avatars
         }
 
         /// <inheritdoc />
-        public async Task<Image> GetAvatarAsync(string email, int imageSize)
+        public async Task<Image> GetAvatarAsync(string email, string name, int imageSize)
         {
             try
             {
-                return await _inner.GetAvatarAsync(email, imageSize) ?? _backupImage;
+                return await _inner.GetAvatarAsync(email, name, imageSize) ?? _backupImage;
             }
             catch
             {

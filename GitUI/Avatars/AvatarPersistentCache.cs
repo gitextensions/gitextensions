@@ -16,11 +16,13 @@ namespace GitUI.Avatars
         private const int DefaultCacheDays = 30;
 
         private readonly IAvatarProvider _inner;
+        private readonly IAvatarGenerator _avatarGenerator;
         private readonly IFileSystem _fileSystem;
 
-        public AvatarPersistentCache(IAvatarProvider inner, IFileSystem fileSystem = null)
+        public AvatarPersistentCache(IAvatarProvider inner, IAvatarGenerator avatarGenerator, IFileSystem fileSystem = null)
         {
             _inner = inner;
+            _avatarGenerator = avatarGenerator;
             _fileSystem = fileSystem ?? new FileSystem();
         }
 
@@ -32,13 +34,14 @@ namespace GitUI.Avatars
         }
 
         /// <inheritdoc />
-        public async Task<Image> GetAvatarAsync(string email, int imageSize)
+        public async Task<Image> GetAvatarAsync(string email, string name, int imageSize)
         {
             var cacheDir = AppSettings.AvatarImageCachePath;
             var path = Path.Combine(cacheDir, $"{email}.{imageSize}px.png");
 
             var image = ReadImage()
-                ?? await _inner.GetAvatarAsync(email, imageSize);
+                ?? await _inner.GetAvatarAsync(email, name, imageSize)
+                ?? _avatarGenerator.GetAvatarImage(email, name, imageSize);
 
             if (image != null)
             {

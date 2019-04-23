@@ -61,6 +61,7 @@
     <Compile Include="Avatars\AvatarMemoryCacheTests.cs" />
     <Compile Include="Avatars\AvatarPersistentCacheTests.cs" />
     <Compile Include="Avatars\AvatarTestBase.cs" />
+    <Compile Include="Avatars\InitialsAvatarGeneratorTests.cs" />
     <Compile Include="Avatars\BackupAvatarProviderTests.cs" />
     <Compile Include="BranchTreePanel\GitRefMenuItemsTest.cs" />
     <Compile Include="CancellationTokenSequenceTests.cs" />

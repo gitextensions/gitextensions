@@ -11,6 +11,11 @@ namespace GitCommands
         /// </summary>
         None = 0,
 
+        /// <summary>
+        /// Return generated author initials avatar (color based on the email hash).
+        /// </summary>
+        AuthorInitials,
+
 #if false
         /// <summary>
         /// Return a simple, cartoon-style silhouetted outline of a person

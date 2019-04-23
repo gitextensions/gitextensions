@@ -94,11 +94,11 @@ namespace GitUI.CommitInfo
 
             if (revision == null)
             {
-                avatarControl.LoadImage(null);
+                avatarControl.LoadImage(null, null);
                 return;
             }
 
-            avatarControl.LoadImage(revision.AuthorEmail ?? revision.CommitterEmail);
+            avatarControl.LoadImage(revision.AuthorEmail ?? revision.CommitterEmail, revision.Author ?? revision.Committer);
         }
 
         private void rtbRevisionHeader_ContentsResized(ContentsResizedEventArgs e)

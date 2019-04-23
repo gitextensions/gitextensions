@@ -17,7 +17,7 @@ namespace GitUI.Avatars
         /// </summary>
         [NotNull]
         [ItemCanBeNull]
-        Task<Image> GetAvatarAsync([NotNull] string email, int imageSize);
+        Task<Image> GetAvatarAsync([NotNull] string email, string name, int imageSize);
 
         /// <summary>
         /// Clears any cached images before raising <see cref="CacheCleared"/>.
