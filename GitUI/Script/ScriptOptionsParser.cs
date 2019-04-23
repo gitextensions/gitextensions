@@ -15,6 +15,13 @@ using JetBrains.Annotations;
 
 namespace GitUI.Script
 {
+    internal interface IExternalMethods : ICanGetCurrentRevision,
+        ICanGetQuickItemSelectorLocation,
+        ICanGetSelectedRevisions,
+        ICanLatestSelectedRevision
+    {
+    }
+
     internal sealed class ScriptOptionsParser : IScriptOptionsParser
     {
         private readonly ISimpleDialog _simpleDialog;
@@ -496,13 +503,6 @@ namespace GitUI.Script
         {
             public string ParseScriptArguments(string argument, string option, ISimpleDialog simpleDialog, IGitModule module, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches, List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision, List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote, ICanGetQuickItemSelectorLocation canGetQuickItemSelectorLocation) =>
                 ScriptOptionsParser.ParseScriptArguments(argument, option, simpleDialog, module, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote, canGetQuickItemSelectorLocation);
-        }
-
-        internal interface IExternalMethods : ICanGetCurrentRevision,
-            ICanGetQuickItemSelectorLocation,
-            ICanGetSelectedRevisions,
-            ICanLatestSelectedRevision
-        {
         }
     }
 }
