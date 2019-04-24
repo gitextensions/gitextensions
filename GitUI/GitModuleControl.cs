@@ -162,7 +162,7 @@ namespace GitUI
                 var scriptOptionsParser = new ScriptOptionsParser(simpleDialog, revisionGridControl);
                 var scriptRunner = new ScriptRunner(Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, new ScriptManager(), revisionGridControl);
 
-                return scriptRunner.ExecuteScriptCommand(command);
+                return scriptRunner.RunScript(command);
             }
         }
 

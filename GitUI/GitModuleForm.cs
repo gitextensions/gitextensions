@@ -74,7 +74,7 @@ namespace GitUI
             var simpleDialog = new SimpleDialog(this);
             var scriptOptionsParser = new ScriptOptionsParser(simpleDialog);
             var scriptRunner = new ScriptRunner(Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, new ScriptManager());
-            var result = scriptRunner.ExecuteScriptCommand(command);
+            var result = scriptRunner.RunScript(command);
 
             if (!result.Executed)
             {

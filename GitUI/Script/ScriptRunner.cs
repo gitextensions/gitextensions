@@ -14,7 +14,7 @@ namespace GitUI.Script
         /// <summary>
         /// Tries to run scripts identified by a <paramref name="command"/>
         /// </summary>
-        CommandStatus ExecuteScriptCommand(int command);
+        CommandStatus RunScript(int command);
 
         CommandStatus RunScript(string scriptKey);
     }
@@ -48,7 +48,7 @@ namespace GitUI.Script
         }
 
         /// <inheritdoc />
-        public CommandStatus ExecuteScriptCommand(int command)
+        public CommandStatus RunScript(int command)
         {
             var anyScriptExecuted = false;
             var needsGridRefresh = false;
