@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
+using GitUI.BranchTreePanel;
 using GitUI.CommitInfo;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
@@ -266,12 +267,39 @@ namespace GitUI.Blame
 
         private void ProcessBlame(string filename, GitRevision revision, IReadOnlyList<ObjectId> children, Control controlToMask, int lineNumber, int scrollpos)
         {
+            var (gutter, body) = BuildBlameContents(filename);
+
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                () => BlameAuthor.ViewTextAsync("committer.txt", gutter));
+            ThreadHelper.JoinableTaskFactory.RunAsync(
+                () => BlameFile.ViewTextAsync(_fileName, body));
+
+            if (lineNumber > 0)
+            {
+                BlameFile.GoToLine(lineNumber - 1);
+            }
+            else
+            {
+                BlameFile.VScrollPosition = scrollpos;
+            }
+
+            _clickedBlameLine = null;
+
+            _blameId = revision.ObjectId;
+            CommitInfo.SetRevisionWithChildren(revision, children);
+
+            controlToMask?.UnMask();
+        }
+
+        private (string gutter, string body) BuildBlameContents(string filename)
+        {
             var body = new StringBuilder(capacity: 4096);
 
             GitBlameCommit lastCommit = null;
 
             var dateTimeFormat = AppSettings.BlameShowAuthorTime
-                ? CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern
+                ? CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " +
+                  CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern
                 : CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
 
             // NOTE EOL white-space supports highlight on mouse-over.
@@ -296,7 +324,7 @@ namespace GitUI.Blame
                 }
                 else
                 {
-                    BuildAuthorLine(line, lineBuilder, dateTimeFormat, filename);
+                    BuildAuthorLine(line, lineBuilder, dateTimeFormat, filename, AppSettings.BlameShowAuthor, AppSettings.BlameShowAuthorDate, AppSettings.BlameShowOriginalFilePath, AppSettings.BlameDisplayAuthorFirst);
 
                     gutter.Append(lineBuilder);
                     gutter.Append(' ', lineLength - lineBuilder.Length).AppendLine();
@@ -308,47 +336,28 @@ namespace GitUI.Blame
                 lastCommit = line.Commit;
             }
 
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                () => BlameAuthor.ViewTextAsync("committer.txt", gutter.ToString()));
-            ThreadHelper.JoinableTaskFactory.RunAsync(
-                () => BlameFile.ViewTextAsync(_fileName, body.ToString()));
-
-            if (lineNumber > 0)
-            {
-                BlameFile.GoToLine(lineNumber - 1);
-            }
-            else
-            {
-                BlameFile.VScrollPosition = scrollpos;
-            }
-
-            _clickedBlameLine = null;
-
-            _blameId = revision.ObjectId;
-            CommitInfo.SetRevisionWithChildren(revision, children);
-
-            controlToMask?.UnMask();
+            return (gutter.ToString(), body.ToString());
         }
 
-        private void BuildAuthorLine(GitBlameLine line, StringBuilder lineBuilder, string dateTimeFormat, string filename)
+        private void BuildAuthorLine(GitBlameLine line, StringBuilder lineBuilder, string dateTimeFormat, string filename, bool showAuthor, bool showAuthorDate, bool showOriginalFilePath, bool displayAuthorFirst)
         {
-            if (AppSettings.BlameShowAuthor && AppSettings.BlameDisplayAuthorFirst)
+            if (showAuthor && displayAuthorFirst)
             {
                 lineBuilder.Append(line.Commit.Author);
-                if (AppSettings.BlameShowAuthorDate)
+                if (showAuthorDate)
                 {
                     lineBuilder.Append(" - ");
                 }
             }
 
-            if (AppSettings.BlameShowAuthorDate)
+            if (showAuthorDate)
             {
                 lineBuilder.Append(line.Commit.AuthorTime.ToString(dateTimeFormat));
             }
 
-            if (AppSettings.BlameShowAuthor && !AppSettings.BlameDisplayAuthorFirst)
+            if (showAuthor && !displayAuthorFirst)
             {
-                if (AppSettings.BlameShowAuthorDate)
+                if (showAuthorDate)
                 {
                     lineBuilder.Append(" - ");
                 }
@@ -356,7 +365,7 @@ namespace GitUI.Blame
                 lineBuilder.Append(line.Commit.Author);
             }
 
-            if (AppSettings.BlameShowOriginalFilePath && filename != line.Commit.FileName)
+            if (showOriginalFilePath && filename != line.Commit.FileName)
             {
                 lineBuilder.Append(" - ");
                 lineBuilder.Append(line.Commit.FileName);
@@ -501,6 +510,27 @@ namespace GitUI.Blame
             }
 
             base.Dispose(disposing);
+        }
+
+        internal readonly struct TestAccessor
+        {
+            private readonly BlameControl _control;
+
+            public TestAccessor(BlameControl control)
+            {
+                _control = control;
+            }
+
+            public GitBlame Blame
+            {
+                get => _control._blame;
+                set => _control._blame = value;
+            }
+
+            public void BuildAuthorLine(GitBlameLine line, StringBuilder lineBuilder, string dateTimeFormat, string filename, bool showAuthor, bool showAuthorDate, bool showOriginalFilePath, bool displayAuthorFirst)
+                => _control.BuildAuthorLine(line, lineBuilder, dateTimeFormat, filename, showAuthor, showAuthorDate, showOriginalFilePath, displayAuthorFirst);
+
+            public (string gutter, string body) BuildBlameContents(string filename) => _control.BuildBlameContents(filename);
         }
     }
 }
