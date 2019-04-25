@@ -33,8 +33,7 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Don't show me this message again.");
 
         private readonly TranslationString _resetNonFastForwardBranch =
-            new TranslationString("You are going to reset the “{0}” branch to a new location\n" +
-                "discarding ALL the commited changes since the {1} revision.\n\nAre you sure?");
+            new TranslationString("You are going to reset the “{0}” branch to a new location discarding ALL the commited changes since the {1} revision.\n\nAre you sure?");
         private readonly TranslationString _resetCaption = new TranslationString("Reset branch");
         #endregion
 
