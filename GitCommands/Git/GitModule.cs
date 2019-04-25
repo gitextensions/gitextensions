@@ -1166,6 +1166,11 @@ namespace GitCommands
 
                 return null;
             }
+            else if (output.StartsWith("fatal: ") || output.StartsWith("error: "))
+            {
+                // Not a Git repo or a submodule with incorrect ref to a superproject
+                return null;
+            }
 
             return ObjectId.Parse(output);
         }

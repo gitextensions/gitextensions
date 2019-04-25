@@ -359,6 +359,16 @@ namespace GitCommandsTests
             }
         }
 
+        [TestCase("fatal: not a git repository:")]
+        [TestCase("error: something went wrong")]
+        public void GetCurrentCheckout_should_query_git_and_return_null_if_invalid_response(string msg)
+        {
+            using (_executable.StageOutput($"rev-parse HEAD", msg, 0))
+            {
+                _gitModule.GetCurrentCheckout().Should().BeNull();
+            }
+        }
+
         [Test]
         public void GetRemotes()
         {
