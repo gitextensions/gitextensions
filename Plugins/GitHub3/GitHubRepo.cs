@@ -72,7 +72,7 @@ namespace GitHub3
 
         public string CloneReadWriteUrl => CloneProtocol == GitProtocol.Ssh ? _repo.SshUrl : _repo.CloneUrl;
 
-        public string CloneReadOnlyUrl => _repo.GitUrl;
+        public string CloneReadOnlyUrl => CloneProtocol == GitProtocol.Ssh ? _repo.GitUrl : _repo.CloneUrl;
 
         public IReadOnlyList<IHostedBranch> GetBranches()
         {
