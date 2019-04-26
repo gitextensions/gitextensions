@@ -438,11 +438,11 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             if (repo != null)
             {
-                bool multipleProtocols = repo.SupportedCloneProtocols.Length > 0;
+                bool multipleProtocols = repo.SupportedCloneProtocols.Any();
 
                 if (multipleProtocols && updateProtocols)
                 {
-                    var currentSelection = (string)ProtocolDropdownList.SelectedItem;
+                    var currentSelection = (GitProtocol)(ProtocolDropdownList.SelectedItem ?? repo.SupportedCloneProtocols.First());
                     ProtocolDropdownList.DataSource = CurrentySelectedGitRepo.SupportedCloneProtocols;
                     if (CurrentySelectedGitRepo.SupportedCloneProtocols.Contains(currentSelection))
                     {
@@ -535,7 +535,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void ProtocolSelectionChanged(object sender, EventArgs e)
         {
-            CurrentySelectedGitRepo.CloneProtocol = (string)ProtocolDropdownList.SelectedItem;
+            CurrentySelectedGitRepo.CloneProtocol = (GitProtocol)ProtocolDropdownList.SelectedItem;
             SetCloneInfoText(CurrentySelectedGitRepo);
         }
     }

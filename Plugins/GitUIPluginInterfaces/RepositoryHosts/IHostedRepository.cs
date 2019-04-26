@@ -47,9 +47,9 @@ namespace GitUIPluginInterfaces.RepositoryHosts
         /// <returns>Pull request number</returns>
         int CreatePullRequest(string myBranch, string remoteBranch, string title, string body);
 
-        string CloneProtocol { get; set; }
+        GitProtocol CloneProtocol { get; set; }
 
-        string[] SupportedCloneProtocols { get; set; }
+        IReadOnlyList<GitProtocol> SupportedCloneProtocols { get; set; }
     }
 
     public interface IHostedBranch
