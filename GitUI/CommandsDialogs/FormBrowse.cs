@@ -104,6 +104,8 @@ namespace GitUI.CommandsDialogs
         private readonly WindowsJumpListManager _windowsJumpListManager;
         private readonly SubmoduleStatusProvider _submoduleStatusProvider;
         private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
+        private readonly IScriptManager _scriptManager;
+        private readonly FormSettings _formSettings;
         [CanBeNull] private BuildReportTabPageExtension _buildReportTabPageExtension;
         private ConEmuControl _terminal;
         private Dashboard _dashboard;
@@ -184,13 +186,14 @@ namespace GitUI.CommandsDialogs
             _filterRevisionsHelper = new FilterRevisionsHelper(toolStripRevisionFilterTextBox, toolStripRevisionFilterDropDownButton, RevisionGrid, toolStripRevisionFilterLabel, ShowFirstParent, form: this);
             _filterBranchHelper = new FilterBranchHelper(toolStripBranchFilterComboBox, toolStripBranchFilterDropDownButton, RevisionGrid);
             _aheadBehindDataProvider = GitVersion.Current.SupportAheadBehindData ? new AheadBehindDataProvider(() => Module.GitExecutable) : null;
+            _scriptManager = new ScriptManager();
+            _formSettings = new FormSettings(UICommands);
 
             var gitUIEventArgs = new GitUIEventArgs(RevisionGrid, UICommands);
             var simpleDialog = new SimpleDialog(RevisionGrid);
-            var scriptManager = new ScriptManager();
             var scriptOptionsParser = new ScriptOptionsParser(simpleDialog, () => Module, RevisionGrid);
-            var scriptRunner = new ScriptRunner(() => Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, scriptManager, RevisionGrid);
-            var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptManager, scriptRunner, RevisionGrid, new FormSettings(UICommands));
+            var scriptRunner = new ScriptRunner(() => Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, _scriptManager, RevisionGrid);
+            var userScriptMenuBuilder = new UserScriptMenuBuilder(_scriptManager, scriptRunner, RevisionGrid, _formSettings);
 
             repoObjectsTree.Initialize(_aheadBehindDataProvider, _filterBranchHelper, userScriptMenuBuilder);
             toolStripBranchFilterComboBox.DropDown += toolStripBranches_DropDown_ResizeDropDownWidth;
@@ -864,10 +867,9 @@ namespace GitUI.CommandsDialogs
 
                 var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
                 var simpleDialog = new SimpleDialog(this);
-                var scriptManager = new ScriptManager();
                 var scriptOptionsParser = new ScriptOptionsParser(simpleDialog, () => Module, RevisionGrid);
-                var scriptRunner = new ScriptRunner(() => Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, scriptManager, RevisionGrid);
-                var userScriptMenuBuilder = new UserScriptMenuBuilder(scriptManager, scriptRunner, RevisionGrid, new FormSettings(UICommands));
+                var scriptRunner = new ScriptRunner(() => Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, _scriptManager, RevisionGrid);
+                var userScriptMenuBuilder = new UserScriptMenuBuilder(_scriptManager, scriptRunner, RevisionGrid, _formSettings);
 
                 userScriptMenuBuilder.Build(ToolStrip);
 
