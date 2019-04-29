@@ -42,9 +42,9 @@ namespace GitUI.CommandsDialogs
 
             var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
             var simpleDialog = new SimpleDialog(this);
-            var scriptOptionsParser = new ScriptOptionsParser(simpleDialog);
+            var scriptOptionsParser = new ScriptOptionsParser(simpleDialog, () => Module);
 
-            _scriptRunner = new ScriptRunner(Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, _scriptManager);
+            _scriptRunner = new ScriptRunner(() => Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, _scriptManager);
         }
 
         private void FormDeleteRemoteBranchLoad(object sender, EventArgs e)

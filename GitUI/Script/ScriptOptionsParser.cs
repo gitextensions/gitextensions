@@ -15,6 +15,11 @@ using JetBrains.Annotations;
 
 namespace GitUI.Script
 {
+    internal interface IScriptOptionsParser
+    {
+        (string argument, bool abort) Parse(string argument);
+    }
+
     internal interface IExternalMethods : ICanGetCurrentRevision,
         ICanGetQuickItemSelectorLocation,
         ICanGetSelectedRevisions,
@@ -25,6 +30,7 @@ namespace GitUI.Script
     internal sealed class ScriptOptionsParser : IScriptOptionsParser
     {
         private readonly ISimpleDialog _simpleDialog;
+        private readonly Func<IGitModule> _getModule;
         private readonly ICanGetCurrentRevision _canGetCurrentRevision;
         private readonly ICanGetQuickItemSelectorLocation _canGetQuickItemSelectorLocation;
         private readonly ICanGetSelectedRevisions _canGetSelectedRevisions;
@@ -32,29 +38,36 @@ namespace GitUI.Script
 
         public ScriptOptionsParser(
             ISimpleDialog simpleDialog,
+            Func<IGitModule> getModule,
             ICanGetCurrentRevision canGetCurrentRevision = null,
             ICanGetQuickItemSelectorLocation canGetQuickItemSelectorLocation = null,
             ICanGetSelectedRevisions canGetSelectedRevisions = null,
             ICanLatestSelectedRevision canLatestSelectedRevision = null)
         {
             _simpleDialog = simpleDialog ?? throw new ArgumentNullException(nameof(simpleDialog));
+            _getModule = getModule ?? throw new ArgumentNullException(nameof(getModule));
             _canGetCurrentRevision = canGetCurrentRevision;
             _canGetQuickItemSelectorLocation = canGetQuickItemSelectorLocation;
             _canGetSelectedRevisions = canGetSelectedRevisions;
             _canLatestSelectedRevision = canLatestSelectedRevision;
         }
 
-        public ScriptOptionsParser(ISimpleDialog simpleDialog, IExternalMethods externalMethods = null)
-            : this(simpleDialog, externalMethods, externalMethods, externalMethods, externalMethods)
+        public ScriptOptionsParser(
+            ISimpleDialog simpleDialog,
+            Func<IGitModule> getModule,
+            IExternalMethods externalMethods = null)
+            : this(simpleDialog, getModule, externalMethods, externalMethods, externalMethods, externalMethods)
         {
         }
 
-        public ScriptOptionsParser(ISimpleDialog simpleDialog)
-            : this(simpleDialog, null)
+        public ScriptOptionsParser(
+            ISimpleDialog simpleDialog,
+            Func<IGitModule> getModule)
+            : this(simpleDialog, getModule, null)
         {
         }
 
-        public (string argument, bool abort) Parse(string argument, IGitModule module)
+        public (string argument, bool abort) Parse(string argument)
         {
             GitRevision selectedRevision = null;
             GitRevision currentRevision = null;
@@ -85,6 +98,8 @@ namespace GitUI.Script
                 {
                     continue;
                 }
+
+                var module = _getModule();
 
                 if (option.StartsWith("c") && currentRevision == null)
                 {

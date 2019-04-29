@@ -14,7 +14,7 @@ namespace GitUITests.Script
     {
         private IScriptRunner _scriptRunner;
 
-        private readonly Mock<IGitModule> _moduleMock = new Mock<IGitModule>();
+        private readonly Mock<Func<IGitModule>> _getModuleMock = new Mock<Func<IGitModule>>();
         private readonly Mock<IScriptOptionsParser> _scriptOptionsParserMock = new Mock<IScriptOptionsParser>();
         private readonly Mock<ISimpleDialog> _simpleDialogMock = new Mock<ISimpleDialog>();
         private readonly Mock<IScriptManager> _scriptManagerMock = new Mock<IScriptManager>();
@@ -24,7 +24,7 @@ namespace GitUITests.Script
         public void SetUp()
         {
             _scriptRunner = new ScriptRunner(
-                _moduleMock.Object,
+                _getModuleMock.Object,
                 new GitUIEventArgs(new Mock<IWin32Window>().Object, new Mock<IGitUICommands>().Object),
                 _scriptOptionsParserMock.Object,
                 _simpleDialogMock.Object,

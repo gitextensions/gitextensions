@@ -26,7 +26,7 @@ namespace GitUI.Script
         private const string PluginPrefix = "plugin:";
         private const string NavigateToPrefix = "navigateTo:";
 
-        private readonly IGitModule _module;
+        private readonly Func<IGitModule> _getModule;
         private readonly GitUIEventArgs _gitUIEventArgs;
         private readonly IScriptOptionsParser _scriptOptionsParser;
         private readonly ISimpleDialog _simpleDialog;
@@ -34,14 +34,14 @@ namespace GitUI.Script
         private readonly ICanGoToRef _canGoToRef;
 
         public ScriptRunner(
-            IGitModule module,
+            Func<IGitModule> getModule,
             GitUIEventArgs gitUIEventArgs,
             IScriptOptionsParser scriptOptionsParser,
             ISimpleDialog simpleDialog,
             IScriptManager scriptManager,
             ICanGoToRef canGoToRef = null)
         {
-            _module = module ?? throw new ArgumentNullException(nameof(module));
+            _getModule = getModule ?? throw new ArgumentNullException(nameof(getModule));
             _gitUIEventArgs = gitUIEventArgs ?? throw new ArgumentNullException(nameof(gitUIEventArgs));
             _scriptOptionsParser = scriptOptionsParser ?? throw new ArgumentNullException(nameof(scriptOptionsParser));
             _simpleDialog = simpleDialog ?? throw new ArgumentNullException(nameof(simpleDialog));
@@ -121,7 +121,7 @@ namespace GitUI.Script
             }
 
             var originalCommand = script.Command;
-            (string argument, bool abort) = _scriptOptionsParser.Parse(script.Arguments, _module);
+            (string argument, bool abort) = _scriptOptionsParser.Parse(script.Arguments);
 
             if (abort)
             {
@@ -130,11 +130,11 @@ namespace GitUI.Script
 
             var command = OverrideCommandWhenNecessary(originalCommand);
 
-            command = ExpandCommandVariables(command, _module);
+            command = ExpandCommandVariables(command, _getModule());
 
             if (script.IsPowerShell)
             {
-                PowerShellHelper.RunPowerShell(command, argument, _module.WorkingDir, script.RunInBackground);
+                PowerShellHelper.RunPowerShell(command, argument, _getModule().WorkingDir, script.RunInBackground);
                 return new CommandStatus(true, false);
             }
 
@@ -162,7 +162,7 @@ namespace GitUI.Script
                 command = command.Replace(NavigateToPrefix, string.Empty);
                 if (!command.IsNullOrEmpty())
                 {
-                    var revisionRef = new Executable(command, _module.WorkingDir).GetOutputLines(argument).FirstOrDefault();
+                    var revisionRef = new Executable(command, _getModule().WorkingDir).GetOutputLines(argument).FirstOrDefault();
 
                     if (revisionRef != null)
                     {
@@ -175,7 +175,7 @@ namespace GitUI.Script
 
             if (!script.RunInBackground)
             {
-                _simpleDialog.ShowStandardProcessDialog(command, argument, _module.WorkingDir, null, true);
+                _simpleDialog.ShowStandardProcessDialog(command, argument, _getModule().WorkingDir, null, true);
             }
             else
             {
@@ -185,7 +185,7 @@ namespace GitUI.Script
                 }
                 else
                 {
-                    new Executable(command, _module.WorkingDir).Start(argument);
+                    new Executable(command, _getModule().WorkingDir).Start(argument);
                 }
             }
 
