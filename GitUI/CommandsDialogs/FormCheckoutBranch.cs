@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitUI.Browsing.Dialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -52,7 +53,8 @@ namespace GitUI.CommandsDialogs
         private IReadOnlyList<IGitRef> _localBranches;
         private IReadOnlyList<IGitRef> _remoteBranches;
 
-        private IScriptManager _scriptManager;
+        private readonly IScriptManager _scriptManager;
+        private readonly IScriptRunner _scriptRunner;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCheckoutBranch()
@@ -72,6 +74,12 @@ namespace GitUI.CommandsDialogs
             Shown += FormCheckoutBranch_Shown;
 
             _scriptManager = new ScriptManager();
+
+            var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
+            var simpleDialog = new SimpleDialog(this);
+            var scriptOptionsParser = new ScriptOptionsParser(simpleDialog);
+
+            _scriptRunner = new ScriptRunner(Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, _scriptManager);
 
             return;
 
@@ -376,7 +384,14 @@ namespace GitUI.CommandsDialogs
 
             Debug.Assert(originalId != null, "originalId != null");
 
-            _scriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
+            var scripts = _scriptManager.GetScripts()
+                .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforeCheckout)
+                .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+            foreach (var script in scripts)
+            {
+                _scriptRunner.RunScript(script);
+            }
 
             if (UICommands.StartCommandLineProcessDialog(owner, new GitCheckoutBranchCmd(branchName, isRemote, localChanges, newBranchMode, newBranchName)))
             {
@@ -416,7 +431,14 @@ namespace GitUI.CommandsDialogs
                     UICommands.UpdateSubmodules(this);
                 }
 
-                _scriptManager.RunEventScripts(this, ScriptEvent.AfterCheckout);
+                scripts = _scriptManager.GetScripts()
+                    .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterCheckout)
+                    .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+                foreach (var script in scripts)
+                {
+                    _scriptRunner.RunScript(script);
+                }
 
                 return DialogResult.OK;
             }

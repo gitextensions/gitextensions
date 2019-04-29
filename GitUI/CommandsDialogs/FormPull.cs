@@ -12,6 +12,7 @@ using GitCommands.Git;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
+using GitUI.Browsing.Dialogs;
 using GitUI.Properties;
 using GitUI.Script;
 using GitUIPluginInterfaces;
@@ -108,6 +109,7 @@ namespace GitUI.CommandsDialogs
         private readonly string _branch;
 
         private readonly IScriptManager _scriptManager;
+        private readonly IScriptRunner _scriptRunner;
 
         [CanBeNull] private List<IGitRef> _heads;
         private bool _bInternalUpdate;
@@ -127,6 +129,12 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             _scriptManager = new ScriptManager();
+
+            var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
+            var simpleDialog = new SimpleDialog(this);
+            var scriptOptionsParser = new ScriptOptionsParser(simpleDialog);
+
+            _scriptRunner = new ScriptRunner(Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, _scriptManager);
 
             helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
             helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
@@ -402,7 +410,14 @@ namespace GitUI.CommandsDialogs
                 return DialogResult.No;
             }
 
-            _scriptManager.RunEventScripts(this, ScriptEvent.BeforePull);
+            var scripts = _scriptManager.GetScripts()
+                .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforePull)
+                .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+            foreach (var script in scripts)
+            {
+                _scriptRunner.RunScript(script);
+            }
 
             var stashed = CalculateStashedValue(owner);
 
@@ -441,7 +456,14 @@ namespace GitUI.CommandsDialogs
                         PopStash();
                     }
 
-                    _scriptManager.RunEventScripts(this, ScriptEvent.AfterPull);
+                    scripts = _scriptManager.GetScripts()
+                        .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterPull)
+                        .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+                    foreach (var script in scripts)
+                    {
+                        _scriptRunner.RunScript(script);
+                    }
                 }
             }
 

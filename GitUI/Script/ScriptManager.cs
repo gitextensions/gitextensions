@@ -19,8 +19,6 @@ namespace GitUI.Script
 
         ScriptInfo GetScript(string key);
 
-        void RunEventScripts(GitModuleForm form, ScriptEvent scriptEvent);
-
         string SerializeIntoXml();
 
         int NextHotKeyCommandIdentifier();
@@ -68,19 +66,6 @@ namespace GitUI.Script
             }
 
             return null;
-        }
-
-        public void RunEventScripts(GitModuleForm form, ScriptEvent scriptEvent)
-        {
-            foreach (var script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
-            {
-                var gitUIEventArgs = new GitUIEventArgs(form, form.UICommands);
-                var simpleDialog = new SimpleDialog(form);
-                var scriptOptionsParser = new ScriptOptionsParser(simpleDialog);
-                var scriptRunner = new ScriptRunner(form.Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, new ScriptManager());
-
-                scriptRunner.RunScript(script.Name);
-            }
         }
 
         [CanBeNull]

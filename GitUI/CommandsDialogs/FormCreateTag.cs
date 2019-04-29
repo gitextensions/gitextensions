@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git.Tag;
+using GitUI.Browsing.Dialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -21,6 +23,7 @@ namespace GitUI.CommandsDialogs
         private static readonly TranslationString _trsSignSpecificKey = new TranslationString("Sign with specific GPG");
 
         private readonly IScriptManager _scriptManager;
+        private readonly IScriptRunner _scriptRunner;
 
         private readonly IGitTagController _gitTagController;
         private string _currentRemote = "";
@@ -38,6 +41,12 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             _scriptManager = new ScriptManager();
+
+            var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
+            var simpleDialog = new SimpleDialog(this);
+            var scriptOptionsParser = new ScriptOptionsParser(simpleDialog);
+
+            _scriptRunner = new ScriptRunner(Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, _scriptManager);
 
             annotate.Items.AddRange(new object[] { _trsLightweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text });
             annotate.SelectedIndex = 0;
@@ -117,7 +126,14 @@ namespace GitUI.CommandsDialogs
         {
             var pushCmd = GitCommandHelpers.PushTagCmd(_currentRemote, tagName, false);
 
-            _scriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+            var scripts = _scriptManager.GetScripts()
+                .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforePush)
+                .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+            foreach (var script in scripts)
+            {
+                _scriptRunner.RunScript(script);
+            }
 
             using (var form = new FormRemoteProcess(Module, pushCmd)
             {
@@ -129,7 +145,14 @@ namespace GitUI.CommandsDialogs
 
                 if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
                 {
-                    _scriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
+                    scripts = _scriptManager.GetScripts()
+                        .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterPush)
+                        .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+                    foreach (var script in scripts)
+                    {
+                        _scriptRunner.RunScript(script);
+                    }
                 }
             }
         }

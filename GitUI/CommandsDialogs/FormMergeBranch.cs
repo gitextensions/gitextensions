@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Browsing.Dialogs;
 using GitUI.Script;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -15,6 +18,7 @@ namespace GitUI.CommandsDialogs
         private readonly string _defaultBranch;
 
         private readonly IScriptManager _scriptManager;
+        private readonly IScriptRunner _scriptRunner;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormMergeBranch()
@@ -31,6 +35,12 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             _scriptManager = new ScriptManager();
+
+            var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
+            var simpleDialog = new SimpleDialog(this);
+            var scriptOptionsParser = new ScriptOptionsParser(simpleDialog);
+
+            _scriptRunner = new ScriptRunner(Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, _scriptManager);
 
             currentBranchLabel.Font = new Font(currentBranchLabel.Font, FontStyle.Bold);
             noCommit.Checked = AppSettings.DontCommitMerge;
@@ -82,7 +92,15 @@ namespace GitUI.CommandsDialogs
         {
             Module.EffectiveSettings.NoFastForwardMerge = noFastForward.Checked;
             AppSettings.DontCommitMerge = noCommit.Checked;
-            _scriptManager.RunEventScripts(this, ScriptEvent.BeforeMerge);
+
+            var scripts = _scriptManager.GetScripts()
+                .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforeMerge)
+                .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+            foreach (var script in scripts)
+            {
+                _scriptRunner.RunScript(script);
+            }
 
             var successfullyMerged = FormProcess.ShowDialog(this, GitCommandHelpers.MergeBranchCmd(Branches.GetSelectedText(),
                                                                                                    fastForward.Checked,
@@ -97,7 +115,15 @@ namespace GitUI.CommandsDialogs
 
             if (successfullyMerged || wasConflict)
             {
-                _scriptManager.RunEventScripts(this, ScriptEvent.AfterMerge);
+                scripts = _scriptManager.GetScripts()
+                    .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterMerge)
+                    .Where(x => x.OnEvent == ScriptEvent.AfterMerge);
+
+                foreach (var script in scripts)
+                {
+                    _scriptRunner.RunScript(script);
+                }
+
                 UICommands.RepoChangedNotifier.Notify();
                 Close();
             }

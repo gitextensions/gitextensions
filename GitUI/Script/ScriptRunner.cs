@@ -17,6 +17,8 @@ namespace GitUI.Script
         CommandStatus RunScript(int command);
 
         CommandStatus RunScript(string scriptKey);
+
+        CommandStatus RunScript(ScriptInfo script);
     }
 
     internal sealed class ScriptRunner : IScriptRunner
@@ -57,7 +59,7 @@ namespace GitUI.Script
             {
                 if (script.HotkeyCommandIdentifier == command)
                 {
-                    var result = RunScript(script.Name);
+                    var result = RunScript(script);
 
                     anyScriptExecuted = true;
                     needsGridRefresh |= result.NeedsGridRefresh;
@@ -83,44 +85,34 @@ namespace GitUI.Script
                 return false;
             }
 
+            return RunScript(script);
+        }
+
+        public CommandStatus RunScript(ScriptInfo script)
+        {
             if (string.IsNullOrEmpty(script.Command))
             {
                 return false;
             }
 
-            var argument = script.Arguments;
-
-            foreach (var option in ScriptOptions.All)
+            if (_canGoToRef == null && !string.IsNullOrEmpty(script.Arguments))
             {
-                if (string.IsNullOrEmpty(argument) || !argument.Contains(option))
+                var option = ScriptOptions.All
+                    .Where(x => script.Arguments.Contains(x))
+                    .FirstOrDefault(x => x.StartsWith("s"));
+
+                if (option != null)
                 {
-                    continue;
+                    _simpleDialog.ShowOkDialog($"Option {option} is only supported when started from revision grid.", "Error", MessageBoxIcon.Error);
+
+                    return false;
                 }
-
-                if (!option.StartsWith("s"))
-                {
-                    continue;
-                }
-
-                if (_canGoToRef != null)
-                {
-                    continue;
-                }
-
-                _simpleDialog.ShowOkDialog($"Option {option} is only supported when started from revision grid.", "Error", MessageBoxIcon.Error);
-
-                return false;
             }
 
-            return RunScript(_module, script);
-        }
-
-        private CommandStatus RunScript(IGitModule module, ScriptInfo scriptInfo)
-        {
-            if (scriptInfo.AskConfirmation)
+            if (script.AskConfirmation)
             {
                 var dialogResult = _simpleDialog
-                    .ShowYesNoDialog($"Do you want to execute '{scriptInfo.Name}'?", "Script", MessageBoxIcon.Question);
+                    .ShowYesNoDialog($"Do you want to execute '{script.Name}'?", "Script", MessageBoxIcon.Question);
 
                 if (dialogResult == DialogResult.No)
                 {
@@ -128,8 +120,8 @@ namespace GitUI.Script
                 }
             }
 
-            var originalCommand = scriptInfo.Command;
-            (string argument, bool abort) = _scriptOptionsParser.Parse(scriptInfo.Arguments, module);
+            var originalCommand = script.Command;
+            (string argument, bool abort) = _scriptOptionsParser.Parse(script.Arguments, _module);
 
             if (abort)
             {
@@ -138,11 +130,11 @@ namespace GitUI.Script
 
             var command = OverrideCommandWhenNecessary(originalCommand);
 
-            command = ExpandCommandVariables(command, module);
+            command = ExpandCommandVariables(command, _module);
 
-            if (scriptInfo.IsPowerShell)
+            if (script.IsPowerShell)
             {
-                PowerShellHelper.RunPowerShell(command, argument, module.WorkingDir, scriptInfo.RunInBackground);
+                PowerShellHelper.RunPowerShell(command, argument, _module.WorkingDir, script.RunInBackground);
                 return new CommandStatus(true, false);
             }
 
@@ -170,7 +162,7 @@ namespace GitUI.Script
                 command = command.Replace(NavigateToPrefix, string.Empty);
                 if (!command.IsNullOrEmpty())
                 {
-                    var revisionRef = new Executable(command, module.WorkingDir).GetOutputLines(argument).FirstOrDefault();
+                    var revisionRef = new Executable(command, _module.WorkingDir).GetOutputLines(argument).FirstOrDefault();
 
                     if (revisionRef != null)
                     {
@@ -181,9 +173,9 @@ namespace GitUI.Script
                 return new CommandStatus(true, false);
             }
 
-            if (!scriptInfo.RunInBackground)
+            if (!script.RunInBackground)
             {
-                _simpleDialog.ShowStandardProcessDialog(command, argument, module.WorkingDir, null, true);
+                _simpleDialog.ShowStandardProcessDialog(command, argument, _module.WorkingDir, null, true);
             }
             else
             {
@@ -193,11 +185,11 @@ namespace GitUI.Script
                 }
                 else
                 {
-                    new Executable(command, module.WorkingDir).Start(argument);
+                    new Executable(command, _module.WorkingDir).Start(argument);
                 }
             }
 
-            return new CommandStatus(true, !scriptInfo.RunInBackground);
+            return new CommandStatus(true, !script.RunInBackground);
         }
 
         private static string ExpandCommandVariables(string originalCommand, IGitModule module)

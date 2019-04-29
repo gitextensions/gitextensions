@@ -12,6 +12,7 @@ using GitCommands.Git;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtUtils.GitUI;
+using GitUI.Browsing.Dialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -39,6 +40,7 @@ namespace GitUI.CommandsDialogs
         private IReadOnlyList<IGitRef> _gitRefs;
         private readonly IConfigFileRemoteSettingsManager _remotesManager;
         private readonly IScriptManager _scriptManager;
+        private readonly IScriptRunner _scriptRunner;
 
         public bool ErrorOccurred { get; private set; }
 
@@ -103,6 +105,12 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             _scriptManager = new ScriptManager();
+
+            var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
+            var simpleDialog = new SimpleDialog(this);
+            var scriptOptionsParser = new ScriptOptionsParser(simpleDialog);
+
+            _scriptRunner = new ScriptRunner(Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, _scriptManager);
 
             if (!GitVersion.Current.SupportPushForceWithLease)
             {
@@ -425,7 +433,14 @@ namespace GitUI.CommandsDialogs
                 pushCmd = GitCommandHelpers.PushMultipleCmd(destination, pushActions);
             }
 
-            _scriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+            var scripts = _scriptManager.GetScripts()
+                .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforePush)
+                .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+            foreach (var script in scripts)
+            {
+                _scriptRunner.RunScript(script);
+            }
 
             // controls can be accessed only from UI thread
             _selectedBranch = _NO_TRANSLATE_Branch.Text;
@@ -444,7 +459,15 @@ namespace GitUI.CommandsDialogs
 
                 if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
                 {
-                    _scriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
+                    scripts = _scriptManager.GetScripts()
+                        .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterPush)
+                        .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+                    foreach (var script in scripts)
+                    {
+                        _scriptRunner.RunScript(script);
+                    }
+
                     if (_createPullRequestCB.Checked)
                     {
                         UICommands.StartCreatePullRequest(owner);

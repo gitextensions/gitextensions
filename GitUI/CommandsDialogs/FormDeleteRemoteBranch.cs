@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
+using GitUI.Browsing.Dialogs;
 using GitUI.Script;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -22,6 +23,7 @@ namespace GitUI.CommandsDialogs
         private readonly string _defaultRemoteBranch;
 
         private readonly IScriptManager _scriptManager;
+        private readonly IScriptRunner _scriptRunner;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormDeleteRemoteBranch()
@@ -37,6 +39,12 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             _scriptManager = new ScriptManager();
+
+            var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
+            var simpleDialog = new SimpleDialog(this);
+            var scriptOptionsParser = new ScriptOptionsParser(simpleDialog);
+
+            _scriptRunner = new ScriptRunner(Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, _scriptManager);
         }
 
         private void FormDeleteRemoteBranchLoad(object sender, EventArgs e)
@@ -80,7 +88,14 @@ namespace GitUI.CommandsDialogs
 
                     var cmd = new GitDeleteRemoteBranchesCmd(remote, branches.Select(x => x.LocalName));
 
-                    _scriptManager.RunEventScripts(this, ScriptEvent.BeforePush);
+                    var scripts = _scriptManager.GetScripts()
+                        .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforePush)
+                        .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+                    foreach (var script in scripts)
+                    {
+                        _scriptRunner.RunScript(script);
+                    }
 
                     using (var form = new FormRemoteProcess(Module, cmd.Arguments)
                     {
@@ -91,7 +106,14 @@ namespace GitUI.CommandsDialogs
 
                         if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
                         {
-                            _scriptManager.RunEventScripts(this, ScriptEvent.AfterPush);
+                            scripts = _scriptManager.GetScripts()
+                                .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterPush)
+                                .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+                            foreach (var script in scripts)
+                            {
+                                _scriptRunner.RunScript(script);
+                            }
                         }
                     }
                 }

@@ -20,6 +20,7 @@ using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.AutoCompletion;
+using GitUI.Browsing.Dialogs;
 using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
@@ -160,6 +161,7 @@ namespace GitUI.CommandsDialogs
         private readonly IFullPathResolver _fullPathResolver;
         private readonly List<string> _formattedLines = new List<string>();
         private readonly IScriptManager _scriptManager;
+        private readonly IScriptRunner _scriptRunner;
 
         private FileStatusList _currentFilesList;
         private bool _skipUpdate;
@@ -195,6 +197,12 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
 
             _scriptManager = new ScriptManager();
+
+            var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
+            var simpleDialog = new SimpleDialog(this);
+            var scriptOptionsParser = new ScriptOptionsParser(simpleDialog);
+
+            _scriptRunner = new ScriptRunner(Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, _scriptManager);
 
             splitRight.Panel2MinSize = DpiUtil.Scale(100);
 
@@ -1365,7 +1373,14 @@ namespace GitUI.CommandsDialogs
                         SetCommitMessageFromTextBox(Message.Text);
                     }
 
-                    _scriptManager.RunEventScripts(this, ScriptEvent.BeforeCommit);
+                    var scripts = _scriptManager.GetScripts()
+                        .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforeCommit)
+                        .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+                    foreach (var script in scripts)
+                    {
+                        _scriptRunner.RunScript(script);
+                    }
 
                     var commitCmd = Module.CommitCmd(
                         amend,
@@ -1387,7 +1402,14 @@ namespace GitUI.CommandsDialogs
                     Amend.Checked = false;
                     noVerifyToolStripMenuItem.Checked = false;
 
-                    _scriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
+                    scripts = _scriptManager.GetScripts()
+                        .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterCommit)
+                        .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+                    foreach (var script in scripts)
+                    {
+                        _scriptRunner.RunScript(script);
+                    }
 
                     Message.Text = string.Empty; // Message.Text has been used and stored
                     _commitMessageManager.ResetCommitMessage();

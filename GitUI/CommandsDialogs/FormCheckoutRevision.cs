@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
+using GitUI.Browsing.Dialogs;
 using GitUI.Script;
+using GitUIPluginInterfaces;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -13,6 +16,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noRevisionSelectedMsgBoxCaption = new TranslationString("Checkout");
 
         private readonly IScriptManager _scriptManager;
+        private readonly IScriptRunner _scriptRunner;
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormCheckoutRevision()
@@ -27,6 +31,12 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             _scriptManager = new ScriptManager();
+
+            var gitUIEventArgs = new GitUIEventArgs(this, UICommands);
+            var simpleDialog = new SimpleDialog(this);
+            var scriptOptionsParser = new ScriptOptionsParser(simpleDialog);
+
+            _scriptRunner = new ScriptRunner(Module, gitUIEventArgs, scriptOptionsParser, simpleDialog, _scriptManager);
         }
 
         public void SetRevision(string commitHash)
@@ -50,7 +60,14 @@ namespace GitUI.CommandsDialogs
 
                 Debug.Assert(checkedOutObjectId != null, "checkedOutObjectId != null");
 
-                _scriptManager.RunEventScripts(this, ScriptEvent.BeforeCheckout);
+                var scripts = _scriptManager.GetScripts()
+                    .Where(x => x.Enabled && x.OnEvent == ScriptEvent.BeforeCheckout)
+                    .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+                foreach (var script in scripts)
+                {
+                    _scriptRunner.RunScript(script);
+                }
 
                 string command = GitCommandHelpers.CheckoutCmd(selectedObjectId.ToString(), Force.Checked ? LocalChangesAction.Reset : 0);
                 if (FormProcess.ShowDialog(this, command))
@@ -61,7 +78,14 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                _scriptManager.RunEventScripts(this, ScriptEvent.AfterCheckout);
+                scripts = _scriptManager.GetScripts()
+                    .Where(x => x.Enabled && x.OnEvent == ScriptEvent.AfterCheckout)
+                    .Where(x => x.OnEvent == ScriptEvent.BeforeCheckout);
+
+                foreach (var script in scripts)
+                {
+                    _scriptRunner.RunScript(script);
+                }
 
                 DialogResult = DialogResult.OK;
                 Close();
