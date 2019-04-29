@@ -37,7 +37,7 @@ namespace Bitbucket
                 return false;
             }
 
-            using (var frm = new BitbucketPullRequestForm(settings))
+            using (var frm = new BitbucketPullRequestForm(settings, args.GitModule))
             {
                 frm.ShowDialog(args.OwnerForm);
             }
