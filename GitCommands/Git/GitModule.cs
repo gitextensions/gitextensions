@@ -1142,37 +1142,17 @@ namespace GitCommands
 
         /// <summary>
         /// Gets the commit ID of the currently checked out commit.
-        /// If the repo is bare or has no commits, <c>null</c> is returned.
+        /// If the repo is bare, has no commits or is corrupt, <c>null</c> is returned.
         /// </summary>
         [CanBeNull]
         public ObjectId GetCurrentCheckout()
         {
             var args = new GitArgumentBuilder("rev-parse") { "HEAD" };
-            var output = _gitExecutable.GetOutput(args).TrimEnd();
+            var result = _gitExecutable.Execute(args);
 
-            if (output.StartsWith("HEAD"))
-            {
-                // A bare repo returns:
-                //
-                // HEAD
-                //
-                // A repository with no commits returns:
-                //
-                // HEAD
-                //
-                // fatal: ambiguous argument 'HEAD': unknown revision or path not in the working tree.
-                // Use '--' to separate paths from revisions, like this:
-                // 'git <command> [<revision>...] -- [<file>...]'
-
-                return null;
-            }
-            else if (output.StartsWith("fatal: ") || output.StartsWith("error: "))
-            {
-                // Not a Git repo or a submodule with incorrect ref to a superproject
-                return null;
-            }
-
-            return ObjectId.Parse(output);
+            return result.ExitCode == 0 && ObjectId.TryParse(result.StandardOutput, offset: 0, out var objectId)
+                ? objectId
+                : null;
         }
 
         public bool TryResolvePartialCommitId(string objectIdPrefix, out ObjectId objectId)
