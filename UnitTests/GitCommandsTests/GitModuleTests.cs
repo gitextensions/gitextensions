@@ -359,6 +359,32 @@ namespace GitCommandsTests
             }
         }
 
+        [TestCase("fatal: not a git repository:")]
+        [TestCase("error: something went wrong")]
+        [TestCase("HEAD")]
+        [TestCase("master")]
+        public void GetCurrentCheckout_should_query_git_and_return_null_if_response_is_not_sha(string msg)
+        {
+            using (_executable.StageOutput($"rev-parse HEAD", msg, 0))
+            {
+                _gitModule.GetCurrentCheckout().Should().BeNull();
+            }
+        }
+
+        [Test]
+        public void GetCurrentCheckout_should_query_git_and_return_sha_for_HEAD()
+        {
+            ObjectId objectId;
+            var headId = "69a7c7a40230346778e7eebed809773a6bc45268";
+
+            using (_executable.StageOutput("rev-parse HEAD", headId))
+            {
+                objectId = _gitModule.GetCurrentCheckout();
+            }
+
+            Assert.AreEqual(headId, objectId.ToString());
+        }
+
         [Test]
         public void GetRemotes()
         {
