@@ -290,11 +290,6 @@ namespace GitUI.CommitInfo
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    if (_refsOrderDict == null)
-                    {
-                        await LoadSortedRefsAsync();
-                    }
-
                     // No branch/tag data for artificial commands
                     if (AppSettings.CommitInfoShowContainedInBranches)
                     {
@@ -356,26 +351,6 @@ namespace GitUI.CommitInfo
                         }
 
                         return $"{WebUtility.HtmlEncode(_trsLinksRelatedToRevision.Text)} {result}";
-                    }
-                }
-
-                async Task LoadSortedRefsAsync()
-                {
-                    await TaskScheduler.Default;
-                    _refsOrderDict = ToDictionary(Module.GetSortedRefs());
-
-                    await this.SwitchToMainThreadAsync(cancellationToken);
-                    UpdateRevisionInfo();
-
-                    IDictionary<string, int> ToDictionary(IReadOnlyList<string> list)
-                    {
-                        var dict = new Dictionary<string, int>();
-                        for (int i = 0; i < list.Count; i++)
-                        {
-                            dict.Add(list[i], i);
-                        }
-
-                        return dict;
                     }
                 }
 
