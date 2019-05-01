@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GitCommands;
@@ -203,25 +202,17 @@ namespace GitUI.CommitInfo
             ReloadCommitInfo();
         }
 
-        private async Task LoadSortedRefsAsync(CancellationToken cancellationToken = default)
+        private async Task LoadSortedRefsAsync()
         {
-            if (cancellationToken == default)
-            {
-                ThreadHelper.AssertOnUIThread();
-                _refsOrderDict = null;
+            ThreadHelper.AssertOnUIThread();
+            _refsOrderDict = null;
 
-                await TaskScheduler.Default.SwitchTo();
-            }
-            else
-            {
-                await TaskScheduler.Default;
-            }
-
+            await TaskScheduler.Default.SwitchTo();
             try
             {
                 var refsOrderDict = ToDictionary(Module.GetSortedRefs());
 
-                await this.SwitchToMainThreadAsync(cancellationToken);
+                await this.SwitchToMainThreadAsync();
                 _refsOrderDict = refsOrderDict;
                 UpdateRevisionInfo();
             }
@@ -299,11 +290,6 @@ namespace GitUI.CommitInfo
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
-                    if (_refsOrderDict == null)
-                    {
-                        await LoadSortedRefsAsync(cancellationToken);
-                    }
-
                     // No branch/tag data for artificial commands
                     if (AppSettings.CommitInfoShowContainedInBranches)
                     {
