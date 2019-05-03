@@ -1,4 +1,5 @@
 ﻿using System;
+using System.DirectoryServices;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
@@ -127,7 +128,7 @@ namespace GitUI.CommandsDialogs
             string rev2 = "";
             string result = "";
 
-            var revisions = RevisionGrid.GetSelectedRevisions();
+            var revisions = RevisionGrid.GetSelectedRevisions(SortDirection.Descending);
             if (revisions.Count > 0)
             {
                 if (revisions.Count == 1)
