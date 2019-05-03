@@ -157,7 +157,7 @@ namespace GitUI.CommandsDialogs
             this.Skip.Name = "Skip";
             this.Skip.Size = new System.Drawing.Size(162, 25);
             this.Skip.TabIndex = 11;
-            this.Skip.Text = "Skip this commit";
+            this.Skip.Text = "Skip currently applying commit";
             this.Skip.UseVisualStyleBackColor = true;
             this.Skip.Click += new System.EventHandler(this.SkipClick);
             // 
