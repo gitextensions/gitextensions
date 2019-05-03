@@ -70,6 +70,8 @@ namespace GitUI
                 int currentPatchFileIndex = patchFiles.TakeWhile(pf => !pf.IsNext).Count() - 1;
                 Patches.FirstDisplayedScrollingRowIndex = Math.Max(0, currentPatchFileIndex - (rowsInView / 2));
             }
+
+            SelectCurrentlyApplyingPatch();
         }
 
         private void Patches_DoubleClick(object sender, EventArgs e)
@@ -88,6 +90,22 @@ namespace GitUI
             }
 
             UICommands.StartViewPatchDialog(patchFile.FullName);
+        }
+
+        public void SelectCurrentlyApplyingPatch()
+        {
+            if (PatchFiles == null || !PatchFiles.Any())
+            {
+                return;
+            }
+
+            var shouldSelectIndex = PatchFiles.IndexOf(p => p.IsNext);
+
+            if (shouldSelectIndex >= 0)
+            {
+                Patches.ClearSelection();
+                Patches.Rows[shouldSelectIndex].Selected = true;
+            }
         }
     }
 }
