@@ -1,4 +1,5 @@
 ﻿using System;
+using System.DirectoryServices;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
@@ -33,6 +34,8 @@ namespace GitUI.CommandsDialogs
             new TranslationString("Patch result");
         private readonly TranslationString _noGitMailConfigured =
             new TranslationString("There is no email address configured in the settings dialog.");
+        private readonly TranslationString _failCreatePatch =
+            new TranslationString("Unable to create patch file(s)");
 
         [Obsolete("For VS designer and translation test only. Do not remove.")]
         private FormFormatPatch()
@@ -127,7 +130,7 @@ namespace GitUI.CommandsDialogs
             string rev2 = "";
             string result = "";
 
-            var revisions = RevisionGrid.GetSelectedRevisions();
+            var revisions = RevisionGrid.GetSelectedRevisions(SortDirection.Descending);
             if (revisions.Count > 0)
             {
                 if (revisions.Count == 1)
@@ -185,8 +188,15 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            MessageBox.Show(this, result, _patchResultCaption.Text);
-            Close();
+            if (string.IsNullOrEmpty(result))
+            {
+                MessageBox.Show(this, _failCreatePatch.Text, _revisionsNeededCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                MessageBox.Show(this, result, _patchResultCaption.Text);
+                Close();
+            }
         }
 
         private bool SendMail(string dir)
