@@ -130,6 +130,12 @@ namespace GitUI.CommandsDialogs
                 ignoreWhitespaceToolStripMenuItem.Checked = AppSettings.IgnoreWhitespaceOnBlame;
                 detectMoveAndCopyInAllFilesToolStripMenuItem.Checked = AppSettings.DetectCopyInAllOnBlame;
                 detectMoveAndCopyInThisFileToolStripMenuItem.Checked = AppSettings.DetectCopyInFileOnBlame;
+                displayAuthorFirstToolStripMenuItem.Checked = AppSettings.BlameDisplayAuthorFirst;
+                showAuthorToolStripMenuItem.Checked = AppSettings.BlameShowAuthor;
+                showAuthorDateToolStripMenuItem.Checked = AppSettings.BlameShowAuthorDate;
+                showAuthorTimeToolStripMenuItem.Checked = AppSettings.BlameShowAuthorTime;
+                showLineNumbersToolStripMenuItem.Checked = AppSettings.BlameShowLineNumbers;
+                showOriginalFilePathToolStripMenuItem.Checked = AppSettings.BlameShowOriginalFilePath;
             }
 
             if (filterByRevision && revision?.Guid != null)
@@ -631,5 +637,64 @@ namespace GitUI.CommandsDialogs
         }
 
         #endregion
+
+        private void displayAuthorFirstToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.BlameDisplayAuthorFirst = !AppSettings.BlameDisplayAuthorFirst;
+            displayAuthorFirstToolStripMenuItem.Checked = AppSettings.BlameDisplayAuthorFirst;
+            UpdateSelectedFileViewers(true);
+        }
+
+        private void showAuthorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.BlameShowAuthor = !AppSettings.BlameShowAuthor;
+            showAuthorToolStripMenuItem.Checked = AppSettings.BlameShowAuthor;
+
+            if (!AppSettings.BlameShowAuthor)
+            {
+                showAuthorDateToolStripMenuItem.Checked = true;
+                AppSettings.BlameShowAuthorDate = true;
+            }
+
+            UpdateSelectedFileViewers(true);
+        }
+
+        private void showAuthorDateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.BlameShowAuthorDate = !AppSettings.BlameShowAuthorDate;
+            showAuthorDateToolStripMenuItem.Checked = AppSettings.BlameShowAuthorDate;
+
+            showAuthorTimeToolStripMenuItem.Enabled = AppSettings.BlameShowAuthorDate;
+
+            if (!AppSettings.BlameShowAuthorDate)
+            {
+                showAuthorToolStripMenuItem.Checked = true;
+                AppSettings.BlameShowAuthor = true;
+            }
+
+            UpdateSelectedFileViewers(true);
+        }
+
+        private void showAuthorTimeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.BlameShowAuthorTime = !AppSettings.BlameShowAuthorTime;
+            showAuthorTimeToolStripMenuItem.Checked = AppSettings.BlameShowAuthorTime;
+            UpdateSelectedFileViewers(true);
+        }
+
+        private void showLineNumbersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.BlameShowLineNumbers = !AppSettings.BlameShowLineNumbers;
+            showLineNumbersToolStripMenuItem.Checked = AppSettings.BlameShowLineNumbers;
+            Blame.UpdateShowLineNumbers();
+            UpdateSelectedFileViewers(true);
+        }
+
+        private void showOriginalFilePathToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AppSettings.BlameShowOriginalFilePath = !AppSettings.BlameShowOriginalFilePath;
+            showOriginalFilePathToolStripMenuItem.Checked = AppSettings.BlameShowOriginalFilePath;
+            UpdateSelectedFileViewers(true);
+        }
     }
 }

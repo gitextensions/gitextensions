@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using GitCommands;
 using GitExtUtils;
+using GitUI.BranchTreePanel;
 using GitUI.CommitInfo;
 using GitUI.Editor;
 using GitUI.HelperDialogs;
@@ -43,16 +45,16 @@ namespace GitUI.Blame
             InitializeComponent();
             InitializeComplete();
 
-            BlameCommitter.IsReadOnly = true;
-            BlameCommitter.EnableScrollBars(false);
-            BlameCommitter.ShowLineNumbers = false;
-            BlameCommitter.HScrollPositionChanged += BlameCommitter_HScrollPositionChanged;
-            BlameCommitter.VScrollPositionChanged += BlameCommitter_VScrollPositionChanged;
-            BlameCommitter.MouseMove += BlameCommitter_MouseMove;
-            BlameCommitter.MouseLeave += BlameCommitter_MouseLeave;
-            BlameCommitter.SelectedLineChanged += SelectedLineChanged;
-            BlameCommitter.RequestDiffView += ActiveTextAreaControlDoubleClick;
-            BlameCommitter.EscapePressed += () => EscapePressed?.Invoke();
+            BlameAuthor.IsReadOnly = true;
+            BlameAuthor.EnableScrollBars(false);
+            UpdateShowLineNumbers();
+            BlameAuthor.HScrollPositionChanged += BlameAuthor_HScrollPositionChanged;
+            BlameAuthor.VScrollPositionChanged += BlameAuthor_VScrollPositionChanged;
+            BlameAuthor.MouseMove += BlameAuthor_MouseMove;
+            BlameAuthor.MouseLeave += BlameAuthor_MouseLeave;
+            BlameAuthor.SelectedLineChanged += SelectedLineChanged;
+            BlameAuthor.RequestDiffView += ActiveTextAreaControlDoubleClick;
+            BlameAuthor.EscapePressed += () => EscapePressed?.Invoke();
 
             BlameFile.IsReadOnly = true;
             BlameFile.VScrollPositionChanged += BlameFile_VScrollPositionChanged;
@@ -62,6 +64,11 @@ namespace GitUI.Blame
             BlameFile.EscapePressed += () => EscapePressed?.Invoke();
 
             CommitInfo.CommandClicked += commitInfo_CommandClicked;
+        }
+
+        public void UpdateShowLineNumbers()
+        {
+            BlameAuthor.ShowLineNumbers = AppSettings.BlameShowLineNumbers;
         }
 
         public void LoadBlame(GitRevision revision, [CanBeNull] IReadOnlyList<ObjectId> children, string fileName, RevisionGridControl revGrid, Control controlToMask, Encoding encoding, int? initialLine = null, bool force = false)
@@ -95,12 +102,12 @@ namespace GitUI.Blame
             CommandClick?.Invoke(sender, e);
         }
 
-        private void BlameCommitter_MouseLeave(object sender, EventArgs e)
+        private void BlameAuthor_MouseLeave(object sender, EventArgs e)
         {
             blameTooltip.Hide(this);
         }
 
-        private void BlameCommitter_MouseMove(object sender, MouseEventArgs e)
+        private void BlameAuthor_MouseMove(object sender, MouseEventArgs e)
         {
             if (!BlameFile.Focused)
             {
@@ -112,7 +119,7 @@ namespace GitUI.Blame
                 return;
             }
 
-            var lineIndex = BlameCommitter.GetLineFromVisualPosY(e.Y);
+            var lineIndex = BlameAuthor.GetLineFromVisualPosY(e.Y);
 
             var blameCommit = lineIndex < _blame.Lines.Count
                 ? _blame.Lines[lineIndex].Commit
@@ -162,7 +169,7 @@ namespace GitUI.Blame
 
             _highlightedCommit = commit;
 
-            BlameCommitter.ClearHighlighting();
+            BlameAuthor.ClearHighlighting();
             BlameFile.ClearHighlighting();
 
             if (commit == null)
@@ -178,7 +185,7 @@ namespace GitUI.Blame
                 {
                     if (prevLine != i - 1 && startLine != -1)
                     {
-                        BlameCommitter.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
+                        BlameAuthor.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
                         BlameFile.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
                         startLine = -1;
                     }
@@ -193,11 +200,11 @@ namespace GitUI.Blame
 
             if (startLine != -1)
             {
-                BlameCommitter.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
+                BlameAuthor.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
                 BlameFile.HighlightLines(startLine, prevLine, SystemColors.ControlLight);
             }
 
-            BlameCommitter.Refresh();
+            BlameAuthor.Refresh();
             BlameFile.Refresh();
         }
 
@@ -222,27 +229,27 @@ namespace GitUI.Blame
             CommitInfo.Revision = Module.GetRevision(_lastBlameLine.Commit.ObjectId);
         }
 
-        private void BlameCommitter_HScrollPositionChanged(object sender, EventArgs e)
+        private void BlameAuthor_HScrollPositionChanged(object sender, EventArgs e)
         {
-            BlameCommitter.HScrollPosition = 0;
+            BlameAuthor.HScrollPosition = 0;
         }
 
-        private void BlameCommitter_VScrollPositionChanged(object sender, EventArgs e)
+        private void BlameAuthor_VScrollPositionChanged(object sender, EventArgs e)
         {
             if (!_changingScrollPosition)
             {
                 _changingScrollPosition = true;
-                BlameFile.VScrollPosition = BlameCommitter.VScrollPosition;
+                BlameFile.VScrollPosition = BlameAuthor.VScrollPosition;
                 _changingScrollPosition = false;
             }
 
-            Rectangle rect = BlameCommitter.ClientRectangle;
-            rect = BlameCommitter.RectangleToScreen(rect);
+            Rectangle rect = BlameAuthor.ClientRectangle;
+            rect = BlameAuthor.RectangleToScreen(rect);
             if (rect.Contains(MousePosition))
             {
-                Point p = BlameCommitter.PointToClient(MousePosition);
+                Point p = BlameAuthor.PointToClient(MousePosition);
                 var me = new MouseEventArgs(0, 0, p.X, p.Y, 0);
-                BlameCommitter_MouseMove(null, me);
+                BlameAuthor_MouseMove(null, me);
             }
         }
 
@@ -254,55 +261,18 @@ namespace GitUI.Blame
             }
 
             _changingScrollPosition = true;
-            BlameCommitter.VScrollPosition = BlameFile.VScrollPosition;
+            BlameAuthor.VScrollPosition = BlameFile.VScrollPosition;
             _changingScrollPosition = false;
         }
 
         private void ProcessBlame(string filename, GitRevision revision, IReadOnlyList<ObjectId> children, Control controlToMask, int lineNumber, int scrollpos)
         {
-            var gutter = new StringBuilder(capacity: 4096);
-            var body = new StringBuilder(capacity: 4096);
-
-            GitBlameCommit lastCommit = null;
-
-            // NOTE EOL white-space supports highlight on mouse-over.
-            // Highlighting is done via text background colour.
-            // If it could be done with a solid rectangle around the text,
-            // the extra spaces added here could be omitted.
-
-            foreach (var line in _blame.Lines)
-            {
-                if (line.Commit == lastCommit)
-                {
-                    gutter.Append(' ', 120).AppendLine();
-                }
-                else
-                {
-                    gutter.Append(line.Commit.Author);
-                    gutter.Append(" - ");
-                    gutter.Append(line.Commit.AuthorTime.ToString(CultureInfo.CurrentCulture));
-                    var authorLength = line.Commit.Author?.Length ?? 0;
-                    if (filename != line.Commit.FileName)
-                    {
-                        gutter.Append(" - ");
-                        gutter.Append(line.Commit.FileName);
-                        gutter.Append(' ', Math.Max(0, 95 - authorLength - line.Commit.FileName.Length)).AppendLine();
-                    }
-                    else
-                    {
-                        gutter.Append(' ', Math.Max(0, 98 - authorLength)).AppendLine();
-                    }
-                }
-
-                body.AppendLine(line.Text);
-
-                lastCommit = line.Commit;
-            }
+            var (gutter, body) = BuildBlameContents(filename);
 
             ThreadHelper.JoinableTaskFactory.RunAsync(
-                () => BlameCommitter.ViewTextAsync("committer.txt", gutter.ToString()));
+                () => BlameAuthor.ViewTextAsync("committer.txt", gutter));
             ThreadHelper.JoinableTaskFactory.RunAsync(
-                () => BlameFile.ViewTextAsync(_fileName, body.ToString()));
+                () => BlameFile.ViewTextAsync(_fileName, body));
 
             if (lineNumber > 0)
             {
@@ -319,6 +289,87 @@ namespace GitUI.Blame
             CommitInfo.SetRevisionWithChildren(revision, children);
 
             controlToMask?.UnMask();
+        }
+
+        private (string gutter, string body) BuildBlameContents(string filename)
+        {
+            var body = new StringBuilder(capacity: 4096);
+
+            GitBlameCommit lastCommit = null;
+
+            var dateTimeFormat = AppSettings.BlameShowAuthorTime
+                ? CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " +
+                  CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern
+                : CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
+
+            // NOTE EOL white-space supports highlight on mouse-over.
+            // Highlighting is done via text background colour.
+            // If it could be done with a solid rectangle around the text,
+            // the extra spaces added here could be omitted.
+
+            var filePathLengthEstimate = _blame.Lines.Where(l => filename != l.Commit.FileName)
+                .Select(l => l.Commit.FileName.Length)
+                .DefaultIfEmpty(0)
+                .Max();
+            var lineLengthEstimate = 25 + _blame.Lines.Max(l => l.Commit.Author?.Length ?? 0) + filePathLengthEstimate;
+            var lineLength = Math.Max(80, lineLengthEstimate);
+            var lineBuilder = new StringBuilder(lineLength + 2);
+            var gutter = new StringBuilder(capacity: lineBuilder.Capacity * _blame.Lines.Count);
+            var emptyLine = new string(' ', lineLength);
+            foreach (var line in _blame.Lines)
+            {
+                if (line.Commit == lastCommit)
+                {
+                    gutter.AppendLine(emptyLine);
+                }
+                else
+                {
+                    BuildAuthorLine(line, lineBuilder, dateTimeFormat, filename, AppSettings.BlameShowAuthor, AppSettings.BlameShowAuthorDate, AppSettings.BlameShowOriginalFilePath, AppSettings.BlameDisplayAuthorFirst);
+
+                    gutter.Append(lineBuilder);
+                    gutter.Append(' ', lineLength - lineBuilder.Length).AppendLine();
+                    lineBuilder.Clear();
+                }
+
+                body.AppendLine(line.Text);
+
+                lastCommit = line.Commit;
+            }
+
+            return (gutter.ToString(), body.ToString());
+        }
+
+        private void BuildAuthorLine(GitBlameLine line, StringBuilder lineBuilder, string dateTimeFormat, string filename, bool showAuthor, bool showAuthorDate, bool showOriginalFilePath, bool displayAuthorFirst)
+        {
+            if (showAuthor && displayAuthorFirst)
+            {
+                lineBuilder.Append(line.Commit.Author);
+                if (showAuthorDate)
+                {
+                    lineBuilder.Append(" - ");
+                }
+            }
+
+            if (showAuthorDate)
+            {
+                lineBuilder.Append(line.Commit.AuthorTime.ToString(dateTimeFormat));
+            }
+
+            if (showAuthor && !displayAuthorFirst)
+            {
+                if (showAuthorDate)
+                {
+                    lineBuilder.Append(" - ");
+                }
+
+                lineBuilder.Append(line.Commit.Author);
+            }
+
+            if (showOriginalFilePath && filename != line.Commit.FileName)
+            {
+                lineBuilder.Append(" - ");
+                lineBuilder.Append(line.Commit.FileName);
+            }
         }
 
         private void ActiveTextAreaControlDoubleClick(object sender, EventArgs e)
@@ -349,9 +400,9 @@ namespace GitUI.Blame
                 return -1;
             }
 
-            Point position = BlameCommitter.PointToClient(MousePosition);
+            Point position = BlameAuthor.PointToClient(MousePosition);
 
-            int line = BlameCommitter.GetLineFromVisualPosY(position.Y);
+            int line = BlameAuthor.GetLineFromVisualPosY(position.Y);
 
             if (line >= _blame.Lines.Count)
             {
@@ -459,6 +510,27 @@ namespace GitUI.Blame
             }
 
             base.Dispose(disposing);
+        }
+
+        internal readonly struct TestAccessor
+        {
+            private readonly BlameControl _control;
+
+            public TestAccessor(BlameControl control)
+            {
+                _control = control;
+            }
+
+            public GitBlame Blame
+            {
+                get => _control._blame;
+                set => _control._blame = value;
+            }
+
+            public void BuildAuthorLine(GitBlameLine line, StringBuilder lineBuilder, string dateTimeFormat, string filename, bool showAuthor, bool showAuthorDate, bool showOriginalFilePath, bool displayAuthorFirst)
+                => _control.BuildAuthorLine(line, lineBuilder, dateTimeFormat, filename, showAuthor, showAuthorDate, showOriginalFilePath, displayAuthorFirst);
+
+            public (string gutter, string body) BuildBlameContents(string filename) => _control.BuildBlameContents(filename);
         }
     }
 }

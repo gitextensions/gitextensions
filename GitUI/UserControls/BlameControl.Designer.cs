@@ -19,7 +19,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.CommitInfo = new GitUI.CommitInfo.CommitInfo();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.BlameCommitter = new GitUI.Editor.FileViewer();
+            this.BlameAuthor = new GitUI.Editor.FileViewer();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.blamePreviousRevisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showChangesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,7 +80,7 @@
             // 
             // splitContainer2.Panel1
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.BlameCommitter);
+            this.splitContainer2.Panel1.Controls.Add(this.BlameAuthor);
             // 
             // splitContainer2.Panel2
             // 
@@ -91,15 +91,15 @@
             // 
             // BlameCommitter
             // 
-            this.BlameCommitter.ContextMenuStrip = this.contextMenu;
-            this.BlameCommitter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BlameCommitter.IsReadOnly = false;
-            this.BlameCommitter.Location = new System.Drawing.Point(0, 0);
-            this.BlameCommitter.Margin = new System.Windows.Forms.Padding(0);
-            this.BlameCommitter.Name = "BlameCommitter";
-            this.BlameCommitter.Size = new System.Drawing.Size(186, 576);
-            this.BlameCommitter.TabIndex = 5;
-            this.BlameCommitter.TabStop = false;
+            this.BlameAuthor.ContextMenuStrip = this.contextMenu;
+            this.BlameAuthor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BlameAuthor.IsReadOnly = false;
+            this.BlameAuthor.Location = new System.Drawing.Point(0, 0);
+            this.BlameAuthor.Margin = new System.Windows.Forms.Padding(0);
+            this.BlameAuthor.Name = "BlameAuthor";
+            this.BlameAuthor.Size = new System.Drawing.Size(186, 576);
+            this.BlameAuthor.TabIndex = 5;
+            this.BlameAuthor.TabStop = false;
             // 
             // contextMenu
             // 
@@ -203,7 +203,7 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private CommitInfo.CommitInfo CommitInfo;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private GitUI.Editor.FileViewer BlameCommitter;
+        private GitUI.Editor.FileViewer BlameAuthor;
         private GitUI.Editor.FileViewer BlameFile;
         private System.Windows.Forms.ToolTip blameTooltip;
         private System.Windows.Forms.ContextMenuStrip contextMenu;
