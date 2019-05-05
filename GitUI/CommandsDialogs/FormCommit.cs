@@ -164,6 +164,7 @@ namespace GitUI.CommandsDialogs
         private bool _skipUpdate;
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
+        private ICommitMessageManager _commitMessageManager;
         private string _commitTemplate;
         private bool _isMergeCommit;
         private bool _shouldRescanChanges = true;
@@ -193,6 +194,8 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
 
             splitRight.Panel2MinSize = DpiUtil.Scale(100);
+
+            _commitMessageManager = new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding);
 
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;
@@ -397,7 +400,8 @@ namespace GitUI.CommandsDialogs
             // a special meaning, and can be dangerous if used inappropriately.
             if (_commitKind == CommitKind.Normal)
             {
-                CommitHelper.SetCommitMessage(Module, Message.Text, Amend.Checked);
+                _commitMessageManager.MergeOrCommitMessage = Message.Text;
+                _commitMessageManager.AmendState = Amend.Checked;
             }
 
             _splitterManager.SaveSplitters();
@@ -432,14 +436,8 @@ namespace GitUI.CommandsDialogs
                     message = TryAddPrefix("squash!", _editedCommit.Subject);
                     break;
                 default:
-                    message = Module.GetMergeMessage();
-
-                    if (string.IsNullOrEmpty(message))
-                    {
-                        message = CommitHelper.GetCommitMessage(Module);
-                        Amend.Checked = CommitHelper.GetAmendState(Module);
-                    }
-
+                    message = _commitMessageManager.MergeOrCommitMessage;
+                    Amend.Checked = !_commitMessageManager.IsMergeCommit && _commitMessageManager.AmendState;
                     break;
             }
 
@@ -1381,7 +1379,7 @@ namespace GitUI.CommandsDialogs
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
                     Message.Text = string.Empty; // Message.Text has been used and stored
-                    CommitHelper.SetCommitMessage(Module, string.Empty, Amend.Checked);
+                    _commitMessageManager.ResetCommitMessage();
 
                     bool pushCompleted = true;
                     if (push)
@@ -2188,7 +2186,7 @@ namespace GitUI.CommandsDialogs
             // Save last commit message in settings. This way it can be used in multiple repositories.
             AppSettings.LastCommitMessage = commitMessageText;
 
-            var path = CommitHelper.GetCommitMessagePath(Module);
+            var path = _commitMessageManager.CommitMessagePath;
 
             // Commit messages are UTF-8 by default unless otherwise in the config file.
             // The git manual states:
