@@ -138,10 +138,12 @@ For more information see our [code of conduct](CODE_OF_CONDUCT.md).
 
 # Shoutouts
 
-* We thank all the people who contribute, the project exists because of you
+* We thank all the people who contribute, the project exists because of you<br />
 <a href="https://github.com/gitextensions/gitextensions/contributors"><img src="https://opencollective.com/gitextensions/contributors.svg?width=890&button=false" /></a>
 * We thank JetBRAINS for [ReSharper](https://www.jetbrains.com/resharper/) licenses.<br /><a href="https://www.jetbrains.com/?from=gitextensions" target="_blank"><img src="./GitUI/Resources/Icons/originals/jetbrains-variant-4.png"></a>
-* We thank [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/) for the icons ([CCA/3.0](http://creativecommons.org/licenses/by/3.0/)).
+* We thank [SignPath.io](https://signpath.io/) for the free code signing
+* We thank [SignPath Foundation](https://signpath.org/) for the signing certificate
+* We thank [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/) for the icons ([CCA/3.0](http://creativecommons.org/licenses/by/3.0/))
 
 
 ## Backers
