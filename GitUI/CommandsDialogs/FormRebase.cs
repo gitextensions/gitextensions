@@ -191,6 +191,12 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
+                var applyingPatch = patchGrid1.PatchFiles.FirstOrDefault(p => p.IsNext);
+                if (applyingPatch != null)
+                {
+                    applyingPatch.IsSkipped = true;
+                }
+
                 FormProcess.ShowDialog(this, GitCommandHelpers.SkipRebaseCmd());
 
                 if (!Module.InTheMiddleOfRebase())
@@ -199,7 +205,8 @@ namespace GitUI.CommandsDialogs
                 }
 
                 EnableButtons();
-                patchGrid1.Initialize();
+
+                patchGrid1.RefreshGrid();
             }
         }
 

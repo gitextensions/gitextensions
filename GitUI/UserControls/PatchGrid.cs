@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Patches;
@@ -10,6 +11,8 @@ namespace GitUI
     public partial class PatchGrid : GitModuleControl
     {
         private readonly TranslationString _unableToShowPatchDetails = new TranslationString("Unable to show details of patch file.");
+
+        public IReadOnlyList<PatchFile> PatchFiles { get; private set; }
 
         public PatchGrid()
         {
@@ -32,12 +35,33 @@ namespace GitUI
             Initialize();
         }
 
+        public void RefreshGrid()
+        {
+            var updatedPatches = GetPatches();
+
+            for (int i = 0; i < updatedPatches.Count; i++)
+            {
+                updatedPatches[i].IsSkipped = PatchFiles[i].IsSkipped;
+            }
+
+            DisplayPatches(updatedPatches);
+        }
+
+        private IReadOnlyList<PatchFile> GetPatches()
+        {
+            return Module.InTheMiddleOfInteractiveRebase()
+                            ? Module.GetInteractiveRebasePatchFiles()
+                            : Module.GetRebasePatchFiles();
+        }
+
         public void Initialize()
         {
-            var patchFiles = Module.InTheMiddleOfInteractiveRebase()
-                ? Module.GetInteractiveRebasePatchFiles()
-                : Module.GetRebasePatchFiles();
+            DisplayPatches(GetPatches());
+        }
 
+        private void DisplayPatches(IReadOnlyList<PatchFile> patchFiles)
+        {
+            PatchFiles = patchFiles;
             Patches.DataSource = patchFiles;
 
             if (patchFiles.Any())
