@@ -4333,6 +4333,10 @@ Change the default behaviour only if you experience problems.</source>
         <source>Current branch:</source>
         <target />
       </trans-unit>
+      <trans-unit id="_failCreatePatch.Text">
+        <source>Unable to create patch file(s)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_noEmailEnteredText.Text">
         <source>You need to enter an email address.</source>
         <target />
