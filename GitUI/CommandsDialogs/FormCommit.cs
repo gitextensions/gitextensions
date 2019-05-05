@@ -445,7 +445,7 @@ namespace GitUI.CommandsDialogs
 
             if (_useFormCommitMessage && !string.IsNullOrEmpty(message))
             {
-                Message.Text = message;
+                Message.Text = message; // initial assignment
             }
             else
             {
@@ -479,7 +479,7 @@ namespace GitUI.CommandsDialogs
                         _templateLoadErrorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                Message.Text = text;
+                Message.Text = text; // initial assignment
                 _commitTemplate = text;
             }
         }
@@ -601,14 +601,7 @@ namespace GitUI.CommandsDialogs
 
             int selectionStart = Message.SelectionStart;
 
-            if (Message.Text.IsNullOrEmpty())
-            {
-                Message.Text = selectedText;
-            }
-            else
-            {
-                Message.SelectedText = selectedText;
-            }
+            Message.SelectedText = selectedText;
 
             Message.SelectionStart = selectionStart + selectedText.Length;
 
@@ -1387,7 +1380,7 @@ namespace GitUI.CommandsDialogs
 
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
-                    Message.Text = string.Empty;
+                    Message.Text = string.Empty; // Message.Text has been used and stored
                     CommitHelper.SetCommitMessage(Module, string.Empty, Amend.Checked);
 
                     bool pushCompleted = true;
@@ -1427,6 +1420,8 @@ namespace GitUI.CommandsDialogs
                 {
                     MessageBox.Show(this, $"Exception: {e.Message}");
                 }
+
+                return;
 
                 bool IsCommitMessageValid()
                 {
@@ -1481,6 +1476,19 @@ namespace GitUI.CommandsDialogs
 
                     return true;
                 }
+            }
+        }
+
+        /// <summary>
+        /// replace the Message.Text in an undo-able way
+        /// </summary>
+        /// <param name="message">the new message</param>
+        private void ReplaceMessage(string message)
+        {
+            if (Message.Text != message)
+            {
+                Message.SelectAll();
+                Message.SelectedText = message;
             }
         }
 
@@ -2322,7 +2330,7 @@ namespace GitUI.CommandsDialogs
         {
             if (e.ClickedItem.Tag != null)
             {
-                Message.Text = ((string)e.ClickedItem.Tag).Trim();
+                ReplaceMessage(((string)e.ClickedItem.Tag).Trim());
             }
         }
 
@@ -2391,7 +2399,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            Message.Text = sb.ToString().TrimEnd();
+            ReplaceMessage(sb.ToString().TrimEnd());
         }
 
         private void AddFileToGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
@@ -3092,7 +3100,7 @@ namespace GitUI.CommandsDialogs
                     {
                         try
                         {
-                            Message.Text = item.Text;
+                            ReplaceMessage(item.Text);
                             Message.Focus();
                         }
                         catch
@@ -3183,7 +3191,7 @@ namespace GitUI.CommandsDialogs
         {
             if (string.IsNullOrEmpty(Message.Text) && Amend.Checked)
             {
-                Message.Text = Module.GetPreviousCommitMessages(1).FirstOrDefault()?.Trim();
+                ReplaceMessage(Module.GetPreviousCommitMessages(1).FirstOrDefault()?.Trim());
             }
 
             if (AppSettings.CommitAndPushForcedWhenAmend)

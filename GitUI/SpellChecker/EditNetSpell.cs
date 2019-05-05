@@ -193,7 +193,12 @@ namespace GitUI.SpellChecker
         public virtual string SelectedText
         {
             get => TextBox.SelectedText;
-            set => TextBox.SelectedText = value;
+            set
+            {
+                HideWatermark();
+                TextBox.SelectedText = value;
+                ShowWatermark();
+            }
         }
 
         protected RepoDistSettings Settings => Module.EffectiveSettings ?? AppSettings.SettingsContainer;
