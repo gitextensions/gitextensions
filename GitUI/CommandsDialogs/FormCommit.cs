@@ -164,6 +164,7 @@ namespace GitUI.CommandsDialogs
         private bool _skipUpdate;
         private GitItemStatus _currentItem;
         private bool _currentItemStaged;
+        private ICommitMessageManager _commitMessageManager;
         private string _commitTemplate;
         private bool _isMergeCommit;
         private bool _shouldRescanChanges = true;
@@ -193,6 +194,8 @@ namespace GitUI.CommandsDialogs
             InitializeComponent();
 
             splitRight.Panel2MinSize = DpiUtil.Scale(100);
+
+            _commitMessageManager = new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding);
 
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;
@@ -334,10 +337,14 @@ namespace GitUI.CommandsDialogs
 
             void ConfigureMessageBox()
             {
-                Message.Enabled = _useFormCommitMessage;
+                Amend.Enabled = _commitKind == CommitKind.Normal;
 
-                commitMessageToolStripMenuItem.Enabled = _useFormCommitMessage;
-                commitTemplatesToolStripMenuItem.Enabled = _useFormCommitMessage;
+                bool messageCanBeChanged = _useFormCommitMessage && _commitKind == CommitKind.Normal;
+
+                Message.Enabled = messageCanBeChanged;
+
+                commitMessageToolStripMenuItem.Enabled = messageCanBeChanged;
+                commitTemplatesToolStripMenuItem.Enabled = messageCanBeChanged;
 
                 Message.WatermarkText = _useFormCommitMessage
                     ? _enterCommitMessageHint.Text
@@ -397,7 +404,8 @@ namespace GitUI.CommandsDialogs
             // a special meaning, and can be dangerous if used inappropriately.
             if (_commitKind == CommitKind.Normal)
             {
-                CommitHelper.SetCommitMessage(Module, Message.Text, Amend.Checked);
+                _commitMessageManager.MergeOrCommitMessage = Message.Text;
+                _commitMessageManager.AmendState = Amend.Checked;
             }
 
             _splitterManager.SaveSplitters();
@@ -432,20 +440,14 @@ namespace GitUI.CommandsDialogs
                     message = TryAddPrefix("squash!", _editedCommit.Subject);
                     break;
                 default:
-                    message = Module.GetMergeMessage();
-
-                    if (string.IsNullOrEmpty(message))
-                    {
-                        message = CommitHelper.GetCommitMessage(Module);
-                        Amend.Checked = CommitHelper.GetAmendState(Module);
-                    }
-
+                    message = _commitMessageManager.MergeOrCommitMessage;
+                    Amend.Checked = !_commitMessageManager.IsMergeCommit && _commitMessageManager.AmendState;
                     break;
             }
 
             if (_useFormCommitMessage && !string.IsNullOrEmpty(message))
             {
-                Message.Text = message;
+                Message.Text = message; // initial assignment
             }
             else
             {
@@ -479,7 +481,7 @@ namespace GitUI.CommandsDialogs
                         _templateLoadErrorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
-                Message.Text = text;
+                Message.Text = text; // initial assignment
                 _commitTemplate = text;
             }
         }
@@ -601,14 +603,7 @@ namespace GitUI.CommandsDialogs
 
             int selectionStart = Message.SelectionStart;
 
-            if (Message.Text.IsNullOrEmpty())
-            {
-                Message.Text = selectedText;
-            }
-            else
-            {
-                Message.SelectedText = selectedText;
-            }
+            Message.SelectedText = selectedText;
 
             Message.SelectionStart = selectionStart + selectedText.Length;
 
@@ -1084,7 +1079,7 @@ namespace GitUI.CommandsDialogs
             LoadingStaged.Visible = false;
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;
-            Amend.Enabled = true;
+            Amend.Enabled = _commitKind == CommitKind.Normal;
             Reset.Enabled = doChangesExist;
 
             EnableStageButtons(true);
@@ -1387,8 +1382,8 @@ namespace GitUI.CommandsDialogs
 
                     ScriptManager.RunEventScripts(this, ScriptEvent.AfterCommit);
 
-                    Message.Text = string.Empty;
-                    CommitHelper.SetCommitMessage(Module, string.Empty, Amend.Checked);
+                    Message.Text = string.Empty; // Message.Text has been used and stored
+                    _commitMessageManager.ResetCommitMessage();
 
                     bool pushCompleted = true;
                     if (push)
@@ -1427,6 +1422,8 @@ namespace GitUI.CommandsDialogs
                 {
                     MessageBox.Show(this, $"Exception: {e.Message}");
                 }
+
+                return;
 
                 bool IsCommitMessageValid()
                 {
@@ -1481,6 +1478,19 @@ namespace GitUI.CommandsDialogs
 
                     return true;
                 }
+            }
+        }
+
+        /// <summary>
+        /// replace the Message.Text in an undo-able way
+        /// </summary>
+        /// <param name="message">the new message</param>
+        private void ReplaceMessage(string message)
+        {
+            if (Message.Text != message)
+            {
+                Message.SelectAll();
+                Message.SelectedText = message;
             }
         }
 
@@ -1967,7 +1977,7 @@ namespace GitUI.CommandsDialogs
                 EnableStageButtons(true);
 
                 Commit.Enabled = true;
-                Amend.Enabled = true;
+                Amend.Enabled = _commitKind == CommitKind.Normal;
             }
 
             if (AppSettings.RevisionGraphShowWorkingDirChanges)
@@ -2180,7 +2190,7 @@ namespace GitUI.CommandsDialogs
             // Save last commit message in settings. This way it can be used in multiple repositories.
             AppSettings.LastCommitMessage = commitMessageText;
 
-            var path = CommitHelper.GetCommitMessagePath(Module);
+            var path = _commitMessageManager.CommitMessagePath;
 
             // Commit messages are UTF-8 by default unless otherwise in the config file.
             // The git manual states:
@@ -2322,7 +2332,7 @@ namespace GitUI.CommandsDialogs
         {
             if (e.ClickedItem.Tag != null)
             {
-                Message.Text = ((string)e.ClickedItem.Tag).Trim();
+                ReplaceMessage(((string)e.ClickedItem.Tag).Trim());
             }
         }
 
@@ -2391,7 +2401,7 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            Message.Text = sb.ToString().TrimEnd();
+            ReplaceMessage(sb.ToString().TrimEnd());
         }
 
         private void AddFileToGitIgnoreToolStripMenuItemClick(object sender, EventArgs e)
@@ -3092,7 +3102,7 @@ namespace GitUI.CommandsDialogs
                     {
                         try
                         {
-                            Message.Text = item.Text;
+                            ReplaceMessage(item.Text);
                             Message.Focus();
                         }
                         catch
@@ -3183,7 +3193,7 @@ namespace GitUI.CommandsDialogs
         {
             if (string.IsNullOrEmpty(Message.Text) && Amend.Checked)
             {
-                Message.Text = Module.GetPreviousCommitMessages(1).FirstOrDefault()?.Trim();
+                ReplaceMessage(Module.GetPreviousCommitMessages(1).FirstOrDefault()?.Trim());
             }
 
             if (AppSettings.CommitAndPushForcedWhenAmend)
