@@ -337,10 +337,14 @@ namespace GitUI.CommandsDialogs
 
             void ConfigureMessageBox()
             {
-                Message.Enabled = _useFormCommitMessage;
+                Amend.Enabled = _commitKind == CommitKind.Normal;
 
-                commitMessageToolStripMenuItem.Enabled = _useFormCommitMessage;
-                commitTemplatesToolStripMenuItem.Enabled = _useFormCommitMessage;
+                bool messageCanBeChanged = _useFormCommitMessage && _commitKind == CommitKind.Normal;
+
+                Message.Enabled = messageCanBeChanged;
+
+                commitMessageToolStripMenuItem.Enabled = messageCanBeChanged;
+                commitTemplatesToolStripMenuItem.Enabled = messageCanBeChanged;
 
                 Message.WatermarkText = _useFormCommitMessage
                     ? _enterCommitMessageHint.Text
@@ -1075,7 +1079,7 @@ namespace GitUI.CommandsDialogs
             LoadingStaged.Visible = false;
             Commit.Enabled = true;
             CommitAndPush.Enabled = true;
-            Amend.Enabled = true;
+            Amend.Enabled = _commitKind == CommitKind.Normal;
             Reset.Enabled = doChangesExist;
 
             EnableStageButtons(true);
@@ -1973,7 +1977,7 @@ namespace GitUI.CommandsDialogs
                 EnableStageButtons(true);
 
                 Commit.Enabled = true;
-                Amend.Enabled = true;
+                Amend.Enabled = _commitKind == CommitKind.Normal;
             }
 
             if (AppSettings.RevisionGraphShowWorkingDirChanges)
