@@ -68,6 +68,8 @@ after_test:
         Exit-AppVeyorBuild
         return
     }
+    # ...sing only it is enabled
+    $env:sign=$ARTIFACT_SIGNING_ENABLED
 
 artifacts:
   # upload the generated portable archive only
@@ -76,6 +78,8 @@ artifacts:
 
 deploy:
 - provider: Webhook
+  on:
+    sign: true
   url: https://app.signpath.io/API/v1/7c19b2cf-90f7-4d15-9b12-1b615f7c18c4/Integrations/AppVeyor?SigningPolicyId=8efd636e-c408-4406-a14a-1d481f6163bf
   on_build_success: true
   on_build_failure: false
