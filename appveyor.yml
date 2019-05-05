@@ -76,8 +76,8 @@ artifacts:
 
 deploy:
 - provider: Webhook
-  url: https://app.signpath.io/API/v1/7c19b2cf-90f7-4d15-9b12-1b615f7c18c4/Integrations/AppVeyor?SigningPolicyId=8efd636e-c408-4406-a14a-1d481f6163bf
-  on_build_success: true
+  url: https://app.signpath.io/API/v1/7c19b2cf-90f7-4d15-9b12-1b615f7c18c4/Integrations/AppVeyor?SigningPolicyId=5c9879c7-0dea-4303-8e5b-fc4192a7b0de
+  on_build_success: $(ARTIFACT_SIGNING_ENABLED)
   on_build_failure: false
   on_build_status_changed: false
   method: POST
