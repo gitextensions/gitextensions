@@ -45,25 +45,3 @@ trans.zh-Hans = Simplified Chinese.Plugins.xlf
 trans.zh-Hant = Traditional Chinese.Plugins.xlf
 type = XLIFF
 
-[git-extensions.ui-248]
-file_filter = <lang>.xlf
-source_file = English.xlf
-source_lang = en
-trans.cs = Czech.xlf
-trans.de = German.xlf
-trans.es = Spanish.xlf
-trans.fr = French.xlf
-trans.id = Indonesian.xlf
-trans.it = Italian.xlf
-trans.ja = Japanese.xlf
-trans.ko = Korean.xlf
-trans.nl = Dutch.xlf
-trans.pl = Polish.xlf
-trans.pt_BR = Portuguese (Brazil).xlf
-trans.pt_PT = Portuguese (Portugal).xlf
-trans.ro = Romanian.xlf
-trans.ru = Russian.xlf
-trans.zh-Hans = Simplified Chinese.xlf
-trans.zh-Hant = Traditional Chinese.xlf
-type = XLIFF
-

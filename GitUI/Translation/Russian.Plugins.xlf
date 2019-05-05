@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>Отображать результаты тестов в сводке статуса сборки для каждого результата сборки (создает нагрузку на сеть!) </target>
+        <target>Отображать результаты теста в сводке состояния сборки для каждого результата сборки (интенсивная работа в сети!)</target>
         
       </trans-unit>
     </body>
@@ -26,7 +26,7 @@
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>Пожалуйста введите правильный путь к MSBuild в настройках плагина и попробуйте снова.</target>
+        <target>Пожалуйста, введите правильный путь к MSBuild в настройках плагина и попробуйте снова.</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
@@ -206,16 +206,6 @@
       <trans-unit id="lblDescriptionView.Text">
         <source>Description</source>
         <target>Описание</target>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkCreatePull.Text">
-        <source>/projects//repos//pull-requests?create</source>
-        <target>/projects//repos//pull-requests?create</target>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkViewPull.Text">
-        <source>/projects//repos//pull-requests</source>
-        <target>/projects//repos//pull-requests</target>
         
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
@@ -424,14 +414,9 @@ Are you sure you want to continue?</source>
         <target>Последняя активность</target>
         
       </trans-unit>
-      <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
-        <source>deleteDataGridViewCheckBoxColumn</source>
-        <target>deleteDataGridViewCheckBoxColumn</target>
-        
-      </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>Включить не слитые ветки</target>
+        <target>Включить неслитые ветки</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -520,6 +505,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
         <source>Remote name obsoleted branches should be deleted from</source>
+        <target>Удалить устаревшие ветки внешнего репозитория из</target>
         
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
@@ -926,10 +912,12 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
+        <target>{0:N0} Строк в файлах дизайнера ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
+        <target>{0:N0} Строк кода в эксплуатации ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
@@ -1001,12 +989,12 @@ defaultrebase=0</target>
         
       </trans-unit>
       <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
+        <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
-        <target>Gerrit плагин для GitExtensions обеспечивает интеграцию с Gerrit для GitExtensions. Этот плагин был основан на утилите git-review.
+        <target>Gerrit плагин для Git Extensions обеспечивает интеграцию с Gerrit для Git Extensions. Этот плагин был основан на утилите git-review.
 
-Чтобы включить поддержку Gerrit для репозитория, файл .gitreview должен быть создан. Это можно сделать через меню Репозиторий| Редактировать .gitreview. Смотрите ссылку ниже для получения дополнительной информации о файле .gitreview файла и утилите git-review.</target>
+Чтобы включить поддержку Gerrit для репозитория, файл .gitreview должен быть создан. Это можно сделать через меню Репозиторий | Редактировать .gitreview. Смотрите ссылку ниже для получения дополнительной информации о файле .gitreview файла и утилите git-review.</target>
         
       </trans-unit>
     </body>
@@ -1402,6 +1390,7 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
         <source>Ignore build for branch</source>
+        <target>Игнорировать сборку для ветки</target>
         
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
@@ -1423,6 +1412,11 @@ Do you want to reset the configured path?</source>
         <target>Подсказка коммита Jira</target>
         
       </trans-unit>
+      <trans-unit id="_credentialsSettings.Caption">
+        <source>Jira credentials</source>
+        <target>Полномочия Jira</target>
+        
+      </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
         <target>Плагин подсказок Jira включён</target>
@@ -1438,11 +1432,6 @@ Do you want to reset the configured path?</source>
         <target>JQL Query</target>
         
       </trans-unit>
-      <trans-unit id="_passwordSettings.Caption">
-        <source>Jira password</source>
-        <target>Пароль Jira</target>
-        
-      </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         <target>Шаблон сообщения</target>
@@ -1451,11 +1440,6 @@ Do you want to reset the configured path?</source>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
         <target>Ссылка на Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="_userSettings.Caption">
-        <source>Jira user</source>
-        <target>Пользователь Jira</target>
         
       </trans-unit>
     </body>
@@ -1669,6 +1653,76 @@ branch names, tag names)</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="ExtractLink.Text">
+        <source>Extract data from a build result url copied in the clipboard</source>
+        <target>Извлечь информацию из URL сборки, скопированного в буфер обмена</target>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        <target>Перейти на страницу управления токеном</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Could not extract data</source>
+        <target>Не удалось извлечь данные</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy the url of the build into the clipboard before retrying.
+(Should contain at least the &quot;buildId&quot; parameter)</source>
+        <target>Буфер обмена не содержит правильного адреса сборки..
+
+Перед повторной попыткой скопируйте адрес сборки в буфер обмена.
+(Должен содержать хотя бы параметр buildId)</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
+        <source>Error while trying to retrieve build definition information from url.
+
+Please ensure that the url is valid and that the API token has access to build and project information.</source>
+        <target>Ошибка получения информации о сборке по URL.
+l.
+
+Убедитесь, что URL действителен, и что токен API имеет доступ к информации о сборке и проекте.</target>
+        
+      </trans-unit>
+      <trans-unit id="_infoNoApiTokenMessage.Text">
+        <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
+        <target>Невозможно получить информацию о сборке без API-токена. Поле останется пустым.</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Examples:
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</source>
+        <target>Примеры:
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>You need to create a token with the following scopes:
+ - 'Build (read)'
+ - 'Project and team (read)'</source>
+        <target>Вам необходимо создать токен со следующими разрешениями:
+ - &quot;Сборка (чтение)&quot;
+ - &quot;Проект и команда (чтение)&quot;</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>Регулярное выражение &quot;Build definition name&quot; недопустимо и не будет сохранено!</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="ru">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
@@ -1718,25 +1772,6 @@ Please verify the server url.</source>
   </file>
   <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="ru">
     <body>
-      <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>Регулярное выражение &quot;Build definition name&quot; недопустимо и не будет сохранено!</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="VstsAndTfsSettingsUserControl" source-language="en" target-language="ru">
-    <body>
-      <trans-unit id="RestApiTokenLink.Text">
-        <source>Go to token management page</source>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
-        
-      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
         <target>Регулярное выражение &quot;Build definition name&quot; недопустимо и не будет сохранено!</target>

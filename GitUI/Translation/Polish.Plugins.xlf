@@ -207,16 +207,6 @@ zatwierdzono przez {0}</target>
         <target>Opis</target>
         
       </trans-unit>
-      <trans-unit id="lblLinkCreatePull.Text">
-        <source>/projects//repos//pull-requests?create</source>
-        <target>/projects//repos//pull-requests?create</target>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkViewPull.Text">
-        <source>/projects//repos//pull-requests</source>
-        <target>/projects//repos//pull-requests</target>
-        
-      </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
         <source>Repository</source>
         <target>Repozytorium</target>
@@ -421,11 +411,6 @@ Na pewno chcesz kontynuować?</target>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
         <target>Ostatnia aktywność</target>
-        
-      </trans-unit>
-      <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
-        <source>deleteDataGridViewCheckBoxColumn</source>
-        <target>deleteDataGridViewCheckBoxColumn</target>
         
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
@@ -1003,12 +988,9 @@ defaultrebase=0</target>
         
       </trans-unit>
       <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
+        <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
-        <target>Wtyczka Gerrit dla GitExtensions zapewnia integrację z Gerrit. Działa ona na zasadzie narzędzia git-review.
-
-Aby aktywować Gerrit dla repozytorium, należy stworzyć plik .gitreview. Można to zrobić poprzez opcję w menu Repozytorium | Edytuj .gitreview. Sprawdź link poniżej, aby uzyskać więcej informacji o pliku .gitreview oraz narzędziu git-review.</target>
         
       </trans-unit>
     </body>
@@ -1424,6 +1406,10 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
         <source>Jira Commit Hint</source>
         
       </trans-unit>
+      <trans-unit id="_credentialsSettings.Caption">
+        <source>Jira credentials</source>
+        
+      </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
         
@@ -1437,11 +1423,6 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
         <source>JQL Query</source>
         
       </trans-unit>
-      <trans-unit id="_passwordSettings.Caption">
-        <source>Jira password</source>
-        <target>Hasło Jira</target>
-        
-      </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         <target>Szablon wiadomości</target>
@@ -1450,11 +1431,6 @@ Chcesz zresetować skonfigurowaną ścieżkę?</target>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
         <target>Adres URL Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="_userSettings.Caption">
-        <source>Jira user</source>
-        <target>Użytkownik Jira</target>
         
       </trans-unit>
     </body>
@@ -1669,6 +1645,71 @@ zatwierdzeń, nazwami gałęzi lub tagów)</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="pl">
+    <body>
+      <trans-unit id="ExtractLink.Text">
+        <source>Extract data from a build result url copied in the clipboard</source>
+        <target>Wyodrębnij dane z URL wyniku tworzenia skopiowanego do schowka</target>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        <target>Przejdź do strony zarządzania tokenami</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Could not extract data</source>
+        <target>Nie można wyodrębnić danych</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy the url of the build into the clipboard before retrying.
+(Should contain at least the &quot;buildId&quot; parameter)</source>
+        <target>Schowek nie zawiera prawidłowego URL tworzenia.
+
+Proszę skopiować URL tworzenia do schowka przed ponowną próbą.
+(Powinien zawierać przynajmniej parametr &quot;buildId&quot;)</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
+        <source>Error while trying to retrieve build definition information from url.
+
+Please ensure that the url is valid and that the API token has access to build and project information.</source>
+        <target>Błąd podczas próby uzyskania definicji tworzenia z URL.
+
+Proszę się upewnić, czy URL jest poprawny i czy token API ma dostęp do informacji tworzenia i projektu.</target>
+        
+      </trans-unit>
+      <trans-unit id="_infoNoApiTokenMessage.Text">
+        <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
+        <target>Nie można uzyskać definicji tworzenia bez tokenu API. Pole pozostanie puste.</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Examples:
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</source>
+        <target>Przykłady:
+ - https://dev.azure.com/twojaorganizacja/nazwaprojektu/
+ - https://twojadres:8080/tfs/nazwakolekcji/nazwaprojektu/
+ - https://twojaorganizacja.visualstudio.com/nazwaprojektu/</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>You need to create a token with the following scopes:
+ - 'Build (read)'
+ - 'Project and team (read)'</source>
+        
+      </trans-unit>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="pl">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
@@ -1677,6 +1718,7 @@ zatwierdzeń, nazwami gałęzi lub tagów)</target>
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
+        <target>Nieprawidłowy URL tworzenia</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1710,25 +1752,6 @@ Proszę sprawdzić adres URL serwera.</target>
   </file>
   <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="pl">
     <body>
-      <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="VstsAndTfsSettingsUserControl" source-language="en" target-language="pl">
-    <body>
-      <trans-unit id="RestApiTokenLink.Text">
-        <source>Go to token management page</source>
-        <target>Przejdź do strony zarządzania tokenami</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
-        
-      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
         

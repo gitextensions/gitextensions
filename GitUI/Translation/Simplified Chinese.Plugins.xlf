@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>显示测试结果为每个生成结果生成状态摘要 (网络密集型!)</target>
+        <target>在每个构建结果的构建状态摘要中显示测试结果（网络密集型！）</target>
         
       </trans-unit>
     </body>
@@ -55,17 +55,17 @@
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
         <source>Refresh view after fetch</source>
-        <target>拉取后刷新视图</target>
+        <target>提取后刷新视图</target>
         
       </trans-unit>
       <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
-        <target>获取所有子模块</target>
+        <target>提取所有子模块</target>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>几秒抓取一次 - 0为不抓取</target>
+        <target>每（几秒）提取一次 - 设定为0以禁用</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
@@ -208,16 +208,6 @@
         <target>描述</target>
         
       </trans-unit>
-      <trans-unit id="lblLinkCreatePull.Text">
-        <source>/projects//repos//pull-requests?create</source>
-        <target>/项目//档案库/ /拉取？创建</target>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkViewPull.Text">
-        <source>/projects//repos//pull-requests</source>
-        <target>/项目//档案库/ /拉取</target>
-        
-      </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
         <source>Repository</source>
         <target>档案库</target>
@@ -275,7 +265,7 @@
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>创建推送请求</target>
+        <target>创建合并请求</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
@@ -422,11 +412,6 @@ Are you sure you want to continue?</source>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
         <target>上次的活动</target>
-        
-      </trans-unit>
-      <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
-        <source>deleteDataGridViewCheckBoxColumn</source>
-        <target>删除数据网格视图复选框列</target>
         
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
@@ -801,7 +786,7 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="_saveFileQuestionCaption.Text">
         <source>Save changes?</source>
-        <target>保存更改？</target>
+        <target>保存改变？</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1004,12 +989,9 @@ defaultrebase=0</target>
         
       </trans-unit>
       <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
+        <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
-        <target>Gerrit插件可GitExtensions的提供Gerrit操作。这个插件源自git-review命令。
-
-要使档案库启用Gerrit支持，.gitreview文件必须被创建。这是可以通过菜单“档案库|编辑.gitreview”选项。更多关于.gitreview文件和git-review信息，请参阅下面的链接。</target>
         
       </trans-unit>
     </body>
@@ -1101,7 +1083,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="$this.Text">
         <source>GitFlow</source>
-        <target>Git工作流</target>
+        <target>GitFlow</target>
         
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
@@ -1427,6 +1409,10 @@ Do you want to reset the configured path?</source>
         <target>Jira Commit 提示</target>
         
       </trans-unit>
+      <trans-unit id="_credentialsSettings.Caption">
+        <source>Jira credentials</source>
+        
+      </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
         <target>启用 Jira 提示插件</target>
@@ -1442,11 +1428,6 @@ Do you want to reset the configured path?</source>
         <target>JQL查询</target>
         
       </trans-unit>
-      <trans-unit id="_passwordSettings.Caption">
-        <source>Jira password</source>
-        <target>Jira 密码</target>
-        
-      </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         <target>提交注释模板</target>
@@ -1455,11 +1436,6 @@ Do you want to reset the configured path?</source>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
         <target>Jira 地址</target>
-        
-      </trans-unit>
-      <trans-unit id="_userSettings.Caption">
-        <source>Jira user</source>
-        <target>Jira 用户名</target>
         
       </trans-unit>
     </body>
@@ -1674,6 +1650,75 @@ branch names, tag names)</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="zh-Hans">
+    <body>
+      <trans-unit id="ExtractLink.Text">
+        <source>Extract data from a build result url copied in the clipboard</source>
+        <target>从剪贴板复制来的构建结果URL中提取数据</target>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        <target>转到令牌管理页</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Could not extract data</source>
+        <target>无法提取数据</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy the url of the build into the clipboard before retrying.
+(Should contain at least the &quot;buildId&quot; parameter)</source>
+        <target>剪贴板中并不包含可用的构建网址。
+
+请复制构建网址到剪贴板后再重试。
+（应该至少包含“buildID”参数）</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
+        <source>Error while trying to retrieve build definition information from url.
+
+Please ensure that the url is valid and that the API token has access to build and project information.</source>
+        <target>在尝试从网址取回构建定义信息时发生错误。
+
+请确定网址有效且应用程序界面符号有权限访问构建和工程信息。</target>
+        
+      </trans-unit>
+      <trans-unit id="_infoNoApiTokenMessage.Text">
+        <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
+        <target>没有应用程序界面符号无法取回构建定义信息。字段将会留为空白。</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Examples:
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</source>
+        <target>范例：
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>You need to create a token with the following scopes:
+ - 'Build (read)'
+ - 'Project and team (read)'</source>
+        <target>您需要创建具有以下范围的令牌:
+ - '编译(读)'
+ - '工程和团队(读)'</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>&quot;生成定义名称&quot; 正则表达式无效, 无法保存!</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="zh-Hans">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
@@ -1723,29 +1768,6 @@ Please verify the server url.</source>
   </file>
   <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="zh-Hans">
     <body>
-      <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>&quot;生成定义名称&quot; 正则表达式无效, 无法保存!</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="VstsAndTfsSettingsUserControl" source-language="en" target-language="zh-Hans">
-    <body>
-      <trans-unit id="RestApiTokenLink.Text">
-        <source>Go to token management page</source>
-        <target>转到令牌管理页</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
-        <target>您需要创建具有以下范围的令牌:
- - '编译(读)'
- - '工程和团队(读)'</target>
-        
-      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
         <target>&quot;生成定义名称&quot; 正则表达式无效, 无法保存!</target>

@@ -49,7 +49,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
-        <target>定期的にバックグラウンドでfetch</target>
+        <target>バックグラウンドで定期的にフェッチ</target>
         
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
@@ -103,6 +103,7 @@
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
         <source>Your repository is not hosted in BitBucket Server.</source>
+        <target>あなたのリポジトリはBitbucketのサーバーにホストされていません。</target>
         
       </trans-unit>
     </body>
@@ -117,6 +118,7 @@
       <trans-unit id="_committed.Text">
         <source>{0} committed
 {1}</source>
+        <target>{0}は{1}をコミットした</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -126,6 +128,7 @@
       </trans-unit>
       <trans-unit id="_linkLabelToolTip.Text">
         <source>Right-click to copy link</source>
+        <target>右クリックしてURLをコピー</target>
         
       </trans-unit>
       <trans-unit id="_success.Text">
@@ -201,14 +204,6 @@
       <trans-unit id="lblDescriptionView.Text">
         <source>Description</source>
         <target>注釈</target>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkCreatePull.Text">
-        <source>/projects//repos//pull-requests?create</source>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkViewPull.Text">
-        <source>/projects//repos//pull-requests</source>
         
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
@@ -292,6 +287,7 @@
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
+        <target>作成する追跡ブランチ用のリモート</target>
         
       </trans-unit>
     </body>
@@ -416,10 +412,6 @@ Are you sure you want to continue?</source>
         <target>最新のアクティビティ</target>
         
       </trans-unit>
-      <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
-        <source>deleteDataGridViewCheckBoxColumn</source>
-        
-      </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
         <target>未マージのブランチを含む</target>
@@ -481,34 +473,42 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
+        <target>リモートから不要なブランチを削除</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
         <source>Delete unmerged branches</source>
+        <target>未マージのブランチを削除</target>
         
       </trans-unit>
       <trans-unit id="_mergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
+        <target>すべてのブランチがマージされるべきブランチ</target>
         
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
+        <target>正規表現フィルタの大文字小文字は区別されていませんか？</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
+        <target>正規表現で削除するブランチをフィルタ</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
         <source>Search branches that does not match regex</source>
+        <target>正規表現に統一していないブランチを検索</target>
         
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
         <source>Remote name obsoleted branches should be deleted from</source>
+        <target>不要なブランチを削除するリモート名</target>
         
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
+        <target>正規表現を利用して削除するブランチをフィルタ</target>
         
       </trans-unit>
     </body>
@@ -562,7 +562,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
-        <target>最終コミット日</target>
+        <target>最終コミット日時</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
@@ -629,7 +629,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="Download.Text">
         <source>&amp;Download</source>
-        <target>ダウンロード (&amp;D)</target>
+        <target>ダウンロード(&amp;D)</target>
         
       </trans-unit>
       <trans-unit id="_cannotGetChangeDetails.Text">
@@ -733,6 +733,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="labelReviewers.Text">
         <source>Reviewer(s):</source>
+        <target>レビュアー：</target>
         
       </trans-unit>
       <trans-unit id="labelTopic.Text">
@@ -874,30 +875,37 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0:N0} Blank lines ({1:P1})</source>
+        <target>空行の{0:N0}行目({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
+        <target>コメントの{0:N0}行目({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0:N0} Commits</source>
+        <target>{0:N0}コミット</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
+        <target>{1}によるコミット数{0:N0}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
+        <target>コードの{0:N0}行目</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
+        <target>{1}ファイル内({2:P1})のコードの{0:N0}行目</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
+        <target>コードの{0}行目({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
@@ -910,10 +918,12 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
+        <target>テストコードの{0:N0}行目</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
+        <target>テストコードの{0:N0}行目({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
@@ -975,12 +985,9 @@ defaultrebase=0</target>
         
       </trans-unit>
       <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
+        <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
-        <target>GitExtensions用GerritプラグインはGitExtensionsへのGerritの統合を提供します。
-
-Gerritサポートを有効にするには、.gitreviewファイルを作る必要があります。これは、リポジトリ | .gitreviewファイルの編集メニューオプションから可能です。.gitreviewファイルやgit-reviewツールに関する更なる情報については、下記のリンクを参照してください。</target>
         
       </trans-unit>
     </body>
@@ -1014,6 +1021,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
       </trans-unit>
       <trans-unit id="_installCommitMsgHookFolderCreationFailed.Text">
         <source>Could not create the hooks folder. Please create the folder manually and try again.</source>
+        <target>フックのフォルダを作成きませんでした。手動でフォルダを作成して再試行してください。</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookMessage.Text">
@@ -1076,6 +1084,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
         <source>A good branch model for your project with Git...</source>
+        <target>Gitを使ったプロジェクトの良いブランチモデル</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -1125,6 +1134,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
       </trans-unit>
       <trans-unit id="cbPushAfterFinish.Text">
         <source>Push after finish</source>
+        <target>完了してからプッシュ</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
@@ -1197,6 +1207,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
     <body>
       <trans-unit id="Description.Text">
         <source>GitHub</source>
+        <target>Github</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
@@ -1229,6 +1240,7 @@ Gerritサポートを有効にするには、.gitreviewファイルを作る必�
       </trans-unit>
       <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
+        <target>無視するディレクトリ (EndsWith)</target>
         
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
@@ -1310,6 +1322,9 @@ Grouceをダウンロードし、プラグイン設定ダイアログからパ�
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
+        <target>設定されたパス： {0} にGourceが見つかりませんでした。
+
+パスを再設定しますか？</target>
         
       </trans-unit>
     </body>
@@ -1367,6 +1382,7 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
         <source>Ignore build for branch</source>
+        <target>このブランチでビルドを無視</target>
         
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
@@ -1388,6 +1404,10 @@ Do you want to reset the configured path?</source>
         <target>Jiraコミットヒント</target>
         
       </trans-unit>
+      <trans-unit id="_credentialsSettings.Caption">
+        <source>Jira credentials</source>
+        
+      </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
         <target>Jiraヒントプラグイン有効</target>
@@ -1400,11 +1420,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
         <source>JQL Query</source>
-        
-      </trans-unit>
-      <trans-unit id="_passwordSettings.Caption">
-        <source>Jira password</source>
-        <target>Jiraパスワード</target>
+        <target>JQLクエリ</target>
         
       </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
@@ -1415,11 +1431,6 @@ Do you want to reset the configured path?</source>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
         <target>Jira URL</target>
-        
-      </trans-unit>
-      <trans-unit id="_userSettings.Caption">
-        <source>Jira user</source>
-        <target>Jiraユーザ</target>
         
       </trans-unit>
     </body>
@@ -1561,6 +1572,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
+        <target>コミット参照 &quot;To&quot; (含む):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
@@ -1576,6 +1588,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
+        <target>コミット参照&quot;From&quot; (除外):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
@@ -1601,6 +1614,8 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
+        <target>(コミットの参照式はコミットハッシュ、
+ブランチ名、タグ名があり得ます)</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
@@ -1629,10 +1644,80 @@ branch names, tag names)</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="ja">
+    <body>
+      <trans-unit id="ExtractLink.Text">
+        <source>Extract data from a build result url copied in the clipboard</source>
+        <target>クリップボードにコピーされたビルド結果のURLからデータを抽出</target>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        <target>トークン管理ページに移動</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Could not extract data</source>
+        <target>データを抽出できませんでした</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy the url of the build into the clipboard before retrying.
+(Should contain at least the &quot;buildId&quot; parameter)</source>
+        <target>クリップボードには有効なビルドURLが含まれていません。
+
+リトライする前に、ビルドのURLをクリップボードにコピーしてください。
+(&quot;buildTypeId&quot;パラメータは必須です)</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
+        <source>Error while trying to retrieve build definition information from url.
+
+Please ensure that the url is valid and that the API token has access to build and project information.</source>
+        <target>URLからビルド定義情報を取得しようとしたときにエラーが発生しました。
+
+URLが有効であり、APIトークンがビルドおよびプロジェクト情報にアクセスできることを確認してください。</target>
+        
+      </trans-unit>
+      <trans-unit id="_infoNoApiTokenMessage.Text">
+        <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
+        <target>APIトークンがないためビルド定義情報を取得できません。フィールドは空白のままになります。</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Examples:
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</source>
+        <target>例：
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>You need to create a token with the following scopes:
+ - 'Build (read)'
+ - 'Project and team (read)'</source>
+        <target>以下のスコープでトークンを作成する必要があります。
+  - 'ビルド（読み取り）'
+  - 'プロジェクトとチーム（読み取り）'</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>'ビルド定義名'の正規表現は無効なため保存されません！</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="ja">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
+        <target>ビルドのリポートを表示するためにゲストとして記録</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
@@ -1653,6 +1738,7 @@ Please copy in the clipboard the url of the build before retrying.
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
+        <target>プロジェクトとビルド一覧を読み込む時にエラーが発生しました</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
@@ -1676,25 +1762,6 @@ Please verify the server url.</source>
   </file>
   <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="ja">
     <body>
-      <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>'ビルド定義名'の正規表現は無効なため保存されません！</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="VstsAndTfsSettingsUserControl" source-language="en" target-language="ja">
-    <body>
-      <trans-unit id="RestApiTokenLink.Text">
-        <source>Go to token management page</source>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
-        
-      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
         <target>'ビルド定義名'の正規表現は無効なため保存されません！</target>
