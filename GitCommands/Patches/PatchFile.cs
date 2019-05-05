@@ -19,19 +19,25 @@ namespace GitCommands.Patches
         public bool IsNext { get; set; }
 
         public bool IsSkipped { get; set; }
+        public bool IsApplied { get; set; }
 
         public string Status
         {
             get
             {
-                if (IsNext)
-                {
-                    return "Next to apply";
-                }
-
                 if (IsSkipped)
                 {
                     return "Skipped";
+                }
+
+                if (IsApplied)
+                {
+                    return "Applied";
+                }
+
+                if (IsNext)
+                {
+                    return "Applying...";
                 }
 
                 if (!string.IsNullOrEmpty(FullName) && !File.Exists(FullName))
