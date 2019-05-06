@@ -21,6 +21,7 @@ using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
 using GitUI.Hotkey;
+using GitUI.Properties;
 using GitUI.Script;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
@@ -1517,15 +1518,15 @@ namespace GitUI
             var revision = LatestSelectedRevision;
             var gitRefListsForRevision = new GitRefListsForRevision(revision);
             _rebaseOnTopOf = null;
+
             foreach (var head in gitRefListsForRevision.AllTags)
             {
-                var deleteItem = new ToolStripMenuItem(head.Name);
-                deleteItem.Click += delegate { UICommands.StartDeleteTagDialog(this, head.Name); };
-                deleteTagDropDown.Items.Add(deleteItem);
+                AddBranchMenuItem(deleteTagDropDown, head, delegate { UICommands.StartDeleteTagDialog(this, head.Name); });
 
-                var mergeItem = new ToolStripMenuItem(head.Name) { Tag = GetRefUnambiguousName(head) };
-                mergeItem.Click += delegate { UICommands.StartMergeBranchDialog(this, GetRefUnambiguousName(head)); };
-                mergeBranchDropDown.Items.Add(mergeItem);
+                var refUnambiguousName = GetRefUnambiguousName(head);
+                var mergeItem = AddBranchMenuItem(mergeBranchDropDown, head,
+                    delegate { UICommands.StartMergeBranchDialog(this, refUnambiguousName); });
+                mergeItem.Tag = refUnambiguousName;
             }
 
             // For now there is no action that could be done on currentBranch
@@ -1541,9 +1542,8 @@ namespace GitUI
                 }
                 else
                 {
-                    var toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += delegate { UICommands.StartMergeBranchDialog(this, GetRefUnambiguousName(head)); };
-                    mergeBranchDropDown.Items.Add(toolStripItem);
+                    var toolStripItem = AddBranchMenuItem(mergeBranchDropDown, head,
+                        delegate { UICommands.StartMergeBranchDialog(this, GetRefUnambiguousName(head)); });
 
                     if (_rebaseOnTopOf == null)
                     {
@@ -1571,6 +1571,7 @@ namespace GitUI
             }
 
             var allBranches = gitRefListsForRevision.AllBranches;
+            bool firstRemoteBranchForCheckout = false;
             foreach (var head in allBranches)
             {
                 // skip remote branches - they can not be deleted this way
@@ -1578,20 +1579,25 @@ namespace GitUI
                 {
                     if (head.CompleteName != currentBranchRef)
                     {
-                        var deleteBranchMenuItem = new ToolStripMenuItem(head.Name);
-                        deleteBranchMenuItem.Click += delegate { UICommands.StartDeleteBranchDialog(this, head.Name); };
-                        deleteBranchDropDown.Items.Add(deleteBranchMenuItem);
+                        AddBranchMenuItem(deleteBranchDropDown, head, delegate { UICommands.StartDeleteBranchDialog(this, head.Name); });
                     }
 
-                    var renameBranchMenuItem = new ToolStripMenuItem(head.Name);
-                    renameBranchMenuItem.Click += delegate { UICommands.StartRenameDialog(this, head.Name); };
-                    renameDropDown.Items.Add(renameBranchMenuItem);
+                    AddBranchMenuItem(renameDropDown, head, delegate { UICommands.StartRenameDialog(this, head.Name); });
                 }
 
                 if (head.CompleteName != currentBranchRef)
                 {
-                    var checkoutBranchMenuItem = new ToolStripMenuItem(head.Name);
-                    checkoutBranchMenuItem.Click += delegate
+                    if (!head.IsRemote)
+                    {
+                        firstRemoteBranchForCheckout = true;
+                    }
+                    else if (firstRemoteBranchForCheckout)
+                    {
+                        checkoutBranchDropDown.Items.Add(new ToolStripSeparator());
+                        firstRemoteBranchForCheckout = false;
+                    }
+
+                    AddBranchMenuItem(checkoutBranchDropDown, head, delegate
                     {
                         if (head.IsRemote)
                         {
@@ -1601,8 +1607,7 @@ namespace GitUI
                         {
                             UICommands.StartCheckoutBranch(this, head.Name);
                         }
-                    };
-                    checkoutBranchDropDown.Items.Add(checkoutBranchMenuItem);
+                    });
                 }
             }
 
@@ -1620,9 +1625,7 @@ namespace GitUI
                         }
                     }
 
-                    var toolStripItem = new ToolStripMenuItem(head.Name);
-                    toolStripItem.Click += delegate { UICommands.StartDeleteRemoteBranchDialog(this, head.Name); };
-                    deleteBranchDropDown.Items.Add(toolStripItem);
+                    AddBranchMenuItem(deleteBranchDropDown, head, delegate { UICommands.StartDeleteRemoteBranchDialog(this, head.Name); });
                 }
             }
 
@@ -1694,6 +1697,17 @@ namespace GitUI
                         seenItem = true;
                     }
                 }
+            }
+
+            ToolStripMenuItem AddBranchMenuItem(ContextMenuStrip menu, IGitRef gitRef, EventHandler action)
+            {
+                var menuItem = new ToolStripMenuItem(gitRef.Name)
+                {
+                    Image = gitRef.IsRemote ? Images.BranchRemote : Images.BranchLocal
+                };
+                menuItem.Click += action;
+                menu.Items.Add(menuItem);
+                return menuItem;
             }
         }
 
