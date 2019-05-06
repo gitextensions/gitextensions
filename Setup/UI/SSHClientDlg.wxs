@@ -3,8 +3,8 @@
   <Fragment>
     <UI>
       <Dialog Id="GitEx_SSHClientDlg" Width="370" Height="270" Title="!(loc.VerifyReadyDlg_Title)" TrackDiskSpace="yes">
+        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="18" Default="yes" Text="!(loc.WixUINext)"/>
         <Control Id="Back" Type="PushButton" X="177" Y="243" Width="56" Height="18" Text="!(loc.WixUIBack)"/>
-        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="18" Text="!(loc.WixUINext)"/>
         <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="18" Cancel="no" Text="!(loc.WixUICancel)">
           <Publish Event="SpawnDialog" Value="GitEx_CancelDlg">1</Publish>
         </Control>
@@ -12,9 +12,9 @@
         <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="2"/>
         <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="2"/>
         <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Title}Select SSH Client"/>
-        <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="Select the SSH client that will be used by Git Extensions"/>
-        <Control Id="OpenSSHInfo" Type="Text" Height="19" Width="202" X="88" Y="100" Text="OpenSSH is the Git default."/>
-        <Control Id="PuTTYInfo" Type="Text" Height="19" Width="202" X="88" Y="158" Text="PuTTY has better integration with Windows."/>
+        <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="{\WixUI_Font_Normal}Select the SSH client that will be used by Git Extensions"/>
+        <Control Id="OpenSSHInfo" Type="Text" Height="19" Width="202" X="88" Y="100" Text="{\WixUI_Font_Normal}OpenSSH is the Git default."/>
+        <Control Id="PuTTYInfo" Type="Text" Height="19" Width="202" X="88" Y="158" Text="{\WixUI_Font_Normal}PuTTY has better integration with Windows."/>
         <Control Id="SSHClient" Type="RadioButtonGroup" Height="124" Width="178" X="58" Y="70" Property="SSHCLIENT">
           <RadioButtonGroup Property="SSHCLIENT">
             <RadioButton X="10" Y="10" Height="18" Width="159" Text="{\WixUI_Font_Title}OpenSSH" Value="OpenSSH"/>

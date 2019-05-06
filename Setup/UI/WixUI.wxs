@@ -56,7 +56,10 @@
       <Publish Dialog="GitEx_CustomizeDlg" Control="Next" Event="NewDialog" Value="GitEx_SSHClientDlg" Order="2">NOT Installed</Publish>
 
       <Publish Dialog="GitEx_SSHClientDlg" Control="Back" Event="NewDialog" Value="GitEx_CustomizeDlg">1</Publish>
-      <Publish Dialog="GitEx_SSHClientDlg" Control="Next" Event="NewDialog" Value="GitEx_VerifyReadyDlg">1</Publish>
+      <Publish Dialog="GitEx_SSHClientDlg" Control="Next" Event="NewDialog" Value="GitEx_TelemetryDlg">1</Publish>
+
+      <Publish Dialog="GitEx_TelemetryDlg" Control="Back" Event="NewDialog" Value="GitEx_SSHClientDlg">1</Publish>
+      <Publish Dialog="GitEx_TelemetryDlg" Control="Next" Event="NewDialog" Value="GitEx_VerifyReadyDlg">1</Publish>
 
       <Publish Dialog="GitEx_VerifyReadyDlg" Control="Back" Event="NewDialog" Value="GitEx_SSHClientDlg" Order="1">
         NOT Installed

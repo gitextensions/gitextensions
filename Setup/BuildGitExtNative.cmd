@@ -21,5 +21,4 @@ IF ERRORLEVEL 1 EXIT /B 1
 %msbuild32% %projectSshAskPass% /p:Platform=Win32 %msbuildparams%
 IF ERRORLEVEL 1 EXIT /B 1
 
-echo.
-IF "%SKIP_PAUSE%"=="" pause
+
