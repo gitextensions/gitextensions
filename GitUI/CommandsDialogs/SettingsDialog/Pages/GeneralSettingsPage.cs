@@ -39,7 +39,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             // align 1st columns across all tables
             tlpnlBehaviour.AdjustWidthToSize(0, lblCommitsLimit, lblDefaultCloneDestination);
-            tlpnlEmailSettings.AdjustWidthToSize(0, lblCommitsLimit, lblDefaultCloneDestination);
         }
 
         private void SetSubmoduleStatus()
@@ -62,9 +61,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowGitStatusInToolbar.Checked = AppSettings.ShowGitStatusInBrowseToolbar;
             chkShowGitStatusForArtificialCommits.Checked = AppSettings.ShowGitStatusForArtificialCommits;
             chkShowSubmoduleStatusInBrowse.Checked = AppSettings.ShowSubmoduleStatus;
-            SmtpServer.Text = AppSettings.SmtpServer;
-            SmtpServerPort.Text = AppSettings.SmtpPort.ToString();
-            chkUseSSL.Checked = AppSettings.SmtpUseSsl;
             _NO_TRANSLATE_MaxCommits.Value = AppSettings.MaxRevisionGraphCommits;
             chkCloseProcessDialog.Checked = AppSettings.CloseProcessDialog;
             chkShowGitCommandLine.Checked = AppSettings.ShowGitCommandLine;
@@ -83,13 +79,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
             AppSettings.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;
             AppSettings.ShowGitStatusForArtificialCommits = chkShowGitStatusForArtificialCommits.Checked;
-            AppSettings.SmtpServer = SmtpServer.Text;
-            if (int.TryParse(SmtpServerPort.Text, out var port))
-            {
-                AppSettings.SmtpPort = port;
-            }
-
-            AppSettings.SmtpUseSsl = chkUseSSL.Checked;
             AppSettings.CloseProcessDialog = chkCloseProcessDialog.Checked;
             AppSettings.ShowGitCommandLine = chkShowGitCommandLine.Checked;
             AppSettings.UseFastChecks = chkUseFastChecks.Checked;
@@ -101,24 +90,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             AppSettings.DefaultCloneDestinationPath = cbDefaultCloneDestination.Text;
             AppSettings.FollowRenamesInFileHistoryExactOnly = chkFollowRenamesInFileHistoryExact.Checked;
-        }
-
-        private void chkUseSSL_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!chkUseSSL.Checked)
-            {
-                if (SmtpServerPort.Text == "587")
-                {
-                    SmtpServerPort.Text = "465";
-                }
-            }
-            else
-            {
-                if (SmtpServerPort.Text == "465")
-                {
-                    SmtpServerPort.Text = "587";
-                }
-            }
         }
 
         private static Func<Repository, string> GetParentPath()
