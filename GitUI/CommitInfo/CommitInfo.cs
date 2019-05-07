@@ -286,7 +286,9 @@ namespace GitUI.CommitInfo
             {
                 var cancellationToken = _asyncLoadCancellation.Next();
 
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () => { await LoadLinksForRevisionAsync(_revision); }).FileAndForget();
+                var initialRevision = _revision;
+
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () => { await LoadLinksForRevisionAsync(initialRevision); }).FileAndForget();
 
                 ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                 {
@@ -294,25 +296,25 @@ namespace GitUI.CommitInfo
                     if (AppSettings.CommitInfoShowContainedInBranches)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        await LoadBranchInfoAsync(_revision.ObjectId);
+                        await LoadBranchInfoAsync(initialRevision.ObjectId);
                     }
 
                     if (AppSettings.ShowAnnotatedTagsMessages)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        await LoadAnnotatedTagInfoAsync(_revision.Refs);
+                        await LoadAnnotatedTagInfoAsync(initialRevision.Refs);
                     }
 
                     if (AppSettings.CommitInfoShowContainedInTags)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        await LoadTagInfoAsync(_revision.ObjectId);
+                        await LoadTagInfoAsync(initialRevision.ObjectId);
                     }
 
                     if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        await LoadDescribeInfoAsync(_revision.ObjectId);
+                        await LoadDescribeInfoAsync(initialRevision.ObjectId);
                     }
                 }).FileAndForget();
 
