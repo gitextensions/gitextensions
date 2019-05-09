@@ -512,6 +512,9 @@ namespace GitUI.Blame
             base.Dispose(disposing);
         }
 
+        internal TestAccessor GetTestAccessor()
+            => new TestAccessor(this);
+
         internal readonly struct TestAccessor
         {
             private readonly BlameControl _control;
