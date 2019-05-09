@@ -147,6 +147,7 @@ Esta acción se realizará sin preguntar al hacer checkout de una rama.</target>
       </trans-unit>
       <trans-unit id="ShowAuthorAvatarInCommitGraph.Text">
         <source>Show author's avatar column in the commit graph</source>
+        <target>Mostrar columna de avatar del autor en la gráfica del commit</target>
         
       </trans-unit>
       <trans-unit id="ShowAuthorAvatarInCommitInfo.Text">
@@ -167,6 +168,8 @@ Esta acción se realizará sin preguntar al hacer checkout de una rama.</target>
       <trans-unit id="_noImageServiceTooltip.Text">
         <source>A default image, if an email address has no matching Gravatar image.
 See http://en.gravatar.com/site/implement/images/ for more details.</source>
+        <target>Una imagen por defecto, si una dirección de correo no tiene una imagen Gravatar correspondiente.
+Ver http://en.gravatar.com/site/implement/images/ para más detalles.</target>
         
       </trans-unit>
       <trans-unit id="chkEnableAutoScale.Text">
@@ -279,6 +282,7 @@ See http://en.gravatar.com/site/implement/images/ for more details.</source>
     <body>
       <trans-unit id="allCommitInfoToolStripMenuItem.Text">
         <source>All commit info</source>
+        <target>Toda la información de commit</target>
         
       </trans-unit>
       <trans-unit id="blamePreviousRevisionToolStripMenuItem.Text">
@@ -326,14 +330,17 @@ See http://en.gravatar.com/site/implement/images/ for more details.</source>
       </trans-unit>
       <trans-unit id="CreateTooltip.Text">
         <source>Create a local branch from this branch</source>
+        <target>Crear una rama local de esta rama</target>
         
       </trans-unit>
       <trans-unit id="MergeTooltip.Text">
         <source>Merge this branch into current branch</source>
+        <target>Fusionar esta rama en la rama actual</target>
         
       </trans-unit>
       <trans-unit id="RebaseTooltip.Text">
         <source>Rebase current branch to this branch</source>
+        <target>Hacer rebase de la rama actual a esta rama</target>
         
       </trans-unit>
       <trans-unit id="RenameTooltip.Text">
@@ -386,6 +393,7 @@ See http://en.gravatar.com/site/implement/images/ for more details.</source>
       </trans-unit>
       <trans-unit id="checkBoxShowBuildResultPage.Text">
         <source>Show build result page</source>
+        <target>Mostrar página de resultados de compilación</target>
         
       </trans-unit>
       <trans-unit id="labelBuildServerSettingsInfo.Text">
@@ -878,6 +886,7 @@ Por favor asegúrese que git (Git for Windows o cygwin) está instalado o config
     <body>
       <trans-unit id="_brokenRefs.Text">
         <source>The repository refs seem to be broken:</source>
+        <target>Los refs del repositorio parecen estar rotos:</target>
         
       </trans-unit>
       <trans-unit id="_containedInBranches.Text">
@@ -922,6 +931,7 @@ Por favor asegúrese que git (Git for Windows o cygwin) está instalado o config
       </trans-unit>
       <trans-unit id="_repoFailure.Text">
         <source>Repository failure</source>
+        <target>Falla del repositorio</target>
         
       </trans-unit>
       <trans-unit id="_trsLinksRelatedToRevision.Text">
@@ -1370,6 +1380,7 @@ Por favor asegúrese que git (Git for Windows o cygwin) está instalado o config
       </trans-unit>
       <trans-unit id="_autoCompletionText.Text">
         <source>Provide auto completion</source>
+        <target>Proporcionar auto completar</target>
         
       </trans-unit>
       <trans-unit id="_copyMenuItemText.Text">
@@ -1546,6 +1557,7 @@ Por favor asegúrese que git (Git for Windows o cygwin) está instalado o config
       </trans-unit>
       <trans-unit id="ignoreWhiteSpaces.ToolTipText">
         <source>Ignore changes in amount of whitespace</source>
+        <target>Ignorar los cambios en la cantidad de espacios en blanco</target>
         
       </trans-unit>
       <trans-unit id="ignoreWhitespaceAtEol.ToolTipText">
@@ -1560,6 +1572,7 @@ Por favor asegúrese que git (Git for Windows o cygwin) está instalado o config
       </trans-unit>
       <trans-unit id="ignoreWhitespaceChangesToolStripMenuItem.Text">
         <source>Ignore changes in amount of whitespace</source>
+        <target>Ignorar los cambios en la cantidad de espacios en blanco</target>
         
       </trans-unit>
       <trans-unit id="increaseNumberOfLines.ToolTipText">
@@ -4068,6 +4081,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="_untrackedRemote.Text">
         <source>(untracked)</source>
+        <target>(omitidos)</target>
         
       </trans-unit>
       <trans-unit id="addFileToGitIgnoreToolStripMenuItem.Text">
@@ -4122,6 +4136,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="commitStagedCountLabel.Text">
         <source>Staged</source>
+        <target>Preparados</target>
         
       </trans-unit>
       <trans-unit id="commitSubmoduleChanges.Text">
@@ -5376,6 +5391,7 @@ Cambiar el comportamiento por defecto sólo si tiene problemas.</target>
       </trans-unit>
       <trans-unit id="_failCreatePatch.Text">
         <source>Unable to create patch file(s)</source>
+        <target>No se puede(n) crear archivo(s) de parche</target>
         
       </trans-unit>
       <trans-unit id="_noEmailEnteredText.Text">
@@ -8101,6 +8117,10 @@ Do you want to use this custom merge script?</source>
 You need to set the correct path to be able to use Git Extensions.
 
 Do you want to set the correct command now? If not Global and Local Settings will not be saved.</source>
+        <target>El comando para ejecutar git no está configurado correctamente.
+Debe configurar la ruta correcta para poder usar Git Extensions.
+
+¿Desea establecer el comando correcto ahora? Si no es así, no se guardarán las Configuraciones Globales y Locales.</target>
         
       </trans-unit>
       <trans-unit id="_cantFindGitMessageCaption.Text">
@@ -8630,6 +8650,7 @@ No se olvide de eliminar estas etiquetas cuando haya terminado.</target>
       </trans-unit>
       <trans-unit id="columnParent.HeaderText">
         <source>Parent(s) hashs</source>
+        <target>Hash de padre(s)</target>
         
       </trans-unit>
       <trans-unit id="columnSubject.HeaderText">
@@ -9382,6 +9403,7 @@ ayuda</target>
     <body>
       <trans-unit id="DeleteTooltip.Text">
         <source>Delete the branch, which must be fully merged in its upstream branch or in HEAD</source>
+        <target>Elimine la rama, que debe estar completamente fusionada en su rama ascendente o en HEAD</target>
         
       </trans-unit>
     </body>
@@ -10563,6 +10585,7 @@ Ver los cambios en el formulario de commit.</target>
       </trans-unit>
       <trans-unit id="cherryPickCommitToolStripMenuItem.Text">
         <source>Cherry pick this commit...</source>
+        <target>Seleccionar manualmente este commit...</target>
         
       </trans-unit>
       <trans-unit id="compareSelectedCommitsMenuItem.Text">
@@ -10627,6 +10650,7 @@ Ver los cambios en el formulario de commit.</target>
       </trans-unit>
       <trans-unit id="fixupCommitToolStripMenuItem.Text">
         <source>Create a fixup commit...</source>
+        <target>Crear un fixup commit...</target>
         
       </trans-unit>
       <trans-unit id="getHelpOnHowToUseTheseFeaturesToolStripMenuItem.Text">
@@ -10720,6 +10744,7 @@ Ver los cambios en el formulario de commit.</target>
       </trans-unit>
       <trans-unit id="squashCommitToolStripMenuItem.Text">
         <source>Create a squash commit...</source>
+        <target>Crear un squash commit...</target>
         
       </trans-unit>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
@@ -11240,10 +11265,12 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
     <body>
       <trans-unit id="_authorDateText.Text">
         <source>{0:Author date|Author dates}</source>
+        <target>{0:Fecha del autor|Fechas de autor}</target>
         
       </trans-unit>
       <trans-unit id="_authorText.Text">
         <source>{0:Author|Authors}</source>
+        <target>{0:Autor|Autores}</target>
         
       </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">
@@ -11251,6 +11278,10 @@ en segundo plano. Cuando se utiliza OpenSSH se muestran las ventanas de línea d
 
 Full message text is not present in older commits.
 Select this commit to populate the full message.</source>
+        <target>
+
+El mensaje de texto completo no está presente en commits antiguos.
+Seleccione este commit para llenar el mensaje completo.</target>
         
       </trans-unit>
       <trans-unit id="_branchText.Text">
@@ -11265,14 +11296,17 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_childrenText.Text">
         <source>{0:Child|Children}</source>
+        <target>{0:Hijo|Hijos}</target>
         
       </trans-unit>
       <trans-unit id="_commitDateText.Text">
         <source>{0:Commit date|Commits dates}</source>
+        <target>{0:Fecha del commit|Fechas de los commits}</target>
         
       </trans-unit>
       <trans-unit id="_commitHashText.Text">
         <source>{0:Commit hash|Commits hashes}</source>
+        <target>{0:Hash del commit|Hashes de los commits}</target>
         
       </trans-unit>
       <trans-unit id="_committerText.Text">
@@ -11322,6 +11356,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_messageText.Text">
         <source>{0:Message|Messages}</source>
+        <target>{0:Mensaje|Mensajes}</target>
         
       </trans-unit>
       <trans-unit id="_minutesAgo.Text">
@@ -11336,6 +11371,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_parentsText.Text">
         <source>{0:Parent|Parents}</source>
+        <target>{0:Padre|Padres}</target>
         
       </trans-unit>
       <trans-unit id="_remotesText.Text">
@@ -11404,10 +11440,12 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="MergeTooltip.Text">
         <source>Merge this tag into current branch</source>
+        <target>Fusionar esta etiqueta en la rama actual</target>
         
       </trans-unit>
       <trans-unit id="RebaseTooltip.Text">
         <source>Rebase current branch to this tag</source>
+        <target>Hacer rebase de la rama actual a esta etiqueta</target>
         
       </trans-unit>
       <trans-unit id="ResetTooltip.Text">
