@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading;
 using FluentAssertions;
 using GitCommands;
-using GitUI;
 using GitUI.Blame;
 using GitUIPluginInterfaces;
 using NUnit.Framework;
@@ -18,7 +17,7 @@ namespace GitUITests.UserControls
     [Apartment(ApartmentState.STA)]
     public class BlameControlTests
     {
-        private BlameControl _sut;
+        private BlameControl.TestAccessor _sut;
         private GitBlameLine _gitBlameLine;
 
         [SetUp]
@@ -52,8 +51,8 @@ namespace GitUITests.UserControls
 
             _gitBlameLine = new GitBlameLine(blameCommit1, 1, 1, "line1");
 
-            _sut = new BlameControl();
-            _sut.GetTestAccessor().Blame = new GitBlame(new GitBlameLine[]
+            _sut = new BlameControl().GetTestAccessor();
+            _sut.Blame = new GitBlame(new GitBlameLine[]
             {
                 _gitBlameLine,
                 new GitBlameLine(blameCommit1, 2, 2, "line2"),
@@ -71,7 +70,7 @@ namespace GitUITests.UserControls
         {
             var line = new StringBuilder();
 
-            _sut.GetTestAccessor().BuildAuthorLine(_gitBlameLine, line, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, "fileName_different.txt", showAuthor, showAuthorDate, showFilePath, displayAuthorFirst);
+            _sut.BuildAuthorLine(_gitBlameLine, line, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, "fileName_different.txt", showAuthor, showAuthorDate, showFilePath, displayAuthorFirst);
 
             line.ToString().Should().StartWith(expectedResult);
         }
@@ -81,7 +80,7 @@ namespace GitUITests.UserControls
         {
             var line = new StringBuilder();
 
-            _sut.GetTestAccessor().BuildAuthorLine(_gitBlameLine, line, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, "fileName.txt", true, true, true, false);
+            _sut.BuildAuthorLine(_gitBlameLine, line, CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern, "fileName.txt", true, true, true, false);
 
             line.ToString().Should().StartWith("3/22/2010 - author1");
         }
@@ -95,7 +94,7 @@ namespace GitUITests.UserControls
             {
                 AppSettings.BlameShowAuthorTime = true;
 
-                var (gutter, content) = _sut.GetTestAccessor().BuildBlameContents("fileName.txt");
+                var (gutter, content) = _sut.BuildBlameContents("fileName.txt");
 
                 content.Should().Be($"line1{Environment.NewLine}line2{Environment.NewLine}line3{Environment.NewLine}line4{Environment.NewLine}");
                 var gutterLines = gutter.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -124,7 +123,7 @@ namespace GitUITests.UserControls
                 AppSettings.BlameShowAuthorTime = false;
 
                 // When
-                var (gutter, content) = _sut.GetTestAccessor().BuildBlameContents("fileName.txt");
+                var (gutter, content) = _sut.BuildBlameContents("fileName.txt");
 
                 // Then
                 content.Should().Be($"line1{Environment.NewLine}line2{Environment.NewLine}line3{Environment.NewLine}line4{Environment.NewLine}");
