@@ -31,6 +31,8 @@ namespace GitUI
 
                 try
                 {
+                    ManagedExtensibility.SetUserPluginsPath(AppSettings.UserPluginsPath);
+
                     foreach (var plugin in ManagedExtensibility.GetExports<IGitPlugin>().Select(lazy => lazy.Value))
                     {
                         plugin.SettingsContainer = new GitPluginSettingsContainer(plugin.Name);

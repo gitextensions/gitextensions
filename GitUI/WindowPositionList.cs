@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Xml.Serialization;
+using GitCommands;
 using JetBrains.Annotations;
 
 namespace GitUI
@@ -41,19 +42,8 @@ namespace GitUI
     [Serializable]
     public class WindowPositionList
     {
-        private static readonly string AppDataDir = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
-
-        private static readonly string ConfigFilePath = Path.Combine(AppDataDir, "WindowPositions.xml");
+        private static readonly string ConfigFilePath = Path.Combine(AppSettings.LocalApplicationDataPath.Value, "WindowPositions.xml");
         private static readonly XmlSerializer _serializer = new XmlSerializer(typeof(WindowPositionList));
-
-        static WindowPositionList()
-        {
-            if (!Directory.Exists(AppDataDir))
-            {
-                Directory.CreateDirectory(AppDataDir);
-            }
-        }
 
         public List<WindowPosition> WindowPositions { get; set; } = new List<WindowPosition>();
 

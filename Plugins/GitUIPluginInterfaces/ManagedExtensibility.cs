@@ -13,6 +13,25 @@ namespace GitUIPluginInterfaces
 {
     public static class ManagedExtensibility
     {
+        /// <summary>
+        /// Gets a root path where user installed plugins are located.
+        /// </summary>
+        public static string UserPluginsPath { get; private set; }
+
+        /// <summary>
+        /// Sets a root path to a folder where user plugins are located.
+        /// </summary>
+        /// <param name="userPluginsPath">A root path to a folder where user plugins are located.</param>
+        public static void SetUserPluginsPath(string userPluginsPath)
+        {
+            if (UserPluginsPath != null)
+            {
+                throw new InvalidOperationException("The user plugins path has already been initialized.");
+            }
+
+            UserPluginsPath = userPluginsPath;
+        }
+
         private static Lazy<ExportProvider> _exportProvider;
 
         private static Lazy<ExportProvider> GetOrCreateLazyExportProvider(string applicationDataFolder)
@@ -32,14 +51,10 @@ namespace GitUIPluginInterfaces
         {
             var stopwatch = Stopwatch.StartNew();
 
-            var file = new FileInfo(Application.ExecutablePath);
+            string defaultPluginsPath = Path.Combine(new FileInfo(Application.ExecutablePath).Directory.FullName, "Plugins");
+            string userPluginsPath = UserPluginsPath;
 
-            FileInfo[] plugins =
-                Directory.Exists(Path.Combine(file.Directory.FullName, "Plugins"))
-                ? new DirectoryInfo(Path.Combine(file.Directory.FullName, "Plugins")).GetFiles("*.dll")
-                : new FileInfo[] { };
-
-            var pluginFiles = plugins;
+            var pluginFiles = PluginsPathScanner.GetFiles(defaultPluginsPath, userPluginsPath);
 
             var cacheFile = Path.Combine(applicationDataFolder ?? "ignored", "Plugins", "composition.cache");
             IExportProviderFactory exportProviderFactory;

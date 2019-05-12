@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FontParserTests.cs" />
+    <Compile Include="ManagedExtensibilityTests.cs" />
+    <Compile Include="PluginsPathScannerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +57,11 @@
       <Project>{27559302-F35E-4B62-A6EC-11FF21A5FA6F}</Project>
       <Name>GitUIPluginInterfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="PathScanningData\NotFoundPlugin\SubDir\NotFoundPlugin.dll" />
+    <Content Include="PathScanningData\PluginInOwnDir\PluginInOwnDir.dll" />
+    <Content Include="PathScanningData\PluginInRootDir.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

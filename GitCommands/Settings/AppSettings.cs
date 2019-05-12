@@ -55,10 +55,13 @@ namespace GitCommands
         public static Version AppVersion => Assembly.GetCallingAssembly().GetName().Version;
         public static string ProductVersion => Application.ProductVersion;
         public static readonly string SettingsFileName = "GitExtensions.settings";
+        public static readonly string UserPluginsDirectoryName = "UserPlugins";
         private static readonly ISshPathLocator SshPathLocatorInstance = new SshPathLocator();
 
         public static readonly Lazy<string> ApplicationDataPath;
+        public static readonly Lazy<string> LocalApplicationDataPath;
         public static string SettingsFilePath => Path.Combine(ApplicationDataPath.Value, SettingsFileName);
+        public static string UserPluginsPath => Path.Combine(LocalApplicationDataPath.Value, UserPluginsDirectoryName);
 
         public static RepoDistSettings SettingsContainer { get; private set; }
 
@@ -80,6 +83,22 @@ namespace GitCommands
                     // Make ApplicationDataPath version independent
                     return Application.UserAppDataPath.Replace(Application.ProductVersion, string.Empty);
                 }
+            });
+
+            LocalApplicationDataPath = new Lazy<string>(() =>
+            {
+                if (IsPortable())
+                {
+                    return GetGitExtensionsDirectory();
+                }
+
+                string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                return path;
             });
 
             SettingsContainer = new RepoDistSettings(null, GitExtSettingsCache.FromCache(SettingsFilePath), SettingLevel.Unknown);
