@@ -1166,7 +1166,7 @@ namespace GitUI.CommandsDialogs
             this.Reset.Size = new System.Drawing.Size(171, 26);
             this.Reset.TabIndex = 11;
             this.Reset.TabStop = false;
-            this.Reset.Text = "Reset all changes";
+            this.Reset.Text = "Reset &all changes";
             this.Reset.UseVisualStyleBackColor = true;
             this.Reset.Click += new System.EventHandler(this.ResetClick);
             //

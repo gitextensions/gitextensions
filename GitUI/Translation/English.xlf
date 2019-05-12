@@ -3030,7 +3030,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
         <target />
       </trans-unit>
       <trans-unit id="Reset.Text">
-        <source>Reset all changes</source>
+        <source>Reset &amp;all changes</source>
         <target />
       </trans-unit>
       <trans-unit id="ResetUnStaged.Text">
@@ -5935,11 +5935,11 @@ Value has been reset to empty value.</source>
         <target />
       </trans-unit>
       <trans-unit id="btnCancel.Text">
-        <source>Cancel</source>
+        <source>&amp;Cancel</source>
         <target />
       </trans-unit>
       <trans-unit id="btnReset.Text">
-        <source>Reset</source>
+        <source>&amp;Reset</source>
         <target />
       </trans-unit>
       <trans-unit id="cbDeleteNewFilesAndDirectories.Text">
