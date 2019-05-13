@@ -33,7 +33,7 @@ install:
 - cmd: echo /logger:"%ProgramFiles%\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll">> Directory.Build.rsp
 - cmd: |-
     cd Setup
-    C:\\Python35\\python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%-RC1
+    C:\\Python35\\python set_version_to.py -v %APPVEYOR_BUILD_VERSION% -t %APPVEYOR_BUILD_VERSION%
     cd ..
 
 # to run your custom scripts instead of automatic MSBuild
@@ -68,8 +68,6 @@ after_test:
         Exit-AppVeyorBuild
         return
     }
-    # ...sing only it is enabled
-    $env:sign=$ARTIFACT_SIGNING_ENABLED
 
 artifacts:
   # upload the generated portable archive only
@@ -79,8 +77,8 @@ artifacts:
 deploy:
 - provider: Webhook
   on:
-    sign: true
-  url: https://app.signpath.io/API/v1/7c19b2cf-90f7-4d15-9b12-1b615f7c18c4/Integrations/AppVeyor?SigningPolicyId=8efd636e-c408-4406-a14a-1d481f6163bf
+    ARTIFACT_SIGNING_ENABLED: true
+  url: https://app.signpath.io/API/v1/7c19b2cf-90f7-4d15-9b12-1b615f7c18c4/Integrations/AppVeyor?SigningPolicyId=5c9879c7-0dea-4303-8e5b-fc4192a7b0de
   on_build_success: true
   on_build_failure: false
   on_build_status_changed: false

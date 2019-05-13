@@ -1,6 +1,274 @@
 Changelog
 =========
 
+### Version 3.1.0 (13 May 2019)
+
+#### Features:
+* Include source branch in link to BitBucket create pull request - PR [6511]
+* Generate avatars with author initials as fallback of gravatar - PR [6499]
+* Hotkeys for Open with difftool | First/Selected -> Working Directory - Issue [6481]
+* FileStatusList: highlight the new name - Issue [6465]
+* fix: JiraCommitHintPlugin hidpi layout issues - PR [6464]
+* FileStatusList: indicate active filter - Issue [6449]
+* FileStatusList filter: mention Regular Expression - Issue [6447]
+* Update NBug - PR [6446]
+* Support for VS2019 - Issue [6431]
+* Text entering over the top of commits tree - Issue [6419]
+* Improve blame contextual menu - PR [6400]
+* Fix blame control click hold move mouse to the right - PR [6399]
+* Left pane reorder trees - PR [6349]
+* Being able to navigate to a PR page of an AppVeyor build - PR [6326]
+* Author images should support Robohash image service - Issue [6311]
+* Automatically load PuTTY SSH key files when needed in left panel - PR [6301]
+* Prune remote branches from Remote repositories dialog not working as expected - Issue [6284]
+* Display Issue (black history graph area) - Issue [6268]
+* Manually handle Ctrl+Backspace on TextBox and ComboBox controls - PR [6256]
+* FormCleanupRepository: Add a button to easily add a path to clean up - PR [6250]
+* Drag and drop windows folder onto Extensions used to open that repo - Issue [6221]
+* Toggle autocomplete commit textbox - PR [6187]
+* Fix sorting of commit templates. - PR [6169]
+* "There are no staged changes" is not hidden completely - Issue [6149]
+* CI integration in revision grid adjustments - PR [6116]
+* Commit dialog: Copy selected text from diff directly to commit message - Issue [6115]
+* Copy links to clipboard - Issue [6088]
+* Ability to disable 'simplify-merges' option - Issue [6066]
+* Introduce option to disable build result tab - Issue [6063]
+* Left panel - show inactive remotes - Issue [6015]
+* Display ahead and behind information in the push button - PR [5994]
+* Remove unused setting "Striped branch change" - PR [5991]
+* Remove VSIX from installer - Issue [5979]
+* Console tab doesn't require translation strings - PR [5951]
+* AppVeyor settings enhancements - PR [5941]
+* Browse: Sort the Plugin list in alphabetic order - PR [5926]
+* Help text for Edit .gitignore not wrapped - PR [5925]
+* Git lfs commands deprecated - Issue [5905]
+* Plugin GitStatistics: Added calculation of comment lines for assembler files - PR [5846]
+* Implement F3 to open difftool for .png - PR [5838]
+* Ability to prune remote directly from object tree - Issue [5805]
+* Revision Links: Detect GH issues without # - PR [5799]
+* Update ManagedExtensibility to vs-mef - PR [5788]
+* Revision grid context menu improvements - Issue [5786]
+* only update submodule status at changes - PR [5777]
+* Issue 3320 - Plugin registration phase - PR [5776]
+* Do not open autocomplete when moving in the commit message editor - Issue [5770]
+* Improve Submodule Status performance - Issue [5769]
+* Browse: Delay status updates when opening/refreshing repos - PR [5747]
+* GE documentation update for 3.0 - Issue [5693]
+* Pub/sub for the left panel - PR [5669]
+* #5125 RevisionGrid Graph: Nearest branch in tooltip - PR [5643]
+* Add Submodules to the left pane - Issue [5569]
+* Github fork/clone dialog change protocol of remote - Issue [5418]
+* Improve overlay of Windows task bar icon - Issue [5336]
+* Create an issue from NBug report - Issue [5064]
+* Need -depth option on clone github dialog - Issue [3517]
+
+#### Fixes:
+* [NBug] Unexpected artificial commit in Git command: 11111111111111... - Issue [6535]
+* Format patch: fix patch creation when selection order is invalid (master)  - PR [6526]
+* Unhandled RefsWarningException "warning: ignoring broken ref" - Issue [6516]
+* Exception if opening a submodule with incorrect superproject reference - Issue [6512]
+* Checkout branch: Badly formatted message - Issue [6507]
+* Unable to build from cli - Issue [6497]
+* ArgumentException on startup - Issue [6442]
+* git mergetool should be considered correctly configured even there's no path. - Issue [6438]
+* Hex View on Blame Tab Always Shows Working Copy instead of Selected Revision - Issue [6434]
+* AppVeyor plugin: Prevent crash when trying to add the same project again - PR [6426]
+* Vertical ruler position not correctly read from settings - Issue [6391]
+* Date formats used are inconsistent and confusing - Issue [6389]
+* FormAbout: fix "Git Extensions is open source. Get involved!" text wa… - PR [6383]
+* ExListView not redrawn on expand / collapse - Issue [6375]
+* Alt+C in main window has a conflict between menu and commit button - Issue [6368]
+* UI freezes when updating submodule status - Issue [6357]
+* Unable to save changes for a remote - Issue [6347]
+* View History window says "This repository does not yet contain any commits" - Issue [6343]
+* "Filter files..." hint overlays the filter - Issue [6336]
+* Sorted refs needs to be refreshed after the repository has changed. - PR [6335]
+* [Blocker] Thread exhaustion - Issue [6319]
+* Copied files in a commit cannot be deleted by 'Reset to parent' - Issue [6297]
+* Incorrect context menu items in commit diff tab - Issue [6296]
+* Application crashes when selecting "Go to commit" and having big contents in clipboard - Issue [6288]
+* NRE on script hotkey unless the revision grid has the focus - Issue [6285]
+* Exception on creating worktree - Issue [6277]
+* Clear diff in history form when clicked on empty area, just like main form and commit form do - Issue [6271]
+* NullReferenceException in commit dialog - Issue [6246]
+* Black screen once switching to one of the submodules - Issue [6243]
+* Frozen once staging 1000 files with CRLF line break and core.autocrlf = input - Issue [6225]
+* Slow startup if never connected to internet - Issue [6223]
+* Orphan commit badly displayed in Revision graph - Issue [6210]
+* Exception from revision grid - Issue [6193]
+* PathTooLongExceptions for file paths shorter than 260 characters in commit window when triggered from VS extension - Issue [6170]
+* Jira Commit Hint plugin doesn't work - Issue [6154]
+* inverted diffs after refresh - Issue [6147]
+* Revision grid: bad behaviour when resizing of commit message column - Issue [6117]
+* System.Exception opening an existing repository - Issue [6093]
+* View menu icons fail to update - Issue [6086]
+* Corrupted Commit Log View after scrolling - Issue [6082]
+* Reset selected lines is broken for staged files - Issue [6076]
+* Debounce navigating the list of branches - Issue [6072]
+* Delete All no longer works - "not selectable" - Issue [6068]
+* Fetching orgin from the remote branches on first load asks for the ssh key - Issue [6047]
+* Copy Commit Info distorts the Commit Info display - Issue [6045]
+* Fix ROT selected node ensuring visible without collapsing other nodes… - PR [6013]
+* No good way to pass arguments which contain whitespace or special characters to scripts - Issue [5999]
+* Fix recent repo dropdown favourites ordering - PR [5995]
+* Size dialog "Clone" - Issue [5972]
+* Commit button always visible - Issue [5968]
+* Option to show tags not stored on restart - Issue [5962]
+* Esc key to close the Stash Manager dialog - Issue [5958]
+* Esc key to close the File History / Blame dialog from everywhere - Issue [5957]
+* Two console tabs if UI is not english - Issue [5916]
+* [3.0] Commit status list is sorted by change type - Issue [5909]
+* 3.0 Not need branch window which freeze the best super fast application - Issue [5884]
+* Commit message is editable in the main UI - Issue [5870]
+* Clipping of the search text box in the branches panel - Issue [5866]
+* Change working directory dropdown hangs for multiple seconds - Issue [5829]
+* Author's avatar settings are not working correctly in Version 3.00.00 RC2 - Issue [5828]
+* Exception showing combined diff on merge commit - Issue [5815]
+* ArgumentNullException when comparing without checked out branch - Issue [5812]
+* Showing "Notes" in FormFileHistory and FormCommitDiff commit info when there are none - Issue [5804]
+* Bug: Console tab setting requires restart - Issue [5787]
+* Revisions panel empties after double click in blame view - Issue [5678]
+* Incorrect layout of the 'Specify branch' dialog - Issue [5676]
+* Git Notes don't show in beta 3.00.00.01 - Issue [5653]
+* Git extensions crash when using the mouse wheel  - Issue [5621]
+* Avatars makes app unresponsive on slow internet connection - Issue [5309]
+* "Remote repositories -- Default pull behaviour" tab broken under high dpi - Issue [5028]
+* Push dialog remotes not updated - Issue [4853]
+* Jira Commit Hint plugin credentials stored in plain text - Issue [4447]
+* Plugin loading phase - Issue [3320]
+
+
+[6535]:https://github.com/gitextensions/gitextensions/issues/6535
+[6526]:https://github.com/gitextensions/gitextensions/pull/6526
+[6516]:https://github.com/gitextensions/gitextensions/issues/6516
+[6512]:https://github.com/gitextensions/gitextensions/issues/6512
+[6511]:https://github.com/gitextensions/gitextensions/pull/6511
+[6507]:https://github.com/gitextensions/gitextensions/issues/6507
+[6499]:https://github.com/gitextensions/gitextensions/pull/6499
+[6497]:https://github.com/gitextensions/gitextensions/issues/6497
+[6481]:https://github.com/gitextensions/gitextensions/issues/6481
+[6465]:https://github.com/gitextensions/gitextensions/issues/6465
+[6464]:https://github.com/gitextensions/gitextensions/pull/6464
+[6449]:https://github.com/gitextensions/gitextensions/issues/6449
+[6447]:https://github.com/gitextensions/gitextensions/issues/6447
+[6446]:https://github.com/gitextensions/gitextensions/pull/6446
+[6442]:https://github.com/gitextensions/gitextensions/issues/6442
+[6438]:https://github.com/gitextensions/gitextensions/issues/6438
+[6434]:https://github.com/gitextensions/gitextensions/issues/6434
+[6431]:https://github.com/gitextensions/gitextensions/issues/6431
+[6426]:https://github.com/gitextensions/gitextensions/pull/6426
+[6419]:https://github.com/gitextensions/gitextensions/issues/6419
+[6400]:https://github.com/gitextensions/gitextensions/pull/6400
+[6399]:https://github.com/gitextensions/gitextensions/pull/6399
+[6391]:https://github.com/gitextensions/gitextensions/issues/6391
+[6389]:https://github.com/gitextensions/gitextensions/issues/6389
+[6383]:https://github.com/gitextensions/gitextensions/pull/6383
+[6375]:https://github.com/gitextensions/gitextensions/issues/6375
+[6368]:https://github.com/gitextensions/gitextensions/issues/6368
+[6357]:https://github.com/gitextensions/gitextensions/issues/6357
+[6349]:https://github.com/gitextensions/gitextensions/pull/6349
+[6347]:https://github.com/gitextensions/gitextensions/issues/6347
+[6343]:https://github.com/gitextensions/gitextensions/issues/6343
+[6336]:https://github.com/gitextensions/gitextensions/issues/6336
+[6335]:https://github.com/gitextensions/gitextensions/pull/6335
+[6326]:https://github.com/gitextensions/gitextensions/pull/6326
+[6319]:https://github.com/gitextensions/gitextensions/issues/6319
+[6311]:https://github.com/gitextensions/gitextensions/issues/6311
+[6301]:https://github.com/gitextensions/gitextensions/pull/6301
+[6297]:https://github.com/gitextensions/gitextensions/issues/6297
+[6296]:https://github.com/gitextensions/gitextensions/issues/6296
+[6288]:https://github.com/gitextensions/gitextensions/issues/6288
+[6285]:https://github.com/gitextensions/gitextensions/issues/6285
+[6284]:https://github.com/gitextensions/gitextensions/issues/6284
+[6277]:https://github.com/gitextensions/gitextensions/issues/6277
+[6271]:https://github.com/gitextensions/gitextensions/issues/6271
+[6268]:https://github.com/gitextensions/gitextensions/issues/6268
+[6256]:https://github.com/gitextensions/gitextensions/pull/6256
+[6250]:https://github.com/gitextensions/gitextensions/pull/6250
+[6246]:https://github.com/gitextensions/gitextensions/issues/6246
+[6243]:https://github.com/gitextensions/gitextensions/issues/6243
+[6225]:https://github.com/gitextensions/gitextensions/issues/6225
+[6223]:https://github.com/gitextensions/gitextensions/issues/6223
+[6221]:https://github.com/gitextensions/gitextensions/issues/6221
+[6210]:https://github.com/gitextensions/gitextensions/issues/6210
+[6193]:https://github.com/gitextensions/gitextensions/issues/6193
+[6187]:https://github.com/gitextensions/gitextensions/pull/6187
+[6170]:https://github.com/gitextensions/gitextensions/issues/6170
+[6169]:https://github.com/gitextensions/gitextensions/pull/6169
+[6154]:https://github.com/gitextensions/gitextensions/issues/6154
+[6149]:https://github.com/gitextensions/gitextensions/issues/6149
+[6147]:https://github.com/gitextensions/gitextensions/issues/6147
+[6117]:https://github.com/gitextensions/gitextensions/issues/6117
+[6116]:https://github.com/gitextensions/gitextensions/pull/6116
+[6115]:https://github.com/gitextensions/gitextensions/issues/6115
+[6093]:https://github.com/gitextensions/gitextensions/issues/6093
+[6088]:https://github.com/gitextensions/gitextensions/issues/6088
+[6086]:https://github.com/gitextensions/gitextensions/issues/6086
+[6082]:https://github.com/gitextensions/gitextensions/issues/6082
+[6076]:https://github.com/gitextensions/gitextensions/issues/6076
+[6072]:https://github.com/gitextensions/gitextensions/issues/6072
+[6068]:https://github.com/gitextensions/gitextensions/issues/6068
+[6066]:https://github.com/gitextensions/gitextensions/issues/6066
+[6063]:https://github.com/gitextensions/gitextensions/issues/6063
+[6047]:https://github.com/gitextensions/gitextensions/issues/6047
+[6045]:https://github.com/gitextensions/gitextensions/issues/6045
+[6015]:https://github.com/gitextensions/gitextensions/issues/6015
+[6013]:https://github.com/gitextensions/gitextensions/pull/6013
+[5999]:https://github.com/gitextensions/gitextensions/issues/5999
+[5995]:https://github.com/gitextensions/gitextensions/pull/5995
+[5994]:https://github.com/gitextensions/gitextensions/pull/5994
+[5991]:https://github.com/gitextensions/gitextensions/pull/5991
+[5979]:https://github.com/gitextensions/gitextensions/issues/5979
+[5972]:https://github.com/gitextensions/gitextensions/issues/5972
+[5968]:https://github.com/gitextensions/gitextensions/issues/5968
+[5962]:https://github.com/gitextensions/gitextensions/issues/5962
+[5958]:https://github.com/gitextensions/gitextensions/issues/5958
+[5957]:https://github.com/gitextensions/gitextensions/issues/5957
+[5951]:https://github.com/gitextensions/gitextensions/pull/5951
+[5941]:https://github.com/gitextensions/gitextensions/pull/5941
+[5926]:https://github.com/gitextensions/gitextensions/pull/5926
+[5925]:https://github.com/gitextensions/gitextensions/pull/5925
+[5916]:https://github.com/gitextensions/gitextensions/issues/5916
+[5909]:https://github.com/gitextensions/gitextensions/issues/5909
+[5905]:https://github.com/gitextensions/gitextensions/issues/5905
+[5884]:https://github.com/gitextensions/gitextensions/issues/5884
+[5870]:https://github.com/gitextensions/gitextensions/issues/5870
+[5866]:https://github.com/gitextensions/gitextensions/issues/5866
+[5846]:https://github.com/gitextensions/gitextensions/pull/5846
+[5838]:https://github.com/gitextensions/gitextensions/pull/5838
+[5829]:https://github.com/gitextensions/gitextensions/issues/5829
+[5828]:https://github.com/gitextensions/gitextensions/issues/5828
+[5815]:https://github.com/gitextensions/gitextensions/issues/5815
+[5812]:https://github.com/gitextensions/gitextensions/issues/5812
+[5805]:https://github.com/gitextensions/gitextensions/issues/5805
+[5804]:https://github.com/gitextensions/gitextensions/issues/5804
+[5799]:https://github.com/gitextensions/gitextensions/pull/5799
+[5788]:https://github.com/gitextensions/gitextensions/pull/5788
+[5787]:https://github.com/gitextensions/gitextensions/issues/5787
+[5786]:https://github.com/gitextensions/gitextensions/issues/5786
+[5777]:https://github.com/gitextensions/gitextensions/pull/5777
+[5776]:https://github.com/gitextensions/gitextensions/pull/5776
+[5770]:https://github.com/gitextensions/gitextensions/issues/5770
+[5769]:https://github.com/gitextensions/gitextensions/issues/5769
+[5747]:https://github.com/gitextensions/gitextensions/pull/5747
+[5693]:https://github.com/gitextensions/gitextensions/issues/5693
+[5678]:https://github.com/gitextensions/gitextensions/issues/5678
+[5676]:https://github.com/gitextensions/gitextensions/issues/5676
+[5669]:https://github.com/gitextensions/gitextensions/pull/5669
+[5653]:https://github.com/gitextensions/gitextensions/issues/5653
+[5643]:https://github.com/gitextensions/gitextensions/pull/5643
+[5621]:https://github.com/gitextensions/gitextensions/issues/5621
+[5569]:https://github.com/gitextensions/gitextensions/issues/5569
+[5418]:https://github.com/gitextensions/gitextensions/issues/5418
+[5336]:https://github.com/gitextensions/gitextensions/issues/5336
+[5309]:https://github.com/gitextensions/gitextensions/issues/5309
+[5064]:https://github.com/gitextensions/gitextensions/issues/5064
+[5028]:https://github.com/gitextensions/gitextensions/issues/5028
+[4853]:https://github.com/gitextensions/gitextensions/issues/4853
+[4447]:https://github.com/gitextensions/gitextensions/issues/4447
+[3517]:https://github.com/gitextensions/gitextensions/issues/3517
+[3320]:https://github.com/gitextensions/gitextensions/issues/3320
+
 ### Version 3.0.2 (16 Feb 2019)
 
 #### Fixes:

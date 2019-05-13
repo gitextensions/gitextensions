@@ -4,10 +4,6 @@
 
 [CmdletBinding()]
 Param(
-    [Parameter(Mandatory=$True, Position=1)]
-    [string] $oldVersion,
-    [Parameter(Mandatory=$True, Position=2)]
-    [string] $newVersion,
     #[Parameter(Mandatory=$True, Position=3)]
     [string] $milestones
 )
@@ -152,36 +148,6 @@ try {
     #Write-Host ----------------------------------------------------------------------
     #.\Download-PluginManager.ps1 -ExtractRootPath '..\Plugins\GitExtensions.PluginManager'
 
-    Write-Host ----------------------------------------------------------------------
-    Write-Host Compile and package
-    Write-Host ----------------------------------------------------------------------
-    # preparing the build artifacts
-    python set_version_to.py -v $newVersion -t $newVersion-beta1
-
-    $env:SKIP_PAUSE=1
-    
-    # restore packages and rebuild everything
-    ..\.nuget\nuget install -OutputDirectory ..\packages
-    pushd ..\
-    msbuild /t:Restore
-    msbuild /t:Rebuild /p:Configuration=Release
-    popd
-
-    .\BuildInstallers.cmd
-
-    # Set IsPortable in config to true
-    .\Set-Portable.ps1 -IsPortable
-    Write-Host ----------------------------------------------------------------------
-    Write-Host Make Portable Archive
-    Write-Host -------------------------------------------------------------------
-    .\MakePortableArchive.cmd Release $newVersion-beta1
-    
-    # Restore IsPortable in config
-    .\Set-Portable.ps1
-
-    # cleanup
-    Remove-Item -Force -Recurse GitExtensions-pdbs
-    Remove-Item -Force -Recurse GitExtensions
 
 }
 catch {

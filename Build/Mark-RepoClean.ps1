@@ -12,6 +12,8 @@ $submodules | ForEach-Object {
     popd
 }
 
+& git update-index --skip-worktree .nuget/NuGet.exe
+& git update-index --skip-worktree GitUI/CommandsDialogs/FormBrowse.cs
 & git update-index --skip-worktree CommonAssemblyInfo.cs
 & git update-index --skip-worktree CommonAssemblyInfoExternals.cs
 & git update-index --skip-worktree GitExtSshAskPass/SshAskPass.rc2
