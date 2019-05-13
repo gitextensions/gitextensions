@@ -280,6 +280,8 @@ namespace GitUI.CommandsDialogs
 
             InitializeComplete();
 
+            AlignCommitButtons();
+
             // By calling this in the constructor, we prevent flickering caused by resizing the
             // form, for example when it is restored to maximised, but first drawn as a smaller window.
             RestorePosition();
@@ -343,6 +345,27 @@ namespace GitUI.CommandsDialogs
                     ? _enterCommitMessageHint.Text
                     : _commitMessageDisabled.Text;
             }
+        }
+
+        private void AlignCommitButtons()
+        {
+            // get all button sizes
+            var commitBtnSize = Commit.Width;
+            var commitAndPushBtnSize = CommitAndPush.Width;
+            var resetAllChanges = Reset.Width;
+            var resetUnstagedChanges = ResetUnStaged.Width;
+
+            // collect them in an array to compute max
+            int[] buttonList = { commitBtnSize, commitAndPushBtnSize, resetAllChanges, resetUnstagedChanges };
+
+            // get maximum
+            var newWidth = buttonList.Max();
+
+            // set maximum
+            Commit.Width = newWidth;
+            CommitAndPush.Width = newWidth;
+            Reset.Width = newWidth;
+            ResetUnStaged.Width = newWidth;
         }
 
         protected override void Dispose(bool disposing)

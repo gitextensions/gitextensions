@@ -1118,12 +1118,13 @@ namespace GitUI.CommandsDialogs
             //
             // Commit
             //
+            this.Commit.AutoSize = true;
             this.Commit.Image = global::GitUI.Properties.Images.RepoStateClean;
             this.Commit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Commit.Location = new System.Drawing.Point(0, 0);
             this.Commit.Margin = new System.Windows.Forms.Padding(0, 0, 0, 3);
             this.Commit.Name = "Commit";
-            this.Commit.Size = new System.Drawing.Size(171, 26);
+            this.Commit.Size = new System.Drawing.Size(185, 26);
             this.Commit.TabIndex = 1;
             this.Commit.TabStop = false;
             this.Commit.Text = "&Commit";
@@ -1132,12 +1133,13 @@ namespace GitUI.CommandsDialogs
             //
             // CommitAndPush
             //
+            this.CommitAndPush.AutoSize = true;
             this.CommitAndPush.Image = global::GitUI.Properties.Images.ArrowUp;
             this.CommitAndPush.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.CommitAndPush.Location = new System.Drawing.Point(0, 32);
             this.CommitAndPush.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.CommitAndPush.Name = "CommitAndPush";
-            this.CommitAndPush.Size = new System.Drawing.Size(171, 26);
+            this.CommitAndPush.Size = new System.Drawing.Size(185, 26);
             this.CommitAndPush.TabIndex = 9;
             this.CommitAndPush.TabStop = false;
             this.CommitAndPush.Text = "C&ommit && push";
@@ -1158,12 +1160,13 @@ namespace GitUI.CommandsDialogs
             // 
             // Reset
             // 
+            this.Reset.AutoSize = true;
             this.Reset.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
             this.Reset.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Reset.Location = new System.Drawing.Point(0, 122);
             this.Reset.Margin = new System.Windows.Forms.Padding(0, 9, 0, 3);
             this.Reset.Name = "Reset";
-            this.Reset.Size = new System.Drawing.Size(171, 26);
+            this.Reset.Size = new System.Drawing.Size(185, 26);
             this.Reset.TabIndex = 11;
             this.Reset.TabStop = false;
             this.Reset.Text = "Reset all changes";
@@ -1172,12 +1175,13 @@ namespace GitUI.CommandsDialogs
             //
             // ResetUnStaged
             //
+            this.ResetUnStaged.AutoSize = true;
             this.ResetUnStaged.Image = global::GitUI.Properties.Images.ResetWorkingDirChanges;
             this.ResetUnStaged.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.ResetUnStaged.Location = new System.Drawing.Point(0, 154);
             this.ResetUnStaged.Margin = new System.Windows.Forms.Padding(0, 3, 0, 3);
             this.ResetUnStaged.Name = "ResetUnStaged";
-            this.ResetUnStaged.Size = new System.Drawing.Size(171, 26);
+            this.ResetUnStaged.Size = new System.Drawing.Size(185, 26);
             this.ResetUnStaged.TabIndex = 14;
             this.ResetUnStaged.TabStop = false;
             this.ResetUnStaged.Text = "Reset unstaged changes";
