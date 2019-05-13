@@ -82,3 +82,4 @@ YYYY/MM/DD, github id, Full name, email
 2019/03/29, realkompot, Andrei Matsei, therealkompot@gmail.com
 2019/04/09, vbjay, Jay Asbury, vbjay.net@gmail.com
 2019/04/20, Hemaolle, Oskari Leppäaho, oskari.leppaaho@gmail.com
+2019/05/12, thimmy687, Ricardo Krause, kaser23@gmx.de

@@ -114,6 +114,7 @@
             // bResetToDefaults
             // 
             this.bResetToDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.bResetToDefaults.AutoSize = true;
             this.bResetToDefaults.Location = new System.Drawing.Point(3, 496);
             this.bResetToDefaults.Name = "bResetToDefaults";
             this.bResetToDefaults.Size = new System.Drawing.Size(209, 26);
