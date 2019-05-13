@@ -3263,6 +3263,9 @@ Enter valid branch name or select predefined value.</source>
         <source>You are going to reset the “{0}” branch to a new location discarding ALL the commited changes since the {1} revision.
 
 Are you sure?</source>
+        <target>Вы собираетесь сбросить изменения ветки “{0}” на новое место, сбрасывая ВСЕ зафиксированные изменения после ревизии {1}.
+
+Вы уверены?</target>
         
       </trans-unit>
       <trans-unit id="chkSetLocalChangesActionAsDefault.Text">
