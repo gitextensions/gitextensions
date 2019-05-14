@@ -1,3 +1,8 @@
+[Version "3.1"]
+    DownloadPage = https://github.com/gitextensions/gitextensions/releases/download/v3.1/GitExtensions-3.1.0.5877.msi
+    ReleaseType = major
+    ;branch to which bugfixes found in this version should be merged (base for a pull request)
+    BugFixBranch = release/3.1
 [Version "3.0.2"]
     DownloadPage = https://github.com/gitextensions/gitextensions/releases/download/v3.0.2/GitExtensions-3.0.2.5232.msi
     ReleaseType = hotfix
