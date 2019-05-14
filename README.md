@@ -13,10 +13,10 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a>
 
 The work has been [split into two streams](https://github.com/gitextensions/gitextensions/wiki/Compare-versions):
- * version 3.0x - **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description)** or [install it with Chocolatey](https://chocolatey.org/packages/gitextensions).
+ * version 3.x - **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description)** or [install it with Chocolatey](https://chocolatey.org/packages/gitextensions).
  * version 2.5x
 
-### Version 3.0x
+### Version 3.x
 
 This stream contains the code for the new major version with a number of significant changes&mdash;both to the app and the codebase.
 For more details please refer to [versions comparison](https://github.com/gitextensions/gitextensions/wiki/Compare-versions).
@@ -86,7 +86,7 @@ title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.
 
 <table>
   <tr>
-    <td><strong>v3.0.2</strong></td>
+    <td><strong>v3.1</strong></td>
     <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description">[ Download ]</a><br />
         GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
   </tr>
@@ -97,7 +97,7 @@ title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.
     </td>
   </tr>
   <tr>
-    <td><strong>Visual Studio VSIX (2015/2017)</strong></td>
+    <td><strong>Visual Studio VSIX (2015/2017/2019)</strong></td>
     <td><a href="https://marketplace.visualstudio.com/items?itemName=HenkWesthuis.GitExtensions">[ Download ]</a> or install from Visual Studio via Extensions</td>
   </tr>
   <tr>
@@ -178,7 +178,7 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 * Wiki: [github.com/gitextensions/gitextensions/wiki](https://github.com/gitextensions/gitextensions/wiki)
 * Gitter chat: [gitter.im/gitextensions/gitextensions](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-# Latest Release History (3.0.1)
+# Release History (3.0.1)
 Watch us work on this project.
 
 [![Click to play](https://img.youtube.com/vi/k6DhHbzkZvM/0.jpg)](https://www.youtube.com/watch?v=k6DhHbzkZvM)
