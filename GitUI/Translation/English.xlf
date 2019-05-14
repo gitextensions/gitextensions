@@ -4925,7 +4925,7 @@ ancestor tree.</source>
         <target />
       </trans-unit>
       <trans-unit id="_warningOpenFailed.Text">
-        <source>Directory does not exist.</source>
+        <source>The selected directory is not a valid git repository.</source>
         <target />
       </trans-unit>
       <trans-unit id="_warningOpenFailedCaption.Text">
