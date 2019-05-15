@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using FluentAssertions;
