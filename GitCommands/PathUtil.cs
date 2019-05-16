@@ -131,7 +131,14 @@ namespace GitCommands
                 return string.Empty;
             }
 
-            return Path.GetFullPath(new Uri(path).LocalPath);
+            try
+            {
+                return Path.GetFullPath(new Uri(path).LocalPath);
+            }
+            catch (UriFormatException)
+            {
+                return string.Empty;
+            }
         }
 
         [ContractAnnotation("=>false,posixPath:null")]

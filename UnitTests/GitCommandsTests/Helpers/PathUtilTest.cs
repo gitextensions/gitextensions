@@ -183,12 +183,14 @@ namespace GitCommandsTests.Helpers
         [TestCase(null)]
         [TestCase("")]
         [TestCase(" ")]
+        [TestCase("c:")]
         public void NormalizePath(string path)
         {
             PathUtil.NormalizePath(path).Should().BeEmpty();
         }
 
         [Platform(Include = "Win")]
+        [TestCase("C:\\", "C:\\")]
         [TestCase("a:\\folder\\filename.txt", "a:\\folder\\filename.txt")]
         [TestCase("a:\\folder\\..\\filename.txt", "a:\\filename.txt")]
         [TestCase("file:///C:/Test%20Project.exe", "C:\\Test Project.exe")]
