@@ -1994,8 +1994,8 @@ namespace GitCommands
                     {
                         Name = file,
                         FullName = fullFileName,
-                        IsNext = n == next,
-                        IsSkipped = n < next
+                        IsApplied = n < next,
+                        IsNext = n == next
                     };
 
                 if (File.Exists(rebaseDir + file))

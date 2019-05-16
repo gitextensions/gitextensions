@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using GitCommands.Patches;
@@ -10,6 +11,8 @@ namespace GitUI
     public partial class PatchGrid : GitModuleControl
     {
         private readonly TranslationString _unableToShowPatchDetails = new TranslationString("Unable to show details of patch file.");
+
+        public IReadOnlyList<PatchFile> PatchFiles { get; private set; }
 
         public PatchGrid()
         {
@@ -32,12 +35,33 @@ namespace GitUI
             Initialize();
         }
 
+        public void RefreshGrid()
+        {
+            var updatedPatches = GetPatches();
+
+            for (int i = 0; i < updatedPatches.Count; i++)
+            {
+                updatedPatches[i].IsSkipped = PatchFiles[i].IsSkipped;
+            }
+
+            DisplayPatches(updatedPatches);
+        }
+
+        private IReadOnlyList<PatchFile> GetPatches()
+        {
+            return Module.InTheMiddleOfInteractiveRebase()
+                            ? Module.GetInteractiveRebasePatchFiles()
+                            : Module.GetRebasePatchFiles();
+        }
+
         public void Initialize()
         {
-            var patchFiles = Module.InTheMiddleOfInteractiveRebase()
-                ? Module.GetInteractiveRebasePatchFiles()
-                : Module.GetRebasePatchFiles();
+            DisplayPatches(GetPatches());
+        }
 
+        private void DisplayPatches(IReadOnlyList<PatchFile> patchFiles)
+        {
+            PatchFiles = patchFiles;
             Patches.DataSource = patchFiles;
 
             if (patchFiles.Any())
@@ -46,6 +70,8 @@ namespace GitUI
                 int currentPatchFileIndex = patchFiles.TakeWhile(pf => !pf.IsNext).Count() - 1;
                 Patches.FirstDisplayedScrollingRowIndex = Math.Max(0, currentPatchFileIndex - (rowsInView / 2));
             }
+
+            SelectCurrentlyApplyingPatch();
         }
 
         private void Patches_DoubleClick(object sender, EventArgs e)
@@ -64,6 +90,22 @@ namespace GitUI
             }
 
             UICommands.StartViewPatchDialog(patchFile.FullName);
+        }
+
+        public void SelectCurrentlyApplyingPatch()
+        {
+            if (PatchFiles == null || !PatchFiles.Any())
+            {
+                return;
+            }
+
+            var shouldSelectIndex = PatchFiles.IndexOf(p => p.IsNext);
+
+            if (shouldSelectIndex >= 0)
+            {
+                Patches.ClearSelection();
+                Patches.Rows[shouldSelectIndex].Selected = true;
+            }
         }
     }
 }

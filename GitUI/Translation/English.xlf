@@ -5487,7 +5487,7 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="Skip.Text">
-        <source>Skip this commit</source>
+        <source>Skip currently applying commit</source>
         <target />
       </trans-unit>
       <trans-unit id="SolveMergeconflicts.Text">

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using GitCommands;
 using ResourceManager;
@@ -96,7 +97,14 @@ namespace GitUI.CommandsDialogs
                 Abort.Enabled = false;
             }
 
-            patchGrid1.Initialize();
+            if (patchGrid1.PatchFiles == null || patchGrid1.PatchFiles.Count == 0)
+            {
+                patchGrid1.Initialize();
+            }
+            else
+            {
+                patchGrid1.RefreshGrid();
+            }
 
             SolveMergeConflicts.Visible = Module.InTheMiddleOfConflictedMerge();
 
@@ -209,6 +217,12 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
+                var applyingPatch = patchGrid1.PatchFiles.FirstOrDefault(p => p.IsNext);
+                if (applyingPatch != null)
+                {
+                    applyingPatch.IsSkipped = true;
+                }
+
                 FormProcess.ShowDialog(this, GitCommandHelpers.SkipCmd());
                 EnableButtons();
             }

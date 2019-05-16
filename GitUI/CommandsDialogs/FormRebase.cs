@@ -46,6 +46,13 @@ namespace GitUI.CommandsDialogs
             {
                 ShowOptions_LinkClicked(null, null);
             }
+
+            Shown += FormRebase_Shown;
+        }
+
+        private void FormRebase_Shown(object sender, EventArgs e)
+        {
+            patchGrid1.SelectCurrentlyApplyingPatch();
         }
 
         public FormRebase(GitUICommands commands, string from, string to, string defaultBranch, bool interactive = false,
@@ -191,6 +198,12 @@ namespace GitUI.CommandsDialogs
         {
             using (WaitCursorScope.Enter())
             {
+                var applyingPatch = patchGrid1.PatchFiles.FirstOrDefault(p => p.IsNext);
+                if (applyingPatch != null)
+                {
+                    applyingPatch.IsSkipped = true;
+                }
+
                 FormProcess.ShowDialog(this, GitCommandHelpers.SkipRebaseCmd());
 
                 if (!Module.InTheMiddleOfRebase())
@@ -199,7 +212,8 @@ namespace GitUI.CommandsDialogs
                 }
 
                 EnableButtons();
-                patchGrid1.Initialize();
+
+                patchGrid1.RefreshGrid();
             }
         }
 
