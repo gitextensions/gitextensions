@@ -2550,7 +2550,7 @@ Do you want to continue?</source>
         <target />
       </trans-unit>
       <trans-unit id="chkShowGpgInformation.Text">
-        <source>Show GPG information</source>
+        <source>Show GPG information (a restart is needed to take effect)</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBoxConsoleSettings.Text">
