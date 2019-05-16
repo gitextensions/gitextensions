@@ -2203,6 +2203,11 @@ namespace GitCommands
                             return remotes;
                         }
 
+                        if (string.IsNullOrWhiteSpace(fetchLine))
+                        {
+                            continue;
+                        }
+
                         if (!enumerator.MoveNext())
                         {
                             throw new Exception("Remote URLs should appear in pairs.");
