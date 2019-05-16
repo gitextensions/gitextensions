@@ -359,24 +359,49 @@ namespace GitCommandsTests
             }
         }
 
+        [TestCase("fatal: not a git repository (or any of the parent directories): .git")] // git version 2.20.1 (Apple Git-117)
+        [TestCase("fatal: Not a git repository (or any of the parent directories): .git")] // git version 2.16.1.windows.4
+        public void GetRemotes_should_return_empty_list_not_inside_git_repo(string warning)
+        {
+            ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                using (_executable.StageOutput("remote -v", warning))
+                {
+                    var remotes = await _gitModule.GetRemotesAsync();
+
+                    remotes.Should().BeEmpty();
+                }
+            });
+        }
+
+        [TestCase("fatal: not a git repository (or any of the parent directories): .git")] // git version 2.20.1 (Apple Git-117)
+        [TestCase("fatal: Not a git repository (or any of the parent directories): .git")] // git version 2.16.1.windows.4
+        public void GetRemotes_should_not_throw_if_not_inside_git_repo(string warning)
+        {
+            using (_executable.StageOutput("remote -v", warning))
+            {
+                Assert.DoesNotThrowAsync(async () => await _gitModule.GetRemotesAsync());
+            }
+        }
+
         [Test]
-        public void GetRemotes()
+        public void GetRemotes_should_parse_correctly_configured_remotes()
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
             {
                 var lines = new[]
                 {
-                "RussKie\tgit://github.com/RussKie/gitextensions.git (fetch)",
-                "RussKie\tgit://github.com/RussKie/gitextensions.git (push)",
-                "origin\tgit@github.com:drewnoakes/gitextensions.git (fetch)",
-                "origin\tgit@github.com:drewnoakes/gitextensions.git (push)",
-                "upstream\tgit@github.com:gitextensions/gitextensions.git (fetch)",
-                "upstream\tgit@github.com:gitextensions/gitextensions.git (push)",
-                "asymmetrical\thttps://github.com/gitextensions/fetch.git (fetch)",
-                "asymmetrical\thttps://github.com/gitextensions/push.git (push)",
-                "with-space\tc:\\Bare Repo (fetch)",
-                "with-space\tc:\\Bare Repo (push)"
-            };
+                    "RussKie\tgit://github.com/RussKie/gitextensions.git (fetch)",
+                    "RussKie\tgit://github.com/RussKie/gitextensions.git (push)",
+                    "origin\tgit@github.com:drewnoakes/gitextensions.git (fetch)",
+                    "origin\tgit@github.com:drewnoakes/gitextensions.git (push)",
+                    "upstream\tgit@github.com:gitextensions/gitextensions.git (fetch)",
+                    "upstream\tgit@github.com:gitextensions/gitextensions.git (push)",
+                    "asymmetrical\thttps://github.com/gitextensions/fetch.git (fetch)",
+                    "asymmetrical\thttps://github.com/gitextensions/push.git (push)",
+                    "with-space\tc:\\Bare Repo (fetch)",
+                    "with-space\tc:\\Bare Repo (push)"
+                };
 
                 using (_executable.StageOutput("remote -v", string.Join("\n", lines)))
                 {
