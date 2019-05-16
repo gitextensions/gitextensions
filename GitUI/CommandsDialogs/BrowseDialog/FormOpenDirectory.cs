@@ -14,7 +14,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 {
     public partial class FormOpenDirectory : GitExtensionsForm
     {
-        private readonly TranslationString _warningOpenFailed = new TranslationString("Directory does not exist.");
+        private readonly TranslationString _warningOpenFailed = new TranslationString("The selected directory is not a valid git repository.");
         private readonly TranslationString _warningOpenFailedCaption = new TranslationString("Error");
 
         [CanBeNull] private GitModule _chosenModule;
@@ -95,16 +95,15 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void LoadClick(object sender, EventArgs e)
         {
             _NO_TRANSLATE_Directory.Text = _NO_TRANSLATE_Directory.Text.Trim();
-            if (Directory.Exists(_NO_TRANSLATE_Directory.Text))
+
+            _chosenModule = OpenGitRepository(_NO_TRANSLATE_Directory.Text, RepositoryHistoryManager.Locals);
+            if (_chosenModule != null)
             {
-                _chosenModule = new GitModule(_NO_TRANSLATE_Directory.Text);
-                ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(_chosenModule.WorkingDir));
                 Close();
+                return;
             }
-            else
-            {
-                MessageBox.Show(this, _warningOpenFailed.Text, _warningOpenFailedCaption.Text);
-            }
+
+            MessageBox.Show(this, _warningOpenFailed.Text, _warningOpenFailedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void DirectoryKeyPress(object sender, KeyPressEventArgs e)
@@ -148,6 +147,38 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             {
                 folderGoUpButton.Enabled = false;
             }
+        }
+
+        private static GitModule OpenGitRepository([NotNull] string path, ILocalRepositoryManager localRepositoryManager)
+        {
+            if (!Directory.Exists(path))
+            {
+                return null;
+            }
+
+            var chosenModule = new GitModule(path.EnsureTrailingPathSeparator());
+            if (!chosenModule.IsValidGitWorkingDir())
+            {
+                return null;
+            }
+
+            ThreadHelper.JoinableTaskFactory.Run(() => localRepositoryManager.AddAsMostRecentAsync(chosenModule.WorkingDir));
+            return chosenModule;
+        }
+
+        internal TestAccessor GetTestAccessor()
+            => new TestAccessor(this);
+
+        public readonly struct TestAccessor
+        {
+            private readonly FormOpenDirectory _form;
+
+            public TestAccessor(FormOpenDirectory form)
+            {
+                _form = form;
+            }
+
+            public GitModule OpenGitRepository([NotNull] string path, ILocalRepositoryManager localRepositoryManager) => FormOpenDirectory.OpenGitRepository(path, localRepositoryManager);
         }
     }
 }
