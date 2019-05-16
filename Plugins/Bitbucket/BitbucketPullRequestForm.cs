@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,18 +46,21 @@ namespace Bitbucket
                 ReloadRepositories();
             };
 
-            var repoUrl = _NO_TRANSLATE_RepoUrl = string.Format(_NO_TRANSLATE_RepoUrl,
-                                      _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
-            var branch = GitCommands.GitRefName.GetFullBranchName(module.GetSelectedBranch());
+            if (module != null)
+            {
+                var repoUrl = _NO_TRANSLATE_RepoUrl = string.Format(_NO_TRANSLATE_RepoUrl,
+                                          _settings.BitbucketUrl, _settings.ProjectKey, _settings.RepoSlug);
+                var branch = GitCommands.GitRefName.GetFullBranchName(module.GetSelectedBranch());
 
-            _NO_TRANSLATE_lblLinkCreatePull.Text = repoUrl +
-                ((branch.IsNullOrEmpty() || branch.Equals(DetachedHeadParser.DetachedBranch)) ?
-                _NO_TRANSLATE_LinkCreatePullNoBranch :
-                string.Format(_NO_TRANSLATE_LinkCreatePull, branch));
-            toolTipLink.SetToolTip(_NO_TRANSLATE_lblLinkCreatePull, _linkLabelToolTip.Text);
+                _NO_TRANSLATE_lblLinkCreatePull.Text = repoUrl +
+                    ((branch.IsNullOrEmpty() || branch.Equals(DetachedHeadParser.DetachedBranch)) ?
+                    _NO_TRANSLATE_LinkCreatePullNoBranch :
+                    string.Format(_NO_TRANSLATE_LinkCreatePull, branch));
+                toolTipLink.SetToolTip(_NO_TRANSLATE_lblLinkCreatePull, _linkLabelToolTip.Text);
 
-            _NO_TRANSLATE_lblLinkViewPull.Text = repoUrl + _NO_TRANSLATE_LinkViewPull;
-            toolTipLink.SetToolTip(_NO_TRANSLATE_lblLinkViewPull, _linkLabelToolTip.Text);
+                _NO_TRANSLATE_lblLinkViewPull.Text = repoUrl + _NO_TRANSLATE_LinkViewPull;
+                toolTipLink.SetToolTip(_NO_TRANSLATE_lblLinkViewPull, _linkLabelToolTip.Text);
+            }
 
             InitializeComplete();
         }

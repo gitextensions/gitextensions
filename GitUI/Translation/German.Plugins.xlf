@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>Zeige Testergebnisse in der Buildstatus Übersicht für jedes Buildergebnis (viel Netzwerkverkehr!)</target>
+        <target>Anzeige der Testergebnisse in der Statuszusammenfassung für jedes Buildergebnis (Netzwerkintensiv!)</target>
         
       </trans-unit>
     </body>
@@ -206,16 +206,6 @@
       <trans-unit id="lblDescriptionView.Text">
         <source>Description</source>
         <target>Beschreibung</target>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkCreatePull.Text">
-        <source>/projects//repos//pull-requests?create</source>
-        <target>/projects//repos//pull-requests?create</target>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkViewPull.Text">
-        <source>/projects//repos//pull-requests</source>
-        <target>/projects//repos//pull-requests</target>
         
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
@@ -422,11 +412,6 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
         <target>Letzte Aktivität</target>
-        
-      </trans-unit>
-      <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
-        <source>deleteDataGridViewCheckBoxColumn</source>
-        <target>Ungenützte Branches Checkbox Spalte</target>
         
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
@@ -1005,13 +990,12 @@ defaultrebase=0</target>
         
       </trans-unit>
       <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
+        <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
-        <target>Das Gerrit Plugin für GitExtensions integriert Gerrit in GitExtensions. Dieses Plugin basiert auf dem git-review Tool.
+        <target>Das Gerrit Plugin für Git Extensions bringt die Unterstützung integriert Gerrit in Git Extensions. Dieses Plugin basiert auf dem git-review Tool.
 
-Um Gerrit Support für ein Repository zu aktivieren muss eine .gitreview Datei angelegt werden. Dies kann über die Option Einstellungen | Editiere .gitreview Menüoption ausgewählt werden.
-Benützen Sie den Verweis unten für mehr Informationen zur .gitreview Datei und dem git-review Befehl.</target>
+Um die Gerrit Unterstützung für ein Repository zu aktivieren, muss eine .gitreview Datei erstellt werden. Das kann über die Menüoption Repository | Bearbeite .gitreview erledigt werden. Besuchen Sie den Link unten, um mehr Informationen über die .gitreview Datei und das git-review Tool zu bekommen.</target>
         
       </trans-unit>
     </body>
@@ -1429,6 +1413,11 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
         <target>JIRA Commit Hinweis</target>
         
       </trans-unit>
+      <trans-unit id="_credentialsSettings.Caption">
+        <source>Jira credentials</source>
+        <target>JIRA Zugangsdaten</target>
+        
+      </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
         <target>JIRA Hinweis Plugin aktiviert</target>
@@ -1444,11 +1433,6 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
         <target>JQL Abfrage</target>
         
       </trans-unit>
-      <trans-unit id="_passwordSettings.Caption">
-        <source>Jira password</source>
-        <target>JIRA Passwort</target>
-        
-      </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         <target>Vorlage für Commit Nachricht</target>
@@ -1457,11 +1441,6 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
         <target>JIRA URL</target>
-        
-      </trans-unit>
-      <trans-unit id="_userSettings.Caption">
-        <source>Jira user</source>
-        <target>JIRA Benutzer</target>
         
       </trans-unit>
     </body>
@@ -1676,6 +1655,75 @@ Branchnamen oder Tag-Namen sein.)</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="de">
+    <body>
+      <trans-unit id="ExtractLink.Text">
+        <source>Extract data from a build result url copied in the clipboard</source>
+        <target>Daten aus Buildergebnis URL in Zwischenablage extrahieren</target>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        <target>Zur Token Management Seite gehen</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Could not extract data</source>
+        <target>Konnte keine Daten extrahieren</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy the url of the build into the clipboard before retrying.
+(Should contain at least the &quot;buildId&quot; parameter)</source>
+        <target>Die Zwischenablage enthält keine gültige Build-URL.
+
+ Bitte kopieren Sie die URL des Builds in die Zwischenablage, bevor Sie es erneut versuchen.
+(Sollte mindestens den Parameter &quot;buildId&quot; enthalten)</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
+        <source>Error while trying to retrieve build definition information from url.
+
+Please ensure that the url is valid and that the API token has access to build and project information.</source>
+        <target>Fehler beim Abrufen von Informationen zur Builddefinition  von der URL.
+
+Bitte stellen Sie sicher, dass die URL gültig ist und dass das API-Token Zugriff auf Build- und Projektinformationen hat.</target>
+        
+      </trans-unit>
+      <trans-unit id="_infoNoApiTokenMessage.Text">
+        <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
+        <target>Builddefinition-Informationen können ohne API-Token nicht abgerufen werden. Feld wird leer gelassen.</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Examples:
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</source>
+        <target>Beispiele:
+- https://dev.azure.com/yourorganization/projectname/
+- https://yourhost:8080/tfs/collectionname/projectname/ 
+- https://yourorganization.visualstudio.com/projectname/</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>You need to create a token with the following scopes:
+ - 'Build (read)'
+ - 'Project and team (read)'</source>
+        <target>Sie müssen einen Token mit den folgenden Scopes erstellen:
+- 'Build (read)'
+- 'Project and team (read)'</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>Der reguläre Ausdruck &quot;Builddefinition-Name&quot; ist ungültig und wird nicht gespeichert!</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="de">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
@@ -1727,30 +1775,7 @@ Bitte die Server-URL überprüfen.</target>
     <body>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>Der reguläre Ausdruck &quot;Build definition name&quot; validiert nicht und wird nicht gespeichert!</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="VstsAndTfsSettingsUserControl" source-language="en" target-language="de">
-    <body>
-      <trans-unit id="RestApiTokenLink.Text">
-        <source>Go to token management page</source>
-        <target>Zur Token Management Seite gehen</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
-        <target>Sie müssen einen Token mit den folgenden Scopes erstellen:
-- 'Build (read)'
-- 'Project and team (read)'</target>
-        
-      </trans-unit>
-      <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>Der reguläre Ausdruck &quot;Build definition name&quot; validiert nicht und wird nicht gespeichert!</target>
+        <target>Der reguläre Ausdruck &quot;Builddefinition-Name&quot; ist ungültig und wird nicht gespeichert!</target>
         
       </trans-unit>
     </body>

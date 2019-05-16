@@ -1,12 +1,17 @@
+[CmdletBinding()]
+param (
+   [string] $Configuration = 'Release'
+)
+
 pushd $PSScriptRoot
 
 Write-Host "Copying the latest English translation before the update..."
 $translationsFolder = Resolve-Path .\
-$releaseTranslationsFolder = Resolve-Path ..\..\GitExtensions\bin\Release\Translation
+$releaseTranslationsFolder = Resolve-Path ..\..\GitExtensions\bin\$Configuration\Translation
 Write-Debug " > $translationsFolder`r`n > $releaseTranslationsFolder"
 xcopy "$translationsFolder\English*.xlf" "$releaseTranslationsFolder" /Y
 
-$src = Resolve-Path ..\..\GitExtensions\bin\Release
+$src = Resolve-Path ..\..\GitExtensions\bin\$Configuration
 pushd "$src"
 Write-Host "Updating the English translation..."
 Start-Process -FilePath "$src\TranslationApp.exe" -ArgumentList "update" -Wait

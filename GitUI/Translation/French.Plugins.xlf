@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>Afficher le résultat des tests dans le résumé du status du build pour chaque résultat (couteux en réseau!)</target>
+        <target>Afficher les résultats des tests dans le status du sommaire des compilations pour chaque résultat de compilation (surcharge du réseau) </target>
         
       </trans-unit>
     </body>
@@ -19,7 +19,7 @@
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>Voulez-vous construire {0}?
+        <target>Voulez-vous compiler {0}?
 
 {1}</target>
         
@@ -206,16 +206,6 @@
       <trans-unit id="lblDescriptionView.Text">
         <source>Description</source>
         <target>Description</target>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkCreatePull.Text">
-        <source>/projects//repos//pull-requests?create</source>
-        <target>/projects//repos//pull-requests?create</target>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkViewPull.Text">
-        <source>/projects//repos//pull-requests</source>
-        <target>/projects//repos//pull-requests</target>
         
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
@@ -424,10 +414,6 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
         <target>Dernière activité</target>
         
       </trans-unit>
-      <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
-        <source>deleteDataGridViewCheckBoxColumn</source>
-        
-      </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
         <target>Inclure les branches non fusionnées</target>
@@ -519,6 +505,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
         <source>Remote name obsoleted branches should be deleted from</source>
+        <target>On doit effacer depuis les noms des branches obsolètes distantes</target>
         
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
@@ -926,6 +913,7 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
+        <target>{0:N0} Lignes dans les fichiers de conception ({1:P1}) </target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
@@ -1002,12 +990,9 @@ defaultrebase=0</target>
         
       </trans-unit>
       <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
+        <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
-        <target>L'extension Gerrit pour GitExtensions fourni l'intégration avec Gerrit pour GitExtensions. Cette extension est basée sur l'outil git-review.
-
-Pour activer le support de Gerrit pour un dépôt, un fichier .gitreview doit être créé. Cela peut être fait à travers l'option du menu Paramètres | Modifier .gitreview. Visiter le lien ci-dessous pour pus d'information sur le fichier .gitreview et l'outil git-review.</target>
         
       </trans-unit>
     </body>
@@ -1425,6 +1410,11 @@ Voulez-vous réinitialiser le chemin configuré?</target>
         <target>Lien commit-Jira</target>
         
       </trans-unit>
+      <trans-unit id="_credentialsSettings.Caption">
+        <source>Jira credentials</source>
+        <target>Identifiants JIRA</target>
+        
+      </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
         <target>Plugin lien commit-Jira activé</target>
@@ -1440,11 +1430,6 @@ Voulez-vous réinitialiser le chemin configuré?</target>
         <target>Requête JQL</target>
         
       </trans-unit>
-      <trans-unit id="_passwordSettings.Caption">
-        <source>Jira password</source>
-        <target>Mot de passe Jira</target>
-        
-      </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
         <target>Modèle de mesage</target>
@@ -1453,11 +1438,6 @@ Voulez-vous réinitialiser le chemin configuré?</target>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
         <target>URL Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="_userSettings.Caption">
-        <source>Jira user</source>
-        <target>Identifiant Jira</target>
         
       </trans-unit>
     </body>
@@ -1672,6 +1652,67 @@ noms de branche, noms de tag)</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="fr">
+    <body>
+      <trans-unit id="ExtractLink.Text">
+        <source>Extract data from a build result url copied in the clipboard</source>
+        <target>Les données extraites de l'url du résultat de la build copié dans le clipboard</target>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        <target>Aller à la page de gestion du jeton</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Could not extract data</source>
+        <target>Impossibilité d'extraire les données</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy the url of the build into the clipboard before retrying.
+(Should contain at least the &quot;buildId&quot; parameter)</source>
+        <target>Le presse-papier ne contient pas une url de build valide. Veuillez copier l'url de build dans le presse-papier avant de réessayer. (doit contenir au moins le paramètre &quot;buildid&quot;)</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
+        <source>Error while trying to retrieve build definition information from url.
+
+Please ensure that the url is valid and that the API token has access to build and project information.</source>
+        <target>Erreur pendant la tentative de recherche des informations de la définition de build depuis l'url. Veuillez vous assurez que l'url est valide et que le token API a accès aux informations du projet et de la build.</target>
+        
+      </trans-unit>
+      <trans-unit id="_infoNoApiTokenMessage.Text">
+        <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
+        <target>Impossibilité de retrouver l'information de la définition du build. Le champs sera vide.</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Examples:
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</source>
+        <target>Exemples: - https://dev.azure.com/votreorganisation/nomduprojet/ - https://votrehote:8080/tfs/nomdelacollection/nomduprojet/ - https://votreorganisation.visualstudio.com/nomduprojet/ </target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>You need to create a token with the following scopes:
+ - 'Build (read)'
+ - 'Project and team (read)'</source>
+        <target>Vous devez créer un jeton avec les portées suivantes:
+ - 'Construction (lecture)'
+ - 'Projet et équipe (lecture)'</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>L'expression régulière pour &quot;le nom de la définition de build&quot; n'est pas valide et ne sera pas enregistrée!</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="fr">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
@@ -1721,29 +1762,6 @@ Veuillez vérifier l'url du serveur.</target>
   </file>
   <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="fr">
     <body>
-      <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>L'expression régulière pour &quot;le nom de la définition de build&quot; n'est pas valide et ne sera pas enregistrée!</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="VstsAndTfsSettingsUserControl" source-language="en" target-language="fr">
-    <body>
-      <trans-unit id="RestApiTokenLink.Text">
-        <source>Go to token management page</source>
-        <target>Aller à la page de gestion du jeton</target>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
-        <target>Vous devez créer un jeton avec les portées suivantes:
- - 'Construction (lecture)'
- - 'Projet et équipe (lecture)'</target>
-        
-      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
         <target>L'expression régulière pour &quot;le nom de la définition de build&quot; n'est pas valide et ne sera pas enregistrée!</target>
