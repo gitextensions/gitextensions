@@ -2198,7 +2198,7 @@ namespace GitCommands
                         var fetchLine = enumerator.Current;
 
                         // An invalid module is not an error; we simply return an empty list of remotes
-                        if (fetchLine.Contains("not a git repository"))
+                        if (fetchLine.IndexOf("not a git repository", StringComparison.OrdinalIgnoreCase) >= 0)
                         {
                             return remotes;
                         }
