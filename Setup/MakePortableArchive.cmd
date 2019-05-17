@@ -478,6 +478,8 @@ xcopy /y /i ..\GitExtensions\bin\%Configuration%\NBug.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\SmartFormat.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
+xcopy /y /i ..\GitExtensions\bin\%Configuration%\Ben.Demystifier.dll GitExtensions\
+IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\NetSpell.SpellChecker.dll GitExtensions\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\PSTaskDialog.dll GitExtensions\
