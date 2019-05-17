@@ -153,6 +153,9 @@
       <Component Id="SmartFormat.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\SmartFormat.dll" />
       </Component>
+      <Component Id="Ben.Demystifier.dll" Guid="*">
+        <File Source="..\GitExtensions\bin\$(var.Configuration)\Ben.Demystifier.dll" />
+      </Component>
       <Component Id="System.Reactive.Core.dll" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\System.Reactive.Core.dll" />
       </Component>
@@ -723,7 +726,7 @@
       <Component Id="English.Plugins.xlf" Guid="*">
         <File Source="..\GitExtensions\bin\$(var.Configuration)\Translation\English.Plugins.xlf" />
       </Component>
-      <!-- 
+      <!--
       <Component Id="Czech.xlf" Guid="*">
         <File Source="..\GitUI\Translation\Czech.xlf" />
       </Component>
@@ -1557,6 +1560,7 @@
       <ComponentRef Id="System.ValueTuple.dll" />
       <ComponentRef Id="NBug.dll" />
       <ComponentRef Id="SmartFormat.dll" />
+      <ComponentRef Id="Ben.Demystifier.dll" />
       <ComponentRef Id="NetSpell.SpellChecker.dll" />
       <ComponentRef Id="ResourceManager.dll" />
       <ComponentRef Id="GitUIPluginInterfaces.dll" />
