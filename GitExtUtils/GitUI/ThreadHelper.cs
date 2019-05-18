@@ -107,7 +107,7 @@ namespace GitUI
                     catch (Exception ex) when (fileOnlyIf?.Invoke(ex) ?? true)
                     {
                         await JoinableTaskFactory.SwitchToMainThreadAsync();
-                        Application.OnThreadException(ex);
+                        Application.OnThreadException(ex.Demystify());
                     }
                 });
         }
