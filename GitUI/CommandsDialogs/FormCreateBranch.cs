@@ -35,6 +35,11 @@ namespace GitUI.CommandsDialogs
 
             groupBox1.AutoSize = true;
 
+            if (objectId != null && objectId.IsArtificial)
+            {
+                objectId = null;
+            }
+
             objectId = objectId ?? Module.GetCurrentCheckout();
             if (objectId != null)
             {
