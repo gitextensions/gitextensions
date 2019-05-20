@@ -1379,14 +1379,9 @@ namespace GitUI
         {
             var revision = LatestSelectedRevision;
 
-            if (revision == null)
-            {
-                return;
-            }
-
             UICommands.DoActionOnRepo(() =>
                 {
-                    using (var frm = new FormCreateTag(UICommands, revision.ObjectId))
+                    using (var frm = new FormCreateTag(UICommands, revision?.ObjectId))
                     {
                         return frm.ShowDialog(this) == DialogResult.OK;
                     }
@@ -1408,14 +1403,9 @@ namespace GitUI
         {
             var revision = LatestSelectedRevision;
 
-            if (revision == null)
-            {
-                return;
-            }
-
             UICommands.DoActionOnRepo(() =>
                 {
-                    var frm = new FormCreateBranch(UICommands, revision.ObjectId);
+                    var frm = new FormCreateBranch(UICommands, revision?.ObjectId);
 
                     return frm.ShowDialog(this) == DialogResult.OK;
                 });

@@ -40,6 +40,11 @@ namespace GitUI.CommandsDialogs
 
             tagMessage.MistakeFont = new Font(tagMessage.MistakeFont, FontStyle.Underline);
 
+            if (objectId != null && objectId.IsArtificial)
+            {
+                objectId = null;
+            }
+
             objectId = objectId ?? Module.GetCurrentCheckout();
             if (objectId != null)
             {
