@@ -2396,7 +2396,7 @@ namespace GitUI.CommandsDialogs
         private void PullToolStripMenuItemClick(object sender, EventArgs e)
         {
             // "Pull/Fetch..." menu item always opens the dialog
-            DoPull(pullAction: AppSettings.DefaultPullAction, isSilent: false);
+            DoPull(pullAction: AppSettings.FormPullAction, isSilent: false);
         }
 
         private void ToolStripButtonPullClick(object sender, EventArgs e)
@@ -2404,13 +2404,15 @@ namespace GitUI.CommandsDialogs
             // Clicking on the Pull button toolbar button will perform the default selected action silently,
             // except if that action is to open the dialog (PullAction.None)
             bool isSilent = AppSettings.DefaultPullAction != AppSettings.PullAction.None;
-            DoPull(pullAction: AppSettings.DefaultPullAction, isSilent: isSilent);
+            var pullAction = AppSettings.DefaultPullAction != AppSettings.PullAction.None ?
+                AppSettings.DefaultPullAction : AppSettings.FormPullAction;
+            DoPull(pullAction: pullAction, isSilent: isSilent);
         }
 
         private void pullToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             // "Open Pull Dialog..." toolbar menu item always open the dialog with the current default action
-            DoPull(pullAction: AppSettings.DefaultPullAction, isSilent: false);
+            DoPull(pullAction: AppSettings.FormPullAction, isSilent: false);
         }
 
         private void mergeToolStripMenuItem_Click(object sender, EventArgs e)

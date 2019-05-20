@@ -18,11 +18,15 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         // Created once for each test
         private GitUICommands _commands;
         private AppSettings.PullAction _originalDefaultPullAction;
+        private AppSettings.PullAction _originalFormPullAction;
+        private bool _originalAutoStash;
 
         [SetUp]
         public void SetUp()
         {
             _originalDefaultPullAction = AppSettings.DefaultPullAction;
+            _originalFormPullAction = AppSettings.FormPullAction;
+            _originalAutoStash = AppSettings.AutoStash;
 
             if (_referenceRepository == null)
             {
@@ -40,6 +44,8 @@ namespace GitUITests.CommandsDialogs.CommitDialog
         public void TearDown()
         {
             AppSettings.DefaultPullAction = _originalDefaultPullAction;
+            AppSettings.FormPullAction = _originalFormPullAction;
+            AppSettings.AutoStash = _originalAutoStash;
             _commands = null;
         }
 
@@ -103,6 +109,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
                 AppSettings.PullAction.Merge);
         }
 
+        [TestCase(AppSettings.PullAction.None, true, false, false, false, false, true)]
         [TestCase(AppSettings.PullAction.Merge, true, false, false, false, false, true)]
         [TestCase(AppSettings.PullAction.Rebase, false, false, true, false, false, false)]
         [TestCase(AppSettings.PullAction.Fetch, false, false, false, true, false, true)]
@@ -127,6 +134,7 @@ namespace GitUITests.CommandsDialogs.CommitDialog
                 null, null, pullAction);
         }
 
+        [TestCase(AppSettings.PullAction.None, true, false, false, false, false, true)]
         [TestCase(AppSettings.PullAction.Merge, true, false, false, false, false, true)]
         [TestCase(AppSettings.PullAction.Rebase, false, false, true, false, false, false)]
         [TestCase(AppSettings.PullAction.Fetch, false, false, false, true, false, true)]
@@ -151,6 +159,48 @@ namespace GitUITests.CommandsDialogs.CommitDialog
                     accessor.Remotes.Text.Should().Be("[ All ]");
                 },
                 null, null, AppSettings.PullAction.None);
+        }
+
+        [TestCase(true, false, false, AppSettings.PullAction.Merge)]
+        [TestCase(false, true, false, AppSettings.PullAction.Rebase)]
+        [TestCase(false, false, true, AppSettings.PullAction.Fetch)]
+        public void Should_remember_user_choice_upon_pull(bool mergeChecked, bool rebaseChecked, bool fetchChecked, AppSettings.PullAction expectedFormPullAction)
+        {
+            RunFormTest(
+                form =>
+                {
+                    var accessor = form.GetTestAccessor();
+
+                    accessor.Merge.Checked = mergeChecked;
+                    accessor.Rebase.Checked = rebaseChecked;
+                    accessor.Fetch.Checked = fetchChecked;
+
+                    accessor.UpdateSettingsDuringPull();
+
+                    AppSettings.FormPullAction.Should().Be(expectedFormPullAction);
+                },
+                null, null,
+                //// select an action different from None/fetch
+                AppSettings.PullAction.Merge);
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void Should_remember_user_choice_upon_pull(bool autoStashChecked)
+        {
+            RunFormTest(
+                form =>
+                {
+                    var accessor = form.GetTestAccessor();
+                    accessor.AutoStash.Checked = autoStashChecked;
+
+                    accessor.UpdateSettingsDuringPull();
+
+                    AppSettings.AutoStash.Should().Be(autoStashChecked);
+                },
+                null, null,
+                //// select an action different from None/fetch
+                AppSettings.PullAction.Merge);
         }
 
         private void RunFormTest(Action<FormPull> testDriver, string remoteBranch, string remote, AppSettings.PullAction pullAction)
