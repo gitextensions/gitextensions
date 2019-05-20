@@ -1763,6 +1763,8 @@
     <None Include="Resources\Icons\CommitId.png" />
     <None Include="Resources\Icons\CommitSummary.png" />
     <None Include="Resources\Icons\Message.png" />
+    <None Include="Resources\Icons\branch.png" />
+    <None Include="Resources\Icons\RepoOpen.png" />
     <None Include="Properties\DataSources\GitUI.Script.ScriptInfo.datasource" />
     <None Include="Properties\DataSources\GitCommands.Repository.datasource" />
     <None Include="Properties\DataSources\GitCommands.GitSubmodule.datasource" />

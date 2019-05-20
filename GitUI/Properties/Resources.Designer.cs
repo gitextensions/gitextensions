@@ -61,6 +61,16 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap branch {
+            get {
+                object obj = ResourceManager.GetObject("branch", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
@@ -162,6 +172,16 @@ namespace GitUI.Properties {
         internal static System.Drawing.Bitmap RecentRepositories {
             get {
                 object obj = ResourceManager.GetObject("RecentRepositories", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RepoOpen {
+            get {
+                object obj = ResourceManager.GetObject("RepoOpen", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

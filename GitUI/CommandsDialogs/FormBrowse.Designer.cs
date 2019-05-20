@@ -367,6 +367,7 @@ namespace GitUI.CommandsDialogs
             // 
             // _NO_TRANSLATE_WorkingDir
             // 
+            this._NO_TRANSLATE_WorkingDir.Image = global::GitUI.Properties.Resources.RepoOpen;
             this._NO_TRANSLATE_WorkingDir.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this._NO_TRANSLATE_WorkingDir.ImageTransparentColor = System.Drawing.Color.Magenta;
             this._NO_TRANSLATE_WorkingDir.Name = "_NO_TRANSLATE_WorkingDir";
@@ -380,6 +381,7 @@ namespace GitUI.CommandsDialogs
             // 
             // branchSelect
             // 
+            this.branchSelect.Image = global::GitUI.Properties.Resources.branch;
             this.branchSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.branchSelect.Name = "branchSelect";
             this.branchSelect.Size = new System.Drawing.Size(60, 22);
