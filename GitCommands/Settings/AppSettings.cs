@@ -697,10 +697,22 @@ namespace GitCommands
             Default
         }
 
+        /// <summary>
+        /// Gets or sets the default pull action that is performed by the toolbar icon when it is clicked on.
+        /// </summary>
         public static PullAction DefaultPullAction
         {
             get => GetEnum("DefaultPullAction", PullAction.Merge);
             set => SetEnum("DefaultPullAction", value);
+        }
+
+        /// <summary>
+        /// Gets or sets the default pull action as configured in the FormPull dialog.
+        /// </summary>
+        public static PullAction FormPullAction
+        {
+            get => GetEnum("FormPullAction", PullAction.Merge);
+            set => SetEnum("FormPullAction", value);
         }
 
         public static string SmtpServer
