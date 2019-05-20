@@ -349,7 +349,8 @@ namespace GitUI.Script
                         remote = selectedRemotes.Count == 1
                             ? selectedRemotes[0]
                             : AskToSpecify(selectedRemotes, revisionGrid);
-                        newString = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                        url = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                        newString = GetRemotePath(url);
                     }
 
                     break;
