@@ -138,6 +138,7 @@ namespace GitUI.CommandsDialogs
 
             switch (pullAction)
             {
+                case AppSettings.PullAction.None:
                 case AppSettings.PullAction.Merge:
                     Merge.Checked = true;
                     Prune.Enabled = true;
@@ -352,6 +353,8 @@ namespace GitUI.CommandsDialogs
                 return DialogResult.No;
             }
 
+            UpdateSettingsDuringPull();
+
             DialogResult dr = ShouldRebaseMergeCommit();
             if (dr != DialogResult.Yes)
             {
@@ -554,6 +557,16 @@ namespace GitUI.CommandsDialogs
                     UICommands.StashPop(owner);
                 }
             }
+        }
+
+        private void UpdateSettingsDuringPull()
+        {
+            AppSettings.FormPullAction =
+                Merge.Checked ? AppSettings.PullAction.Merge :
+                Rebase.Checked ? AppSettings.PullAction.Rebase :
+                Fetch.Checked ? AppSettings.FormPullAction = AppSettings.PullAction.Fetch : AppSettings.PullAction.Default;
+
+            AppSettings.AutoStash = AutoStash.Checked;
         }
 
         private DialogResult ShouldRebaseMergeCommit()
@@ -1045,6 +1058,8 @@ namespace GitUI.CommandsDialogs
             public CheckBox Prune => _form.Prune;
             public ComboBox Remotes => _form._NO_TRANSLATE_Remotes;
             public TextBox LocalBranch => _form.localBranch;
+
+            public void UpdateSettingsDuringPull() => _form.UpdateSettingsDuringPull();
         }
     }
 }
