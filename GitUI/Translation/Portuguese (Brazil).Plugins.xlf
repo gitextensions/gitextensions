@@ -115,6 +115,8 @@
       <trans-unit id="_committed.Text">
         <source>{0} committed
 {1}</source>
+        <target>{0} comitados
+{1}</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -124,6 +126,7 @@
       </trans-unit>
       <trans-unit id="_linkLabelToolTip.Text">
         <source>Right-click to copy link</source>
+        <target>Botão direito para copiar o link</target>
         
       </trans-unit>
       <trans-unit id="_success.Text">
@@ -197,14 +200,6 @@
       <trans-unit id="lblDescriptionView.Text">
         <source>Description</source>
         <target>Descrição</target>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkCreatePull.Text">
-        <source>/projects//repos//pull-requests?create</source>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkViewPull.Text">
-        <source>/projects//repos//pull-requests</source>
         
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
@@ -412,10 +407,6 @@ Deseja realmente continuar?</target>
         <target>Última atividade</target>
         
       </trans-unit>
-      <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
-        <source>deleteDataGridViewCheckBoxColumn</source>
-        
-      </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
         <target>Incluir branches não mergidos</target>
@@ -477,10 +468,12 @@ Deseja realmente continuar?</target>
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
+        <target>Remover branches remotos obsoletos</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
         <source>Delete unmerged branches</source>
+        <target>Remover branches &quot;não-mergeados&quot;</target>
         
       </trans-unit>
       <trans-unit id="_mergedInBranch.Caption">
@@ -494,6 +487,7 @@ Deseja realmente continuar?</target>
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
+        <target>Regex para filtrar os branches a remover</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
@@ -506,6 +500,7 @@ Deseja realmente continuar?</target>
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
+        <target>Usar Regex para filtrar os branches a remover</target>
         
       </trans-unit>
     </body>
@@ -554,6 +549,8 @@ Deseja realmente continuar?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
+        <target>Resete as mudanças locais antes de remover os arquivos.
+Escolha os arquivos a remover. &quot;Force push&quot; para substituir os dados no repositório remoto.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
@@ -727,6 +724,7 @@ Deseja realmente continuar?</target>
       </trans-unit>
       <trans-unit id="labelReviewers.Text">
         <source>Reviewer(s):</source>
+        <target>Revisor(es):</target>
         
       </trans-unit>
       <trans-unit id="labelTopic.Text">
@@ -856,46 +854,57 @@ defaultrebase=0</source>
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0:N0} Blank lines ({1:P1})</source>
+        <target>{0:N0} Linhas em branco ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
+        <target>{0:N0} Linhas comentadas ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0:N0} Commits</source>
+        <target>{0:N0} Commits</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
+        <target>{0:N0} Commits por  {1}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
+        <target>{0:N0} Linhas de código</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
+        <target>{0:N0} Linhas de código em {1} arquivos ({2:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
+        <target>{0:N0} Linhas de código ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
+        <target>{0:N0} Linhas em arquivos de &quot;designer&quot; ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
+        <target>{0:N0} Linhas de código de produção ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
+        <target>{0:N0} Linhas de código de teste</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
+        <target>{0:N0} Linhas de código de teste ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
@@ -929,6 +938,7 @@ defaultrebase=0</source>
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
         <source>{0} ({1} Commits, {2} Changed Lines)</source>
+        <target>{0} ({1} Commits, {2} Linhas Modificadas)</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
@@ -956,7 +966,7 @@ defaultrebase=0</source>
         
       </trans-unit>
       <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
+        <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
         
@@ -982,6 +992,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_installCommitMsgHook.Text">
         <source>Install Hook</source>
+        <target>Instalar &quot;Hook&quot;</target>
         
       </trans-unit>
       <trans-unit id="_installCommitMsgHookDownloadFileFailed.Text">
@@ -1098,6 +1109,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="cbPushAfterFinish.Text">
         <source>Push after finish</source>
+        <target>&quot;Push&quot; após finalizar</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
@@ -1151,6 +1163,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
+        <target>Resultado do comando &quot;git flow&quot; executado</target>
         
       </trans-unit>
     </body>
@@ -1168,6 +1181,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
     <body>
       <trans-unit id="Description.Text">
         <source>GitHub</source>
+        <target>GitHub</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
@@ -1200,6 +1214,7 @@ To enable Gerrit support for a repository, a .gitreview file must be created. Th
       </trans-unit>
       <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
+        <target>Diretórios a serem ignorados (EndsWith)</target>
         
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
@@ -1342,6 +1357,7 @@ Quer redefinir o caminho configurado?</target>
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
         <source>Ignore build for branch</source>
+        <target>Ignorar &quot;build&quot; para &quot;branch&quot;</target>
         
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
@@ -1362,32 +1378,32 @@ Quer redefinir o caminho configurado?</target>
         <source>Jira Commit Hint</source>
         
       </trans-unit>
+      <trans-unit id="_credentialsSettings.Caption">
+        <source>Jira credentials</source>
+        <target>Credenciais do &quot;Jira&quot;</target>
+        
+      </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
         
       </trans-unit>
       <trans-unit id="_jiraFields.Caption">
         <source>Jira fields</source>
+        <target>Campos do &quot;Jira&quot;</target>
         
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
         <source>JQL Query</source>
         
       </trans-unit>
-      <trans-unit id="_passwordSettings.Caption">
-        <source>Jira password</source>
-        
-      </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
+        <target>Modelo de mensagem</target>
         
       </trans-unit>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
-        
-      </trans-unit>
-      <trans-unit id="_userSettings.Caption">
-        <source>Jira user</source>
+        <target>URL do &quot;Jira&quot;</target>
         
       </trans-unit>
     </body>
@@ -1470,18 +1486,22 @@ Quer redefinir o caminho configurado?</target>
       </trans-unit>
       <trans-unit id="_caption.Text">
         <source>Invalid input</source>
+        <target>Entrada inválida</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
+        <target>Comitar log de '{0}' até '{1}' ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>'From' commit must be specified</source>
+        <target>'De' do commit deve ser especificado</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>'To' commit must be specified</source>
+        <target>'Para' do commit deve ser especificado</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1521,6 +1541,7 @@ Quer redefinir o caminho configurado?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
+        <target>Expressão de Commit &quot;Para&quot; (incluindo):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
@@ -1535,6 +1556,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
+        <target>Expressão de Commit &quot;De&quot; (excluindo):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
@@ -1588,6 +1610,62 @@ branch names, tag names)</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="pt-BR">
+    <body>
+      <trans-unit id="ExtractLink.Text">
+        <source>Extract data from a build result url copied in the clipboard</source>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        <target>Vá para a página de gestão de token</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Could not extract data</source>
+        <target>Não foi possível extrair os dados</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy the url of the build into the clipboard before retrying.
+(Should contain at least the &quot;buildId&quot; parameter)</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
+        <source>Error while trying to retrieve build definition information from url.
+
+Please ensure that the url is valid and that the API token has access to build and project information.</source>
+        
+      </trans-unit>
+      <trans-unit id="_infoNoApiTokenMessage.Text">
+        <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Examples:
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</source>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>You need to create a token with the following scopes:
+ - 'Build (read)'
+ - 'Project and team (read)'</source>
+        <target>Você precisa criar um &quot;token&quot; com o seguinte escopo:
+ - 'Build (read)'
+ - 'Project and team (read)'</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>O expressão regular de 'Nome de definição de Build' não é válida e não será salva!</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="pt-BR">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
@@ -1598,6 +1676,7 @@ Logar como convidado para exibir o relatório de compilação</target>
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
+        <target>URL de &quot;build&quot; inválida</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1605,23 +1684,32 @@ Logar como convidado para exibir o relatório de compilação</target>
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
+        <target>A área de transferência não contém um url de build válida.
+
+Por favor copie para a área de transferência a url do build antes de tentar novamente
+(Deve conter ao menos o parâmetro &quot;buildTypeId&quot;)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
+        <target>Erro carregando os projetos e a lista de build</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
+        <target>Falha carregando os projetos e a lista de build.
+Por favor, verifique a url de servidor.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <target>A expressão regular de &quot;Build Id Filter&quot; não é válida e não será salva!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
+        <target>Extrai os dados da url de build copiada na área de transferência</target>
         
       </trans-unit>
     </body>
@@ -1630,24 +1718,7 @@ Please verify the server url.</source>
     <body>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="VstsAndTfsSettingsUserControl" source-language="en" target-language="pt-BR">
-    <body>
-      <trans-unit id="RestApiTokenLink.Text">
-        <source>Go to token management page</source>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
-        
-      </trans-unit>
-      <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>A expressão regular de 'Nome de definição de Build' não é válida e não será salva!</target>
         
       </trans-unit>
     </body>

@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>geef testresultaten weer in samenvatting build status voor ieder bouw resultaat (netwerk intensief!)</target>
+        <target>Geef testresultaten weer in samenvatting build status voor ieder bouw resultaat (netwerk intensief!)</target>
         
       </trans-unit>
     </body>
@@ -104,6 +104,7 @@
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
         <source>Your repository is not hosted in BitBucket Server.</source>
+        <target>Uw repository wordt niet gehost in Bitbucket Server.</target>
         
       </trans-unit>
     </body>
@@ -129,6 +130,7 @@
       </trans-unit>
       <trans-unit id="_linkLabelToolTip.Text">
         <source>Right-click to copy link</source>
+        <target>Rechtermuisknop om de link te kopiëren </target>
         
       </trans-unit>
       <trans-unit id="_success.Text">
@@ -204,14 +206,6 @@
       <trans-unit id="lblDescriptionView.Text">
         <source>Description</source>
         <target>Omschrijving</target>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkCreatePull.Text">
-        <source>/projects//repos//pull-requests?create</source>
-        
-      </trans-unit>
-      <trans-unit id="lblLinkViewPull.Text">
-        <source>/projects//repos//pull-requests</source>
         
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
@@ -420,10 +414,6 @@ Weet u zeker dat u door wilt gaan?</target>
         <target>Laatste activiteit</target>
         
       </trans-unit>
-      <trans-unit id="deleteDataGridViewCheckBoxColumn.HeaderText">
-        <source>deleteDataGridViewCheckBoxColumn</source>
-        
-      </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
         <target>Inclusief niet-gemergde branches</target>
@@ -485,10 +475,12 @@ Weet u zeker dat u door wilt gaan?</target>
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
+        <target>Verwijder verouderde branches van extern</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
         <source>Delete unmerged branches</source>
+        <target>Verwijder niet-gemergde branches</target>
         
       </trans-unit>
       <trans-unit id="_mergedInBranch.Caption">
@@ -498,18 +490,22 @@ Weet u zeker dat u door wilt gaan?</target>
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
+        <target>Is regex filter hoofdletter gevoelig?</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
+        <target>Regex filter om branches te verwijderen</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
         <source>Search branches that does not match regex</source>
+        <target>Zoek branch die niet voldoen aan de regex</target>
         
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
         <source>Remote name obsoleted branches should be deleted from</source>
+        <target>Externe naam van verouderde branches moeten worden verwijderd</target>
         
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
@@ -738,6 +734,7 @@ Weet u zeker dat u door wilt gaan?</target>
       </trans-unit>
       <trans-unit id="labelReviewers.Text">
         <source>Reviewer(s):</source>
+        <target>Reviewer(s):</target>
         
       </trans-unit>
       <trans-unit id="labelTopic.Text">
@@ -879,46 +876,57 @@ defaultrebase=0</target>
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
         <source>{0:N0} Blank lines ({1:P1})</source>
+        <target>{0:N0} Lege regels ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
+        <target>{0:N0} Regels commentaar ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0:N0} Commits</source>
+        <target>{0:N0} Commits</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
+        <target>{0:N0} Commits door {1}</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
+        <target>{0:N0} Regels code</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
+        <target>{0:N0}  Regels code in {1} bestanden ({2:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
+        <target>{0:N0} Regels code ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
+        <target>{0:N0} Regels in designer-bestanden ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
+        <target>{0:N0} Regels productiecode ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
+        <target>{0:N0} Regels testcode</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
+        <target>{0:N0} Regels test code ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
@@ -980,12 +988,9 @@ defaultrebase=0</target>
         
       </trans-unit>
       <trans-unit id="informationLabel.Text">
-        <source>The Gerrit plugin for GitExtensions provides integration with Gerrit for GitExtensions. This plugin has been based on the git-review tool.
+        <source>The Gerrit plugin for Git Extensions provides integration with Gerrit for Git Extensions. This plugin has been based on the git-review tool.
 
 To enable Gerrit support for a repository, a .gitreview file must be created. This can be done through the Repository | Edit .gitreview menu option. See the link below for more information on the .gitreview file and the git-review tool.</source>
-        <target>De Gerrit plug-in voor GitExtensions voorziet in een integratie met Gerrit. Deze plug-in is gebaseerd op de git-review tool.
-
-Om de integratie tussen een repository en Gerrit mogelijk te maken moet een .gitreview file gemaakt worden. Dit kan via het menu &quot;Repository | Bewerk .gitreview&quot;. Zie de link hieronder voor meer informatie over het .gitreview bestand en de git-review tool.</target>
         
       </trans-unit>
     </body>
@@ -1203,6 +1208,7 @@ Om de integratie tussen een repository en Gerrit mogelijk te maken moet een .git
     <body>
       <trans-unit id="Description.Text">
         <source>GitHub</source>
+        <target>GitHub</target>
         
       </trans-unit>
       <trans-unit id="OAuthToken.Caption">
@@ -1378,6 +1384,7 @@ Wilt het het pad opnieuw instellen?</target>
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
         <source>Ignore build for branch</source>
+        <target>Negeer build voor branch</target>
         
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
@@ -1399,6 +1406,10 @@ Wilt het het pad opnieuw instellen?</target>
         <target>Jira Commit Hint</target>
         
       </trans-unit>
+      <trans-unit id="_credentialsSettings.Caption">
+        <source>Jira credentials</source>
+        
+      </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
         <target>Jira hint plugin ge-enabled</target>
@@ -1411,11 +1422,7 @@ Wilt het het pad opnieuw instellen?</target>
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
         <source>JQL Query</source>
-        
-      </trans-unit>
-      <trans-unit id="_passwordSettings.Caption">
-        <source>Jira password</source>
-        <target>Jira wachtwoord</target>
+        <target>JQL Query</target>
         
       </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
@@ -1426,11 +1433,6 @@ Wilt het het pad opnieuw instellen?</target>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
         <target>Jira URL</target>
-        
-      </trans-unit>
-      <trans-unit id="_userSettings.Caption">
-        <source>Jira user</source>
-        <target>Jira user</target>
         
       </trans-unit>
     </body>
@@ -1645,6 +1647,59 @@ branch namen of tag namen zijn)</target>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="nl">
+    <body>
+      <trans-unit id="ExtractLink.Text">
+        <source>Extract data from a build result url copied in the clipboard</source>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        <target>Ga naar token management pagina</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Could not extract data</source>
+        <target>Kan data niet extraheren</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn't contain a valid build url.
+
+Please copy the url of the build into the clipboard before retrying.
+(Should contain at least the &quot;buildId&quot; parameter)</source>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
+        <source>Error while trying to retrieve build definition information from url.
+
+Please ensure that the url is valid and that the API token has access to build and project information.</source>
+        
+      </trans-unit>
+      <trans-unit id="_infoNoApiTokenMessage.Text">
+        <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Examples:
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</source>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>You need to create a token with the following scopes:
+ - 'Build (read)'
+ - 'Project and team (read)'</source>
+        
+      </trans-unit>
+      <trans-unit id="labelRegexError.Text">
+        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target>De regular expressie voor &quot;Bouw definitienaam&quot; is niet geldig en wordt niet opgeslagen!</target>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="nl">
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
@@ -1694,25 +1749,6 @@ Controleer a.u.b. de server url.</target>
   </file>
   <file datatype="plaintext" original="TfsSettingsUserControl" source-language="en" target-language="nl">
     <body>
-      <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>De regular expressie voor &quot;Bouw definitienaam&quot; is niet geldig en wordt niet opgeslagen!</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="VstsAndTfsSettingsUserControl" source-language="en" target-language="nl">
-    <body>
-      <trans-unit id="RestApiTokenLink.Text">
-        <source>Go to token management page</source>
-        
-      </trans-unit>
-      <trans-unit id="label4.Text">
-        <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
-        
-      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
         <target>De regular expressie voor &quot;Bouw definitienaam&quot; is niet geldig en wordt niet opgeslagen!</target>
