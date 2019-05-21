@@ -25,24 +25,47 @@ namespace GitUI
             string gitVer;
             try
             {
-                gitVer = GitVersion.Current?.Full ?? "";
+                gitVer = GitVersion.Current?.Full;
             }
             catch (Exception)
             {
-                gitVer = "";
+                gitVer = null;
             }
+
+            var gitVersionInfo = GetGitVersionInfo(gitVer, GitVersion.LastSupportedVersion, GitVersion.LastRecommendedVersion);
 
             // Build and open FormAbout design to make sure info still looks good if you change this code.
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine($"- Git Extensions {AppSettings.ProductVersion}");
             sb.AppendLine($"- Build {_sha}{(_dirty ? " (Dirty)" : "")}");
-            sb.AppendLine($"- Git {gitVer}");
+            sb.AppendLine($"- Git {gitVersionInfo}");
             sb.AppendLine($"- {Environment.OSVersion}");
             sb.AppendLine($"- {RuntimeInformation.FrameworkDescription}");
             sb.AppendLine($"- DPI {DpiUtil.DpiX}dpi ({(DpiUtil.ScaleX == 1 ? "no" : $"{Math.Round(DpiUtil.ScaleX * 100)}%")} scaling)");
 
             return sb.ToString();
+        }
+
+        public static string GetGitVersionInfo(string gitVersion, GitVersion lastSupportedVersion, GitVersion recommendedVersion)
+        {
+            if (string.IsNullOrWhiteSpace(gitVersion))
+            {
+                return $"- (minimum: {lastSupportedVersion}, recommended: {recommendedVersion})";
+            }
+
+            var actualVersion = new GitVersion(gitVersion);
+            if (actualVersion < lastSupportedVersion)
+            {
+                return $"{gitVersion} (minimum: {lastSupportedVersion}, please update!)";
+            }
+
+            if (actualVersion < recommendedVersion)
+            {
+                return $"{gitVersion} (recommended: {recommendedVersion} or later)";
+            }
+
+            return gitVersion;
         }
 
         public static void Initialise(string sha, bool isDirty)
