@@ -168,7 +168,7 @@ namespace GitUI
                 return (null, null);
             }
 
-            int slashIndex = name.LastIndexOf(PathUtil.PosixDirectorySeparatorChar);
+            int slashIndex = name.TrimEnd(PathUtil.PosixDirectorySeparatorChar).LastIndexOf(PathUtil.PosixDirectorySeparatorChar);
             if (slashIndex >= 0 && slashIndex < name.Length)
             {
                 string path = name.Substring(0, slashIndex + 1);

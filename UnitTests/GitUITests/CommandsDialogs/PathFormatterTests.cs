@@ -46,6 +46,12 @@ namespace GitUITests.CommandsDialogs
         [TestCase("nested/path/filename.ext", "nested/path/", "filename.ext")]
         [TestCase("/nested/path/filename.ext", "/nested/path/", "filename.ext")]
         [TestCase("path\\filename.ext", null, "path\\filename.ext")]
+        [TestCase("path\\submodule.dir\\", null, "path\\submodule.dir\\")]
+        [TestCase("/", null, "/")]
+        [TestCase("submodule.dir/", null, "submodule.dir/")]
+        [TestCase("/submodule.dir/", "/", "submodule.dir/")]
+        [TestCase("path/submodule.dir/", "path/", "submodule.dir/")]
+        [TestCase("/path/submodule.dir/", "/path/", "submodule.dir/")]
         public void Test_SplitPathName(string name, string expectedPath, string expectedFileName)
         {
             PathFormatter.TestAccessor.SplitPathName(name).Should().Be((expectedPath, expectedFileName));
