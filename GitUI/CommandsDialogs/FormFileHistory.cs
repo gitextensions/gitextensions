@@ -231,6 +231,7 @@ namespace GitUI.CommandsDialogs
                     {
                         "--format=\"%n\"",
                         "--name-only",
+                        "--follow",
                         GitCommandHelpers.FindRenamesAndCopiesOpts(),
                         "--",
                         fileName.Quote()
