@@ -49,6 +49,16 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _gitHoster = gitHoster;
             InitializeComponent();
             InitializeComplete();
+
+            foreach (ColumnHeader column in myReposLV.Columns)
+            {
+                column.Width = DpiUtil.Scale(column.Width);
+            }
+
+            foreach (ColumnHeader column in searchResultsLV.Columns)
+            {
+                column.Width = DpiUtil.Scale(column.Width);
+            }
         }
 
         private void ForkAndCloneForm_Load(object sender, EventArgs e)
@@ -117,7 +127,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                             });
                         }
 
-                        ResizeColumnsToFitContent(myReposLV);
+                        ResizeColumnToFitContent(myReposLV.Columns[0]);
                     }
                     catch (Exception ex) when (!(ex is OperationCanceledException))
                     {
@@ -131,14 +141,13 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 .FileAndForget();
         }
 
-        private void ResizeColumnsToFitContent(NativeListView list)
-        {
-            var resizeStrategy = list.Items.Count == 0 ? -2 : -1;
+        private const int ResizeOnContent = -1;
+        private const int ResizeOnHeader = -2;
 
-            foreach (ColumnHeader column in list.Columns)
-            {
-                column.Width = resizeStrategy;
-            }
+        private void ResizeColumnToFitContent(ColumnHeader column)
+        {
+            var resizeStrategy = column.ListView.Items.Count == 0 ? ResizeOnHeader : ResizeOnContent;
+            column.Width = resizeStrategy;
         }
 
         #region GUI Handlers
@@ -247,7 +256,8 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 });
             }
 
-            ResizeColumnsToFitContent(searchResultsLV);
+            ResizeColumnToFitContent(searchResultsLV.Columns[0]);
+            ResizeColumnToFitContent(searchResultsLV.Columns[1]);
 
             searchBtn.Enabled = true;
         }
