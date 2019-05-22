@@ -1557,7 +1557,7 @@ You will have push access. {2}</source>
         <target />
       </trans-unit>
       <trans-unit id="label3.Text">
-        <source>Add remote as:</source>
+        <source>Add upstream remote as:</source>
         <target />
       </trans-unit>
       <trans-unit id="myReposPage.Text">

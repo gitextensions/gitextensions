@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
+using GitExtUtils.GitUI;
 using GitUI.UserControls;
 using GitUIPluginInterfaces.RepositoryHosts;
 using JetBrains.Annotations;
@@ -40,6 +41,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         #endregion
 
+        private const string UpstreamRemoteName = "upstream";
         private readonly IRepositoryHostPlugin _gitHoster;
         private readonly EventHandler<GitModuleEventArgs> _gitModuleChanged;
 
@@ -405,9 +407,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             var module = new GitModule(targetDir);
 
-            if (addRemoteAsTB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentReadOnlyUrl))
+            if (addUpstreamRemoteAsCB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentReadOnlyUrl))
             {
-                var error = module.AddRemote(addRemoteAsTB.Text.Trim(), repo.ParentReadOnlyUrl);
+                var error = module.AddRemote(addUpstreamRemoteAsCB.Text.Trim(), repo.ParentReadOnlyUrl);
                 if (!string.IsNullOrEmpty(error))
                 {
                     MessageBox.Show(this, error, _strCouldNotAddRemote.Text);
@@ -467,8 +469,20 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 if (updateCreateDirTB)
                 {
                     createDirTB.Text = repo.Name;
-                    addRemoteAsTB.Text = repo.ParentOwner ?? "";
-                    addRemoteAsTB.Enabled = repo.ParentOwner != null;
+                    addUpstreamRemoteAsCB.Text = "";
+                    addUpstreamRemoteAsCB.Items.Clear();
+                    if (repo.ParentOwner != null)
+                    {
+                        var upstreamRemoteName = repo.ParentOwner ?? "";
+                        addUpstreamRemoteAsCB.Items.Add(upstreamRemoteName);
+                        addUpstreamRemoteAsCB.Items.Add(UpstreamRemoteName);
+                        if (addUpstreamRemoteAsCB.Text != UpstreamRemoteName)
+                        {
+                            addUpstreamRemoteAsCB.Text = upstreamRemoteName;
+                        }
+                    }
+
+                    addUpstreamRemoteAsCB.Enabled = repo.ParentOwner != null;
                 }
 
                 cloneBtn.Enabled = true;
@@ -485,7 +499,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void SetCloneInfoText(IHostedRepository repo)
         {
-            var moreInfo = !string.IsNullOrEmpty(addRemoteAsTB.Text) ? string.Format(_strWillBeAddedAsARemote.Text, addRemoteAsTB.Text.Trim()) : "";
+            var moreInfo = !string.IsNullOrEmpty(addUpstreamRemoteAsCB.Text) ? string.Format(_strWillBeAddedAsARemote.Text, addUpstreamRemoteAsCB.Text.Trim()) : "";
 
             if (tabControl.SelectedTab == searchReposPage)
             {
