@@ -203,6 +203,13 @@ namespace GitUI.UserControls.RevisionGrid
                 },
                 new MenuCommand
                 {
+                    Name = "ShowArtificialCommits",
+                    Text = "Show artificial commits",
+                    ExecuteAction = () => _revisionGrid.ToggleShowArtificialCommits(),
+                    IsCheckedFunc = () => AppSettings.RevisionGraphShowWorkingDirChanges
+                },
+                new MenuCommand
+                {
                     Name = "ShowReflogReferences",
                     Text = "Show reflog references",
                     ExecuteAction = () => _revisionGrid.ToggleShowReflogReferences(),

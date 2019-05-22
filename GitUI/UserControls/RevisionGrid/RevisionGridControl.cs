@@ -1827,6 +1827,12 @@ namespace GitUI
             _gridView.Invalidate();
         }
 
+        internal void ToggleShowArtificialCommits()
+        {
+            AppSettings.RevisionGraphShowWorkingDirChanges = !AppSettings.RevisionGraphShowWorkingDirChanges;
+            ForceRefreshRevisions();
+        }
+
         internal void ToggleShowReflogReferences()
         {
             AppSettings.ShowReflogReferences = !AppSettings.ShowReflogReferences;
