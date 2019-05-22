@@ -1,15 +1,15 @@
 [submodule "GitExtensionsDoc"]
 	path = GitExtensionsDoc
-	url = https://github.com/gitextensions/GitExtensionsDoc.git
+	url = ../../gitextensions/GitExtensionsDoc.git
 [submodule "Externals/NBug"]
 	path = Externals/NBug
-	url = https://github.com/gitextensions/NBug.git
+	url = ../../gitextensions/NBug.git
 [submodule "Externals/Git.hub"]
 	path = Externals/Git.hub
-	url = https://github.com/gitextensions/Git.hub.git
+	url = ../../gitextensions/Git.hub.git
 [submodule "Externals/conemu-inside"]
 	path = Externals/conemu-inside
-	url = https://github.com/gitextensions/conemu-inside.git
+	url = ../../gitextensions/conemu-inside.git
 [submodule "Externals/ICSharpCode.TextEditor"]
 	path = Externals/ICSharpCode.TextEditor
-	url = https://github.com/gitextensions/ICSharpCode.TextEditor.git
+	url = ../../gitextensions/ICSharpCode.TextEditor.git
