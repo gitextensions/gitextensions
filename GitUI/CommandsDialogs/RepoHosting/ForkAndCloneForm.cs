@@ -102,7 +102,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
                         myReposLV.Items.Clear();
 
-                        foreach (var repo in repos)
+                        foreach (var repo in repos.OrderBy(r => r.Name))
                         {
                             myReposLV.Items.Add(new ListViewItem
                             {
@@ -232,7 +232,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         {
             searchResultsLV.Items.Clear();
 
-            foreach (var repo in repos)
+            foreach (var repo in repos.OrderBy(r => r.Name))
             {
                 searchResultsLV.Items.Add(new ListViewItem
                 {
