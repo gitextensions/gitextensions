@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="3.1.0">
+<xliff xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" GitExVersion="3.2.0">
   <file datatype="plaintext" original="AdvancedSettingsPage" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -4127,6 +4127,10 @@ If you are not sure just close this window.</source>
         <source>Build Report</source>
         <target />
       </trans-unit>
+      <trans-unit id="blameSettingsToolStripMenuItem.Text">
+        <source>Blame settings:</source>
+        <target />
+      </trans-unit>
       <trans-unit id="cherryPickThisCommitToolStripMenuItem.Text">
         <source>Cherry pick commit</source>
         <target />
@@ -4145,6 +4149,14 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="diffToolRemoteLocalStripMenuItem.Text">
         <source>Difftool selected &lt; - &gt; local</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="displayAuthorFirstToolStripMenuItem.Text">
+        <source>Display author first</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="displaySettingsToolStripMenuItem.Text">
+        <source>Display result settings:</source>
         <target />
       </trans-unit>
       <trans-unit id="followFileHistoryRenamesToolStripMenuItem.Text">
@@ -4187,8 +4199,28 @@ If you are not sure just close this window.</source>
         <source>Save as</source>
         <target />
       </trans-unit>
+      <trans-unit id="showAuthorDateToolStripMenuItem.Text">
+        <source>Show author date</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showAuthorTimeToolStripMenuItem.Text">
+        <source>Show author time</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showAuthorToolStripMenuItem.Text">
+        <source>Show author</source>
+        <target />
+      </trans-unit>
       <trans-unit id="showFullHistoryToolStripMenuItem.Text">
         <source>Show Full History</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showLineNumbersToolStripMenuItem.Text">
+        <source>Show line numbers</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="showOriginalFilePathToolStripMenuItem.Text">
+        <source>Show original file path</source>
         <target />
       </trans-unit>
       <trans-unit id="simplifyMergesContextMenuItem.Text">
@@ -4331,6 +4363,10 @@ Change the default behaviour only if you experience problems.</source>
       </trans-unit>
       <trans-unit id="_currentBranchText.Text">
         <source>Current branch:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_failCreatePatch.Text">
+        <source>Unable to create patch file(s)</source>
         <target />
       </trans-unit>
       <trans-unit id="_noEmailEnteredText.Text">
@@ -7011,10 +7047,6 @@ Context menu for additional operations</source>
         <source>Show ahead and behind information on status bar in browse window</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkShowCurrentChangesInRevisionGraph.Text">
-        <source>Show current working directory changes as an artificial commit</source>
-        <target />
-      </trans-unit>
       <trans-unit id="chkShowGitCommandLine.Text">
         <source>Show console window when executing git process</source>
         <target />
@@ -8266,6 +8298,10 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="ShowAllBranches.Text">
         <source>Show all branches</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="ShowArtificialCommits.Text">
+        <source>Show artificial commits</source>
         <target />
       </trans-unit>
       <trans-unit id="ShowCurrentBranchOnly.Text">
