@@ -69,7 +69,6 @@
     <Compile Include="PlinkTests.cs" />
     <Compile Include="RevisionReaderTests.cs" />
     <Compile Include="StreamExtensionsTests.cs" />
-    <Compile Include="MockExecutable.cs" />
     <Compile Include="RepoNameExtractorTest.cs" />
     <Compile Include="GitModuleTests.cs" />
     <Compile Include="GitRevisionInfoProviderTests.cs" />

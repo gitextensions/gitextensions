@@ -98,7 +98,6 @@ namespace GitUI.CommitInfo
                 this.InvokeAsync(() =>
                 {
                     UICommandsSource.UICommandsChanged += UICommandsSource_UICommandsChanged;
-                    RefreshSortedRefs();
                     ReloadCommitInfo();
                 }).FileAndForget();
             };
@@ -139,6 +138,11 @@ namespace GitUI.CommitInfo
 
         private void UICommandsSource_UICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
         {
+            if (!Module.IsValidGitWorkingDir())
+            {
+                return;
+            }
+
             RefreshSortedRefs();
         }
 
@@ -202,6 +206,34 @@ namespace GitUI.CommitInfo
             ReloadCommitInfo();
         }
 
+        private IDictionary<string, int> GetSortedRefs()
+        {
+            var args = new GitArgumentBuilder("for-each-ref")
+            {
+                "--sort=-committerdate",
+                "--sort=-taggerdate",
+                "--format=\"%(refname)\"",
+                "refs/"
+            };
+
+            string tree = Module.GitExecutable.GetOutput(args);
+            int warningPos = tree.IndexOf("warning:");
+            if (warningPos >= 0)
+            {
+                throw new RefsWarningException(tree.Substring(warningPos).SplitLines()[0]);
+            }
+
+            int i = 0;
+            var dict = new Dictionary<string, int>();
+            foreach (var entry in tree.Split('\n'))
+            {
+                dict.Add(entry, i);
+                i++;
+            }
+
+            return dict;
+        }
+
         private async Task LoadSortedRefsAsync()
         {
             ThreadHelper.AssertOnUIThread();
@@ -210,7 +242,7 @@ namespace GitUI.CommitInfo
             await TaskScheduler.Default.SwitchTo();
             try
             {
-                var refsOrderDict = ToDictionary(Module.GetSortedRefs());
+                var refsOrderDict = GetSortedRefs();
 
                 await this.SwitchToMainThreadAsync();
                 _refsOrderDict = refsOrderDict;
@@ -223,17 +255,6 @@ namespace GitUI.CommitInfo
             }
 
             return;
-
-            IDictionary<string, int> ToDictionary(IReadOnlyList<string> list)
-            {
-                var dict = new Dictionary<string, int>();
-                for (int i = 0; i < list.Count; i++)
-                {
-                    dict.Add(list[i], i);
-                }
-
-                return dict;
-            }
         }
 
         private void ReloadCommitInfo()
@@ -266,9 +287,15 @@ namespace GitUI.CommitInfo
 
             void UpdateCommitMessage()
             {
+                if (_revision == null)
+                {
+                    rtbxCommitMessage.SetXHTMLText(string.Empty);
+                    return;
+                }
+
                 var data = _commitDataManager.CreateFromRevision(_revision, _children);
 
-                if (_revision != null && (_revision.Body == null || (AppSettings.ShowGitNotes && !_revision.HasNotes)))
+                if (_revision.Body == null || (AppSettings.ShowGitNotes && !_revision.HasNotes))
                 {
                     _commitDataManager.UpdateBody(data, out _);
                     _revision.Body = data.Body;
@@ -276,10 +303,7 @@ namespace GitUI.CommitInfo
                 }
 
                 var commitMessage = _commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent != null);
-
-                // workaround the problem that with some DPI RichTextBox size height
-                // passed to ContentResized event is ~1 line less than needed
-                rtbxCommitMessage.SetXHTMLText(commitMessage + Environment.NewLine);
+                rtbxCommitMessage.SetXHTMLText(commitMessage);
             }
 
             void StartAsyncDataLoad()
@@ -825,6 +849,21 @@ namespace GitUI.CommitInfo
                     return -1;
                 }
             }
+        }
+
+        internal TestAccessor GetTestAccessor()
+            => new TestAccessor(this);
+
+        public readonly struct TestAccessor
+        {
+            private readonly CommitInfo _commitInfo;
+
+            public TestAccessor(CommitInfo commitInfo)
+            {
+                _commitInfo = commitInfo;
+            }
+
+            public IDictionary<string, int> GetSortedRefs() => _commitInfo.GetSortedRefs();
         }
     }
 }
