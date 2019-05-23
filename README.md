@@ -3,7 +3,7 @@
 # Git Extensions
 
 Git Extensions is a standalone UI tool for managing git repositories.
-It also integrates with Windows Explorer and Microsoft Visual Studio (2015/2017).
+It also integrates with Windows Explorer and Microsoft Visual Studio (2015/2017/2019).
 
 Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -12,7 +12,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 <a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a>
 
 The work has been [split into two streams](https://github.com/gitextensions/gitextensions/wiki/Compare-versions):
- * version 3.x - **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description)** or [install it with Chocolatey](https://chocolatey.org/packages/gitextensions).
+ * version 3.x - **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest)** or [install it with Chocolatey](https://chocolatey.org/packages/gitextensions).
  * version 2.5x
 
 ### Version 3.x
@@ -50,7 +50,7 @@ title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.
 ### Version 2.5x
 
 This stream contains the last cross-platform version running both on Windows (MS .NET Framework) and on Linux/Mac (Mono).
-The code is in maintenance mode with no significant active development planned. Only certain bug fixes are currently ported across, however there may be consideration given for certain features to be ported across from the v3.0x stream.
+The code is in maintenance mode with no significant active development planned. Only certain bug fixes are currently ported across, however there may be consideration given for certain features to be ported across from the v3.x stream.
 
 <table>
   <tr>
@@ -101,20 +101,20 @@ title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.
   </tr>
   <tr>
     <td><strong>Visual Studio addin (2010/2012/2013)</strong></td>
-    <td>Included with installer for the 2.x branch. <a href="https://github.com/gitextensions/gitextensions/releases/latest">Download and run setup.exe</a><br />
+    <td>Included with installer for the 2.x branch. <a href="https://github.com/gitextensions/gitextensions/releases/tag/v2.51.05">Download and run setup.exe</a><br />
       <ul><li><a href="https://github.com/gitextensions/gitextensions/files/2646204/Visual.Studio.2010.Addin.zip">Visual Studio 2010 Addin.zip</a></li>
-          <li><a href="https://github.com/gitextensions/gitextensions/files/2646205/Visual.Studio.2012.Addin.zip">Visual Studio 2013 Addin.zip</a></li>
+          <li><a href="https://github.com/gitextensions/gitextensions/files/2646205/Visual.Studio.2012.Addin.zip">Visual Studio 2012 Addin.zip</a></li>
           <li><a href="https://github.com/gitextensions/gitextensions/files/2646203/Visual.Studio.2013.Addin.zip">Visual Studio 2013 Addin.zip</a></li>
         </ul>
 </td>
   </tr>
   <tr>
-    <td><strong>Visual Studio Code VSIX</strong><br />Kudos to <a href="/pmiossec" class="author text-inherit">@pmiossec</a></td>
+    <td><strong>Visual Studio Code VSIX</strong><br />Kudos to <a href="https://github.com/pmiossec" class="author text-inherit">@pmiossec</a></td>
     <td><a href="https://marketplace.visualstudio.com/items?itemName=pmiossec.vscode-gitextensions">[ Download ]</a> or install via VSCode<br />
       NB: Please direct all discussions about the VSIX to <a href="https://github.com/pmiossec/vscode-gitextensions">its own repo</a>.</td>
   </tr>
   <tr>
-    <td><strong>IntelliJ platform IDEs</strong><br />Kudos to <a href="/DmitryZhelnin" class="author text-inherit">@DmitryZhelnin</a></td>
+    <td><strong>IntelliJ platform IDEs</strong><br />Kudos to <a href="https://github.com/DmitryZhelnin" class="author text-inherit">@DmitryZhelnin</a></td>
     <td><a href="https://plugins.jetbrains.com/plugin/11511-gitextensions">[ Download ]</a> or install via IDE Plugins settings<br/>
       NB: Please direct all discussions about this plugin to <a href="https://github.com/DmitryZhelnin/git-extensions-intellij">its own repo</a>.</td>
   </tr>
@@ -139,7 +139,7 @@ For more information see our [code of conduct](CODE_OF_CONDUCT.md).
 
 * We thank all the people who contribute, the project exists because of you<br />
 <a href="https://github.com/gitextensions/gitextensions/contributors"><img src="https://opencollective.com/gitextensions/contributors.svg?width=890&button=false" /></a>
-* We thank JetBRAINS for [ReSharper](https://www.jetbrains.com/resharper/) licenses.<br /><a href="https://www.jetbrains.com/?from=gitextensions" target="_blank"><img src="./GitUI/Resources/Icons/originals/jetbrains-variant-4.png"></a>
+* We thank JetBRAINS for [ReSharper](https://www.jetbrains.com/resharper/) licenses<br /><a href="https://www.jetbrains.com/?from=gitextensions" target="_blank"><img src="./GitUI/Resources/Icons/originals/jetbrains-variant-4.png"></a>
 * We thank [SignPath.io](https://signpath.io/) for the free code signing
 * We thank [SignPath Foundation](https://signpath.org/) for the signing certificate
 * We thank [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/) for the icons ([CCA/3.0](http://creativecommons.org/licenses/by/3.0/))
