@@ -159,10 +159,17 @@ namespace JenkinsIntegration
                         .SelectMany(j => j["builds"]);
                     foreach (var j in jobDescription["jobs"])
                     {
-                        var ts = j["lastBuild"]["timestamp"];
-                        if (ts != null)
+                        try
                         {
-                            timestamp = Math.Max(timestamp, ts.ToObject<long>());
+                            if (j["lastBuild"] != null && j["lastBuild"]["timestamp"] != null)
+                            {
+                                var ts = j["lastBuild"]["timestamp"];
+                                timestamp = Math.Max(timestamp, ts.ToObject<long>());
+                            }
+                        }
+                        catch
+                        {
+                            // Ignore malformed build ids
                         }
                     }
                 }
