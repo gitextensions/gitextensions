@@ -56,7 +56,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             RevisionGridQuickSearchTimeout.Value = AppSettings.RevisionGridQuickSearchTimeout;
             chkFollowRenamesInFileHistory.Checked = AppSettings.FollowRenamesInFileHistory;
             chkStashUntrackedFiles.Checked = AppSettings.IncludeUntrackedFilesInAutoStash;
-            chkShowCurrentChangesInRevisionGraph.Checked = AppSettings.RevisionGraphShowWorkingDirChanges;
             chkShowStashCountInBrowseWindow.Checked = AppSettings.ShowStashCount;
             chkShowAheadBehindDataInBrowseWindow.Checked = AppSettings.ShowAheadBehindData;
             chkShowAheadBehindDataInBrowseWindow.Enabled = GitVersion.Current.SupportAheadBehindData;
@@ -96,7 +95,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.UseFastChecks = chkUseFastChecks.Checked;
             AppSettings.MaxRevisionGraphCommits = (int)_NO_TRANSLATE_MaxCommits.Value;
             AppSettings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
-            AppSettings.RevisionGraphShowWorkingDirChanges = chkShowCurrentChangesInRevisionGraph.Checked;
             AppSettings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
             AppSettings.ShowAheadBehindData = chkShowAheadBehindDataInBrowseWindow.Checked;
             AppSettings.ShowSubmoduleStatus = chkShowSubmoduleStatusInBrowse.Checked;
