@@ -200,7 +200,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             else
             {
                 textBoxFind.Font = _origTextBoxFont;
-                textBoxFind.ForeColor = Color.Black;
+                textBoxFind.ForeColor = SystemColors.ControlText;
             }
         }
 

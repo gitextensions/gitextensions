@@ -79,6 +79,7 @@ namespace GitUI
             ImageList CreateImageList()
             {
                 const int rowHeight = 18;
+                bool light = ColorHelper.IsLightTheme();
 
                 return new ImageList
                 {
@@ -88,7 +89,7 @@ namespace GitUI
                         ScaleHeight(Images.FileStatusRemoved), // 0
                         ScaleHeight(Images.FileStatusAdded), // 1
                         ScaleHeight(Images.FileStatusModified), // 2
-                        ScaleHeight(Images.FileStatusRenamed), // 3
+                        ScaleHeight(light ? Images.FileStatusRenamed : Images.FileStatusRenamed_inv), // 3
                         ScaleHeight(Images.FileStatusCopied), // 4
                         ScaleHeight(Images.SubmoduleDirty), // 5
                         ScaleHeight(Images.SubmoduleRevisionUp), // 6

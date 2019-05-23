@@ -628,7 +628,7 @@ namespace GitUI.CommandsDialogs
             // 
             this.toolStripRevisionFilterTextBox.BackColor = System.Drawing.SystemColors.Control;
             this.toolStripRevisionFilterTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.toolStripRevisionFilterTextBox.ForeColor = System.Drawing.Color.Black;
+            this.toolStripRevisionFilterTextBox.ForeColor = System.Drawing.SystemColors.ControlText;
             this.toolStripRevisionFilterTextBox.Name = "toolStripRevisionFilterTextBox";
             this.toolStripRevisionFilterTextBox.Size = new System.Drawing.Size(100, 25);
             // 
@@ -837,7 +837,7 @@ namespace GitUI.CommandsDialogs
             // 
             // statusStrip
             // 
-            this.statusStrip.BackColor = System.Drawing.Color.FromArgb(218, 218, 218);
+            this.statusStrip.BackColor = System.Drawing.SystemColors.Control;
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.closeStatusBarItem});
             this.statusStrip.Location = new System.Drawing.Point(0, 551);

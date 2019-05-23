@@ -99,7 +99,7 @@
             // noMatchPanel
             // 
             this.noMatchPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.noMatchPanel.BackColor = System.Drawing.Color.White;
+            this.noMatchPanel.BackColor = System.Drawing.SystemColors.Control;
             this.noMatchPanel.Controls.Add(this.label2);
             this.noMatchPanel.Controls.Add(this.pictureBox1);
             this.noMatchPanel.Location = new System.Drawing.Point(161, 89);

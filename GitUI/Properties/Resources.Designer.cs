@@ -71,21 +71,29 @@ namespace GitUI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap branch_inv {
+            get {
+                object obj = ResourceManager.GetObject("branch_inv", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Changelog
         ///=========
         ///
-        ///### Version 3.0.2 (16 Feb 2019)
+        ///### Version 3.1.0 (13 May 2019)
         ///
-        ///#### Fixes:
-        ///* QuickPull&apos;s hotkey is not working - Issue [6200]
-        ///* Can&apos;t delete a repository included in the categories of the dashboard - Issue [6192]
-        ///* Fix loading of some plugins that failed - PR [6159]
-        ///* Regression: Pull Dialog Title when changing merge option - Issue [6150]
-        ///* Shell Extension Menu Pull  - Issue [6144]
-        ///* gitexe.cmd pull - always opens dialog window in do not merge, only fetch changes - Issue [6060]
-        ///
-        ///
-        ///[6200]:https://github. [rest of string was truncated]&quot;;.
+        ///#### Features:
+        ///* Include source branch in link to BitBucket create pull request - PR [6511]
+        ///* Generate avatars with author initials as fallback of gravatar - PR [6499]
+        ///* Hotkeys for Open with difftool | First/Selected -&gt; Working Directory - Issue [6481]
+        ///* FileStatusList: highlight the new name - Issue [6465]
+        ///* fix: JiraCommitHintPlugin hidpi layout issues - PR [6464]
+        ///* FileStatusList: indicate active filter - Issue [6449]
+        ///* FileStatusList fil [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ChangeLog {
             get {

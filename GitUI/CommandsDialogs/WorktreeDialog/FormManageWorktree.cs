@@ -38,6 +38,9 @@ namespace GitUI.CommandsDialogs.WorktreeDialog
             Branch.DataPropertyName = nameof(WorkTree.Branch);
             Sha1.DataPropertyName = nameof(WorkTree.Sha1);
             IsDeleted.DataPropertyName = nameof(WorkTree.IsDeleted);
+
+            bool light = ColorHelper.IsLightTheme();
+            Delete.Image = light ? Images.Delete : Images.Delete_inv;
         }
 
         private void FormManageWorktree_Load(object sender, EventArgs e)

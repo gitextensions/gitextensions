@@ -1777,6 +1777,48 @@
     <None Include="Properties\DataSources\GitCommands.GitStash.datasource" />
     <None Include="Properties\DataSources\PatchApply.PatchFile.datasource" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\Delete_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\Develop_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\FileStatusRenamed_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\github_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\GitHub32_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\Link_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\PullRequest_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\RecoverLostObjects_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\ShowWhitespace_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\Translate_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\WhitespaceIgnore_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\WhitespaceIgnoreAll_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\WhitespaceIgnoreEol_inv.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Icons\branch_inv.png" />
+  </ItemGroup>
   <Target Name="CopyTranslations" AfterTargets="AfterBuild">
     <ItemGroup>
       <Translations Include="$(ProjectDir)Translation\*.xlf;$(ProjectDir)Translation\*.gif" />

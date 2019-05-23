@@ -94,14 +94,15 @@ namespace GitUI.Editor
 
             IgnoreWhitespace = AppSettings.IgnoreWhitespaceKind;
             OnIgnoreWhitespaceChanged();
+            bool light = ColorHelper.IsLightTheme();
 
-            ignoreWhitespaceAtEol.Image = Images.WhitespaceIgnoreEol;
+            ignoreWhitespaceAtEol.Image = light ? Images.WhitespaceIgnoreEol : Images.WhitespaceIgnoreEol_inv;
             ignoreWhitespaceAtEolToolStripMenuItem.Image = ignoreWhitespaceAtEol.Image;
 
-            ignoreWhiteSpaces.Image = Images.WhitespaceIgnore;
+            ignoreWhiteSpaces.Image = light ? Images.WhitespaceIgnore : Images.WhitespaceIgnore_inv;
             ignoreWhitespaceChangesToolStripMenuItem.Image = ignoreWhiteSpaces.Image;
 
-            ignoreAllWhitespaces.Image = Images.WhitespaceIgnoreAll;
+            ignoreAllWhitespaces.Image = light ? Images.WhitespaceIgnoreAll : Images.WhitespaceIgnoreAll_inv;
             ignoreAllWhitespaceChangesToolStripMenuItem.Image = ignoreAllWhitespaces.Image;
 
             ShowEntireFile = AppSettings.ShowEntireFile;
@@ -109,6 +110,8 @@ namespace GitUI.Editor
             showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
             SetStateOfContextLinesButtons();
 
+            showNonPrintChars.Image = light ? Images.ShowWhitespace : Images.ShowWhitespace_inv;
+            showNonprintableCharactersToolStripMenuItem.Image = showNonPrintChars.Image;
             showNonPrintChars.Checked = AppSettings.ShowNonPrintingChars;
             showNonprintableCharactersToolStripMenuItem.Checked = AppSettings.ShowNonPrintingChars;
             ToggleNonPrintingChars(AppSettings.ShowNonPrintingChars);

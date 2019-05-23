@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using GitUI.CommandsDialogs.AboutBoxDialog;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -20,6 +21,11 @@ namespace GitUI.CommandsDialogs
             InitializeComplete();
 
             environmentInfo.SetCopyButtonTooltip(_copyTooltip.Text);
+
+            Color clrLink = Color.Blue; // ColorHelper.IsLightTheme() ? Color.Blue : Color.SkyBlue;
+            _NO_TRANSLATE_labelProductName.LinkColor = clrLink;
+            _NO_TRANSLATE_ThanksTo.LinkColor = clrLink;
+            linkLabelIcons.LinkColor = clrLink;
 
             // Click handlers
             _NO_TRANSLATE_labelProductName.LinkClicked += delegate { Process.Start("https://github.com/gitextensions/gitextensions"); };

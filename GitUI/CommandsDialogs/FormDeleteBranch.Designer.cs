@@ -57,7 +57,7 @@
             // labelSelectBranches
             // 
             this.labelSelectBranches.AutoSize = true;
-            this.labelSelectBranches.ForeColor = System.Drawing.Color.Black;
+            this.labelSelectBranches.ForeColor = System.Drawing.SystemColors.ControlText;
             this.labelSelectBranches.Location = new System.Drawing.Point(9, 9);
             this.labelSelectBranches.Name = "labelSelectBranches";
             this.labelSelectBranches.Size = new System.Drawing.Size(99, 16);
@@ -67,7 +67,7 @@
             // labelDeleteBranchWarning
             // 
             this.labelDeleteBranchWarning.AutoSize = true;
-            this.labelDeleteBranchWarning.ForeColor = System.Drawing.Color.Black;
+            this.labelDeleteBranchWarning.ForeColor = System.Drawing.SystemColors.ControlText;
             this.labelDeleteBranchWarning.Location = new System.Drawing.Point(39, 116);
             this.labelDeleteBranchWarning.MaximumSize = new System.Drawing.Size(500, 0);
             this.labelDeleteBranchWarning.Name = "labelDeleteBranchWarning";

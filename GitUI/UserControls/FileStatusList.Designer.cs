@@ -105,13 +105,14 @@
             // FilterWatermarkLabel
             // 
             this.FilterWatermarkLabel.AutoSize = true;
-            this.FilterWatermarkLabel.BackColor = System.Drawing.Color.White;
-            this.FilterWatermarkLabel.ForeColor = System.Drawing.Color.LightGray;
+            this.FilterWatermarkLabel.BackColor = System.Drawing.SystemColors.Window;
+            this.FilterWatermarkLabel.ForeColor = System.Drawing.SystemColors.WindowText;
             this.FilterWatermarkLabel.Location = new System.Drawing.Point(4, 4);
             this.FilterWatermarkLabel.Name = "FilterWatermarkLabel";
             this.FilterWatermarkLabel.Size = new System.Drawing.Size(65, 13);
             this.FilterWatermarkLabel.TabIndex = 0;
             this.FilterWatermarkLabel.Text = "Filter files using a regular expression...";
+            //this.FilterWatermarkLabel.Font.Size = 7.0F;
             this.FilterWatermarkLabel.Click += new System.EventHandler(this.FilterWatermarkLabel_Click);
             // 
             // FilterToolTip
