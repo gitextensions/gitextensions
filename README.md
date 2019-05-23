@@ -86,8 +86,8 @@ title="More information in the wiki"><img src="https://ds0k0en9abmn1.cloudfront.
 <table>
   <tr>
     <td><strong>v3.1</strong></td>
-    <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description">[ Download ]</a><br />
-        GitHub: <a href="https://github.com/gitextensions/gitextensions/releases/latest#hovercard-aria-description" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?maxAge=86400" alt="GitHub Releases (latest)"></a> | SourceForge: <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dm/gitextensions.svg" alt="SourceForge"></a></td>
+    <td colspan=2><a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a><br />
+        <a href="https://github.com/gitextensions/gitextensions/releases/latest" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/latest/total.svg?label=GitHub%20downloads%20(latest)&cacheSeconds=3600"></a> <a href="https://sourceforge.net/projects/gitextensions/" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dt/gitextensions/v3.1.svg?label=SourceForge%20downloads%20(latest)&cacheSeconds=3600"></a></td>
   </tr>
   <tr>
     <td><strong>Current dev stream</strong><br />NB: expect :unicorn: :unicorn: :dragon: :dragon: and :bug: :bug:</td>
