@@ -484,8 +484,6 @@ IF ERRORLEVEL 1 EXIT /B 1
 REM Plugins
 echo "Plugins"
 
-REM xcopy /y /e ..\Plugins\GitExtensions.PluginManager\Output GitExtensions\Plugins\
-REM IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\Plugins\AutoCompileSubmodules\bin\%Configuration%\AutoCompileSubmodules.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1
 xcopy /y /i ..\Plugins\BackgroundFetch\bin\%Configuration%\BackgroundFetch.dll GitExtensions\Plugins\
@@ -590,6 +588,12 @@ xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\TfsInterop.Vs2013.dll G
 IF ERRORLEVEL 1 EXIT /B 1 
 xcopy /y /i ..\GitExtensions\bin\%Configuration%\Plugins\TfsInterop.Vs2015.dll GitExtensions\Plugins\
 IF ERRORLEVEL 1 EXIT /B 1 
+
+REM UserPlugins
+echo "UserPlugins"
+
+xcopy /y /e ..\Plugins\GitExtensions.PluginManager\Output GitExtensions\UserPlugins\
+IF ERRORLEVEL 1 EXIT /B 1
 
 REM Translation
 echo "Translation"

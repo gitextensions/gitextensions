@@ -68,6 +68,20 @@
           <Directory Id="ru_RU" Name="ru-RU" />
         </Directory>
       </Directory>
+      <Directory Id="LocalAppDataFolder">
+        <Directory Id="LocalAppDataOrganizationDir" Name="GitExtensions">
+          <Directory Id="LocalAppDataApplicationDir" Name="GitExtensions">
+            <Directory Id="UserPluginsDir" Name="UserPlugins">
+              <Component Id="UserPlugins" Guid="{81556E1B-270C-448D-A68D-FD30678D4827}">
+                <RemoveFolder Id="RemoveLocalAppDataOrganizationDir" Directory="LocalAppDataOrganizationDir" On="uninstall" />
+                <RemoveFolder Id="RemoveLocalAppDataApplicationDir" Directory="LocalAppDataApplicationDir" On="uninstall" />
+                <RemoveFolder Id="RemoveUserPluginsDir" Directory="UserPluginsDir" On="uninstall" />
+                <RemoveFolder Id="Removedir7351E76F113B364403061A39D2447F8D" Directory="dir7351E76F113B364403061A39D2447F8D" On="uninstall" />
+              </Component>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
       <Directory Id="ProgramMenuFolder">
         <Directory Id="StartMenuDir" Name="$(var.ProductName)" />
       </Directory>
@@ -1579,9 +1593,8 @@
           <ComponentRef Id="NString.dll" />
           <ComponentRef Id="System.Collections.Immutable.dll" />
         </Feature>
-        <!--
-        <ComponentGroupRef Id="PluginMananger" />
-        -->
+        <ComponentRef Id="UserPlugins" />
+        <ComponentGroupRef Id="PluginManager" />
       </Feature>
       <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
         <ComponentRef Id="GitExtensions.desktop" />
