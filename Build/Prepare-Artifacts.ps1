@@ -11,6 +11,15 @@ if ($env:ARTIFACT_DEBUG_ENABLED -eq $true) {
     Push-AppveyorArtifact .\tree.txt
 }
 
+# ----------------------------------------------------------------------
+# download PluginManager
+# ----------------------------------------------------------------------
+Push-Location $PSScriptRoot
+
+& .\Download-PluginManager.ps1 -ExtractRootPath '..\Plugins\GitExtensions.PluginManager'
+
+Pop-Location
+
 # -------------------------------
 # build artifacts
 # -------------------------------
