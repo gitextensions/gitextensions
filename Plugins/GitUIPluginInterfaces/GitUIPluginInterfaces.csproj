@@ -92,6 +92,8 @@
     <Compile Include="IProcess.cs" />
     <Compile Include="ISettingControlBinding.cs" />
     <Compile Include="PluginsPathScanner.cs" />
+    <Compile Include="RepositoryHosts\GitProtocol.cs" />
+    <Compile Include="RepositoryHosts\GitProtocolExtensions.cs" />
     <Compile Include="SettingLevel.cs" />
     <Compile Include="ISettingsValueGetter.cs" />
     <Compile Include="ObjectId.cs" />

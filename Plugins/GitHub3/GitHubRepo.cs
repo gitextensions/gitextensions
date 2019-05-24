@@ -70,23 +70,7 @@ namespace GitHub3
             }
         }
 
-        public string CloneReadWriteUrl
-        {
-            get
-            {
-                string url;
-                if (CloneProtocol == "SSH")
-                {
-                    url = _repo.SshUrl;
-                }
-                else
-                {
-                    url = _repo.CloneUrl;
-                }
-
-                return url;
-            }
-        }
+        public string CloneReadWriteUrl => CloneProtocol == GitProtocol.Ssh ? _repo.SshUrl : _repo.CloneUrl;
 
         public string CloneReadOnlyUrl => _repo.GitUrl;
 
@@ -134,9 +118,9 @@ namespace GitHub3
             return pullRequest.Number;
         }
 
-        public string CloneProtocol { get; set; } = "SSH";
+        public GitProtocol CloneProtocol { get; set; } = GitProtocol.Ssh;
 
-        public string[] SupportedCloneProtocols { get; set; } = new string[] { "SSH", "HTTPS" };
+        public IReadOnlyList<GitProtocol> SupportedCloneProtocols { get; set; } = new[] { GitProtocol.Ssh, GitProtocol.Https };
 
         public override string ToString() => $"{Owner}/{Name}";
     }
