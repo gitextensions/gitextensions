@@ -35,7 +35,7 @@ namespace GitUI
 
         private static void HandleKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyData == (Keys.Control | Keys.Back))
+            if (e.KeyData == (Keys.Control | Keys.Back) && !IsReadOnly(sender))
             {
                 e.Handled = true;
                 e.SuppressKeyPress = true;
@@ -190,6 +190,9 @@ namespace GitUI
             ((Control)sender).Disposed -= HandleDisposed;
             ((Control)sender).KeyDown -= HandleKeyDown;
         }
+
+        private static bool IsReadOnly(object sender) =>
+            sender is TextBoxBase textBox && textBox.ReadOnly;
 
         private static readonly MethodInfo _beginUpdateMethod =
             typeof(Control).GetMethod("BeginUpdateInternal",
