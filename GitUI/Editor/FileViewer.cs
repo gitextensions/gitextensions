@@ -113,6 +113,11 @@ namespace GitUI.Editor
             showNonprintableCharactersToolStripMenuItem.Checked = AppSettings.ShowNonPrintingChars;
             ToggleNonPrintingChars(AppSettings.ShowNonPrintingChars);
 
+            if (!AppSettings.ShowLineNumbers)
+            {
+                ShowLineNumbers = false;
+            }
+
             IsReadOnly = true;
 
             internalFileViewer.MouseMove += (_, e) =>

@@ -1364,6 +1364,12 @@ namespace GitCommands
             set => SetBool("RememberNumberOfContextLines", value);
         }
 
+        public static bool ShowLineNumbers
+        {
+            get => GetBool("ShowLineNumbers", true);
+            set => SetBool("ShowLineNumbers", value);
+        }
+
         public static string GetDictionaryDir()
         {
             return Path.Combine(GetResourceDir(), "Dictionaries");

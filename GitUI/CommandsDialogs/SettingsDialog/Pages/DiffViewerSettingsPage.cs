@@ -21,6 +21,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkOpenSubmoduleDiffInSeparateWindow.Checked = AppSettings.OpenSubmoduleDiffInSeparateWindow;
             chkShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
             VerticalRulerPosition.Value = AppSettings.DiffVerticalRulerPosition;
+            chkShowLineNumbers.Checked = AppSettings.ShowLineNumbers;
         }
 
         protected override void PageToSettings()
@@ -33,11 +34,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.OpenSubmoduleDiffInSeparateWindow = chkOpenSubmoduleDiffInSeparateWindow.Checked;
             AppSettings.ShowDiffForAllParents = chkShowDiffForAllParents.Checked;
             AppSettings.DiffVerticalRulerPosition = (int)VerticalRulerPosition.Value;
+            AppSettings.ShowLineNumbers = chkShowLineNumbers.Checked;
         }
 
         public static SettingsPageReference GetPageReference()
         {
             return new SettingsPageReferenceByType(typeof(DiffViewerSettingsPage));
+        }
+
+        private void chkShowLineNumbers_CheckedChanged(object sender, System.EventArgs e)
+        {
+            
         }
     }
 }

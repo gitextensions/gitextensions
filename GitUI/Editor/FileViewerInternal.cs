@@ -112,6 +112,13 @@ namespace GitUI.Editor
             _currentViewPositionCache.Capture();
 
             OpenWithDifftool = openWithDifftool;
+            if (!AppSettings.ShowLineNumbers)
+            {
+                isDiff = false;
+            }
+
+            TextEditor.ShowLineNumbers = false;
+
             _lineNumbersControl.Clear(isDiff);
             _lineNumbersControl.SetVisibility(isDiff);
 

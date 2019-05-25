@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.tableLayoutPanelForDiffViewer = new System.Windows.Forms.TableLayoutPanel();
+            this.chkShowLineNumbers = new System.Windows.Forms.CheckBox();
             this.chkShowDiffForAllParents = new System.Windows.Forms.CheckBox();
             this.chkOpenSubmoduleDiffInSeparateWindow = new System.Windows.Forms.CheckBox();
             this.chkRememberIgnoreWhiteSpacePreference = new System.Windows.Forms.CheckBox();
@@ -50,6 +51,7 @@
             this.tableLayoutPanelForDiffViewer.ColumnCount = 2;
             this.tableLayoutPanelForDiffViewer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanelForDiffViewer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkShowLineNumbers, 0, 8);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkShowDiffForAllParents, 0, 6);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkOpenSubmoduleDiffInSeparateWindow, 0, 5);
             this.tableLayoutPanelForDiffViewer.Controls.Add(this.chkRememberIgnoreWhiteSpacePreference, 0, 0);
@@ -74,6 +76,17 @@
             this.tableLayoutPanelForDiffViewer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelForDiffViewer.Size = new System.Drawing.Size(1132, 821);
             this.tableLayoutPanelForDiffViewer.TabIndex = 1;
+            // 
+            // chkShowLineNumbers
+            // 
+            this.chkShowLineNumbers.AutoSize = true;
+            this.chkShowLineNumbers.Location = new System.Drawing.Point(3, 190);
+            this.chkShowLineNumbers.Name = "chkShowLineNumbers";
+            this.chkShowLineNumbers.Size = new System.Drawing.Size(115, 17);
+            this.chkShowLineNumbers.TabIndex = 13;
+            this.chkShowLineNumbers.Text = "Show line numbers";
+            this.chkShowLineNumbers.UseVisualStyleBackColor = true;
+            this.chkShowLineNumbers.CheckedChanged += new System.EventHandler(this.chkShowLineNumbers_CheckedChanged);
             // 
             // chkShowDiffForAllParents
             // 
@@ -205,5 +218,6 @@
         private System.Windows.Forms.CheckBox chkShowDiffForAllParents;
         private System.Windows.Forms.NumericUpDown VerticalRulerPosition;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox chkShowLineNumbers;
     }
 }
