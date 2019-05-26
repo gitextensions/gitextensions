@@ -4,6 +4,8 @@
 *.blame diff -text
 *.cs text diff=csharp
 *.sln text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
 *.sh text eol=lf
 *.py text eol=lf
 *.bin binary

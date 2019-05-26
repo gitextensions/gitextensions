@@ -19,13 +19,14 @@ SET BuildType=%2
 IF "%BuildType%"=="" SET BuildType=Rebuild
 
 set normal=GitExtensions-%Version%.msi
-for /f "tokens=*" %%i in ('hMSBuild.bat -only-path -notamd64') do set msbuild="%%i"
+set msbuild=hMSBuild
 set output=bin\%Configuration%\GitExtensions.msi
 
 REM HACK: for some reason when we build the full solution the VSIX contains too many files, clean and rebuild the VSIX
 rmdir ..\GitExtensionsVSIX\bin\Release /s /q
 pushd ..\GitExtensionsVSIX
-%msbuild% /t:%BuildType% /p:Configuration=%Configuration% /nologo /v:m
+set msbuild32=..\Setup\hMSBuild -notamd64
+%msbuild32% /t:%BuildType% /p:Configuration=%Configuration% /nologo /v:m
 popd
 
 echo Creating installers for Git Extensions %version%
