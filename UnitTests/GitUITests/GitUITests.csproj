@@ -81,6 +81,7 @@
     <Compile Include="CommandsDialogs\RevisionDiffContextMenuControllerTests.cs" />
     <Compile Include="CommandsDialogs\RevisionFileTreeControllerTests.cs" />
     <Compile Include="CommandsDialogs\RevisionDiffControllerTests.cs" />
+    <Compile Include="CommitInfo\CommitInfoTests.cs" />
     <Compile Include="ControlThreadingExtensionsTests.cs" />
     <Compile Include="UserEnvironmentInformationTests.cs" />
     <Compile Include="Editor\FileViewerInternal.CurrentViewPositionCacheTests.cs" />

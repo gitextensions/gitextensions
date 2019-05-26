@@ -747,26 +747,6 @@ namespace GitCommands
             return list;
         }
 
-        public IReadOnlyList<string> GetSortedRefs()
-        {
-            var args = new GitArgumentBuilder("for-each-ref")
-            {
-                "--sort=-committerdate",
-                "--sort=-taggerdate",
-                "--format=\"%(refname)\"",
-                "refs/"
-            };
-
-            string tree = _gitExecutable.GetOutput(args);
-            int warningPos = tree.IndexOf("warning:");
-            if (warningPos >= 0)
-            {
-                throw new RefsWarningException(tree.Substring(warningPos).SplitLines()[0]);
-            }
-
-            return tree.Split();
-        }
-
         public async Task<Dictionary<IGitRef, IGitItem>> GetSubmoduleItemsForEachRefAsync(string filename, Func<IGitRef, bool> showRemoteRef, bool noLocks = false)
         {
             string command = GetSortedRefsCommand(noLocks: noLocks);

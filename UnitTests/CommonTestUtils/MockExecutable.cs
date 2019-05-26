@@ -11,9 +11,9 @@ using GitUIPluginInterfaces;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
-namespace GitCommandsTests
+namespace CommonTestUtils
 {
-    internal sealed class MockExecutable : IExecutable
+    public sealed class MockExecutable : IExecutable
     {
         private readonly ConcurrentDictionary<string, ConcurrentStack<(string output, int? exitCode)>> _outputStackByArguments = new ConcurrentDictionary<string, ConcurrentStack<(string output, int? exitCode)>>();
         private readonly ConcurrentDictionary<string, int> _commandArgumentsSet = new ConcurrentDictionary<string, int>();
