@@ -191,8 +191,18 @@ namespace GitUI
             ((Control)sender).KeyDown -= HandleKeyDown;
         }
 
-        private static bool IsReadOnly(object sender) =>
-            sender is TextBoxBase textBox && textBox.ReadOnly;
+        private static bool IsReadOnly(object sender)
+        {
+            switch (sender)
+            {
+                case TextBoxBase textBox:
+                    return textBox.ReadOnly;
+                case ComboBox comboBox:
+                    return comboBox.DropDownStyle == ComboBoxStyle.DropDownList;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
 
         private static readonly MethodInfo _beginUpdateMethod =
             typeof(Control).GetMethod("BeginUpdateInternal",
