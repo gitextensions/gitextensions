@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using Git.hub;
@@ -21,6 +22,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             new TranslationString("There is a new version {0} of Git Extensions available");
         private readonly TranslationString _noUpdatesFound =
             new TranslationString("No updates found");
+        private readonly TranslationString _downloadingUpdate =
+            new TranslationString("Downloading update...");
         #endregion
 
         public IWin32Window OwnerWindow;
@@ -145,11 +148,27 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             Process.Start("https://github.com/gitextensions/gitextensions/blob/master/GitUI/Resources/ChangeLog.md");
         }
 
-        private void btnDownloadNow_Click(object sender, EventArgs e)
+        private async void btnDownloadNow_Click(object sender, EventArgs e)
         {
             try
             {
-                Process.Start(UpdateUrl);
+                progressBar1.Visible = true;
+                btnDownloadNow.Enabled = false;
+                UpdateLabel.Text = _downloadingUpdate.Text;
+
+                WebClient webClient = new WebClient();
+                string fileName = UpdateUrl.Substring(UpdateUrl.LastIndexOf("/") + 1);
+                await webClient.DownloadFileTaskAsync(new Uri(UpdateUrl), Environment.GetEnvironmentVariable("TEMP") + "\\" + fileName);
+
+                Process process = new Process();
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.FileName = "msiexec.exe";
+                process.StartInfo.Arguments = string.Format("/i \"{0}\\{1}\" /qb LAUNCH=1", Environment.GetEnvironmentVariable("TEMP"), fileName);
+                process.Start();
+
+                progressBar1.Visible = false;
+                Close();
+                Application.Exit();
             }
             catch (Win32Exception)
             {
