@@ -466,24 +466,25 @@ namespace GitUI.Blame
             }
 
             var objectId = _blame.Lines[line].Commit.ObjectId;
-            int originalLine = _blame.Lines[line].OriginLineNumber;
-            GitBlame blame = Module.Blame(_fileName, objectId + "^", _encoding, originalLine + ",+1");
-            if (blame.Lines.Count > 0)
+
+            var selectedRevision = _revGrid.GetRevision(objectId);
+            if (selectedRevision == null)
             {
-                var revision = blame.Lines[0].Commit.ObjectId;
-                if (_revGrid != null)
-                {
-                    _clickedBlameLine = blame.Lines[0];
-                    _revGrid.SetSelectedRevision(revision);
-                }
-                else
-                {
-                    using (var frm = new FormCommitDiff(UICommands, revision))
-                    {
-                        frm.ShowDialog(this);
-                    }
-                }
+                return;
             }
+
+            if (!selectedRevision.HasParent)
+            {
+                _revGrid.SetSelectedRevision(selectedRevision);
+                using (var frm = new FormCommitDiff(UICommands, selectedRevision.ObjectId))
+                {
+                    frm.ShowDialog(this);
+                }
+
+                return;
+            }
+
+            _revGrid.SetSelectedRevision(selectedRevision.FirstParentGuid);
         }
 
         private void showChangesToolStripMenuItem_Click(object sender, EventArgs e)
