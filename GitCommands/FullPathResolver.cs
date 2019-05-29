@@ -53,7 +53,7 @@ namespace GitCommands
             if (!basePath.EndsWith(Path.DirectorySeparatorChar.ToString())
                 && !basePath.EndsWith(Path.AltDirectorySeparatorChar.ToString()))
             {
-                basePath = basePath + Path.DirectorySeparatorChar;
+                basePath += Path.DirectorySeparatorChar;
             }
 
             var uri = new Uri(new Uri(basePath), path);
