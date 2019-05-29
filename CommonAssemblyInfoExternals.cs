@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyProduct("Git Extensions")]
+[assembly: AssemblyProduct("GitExtensions")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
