@@ -848,16 +848,6 @@ namespace GitCommands
                 (added > 0 ? ("+" + added) : "");
         }
 
-        public string GetMergeMessage()
-        {
-            var file = GetGitDirectory() + "MERGE_MSG";
-
-            return
-                File.Exists(file)
-                    ? File.ReadAllText(file)
-                    : "";
-        }
-
         public void RunGitK()
         {
             if (EnvUtils.RunningOnUnix())

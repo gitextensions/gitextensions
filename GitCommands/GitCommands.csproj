@@ -182,7 +182,7 @@
     <Compile Include="Git\GitSubmoduleStatus.cs" />
     <Compile Include="LockableNotifier.cs" />
     <Compile Include="Logging\CommandLog.cs" />
-    <Compile Include="CommitHelper.cs" />
+    <Compile Include="CommitMessageManager.cs" />
     <Compile Include="Config\ConfigFile.cs" />
     <Compile Include="Config\ConfigSection.cs" />
     <Compile Include="Git\CommandCache.cs" />
